@@ -1,228 +1,332 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RESEND/PATCH v6 1/3] clk: qcom: Add A53 PLL support
-Date: Fri, 28 Oct 2016 19:47:55 +0300
-Message-ID: <01b1f1c6-18f6-1aeb-c53f-34c00886b506@linaro.org>
-References: <20161019132816.31073-1-georgi.djakov@linaro.org>
- <20161019132816.31073-2-georgi.djakov@linaro.org>
- <20161028014914.GF16026@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/4] pinctrl: Introduce generic #pinctrl-cells and
+ pinctrl_parse_index_with_args
+Date: Fri, 28 Oct 2016 09:53:38 -0700
+Message-ID: <20161028165338.y5fyavbw5xfxweg3@atomide.com>
+References: <20161025164538.453-1-tony@atomide.com>
+ <20161025164538.453-2-tony@atomide.com>
+ <CACRpkdYWB4aa2XvW-yT39cKqy3XChSwCiFRy1mVWhbhse63=3A@mail.gmail.com>
+ <20161027141120.jqvul6q7iz5fjsmb@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20161028014914.GF16026@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161027141120.jqvul6q7iz5fjsmb@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen, thanks for reviewing!
+* Tony Lindgren <tony@atomide.com> [161027 07:59]:
+> * Linus Walleij <linus.walleij@linaro.org> [161027 00:57]:
+> > On Tue, Oct 25, 2016 at 6:45 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > > +/*
+> > > + * For pinctrl binding, typically #pinctrl-cells is for the pin controller
+> > > + * device, so either parent or grandparent. See pinctrl-bindings.txt.
+> > > + */
+> > > +static int pinctrl_find_cells_size(const struct device_node *np,
+> > > +                                  const char *cells_name)
+> > > +{
+> > > +       int cells_size, error;
+> > > +
+> > > +       error = of_property_read_u32(np->parent, cells_name, &cells_size);
+> > > +       if (error) {
+> > > +               error = of_property_read_u32(np->parent->parent,
+> > > +                                            cells_name, &cells_size);
+> > > +               if (error)
+> > > +                       return -ENOENT;
+> > > +       }
+> > > +
+> > > +       return cells_size;
+> > > +}
+> > 
+> > Can't we just hardcode this to "#pinctrl-cells" and skip the cells_name
+> > parameter? We can parametrize it the day we need it instead.
+> 
+> Sure we can do that.
+> 
+> > The rest of the helpers look nice and clean.
+> 
+> OK cool thanks,
 
-On 10/28/2016 04:49 AM, Stephen Boyd wrote:
-> On 10/19, Georgi Djakov wrote:
->> Add support for the PLL, which generates the higher range of CPU
->> frequencies on MSM8916 platforms.
->>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->
-> Please Cc dt reviewers.
+Below is an updated version of this patch with documentation updated
+and cells_name removed. I'll repost the whole series once the DT
+binding has been reviewed.
 
-Ok, sure!
+Regards,
 
->
->> ---
->>  .../devicetree/bindings/clock/qcom,a53-pll.txt     | 17 ++++
->>  drivers/clk/qcom/Kconfig                           |  9 +++
->>  drivers/clk/qcom/Makefile                          |  1 +
->>  drivers/clk/qcom/a53-pll.c                         | 94 ++++++++++++++++++++++
->>  4 files changed, 121 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53-pll.txt
->>  create mode 100644 drivers/clk/qcom/a53-pll.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53-pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53-pll.txt
->> new file mode 100644
->> index 000000000000..50e71e4e13a6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,a53-pll.txt
->> @@ -0,0 +1,17 @@
->> +A53 PLL Binding
->> +---------------
->> +The A53 PLL is the main CPU PLL used for frequencies above 1GHz.
->
-> Perhaps add which SoC(s) its in?
+Tony
+8< -------------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 25 Oct 2016 08:33:34 -0700
+Subject: [PATCH] pinctrl: Introduce generic #pinctrl-cells and
+ pinctrl_parse_index_with_args
 
-Ok, done!
+Introduce #pinctrl-cells helper binding and generic helper functions
+pinctrl_count_index_with_args() and pinctrl_parse_index_with_args().
 
->
->> +
->> +Required properties :
->> +- compatible : Shall contain only one of the following:
->> +
->> +		"qcom,a53-pll"
->
-> And this could be something more SoC specific too?
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ .../bindings/pinctrl/pinctrl-bindings.txt          |  44 ++++++-
+ drivers/pinctrl/devicetree.c                       | 144 +++++++++++++++++++++
+ drivers/pinctrl/devicetree.h                       |  21 +++
+ 3 files changed, 208 insertions(+), 1 deletion(-)
 
-I will make it qcom,a53pll-msm8916
-
->
->> +
->> +- reg : shall contain base register location and length
->> +
->> +Example:
->> +
->> +	a53pll: a53pll@0b016000 {
->
-> Drop the leading 0
-
-Ok, done!
-
->
->> +		compatible = "qcom,a53-pll";
->> +		reg = <0x0b016000 0x40>;
->
-> Should probably have #clock-cells = <0> just in case.
->
-
-Ok, done!
-
->> +	};
->> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->> index 1fb1f5476cb0..7d27f47f0c92 100644
->> --- a/drivers/clk/qcom/Makefile
->> +++ b/drivers/clk/qcom/Makefile
->> @@ -29,3 +29,4 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
->>  obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
->>  obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
->>  obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
->> +obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
->> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
->> new file mode 100644
->> index 000000000000..43902080f34b
->> --- /dev/null
->> +++ b/drivers/clk/qcom/a53-pll.c
->> @@ -0,0 +1,94 @@
->> +/*
->> + * Copyright (c) 2016, Linaro Limited
->> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->
-> #include <linux/clk-provider.h>?
->
-
-Ok.
-
->> +
->> +#include "clk-pll.h"
->> +#include "clk-regmap.h"
->> +
->> +static struct pll_freq_tbl a53pll_freq[] = {
->
-> Can this be const?
->
-
-Yes, done!
-
->> +	{  998400000, 52, 0x0, 0x1, 0 },
->> +	{ 1094400000, 57, 0x0, 0x1, 0 },
->> +	{ 1152000000, 62, 0x0, 0x1, 0 },
->> +	{ 1209600000, 65, 0x0, 0x1, 0 },
->> +	{ 1401600000, 73, 0x0, 0x1, 0 },
->> +};
->> +
->> +static const struct regmap_config a53pll_regmap_config = {
->> +	.reg_bits		= 32,
->> +	.reg_stride		= 4,
->> +	.val_bits		= 32,
->> +	.max_register		= 0x40,
->> +	.fast_io		= true,
->> +	.val_format_endian	= REGMAP_ENDIAN_LITTLE,
->> +};
->> +
->> +static const struct of_device_id qcom_a53pll_match_table[] = {
->> +	{ .compatible = "qcom,a53-pll" },
->> +	{ }
->> +};
->> +
->> +static int qcom_a53pll_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *node = dev->of_node;
->> +	struct clk_pll *pll;
->> +	struct resource *res;
->> +	void __iomem *base;
->> +	struct regmap *regmap;
->> +	struct clk_init_data init;
->
-> Initialize to { } for safety?
->
-
-Ok!
-
->> +
->> +	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
->> +	if (!pll)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	regmap = devm_regmap_init_mmio(dev, base, &a53pll_regmap_config);
->> +	if (IS_ERR(regmap))
->> +		return PTR_ERR(regmap);
->> +
->> +	pll->l_reg = 0x04,
->> +	pll->m_reg = 0x08,
->> +	pll->n_reg = 0x0c,
->> +	pll->config_reg = 0x14,
->> +	pll->mode_reg = 0x00,
->> +	pll->status_reg = 0x1c,
->> +	pll->status_bit = 16,
->> +	pll->freq_tbl = a53pll_freq,
->
-> Replace commas with semicolon please.
->
-
-Ah, right! Done!
-
->> +
->> +	init.name = node->name;
->
-> Please just hardcode the string name for now. Best to not get
-> tied down to DT node names if we don't need to.
->
-
-Ok, will hardcode it as a53pll.
-
->> +	init.parent_names = (const char *[]){ "xo" },
->> +	init.num_parents = 1,
->> +	init.ops = &clk_pll_sr2_ops,
->> +	init.flags = CLK_IS_CRITICAL;
->> +	pll->clkr.hw.init = &init;
->> +
->> +	return devm_clk_register_regmap(dev, &pll->clkr);
->> +}
->> +
->> +static struct platform_driver qcom_a53pll_driver = {
->> +	.probe = qcom_a53pll_probe,
->> +	.driver = {
->> +		.name = "qcom-a53pll",
->> +		.of_match_table = qcom_a53pll_match_table,
->> +	},
->> +};
->> +
->> +builtin_platform_driver(qcom_a53pll_driver);
->
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -97,6 +97,11 @@ For example:
+ 	};
+ 
+ == Pin controller devices ==
++Required properties: See the pin controller driver specific documentation
++
++Optional properties:
++#pinctrl-cells:	Number of pin control cells in addition to the index within the
++		pin controller device instance
+ 
+ Pin controller devices should contain the pin configuration nodes that client
+ devices reference.
+@@ -119,7 +124,8 @@ For example:
+ 
+ The contents of each of those pin configuration child nodes is defined
+ entirely by the binding for the individual pin controller device. There
+-exists no common standard for this content.
++exists no common standard for this content. The pinctrl framework only
++provides generic helper bindings that the pin controller driver can use.
+ 
+ The pin configuration nodes need not be direct children of the pin controller
+ device; they may be grandchildren, for example. Whether this is legal, and
+@@ -156,6 +162,42 @@ state_2_node_a {
+ 	pins = "mfio29", "mfio30";
+ };
+ 
++Optionally an altenative binding can be used if more suitable depending on the
++pin controller hardware. For hardaware where there is a large number of identical
++pin controller instances, naming each pin and function can easily become
++unmaintainable. This is especially the case if the same controller is used for
++different pins and functions depending on the SoC revision and packaging.
++
++For cases like this, the pin controller driver may use pinctrl-pin-array helper
++binding with a hardware based index and a number of pin configuration values:
++
++pincontroller {
++	... /* Standard DT properties for the device itself elided */
++	#pinctrl-cells = <2>;
++
++	state_0_node_a {
++		pinctrl-pin-array = <
++			0 A_DELAY_PS(0) G_DELAY_PS(120)
++			4 A_DELAY_PS(0) G_DELAY_PS(360)
++			...
++		>;
++	};
++	...
++};
++
++Above #pinctrl-cells specifies the number of value cells in addition to the
++index of the registers. This is similar to the interrupts-extended binding with
++one exception. There is no need to specify the phandle for each entry as that
++is already known as the defined pins are always children of the pin controller
++node. Further having the phandle pointing to another pin controller would not
++currently work as the pinctrl framework uses named modes to group pins for each
++pin control device.
++
++The index for pinctrl-pin-array must relate to the hardware for the pinctrl
++registers, and must not be a virtual index of pin instances. The reason for
++this is to avoid mapping of the index in the dts files and the pin controller
++driver as it can change.
++
+ == Generic pin configuration node content ==
+ 
+ Many data items that are represented in a pin configuration node are common
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -253,3 +253,147 @@ int pinctrl_dt_to_map(struct pinctrl *p)
+ 	pinctrl_dt_free_maps(p);
+ 	return ret;
+ }
++
++/*
++ * For pinctrl binding, typically #pinctrl-cells is for the pin controller
++ * device, so either parent or grandparent. See pinctrl-bindings.txt.
++ */
++static int pinctrl_find_cells_size(const struct device_node *np)
++{
++	const char *cells_name = "#pinctrl-cells";
++	int cells_size, error;
++
++	error = of_property_read_u32(np->parent, cells_name, &cells_size);
++	if (error) {
++		error = of_property_read_u32(np->parent->parent,
++					     cells_name, &cells_size);
++		if (error)
++			return -ENOENT;
++	}
++
++	return cells_size;
++}
++
++/**
++ * pinctrl_get_list_and_count - Gets the list and it's cell size and number
++ * @np: pointer to device node with the property
++ * @list_name: property that contains the list
++ * @list: pointer for the list found
++ * @cells_size: pointer for the cell size found
++ * @nr_elements: pointer for the number of elements found
++ *
++ * Typically np is a single pinctrl entry containing the list.
++ */
++static int pinctrl_get_list_and_count(const struct device_node *np,
++				      const char *list_name,
++				      const __be32 **list,
++				      int *cells_size,
++				      int *nr_elements)
++{
++	int size;
++
++	*cells_size = 0;
++	*nr_elements = 0;
++
++	*list = of_get_property(np, list_name, &size);
++	if (!*list)
++		return -ENOENT;
++
++	*cells_size = pinctrl_find_cells_size(np);
++	if (*cells_size < 0)
++		return -ENOENT;
++
++	/* First element is always the index within the pinctrl device */
++	*nr_elements = (size / sizeof(**list)) / (*cells_size + 1);
++
++	return 0;
++}
++
++/**
++ * pinctrl_count_index_with_args - Count number of elements in a pinctrl entry
++ * @np: pointer to device node with the property
++ * @list_name: property that contains the list
++ *
++ * Counts the number of elements in a pinctrl array consisting of an index
++ * within the controller and a number of u32 entries specified for each
++ * entry. Note that device_node is always for the parent pin controller device.
++ */
++int pinctrl_count_index_with_args(const struct device_node *np,
++				  const char *list_name)
++{
++	const __be32 *list;
++	int size, nr_cells, error;
++
++	error = pinctrl_get_list_and_count(np, list_name, &list,
++					   &nr_cells, &size);
++	if (error)
++		return error;
++
++	return size;
++}
++EXPORT_SYMBOL_GPL(pinctrl_count_index_with_args);
++
++/**
++ * pinctrl_copy_args - Populates of_phandle_args based on index
++ * @np: pointer to device node with the property
++ * @list: pointer to a list with the elements
++ * @index: entry within the list of elements
++ * @nr_cells: number of cells in the list
++ * @nr_elem: number of elements for each entry in the list
++ * @out_args: returned values
++ *
++ * Populates the of_phandle_args based on the index in the list.
++ */
++static int pinctrl_copy_args(const struct device_node *np,
++			     const __be32 *list,
++			     int index, int nr_cells, int nr_elem,
++			     struct of_phandle_args *out_args)
++{
++	int i;
++
++	memset(out_args, 0, sizeof(*out_args));
++	out_args->np = (struct device_node *)np;
++	out_args->args_count = nr_cells + 1;
++
++	if (index >= nr_elem)
++		return -EINVAL;
++
++	list += index * (nr_cells + 1);
++
++	for (i = 0; i < nr_cells + 1; i++)
++		out_args->args[i] = be32_to_cpup(list++);
++
++	return 0;
++}
++
++/**
++ * pinctrl_parse_index_with_args - Find a node pointed by index in a list
++ * @np: pointer to device node with the property
++ * @list_name: property that contains the list
++ * @index: index within the list
++ * @out_arts: entries in the list pointed by index
++ *
++ * Finds the selected element in a pinctrl array consisting of an index
++ * within the controller and a number of u32 entries specified for each
++ * entry. Note that device_node is always for the parent pin controller device.
++ */
++int pinctrl_parse_index_with_args(const struct device_node *np,
++				  const char *list_name, int index,
++				  struct of_phandle_args *out_args)
++{
++	const __be32 *list;
++	int nr_elem, nr_cells, error;
++
++	error = pinctrl_get_list_and_count(np, list_name, &list,
++					   &nr_cells, &nr_elem);
++	if (error || !nr_cells)
++		return error;
++
++	error = pinctrl_copy_args(np, list, index, nr_cells, nr_elem,
++				  out_args);
++	if (error)
++		return error;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pinctrl_parse_index_with_args);
+diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
+--- a/drivers/pinctrl/devicetree.h
++++ b/drivers/pinctrl/devicetree.h
+@@ -21,6 +21,13 @@
+ void pinctrl_dt_free_maps(struct pinctrl *p);
+ int pinctrl_dt_to_map(struct pinctrl *p);
+ 
++int pinctrl_count_index_with_args(const struct device_node *np,
++				  const char *list_name);
++
++int pinctrl_parse_index_with_args(const struct device_node *np,
++				  const char *list_name, int index,
++				  struct of_phandle_args *out_args);
++
+ #else
+ 
+ static inline int pinctrl_dt_to_map(struct pinctrl *p)
+@@ -32,4 +39,18 @@ static inline void pinctrl_dt_free_maps(struct pinctrl *p)
+ {
+ }
+ 
++static inline int pinctrl_count_index_with_args(const struct device_node *np,
++						const char *list_name)
++{
++	return -ENODEV;
++}
++
++static inline int
++pinctrl_parse_index_with_args(const struct device_node *np,
++			      const char *list_name, int index,
++			      struct of_phandle_args *out_args)
++{
++	return -ENODEV;
++}
++
+ #endif
+-- 
+2.9.3
