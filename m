@@ -1,62 +1,30 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support
- to clockdomains
-Date: Fri, 28 Oct 2016 05:51:12 -0700
-Message-ID: <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
-References: <1476805568-19264-1-git-send-email-t-kristo@ti.com>
- <1476805568-19264-12-git-send-email-t-kristo@ti.com>
- <20161028005047.GQ26139@codeaurora.org>
- <cd32a554-ba0a-33cd-c15c-121524ce679b@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH resent v3 2/3] dts: omap5: board-common: enable twl6040
+ headset jack detection
+Date: Fri, 28 Oct 2016 06:11:00 -0700
+Message-ID: <20161028131059.jbcmlmakfmovq2jj@atomide.com>
+References: <cover.1477417090.git.hns@goldelico.com>
+ <b918b86fd1d1f7e6fb2c15bb507b84d5cf1f0d3e.1477417090.git.hns@goldelico.com>
+ <06084abe-015a-ed84-2ce3-779be5744773@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cd32a554-ba0a-33cd-c15c-121524ce679b-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <06084abe-015a-ed84-2ce3-779be5744773@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, kernel@pyra-handheld.com, marek@goldelico.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [161028 00:43]:
-> On 28/10/16 03:50, Stephen Boyd wrote:
-> > I suppose a PRCM is
-> > like an MFD that has clocks and resets under it? On other
-> > platforms we've combined that all into one node and just had
-> > #clock-cells and #reset-cells in that node. Is there any reason
-> > we can't do that here?
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [161026 01:03]:
+> On 10/25/16 20:38, H. Nikolaus Schaller wrote:
+> > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > 
-> For OMAPs, there are typically multiple instances of the PRCM around; OMAP4
-> for example has:
-> 
-> cm1 @ 0x4a004000 (clocks + clockdomains)
-> cm2 @ 0x4a008000 (clocks + clockdomains)
-> prm @ 0x4a306000 (few clocks + resets + power state handling)
-> scrm @ 0x4a30a000 (few external clocks + plenty of misc stuff)
-> 
-> These instances are also under different power/voltage domains which means
-> their PM behavior is different.
-> 
-> The idea behind having a clockdomain as a provider was mostly to have the
-> topology visible : prcm-instance -> clockdomain -> clocks
+> I'm not sure if this is valid for igep0500 as I have not seen the schematics.
+> It might be safer to enable the jack detection only for omap5-uevm?
 
-Yeah that's needed to get the interconnect hierarchy right for
-genpd :)
-
-> ... but basically I think it would be possible to drop the clockdomain
-> representation and just mark the prcm-instance as a clock provider. Tony,
-> any thoughts on that?
-
-No let's not drop the clockdomains as those will be needed when we
-move things into proper hierarchy within the interconnect instances.
-This will then help with getting things right with genpd.
-
-In the long run we just want to specify clockdomain and the offset of
-the clock instance within the clockdomain in the dts files.
-
-Regards,
+FYI it's pretty much the same design and audio worked fine on igepv5
+the last time I tested it. I guess a good reason to drill a new hole
+to my pi-top case for the audio jack :)
 
 Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
