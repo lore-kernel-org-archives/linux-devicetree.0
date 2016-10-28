@@ -1,39 +1,82 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [PATCH 0/2] mmc: sdhci: Fix sdhci caps register bits with corrections provided by dt
-Date: Fri, 28 Oct 2016 10:56:09 -0500
-Message-ID: <1477670171-30015-1-git-send-email-zach.brown@ni.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm64: arch_timer: Work around Erratum
+ Hisilicon-161601
+Date: Fri, 28 Oct 2016 17:00:00 +0100
+Message-ID: <20161028160000.GB1076@arm.com>
+References: <1477553651-13428-1-git-send-email-dingtianhong@huawei.com>
+ <1477553651-13428-3-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org
-Cc: adrian.hunter@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zach.brown@ni.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477553651-13428-3-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For various reasons the sdhci caps register can be incorrect. This patch set
-introduces a general way to correct the bits when they are read to accurately
-reflect the capabilties of the controller/board combo.
+Hi Ding,
 
-The first patch creates sdhci-caps and sdhci-caps-mask dt properties that
-combined represent the correction to the sdhci caps register.
+On Thu, Oct 27, 2016 at 03:34:10PM +0800, Ding Tianhong wrote:
+> Erratum Hisilicon-161601 says that the ARM generic timer counter "has the
+> potential to contain an erroneous value when the timer value changes".
+> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+> read.  Accesses to CVAL are not affected.
+> 
+> The workaround is to reread the system count registers until the value of the second
+> read is larger than the first one by less than 32, the system counter can be guaranteed
+> not to return wrong value twice by back-to-back read and the error value is always larger
+> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
+> 
+> The workaround is enabled if the hisilicon,erratum-161601 property is found in
+> the timer node in the device tree.  This can be overridden with the
+> clocksource.arm_arch_timer.hisilicon-161601 boot parameter, which allows KVM
+> users to enable the workaround until a mechanism is implemented to
+> automatically communicate this information.
+> 
+> Fix some description for fsl erratum a008585.
+> 
+> v2: Significant rework based on feedback, including seperate the fsl erratum a008585
+>     to another patch, update the erratum name and remove unwanted code.
+> 
+> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
 
-The second patch uses the new dt properties to correct the caps from the
-register as they read during __sdhci_read_caps.
+[...]
 
-Changes from RFC:
- * /s/registers/register
- * Moved sdhci dt properties into new documentation file sdhci.txt
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 8a753fd..4aafb6a 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -312,8 +312,20 @@ config FSL_ERRATUM_A008585
+>  	help
+>  	  This option enables a workaround for Freescale/NXP Erratum
+>  	  A-008585 ("ARM generic timer may contain an erroneous
+> -	  value").  The workaround will only be active if the
+> +	  value").  The workaround will be active if the
+>  	  fsl,erratum-a008585 property is found in the timer node.
+> +	  This can be overridden with the clocksource.arm_arch_timer.fsl-a008585
+> +	  boot parameter.
+> +
+> +config HISILICON_ERRATUM_161601
+> +	bool "Workaround for Hisilicon Erratum 161601"
+> +	default y
+> +	depends on ARM_ARCH_TIMER && ARM64
+> +	help
+> +	  This option enables a workaround for Hisilicon Erratum
+> +	  161601. The workaround will be active if the hisilicon,erratum-161601
+> +	  property is found in the timer node. This can be overridden with
+> +	  the clocksource.arm_arch_timer.hisilicon-161601 boot parameter.
 
-Zach Brown (2):
-  mmc: sdhci: dt: Add device tree properties sdhci-caps and
-    sdhci-caps-mask
-  mmc: sdhci: Use sdhci-caps-mask and sdhci-caps to change the caps read
-        during __sdhci_read_caps
+I'm really not keen on having a kernel commandline parameter for this.
+It's not something we've done for other, similar errata (e.g. CNTFRQ
+reporting the wrong value) and I think it's a slippery slope to having
+more of these workarounds controlled at boot-time. If you have a board
+that is affected by this, it's always going to need the workaround. Why
+would you turn it off?
 
- Documentation/devicetree/bindings/mmc/sdhci.txt | 14 ++++++++++++++
- drivers/mmc/host/sdhci.c                        | 24 ++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci.txt
-
--- 
-2.7.4
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
