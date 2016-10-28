@@ -1,50 +1,70 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] of: base: Export symbol of __of_find_all_nodes()
-Date: Fri, 28 Oct 2016 16:58:12 +0530
-Message-ID: <1477654092-12406-1-git-send-email-ldewangan@nvidia.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: hi6220: add resets property into dwmmc
+ nodes
+Date: Fri, 28 Oct 2016 20:52:49 +0900
+Message-ID: <f5dfafbb-39df-4edb-03b8-57c0e34c912f@samsung.com>
+References: <1472094041-5357-2-git-send-email-guodong.xu@linaro.org>
+ <CAKfTPtB0FtGbm4C5z+LJizrsHikKt_BGFti5XY+LN3w7zO1Vjw@mail.gmail.com>
+ <CALAqxLXfb48h8hMQmAaJ+YjA5=pekkQ8Dg8ReL6VTTfmuFRPDw@mail.gmail.com>
+ <CAKfTPtAXdkKcfpHmUmQNwuJxO0PORcCf49noST_CCkZPigPwgw@mail.gmail.com>
+ <CGME20161028072654epcas4p13cbf983b3e22dd96039ed33a4ac792d5@epcas4p1.samsung.com>
+ <20161028072640.GB17266@leoy-linaro>
+ <d7993c1a-5e50-9a33-0900-5c1a79884d3c@samsung.com>
+ <20161028073830.GC17266@leoy-linaro>
+ <24930ad4-313f-a4f0-c89a-770238863816@samsung.com>
+ <95e22336-0465-f1e1-71b8-548d0e6ee8b7@samsung.com>
+ <20161028101919.GA25564@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20161028101919.GA25564@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <rob.herring@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Fathi Boudra <fathi.boudra@linaro.org>, LAK <linux-arm-kernel@lists.infradead.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The function __of_find_all_nodes() is used in the public header
-linux/of.h and if any driver developed using this API then
-it reports error as unknown symbol if compiled as module.
+Hi,
 
-Export this APIs using EXPORT_SYMBOL() so that it can be used
-from driver compiled as module.
+On 10/28/2016 07:19 PM, Leo Yan wrote:
+> On Fri, Oct 28, 2016 at 06:54:58PM +0900, Jaehoon Chung wrote:
+> 
+> [...]
+> 
+>>>>> Could you share the log? Is there any log about failure?
+>>>>
+>>>> Sure, please see below log:
+>>>
+>>> It's related with -EPROBE_DEFER..I'm not sure but if CONFIG_RESET_CONTROLLER is enabled, it's searching for reset controller.
+>>> Maybe hi6220 has handled the reset controller(?)...
+>>>
+>>> I'm checking devm_reset_control_xxx...It's possible to occur the other boards which enabled RESET_CONTROLLER..
+>>
+>> Could you check the below thing..
+>>
+>>         /* find reset controller when exist */
+>> -       pdata->rstc = devm_reset_control_get_optional(dev, NULL);
+>> +       pdata->rstc = devm_reset_control_get_optional(dev, "dwmci-reset");
+>>         if (IS_ERR(pdata->rstc)) {
+>>                 if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
+>>                         return ERR_PTR(-EPROBE_DEFER);
+> 
+> Confirmed with this fixing, the kernel can bootup successfully.
+> 
+> Thanks for this.
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/base.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for checking this..If this approach is not bad, i will send the patch.
+Or if there are other good approaches, let me know, plz.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d687e6d..89c2083 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -269,6 +269,7 @@ struct device_node *__of_find_all_nodes(struct device_node *prev)
- 	}
- 	return np;
- }
-+EXPORT_SYMBOL(__of_find_all_nodes);
- 
- /**
-  * of_find_all_nodes - Get next node in global list
--- 
-2.1.4
+Best Regards,
+Jaehoon Chung
 
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> To prevent the wrong controlling, how about adding "#reset-names" for dwmmc controller?
+>>
+>>
+>> Best Regards,
+>> Jaehoon Chung
+> 
+> 
+> 
