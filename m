@@ -1,370 +1,667 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] reset: Add the TI SCI reset driver
-Date: Fri, 28 Oct 2016 11:43:46 -0600
-Message-ID: <CANLsYkyiC9o9h_mq4D-6pMKNVAKQEnXR5rswiCVa8-mbtgRoJg@mail.gmail.com>
-References: <20161027214941.24641-1-afd@ti.com> <20161027214941.24641-4-afd@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: hisi: add PCIe driver support for HiSilicon STB
+ SoCs
+Date: Fri, 28 Oct 2016 12:53:06 -0500
+Message-ID: <20161028175306.GA13927@bhelgaas-glaptop.roam.corp.google.com>
+References: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161027214941.24641-4-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477014336-12385-1-git-send-email-juruqiang@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ruqiang Ju <juruqiang@huawei.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bin.chen@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 27 October 2016 at 15:49, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-> Some TI Keystone family of SoCs contain a system controller (like the
-> Power Management Micro Controller (PMMC) on K2G SoCs) that manage the
-> low-level device control (like clocks, resets etc) for the various
-> hardware modules present on the SoC. These device control operations
-> are provided to the host processor OS through a communication protocol
-> called the TI System Control Interface (TI SCI) protocol.
->
-> This patch adds a reset driver that communicates to the system
-> controller over the TI SCI protocol for performing reset management
-> of various devices present on the SoC. Various reset functionalities
-> are achieved by the means of different TI SCI device operations
-> provided by the TI SCI framework.
->
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> [s-anna-l0cyMroinI0@public.gmane.org: documentation changes, revised commit message]
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Hi Ruqiang,
+
+On Fri, Oct 21, 2016 at 09:45:36AM +0800, Ruqiang Ju wrote:
+> Add PCIe controller drvier for HiSilicon STB SoCs,
+
+s/drvier/driver/
+
+> the controller is based on the DesignWare's PCIe core.
+> 
+> Signed-off-by: Ruqiang Ju <juruqiang@huawei.com>
 > ---
->  MAINTAINERS                  |   1 +
->  drivers/reset/Kconfig        |   9 ++
->  drivers/reset/Makefile       |   1 +
->  drivers/reset/reset-ti-sci.c | 262 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 273 insertions(+)
->  create mode 100644 drivers/reset/reset-ti-sci.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index accf991..b93d91a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11901,6 +11901,7 @@ F:      include/dt-bindings/clock/k2g.h
->  F:     drivers/clk/keystone/sci-clk.c
->  F:     Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->  F:     include/dt-bindings/reset/k2g.h
-> +F:     drivers/reset/reset-ti-sci.c
->
->  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
->  M:     Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 06d9fa2..4c21c9d 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -66,6 +66,15 @@ config RESET_SUNXI
->         help
->           This enables the reset driver for Allwinner SoCs.
->
-> +config RESET_TI_SCI
-> +       tristate "TI System Control Interface (TI-SCI) reset driver"
-> +       depends on RESET_CONTROLLER
-> +       depends on TI_SCI_PROTOCOL
-> +       help
-> +         This enables the reset driver support over TI System Control Interface
-> +         available on some new TI SoCs. If you wish to use reset resources
-> +         managed by the TI System Controller, say Y here. Otherwise, say N.
-> +
->  config TI_SYSCON_RESET
->         tristate "TI SYSCON Reset Driver"
->         depends on HAS_IOMEM
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index bbe7026..36321f2 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
->  obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_RESET_STM32) += reset-stm32.o
->  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
-> +obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
->  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
->  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
->  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-> diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
+>  drivers/pci/host/Kconfig                           |   8 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pcie-histb.c                      | 448 +++++++++++++++++++++
+>  4 files changed, 523 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-histb.c
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
 > new file mode 100644
-> index 0000000..42ccf12
+> index 0000000..952f1db
 > --- /dev/null
-> +++ b/drivers/reset/reset-ti-sci.c
-> @@ -0,0 +1,262 @@
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> @@ -0,0 +1,66 @@
+> +HiSilicon STB PCIe host bridge DT description
+> +
+> +HiSilicon PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+
+Documentation/devicetree/bindings/pci/designware-pcie.txt ("pcie" at
+the end, not "pci").
+
+> +
+> +Additional properties are described here:
+> +
+> +Required properties
+> +- compatible: Should be one of the following strings
+> +		 "hisilicon,histb-pcie",
+> +		 "hisilicon,hi3798cv200-pcie"
+> +- reg: Should contain sysctl, rc_dbi, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "sysctrl": system control registers of PCIe controller;
+> +  "rc_dbi": configuration space of PCIe controller;
+> +  "config": configuration transaction space of PCIe controller.
+> +- interrupts: MSI interrupt.
+> +- interrupt-names: Must include "msi" entries.
+> +- clocks: List of phandle and clock specifier pairs as listed
+> +		in clock-names property.
+> +- clock-name: Must include the following entries:
+> +  "aux_clk": auxiliary gate clock;
+> +  "pipe_clk": pipe gate clock;
+> +  "sys_clk": sys gate clock;
+> +  "bus_clk": bus gate clock.
+> +- resets: List of phandle and reset specifier pairs as listed
+> +			in reset-names property
+> +- reset-names: Must include the following entries:
+> +  "soft_reset": soft reset;
+> +  "sys_reset": sys reset;
+> +  "bus_rest": bus reset.
+
+Please add "bus-range" as a required property so we don't have to
+assume the 00-ff range.  Documented in
+Documentation/devicetree/bindings/pci/designware-pcie.txt.
+
+> +
+> +Optional properties:
+> +- power-gpios: pcie device power control gpio if needed;
+> +- power-gpios-active-high: must include this propty
+> +		if active level is high.
+> +- status: Either "ok" or "disabled".
+> +
+> +Example:
+> +	pcie@f9860000 {
+> +		compatible = "hisilicon,histb-pcie", "snps,dw-pcie";
+> +		reg = <0xf9860000 0x1000>,
+> +			<0xf0000000 0x2000>,
+> +			<0xf2000000 0x01000000>;
+> +		reg-names = "sysctrl", "rc_dbi", "config";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		num-lanes = <1>;
+> +		ranges=<0x81000000 0 0 0xf4000000 0 0x00010000
+> +			0x82000000 0 0xf3000000 0xf3000000 0 0x01000000>;
+> +		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "msi";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0x0 0 0 1 &gic 0 131 4>;
+> +		clocks = <&crg PCIE_AUX_CLK>,
+> +			 <&crg PCIE_PIPE_CLK>,
+> +			 <&crg PCIE_SYS_CLK>,
+> +			 <&crg PCIE_BUS_CLK>;
+> +		clock-names = "aux_clk", "pipe_clk", "sys_clk", "bus_clk";
+> +		resets = <&crg 0x18c 6>, <&crg 0x18c 5>, <&crg 0x18c 4>;
+> +		reset-names = "soft_reset", "sys_reset", "bus_reset";
+> +	};
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index d7e7c0a..57ce4df 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -227,6 +227,14 @@ config PCI_HISI
+>  	  Say Y here if you want PCIe controller support on HiSilicon
+>  	  Hip05 and Hip06 SoCs
+>  
+> +config PCIE_HISI_STB
+> +	depends on OF
+> +	bool "HiSilicon STB SoCs PCIe controllers"
+> +	select PCIEPORTBUS
+> +	select PCIE_DW
+> +	help
+> +	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
+> +
+>  config PCIE_QCOM
+>  	bool "Qualcomm PCIe controller"
+>  	depends on ARCH_QCOM && OF
+> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+> index 084cb49..55f4fe7 100644
+> --- a/drivers/pci/host/Makefile
+> +++ b/drivers/pci/host/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
+>  obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
+>  obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
+>  obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
+> +obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
+>  obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
+> diff --git a/drivers/pci/host/pcie-histb.c b/drivers/pci/host/pcie-histb.c
+> new file mode 100644
+> index 0000000..71e344f
+> --- /dev/null
+> +++ b/drivers/pci/host/pcie-histb.c
+> @@ -0,0 +1,448 @@
 > +/*
-> + * Texas Instrument's System Control Interface (TI-SCI) reset driver
+> + * PCIe host controller driver for HiSilicon STB SoCs
 > + *
-> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-> + *     Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> + * Copyright (C) 2016 HiSilicon Co., Ltd. http://www.hisilicon.com
+> + *
+> + * Authors: RuQiang Ju <juruqiang@huawei.com>
 > + *
 > + * This program is free software; you can redistribute it and/or modify
 > + * it under the terms of the GNU General Public License version 2 as
 > + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
 > + */
-> +
-> +#include <linux/idr.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
 > +#include <linux/module.h>
 > +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/pci.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/soc/ti/ti_sci_protocol.h>
+> +#include <linux/resource.h>
+> +#include <linux/reset.h>
 > +
-> +/**
-> + * struct ti_sci_reset_control - reset control structure
-> + * @dev_id: SoC-specific device identifier
-> + * @reset_mask: reset mask to use for toggling reset
-> + */
-> +struct ti_sci_reset_control {
-> +       u32 dev_id;
-> +       u32 reset_mask;
-> +};
+> +#include "pcie-designware.h"
 > +
-> +/**
-> + * struct ti_sci_reset_data - reset controller information structure
-> + * @rcdev: reset controller entity
-> + * @dev: reset controller device pointer
-> + * @sci: TI SCI handle used for communication with system controller
-> + * @idr: idr structure for mapping ids to reset control structures
-> + */
-> +struct ti_sci_reset_data {
-> +       struct reset_controller_dev rcdev;
-> +       struct device *dev;
-> +       const struct ti_sci_handle *sci;
-> +       struct idr idr;
-> +};
+> +#define PCIE_SYS_CTRL0			0x0000
+> +#define PCIE_SYS_CTRL1			0x0004
+> +#define PCIE_SYS_CTRL7			0x001C
+> +#define PCIE_SYS_CTRL13			0x0034
+> +#define PCIE_SYS_CTRL15			0x003c
+> +#define PCIE_SYS_CTRL16			0x0040
+> +#define PCIE_SYS_CTRL17			0x0044
 > +
-> +#define to_ti_sci_reset_data(p)        \
-> +       container_of((p), struct ti_sci_reset_data, rcdev)
+> +#define PCIE_SYS_STAT0			0x0100
+> +#define PCIE_SYS_STAT4			0x0110
 > +
-> +/**
-> + * ti_sci_reset_set() - program a device's reset
-> + * @rcdev: reset controller entity
-> + * @id: ID of the reset to toggle
-> + * @assert: boolean flag to indicate assert or deassert
-> + *
-> + * This is a common internal function used to assert or deassert a device's
-> + * reset using the TI SCI protocol. The device's reset is asserted if the
-> + * @assert argument is true, or deasserted if @assert argument is false.
-> + * The mechanism itself is a read-modify-write procedure, the current device
-> + * reset register is read using a TI SCI device operation, the new value is
-> + * set or un-set using the reset's mask, and the new reset value written by
-> + * using another TI SCI device operation.
-> + *
-> + * Return: 0 for successful request, else a corresponding error value
-> + */
-> +static int ti_sci_reset_set(struct reset_controller_dev *rcdev,
-> +                           unsigned long id, bool assert)
-> +{
-> +       struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-> +       const struct ti_sci_handle *sci = data->sci;
-> +       const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-> +       struct ti_sci_reset_control *control;
-> +       u32 reset_state;
-> +       int ret;
+> +#define PCIE_RDLH_LINK_UP		BIT(5)
+> +#define PCIE_XMLH_LINK_UP		BIT(15)
+> +#define PCIE_ELBI_SLV_DBI_ENABLE	BIT(21)
+> +#define PCIE_APP_LTSSM_ENABLE		BIT(11)
 > +
-> +       control = idr_find(&data->idr, id);
-> +       if (!control)
-> +               return -EINVAL;
+> +#define PCIE_DEVICE_TYPE_MASK		GENMASK(31, 28)
+> +#define PCIE_WM_EP			0
+> +#define PCIE_WM_LEGACY			BIT(1)
+> +#define PCIE_WM_RC			BIT(30)
 > +
-> +       ret = dev_ops->get_device_resets(sci, control->dev_id,
-> +                                        &reset_state);
-> +       if (ret)
-> +               return ret;
+> +#define PCIE_LTSSM_STATE_MASK		GENMASK(5, 0)
+> +#define PCIE_LTSSM_STATE_ACTIVE		0x11
 > +
-> +       if (assert)
-> +               reset_state |= control->reset_mask;
-> +       else
-> +               reset_state &= ~control->reset_mask;
-> +
-> +       return dev_ops->set_device_resets(sci, control->dev_id,
-> +                                         reset_state);
-> +}
-> +
-> +/**
-> + * ti_sci_reset_assert() - assert device reset
-> + * @rcdev: reset controller entity
-> + * @id: ID of the reset to be asserted
-> + *
-> + * This function implements the reset driver op to assert a device's reset
-> + * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-> + * with the corresponding parameters as passed in, but with the @assert
-> + * argument set to true for asserting the reset.
-> + *
-> + * Return: 0 for successful request, else a corresponding error value
-> + */
-> +static int ti_sci_reset_assert(struct reset_controller_dev *rcdev,
-> +                              unsigned long id)
-> +{
-> +       return ti_sci_reset_set(rcdev, id, true);
-> +}
-> +
-> +/**
-> + * ti_sci_reset_deassert() - deassert device reset
-> + * @rcdev: reset controller entity
-> + * @id: ID of the reset to be deasserted
-> + *
-> + * This function implements the reset driver op to deassert a device's reset
-> + * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-> + * with the corresponding parameters as passed in, but with the @assert
-> + * argument set to false for deasserting the reset.
-> + *
-> + * Return: 0 for successful request, else a corresponding error value
-> + */
-> +static int ti_sci_reset_deassert(struct reset_controller_dev *rcdev,
-> +                                unsigned long id)
-> +{
-> +       return ti_sci_reset_set(rcdev, id, false);
-> +}
-> +
-> +/**
-> + * ti_sci_reset_status() - check device reset status
-> + * @rcdev: reset controller entity
-> + * @id: ID of reset to be checked
-> + *
-> + * This function implements the reset driver op to return the status of a
-> + * device's reset using the TI SCI protocol. The reset register value is read
-> + * by invoking the TI SCI device opertation .get_device_resets(), and the
-> + * status of the specific reset is extracted and returned using this reset's
-> + * reset mask.
-> + *
-> + * Return: 0 if reset is deasserted, or a non-zero value if reset is asserted
-> + */
-> +static int ti_sci_reset_status(struct reset_controller_dev *rcdev,
-> +                              unsigned long id)
-> +{
-> +       struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-> +       const struct ti_sci_handle *sci = data->sci;
-> +       const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-> +       struct ti_sci_reset_control *control;
-> +       u32 reset_state;
-> +       int ret;
-> +
-> +       control = idr_find(&data->idr, id);
-> +       if (!control)
-> +               return -EINVAL;
-> +
-> +       ret = dev_ops->get_device_resets(sci, control->dev_id,
-> +                                        &reset_state);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return reset_state & control->reset_mask;
-> +}
-> +
-> +static struct reset_control_ops ti_sci_reset_ops = {
-> +       .assert         = ti_sci_reset_assert,
-> +       .deassert       = ti_sci_reset_deassert,
-> +       .status         = ti_sci_reset_status,
-> +};
-> +
-> +/**
-> + * ti_sci_reset_of_xlate() - translate a set of OF arguments to a reset ID
-> + * @rcdev: reset controller entity
-> + * @reset_spec: OF reset argument specifier
-> + *
-> + * This function performs the translation of the reset argument specifier
-> + * values defined in a reset consumer device node. The function allocates a
-> + * reset control structure for that device reset, and will be used by the
-> + * driver for performing any reset functions on that reset. An idr structure
-> + * is allocated and used to map to the reset control structure. This idr
-> + * is used by the driver to do reset lookups.
-> + *
-> + * Return: 0 for successful request, else a corresponding error value
-> + */
-> +static int ti_sci_reset_of_xlate(struct reset_controller_dev *rcdev,
-> +                                const struct of_phandle_args *reset_spec)
-> +{
-> +       struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-> +       struct ti_sci_reset_control *control;
-> +
-> +       if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
-> +               return -EINVAL;
-> +
-> +       control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
-> +       if (!control)
-> +               return -ENOMEM;
-> +
-> +       control->dev_id = reset_spec->args[0];
-> +       control->reset_mask = reset_spec->args[1];
-> +
-> +       return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
-> +}
-> +
-> +static const struct of_device_id ti_sci_reset_of_match[] = {
-> +       { .compatible = "ti,sci-reset", },
-> +       { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, ti_sci_reset_of_match);
-> +
-> +static int ti_sci_reset_probe(struct platform_device *pdev)
-> +{
-> +       struct ti_sci_reset_data *data;
-> +
-> +       if (!pdev->dev.of_node)
-> +               return -ENODEV;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->sci = devm_ti_sci_get_handle(&pdev->dev);
-> +       if (IS_ERR(data->sci))
-> +               return PTR_ERR(data->sci);
-> +
-> +       data->rcdev.ops = &ti_sci_reset_ops;
-> +       data->rcdev.owner = THIS_MODULE;
-> +       data->rcdev.of_node = pdev->dev.of_node;
-> +       data->rcdev.of_reset_n_cells = 2;
-> +       data->rcdev.of_xlate = ti_sci_reset_of_xlate;
-> +       data->dev = &pdev->dev;
-> +       idr_init(&data->idr);
+> +struct histb_pcie_host {
 
-Hello Andrew,
+struct histb_pcie (without "_host") should be enough.
 
-For my own education, is there a specific reason to use a struct idr
-as opposed to keeping a pointer to a struct ti_sci_reset_control in
-truct ti_sci_reset_data?   I'm not opposed to the way you've done
-things but simply keeping a pointer sound more intuitive to me.
+> +	void __iomem *sysctrl;
+> +	int power_gpio;
+> +	bool gpio_active_high;
+> +	struct clk *aux_clk;
+> +	struct clk *pipe_clk;
+> +	struct clk *sys_clk;
+> +	struct clk *bus_clk;
+> +	struct reset_control *soft_reset;
+> +	struct reset_control *sys_reset;
+> +	struct reset_control *bus_reset;
+> +	struct pcie_port pp;
 
-Thanks,
-Mathieu
+Reorder as in f84cfdf72109 ("PCI: hisi: Reorder struct hisi_pcie") and
+add comment(s) about related DT property names.
 
-> +
-> +       platform_set_drvdata(pdev, data);
-> +
-> +       return reset_controller_register(&data->rcdev);
-> +}
-> +
-> +static int ti_sci_reset_remove(struct platform_device *pdev)
-> +{
-> +       struct ti_sci_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +       reset_controller_unregister(&data->rcdev);
-> +
-> +       idr_destroy(&data->idr);
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver ti_sci_reset_driver = {
-> +       .probe = ti_sci_reset_probe,
-> +       .remove = ti_sci_reset_remove,
-> +       .driver = {
-> +               .name = "ti-sci-reset",
-> +               .of_match_table = ti_sci_reset_of_match,
-> +       },
 > +};
-> +module_platform_driver(ti_sci_reset_driver);
 > +
-> +MODULE_AUTHOR("Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>");
-> +MODULE_DESCRIPTION("TI System Control Interface (TI SCI) Reset driver");
+> +#define to_histb_pcie(x) container_of(x, struct histb_pcie_host, pp)
+> +
+
+Can you add accessors, e.g.,
+
+  static u32 histb_pcie_readl(struct histb_pcie *histb_pcie, u32 reg)
+  {
+    return readl(histb_pcie->sysctrl + reg);
+  }
+
+  static void histb_pcie_writel(struct histb_pcie *histb_pcie, u32 reg, u32 val)
+  {
+    writel(val, histb_pcie->sysctrl + reg);
+  }
+
+> +static void histb_pcie_dbi_w_mode(struct pcie_port *pp, bool enable)
+
+Rework this and other internal interfaces as in e9480b5a7f34 ("PCI:
+hisi: Pass device-specific struct to internal functions").
+
+> +{
+> +	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
+
+struct histb_pcie *histb_pcie;
+
+> +	u32 val;
+> +
+> +	if (enable) {
+> +		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
+> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+> +		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
+> +	} else {
+> +		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
+> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL0);
+
+  val = histb_pcie_readl(hipcie, PCIE_SYS_CTRL0);
+  if (enable)
+    val |= PCIE_ELBI_SLV_DBI_ENABLE;
+  else
+    val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+  histb_pcie_writel(hipcie, PCIE_SYS_CTRL0, val);
+
+We should do the same to exynos_pcie_sideband_dbi_w_mode() and
+exynos_pcie_sideband_dbi_r_mode().
+
+> +	}
+> +}
+> +
+> +static void histb_pcie_dbi_r_mode(struct pcie_port *pp, bool enable)
+> +{
+> +	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
+> +	u32 val;
+> +
+> +	if (enable) {
+> +		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
+> +		val |= PCIE_ELBI_SLV_DBI_ENABLE;
+> +		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
+> +	} else {
+> +		val = readl(hipcie->sysctrl + PCIE_SYS_CTRL1);
+> +		val &= ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +		writel(val, hipcie->sysctrl + PCIE_SYS_CTRL1);
+> +	}
+
+Similar to above.
+
+> +}
+> +
+> +static inline u32 histb_pcie_readl_rc(struct pcie_port *pp, u32 reg)
+
+It's pointless to mark these "inline".  They can't be inline in any case
+because the only use is to save a pointer to them in the
+histb_pcie_host_ops structure.
+
+> +{
+> +	u32 val;
+> +
+> +	histb_pcie_dbi_r_mode(pp, true);
+> +	val = readl(pp->dbi_base + reg);
+> +	histb_pcie_dbi_r_mode(pp, false);
+> +
+> +	return val;
+> +}
+> +
+> +static inline void histb_pcie_writel_rc(struct pcie_port *pp,
+> +					u32 reg, u32 val)
+> +{
+> +	histb_pcie_dbi_w_mode(pp, true);
+> +	writel(val, pp->dbi_base + reg);
+> +	histb_pcie_dbi_w_mode(pp, false);
+> +}
+> +
+> +static int histb_pcie_rd_own_conf(struct pcie_port *pp,
+> +	int where, int size, u32 *val)
+> +{
+> +	int ret;
+> +
+> +	histb_pcie_dbi_r_mode(pp, true);
+> +	ret = dw_pcie_cfg_read(pp->dbi_base + where, size, val);
+> +	histb_pcie_dbi_r_mode(pp, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static int histb_pcie_wr_own_conf(struct pcie_port *pp,
+> +	int where, int size, u32 val)
+> +{
+> +	int ret;
+> +
+> +	histb_pcie_dbi_w_mode(pp, true);
+> +	ret = dw_pcie_cfg_write(pp->dbi_base + where, size, val);
+> +	histb_pcie_dbi_w_mode(pp, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static int histb_pcie_link_up(struct pcie_port *pp)
+> +{
+> +	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
+> +	u32 regval;
+> +	u32 status;
+> +
+> +	regval = readl(hipcie->sysctrl + PCIE_SYS_STAT0);
+> +	status = readl(hipcie->sysctrl + PCIE_SYS_STAT4);
+> +	status &= PCIE_LTSSM_STATE_MASK;
+> +	if ((regval & PCIE_XMLH_LINK_UP) &&
+> +		(regval & PCIE_RDLH_LINK_UP) &&
+> +		(status == PCIE_LTSSM_STATE_ACTIVE))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int histb_pcie_establish_link(struct pcie_port *pp)
+> +{
+> +	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
+> +	u32 regval;
+> +	int count = 0;
+> +
+> +	if (dw_pcie_link_up(pp)) {
+> +		dev_err(pp->dev, "Link already up\n");
+
+This doesn't seem like an error condition to me; maybe dev_info() if
+we need a message at all.  We should also change the other drivers
+that do the same thing.
+
+> +		return 0;
+> +	}
+> +
+> +	/* PCIe RC work mode */
+> +	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL0);
+> +	regval &= ~PCIE_DEVICE_TYPE_MASK;
+> +	regval |= PCIE_WM_RC;
+> +	writel(regval, hipcie->sysctrl + PCIE_SYS_CTRL0);
+> +
+> +	/* setup root complex */
+> +	dw_pcie_setup_rc(pp);
+> +
+> +	/* assert LTSSM enable */
+> +	regval = readl(hipcie->sysctrl + PCIE_SYS_CTRL7);
+> +	regval |= PCIE_APP_LTSSM_ENABLE;
+> +	writel(regval,  hipcie->sysctrl + PCIE_SYS_CTRL7);
+> +
+> +	/* check if the link is up or not */
+> +	while (!dw_pcie_link_up(pp)) {
+> +		mdelay(10);
+> +		count++;
+> +		if (count == 50) {
+> +			dev_err(pp->dev, "PCIe Link Fail\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+
+Use dw_pcie_wait_for_link().
+
+> +
+> +	dev_info(pp->dev, "Link up\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void histb_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	histb_pcie_establish_link(pp);
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		dw_pcie_msi_init(pp);
+> +}
+> +
+> +static struct pcie_host_ops histb_pcie_host_ops = {
+> +	.readl_rc = histb_pcie_readl_rc,
+> +	.writel_rc = histb_pcie_writel_rc,
+> +	.rd_own_conf = histb_pcie_rd_own_conf,
+> +	.wr_own_conf = histb_pcie_wr_own_conf,
+> +	.link_up = histb_pcie_link_up,
+> +	.host_init = histb_pcie_host_init,
+> +};
+> +
+> +#ifdef CONFIG_PCI_MSI
+> +static irqreturn_t histb_pcie_msi_irq_handler(int irq, void *arg)
+> +{
+> +	struct pcie_port *pp = arg;
+> +
+> +	return dw_handle_msi_irq(pp);
+> +}
+> +#endif
+> +
+> +static void histb_pcie_host_disable(struct histb_pcie_host *hipcie)
+> +{
+> +	reset_control_assert(hipcie->soft_reset);
+> +	reset_control_assert(hipcie->sys_reset);
+> +	reset_control_assert(hipcie->bus_reset);
+> +
+> +	clk_disable_unprepare(hipcie->aux_clk);
+> +	clk_disable_unprepare(hipcie->pipe_clk);
+> +	clk_disable_unprepare(hipcie->sys_clk);
+> +	clk_disable_unprepare(hipcie->bus_clk);
+> +
+> +	if (gpio_is_valid(hipcie->power_gpio))
+> +		gpio_set_value_cansleep(hipcie->power_gpio,
+> +					!hipcie->gpio_active_high);
+> +}
+> +
+> +static int histb_pcie_host_enable(struct pcie_port *pp)
+> +{
+> +	struct histb_pcie_host *hipcie = to_histb_pcie(pp);
+> +	struct device *dev = pp->dev;
+> +	int ret;
+> +
+> +	/* power on pcie device if have */
+> +	if (gpio_is_valid(hipcie->power_gpio))
+> +		gpio_set_value_cansleep(hipcie->power_gpio,
+> +					hipcie->gpio_active_high);
+> +
+
+Thanks for splitting all this clock and reset management into its own
+function.  Many of the other drivers mix it in with discovery of
+resources from DT, which I think is a mistake.
+
+> +	ret = clk_prepare_enable(hipcie->bus_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable bus_clk\n");
+> +		goto err_bus_clk;
+> +	}
+> +	ret = clk_prepare_enable(hipcie->sys_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable sys_clk\n");
+> +		goto err_sys_clk;
+> +	}
+> +	ret = clk_prepare_enable(hipcie->pipe_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable pipe_clk\n");
+> +		goto err_pipe_clk;
+> +	}
+> +	ret = clk_prepare_enable(hipcie->aux_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable aux_clk\n");
+> +		goto err_aux_clk;
+> +	}
+> +
+> +	reset_control_assert(hipcie->soft_reset);
+> +	reset_control_deassert(hipcie->soft_reset);
+> +
+> +	reset_control_assert(hipcie->sys_reset);
+> +	reset_control_deassert(hipcie->sys_reset);
+> +
+> +	reset_control_assert(hipcie->bus_reset);
+> +	reset_control_deassert(hipcie->bus_reset);
+> +
+> +	return 0;
+> +
+> +err_aux_clk:
+> +	clk_disable_unprepare(hipcie->aux_clk);
+> +err_pipe_clk:
+> +	clk_disable_unprepare(hipcie->pipe_clk);
+> +err_sys_clk:
+> +	clk_disable_unprepare(hipcie->sys_clk);
+> +err_bus_clk:
+> +	clk_disable_unprepare(hipcie->bus_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +
+> +static int histb_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct histb_pcie_host *hipcie;
+> +	struct pcie_port *pp;
+> +	struct resource *res;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	hipcie = devm_kzalloc(dev, sizeof(*hipcie), GFP_KERNEL);
+> +	if (!hipcie)
+> +		return -ENOMEM;
+> +
+> +	pp = &hipcie->pp;
+> +	pp->dev = dev;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "sysctrl");
+> +	hipcie->sysctrl = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(hipcie->sysctrl)) {
+> +		dev_err(dev, "cannot get sysctrl base\n");
+> +		return PTR_ERR(hipcie->sysctrl);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbi");
+> +	pp->dbi_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pp->dbi_base)) {
+> +		dev_err(dev, "cannot get rc_dbi base\n");
+> +		return PTR_ERR(pp->dbi_base);
+> +	}
+> +
+> +	hipcie->power_gpio = of_get_named_gpio(np, "power-gpios", 0);
+> +	hipcie->gpio_active_high = of_property_read_bool(np,
+> +						"power-gpios-active-high");
+> +	if (gpio_is_valid(hipcie->power_gpio)) {
+> +		ret = devm_gpio_request_one(dev, hipcie->power_gpio,
+> +				hipcie->gpio_active_high ?
+> +					GPIOF_OUT_INIT_HIGH :
+> +					GPIOF_OUT_INIT_LOW,
+> +					"PCIe Dev power");
+> +		if (ret) {
+> +			dev_err(dev, "unable to request gpio\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	hipcie->aux_clk = devm_clk_get(dev, "aux_clk");
+> +	if (IS_ERR(hipcie->aux_clk)) {
+> +		dev_err(dev, "Failed to get pcie aux_clk clock\n");
+> +		return PTR_ERR(hipcie->aux_clk);
+> +	}
+> +
+> +	hipcie->pipe_clk = devm_clk_get(dev, "pipe_clk");
+> +	if (IS_ERR(hipcie->pipe_clk)) {
+> +		dev_err(dev, "Failed to get pcie pipe_clk clock\n");
+> +		return PTR_ERR(hipcie->pipe_clk);
+> +	}
+> +
+> +	hipcie->sys_clk = devm_clk_get(dev, "sys_clk");
+> +	if (IS_ERR(hipcie->sys_clk)) {
+> +		dev_err(dev, "Failed to get pcie sys_clk clock\n");
+> +		return PTR_ERR(hipcie->sys_clk);
+> +	}
+> +
+> +	hipcie->bus_clk = devm_clk_get(dev, "bus_clk");
+> +	if (IS_ERR(hipcie->bus_clk)) {
+> +		dev_err(dev, "Failed to get pcie bus_clk clock\n");
+> +		return PTR_ERR(hipcie->bus_clk);
+> +	}
+> +
+> +	hipcie->soft_reset = devm_reset_control_get(dev, "soft_reset");
+> +	if (IS_ERR(hipcie->soft_reset)) {
+> +		dev_err(dev, "couldn't get soft_reset\n");
+> +		return PTR_ERR(hipcie->soft_reset);
+> +	}
+> +
+> +	hipcie->sys_reset = devm_reset_control_get(dev, "sys_reset");
+> +	if (IS_ERR(hipcie->sys_reset)) {
+> +		dev_err(dev, "couldn't get sys_reset\n");
+> +		return PTR_ERR(hipcie->sys_reset);
+> +	}
+> +
+> +	hipcie->bus_reset = devm_reset_control_get(dev, "bus_reset");
+> +	if (IS_ERR(hipcie->bus_reset)) {
+> +		dev_err(dev, "couldn't get bus_reset\n");
+> +		return PTR_ERR(hipcie->bus_reset);
+> +	}
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
+> +		if (pp->msi_irq < 0) {
+> +			dev_err(dev, "Failed to get msi irq\n");
+> +			return pp->msi_irq;
+> +		}
+> +		ret = devm_request_irq(dev, pp->msi_irq,
+> +				       histb_pcie_msi_irq_handler,
+> +				       IRQF_SHARED, "histb-pcie-msi", pp);
+> +		if (ret) {
+> +			dev_err(dev, "cannot request msi irq\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	pp->root_bus_nr = -1;
+> +	pp->ops = &histb_pcie_host_ops;
+> +
+> +	ret = histb_pcie_host_enable(pp);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable host\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize host\n");
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, hipcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static int histb_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct histb_pcie_host *hipcie = platform_get_drvdata(pdev);
+> +
+> +	histb_pcie_host_disable(hipcie);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id histb_pcie_of_match[] = {
+> +	{ .compatible = "hisilicon,histb-pcie", },
+> +	{ .compatible = "hisilicon,hi3798cv200-pcie", },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, histb_pcie_of_match);
+> +
+> +static struct platform_driver histb_pcie_platform_driver = {
+> +	.probe	= histb_pcie_probe,
+> +	.remove	= histb_pcie_remove,
+> +	.driver = {
+> +		.name = "histb-pcie",
+> +		.of_match_table = of_match_ptr(histb_pcie_of_match),
+> +	},
+> +};
+> +
+> +module_platform_driver(histb_pcie_platform_driver);
+> +
+> +MODULE_AUTHOR("RuQiang Ju <juruqiang@huawei.com>");
+> +MODULE_DESCRIPTION("HiSilicon STB PCIe host controller driver");
 > +MODULE_LICENSE("GPL v2");
+> -- 
+> 1.9.1
+> 
 > --
-> 2.10.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
