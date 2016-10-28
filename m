@@ -1,80 +1,61 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/4] drivers: base: cacheinfo: fix x86 with CONFIG_OF enabled
-Date: Fri, 28 Oct 2016 09:45:28 +0100
-Message-ID: <1477644331-25559-2-git-send-email-sudeep.holla@arm.com>
-References: <1477644331-25559-1-git-send-email-sudeep.holla@arm.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: davinci: enable LEDs default-on trigger in
+ default config
+Date: Fri, 28 Oct 2016 14:33:32 +0530
+Message-ID: <62bfb9e3-c752-99e3-78c2-944d95735847@ti.com>
+References: <1477075018-20176-1-git-send-email-david@lechnology.com>
+ <1477075018-20176-5-git-send-email-david@lechnology.com>
+ <669b14c2-7f62-35bc-c8a3-6dde05a99fb1@ti.com>
+ <be478f0a-bd10-7241-7e9d-20dfc1beaa30@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477644331-25559-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <be478f0a-bd10-7241-7e9d-20dfc1beaa30-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With CONFIG_OF enabled on x86, we get the following error on boot:
-"
-	Failed to find cpu0 device node
- 	Unable to detect cache hierarchy from DT for CPU 0
-"
-and the cacheinfo fails to get populated in the corresponding sysfs
-entries. This is because cache_setup_of_node looks for of_node for
-setting up the shared cpu_map without checking that it's already
-populated in the architecture specific callback.
+On Thursday 27 October 2016 09:19 PM, David Lechner wrote:
+> Yes, module is OK here.
 
-In order to indicate that the shared cpu_map is already populated, this
-patch introduces a boolean `cpu_map_populated` in struct cpu_cacheinfo
-that can be used by the generic code to skip cache_shared_cpu_map_setup.
+Here is the patch I pushed to v4.10/defconfig.
 
-This patch also sets that boolean for x86.
+Thanks,
+Sekhar
 
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---8<---
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Date: Fri, 21 Oct 2016 13:36:56 -0500
+Subject: [PATCH] ARM: davinci_all_defconfig: enable LED default-on trigger
+
+The LEDs default-on trigger is nice to have. For example, it can be used
+to configure a LED as a power indicator.
+
+Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+[nsekhar-l0cyMroinI0@public.gmane.org: build as module, subject line fixes]
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- arch/x86/kernel/cpu/intel_cacheinfo.c | 2 ++
- drivers/base/cacheinfo.c              | 3 +++
- include/linux/cacheinfo.h             | 1 +
- 3 files changed, 6 insertions(+)
+ arch/arm/configs/davinci_all_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/intel_cacheinfo.c b/arch/x86/kernel/cpu/intel_cacheinfo.c
-index de6626c18e42..be6337156502 100644
---- a/arch/x86/kernel/cpu/intel_cacheinfo.c
-+++ b/arch/x86/kernel/cpu/intel_cacheinfo.c
-@@ -934,6 +934,8 @@ static int __populate_cache_leaves(unsigned int cpu)
- 		ci_leaf_init(this_leaf++, &id4_regs);
- 		__cache_cpumap_setup(cpu, idx, &id4_regs);
- 	}
-+	this_cpu_ci->cpu_map_populated = true;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
-index e9fd32e91668..ecde8957835a 100644
---- a/drivers/base/cacheinfo.c
-+++ b/drivers/base/cacheinfo.c
-@@ -106,6 +106,9 @@ static int cache_shared_cpu_map_setup(unsigned int cpu)
- 	unsigned int index;
- 	int ret;
- 
-+	if (this_cpu_ci->cpu_map_populated)
-+		return 0;
-+
- 	ret = cache_setup_of_node(cpu);
- 	if (ret)
- 		return ret;
-diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-index 2189935075b4..a951fd10aaaa 100644
---- a/include/linux/cacheinfo.h
-+++ b/include/linux/cacheinfo.h
-@@ -71,6 +71,7 @@ struct cpu_cacheinfo {
- 	struct cacheinfo *info_list;
- 	unsigned int num_levels;
- 	unsigned int num_leaves;
-+	bool cpu_map_populated;
- };
- 
- /*
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index 513978eaf03d..b5e978ff177f 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -180,6 +180,7 @@ CONFIG_LEDS_GPIO=m
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_TIMER=m
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=m
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=m
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_OMAP=m
+ CONFIG_DMADEVICES=y
 -- 
-2.7.4
+2.9.0
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
