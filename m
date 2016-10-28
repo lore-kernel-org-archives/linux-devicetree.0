@@ -1,35 +1,114 @@
-From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/3] ARM: dts: sun8i: Support NanoPi SBCs
-Date: Fri, 28 Oct 2016 15:59:00 +0900
-Message-ID: <20161028065903.23298-1-woogyom.kim@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Pettigrew <james-Rly9TSIBl47vnOemgxGiVw@public.gmane.org>, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: [PATCH v2 2/3] ARM: dts: sun8i: Use the common file in NanoPi NEO SBC
+Date: Fri, 28 Oct 2016 15:59:02 +0900
+Message-ID: <20161028065903.23298-3-woogyom.kim@gmail.com>
+References: <20161028065903.23298-1-woogyom.kim@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161028065903.23298-1-woogyom.kim@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, James Pettigrew <james@innovum.com.au>, Milo Kim <woogyom.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-NanoPi M1 and NEO have common features, so duplicate properties can be 
-moved into new dtsi file.
+NanoPi common dtsi supports all components of NEO SBC, so just include it.
 
-v2:
-  Add James's copyrights in NanoPi common dtsi file 
+Cc: James Pettigrew <james@innovum.com.au>
+Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+---
+ arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 79 +------------------------------
+ 1 file changed, 1 insertion(+), 78 deletions(-)
 
-Milo Kim (3):
-  ARM: dts: sun8i: Add common dtsi file for NanoPi SBCs
-  ARM: dts: sun8i: Use the common file in NanoPi NEO SBC
-  ARM: dts: sun8i: Add dts file for NanoPi M1 SBC
-
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts  |  64 +++++++++++++
- arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts |  79 +---------------
- arch/arm/boot/dts/sun8i-h3-nanopi.dtsi    | 144 ++++++++++++++++++++++++++++++
- 3 files changed, 209 insertions(+), 78 deletions(-)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
- create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+index 3d64caf..8d2cc6e 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+@@ -40,86 +40,9 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-/dts-v1/;
+-#include "sun8i-h3.dtsi"
+-#include "sunxi-common-regulators.dtsi"
+-
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/pinctrl/sun4i-a10.h>
++#include "sun8i-h3-nanopi.dtsi"
+ 
+ / {
+ 	model = "FriendlyARM NanoPi NEO";
+ 	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
+-
+-	aliases {
+-		serial0 = &uart0;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+-	leds {
+-		compatible = "gpio-leds";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
+-
+-		pwr {
+-			label = "nanopi:green:pwr";
+-			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
+-			default-state = "on";
+-		};
+-
+-		status {
+-			label = "nanopi:blue:status";
+-			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
+-		};
+-	};
+-};
+-
+-&ehci3 {
+-	status = "okay";
+-};
+-
+-&mmc0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+-	vmmc-supply = <&reg_vcc3v3>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+-	cd-inverted;
+-	status = "okay";
+-};
+-
+-&ohci3 {
+-	status = "okay";
+-};
+-
+-&pio {
+-	leds_opc: led-pins {
+-		allwinner,pins = "PA10";
+-		allwinner,function = "gpio_out";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
+-};
+-
+-&r_pio {
+-	leds_r_opc: led-pins {
+-		allwinner,pins = "PL10";
+-		allwinner,function = "gpio_out";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
+-};
+-
+-&uart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins_a>;
+-	status = "okay";
+-};
+-
+-&usbphy {
+-	/* USB VBUS is always on */
+-	status = "okay";
+ };
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
