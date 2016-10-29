@@ -1,84 +1,139 @@
-Return-Path: <j-keerthy@ti.com>
-Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
-References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
- <1476855239-32730-3-git-send-email-j-keerthy@ti.com>
- <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
- <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
- <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
-From: Keerthy <j-keerthy@ti.com>
-Message-ID: <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com>
-Date: Thu, 27 Oct 2016 13:37:21 +0530
+Return-Path: <michael.scott@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-To: Roger Quadros <rogerq@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Lokesh Vutla <lokeshvutla@ti.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+In-Reply-To: <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
+References: <20161026233228.15219-1-michael.scott@linaro.org> <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
+From: Michael Scott <michael.scott@linaro.org>
+Date: Sat, 29 Oct 2016 09:26:28 -0700
+Message-ID: <CAEz3QY0aXuhmcHKTpRZzKvEB1cbpMe4W9McE-2bGsbFvMHAa6g@mail.gmail.com>
+Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
+Content-Type: multipart/alternative; boundary=001a11c16510e78fce0540036f3d
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
+--001a11c16510e78fce0540036f3d
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-
-On Thursday 27 October 2016 01:23 PM, Roger Quadros wrote:
-> Keerthy,
+On Oct 29, 2016 1:27 AM, "Linus Walleij" <linus.walleij@linaro.org> wrote:
 >
-> On 27/10/16 06:42, Keerthy wrote:
->>
->>
->> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
->>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy@ti.com> wrote:
->>>
->>>> From: Lokesh Vutla <lokeshvutla@ti.com>
->>>>
->>>> Update GPIO driver to support Multiple GPIO IPs.
->>>>
->>>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
->>>
->>> This commit message is not at all describing what the patch is doing.
->>>
->>> What it does is bumping the GPIO pin offset in the Linux global
->>> GPIO number space with 32 for each new controller.
->>>
->>>> +       static int bank_base;
->>>>
->>>>         pdata = davinci_gpio_get_pdata(pdev);
->>>>         if (!pdata) {
->>>> @@ -226,7 +227,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>>>                 chips[i].chip.direction_output = davinci_direction_out;
->>>>                 chips[i].chip.set = davinci_gpio_set;
->>>>
->>>> -               chips[i].chip.base = base;
->>>> +               chips[i].chip.base = bank_base;
->>>> +               bank_base += 32;
->>>
->>> Why can you not rewrite the driver to pass -1 as base and
->>> get a dynamic allocation of GPIO numbers instead? Then
->>> you won't have this hairy problem.
->>
->> Ok i will try that.
->>
->> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
->> GPIO0 comprises of 144 GPIOs
->> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is being modeled.
->>
->> I am creating a controller for every 32 GPIOs under the big module each containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
->> Each 16 GPIO bank has an interrupt.
->>
->> Is this modeling fine or do you think creating one chip with 144 pins and another with 68 pins is a better way?
+> On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott <michael.scott@linaro.org>
+wrote:
 >
-> If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144 GPIOs?
-> What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+> > Initial pinctrl driver for QCOM msm8994 platforms.
+> >
+> > In order to continue the initial board support for QCOM msm8994/msm8992
+> > presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's
+put
+> > a proper pinctrl driver in place.
+> >
+> > Currently, the DT for these platforms uses the msm8x74 pinctrl driver
+to enable
+> > basic UART.  Beyond the first few pins the rest are different enough to
+justify
+> > it's own driver.
+> >
+> > Note: This driver is also be used by QCOM's msm8992 platform as it's
+TLM block
+> > is the same.
+> >
+> > - Initial formatting and style was taken from the msm8x74 pinctrl
+driver added
+> >   by Bj=C3=B6rn Andersson <bjorn.andersson@linaro.org>
+> > - Data was then adjusted per QCOM MSM8994 documentation for Top Level
+Multiplexing
+> > - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
+> >   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994
+content
+> >
+> > Signed-off-by: Michael Scott <michael.scott@linaro.org>
+> > ---
+> >
+> > V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines
+between blsp_i2c4_groups and cci_timer0_groups
+>
+> Looks fine to me, just like the other Qcom drivers.
+>
+> I just want Bj=C3=B6rn Andersson's ACK before merging, Bj=C3=B6rn?
 
-144 GPIOs where in 16 GPIOs form a bank. So about 9 banks with one 
-interrupt each. So split it into gpiochips with 32 GPIOs each handling 2 
-Interrupts.
+FYI: I asked Stephen if he could find someone else with tech docs to do a
+data review.  This may or may not happen depending on the internal interest
+level and/or current work load.  It will probably take a week or so to get
+sorted out.
 
-Grygorii,
+Worst case is no extra set of eyes on the data, and as issues are found we
+can fix them in follow up patches.  The driver works for the current
+msm8994 patches submitted by Jeremy.
 
-Any strong reason that you recollect of so as to why this modeling was 
-chosen?
+Michael Scott
 
 >
-> cheers,
-> -roger
->
+> Yours,
+> Linus Walleij
+
+--001a11c16510e78fce0540036f3d
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr"></p>
+<p dir=3D"ltr">On Oct 29, 2016 1:27 AM, &quot;Linus Walleij&quot; &lt;<a hr=
+ef=3D"mailto:linus.walleij@linaro.org">linus.walleij@linaro.org</a>&gt; wro=
+te:<br>
+&gt;<br>
+&gt; On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott &lt;<a href=3D"mailto:m=
+ichael.scott@linaro.org">michael.scott@linaro.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; &gt; Initial pinctrl driver for QCOM msm8994 platforms.<br>
+&gt; &gt;<br>
+&gt; &gt; In order to continue the initial board support for QCOM msm8994/m=
+sm8992<br>
+&gt; &gt; presented in patches from Jeremy McNicoll &lt;<a href=3D"mailto:j=
+eremymc@redhat.com">jeremymc@redhat.com</a>&gt;, let&#39;s put<br>
+&gt; &gt; a proper pinctrl driver in place.<br>
+&gt; &gt;<br>
+&gt; &gt; Currently, the DT for these platforms uses the msm8x74 pinctrl dr=
+iver to enable<br>
+&gt; &gt; basic UART.=C2=A0 Beyond the first few pins the rest are differen=
+t enough to justify<br>
+&gt; &gt; it&#39;s own driver.<br>
+&gt; &gt;<br>
+&gt; &gt; Note: This driver is also be used by QCOM&#39;s msm8992 platform =
+as it&#39;s TLM block<br>
+&gt; &gt; is the same.<br>
+&gt; &gt;<br>
+&gt; &gt; - Initial formatting and style was taken from the msm8x74 pinctrl=
+ driver added<br>
+&gt; &gt;=C2=A0 =C2=A0by Bj=C3=B6rn Andersson &lt;<a href=3D"mailto:bjorn.a=
+ndersson@linaro.org">bjorn.andersson@linaro.org</a>&gt;<br>
+&gt; &gt; - Data was then adjusted per QCOM MSM8994 documentation for Top L=
+evel Multiplexing<br>
+&gt; &gt; - Bindings documentation was based on qcom,msm8996-pinctrl.txt by=
+<br>
+&gt; &gt;=C2=A0 =C2=A0Joonwoo Park &lt;<a href=3D"mailto:joonwoop@codeauror=
+a.org">joonwoop@codeaurora.org</a>&gt; and then modified for msm8994 conten=
+t<br>
+&gt; &gt;<br>
+&gt; &gt; Signed-off-by: Michael Scott &lt;<a href=3D"mailto:michael.scott@=
+linaro.org">michael.scott@linaro.org</a>&gt;<br>
+&gt; &gt; ---<br>
+&gt; &gt;<br>
+&gt; &gt; V1 -&gt; V2: fixed missing FUNCTION(nav_pps) and removed 3 odd ne=
+wlines between blsp_i2c4_groups and cci_timer0_groups<br>
+&gt;<br>
+&gt; Looks fine to me, just like the other Qcom drivers.<br>
+&gt;<br>
+&gt; I just want Bj=C3=B6rn Andersson&#39;s ACK before merging, Bj=C3=B6rn?=
+</p>
+<p dir=3D"ltr">FYI: I asked Stephen if he could find someone else with tech=
+ docs to do a data review.=C2=A0 This may or may not happen depending on th=
+e internal interest level and/or current work load.=C2=A0 It will probably =
+take a week or so to get sorted out.</p>
+<p dir=3D"ltr">Worst case is no extra set of eyes on the data, and as issue=
+s are found we can fix them in follow up patches.=C2=A0 The driver works fo=
+r the current msm8994 patches submitted by Jeremy.</p>
+<p dir=3D"ltr">Michael Scott</p>
+<p dir=3D"ltr">&gt;<br>
+&gt; Yours,<br>
+&gt; Linus Walleij<br></p>
+
+--001a11c16510e78fce0540036f3d--
