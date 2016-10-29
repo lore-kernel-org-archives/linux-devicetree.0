@@ -1,47 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/6] net: phy: broadcom: Add BCM54810 PHY entry
-Date: Sat, 29 Oct 2016 10:18:39 +0200
-Message-ID: <20161029081839.GA32579@lunn.ch>
-References: <1477688219-3871-1-git-send-email-jon.mason@broadcom.com>
- <1477688219-3871-3-git-send-email-jon.mason@broadcom.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
+Date: Sat, 29 Oct 2016 10:27:00 +0200
+Message-ID: <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
+References: <20161026233228.15219-1-michael.scott@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1477688219-3871-3-git-send-email-jon.mason@broadcom.com>
+In-Reply-To: <20161026233228.15219-1-michael.scott@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+To: Michael Scott <michael.scott@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 28, 2016 at 04:56:55PM -0400, Jon Mason wrote:
-> The BCM54810 PHY requires some semi-unique configuration, which results
-> in some additional configuration in addition to the standard config.
-> Also, some users of the BCM54810 require the PHY lanes to be swapped.
-> Since there is no way to detect this, add a device tree query to see if
-> it is applicable.
-> 
-> Inspired-by: Vikas Soni <vsoni@broadcom.com>
-> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott <michael.scott@linaro.org> w=
+rote:
+
+> Initial pinctrl driver for QCOM msm8994 platforms.
+>
+> In order to continue the initial board support for QCOM msm8994/msm8992
+> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's pu=
+t
+> a proper pinctrl driver in place.
+>
+> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to =
+enable
+> basic UART.  Beyond the first few pins the rest are different enough to j=
+ustify
+> it's own driver.
+>
+> Note: This driver is also be used by QCOM's msm8992 platform as it's TLM =
+block
+> is the same.
+>
+> - Initial formatting and style was taken from the msm8x74 pinctrl driver =
+added
+>   by Bj=C3=B6rn Andersson <bjorn.andersson@linaro.org>
+> - Data was then adjusted per QCOM MSM8994 documentation for Top Level Mul=
+tiplexing
+> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
+>   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 co=
+ntent
+>
+> Signed-off-by: Michael Scott <michael.scott@linaro.org>
 > ---
->  drivers/net/phy/Kconfig    |  2 +-
->  drivers/net/phy/broadcom.c | 58 +++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/brcmphy.h    | 10 ++++++++
+>
+> V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines betw=
+een blsp_i2c4_groups and cci_timer0_groups
 
-Hi Jon
+Looks fine to me, just like the other Qcom drivers.
 
-The binding documentation is missing.
+I just want Bj=C3=B6rn Andersson's ACK before merging, Bj=C3=B6rn?
 
-> +	if (of_property_read_bool(np, "brcm,enet-phy-lane-swap")) {
-> +		/* Lane Swap - Undocumented register...magic! */
-> +		ret = bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_SEL_ER + 0x9,
-> +					0x11B);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-
-I wounder if this property could be made generic? What exactly are you
-swapping? Rx and Tx lanes? Maybe we should add it to phy.txt?
-
-	  Andrew
+Yours,
+Linus Walleij
