@@ -1,56 +1,31 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Sat, 29 Oct 2016 10:27:00 +0200
-Message-ID: <CACRpkda9fcUjtEuezEa-DdU_Q_OcE-kArRpY7RGp+aTFWWf=rA@mail.gmail.com>
-References: <20161026233228.15219-1-michael.scott@linaro.org>
+Subject: Re: [PATCH v3 1/6] pinctrl: sunxi: Deal with configless pins
+Date: Sat, 29 Oct 2016 11:08:53 +0200
+Message-ID: <CACRpkdabSP47+OA5bVwYhqMBvqKGxxG8=Vk94KcdAmkqjsi2pA@mail.gmail.com>
+References: <cover.f893b02a9f816dad8fad3986672b05c4b211e2b1.1476971126.git-series.maxime.ripard@free-electrons.com>
+ <ae812275bfb0f0ded2a73b571bfcecffcd747126.1476971126.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161026233228.15219-1-michael.scott@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Scott <michael.scott@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <ae812275bfb0f0ded2a73b571bfcecffcd747126.1476971126.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 1:32 AM, Michael Scott <michael.scott@linaro.org> w=
-rote:
+On Thu, Oct 20, 2016 at 3:49 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
-> Initial pinctrl driver for QCOM msm8994 platforms.
+> Even though the our binding had the assumption that the allwinner,pull and
+> allwinner,drive properties were optional, the code never took that into
+> account.
 >
-> In order to continue the initial board support for QCOM msm8994/msm8992
-> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's pu=
-t
-> a proper pinctrl driver in place.
+> Fix that.
 >
-> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to =
-enable
-> basic UART.  Beyond the first few pins the rest are different enough to j=
-ustify
-> it's own driver.
->
-> Note: This driver is also be used by QCOM's msm8992 platform as it's TLM =
-block
-> is the same.
->
-> - Initial formatting and style was taken from the msm8x74 pinctrl driver =
-added
->   by Bj=C3=B6rn Andersson <bjorn.andersson@linaro.org>
-> - Data was then adjusted per QCOM MSM8994 documentation for Top Level Mul=
-tiplexing
-> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
->   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 co=
-ntent
->
-> Signed-off-by: Michael Scott <michael.scott@linaro.org>
-> ---
->
-> V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines betw=
-een blsp_i2c4_groups and cci_timer0_groups
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-Looks fine to me, just like the other Qcom drivers.
-
-I just want Bj=C3=B6rn Andersson's ACK before merging, Bj=C3=B6rn?
+Patch applied.
 
 Yours,
 Linus Walleij
