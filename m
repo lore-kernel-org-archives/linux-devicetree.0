@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 05/12] of: Remove prefix "__of_" from local function names
-Date: Fri, 28 Oct 2016 23:26:25 -0700
-Message-ID: <1477722392-32172-6-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 04/12] of: Rename functions to more accurately reflect what they do
+Date: Fri, 28 Oct 2016 23:26:24 -0700
+Message-ID: <1477722392-32172-5-git-send-email-frowand.list@gmail.com>
 References: <1477722392-32172-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1477722392-32172-1-git-send-email-frowand.list@gmail.com>
@@ -12,64 +12,102 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@am.sony.com>
 
-Remove "__of_" prefix from local function names.  The pattern of
-a leading "__" is used in drivers/of/ to signify a function that
-must be called with a lock held.  These functions do not fit
-that pattern.
+Some function names are misleading or do not provide a good
+sense of what they do.  Rename the functions to ne more
+informative.
 
 Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
 ---
- drivers/of/resolver.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/of/resolver.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 3d123b612789..0ce38aa0ed3c 100644
+index 31fd3800787a..3d123b612789 100644
 --- a/drivers/of/resolver.c
 +++ b/drivers/of/resolver.c
-@@ -28,7 +28,7 @@
-  * Find a node with the give full name by recursively following any of
-  * the child node links.
+@@ -53,7 +53,7 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
+ /*
+  * Find live tree's maximum phandle value.
   */
--static struct device_node *__of_find_node_by_full_name(struct device_node *node,
-+static struct device_node *find_node_by_full_name(struct device_node *node,
- 		const char *full_name)
+-static phandle of_get_tree_max_phandle(void)
++static phandle live_tree_max_phandle(void)
  {
- 	struct device_node *child, *found;
-@@ -40,7 +40,7 @@ static struct device_node *__of_find_node_by_full_name(struct device_node *node,
- 		return of_node_get(node);
+ 	struct device_node *node;
+ 	phandle phandle;
+@@ -74,7 +74,7 @@ static phandle of_get_tree_max_phandle(void)
+ /*
+  * Adjust a subtree's phandle values by a given delta.
+  */
+-static void __of_adjust_tree_phandles(struct device_node *node,
++static void adjust_overlay_phandles(struct device_node *node,
+ 		int phandle_delta)
+ {
+ 	struct device_node *child;
+@@ -101,10 +101,10 @@ static void __of_adjust_tree_phandles(struct device_node *node,
+ 	}
  
- 	for_each_child_of_node(node, child) {
--		found = __of_find_node_by_full_name(child, full_name);
-+		found = find_node_by_full_name(child, full_name);
- 		if (found != NULL) {
- 			of_node_put(child);
- 			return found;
-@@ -143,7 +143,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *node,
- 		if (err)
- 			goto err_fail;
- 
--		refnode = __of_find_node_by_full_name(node, nodestr);
-+		refnode = find_node_by_full_name(node, nodestr);
- 		if (!refnode)
- 			continue;
- 
-@@ -168,7 +168,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *node,
+ 	for_each_child_of_node(node, child)
+-		__of_adjust_tree_phandles(child, phandle_delta);
++		adjust_overlay_phandles(child, phandle_delta);
  }
  
- /* compare nodes taking into account that 'name' strips out the @ part */
--static int __of_node_name_cmp(const struct device_node *dn1,
-+static int node_name_cmp(const struct device_node *dn1,
- 		const struct device_node *dn2)
+-static int __of_adjust_phandle_ref(struct device_node *node,
++static int update_usages_of_a_phandle_reference(struct device_node *node,
+ 		struct property *rprop, int value)
  {
- 	const char *n1 = strrchr(dn1->full_name, '/') ? : "/";
-@@ -232,7 +232,7 @@ static int adjust_local_phandle_references(struct device_node *node,
- 	for_each_child_of_node(node, child) {
- 
- 		for_each_child_of_node(target, childtarget)
--			if (!__of_node_name_cmp(child, childtarget))
-+			if (!node_name_cmp(child, childtarget))
- 				break;
- 
+ 	phandle phandle;
+@@ -184,7 +184,7 @@ static int __of_node_name_cmp(const struct device_node *dn1,
+  * Does not take any devtree locks so make sure you call this on a tree
+  * which is at the detached state.
+  */
+-static int __of_adjust_tree_phandle_references(struct device_node *node,
++static int adjust_local_phandle_references(struct device_node *node,
+ 		struct device_node *target, int phandle_delta)
+ {
+ 	struct device_node *child, *childtarget;
+@@ -238,7 +238,7 @@ static int __of_adjust_tree_phandle_references(struct device_node *node,
  		if (!childtarget)
+ 			return -EINVAL;
+ 
+-		err = __of_adjust_tree_phandle_references(child, childtarget,
++		err = adjust_local_phandle_references(child, childtarget,
+ 				phandle_delta);
+ 		if (err)
+ 			return err;
+@@ -277,8 +277,8 @@ int of_resolve_phandles(struct device_node *resolve)
+ 	if (!resolve || !of_node_check_flag(resolve, OF_DETACHED))
+ 		return -EINVAL;
+ 
+-	phandle_delta = of_get_tree_max_phandle() + 1;
+-	__of_adjust_tree_phandles(resolve, phandle_delta);
++	phandle_delta = live_tree_max_phandle() + 1;
++	adjust_overlay_phandles(resolve, phandle_delta);
+ 
+ 	childroot = NULL;
+ 	for_each_child_of_node(resolve, childroot)
+@@ -286,12 +286,12 @@ int of_resolve_phandles(struct device_node *resolve)
+ 			break;
+ 
+ 	if (childroot != NULL) {
+-		err = __of_adjust_tree_phandle_references(childroot,
++		err = adjust_local_phandle_references(childroot,
+ 				resolve, 0);
+ 		if (err)
+ 			return err;
+ 
+-		BUG_ON(__of_adjust_tree_phandle_references(childroot,
++		BUG_ON(adjust_local_phandle_references(childroot,
+ 				resolve, phandle_delta));
+ 	}
+ 
+@@ -344,7 +344,7 @@ int of_resolve_phandles(struct device_node *resolve)
+ 		phandle = refnode->phandle;
+ 		of_node_put(refnode);
+ 
+-		err = __of_adjust_phandle_ref(resolve, rprop, phandle);
++		err = update_usages_of_a_phandle_reference(resolve, rprop, phandle);
+ 		if (err)
+ 			break;
+ 	}
 -- 
 1.9.1
