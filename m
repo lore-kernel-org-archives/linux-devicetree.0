@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 06/12] of: Rename variables to better reflect purpose or follow convention
-Date: Fri, 28 Oct 2016 23:26:26 -0700
-Message-ID: <1477722392-32172-7-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 09/12] of: Update comments to reflect changes and increase clarity
+Date: Fri, 28 Oct 2016 23:26:29 -0700
+Message-ID: <1477722392-32172-10-git-send-email-frowand.list@gmail.com>
 References: <1477722392-32172-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1477722392-32172-1-git-send-email-frowand.list@gmail.com>
@@ -12,346 +12,136 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@am.sony.com>
 
-Rename variables to better reflect what their purpose is.  As a side
-effect, this reduces the need for some of the comments previously
-removed in this series.
+Update comments to better explain what functions are doing.
 
 Signed-off-by: Frank Rowand <frank.rowand@am.sony.com>
 ---
- drivers/of/resolver.c | 172 +++++++++++++++++++++++++-------------------------
- 1 file changed, 85 insertions(+), 87 deletions(-)
+ drivers/of/resolver.c | 66 ++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 47 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 0ce38aa0ed3c..0778747cdd58 100644
+index 76c09cb57eae..f842dbd1585c 100644
 --- a/drivers/of/resolver.c
 +++ b/drivers/of/resolver.c
-@@ -74,17 +74,17 @@ static phandle live_tree_max_phandle(void)
- /*
-  * Adjust a subtree's phandle values by a given delta.
-  */
--static void adjust_overlay_phandles(struct device_node *node,
-+static void adjust_overlay_phandles(struct device_node *overlay,
+@@ -50,9 +50,6 @@ static struct device_node *find_node_by_full_name(struct device_node *node,
+ 	return NULL;
+ }
+ 
+-/*
+- * Find live tree's maximum phandle value.
+- */
+ static phandle live_tree_max_phandle(void)
+ {
+ 	struct device_node *node;
+@@ -71,9 +68,6 @@ static phandle live_tree_max_phandle(void)
+ 	return phandle;
+ }
+ 
+-/*
+- * Adjust a subtree's phandle values by a given delta.
+- */
+ static void adjust_overlay_phandles(struct device_node *overlay,
  		int phandle_delta)
  {
- 	struct device_node *child;
+@@ -81,9 +75,11 @@ static void adjust_overlay_phandles(struct device_node *overlay,
  	struct property *prop;
  	phandle phandle;
  
--	if (node->phandle != 0 && node->phandle != OF_PHANDLE_ILLEGAL)
--		node->phandle += phandle_delta;
-+	if (overlay->phandle != 0 && overlay->phandle != OF_PHANDLE_ILLEGAL)
-+		overlay->phandle += phandle_delta;
++	/* adjust node's phandle in node */
+ 	if (overlay->phandle != 0 && overlay->phandle != OF_PHANDLE_ILLEGAL)
+ 		overlay->phandle += phandle_delta;
  
--	for_each_property_of_node(node, prop) {
-+	for_each_property_of_node(overlay, prop) {
++	/* copy adjusted phandle into *phandle properties */
+ 	for_each_property_of_node(overlay, prop) {
  
  		if (of_prop_cmp(prop->name, "phandle") &&
- 		    of_prop_cmp(prop->name, "linux,phandle"))
-@@ -97,41 +97,40 @@ static void adjust_overlay_phandles(struct device_node *node,
- 		if (phandle == OF_PHANDLE_ILLEGAL)
- 			continue;
- 
--		*(uint32_t *)prop->value = cpu_to_be32(node->phandle);
-+		*(uint32_t *)prop->value = cpu_to_be32(overlay->phandle);
- 	}
- 
--	for_each_child_of_node(node, child)
-+	for_each_child_of_node(overlay, child)
- 		adjust_overlay_phandles(child, phandle_delta);
- }
- 
--static int update_usages_of_a_phandle_reference(struct device_node *node,
--		struct property *rprop, int value)
-+static int update_usages_of_a_phandle_reference(struct device_node *overlay,
-+		struct property *prop_fixup, phandle phandle)
- {
--	phandle phandle;
- 	struct device_node *refnode;
--	struct property *sprop;
--	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
--	int offset, propcurlen;
-+	struct property *prop;
-+	char *value, *cur, *end, *node_path, *prop_name, *s;
-+	int offset, len;
- 	int err = 0;
- 
--	propval = kmalloc(rprop->length, GFP_KERNEL);
--	if (!propval)
-+	value = kmalloc(prop_fixup->length, GFP_KERNEL);
-+	if (!value)
+@@ -118,6 +114,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
  		return -ENOMEM;
--	memcpy(propval, rprop->value, rprop->length);
-+	memcpy(value, prop_fixup->value, prop_fixup->length);
+ 	memcpy(value, prop_fixup->value, prop_fixup->length);
  
--	propend = propval + rprop->length;
--	for (propcur = propval; propcur < propend; propcur += propcurlen + 1) {
--		propcurlen = strlen(propcur);
-+	end = value + prop_fixup->length;
-+	for (cur = value; cur < end; cur += len + 1) {
-+		len = strlen(cur);
++	/* prop_fixup contains a list of tuples of path:property_name:offset */
+ 	end = value + prop_fixup->length;
+ 	for (cur = value; cur < end; cur += len + 1) {
+ 		len = strlen(cur);
+@@ -177,10 +174,14 @@ static int node_name_cmp(const struct device_node *dn1,
  
--		nodestr = propcur;
--		s = strchr(propcur, ':');
-+		node_path = cur;
-+		s = strchr(cur, ':');
- 		if (!s) {
- 			err = -EINVAL;
- 			goto err_fail;
+ /*
+  * Adjust the local phandle references by the given phandle delta.
+- * Assumes the existances of a __local_fixups__ node at the root.
+- * Assumes that __of_verify_tree_phandle_references has been called.
+- * Does not take any devtree locks so make sure you call this on a tree
+- * which is at the detached state.
++ *
++ * Subtree @local_fixups, which is overlay node __local_fixups__,
++ * mirrors the fragment node structure at the root of the overlay.
++ *
++ * For each property in the fragments that contains a phandle reference,
++ * @local_fixups has a property of the same name that contains a list
++ * of offsets of the phandle reference(s) within the respective property
++ * value(s).  The values at these offsets will be fixed up.
+  */
+ static int adjust_local_phandle_references(struct device_node *local_fixups,
+ 		struct device_node *overlay, int phandle_delta)
+@@ -225,6 +226,13 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
  		}
- 		*s++ = '\0';
- 
--		propstr = s;
-+		prop_name = s;
- 		s = strchr(s, ':');
- 		if (!s) {
- 			err = -EINVAL;
-@@ -143,27 +142,26 @@ static int update_usages_of_a_phandle_reference(struct device_node *node,
- 		if (err)
- 			goto err_fail;
- 
--		refnode = find_node_by_full_name(node, nodestr);
-+		refnode = find_node_by_full_name(overlay, node_path);
- 		if (!refnode)
- 			continue;
- 
--		for_each_property_of_node(refnode, sprop) {
--			if (!of_prop_cmp(sprop->name, propstr))
-+		for_each_property_of_node(refnode, prop) {
-+			if (!of_prop_cmp(prop->name, prop_name))
- 				break;
- 		}
- 		of_node_put(refnode);
- 
--		if (!sprop) {
-+		if (!prop) {
- 			err = -ENOENT;
- 			goto err_fail;
- 		}
- 
--		phandle = value;
--		*(__be32 *)(sprop->value + offset) = cpu_to_be32(phandle);
-+		*(__be32 *)(prop->value + offset) = cpu_to_be32(phandle);
  	}
  
- err_fail:
--	kfree(propval);
-+	kfree(value);
- 	return err;
++	/*
++	 * These nested loops recurse down two subtrees in parallel, where the
++	 * node names in the two subtrees match.
++	 *
++	 * The roots of the subtrees are the overlay's __local_fixups__ node
++	 * and the overlay's root node.
++	 */
+ 	for_each_child_of_node(local_fixups, child) {
+ 
+ 		for_each_child_of_node(overlay, overlay_child)
+@@ -244,17 +252,37 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
  }
  
-@@ -184,61 +182,61 @@ static int node_name_cmp(const struct device_node *dn1,
-  * Does not take any devtree locks so make sure you call this on a tree
-  * which is at the detached state.
+ /**
+- * of_resolve	- Resolve the given node against the live tree.
++ * of_resolve_phandles - Relocate and resolve overlay against live tree
++ *
++ * @overlay:	Pointer to devicetree overlay to relocate and resolve
++ *
++ * Modify (relocate) values of local phandles in @overlay to a range that
++ * does not conflict with the live expanded devicetree.  Update references
++ * to the local phandles in @overlay.  Update (resolve) phandle references
++ * in @overlay that refer to the live expanded devicetree.
++ *
++ * Phandle values in the live tree are in the range of
++ * 1 .. live_tree_max_phandle().  The range of phandle values in the overlay
++ * also begin with at 1.  Adjust the phandle values in the overlay to begin
++ * at live_tree_max_phandle() + 1.  Update references to the phandles to
++ * the adjusted phandle values.
++ *
++ * The name of each property in the "__fixups__" node in the overlay matches
++ * the name of a symbol (a label) in the live tree.  The values of each
++ * property in the "__fixups__" node is a list of the property values in the
++ * overlay that need to be updated to contain the phandle reference
++ * corresponding to that symbol in the live tree.  Update the references in
++ * the overlay with the phandle values in the live tree.
++ *
++ * @overlay must be detached.
+  *
+- * @resolve:	Node to resolve
++ * Resolving and applying @overlay to the live expanded devicetree must be
++ * protected by a mechanism to ensure that multiple overlays are processed
++ * in a single threaded manner so that multiple overlays will not relocate
++ * phandles to overlapping ranges.  The mechanism to enforce this is not
++ * yet implemented.
+  *
+- * Perform dynamic Device Tree resolution against the live tree
+- * to the given node to resolve. This depends on the live tree
+- * having a __symbols__ node, and the resolve node the __fixups__ &
+- * __local_fixups__ nodes (if needed).
+- * The result of the operation is a resolve node that it's contents
+- * are fit to be inserted or operate upon the live tree.
+- * Returns 0 on success or a negative error value on error.
++ * Return: %0 on success or a negative error value on error.
   */
--static int adjust_local_phandle_references(struct device_node *node,
--		struct device_node *target, int phandle_delta)
-+static int adjust_local_phandle_references(struct device_node *local_fixups,
-+		struct device_node *overlay, int phandle_delta)
+ int of_resolve_phandles(struct device_node *overlay)
  {
--	struct device_node *child, *childtarget;
--	struct property *rprop, *sprop;
-+	struct device_node *child, *overlay_child;
-+	struct property *prop_fix, *prop;
- 	int err, i, count;
- 	unsigned int off;
- 	phandle phandle;
- 
--	if (!node)
-+	if (!local_fixups)
- 		return 0;
- 
--	for_each_property_of_node(node, rprop) {
-+	for_each_property_of_node(local_fixups, prop_fix) {
- 
- 		/* skip properties added automatically */
--		if (!of_prop_cmp(rprop->name, "name") ||
--		    !of_prop_cmp(rprop->name, "phandle") ||
--		    !of_prop_cmp(rprop->name, "linux,phandle"))
-+		if (!of_prop_cmp(prop_fix->name, "name") ||
-+		    !of_prop_cmp(prop_fix->name, "phandle") ||
-+		    !of_prop_cmp(prop_fix->name, "linux,phandle"))
- 			continue;
- 
--		if ((rprop->length % 4) != 0 || rprop->length == 0)
-+		if ((prop_fix->length % 4) != 0 || prop_fix->length == 0)
- 			return -EINVAL;
--		count = rprop->length / sizeof(__be32);
-+		count = prop_fix->length / sizeof(__be32);
- 
--		for_each_property_of_node(target, sprop) {
--			if (!of_prop_cmp(sprop->name, rprop->name))
-+		for_each_property_of_node(overlay, prop) {
-+			if (!of_prop_cmp(prop->name, prop_fix->name))
- 				break;
- 		}
- 
--		if (!sprop)
-+		if (!prop)
- 			return -EINVAL;
- 
- 		for (i = 0; i < count; i++) {
--			off = be32_to_cpu(((__be32 *)rprop->value)[i]);
--			if (off >= sprop->length || (off + 4) > sprop->length)
-+			off = be32_to_cpu(((__be32 *)prop_fix->value)[i]);
-+			if (off >= prop->length || (off + 4) > prop->length)
- 				return -EINVAL;
- 
- 			if (phandle_delta) {
--				phandle = be32_to_cpu(*(__be32 *)(sprop->value + off));
-+				phandle = be32_to_cpu(*(__be32 *)(prop->value + off));
- 				phandle += phandle_delta;
--				*(__be32 *)(sprop->value + off) = cpu_to_be32(phandle);
-+				*(__be32 *)(prop->value + off) = cpu_to_be32(phandle);
- 			}
- 		}
- 	}
- 
--	for_each_child_of_node(node, child) {
-+	for_each_child_of_node(local_fixups, child) {
- 
--		for_each_child_of_node(target, childtarget)
--			if (!node_name_cmp(child, childtarget))
-+		for_each_child_of_node(overlay, overlay_child)
-+			if (!node_name_cmp(child, overlay_child))
- 				break;
- 
--		if (!childtarget)
-+		if (!overlay_child)
- 			return -EINVAL;
- 
--		err = adjust_local_phandle_references(child, childtarget,
-+		err = adjust_local_phandle_references(child, overlay_child,
- 				phandle_delta);
- 		if (err)
- 			return err;
-@@ -260,78 +258,78 @@ static int adjust_local_phandle_references(struct device_node *node,
-  * are fit to be inserted or operate upon the live tree.
-  * Returns 0 on success or a negative error value on error.
-  */
--int of_resolve_phandles(struct device_node *resolve)
-+int of_resolve_phandles(struct device_node *overlay)
- {
--	struct device_node *child, *childroot, *refnode;
--	struct device_node *root_sym, *resolve_sym, *resolve_fix;
--	struct property *rprop;
-+	struct device_node *child, *local_fixups, *refnode;
-+	struct device_node *tree_symbols, *overlay_symbols, *overlay_fixups;
-+	struct property *prop;
- 	const char *refpath;
- 	phandle phandle, phandle_delta;
- 	int err;
- 
--	if (!resolve)
--		pr_err("%s: null node\n", __func__);
--	if (resolve && !of_node_check_flag(resolve, OF_DETACHED))
-+	if (!overlay)
-+		pr_err("%s: null overlay\n", __func__);
-+	if (overlay && !of_node_check_flag(overlay, OF_DETACHED))
- 		pr_err("%s: node %s not detached\n", __func__,
--			 resolve->full_name);
--	if (!resolve || !of_node_check_flag(resolve, OF_DETACHED))
-+			 overlay->full_name);
-+	if (!overlay || !of_node_check_flag(overlay, OF_DETACHED))
- 		return -EINVAL;
- 
- 	phandle_delta = live_tree_max_phandle() + 1;
--	adjust_overlay_phandles(resolve, phandle_delta);
-+	adjust_overlay_phandles(overlay, phandle_delta);
- 
--	childroot = NULL;
--	for_each_child_of_node(resolve, childroot)
--		if (!of_node_cmp(childroot->name, "__local_fixups__"))
-+	local_fixups = NULL;
-+	for_each_child_of_node(overlay, local_fixups)
-+		if (!of_node_cmp(local_fixups->name, "__local_fixups__"))
- 			break;
- 
--	if (childroot != NULL) {
--		err = adjust_local_phandle_references(childroot,
--				resolve, 0);
-+	if (local_fixups != NULL) {
-+		err = adjust_local_phandle_references(local_fixups,
-+				overlay, 0);
- 		if (err)
- 			return err;
- 
--		BUG_ON(adjust_local_phandle_references(childroot,
--				resolve, phandle_delta));
-+		BUG_ON(adjust_local_phandle_references(local_fixups,
-+				overlay, phandle_delta));
- 	}
- 
--	root_sym = NULL;
--	resolve_sym = NULL;
--	resolve_fix = NULL;
-+	tree_symbols = NULL;
-+	overlay_symbols = NULL;
-+	overlay_fixups = NULL;
- 
--	root_sym = of_find_node_by_path("/__symbols__");
-+	tree_symbols = of_find_node_by_path("/__symbols__");
- 
--	for_each_child_of_node(resolve, child) {
-+	for_each_child_of_node(overlay, child) {
- 
--		if (!resolve_sym && !of_node_cmp(child->name, "__symbols__"))
--			resolve_sym = child;
-+		if (!overlay_symbols && !of_node_cmp(child->name, "__symbols__"))
-+			overlay_symbols = child;
- 
--		if (!resolve_fix && !of_node_cmp(child->name, "__fixups__"))
--			resolve_fix = child;
-+		if (!overlay_fixups && !of_node_cmp(child->name, "__fixups__"))
-+			overlay_fixups = child;
- 
--		if (resolve_sym && resolve_fix)
-+		if (overlay_symbols && overlay_fixups)
- 			break;
- 	}
- 
--	if (!resolve_fix) {
-+	if (!overlay_fixups) {
- 		err = 0;
- 		goto out;
- 	}
- 
--	if (!root_sym) {
-+	if (!tree_symbols) {
- 		pr_err("%s: no symbols in root of device tree.\n", __func__);
- 		err = -EINVAL;
- 		goto out;
- 	}
- 
--	for_each_property_of_node(resolve_fix, rprop) {
-+	for_each_property_of_node(overlay_fixups, prop) {
- 
- 		/* skip properties added automatically */
--		if (!of_prop_cmp(rprop->name, "name"))
-+		if (!of_prop_cmp(prop->name, "name"))
- 			continue;
- 
--		err = of_property_read_string(root_sym,
--				rprop->name, &refpath);
-+		err = of_property_read_string(tree_symbols,
-+				prop->name, &refpath);
- 		if (err)
- 			goto out;
- 
-@@ -344,13 +342,13 @@ int of_resolve_phandles(struct device_node *resolve)
- 		phandle = refnode->phandle;
- 		of_node_put(refnode);
- 
--		err = update_usages_of_a_phandle_reference(resolve, rprop, phandle);
-+		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
- 		if (err)
- 			break;
- 	}
- 
- out:
--	of_node_put(root_sym);
-+	of_node_put(tree_symbols);
- 
- 	return err;
- }
 -- 
 1.9.1
