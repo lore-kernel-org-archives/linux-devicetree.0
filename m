@@ -1,326 +1,168 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] clk: cdce925: add support for CDCE913, CDCE937, and CDCE949
-Date: Mon, 31 Oct 2016 02:30:37 +0900
-Message-ID: <1477848637-5151-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V3 1/2] iio: adc: spmi-vadc: Update changes to support
+ reporting of Raw adc code.
+Date: Sun, 30 Oct 2016 17:35:53 +0000
+Message-ID: <ee44e76a-b7e1-63b2-2251-6247d9e6bb9d@kernel.org>
+References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
+ <1477492887-1663-2-git-send-email-rphani@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1477492887-1663-2-git-send-email-rphani@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rama Krishna Phani A <rphani@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, smohanad@codeaurora.org, mgautam@codeaurora.org, sivaa@codeaurora.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Julia.Lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-The CDCE925 is a member of the CDCE(L)9xx programmable clock generator
-family.  There are also CDCE913, CDCE937, CDCE949 which have different
-number of PLLs and outputs.
+On 26/10/16 15:41, Rama Krishna Phani A wrote:
+> Logic to convert adc code to voltage is generic across all channels.
+> Different scaling can be done on the obtained voltage to report in physical
+> units. Implement separate function for generic conversion logic.
+> Scaling functionality can be changed per channel. Update changes to support
+> reporting of Raw adc code.
+Pleas rewrite this description.  Perhaps give examples of the changes
+it makes to what is read from the various attributes? 
 
-The clk-cdce925 driver supports only CDCE925 in the family.  This adds
-support for the CDCE913, CDCE937, CDCE949, too.
+I haven't immediately followed what this change is actually doing.
 
-Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-Cc: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../devicetree/bindings/clock/ti,cdce925.txt       |  15 ++-
- drivers/clk/Kconfig                                |  11 ++-
- drivers/clk/clk-cdce925.c                          | 106 ++++++++++++++++-----
- 3 files changed, 99 insertions(+), 33 deletions(-)
+I 'think' the point here is to not apply the calibration to
+the raw adc counts when a true raw read is requested?
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,cdce925.txt b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-index 4c7669a..0d01f2d 100644
---- a/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-+++ b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-@@ -1,15 +1,22 @@
--Binding for TO CDCE925 programmable I2C clock synthesizers.
-+Binding for TI CDCE913/925/937/949 programmable I2C clock synthesizers.
- 
- Reference
- This binding uses the common clock binding[1].
- 
- [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--[2] http://www.ti.com/product/cdce925
-+[2] http://www.ti.com/product/cdce913
-+[3] http://www.ti.com/product/cdce925
-+[4] http://www.ti.com/product/cdce937
-+[5] http://www.ti.com/product/cdce949
- 
- The driver provides clock sources for each output Y1 through Y5.
- 
- Required properties:
-- - compatible: Shall be "ti,cdce925"
-+ - compatible: Shall be one of the following:
-+	- "ti,cdce913": 1-PLL, 3 Outputs
-+	- "ti,cdce925": 2-PLL, 5 Outputs
-+	- "ti,cdce937": 3-PLL, 7 Outputs
-+	- "ti,cdce949": 4-PLL, 9 Outputs
-  - reg: I2C device address.
-  - clocks: Points to a fixed parent clock that provides the input frequency.
-  - #clock-cells: From common clock bindings: Shall be 1.
-@@ -18,7 +25,7 @@ Optional properties:
-  - xtal-load-pf: Crystal load-capacitor value to fine-tune performance on a
-                  board, or to compensate for external influences.
- 
--For both PLL1 and PLL2 an optional child node can be used to specify spread
-+For all PLL1, PLL2, ... an optional child node can be used to specify spread
- spectrum clocking parameters for a board.
-   - spread-spectrum: SSC mode as defined in the data sheet.
-   - spread-spectrum-center: Use "centered" mode instead of "max" mode. When
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index e99a42f..bc0a6e6 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -104,16 +104,17 @@ config COMMON_CLK_CDCE706
- 	  This driver supports TI CDCE706 programmable 3-PLL clock synthesizer.
- 
- config COMMON_CLK_CDCE925
--	tristate "Clock driver for TI CDCE925 devices"
-+	tristate "Clock driver for TI CDCE913/925/937/949 devices"
- 	depends on I2C
- 	depends on OF
- 	select REGMAP_I2C
- 	help
- 	---help---
--	  This driver supports the TI CDCE925 programmable clock synthesizer.
--	  The chip contains two PLLs with spread-spectrum clocking support and
--	  five output dividers. The driver only supports the following setup,
--	  and uses a fixed setting for the output muxes.
-+	  This driver supports the TI CDCE913/925/937/949 programmable clock
-+	  synthesizer. Each chip has different number of PLLs and outputs.
-+	  For example, the CDCE925 contains two PLLs with spread-spectrum
-+	  clocking support and five output dividers. The driver only supports
-+	  the following setup, and uses a fixed setting for the output muxes.
- 	  Y1 is derived from the input clock
- 	  Y2 and Y3 derive from PLL1
- 	  Y4 and Y5 derive from PLL2
-diff --git a/drivers/clk/clk-cdce925.c b/drivers/clk/clk-cdce925.c
-index b8459c1..fbac08d 100644
---- a/drivers/clk/clk-cdce925.c
-+++ b/drivers/clk/clk-cdce925.c
-@@ -1,8 +1,8 @@
- /*
-- * Driver for TI Dual PLL CDCE925 clock synthesizer
-+ * Driver for TI Multi PLL CDCE913/925/937/949 clock synthesizer
-  *
-- * This driver always connects the Y1 to the input clock, Y2/Y3 to PLL1
-- * and Y4/Y5 to PLL2. PLL frequency is set on a first-come-first-serve
-+ * This driver always connects the Y1 to the input clock, Y2/Y3 to PLL1,
-+ * Y4/Y5 to PLL2, and so on. PLL frequency is set on a first-come-first-serve
-  * basis. Clients can directly request any frequency that the chip can
-  * deliver using the standard clk framework. In addition, the device can
-  * be configured and activated via the devicetree.
-@@ -19,11 +19,32 @@
- #include <linux/slab.h>
- #include <linux/gcd.h>
- 
--/* The chip has 2 PLLs which can be routed through dividers to 5 outputs.
-+/* Each chip has different number of PLLs and outputs, for example:
-+ * The CECE925 has 2 PLLs which can be routed through dividers to 5 outputs.
-  * Model this as 2 PLL clocks which are parents to the outputs.
-  */
--#define NUMBER_OF_PLLS	2
--#define NUMBER_OF_OUTPUTS	5
-+
-+enum {
-+	CDCE913,
-+	CDCE925,
-+	CDCE937,
-+	CDCE949,
-+};
-+
-+struct clk_cdce925_chip_info {
-+	int num_plls;
-+	int num_outputs;
-+};
-+
-+static const struct clk_cdce925_chip_info clk_cdce925_chip_info_tbl[] = {
-+	[CDCE913] = { .num_plls = 1, .num_outputs = 3 },
-+	[CDCE925] = { .num_plls = 2, .num_outputs = 5 },
-+	[CDCE937] = { .num_plls = 3, .num_outputs = 7 },
-+	[CDCE949] = { .num_plls = 4, .num_outputs = 9 },
-+};
-+
-+#define MAX_NUMBER_OF_PLLS	4
-+#define MAX_NUMBER_OF_OUTPUTS	9
- 
- #define CDCE925_REG_GLOBAL1	0x01
- #define CDCE925_REG_Y1SPIPDIVH	0x02
-@@ -43,7 +64,7 @@ struct clk_cdce925_output {
- 	struct clk_hw hw;
- 	struct clk_cdce925_chip *chip;
- 	u8 index;
--	u16 pdiv; /* 1..127 for Y2-Y5; 1..1023 for Y1 */
-+	u16 pdiv; /* 1..127 for Y2-Y9; 1..1023 for Y1 */
- };
- #define to_clk_cdce925_output(_hw) \
- 	container_of(_hw, struct clk_cdce925_output, hw)
-@@ -60,8 +81,9 @@ struct clk_cdce925_pll {
- struct clk_cdce925_chip {
- 	struct regmap *regmap;
- 	struct i2c_client *i2c_client;
--	struct clk_cdce925_pll pll[NUMBER_OF_PLLS];
--	struct clk_cdce925_output clk[NUMBER_OF_OUTPUTS];
-+	const struct clk_cdce925_chip_info *chip_info;
-+	struct clk_cdce925_pll pll[MAX_NUMBER_OF_PLLS];
-+	struct clk_cdce925_output clk[MAX_NUMBER_OF_OUTPUTS];
- };
- 
- /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** */
-@@ -284,6 +306,18 @@ static void cdce925_clk_set_pdiv(struct clk_cdce925_output *data, u16 pdiv)
- 	case 4:
- 		regmap_update_bits(data->chip->regmap, 0x27, 0x7F, pdiv);
- 		break;
-+	case 5:
-+		regmap_update_bits(data->chip->regmap, 0x36, 0x7F, pdiv);
-+		break;
-+	case 6:
-+		regmap_update_bits(data->chip->regmap, 0x37, 0x7F, pdiv);
-+		break;
-+	case 7:
-+		regmap_update_bits(data->chip->regmap, 0x46, 0x7F, pdiv);
-+		break;
-+	case 8:
-+		regmap_update_bits(data->chip->regmap, 0x47, 0x7F, pdiv);
-+		break;
- 	}
- }
- 
-@@ -302,6 +336,14 @@ static void cdce925_clk_activate(struct clk_cdce925_output *data)
- 	case 4:
- 		regmap_update_bits(data->chip->regmap, 0x24, 0x03, 0x03);
- 		break;
-+	case 5:
-+	case 6:
-+		regmap_update_bits(data->chip->regmap, 0x34, 0x03, 0x03);
-+		break;
-+	case 7:
-+	case 8:
-+		regmap_update_bits(data->chip->regmap, 0x44, 0x03, 0x03);
-+		break;
- 	}
- }
- 
-@@ -474,15 +516,6 @@ static const struct clk_ops cdce925_clk_y1_ops = {
- 	.set_rate = cdce925_clk_y1_set_rate,
- };
- 
--
--static struct regmap_config cdce925_regmap_config = {
--	.name = "configuration0",
--	.reg_bits = 8,
--	.val_bits = 8,
--	.cache_type = REGCACHE_RBTREE,
--	.max_register = 0x2F,
--};
--
- #define CDCE925_I2C_COMMAND_BLOCK_TRANSFER	0x00
- #define CDCE925_I2C_COMMAND_BYTE_TRANSFER	0x80
- 
-@@ -582,13 +615,19 @@ static int cdce925_probe(struct i2c_client *client,
- 	struct clk_cdce925_chip *data;
- 	struct device_node *node = client->dev.of_node;
- 	const char *parent_name;
--	const char *pll_clk_name[NUMBER_OF_PLLS] = {NULL,};
-+	const char *pll_clk_name[MAX_NUMBER_OF_PLLS] = {NULL,};
- 	struct clk_init_data init;
- 	u32 value;
- 	int i;
- 	int err;
- 	struct device_node *np_output;
- 	char child_name[6];
-+	struct regmap_config cdce925_regmap_config = {
-+		.name = "configuration0",
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.cache_type = REGCACHE_RBTREE,
-+	};
- 
- 	dev_dbg(&client->dev, "%s\n", __func__);
- 	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-@@ -596,6 +635,9 @@ static int cdce925_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 
- 	data->i2c_client = client;
-+	data->chip_info = &clk_cdce925_chip_info_tbl[id->driver_data];
-+	cdce925_regmap_config.max_register = CDCE925_OFFSET_PLL	+
-+		data->chip_info->num_plls * 0x10 - 1;
- 	data->regmap = devm_regmap_init(&client->dev, &regmap_cdce925_bus,
- 			&client->dev, &cdce925_regmap_config);
- 	if (IS_ERR(data->regmap)) {
-@@ -626,7 +668,7 @@ static int cdce925_probe(struct i2c_client *client,
- 	init.num_parents = parent_name ? 1 : 0;
- 
- 	/* Register PLL clocks */
--	for (i = 0; i < NUMBER_OF_PLLS; ++i) {
-+	for (i = 0; i < data->chip_info->num_plls; ++i) {
- 		pll_clk_name[i] = kasprintf(GFP_KERNEL, "%s.pll%d",
- 			client->dev.of_node->name, i);
- 		init.name = pll_clk_name[i];
-@@ -684,7 +726,7 @@ static int cdce925_probe(struct i2c_client *client,
- 	init.ops = &cdce925_clk_ops;
- 	init.flags = CLK_SET_RATE_PARENT;
- 	init.num_parents = 1;
--	for (i = 1; i < NUMBER_OF_OUTPUTS; ++i) {
-+	for (i = 1; i < data->chip_info->num_outputs; ++i) {
- 		init.name = kasprintf(GFP_KERNEL, "%s.Y%d",
- 			client->dev.of_node->name, i+1);
- 		data->clk[i].chip = data;
-@@ -702,6 +744,16 @@ static int cdce925_probe(struct i2c_client *client,
- 			/* Mux Y4/5 to PLL2 */
- 			init.parent_names = &pll_clk_name[1];
- 			break;
-+		case 5:
-+		case 6:
-+			/* Mux Y6/7 to PLL3 */
-+			init.parent_names = &pll_clk_name[2];
-+			break;
-+		case 7:
-+		case 8:
-+			/* Mux Y8/9 to PLL4 */
-+			init.parent_names = &pll_clk_name[3];
-+			break;
- 		}
- 		err = devm_clk_hw_register(&client->dev, &data->clk[i].hw);
- 		kfree(init.name); /* clock framework made a copy of the name */
-@@ -720,7 +772,7 @@ static int cdce925_probe(struct i2c_client *client,
- 	err = 0;
- 
- error:
--	for (i = 0; i < NUMBER_OF_PLLS; ++i)
-+	for (i = 0; i < data->chip_info->num_plls; ++i)
- 		/* clock framework made a copy of the name */
- 		kfree(pll_clk_name[i]);
- 
-@@ -728,13 +780,19 @@ static int cdce925_probe(struct i2c_client *client,
- }
- 
- static const struct i2c_device_id cdce925_id[] = {
--	{ "cdce925", 0 },
-+	{ "cdce913", CDCE913 },
-+	{ "cdce925", CDCE925 },
-+	{ "cdce937", CDCE937 },
-+	{ "cdce949", CDCE949 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, cdce925_id);
- 
- static const struct of_device_id clk_cdce925_of_match[] = {
-+	{ .compatible = "ti,cdce913" },
- 	{ .compatible = "ti,cdce925" },
-+	{ .compatible = "ti,cdce937" },
-+	{ .compatible = "ti,cdce949" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, clk_cdce925_of_match);
-@@ -750,5 +808,5 @@ static struct i2c_driver cdce925_driver = {
- module_i2c_driver(cdce925_driver);
- 
- MODULE_AUTHOR("Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>");
--MODULE_DESCRIPTION("cdce925 driver");
-+MODULE_DESCRIPTION("TI CDCE913/925/937/949 driver");
- MODULE_LICENSE("GPL");
--- 
-2.7.4
+There are several unconnected looking changes in here...
+> 
+> Signed-off-by: Rama Krishna Phani A <rphani@codeaurora.org>
+> ---
+>  drivers/iio/adc/qcom-spmi-vadc.c | 54 +++++++++++++++++++++-------------------
+>  1 file changed, 28 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/qcom-spmi-vadc.c b/drivers/iio/adc/qcom-spmi-vadc.c
+> index c2babe5..ff4d549 100644
+> --- a/drivers/iio/adc/qcom-spmi-vadc.c
+> +++ b/drivers/iio/adc/qcom-spmi-vadc.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 and
+> @@ -84,7 +84,7 @@
+>  #define VADC_MAX_ADC_CODE			0xa800
+>  
+>  #define VADC_ABSOLUTE_RANGE_UV			625000
+> -#define VADC_RATIOMETRIC_RANGE_UV		1800000
+> +#define VADC_RATIOMETRIC_RANGE			1800
+>  
+>  #define VADC_DEF_PRESCALING			0 /* 1:1 */
+>  #define VADC_DEF_DECIMATION			0 /* 512 */
+> @@ -418,7 +418,7 @@ static int vadc_measure_ref_points(struct vadc_priv *vadc)
+>  	u16 read_1, read_2;
+>  	int ret;
+>  
+> -	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE_UV;
+> +	vadc->graph[VADC_CALIB_RATIOMETRIC].dx = VADC_RATIOMETRIC_RANGE;
+>  	vadc->graph[VADC_CALIB_ABSOLUTE].dx = VADC_ABSOLUTE_RANGE_UV;
+>  
+>  	prop = vadc_get_channel(vadc, VADC_REF_1250MV);
+> @@ -468,21 +468,30 @@ static int vadc_measure_ref_points(struct vadc_priv *vadc)
+>  	return ret;
+>  }
+>  
+> -static s32 vadc_calibrate(struct vadc_priv *vadc,
+> -			  const struct vadc_channel_prop *prop, u16 adc_code)
+> +static void vadc_scale_calib(struct vadc_priv *vadc, u16 adc_code,
+> +			     const struct vadc_channel_prop *prop,
+> +			     s64 *scale_voltage)
+>  {
+> -	const struct vadc_prescale_ratio *prescale;
+> -	s64 voltage;
+> +	*scale_voltage = (adc_code -
+> +		vadc->graph[prop->calibration].gnd);
+> +	*scale_voltage *= vadc->graph[prop->calibration].dx;
+> +	*scale_voltage = div64_s64(*scale_voltage,
+> +		vadc->graph[prop->calibration].dy);
+> +	if (prop->calibration == VADC_CALIB_ABSOLUTE)
+> +		*scale_voltage +=
+> +		vadc->graph[prop->calibration].dx;
+>  
+> -	voltage = adc_code - vadc->graph[prop->calibration].gnd;
+> -	voltage *= vadc->graph[prop->calibration].dx;
+> -	voltage = div64_s64(voltage, vadc->graph[prop->calibration].dy);
+> +	if (*scale_voltage < 0)
+> +		*scale_voltage = 0;
+> +}
+>  
+> -	if (prop->calibration == VADC_CALIB_ABSOLUTE)
+> -		voltage += vadc->graph[prop->calibration].dx;
+> +static s64 vadc_scale_fn(struct vadc_priv *vadc,
+> +			 const struct vadc_channel_prop *prop, u16 adc_code)
+> +{
+> +	const struct vadc_prescale_ratio *prescale;
+> +	s64 voltage = 0;
+>  
+> -	if (voltage < 0)
+> -		voltage = 0;
+> +	vadc_scale_calib(vadc, adc_code, prop, &voltage);
+>  
+>  	prescale = &vadc_prescale_ratios[prop->prescale];
+>  
+> @@ -552,11 +561,8 @@ static int vadc_read_raw(struct iio_dev *indio_dev,
+>  		if (ret)
+>  			break;
+>  
+> -		*val = vadc_calibrate(vadc, prop, adc_code);
+> +		*val = vadc_scale_fn(vadc, prop, adc_code);
+>  
+> -		/* 2mV/K, return milli Celsius */
+> -		*val /= 2;
+> -		*val -= KELVINMIL_CELSIUSMIL;
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_RAW:
+>  		prop = &vadc->chan_props[chan->address];
+> @@ -564,12 +570,8 @@ static int vadc_read_raw(struct iio_dev *indio_dev,
+>  		if (ret)
+>  			break;
+>  
+> -		*val = vadc_calibrate(vadc, prop, adc_code);
+> +		*val = (int)adc_code;
+>  		return IIO_VAL_INT;
+So this is 'more raw'.
+> -	case IIO_CHAN_INFO_SCALE:
+> -		*val = 0;
+> -		*val2 = 1000;
+> -		return IIO_VAL_INT_PLUS_MICRO;
+>  	default:
+>  		ret = -EINVAL;
+>  		break;
+> @@ -616,8 +618,8 @@ struct vadc_channels {
+>  	VADC_CHAN(_dname, IIO_TEMP, BIT(IIO_CHAN_INFO_PROCESSED), _pre)	\
+>  
+>  #define VADC_CHAN_VOLT(_dname, _pre)					\
+> -	VADC_CHAN(_dname, IIO_VOLTAGE,					\
+> -		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),	\
+> +	VADC_CHAN(_dname, IIO_VOLTAGE,				\
+> +		  BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_PROCESSED),\
+>  		  _pre)							\
+It very unusual to report both raw and processed values.  Please explain
+why that is needed here?  It may be valid to maintain backwards compatibility
+of ABI. Which would be fine. However if I read the above correctly you are
+changing what comes out of reading the raw value so the ABI just changed...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  
+>  /*
+> @@ -850,9 +852,9 @@ static int vadc_get_dt_data(struct vadc_priv *vadc, struct device_node *node)
+>  
+>  		iio_chan->channel = prop.channel;
+>  		iio_chan->datasheet_name = vadc_chan->datasheet_name;
+> +		iio_chan->extend_name = child->name;
+What's this change?
+>  		iio_chan->info_mask_separate = vadc_chan->info_mask;
+>  		iio_chan->type = vadc_chan->type;
+> -		iio_chan->indexed = 1;
+Or for that matter this one...
+>  		iio_chan->address = index++;
+>  
+>  		iio_chan++;
+> 
