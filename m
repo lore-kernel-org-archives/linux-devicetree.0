@@ -1,130 +1,238 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 04/10] iio: adc: stm32: add optional support for exti
- gpios
-Date: Sun, 30 Oct 2016 14:35:04 +0000
-Message-ID: <e7aac741-e7c4-5680-5ef2-99b57ebba522@kernel.org>
-References: <1477412722-24061-1-git-send-email-fabrice.gasnier@st.com>
- <1477412722-24061-5-git-send-email-fabrice.gasnier@st.com>
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v3 2/8] iio: inkern: add helpers to query available values
+ from channels
+Date: Sun, 30 Oct 2016 16:23:00 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1610301611070.32031@pmeerw.net>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se> <1477262381-7800-3-git-send-email-peda@axentia.se> <c7848c84-960b-506f-f2e2-4aadfc5246f9@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477412722-24061-5-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <c7848c84-960b-506f-f2e2-4aadfc5246f9@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
+To: Jonathan Cameron <jic23@kernel.org>, Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/10/16 17:25, Fabrice Gasnier wrote:
-> STM32 ADC may use EXTi signals routed internally as trigger source
-> for conversions. Configure them as interrupt to configure this path
-> in HW to adc.
-> Note: interrupt handler isn't required here, and corresponding interrupt
-> can be kept masked at exti controller level.
+
+> On 23/10/16 23:39, Peter Rosin wrote:
+> > Specifically a helper for reading the available maximum raw value of a
+> > channel and a helper for forwarding read_avail requests for raw values
+> > from one iio driver to an iio channel that is consumed.
+> > 
+> > These rather specific helpers are in turn built with generic helpers
+> > making it easy to build more helpers for available values as needed.
+> > 
+> > Signed-off-by: Peter Rosin <peda@axentia.se>
+> Looks good to me.  Just what I was after.
+
+some comments below
+ 
+> Jonathan
+> > ---
+> >  drivers/iio/inkern.c         | 97 ++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/iio/consumer.h | 29 +++++++++++++
+> >  include/linux/iio/iio.h      | 17 ++++++++
+> >  3 files changed, 143 insertions(+)
+> > 
+> > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> > index c4757e6367e7..74808f8a187a 100644
+> > --- a/drivers/iio/inkern.c
+> > +++ b/drivers/iio/inkern.c
+> > @@ -703,6 +703,103 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val, int *val2)
+> >  }
+> >  EXPORT_SYMBOL_GPL(iio_read_channel_scale);
+> >  
+> > +static int iio_channel_read_avail(struct iio_channel *chan,
+> > +				  const int **vals, int *type, int *length,
+> > +				  enum iio_chan_info_enum info)
+> > +{
+> > +	if (!iio_channel_has_available(chan->channel, info))
+> > +		return -EINVAL;
+> > +
+> > +	return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
+> > +						 vals, type, length, info);
+> > +}
+> > +
+> > +int iio_read_avail_channel_raw(struct iio_channel *chan,
+> > +			       const int **vals, int *type, int *length)
+> > +{
+> > +	int ret;
+> > +
+> > +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> > +	if (!chan->indio_dev->info) {
+> > +		ret = -ENODEV;
+> > +		goto err_unlock;
+> > +	}
+> > +
+> > +	ret = iio_channel_read_avail(chan,
+> > +				     vals, type, length, IIO_CHAN_INFO_RAW);
+> > +err_unlock:
+> > +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(iio_read_avail_channel_raw);
+> > +
+> > +static int iio_channel_read_max(struct iio_channel *chan,
+> > +				int *val, int *val2, int *type,
+> > +				enum iio_chan_info_enum info)
+> > +{
+> > +	int unused;
+> > +	const int *vals;
+> > +	int length;
+> > +	int ret;
+> > +
+> > +	if (!val2)
+> > +		val2 = &unused;
+> > +
+> > +	ret = iio_channel_read_avail(chan, &vals, type, &length, info);
+> > +	switch (ret) {
+> > +	case IIO_AVAIL_RANGE:
+> > +		switch (*type) {
+> > +		case IIO_VAL_INT:
+> > +			*val = vals[2];
+> > +			break;
+> > +		default:
+> > +			*val = vals[4];
+> > +			*val2 = vals[5];
+> > +		}
+> > +		return 0;
+> > +
+> > +	case IIO_AVAIL_LIST:
+> > +		if (length <= 0)
+> > +			return -EINVAL;
+> > +		switch (*type) {
+> > +		case IIO_VAL_INT:
+> > +			*val = vals[--length];
+> > +			while (length) {
+> > +				if (vals[--length] > *val)
+> > +					*val = vals[length];
+> > +			}
+> > +			break;
+> > +		default:
+> > +			/* FIXME: learn about max for other iio values */
+> > +			return -EINVAL;
+> > +		}
+> > +		return 0;
+> > +
+> > +	default:
+> > +		return ret;
+> > +	}
+> > +}
+> > +
+> > +int iio_read_max_channel_raw(struct iio_channel *chan, int *val)
+> > +{
+> > +	int ret;
+> > +	int type;
+> > +
+> > +	mutex_lock(&chan->indio_dev->info_exist_lock);
+> > +	if (!chan->indio_dev->info) {
+> > +		ret = -ENODEV;
+> > +		goto err_unlock;
+> > +	}
+> > +
+> > +	ret = iio_channel_read_max(chan, val, NULL, &type, IIO_CHAN_INFO_RAW);
+> > +err_unlock:
+> > +	mutex_unlock(&chan->indio_dev->info_exist_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(iio_read_max_channel_raw);
+> > +
+> >  int iio_get_channel_type(struct iio_channel *chan, enum iio_chan_type *type)
+> >  {
+> >  	int ret = 0;
+> > diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> > index 9edccfba1ffb..baab5e45734f 100644
+> > --- a/include/linux/iio/consumer.h
+> > +++ b/include/linux/iio/consumer.h
+> > @@ -226,6 +226,35 @@ int iio_read_channel_processed(struct iio_channel *chan, int *val);
+> >  int iio_write_channel_raw(struct iio_channel *chan, int val);
+> >  
+> >  /**
+> > + * iio_read_max_channel_raw() - read maximum available raw value from a given
+> > + *				channel
+> > + * @chan:		The channel being queried.
+> > + * @val:		Value read back.
+> > + *
+> > + * Note raw reads from iio channels are in adc counts and hence
+
+"Note: raw reads..." would be easier...
+here and below
+
+why is there no val2 here?
+
+just reading the documentation ("maximum available raw value") I am not 
+sure what the function does: does it return the maximum value possible? or 
+the maximum value in some internal buffer? maximum value ever seen?
+
+> > + * scale will need to be applied if standard units are required.
+> > + */
+> > +int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
+> > +
+> > +/**
+> > + * iio_read_avail_channel_raw() - read available raw values from a given channel
+> > + * @chan:		The channel being queried.
+> > + * @vals:		Available values read back.
+
+no vals2?
+
+> > + * @type:		Type of available values in vals.
+
+it is not clear what type is
+
+> > + * @length:		Number of entries in vals.
+> > + *
+> > + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
+> > + *
+> > + * For ranges, three vals are always returned; min, step and max.
+> > + * For lists, all the possible values are enumerated.
+> > + *
+> > + * Note raw available values from iio channels are in adc counts and
+> > + * hence scale will need to be applied if standard units are required.
+> > + */
+> > +int iio_read_avail_channel_raw(struct iio_channel *chan,
+> > +			       const int **vals, int *type, int *length);
+> > +
+> > +/**
+> >   * iio_get_channel_type() - get the type of a channel
+> >   * @channel:		The channel being queried.
+> >   * @type:		The type of the channel.
+> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> > index 45b781084a4b..e565701d13ce 100644
+> > --- a/include/linux/iio/iio.h
+> > +++ b/include/linux/iio/iio.h
+> > @@ -315,6 +315,23 @@ static inline bool iio_channel_has_info(const struct iio_chan_spec *chan,
+> >  		(chan->info_mask_shared_by_all & BIT(type));
+> >  }
+> >  
+> > +/**
+> > + * iio_channel_has_available() - Checks if a channel has an available attribute
+> > + * @chan: The channel to be queried
+> > + * @type: Type of the available attribute to be checked
+> > + *
+> > + * Returns true if the channels supports reporting available values for the
+
+channel
+
+> > + * given attribute type, false otherwise.
+> > + */
+> > +static inline bool iio_channel_has_available(const struct iio_chan_spec *chan,
+> > +					     enum iio_chan_info_enum type)
+> > +{
+> > +	return (chan->info_mask_separate_available & BIT(type)) |
+> > +		(chan->info_mask_shared_by_type_available & BIT(type)) |
+> > +		(chan->info_mask_shared_by_dir_available & BIT(type)) |
+> > +		(chan->info_mask_shared_by_all_available & BIT(type));
+> > +}
+> > +
+> >  #define IIO_CHAN_SOFT_TIMESTAMP(_si) {					\
+> >  	.type = IIO_TIMESTAMP,						\
+> >  	.channel = -1,							\
+> > 
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  drivers/iio/adc/stm32/stm32-adc.c | 45 +++++++++++++++++++++++++++++++++++++++
->  drivers/iio/adc/stm32/stm32-adc.h |  3 +++
->  2 files changed, 48 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/stm32/stm32-adc.c b/drivers/iio/adc/stm32/stm32-adc.c
-> index 25d0307..1a13450 100644
-> --- a/drivers/iio/adc/stm32/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32/stm32-adc.c
-> @@ -482,6 +482,12 @@ static irqreturn_t stm32_adc_common_isr(int irq, void *data)
->  	return ret;
->  }
->  
-> +static irqreturn_t stm32_adc_exti_handler(int irq, void *data)
-> +{
-> +	/* Exti handler should not be invoqued, and is not used */
-invoked.
-> +	return IRQ_HANDLED;
-> +}
-> +
->  /**
->   * stm32_adc_validate_trigger() - validate trigger for stm32 adc
->   * @indio_dev: IIO device
-> @@ -1051,6 +1057,41 @@ static void stm32_adc_unregister(struct stm32_adc *adc)
->  	}
->  }
->  
-> +static int stm32_adc_exti_probe(struct stm32_adc_common *common)
-> +{
-> +	int i, irq, ret;
-> +
-> +	common->gpios = devm_gpiod_get_array_optional(common->dev, NULL,
-> +						      GPIOD_IN);
-> +	if (!common->gpios)
-> +		return 0;
-> +
-> +	for (i = 0; i < common->gpios->ndescs; i++) {
-> +		irq = gpiod_to_irq(common->gpios->desc[i]);
-> +		if (irq < 0) {
-> +			dev_err(common->dev, "gpio %d to irq failed\n", i);
-> +			return irq;
-> +		}
-> +
-> +		ret = devm_request_irq(common->dev, irq, stm32_adc_exti_handler,
-> +				       0, dev_name(common->dev), common);
-> +		if (ret) {
-> +			dev_err(common->dev, "request IRQ %d failed\n", irq);
-> +			return ret;
-> +		}
-> +
-> +		/*
-> +		 * gpios are configured as interrupts, so exti trigger path is
-> +		 * configured in HW. But getting interrupts when starting
-> +		 * conversions is unused here, so mask it in on exti
-> +		 * controller by default.
-> +		 */
-> +		disable_irq(irq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int stm32_adc_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node, *child;
-> @@ -1131,6 +1172,10 @@ int stm32_adc_probe(struct platform_device *pdev)
->  		goto err_clk_disable;
->  	}
->  
-> +	ret = stm32_adc_exti_probe(common);
-> +	if (ret)
-> +		goto err_clk_disable;
-> +
->  	/* Parse adc child nodes to retrieve master/slave instances data */
->  	for_each_available_child_of_node(np, child) {
->  		ret = stm32_adc_register(common, child);
-> diff --git a/drivers/iio/adc/stm32/stm32-adc.h b/drivers/iio/adc/stm32/stm32-adc.h
-> index 01a0dda..fe3568b 100644
-> --- a/drivers/iio/adc/stm32/stm32-adc.h
-> +++ b/drivers/iio/adc/stm32/stm32-adc.h
-> @@ -23,6 +23,7 @@
->  #define __STM32_ADC_H
->  
->  #include <linux/dmaengine.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/irq_work.h>
->  
->  /*
-> @@ -323,6 +324,7 @@ struct stm32_adc {
->   * @aclk:		common clock for the analog circuitry
->   * @vref:		regulator reference
->   * @vref_mv:		vref voltage (mv)
-> + * @gpio_descs:		gpio descriptor used to configure EXTi triggers
->   * @lock:		mutex
->   */
->  struct stm32_adc_common {
-> @@ -335,6 +337,7 @@ struct stm32_adc_common {
->  	struct clk			*aclk;
->  	struct regulator		*vref;
->  	int				vref_mv;
-> +	struct gpio_descs		*gpios;
->  	struct mutex			lock;	/* read_raw lock */
->  };
->  
-> 
+
+-- 
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
