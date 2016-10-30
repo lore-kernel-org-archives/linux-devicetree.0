@@ -1,99 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] net: stmmac: Add OXNAS Glue Driver
-Date: Sun, 30 Oct 2016 15:41:10 -0500
-Message-ID: <20161030204110.otvjlanmi7dv7fox@rob-hp-laptop>
-References: <20161021084445.24989-1-narmstrong@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
+Date: Sun, 30 Oct 2016 15:41:21 -0500
+Message-ID: <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-2-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161021084445.24989-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1477053961-27128-2-git-send-email-t-kristo@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, ssantosh@kernel.org, nm@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 10:44:45AM +0200, Neil Armstrong wrote:
-> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
+On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
+> Add a clock implementation, TI SCI clock, that will hook to the common
+> clock framework, and allow each clock to be controlled via TI SCI
+> protocol.
 > 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 +++++
-
-It's preferred that bindings are a separate patch.
-
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 219 +++++++++++++++++++++
->  4 files changed, 275 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
+>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
 > 
-> Changes since RFC at https://patchwork.kernel.org/patch/9387257 :
->  - Drop init/exit callbacks
->  - Implement proper remove and PM callback
->  - Call init from probe
->  - Disable/Unprepare clock if stmmac probe fails
-> 
-> diff --git a/Documentation/devicetree/bindings/net/oxnas-dwmac.txt b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
 > new file mode 100644
-> index 0000000..5d2696c
+> index 0000000..bfc3ca4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
-> @@ -0,0 +1,44 @@
-> +* Oxford Semiconductor OXNAS DWMAC Ethernet controller
+> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+> @@ -0,0 +1,37 @@
+> +Texas Instruments TI-SCI Clocks
+> +===============================
 > +
-> +The device inherits all the properties of the dwmac/stmmac devices
-> +described in the file stmmac.txt in the current directory with the
-> +following changes.
+> +All clocks on Texas Instruments' SoCs that contain a System Controller,
+> +are only controlled by this entity. Communication between a host processor
+> +running an OS and the System Controller happens through a protocol known
+> +as TI-SCI[1]. This clock implementation plugs into the common clock
+> +framework and makes use of the TI-SCI protocol on clock API requests.
 > +
-> +Required properties on all platforms:
+> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
 > +
-> +- compatible:	Depending on the platform this should be one of:
-> +			- "oxsemi,ox820-dwmac"
-> +		Additionally "snps,dwmac" and any applicable more
-> +		detailed version number described in net/stmmac.txt
-> +		should be used.
+> +Required properties:
+> +-------------------
+> +- compatible: Must be "ti,k2g-sci-clk"
+> +- #clock-cells: Shall be 2.
+> +  In clock consumers, this cell represents the device ID and clock ID
+> +  exposed by the PM firmware. The assignments can be found in the header
+> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+> +  is the SoC involved, for example 'k2g'.
+> +
+> +Examples:
+> +--------
+> +
+> +pmmc: pmmc {
+> +	compatible = "ti,k2g-sci";
+> +
+> +	k2g_clks: k2g_clks {
 
-You should be explicit what version applies to ox820. "snps,dwmac" 
-should probably be deprecated IMO. There are so many variations of DW 
-h/w.
+Use "clocks" for node name instead.
+ 
+> +		compatible = "ti,k2g-sci-clk";
 
-> +
-> +- reg:	The first register range should be the one of the DWMAC
-> +	controller.
+I'm starting to think all these child nodes for SCI are pointless. Is 
+there any reason why the parent node can't be the clock provider (along 
+with all the other providers it acks as)?
 
-This is worded like there's a 2nd range?
-
-> +
-> +- clocks: Should contain phandles to the following clocks
-> +- clock-names:	Should contain the following:
-> +		- "stmmaceth" - see stmmac.txt
-> +		- "gmac" - peripheral gate clock
-> +
-> +- oxsemi,sys-ctrl: a phandle to the system controller syscon node
-> +
-> +Example :
-> +
-> +etha: ethernet@40400000 {
-> +	compatible = "oxsemi,ox820-dwmac", "snps,dwmac";
-> +	reg = <0x40400000 0x2000>;
-> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "macirq", "eth_wake_irq";
-> +	mac-address = [000000000000]; /* Filled in by U-Boot */
-> +	phy-mode = "rgmii";
-> +
-> +	clocks = <&stdclk CLK_820_ETHA>, <&gmacclk>;
-> +	clock-names = "gmac", "stmmaceth";
-> +	resets = <&reset RESET_MAC>;
-> +
-> +	/* Regmap for sys registers */
-> +	oxsemi,sys-ctrl = <&sys>;
-> +
-> +	status = "disabled";
+> +		#clock-cells = <2>;
+> +	};
 > +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +uart0: serial@2530c00 {
+> +	compatible = "ns16550a";
+> +	clocks = <&k2g_clks K2G_DEV_UART0 0>;
+> +};
