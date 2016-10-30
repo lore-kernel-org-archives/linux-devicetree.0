@@ -1,96 +1,48 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
- scaling
-Date: Sun, 30 Oct 2016 17:13:46 +0000
-Message-ID: <a96141dc-6ee5-2d7c-868c-7cb282002b89@kernel.org>
-References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
- <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
- <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
- <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: =?UTF-8?q?=5BPATCH=20V2=202/2=5D=20ARM=3A=20dts=3A=20bcm283x=3A=20fix=20typo=20in=20mailbox=20address?=
+Date: Sun, 30 Oct 2016 17:22:19 +0000
+Message-ID: <1477848139-32267-1-git-send-email-stefan.wahren@i2se.com>
+References: <6b13e96d-78d1-fcab-4273-803310ae4da6@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Phani A, Rama Krishna" <rphani@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, smohanad@codeaurora.org, mgautam@codeaurora.org, sivaa@codeaurora.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Julia.Lawall@lip6.fr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6b13e96d-78d1-fcab-4273-803310ae4da6-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/10/16 18:37, Phani A, Rama Krishna wrote:
-> Hi Stan,
-> 
-> On 27-Oct-16 4:48 PM, Stanimir Varbanov wrote:
->> Hi Rama,
->>
->> On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
->>> Polling can also be used for End of conversion completion. Implement logic
->>> to choose either polling or interrupt for End of conversion completion.
->>> Scaling can be done on the voltage to report adc code in physical units.
->>> Add changes to support different scale functions to convert adc code to
->>> physical units.
->>>
->>> Signed-off-by: Rama Krishna Phani A <rphani@codeaurora.org>
->>> ---
->>>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
->>>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263 +++++++++++++++++----
->>>  2 files changed, 236 insertions(+), 41 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>> index 0fb4613..39e31c0e 100644
->>> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>> @@ -37,6 +37,12 @@ VADC node:
->>>      Value type: <prop-encoded-array>
->>>      Definition: End of conversion interrupt.
->>>
->>> +- qcom,vadc-poll-eoc:
->>> +    Usage: optional
->>> +    Value type: <bool>
->>> +    Definition: Use polling instead of interrupts for End of Conversion
->>> +        completion.
->>
->> Why you need to add such a flag in DT?
->>
->> The DT should describe hardware details not how the driver will choose
->> pooling vs interrupt.
->>
->> On which use-case you would prefer pooling?
->>
-> 
-> Few PMIC's support interrupt functionality for ADC where as few
-> PMIC's dont support. Based on the functionality that is supported in
-> hardware we choose whether to go for polling or for interrupt.
-Can't use the usual trick of an optional interrupt in DT?
-If it's there we try to use it, if not then fall back to polling?
+The address of the mailbox node in the bcm283x.dtsi also has a typo.
+So fix it accordingly.
 
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Fixes: 05b682b7a3b2 ("ARM: bcm2835: dt: Add the mailbox to the device tree")
+---
+Changes in V2:
+  * fixed commit message as reported by Andreas
 
->>> +
->>>  Channel node properties:
->>>
->>>  - reg:
->>> @@ -92,6 +98,14 @@ Channel node properties:
->>>              Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
->>>              If property is not found, 1 sample will be used.
->>>
->>> +- qcom,scale-function:
->>> +    Usage: optional
->>> +    Value type: <u32>
->>> +    Definition: Scaling function used to convert raw ADC code to
->>> +    units specific to a given channel. Scaled units can be
->>> +    microvolts, millidegC.Valid values are: 0, 1, 2, 3, 4.
->>> +    If property is not found, 0 scaling will be used.
->>
->> This shouldn't be in DT binding. Just select the scale function for each
->> channel in the driver based on compatible property.
->>
->>
-> Ok ., Will remove this binding from DT, implement logic in driver and will post next patch.
-> 
-> Thanks,
-> Ramakrishna
-> 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/bcm283x.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 46d46d8..74dd21b 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -104,7 +104,7 @@
+ 			reg = <0x7e104000 0x10>;
+ 		};
+ 
+-		mailbox: mailbox@7e00b800 {
++		mailbox: mailbox@7e00b880 {
+ 			compatible = "brcm,bcm2835-mbox";
+ 			reg = <0x7e00b880 0x40>;
+ 			interrupts = <0 1>;
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
