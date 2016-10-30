@@ -1,63 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] regulator: lp873x: Add support for populating
- input supply
-Date: Sun, 30 Oct 2016 15:41:18 -0500
-Message-ID: <20161030204118.ojeetnxl5qsi6lp7@rob-hp-laptop>
-References: <20161021103841.8044-1-lokeshvutla@ti.com>
- <20161021103841.8044-5-lokeshvutla@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 01/23] reset: Add renesas,rst DT bindings
+Date: Sun, 30 Oct 2016 15:41:22 -0500
+Message-ID: <20161030204122.zejypdnpu3h3um7x@rob-hp-laptop>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+ <1477055857-17936-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20161021103841.8044-5-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1477055857-17936-2-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 04:08:36PM +0530, Lokesh Vutla wrote:
-> In order to have a proper topology of regulators for a platform, each
-> registering regulator needs to populate supply_name field for identifying
-> its supply's name. Add supply_name field for lp873x regulators.
+On Fri, Oct 21, 2016 at 03:17:15PM +0200, Geert Uytterhoeven wrote:
+> Add DT bindings for the Renesas R-Car Reset Controller (R-Car Gen1
+> RESET/WDT and R-Car Gen2/Gen3 and RZ/G RST).
 > 
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> As the features provided by the hardware module differ a lot across the
+> various SoC families and members, only SoC-specific compatible values
+> are defined.
+> 
+> For now we use the RST only for providing access to the state of the
+> mode pins, which is needed by the clock driver.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Magnus Damm <damm+renesas@opensource.se>
+> Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
->  drivers/regulator/lp873x-regulator.c             | 1 +
->  2 files changed, 9 insertions(+)
+> v4:
+>   - Add Acked-by,
+>   - Fix comma and period in list,
+>   - Add RZ/G1M and RZ/G1E,
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> index 52766c2..998837a 100644
-> --- a/Documentation/devicetree/bindings/mfd/lp873x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> @@ -7,6 +7,9 @@ Required properties:
->    - #gpio-cells:	Should be two.  The first cell is the pin number and
->  			the second cell is used to specify flags.
->  			See ../gpio/gpio.txt for more information.
-> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
-> +			populated under regulators node. xxx should match
-> +			the supply_name populated in driver.
+> v3:
+>   - Clarify current usage,
+>   - Use "renesas,<soctype>-rst" instead of "renesas,rst-<soctype>",
+>   - Drop "syscon" compatible value,
+>   - Add R-Car M3-W,
+>   - Add R-Car Gen1,
+> 
+> v2:
+>   - Add Acked-by.
+> ---
+>  .../devicetree/bindings/reset/renesas,rst.txt      | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rst.txt
 
-The driver is irrelevant. This should reference a list in this document.
-
->    - regulators:	List of child nodes that specify the regulator
->  			initialization data.
->  Example:
-> @@ -17,6 +20,11 @@ pmic: lp8733@60 {
->  	gpio-controller;
->  	#gpio-cells = <2>;
->  
-> +	buck0-in-supply = <&vsys_3v3>;
-> +	buck1-in-supply = <&vsys_3v3>;
-> +	ldo0-in-supply = <&vsys_3v3>;
-> +	ldo1-in-supply = <&vsys_3v3>;
-> +
->  	regulators {
->  		lp8733_buck0: buck0 {
->  			regulator-name = "lp8733-buck0";
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
