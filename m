@@ -1,45 +1,30 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v7 REPOST 0/9] CPUs capacity information for
- heterogeneous systems
-Date: Sun, 30 Oct 2016 14:22:46 +0000
-Message-ID: <20161030142246.od5skjzegyp62hma@localhost>
-References: <20161017154650.18779-1-juri.lelli@arm.com>
+From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] fpga: Add support for Lattice iCE40 FPGAs
+Date: Sun, 30 Oct 2016 15:34:54 -0600
+Message-ID: <9e80dbd9-835d-5215-f2fe-40db0a3db05e@airwebreathe.org.uk>
+References: <1477776746-3678-1-git-send-email-joel@airwebreathe.org.uk>
+ <1477776746-3678-2-git-send-email-joel@airwebreathe.org.uk>
+ <CAMuHMdWJYrUp2Bqh6PW7KCEv16HYpvKXG9dAQBjfw+pMxDQd_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20161017154650.18779-1-juri.lelli@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, morten.rasmussen@arm.com, broonie@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWJYrUp2Bqh6PW7KCEv16HYpvKXG9dAQBjfw+pMxDQd_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2016 at 04:46:41PM +0100, Juri Lelli wrote:
-> I'm thus now assuming that everybody is OK with the patches and that they can
-> be queued for 4.10 (we certainly need this plumbing at this point). Please
-> speak if my assumption is wrong (and provide feedback! :).
-> Otherwise I'm going to:
-> 
->  - use Russell's patching system for patches 2 and 8
->  - ask Sudeep to pull patches 3,5,6 and 7
->  - ask Catalin/Will to pull patches 1,4 and 9
 
-I'm happy to queue patches 1, 4 and 9 for 4.10 (though it might have
-been easier for the whole series to go through arm-soc).
+>
+> Plural, please, like in the previous version, cfr.
+>
 
-> Do you think we might get into trouble splitting the merge process this way?
+Hmm ok - it used to be plural, but I received advice to make it 
+singular. I'll change it back.
 
-Probably not. The only minor downside is that I have to grab a new DT
-for Juno from Sudeep to test the patches. Not an issue, though.
-
--- 
-Catalin
+Joel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
