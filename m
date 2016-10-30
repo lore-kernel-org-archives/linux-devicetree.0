@@ -1,402 +1,489 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 6/8] iio: dpot-dac: DAC driver based on a digital
- potentiometer
-Date: Sun, 30 Oct 2016 16:32:39 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1610301628400.32031@pmeerw.net>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se> <1477262381-7800-7-git-send-email-peda@axentia.se> <301ab064-cd90-d99d-a05a-8a50ba759c62@kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 03/10] iio: adc: stm32: add optional dma support
+Date: Sun, 30 Oct 2016 15:34:16 +0000
+Message-ID: <dc2b9c32-30f0-24b4-f11e-571b6cb130b3@kernel.org>
+References: <1477412722-24061-1-git-send-email-fabrice.gasnier@st.com>
+ <1477412722-24061-4-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <301ab064-cd90-d99d-a05a-8a50ba759c62@kernel.org>
+In-Reply-To: <1477412722-24061-4-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 30 Oct 2016, Jonathan Cameron wrote:
-
-> On 23/10/16 23:39, Peter Rosin wrote:
-> > It is assumed that the dpot is used as a voltage divider between the
-> > current dpot wiper setting and the maximum resistance of the dpot. The
-> > divided voltage is provided by a vref regulator.
-> > 
-> >                   .------.
-> >    .-----------.  |      |
-> >    | vref      |--'    .---.
-> >    | regulator |--.    |   |
-> >    '-----------'  |    | d |
-> >                   |    | p |
-> >                   |    | o |  wiper
-> >                   |    | t |<---------+
-> >                   |    |   |
-> >                   |    '---'       dac output voltage
-> >                   |      |
-> >                   '------+------------+
-> > 
-> > Signed-off-by: Peter Rosin <peda@axentia.se>
-> Only a trivial suggestion to drop the devinfo about max ohms now it's
-> exposed (effectively) via the dpot driver. (really minor though so don't bother
-> respinning for that!)
+On 25/10/16 17:25, Fabrice Gasnier wrote:
+> Add optional DMA support to STM32 ADC.
+> Use dma cyclic mode with at least two periods.
 > 
-> Jonathan
-> > ---
-> >  .../ABI/testing/sysfs-bus-iio-dac-dpot-dac         |   8 +
-> >  MAINTAINERS                                        |   2 +
-> >  drivers/iio/dac/Kconfig                            |  10 +
-> >  drivers/iio/dac/Makefile                           |   1 +
-> >  drivers/iio/dac/dpot-dac.c                         | 267 +++++++++++++++++++++
-> >  5 files changed, 288 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
-> >  create mode 100644 drivers/iio/dac/dpot-dac.c
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
-> > new file mode 100644
-> > index 000000000000..580e93f373f6
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
-> > @@ -0,0 +1,8 @@
-> > +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_raw_available
-> > +Date:		October 2016
-> > +KernelVersion:	4.9
-> > +Contact:	Peter Rosin <peda@axentia.se>
-> > +Description:
-> > +		The range of available values represented as the minimum value,
-> > +		the step and the maximum value, all enclosed in square brackets.
-> > +		Example: [0 1 256]
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 6218010128dc..d7375f45ff0f 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -6115,7 +6115,9 @@ IIO DIGITAL POTENTIOMETER DAC
-> >  M:	Peter Rosin <peda@axentia.se>
-> >  L:	linux-iio@vger.kernel.org
-> >  S:	Maintained
-> > +F:	Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
-> >  F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
-> > +F:	drivers/iio/dac/dpot-dac.c
-> >  
-> >  IIO SUBSYSTEM AND DRIVERS
-> >  M:	Jonathan Cameron <jic23@kernel.org>
-> > diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-> > index 120b24478469..d3084028905b 100644
-> > --- a/drivers/iio/dac/Kconfig
-> > +++ b/drivers/iio/dac/Kconfig
-> > @@ -200,6 +200,16 @@ config AD8801
-> >  	  To compile this driver as a module choose M here: the module will be called
-> >  	  ad8801.
-> >  
-> > +config DPOT_DAC
-> > +	tristate "DAC emulation using a DPOT"
-> > +	depends on OF
-> > +	help
-> > +	  Say yes here to build support for DAC emulation using a digital
-> > +	  potentiometer.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module will be
-> > +	  called dpot-dac.
-> > +
-> >  config LPC18XX_DAC
-> >  	tristate "NXP LPC18xx DAC driver"
-> >  	depends on ARCH_LPC18XX || COMPILE_TEST
-> > diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
-> > index 27642bbf75f2..f01bf4a99867 100644
-> > --- a/drivers/iio/dac/Makefile
-> > +++ b/drivers/iio/dac/Makefile
-> > @@ -22,6 +22,7 @@ obj-$(CONFIG_AD5686) += ad5686.o
-> >  obj-$(CONFIG_AD7303) += ad7303.o
-> >  obj-$(CONFIG_AD8801) += ad8801.o
-> >  obj-$(CONFIG_CIO_DAC) += cio-dac.o
-> > +obj-$(CONFIG_DPOT_DAC) += dpot-dac.o
-> >  obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
-> >  obj-$(CONFIG_M62332) += m62332.o
-> >  obj-$(CONFIG_MAX517) += max517.o
-> > diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
-> > new file mode 100644
-> > index 000000000000..f227a211d34d
-> > --- /dev/null
-> > +++ b/drivers/iio/dac/dpot-dac.c
-> > @@ -0,0 +1,267 @@
-> > +/*
-> > + * IIO DAC emulation driver using a digital potentiometer
-> > + *
-> > + * Copyright (C) 2016 Axentia Technologies AB
-> > + *
-> > + * Author: Peter Rosin <peda@axentia.se>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +
-> > +/*
-> > + * It is assumed that the dpot is used as a voltage divider between the
-> > + * current dpot wiper setting and the maximum resistance of the dpot. The
-> > + * divided voltage is provided by a vref regulator.
-> > + *
-> > + *                   .------.
-> > + *    .-----------.  |      |
-> > + *    | vref      |--'    .---.
-> > + *    | regulator |--.    |   |
-> > + *    '-----------'  |    | d |
-> > + *                   |    | p |
-> > + *                   |    | o |  wiper
-> > + *                   |    | t |<---------+
-> > + *                   |    |   |
-> > + *                   |    '---'       dac output voltage
-> > + *                   |      |
-> > + *                   '------+------------+
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/iio/consumer.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +struct dpot_dac {
-> > +	struct regulator *vref;
-> > +	struct iio_channel *dpot;
-> > +	u32 max_ohms;
-> > +};
-> > +
-> > +static const struct iio_chan_spec dpot_dac_iio_channel = {
-> > +	.type = IIO_VOLTAGE,
-> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-> > +			    | BIT(IIO_CHAN_INFO_SCALE),
-> > +	.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW),
-> > +	.output = 1,
-> > +	.indexed = 1,
-> > +};
-> > +
-> > +static int dpot_dac_read_raw(struct iio_dev *indio_dev,
-> > +			     struct iio_chan_spec const *chan,
-> > +			     int *val, int *val2, long mask)
-> > +{
-> > +	struct dpot_dac *dac = iio_priv(indio_dev);
-> > +	int ret;
-> > +	unsigned long long tmp;
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		return iio_read_channel_raw(dac->dpot, val);
-> > +
-> > +	case IIO_CHAN_INFO_SCALE:
-> > +		ret = iio_read_channel_scale(dac->dpot, val, val2);
-> > +		switch (ret) {
-> > +		case IIO_VAL_FRACTIONAL_LOG2:
-> > +			tmp = *val * 1000000000LL;
-> > +			do_div(tmp, dac->max_ohms);
-> > +			tmp *= regulator_get_voltage(dac->vref) / 1000;
-> > +			do_div(tmp, 1000000000LL);
-> > +			*val = tmp;
-> > +			return ret;
-> > +		case IIO_VAL_INT:
-> > +			/*
-> > +			 * Convert integer scale to fractional scale by
-> > +			 * setting the denominator (val2) to one...
-> > +			 */
-> > +			*val2 = 1;
-> > +			ret = IIO_VAL_FRACTIONAL;
-> > +			/* ...and fall through. */
-> > +		case IIO_VAL_FRACTIONAL:
-> > +			*val *= regulator_get_voltage(dac->vref) / 1000;
-> > +			*val2 *= dac->max_ohms;
-> > +			break;
-> > +		}
-> > +
-> > +		return ret;
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int dpot_dac_read_avail(struct iio_dev *indio_dev,
-> > +			       struct iio_chan_spec const *chan,
-> > +			       const int **vals, int *type, int *length,
-> > +			       long mask)
-> > +{
-> > +	struct dpot_dac *dac = iio_priv(indio_dev);
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		return iio_read_avail_channel_raw(dac->dpot,
-> > +						  vals, type, length);
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int dpot_dac_write_raw(struct iio_dev *indio_dev,
-> > +			      struct iio_chan_spec const *chan,
-> > +			      int val, int val2, long mask)
-> > +{
-> > +	struct dpot_dac *dac = iio_priv(indio_dev);
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		return iio_write_channel_raw(dac->dpot, val);
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static const struct iio_info dpot_dac_info = {
-> > +	.read_raw = dpot_dac_read_raw,
-> > +	.read_avail = dpot_dac_read_avail,
-> > +	.write_raw = dpot_dac_write_raw,
-> > +	.driver_module = THIS_MODULE,
-> > +};
-> > +
-> > +static int dpot_dac_channel_max_ohms(struct iio_dev *indio_dev)
-> > +{
-> > +	struct device *dev = &indio_dev->dev;
-> > +	struct dpot_dac *dac = iio_priv(indio_dev);
-> > +	unsigned long long tmp;
-> > +	int ret;
-> > +	int val;
-> > +	int val2;
-> > +	int max;
-> > +
-> > +	ret = iio_read_max_channel_raw(dac->dpot, &max);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "dpot does not indicate its raw maximum value\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	switch (iio_read_channel_scale(dac->dpot, &val, &val2)) {
-> > +	case IIO_VAL_INT:
-> > +		return max * val;
-> > +	case IIO_VAL_FRACTIONAL:
-> > +		tmp = (unsigned long long)max * val;
-> > +		do_div(tmp, val2);
-> > +		return tmp;
-> > +	case IIO_VAL_FRACTIONAL_LOG2:
-> > +		tmp = (s64)val * 1000000000LL * max >> val2;
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Few little bits inline, but looks superficially good (my dma knowledge isn't
+really up to reviewing this.) Lars can you take a look (perhaps at the next
+version)?
 
-(s64) necessary?
-or rather unsigned long long?
+Also, you 'could' potentially use the dma buffer stuff to give a lower overhead
+route for the data to userspace if the device goes quick enough to warrant
+it.
 
-> > +		do_div(tmp, 1000000000LL);
-> > +		return tmp;
-> > +	default:
-> > +		dev_err(dev, "dpot has a scale that is too weird\n");
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static int dpot_dac_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct iio_dev *indio_dev;
-> > +	struct dpot_dac *dac;
-> > +	enum iio_chan_type type;
-> > +	int ret;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*dac));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, indio_dev);
-> > +	dac = iio_priv(indio_dev);
-> > +
-> > +	indio_dev->name = dev_name(dev);
-> > +	indio_dev->dev.parent = dev;
-> > +	indio_dev->info = &dpot_dac_info;
-> > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > +	indio_dev->channels = &dpot_dac_iio_channel;
-> > +	indio_dev->num_channels = 1;
-> > +
-> > +	dac->vref = devm_regulator_get(dev, "vref");
-> > +	if (IS_ERR(dac->vref)) {
-> > +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
-> > +			dev_err(&pdev->dev, "failed to get vref regulator\n");
-> > +		return PTR_ERR(dac->vref);
-> > +	}
-> > +
-> > +	dac->dpot = devm_iio_channel_get(dev, "dpot");
-> > +	if (IS_ERR(dac->dpot)) {
-> > +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
-> > +			dev_err(dev, "failed to get dpot input channel\n");
-> > +		return PTR_ERR(dac->dpot);
-> > +	}
-> > +
-> > +	ret = iio_get_channel_type(dac->dpot, &type);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (type != IIO_RESISTANCE) {
-> > +		dev_err(dev, "dpot is of the wrong type\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = dpot_dac_channel_max_ohms(indio_dev);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	dac->max_ohms = ret;
-> > +	dev_info(dev, "dpot max is %d\n", dac->max_ohms);
-> Given we can query this (indirectly) from the dpot itself, I'd drop this now.
-
-max_ohms is u32, so this should be %u not %d?
-
-
+Jonathan
+> ---
+>  drivers/iio/adc/stm32/Kconfig       |   2 +
+>  drivers/iio/adc/stm32/stm32-adc.c   | 222 ++++++++++++++++++++++++++++++++----
+>  drivers/iio/adc/stm32/stm32-adc.h   |  15 +++
+>  drivers/iio/adc/stm32/stm32f4-adc.c |  20 +++-
+>  4 files changed, 235 insertions(+), 24 deletions(-)
 > 
-> > +
-> > +	ret = regulator_enable(dac->vref);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to enable the vref regulator\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = iio_device_register(indio_dev);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to register iio device\n");
-> > +		goto disable_reg;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +disable_reg:
-> > +	regulator_disable(dac->vref);
-> > +	return ret;
-> > +}
-> > +
-> > +static int dpot_dac_remove(struct platform_device *pdev)
-> > +{
-> > +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> > +	struct dpot_dac *dac = iio_priv(indio_dev);
-> > +
-> > +	iio_device_unregister(indio_dev);
-> > +	regulator_disable(dac->vref);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id dpot_dac_match[] = {
-> > +	{ .compatible = "dpot-dac" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, dpot_dac_match);
-> > +
-> > +static struct platform_driver dpot_dac_driver = {
-> > +	.probe = dpot_dac_probe,
-> > +	.remove = dpot_dac_remove,
-> > +	.driver = {
-> > +		.name = "iio-dpot-dac",
-> > +		.of_match_table = dpot_dac_match,
-> > +	},
-> > +};
-> > +module_platform_driver(dpot_dac_driver);
-> > +
-> > +MODULE_DESCRIPTION("DAC emulation driver using a digital potentiometer");
-> > +MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
-> > +MODULE_LICENSE("GPL v2");
-> > 
+> diff --git a/drivers/iio/adc/stm32/Kconfig b/drivers/iio/adc/stm32/Kconfig
+> index 245d037..5554ac8 100644
+> --- a/drivers/iio/adc/stm32/Kconfig
+> +++ b/drivers/iio/adc/stm32/Kconfig
+> @@ -8,6 +8,7 @@ config STM32_ADC
+>  	select REGULATOR_FIXED_VOLTAGE
+>  	select IIO_BUFFER
+>  	select IIO_TRIGGERED_BUFFER
+> +	select IRQ_WORK
+>  	help
+>  	  Say yes here to build the driver for the STMicroelectronics
+>  	  STM32 analog-to-digital converter (ADC).
+> @@ -18,6 +19,7 @@ config STM32_ADC
+>  config STM32F4_ADC
+>  	tristate "STMicroelectronics STM32F4 adc"
+>  	depends on ARCH_STM32 || COMPILE_TEST
+> +	depends on HAS_DMA
+>  	depends on OF
+>  	select STM32_ADC
+>  	help
+> diff --git a/drivers/iio/adc/stm32/stm32-adc.c b/drivers/iio/adc/stm32/stm32-adc.c
+> index 1e0850d..25d0307 100644
+> --- a/drivers/iio/adc/stm32/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32/stm32-adc.c
+> @@ -21,6 +21,7 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/debugfs.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/events.h>
+> @@ -371,6 +372,34 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+>  	return ret;
+>  }
+>  
+> +static int stm32_adc_residue(struct stm32_adc *adc)
+> +{
+> +	struct dma_tx_state state;
+> +	enum dma_status status;
+> +
+> +	if (!adc->rx_buf)
+> +		return 0;
+> +
+> +	status = dmaengine_tx_status(adc->dma_chan,
+> +				     adc->dma_chan->cookie,
+> +				     &state);
+> +	if (status == DMA_IN_PROGRESS) {
+> +		/* Residue is size in bytes from end of buffer */
+> +		int i = adc->rx_buf_sz - state.residue;
+> +		int size;
+> +
+> +		/* Return available bytes */
+> +		if (i >= adc->bufi)
+> +			size = i - adc->bufi;
+> +		else
+> +			size = adc->rx_buf_sz - adc->bufi + i;
+> +
+> +		return size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * stm32_adc_isr() - Treat interrupt for one ADC instance within ADC block
+>   */
+> @@ -394,8 +423,8 @@ static irqreturn_t stm32_adc_isr(struct stm32_adc *adc)
+>  	stm32_adc_writel(adc, reginfo->isr, status & ~clr_mask);
+>  	status &= mask;
+>  
+> -	/* Regular data */
+> -	if (status & reginfo->eoc) {
+> +	/* Regular data (when dma isn't used) */
+> +	if ((status & reginfo->eoc) && (!adc->rx_buf)) {
+>  		adc->buffer[adc->bufi] = stm32_adc_readl(adc, reginfo->dr);
+>  		if (iio_buffer_enabled(indio_dev)) {
+>  			adc->bufi++;
+> @@ -553,29 +582,154 @@ static int stm32_adc_validate_device(struct iio_trigger *trig,
+>  	return indio != indio_dev ? -EINVAL : 0;
+>  }
+>  
+> -static int stm32_adc_set_trigger_state(struct iio_trigger *trig,
+> -				       bool state)
+> +static void stm32_adc_dma_irq_work(struct irq_work *work)
+>  {
+> -	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> +	struct stm32_adc *adc = container_of(work, struct stm32_adc, work);
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+> +
+> +	/**
+> +	 * iio_trigger_poll calls generic_handle_irq(). So, it requires hard
+> +	 * irq context, and cannot be called directly from dma callback,
+> +	 * dma cb has to schedule this work instead.
+> +	 */
+> +	iio_trigger_poll(indio_dev->trig);
+> +}
+> +
+> +static void stm32_adc_dma_buffer_done(void *data)
+> +{
+> +	struct iio_dev *indio_dev = data;
+>  	struct stm32_adc *adc = iio_priv(indio_dev);
+> -	int ret;
+>  
+> -	if (state) {
+> -		/* Reset adc buffer index */
+> -		adc->bufi = 0;
+> +	/* invoques iio_trigger_poll() from hard irq context */
+invokes.
+> +	irq_work_queue(&adc->work);
+> +}
+> +
+> +static int stm32_adc_buffer_alloc_dma_start(struct iio_dev *indio_dev)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	const struct stm32_adc_reginfo *reginfo =
+> +		adc->common->data->adc_reginfo;
+> +	struct dma_async_tx_descriptor *desc;
+> +	struct dma_slave_config config;
+> +	dma_cookie_t cookie;
+> +	int ret, size, watermark;
+>  
+> +	/* Reset adc buffer index */
+> +	adc->bufi = 0;
+> +
+> +	if (!adc->dma_chan) {
+>  		/* Allocate adc buffer */
+>  		adc->buffer = kzalloc(indio_dev->scan_bytes, GFP_KERNEL);
+>  		if (!adc->buffer)
+>  			return -ENOMEM;
+>  
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Allocate at least twice the buffer size for dma cyclic transfers, so
+> +	 * we can work with at least two dma periods. There should be :
+> +	 * - always one buffer (period) dma is working on
+> +	 * - one buffer (period) driver can push with iio_trigger_poll().
+> +	 */
+> +	size = indio_dev->buffer->bytes_per_datum * indio_dev->buffer->length;
+> +	size = max(indio_dev->scan_bytes * 2, size);
+> +
+> +	adc->rx_buf = dma_alloc_coherent(adc->common->dev, PAGE_ALIGN(size),
+> +					 &adc->rx_dma_buf,
+> +					 GFP_KERNEL);
+> +	if (!adc->rx_buf)
+> +		return -ENOMEM;
+> +	adc->rx_buf_sz = size;
+> +	watermark = indio_dev->buffer->bytes_per_datum
+> +		* indio_dev->buffer->watermark;
+> +	watermark = max(indio_dev->scan_bytes, watermark);
+> +	watermark = rounddown(watermark, indio_dev->scan_bytes);
+> +
+> +	dev_dbg(&indio_dev->dev, "%s size=%d watermark=%d\n", __func__, size,
+> +		watermark);
+> +
+> +	/* Configure DMA channel to read data register */
+> +	memset(&config, 0, sizeof(config));
+> +	config.src_addr = (dma_addr_t)adc->common->phys_base;
+> +	config.src_addr += adc->offset + reginfo->dr;
+> +	config.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+> +
+> +	ret = dmaengine_slave_config(adc->dma_chan, &config);
+> +	if (ret)
+> +		goto config_err;
+> +
+> +	/* Prepare a DMA cyclic transaction */
+> +	desc = dmaengine_prep_dma_cyclic(adc->dma_chan,
+> +					 adc->rx_dma_buf,
+> +					 size, watermark,
+> +					 DMA_DEV_TO_MEM,
+> +					 DMA_PREP_INTERRUPT);
+> +	if (!desc) {
+> +		ret = -ENODEV;
+> +		goto config_err;
+> +	}
+> +
+> +	desc->callback = stm32_adc_dma_buffer_done;
+> +	desc->callback_param = indio_dev;
+> +
+> +	cookie = dmaengine_submit(desc);
+> +	if (dma_submit_error(cookie)) {
+> +		ret = dma_submit_error(cookie);
+> +		goto config_err;
+> +	}
+> +
+> +	/* Issue pending DMA requests */
+> +	dma_async_issue_pending(adc->dma_chan);
+> +
+> +	return 0;
+> +
+> +config_err:
+> +	dma_free_coherent(adc->common->dev, PAGE_ALIGN(size), adc->rx_buf,
+> +			  adc->rx_dma_buf);
+> +
+> +	return ret;
+> +}
+> +
+> +static void stm32_adc_dma_stop_buffer_free(struct iio_dev *indio_dev)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +
+> +	if (!adc->dma_chan) {
+> +		kfree(adc->buffer);
+> +	} else {
+> +		dmaengine_terminate_all(adc->dma_chan);
+> +		irq_work_sync(&adc->work);
+> +		dma_free_coherent(adc->common->dev, PAGE_ALIGN(adc->rx_buf_sz),
+> +				  adc->rx_buf, adc->rx_dma_buf);
+> +		adc->rx_buf = NULL;
+> +	}
+> +
+> +	adc->buffer = NULL;
+> +}
+> +
+> +static int stm32_adc_set_trigger_state(struct iio_trigger *trig,
+> +				       bool state)
+> +{
+> +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (state) {
+> +		ret = stm32_adc_buffer_alloc_dma_start(indio_dev);
+> +		if (ret) {
+> +			dev_err(&indio_dev->dev, "alloc failed\n");
+> +			return ret;
+> +		}
+> +
+>  		ret = stm32_adc_set_trig(indio_dev, trig);
+>  		if (ret) {
+>  			dev_err(&indio_dev->dev, "Can't set trigger\n");
+>  			goto err_buffer_free;
+>  		}
+>  
+> -		stm32_adc_conv_irq_enable(adc);
+> +		if (!adc->dma_chan)
+> +			stm32_adc_conv_irq_enable(adc);
+>  
+>  		ret = stm32_adc_start_conv(adc);
+>  		if (ret) {
+> @@ -589,25 +743,25 @@ static int stm32_adc_set_trigger_state(struct iio_trigger *trig,
+>  			return ret;
+>  		}
+>  
+> -		stm32_adc_conv_irq_disable(adc);
+> +		if (!adc->dma_chan)
+> +			stm32_adc_conv_irq_disable(adc);
+>  
+>  		ret = stm32_adc_set_trig(indio_dev, NULL);
+>  		if (ret)
+>  			dev_warn(&indio_dev->dev, "Can't clear trigger\n");
+>  
+> -		kfree(adc->buffer);
+> -		adc->buffer = NULL;
+> +		stm32_adc_dma_stop_buffer_free(indio_dev);
+>  	}
+>  
+>  	return 0;
+>  
+>  err_irq_trig_disable:
+> -	stm32_adc_conv_irq_disable(adc);
+> +	if (!adc->dma_chan)
+> +		stm32_adc_conv_irq_disable(adc);
+>  	stm32_adc_set_trig(indio_dev, NULL);
+>  
+>  err_buffer_free:
+> -	kfree(adc->buffer);
+> -	adc->buffer = NULL;
+> +	stm32_adc_dma_stop_buffer_free(indio_dev);
+>  
+>  	return ret;
+>  }
+> @@ -624,17 +778,30 @@ static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
+>  	struct iio_dev *indio_dev = pf->indio_dev;
+>  	struct stm32_adc *adc = iio_priv(indio_dev);
+>  
+> -	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
+> -
+> -	/* reset buffer index */
+> -	adc->bufi = 0;
+> -	iio_push_to_buffers_with_timestamp(indio_dev, adc->buffer,
+> -					   pf->timestamp);
+> +	if (!adc->dma_chan) {
+> +		adc->bufi = 0;
+> +		iio_push_to_buffers_with_timestamp(indio_dev, adc->buffer,
+> +						   pf->timestamp);
+> +	} else {
+> +		int residue = stm32_adc_residue(adc);
+> +
+This bit wants some explanatory comments I think.
+> +		while (residue >= indio_dev->scan_bytes) {
+> +			adc->buffer = (u16 *)&adc->rx_buf[adc->bufi];
+> +			iio_push_to_buffers_with_timestamp(indio_dev,
+> +							   adc->buffer,
+> +							   pf->timestamp);
+> +			residue -= indio_dev->scan_bytes;
+> +			adc->bufi += indio_dev->scan_bytes;
+> +			if (adc->bufi >= adc->rx_buf_sz)
+> +				adc->bufi = 0;
+> +		}
+> +	}
+>  
+>  	iio_trigger_notify_done(indio_dev->trig);
+>  
+>  	/* re-enable eoc irq */
+> -	stm32_adc_conv_irq_enable(adc);
+> +	if (!adc->dma_chan)
+> +		stm32_adc_conv_irq_enable(adc);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -827,6 +994,10 @@ static int stm32_adc_register(struct stm32_adc_common *common,
+>  	if (ret)
+>  		goto err_clk_disable;
+>  
+> +	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+> +	if (adc->dma_chan)
+> +		init_irq_work(&adc->work, stm32_adc_dma_irq_work);
+> +
+>  	ret = iio_triggered_buffer_setup(indio_dev,
+>  					 &iio_pollfunc_store_time,
+>  					 &stm32_adc_trigger_handler,
+> @@ -850,6 +1021,8 @@ static int stm32_adc_register(struct stm32_adc_common *common,
+>  	iio_triggered_buffer_cleanup(indio_dev);
+>  
+>  err_trig_unregister:
+> +	if (adc->dma_chan)
+> +		dma_release_channel(adc->dma_chan);
+>  	stm32_adc_trig_unregister(indio_dev);
+>  
+>  err_clk_disable:
+> @@ -870,6 +1043,8 @@ static void stm32_adc_unregister(struct stm32_adc *adc)
+>  	iio_device_unregister(indio_dev);
+>  	iio_triggered_buffer_cleanup(indio_dev);
+>  	stm32_adc_trig_unregister(indio_dev);
+> +	if (adc->dma_chan)
+> +		dma_release_channel(adc->dma_chan);
+>  	if (adc->clk) {
+>  		clk_disable_unprepare(adc->clk);
+>  		clk_put(adc->clk);
+> @@ -900,6 +1075,7 @@ int stm32_adc_probe(struct platform_device *pdev)
+>  	common->base = devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(common->base))
+>  		return PTR_ERR(common->base);
+> +	common->phys_base = res->start;
+>  
+>  	common->data = match->data;
+>  	common->dev = &pdev->dev;
+> diff --git a/drivers/iio/adc/stm32/stm32-adc.h b/drivers/iio/adc/stm32/stm32-adc.h
+> index 0be603c..01a0dda 100644
+> --- a/drivers/iio/adc/stm32/stm32-adc.h
+> +++ b/drivers/iio/adc/stm32/stm32-adc.h
+> @@ -22,6 +22,9 @@
+>  #ifndef __STM32_ADC_H
+>  #define __STM32_ADC_H
+>  
+> +#include <linux/dmaengine.h>
+> +#include <linux/irq_work.h>
+> +
+>  /*
+>   * STM32 - ADC global register map
+>   * ________________________________________________________
+> @@ -276,6 +279,11 @@ struct stm32_adc_ops {
+>   * @num_conv:		expected number of scan conversions
+>   * @injected:		use injected channels on this adc
+>   * @lock:		spinlock
+> + * @work:		irq work used to call trigger poll routine
+> + * @dma_chan:		dma channel
+> + * @rx_buf:		dma rx buffer cpu address
+> + * @rx_dma_buf:		dma rx buffer bus address
+> + * @rx_buf_sz:		dma rx buffer size
+>   * @clk:		optional adc clock, for this adc instance
+>   * @calib:		optional calibration data
+>   * @en:			emulates enabled state on some stm32 adc
+> @@ -293,6 +301,11 @@ struct stm32_adc {
+>  	int			num_conv;
+>  	bool			injected;
+>  	spinlock_t		lock;		/* interrupt lock */
+> +	struct irq_work		work;
+> +	struct dma_chan		*dma_chan;
+> +	u8			*rx_buf;
+> +	dma_addr_t		rx_dma_buf;
+> +	int			rx_buf_sz;
+>  	struct clk		*clk;
+>  	void			*calib;
+>  	bool			en;
+> @@ -302,6 +315,7 @@ struct stm32_adc {
+>   * struct stm32_adc_common - private data of ADC driver, common to all
+>   * ADC instances (ADC block)
+>   * @dev:		device for this controller
+> + * @phys_base:		control registers base physical addr
+>   * @base:		control registers base cpu addr
+>   * @irq:		Common irq line for all adc instances
+>   * @data:		STM32 dependent data from compatible
+> @@ -313,6 +327,7 @@ struct stm32_adc {
+>   */
+>  struct stm32_adc_common {
+>  	struct device			*dev;
+> +	phys_addr_t			phys_base;
+>  	void __iomem			*base;
+>  	int				irq;
+>  	const struct stm32_adc_ops	*data;
+> diff --git a/drivers/iio/adc/stm32/stm32f4-adc.c b/drivers/iio/adc/stm32/stm32f4-adc.c
+> index 147fe9c..4d7a2a8 100644
+> --- a/drivers/iio/adc/stm32/stm32f4-adc.c
+> +++ b/drivers/iio/adc/stm32/stm32f4-adc.c
+> @@ -437,16 +437,30 @@ static bool stm32f4_adc_injected_started(struct stm32_adc *adc)
+>   * @adc: stm32 adc instance
+>   *
+>   * Start single conversions for regular or injected channels.
+> + * Also take care of normal or DMA mode. DMA is used in circular mode for
+> + * regular conversions, in IIO buffer modes. Rely on rx_buf as raw
+> + * read doesn't use dma, but direct DR read.
+>   */
+>  static int stm32f4_adc_start_conv(struct stm32_adc *adc)
+>  {
+> -	u32 trig_msk, start_msk;
+> +	u32 val, trig_msk, start_msk;
+> +	unsigned long flags;
+>  
+>  	dev_dbg(adc->common->dev, "%s %s\n", __func__,
+>  		adc->injected ? "injected" : "regular");
+>  
+>  	stm32_adc_set_bits(adc, STM32F4_ADCX_CR1, STM32F4_SCAN);
+>  
+> +	if (!adc->injected) {
+> +		spin_lock_irqsave(&adc->lock, flags);
+> +		val = stm32_adc_readl(adc, STM32F4_ADCX_CR2);
+> +		val &= ~(STM32F4_DMA | STM32F4_DDS);
+> +		if (adc->rx_buf)
+> +			val |= STM32F4_DMA | STM32F4_DDS;
+> +		stm32_adc_writel(adc, STM32F4_ADCX_CR2, val);
+> +		spin_unlock_irqrestore(&adc->lock, flags);
+> +	}
+> +
+>  	if (!stm32f4_adc_is_started(adc)) {
+>  		stm32_adc_set_bits(adc, STM32F4_ADCX_CR2,
+>  				   STM32F4_EOCS | STM32F4_ADON);
+> @@ -494,6 +508,10 @@ static int stm32f4_adc_stop_conv(struct stm32_adc *adc)
+>  		stm32_adc_clr_bits(adc, STM32F4_ADCX_CR2, STM32F4_ADON);
+>  	}
+>  
+> +	if (!adc->injected)
+> +		stm32_adc_clr_bits(adc, STM32F4_ADCX_CR2,
+> +				   STM32F4_DMA | STM32F4_DDS);
+> +
+>  	return 0;
+>  }
+>  
 > 
-
--- 
-
-Peter Meerwald-Stadler
-+43-664-2444418 (mobile)
