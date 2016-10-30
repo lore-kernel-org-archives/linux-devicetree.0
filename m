@@ -1,79 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6] mwifiex: parse device tree node for PCIe
-Date: Sun, 30 Oct 2016 15:41:31 -0500
-Message-ID: <20161030204131.pwfjqekpwd6nr3gb@rob-hp-laptop>
-References: <1477070156-109965-1-git-send-email-rajatja@google.com>
- <1477084869-15612-1-git-send-email-rajatja@google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
+Date: Sun, 30 Oct 2016 15:41:34 -0500
+Message-ID: <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+References: <20161023191706.GA25754@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477084869-15612-1-git-send-email-rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20161023191706.GA25754@amd>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 02:21:09PM -0700, Rajat Jain wrote:
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Sun, Oct 23, 2016 at 09:17:06PM +0200, Pavel Machek wrote:
 > 
-> This patch derives device tree node from pcie bus layer framework, and
-> fixes a minor memory leak in mwifiex_pcie_probe() (in failure path).
-> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-> marvell-8xxx.txt) to accommodate PCIe changes.
+> Add device tree binding documentation for toshiba et8ek8 sensor.
 > 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> 
 > ---
-> v2: Included vendor and product IDs in compatible strings for PCIe
-> chipsets(Rob Herring)
-> v3: Patch is created using -M option so that it will only include diff of
-> original and renamed files(Rob Herring)
-> Resend v3: Resending the patch because I missed to include device tree mailing
-> while sending v3.
-> v4: Fix error handling, also move-on even if no device tree node is present.
-> v5: Update commit log to include memory leak, return -EINVAL instead of -1.
-> v6: Remove an unnecessary error print, fix typo in commit log
 > 
->  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
->  drivers/net/wireless/marvell/mwifiex/pcie.c        | 36 +++++++++++++++++++---
->  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
->  3 files changed, 39 insertions(+), 8 deletions(-)
->  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+> diff from v3: explain what clock-frequency means
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> similarity index 91%
-> rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> index c421aba..dfe5f8e 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> @@ -1,8 +1,8 @@
-> -Marvell 8897/8997 (sd8897/sd8997) SDIO devices
-> +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
->  ------
->  
-> -This node provides properties for controlling the marvell sdio wireless device.
-> -The node is expected to be specified as a child node to the SDIO controller that
-> +This node provides properties for controlling the marvell sdio/pcie wireless device.
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> new file mode 100644
+> index 0000000..54863cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> @@ -0,0 +1,51 @@
+> +Toshiba et8ek8 5MP sensor
+> +
+> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+> +
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +
+> +
+> +Mandatory properties
+> +--------------------
+> +
+> +- compatible: "toshiba,et8ek8"
+> +- reg: I2C address (0x3e, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> +- clocks: External clock to the sensor
+> +- clock-frequency: Frequency of the external clock to the sensor. Camera
+> +  driver will set this frequency on the external clock.
 
-s/marvell/Marvell/
-s/sdio\/pcie/SDIO\/PCIE/
+This is fine if the frequency is fixed (e.g. an oscillator), but you 
+should use the clock binding if clocks are programable.
 
-> +The node is expected to be specified as a child node to the SDIO/PCIE controller that
->  connects the device to the system.
->  
->  Required properties:
-> @@ -10,6 +10,8 @@ Required properties:
->    - compatible : should be one of the following:
->  	* "marvell,sd8897"
->  	* "marvell,sd8997"
-> +	* "pci11ab,2b42"
-> +	* "pci1b4b,2b42"
+> +- reset-gpios: XSHUTDOWN GPIO
 
-I think I already said this, but you have the vendor and product IDs 
-reversed.
+Please state what the active polarity is.
 
-Rob
+> +
+> +
+> +Endpoint node mandatory properties
+> +----------------------------------
+> +
+> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
+> +
+> +Endpoint node optional properties
+> +----------------------------------
+> +
+> +- clock-lanes: <0>
+> +- data-lanes: <1..n>
+> +
+> +Example
+> +-------
+> +
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +
+> +	cam1: camera@3e {
+> +		compatible = "toshiba,et8ek8";
+> +		reg = <0x3e>;
+> +		vana-supply = <&vaux4>;
+> +		clocks = <&isp 0>;
+> +		clock-frequency = <9600000>;
+> +		reset-gpio = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
+> +		port {
+> +			csi_cam1: endpoint {
+> +				remote-endpoint = <&csi_out1>;
+> +			};
+> +		};
+> +	};
+> +};
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
