@@ -1,39 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] sh-sci: document R8A7743/5 support
-Date: Sun, 30 Oct 2016 15:41:29 -0500
-Message-ID: <20161030204129.3aimogcpr6p352uv@rob-hp-laptop>
-References: <4258682.UW6HhKP1CC@wasted.cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 01/13] pinctrl: meson: Add GXL pinctrl definitions
+Date: Sun, 30 Oct 2016 15:41:26 -0500
+Message-ID: <20161030204126.adj4bo7arpxxqtpf@rob-hp-laptop>
+References: <1477060838-14164-1-git-send-email-narmstrong@baylibre.com>
+ <1477060838-14164-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4258682.UW6HhKP1CC-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1477060838-14164-2-git-send-email-narmstrong@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 11:00:43PM +0300, Sergei Shtylyov wrote:
-> Renesas RZ/G SoC also have the SCIF, SCIFA, SCIFB, and HSCIF ports and
-> they  seem compatible with the R-Car gen2 SoC  in this respect...
-> Document RZ/G1[ME] (also known as R8A774[35]) SoC bindings.
+On Fri, Oct 21, 2016 at 04:40:26PM +0200, Neil Armstrong wrote:
+> Add support for the Amlogic Meson GXL SoC, this is a partially complete
+> definition only based on the Amlogic Vendor tree.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> This definition differs a lot from the GXBB and needs a separate entry.
 > 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> This patch is against the 'tty-next' branch of GregKH's 'tty.git' repo.
-> 
-> Changes in version 2:
-> - removed the RZ/G  family specific bindings, renamed the patch;
-> - added Simon's and Geert's ACKs.
-> 
->  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   2 +
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pinctrl/meson/Makefile                     |   3 +-
+>  drivers/pinctrl/meson/pinctrl-meson-gxl.c          | 589 +++++++++++++++++++++
+>  drivers/pinctrl/meson/pinctrl-meson.c              |   8 +
+>  drivers/pinctrl/meson/pinctrl-meson.h              |   2 +
+>  include/dt-bindings/gpio/meson-gxl-gpio.h          | 131 +++++
+>  6 files changed, 734 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>  create mode 100644 include/dt-bindings/gpio/meson-gxl-gpio.h
