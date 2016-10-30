@@ -1,78 +1,33 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v9 1/4] soc: mediatek: Refine scpsys to support multiple
- platform
-Date: Mon, 31 Oct 2016 00:57:17 +0100
-Message-ID: <b2f411ed-2de4-95aa-d15a-5435a6694410@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Mon, 31 Oct 2016 00:57:42 +0100
+Message-ID: <19220b7f-84c3-eefe-333c-bd1ddfa988a3@gmail.com>
 References: <1476953798-23263-1-git-send-email-jamesjj.liao@mediatek.com>
- <1476953798-23263-2-git-send-email-jamesjj.liao@mediatek.com>
- <1d5cda95-467a-4f95-1cc9-b8f156271a54@gmail.com>
- <1477647408.24014.6.camel@mtksdaap41>
+ <1476953798-23263-4-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477647408.24014.6.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476953798-23263-4-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/28/2016 11:36 AM, James Liao wrote:
-> Hi Matthias,
+On 10/20/2016 10:56 AM, James Liao wrote:
+> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >
-> Sorry for late reply due to our email service.
+> Add power dt-bindings for MT2701.
 >
-> On Tue, 2016-10-25 at 16:04 +0200, Matthias Brugger wrote:
->> Hi James,
->>
->> On 10/20/2016 10:56 AM, James Liao wrote:
->>> -static int scpsys_probe(struct platform_device *pdev)
->>> +static void init_clks(struct platform_device *pdev, struct clk *clk[CLK_MAX])
->>
->> I prefer struct clk **clk.
->
-> Okay.
->
->>> +{
->>> +	int i;
->>> +
->>> +	for (i = CLK_NONE + 1; i < CLK_MAX; i++)
->>> +		clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
->>> +}
->>> +
->>> +static struct scp *init_scp(struct platform_device *pdev,
->>> +			const struct scp_domain_data *scp_domain_data, int num)
->>>  {
->>>  	struct genpd_onecell_data *pd_data;
->>>  	struct resource *res;
->>> -	int i, j, ret;
->>> +	int i, j;
->>>  	struct scp *scp;
->>> -	struct clk *clk[MT8173_CLK_MAX];
->>> +	struct clk *clk[CLK_MAX];
->>
->> should be *[CLK_MAX - 1] but I would prefer to define in the enum:
->> CLK_MAX = CLK_VENC_LT,
->
-> After init_clks() the clk[] will have valid contents between
-> clk[1]..clk[CLK_MAX-1], so it's necessary to declare clk[] with CLK_MAX
-> elements.
->
->> If you are ok with it, I can fix both of my comments when applying.
->
-> Yes. struct clk **clk can be applied directly. But I think clk[CLK_MAX]
-> should be kept in current implementation.
->
-
-Ok, we won't never use clk[0] but it's ok for now.
+> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
 Applied to v4.9-next/soc
-
->
-> Best regards,
->
-> James
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
