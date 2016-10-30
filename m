@@ -1,266 +1,92 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v3 2/8] iio: inkern: add helpers to query available values
- from channels
-Date: Sun, 30 Oct 2016 22:12:32 +0100
-Message-ID: <f4106f92-0011-a10d-653d-e315334d9472@axentia.se>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
- <1477262381-7800-3-git-send-email-peda@axentia.se>
- <c7848c84-960b-506f-f2e2-4aadfc5246f9@kernel.org>
- <alpine.DEB.2.02.1610301611070.32031@pmeerw.net>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: [PATCH v2 2/7] Documentation: dt: Add binding info for
+ jz4740-rtc driver
+Date: Mon, 31 Oct 2016 00:02:42 +0100
+Message-ID: <20161030230247.20538-3-paul@crapouillou.net>
+References: <20161030230247.20538-1-paul@crapouillou.net>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1610301611070.32031-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBC433LF43MBBBJXY3HAAKGQEEUOCH3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161030230247.20538-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-30 16:23, Peter Meerwald-Stadler wrote:
-> 
->> On 23/10/16 23:39, Peter Rosin wrote:
->>> Specifically a helper for reading the available maximum raw value of a
->>> channel and a helper for forwarding read_avail requests for raw values
->>> from one iio driver to an iio channel that is consumed.
->>>
->>> These rather specific helpers are in turn built with generic helpers
->>> making it easy to build more helpers for available values as needed.
->>>
->>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> Looks good to me.  Just what I was after.
-> 
-> some comments below
->  
->> Jonathan
->>> ---
->>>  drivers/iio/inkern.c         | 97 ++++++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/iio/consumer.h | 29 +++++++++++++
->>>  include/linux/iio/iio.h      | 17 ++++++++
->>>  3 files changed, 143 insertions(+)
->>>
->>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
->>> index c4757e6367e7..74808f8a187a 100644
->>> --- a/drivers/iio/inkern.c
->>> +++ b/drivers/iio/inkern.c
->>> @@ -703,6 +703,103 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val, int *val2)
->>>  }
->>>  EXPORT_SYMBOL_GPL(iio_read_channel_scale);
->>>  
->>> +static int iio_channel_read_avail(struct iio_channel *chan,
->>> +				  const int **vals, int *type, int *length,
->>> +				  enum iio_chan_info_enum info)
->>> +{
->>> +	if (!iio_channel_has_available(chan->channel, info))
->>> +		return -EINVAL;
->>> +
->>> +	return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
->>> +						 vals, type, length, info);
->>> +}
->>> +
->>> +int iio_read_avail_channel_raw(struct iio_channel *chan,
->>> +			       const int **vals, int *type, int *length)
->>> +{
->>> +	int ret;
->>> +
->>> +	mutex_lock(&chan->indio_dev->info_exist_lock);
->>> +	if (!chan->indio_dev->info) {
->>> +		ret = -ENODEV;
->>> +		goto err_unlock;
->>> +	}
->>> +
->>> +	ret = iio_channel_read_avail(chan,
->>> +				     vals, type, length, IIO_CHAN_INFO_RAW);
->>> +err_unlock:
->>> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
->>> +
->>> +	return ret;
->>> +}
->>> +EXPORT_SYMBOL_GPL(iio_read_avail_channel_raw);
->>> +
->>> +static int iio_channel_read_max(struct iio_channel *chan,
->>> +				int *val, int *val2, int *type,
->>> +				enum iio_chan_info_enum info)
->>> +{
->>> +	int unused;
->>> +	const int *vals;
->>> +	int length;
->>> +	int ret;
->>> +
->>> +	if (!val2)
->>> +		val2 = &unused;
->>> +
->>> +	ret = iio_channel_read_avail(chan, &vals, type, &length, info);
->>> +	switch (ret) {
->>> +	case IIO_AVAIL_RANGE:
->>> +		switch (*type) {
->>> +		case IIO_VAL_INT:
->>> +			*val = vals[2];
->>> +			break;
->>> +		default:
->>> +			*val = vals[4];
->>> +			*val2 = vals[5];
->>> +		}
->>> +		return 0;
->>> +
->>> +	case IIO_AVAIL_LIST:
->>> +		if (length <= 0)
->>> +			return -EINVAL;
->>> +		switch (*type) {
->>> +		case IIO_VAL_INT:
->>> +			*val = vals[--length];
->>> +			while (length) {
->>> +				if (vals[--length] > *val)
->>> +					*val = vals[length];
->>> +			}
->>> +			break;
->>> +		default:
->>> +			/* FIXME: learn about max for other iio values */
->>> +			return -EINVAL;
->>> +		}
->>> +		return 0;
->>> +
->>> +	default:
->>> +		return ret;
->>> +	}
->>> +}
->>> +
->>> +int iio_read_max_channel_raw(struct iio_channel *chan, int *val)
->>> +{
->>> +	int ret;
->>> +	int type;
->>> +
->>> +	mutex_lock(&chan->indio_dev->info_exist_lock);
->>> +	if (!chan->indio_dev->info) {
->>> +		ret = -ENODEV;
->>> +		goto err_unlock;
->>> +	}
->>> +
->>> +	ret = iio_channel_read_max(chan, val, NULL, &type, IIO_CHAN_INFO_RAW);
->>> +err_unlock:
->>> +	mutex_unlock(&chan->indio_dev->info_exist_lock);
->>> +
->>> +	return ret;
->>> +}
->>> +EXPORT_SYMBOL_GPL(iio_read_max_channel_raw);
->>> +
->>>  int iio_get_channel_type(struct iio_channel *chan, enum iio_chan_type *type)
->>>  {
->>>  	int ret = 0;
->>> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
->>> index 9edccfba1ffb..baab5e45734f 100644
->>> --- a/include/linux/iio/consumer.h
->>> +++ b/include/linux/iio/consumer.h
->>> @@ -226,6 +226,35 @@ int iio_read_channel_processed(struct iio_channel *chan, int *val);
->>>  int iio_write_channel_raw(struct iio_channel *chan, int val);
->>>  
->>>  /**
->>> + * iio_read_max_channel_raw() - read maximum available raw value from a given
->>> + *				channel
->>> + * @chan:		The channel being queried.
->>> + * @val:		Value read back.
->>> + *
->>> + * Note raw reads from iio channels are in adc counts and hence
-> 
-> "Note: raw reads..." would be easier...
-> here and below
+This commit adds documentation for the device-tree bindings of the
+jz4740-rtc driver, which supports the RTC unit present in the JZ4740 and
+JZ4780 SoCs from Ingenic.
 
-All other function comments lack the colon after that Note, so I was just
-following that lead. I suggest that this can be fixed up later with one
-patch for all comments, if needed?
+Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
+---
+ .../devicetree/bindings/rtc/ingenic,jz4740-rtc.txt | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
 
-> why is there no val2 here?
+v2:
+- Remove 'interrupt-parent' of the list of required properties
+- Add the -msec suffix for the DT entries that represent time
 
-Everything else in inkern.c that handles the raw channel assumes it
-is of type IIO_VAL_INT. Again, just following the lead.
+diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+new file mode 100644
+index 0000000..df97594
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+@@ -0,0 +1,37 @@
++JZ4740 and similar SoCs real-time clock driver
++
++Required properties:
++
++- compatible: One of:
++  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
++  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
++- reg: Address range of rtc register set
++- interrupts: IRQ number for the alarm interrupt
++- clocks: phandle to the "rtc" clock
++- clock-names: must be "rtc"
++
++Optional properties:
++- system-power-controller: To use this component as the
++  system power controller
++- reset-pin-assert-time-msec: Reset pin low-level assertion
++  time after wakeup (default 60ms; range 0-125ms if RTC clock
++  at 32 kHz)
++- min-wakeup-pin-assert-time-msec: Minimum wakeup pin assertion
++  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
++
++Example:
++
++rtc@10003000 {
++	compatible = "ingenic,jz4740-rtc";
++	reg = <0x10003000 0x3F>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <32>;
++
++	clocks = <&rtc_clock>;
++	clock-names = "rtc";
++
++	system-power-controller;
++	reset-pin-assert-time-msec = <60>;
++	min-wakeup-pin-assert-time-msec = <100>;
++};
+-- 
+2.9.3
 
-> just reading the documentation ("maximum available raw value") I am not 
-> sure what the function does: does it return the maximum value possible? or 
-> the maximum value in some internal buffer? maximum value ever seen?
-
-Maximum possible, that's what the available attribute is all
-about; possible values. How about:
-
- * iio_read_max_channel_raw() - read maximum available raw value from a given
- *				channel, i.e. the maximum possible value.
-
->>> + * scale will need to be applied if standard units are required.
->>> + */
->>> +int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
->>> +
->>> +/**
->>> + * iio_read_avail_channel_raw() - read available raw values from a given channel
->>> + * @chan:		The channel being queried.
->>> + * @vals:		Available values read back.
-> 
-> no vals2?
-
-Same raw channel assumption about IIO_VAL_INT.
-
->>> + * @type:		Type of available values in vals.
-> 
-> it is not clear what type is
-
-Same as in the iio_channel_has_info function right above which has
-the same kind of explanation. Again, just following the lead.
-
->>> + * @length:		Number of entries in vals.
->>> + *
->>> + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
->>> + *
->>> + * For ranges, three vals are always returned; min, step and max.
->>> + * For lists, all the possible values are enumerated.
->>> + *
->>> + * Note raw available values from iio channels are in adc counts and
->>> + * hence scale will need to be applied if standard units are required.
->>> + */
->>> +int iio_read_avail_channel_raw(struct iio_channel *chan,
->>> +			       const int **vals, int *type, int *length);
->>> +
->>> +/**
->>>   * iio_get_channel_type() - get the type of a channel
->>>   * @channel:		The channel being queried.
->>>   * @type:		The type of the channel.
->>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
->>> index 45b781084a4b..e565701d13ce 100644
->>> --- a/include/linux/iio/iio.h
->>> +++ b/include/linux/iio/iio.h
->>> @@ -315,6 +315,23 @@ static inline bool iio_channel_has_info(const struct iio_chan_spec *chan,
->>>  		(chan->info_mask_shared_by_all & BIT(type));
->>>  }
->>>  
->>> +/**
->>> + * iio_channel_has_available() - Checks if a channel has an available attribute
->>> + * @chan: The channel to be queried
->>> + * @type: Type of the available attribute to be checked
->>> + *
->>> + * Returns true if the channels supports reporting available values for the
-> 
-> channel
-
-I'll fix that.
-
-Sigh, I guess there's enough small changes that I'll need to do a v4.
-I'll hold off on that for a couple of days though since there is
-nothing badly wrong...
-
-Cheers,
-Peter
-
->>> + * given attribute type, false otherwise.
->>> + */
->>> +static inline bool iio_channel_has_available(const struct iio_chan_spec *chan,
->>> +					     enum iio_chan_info_enum type)
->>> +{
->>> +	return (chan->info_mask_separate_available & BIT(type)) |
->>> +		(chan->info_mask_shared_by_type_available & BIT(type)) |
->>> +		(chan->info_mask_shared_by_dir_available & BIT(type)) |
->>> +		(chan->info_mask_shared_by_all_available & BIT(type));
->>> +}
->>> +
->>>  #define IIO_CHAN_SOFT_TIMESTAMP(_si) {					\
->>>  	.type = IIO_TIMESTAMP,						\
->>>  	.channel = -1,							\
->>>
->>
-> 
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
