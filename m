@@ -1,33 +1,23 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/5] irqchip: st: Remove obsolete platforms from dt
- binding doc
-Date: Sun, 30 Oct 2016 15:41:28 -0500
-Message-ID: <20161030204128.gykqvspj72oednox@rob-hp-laptop>
-References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
- <1477065443-10668-6-git-send-email-patrice.chotard@st.com>
+Subject: Re: [PATCH v3 4/8] dt-bindings: add axentia to vendor-prefixes
+Date: Sun, 30 Oct 2016 15:41:35 -0500
+Message-ID: <20161030204135.zpis5kut653fldne@rob-hp-laptop>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+ <1477262381-7800-5-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477065443-10668-6-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <1477262381-7800-5-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: patrice.chotard@st.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, peter.griffin@linaro.org, lee.jones@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2016 at 05:57:23PM +0200, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
-> 
-> STiH415/6 SoC support is being removed from the kernel.
-> This patch updates the sti irchip and removes
-> references to these obsolete platforms.
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> Cc: <tglx@linutronix.de>
-> Cc: <jason@lakedaemon.net>
-> Cc: <marc.zyngier@arm.com>
+On Mon, Oct 24, 2016 at 12:39:37AM +0200, Peter Rosin wrote:
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  .../devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt  | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
