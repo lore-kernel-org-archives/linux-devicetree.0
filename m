@@ -1,568 +1,332 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] iio: envelope-detector: ADC driver based on a DAC
- and a comparator
-Date: Sun, 30 Oct 2016 13:44:48 +0000
-Message-ID: <61cd873a-b6ff-50d5-1161-e9b1ad90af88@kernel.org>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
- <1477262381-7800-9-git-send-email-peda@axentia.se>
+Subject: Re: [PATCH 06/10] iio: adc: stm32: add ext attrs to configure
+ sampling time
+Date: Sun, 30 Oct 2016 14:21:11 +0000
+Message-ID: <3e6634e9-35ce-5bd0-6647-e4e7d6d40261@kernel.org>
+References: <1477412722-24061-1-git-send-email-fabrice.gasnier@st.com>
+ <1477412722-24061-7-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477262381-7800-9-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477412722-24061-7-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/16 23:39, Peter Rosin wrote:
-> The DAC is used to find the peak level of an alternating voltage input
-> signal by a binary search using the output of a comparator wired to
-> an interrupt pin. Like so:
->                           _
->                          | \
->     input +------>-------|+ \
->                          |   \
->            .-------.     |    }---.
->            |       |     |   /    |
->            |    dac|-->--|- /     |
->            |       |     |_/      |
->            |       |              |
->            |       |              |
->            |    irq|------<-------'
->            |       |
->            '-------'
+On 25/10/16 17:25, Fabrice Gasnier wrote:
+> Add per channel "smpr" IIO extended attribute, to allow sampling
+> time configuration.
 > 
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Looks good to me.  I've cc'd Thomas Gleixner as the irq usage is obviously
-a bit unusual and I thought he may have some thoughts on it.
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+First thing is that any attributes need to be documented in
+Documentation/ABI/testing/sysfs-bus-iio-*
 
-Jonathan
+Secondly this feels rather like it should be possible to use standard ABI for
+this. The documentation manages to successfully skip passed the use of
+any standard ADC terminology. I'm not actually sure what its
+doing when it talks about sampling time... Does this device even have an
+inbuilt track and hold?  Presumably but who knows...  Ah, the document
+'How to get the best ADC accuracy in STM32FX ... ' gives some details in the
+section on how to deal with high impedance sources.  Worth adding a reference
+to that for this.
+
+Arguably the 'right' value for these is dependent on the local electrical
+properties, so should be described in the device tree rather than tweaked
+from userspace.
+
+If you do want to do still want to provide userspace control then it
+needs to fit nicely within the IIO ABI.  Now arguably it's 'sort of'
+integration time but only via a nasty non linear relationship so lets
+not abuse that but rather work up something ADC specific.
+
+As such we would be looking at something like.
+
+in_voltageX_track_time and the units should be seconds (it'll be a pain, but
+we need to end up with a generic ABI so it has to be in standard units).
+It might make sense to add this to the core info_mask element list and
+handle it that way.  I'm still dubious that this isn't really a hardware
+question that should never be exposed to userspace in the first place...
+You will need to convince me ;)
+
+A few more specific comments inline.
 > ---
->  .../testing/sysfs-bus-iio-adc-envelope-detector    |  36 ++
->  MAINTAINERS                                        |   2 +
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/envelope-detector.c                | 422 +++++++++++++++++++++
->  5 files changed, 471 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
->  create mode 100644 drivers/iio/adc/envelope-detector.c
+>  drivers/iio/adc/stm32/stm32-adc.c   | 75 +++++++++++++++++++++++++++++++++++++
+>  drivers/iio/adc/stm32/stm32-adc.h   | 25 +++++++++++++
+>  drivers/iio/adc/stm32/stm32f4-adc.c | 48 ++++++++++++++++++++++++
+>  3 files changed, 148 insertions(+)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
-> new file mode 100644
-> index 000000000000..2071f9bcfaa5
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
-> @@ -0,0 +1,36 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_invert
-> +Date:		October 2016
-> +KernelVersion:	4.9
-> +Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> +Description:
-> +		The DAC is used to find the peak level of an alternating
-> +		voltage input signal by a binary search using the output
-> +		of a comparator wired to an interrupt pin. Like so:
-> +		                           _
-> +		                          | \
-> +		     input +------>-------|+ \
-> +		                          |   \
-> +		            .-------.     |    }---.
-> +		            |       |     |   /    |
-> +		            |    dac|-->--|- /     |
-> +		            |       |     |_/      |
-> +		            |       |              |
-> +		            |       |              |
-> +		            |    irq|------<-------'
-> +		            |       |
-> +		            '-------'
-> +		The boolean invert attribute (0/1) should be set when the
-> +		input signal is centered around the maximum value of the
-> +		dac instead of zero. The envelope detector will search
-> +		from below in this case and will also invert the result.
-> +		The edge/level of the interrupt is also switched to its
-> +		opposite value.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_compare_interval
-> +Date:		October 2016
-> +KernelVersion:	4.9
-> +Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> +Description:
-> +		Number of milliseconds to wait for the comparator in each
-> +		step of the binary search for the input peak level. Needs
-> +		to relate to the frequency of the input signal.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fca35d16037d..0cf3549e05e7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6123,7 +6123,9 @@ IIO ENVELOPE DETECTOR
->  M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->  L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
->  F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> +F:	drivers/iio/adc/envelope-detector.c
+> diff --git a/drivers/iio/adc/stm32/stm32-adc.c b/drivers/iio/adc/stm32/stm32-adc.c
+> index 9b4b459..1681f75 100644
+> --- a/drivers/iio/adc/stm32/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32/stm32-adc.c
+> @@ -38,6 +38,61 @@
+>  #include "stm32-adc.h"
 >  
->  IIO SUBSYSTEM AND DRIVERS
->  M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 7edcf3238620..d5c4a95855c2 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -195,6 +195,16 @@ config DA9150_GPADC
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called berlin2-adc.
+>  /**
+> + * stm32_adc_conf_smp() - Configure sampling time for each channel
+> + * @indio_dev: IIO device
+> + * @scan_mask: channels to be converted
+> + */
+> +static int stm32_adc_conf_smp(struct iio_dev *indio_dev,
+> +			      const unsigned long *scan_mask)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	const struct stm32_adc_regs *smp =
+> +		adc->common->data->adc_reginfo->smpr_regs;
+> +	struct stm32_adc_chan *stm32_chan;
+> +	const struct iio_chan_spec *chan;
+> +	u32 bit, val;
+> +	int i;
+> +
+> +	for_each_set_bit(bit, scan_mask, indio_dev->masklength) {
+> +		chan = indio_dev->channels + bit;
+> +		stm32_chan = to_stm32_chan(adc, chan);
+> +		i = chan->channel;
+> +
+> +		if (i >= adc->max_channels)
+> +			return -EINVAL;
+> +
+> +		val = stm32_adc_readl(adc, smp[i].reg);
+> +		val &= ~smp[i].mask;
+> +		val |= (stm32_chan->smpr << smp[i].shift) & smp[i].mask;
+> +		stm32_adc_writel(adc, smp[i].reg, val);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int stm32_adc_set_smpr(struct iio_dev *indio_dev,
+> +		       const struct iio_chan_spec *chan, unsigned int smpr)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	struct stm32_adc_chan *stm32_chan = to_stm32_chan(adc, chan);
+> +
+> +	stm32_chan->smpr = smpr;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(stm32_adc_set_smpr);
+> +
+> +int stm32_adc_get_smpr(struct iio_dev *indio_dev,
+> +		       const struct iio_chan_spec *chan)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	struct stm32_adc_chan *stm32_chan = to_stm32_chan(adc, chan);
+> +
+> +	return stm32_chan->smpr;
+> +}
+> +EXPORT_SYMBOL_GPL(stm32_adc_get_smpr);
+> +
+> +/**
+>   * stm32_adc_conf_scan_seq() - Build regular or injected channels scan sequence
+>   * @indio_dev: IIO device
+>   * @scan_mask: channels to be converted
+> @@ -126,6 +181,12 @@ static int stm32_adc_conf_scan(struct iio_dev *indio_dev,
+>  		return ret;
+>  	}
 >  
-> +config ENVELOPE_DETECTOR
-> +	tristate "Envelope detector using a DAC and a comparator"
-> +	depends on OF
-> +	help
-> +	  Say yes here to build support for an envelope detector using a DAC
-> +	  and a comparator.
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called iio-envelope-detector.
-> +
->  config EXYNOS_ADC
->  	tristate "Exynos ADC driver support"
->  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 7a40c04c311f..0d773c6a0578 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
->  obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
->  obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
->  obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
-> +obj-$(CONFIG_ENVELOPE_DETECTOR) += envelope-detector.o
->  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->  obj-$(CONFIG_FSL_MX25_ADC) += fsl-imx25-gcq.o
->  obj-$(CONFIG_HI8435) += hi8435.o
-> diff --git a/drivers/iio/adc/envelope-detector.c b/drivers/iio/adc/envelope-detector.c
-> new file mode 100644
-> index 000000000000..fef15c0d7c9c
-> --- /dev/null
-> +++ b/drivers/iio/adc/envelope-detector.c
-> @@ -0,0 +1,422 @@
-> +/*
-> + * Driver for an envelope detector using a DAC and a comparator
-> + *
-> + * Copyright (C) 2016 Axentia Technologies AB
-> + *
-> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/*
-> + * The DAC is used to find the peak level of an alternating voltage input
-> + * signal by a binary search using the output of a comparator wired to
-> + * an interrupt pin. Like so:
-> + *                           _
-> + *                          | \
-> + *     input +------>-------|+ \
-> + *                          |   \
-> + *            .-------.     |    }---.
-> + *            |       |     |   /    |
-> + *            |    dac|-->--|- /     |
-> + *            |       |     |_/      |
-> + *            |       |              |
-> + *            |       |              |
-> + *            |    irq|------<-------'
-> + *            |       |
-> + *            '-------'
-> + */
-> +
-> +#include <linux/completion.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/workqueue.h>
-> +
-> +struct envelope {
-> +	spinlock_t comp_lock; /* protects comp */
-> +	int comp;
-> +
-> +	struct mutex read_lock; /* protects everything else */
-> +
-> +	int comp_irq;
-> +	u32 comp_irq_trigger;
-> +	u32 comp_irq_trigger_inv;
-> +
-> +	struct iio_channel *dac;
-> +	struct delayed_work comp_timeout;
-> +
-> +	unsigned int comp_interval;
-> +	bool invert;
-> +	u32 dac_max;
-> +
-> +	int high;
-> +	int level;
-> +	int low;
-> +
-> +	struct completion done;
-> +};
-> +
-> +/*
-> + * The envelope_detector_comp_latch function works together with the compare
-> + * interrupt service routine below (envelope_detector_comp_isr) as a latch
-> + * (one-bit memory) for if the interrupt has triggered since last calling
-> + * this function.
-> + * The ..._comp_isr function disables the interrupt so that the cpu does not
-> + * need to service a possible interrupt flood from the comparator when no-one
-> + * cares anyway, and this ..._comp_latch function reenables them again if
-> + * needed.
-> + */
-> +static int envelope_detector_comp_latch(struct envelope *env)
-> +{
-> +	int comp;
-> +
-> +	spin_lock_irq(&env->comp_lock);
-> +	comp = env->comp;
-> +	env->comp = 0;
-> +	spin_unlock_irq(&env->comp_lock);
-> +
-> +	if (!comp)
-> +		return 0;
-> +
-> +	/*
-> +	 * The irq was disabled, and is reenabled just now.
-> +	 * But there might have been a pending irq that
-> +	 * happened while the irq was disabled that fires
-> +	 * just as the irq is reenabled. That is not what
-> +	 * is desired.
-> +	 */
-> +	enable_irq(env->comp_irq);
-> +
-> +	/* So, synchronize this possibly pending irq... */
-> +	synchronize_irq(env->comp_irq);
-> +
-> +	/* ...and redo the whole dance. */
-> +	spin_lock_irq(&env->comp_lock);
-> +	comp = env->comp;
-> +	env->comp = 0;
-> +	spin_unlock_irq(&env->comp_lock);
-> +
-> +	if (comp)
-> +		enable_irq(env->comp_irq);
-> +
-> +	return 1;
-> +}
-> +
-> +static irqreturn_t envelope_detector_comp_isr(int irq, void *ctx)
-> +{
-> +	struct envelope *env = ctx;
-> +
-> +	spin_lock(&env->comp_lock);
-> +	env->comp = 1;
-> +	disable_irq_nosync(env->comp_irq);
-> +	spin_unlock(&env->comp_lock);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void envelope_detector_setup_compare(struct envelope *env)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Do a binary search for the peak input level, and stop
-> +	 * when that level is "trapped" between two adjacent DAC
-> +	 * values.
-> +	 * When invert is active, use the midpoint floor so that
-> +	 * env->level ends up as env->low when the termination
-> +	 * criteria below is fulfilled, and use the midpoint
-> +	 * ceiling when invert is not active so that env->level
-> +	 * ends up as env->high in that case.
-> +	 */
-> +	env->level = (env->high + env->low + !env->invert) / 2;
-> +
-> +	if (env->high == env->low + 1) {
-> +		complete(&env->done);
-> +		return;
-> +	}
-> +
-> +	/* Set a "safe" DAC level (if there is such a thing)... */
-> +	ret = iio_write_channel_raw(env->dac, env->invert ? 0 : env->dac_max);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	/* ...clear the comparison result... */
-> +	envelope_detector_comp_latch(env);
-> +
-> +	/* ...set the real DAC level... */
-> +	ret = iio_write_channel_raw(env->dac, env->level);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	/* ...and wait for a bit to see if the latch catches anything. */
-> +	schedule_delayed_work(&env->comp_timeout,
-> +			      msecs_to_jiffies(env->comp_interval));
-> +	return;
-> +
-> +err:
-> +	env->level = ret;
-> +	complete(&env->done);
-> +}
-> +
-> +static void envelope_detector_timeout(struct work_struct *work)
-> +{
-> +	struct envelope *env = container_of(work, struct envelope,
-> +					    comp_timeout.work);
-> +
-> +	/* Adjust low/high depending on the latch content... */
-> +	if (!envelope_detector_comp_latch(env) ^ !env->invert)
-> +		env->low = env->level;
-> +	else
-> +		env->high = env->level;
-> +
-> +	/* ...and continue the search. */
-> +	envelope_detector_setup_compare(env);
-> +}
-> +
-> +static int envelope_detector_read_raw(struct iio_dev *indio_dev,
-> +				      struct iio_chan_spec const *chan,
-> +				      int *val, int *val2, long mask)
-> +{
-> +	struct envelope *env = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		/*
-> +		 * When invert is active, start with high=max+1 and low=0
-> +		 * since we will end up with the low value when the
-> +		 * termination criteria is fulfilled (rounding down). And
-> +		 * start with high=max and low=-1 when invert is not active
-> +		 * since we will end up with the high value in that case.
-> +		 * This ensures that the returned value in both cases are
-> +		 * in the same range as the DAC and is a value that has not
-> +		 * triggered the comparator.
-> +		 */
-> +		mutex_lock(&env->read_lock);
-> +		env->high = env->dac_max + env->invert;
-> +		env->low = -1 + env->invert;
-> +		envelope_detector_setup_compare(env);
-> +		wait_for_completion(&env->done);
-> +		if (env->level < 0) {
-> +			ret = env->level;
-> +			goto err_unlock;
-> +		}
-> +		*val = env->invert ? env->dac_max - env->level : env->level;
-> +		mutex_unlock(&env->read_lock);
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return iio_read_channel_scale(env->dac, val, val2);
-> +	}
-> +
-> +	return -EINVAL;
-> +
-> +err_unlock:
-> +	mutex_unlock(&env->read_lock);
-> +	return ret;
-> +}
-> +
-> +static ssize_t envelope_show_invert(struct iio_dev *indio_dev,
-> +				    uintptr_t private,
-> +				    struct iio_chan_spec const *ch, char *buf)
-> +{
-> +	struct envelope *env = iio_priv(indio_dev);
-> +
-> +	return sprintf(buf, "%u\n", env->invert);
-> +}
-> +
-> +static ssize_t envelope_store_invert(struct iio_dev *indio_dev,
-> +				     uintptr_t private,
-> +				     struct iio_chan_spec const *ch,
-> +				     const char *buf, size_t len)
-> +{
-> +	struct envelope *env = iio_priv(indio_dev);
-> +	unsigned long invert;
-> +	int ret;
-> +	u32 trigger;
-> +
-> +	ret = kstrtoul(buf, 0, &invert);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (invert > 1)
-> +		return -EINVAL;
-> +
-> +	trigger = invert ? env->comp_irq_trigger_inv : env->comp_irq_trigger;
-> +
-> +	mutex_lock(&env->read_lock);
-> +	if (invert != env->invert)
-> +		ret = irq_set_irq_type(env->comp_irq, trigger);
-> +	if (!ret) {
-> +		env->invert = invert;
-> +		ret = len;
-> +	}
-> +	mutex_unlock(&env->read_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t envelope_show_comp_interval(struct iio_dev *indio_dev,
-> +					   uintptr_t private,
-> +					   struct iio_chan_spec const *ch,
-> +					   char *buf)
-> +{
-> +	struct envelope *env = iio_priv(indio_dev);
-> +
-> +	return sprintf(buf, "%u\n", env->comp_interval);
-> +}
-> +
-> +static ssize_t envelope_store_comp_interval(struct iio_dev *indio_dev,
-> +					    uintptr_t private,
-> +					    struct iio_chan_spec const *ch,
-> +					    const char *buf, size_t len)
-> +{
-> +	struct envelope *env = iio_priv(indio_dev);
-> +	unsigned long interval;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 0, &interval);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (interval > 1000)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&env->read_lock);
-> +	env->comp_interval = interval;
-> +	mutex_unlock(&env->read_lock);
-> +
-> +	return len;
-> +}
-> +
-> +static const struct iio_chan_spec_ext_info envelope_detector_ext_info[] = {
-> +	{ .name = "invert",
-> +	  .read = envelope_show_invert,
-> +	  .write = envelope_store_invert, },
-> +	{ .name = "compare_interval",
-> +	  .read = envelope_show_comp_interval,
-> +	  .write = envelope_store_comp_interval, },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static const struct iio_chan_spec envelope_detector_iio_channel = {
-> +	.type = IIO_ALTVOLTAGE,
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-> +			    | BIT(IIO_CHAN_INFO_SCALE),
-> +	.ext_info = envelope_detector_ext_info,
-> +	.indexed = 1,
-> +};
-> +
-> +static const struct iio_info envelope_detector_info = {
-> +	.read_raw = &envelope_detector_read_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +static int envelope_detector_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct envelope *env;
-> +	enum iio_chan_type type;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*env));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +	env = iio_priv(indio_dev);
-> +	env->comp_interval = 50; /* some sensible default? */
-> +
-> +	spin_lock_init(&env->comp_lock);
-> +	mutex_init(&env->read_lock);
-> +	init_completion(&env->done);
-> +	INIT_DELAYED_WORK(&env->comp_timeout, envelope_detector_timeout);
-> +
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->dev.of_node = dev->of_node;
-> +	indio_dev->info = &envelope_detector_info;
-> +	indio_dev->channels = &envelope_detector_iio_channel;
-> +	indio_dev->num_channels = 1;
-> +
-> +	env->dac = devm_iio_channel_get(dev, "dac");
-> +	if (IS_ERR(env->dac)) {
-> +		if (PTR_ERR(env->dac) != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get dac input channel\n");
-> +		return PTR_ERR(env->dac);
-> +	}
-> +
-> +	env->comp_irq = platform_get_irq_byname(pdev, "comp");
-> +	if (env->comp_irq < 0) {
-> +		if (env->comp_irq != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get compare interrupt\n");
-> +		return env->comp_irq;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, env->comp_irq, envelope_detector_comp_isr,
-> +			       0, "envelope-detector", env);
+> +	ret = stm32_adc_conf_smp(indio_dev, scan_mask);
 > +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to request interrupt\n");
-> +		return ret;
-> +	}
-> +	env->comp_irq_trigger = irq_get_trigger_type(env->comp_irq);
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_RISING)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_FALLING;
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_FALLING)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_RISING;
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_HIGH)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_LOW;
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_LOW)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_HIGH;
-> +
-> +	ret = iio_get_channel_type(env->dac, &type);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (type != IIO_VOLTAGE) {
-> +		dev_err(dev, "dac is of the wrong type\n");
-> +		return -EINVAL;
+> +		dev_err(&indio_dev->dev, "Failed to configure samp time\n");
+> +		goto err_dis;
 > +	}
 > +
-> +	ret = iio_read_max_channel_raw(env->dac, &env->dac_max);
-> +	if (ret < 0) {
-> +		dev_err(dev, "dac does not indicate its raw maximum value\n");
-> +		return ret;
+>  	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
+>  	if (ret) {
+>  		dev_err(&indio_dev->dev, "Failed to configure sequence\n");
+> @@ -938,6 +999,7 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev,
+>  				  const struct stm32_adc_info *adc_info)
+>  {
+>  	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	struct stm32_adc_common *common = adc->common;
+>  	struct device_node *node = indio_dev->dev.of_node;
+>  	struct property *prop;
+>  	const __be32 *cur;
+> @@ -945,6 +1007,19 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev,
+>  	int scan_index = 0, num_channels = 0;
+>  	u32 val;
+>  
+> +	if (!common->stm32_chans[adc->id]) {
+> +		/* Allocate extended attributes structure for an instance */
+> +		struct stm32_adc_chan *stm32_chans;
+> +
+> +		stm32_chans = devm_kcalloc(&indio_dev->dev,
+> +					   adc_info->max_channels,
+> +					   sizeof(*stm32_chans), GFP_KERNEL);
+> +		if (!stm32_chans)
+> +			return -ENOMEM;
+> +
+> +		common->stm32_chans[adc->id] = stm32_chans;
 > +	}
 > +
-> +	return devm_iio_device_register(dev, indio_dev);
+>  	of_property_for_each_u32(node, "st,adc-channels", prop, cur, val)
+>  		num_channels++;
+>  
+> diff --git a/drivers/iio/adc/stm32/stm32-adc.h b/drivers/iio/adc/stm32/stm32-adc.h
+> index 6c9b70d..8cf1d5c 100644
+> --- a/drivers/iio/adc/stm32/stm32-adc.h
+> +++ b/drivers/iio/adc/stm32/stm32-adc.h
+> @@ -143,6 +143,14 @@ struct stm32_adc_chan_spec {
+>  };
+>  
+>  /**
+> + * struct stm32_adc_chan - Extended specifications of stm32 adc channels
+> + * @smpr: per channel sampling time selection
+> + */
+> +struct stm32_adc_chan {
+> +	unsigned smpr:3;
+> +};
+> +
+> +/**
+>   * struct stm32_adc_trig_info - ADC trigger info
+>   * @extsel:		trigger selection for regular or injected
+>   * @name:		name of the trigger, corresponding to its source
+> @@ -206,6 +214,7 @@ struct stm32_adc_trig_reginfo {
+>   * @jdr:		injected data registers offsets
+>   * @sqr_regs:		Regular sequence registers description
+>   * @jsqr_reg:		Injected sequence register description
+> + * @smpr_regs:		Sampling time registers description
+>   * @trig_reginfo:	regular trigger control registers description
+>   * @jtrig_reginfo:	injected trigger control registers description
+>   */
+> @@ -220,6 +229,7 @@ struct stm32_adc_reginfo {
+>  	u32 jdr[4];
+>  	const struct stm32_adc_regs *sqr_regs;
+>  	const struct stm32_adc_regs *jsqr_reg;
+> +	const struct stm32_adc_regs *smpr_regs;
+>  	const struct stm32_adc_trig_reginfo *trig_reginfo;
+>  	const struct stm32_adc_trig_reginfo *jtrig_reginfo;
+>  };
+> @@ -328,6 +338,7 @@ struct stm32_adc {
+>   * @aclk:		common clock for the analog circuitry
+>   * @vref:		regulator reference
+>   * @vref_mv:		vref voltage (mv)
+> + * @stm32_chans:	stm32 channels extended specification data
+>   * @gpio_descs:		gpio descriptor used to configure EXTi triggers
+>   * @lock:		mutex
+>   */
+> @@ -341,11 +352,21 @@ struct stm32_adc_common {
+>  	struct clk			*aclk;
+>  	struct regulator		*vref;
+>  	int				vref_mv;
+> +	struct stm32_adc_chan		*stm32_chans[STM32_ADC_ID_MAX];
+>  	struct gpio_descs		*gpios;
+>  	struct mutex			lock;	/* read_raw lock */
+>  };
+>  
+>  /* Helper routines */
+> +static inline struct stm32_adc_chan *to_stm32_chan(struct stm32_adc *adc,
+> +						   const struct iio_chan_spec
+> +						   *chan)
+> +{
+> +	struct stm32_adc_chan *stm32_chans = adc->common->stm32_chans[adc->id];
+> +
+> +	return &stm32_chans[chan->channel];
 > +}
 > +
-> +static const struct of_device_id envelope_detector_match[] = {
-> +	{ .compatible = "axentia,tse850-envelope-detector", },
-> +	{ /* sentinel */ }
+>  static inline int stm32_adc_start_conv(struct stm32_adc *adc)
+>  {
+>  	return adc->common->data->start_conv(adc);
+> @@ -458,6 +479,10 @@ static inline void stm32_adc_clr_bits(struct stm32_adc *adc, u32 reg, u32 bits)
+>  
+>  /* STM32 common extended attributes */
+>  extern const struct iio_enum stm32_adc_trig_pol;
+> +int stm32_adc_set_smpr(struct iio_dev *indio_dev,
+> +		       const struct iio_chan_spec *chan, unsigned int smpr);
+> +int stm32_adc_get_smpr(struct iio_dev *indio_dev,
+> +		       const struct iio_chan_spec *chan);
+>  int stm32_adc_probe(struct platform_device *pdev);
+>  int stm32_adc_remove(struct platform_device *pdev);
+>  
+> diff --git a/drivers/iio/adc/stm32/stm32f4-adc.c b/drivers/iio/adc/stm32/stm32f4-adc.c
+> index e033a68..e0e6211 100644
+> --- a/drivers/iio/adc/stm32/stm32f4-adc.c
+> +++ b/drivers/iio/adc/stm32/stm32f4-adc.c
+> @@ -330,6 +330,32 @@ enum stm32f4_adc_smpr {
+>  };
+>  
+>  /**
+> + * stm32f4_smpr_regs[] - describe sampling time registers & bit fields
+> + * Sorted so it can be indexed by channel number.
+> + */
+> +static const struct stm32_adc_regs stm32f4_smpr_regs[] = {
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP0_MASK, STM32F4_SMP0_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP1_MASK, STM32F4_SMP1_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP2_MASK, STM32F4_SMP2_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP3_MASK, STM32F4_SMP3_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP4_MASK, STM32F4_SMP4_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP5_MASK, STM32F4_SMP5_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP6_MASK, STM32F4_SMP6_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP7_MASK, STM32F4_SMP7_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP8_MASK, STM32F4_SMP8_SHIFT },
+> +	{ STM32F4_ADCX_SMPR2, STM32F4_SMP9_MASK, STM32F4_SMP9_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP10_MASK, STM32F4_SMP10_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP11_MASK, STM32F4_SMP11_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP12_MASK, STM32F4_SMP12_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP13_MASK, STM32F4_SMP13_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP14_MASK, STM32F4_SMP14_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP15_MASK, STM32F4_SMP15_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP16_MASK, STM32F4_SMP16_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP17_MASK, STM32F4_SMP17_SHIFT },
+> +	{ STM32F4_ADCX_SMPR1, STM32F4_SMP18_MASK, STM32F4_SMP18_SHIFT },
 > +};
-> +MODULE_DEVICE_TABLE(of, envelope_detector_match);
 > +
-> +static struct platform_driver envelope_detector_driver = {
-> +	.probe = envelope_detector_probe,
-> +	.driver = {
-> +		.name = "iio-envelope-detector",
-> +		.of_match_table = envelope_detector_match,
-> +	},
+> +/**
+>   * stm32f4_sqr_regs - describe regular sequence registers
+>   * - L: sequence len (register & bit field)
+>   * - SQ1..SQ16: sequence entries (register & bit field)
+> @@ -407,6 +433,7 @@ enum stm32f4_adc_smpr {
+>  	},
+>  	.sqr_regs = stm32f4_sqr_regs,
+>  	.jsqr_reg = stm32f4_jsqr_reg,
+> +	.smpr_regs = stm32f4_smpr_regs,
+>  	.trig_reginfo = &stm32f4_adc_trig_reginfo,
+>  	.jtrig_reginfo = &stm32f4_adc_jtrig_reginfo,
+>  };
+> @@ -555,7 +582,28 @@ static int stm32f4_adc_clk_sel(struct stm32_adc *adc)
+>  	return 0;
+>  }
+>  
+> +/* stm32f4_smpr_items : Channel-wise programmable sampling time */
+> +static const char * const stm32f4_smpr_items[] = {
+> +	[STM32F4_SMPR_3_CK_CYCLES] = "3_cycles",
+> +	[STM32F4_SMPR_15_CK_CYCLES] = "15_cycles",
+> +	[STM32F4_SMPR_28_CK_CYCLES] = "28_cycles",
+> +	[STM32F4_SMPR_56_CK_CYCLES] = "56_cycles",
+> +	[STM32F4_SMPR_84_CK_CYCLES] = "84_cycles",
+> +	[STM32F4_SMPR_112_CK_CYCLES] = "112_cycles",
+> +	[STM32F4_SMPR_144_CK_CYCLES] = "144_cycles",
+> +	[STM32F4_SMPR_480_CK_CYCLES] = "480_cycles",
+This is a whole level of nasty magic numbers.  Always take real numeric
+values and either provide an _available attribute listing the options,
+or if appropriate round to the next best (probably up here).
+
+Units shouldn't be in cycles as that has no meaning without a deep and
+dirty knowledge of what clocks are being fed to the device.  Stuff that
+is at least tricky for userspace to work out.  THis is a time, so it
+should be in seconds.
+
+
 > +};
-> +module_platform_driver(envelope_detector_driver);
 > +
-> +MODULE_DESCRIPTION("Envelope detector using a DAC and a comparator");
-> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
+> +static const struct iio_enum stm32f4_smpr = {
+> +	.items = stm32f4_smpr_items,
+> +	.num_items = ARRAY_SIZE(stm32f4_smpr_items),
+> +	.get = stm32_adc_get_smpr,
+> +	.set = stm32_adc_set_smpr,
+> +};
+> +
+>  static const struct iio_chan_spec_ext_info stm32f4_adc_ext_info[] = {
+> +	IIO_ENUM("smpr", IIO_SEPARATE, &stm32f4_smpr),
+> +	IIO_ENUM_AVAILABLE("smpr", &stm32f4_smpr),
+>  	IIO_ENUM("trigger_pol", IIO_SHARED_BY_ALL, &stm32_adc_trig_pol),
+>  	{
+>  		.name = "trigger_pol_available",
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
