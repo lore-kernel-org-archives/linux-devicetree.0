@@ -1,109 +1,95 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 7/8] dt-bindings: iio: document envelope-detector
- bindings
-Date: Sun, 30 Oct 2016 13:35:26 +0000
-Message-ID: <0f054fa3-5b38-ce19-d9b6-d5f862f43ee2@kernel.org>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
- <1477262381-7800-8-git-send-email-peda@axentia.se>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] usb: musb: core: added helper function for parsing DT
+Date: Sun, 30 Oct 2016 06:35:57 -0700
+Message-ID: <m2wpgq2c3m.fsf@baylibre.com>
+References: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
+        <1477560847-8929-3-git-send-email-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477262381-7800-8-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477560847-8929-3-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+        (Alexandre Bailon's message of "Thu, 27 Oct 2016 11:34:05 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/16 23:39, Peter Rosin wrote:
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-I'm happy with this, but again it's odd enough I'd like some input from
-a device tree bindings maintainer.
+Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Thanks,
-
-Jonathan
+> From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>
+> This adds the function musb_get_mode() to get the DT property "dr_mode"
+>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Tested-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
->  .../bindings/iio/adc/envelope-detector.txt         | 54 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 +++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> new file mode 100644
-> index 000000000000..27544bdd4478
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
-> @@ -0,0 +1,54 @@
-> +Bindings for ADC envelope detector using a DAC and a comparator
-> +
-> +The DAC is used to find the peak level of an alternating voltage input
-> +signal by a binary search using the output of a comparator wired to
-> +an interrupt pin. Like so:
-> +                          _
-> +                         | \
-> +    input +------>-------|+ \
-> +                         |   \
-> +           .-------.     |    }---.
-> +           |       |     |   /    |
-> +           |    dac|-->--|- /     |
-> +           |       |     |_/      |
-> +           |       |              |
-> +           |       |              |
-> +           |    irq|------<-------'
-> +           |       |
-> +           '-------'
-> +
-> +Required properties:
-> +- compatible: Should be "axentia,tse850-envelope-detector"
-> +- io-channels: Channel node of the dac to be used for comparator input.
-> +- io-channel-names: Should be "dac".
-> +- interrupt specification for one client interrupt,
-> +  see ../../interrupt-controller/interrupts.txt for details.
-> +- interrupt-names: Should be "comp".
-> +
-> +Example:
-> +
-> +	&i2c {
-> +		dpot: mcp4651-104@28 {
-> +			compatible = "microchip,mcp4651-104";
-> +			reg = <0x28>;
-> +			#io-channel-cells = <1>;
-> +		};
-> +	};
-> +
-> +	dac: dac {
-> +		compatible = "dpot-dac";
-> +		vref-supply = <&reg_3v3>;
-> +		io-channels = <&dpot 0>;
-> +		io-channel-names = "dpot";
-> +		#io-channel-cells = <1>;
-> +	};
-> +
-> +	envelope-detector {
-> +		compatible = "axentia,tse850-envelope-detector";
-> +		io-channels = <&dac 0>;
-> +		io-channel-names = "dac";
-> +
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-names = "comp";
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d7375f45ff0f..fca35d16037d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6119,6 +6119,12 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
->  F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
->  F:	drivers/iio/dac/dpot-dac.c
+>  drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
+>  drivers/usb/musb/musb_core.h |  5 +++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+> index 27dadc0..bba07e7 100644
+> --- a/drivers/usb/musb/musb_core.c
+> +++ b/drivers/usb/musb/musb_core.c
+> @@ -100,6 +100,7 @@
+>  #include <linux/io.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/usb.h>
+> +#include <linux/usb/of.h>
 >  
-> +IIO ENVELOPE DETECTOR
-> +M:	Peter Rosin <peda@axentia.se>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+>  #include "musb_core.h"
+>  #include "musb_trace.h"
+> @@ -130,6 +131,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
+>  	return dev_get_drvdata(dev);
+>  }
+>  
+> +enum musb_mode musb_get_mode(struct device *dev)
+> +{
+> +	enum usb_dr_mode mode;
 > +
->  IIO SUBSYSTEM AND DRIVERS
->  M:	Jonathan Cameron <jic23@kernel.org>
->  R:	Hartmut Knaack <knaack.h@gmx.de>
-> 
+> +	mode = usb_get_dr_mode(dev);
+> +	switch (mode) {
+> +	case USB_DR_MODE_HOST:
+> +		return MUSB_HOST;
+> +	case USB_DR_MODE_PERIPHERAL:
+> +		return MUSB_PERIPHERAL;
+> +	case USB_DR_MODE_OTG:
+> +	case USB_DR_MODE_UNKNOWN:
+> +	default:
+> +		return MUSB_OTG;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(musb_get_mode);
+> +
+>  /*-------------------------------------------------------------------------*/
+>  
+>  #ifndef CONFIG_BLACKFIN
+> diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+> index 2cb88a49..a406468 100644
+> --- a/drivers/usb/musb/musb_core.h
+> +++ b/drivers/usb/musb/musb_core.h
+> @@ -617,4 +617,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
+>  		musb->ops->post_root_reset_end(musb);
+>  }
+>  
+> +/* gets the "dr_mode" property from DT and converts it into musb_mode
+> + * if the property is not found or not recognized returns MUSB_OTG
+> + */
+
+nit: multi-line comment style
+
+> +extern enum musb_mode musb_get_mode(struct device *dev);
+> +
+>  #endif	/* __MUSB_CORE_H__ */
+
+Otherwise,
+
+Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
