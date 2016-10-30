@@ -1,238 +1,39 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v3 2/8] iio: inkern: add helpers to query available values
- from channels
-Date: Sun, 30 Oct 2016 16:23:00 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1610301611070.32031@pmeerw.net>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se> <1477262381-7800-3-git-send-email-peda@axentia.se> <c7848c84-960b-506f-f2e2-4aadfc5246f9@kernel.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: binding: bcm2835-mbox: fix address typo in
+ example
+Date: Sun, 30 Oct 2016 16:26:48 +0100
+Message-ID: <b387fb23-8ebe-bd12-631f-4b6e42a5ecde@suse.de>
+References: <1477505640-26658-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c7848c84-960b-506f-f2e2-4aadfc5246f9@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477505640-26658-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-> On 23/10/16 23:39, Peter Rosin wrote:
-> > Specifically a helper for reading the available maximum raw value of a
-> > channel and a helper for forwarding read_avail requests for raw values
-> > from one iio driver to an iio channel that is consumed.
-> > 
-> > These rather specific helpers are in turn built with generic helpers
-> > making it easy to build more helpers for available values as needed.
-> > 
-> > Signed-off-by: Peter Rosin <peda@axentia.se>
-> Looks good to me.  Just what I was after.
-
-some comments below
- 
-> Jonathan
-> > ---
-> >  drivers/iio/inkern.c         | 97 ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/iio/consumer.h | 29 +++++++++++++
-> >  include/linux/iio/iio.h      | 17 ++++++++
-> >  3 files changed, 143 insertions(+)
-> > 
-> > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> > index c4757e6367e7..74808f8a187a 100644
-> > --- a/drivers/iio/inkern.c
-> > +++ b/drivers/iio/inkern.c
-> > @@ -703,6 +703,103 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val, int *val2)
-> >  }
-> >  EXPORT_SYMBOL_GPL(iio_read_channel_scale);
-> >  
-> > +static int iio_channel_read_avail(struct iio_channel *chan,
-> > +				  const int **vals, int *type, int *length,
-> > +				  enum iio_chan_info_enum info)
-> > +{
-> > +	if (!iio_channel_has_available(chan->channel, info))
-> > +		return -EINVAL;
-> > +
-> > +	return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
-> > +						 vals, type, length, info);
-> > +}
-> > +
-> > +int iio_read_avail_channel_raw(struct iio_channel *chan,
-> > +			       const int **vals, int *type, int *length)
-> > +{
-> > +	int ret;
-> > +
-> > +	mutex_lock(&chan->indio_dev->info_exist_lock);
-> > +	if (!chan->indio_dev->info) {
-> > +		ret = -ENODEV;
-> > +		goto err_unlock;
-> > +	}
-> > +
-> > +	ret = iio_channel_read_avail(chan,
-> > +				     vals, type, length, IIO_CHAN_INFO_RAW);
-> > +err_unlock:
-> > +	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(iio_read_avail_channel_raw);
-> > +
-> > +static int iio_channel_read_max(struct iio_channel *chan,
-> > +				int *val, int *val2, int *type,
-> > +				enum iio_chan_info_enum info)
-> > +{
-> > +	int unused;
-> > +	const int *vals;
-> > +	int length;
-> > +	int ret;
-> > +
-> > +	if (!val2)
-> > +		val2 = &unused;
-> > +
-> > +	ret = iio_channel_read_avail(chan, &vals, type, &length, info);
-> > +	switch (ret) {
-> > +	case IIO_AVAIL_RANGE:
-> > +		switch (*type) {
-> > +		case IIO_VAL_INT:
-> > +			*val = vals[2];
-> > +			break;
-> > +		default:
-> > +			*val = vals[4];
-> > +			*val2 = vals[5];
-> > +		}
-> > +		return 0;
-> > +
-> > +	case IIO_AVAIL_LIST:
-> > +		if (length <= 0)
-> > +			return -EINVAL;
-> > +		switch (*type) {
-> > +		case IIO_VAL_INT:
-> > +			*val = vals[--length];
-> > +			while (length) {
-> > +				if (vals[--length] > *val)
-> > +					*val = vals[length];
-> > +			}
-> > +			break;
-> > +		default:
-> > +			/* FIXME: learn about max for other iio values */
-> > +			return -EINVAL;
-> > +		}
-> > +		return 0;
-> > +
-> > +	default:
-> > +		return ret;
-> > +	}
-> > +}
-> > +
-> > +int iio_read_max_channel_raw(struct iio_channel *chan, int *val)
-> > +{
-> > +	int ret;
-> > +	int type;
-> > +
-> > +	mutex_lock(&chan->indio_dev->info_exist_lock);
-> > +	if (!chan->indio_dev->info) {
-> > +		ret = -ENODEV;
-> > +		goto err_unlock;
-> > +	}
-> > +
-> > +	ret = iio_channel_read_max(chan, val, NULL, &type, IIO_CHAN_INFO_RAW);
-> > +err_unlock:
-> > +	mutex_unlock(&chan->indio_dev->info_exist_lock);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(iio_read_max_channel_raw);
-> > +
-> >  int iio_get_channel_type(struct iio_channel *chan, enum iio_chan_type *type)
-> >  {
-> >  	int ret = 0;
-> > diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-> > index 9edccfba1ffb..baab5e45734f 100644
-> > --- a/include/linux/iio/consumer.h
-> > +++ b/include/linux/iio/consumer.h
-> > @@ -226,6 +226,35 @@ int iio_read_channel_processed(struct iio_channel *chan, int *val);
-> >  int iio_write_channel_raw(struct iio_channel *chan, int val);
-> >  
-> >  /**
-> > + * iio_read_max_channel_raw() - read maximum available raw value from a given
-> > + *				channel
-> > + * @chan:		The channel being queried.
-> > + * @val:		Value read back.
-> > + *
-> > + * Note raw reads from iio channels are in adc counts and hence
-
-"Note: raw reads..." would be easier...
-here and below
-
-why is there no val2 here?
-
-just reading the documentation ("maximum available raw value") I am not 
-sure what the function does: does it return the maximum value possible? or 
-the maximum value in some internal buffer? maximum value ever seen?
-
-> > + * scale will need to be applied if standard units are required.
-> > + */
-> > +int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
-> > +
-> > +/**
-> > + * iio_read_avail_channel_raw() - read available raw values from a given channel
-> > + * @chan:		The channel being queried.
-> > + * @vals:		Available values read back.
-
-no vals2?
-
-> > + * @type:		Type of available values in vals.
-
-it is not clear what type is
-
-> > + * @length:		Number of entries in vals.
-> > + *
-> > + * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
-> > + *
-> > + * For ranges, three vals are always returned; min, step and max.
-> > + * For lists, all the possible values are enumerated.
-> > + *
-> > + * Note raw available values from iio channels are in adc counts and
-> > + * hence scale will need to be applied if standard units are required.
-> > + */
-> > +int iio_read_avail_channel_raw(struct iio_channel *chan,
-> > +			       const int **vals, int *type, int *length);
-> > +
-> > +/**
-> >   * iio_get_channel_type() - get the type of a channel
-> >   * @channel:		The channel being queried.
-> >   * @type:		The type of the channel.
-> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > index 45b781084a4b..e565701d13ce 100644
-> > --- a/include/linux/iio/iio.h
-> > +++ b/include/linux/iio/iio.h
-> > @@ -315,6 +315,23 @@ static inline bool iio_channel_has_info(const struct iio_chan_spec *chan,
-> >  		(chan->info_mask_shared_by_all & BIT(type));
-> >  }
-> >  
-> > +/**
-> > + * iio_channel_has_available() - Checks if a channel has an available attribute
-> > + * @chan: The channel to be queried
-> > + * @type: Type of the available attribute to be checked
-> > + *
-> > + * Returns true if the channels supports reporting available values for the
-
-channel
-
-> > + * given attribute type, false otherwise.
-> > + */
-> > +static inline bool iio_channel_has_available(const struct iio_chan_spec *chan,
-> > +					     enum iio_chan_info_enum type)
-> > +{
-> > +	return (chan->info_mask_separate_available & BIT(type)) |
-> > +		(chan->info_mask_shared_by_type_available & BIT(type)) |
-> > +		(chan->info_mask_shared_by_dir_available & BIT(type)) |
-> > +		(chan->info_mask_shared_by_all_available & BIT(type));
-> > +}
-> > +
-> >  #define IIO_CHAN_SOFT_TIMESTAMP(_si) {					\
-> >  	.type = IIO_TIMESTAMP,						\
-> >  	.channel = -1,							\
-> > 
+Am 26.10.2016 um 20:13 schrieb Stefan Wahren:
+> The address of the mailbox node in the example has a typo.
+> So fix it accordingly.
 > 
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Fixes: d4b5c782b9f4 ("dt/bindings: Add binding for the BCM2835 mailbox driver")
+> ---
+>  .../bindings/mailbox/brcm,bcm2835-mbox.txt         |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+
+Regards,
+Andreas
 
 -- 
-
-Peter Meerwald-Stadler
-+43-664-2444418 (mobile)
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
