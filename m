@@ -1,66 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/7] drm: sunxi: Add a basic DRM driver for Allwinner
- DE2
-Date: Sun, 30 Oct 2016 15:41:08 -0500
-Message-ID: <20161030204108.rpeipal6hkao5zjv@rob-hp-laptop>
-References: <cover.1477142934.git.moinejf@free.fr>
- <8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] net: stmmac: Add OXNAS Glue Driver
+Date: Sun, 30 Oct 2016 15:41:10 -0500
+Message-ID: <20161030204110.otvjlanmi7dv7fox@rob-hp-laptop>
+References: <20161021084445.24989-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161021084445.24989-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjEsIDIwMTYgYXQgMDk6MjY6MThBTSArMDIwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiBBbGx3aW5uZXIncyByZWNlbnQgU29DcywgYXMgQTY0LCBBODNUIGFuZCBI
-MywgY29udGFpbiBhIG5ldyBkaXNwbGF5Cj4gZW5naW5lLCBERTIuCj4gVGhpcyBwYXRjaCBhZGRz
-IGEgRFJNIHZpZGVvIGRyaXZlciBmb3IgdGhpcyBkZXZpY2UuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-SmVhbi1GcmFuY29pcyBNb2luZSA8bW9pbmVqZkBmcmVlLmZyPgo+IC0tLQo+ICAuLi4vYmluZGlu
-Z3MvZGlzcGxheS9zdW54aS9zdW54aS1kZTIudHh0ICAgICAgICAgICB8ICA4MyArKysKPiAgZHJp
-dmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+
-ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MSArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW54aS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-IHwgIDIxICsKPiAgZHJpdmVycy9ncHUvZHJtL3N1bnhpL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDcgKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VueGkvZGUyX2NydGMuYyAgICAgICAg
-ICAgICAgICAgICB8IDQ3NSArKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3Vu
-eGkvZGUyX2NydGMuaCAgICAgICAgICAgICAgICAgICB8ICA2MyArKysKPiAgZHJpdmVycy9ncHUv
-ZHJtL3N1bnhpL2RlMl9kZS5jICAgICAgICAgICAgICAgICAgICAgfCA1OTEgKysrKysrKysrKysr
-KysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW54aS9kZTJfZHJtLmggICAgICAgICAgICAg
-ICAgICAgIHwgIDQ3ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW54aS9kZTJfZHJ2LmMgICAgICAg
-ICAgICAgICAgICAgIHwgMzc4ICsrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bnhp
-L2RlMl9wbGFuZS5jICAgICAgICAgICAgICAgICAgfCAxMTkgKysrKysKPiAgMTEgZmlsZXMgY2hh
-bmdlZCwgMTc4NyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW54aS1kZTIudHh0Cj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VueGkvS2NvbmZpZwo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bnhpL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VueGkvZGUyX2NydGMuYwo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bnhpL2RlMl9jcnRjLmgKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9zdW54aS9kZTJfZGUuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3N1bnhpL2RlMl9kcm0uaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL3N1bnhpL2RlMl9kcnYuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3N1bnhpL2RlMl9wbGFuZS5jCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bnhpLWRlMi50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW54aS1kZTIudHh0
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5mOWNkNjdhCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3N1bnhpL3N1bnhpLWRlMi50eHQKCj4gKwloZG1pOiBoZG1pQDAxZWUwMDAwIHsKPiArCQkuLi4K
-PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQlw
-b3J0IHsKPiArCQkJdHlwZSA9ICJ2aWRlbyI7CgpUaGlzIGlzIHByb3Bvc2VkLCBidXQgbm90IGFu
-IGFjY2VwdGVkIHByb3BlcnR5LiBQbGVhc2UgZHJvcC4KCj4gKwkJCWhkbWlfZXA6IGVuZHBvaW50
-IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbGNkMF9lcD47Cj4gKwkJCX07Cj4gKwkJfTsK
-PiArCX07Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Oct 21, 2016 at 10:44:45AM +0200, Neil Armstrong wrote:
+> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 +++++
+
+It's preferred that bindings are a separate patch.
+
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
+>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 219 +++++++++++++++++++++
+>  4 files changed, 275 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
+> 
+> Changes since RFC at https://patchwork.kernel.org/patch/9387257 :
+>  - Drop init/exit callbacks
+>  - Implement proper remove and PM callback
+>  - Call init from probe
+>  - Disable/Unprepare clock if stmmac probe fails
+> 
+> diff --git a/Documentation/devicetree/bindings/net/oxnas-dwmac.txt b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+> new file mode 100644
+> index 0000000..5d2696c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+> @@ -0,0 +1,44 @@
+> +* Oxford Semiconductor OXNAS DWMAC Ethernet controller
+> +
+> +The device inherits all the properties of the dwmac/stmmac devices
+> +described in the file stmmac.txt in the current directory with the
+> +following changes.
+> +
+> +Required properties on all platforms:
+> +
+> +- compatible:	Depending on the platform this should be one of:
+> +			- "oxsemi,ox820-dwmac"
+> +		Additionally "snps,dwmac" and any applicable more
+> +		detailed version number described in net/stmmac.txt
+> +		should be used.
+
+You should be explicit what version applies to ox820. "snps,dwmac" 
+should probably be deprecated IMO. There are so many variations of DW 
+h/w.
+
+> +
+> +- reg:	The first register range should be the one of the DWMAC
+> +	controller.
+
+This is worded like there's a 2nd range?
+
+> +
+> +- clocks: Should contain phandles to the following clocks
+> +- clock-names:	Should contain the following:
+> +		- "stmmaceth" - see stmmac.txt
+> +		- "gmac" - peripheral gate clock
+> +
+> +- oxsemi,sys-ctrl: a phandle to the system controller syscon node
+> +
+> +Example :
+> +
+> +etha: ethernet@40400000 {
+> +	compatible = "oxsemi,ox820-dwmac", "snps,dwmac";
+> +	reg = <0x40400000 0x2000>;
+> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "macirq", "eth_wake_irq";
+> +	mac-address = [000000000000]; /* Filled in by U-Boot */
+> +	phy-mode = "rgmii";
+> +
+> +	clocks = <&stdclk CLK_820_ETHA>, <&gmacclk>;
+> +	clock-names = "gmac", "stmmaceth";
+> +	resets = <&reset RESET_MAC>;
+> +
+> +	/* Regmap for sys registers */
+> +	oxsemi,sys-ctrl = <&sys>;
+> +
+> +	status = "disabled";
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
