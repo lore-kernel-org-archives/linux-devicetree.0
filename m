@@ -1,358 +1,411 @@
-From: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-Subject: Re: [PATCH] clk: cdce925: add support for CDCE913, CDCE937, and
- CDCE949
-Date: Sun, 30 Oct 2016 19:39:38 +0100
-Message-ID: <58163E6A.7030709@topic.nl>
-References: <1477848637-5151-1-git-send-email-akinobu.mita@gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v3 6/8] iio: dpot-dac: DAC driver based on a digital
+ potentiometer
+Date: Sun, 30 Oct 2016 19:36:14 +0100
+Message-ID: <48f793af-6f70-d666-0e9e-c170e607ab7e@axentia.se>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+ <1477262381-7800-7-git-send-email-peda@axentia.se>
+ <301ab064-cd90-d99d-a05a-8a50ba759c62@kernel.org>
+ <alpine.DEB.2.02.1610301628400.32031@pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477848637-5151-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1610301628400.32031-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-﻿Looks okay to me. I can test it on our boards (with the 925 chip) to 
-make sure there wasn't any regression, if you like.
+On 2016-10-30 16:32, Peter Meerwald-Stadler wrote:
+> On Sun, 30 Oct 2016, Jonathan Cameron wrote:
+> 
+>> On 23/10/16 23:39, Peter Rosin wrote:
+>>> It is assumed that the dpot is used as a voltage divider between the
+>>> current dpot wiper setting and the maximum resistance of the dpot. The
+>>> divided voltage is provided by a vref regulator.
+>>>
+>>>                   .------.
+>>>    .-----------.  |      |
+>>>    | vref      |--'    .---.
+>>>    | regulator |--.    |   |
+>>>    '-----------'  |    | d |
+>>>                   |    | p |
+>>>                   |    | o |  wiper
+>>>                   |    | t |<---------+
+>>>                   |    |   |
+>>>                   |    '---'       dac output voltage
+>>>                   |      |
+>>>                   '------+------------+
+>>>
+>>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>> Only a trivial suggestion to drop the devinfo about max ohms now it's
+>> exposed (effectively) via the dpot driver. (really minor though so don't bother
+>> respinning for that!)
+>>
+>> Jonathan
+>>> ---
+>>>  .../ABI/testing/sysfs-bus-iio-dac-dpot-dac         |   8 +
+>>>  MAINTAINERS                                        |   2 +
+>>>  drivers/iio/dac/Kconfig                            |  10 +
+>>>  drivers/iio/dac/Makefile                           |   1 +
+>>>  drivers/iio/dac/dpot-dac.c                         | 267 +++++++++++++++++++++
+>>>  5 files changed, 288 insertions(+)
+>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+>>>  create mode 100644 drivers/iio/dac/dpot-dac.c
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+>>> new file mode 100644
+>>> index 000000000000..580e93f373f6
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+>>> @@ -0,0 +1,8 @@
+>>> +What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_raw_available
+>>> +Date:		October 2016
+>>> +KernelVersion:	4.9
+>>> +Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>> +Description:
+>>> +		The range of available values represented as the minimum value,
+>>> +		the step and the maximum value, all enclosed in square brackets.
+>>> +		Example: [0 1 256]
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 6218010128dc..d7375f45ff0f 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -6115,7 +6115,9 @@ IIO DIGITAL POTENTIOMETER DAC
+>>>  M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>>  L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>  S:	Maintained
+>>> +F:	Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+>>>  F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+>>> +F:	drivers/iio/dac/dpot-dac.c
+>>>  
+>>>  IIO SUBSYSTEM AND DRIVERS
+>>>  M:	Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+>>> index 120b24478469..d3084028905b 100644
+>>> --- a/drivers/iio/dac/Kconfig
+>>> +++ b/drivers/iio/dac/Kconfig
+>>> @@ -200,6 +200,16 @@ config AD8801
+>>>  	  To compile this driver as a module choose M here: the module will be called
+>>>  	  ad8801.
+>>>  
+>>> +config DPOT_DAC
+>>> +	tristate "DAC emulation using a DPOT"
+>>> +	depends on OF
+>>> +	help
+>>> +	  Say yes here to build support for DAC emulation using a digital
+>>> +	  potentiometer.
+>>> +
+>>> +	  To compile this driver as a module, choose M here: the module will be
+>>> +	  called dpot-dac.
+>>> +
+>>>  config LPC18XX_DAC
+>>>  	tristate "NXP LPC18xx DAC driver"
+>>>  	depends on ARCH_LPC18XX || COMPILE_TEST
+>>> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+>>> index 27642bbf75f2..f01bf4a99867 100644
+>>> --- a/drivers/iio/dac/Makefile
+>>> +++ b/drivers/iio/dac/Makefile
+>>> @@ -22,6 +22,7 @@ obj-$(CONFIG_AD5686) += ad5686.o
+>>>  obj-$(CONFIG_AD7303) += ad7303.o
+>>>  obj-$(CONFIG_AD8801) += ad8801.o
+>>>  obj-$(CONFIG_CIO_DAC) += cio-dac.o
+>>> +obj-$(CONFIG_DPOT_DAC) += dpot-dac.o
+>>>  obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
+>>>  obj-$(CONFIG_M62332) += m62332.o
+>>>  obj-$(CONFIG_MAX517) += max517.o
+>>> diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
+>>> new file mode 100644
+>>> index 000000000000..f227a211d34d
+>>> --- /dev/null
+>>> +++ b/drivers/iio/dac/dpot-dac.c
+>>> @@ -0,0 +1,267 @@
+>>> +/*
+>>> + * IIO DAC emulation driver using a digital potentiometer
+>>> + *
+>>> + * Copyright (C) 2016 Axentia Technologies AB
+>>> + *
+>>> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +/*
+>>> + * It is assumed that the dpot is used as a voltage divider between the
+>>> + * current dpot wiper setting and the maximum resistance of the dpot. The
+>>> + * divided voltage is provided by a vref regulator.
+>>> + *
+>>> + *                   .------.
+>>> + *    .-----------.  |      |
+>>> + *    | vref      |--'    .---.
+>>> + *    | regulator |--.    |   |
+>>> + *    '-----------'  |    | d |
+>>> + *                   |    | p |
+>>> + *                   |    | o |  wiper
+>>> + *                   |    | t |<---------+
+>>> + *                   |    |   |
+>>> + *                   |    '---'       dac output voltage
+>>> + *                   |      |
+>>> + *                   '------+------------+
+>>> + */
+>>> +
+>>> +#include <linux/err.h>
+>>> +#include <linux/iio/consumer.h>
+>>> +#include <linux/iio/iio.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regulator/consumer.h>
+>>> +
+>>> +struct dpot_dac {
+>>> +	struct regulator *vref;
+>>> +	struct iio_channel *dpot;
+>>> +	u32 max_ohms;
+>>> +};
+>>> +
+>>> +static const struct iio_chan_spec dpot_dac_iio_channel = {
+>>> +	.type = IIO_VOLTAGE,
+>>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
+>>> +			    | BIT(IIO_CHAN_INFO_SCALE),
+>>> +	.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW),
+>>> +	.output = 1,
+>>> +	.indexed = 1,
+>>> +};
+>>> +
+>>> +static int dpot_dac_read_raw(struct iio_dev *indio_dev,
+>>> +			     struct iio_chan_spec const *chan,
+>>> +			     int *val, int *val2, long mask)
+>>> +{
+>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>> +	int ret;
+>>> +	unsigned long long tmp;
+>>> +
+>>> +	switch (mask) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		return iio_read_channel_raw(dac->dpot, val);
+>>> +
+>>> +	case IIO_CHAN_INFO_SCALE:
+>>> +		ret = iio_read_channel_scale(dac->dpot, val, val2);
+>>> +		switch (ret) {
+>>> +		case IIO_VAL_FRACTIONAL_LOG2:
+>>> +			tmp = *val * 1000000000LL;
+>>> +			do_div(tmp, dac->max_ohms);
+>>> +			tmp *= regulator_get_voltage(dac->vref) / 1000;
+>>> +			do_div(tmp, 1000000000LL);
+>>> +			*val = tmp;
+>>> +			return ret;
+>>> +		case IIO_VAL_INT:
+>>> +			/*
+>>> +			 * Convert integer scale to fractional scale by
+>>> +			 * setting the denominator (val2) to one...
+>>> +			 */
+>>> +			*val2 = 1;
+>>> +			ret = IIO_VAL_FRACTIONAL;
+>>> +			/* ...and fall through. */
+>>> +		case IIO_VAL_FRACTIONAL:
+>>> +			*val *= regulator_get_voltage(dac->vref) / 1000;
+>>> +			*val2 *= dac->max_ohms;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static int dpot_dac_read_avail(struct iio_dev *indio_dev,
+>>> +			       struct iio_chan_spec const *chan,
+>>> +			       const int **vals, int *type, int *length,
+>>> +			       long mask)
+>>> +{
+>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>> +
+>>> +	switch (mask) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		return iio_read_avail_channel_raw(dac->dpot,
+>>> +						  vals, type, length);
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static int dpot_dac_write_raw(struct iio_dev *indio_dev,
+>>> +			      struct iio_chan_spec const *chan,
+>>> +			      int val, int val2, long mask)
+>>> +{
+>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>> +
+>>> +	switch (mask) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		return iio_write_channel_raw(dac->dpot, val);
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static const struct iio_info dpot_dac_info = {
+>>> +	.read_raw = dpot_dac_read_raw,
+>>> +	.read_avail = dpot_dac_read_avail,
+>>> +	.write_raw = dpot_dac_write_raw,
+>>> +	.driver_module = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static int dpot_dac_channel_max_ohms(struct iio_dev *indio_dev)
+>>> +{
+>>> +	struct device *dev = &indio_dev->dev;
+>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>> +	unsigned long long tmp;
+>>> +	int ret;
+>>> +	int val;
+>>> +	int val2;
+>>> +	int max;
+>>> +
+>>> +	ret = iio_read_max_channel_raw(dac->dpot, &max);
+>>> +	if (ret < 0) {
+>>> +		dev_err(dev, "dpot does not indicate its raw maximum value\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	switch (iio_read_channel_scale(dac->dpot, &val, &val2)) {
+>>> +	case IIO_VAL_INT:
+>>> +		return max * val;
+>>> +	case IIO_VAL_FRACTIONAL:
+>>> +		tmp = (unsigned long long)max * val;
+>>> +		do_div(tmp, val2);
+>>> +		return tmp;
+>>> +	case IIO_VAL_FRACTIONAL_LOG2:
+>>> +		tmp = (s64)val * 1000000000LL * max >> val2;
+> 
+> (s64) necessary?
+> or rather unsigned long long?
 
-On 30-10-2016 18:30, Akinobu Mita wrote:
-> The CDCE925 is a member of the CDCE(L)9xx programmable clock generator
-> family.  There are also CDCE913, CDCE937, CDCE949 which have different
-> number of PLLs and outputs.
->
-> The clk-cdce925 driver supports only CDCE925 in the family.  This adds
-> support for the CDCE913, CDCE937, CDCE949, too.
->
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-> Cc: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/clock/ti,cdce925.txt       |  15 ++-
->   drivers/clk/Kconfig                                |  11 ++-
->   drivers/clk/clk-cdce925.c                          | 106 ++++++++++++++++-----
->   3 files changed, 99 insertions(+), 33 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/ti,cdce925.txt b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-> index 4c7669a..0d01f2d 100644
-> --- a/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-> +++ b/Documentation/devicetree/bindings/clock/ti,cdce925.txt
-> @@ -1,15 +1,22 @@
-> -Binding for TO CDCE925 programmable I2C clock synthesizers.
-> +Binding for TI CDCE913/925/937/949 programmable I2C clock synthesizers.
->
->   Reference
->   This binding uses the common clock binding[1].
->
->   [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -[2] http://www.ti.com/product/cdce925
-> +[2] http://www.ti.com/product/cdce913
-> +[3] http://www.ti.com/product/cdce925
-> +[4] http://www.ti.com/product/cdce937
-> +[5] http://www.ti.com/product/cdce949
->
->   The driver provides clock sources for each output Y1 through Y5.
->
->   Required properties:
-> - - compatible: Shall be "ti,cdce925"
-> + - compatible: Shall be one of the following:
-> +	- "ti,cdce913": 1-PLL, 3 Outputs
-> +	- "ti,cdce925": 2-PLL, 5 Outputs
-> +	- "ti,cdce937": 3-PLL, 7 Outputs
-> +	- "ti,cdce949": 4-PLL, 9 Outputs
->    - reg: I2C device address.
->    - clocks: Points to a fixed parent clock that provides the input frequency.
->    - #clock-cells: From common clock bindings: Shall be 1.
-> @@ -18,7 +25,7 @@ Optional properties:
->    - xtal-load-pf: Crystal load-capacitor value to fine-tune performance on a
->                    board, or to compensate for external influences.
->
-> -For both PLL1 and PLL2 an optional child node can be used to specify spread
-> +For all PLL1, PLL2, ... an optional child node can be used to specify spread
->   spectrum clocking parameters for a board.
->     - spread-spectrum: SSC mode as defined in the data sheet.
->     - spread-spectrum-center: Use "centered" mode instead of "max" mode. When
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index e99a42f..bc0a6e6 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -104,16 +104,17 @@ config COMMON_CLK_CDCE706
->   	  This driver supports TI CDCE706 programmable 3-PLL clock synthesizer.
->
->   config COMMON_CLK_CDCE925
-> -	tristate "Clock driver for TI CDCE925 devices"
-> +	tristate "Clock driver for TI CDCE913/925/937/949 devices"
->   	depends on I2C
->   	depends on OF
->   	select REGMAP_I2C
->   	help
->   	---help---
-> -	  This driver supports the TI CDCE925 programmable clock synthesizer.
-> -	  The chip contains two PLLs with spread-spectrum clocking support and
-> -	  five output dividers. The driver only supports the following setup,
-> -	  and uses a fixed setting for the output muxes.
-> +	  This driver supports the TI CDCE913/925/937/949 programmable clock
-> +	  synthesizer. Each chip has different number of PLLs and outputs.
-> +	  For example, the CDCE925 contains two PLLs with spread-spectrum
-> +	  clocking support and five output dividers. The driver only supports
-> +	  the following setup, and uses a fixed setting for the output muxes.
->   	  Y1 is derived from the input clock
->   	  Y2 and Y3 derive from PLL1
->   	  Y4 and Y5 derive from PLL2
-> diff --git a/drivers/clk/clk-cdce925.c b/drivers/clk/clk-cdce925.c
-> index b8459c1..fbac08d 100644
-> --- a/drivers/clk/clk-cdce925.c
-> +++ b/drivers/clk/clk-cdce925.c
-> @@ -1,8 +1,8 @@
->   /*
-> - * Driver for TI Dual PLL CDCE925 clock synthesizer
-> + * Driver for TI Multi PLL CDCE913/925/937/949 clock synthesizer
->    *
-> - * This driver always connects the Y1 to the input clock, Y2/Y3 to PLL1
-> - * and Y4/Y5 to PLL2. PLL frequency is set on a first-come-first-serve
-> + * This driver always connects the Y1 to the input clock, Y2/Y3 to PLL1,
-> + * Y4/Y5 to PLL2, and so on. PLL frequency is set on a first-come-first-serve
->    * basis. Clients can directly request any frequency that the chip can
->    * deliver using the standard clk framework. In addition, the device can
->    * be configured and activated via the devicetree.
-> @@ -19,11 +19,32 @@
->   #include <linux/slab.h>
->   #include <linux/gcd.h>
->
-> -/* The chip has 2 PLLs which can be routed through dividers to 5 outputs.
-> +/* Each chip has different number of PLLs and outputs, for example:
-> + * The CECE925 has 2 PLLs which can be routed through dividers to 5 outputs.
->    * Model this as 2 PLL clocks which are parents to the outputs.
->    */
-> -#define NUMBER_OF_PLLS	2
-> -#define NUMBER_OF_OUTPUTS	5
-> +
-> +enum {
-> +	CDCE913,
-> +	CDCE925,
-> +	CDCE937,
-> +	CDCE949,
-> +};
-> +
-> +struct clk_cdce925_chip_info {
-> +	int num_plls;
-> +	int num_outputs;
-> +};
-> +
-> +static const struct clk_cdce925_chip_info clk_cdce925_chip_info_tbl[] = {
-> +	[CDCE913] = { .num_plls = 1, .num_outputs = 3 },
-> +	[CDCE925] = { .num_plls = 2, .num_outputs = 5 },
-> +	[CDCE937] = { .num_plls = 3, .num_outputs = 7 },
-> +	[CDCE949] = { .num_plls = 4, .num_outputs = 9 },
-> +};
-> +
-> +#define MAX_NUMBER_OF_PLLS	4
-> +#define MAX_NUMBER_OF_OUTPUTS	9
->
->   #define CDCE925_REG_GLOBAL1	0x01
->   #define CDCE925_REG_Y1SPIPDIVH	0x02
-> @@ -43,7 +64,7 @@ struct clk_cdce925_output {
->   	struct clk_hw hw;
->   	struct clk_cdce925_chip *chip;
->   	u8 index;
-> -	u16 pdiv; /* 1..127 for Y2-Y5; 1..1023 for Y1 */
-> +	u16 pdiv; /* 1..127 for Y2-Y9; 1..1023 for Y1 */
->   };
->   #define to_clk_cdce925_output(_hw) \
->   	container_of(_hw, struct clk_cdce925_output, hw)
-> @@ -60,8 +81,9 @@ struct clk_cdce925_pll {
->   struct clk_cdce925_chip {
->   	struct regmap *regmap;
->   	struct i2c_client *i2c_client;
-> -	struct clk_cdce925_pll pll[NUMBER_OF_PLLS];
-> -	struct clk_cdce925_output clk[NUMBER_OF_OUTPUTS];
-> +	const struct clk_cdce925_chip_info *chip_info;
-> +	struct clk_cdce925_pll pll[MAX_NUMBER_OF_PLLS];
-> +	struct clk_cdce925_output clk[MAX_NUMBER_OF_OUTPUTS];
->   };
->
->   /* ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** */
-> @@ -284,6 +306,18 @@ static void cdce925_clk_set_pdiv(struct clk_cdce925_output *data, u16 pdiv)
->   	case 4:
->   		regmap_update_bits(data->chip->regmap, 0x27, 0x7F, pdiv);
->   		break;
-> +	case 5:
-> +		regmap_update_bits(data->chip->regmap, 0x36, 0x7F, pdiv);
-> +		break;
-> +	case 6:
-> +		regmap_update_bits(data->chip->regmap, 0x37, 0x7F, pdiv);
-> +		break;
-> +	case 7:
-> +		regmap_update_bits(data->chip->regmap, 0x46, 0x7F, pdiv);
-> +		break;
-> +	case 8:
-> +		regmap_update_bits(data->chip->regmap, 0x47, 0x7F, pdiv);
-> +		break;
->   	}
->   }
->
-> @@ -302,6 +336,14 @@ static void cdce925_clk_activate(struct clk_cdce925_output *data)
->   	case 4:
->   		regmap_update_bits(data->chip->regmap, 0x24, 0x03, 0x03);
->   		break;
-> +	case 5:
-> +	case 6:
-> +		regmap_update_bits(data->chip->regmap, 0x34, 0x03, 0x03);
-> +		break;
-> +	case 7:
-> +	case 8:
-> +		regmap_update_bits(data->chip->regmap, 0x44, 0x03, 0x03);
-> +		break;
->   	}
->   }
->
-> @@ -474,15 +516,6 @@ static const struct clk_ops cdce925_clk_y1_ops = {
->   	.set_rate = cdce925_clk_y1_set_rate,
->   };
->
-> -
-> -static struct regmap_config cdce925_regmap_config = {
-> -	.name = "configuration0",
-> -	.reg_bits = 8,
-> -	.val_bits = 8,
-> -	.cache_type = REGCACHE_RBTREE,
-> -	.max_register = 0x2F,
-> -};
-> -
->   #define CDCE925_I2C_COMMAND_BLOCK_TRANSFER	0x00
->   #define CDCE925_I2C_COMMAND_BYTE_TRANSFER	0x80
->
-> @@ -582,13 +615,19 @@ static int cdce925_probe(struct i2c_client *client,
->   	struct clk_cdce925_chip *data;
->   	struct device_node *node = client->dev.of_node;
->   	const char *parent_name;
-> -	const char *pll_clk_name[NUMBER_OF_PLLS] = {NULL,};
-> +	const char *pll_clk_name[MAX_NUMBER_OF_PLLS] = {NULL,};
->   	struct clk_init_data init;
->   	u32 value;
->   	int i;
->   	int err;
->   	struct device_node *np_output;
->   	char child_name[6];
-> +	struct regmap_config cdce925_regmap_config = {
-> +		.name = "configuration0",
-> +		.reg_bits = 8,
-> +		.val_bits = 8,
-> +		.cache_type = REGCACHE_RBTREE,
-> +	};
->
->   	dev_dbg(&client->dev, "%s\n", __func__);
->   	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-> @@ -596,6 +635,9 @@ static int cdce925_probe(struct i2c_client *client,
->   		return -ENOMEM;
->
->   	data->i2c_client = client;
-> +	data->chip_info = &clk_cdce925_chip_info_tbl[id->driver_data];
-> +	cdce925_regmap_config.max_register = CDCE925_OFFSET_PLL	+
-> +		data->chip_info->num_plls * 0x10 - 1;
->   	data->regmap = devm_regmap_init(&client->dev, &regmap_cdce925_bus,
->   			&client->dev, &cdce925_regmap_config);
->   	if (IS_ERR(data->regmap)) {
-> @@ -626,7 +668,7 @@ static int cdce925_probe(struct i2c_client *client,
->   	init.num_parents = parent_name ? 1 : 0;
->
->   	/* Register PLL clocks */
-> -	for (i = 0; i < NUMBER_OF_PLLS; ++i) {
-> +	for (i = 0; i < data->chip_info->num_plls; ++i) {
->   		pll_clk_name[i] = kasprintf(GFP_KERNEL, "%s.pll%d",
->   			client->dev.of_node->name, i);
->   		init.name = pll_clk_name[i];
-> @@ -684,7 +726,7 @@ static int cdce925_probe(struct i2c_client *client,
->   	init.ops = &cdce925_clk_ops;
->   	init.flags = CLK_SET_RATE_PARENT;
->   	init.num_parents = 1;
-> -	for (i = 1; i < NUMBER_OF_OUTPUTS; ++i) {
-> +	for (i = 1; i < data->chip_info->num_outputs; ++i) {
->   		init.name = kasprintf(GFP_KERNEL, "%s.Y%d",
->   			client->dev.of_node->name, i+1);
->   		data->clk[i].chip = data;
-> @@ -702,6 +744,16 @@ static int cdce925_probe(struct i2c_client *client,
->   			/* Mux Y4/5 to PLL2 */
->   			init.parent_names = &pll_clk_name[1];
->   			break;
-> +		case 5:
-> +		case 6:
-> +			/* Mux Y6/7 to PLL3 */
-> +			init.parent_names = &pll_clk_name[2];
-> +			break;
-> +		case 7:
-> +		case 8:
-> +			/* Mux Y8/9 to PLL4 */
-> +			init.parent_names = &pll_clk_name[3];
-> +			break;
->   		}
->   		err = devm_clk_hw_register(&client->dev, &data->clk[i].hw);
->   		kfree(init.name); /* clock framework made a copy of the name */
-> @@ -720,7 +772,7 @@ static int cdce925_probe(struct i2c_client *client,
->   	err = 0;
->
->   error:
-> -	for (i = 0; i < NUMBER_OF_PLLS; ++i)
-> +	for (i = 0; i < data->chip_info->num_plls; ++i)
->   		/* clock framework made a copy of the name */
->   		kfree(pll_clk_name[i]);
->
-> @@ -728,13 +780,19 @@ static int cdce925_probe(struct i2c_client *client,
->   }
->
->   static const struct i2c_device_id cdce925_id[] = {
-> -	{ "cdce925", 0 },
-> +	{ "cdce913", CDCE913 },
-> +	{ "cdce925", CDCE925 },
-> +	{ "cdce937", CDCE937 },
-> +	{ "cdce949", CDCE949 },
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(i2c, cdce925_id);
->
->   static const struct of_device_id clk_cdce925_of_match[] = {
-> +	{ .compatible = "ti,cdce913" },
->   	{ .compatible = "ti,cdce925" },
-> +	{ .compatible = "ti,cdce937" },
-> +	{ .compatible = "ti,cdce949" },
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(of, clk_cdce925_of_match);
-> @@ -750,5 +808,5 @@ static struct i2c_driver cdce925_driver = {
->   module_i2c_driver(cdce925_driver);
->
->   MODULE_AUTHOR("Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>");
-> -MODULE_DESCRIPTION("cdce925 driver");
-> +MODULE_DESCRIPTION("TI CDCE913/925/937/949 driver");
->   MODULE_LICENSE("GPL");
->
+Fuck it, I'll just remove that case completely. I don't care about
+weird fractional-log2-shit that'll probably overflow anyway. Happy?
 
+>>> +		do_div(tmp, 1000000000LL);
+>>> +		return tmp;
+>>> +	default:
+>>> +		dev_err(dev, "dpot has a scale that is too weird\n");
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static int dpot_dac_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct device *dev = &pdev->dev;
+>>> +	struct iio_dev *indio_dev;
+>>> +	struct dpot_dac *dac;
+>>> +	enum iio_chan_type type;
+>>> +	int ret;
+>>> +
+>>> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*dac));
+>>> +	if (!indio_dev)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	platform_set_drvdata(pdev, indio_dev);
+>>> +	dac = iio_priv(indio_dev);
+>>> +
+>>> +	indio_dev->name = dev_name(dev);
+>>> +	indio_dev->dev.parent = dev;
+>>> +	indio_dev->info = &dpot_dac_info;
+>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>> +	indio_dev->channels = &dpot_dac_iio_channel;
+>>> +	indio_dev->num_channels = 1;
+>>> +
+>>> +	dac->vref = devm_regulator_get(dev, "vref");
+>>> +	if (IS_ERR(dac->vref)) {
+>>> +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
+>>> +			dev_err(&pdev->dev, "failed to get vref regulator\n");
+>>> +		return PTR_ERR(dac->vref);
+>>> +	}
+>>> +
+>>> +	dac->dpot = devm_iio_channel_get(dev, "dpot");
+>>> +	if (IS_ERR(dac->dpot)) {
+>>> +		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
+>>> +			dev_err(dev, "failed to get dpot input channel\n");
+>>> +		return PTR_ERR(dac->dpot);
+>>> +	}
+>>> +
+>>> +	ret = iio_get_channel_type(dac->dpot, &type);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	if (type != IIO_RESISTANCE) {
+>>> +		dev_err(dev, "dpot is of the wrong type\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	ret = dpot_dac_channel_max_ohms(indio_dev);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +	dac->max_ohms = ret;
+>>> +	dev_info(dev, "dpot max is %d\n", dac->max_ohms);
+>> Given we can query this (indirectly) from the dpot itself, I'd drop this now.
+> 
+> max_ohms is u32, so this should be %u not %d?
 
--- 
-Mike Looijmans
+You're right, but that dev_info is about to be killed anyway,
+as requested by Jonathan.
 
+Cheers,
+Peter
 
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
-
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> +
+>>> +	ret = regulator_enable(dac->vref);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "failed to enable the vref regulator\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = iio_device_register(indio_dev);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "failed to register iio device\n");
+>>> +		goto disable_reg;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +
+>>> +disable_reg:
+>>> +	regulator_disable(dac->vref);
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int dpot_dac_remove(struct platform_device *pdev)
+>>> +{
+>>> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>>> +	struct dpot_dac *dac = iio_priv(indio_dev);
+>>> +
+>>> +	iio_device_unregister(indio_dev);
+>>> +	regulator_disable(dac->vref);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct of_device_id dpot_dac_match[] = {
+>>> +	{ .compatible = "dpot-dac" },
+>>> +	{ /* sentinel */ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, dpot_dac_match);
+>>> +
+>>> +static struct platform_driver dpot_dac_driver = {
+>>> +	.probe = dpot_dac_probe,
+>>> +	.remove = dpot_dac_remove,
+>>> +	.driver = {
+>>> +		.name = "iio-dpot-dac",
+>>> +		.of_match_table = dpot_dac_match,
+>>> +	},
+>>> +};
+>>> +module_platform_driver(dpot_dac_driver);
+>>> +
+>>> +MODULE_DESCRIPTION("DAC emulation driver using a digital potentiometer");
+>>> +MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>>
+> 
