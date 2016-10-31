@@ -1,32 +1,42 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v9 4/4] soc: mediatek: Add MT2701 scpsys driver
-Date: Mon, 31 Oct 2016 00:57:55 +0100
-Message-ID: <7c130ef7-0a34-6b0e-27b7-aa4c033d6999@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Mon, 31 Oct 2016 01:01:07 +0100
+Message-ID: <94c5e299-e85e-2b32-7085-cb45a51176ca@gmail.com>
 References: <1476953798-23263-1-git-send-email-jamesjj.liao@mediatek.com>
- <1476953798-23263-5-git-send-email-jamesjj.liao@mediatek.com>
+ <1476953798-23263-4-git-send-email-jamesjj.liao@mediatek.com>
+ <19220b7f-84c3-eefe-333c-bd1ddfa988a3@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476953798-23263-5-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Shunli Wang <shunli.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <19220b7f-84c3-eefe-333c-bd1ddfa988a3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/20/2016 10:56 AM, James Liao wrote:
-> From: Shunli Wang <shunli.wang@mediatek.com>
+On 10/31/2016 12:57 AM, Matthias Brugger wrote:
 >
-> Add scpsys driver for MT2701.
 >
-> mtk-scpsys now supports MT8173 (arm64) and MT2701 (arm). So it should
-> be enabled on both arm64 and arm platforms.
+> On 10/20/2016 10:56 AM, James Liao wrote:
+>> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> Add power dt-bindings for MT2701.
+>>
+>> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 >
-> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-> ---
+> Applied to v4.9-next/soc
 
-Applied to v4.9-next/soc
+Of course this has to be applied to v4.9-next/dts, fixed now.
+
+Thanks,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
