@@ -1,26 +1,28 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] pinctrl: meson: Add GXL pinctrl definitions
-Date: Mon, 31 Oct 2016 12:29:34 -0600
-Message-ID: <m237jc2wz5.fsf@baylibre.com>
-References: <1477931531-27120-1-git-send-email-narmstrong@baylibre.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC PATCH v2 1/5] net: mdio-mux-mmioreg: Add support for 16bit
+ and 32bit register sizes
+Date: Mon, 31 Oct 2016 19:59:32 +0100
+Message-ID: <20161031185932.GJ9441@lunn.ch>
+References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
+ <1477932987-27871-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1477931531-27120-1-git-send-email-narmstrong@baylibre.com> (Neil
-        Armstrong's message of "Mon, 31 Oct 2016 17:32:11 +0100")
-Sender: linux-gpio-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477932987-27871-2-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linus.walleij@linaro.org, carlo@caione.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: f.fainelli@gmail.com, khilman@baylibre.com, carlo@caione.org, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> Add support for the Amlogic Meson GXL SoC, this is a partially complete
-> definition only based on the Amlogic Vendor tree.
->
-> This definition differs a lot from the GXBB and needs a separate entry.
->
-> Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Oct 31, 2016 at 05:56:23PM +0100, Neil Armstrong wrote:
+> In order to support PHY switching on Amlogic GXL SoCs, add support for
+> 16bit and 32bit registers sizes.
+> 
 > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Acked-by: Kevin Hilman <khilman@baylibre.com>
+Nice.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
