@@ -1,33 +1,42 @@
-From: "=?utf-8?B?RGF2aWQgSMOkcmRlbWFu?=" <david@hardeman.nu>
-Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any
- transmitting time for tx only devices
-Date: Mon, 31 Oct 2016 14:31:52 +0000
-Message-ID: <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
-References: <20161027143601.GA5103@gofer.mess.org>
- <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-6-andi.shyti@samsung.com>
- <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
- <20160902084158.GA25342@gofer.mess.org>
- <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 3/5] ARM: dts: da850: add the mstpri and ddrctl nodes
+Date: Mon, 31 Oct 2016 15:45:36 +0100
+Message-ID: <1477925138-23457-4-git-send-email-bgolaszewski@baylibre.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161027143601.GA5103@gofer.mess.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>, Andi Shyti <andi.shyti@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-October 27, 2016 4:36 PM, "Sean Young" <sean@mess.org> wrote:=0A> Since w=
-e have to be able to switch between waiting and not waiting,=0A> we need =
-some sort of ABI for this. I think this warrants a new ioctl;=0A> I'm not=
- sure how else it can be done. I'll be sending out a patch=0A> shortly.=
-=0A=0AHi Sean,=0A=0Ahave you considered using a module param for the LIRC=
- bridge module instead? As far as I understand it, this is an issue which=
- is entirely internal to LIRC, and it's also not something which really n=
-eeds to be changed on a per-device level (either you have a modern LIRC d=
-aemon or you don't, and all drivers should behave the same, no?).=0A=0AAn=
-other advantage is that the parameter would then go away if and when the =
-lirc bridge ever goes away (yes, I can still dream, can't I?).=0A=0ARegar=
-ds,=0ADavid
+QWRkIHRoZSBub2RlcyBmb3IgdGhlIE1TVFBSSSBjb25maWd1cmF0aW9uIGFuZCBERFIyL21ERFIg
+bWVtb3J5CmNvbnRyb2xsZXIgZHJpdmVycyB0byBkYTg1MC5kdHNpLgoKU2lnbmVkLW9mZi1ieTog
+QmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNo
+L2FybS9ib290L2R0cy9kYTg1MC5kdHNpIHwgMTEgKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
+LCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAu
+ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKaW5kZXggMTEyYzZkNy4uNDRiZWNl
+MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQorKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9kYTg1MC5kdHNpCkBAIC00NTQsNiArNDU0LDEyIEBACiAJCQlpbnRlcnJ1cHRz
+ID0gPDUyPjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCX07CisKKwkJbXN0cHJpOiBtc3Rw
+cmlAMTQxMTAgeworCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1tc3RwcmkiOworCQkJcmVnID0g
+PDB4MTQxMTAgMHgwYz47CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQl9OwogCX07CiAJYWVt
+aWY6IGFlbWlmQDY4MDAwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1hZW1pZiI7CkBA
+IC00NjUsNCArNDcxLDkgQEAKIAkJCSAgMSAwIDB4NjgwMDAwMDAgMHgwMDAwODAwMD47CiAJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7CiAJfTsKKwlkZHJjdGw6IGRkcmN0bEBiMDAwMDAwMCB7CisJCWNv
+bXBhdGlibGUgPSAidGksZGE4NTAtZGRyLWNvbnRyb2xsZXIiOworCQlyZWcgPSA8MHhiMDAwMDAw
+MCAweGU4PjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OwogfTsKLS0gCjIuOS4zCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
