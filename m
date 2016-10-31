@@ -1,33 +1,84 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH v2 5/5] ARM64: dts: meson-gxl-s905x: Enable internal ethernet PHY
-Date: Mon, 31 Oct 2016 17:56:27 +0100
-Message-ID: <1477932987-27871-6-git-send-email-narmstrong@baylibre.com>
+Subject: [RFC PATCH v2 3/5] ARM64: dts: meson-gxl: Add ethernet nodes with internal PHY
+Date: Mon, 31 Oct 2016 17:56:25 +0100
+Message-ID: <1477932987-27871-4-git-send-email-narmstrong@baylibre.com>
 References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: f.fainelli@gmail.com, khilman@baylibre.com, carlo@caione.org, andrew@lunn.ch
 Cc: Neil Armstrong <narmstrong@baylibre.com>, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add Ethernet node with Internal PHY selection for the Amlogic GXL SoCs
+
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 45 ++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-index 07f0e0b..08237ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-@@ -46,3 +46,9 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index d1bf381..71670c3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -47,6 +47,24 @@
+ 
  / {
- 	compatible = "amlogic,s905x", "amlogic,meson-gxl";
- };
+ 	compatible = "amlogic,meson-gxl";
 +
-+/* S905X Only has access to its internal PHY */
-+&ethmac {
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
++
 +};
++
++&ethmac {
++	reg = <0x0 0xc9410000 0x0 0x10000
++	       0x0 0xc8834540 0x0 0x4>;
++
++	clocks = <&clkc CLKID_ETH>,
++		 <&clkc CLKID_FCLK_DIV2>,
++		 <&clkc CLKID_MPLL2>;
++	clock-names = "stmmaceth", "clkin0", "clkin1";
++
++	mdio0: mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++	};
+ };
+ 
+ &aobus {
+@@ -214,6 +232,33 @@
+ 			};
+ 		};
+ 	};
++
++	eth-phy-mux {
++		compatible = "mdio-mux-mmioreg", "mdio-mux";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x0 0x55c 0x0 0x4>;
++		mux-mask = <0xffffffff>;
++		mdio-parent-bus = <&mdio0>;
++
++		internal_mdio: mdio@e40908ff {
++			reg = <0xe40908ff>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			internal_phy: ethernet-phy@8 {
++				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
++				reg = <8>;
++				max-speed = <100>;
++			};
++		};
++
++		external_mdio: mdio@2009087f {
++			reg = <0x2009087f>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
+ };
+ 
+ &hiubus {
 -- 
 1.9.1
