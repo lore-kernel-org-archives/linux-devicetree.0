@@ -1,73 +1,70 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Subject: Re: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
-Date: Mon, 31 Oct 2016 15:22:03 +0530
-Message-ID: <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
+Date: Mon, 31 Oct 2016 10:54:55 +0100
+Message-ID: <CAMpxmJX7SjE1zs926Fn-=jsZhPsOK6ey0hHM8LBhNS1nuSuFFQ@mail.gmail.com>
 References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
  <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
  <20161031043015.74ppaship5nqfaqt@rob-hp-laptop>
  <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ@mail.gmail.com>
+ <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
-
-On Monday 31 October 2016 03:10 PM, Bartosz Golaszewski wrote:
-> 2016-10-31 5:30 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On Wed, Oct 26, 2016 at 07:35:55PM +0200, Bartosz Golaszewski wrote:
->>> Create the driver for the da8xx master peripheral priority
->>> configuration and implement support for writing to the three
->>> Master Priority registers on da850 SoCs.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
->>>  drivers/bus/Kconfig                                |   9 +
->>>  drivers/bus/Makefile                               |   2 +
->>>  drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
->>>  4 files changed, 297 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
->>>  create mode 100644 drivers/bus/da8xx-mstpri.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
->>> new file mode 100644
->>> index 0000000..225af09
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
->>> @@ -0,0 +1,20 @@
->>> +* Device tree bindings for Texas Instruments da8xx master peripheral
->>> +  priority driver
->>> +
->>> +DA8XX SoCs feature a set of registers allowing to change the priority of all
->>> +peripherals classified as masters.
->>> +
->>> +Documentation:
->>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
->>> +
->>> +Required properties:
->>> +
->>> +- compatible:                "ti,da850-mstpri", "syscon" - for da850 based boards
->>
->> Drop syscon. Doesn't look like it is needed and the example doesn't
->> match.
-> 
-> Hi Rob,
-> 
-> it is needed: syscon_regmap_lookup_by_compatible() fails without it. I
-> fixed the example instead.
-
-Why are master priority registers under syscon? This driver should be
-the only entity touching them. So do we need an MFD driver?
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MjAxNi0xMC0zMSAxMDo1MiBHTVQrMDE6MDAgU2VraGFyIE5vcmkgPG5zZWtoYXJAdGkuY29tPjoK
+PiBIaSBCYXJ0b3N6LAo+Cj4gT24gTW9uZGF5IDMxIE9jdG9iZXIgMjAxNiAwMzoxMCBQTSwgQmFy
+dG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4gMjAxNi0xMC0zMSA1OjMwIEdNVCswMTowMCBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjoKPj4+IE9uIFdlZCwgT2N0IDI2LCAyMDE2IGF0IDA3
+OjM1OjU1UE0gKzAyMDAsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4+Pj4gQ3JlYXRlIHRo
+ZSBkcml2ZXIgZm9yIHRoZSBkYTh4eCBtYXN0ZXIgcGVyaXBoZXJhbCBwcmlvcml0eQo+Pj4+IGNv
+bmZpZ3VyYXRpb24gYW5kIGltcGxlbWVudCBzdXBwb3J0IGZvciB3cml0aW5nIHRvIHRoZSB0aHJl
+ZQo+Pj4+IE1hc3RlciBQcmlvcml0eSByZWdpc3RlcnMgb24gZGE4NTAgU29Dcy4KPj4+Pgo+Pj4+
+IFNpZ25lZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJy
+ZS5jb20+Cj4+Pj4gLS0tCj4+Pj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1cy90aSxkYTg1
+MC1tc3RwcmkudHh0ICAgIHwgIDIwICsrCj4+Pj4gIGRyaXZlcnMvYnVzL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsKPj4+PiAgZHJpdmVycy9idXMvTWFrZWZp
+bGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+Pj4+ICBkcml2ZXJzL2J1
+cy9kYTh4eC1tc3RwcmkuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDI2NiArKysrKysrKysr
+KysrKysrKysrKysKPj4+PiAgNCBmaWxlcyBjaGFuZ2VkLCAyOTcgaW5zZXJ0aW9ucygrKQo+Pj4+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1
+cy90aSxkYTg1MC1tc3RwcmkudHh0Cj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2J1
+cy9kYTh4eC1tc3RwcmkuYwo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9idXMvdGksZGE4NTAtbXN0cHJpLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9idXMvdGksZGE4NTAtbXN0cHJpLnR4dAo+Pj4+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMC4uMjI1YWYwOQo+Pj4+IC0tLSAvZGV2L251
+bGwKPj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYnVzL3RpLGRh
+ODUwLW1zdHByaS50eHQKPj4+PiBAQCAtMCwwICsxLDIwIEBACj4+Pj4gKyogRGV2aWNlIHRyZWUg
+YmluZGluZ3MgZm9yIFRleGFzIEluc3RydW1lbnRzIGRhOHh4IG1hc3RlciBwZXJpcGhlcmFsCj4+
+Pj4gKyAgcHJpb3JpdHkgZHJpdmVyCj4+Pj4gKwo+Pj4+ICtEQThYWCBTb0NzIGZlYXR1cmUgYSBz
+ZXQgb2YgcmVnaXN0ZXJzIGFsbG93aW5nIHRvIGNoYW5nZSB0aGUgcHJpb3JpdHkgb2YgYWxsCj4+
+Pj4gK3BlcmlwaGVyYWxzIGNsYXNzaWZpZWQgYXMgbWFzdGVycy4KPj4+PiArCj4+Pj4gK0RvY3Vt
+ZW50YXRpb246Cj4+Pj4gK09NQVAtTDEzOCAoREE4NTApIC0gaHR0cDovL3d3dy50aS5jb20vbGl0
+L3VnL3NwcnVoODJjL3NwcnVoODJjLnBkZgo+Pj4+ICsKPj4+PiArUmVxdWlyZWQgcHJvcGVydGll
+czoKPj4+PiArCj4+Pj4gKy0gY29tcGF0aWJsZTogICAgICAgICAgICAgICAgInRpLGRhODUwLW1z
+dHByaSIsICJzeXNjb24iIC0gZm9yIGRhODUwIGJhc2VkIGJvYXJkcwo+Pj4KPj4+IERyb3Agc3lz
+Y29uLiBEb2Vzbid0IGxvb2sgbGlrZSBpdCBpcyBuZWVkZWQgYW5kIHRoZSBleGFtcGxlIGRvZXNu
+J3QKPj4+IG1hdGNoLgo+Pgo+PiBIaSBSb2IsCj4+Cj4+IGl0IGlzIG5lZWRlZDogc3lzY29uX3Jl
+Z21hcF9sb29rdXBfYnlfY29tcGF0aWJsZSgpIGZhaWxzIHdpdGhvdXQgaXQuIEkKPj4gZml4ZWQg
+dGhlIGV4YW1wbGUgaW5zdGVhZC4KPgo+IFdoeSBhcmUgbWFzdGVyIHByaW9yaXR5IHJlZ2lzdGVy
+cyB1bmRlciBzeXNjb24/IFRoaXMgZHJpdmVyIHNob3VsZCBiZQo+IHRoZSBvbmx5IGVudGl0eSB0
+b3VjaGluZyB0aGVtLiBTbyBkbyB3ZSBuZWVkIGFuIE1GRCBkcml2ZXI/Cj4KCkl0IHNob3VsZCwg
+YnV0IHN5c2NmZzAgcmVnaXN0ZXJzIGFyZSBtYXBwZWQgYWxsIG92ZXIgdGhlIHBsYWNlLiBJCnRo
+b3VnaHQgaXQgd291bGQgYmUgc2FmZXIgdG8gcHV0IHRoZW0gdW5kZXIgc3lzY29uIGFuZCBLZXZp
+biBhZ3JlZWQuCgpUaGFua3MsCkJhcnRvc3ogR29sYXN6ZXdza2kKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
