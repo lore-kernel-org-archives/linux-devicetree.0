@@ -1,87 +1,56 @@
-From: Gordan =?UTF-8?Q?Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] input: keyboard: Add devicetree support for lm8333
-Date: Mon, 31 Oct 2016 21:37:50 +0100
-Message-ID: <1477946270.2116.21.camel@gordan-VirtualBox>
-References: <1477595854-9059-1-git-send-email-gordan.markus@gmail.com>
-         <20161031053227.n7lsmo6fgxbl2qze@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/3] nvmem: Add the Broadcom OTP controller driver
+Date: Mon, 31 Oct 2016 13:38:13 -0700
+Message-ID: <66722267-425b-5d02-7612-8b5c57fd2f85@gmail.com>
+References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
+ <1477336324-10543-3-git-send-email-jonathan.richardson@broadcom.com>
+ <f51e98c8-af71-5722-ab30-a27e176ddd5f@linaro.org>
+ <a85d1574-8d4b-e0bf-7340-7eab30deef37@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161031053227.n7lsmo6fgxbl2qze@rob-hp-laptop>
+In-Reply-To: <a85d1574-8d4b-e0bf-7340-7eab30deef37-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Mon, 2016-10-31 at 00:32 -0500, Rob Herring wrote:
-> On Thu, Oct 27, 2016 at 09:17:34PM +0200, Gordan Markus wrote:
-> > This adds LM8333 devicetree parsing for the keypad part.
-> > Optional properties to specify the keypad driver active
-> > time and debounce time.
-> > 
-> > Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++
+On 10/31/2016 12:55 PM, Scott Branden wrote:
+> Florian,
 > 
-> It is preferred that bindings be a separate patch.
-
-Thanks Rob. 
-Just to be clear, should I create a new thread with two patches?
-
+> On 16-10-31 07:23 AM, Srinivas Kandagatla wrote:
+>>
+>> On 24/10/16 20:12, Jonathan Richardson wrote:
+>>> From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> Add support for 32 and 64-bit versions of Broadcom's On-Chip OTP
+>>> controller. These controllers are used on SoC's such as Cygnus and
+>>> Stingray.
+>>>
+>>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  drivers/nvmem/Kconfig     |  12 ++
+>>>  drivers/nvmem/Makefile    |   2 +
+>>>  drivers/nvmem/bcm-ocotp.c | 335
+>>> ++++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 349 insertions(+)
+>>>  create mode 100644 drivers/nvmem/bcm-ocotp.c
+>>
+>>
+>> I can pick this patch along with dt bindings document, but dts patch has
+>> to go via arm-soc tree.
 > 
-> >  drivers/input/keyboard/lm8333.c                    | 54 ++++++++++++++++++++++
-> >  2 files changed, 99 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/ti,lm8333.txt b/Documentation/devicetree/bindings/input/ti,lm8333.txt
-> > new file mode 100644
-> > index 0000000..4100d48
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/ti,lm8333.txt
-> > @@ -0,0 +1,45 @@
-> > +LM8333 Keypad
-> > +
-> > +Required properties:
-> > +- compatible: Compatible property value should be "ti,lm8333".
-> > +
-> > +- reg: Physical base address of the peripheral and length of memory mapped
-> > +  region.
-> > +
-> > +- interrupts: The interrupt number for the peripheral.
-> > +
-> > +- linux,keymap: The keymap to use
-> > +	(see Documentation/devicetree/bindings/input/matrix-keymap.txt)
-> > +
-> > +Optional properties:
-> > +- ti,active-time: Specify the time during which the keypad is scanned after
-> > +	the last key is released, before entering Halt mode.
-> > +	The active time must be longer than the debounce time.
-> > +	Default 500 ms.
-> 
-> Add a unit suffix.
+> Can you pick up [PATCH v1 3/3] ARM: dts: Add node from Broadcom OTP
+> controller driver?
 
-The property will be renamed to "ti,active-time-ms". 
-
-> 
-> > +
-> > +- ti,debounce-time: Specify the keypad debounce time.
-> > +	This can be used for reliable scanning of keyboards with noisy contacts.
-> > +	Default 10 ms.
-> 
-> Don't we have a common property for this?
-
-There isn't a common property, as far as I can tell.
-Different devices have different debounce time properties.
-
-Furthermore, the property should have a unit sufix as well, i.e.
-it should be renamed to "ti,debounce-time-ms", right? 
-
-Gordan
-
-
-
+As soon as we get Rob's acked-by for Patch 1, sure.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
