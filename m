@@ -1,39 +1,91 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] irqchip: st: Remove obsolete platforms from dt
- binding doc
-Date: Mon, 31 Oct 2016 09:06:38 +0000
-Message-ID: <20161031090638.GA16442@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1477065443-10668-1-git-send-email-patrice.chotard@st.com>
- <1477065443-10668-6-git-send-email-patrice.chotard@st.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
+ scaling
+Date: Mon, 31 Oct 2016 11:26:53 +0200
+Message-ID: <7c0baa96-51a1-06fb-7a90-1bfb3338a294@linaro.org>
+References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
+ <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
+ <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
+ <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
+ <a96141dc-6ee5-2d7c-868c-7cb282002b89@kernel.org>
+ <812bb533-0f19-7abc-1fa1-9e83f1db10f4@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477065443-10668-6-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <812bb533-0f19-7abc-1fa1-9e83f1db10f4@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rama Krishna Phani A <rphani@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, smohanad@codeaurora.org, mgautam@codeaurora.org, sivaa@codeaurora.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Julia.Lawall@lip6.fr
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Oct 2016, patrice.chotard-qxv4g6HH51o@public.gmane.org wrote:
+Hi Rama,
 
-> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+On 10/31/2016 09:12 AM, Rama Krishna Phani A wrote:
+> Hi Jonathan,
 > 
-> STiH415/6 SoC support is being removed from the kernel.
-> This patch updates the sti irchip and removes
-> references to these obsolete platforms.
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-> Cc: <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> ---
->  .../devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt  | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+> On 30-Oct-16 10:43 PM, Jonathan Cameron wrote:
+>> On 27/10/16 18:37, Phani A, Rama Krishna wrote:
+>>> Hi Stan,
+>>>
+>>> On 27-Oct-16 4:48 PM, Stanimir Varbanov wrote:
+>>>> Hi Rama,
+>>>>
+>>>> On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
+>>>>> Polling can also be used for End of conversion completion.
+>>>>> Implement logic
+>>>>> to choose either polling or interrupt for End of conversion
+>>>>> completion.
+>>>>> Scaling can be done on the voltage to report adc code in physical
+>>>>> units.
+>>>>> Add changes to support different scale functions to convert adc
+>>>>> code to
+>>>>> physical units.
+>>>>>
+>>>>> Signed-off-by: Rama Krishna Phani A <rphani@codeaurora.org>
+>>>>> ---
+>>>>>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
+>>>>>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263
+>>>>> +++++++++++++++++----
+>>>>>  2 files changed, 236 insertions(+), 41 deletions(-)
+>>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>>>>> b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>>>>> index 0fb4613..39e31c0e 100644
+>>>>> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+>>>>> @@ -37,6 +37,12 @@ VADC node:
+>>>>>      Value type: <prop-encoded-array>
+>>>>>      Definition: End of conversion interrupt.
+>>>>>
+>>>>> +- qcom,vadc-poll-eoc:
+>>>>> +    Usage: optional
+>>>>> +    Value type: <bool>
+>>>>> +    Definition: Use polling instead of interrupts for End of
+>>>>> Conversion
+>>>>> +        completion.
+>>>>
+>>>> Why you need to add such a flag in DT?
+>>>>
+>>>> The DT should describe hardware details not how the driver will choose
+>>>> pooling vs interrupt.
+>>>>
+>>>> On which use-case you would prefer pooling?
+>>>>
+>>>
+>>> Few PMIC's support interrupt functionality for ADC where as few
+>>> PMIC's dont support. Based on the functionality that is supported in
+>>> hardware we choose whether to go for polling or for interrupt.
+>> Can't use the usual trick of an optional interrupt in DT?
+>> If it's there we try to use it, if not then fall back to polling?
+>>
+> Ok., Will check this logic for implementation and will post next patch.
 
-Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The interrupts DT property in binding doc is marked as optional already,
+so I can't really understand what you are trying to achieve with this
+new qcom,vadc-poll-eoc boolean property?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
