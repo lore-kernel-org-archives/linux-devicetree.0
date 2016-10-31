@@ -1,34 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt: cpufreq: brcm: New binding document for
- brcmstb-avs-cpufreq
-Date: Mon, 31 Oct 2016 00:43:03 -0500
-Message-ID: <20161031054303.thdw4rjslosajyl7@rob-hp-laptop>
-References: <20161027210536.98988-1-code@mmayer.net>
- <20161027210536.98988-2-code@mmayer.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: reset: Add K2G reset definitions
+Date: Mon, 31 Oct 2016 00:57:03 -0500
+Message-ID: <20161031055703.y55nqcoplfopspkd@rob-hp-laptop>
+References: <20161027214941.24641-1-afd@ti.com>
+ <20161027214941.24641-3-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161027210536.98988-2-code@mmayer.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+In-Reply-To: <20161027214941.24641-3-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 02:05:34PM -0700, Markus Mayer wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
+On Thu, Oct 27, 2016 at 04:49:40PM -0500, Andrew F. Davis wrote:
+> Add identifiers for the K2G resets managed by the PMMC.
 > 
-> Add the binding document for the new brcmstb-avs-cpufreq driver.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 > ---
->  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 78 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>  MAINTAINERS                     |  1 +
+>  include/dt-bindings/reset/k2g.h | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/k2g.h
 
-I guess if one of the nodes is used elsewhere, combining the nodes 
-doesn't make sense. So:
+This belongs with the previous patch. It is part of the binding 
+definition.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
