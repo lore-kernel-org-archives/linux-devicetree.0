@@ -1,55 +1,38 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v1 2/3] nvmem: Add the Broadcom OTP controller driver
-Date: Mon, 31 Oct 2016 12:55:29 -0700
-Message-ID: <a85d1574-8d4b-e0bf-7340-7eab30deef37@broadcom.com>
-References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
- <1477336324-10543-3-git-send-email-jonathan.richardson@broadcom.com>
- <f51e98c8-af71-5722-ab30-a27e176ddd5f@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v3 0/4] PXA cpufreq conversion to clock API
+Date: Mon, 31 Oct 2016 20:54:52 +0100
+Message-ID: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f51e98c8-af71-5722-ab30-a27e176ddd5f@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jonathan Richardson <jonathan.richardson@broadcom.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jonathan Richardson <jonathar@broadcom.com>, Oza Pawandeep <oza@broadcom.com>
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafael J Wysocki <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Florian,
+Hi,
 
-On 16-10-31 07:23 AM, Srinivas Kandagatla wrote:
->
-> On 24/10/16 20:12, Jonathan Richardson wrote:
->> From: Jonathan Richardson <jonathar@broadcom.com>
->>
->> Add support for 32 and 64-bit versions of Broadcom's On-Chip OTP
->> controller. These controllers are used on SoC's such as Cygnus and
->> Stingray.
->>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> Signed-off-by: Oza Pawandeep <oza@broadcom.com>
->> Signed-off-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
->> ---
->>  drivers/nvmem/Kconfig     |  12 ++
->>  drivers/nvmem/Makefile    |   2 +
->>  drivers/nvmem/bcm-ocotp.c | 335
->> ++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 349 insertions(+)
->>  create mode 100644 drivers/nvmem/bcm-ocotp.c
->
->
-> I can pick this patch along with dt bindings document, but dts patch has
-> to go via arm-soc tree.
+This serie is a preparation to shift the cpufreq of pxa2xx platforms to clocks
+API, next iteration.
 
-Can you pick up [PATCH v1 3/3] ARM: dts: Add node from Broadcom OTP 
-controller driver?
+The first 3 patches are review and merge material :
+ - patch 1/4 for Viresh and Rafael
+ - patches 2/4 and 3/4 for me
 
->
-> Thanks,
-> srini
->
->
-Thanks,
-  Scott
+The 4th on is for review but not merge, as the clock changes must be fully
+reviewed and go in first as a prequisite
+
+Since previous iteration, 2 and 3 were amended per Viresh's suggestion.
+
+Robert Jarzmik (4):
+  cpufreq: pxa: use generic platdev driver for device-tree
+  ARM: dts: pxa: add pxa25x cpu operating points
+  ARM: dts: pxa: add pxa27x cpu operating points
+  cpufreq: pxa: convert to clock API
+
+ arch/arm/boot/dts/pxa25x.dtsi        |  25 +++++
+ arch/arm/boot/dts/pxa27x.dtsi        |  40 ++++++++
+ drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
+ drivers/cpufreq/pxa2xx-cpufreq.c     | 191 +++++++----------------------------
+ 4 files changed, 106 insertions(+), 152 deletions(-)
+
+-- 
+2.1.4
