@@ -1,83 +1,87 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: ti_am335x_tscadc: store physical address
-Date: Mon, 31 Oct 2016 08:16:43 +0000
-Message-ID: <20161031081643.GN13127@dell>
-References: <20160921161134.6951-1-mugunthanvnm@ti.com>
- <20160921161134.6951-2-mugunthanvnm@ti.com>
- <20160927194045.GK21388@dell>
- <f271b805-82c2-a45e-0de9-39edafd34d2e@ti.com>
- <20161026121730.GS8574@dell>
- <954adfa7-94d9-f785-aeab-6f20c8f4c3b9@kernel.org>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Mon, 31 Oct 2016 09:19:24 +0100
+Message-ID: <20161031081923.GF18195@verge.net.au>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <954adfa7-94d9-f785-aeab-6f20c8f4c3b9-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 30 Oct 2016, Jonathan Cameron wrote:
-
-> On 26/10/16 13:17, Lee Jones wrote:
-> > On Fri, 30 Sep 2016, Mugunthan V N wrote:
-> > 
-> >> On Wednesday 28 September 2016 01:10 AM, Lee Jones wrote:
-> >>> On Wed, 21 Sep 2016, Mugunthan V N wrote:
-> >>>
-> >>>> store the physical address of the device in its priv to use it
-> >>>> for DMA addressing in the client drivers.
-> >>>>
-> >>>> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-> >>>> ---
-> >>>>  drivers/mfd/ti_am335x_tscadc.c       | 1 +
-> >>>>  include/linux/mfd/ti_am335x_tscadc.h | 1 +
-> >>>>  2 files changed, 2 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_tscadc.c
-> >>>> index c8f027b..0f3fab4 100644
-> >>>> --- a/drivers/mfd/ti_am335x_tscadc.c
-> >>>> +++ b/drivers/mfd/ti_am335x_tscadc.c
-> >>>> @@ -183,6 +183,7 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
-> >>>>  		tscadc->irq = err;
-> >>>>  
-> >>>>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >>>> +	tscadc->tscadc_phys_base = res->start;
-> >>>
-> >>> This is unusual.  Can't you use a virt_to_phys() variant instead?
-> >>>
-> >>
-> >> I tried using virt_to_phys(), but its not working for me.
-> >> Also saw many drivers uses like this to get physical address
-> >> ("git grep -n " res->start;" drivers/*").
-> > 
-> > Very well:
-> > 
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > Let me know how you wish this set to be handled.
-> I'm happy to pick up the whole series.  There are some more mfd
-> header changes in patch 2 but as they only add defines, I
-> don't mind that much if I don't an Ack from you on those
-> (btw this got to V3 but as patch 1 didn't change I'll carry
-> your ack forwards).
+On Wed, Oct 26, 2016 at 02:00:24PM +0200, Geert Uytterhoeven wrote:
+> Hi Mike, Stephen,
 > 
-> Do you want an immutable branch?  Seems unlikely to cause
-> much trouble even if there is a merge issue on all 10ish
-> lines of mfd code in the next merge window.
+> On Fri, Oct 21, 2016 at 3:17 PM, Geert Uytterhoeven
+> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> > Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+> > state of the mode pins either by a call from the platform code, or
+> > directly by using a hardcoded register access. This is a bit messy, and
+> > creates a dependency between driver and platform code.
+> >
+> > This patch series converts the various Renesas R-Car clock drivers
+> > and support code from reading the mode pin states using a hardcoded
+> > register access to using a new minimalistic R-Car RST driver.
+> >
+> > All R-Car clock drivers will rely on the presence in DT of a device node
+> > for the RST module.  Backwards compatibility with old DTBs is retained
+> > only for R-Car Gen2, which has fallback code using its own private copy
+> > of rcar_gen2_read_mode_pins().
+> >
+> > After this, there is still one remaining user of
+> > rcar_gen2_read_mode_pins() left in platform code. A patch series to
+> > remove that user has already been posted, though ("[PATCH/RFT 0/4] ARM:
+> > shmobile: R-Car Gen2: Allow booting secondary CPU cores in debug mode").
+> > Since v3, the other user has been removed in commit 9f5ce39ddb8f68b3
+> > ("ARM: shmobile: rcar-gen2: Obtain extal frequency from DT").
+> >
+> > This series consists of 5 parts:
+> >   A. Patches 1 and 2 add DT bindings and driver code for the R-Car RST
+> >      driver,
+> >   B. Patches 3-11 add device nodes for the RST modules to the R-Car DTS
+> >      files,
+> >   C. Patches 12-17 convert the clock drivers to call into the new R-Car
+> >      RST driver,
+> >   D. Patches 18-20 remove passing mode pin state to the clock drivers
+> >      from the platform code,
+> >   E. Patches 21-23 remove dead code from the clock drivers.
+> >
+> > As is usually the case with moving functionality from platform code to
+> > DT, there are lots of hard dependencies:
+> >   - The DT updates in Part B can be merged as soon as the DT bindings in
+> >     Part A have been approved,
+> >   - The clock driver updates in Part C depend functionally on the driver
+> >     code in Part A, and on the DT updates in Part B,
+> >   - The board code cleanups in Part D depend on the clock driver updates
+> >     in Part C,
+> >   - The block driver cleanups in part E depend on the board code
+> >     cleanups in part D.
+> >
+> > Hence to maintain the required lockstep between SoC driver, clock
+> > drivers, shmobile platform code, and shmobile DT, I propose to queue up
+> > all patches in a single branch against v4.9-rc1, and send pull requests
+> > to both Mike/Stephen (clock) and Simon (rest).
+> >
+> > ***
+> 
+> >   - Mike/Stephen/Simon/Magnus: Are you OK with the suggested merge
+> >     approach above?
+> 
+> Is this OK for you?
+> 
+> I'd like to move forward with this, as this is a prerequisite for adding
+> support for new SoCs (RZ/G) without adding more copies of
+> rcar_gen2_read_mode_pins(), and removing that function from platform code
+> for good.
 
-Not at the moment, but if you could set things up so it's possible to
-create one at a later date if things go Pete Tong, that would be
-great.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+This seems reasonable to me but likely the ARM SoC maintainers will want to
+know about this plan before it is executed.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
