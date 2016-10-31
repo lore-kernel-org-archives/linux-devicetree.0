@@ -1,39 +1,47 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 2/2] mmc: dw_mmc: add the "reset" as name of reset controller
-Date: Mon, 31 Oct 2016 11:49:42 +0900
-Message-ID: <20161031024942.4415-3-jh80.chung@samsung.com>
-References: <20161031024942.4415-1-jh80.chung@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20161031024942.4415-1-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, john.stultz@linaro.org, guodong.xu@linaro.org, leo.yan@linaro.org, vincent.guittot@linaro.org, Jaehoon Chung <jh80.chung@samsung.com>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx6sx-sdb: update TX D_CAL for USBPHY
+Date: Mon, 31 Oct 2016 10:58:28 +0800
+Message-ID: <1477882709-2518-1-git-send-email-peter.chen@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the "reset" as name of reset controller.
-This is for preventing the wrong operation. Even if some SoC has reset
-controller, doesn't define "resets" in device-tree.
-Then it might be waiting for reset controller and it should be stuck.
+We need to change trimming value (as a percentage) of the 17.78mA TX
+reference current for better signal quality. With this change, we
+can patch the eye-diagram test on this board.
 
-Fixes: d6786fefe816 ("mmc: dw_mmc: add reset support to dwmmc host controller")
-
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/mmc/host/dw_mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 1c9ee36..a16c537 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -2940,7 +2940,7 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index 85f56a5..4933c56 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -317,6 +317,14 @@
+ 	status = "okay";
+ };
  
- 	/* find reset controller when exist */
--	pdata->rstc = devm_reset_control_get_optional(dev, NULL);
-+	pdata->rstc = devm_reset_control_get_optional(dev, "reset");
- 	if (IS_ERR(pdata->rstc)) {
- 		if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
- 			return ERR_PTR(-EPROBE_DEFER);
++&usbphy1 {
++	fsl,tx-d-cal = <106>;
++};
++
++&usbphy2 {
++	fsl,tx-d-cal = <106>;
++};
++
+ &usdhc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
 -- 
-2.10.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
