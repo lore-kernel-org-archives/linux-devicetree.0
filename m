@@ -1,166 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 04/10] Documentation: devicetree: mfd: da9062/61 MFD
- binding
-Date: Sun, 30 Oct 2016 23:20:56 -0500
-Message-ID: <20161031042056.lnte54eilx7cegq7@rob-hp-laptop>
-References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
- <0e5e8a32cbb9cf307858c860cf25107cb71c8e32.1477501000.git.stwiss.opensource@diasemi.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] tpm_tis: Allow tpm_tis to be bound
+	using DT
+Date: Sun, 30 Oct 2016 23:26:18 -0500
+Message-ID: <20161031042618.natoswnyn7z4ixxb@rob-hp-laptop>
+References: <20161026170437.GB13461@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <0e5e8a32cbb9cf307858c860cf25107cb71c8e32.1477501000.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+In-Reply-To: <20161026170437.GB13461-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 05:56:38PM +0100, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Wed, Oct 26, 2016 at 11:04:37AM -0600, Jason Gunthorpe wrote:
+> This provides an open firwmare driver binding for tpm_tis. OF
+> is useful on arches where ACPI/PNP is not used.
 > 
-> Extend existing DA9062 binding information to include the DA9061 PMIC for
-> MFD core and regulators.
+> The tcg,tpm-tis-mmio register map interface is specified by the TCG.
 > 
-> Add a da9062-onkey link to the existing onkey binding file.
-> 
-> Add a da9062-thermal link to the new temperature monitoring binding file
-> found in [PATCH V2 03/10].
-> 
-> Delete the da9062-watchdog section and replace it with a link to the new
-> DA9061/62 binding information file added by [PATCH V2 02/10].
-> 
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 > ---
-> This patch applies against linux-next and v4.8
+>  .../bindings/security/tpm/tpm_tis_mmio.txt         | 23 ++++++++++++++++++++++
+>  drivers/char/tpm/Kconfig                           |  2 +-
+>  drivers/char/tpm/tpm_tis.c                         | 11 +++++++++++
+>  3 files changed, 35 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
 > 
-> v1 -> v2
->  - Patch renamed from [PATCH V1 09/10] to [PATCH V2 04/10] -- these
->    changes were made to fix checkpatch warnings caused by the patch
->    set dependency order
+> v2 (from Mark)
+>  - Change name to tpm-tis-mmio (and fix c&p spi)
+>  - Include some valid chip names
 > 
-> Hi,
-> 
-> This patch depends on acceptance of the main code for the DA9061 MFD:
-> 
-> - [PATCH V2 1/10] mfd: da9061: MFD core support
-> 
-> and also from the following binding file changes:
-> 
-> - [PATCH V2 01/10] Binding for onkey
-> - [PATCH V2 02/10] Binding for watchdog
-> - [PATCH V2 03/10] Binding for thermal
-> 
-> Regards,
-> Steve Twiss, Dialog Semiconductor Ltd.
-> 
-> 
->  Documentation/devicetree/bindings/mfd/da9062.txt | 45 +++++++++++++++++-------
->  1 file changed, 33 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
-> index 38802b5..38ba5e2 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> @@ -1,22 +1,32 @@
->  * Dialog DA9062 Power Management Integrated Circuit (PMIC)
->  
-> -DA9062 consists of a large and varied group of sub-devices:
-> +The DA9062 driver is compatible with the DA9062 and DA9061 devices.
+> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> new file mode 100644
+> index 000000000000..f9a853165cd0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+> @@ -0,0 +1,23 @@
+> +Trusted Computing Group MMIO Trusted Platform Module
+> +
+> +The TCG defines multi vendor standard for accessing a TPM chip, this
+> +is the standard protocol defined to access the TPM via MMIO. Typically
+> +this interface will be implemented over Intel's LPC bus.
+> +
+> +Refer to the 'TCG PC Client Specific TPM Interface Specification (TIS)' TCG
+> +publication for the specification.
+> +
+> +Required properties:
+> +
+> +- compatible: should contain a string below for the chip, followed by
+> +              "tcg,tpm-tis-mmio". Valid chip strings are:
+> +	          * "atmel,at97sc3204"
+> +- reg: The location of the MMIO registers, should be at least 0x5000 bytes
+> +- interrupt: An optional intzerrupt indicating command completion.
 
-Describe the device, not driver.
+s/interrupt/interrupts/
 
 > +
-> +Product information can be found here:
-> +- http://www.dialog-semiconductor.com/products/da9062
-> +- http://www.dialog-semiconductor.com/products/da9061
+> +Example:
 > +
-> +DA9062 driver consists of a large and varied group of sub-devices:
+> +	tpm_tis@90000 {
+> +				compatible = "atmel,at97sc3204", "tcg,tpm-tis-mmio";
+> +				reg = <0x90000 0x5000>;
 
-DA9062/DA9061 PMIC consists of...
+Missing the required interrupts property.
 
->  
->  Device                   Supply Names    Description
->  ------                   ------------    -----------
->  da9062-regulator        :               : LDOs & BUCKs
->  da9062-rtc              :               : Real-Time Clock
-> +da9062-onkey            :               : On Key
->  da9062-watchdog         :               : Watchdog Timer
-> +da9062-thermal          :               : Thermal
->  
->  ======
->  
->  Required properties:
->  
-> -- compatible : Should be "dlg,da9062".
-> +- compatible : Should be
-> +    "dlg,da9062" for DA9062
-> +    "dlg,da9061" for DA9061
->  - reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
->    modified to match the chip's OTP settings).
->  - interrupt-parent : Specifies the reference to the interrupt controller for
-> -  the DA9062.
-> +  the DA9062 or DA9061.
->  - interrupts : IRQ line information.
->  - interrupt-controller
->  
-> @@ -25,8 +35,8 @@ further information on IRQ bindings.
->  
->  Sub-nodes:
->  
-> -- regulators : This node defines the settings for the LDOs and BUCKs. The
-> -  DA9062 regulators are bound using their names listed below:
-> +- regulators : This node defines the settings for the LDOs and BUCKs.
-> +  The DA9062 regulators are bound using their names listed below:
->  
->      buck1    : BUCK_1
->      buck2    : BUCK_2
-> @@ -37,6 +47,16 @@ Sub-nodes:
->      ldo3     : LDO_3
->      ldo4     : LDO_4
->  
-> +  The DA9061 regulators are bound using their names listed below:
-> +
-> +    buck1    : BUCK_1
-> +    buck2    : BUCK_2
-> +    buck3    : BUCK_3
-> +    ldo1     : LDO_1
-> +    ldo2     : LDO_2
-> +    ldo3     : LDO_3
-> +    ldo4     : LDO_4
-> +
->    The component follows the standard regulator framework and the bindings
->    details of individual regulator device can be found in:
->    Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -46,9 +66,14 @@ Sub-nodes:
->    with the DA9062. There are currently no entries in this binding, however
->    compatible = "dlg,da9062-rtc" should be added if a node is created.
->  
-> -- watchdog: This node defines the settings for the watchdog driver associated
-> -  with the DA9062 PMIC. The compatible = "dlg,da9062-watchdog" should be added
-> -  if a node is created.
-> +
-> +- onkey : See ../input/da9062-onkey.txt
-> +
-> +
-> +- watchdog: See ../watchdog/da9062-watchdog.txt
-> +
-> +
-> +- thermal : See ../thermal/da9062-thermal.txt
->  
->  
->  Example:
-> @@ -64,10 +89,6 @@ Example:
->  			compatible = "dlg,da9062-rtc";
->  		};
->  
-> -		watchdog {
-> -			compatible = "dlg,da9062-watchdog";
-> -		};
-> -
->  		regulators {
->  			DA9062_BUCK1: buck1 {
->  				regulator-name = "BUCK1";
-> -- 
-> end-of-patch for PATCH V2
-> 
+> +			};
+
+The indentation here is off, otherwise:
+
+Rob
+
+------------------------------------------------------------------------------
+The Command Line: Reinvented for Modern Developers
+Did the resurgence of CLI tooling catch you by surprise?
+Reconnect with the command line and become more productive. 
+Learn the new .NET and ASP.NET CLI. Get your free copy!
+http://sdm.link/telerik
