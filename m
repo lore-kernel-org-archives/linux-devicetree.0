@@ -1,42 +1,75 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 3/5] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Mon, 31 Oct 2016 15:45:36 +0100
-Message-ID: <1477925138-23457-4-git-send-email-bgolaszewski@baylibre.com>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/5] ARM: da850: new drivers for better LCDC support
+Date: Mon, 31 Oct 2016 15:45:33 +0100
+Message-ID: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBub2RlcyBmb3IgdGhlIE1TVFBSSSBjb25maWd1cmF0aW9uIGFuZCBERFIyL21ERFIg
-bWVtb3J5CmNvbnRyb2xsZXIgZHJpdmVycyB0byBkYTg1MC5kdHNpLgoKU2lnbmVkLW9mZi1ieTog
-QmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9kYTg1MC5kdHNpIHwgMTEgKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
-LCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKaW5kZXggMTEyYzZkNy4uNDRiZWNl
-MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQorKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC5kdHNpCkBAIC00NTQsNiArNDU0LDEyIEBACiAJCQlpbnRlcnJ1cHRz
-ID0gPDUyPjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCX07CisKKwkJbXN0cHJpOiBtc3Rw
-cmlAMTQxMTAgeworCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1tc3RwcmkiOworCQkJcmVnID0g
-PDB4MTQxMTAgMHgwYz47CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQl9OwogCX07CiAJYWVt
-aWY6IGFlbWlmQDY4MDAwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1hZW1pZiI7CkBA
-IC00NjUsNCArNDcxLDkgQEAKIAkJCSAgMSAwIDB4NjgwMDAwMDAgMHgwMDAwODAwMD47CiAJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7CiAJfTsKKwlkZHJjdGw6IGRkcmN0bEBiMDAwMDAwMCB7CisJCWNv
-bXBhdGlibGUgPSAidGksZGE4NTAtZGRyLWNvbnRyb2xsZXIiOworCQlyZWcgPSA8MHhiMDAwMDAw
-MCAweGU4PjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OwogfTsKLS0gCjIuOS4zCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This series adds two new drivers in order to better support the LCDC
+rev1 present on the da850 boards.
+
+The first patch adds a new memory driver which allows to write to the
+DDR2/mDDR memory controller present on the da8xx SoCs.
+
+The second patch adds a new bus driver which allows to interact with
+the MSTPRI registers of the SYSCFG0 module
+
+As is mentioned in the comments: we don't want to commit to supporting
+stable interfaces (DT bindings or sysfs attributes) so we hardcode the
+settings required by some boards (for now only da850-lcdk) with the
+hope that linux gets an appropriate framework for performance knobs
+in the future.
+
+Potential extensions of these drivers should be straightforward in the
+future.
+
+Subsequent patches add DT nodes for the new drivers: disabled nodes
+in da850.dtsi and enabled in da850-lcdk.dts.
+
+The last patch adds a workaround for current lack of support for drm
+bridges in tilcdc.
+
+Tested on a da850-lcdk with a display connected over VGA and two
+additional patches for tilcdc (sent to linux-drm): ran simple modetest
+for supported resolutions, used X.org and fluxbox as graphical
+environment, played video with mplayer.
+
+v1 -> v2:
+- used regular readl()/writel() instead of __raw_** versions
+- used resource_size() instead of calculating the size by hand
+- used ioremap instead of syscon in patch [2/5]
+- added the DT nodes in patches [3/5]-[5/5]
+
+Bartosz Golaszewski (5):
+  ARM: memory: da8xx-ddrctl: new driver
+  ARM: bus: da8xx-mstpri: new driver
+  ARM: dts: da850: add the mstpri and ddrctl nodes
+  ARM: dts: da850-lcdk: enable mstpri and ddrctl nodes
+  ARM: dts: da850-lcdk: add tilcdc panel node
+
+ .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+ .../memory-controllers/ti-da8xx-ddrctl.txt         |  20 ++
+ arch/arm/boot/dts/da850-lcdk.dts                   |  71 ++++++
+ arch/arm/boot/dts/da850.dtsi                       |  11 +
+ drivers/bus/Kconfig                                |   9 +
+ drivers/bus/Makefile                               |   2 +
+ drivers/bus/da8xx-mstpri.c                         | 269 +++++++++++++++++++++
+ drivers/memory/Kconfig                             |   8 +
+ drivers/memory/Makefile                            |   1 +
+ drivers/memory/da8xx-ddrctl.c                      | 175 ++++++++++++++
+ 10 files changed, 586 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+ create mode 100644 drivers/bus/da8xx-mstpri.c
+ create mode 100644 drivers/memory/da8xx-ddrctl.c
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
