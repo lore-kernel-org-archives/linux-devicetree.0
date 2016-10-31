@@ -1,62 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document Broadcom OTP controller
- driver
-Date: Sun, 30 Oct 2016 20:38:48 -0500
-Message-ID: <20161031013848.4vi2544tb5cs65nk@rob-hp-laptop>
-References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
- <1477336324-10543-2-git-send-email-jonathan.richardson@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] dt-bindings: qcom: Add msm899(2/4) bindings
+Date: Sun, 30 Oct 2016 20:43:49 -0500
+Message-ID: <20161031014349.4mv3ksitlf3whjga@rob-hp-laptop>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
+ <1477394221-30963-5-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477336324-10543-2-git-send-email-jonathan.richardson@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Oza Pawandeep <oza@broadcom.com>
+In-Reply-To: <1477394221-30963-5-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 12:12:02PM -0700, Jonathan Richardson wrote:
-> From: Jonathan Richardson <jonathar@broadcom.com>
+On Tue, Oct 25, 2016 at 04:16:59AM -0700, Jeremy McNicoll wrote:
+> From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > 
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Tested-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Oza Pawandeep <oza@broadcom.com>
-> Signed-off-by: Jonathan Richardson <jonathan.richardson@broadcom.com>
+> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
-> new file mode 100644
-> index 0000000..6462e12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
-> @@ -0,0 +1,17 @@
-> +Broadcom OTP memory controller
-> +
-> +Required Properties:
-> +- compatible: "brcm,ocotp" for the first generation Broadcom OTPC which is used
-> +  in Cygnus and supports 32 bit read/write. Use "brcm,ocotp-v2" for the second
-> +  generation Broadcom OTPC which is used in SoC's such as Stingray and supports
-> +  64-bit read/write.
+>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-These should be SoC specific. While I'd guess this block is simple 
-enough, having the SoC can define what all the bits are. Yes, there is a 
-binding to define those, but you may not use that.
-
-
-> +- reg: Base address of the OTP controller.
-> +- brcm,ocotp-size: Amount of memory available, in 32 bit words
-> +
-> +Example:
-> +
-> +otp: otp@0301c800 {
-> +	compatible = "brcm,ocotp";
-> +	reg = <0x0301c800 0x2c>;
-> +	brcm,ocotp-size = <2048>;
-> +};
-> -- 
-> 1.9.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
