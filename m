@@ -1,99 +1,124 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] net: stmmac: Add OXNAS Glue Driver
-Date: Mon, 31 Oct 2016 11:25:43 +0100
-Message-ID: <29c3fe96-8593-eaae-5ffe-d74e687f3448@baylibre.com>
-References: <20161021084445.24989-1-narmstrong@baylibre.com>
- <20161030204110.otvjlanmi7dv7fox@rob-hp-laptop>
- <04b8ed79-8efa-cc10-a9a3-fdee10e0723c@baylibre.com>
- <CAGhQ9Vxy+boEPV3pvRCAWAWh-Tie31oS0PG7F6ix5_Wf=JHxgg@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] soc: Support for NPS HW scheduling
+Date: Mon, 31 Oct 2016 11:26:59 +0100
+Message-ID: <20161031102659.GA1506@mai>
+References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
+ <1477224748-25223-2-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGhQ9Vxy+boEPV3pvRCAWAWh-Tie31oS0PG7F6ix5_Wf=JHxgg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, "peppe.cavallaro" <peppe.cavallaro@st.com>, alexandre.torgue@st.com, netdev <netdev@vger.kernel.org>, linux-oxnas@lists.tuxfamily.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477224748-25223-2-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2016 11:20 AM, Joachim Eastwood wrote:
-> Hi Neil,
+On Sun, Oct 23, 2016 at 03:12:26PM +0300, Noam Camus wrote:
+> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 > 
-> On 31 October 2016 at 10:55, Neil Armstrong <narmstrong@baylibre.com> wrote:
->> On 10/30/2016 09:41 PM, Rob Herring wrote:
->>> On Fri, Oct 21, 2016 at 10:44:45AM +0200, Neil Armstrong wrote:
->>>> Add Synopsys Designware MAC Glue layer for the Oxford Semiconductor OX820.
->>>>
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>> ---
->>>>  .../devicetree/bindings/net/oxnas-dwmac.txt        |  44 +++++
->>>
->>> It's preferred that bindings are a separate patch.
->>
->> OK
->>
->>>
->>>>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 ++
->>>>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->>>>  drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c  | 219 +++++++++++++++++++++
->>>>  4 files changed, 275 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
->>>>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-oxnas.c
->>>>
->>>> Changes since RFC at https://patchwork.kernel.org/patch/9387257 :
->>>>  - Drop init/exit callbacks
->>>>  - Implement proper remove and PM callback
->>>>  - Call init from probe
->>>>  - Disable/Unprepare clock if stmmac probe fails
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/oxnas-dwmac.txt b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
->>>> new file mode 100644
->>>> index 0000000..5d2696c
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
->>>> @@ -0,0 +1,44 @@
->>>> +* Oxford Semiconductor OXNAS DWMAC Ethernet controller
->>>> +
->>>> +The device inherits all the properties of the dwmac/stmmac devices
->>>> +described in the file stmmac.txt in the current directory with the
->>>> +following changes.
->>>> +
->>>> +Required properties on all platforms:
->>>> +
->>>> +- compatible:       Depending on the platform this should be one of:
->>>> +                    - "oxsemi,ox820-dwmac"
->>>> +            Additionally "snps,dwmac" and any applicable more
->>>> +            detailed version number described in net/stmmac.txt
->>>> +            should be used.
->>>
->>> You should be explicit what version applies to ox820. "snps,dwmac"
->>> should probably be deprecated IMO. There are so many variations of DW
->>> h/w.
->>
->> Well, to be honest I have absolutely no idea ! But I will try to find out...
-> 
-> You can see in the boot log:
-> 
-> From lpc18xx boot:
-> [    3.242253] stmmac - user ID: 0x11, Synopsys ID: 0x36
-> [    3.247653]  Ring mode enabled
-> [    3.251491]  DMA HW capability register supported
-> [    3.256336]  Enhanced/Alternate descriptors
-> [    3.261537]  Enabled extended descriptors
-> [    3.265968]  RX Checksum Offload Engine supported (type 2)
-> [    3.272249]  TX Checksum insertion supported
-> [    3.276874]  Wake-Up On Lan supported
-> [    3.283743]  Enable RX Mitigation via HW Watchdog Timer
-> [    3.326701] libphy: stmmac: probed
-> 
-> Synopsys ID: 0x36 and user UD: 0x11, gives us DWMAC version 3.611
-> 
-> 
-> regards,
-> Joachim Eastwood
-> 
-OK, thanks !
+> This new header file is for NPS400 SoC (part of ARC architecture).
+> The header file includes macros for save/restore of HW scheduling.
+> The control of HW scheduling is acheived by writing core registers.
 
-stmmac - user ID: 0x12, Synopsys ID: 0x35
+s/acheived/achieved/
 
-Neil
+> This code was moved from arc/plat-eznps so it can be used
+> from drivers/clocksource/, available only for CONFIG_EZNPS_MTM_EXT.
+> 
+> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arc/plat-eznps/include/plat/ctop.h |    2 -
+>  include/soc/nps/mtm.h                   |   59 +++++++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+), 2 deletions(-)
+>  create mode 100644 include/soc/nps/mtm.h
+> 
+> diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+> index 9d6718c..ee2e32d 100644
+> --- a/arch/arc/plat-eznps/include/plat/ctop.h
+> +++ b/arch/arc/plat-eznps/include/plat/ctop.h
+> @@ -46,9 +46,7 @@
+>  #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+>  
+>  /* EZchip core instructions */
+> -#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
+>  #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
+> -#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
+>  #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
+>  #define CTOP_INST_SCHD_RW			0x3E6F7004
+>  #define CTOP_INST_SCHD_RD			0x3E6F7084
+> diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
+> new file mode 100644
+> index 0000000..d2f5e7e
+> --- /dev/null
+> +++ b/include/soc/nps/mtm.h
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
+> + *
+> + * This software is available to you under a choice of one of two
+> + * licenses.  You may choose to be licensed under the terms of the GNU
+> + * General Public License (GPL) Version 2, available from the file
+> + * COPYING in the main directory of this source tree, or the
+> + * OpenIB.org BSD license below:
+> + *
+> + *     Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *      - Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *
+> + *      - Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+> + * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+> + * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+> + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+> + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> + * SOFTWARE.
+> + */
+> +
+> +#ifndef SOC_NPS_MTM_H
+> +#define SOC_NPS_MTM_H
+> +
+> +#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
+> +#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
+> +
+> +static inline void hw_schd_save(unsigned int *flags)
+> +{
+> +	__asm__ __volatile__(
+> +	"       .word %1\n"
+> +	"       st r3,[%0]\n"
+> +	:
+> +	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
+> +	: "r3", "memory");
+> +}
+> +
+
+Wouldn't make sense to change the macro name to CTOP_INST_HWSCHD_SAVE_R3 ?
+
+> +static inline void hw_schd_restore(unsigned int flags)
+> +{
+> +	__asm__ __volatile__(
+> +	"       mov r3, %0\n"
+> +	"       .word %1\n"
+> +	:
+> +	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
+> +	: "r3");
+> +}
+> +
+> +#endif /* SOC_NPS_MTM_H */
+> -- 
+> 1.7.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
