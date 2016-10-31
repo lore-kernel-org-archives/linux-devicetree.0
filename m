@@ -1,14 +1,14 @@
 From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v3 6/7] MIPS: qi_lb60: Probe RTC driver from DT
- and use it as power controller
-Date: Mon, 31 Oct 2016 21:39:50 +0100
-Message-ID: <20161031203951.5444-6-paul@crapouillou.net>
+Subject: [PATCH v3 2/7] Documentation: dt: Add binding info for
+ jz4740-rtc driver
+Date: Mon, 31 Oct 2016 21:39:46 +0100
+Message-ID: <20161031203951.5444-2-paul@crapouillou.net>
 References: <20161030230247.20538-1-paul@crapouillou.net>
  <20161031203951.5444-1-paul@crapouillou.net>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC433LF43MBBBNOY33AAKGQEE5DDEKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBC433LF43MBBBM6Y33AAKGQE6SCKJAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20161031203951.5444-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,47 +21,68 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo
 Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since we already have a devicetree node for the jz4740-rtc driver, we
-don't have to probe it from platform code.
-
-Besides, using the jz4740-rtc driver as the power controller for the
-qi_lb60 platform allows us to remove the jz4740 platform power-off code,
-since this is the only jz4740-based board upstream.
+This commit adds documentation for the device-tree bindings of the
+jz4740-rtc driver, which supports the RTC unit present in the JZ4740 and
+JZ4780 SoCs from Ingenic.
 
 Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
 ---
- arch/mips/boot/dts/ingenic/qi_lb60.dts | 4 ++++
- arch/mips/jz4740/board-qi_lb60.c       | 1 -
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/rtc/ingenic,jz4740-rtc.txt | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
 
-v2: New patch in this series
-v3: No change
+v2:
+- Remove 'interrupt-parent' of the list of required properties
+- Add the -msec suffix for the DT entries that represent time
 
-diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-index 2414d63..be1a7d3 100644
---- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
-+++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-@@ -13,3 +13,7 @@
- &ext {
- 	clock-frequency = <12000000>;
- };
+v3:
+- Replace the -msec suffix by -ms
+- Change the register area size from 0x3F to 0x40
+
+diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+new file mode 100644
+index 0000000..df97594
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+@@ -0,0 +1,37 @@
++JZ4740 and similar SoCs real-time clock driver
 +
-+&rtc_dev {
++Required properties:
++
++- compatible: One of:
++  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
++  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
++- reg: Address range of rtc register set
++- interrupts: IRQ number for the alarm interrupt
++- clocks: phandle to the "rtc" clock
++- clock-names: must be "rtc"
++
++Optional properties:
++- system-power-controller: To use this component as the
++  system power controller
++- reset-pin-assert-time-ms: Reset pin low-level assertion
++  time after wakeup (default 60ms; range 0-125ms if RTC clock
++  at 32 kHz)
++- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
++  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
++
++Example:
++
++rtc@10003000 {
++	compatible = "ingenic,jz4740-rtc";
++	reg = <0x10003000 0x40>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <32>;
++
++	clocks = <&rtc_clock>;
++	clock-names = "rtc";
++
 +	system-power-controller;
++	reset-pin-assert-time-ms = <60>;
++	min-wakeup-pin-assert-time-ms = <100>;
 +};
-diff --git a/arch/mips/jz4740/board-qi_lb60.c b/arch/mips/jz4740/board-qi_lb60.c
-index 258fd03..a5bd94b 100644
---- a/arch/mips/jz4740/board-qi_lb60.c
-+++ b/arch/mips/jz4740/board-qi_lb60.c
-@@ -438,7 +438,6 @@ static struct platform_device *jz_platform_devices[] __initdata = {
- 	&jz4740_pcm_device,
- 	&jz4740_i2s_device,
- 	&jz4740_codec_device,
--	&jz4740_rtc_device,
- 	&jz4740_adc_device,
- 	&jz4740_pwm_device,
- 	&jz4740_dma_device,
 -- 
 2.9.3
 
