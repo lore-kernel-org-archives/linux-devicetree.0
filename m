@@ -1,47 +1,64 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 31 Oct 2016 10:51:40 -0700
-Message-ID: <35bde193-8492-83e0-fb03-8385d8afd007@synopsys.com>
-References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
- <1477224748-25223-4-git-send-email-noamca@mellanox.com>
- <20161031105251.GD1506@mai>
- <DB6PR0501MB2518720A0F95ACBBBCB1CB27AAAE0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v14 1/4] clk: mediatek: Add MT2701 clock support
+Date: Mon, 31 Oct 2016 11:06:47 -0700
+Message-ID: <20161031180647.GR16026@codeaurora.org>
+References: <1477020742-13889-1-git-send-email-erin.lo@mediatek.com>
+ <1477020742-13889-2-git-send-email-erin.lo@mediatek.com>
+ <20161028011753.GS26139@codeaurora.org>
+ <1477896558.5376.13.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR0501MB2518720A0F95ACBBBCB1CB27AAAE0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Noam Camus <noamca@mellanox.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477896558.5376.13.camel@mtksdaap41>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, ms.chen@mediatek.com, robert.chou@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On 10/31, James Liao wrote:
+> On Thu, 2016-10-27 at 18:17 -0700, Stephen Boyd wrote:
+> > On 10/21, Erin Lo wrote:
+> > > @@ -244,3 +256,31 @@ void mtk_clk_register_composites(const struct mtk_composite *mcs,
+> > >  			clk_data->clks[mc->id] = clk;
+> > >  	}
+> > >  }
+> > > +
+> > > +void mtk_clk_register_dividers(const struct mtk_clk_divider *mcds,
+> > > +			int num, void __iomem *base, spinlock_t *lock,
+> > > +				struct clk_onecell_data *clk_data)
+> > > +{
+> > > +	struct clk *clk;
+> > > +	int i;
+> > > +
+> > > +	for (i = 0; i <  num; i++) {
+> > > +		const struct mtk_clk_divider *mcd = &mcds[i];
+> > > +
+> > > +		if (clk_data && !IS_ERR_OR_NULL(clk_data->clks[mcd->id]))
+> > 
+> > NULL is a valid clk. IS_ERR_OR_NULL is usually wrong.
+> 
+> Why NULL is a valid clk?
 
-On 10/31/2016 10:03 AM, Noam Camus wrote:
->> Oops, wait. Here, arch/arc/kernel/time.c should be moved in drivers/clocksource and consolidated with this driver.
->> >Very likely, CPUHP_AP_ARC_TIMER_STARTING can be used for all ARC timers.
-> Indeed the ARC timer driver served as my inspiration but due to HW threads handling they are not the same.
-> Moving drivers from arch/arc to driver/clocksource is not my call (Vineet Gupta is the maintainer of ARC)
-> And I think they quiet differ now so consolidation gain is not obvious.
+Perhaps at some point we'll want to return a NULL pointer to
+clk_get() callers so that they can handle things like optional
+clocks easily without having any storage requirements. I don't
+know if we'll ever do that, but that's just a possibility.
 
-Sorry this was on my todo list at low priority. Anyways took a quick look at it now.
+> 
+> clk_data is designed for multiple initialization from different clock
+> types, such as infra_clk_data in clk-mt2701.c. So it will ignore valid
+> clocks to avoid duplicated clock registration. Here I assume a clock
+> pointer with error code or NULL to be an invalid (not initialized)
+> clock.
+> 
 
-The problem is timer code overlaps pure driver land and ARC specific code. e.g.
-CONFIG_ARC_HAS_RTC clocksource needs to check whether hardware exists or not. We
-currently conveniently check that from cpuinfo populated at boot time. Now either
-I need to export that info as a function (which should be done anyways) - but then
-define stub for !ARC. Either that or duplicate the detection code here (orig copy
-in arc setup.c)
+Ok. Would it be possible to initialize the array with all error
+pointers? That would make things less error prone, but it
+probably doesn't matter at all anyway because this is done during
+registration time. IS_ERR_OR_NULL makes me take a second look
+each time, because it's usually wrong.
 
-So doing this exercise cleanly would mean exporting much of
-arch/arc/include/asm/{arcregs.h, mcip.h} out of ARC into include/soc/arc/*. Isn't
-this kind of going back to include/asm-<arch>/* days ?
-
-Honestly I do want to move the driver in the right place but not sure how to do
-this cleanly.
-
-Thoughts ?
-
--Vineet
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
