@@ -1,52 +1,88 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Mon, 31 Oct 2016 15:34:04 -0500
-Message-ID: <bce2ef84-491b-070a-dda4-77729567341c@ti.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com>
- <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
- <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
+From: Gordan =?UTF-8?Q?Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] input: keyboard: Add devicetree support for lm8333
+Date: Mon, 31 Oct 2016 21:37:50 +0100
+Message-ID: <1477946270.2116.21.camel@gordan-VirtualBox>
+References: <1477595854-9059-1-git-send-email-gordan.markus@gmail.com>
+         <20161031053227.n7lsmo6fgxbl2qze@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161031053227.n7lsmo6fgxbl2qze@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2016 07:50 AM, Tero Kristo wrote:
-[...]
 
->>> +pmmc: pmmc {
->>> +	compatible = "ti,k2g-sci";
->>> +
->>> +	k2g_clks: k2g_clks {
->>
->> Use "clocks" for node name instead.
->>
->>> +		compatible = "ti,k2g-sci-clk";
->>
->> I'm starting to think all these child nodes for SCI are pointless. Is
->> there any reason why the parent node can't be the clock provider (along
->> with all the other providers it acks as)?
->
-> I believe the only reason to keep them separate is to have kernel side
-> of things modular. If we have separate nodes, the drivers can be probed
-> separately.
->
-> If not, we need to build one huge blob with all the features in it, so
-> the main driver can probe everything in one go, with annoying
-> back-and-forth callbacks in place (assuming we still want to keep stuff
-> somehow modular.)
+On Mon, 2016-10-31 at 00:32 -0500, Rob Herring wrote:
+> On Thu, Oct 27, 2016 at 09:17:34PM +0200, Gordan Markus wrote:
+> > This adds LM8333 devicetree parsing for the keypad part.
+> > Optional properties to specify the keypad driver active
+> > time and debounce time.
+> > 
+> > Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++
+> 
+> It is preferred that bindings be a separate patch.
 
-Documentation/devicetree/bindings/arm/arm,scpi.txt follows the same 
-solution as well, right? There is indeed additional nodes coming in - 
-such as reset, pd etc.. I cant see why it is different for sci clk.. 
-not to mention the driver mess it results in.
+Thanks Rob. 
+Just to be clear, should I create a new thread with two patches?
+
+> 
+> >  drivers/input/keyboard/lm8333.c                    | 54 ++++++++++++++++++++++
+> >  2 files changed, 99 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/ti,lm8333.txt b/Documentation/devicetree/bindings/input/ti,lm8333.txt
+> > new file mode 100644
+> > index 0000000..4100d48
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/ti,lm8333.txt
+> > @@ -0,0 +1,45 @@
+> > +LM8333 Keypad
+> > +
+> > +Required properties:
+> > +- compatible: Compatible property value should be "ti,lm8333".
+> > +
+> > +- reg: Physical base address of the peripheral and length of memory mapped
+> > +  region.
+> > +
+> > +- interrupts: The interrupt number for the peripheral.
+> > +
+> > +- linux,keymap: The keymap to use
+> > +	(see Documentation/devicetree/bindings/input/matrix-keymap.txt)
+> > +
+> > +Optional properties:
+> > +- ti,active-time: Specify the time during which the keypad is scanned after
+> > +	the last key is released, before entering Halt mode.
+> > +	The active time must be longer than the debounce time.
+> > +	Default 500 ms.
+> 
+> Add a unit suffix.
+
+The property will be renamed to "ti,active-time-ms". 
+
+> 
+> > +
+> > +- ti,debounce-time: Specify the keypad debounce time.
+> > +	This can be used for reliable scanning of keyboards with noisy contacts.
+> > +	Default 10 ms.
+> 
+> Don't we have a common property for this?
+
+There isn't a common property, as far as I can tell.
+Different devices have different debounce time properties.
+
+Furthermore, the property should have a unit sufix as well, i.e.
+it should be renamed to "ti,debounce-time-ms", right? 
+
+Gordan
 
 
--- 
-Regards,
-Nishanth Menon
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
