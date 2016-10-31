@@ -1,80 +1,51 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for
- ArticSand devices
-Date: Sun, 30 Oct 2016 23:37:59 -0500
-Message-ID: <20161031043759.s5gmht6obqsqdn2d@rob-hp-laptop>
-References: <1477513801-31350-1-git-send-email-olimpiu@arcticsand.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
+Date: Sun, 30 Oct 2016 23:40:48 -0500
+Message-ID: <20161031044048.avyndpys2aggrjb4@rob-hp-laptop>
+References: <20161026233228.15219-1-michael.scott@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477513801-31350-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <20161026233228.15219-1-michael.scott@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Scott <michael.scott@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 04:30:01PM -0400, Olimpiu Dejeu wrote:
-> Resubmition of arcxcnn backliught driver bindings with added register
->  documentation
+On Wed, Oct 26, 2016 at 04:32:28PM -0700, Michael Scott wrote:
+> Initial pinctrl driver for QCOM msm8994 platforms.
 > 
-> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> In order to continue the initial board support for QCOM msm8994/msm8992
+> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's put
+> a proper pinctrl driver in place.
 > 
+> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to enable
+> basic UART.  Beyond the first few pins the rest are different enough to justify
+> it's own driver.
+> 
+> Note: This driver is also be used by QCOM's msm8992 platform as it's TLM block
+> is the same.
+> 
+> - Initial formatting and style was taken from the msm8x74 pinctrl driver added
+>   by Björn Andersson <bjorn.andersson@linaro.org>
+> - Data was then adjusted per QCOM MSM8994 documentation for Top Level Multiplexing
+> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
+>   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 content
+> 
+> Signed-off-by: Michael Scott <michael.scott@linaro.org>
 > ---
->  .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> new file mode 100644
-> index 0000000..a7b6ff2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> @@ -0,0 +1,31 @@
-> +Binding for ArcticSand arc2c0608 LED driver
-> +
-> +Required properties:
-> +- compatible: should be "arc,arc2c0608"
-
-What's the correct vendor prefix? arc or arcticsand used below?
-
-> +- reg: slave address
-> +
-> +Optional properties:
-> +- default-brightness: brightness value on boot, value from: 0-4095
-> +- label: The name of the backlight device
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +- led-sources: List of enabled channels from 0 to 5.
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +
-> +- arcticsand,led-config-0: setting for register ILED_CONFIG_0
-> +- arcticsand,led-config-1: setting for register ILED_CONFIG_1
-> +- arcticsand,dim-freq: PWM mode frequence setting (bits [3:0] used)
-> +- arcticsand,comp-config: setting for register CONFIG_COMP
-> +- arcticsand,filter-config: setting for register FILTER_CONFIG
-> +- arcticsand,trim-config: setting for register IMAXTUNE
-
-What are the default values if not present?
-
-What determines these settings? If the board design, then okay. If a 
-an enduser wants to adjust, then they shouldn't be in DT.
-
-> +
-> +Example:
-> +
-> +arc2c0608@30 {
-> +	compatible = "arc,arc2c0608";
-> +	reg = <0x30>;
-> +	default-brightness = <500>;
-> +	label = "lcd-backlight";
-> +	linux,default-trigger = "backlight";
-> +	led-sources = <0 1 2 5>;
-> +};
-> +
-> -- 
-> 2.7.4
+> V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines between blsp_i2c4_groups and cci_timer0_groups
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |  175 +++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/pinctrl/qcom/Kconfig                       |    9 +
+>  drivers/pinctrl/qcom/Makefile                      |    1 +
+>  drivers/pinctrl/qcom/pinctrl-msm8994.c             | 1400 ++++++++++++++++++++
+>  4 files changed, 1585 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8994.c
