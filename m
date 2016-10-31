@@ -1,98 +1,30 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Mon, 31 Oct 2016 14:50:12 +0200
-Message-ID: <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com>
- <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: shmobile: r8a7779/marzen: Add board part number to DT bindings
+Date: Mon, 31 Oct 2016 14:43:04 +0100
+Message-ID: <1477921384-1812-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 30/10/16 22:41, Rob Herring wrote:
-> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
->> Add a clock implementation, TI SCI clock, that will hook to the common
->> clock framework, and allow each clock to be controlled via TI SCI
->> protocol.
->>
->> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  1 +
->>  2 files changed, 38 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->> new file mode 100644
->> index 0000000..bfc3ca4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->> @@ -0,0 +1,37 @@
->> +Texas Instruments TI-SCI Clocks
->> +===============================
->> +
->> +All clocks on Texas Instruments' SoCs that contain a System Controller,
->> +are only controlled by this entity. Communication between a host processor
->> +running an OS and the System Controller happens through a protocol known
->> +as TI-SCI[1]. This clock implementation plugs into the common clock
->> +framework and makes use of the TI-SCI protocol on clock API requests.
->> +
->> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->> +
->> +Required properties:
->> +-------------------
->> +- compatible: Must be "ti,k2g-sci-clk"
->> +- #clock-cells: Shall be 2.
->> +  In clock consumers, this cell represents the device ID and clock ID
->> +  exposed by the PM firmware. The assignments can be found in the header
->> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
->> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
->> +  is the SoC involved, for example 'k2g'.
->> +
->> +Examples:
->> +--------
->> +
->> +pmmc: pmmc {
->> +	compatible = "ti,k2g-sci";
->> +
->> +	k2g_clks: k2g_clks {
->
-> Use "clocks" for node name instead.
->
->> +		compatible = "ti,k2g-sci-clk";
->
-> I'm starting to think all these child nodes for SCI are pointless. Is
-> there any reason why the parent node can't be the clock provider (along
-> with all the other providers it acks as)?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I believe the only reason to keep them separate is to have kernel side 
-of things modular. If we have separate nodes, the drivers can be probed 
-separately.
-
-If not, we need to build one huge blob with all the features in it, so 
-the main driver can probe everything in one go, with annoying 
-back-and-forth callbacks in place (assuming we still want to keep stuff 
-somehow modular.)
-
--Tero
-
->
->> +		#clock-cells = <2>;
->> +	};
->> +};
->> +
->> +uart0: serial@2530c00 {
->> +	compatible = "ns16550a";
->> +	clocks = <&k2g_clks K2G_DEV_UART0 0>;
->> +};
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 44b3129a8ded539b..d2e408795889fbec 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -63,7 +63,7 @@ Boards:
+     compatible = "renesas,kzm9g", "renesas,sh73a0"
+   - Lager (RTP0RC7790SEB00010S)
+     compatible = "renesas,lager", "renesas,r8a7790"
+-  - Marzen
++  - Marzen (R0P7779A00010S)
+     compatible = "renesas,marzen", "renesas,r8a7779"
+   - Porter (M2-LCDP)
+     compatible = "renesas,porter", "renesas,r8a7791"
+-- 
+1.9.1
