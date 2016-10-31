@@ -1,342 +1,103 @@
-From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 2/3] clk: qcom: Add regmap mux-div clocks support
-Date: Mon, 31 Oct 2016 16:55:25 +0200
-Message-ID: <20161031145526.5023-3-georgi.djakov@linaro.org>
-References: <20161031145526.5023-1-georgi.djakov@linaro.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
+Date: Mon, 31 Oct 2016 09:58:42 -0500
+Message-ID: <94b12df1-d982-aff7-b86e-453c85db9655@ti.com>
+References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
+ <1476855239-32730-3-git-send-email-j-keerthy@ti.com>
+ <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
+ <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
+ <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
+ <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161031145526.5023-1-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for hardware that can switch both parent clocks and divider
-at the same time. This avoids generating intermediate frequencies from
-either the old parent clock and new divider or new parent clock and
-old divider combinations.
 
-Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/clk/qcom/Makefile             |   1 +
- drivers/clk/qcom/clk-regmap-mux-div.c | 237 ++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/clk-regmap-mux-div.h |  52 ++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.c
- create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.h
 
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 7d27f47f0c92..d3e142e577b0 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -9,6 +9,7 @@ clk-qcom-y += clk-rcg2.o
- clk-qcom-y += clk-branch.o
- clk-qcom-y += clk-regmap-divider.o
- clk-qcom-y += clk-regmap-mux.o
-+clk-qcom-y += clk-regmap-mux-div.o
- clk-qcom-y += reset.o
- clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
- 
-diff --git a/drivers/clk/qcom/clk-regmap-mux-div.c b/drivers/clk/qcom/clk-regmap-mux-div.c
-new file mode 100644
-index 000000000000..682dbf906c89
---- /dev/null
-+++ b/drivers/clk/qcom/clk-regmap-mux-div.c
-@@ -0,0 +1,237 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/regmap.h>
-+
-+#include "clk-regmap-mux-div.h"
-+
-+#define CMD_RCGR			0x0
-+#define CMD_RCGR_UPDATE			BIT(0)
-+#define CMD_RCGR_DIRTY_CFG		BIT(4)
-+#define CMD_RCGR_ROOT_OFF		BIT(31)
-+#define CFG_RCGR			0x4
-+
-+#define to_clk_regmap_mux_div(_hw) \
-+	container_of(to_clk_regmap(_hw), struct clk_regmap_mux_div, clkr)
-+
-+int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div)
-+{
-+	int ret, count;
-+	u32 val, mask;
-+	const char *name = clk_hw_get_name(&md->clkr.hw);
-+
-+	val = (div << md->hid_shift) | (src << md->src_shift);
-+	mask = ((BIT(md->hid_width) - 1) << md->hid_shift) |
-+	       ((BIT(md->src_width) - 1) << md->src_shift);
-+
-+	ret = regmap_update_bits(md->clkr.regmap, CFG_RCGR + md->reg_offset,
-+				 mask, val);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(md->clkr.regmap, CMD_RCGR + md->reg_offset,
-+				 CMD_RCGR_UPDATE, CMD_RCGR_UPDATE);
-+	if (ret)
-+		return ret;
-+
-+	/* Wait for update to take effect */
-+	for (count = 500; count > 0; count--) {
-+		ret = regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset,
-+				  &val);
-+		if (ret)
-+			return ret;
-+		if (!(val & CMD_RCGR_UPDATE))
-+			return 0;
-+		udelay(1);
-+	}
-+
-+	pr_err("%s: RCG did not update its configuration", name);
-+	return -EBUSY;
-+}
-+
-+static void __mux_div_get_src_div(struct clk_regmap_mux_div *md, u32 *src,
-+				  u32 *div)
-+{
-+	u32 val, d, s;
-+	const char *name = clk_hw_get_name(&md->clkr.hw);
-+
-+	regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset, &val);
-+
-+	if (val & CMD_RCGR_DIRTY_CFG) {
-+		pr_err("%s: RCG configuration is pending\n", name);
-+		return;
-+	}
-+
-+	regmap_read(md->clkr.regmap, CFG_RCGR + md->reg_offset, &val);
-+	s = (val >> md->src_shift);
-+	s &= BIT(md->src_width) - 1;
-+	*src = s;
-+
-+	d = (val >> md->hid_shift);
-+	d &= BIT(md->hid_width) - 1;
-+	*div = d;
-+}
-+
-+static inline bool is_better_rate(unsigned long req, unsigned long best,
-+				  unsigned long new)
-+{
-+	return (req <= new && new < best) || (best < req && best < new);
-+}
-+
-+static int mux_div_determine_rate(struct clk_hw *hw,
-+				  struct clk_rate_request *req)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	unsigned int i, div, max_div;
-+	unsigned long actual_rate, best_rate = 0;
-+	unsigned long req_rate = req->rate;
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+		unsigned long parent_rate = clk_hw_get_rate(parent);
-+
-+		max_div = BIT(md->hid_width) - 1;
-+		for (div = 1; div < max_div; div++) {
-+			parent_rate = mult_frac(req_rate, div, 2);
-+			parent_rate = clk_hw_round_rate(parent, parent_rate);
-+			actual_rate = mult_frac(parent_rate, 2, div);
-+
-+			if (is_better_rate(req_rate, best_rate, actual_rate)) {
-+				best_rate = actual_rate;
-+				req->rate = best_rate;
-+				req->best_parent_rate = parent_rate;
-+				req->best_parent_hw = parent;
-+			}
-+
-+			if (actual_rate < req_rate || best_rate <= req_rate)
-+				break;
-+		}
-+	}
-+
-+	if (!best_rate)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int __mux_div_set_rate_and_parent(struct clk_hw *hw, unsigned long rate,
-+					 unsigned long prate, u32 src)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	int ret;
-+	u32 div, max_div, best_src = 0, best_div = 0;
-+	unsigned int i;
-+	unsigned long actual_rate, best_rate = 0;
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+		unsigned long parent_rate = clk_hw_get_rate(parent);
-+
-+		max_div = BIT(md->hid_width) - 1;
-+		for (div = 1; div < max_div; div++) {
-+			parent_rate = mult_frac(rate, div, 2);
-+			parent_rate = clk_hw_round_rate(parent, parent_rate);
-+			actual_rate = mult_frac(parent_rate, 2, div);
-+
-+			if (is_better_rate(rate, best_rate, actual_rate)) {
-+				best_rate = actual_rate;
-+				best_src = md->parent_map[i].cfg;
-+				best_div = div - 1;
-+			}
-+
-+			if (actual_rate < rate || best_rate <= rate)
-+				break;
-+		}
-+	}
-+
-+	ret = __mux_div_set_src_div(md, best_src, best_div);
-+	if (!ret) {
-+		md->div = best_div;
-+		md->src = best_src;
-+	}
-+
-+	return ret;
-+}
-+
-+static u8 mux_div_get_parent(struct clk_hw *hw)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	const char *name = clk_hw_get_name(hw);
-+	u32 i, div, src = 0;
-+
-+	__mux_div_get_src_div(md, &src, &div);
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++)
-+		if (src == md->parent_map[i].cfg)
-+			return i;
-+
-+	pr_err("%s: Can't find parent with src %d\n", name, src);
-+	return 0;
-+}
-+
-+static int mux_div_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_src_div(md, md->parent_map[index].cfg, md->div);
-+}
-+
-+static int mux_div_set_rate(struct clk_hw *hw,
-+			    unsigned long rate, unsigned long prate)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_rate_and_parent(hw, rate, prate, md->src);
-+}
-+
-+static int mux_div_set_rate_and_parent(struct clk_hw *hw,  unsigned long rate,
-+				       unsigned long prate, u8 index)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_rate_and_parent(hw, rate, prate,
-+					     md->parent_map[index].cfg);
-+}
-+
-+static unsigned long mux_div_recalc_rate(struct clk_hw *hw, unsigned long prate)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	u32 div, src;
-+	int i, num_parents = clk_hw_get_num_parents(hw);
-+	const char *name = clk_hw_get_name(hw);
-+
-+	__mux_div_get_src_div(md, &src, &div);
-+	for (i = 0; i < num_parents; i++)
-+		if (src == md->parent_map[i].cfg) {
-+			struct clk_hw *p = clk_hw_get_parent_by_index(hw, i);
-+			unsigned long parent_rate = clk_hw_get_rate(p);
-+
-+			return mult_frac(parent_rate, 2, div + 1);
-+		}
-+
-+	pr_err("%s: Can't find parent %d\n", name, src);
-+	return 0;
-+}
-+
-+const struct clk_ops clk_regmap_mux_div_ops = {
-+	.get_parent = mux_div_get_parent,
-+	.set_parent = mux_div_set_parent,
-+	.set_rate = mux_div_set_rate,
-+	.set_rate_and_parent = mux_div_set_rate_and_parent,
-+	.determine_rate = mux_div_determine_rate,
-+	.recalc_rate = mux_div_recalc_rate,
-+};
-diff --git a/drivers/clk/qcom/clk-regmap-mux-div.h b/drivers/clk/qcom/clk-regmap-mux-div.h
-new file mode 100644
-index 000000000000..3380e8f6e8a1
---- /dev/null
-+++ b/drivers/clk/qcom/clk-regmap-mux-div.h
-@@ -0,0 +1,52 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __QCOM_CLK_REGMAP_MUX_DIV_H__
-+#define __QCOM_CLK_REGMAP_MUX_DIV_H__
-+
-+#include <linux/clk-provider.h>
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+
-+/**
-+ * struct mux_div_clk - combined mux/divider clock
-+ * @reg_offset: offset of the mux/divider register
-+ * @hid_width:	number of bits in half integer divider
-+ * @hid_shift:	lowest bit of hid value field
-+ * @src_width:	number of bits in source select
-+ * @src_shift:	lowest bit of source select field
-+ * @div:	the divider raw configuration value
-+ * @src:	the mux index which will be used if the clock is enabled
-+ * @parent_map:	pointer to parent_map struct
-+ * @clkr:	handle between common and hardware-specific interfaces
-+ * @clk_nb:	clock notifier registered for clock rate changes of the A53 PLL
-+ */
-+
-+struct clk_regmap_mux_div {
-+	u32				reg_offset;
-+	u32				hid_width;
-+	u32				hid_shift;
-+	u32				src_width;
-+	u32				src_shift;
-+	u32				div;
-+	u32				src;
-+	const struct parent_map		*parent_map;
-+	struct clk_regmap		clkr;
-+	struct notifier_block		clk_nb;
-+};
-+
-+extern const struct clk_ops clk_regmap_mux_div_ops;
-+int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div);
-+
-+#endif
+On 10/27/2016 03:07 AM, Keerthy wrote:
+> 
+> 
+> On Thursday 27 October 2016 01:23 PM, Roger Quadros wrote:
+>> Keerthy,
+>>
+>> On 27/10/16 06:42, Keerthy wrote:
+>>>
+>>>
+>>> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
+>>>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+>>>>
+>>>>> From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>>>>>
+>>>>> Update GPIO driver to support Multiple GPIO IPs.
+>>>>>
+>>>>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>>>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>
+>>>> This commit message is not at all describing what the patch is doing.
+>>>>
+>>>> What it does is bumping the GPIO pin offset in the Linux global
+>>>> GPIO number space with 32 for each new controller.
+>>>>
+>>>>> +       static int bank_base;
+>>>>>
+>>>>>         pdata = davinci_gpio_get_pdata(pdev);
+>>>>>         if (!pdata) {
+>>>>> @@ -226,7 +227,8 @@ static int davinci_gpio_probe(struct
+>>>>> platform_device *pdev)
+>>>>>                 chips[i].chip.direction_output =
+>>>>> davinci_direction_out;
+>>>>>                 chips[i].chip.set = davinci_gpio_set;
+>>>>>
+>>>>> -               chips[i].chip.base = base;
+>>>>> +               chips[i].chip.base = bank_base;
+>>>>> +               bank_base += 32;
+>>>>
+>>>> Why can you not rewrite the driver to pass -1 as base and
+>>>> get a dynamic allocation of GPIO numbers instead? Then
+>>>> you won't have this hairy problem.
+>>>
+>>> Ok i will try that.
+>>>
+>>> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
+>>> GPIO0 comprises of 144 GPIOs
+>>> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is
+>>> being modeled.
+>>>
+>>> I am creating a controller for every 32 GPIOs under the big module
+>>> each containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16
+>>> GPIOs each.
+>>> Each 16 GPIO bank has an interrupt.
+>>>
+>>> Is this modeling fine or do you think creating one chip with 144 pins
+>>> and another with 68 pins is a better way?
+>>
+>> If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144
+>> GPIOs?
+>> What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+> 
+> 144 GPIOs where in 16 GPIOs form a bank. So about 9 banks with one
+> interrupt each. So split it into gpiochips with 32 GPIOs each handling 2
+> Interrupts.
+> 
+> Grygorii,
+> 
+> Any strong reason that you recollect of so as to why this modeling was
+> chosen?
+> 
+
+I think, there was a restriction on max number of GPIOs supported by one gpiochip
+(32) at time when this driver was introduced an updated for Keystone.
+But, seems, this might work now since GPIO core was transformed to use gpio descriptors.
+
+regards,
+-grygorii
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
