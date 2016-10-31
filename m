@@ -1,71 +1,74 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v8 0/3] da8xx USB PHY platform devices and clocks
-Date: Mon, 31 Oct 2016 15:47:18 -0500
-Message-ID: <1477946841-16126-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v8 3/3] ARM: davinci: da8xx: register USB PHY clocks in the DT
+ file
+Date: Mon, 31 Oct 2016 15:47:21 -0500
+Message-ID: <1477946841-16126-4-git-send-email-david@lechnology.com>
+References: <1477946841-16126-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1477946841-16126-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
-Cc: David Lechner <david@lechnology.com>, Axel Haslam <ahaslam@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Axel Haslam <ahaslam@baylibre.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-I reworked the "[PATCH v6 4/5] ARM: DTS: da850: Add cfgchip syscon node" and
-"[PATCH v6 5/5] ARM: DTS: da850: Add usb phy node" patches that were dropped
-from linux-davinci into the new "ARM: dts: da850: Add cfgchip syscon node"
-patch. This should be OK unless it is decided that the BayLibre guys should
-rework it so that the entire SYSCFG0 is a single syscon device. I don't see
-any compelling reason to do that though.
+From: Axel Haslam <ahaslam@baylibre.com>
 
-v8 changes:
-* Dropped v7 patches that have been accepted into linux-davinci already
-* New patch for CFGCHIP syscon/USB PHY DT node
-* Rebased other patches
+The usb20_phy clock needs to be registered for the driver to be able
+to get and enable a clock. Currently the usb phy clocks are registered
+form board files, which will not be called during a device tree based
+boot.
 
-v7 changes:
-* Dropped v6 patches that have been accepted into linux-davinci already
-* New patch for adding device names to clock lookup tables
-* Picked up related patch from Axel Haslam for registering USB PHY clocks on
-  device tree boards and added error checking to to that patch
-* Rebased on latest linux-davinci + linux-next
-* Added devices instead of NULL in clk_get() where appropriate usb-da8xx.c
-* Re-ordered patches so that they apply/build cleanly
+To be able to probe correctly usb form a device tree boot, register
+the usb phy clocks form the DT specific init.
 
-v6 changes:
+Unfourtunatly, davinci does not have proper clock support on device tree
+yet, so by registering the clock form de DT specific file we are
+forced to hardcode the parent clock, and cannot select refclkin as
+parent for any of the phy clocks of the da850 family.
 
-* Combine "ARM: davinci: da8xx: Enable the usb20 "per" clk on phy_clk_enable"
-  from the "[PATCH/RFT v2 00/17] Add DT support for ohci-da8xx" series with
-  the "ARM: davinci: da8xx: add usb phy clocks" patch in this series.
-* Change the syscon and da8xx-usb-phy device ids to -1.
+As none of the current da850 based boards currently in mainline use
+refclkin as source. I guess we can live with this limitation until clocks
+are correctly represented through CCF/device tree.
 
-v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
+Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
+[Added error checking]
+Signed-off-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/mach-davinci/da8xx-dt.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-v4 changes: fix strict checkpatch complaint
-
-v3 changes:
-
-* Fixed the davinci device tree declarations to use the preferred DT address
-  convention so that the items I have added can be correct too.
-* Moved that davinci clock init so that we don't have to call ioremap in the
-  clock mux functions.
-* Added a new "syscon" device for the CFGCHIP registers. This is used by the
-  USB PHY driver and will be used in the future in common clock framework
-  drivers.
-* USB clocks are moved to a common file instead of having duplicated code.
-* PHY driver uses syscon for CFGCHIP registers instead of using them directly.
-
-Axel Haslam (1):
-  ARM: davinci: da8xx: register USB PHY clocks in the DT file
-
-David Lechner (2):
-  ARM: dts: da850: Add cfgchip syscon node
-  ARM: davinci: da8xx: add usb phy clocks
-
- arch/arm/boot/dts/da850.dtsi                |  10 ++
- arch/arm/mach-davinci/board-da830-evm.c     |  31 +---
- arch/arm/mach-davinci/board-omapl138-hawk.c |  15 +-
- arch/arm/mach-davinci/da8xx-dt.c            |  12 ++
- arch/arm/mach-davinci/include/mach/da8xx.h  |   3 +
- arch/arm/mach-davinci/usb-da8xx.c           | 267 ++++++++++++++++++++++++++--
- 6 files changed, 296 insertions(+), 42 deletions(-)
-
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 20fa842..230c151 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -49,6 +49,17 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+ 
+ static void __init da850_init_machine(void)
+ {
++	int ret;
++
++	ret = da8xx_register_usb20_phy_clk(false);
++	if (ret)
++		pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
++			__func__, ret);
++	ret = da8xx_register_usb11_phy_clk(false);
++	if (ret)
++		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
++			__func__, ret);
++
+ 	of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
+ }
+ 
 -- 
 2.7.4
