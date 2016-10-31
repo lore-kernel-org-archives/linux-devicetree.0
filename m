@@ -1,75 +1,45 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/3] dt-bindings: Document Broadcom OTP controller
- driver
-Date: Mon, 31 Oct 2016 13:12:43 -0700
-Message-ID: <350b2f50-29dd-6a96-62af-b5c973322298@broadcom.com>
-References: <1477336324-10543-1-git-send-email-jonathan.richardson@broadcom.com>
- <1477336324-10543-2-git-send-email-jonathan.richardson@broadcom.com>
- <20161031013848.4vi2544tb5cs65nk@rob-hp-laptop>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: da850-lcdk: enable mstpri and ddrctl
+ nodes
+Date: Mon, 31 Oct 2016 22:22:54 +0200
+Message-ID: <12222113.L5elJM2tqN@avalon>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-5-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161031013848.4vi2544tb5cs65nk@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1477925138-23457-5-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 16-10-30 06:38 PM, Rob Herring wrote:
-> On Mon, Oct 24, 2016 at 12:12:02PM -0700, Jonathan Richardson wrote:
->> From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Oza Pawandeep <oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
->> new file mode 100644
->> index 0000000..6462e12
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/brcm,ocotp.txt
->> @@ -0,0 +1,17 @@
->> +Broadcom OTP memory controller
->> +
->> +Required Properties:
->> +- compatible: "brcm,ocotp" for the first generation Broadcom OTPC which is used
->> +  in Cygnus and supports 32 bit read/write. Use "brcm,ocotp-v2" for the second
->> +  generation Broadcom OTPC which is used in SoC's such as Stingray and supports
->> +  64-bit read/write.
-> 
-> These should be SoC specific. While I'd guess this block is simple 
-> enough, having the SoC can define what all the bits are. Yes, there is a 
-> binding to define those, but you may not use that.
-
-Hi Rob. This block isn't SoC specific. It is used on multiple SoC's.
-There are older SoC's using v1 that we may upstream drivers for in the
-future. v1 isn't specific to cygnus/iproc and v2 isn't specific to stingray.
-
-> 
-> 
->> +- reg: Base address of the OTP controller.
->> +- brcm,ocotp-size: Amount of memory available, in 32 bit words
->> +
->> +Example:
->> +
->> +otp: otp@0301c800 {
->> +	compatible = "brcm,ocotp";
->> +	reg = <0x0301c800 0x2c>;
->> +	brcm,ocotp-size = <2048>;
->> +};
->> -- 
->> 1.9.1
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQmFydG9zeiwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5IDMxIE9jdCAy
+MDE2IDE1OjQ1OjM3IEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4gRW5hYmxlIHRoZSBNU1RQ
+UkkgY29uZmlndXJhdGlvbiBhbmQgRERSMi9tRERSIG1lbW9yeSBjb250cm9sbGVyCj4gbm9kZXMg
+b24gZGE4NTAtbGNkay4gVGhpcyBpcyBuZWVkZWQgaW4gb3JkZXIgdG8gYWRqdXN0IHRoZSBtZW1v
+cnkKPiB0aHJvdWdocHV0IGNvbnN0cmFpbnRzIGZvciBiZXR0ZXIgdGlsY2RjIHN1cHBvcnQuCgpJ
+cyB0aGVyZSBhIHJlYXNvbiBub3QgdG8gZW5hYmxlIHRoZXNlIHVuY29uZGl0aW9uYWxseSBpbiBk
+YTg1MC5kdHNpIChvciByYXRoZXIgCm5vdCBkaXNhYmxpbmcgdGhlbSkgaW5zdGVhZCBvZiBoYW5k
+bGluZyBpdCBwZXIgYm9hcmQgPwoKPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9k
+YTg1MC1sY2RrLmR0cyB8IDggKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
+cygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwo+
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgaW5kZXggNDc0NzYyOS4uYjM5Nzk2
+ZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwo+ICsrKyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCj4gQEAgLTI0MywzICsyNDMsMTEgQEAK
+PiAgCQl9Owo+ICAJfTsKPiAgfTsKPiArCj4gKyZtc3Rwcmkgewo+ICsJc3RhdHVzID0gIm9rYXki
+Owo+ICt9Owo+ICsKPiArJmRkcmN0bCB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307CgotLSAK
+UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
