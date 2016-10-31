@@ -1,14 +1,13 @@
 From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v3 5/7] MIPS: jz4740: DTS: Probe the jz4740-rtc
- driver from devicetree
-Date: Mon, 31 Oct 2016 21:39:49 +0100
-Message-ID: <20161031203951.5444-5-paul@crapouillou.net>
+Subject: [PATCH v3 7/7] MIPS: jz4740: Remove obsolete code
+Date: Mon, 31 Oct 2016 21:39:51 +0100
+Message-ID: <20161031203951.5444-7-paul@crapouillou.net>
 References: <20161030230247.20538-1-paul@crapouillou.net>
  <20161031203951.5444-1-paul@crapouillou.net>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC433LF43MBBBUOY33AAKGQEF3DGM3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBC433LF43MBBBVGY33AAKGQE5ZFPFVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20161031203951.5444-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,40 +20,143 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo
 Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that the jz4740-rtc driver supports devicetree, we can add a
-devicetree node for it.
+This commit removes two things:
+- The platform_device that corresponds to the RTC driver, since we now
+  probe this driver from devicetree;
+- The platform power-off code, since all the jz4740-based platforms are
+  now using the jz4740-rtc driver as the system power controller.
 
 Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/mips/include/asm/mach-jz4740/platform.h |  1 -
+ arch/mips/jz4740/platform.c                  | 21 ----------
+ arch/mips/jz4740/reset.c                     | 63 ----------------------------
+ 3 files changed, 85 deletions(-)
 
-v2: Previous patch 5/5 was garbage. This is a new patch.
-v3: Changed 'jz4740-rtc@10003000' to 'rtc@10003000'
+v2: New patch in this series
+v3: No change
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index f6ae6ed..c6acd6a 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -44,6 +44,17 @@
- 		#clock-cells = <1>;
- 	};
+diff --git a/arch/mips/include/asm/mach-jz4740/platform.h b/arch/mips/include/asm/mach-jz4740/platform.h
+index 073b8bf..3645974 100644
+--- a/arch/mips/include/asm/mach-jz4740/platform.h
++++ b/arch/mips/include/asm/mach-jz4740/platform.h
+@@ -22,7 +22,6 @@
+ extern struct platform_device jz4740_udc_device;
+ extern struct platform_device jz4740_udc_xceiv_device;
+ extern struct platform_device jz4740_mmc_device;
+-extern struct platform_device jz4740_rtc_device;
+ extern struct platform_device jz4740_i2c_device;
+ extern struct platform_device jz4740_nand_device;
+ extern struct platform_device jz4740_framebuffer_device;
+diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
+index 2f1dab3..5b7cdd6 100644
+--- a/arch/mips/jz4740/platform.c
++++ b/arch/mips/jz4740/platform.c
+@@ -88,27 +88,6 @@ struct platform_device jz4740_mmc_device = {
+ 	.resource	= jz4740_mmc_resources,
+ };
  
-+	rtc_dev: rtc@10003000 {
-+		compatible = "ingenic,jz4740-rtc";
-+		reg = <0x10003000 0x40>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <15>;
-+
-+		clocks = <&cgu JZ4740_CLK_RTC>;
-+		clock-names = "rtc";
-+	};
-+
- 	uart0: serial@10030000 {
- 		compatible = "ingenic,jz4740-uart";
- 		reg = <0x10030000 0x100>;
+-/* RTC controller */
+-static struct resource jz4740_rtc_resources[] = {
+-	{
+-		.start	= JZ4740_RTC_BASE_ADDR,
+-		.end	= JZ4740_RTC_BASE_ADDR + 0x38 - 1,
+-		.flags	= IORESOURCE_MEM,
+-	},
+-	{
+-		.start	= JZ4740_IRQ_RTC,
+-		.end	= JZ4740_IRQ_RTC,
+-		.flags	= IORESOURCE_IRQ,
+-	},
+-};
+-
+-struct platform_device jz4740_rtc_device = {
+-	.name		= "jz4740-rtc",
+-	.id		= -1,
+-	.num_resources	= ARRAY_SIZE(jz4740_rtc_resources),
+-	.resource	= jz4740_rtc_resources,
+-};
+-
+ /* I2C controller */
+ static struct resource jz4740_i2c_resources[] = {
+ 	{
+diff --git a/arch/mips/jz4740/reset.c b/arch/mips/jz4740/reset.c
+index 954e669..67780c4 100644
+--- a/arch/mips/jz4740/reset.c
++++ b/arch/mips/jz4740/reset.c
+@@ -57,71 +57,8 @@ static void jz4740_restart(char *command)
+ 	jz4740_halt();
+ }
+ 
+-#define JZ_REG_RTC_CTRL			0x00
+-#define JZ_REG_RTC_HIBERNATE		0x20
+-#define JZ_REG_RTC_WAKEUP_FILTER	0x24
+-#define JZ_REG_RTC_RESET_COUNTER	0x28
+-
+-#define JZ_RTC_CTRL_WRDY		BIT(7)
+-#define JZ_RTC_WAKEUP_FILTER_MASK	0x0000FFE0
+-#define JZ_RTC_RESET_COUNTER_MASK	0x00000FE0
+-
+-static inline void jz4740_rtc_wait_ready(void __iomem *rtc_base)
+-{
+-	uint32_t ctrl;
+-
+-	do {
+-		ctrl = readl(rtc_base + JZ_REG_RTC_CTRL);
+-	} while (!(ctrl & JZ_RTC_CTRL_WRDY));
+-}
+-
+-static void jz4740_power_off(void)
+-{
+-	void __iomem *rtc_base = ioremap(JZ4740_RTC_BASE_ADDR, 0x38);
+-	unsigned long wakeup_filter_ticks;
+-	unsigned long reset_counter_ticks;
+-	struct clk *rtc_clk;
+-	unsigned long rtc_rate;
+-
+-	rtc_clk = clk_get(NULL, "rtc");
+-	if (IS_ERR(rtc_clk))
+-		panic("unable to get RTC clock");
+-	rtc_rate = clk_get_rate(rtc_clk);
+-	clk_put(rtc_clk);
+-
+-	/*
+-	 * Set minimum wakeup pin assertion time: 100 ms.
+-	 * Range is 0 to 2 sec if RTC is clocked at 32 kHz.
+-	 */
+-	wakeup_filter_ticks = (100 * rtc_rate) / 1000;
+-	if (wakeup_filter_ticks < JZ_RTC_WAKEUP_FILTER_MASK)
+-		wakeup_filter_ticks &= JZ_RTC_WAKEUP_FILTER_MASK;
+-	else
+-		wakeup_filter_ticks = JZ_RTC_WAKEUP_FILTER_MASK;
+-	jz4740_rtc_wait_ready(rtc_base);
+-	writel(wakeup_filter_ticks, rtc_base + JZ_REG_RTC_WAKEUP_FILTER);
+-
+-	/*
+-	 * Set reset pin low-level assertion time after wakeup: 60 ms.
+-	 * Range is 0 to 125 ms if RTC is clocked at 32 kHz.
+-	 */
+-	reset_counter_ticks = (60 * rtc_rate) / 1000;
+-	if (reset_counter_ticks < JZ_RTC_RESET_COUNTER_MASK)
+-		reset_counter_ticks &= JZ_RTC_RESET_COUNTER_MASK;
+-	else
+-		reset_counter_ticks = JZ_RTC_RESET_COUNTER_MASK;
+-	jz4740_rtc_wait_ready(rtc_base);
+-	writel(reset_counter_ticks, rtc_base + JZ_REG_RTC_RESET_COUNTER);
+-
+-	jz4740_rtc_wait_ready(rtc_base);
+-	writel(1, rtc_base + JZ_REG_RTC_HIBERNATE);
+-
+-	jz4740_halt();
+-}
+-
+ void jz4740_reset_init(void)
+ {
+ 	_machine_restart = jz4740_restart;
+ 	_machine_halt = jz4740_halt;
+-	pm_power_off = jz4740_power_off;
+ }
 -- 
 2.9.3
 
