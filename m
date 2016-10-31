@@ -1,100 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Mon, 31 Oct 2016 00:29:55 -0500
-Message-ID: <20161031052955.m44pwdbaynbli5b5@rob-hp-laptop>
-References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
- <1477576872-2665-4-git-send-email-mirza.krak@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] input: keyboard: Add devicetree support for lm8333
+Date: Mon, 31 Oct 2016 00:32:27 -0500
+Message-ID: <20161031053227.n7lsmo6fgxbl2qze@rob-hp-laptop>
+References: <1477595854-9059-1-git-send-email-gordan.markus@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477576872-2665-4-git-send-email-mirza.krak@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>
-Cc: swarren@wwwdotorg.org, thierry.reding@gmail.com, jonathanh@nvidia.com, gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <1477595854-9059-1-git-send-email-gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gordan Markus <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 04:01:09PM +0200, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak@gmail.com>
+On Thu, Oct 27, 2016 at 09:17:34PM +0200, Gordan Markus wrote:
+> This adds LM8333 devicetree parsing for the keypad part.
+> Optional properties to specify the keypad driver active
+> time and debounce time.
 > 
-> Document the devicetree bindings for the Generic Memory Interface (GMI)
-> bus driver found on Tegra SOCs.
-> 
-> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+> Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
+>  .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++
+
+It is preferred that bindings be a separate patch.
+
+>  drivers/input/keyboard/lm8333.c                    | 54 ++++++++++++++++++++++
+>  2 files changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
 > 
-> Changes in v2:
-> - Updated examples and some information based on comments from Jon Hunter.
-> 
-> Changes in v3:
-> - Updates ranges description based on comments from Rob Herring
-> 
->  .../devicetree/bindings/bus/nvidia,tegra20-gmi.txt | 132 +++++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
+> diff --git a/Documentation/devicetree/bindings/input/ti,lm8333.txt b/Documentation/devicetree/bindings/input/ti,lm8333.txt
 > new file mode 100644
-> index 0000000..49bda2f
+> index 0000000..4100d48
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
-> @@ -0,0 +1,132 @@
-> +Device tree bindings for NVIDIA Tegra Generic Memory Interface bus
-> +
-> +The Generic Memory Interface bus enables memory transfers between internal and
-> +external memory. Can be used to attach various high speed devices such as
-> +synchronous/asynchronous NOR, FPGA, UARTS and more.
-> +
-> +The actual devices are instantiated from the child nodes of a GMI node.
+> +++ b/Documentation/devicetree/bindings/input/ti,lm8333.txt
+> @@ -0,0 +1,45 @@
+> +LM8333 Keypad
 > +
 > +Required properties:
-> + - compatible : Should contain one of the following:
-> +        For Tegra20 must contain "nvidia,tegra20-gmi".
-> +        For Tegra30 must contain "nvidia,tegra30-gmi".
-> + - reg: Should contain GMI controller registers location and length.
-> + - clocks: Must contain an entry for each entry in clock-names.
-> + - clock-names: Must include the following entries: "gmi"
-> + - resets : Must contain an entry for each entry in reset-names.
-> + - reset-names : Must include the following entries: "gmi"
-> + - #address-cells: The number of cells used to represent physical base
-> +   addresses in the GMI address space. Should be 2.
-> + - #size-cells: The number of cells used to represent the size of an address
-> +   range in the GMI address space. Should be 1.
-> + - ranges: Must be set up to reflect the memory layout with three integer values
-> +   for each chip-select line in use (only one entry is supported, see below
-> +   comments):
-> +   <cs-number> <offset> <physical address of mapping> <size>
+> +- compatible: Compatible property value should be "ti,lm8333".
 > +
-> +Note that the GMI controller does not have any internal chip-select address
-> +decoding, because of that chip-selects either need to be managed via software
-> +or by employing external chip-select decoding logic.
+> +- reg: Physical base address of the peripheral and length of memory mapped
+> +  region.
 > +
-> +If external chip-select logic is used to support multiple devices it is assumed
-> +that the devices use the same timing and so are probably the same type. It also
-> +assumes that they can fit in the 256MB address range. In this case only one
-> +child device is supported which represents the active chip-select line, see
-> +examples for more insight.
+> +- interrupts: The interrupt number for the peripheral.
 > +
-> +The chip-select number is decoded from the child nodes second address cell of
-> +'ranges' property, if 'ranges' property is not present or empty chip-select will
-> +then be decoded from the first cell of the 'reg' property.
+> +- linux,keymap: The keymap to use
+> +	(see Documentation/devicetree/bindings/input/matrix-keymap.txt)
 > +
-> +Optional child cs node properties:
-> +
-> + - nvidia,snor-data-width-32bit: Use 32bit data-bus, default is 16bit.
-> + - nvidia,snor-mux-mode: Enable address/data MUX mode.
-> + - nvidia,snor-rdy-active-before-data: Assert RDY signal one cycle before data.
-> +   If omitted it will be asserted with data.
-> + - nvidia,snor-rdy-inv: RDY signal is active high
-> + - nvidia,snor-adv-inv: ADV signal is active high
-> + - nvidia,snor-oe-inv: WE/OE signal is active high
-> + - nvidia,snor-cs-inv: CS signal is active high
+> +Optional properties:
+> +- ti,active-time: Specify the time during which the keypad is scanned after
+> +	the last key is released, before entering Halt mode.
+> +	The active time must be longer than the debounce time.
+> +	Default 500 ms.
 
-Inverted is meaningless unless I know what not inverted state is. Name 
-the properties using "active high".
+Add a unit suffix.
 
-With that,
+> +
+> +- ti,debounce-time: Specify the keypad debounce time.
+> +	This can be used for reliable scanning of keyboards with noisy contacts.
+> +	Default 10 ms.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Don't we have a common property for this?
+
+> +
+> +Example:
+> +input {
+> +	compatible = "ti,lm8333";
+> +	reg = <0x51>;
+> +	interrupts = <5>;
+> +
+> +	ti,active-time = <750>;
+> +	ti,debounce-time = <20>;
+> +
+> +	linux,keymap = <
+> +			0x0001001e
+> +			0x00020030
+> +			0x0003002e
+> +			0x00040020
+> +			0x00050012
+> +			0x00060021
+> +			0x00070022
+> +			0x00080023
+> +			0x01010017
+> +			0x01020024
+> +			0x01030025>;
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
