@@ -1,40 +1,46 @@
-From: Michael Scott <michael.scott@linaro.org>
-Subject: [PATCH V3] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Mon, 31 Oct 2016 08:59:41 -0700
-Message-ID: <20161031155941.20414-1-michael.scott@linaro.org>
+From: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V4] pinctrl: qcom: Add msm8994 pinctrl driver
+Date: Mon, 31 Oct 2016 09:00:09 -0700
+Message-ID: <20161031160009.20472-1-michael.scott@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Scott <michael.scott@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Initial pinctrl driver for QCOM msm8994 platforms.
 
 In order to continue the initial board support for QCOM msm8994/msm8992
-presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's put
+presented in patches from Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, let's put
 a proper pinctrl driver in place.
 
-Currently, the DT for these platforms uses the msm8x74 pinctrl driver to enable
-basic UART.  Beyond the first few pins the rest are different enough to justify
-it's own driver.
+Currently, the DT for these platforms uses the msm8x74 pinctrl driver to
+enable basic UART.  Beyond the first few pins the rest are different
+enough to justify it's own driver.
 
-Note: This driver is also be used by QCOM's msm8992 platform as it's TLM block
-is the same.
+Note: This driver is also be used by QCOM's msm8992 platform as it's TLM
+block is the same.
 
-- Initial formatting and style was taken from the msm8x74 pinctrl driver added
-  by Björn Andersson <bjorn.andersson@linaro.org>
-- Data was then adjusted per QCOM MSM8994 documentation for Top Level Multiplexing
+- Initial formatting and style was taken from the msm8x74 pinctrl driver
+  added by Björn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+- Data was then adjusted per QCOM MSM8994 documentation for Top Level
+  Multiplexing
 - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
-  Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 content
+  Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> and then modified for msm8994
+  content
 
-Signed-off-by: Michael Scott <michael.scott@linaro.org>
-Tested-by: Jeremy McNicoll <jeremymc@redhat.com>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
+V4:
+added compatible string to Documentation
+fixed checkpatch word wrapping warnings in patch description
+
 V3:
 added compatible string for msm8992 for clarity
 added Tested-by and ACKs
@@ -43,20 +49,20 @@ V2:
 fixed missing FUNCTION(nav_pps)
 removed 3 odd newlines between blsp_i2c4_groups and cci_timer0_groups
 
- .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |  175 +++
+ .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |  177 +++
  drivers/pinctrl/qcom/Kconfig                       |    9 +
  drivers/pinctrl/qcom/Makefile                      |    1 +
  drivers/pinctrl/qcom/pinctrl-msm8994.c             | 1401 ++++++++++++++++++++
- 4 files changed, 1586 insertions(+)
+ 4 files changed, 1588 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8994.c
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
 new file mode 100644
-index 0000000..e390087b
+index 0000000..183d8d8
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
-@@ -0,0 +1,175 @@
+@@ -0,0 +1,177 @@
 +Qualcomm MSM8994 TLMM block
 +
 +This binding describes the Top Level Mode Multiplexer block found in the
@@ -65,7 +71,9 @@ index 0000000..e390087b
 +- compatible:
 +	Usage: required
 +	Value type: <string>
-+	Definition: must be "qcom,msm8994-pinctrl"
++	Definition: Should contain one of:
++		    "qcom,msm8992-pinctrl",
++		    "qcom,msm8994-pinctrl".
 +
 +- reg:
 +	Usage: required
@@ -1673,3 +1681,8 @@ index 0000000..74568fc
 +MODULE_DEVICE_TABLE(of, msm8994_pinctrl_of_match);
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
