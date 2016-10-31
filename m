@@ -1,41 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: add R8A7745 support
-Date: Mon, 31 Oct 2016 00:36:57 -0500
-Message-ID: <20161031053657.65t33edbvc7ow3ha@rob-hp-laptop>
-References: <13079532.zQoaX56ouR@wasted.cogentembedded.com>
- <5012234.NZmvoVqhq0@wasted.cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] dt: cpufreq: brcm: New binding document for
+ brcmstb-avs-cpufreq
+Date: Mon, 31 Oct 2016 00:43:03 -0500
+Message-ID: <20161031054303.thdw4rjslosajyl7@rob-hp-laptop>
+References: <20161027210536.98988-1-code@mmayer.net>
+ <20161027210536.98988-2-code@mmayer.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5012234.NZmvoVqhq0-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+In-Reply-To: <20161027210536.98988-2-code@mmayer.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Markus Mayer <code@mmayer.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 11:43:31PM +0300, Sergei Shtylyov wrote:
-> Add RZ/G1E (R8A7745) Clock  Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
+On Thu, Oct 27, 2016 at 02:05:34PM -0700, Markus Mayer wrote:
+> From: Markus Mayer <mmayer@broadcom.com>
 > 
-> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
-> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>.
+> Add the binding document for the new brcmstb-avs-cpufreq driver.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt |    5 
+>  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     | 78 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I guess if one of the nodes is used elsewhere, combining the nodes 
+doesn't make sense. So:
 
->  drivers/clk/renesas/Kconfig                                  |    1 
->  drivers/clk/renesas/Makefile                                 |    1 
->  drivers/clk/renesas/r8a7745-cpg-mssr.c                       |  261 +++++++++++
->  drivers/clk/renesas/renesas-cpg-mssr.c                       |    6 
->  drivers/clk/renesas/renesas-cpg-mssr.h                       |    1 
->  6 files changed, 273 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
