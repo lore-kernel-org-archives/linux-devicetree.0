@@ -1,93 +1,783 @@
-Return-Path: <geert.uytterhoeven@gmail.com>
+Return-Path: <radoslaw.pietrzyk@gmail.com>
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
-References: <9246696.7P1aOyyQt4@wasted.cogentembedded.com> <2357731.SxJodxn1PJ@wasted.cogentembedded.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 19 Oct 2016 11:06:26 +0200
-Message-ID: <CAMuHMdW_XSCfy+Kv6uz1pX7q-XFPp=nkaXSehbZJYAeOt6Rf4w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] clk: renesas: cpg-mssr: add R8A7743 support
-Content-Type: text/plain; charset=UTF-8
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+In-Reply-To: <CAF3+Tqdz+92yxuSwZHdQ01d-G-bBNtzayKyP2-_On2APvFyLNA@mail.gmail.com>
+References: <CAF3+Tqd2MGmz+8XhLXhaZiEc78QOwHSpVrQA65-p1AcfT+_xgg@mail.gmail.com>
+ <404315f0-fc9e-93e2-54df-f85e484d9389@st.com> <CAF3+TqdzESUNbkmAVv42pNv13wuyuPgGgksK3pJbORYw2a8ZFQ@mail.gmail.com>
+ <65096fbe-3f06-c8db-fbe8-29f0be28cb61@st.com> <CAF3+TqcxVj9f7kcSQTKDercVfvDdLzAXGpUU1oAxeNBFZx73nQ@mail.gmail.com>
+ <CAFvLkMQGVygLb9SQ8o+2Q=bg7vvRjpHypmSyjRyLkdcHypoFHw@mail.gmail.com>
+ <CAF3+TqcFnXENmX4OpG9jzhPhuaq-EqNsRhhjKgFjHA96DLqK5g@mail.gmail.com>
+ <CAFvLkMQ6YMg4sf2Ug8x4-YshwnjbLz3aVzm+JpKP6zG9r-WU4Q@mail.gmail.com> <CAF3+Tqdz+92yxuSwZHdQ01d-G-bBNtzayKyP2-_On2APvFyLNA@mail.gmail.com>
+From: =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>
+Date: Mon, 31 Oct 2016 19:58:15 +0100
+Message-ID: <CAFvLkMTCkRcwbRc8GVNBoJFAvKWHYDjOPabueQPjTseZrucadA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: DT: stm32: move dma translation to board files
+Content-Type: multipart/alternative; boundary=001a113f16e05d7f5d05402dca11
+To: Bruno Herrera <bruherrera@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux@armlinux.org.uk, ">" <peter.griffin@linaro.org>, ">" <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sergei,
+--001a113f16e05d7f5d05402dca11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 7, 2016 at 10:47 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
+I think wlcore driver searches dma-ranges in its parent that's why sdio
+node needs it.
+
+2016-10-31 17:41 GMT+01:00 Bruno Herrera <bruherrera@gmail.com>:
+
+> On Mon, Oct 31, 2016 at 12:14 PM, Rados=C5=82aw Pietrzyk
+> <radoslaw.pietrzyk@gmail.com> wrote:
+> > This is weird because dma ddresses are recalculated using parent's
+> > dma-ranges property and soc already has it so there should be absolutel=
+y
+> no
+> > problem.
 >
-> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
-> <geert+renesas@glider.be>.
+> These are my DTS and DTSI file.
+> >
+> > 2016-10-31 11:27 GMT+01:00 Bruno Herrera <bruherrera@gmail.com>:
+> >>
+> >> On Fri, Oct 28, 2016 at 5:09 AM, Rados=C5=82aw Pietrzyk
+> >> <radoslaw.pietrzyk@gmail.com> wrote:
+> >> > Have you defined your sdio node within soc node ?
+> >>
+> >> It is in the SOC node of the DSTI file.
+> >>
+> >> >
+> >> > 2016-10-27 14:57 GMT+02:00 Bruno Herrera <bruherrera@gmail.com>:
+> >> >>
+> >> >> Hi Alex,
+> >> >>
+> >> >> On Thu, Oct 27, 2016 at 10:21 AM, Alexandre Torgue
+> >> >> <alexandre.torgue@st.com> wrote:
+> >> >> > Hi Bruno,
+> >> >> >
+> >> >> >
+> >> >> > On 10/27/2016 12:43 PM, Bruno Herrera wrote:
+> >> >> >>
+> >> >> >> Hi Alex,
+> >> >> >>
+> >> >> >> On Wed, Oct 26, 2016 at 7:09 AM, Alexandre Torgue
+> >> >> >> <alexandre.torgue@st.com> wrote:
+> >> >> >>>
+> >> >> >>> Hi Bruno,
+> >> >> >>>
+> >> >> >>> On 10/25/2016 11:06 PM, Bruno Herrera wrote:
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>> Hi Alexandre,
+> >> >> >>>>
+> >> >> >>>>>
+> >> >> >>>>> stm32f469-disco and stm32f429-eval boards use SDRAM start
+> address
+> >> >> >>>>> remapping
+> >> >> >>>>> (to @0) to boost performances. A DMA translation through
+> >> >> >>>>> "dma-ranges"
+> >> >> >>>>> property was needed for other masters than the M4 CPU.
+> >> >> >>>>> stm32f429-disco doesn't use remapping so doesn't need this DM=
+A
+> >> >> >>>>> translation.
+> >> >> >>>>> This patches moves this DMA translation definition from
+> stm32f429
+> >> >> >>>>> soc
+> >> >> >>>>> file
+> >> >> >>>>> to board files.
+> >> >> >>>>>
+> >> >> >>>>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+> >> >> >>>>>
+> >> >> >>>>> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>>> b/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>>> index 13c7cd2..a763c15 100644
+> >> >> >>>>> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>>> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>>> @@ -82,6 +82,10 @@
+> >> >> >>>>>                 };
+> >> >> >>>>>         };
+> >> >> >>>>>
+> >> >> >>>>> +       soc {
+> >> >> >>>>> +               dma-ranges =3D <0xc0000000 0x0 0x10000000>;
+> >> >> >>>>> +       };
+> >> >> >>>>> +
+> >> >> >>>>>         usbotg_hs_phy: usbphy {
+> >> >> >>>>>                 #phy-cells =3D <0>;
+> >> >> >>>>>                 compatible =3D "usb-nop-xceiv";
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>> Shouldn't also the peripheral dma-ranges property move to boar=
+d
+> >> >> >>>> specific
+> >> >> >>>> too?
+> >> >> >>>> I  had this patch for while but I didn't had the time to submi=
+t:
+> >> >> >>>
+> >> >> >>>
+> >> >> >>>
+> >> >> >>> Well spot I forgot it. Actually, discussing with Arnd ysterday =
+on
+> >> >> >>> IIRC,
+> >> >> >>> empty dma-ranges is not needed. Can you test on your side by
+> >> >> >>> removing
+> >> >> >>> dma-ranges in usb node please ?
+> >> >> >>
+> >> >> >> Unfortunately will take a time for me to set up this environment
+> on
+> >> >> >> the STM32F4-EVAL board.
+> >> >> >> And on the discovery boards we dont have this scenario. That was
+> the
+> >> >> >> main reason I did not submit the patch right away.
+> >> >> >> My conclusion and I might be wrong but is based on the my tests
+> with
+> >> >> >> SDIO device at STM32F469I-DISCO board.
+> >> >> >>
+> >> >> >> I started this issue as discussion at ST Forum but Maxime gave m=
+e
+> >> >> >> the
+> >> >> >> hint.
+> >> >> >>
+> >> >> >>
+> >> >> >>
+> >> >> >>
+> >> >> >> https://my.st.com/public/STe2ecommunities/mcu/Lists/
+> cortex_mx_stm32/Flat.aspx?RootFolder=3Dhttps%3a%2f%2fmy%2est%2ecom%2fpubl=
+ic%
+> 2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%
+> 2fDMA2%20and%20SYSCFG_MEMRMP%20relationship&FolderCTID=3D
+> 0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46
+> A77F0FFD06506F5B&currentviews=3D44
+> >> >> >>
+> >> >> >>> I will push a v2 by removing empty dma-ranges if tests are ok i=
+n
+> >> >> >>> your
+> >> >> >>> side.
+> >> >> >>
+> >> >> >>
+> >> >> >> From my understating/conclusion is: when empty
+> property(dma-ranges)
+> >> >> >> is
+> >> >> >> the device node, the mapping will be taken in consideration when
+> >> >> >> using
+> >> >> >> DMA otherwise the mapping is ignored.
+> >> >> >> And in the SDIO case it is needed for DEV->MEM(SDRAM) and
+> >> >> >> MEM(SDRAM)->DEV. If it is not the case for the devices in questi=
+on
+> >> >> >> so
+> >> >> >> I suppose it can work without the property.
+> >> >> >
+> >> >> >
+> >> >> > For sure translation has to be done but I'm not sure that an empt=
+y
+> >> >> > "dma-ranges" is needed in device node to activate it. For Etherne=
+t
+> >> >> > empty
+> >> >> > "dma-ranges" is not needed. I will try with usb.
+> >> >>
+> >> >> In the case of SDIO it is needed. As example this is my working SDI=
+O
+> >> >> node:
+> >> >>
+> >> >> sdio: sdio@40012c00 {
+> >> >> compatible =3D "arm,pl18x", "arm,primecell";
+> >> >> arm,primecell-periphid =3D <0x00480181>;
+> >> >> reg =3D <0x40012c00 0x400>;
+> >> >> dmas =3D  <&dma2 6 4 0x10400 0x3>, /* Logical - DevToMem */
+> >> >> <&dma2 3 4 0x10400 0x3>; /* Logical - MemToDev */
+> >> >> dma-names =3D "rx", "tx";
+> >> >> clocks =3D <&rcc 0 171>;
+> >> >> clock-names =3D "apb_pclk";
+> >> >> interrupts =3D <49>;
+> >> >> status =3D "disabled";
+> >> >> };
+> >> >>
+> >> >> &sdio {
+> >> >> status =3D "okay";
+> >> >> vmmc-supply =3D <&wlan_en>;
+> >> >> bus-width =3D <4>;
+> >> >> max-frequency =3D <24000000>;
+> >> >> pinctrl-names =3D "default";
+> >> >> pinctrl-0 =3D <&sdio_pins>;
+> >> >> ti,non-removable;
+> >> >> ti,needs-special-hs-handling;
+> >> >> dma-ranges;
+> >> >> cap-power-off-card;
+> >> >> keep-power-in-suspend;
+> >> >>
+> >> >> #address-cells =3D <1>;
+> >> >> #size-cells =3D <0>;
+> >> >> wlcore: wlcore@0 {
+> >> >> compatible =3D "ti,wl1835";
+> >> >> reg =3D <2>;
+> >> >> interrupt-parent =3D <&gpioa>;
+> >> >> interrupts =3D <8 IRQ_TYPE_EDGE_RISING>;
+> >> >> };
+> >> >> };
+> >> >>
+> >> >> >
+> >> >> > alex
+> >> >> >
+> >> >> >
+> >> >> >>
+> >> >> >>>
+> >> >> >>> Thanks in advance
+> >> >> >>> Alex
+> >> >> >>>
+> >> >> >>>
+> >> >> >>>>
+> >> >> >>>> Author: Bruno Herrera <bruherrera@gmail.com>
+> >> >> >>>> Date:   Sun Oct 16 14:50:00 2016 -0200
+> >> >> >>>>
+> >> >> >>>>     ARM: DT: STM32: Use dma-ranges property per board not at
+> dtsi
+> >> >> >>>> file
+> >> >> >>>>
+> >> >> >>>> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>> b/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>> index 6bfc595..2a22a82 100644
+> >> >> >>>> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> >> >> >>>> @@ -52,6 +52,10 @@
+> >> >> >>>>         model =3D "STMicroelectronics STM32429i-EVAL board";
+> >> >> >>>>         compatible =3D "st,stm32429i-eval", "st,stm32f429";
+> >> >> >>>>
+> >> >> >>>> +       soc {
+> >> >> >>>> +               dma-ranges =3D <0xC0000000 0x0 0x10000000>;
+> >> >> >>>> +       };
+> >> >> >>>> +
+> >> >> >>>>         chosen {
+> >> >> >>>>                 bootargs =3D "root=3D/dev/ram rdinit=3D/linuxr=
+c";
+> >> >> >>>>                 stdout-path =3D "serial0:115200n8";
+> >> >> >>>> @@ -96,6 +100,7 @@
+> >> >> >>>>
+> >> >> >>>>  &ethernet0 {
+> >> >> >>>>         status =3D "okay";
+> >> >> >>>> +       dma-ranges;
+> >> >> >>>>         pinctrl-0       =3D <&ethernet0_mii>;
+> >> >> >>>>         pinctrl-names   =3D "default";
+> >> >> >>>>         phy-mode        =3D "mii-id";
+> >> >> >>>> @@ -116,6 +121,7 @@
+> >> >> >>>>  };
+> >> >> >>>>
+> >> >> >>>>  &usbotg_hs {
+> >> >> >>>> +       dma-ranges;
+> >> >> >>>>         dr_mode =3D "host";
+> >> >> >>>>         phys =3D <&usbotg_hs_phy>;
+> >> >> >>>>         phy-names =3D "usb2-phy";
+> >> >> >>>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>> b/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>> index 7d624a2..697a133 100644
+> >> >> >>>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>> @@ -59,7 +59,6 @@
+> >> >> >>>>         };
+> >> >> >>>>
+> >> >> >>>>         soc {
+> >> >> >>>> -               dma-ranges =3D <0xc0000000 0x0 0x10000000>;
+> >> >> >>>>
+> >> >> >>>>                 timer2: timer@40000000 {
+> >> >> >>>>                         compatible =3D "st,stm32-timer";
+> >> >> >>>> @@ -472,13 +471,11 @@
+> >> >> >>>>                         st,syscon =3D <&syscfg 0x4>;
+> >> >> >>>>                         snps,pbl =3D <8>;
+> >> >> >>>>                         snps,mixed-burst;
+> >> >> >>>> -                       dma-ranges;
+> >> >> >>>>                         status =3D "disabled";
+> >> >> >>>>                 };
+> >> >> >>>>
+> >> >> >>>>                 usbotg_hs: usb@40040000 {
+> >> >> >>>>                         compatible =3D "snps,dwc2";
+> >> >> >>>> -                       dma-ranges;
+> >> >> >>>>                         reg =3D <0x40040000 0x40000>;
+> >> >> >>>>                         interrupts =3D <77>;
+> >> >> >>>>                         clocks =3D <&rcc 0 29>;
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>>> b/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>>> index 0596d60..3a1cfdd 100644
+> >> >> >>>>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> >> >> >>>>> @@ -59,8 +59,6 @@
+> >> >> >>>>>         };
+> >> >> >>>>>
+> >> >> >>>>>         soc {
+> >> >> >>>>> -               dma-ranges =3D <0xc0000000 0x0 0x10000000>;
+> >> >> >>>>> -
+> >> >> >>>>>                 timer2: timer@40000000 {
+> >> >> >>>>>                         compatible =3D "st,stm32-timer";
+> >> >> >>>>>                         reg =3D <0x40000000 0x400>;
+> >> >> >>>>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts
+> >> >> >>>>> b/arch/arm/boot/dts/stm32f469-disco.dts
+> >> >> >>>>> index 9e73656..c2213c0 100644
+> >> >> >>>>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+> >> >> >>>>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+> >> >> >>>>> @@ -64,6 +64,10 @@
+> >> >> >>>>>         aliases {
+> >> >> >>>>>                 serial0 =3D &usart3;
+> >> >> >>>>>         };
+> >> >> >>>>> +
+> >> >> >>>>> +       soc {
+> >> >> >>>>> +               dma-ranges =3D <0xc0000000 0x0 0x10000000>;
+> >> >> >>>>> +       };
+> >> >> >>>>>  };
+> >> >> >>>>>
+> >> >> >>>>>  &clk_hse {
+> >> >> >>>>> --
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>>
+> >> >> >>>> Br.,
+> >> >> >>>> Bruno
+> >> >> >>>>
+> >> >> >>>
+> >> >> >
+> >> >>
+> >> >> _______________________________________________
+> >> >> linux-arm-kernel mailing list
+> >> >> linux-arm-kernel@lists.infradead.org
+> >> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >> >
+> >> >
+> >
+> >
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks a lot!
+--001a113f16e05d7f5d05402dca11
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-With the few minor nits below fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+<div dir=3D"ltr">I think wlcore driver searches dma-ranges in its parent th=
+at&#39;s why sdio node needs it.</div><div class=3D"gmail_extra"><br><div c=
+lass=3D"gmail_quote">2016-10-31 17:41 GMT+01:00 Bruno Herrera <span dir=3D"=
+ltr">&lt;<a href=3D"mailto:bruherrera@gmail.com" target=3D"_blank">bruherre=
+ra@gmail.com</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"=
+margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=
+=3D"im HOEnZb">On Mon, Oct 31, 2016 at 12:14 PM, Rados=C5=82aw Pietrzyk<br>
+&lt;<a href=3D"mailto:radoslaw.pietrzyk@gmail.com">radoslaw.pietrzyk@gmail.=
+com</a>&gt; wrote:<br>
+</span><span class=3D"im HOEnZb">&gt; This is weird because dma ddresses ar=
+e recalculated using parent&#39;s<br>
+&gt; dma-ranges property and soc already has it so there should be absolute=
+ly no<br>
+&gt; problem.<br>
+<br>
+</span><span class=3D"im HOEnZb">These are my DTS and DTSI file.<br>
+&gt;<br>
+</span><div class=3D"HOEnZb"><div class=3D"h5">&gt; 2016-10-31 11:27 GMT+01=
+:00 Bruno Herrera &lt;<a href=3D"mailto:bruherrera@gmail.com">bruherrera@gm=
+ail.com</a>&gt;:<br>
+&gt;&gt;<br>
+&gt;&gt; On Fri, Oct 28, 2016 at 5:09 AM, Rados=C5=82aw Pietrzyk<br>
+&gt;&gt; &lt;<a href=3D"mailto:radoslaw.pietrzyk@gmail.com">radoslaw.pietrz=
+yk@gmail.com</a>&gt; wrote:<br>
+&gt;&gt; &gt; Have you defined your sdio node within soc node ?<br>
+&gt;&gt;<br>
+&gt;&gt; It is in the SOC node of the DSTI file.<br>
+&gt;&gt;<br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt; 2016-10-27 14:57 GMT+02:00 Bruno Herrera &lt;<a href=3D"mailt=
+o:bruherrera@gmail.com">bruherrera@gmail.com</a>&gt;:<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; Hi Alex,<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; On Thu, Oct 27, 2016 at 10:21 AM, Alexandre Torgue<br>
+&gt;&gt; &gt;&gt; &lt;<a href=3D"mailto:alexandre.torgue@st.com">alexandre.=
+torgue@st.com</a>&gt; wrote:<br>
+&gt;&gt; &gt;&gt; &gt; Hi Bruno,<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt; On 10/27/2016 12:43 PM, Bruno Herrera wrote:<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; Hi Alex,<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; On Wed, Oct 26, 2016 at 7:09 AM, Alexandre Torgu=
+e<br>
+&gt;&gt; &gt;&gt; &gt;&gt; &lt;<a href=3D"mailto:alexandre.torgue@st.com">a=
+lexandre.torgue@st.com</a>&gt; wrote:<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; Hi Bruno,<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; On 10/25/2016 11:06 PM, Bruno Herrera wrote:=
+<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Hi Alexandre,<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; stm32f469-disco and stm32f429-eval b=
+oards use SDRAM start address<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; remapping<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; (to @0) to boost performances. A DMA=
+ translation through<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; &quot;dma-ranges&quot;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; property was needed for other master=
+s than the M4 CPU.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; stm32f429-disco doesn&#39;t use rema=
+pping so doesn&#39;t need this DMA<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; translation.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; This patches moves this DMA translat=
+ion definition from stm32f429<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; soc<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; file<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; to board files.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; Signed-off-by: Alexandre TORGUE &lt;=
+<a href=3D"mailto:alexandre.torgue@st.com">alexandre.torgue@st.com</a>&gt;<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; diff --git a/arch/arm/boot/dts/stm32=
+429i-<wbr>eval.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; b/arch/arm/boot/dts/stm32429i-<wbr>e=
+val.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; index 13c7cd2..a763c15 100644<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; --- a/arch/arm/boot/dts/stm32429i-<w=
+br>eval.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +++ b/arch/arm/boot/dts/stm32429i-<w=
+br>eval.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; @@ -82,6 +82,10 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0soc {<br=
+>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0dma-ranges =3D &lt;0xc0000000 0x0 0x10000000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0usb=
+otg_hs_phy: usbphy {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0#phy-cells =3D &lt;0&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;usb-nop-xceiv&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Shouldn&#39;t also the peripheral dma-ra=
+nges property move to board<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; specific<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; too?<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; I=C2=A0 had this patch for while but I d=
+idn&#39;t had the time to submit:<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; Well spot I forgot it. Actually, discussing =
+with Arnd ysterday on<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; IIRC,<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; empty dma-ranges is not needed. Can you test=
+ on your side by<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; removing<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; dma-ranges in usb node please ?<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; Unfortunately will take a time for me to set up =
+this environment on<br>
+&gt;&gt; &gt;&gt; &gt;&gt; the STM32F4-EVAL board.<br>
+&gt;&gt; &gt;&gt; &gt;&gt; And on the discovery boards we dont have this sc=
+enario. That was the<br>
+&gt;&gt; &gt;&gt; &gt;&gt; main reason I did not submit the patch right awa=
+y.<br>
+&gt;&gt; &gt;&gt; &gt;&gt; My conclusion and I might be wrong but is based =
+on the my tests with<br>
+&gt;&gt; &gt;&gt; &gt;&gt; SDIO device at STM32F469I-DISCO board.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; I started this issue as discussion at ST Forum b=
+ut Maxime gave me<br>
+&gt;&gt; &gt;&gt; &gt;&gt; the<br>
+&gt;&gt; &gt;&gt; &gt;&gt; hint.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; <a href=3D"https://my.st.com/public/STe2ecommuni=
+ties/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=3Dhttps%3a%2f%2fmy%2est=
+%2ecom%2fpublic%2fSTe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fDMA2%2=
+0and%20SYSCFG_MEMRMP%20relationship&amp;FolderCTID=3D0x01200200770978C69A11=
+41439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&amp;currentviews=3D4=
+4" rel=3D"noreferrer" target=3D"_blank">https://my.st.com/public/<wbr>STe2e=
+communities/mcu/Lists/<wbr>cortex_mx_stm32/Flat.aspx?<wbr>RootFolder=3Dhttp=
+s%3a%2f%2fmy%<wbr>2est%2ecom%2fpublic%<wbr>2fSTe2ecommunities%2fmcu%<wbr>2f=
+Lists%2fcortex_mx_stm32%<wbr>2fDMA2%20and%20SYSCFG_MEMRMP%<wbr>20relationsh=
+ip&amp;FolderCTID=3D<wbr>0x01200200770978C69A1141439FE5<wbr>59EB459D7580009=
+C4E14902C3CDE46<wbr>A77F0FFD06506F5B&amp;currentviews=3D<wbr>44</a><br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; I will push a v2 by removing empty dma-range=
+s if tests are ok in<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; your<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; side.<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt; From my understating/conclusion is: when empty p=
+roperty(dma-ranges)<br>
+&gt;&gt; &gt;&gt; &gt;&gt; is<br>
+&gt;&gt; &gt;&gt; &gt;&gt; the device node, the mapping will be taken in co=
+nsideration when<br>
+&gt;&gt; &gt;&gt; &gt;&gt; using<br>
+&gt;&gt; &gt;&gt; &gt;&gt; DMA otherwise the mapping is ignored.<br>
+&gt;&gt; &gt;&gt; &gt;&gt; And in the SDIO case it is needed for DEV-&gt;ME=
+M(SDRAM) and<br>
+&gt;&gt; &gt;&gt; &gt;&gt; MEM(SDRAM)-&gt;DEV. If it is not the case for th=
+e devices in question<br>
+&gt;&gt; &gt;&gt; &gt;&gt; so<br>
+&gt;&gt; &gt;&gt; &gt;&gt; I suppose it can work without the property.<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt; For sure translation has to be done but I&#39;m not =
+sure that an empty<br>
+&gt;&gt; &gt;&gt; &gt; &quot;dma-ranges&quot; is needed in device node to a=
+ctivate it. For Ethernet<br>
+&gt;&gt; &gt;&gt; &gt; empty<br>
+&gt;&gt; &gt;&gt; &gt; &quot;dma-ranges&quot; is not needed. I will try wit=
+h usb.<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; In the case of SDIO it is needed. As example this is my w=
+orking SDIO<br>
+&gt;&gt; &gt;&gt; node:<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; sdio: sdio@40012c00 {<br>
+&gt;&gt; &gt;&gt; compatible =3D &quot;arm,pl18x&quot;, &quot;arm,primecell=
+&quot;;<br>
+&gt;&gt; &gt;&gt; arm,primecell-periphid =3D &lt;0x00480181&gt;;<br>
+&gt;&gt; &gt;&gt; reg =3D &lt;0x40012c00 0x400&gt;;<br>
+&gt;&gt; &gt;&gt; dmas =3D=C2=A0 &lt;&amp;dma2 6 4 0x10400 0x3&gt;, /* Logi=
+cal - DevToMem */<br>
+&gt;&gt; &gt;&gt; &lt;&amp;dma2 3 4 0x10400 0x3&gt;; /* Logical - MemToDev =
+*/<br>
+&gt;&gt; &gt;&gt; dma-names =3D &quot;rx&quot;, &quot;tx&quot;;<br>
+&gt;&gt; &gt;&gt; clocks =3D &lt;&amp;rcc 0 171&gt;;<br>
+&gt;&gt; &gt;&gt; clock-names =3D &quot;apb_pclk&quot;;<br>
+&gt;&gt; &gt;&gt; interrupts =3D &lt;49&gt;;<br>
+&gt;&gt; &gt;&gt; status =3D &quot;disabled&quot;;<br>
+&gt;&gt; &gt;&gt; };<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &amp;sdio {<br>
+&gt;&gt; &gt;&gt; status =3D &quot;okay&quot;;<br>
+&gt;&gt; &gt;&gt; vmmc-supply =3D &lt;&amp;wlan_en&gt;;<br>
+&gt;&gt; &gt;&gt; bus-width =3D &lt;4&gt;;<br>
+&gt;&gt; &gt;&gt; max-frequency =3D &lt;24000000&gt;;<br>
+&gt;&gt; &gt;&gt; pinctrl-names =3D &quot;default&quot;;<br>
+&gt;&gt; &gt;&gt; pinctrl-0 =3D &lt;&amp;sdio_pins&gt;;<br>
+&gt;&gt; &gt;&gt; ti,non-removable;<br>
+&gt;&gt; &gt;&gt; ti,needs-special-hs-handling;<br>
+&gt;&gt; &gt;&gt; dma-ranges;<br>
+&gt;&gt; &gt;&gt; cap-power-off-card;<br>
+&gt;&gt; &gt;&gt; keep-power-in-suspend;<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; #address-cells =3D &lt;1&gt;;<br>
+&gt;&gt; &gt;&gt; #size-cells =3D &lt;0&gt;;<br>
+&gt;&gt; &gt;&gt; wlcore: wlcore@0 {<br>
+&gt;&gt; &gt;&gt; compatible =3D &quot;ti,wl1835&quot;;<br>
+&gt;&gt; &gt;&gt; reg =3D &lt;2&gt;;<br>
+&gt;&gt; &gt;&gt; interrupt-parent =3D &lt;&amp;gpioa&gt;;<br>
+&gt;&gt; &gt;&gt; interrupts =3D &lt;8 IRQ_TYPE_EDGE_RISING&gt;;<br>
+&gt;&gt; &gt;&gt; };<br>
+&gt;&gt; &gt;&gt; };<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt; alex<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; Thanks in advance<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt; Alex<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Author: Bruno Herrera &lt;<a href=3D"mai=
+lto:bruherrera@gmail.com">bruherrera@gmail.com</a>&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Date:=C2=A0 =C2=A0Sun Oct 16 14:50:00 20=
+16 -0200<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0ARM: DT: STM32: Use d=
+ma-ranges property per board not at dtsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; file<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; diff --git a/arch/arm/boot/dts/stm32429i=
+-<wbr>eval.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; b/arch/arm/boot/dts/stm32429i-<wbr>eval.=
+dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; index 6bfc595..2a22a82 100644<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; --- a/arch/arm/boot/dts/stm32429i-<wbr>e=
+val.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +++ b/arch/arm/boot/dts/stm32429i-<wbr>e=
+val.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; @@ -52,6 +52,10 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0model =
+=3D &quot;STMicroelectronics STM32429i-EVAL board&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compati=
+ble =3D &quot;st,stm32429i-eval&quot;, &quot;st,stm32f429&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0soc {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dma-ranges =3D &lt;0xC0000000 0x0 0x10000000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0chosen =
+{<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0bootargs =3D &quot;root=3D/dev/ram rdinit=3D/linuxrc&q=
+uot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0stdout-path =3D &quot;serial0:115200n8&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; @@ -96,6 +100,7 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 &amp;ethernet0 {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =
+=3D &quot;okay&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0dma-ranges;<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl=
+-0=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &lt;&amp;ethernet0_mii&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl=
+-names=C2=A0 =C2=A0=3D &quot;default&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0phy-mod=
+e=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;mii-id&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; @@ -116,6 +121,7 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 };<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 &amp;usbotg_hs {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0dma-ranges;<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dr_mode=
+ =3D &quot;host&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0phys =
+=3D &lt;&amp;usbotg_hs_phy&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0phy-nam=
+es =3D &quot;usb2-phy&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; diff --git a/arch/arm/boot/dts/stm32f429=
+.<wbr>dtsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; b/arch/arm/boot/dts/stm32f429.<wbr>dtsi<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; index 7d624a2..697a133 100644<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; --- a/arch/arm/boot/dts/stm32f429.<wbr>d=
+tsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; +++ b/arch/arm/boot/dts/stm32f429.<wbr>d=
+tsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; @@ -59,7 +59,6 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0soc {<b=
+r>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0dma-ranges =3D &lt;0xc0000000 0x0 0x10000000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0timer2: timer@40000000 {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;st,st=
+m32-timer&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; @@ -472,13 +471,11 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0st,syscon =3D &lt;&amp;sys=
+cfg 0x4&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0snps,pbl =3D &lt;8&gt;;<br=
+>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0snps,mixed-burst;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dma-ranges;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D &quot;disabled&=
+quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0usbotg_hs: usb@40040000 {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;snps,=
+dwc2&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dma-ranges;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x40040000 0x4=
+0000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0interrupts =3D &lt;77&gt;;=
+<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clocks =3D &lt;&amp;rcc 0 =
+29&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; diff --git a/arch/arm/boot/dts/stm32=
+f429.<wbr>dtsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; b/arch/arm/boot/dts/stm32f429.<wbr>d=
+tsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; index 0596d60..3a1cfdd 100644<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; --- a/arch/arm/boot/dts/stm32f429.<w=
+br>dtsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +++ b/arch/arm/boot/dts/stm32f429.<w=
+br>dtsi<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; @@ -59,8 +59,6 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0soc=
+ {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0dma-ranges =3D &lt;0xc0000000 0x0 0x10000000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; -<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0timer2: timer@40000000 {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot=
+;st,stm32-timer&quot;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x400000=
+00 0x400&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; diff --git a/arch/arm/boot/dts/stm32=
+f469-<wbr>disco.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; b/arch/arm/boot/dts/stm32f469-<wbr>d=
+isco.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; index 9e73656..c2213c0 100644<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; --- a/arch/arm/boot/dts/stm32f469-<w=
+br>disco.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +++ b/arch/arm/boot/dts/stm32f469-<w=
+br>disco.dts<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; @@ -64,6 +64,10 @@<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ali=
+ases {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0serial0 =3D &amp;usart3;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<=
+br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0soc {<br=
+>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0dma-ranges =3D &lt;0xc0000000 0x0 0x10000000&gt;;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 };<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt;=C2=A0 &amp;clk_hse {<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;&gt; --<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Br.,<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt; Bruno<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;&gt;&gt;<br>
+&gt;&gt; &gt;&gt; &gt;<br>
+&gt;&gt; &gt;&gt;<br>
+&gt;&gt; &gt;&gt; ______________________________<wbr>_________________<br>
+&gt;&gt; &gt;&gt; linux-arm-kernel mailing list<br>
+&gt;&gt; &gt;&gt; <a href=3D"mailto:linux-arm-kernel@lists.infradead.org">l=
+inux-arm-kernel@lists.<wbr>infradead.org</a><br>
+&gt;&gt; &gt;&gt; <a href=3D"http://lists.infradead.org/mailman/listinfo/li=
+nux-arm-kernel" rel=3D"noreferrer" target=3D"_blank">http://lists.infradead=
+.org/<wbr>mailman/listinfo/linux-arm-<wbr>kernel</a><br>
+&gt;&gt; &gt;<br>
+&gt;&gt; &gt;<br>
+&gt;<br>
+&gt;<br>
+</div></div></blockquote></div><br></div>
 
-> --- /dev/null
-> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
-
-> +static const struct mssr_mod_clk r8a7743_mod_clks[] __initconst = {
-
-> +       DEF_MOD("mmcif0",         315,  R8A7743_CLK_MMC0),
-
-"mmc0"
-
-> +       DEF_MOD("audio-dmac0",    502,  R8A7743_CLK_HP),
-> +       DEF_MOD("audio-dmac1",    501,  R8A7743_CLK_HP),
-
-Please sort by numerical clock ID.
-
-> +       DEF_MOD("i2c6",           926,  R8A7743_CLK_CP),
-
-"iicdvfs"
-
-> +static const unsigned int r8a7743_crit_mod_clks[] __initconst = {
-> +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
-
-INTC-SYS
-
-> +};
-
-> +static const struct rcar_gen2_cpg_pll_config cpg_pll_configs[8] __initconst = {
-> +       /* EXTAL div    PLL1 mult       PLL3 mult */
-> +       { 1,            208,            106,    },
-> +       { 1,            208,            88,     },
-> +       { 1,            156,            80,     },
-> +       { 1,            156,            66,     },
-> +       { 2,            240,            122,    },
-> +       { 2,            240,            102,    },
-> +       { 2,            208,            106,    },
-> +       { 2,            208,            88,     },
-> +};
-> +
-> +static int __init r8a7743_cpg_mssr_init(struct device *dev)
-> +{
-> +       const struct rcar_gen2_cpg_pll_config *cpg_pll_config;
-> +       u32 cpg_mode = rcar_gen2_read_modemr();
-> +
-> +       cpg_pll_config = &cpg_pll_configs[CPG_PLL_CONFIG_INDEX(cpg_mode)];
-> +       if (!cpg_pll_config->extal_div) {
-
-This check is not needed, as extal_div is never zero in the above table.
-
-> +               dev_err(dev, "Prohibited setting (cpg_mode=0x%x)\n", cpg_mode);
-> +               return -EINVAL;
-> +       }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--001a113f16e05d7f5d05402dca11--
