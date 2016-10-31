@@ -1,82 +1,66 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] pinctrl: Introduce generic #pinctrl-cells and
- pinctrl_parse_index_with_args
-Date: Mon, 31 Oct 2016 01:13:36 -0500
-Message-ID: <20161031061336.ya6jcjttvbgdqnld@rob-hp-laptop>
-References: <20161025164538.453-1-tony@atomide.com>
- <20161025164538.453-2-tony@atomide.com>
- <CACRpkdYWB4aa2XvW-yT39cKqy3XChSwCiFRy1mVWhbhse63=3A@mail.gmail.com>
- <20161027141120.jqvul6q7iz5fjsmb@atomide.com>
- <20161028165338.y5fyavbw5xfxweg3@atomide.com>
+Subject: Re: [PATCH v2 2/5] doc: dt: add cyclone-spi binding document
+Date: Mon, 31 Oct 2016 01:16:28 -0500
+Message-ID: <20161031061628.focirubj6qmxwyn3@rob-hp-laptop>
+References: <cover.1477669744.git.stillcompiling@gmail.com>
+ <2de74f6d2f2689b8ef090a9017db2ffb3bd319cb.1477669745.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161028165338.y5fyavbw5xfxweg3-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2de74f6d2f2689b8ef090a9017db2ffb3bd319cb.1477669745.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 28, 2016 at 09:53:38AM -0700, Tony Lindgren wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161027 07:59]:
-> > * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161027 00:57]:
-> > > On Tue, Oct 25, 2016 at 6:45 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > +/*
-> > > > + * For pinctrl binding, typically #pinctrl-cells is for the pin controller
-> > > > + * device, so either parent or grandparent. See pinctrl-bindings.txt.
-> > > > + */
-> > > > +static int pinctrl_find_cells_size(const struct device_node *np,
-> > > > +                                  const char *cells_name)
-> > > > +{
-> > > > +       int cells_size, error;
-> > > > +
-> > > > +       error = of_property_read_u32(np->parent, cells_name, &cells_size);
-> > > > +       if (error) {
-> > > > +               error = of_property_read_u32(np->parent->parent,
-> > > > +                                            cells_name, &cells_size);
-> > > > +               if (error)
-> > > > +                       return -ENOENT;
-> > > > +       }
-> > > > +
-> > > > +       return cells_size;
-> > > > +}
-> > > 
-> > > Can't we just hardcode this to "#pinctrl-cells" and skip the cells_name
-> > > parameter? We can parametrize it the day we need it instead.
-> > 
-> > Sure we can do that.
-> > 
-> > > The rest of the helpers look nice and clean.
-> > 
-> > OK cool thanks,
+On Fri, Oct 28, 2016 at 09:56:39AM -0700, Joshua Clayton wrote:
+> Describe a cyclonei-ps-spi devicetree entry, required features
 > 
-> Below is an updated version of this patch with documentation updated
-> and cells_name removed. I'll repost the whole series once the DT
-> binding has been reviewed.
-> 
-> Regards,
-> 
-> Tony
-> 8< -------------------------
-> From tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Date: Tue, 25 Oct 2016 08:33:34 -0700
-> Subject: [PATCH] pinctrl: Introduce generic #pinctrl-cells and
->  pinctrl_parse_index_with_args
-> 
-> Introduce #pinctrl-cells helper binding and generic helper functions
-> pinctrl_count_index_with_args() and pinctrl_parse_index_with_args().
-> 
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../bindings/pinctrl/pinctrl-bindings.txt          |  44 ++++++-
+>  .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+> new file mode 100644
+> index 0000000..c942281
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+> @@ -0,0 +1,23 @@
+> +Altera Cyclone Passive Serial SPI FPGA Manager
+> +
+> +Altera Cyclone FPGAs support a method of loading the bitstream over what is
+> +referred to as "passive serial".
+> +The passive serial link is not technically spi, and might require extra
+> +circuits in order to play nicely with other spi slaves on the same bus.
+> +
+> +See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
+> +
+> +Required properties:
+> +- compatible  : should contain "altr,cyclone-ps-spi-fpga-mgr"
+> +- reg         : spi slave id of the fpga
+> +- config-gpio : config pin (referred to as nCONFIG in the cyclone manual)
+> +- status-gpio : status pin (referred to as nSTATUS in the cyclone manual)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+'-gpios' is the preferred form.
 
->  drivers/pinctrl/devicetree.c                       | 144 +++++++++++++++++++++
->  drivers/pinctrl/devicetree.h                       |  21 +++
->  3 files changed, 208 insertions(+), 1 deletion(-)
+Looks like active low to me with nXXXX, but the example says active 
+high. Please be specific here.
+
+> +
+> +Example:
+> +	fpga_spi: evi-fpga-spi@0 {
+> +		compatible = "altr,cyclone-ps-spi-fpga-mgr";
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +		config-gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+> +		status-gpio = <&gpio4 11 GPIO_ACTIVE_HIGH>;
+> +	};
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
