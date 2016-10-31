@@ -1,90 +1,51 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] fpga: Add support for Lattice iCE40 FPGAs
-Date: Mon, 31 Oct 2016 10:04:45 -0700
-Message-ID: <CAAtXAHfPSFvA0xf_UHfcZCjd1DcxUHs8WE12pRmPQEzEq8CscQ@mail.gmail.com>
-References: <1477776746-3678-1-git-send-email-joel@airwebreathe.org.uk>
- <1477776746-3678-2-git-send-email-joel@airwebreathe.org.uk>
- <20161031063317.fqoaqemoiqhrrjzg@rob-hp-laptop> <f3c6dac1-bf10-c945-3e8a-9146e07253fd@airwebreathe.org.uk>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any
+ transmitting time for tx only devices
+Date: Mon, 31 Oct 2016 17:05:26 +0000
+Message-ID: <20161031170526.GA8183@gofer.mess.org>
+References: <20161027143601.GA5103@gofer.mess.org>
+ <20160901171629.15422-1-andi.shyti@samsung.com>
+ <20160901171629.15422-6-andi.shyti@samsung.com>
+ <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
+ <20160902084158.GA25342@gofer.mess.org>
+ <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
+ <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f3c6dac1-bf10-c945-3e8a-9146e07253fd-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 9:58 AM, Joel Holdsworth
-<joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org> wrote:
-> Hi Rob,
->
-> Thanks for taking the time review the patches.
->
->>>  .../bindings/fpga/lattice-ice40-fpga-mgr.txt       |  23 +++
->>
->>
->> It's preferred that bindings are a separate patch.
->
->
-> Can you just clarify a little? I'm happy to split the patch up, but I don't
-> understand how it could work without the bindings. For example, in
-> ice40_fpga_probe, I have to get the GPIOs with devm_gpiod_get for the driver
-> to work.
->
-> Maybe I'm missing something. Or do you just mean the documentation?
+Hi David, Andi,
 
-In general, the bindings go in a separate patch, that goes *before*
-the code that uses it.
-That way you're guaranteed it's there if you apply the series in order.
+On Mon, Oct 31, 2016 at 02:31:52PM +0000, David Härdeman wrote:
+> October 27, 2016 4:36 PM, "Sean Young" <sean@mess.org> wrote:
+> > Since we have to be able to switch between waiting and not waiting,
+> > we need some sort of ABI for this. I think this warrants a new ioctl;
+> > I'm not sure how else it can be done. I'll be sending out a patch
+> > shortly.
+> 
+> Hi Sean,
+> 
+> have you considered using a module param for the LIRC bridge module instead? As far as I understand it, this is an issue which is entirely internal to LIRC, and it's also not something which really needs to be changed on a per-device level (either you have a modern LIRC daemon or you don't, and all drivers should behave the same, no?).
 
-So [1/2] would be your bindings (ice40-fpga-mgr.txt) and [2/2] would
-be your driver.
+I still don't see how any of this would change anything for the ir-spi case:
+since it uses sync spi transfer, it's going to block anyway.
 
->
->
->>
->> -gpios is preferred.
->>
->> Please state direction and polarity.
->
->
-> Thanks, I'll fix that up.
->
->>
->>> +- creset_b-gpio:       GPIO connected to CRESET_B pin. Note that
->>> CRESET_B is
->>
->>
->> Don't use '_'. In this case, I'd just do cresetb-gpios.
->
->
-> So the pin is called CRESET_B in the datasheet. I think the _B refers to the
-> active-low polarity of the line.
->
-> So I would think it should be creset-b-gpios or creset-gpios. I'm not so
-> convinced cresetb-gpios is ideal, but it's a minor point.
->
->>
->>> +                       treated as an active-low output because the
->>> signal is
->>> +                       treated as an enable signal, rather than a reset.
->>> This
->>
->>
->> Though for enable signals, enable-gpios is fairly standard even if that
->> deviates from the pin name.
->
->
-> I would think that would just confuse the user, unless they dig out the
-> binding docs. The FPGA doesn't have an enable pin, and it's not at all
-> obvious that a "reset" pin means "enable" in this driver.
+> Another advantage is that the parameter would then go away if and when the lirc bridge ever goes away (yes, I can still dream, can't I?).
 
-That's why you have the binding docs ;-)
+The suggested ioctl is unique to lirc too and would disappear if the
+lirc ABI goes away. With a module parameter you would change the lirc ABI
+into an incompatible one. Not sure that is what module parameters should
+be used for.
 
-Cheers,
+Andi, it would be good to know what the use-case for the original change is.
 
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks
+Sean
