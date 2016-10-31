@@ -1,32 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] spi: sun6i: Add binding for Allwinner H3 SPI
- controller
-Date: Mon, 31 Oct 2016 01:06:06 -0500
-Message-ID: <20161031060606.fk6vhfzyxie6ebg5@rob-hp-laptop>
-References: <20161028065412.23008-1-woogyom.kim@gmail.com>
- <20161028065412.23008-4-woogyom.kim@gmail.com>
+Subject: Re: [PATCH 01/10] staging: iio: tsl2583: add of_match table for
+ device tree support
+Date: Mon, 31 Oct 2016 01:06:55 -0500
+Message-ID: <20161031060655.xhugdvrvuhzu4xjl@rob-hp-laptop>
+References: <1477648821-3786-1-git-send-email-masneyb@onstation.org>
+ <1477648821-3786-2-git-send-email-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161028065412.23008-4-woogyom.kim@gmail.com>
+In-Reply-To: <1477648821-3786-2-git-send-email-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: jic23@kernel.org, linux-iio@vger.kernel.org, devel@driverdev.osuosl.org, gregkh@linuxfoundation.org, lars@metafoo.de, pmeerw@pmeerw.net, knaack.h@gmx.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark.Rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 28, 2016 at 03:54:11PM +0900, Milo Kim wrote:
-> H3 SPI has same architecture as A31 except FIFO capacity.
-> To configure the buffer size separately, compatible property should be
-> different. Optional DMA specifiers and example are added.
+On Fri, Oct 28, 2016 at 06:00:12AM -0400, Brian Masney wrote:
+> Add device tree support for the tsl2583 IIO driver with no custom
+> properties.
 > 
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  .../devicetree/bindings/spi/spi-sun6i.txt          | 25 ++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/iio/light/tsl2583.txt      | 26 ++++++++++++++++++++++
+>  drivers/staging/iio/light/tsl2583.c                | 13 +++++++++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
