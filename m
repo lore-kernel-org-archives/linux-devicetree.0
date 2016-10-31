@@ -1,68 +1,68 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: RE: [PATCH v2 1/3] soc: Support for NPS HW scheduling
-Date: Mon, 31 Oct 2016 12:26:56 +0000
-Message-ID: <DB6PR0501MB2518D1746A4592686D45F253AAAE0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
- <1477224748-25223-2-git-send-email-noamca@mellanox.com>
- <20161031102659.GA1506@mai>
+From: Joel Holdsworth <joel@airwebreathe.org.uk>
+Subject: Re: [PATCH v4 2/2] fpga: Add support for Lattice iCE40 FPGAs
+Date: Mon, 31 Oct 2016 10:58:16 -0600
+Message-ID: <f3c6dac1-bf10-c945-3e8a-9146e07253fd@airwebreathe.org.uk>
+References: <1477776746-3678-1-git-send-email-joel@airwebreathe.org.uk>
+ <1477776746-3678-2-git-send-email-joel@airwebreathe.org.uk>
+ <20161031063317.fqoaqemoiqhrrjzg@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161031102659.GA1506@mai>
-Content-Language: en-US
+In-Reply-To: <20161031063317.fqoaqemoiqhrrjzg@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: atull@opensource.altera.com, moritz.fischer@ettus.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org]=20
-> Sent: Monday, October 31, 2016 12:27 PM
->>=20
->> This new header file is for NPS400 SoC (part of ARC architecture).
->> The header file includes macros for save/restore of HW scheduling.
->> The control of HW scheduling is acheived by writing core registers.
+Hi Rob,
 
->s/acheived/achieved/
-Thanks will update in V4 of this patch set
-...
+Thanks for taking the time review the patches.
 
->> +#ifndef SOC_NPS_MTM_H
->> +#define SOC_NPS_MTM_H
->> +
->> +#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
->> +#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
->> +
->> +static inline void hw_schd_save(unsigned int *flags) {
->> +	__asm__ __volatile__(
->> +	"       .word %1\n"
->> +	"       st r3,[%0]\n"
->> +	:
->> +	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
->> +	: "r3", "memory");
->> +}
->> +
+>>  .../bindings/fpga/lattice-ice40-fpga-mgr.txt       |  23 +++
+>
+> It's preferred that bindings are a separate patch.
 
->Wouldn't make sense to change the macro name to CTOP_INST_HWSCHD_SAVE_R3 ?
-The save of state into register (R3) by this dedicated instruction is only =
-part of action which main purpose
-Is to turn off the HW scheduler within this core (we call CTOP).
-We use it  (Off/On) at places we wish to keep consistency of data where mor=
-e than one HW thread can access.
-So I believe this way macro name reflects properly the functionality of thi=
-s instruction and the API functions
-schd_save()/schd_restore() provide similar format like with IRQs.
+Can you just clarify a little? I'm happy to split the patch up, but I 
+don't understand how it could work without the bindings. For example, in 
+ice40_fpga_probe, I have to get the GPIOs with devm_gpiod_get for the 
+driver to work.
 
-> +static inline void hw_schd_restore(unsigned int flags) {
-> +	__asm__ __volatile__(
-> +	"       mov r3, %0\n"
-> +	"       .word %1\n"
-> +	:
-> +	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
-> +	: "r3");
-> +}
-> +
-> +#endif /* SOC_NPS_MTM_H */
-> --
-> 1.7.1
->=20
+Maybe I'm missing something. Or do you just mean the documentation?
+
+
+>
+> -gpios is preferred.
+>
+> Please state direction and polarity.
+
+Thanks, I'll fix that up.
+
+>
+>> +- creset_b-gpio:	GPIO connected to CRESET_B pin. Note that CRESET_B is
+>
+> Don't use '_'. In this case, I'd just do cresetb-gpios.
+
+So the pin is called CRESET_B in the datasheet. I think the _B refers to 
+the active-low polarity of the line.
+
+So I would think it should be creset-b-gpios or creset-gpios. I'm not so 
+convinced cresetb-gpios is ideal, but it's a minor point.
+
+>
+>> +			treated as an active-low output because the signal is
+>> +			treated as an enable signal, rather than a reset. This
+>
+> Though for enable signals, enable-gpios is fairly standard even if that
+> deviates from the pin name.
+
+I would think that would just confuse the user, unless they dig out the 
+binding docs. The FPGA doesn't have an enable pin, and it's not at all 
+obvious that a "reset" pin means "enable" in this driver.
+
+Again, if you're adamant this is the correct convention it's no problem 
+to make the change - just seems weird to me. What do you think?
+
+
+Thanks
+Joel
