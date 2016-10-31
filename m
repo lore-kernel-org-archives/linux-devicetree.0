@@ -1,61 +1,114 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 3/4] mfd: altr-a10sr: Add Arria10 SR Monitor
-Date: Mon, 31 Oct 2016 08:02:22 +0000
-Message-ID: <20161031080222.GM13127@dell>
-References: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
- <1477598426-28125-4-git-send-email-tthayer@opensource.altera.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/3] soc: Support for NPS HW scheduling
+Date: Mon, 31 Oct 2016 09:37:46 +0200
+Message-ID: <1477899468-5494-2-git-send-email-noamca@mellanox.com>
+References: <1477899468-5494-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477598426-28125-4-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <1477899468-5494-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Oct 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add the Altera Arria10 DevKit System Resource Monitor functionality
-> to the MFD device.
-> 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
-> v2  Change from -mon to -monitor for clarity
-> ---
->  drivers/mfd/altera-a10sr.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> index 06e1f7f..30de652 100644
-> --- a/drivers/mfd/altera-a10sr.c
-> +++ b/drivers/mfd/altera-a10sr.c
-> @@ -33,6 +33,10 @@
->  		.name = "altr_a10sr_gpio",
->  		.of_compatible = "altr,a10sr-gpio",
->  	},
-> +	{
-> +		.name = "altr_a10sr_monitor",
-> +		.of_compatible = "altr,a10sr-monitor",
+This new header file is for NPS400 SoC (part of ARC architecture).
+The header file includes macros for save/restore of HW scheduling.
+The control of HW scheduling is acheived by writing core registers.
+This code was moved from arc/plat-eznps so it can be used
+from drivers/clocksource/, available only for CONFIG_EZNPS_MTM_EXT.
 
-So long as you use whichever compatible you agree on with Rob:
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ arch/arc/plat-eznps/include/plat/ctop.h |    2 -
+ include/soc/nps/mtm.h                   |   59 +++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+), 2 deletions(-)
+ create mode 100644 include/soc/nps/mtm.h
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> +	},
->  };
->  
->  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
-
+diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+index 9d6718c..ee2e32d 100644
+--- a/arch/arc/plat-eznps/include/plat/ctop.h
++++ b/arch/arc/plat-eznps/include/plat/ctop.h
+@@ -46,9 +46,7 @@
+ #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+ 
+ /* EZchip core instructions */
+-#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
+ #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
+-#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
+ #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
+ #define CTOP_INST_SCHD_RW			0x3E6F7004
+ #define CTOP_INST_SCHD_RD			0x3E6F7084
+diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
+new file mode 100644
+index 0000000..d2f5e7e
+--- /dev/null
++++ b/include/soc/nps/mtm.h
+@@ -0,0 +1,59 @@
++/*
++ * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
++ *
++ * This software is available to you under a choice of one of two
++ * licenses.  You may choose to be licensed under the terms of the GNU
++ * General Public License (GPL) Version 2, available from the file
++ * COPYING in the main directory of this source tree, or the
++ * OpenIB.org BSD license below:
++ *
++ *     Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *      - Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *
++ *      - Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
++ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ */
++
++#ifndef SOC_NPS_MTM_H
++#define SOC_NPS_MTM_H
++
++#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
++#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
++
++static inline void hw_schd_save(unsigned int *flags)
++{
++	__asm__ __volatile__(
++	"       .word %1\n"
++	"       st r3,[%0]\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
++	: "r3", "memory");
++}
++
++static inline void hw_schd_restore(unsigned int flags)
++{
++	__asm__ __volatile__(
++	"       mov r3, %0\n"
++	"       .word %1\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
++	: "r3");
++}
++
++#endif /* SOC_NPS_MTM_H */
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.7.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
