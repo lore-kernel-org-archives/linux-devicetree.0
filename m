@@ -1,51 +1,98 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any
- transmitting time for tx only devices
-Date: Mon, 31 Oct 2016 17:05:26 +0000
-Message-ID: <20161031170526.GA8183@gofer.mess.org>
-References: <20161027143601.GA5103@gofer.mess.org>
- <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-6-andi.shyti@samsung.com>
- <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
- <20160902084158.GA25342@gofer.mess.org>
- <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
- <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
+From: Rajat Jain <rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6] mwifiex: parse device tree node for PCIe
+Date: Mon, 31 Oct 2016 10:09:57 -0700
+Message-ID: <CAA93t1pOffe6F_g_jm2h7=rGhnvrsdVnuiBuc8pgoqWQM8EJvg@mail.gmail.com>
+References: <1477070156-109965-1-git-send-email-rajatja@google.com>
+ <1477084869-15612-1-git-send-email-rajatja@google.com> <20161030204131.pwfjqekpwd6nr3gb@rob-hp-laptop>
+Reply-To: rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161030204131.pwfjqekpwd6nr3gb@rob-hp-laptop>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David, Andi,
+On Sun, Oct 30, 2016 at 1:41 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Oct 21, 2016 at 02:21:09PM -0700, Rajat Jain wrote:
+>> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>
+>> This patch derives device tree node from pcie bus layer framework, and
+>> fixes a minor memory leak in mwifiex_pcie_probe() (in failure path).
+>> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+>> marvell-8xxx.txt) to accommodate PCIe changes.
+>>
+>> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> v2: Included vendor and product IDs in compatible strings for PCIe
+>> chipsets(Rob Herring)
+>> v3: Patch is created using -M option so that it will only include diff of
+>> original and renamed files(Rob Herring)
+>> Resend v3: Resending the patch because I missed to include device tree mailing
+>> while sending v3.
+>> v4: Fix error handling, also move-on even if no device tree node is present.
+>> v5: Update commit log to include memory leak, return -EINVAL instead of -1.
+>> v6: Remove an unnecessary error print, fix typo in commit log
+>>
+>>  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++--
+>>  drivers/net/wireless/marvell/mwifiex/pcie.c        | 36 +++++++++++++++++++---
+>>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 +-
+>>  3 files changed, 39 insertions(+), 8 deletions(-)
+>>  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+>> similarity index 91%
+>> rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>> rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+>> index c421aba..dfe5f8e 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+>> @@ -1,8 +1,8 @@
+>> -Marvell 8897/8997 (sd8897/sd8997) SDIO devices
+>> +Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+>>  ------
+>>
+>> -This node provides properties for controlling the marvell sdio wireless device.
+>> -The node is expected to be specified as a child node to the SDIO controller that
+>> +This node provides properties for controlling the marvell sdio/pcie wireless device.
+>
+> s/marvell/Marvell/
+> s/sdio\/pcie/SDIO\/PCIE/
+>
+>> +The node is expected to be specified as a child node to the SDIO/PCIE controller that
+>>  connects the device to the system.
+>>
+>>  Required properties:
+>> @@ -10,6 +10,8 @@ Required properties:
+>>    - compatible : should be one of the following:
+>>       * "marvell,sd8897"
+>>       * "marvell,sd8997"
+>> +     * "pci11ab,2b42"
+>> +     * "pci1b4b,2b42"
+>
 
-On Mon, Oct 31, 2016 at 02:31:52PM +0000, David Härdeman wrote:
-> October 27, 2016 4:36 PM, "Sean Young" <sean@mess.org> wrote:
-> > Since we have to be able to switch between waiting and not waiting,
-> > we need some sort of ABI for this. I think this warrants a new ioctl;
-> > I'm not sure how else it can be done. I'll be sending out a patch
-> > shortly.
-> 
-> Hi Sean,
-> 
-> have you considered using a module param for the LIRC bridge module instead? As far as I understand it, this is an issue which is entirely internal to LIRC, and it's also not something which really needs to be changed on a per-device level (either you have a modern LIRC daemon or you don't, and all drivers should behave the same, no?).
+Hi Rob,
 
-I still don't see how any of this would change anything for the ir-spi case:
-since it uses sync spi transfer, it's going to block anyway.
+> I think I already said this, but you have the vendor and product IDs
+> reversed.
 
-> Another advantage is that the parameter would then go away if and when the lirc bridge ever goes away (yes, I can still dream, can't I?).
+Actually Marvell has 2 vendor IDs assigned to it. In include/linux/pci_ids.h:
 
-The suggested ioctl is unique to lirc too and would disappear if the
-lirc ABI goes away. With a module parameter you would change the lirc ABI
-into an incompatible one. Not sure that is what module parameters should
-be used for.
+#define PCI_VENDOR_ID_MARVELL           0x11ab
+#define PCI_VENDOR_ID_MARVELL_EXT       0x1b4b
 
-Andi, it would be good to know what the use-case for the original change is.
+So in this case the compatible property describes a single product ID,
+with both possible vendor IDs.
+
+Thanks,
+
+Rajat
 
 
-Thanks
-Sean
+
+>
+> Rob
