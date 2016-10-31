@@ -1,54 +1,64 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2] Documentation: synopsys-dw-mshc: add binding for
- reset-names
-Date: Mon, 31 Oct 2016 11:49:41 +0900
-Message-ID: <20161031024942.4415-2-jh80.chung@samsung.com>
-References: <20161031024942.4415-1-jh80.chung@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20161031024942.4415-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: Update domain-idle-state binding to use
+ correct compatibles
+Date: Sun, 30 Oct 2016 21:50:53 -0500
+Message-ID: <20161031025053.t2nxazou35vnna7y@rob-hp-laptop>
+References: <1477409199-52182-1-git-send-email-lina.iyer@linaro.org>
+ <1477409199-52182-4-git-send-email-lina.iyer@linaro.org>
+ <7hh980taqp.fsf@baylibre.com>
+ <68dc67d1-b443-f7b1-6229-0ac54e403d61@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <68dc67d1-b443-f7b1-6229-0ac54e403d61@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Lina Iyer <lina.iyer@linaro.org>, ulf.hansson@linaro.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add reset-names property for binding dw-mmc controller.
-It might be used together with "reset" property.
--  Note: It must be "reset" as name.
+On Wed, Oct 26, 2016 at 09:57:35AM +0100, Sudeep Holla wrote:
+> 
+> 
+> On 25/10/16 21:49, Kevin Hilman wrote:
+> > Lina Iyer <lina.iyer@linaro.org> writes:
+> > 
+> > > Update domain-idle-state binding to use "domain-idle-state" compatible
+> > > from Documentation/devicetree/bindings/arm/idle-states.txt.
+> > > 
+> > > Cc: <devicetree@vger.kernel.org>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/power/power_domain.txt | 9 +++++----
+> > >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > With no current users for this, I don't see the point of adding a
+> > compatible now.
+> > 
+> > IMO, this should wait and be added with the identified user we can
+> > discuss it then.
+> > 
+> 
+> No, IMO it needs to be used for the proposed SoC idle/genpd solution.
+> 
+> I understand the nodes that are "arm,idle-state" compatible can be used
+> for this new SoC hierarchical idle management, but it was never defined
+> for that use originally. So this new feature must be advertised by the
+> firmware with the presence of "domain-idle-state".
+> 
+> Yes we might have other ways to detect that but I have already seen that
+> broken on the reference platform, so we need alternate/DT way to specify
+> that.
+> 
+> Not all existing "arm,idle-state" compatible nodes will be capable of
+> supporting this new SoC idle feature. It's just better and safer for a
+> new feature getting added that relies on DT to have a new compatible.
 
-Fixes: d6786fefe816 ("mmc: dw_mmc: add reset support to dwmmc host controller")
+Or perhaps you should describe something new rather than trying to 
+graft in what's there. This combination of compatible strings looks a 
+bit odd to me. Though, I've not really spent much time thinking about 
+this.
 
-Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-index 4e00e85..bfa461a 100644
---- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-@@ -43,6 +43,9 @@ Optional properties:
-   reset signal present internally in some host controller IC designs.
-   See Documentation/devicetree/bindings/reset/reset.txt for details.
- 
-+* reset-names: request name for using "resets" property. Must be "reset".
-+	(It will be used together with "resets" property.)
-+
- * clocks: from common clock binding: handle to biu and ciu clocks for the
-   bus interface unit clock and the card interface unit clock.
- 
-@@ -103,6 +106,8 @@ board specific portions as listed below.
- 		interrupts = <0 75 0>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		resets = <&rst 20>;
-+		reset-names = "reset";
- 	};
- 
- [board specific internal DMA resources]
--- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
