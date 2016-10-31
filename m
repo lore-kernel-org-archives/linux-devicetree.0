@@ -1,171 +1,41 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v3 7/7] MIPS: jz4740: Remove obsolete code
-Date: Mon, 31 Oct 2016 21:39:51 +0100
-Message-ID: <20161031203951.5444-7-paul@crapouillou.net>
-References: <20161030230247.20538-1-paul@crapouillou.net>
- <20161031203951.5444-1-paul@crapouillou.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: da850-lcdk: enable mstpri and ddrctl
+ nodes
+Date: Mon, 31 Oct 2016 14:46:17 -0600
+Message-ID: <m2mvhk1c2u.fsf@baylibre.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-5-git-send-email-bgolaszewski@baylibre.com>
+ <12222113.L5elJM2tqN@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC433LF43MBBBVGY33AAKGQE5ZFPFVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161031203951.5444-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <12222113.L5elJM2tqN@avalon> (Laurent Pinchart's message of "Mon,
+ 31 Oct 2016 22:22:54 +0200")
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit removes two things:
-- The platform_device that corresponds to the RTC driver, since we now
-  probe this driver from devicetree;
-- The platform power-off code, since all the jz4740-based platforms are
-  now using the jz4740-rtc driver as the system power controller.
-
-Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
----
- arch/mips/include/asm/mach-jz4740/platform.h |  1 -
- arch/mips/jz4740/platform.c                  | 21 ----------
- arch/mips/jz4740/reset.c                     | 63 ----------------------------
- 3 files changed, 85 deletions(-)
-
-v2: New patch in this series
-v3: No change
-
-diff --git a/arch/mips/include/asm/mach-jz4740/platform.h b/arch/mips/include/asm/mach-jz4740/platform.h
-index 073b8bf..3645974 100644
---- a/arch/mips/include/asm/mach-jz4740/platform.h
-+++ b/arch/mips/include/asm/mach-jz4740/platform.h
-@@ -22,7 +22,6 @@
- extern struct platform_device jz4740_udc_device;
- extern struct platform_device jz4740_udc_xceiv_device;
- extern struct platform_device jz4740_mmc_device;
--extern struct platform_device jz4740_rtc_device;
- extern struct platform_device jz4740_i2c_device;
- extern struct platform_device jz4740_nand_device;
- extern struct platform_device jz4740_framebuffer_device;
-diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
-index 2f1dab3..5b7cdd6 100644
---- a/arch/mips/jz4740/platform.c
-+++ b/arch/mips/jz4740/platform.c
-@@ -88,27 +88,6 @@ struct platform_device jz4740_mmc_device = {
- 	.resource	= jz4740_mmc_resources,
- };
- 
--/* RTC controller */
--static struct resource jz4740_rtc_resources[] = {
--	{
--		.start	= JZ4740_RTC_BASE_ADDR,
--		.end	= JZ4740_RTC_BASE_ADDR + 0x38 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.start	= JZ4740_IRQ_RTC,
--		.end	= JZ4740_IRQ_RTC,
--		.flags	= IORESOURCE_IRQ,
--	},
--};
--
--struct platform_device jz4740_rtc_device = {
--	.name		= "jz4740-rtc",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_rtc_resources),
--	.resource	= jz4740_rtc_resources,
--};
--
- /* I2C controller */
- static struct resource jz4740_i2c_resources[] = {
- 	{
-diff --git a/arch/mips/jz4740/reset.c b/arch/mips/jz4740/reset.c
-index 954e669..67780c4 100644
---- a/arch/mips/jz4740/reset.c
-+++ b/arch/mips/jz4740/reset.c
-@@ -57,71 +57,8 @@ static void jz4740_restart(char *command)
- 	jz4740_halt();
- }
- 
--#define JZ_REG_RTC_CTRL			0x00
--#define JZ_REG_RTC_HIBERNATE		0x20
--#define JZ_REG_RTC_WAKEUP_FILTER	0x24
--#define JZ_REG_RTC_RESET_COUNTER	0x28
--
--#define JZ_RTC_CTRL_WRDY		BIT(7)
--#define JZ_RTC_WAKEUP_FILTER_MASK	0x0000FFE0
--#define JZ_RTC_RESET_COUNTER_MASK	0x00000FE0
--
--static inline void jz4740_rtc_wait_ready(void __iomem *rtc_base)
--{
--	uint32_t ctrl;
--
--	do {
--		ctrl = readl(rtc_base + JZ_REG_RTC_CTRL);
--	} while (!(ctrl & JZ_RTC_CTRL_WRDY));
--}
--
--static void jz4740_power_off(void)
--{
--	void __iomem *rtc_base = ioremap(JZ4740_RTC_BASE_ADDR, 0x38);
--	unsigned long wakeup_filter_ticks;
--	unsigned long reset_counter_ticks;
--	struct clk *rtc_clk;
--	unsigned long rtc_rate;
--
--	rtc_clk = clk_get(NULL, "rtc");
--	if (IS_ERR(rtc_clk))
--		panic("unable to get RTC clock");
--	rtc_rate = clk_get_rate(rtc_clk);
--	clk_put(rtc_clk);
--
--	/*
--	 * Set minimum wakeup pin assertion time: 100 ms.
--	 * Range is 0 to 2 sec if RTC is clocked at 32 kHz.
--	 */
--	wakeup_filter_ticks = (100 * rtc_rate) / 1000;
--	if (wakeup_filter_ticks < JZ_RTC_WAKEUP_FILTER_MASK)
--		wakeup_filter_ticks &= JZ_RTC_WAKEUP_FILTER_MASK;
--	else
--		wakeup_filter_ticks = JZ_RTC_WAKEUP_FILTER_MASK;
--	jz4740_rtc_wait_ready(rtc_base);
--	writel(wakeup_filter_ticks, rtc_base + JZ_REG_RTC_WAKEUP_FILTER);
--
--	/*
--	 * Set reset pin low-level assertion time after wakeup: 60 ms.
--	 * Range is 0 to 125 ms if RTC is clocked at 32 kHz.
--	 */
--	reset_counter_ticks = (60 * rtc_rate) / 1000;
--	if (reset_counter_ticks < JZ_RTC_RESET_COUNTER_MASK)
--		reset_counter_ticks &= JZ_RTC_RESET_COUNTER_MASK;
--	else
--		reset_counter_ticks = JZ_RTC_RESET_COUNTER_MASK;
--	jz4740_rtc_wait_ready(rtc_base);
--	writel(reset_counter_ticks, rtc_base + JZ_REG_RTC_RESET_COUNTER);
--
--	jz4740_rtc_wait_ready(rtc_base);
--	writel(1, rtc_base + JZ_REG_RTC_HIBERNATE);
--
--	jz4740_halt();
--}
--
- void jz4740_reset_init(void)
- {
- 	_machine_restart = jz4740_restart;
- 	_machine_halt = jz4740_halt;
--	pm_power_off = jz4740_power_off;
- }
--- 
-2.9.3
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+TGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cml0
+ZXM6Cgo+IEhpIEJhcnRvc3osCj4KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPgo+IE9uIE1v
+bmRheSAzMSBPY3QgMjAxNiAxNTo0NTozNyBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOgo+PiBF
+bmFibGUgdGhlIE1TVFBSSSBjb25maWd1cmF0aW9uIGFuZCBERFIyL21ERFIgbWVtb3J5IGNvbnRy
+b2xsZXIKPj4gbm9kZXMgb24gZGE4NTAtbGNkay4gVGhpcyBpcyBuZWVkZWQgaW4gb3JkZXIgdG8g
+YWRqdXN0IHRoZSBtZW1vcnkKPj4gdGhyb3VnaHB1dCBjb25zdHJhaW50cyBmb3IgYmV0dGVyIHRp
+bGNkYyBzdXBwb3J0Lgo+Cj4gSXMgdGhlcmUgYSByZWFzb24gbm90IHRvIGVuYWJsZSB0aGVzZSB1
+bmNvbmRpdGlvbmFsbHkgaW4gZGE4NTAuZHRzaSAob3IgcmF0aGVyIAo+IG5vdCBkaXNhYmxpbmcg
+dGhlbSkgaW5zdGVhZCBvZiBoYW5kbGluZyBpdCBwZXIgYm9hcmQgPwoKUmlnaHQuICBUaGV5IHNo
+b3VsZCBiZSBlbmFibGVkIGJ5IGRlZmF1bHQgaW4gRFQuICBUaGUgZHJpdmVycyBhbHJlYWR5Cmhh
+dmUgYm9hcmQtc3BlY2lmaWMgY29tcGF0aWJsZSBjaGVja3MuCgpLZXZpbgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
