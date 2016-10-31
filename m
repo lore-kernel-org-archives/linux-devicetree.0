@@ -1,51 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Sun, 30 Oct 2016 23:40:48 -0500
-Message-ID: <20161031044048.avyndpys2aggrjb4@rob-hp-laptop>
-References: <20161026233228.15219-1-michael.scott@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] Documentation: pv88080: Move binding document
+Date: Sun, 30 Oct 2016 23:44:03 -0500
+Message-ID: <20161031044403.a34ylc6tpbp2pg7h@rob-hp-laptop>
+References: <cover.1477530195.git.eric.jeong@diasemi.com>
+ <4e0bd042e35f13c06511ca9b3f790b5ceaf34451.1477530195.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161026233228.15219-1-michael.scott@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Scott <michael.scott@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
+In-Reply-To: <4e0bd042e35f13c06511ca9b3f790b5ceaf34451.1477530195.git.eric.jeong-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-GPIO <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 04:32:28PM -0700, Michael Scott wrote:
-> Initial pinctrl driver for QCOM msm8994 platforms.
+On Thu, Oct 27, 2016 at 10:03:14AM +0900, Eric Jeong wrote:
 > 
-> In order to continue the initial board support for QCOM msm8994/msm8992
-> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's put
-> a proper pinctrl driver in place.
+> From: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 > 
-> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to enable
-> basic UART.  Beyond the first few pins the rest are different enough to justify
-> it's own driver.
+> The change is to move pv88080 binding document 
+> from the regulator directory to mfd binding directory
+> for PV88080 PMIC MFD support.
 > 
-> Note: This driver is also be used by QCOM's msm8992 platform as it's TLM block
-> is the same.
 > 
-> - Initial formatting and style was taken from the msm8x74 pinctrl driver added
->   by Björn Andersson <bjorn.andersson@linaro.org>
-> - Data was then adjusted per QCOM MSM8994 documentation for Top Level Multiplexing
-> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
->   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994 content
+> Signed-off-by: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Michael Scott <michael.scott@linaro.org>
 > ---
+> This patch applies against linux-next and next-20161026
 > 
-> V1 -> V2: fixed missing FUNCTION(nav_pps) and removed 3 odd newlines between blsp_i2c4_groups and cci_timer0_groups
+> Hi,
 > 
->  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt      |  175 +++
+> Change since PATCH V1
+>  - Patch separated from PATCH V1
+> 
+> Regards,
+> Eric Jeong, Dialog Semiconductor Ltd.
+> 
+> 
+>  Documentation/devicetree/bindings/mfd/pv88080.txt  |   63 ++++++++++++++++++++
+>  .../devicetree/bindings/regulator/pv88080.txt      |   62 -------------------
+>  2 files changed, 63 insertions(+), 62 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/pv88080.txt
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/pv88080.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Please resend using git-format-patch -M option.
 
->  drivers/pinctrl/qcom/Kconfig                       |    9 +
->  drivers/pinctrl/qcom/Makefile                      |    1 +
->  drivers/pinctrl/qcom/pinctrl-msm8994.c             | 1400 ++++++++++++++++++++
->  4 files changed, 1585 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8994.c
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
