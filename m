@@ -1,34 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Mon, 31 Oct 2016 00:14:36 -0500
-Message-ID: <20161031051436.erbbxxz5swj4i5hq@rob-hp-laptop>
-References: <1477560847-8929-1-git-send-email-abailon@baylibre.com>
- <1477560847-8929-2-git-send-email-abailon@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] iommu/ipmmu-vmsa: Add r8a7796 DT binding
+Date: Mon, 31 Oct 2016 00:15:16 -0500
+Message-ID: <20161031051516.zpmoynwudyxlvppg@rob-hp-laptop>
+References: <20161027104510.27104.53523.sendpatchset@little-apple>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1477560847-8929-2-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20161027104510.27104.53523.sendpatchset@little-apple>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, joro@8bytes.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 11:34:04AM +0200, Alexandre Bailon wrote:
-> From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+On Thu, Oct 27, 2016 at 07:45:10PM +0900, Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
 > 
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+> Update the IPMMU DT binding documentation to include the r8a7796 compat
+> string for R-Car M3-W.
 > 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> 
+>  Changes since V1:
+>  - Added Acked-by from Laurent - thanks!
+> 
+>  Now broken out, however earlier V1 posted as part of:
+>  [PATCH 0/3] iommu/ipmmu-vmsa: Initial r8a7796 support
+> 
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
