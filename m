@@ -1,62 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] MIPS: jz4740: DTS: Probe the
- jz4740-rtc driver from devicetree
-Date: Mon, 31 Oct 2016 12:50:35 +0300
-Message-ID: <0c9af39c-85e4-5372-2285-620b2c2863ad@cogentembedded.com>
-References: <20161030230247.20538-1-paul@crapouillou.net>
- <20161030230247.20538-6-paul@crapouillou.net>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
+Date: Mon, 31 Oct 2016 15:22:03 +0530
+Message-ID: <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
+References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+ <20161031043015.74ppaship5nqfaqt@rob-hp-laptop>
+ <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <rtc-linux+bncBC6MFNV32EFRB35H3TAAKGQEU5U23GA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161030230247.20538-6-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Bartosz,
 
-On 10/31/2016 2:02 AM, Paul Cercueil wrote:
+On Monday 31 October 2016 03:10 PM, Bartosz Golaszewski wrote:
+> 2016-10-31 5:30 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Wed, Oct 26, 2016 at 07:35:55PM +0200, Bartosz Golaszewski wrote:
+>>> Create the driver for the da8xx master peripheral priority
+>>> configuration and implement support for writing to the three
+>>> Master Priority registers on da850 SoCs.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+>>>  drivers/bus/Kconfig                                |   9 +
+>>>  drivers/bus/Makefile                               |   2 +
+>>>  drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
+>>>  4 files changed, 297 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>  create mode 100644 drivers/bus/da8xx-mstpri.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>> new file mode 100644
+>>> index 0000000..225af09
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>> @@ -0,0 +1,20 @@
+>>> +* Device tree bindings for Texas Instruments da8xx master peripheral
+>>> +  priority driver
+>>> +
+>>> +DA8XX SoCs feature a set of registers allowing to change the priority of all
+>>> +peripherals classified as masters.
+>>> +
+>>> +Documentation:
+>>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible:                "ti,da850-mstpri", "syscon" - for da850 based boards
+>>
+>> Drop syscon. Doesn't look like it is needed and the example doesn't
+>> match.
+> 
+> Hi Rob,
+> 
+> it is needed: syscon_regmap_lookup_by_compatible() fails without it. I
+> fixed the example instead.
 
-> Now that the jz4740-rtc driver supports devicetree, we can add a
-> devicetree node for it.
->
-> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-> Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
-> ---
->  arch/mips/boot/dts/ingenic/jz4740.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> v2: Previous patch 5/5 was garbage. This is a new patch.
->
-> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> index f6ae6ed..c6acd6a 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-> @@ -44,6 +44,17 @@
->  		#clock-cells = <1>;
->  	};
->
-> +	rtc_dev: jz4740-rtc@10003000 {
+Why are master priority registers under syscon? This driver should be
+the only entity touching them. So do we need an MFD driver?
 
-    Just "rtc@10003000" to comply with the DT spec.
-
-[...]
-
-MBR, Sergei
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
