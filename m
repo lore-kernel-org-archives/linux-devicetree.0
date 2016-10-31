@@ -1,24 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH resent v3 3/3] ASoC: omap-abe-twl6040: fix typo in
- bindings documentation
-Date: Sun, 30 Oct 2016 22:07:40 -0500
-Message-ID: <20161031030740.lih7ptbzv4vn7ll6@rob-hp-laptop>
-References: <cover.1477417090.git.hns@goldelico.com>
- <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns@goldelico.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: si7020: Add devicetree support and trivial bindings
+Date: Sun, 30 Oct 2016 22:09:39 -0500
+Message-ID: <20161031030939.3q6jpuom7jxphl2o@rob-hp-laptop>
+References: <20161025192010.11195-1-contact@paulk.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <f2ade237f55685f4fdb2aaa127995f3ccb986bb3.1477417090.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Russell King <linux@armlinux.org.uk>, ldewangan@nvidia.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, marek@goldelico.com, kernel@pyra-handheld.com, letux-kernel@openphoenux.org
+In-Reply-To: <20161025192010.11195-1-contact-W9ppeneeCTY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 07:38:11PM +0200, H. Nikolaus Schaller wrote:
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Tue, Oct 25, 2016 at 09:20:10PM +0200, Paul Kocialkowski wrote:
+> This adds devicetree support for the si7020 iio driver. Since it works
+> well without requiring any additional property, its compatible string is
+> added to the trivial i2c devices bindings list.
+> 
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt |  1 +
+>  drivers/iio/humidity/si7020.c                             | 11 ++++++++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
