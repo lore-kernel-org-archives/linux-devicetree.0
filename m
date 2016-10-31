@@ -1,55 +1,95 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] ARM: dts: bcm283x: fix typo in mailbox address
-Date: Mon, 31 Oct 2016 11:06:22 -0700
-Message-ID: <87zilkqtpd.fsf@eliezer.anholt.net>
-References: <6b13e96d-78d1-fcab-4273-803310ae4da6@suse.de> <1477848139-32267-1-git-send-email-stefan.wahren@i2se.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] ARM: BCM5301X: Add back handler ignoring external
+ imprecise aborts
+Date: Mon, 31 Oct 2016 11:08:47 -0700
+Message-ID: <a491509e-5cfc-fc7d-0011-dfcab3c884ea@broadcom.com>
+References: <20161029111229.26875-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477848139-32267-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161029111229.26875-1-zajec5@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Hauke Mehrtens <hauke@hauke-m.de>, Jon Mason <jonmason@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hi Rafal,
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> The address of the mailbox node in the bcm283x.dtsi also has a typo.
-> So fix it accordingly.
+On 16-10-29 04:12 AM, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 >
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> Fixes: 05b682b7a3b2 ("ARM: bcm2835: dt: Add the mailbox to the device tre=
-e")
+> Since early BCM5301X days we got abort handler that was removed by
+> commit 937b12306ea79 ("ARM: BCM5301X: remove workaround imprecise abort
+> fault handler"). It assumed we need to deal only with pending aborts
+> left by the bootloader. Unfortunately this isn't true for BCM5301X.
+>
+> When probing PCI config space (device enumeration) it is expected to
+> have master aborts on the PCI bus. Most bridges don't forward (or they
+> allow disabling it) these errors onto the AXI/AMBA bus but not the
+> Northstar (BCM5301X) one.
+Should we only add this workaround code if CONFIG_PCI is on then?
 
-Pulled to bcm2835-dt-next.  Thanks!
+>
+> iProc PCIe controller on Northstar seems to be some older one, without
+> a control register for errors forwarding. It means we need to workaround
+> this at platform level. All newer platforms are not affected by this
+> issue.
+>
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+>  arch/arm/mach-bcm/bcm_5301x.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm/mach-bcm/bcm_5301x.c b/arch/arm/mach-bcm/bcm_5301x.c
+> index c8830a2..fe067f6 100644
+> --- a/arch/arm/mach-bcm/bcm_5301x.c
+> +++ b/arch/arm/mach-bcm/bcm_5301x.c
+> @@ -9,14 +9,42 @@
+>  #include <asm/hardware/cache-l2x0.h>
+>
+>  #include <asm/mach/arch.h>
+> +#include <asm/siginfo.h>
+> +#include <asm/signal.h>
+> +
+> +#define FSR_EXTERNAL		(1 << 12)
+> +#define FSR_READ		(0 << 10)
+> +#define FSR_IMPRECISE		0x0406
+>
+>  static const char *const bcm5301x_dt_compat[] __initconst = {
+>  	"brcm,bcm4708",
+>  	NULL,
+>  };
+>
+> +static int bcm5301x_abort_handler(unsigned long addr, unsigned int fsr,
+> +				  struct pt_regs *regs)
+> +{
+> +	/*
+> +	 * We want to ignore aborts forwarded from the PCIe bus that are
+> +	 * expected and shouldn't really be passed by the PCIe controller.
+> +	 * The biggest disadvantage is the same FSR code may be reported when
+> +	 * reading non-existing APB register and we shouldn't ignore that.
+> +	 */
+> +	if (fsr == (FSR_EXTERNAL | FSR_READ | FSR_IMPRECISE))
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+> +static void __init bcm5301x_init_early(void)
+> +{
+> +	hook_fault_code(16 + 6, bcm5301x_abort_handler, SIGBUS, BUS_OBJERR,
+> +			"imprecise external abort");
+> +}
+> +
+>  DT_MACHINE_START(BCM5301X, "BCM5301X")
+>  	.l2c_aux_val	= 0,
+>  	.l2c_aux_mask	= ~0,
+>  	.dt_compat	= bcm5301x_dt_compat,
+> +	.init_early	= bcm5301x_init_early,
+>  MACHINE_END
+>
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJYF4gfAAoJELXWKTbR/J7oFI8P/36CVo2AfHCO+Ra2Jl4I96q5
-YtYK1pKIjuc7W+g9T1IFGCQ8SQpqG5ONa9AenrswSf2wd9gkLIrcw67e9NyslMS9
-hmLICPWTMSobJycXeZX11gp5iheQfe1no6vUcqDfWvNpmWLsArly8MluurGZwyoc
-SP5JLood3wf/ZEN0NiDRWnm5BnFgyPVM7Dor96y3HUHLDcWoChYSNhKjMiOggSKv
-uBb40a1Prr6/OxpVBnNVU57X+t80Uth7DTjWUh7dZNVGxP3D5Y0sRQKhUNeyq0ow
-QJ6W3GUN7g1QjtfSzqnN8sq80Ex9ZV9KIuQo2jNO+QwH+zsVqraduRM5zgJlBsp2
-JbVvW4zKR3Ku244aQmBLqcYXxzWZXxXhQ+MYfMuDvBnio1ZG2cpE440EJHOSnBX/
-pZLHILp8ZOP0HfVXQjnywjhsuYe5Ka6iGNDO3g3hkZ2LtFuvzxHclpFGF5n/Yc0h
-u7GdTgZdWCId3pTGJyBrIfcV9d+psqterKXjMYqkgL2eSfbKrJ8urZiFddjH16El
-c0lAvBkyTQv7DDOtykPSriAMdzziW4J8JEP+9luefgEekjw64NtguTOuIpVPbkrq
-U3/RnzYlUlRu424SrzjVqvqBbNlOiMTB3lM/J/QkH7WR2JLVnLVg2vfFT04L7748
-8q4iLsBWcQhUsePINNlA
-=6XCV
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Scott
