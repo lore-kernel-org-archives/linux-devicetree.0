@@ -1,45 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: da850-lcdk: enable mstpri and ddrctl
- nodes
-Date: Mon, 31 Oct 2016 22:22:54 +0200
-Message-ID: <12222113.L5elJM2tqN@avalon>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
- <1477925138-23457-5-git-send-email-bgolaszewski@baylibre.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
+ moderation
+Date: Mon, 31 Oct 2016 13:28:28 -0700
+Message-ID: <d2e54dd2-a400-39d4-3fc9-c41ba45bdb18@synopsys.com>
+References: <cover.1477424426.git.johnyoun@synopsys.com>
+ <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
+ <87eg32t6fn.fsf@linux.intel.com>
+ <911fcadd-b852-d9db-c733-2df7c106c8d1@synopsys.com>
+ <87shrgss3f.fsf@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477925138-23457-5-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87shrgss3f.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydG9zeiwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5IDMxIE9jdCAy
-MDE2IDE1OjQ1OjM3IEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4gRW5hYmxlIHRoZSBNU1RQ
-UkkgY29uZmlndXJhdGlvbiBhbmQgRERSMi9tRERSIG1lbW9yeSBjb250cm9sbGVyCj4gbm9kZXMg
-b24gZGE4NTAtbGNkay4gVGhpcyBpcyBuZWVkZWQgaW4gb3JkZXIgdG8gYWRqdXN0IHRoZSBtZW1v
-cnkKPiB0aHJvdWdocHV0IGNvbnN0cmFpbnRzIGZvciBiZXR0ZXIgdGlsY2RjIHN1cHBvcnQuCgpJ
-cyB0aGVyZSBhIHJlYXNvbiBub3QgdG8gZW5hYmxlIHRoZXNlIHVuY29uZGl0aW9uYWxseSBpbiBk
-YTg1MC5kdHNpIChvciByYXRoZXIgCm5vdCBkaXNhYmxpbmcgdGhlbSkgaW5zdGVhZCBvZiBoYW5k
-bGluZyBpdCBwZXIgYm9hcmQgPwoKPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9k
-YTg1MC1sY2RrLmR0cyB8IDggKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
-cygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwo+
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgaW5kZXggNDc0NzYyOS4uYjM5Nzk2
-ZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwo+ICsrKyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCj4gQEAgLTI0MywzICsyNDMsMTEgQEAK
-PiAgCQl9Owo+ICAJfTsKPiAgfTsKPiArCj4gKyZtc3Rwcmkgewo+ICsJc3RhdHVzID0gIm9rYXki
-Owo+ICt9Owo+ICsKPiArJmRkcmN0bCB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307CgotLSAK
-UmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On 10/28/2016 3:09 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+>> On 10/27/2016 3:47 AM, Felipe Balbi wrote:
+>>>
+>>> Hi,
+>>>
+>>> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+>>>> Add interrupt moderation interval binding for dwc3.
+>>>>
+>>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> index e3e6983..17de9fc 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>>> @@ -53,6 +53,7 @@ Optional properties:
+>>>>   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+>>>>  	register for post-silicon frame length adjustment when the
+>>>>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+>>>> + - snps,imod_interval: the interrupt moderation interval.
+>>>
+>>> on top of all other comments, what's the unit here? nanoseconds? clock cycles?
+>>>
+>>
+>> Number of 250 ns intervals. I'll update the description to clarify.
+> 
+> it's probably better to add it in nanoseconds itself, then let driver
+> compute register value with DIV_ROUND_UP()
+> 
+
+I'm fine with it either way, but I think "increments of 250 ns" is
+slightly cleaner in that it reflects the exact settings that are
+possible and documented, and also fits neatly into a u16.
+
+I assume you'd also like the internal variable dwc3->imod_interval
+changed as well?
+
+Regards,
+John
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
