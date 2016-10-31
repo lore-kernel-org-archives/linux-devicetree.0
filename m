@@ -1,173 +1,108 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/7] base: soc: Introduce soc_device_match() interface
-Date: Mon, 31 Oct 2016 12:30:50 +0100
-Message-ID: <1477913455-5314-3-git-send-email-geert+renesas@glider.be>
-References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC 1/2] mmc: sdhci: dt: Add device tree properties sdhci-caps
+ and sdhci-caps-mask
+Date: Mon, 31 Oct 2016 20:59:10 +0900
+Message-ID: <6031045c-0eb2-7bea-1efd-874dade0f009@samsung.com>
+References: <1477425538-3315-1-git-send-email-zach.brown@ni.com>
+ <1477425538-3315-2-git-send-email-zach.brown@ni.com>
+ <CGME20161028081315epcas3p4bea31304360f9a6a4a12c5c54334eaa9@epcas3p4.samsung.com>
+ <CAPDyKFpKoXd9yuX5vR-CACtXKGysmV0AqKnjxQ+hTGU+kgwceQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAPDyKFpKoXd9yuX5vR-CACtXKGysmV0AqKnjxQ+hTGU+kgwceQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 10/28/2016 05:12 PM, Ulf Hansson wrote:
+> On 25 October 2016 at 21:58, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org> wrote:
+>> On some systems the sdhci capabilty registers are incorrect for one
+>> reason or another.
+>>
+>> The sdhci-caps-mask property specifies which bits in the registers
+>> are incorrect and should be turned off before using sdhci-caps to turn
+>> on bits.
+>>
+>> The sdhci-caps property specifies which bits should be turned on.
+>>
+>> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/mmc.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> index 8a37782..1415aa0 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> 
+> The bindings in this document are common mmc DT bindings, not bindings
+> specific to a mmc controller.
+> 
+> So unless these bindings are applicable for another controller than
+> sdhci, I suggest we create a new file to document these.
+> How about Documentation/devicetree/bindings/mmc/sdhci.txt?
+> 
+>> @@ -52,6 +52,13 @@ Optional properties:
+>>  - no-sdio: controller is limited to send sdio cmd during initialization
+>>  - no-sd: controller is limited to send sd cmd during initialization
+>>  - no-mmc: controller is limited to send mmc cmd during initialization
+>> +- sdhci-caps-mask: The sdhci capabilities registers are incorrect. This 64bit
+> 
+> /s/registers/register
+> 
+> This applies to some more places below as well.
+> 
+>> +  property corresponds to the bits in the sdhci capabilty registers. If the bit
+>> +  is on in the mask then the bit is incorrect in the registers and should be
+>> +  turned off.
+>> +- sdhci-caps: The sdhci capabilities registers are incorrect. This 64bit
+>> +  property corresponds to the bits in the sdhci capability registers. If the
+>> +  bit is on in the property then the bit should be on in the reigsters.
+> 
+> /s/reigsters/register
+> 
+>>
+>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+>> --
+>> 2.7.4
+>>
+> 
+> Overall, I like this idea as it gives us good flexibility. Thus it
+> should avoid us to having to add any further new similar "sdhci broken
+> cap" DT binding. We could also decide to start deprecate some of the
+> existing sdhci bindings, if we think that makes sense.
+> 
+> The downside is that we get a "magic" hex value in the dts. Although,
+> people could address this issue by providing some comments about what
+> the bits it means in the dts files themselves.
 
-We keep running into cases where device drivers want to know the exact
-version of the a SoC they are currently running on. In the past, this has
-usually been done through a vendor specific API that can be called by a
-driver, or by directly accessing some kind of version register that is
-not part of the device itself but that belongs to a global register area
-of the chip.
+I think it's not good about getting "magic" hex value.
+In my experience, it's too difficult what bits means and calculate..
+Because some people who i know had already used like this.(locally..)
 
-Common reasons for doing this include:
+It needs to consider this...otherwise..it should become really complex magic code.
 
-- A machine is not using devicetree or similar for passing data about
-  on-chip devices, but just announces their presence using boot-time
-  platform devices, and the machine code itself does not care about the
-  revision.
+Best Regards,
+Jaehoon Chung
 
-- There is existing firmware or boot loaders with existing DT binaries
-  with generic compatible strings that do not identify the particular
-  revision of each device, but the driver knows which SoC revisions
-  include which part.
+> 
+> Let's see what Rob thinks about this.
+> 
+> Kind regards
+> Uffe
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
 
-- A prerelease version of a chip has some quirks and we are using the same
-  version of the bootloader and the DT blob on both the prerelease and the
-  final version. An update of the DT binding seems inappropriate because
-  that would involve maintaining multiple copies of the dts and/or
-  bootloader.
-
-This patch introduces the soc_device_match() interface that is meant to
-work like of_match_node() but instead of identifying the version of a
-device, it identifies the SoC itself using a vendor-agnostic interface.
-
-Unlike of_match_node(), we do not do an exact string compare but instead
-use glob_match() to allow wildcards in strings.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2:
-  - Add Acked-by.
----
- drivers/base/Kconfig    |  1 +
- drivers/base/soc.c      | 66 +++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/sys_soc.h |  3 +++
- 3 files changed, 70 insertions(+)
-
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index d02e7c0f5bfdff1c..2abea876c0a0c2c2 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -237,6 +237,7 @@ config GENERIC_CPU_AUTOPROBE
- 
- config SOC_BUS
- 	bool
-+	select GLOB
- 
- source "drivers/base/regmap/Kconfig"
- 
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 028cef377fd49959..04ee597fc3a3fda0 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -13,6 +13,7 @@
- #include <linux/spinlock.h>
- #include <linux/sys_soc.h>
- #include <linux/err.h>
-+#include <linux/glob.h>
- 
- static DEFINE_IDA(soc_ida);
- 
-@@ -168,3 +169,68 @@ static int __init soc_bus_register(void)
- 	return bus_register(&soc_bus_type);
- }
- core_initcall(soc_bus_register);
-+
-+static int soc_device_match_one(struct device *dev, void *arg)
-+{
-+	struct soc_device *soc_dev = container_of(dev, struct soc_device, dev);
-+	const struct soc_device_attribute *match = arg;
-+
-+	if (match->machine &&
-+	    !glob_match(match->machine, soc_dev->attr->machine))
-+		return 0;
-+
-+	if (match->family &&
-+	    !glob_match(match->family, soc_dev->attr->family))
-+		return 0;
-+
-+	if (match->revision &&
-+	    !glob_match(match->revision, soc_dev->attr->revision))
-+		return 0;
-+
-+	if (match->soc_id &&
-+	    !glob_match(match->soc_id, soc_dev->attr->soc_id))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+/*
-+ * soc_device_match - identify the SoC in the machine
-+ * @matches: zero-terminated array of possible matches
-+ *
-+ * returns the first matching entry of the argument array, or NULL
-+ * if none of them match.
-+ *
-+ * This function is meant as a helper in place of of_match_node()
-+ * in cases where either no device tree is available or the information
-+ * in a device node is insufficient to identify a particular variant
-+ * by its compatible strings or other properties. For new devices,
-+ * the DT binding should always provide unique compatible strings
-+ * that allow the use of of_match_node() instead.
-+ *
-+ * The calling function can use the .data entry of the
-+ * soc_device_attribute to pass a structure or function pointer for
-+ * each entry.
-+ */
-+const struct soc_device_attribute *soc_device_match(
-+	const struct soc_device_attribute *matches)
-+{
-+	int ret = 0;
-+
-+	if (!matches)
-+		return NULL;
-+
-+	while (!ret) {
-+		if (!(matches->machine || matches->family ||
-+		      matches->revision || matches->soc_id))
-+			break;
-+		ret = bus_for_each_dev(&soc_bus_type, NULL, (void *)matches,
-+				       soc_device_match_one);
-+		if (!ret)
-+			matches++;
-+		else
-+			return matches;
-+	}
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(soc_device_match);
-diff --git a/include/linux/sys_soc.h b/include/linux/sys_soc.h
-index 2739ccb69571e444..9f5eb06f9fd87565 100644
---- a/include/linux/sys_soc.h
-+++ b/include/linux/sys_soc.h
-@@ -13,6 +13,7 @@ struct soc_device_attribute {
- 	const char *family;
- 	const char *revision;
- 	const char *soc_id;
-+	const void *data;
- };
- 
- /**
-@@ -34,4 +35,6 @@ struct soc_device *soc_device_register(
-  */
- struct device *soc_device_to_device(struct soc_device *soc);
- 
-+const struct soc_device_attribute *soc_device_match(
-+	const struct soc_device_attribute *matches);
- #endif /* __SOC_BUS_H */
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
