@@ -1,94 +1,86 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v7 3/3] clk: qcom: Add A53 clock driver
-Date: Mon, 31 Oct 2016 16:55:26 +0200
-Message-ID: <20161031145526.5023-4-georgi.djakov@linaro.org>
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 1/3] clk: qcom: Add A53 PLL support
+Date: Mon, 31 Oct 2016 16:55:24 +0200
+Message-ID: <20161031145526.5023-2-georgi.djakov@linaro.org>
 References: <20161031145526.5023-1-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161031145526.5023-1-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@baylibre.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161031145526.5023-1-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the A53 Clock Controller. It is a hardware block that
-implements a combined mux and half integer divider functionality. It can
-choose between a fixed-rate clock or the dedicated A53 PLL. The source
-and the divider can be set both at the same time.
+Add support for the PLL, which generates the higher range of CPU
+frequencies on MSM8916 platforms.
 
-This is required for enabling CPU frequency scaling on platforms like
-MSM8916.
-
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/clock/qcom,a53cc.txt       |  23 ++++
- drivers/clk/qcom/Kconfig                           |   8 ++
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/a53cc.c                           | 152 +++++++++++++++++++++
- 4 files changed, 184 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
- create mode 100644 drivers/clk/qcom/a53cc.c
+ .../devicetree/bindings/clock/qcom,a53pll.txt      | 20 +++++
+ drivers/clk/qcom/Kconfig                           |  9 +++
+ drivers/clk/qcom/Makefile                          |  1 +
+ drivers/clk/qcom/a53-pll.c                         | 94 ++++++++++++++++++++++
+ 4 files changed, 124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+ create mode 100644 drivers/clk/qcom/a53-pll.c
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
 new file mode 100644
-index 000000000000..82d1634a2713
+index 000000000000..6a8c03bfbcb5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-@@ -0,0 +1,23 @@
-+Qualcomm A53 CPU Clock Controller Binding
-+------------------------------------------------
-+The A53 CPU Clock Controller is hardware, which provides a combined
-+mux and divider functionality for the CPU clocks. It can choose between
-+a fixed rate clock and the dedicated A53 PLL. This hardware block is used
-+on platforms such as msm8916.
++++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+@@ -0,0 +1,20 @@
++MSM8916 A53 PLL Binding
++---------------
++The A53 PLL on MSM8916 platforms is the main CPU PLL used for frequencies
++above 1GHz.
 +
 +Required properties :
-+- compatible : shall contain:
++- compatible : Shall contain only one of the following:
 +
-+			"qcom,a53cc-msm8916"
++		"qcom,a53pll-msm8916"
 +
 +- reg : shall contain base register location and length
-+	of the APCS region
-+- #clock-cells : shall contain 1
++- #clock-cells : must be set to <0>
 +
 +Example:
 +
-+	apcs: syscon@b011000 {
-+		compatible = "qcom,a53cc-msm8916";
-+		reg = <0x0b011000 0x1000>;
-+		#clock-cells = <1>;
++	a53pll: a53pll@b016000 {
++		compatible = "qcom,a53pll-msm8916";
++		reg = <0x0b016000 0x40>;
++		#clock-cells = <0>;
 +	};
 diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index a889f0b14b54..59dfcdc340e4 100644
+index 0146d3c2547f..a889f0b14b54 100644
 --- a/drivers/clk/qcom/Kconfig
 +++ b/drivers/clk/qcom/Kconfig
-@@ -159,3 +159,11 @@ config QCOM_A53PLL
- 	  support for CPU frequencies above 1GHz.
- 	  Say Y if you want to support CPU frequency scaling on devices
- 	  such as MSM8916.
+@@ -150,3 +150,12 @@ config MSM_MMCC_8996
+ 	  Support for the multimedia clock controller on msm8996 devices.
+ 	  Say Y if you want to support multimedia devices such as display,
+ 	  graphics, video encode/decode, camera, etc.
 +
-+config QCOM_A53CC
-+	bool "A53 Clock Controller"
-+	depends on COMMON_CLK_QCOM && QCOM_A53PLL
++config QCOM_A53PLL
++	bool "A53 PLL"
++	depends on COMMON_CLK_QCOM
 +	help
-+	  Support for the A53 clock controller on some Qualcomm devices.
++	  Support for the A53 PLL on some Qualcomm devices. It provides
++	  support for CPU frequencies above 1GHz.
 +	  Say Y if you want to support CPU frequency scaling on devices
 +	  such as MSM8916.
 diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index d3e142e577b0..980a5d729aa4 100644
+index 1fb1f5476cb0..7d27f47f0c92 100644
 --- a/drivers/clk/qcom/Makefile
 +++ b/drivers/clk/qcom/Makefile
-@@ -30,4 +30,5 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
+@@ -29,3 +29,4 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
  obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
  obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
  obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
-+obj-$(CONFIG_QCOM_A53CC) += a53cc.o
- obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
-diff --git a/drivers/clk/qcom/a53cc.c b/drivers/clk/qcom/a53cc.c
++obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
+diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
 new file mode 100644
-index 000000000000..f9b19939e8ae
+index 000000000000..40610d4076dd
 --- /dev/null
-+++ b/drivers/clk/qcom/a53cc.c
-@@ -0,0 +1,152 @@
++++ b/drivers/clk/qcom/a53-pll.c
+@@ -0,0 +1,94 @@
 +/*
 + * Copyright (c) 2016, Linaro Limited
 + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
@@ -103,75 +95,47 @@ index 000000000000..f9b19939e8ae
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/clk.h>
 +#include <linux/clk-provider.h>
 +#include <linux/kernel.h>
 +#include <linux/platform_device.h>
 +#include <linux/regmap.h>
 +
++#include "clk-pll.h"
 +#include "clk-regmap.h"
-+#include "clk-regmap-mux-div.h"
 +
-+enum {
-+	P_GPLL0,
-+	P_A53PLL,
++static const struct pll_freq_tbl a53pll_freq[] = {
++	{  998400000, 52, 0x0, 0x1, 0 },
++	{ 1094400000, 57, 0x0, 0x1, 0 },
++	{ 1152000000, 62, 0x0, 0x1, 0 },
++	{ 1209600000, 65, 0x0, 0x1, 0 },
++	{ 1401600000, 73, 0x0, 0x1, 0 },
 +};
 +
-+static const struct parent_map gpll0_a53cc_map[] = {
-+	{ P_GPLL0, 4 },
-+	{ P_A53PLL, 5 },
-+};
-+
-+static const char * const gpll0_a53cc[] = {
-+	"gpll0_vote",
-+	"a53pll",
-+};
-+
-+static const struct regmap_config a53cc_regmap_config = {
++static const struct regmap_config a53pll_regmap_config = {
 +	.reg_bits		= 32,
 +	.reg_stride		= 4,
 +	.val_bits		= 32,
-+	.max_register		= 0x1000,
++	.max_register		= 0x40,
 +	.fast_io		= true,
 +	.val_format_endian	= REGMAP_ENDIAN_LITTLE,
 +};
 +
-+/*
-+ * We use the notifier function for switching to a temporary safe configuration
-+ * (mux and divider), while the a53 pll is reconfigured.
-+ */
-+static int a53cc_notifier_cb(struct notifier_block *nb, unsigned long event,
-+			     void *data)
-+{
-+	int ret = 0;
-+	struct clk_regmap_mux_div *md = container_of(nb,
-+						     struct clk_regmap_mux_div,
-+						     clk_nb);
-+	if (event == PRE_RATE_CHANGE)
-+		/* set the mux and divider to safe frequency (400mhz) */
-+		ret = __mux_div_set_src_div(md, 4, 3);
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+static const struct of_device_id qcom_a53cc_match_table[] = {
-+	{ .compatible = "qcom,a53cc-msm8916" },
++static const struct of_device_id qcom_a53pll_match_table[] = {
++	{ .compatible = "qcom,a53pll-msm8916" },
 +	{ }
 +};
 +
-+static int qcom_a53cc_probe(struct platform_device *pdev)
++static int qcom_a53pll_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct clk_regmap_mux_div *a53cc;
++	struct clk_pll *pll;
 +	struct resource *res;
 +	void __iomem *base;
-+	struct clk *pclk;
 +	struct regmap *regmap;
 +	struct clk_init_data init = { };
-+	int ret;
 +
-+	a53cc = devm_kzalloc(dev, sizeof(*a53cc), GFP_KERNEL);
-+	if (!a53cc)
++	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
++	if (!pll)
 +		return -ENOMEM;
 +
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
@@ -179,65 +143,39 @@ index 000000000000..f9b19939e8ae
 +	if (IS_ERR(base))
 +		return PTR_ERR(base);
 +
-+	a53cc->reg_offset = 0x50;
-+	a53cc->hid_width = 5;
-+	a53cc->hid_shift = 0;
-+	a53cc->src_width = 3;
-+	a53cc->src_shift = 8;
-+	a53cc->parent_map = gpll0_a53cc_map;
++	regmap = devm_regmap_init_mmio(dev, base, &a53pll_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
 +
-+	init.name = "a53mux";
-+	init.parent_names = gpll0_a53cc;
-+	init.num_parents = 2;
-+	init.ops = &clk_regmap_mux_div_ops;
-+	init.flags = CLK_SET_RATE_PARENT;
-+	a53cc->clkr.hw.init = &init;
++	pll->l_reg = 0x04;
++	pll->m_reg = 0x08;
++	pll->n_reg = 0x0c;
++	pll->config_reg = 0x14;
++	pll->mode_reg = 0x00;
++	pll->status_reg = 0x1c;
++	pll->status_bit = 16;
++	pll->freq_tbl = a53pll_freq;
 +
-+	pclk = __clk_lookup(gpll0_a53cc[1]);
-+	if (!pclk)
-+		return -EPROBE_DEFER;
++	init.name = "a53pll";
++	init.parent_names = (const char *[]){ "xo" };
++	init.num_parents = 1;
++	init.ops = &clk_pll_sr2_ops;
++	init.flags = CLK_IS_CRITICAL;
++	pll->clkr.hw.init = &init;
 +
-+	a53cc->clk_nb.notifier_call = a53cc_notifier_cb;
-+	ret = clk_notifier_register(pclk, &a53cc->clk_nb);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		return ret;
-+	}
-+
-+	regmap = devm_regmap_init_mmio(dev, base, &a53cc_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(dev, "failed to init regmap mmio: %d\n", ret);
-+		goto err;
-+	}
-+
-+	a53cc->clkr.regmap = regmap;
-+
-+	ret = devm_clk_register_regmap(dev, &a53cc->clkr);
-+	if (ret) {
-+		dev_err(dev, "failed to register regmap clock: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
-+				     &a53cc->clkr.hw);
-+	if (ret) {
-+		dev_err(dev, "failed to add clock provider: %d\n", ret);
-+		goto err;
-+	}
-+
-+	return 0;
-+err:
-+	clk_notifier_unregister(pclk, &a53cc->clk_nb);
-+	return ret;
++	return devm_clk_register_regmap(dev, &pll->clkr);
 +}
 +
-+static struct platform_driver qcom_a53cc_driver = {
-+	.probe = qcom_a53cc_probe,
++static struct platform_driver qcom_a53pll_driver = {
++	.probe = qcom_a53pll_probe,
 +	.driver = {
-+		.name = "qcom-a53cc",
-+		.of_match_table = qcom_a53cc_match_table,
++		.name = "qcom-a53pll",
++		.of_match_table = qcom_a53pll_match_table,
 +	},
 +};
 +
-+builtin_platform_driver(qcom_a53cc_driver);
++builtin_platform_driver(qcom_a53pll_driver);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
