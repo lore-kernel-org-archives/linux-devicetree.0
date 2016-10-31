@@ -1,136 +1,74 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH] ARM: BCM5301X: Add back handler ignoring external
- imprecise aborts
-Date: Mon, 31 Oct 2016 15:28:13 -0700
-Message-ID: <f6a890ee-bf20-def0-141f-b21412336574@broadcom.com>
-References: <20161029111229.26875-1-zajec5@gmail.com>
- <a491509e-5cfc-fc7d-0011-dfcab3c884ea@broadcom.com>
- <6e252703-0010-83ae-fa14-57352add007a@hauke-m.de>
- <fb2c36cb-6f85-1a6d-160a-c50e22d6c46b@gmail.com>
- <dcb21fe4-672f-4545-5b47-d764f390e741@broadcom.com>
- <18db27c7-1055-ff3c-0b0b-eeeaf5f3f5e0@gmail.com>
- <3847db9f-a8e1-b7fe-c2fa-19ea893bae5f@broadcom.com>
- <CACna6ryMbF8kVUYOfhre4qtZp5haa2Shijcv40AXsjL_jZL=JQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
+Date: Tue, 1 Nov 2016 00:47:39 +0200
+Message-ID: <20161031224739.GA3217@valkosipuli.retiisi.org.uk>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACna6ryMbF8kVUYOfhre4qtZp5haa2Shijcv40AXsjL_jZL=JQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Scott Branden <scott.branden@broadcom.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, Jon Mason <jonmason@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafal,
+Hi Rob and Pavel,
 
-On 10/31/2016 3:16 PM, Rafał Miłecki wrote:
-> On 31 October 2016 at 23:05, Scott Branden <scott.branden@broadcom.com> wrote:
->> On 16-10-31 02:56 PM, Florian Fainelli wrote:
->>> - fixups the aborts in the kernel, look where they come from, by using
->>> some bit of magic, looking at PCIe registers and whatnot (provided that
->>> is even possible), not too hard, but can take a while, and is error prone
->>
->> Option 4 sounds like the proper solution - check the range the abort is due
->> to the PCI device enumeration and only ignore those aborts.
+On Sun, Oct 30, 2016 at 03:41:34PM -0500, Rob Herring wrote:
+> On Sun, Oct 23, 2016 at 09:17:06PM +0200, Pavel Machek wrote:
+> > 
+> > Add device tree binding documentation for toshiba et8ek8 sensor.
+> > 
+> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> > 
+> > diff from v3: explain what clock-frequency means
+> > 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> > new file mode 100644
+> > index 0000000..54863cf
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> > @@ -0,0 +1,51 @@
+> > +Toshiba et8ek8 5MP sensor
+> > +
+> > +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+> > +
+> > +More detailed documentation can be found in
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> > +
+> > +
+> > +Mandatory properties
+> > +--------------------
+> > +
+> > +- compatible: "toshiba,et8ek8"
+> > +- reg: I2C address (0x3e, or an alternative address)
+> > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> > +- clocks: External clock to the sensor
+> > +- clock-frequency: Frequency of the external clock to the sensor. Camera
+> > +  driver will set this frequency on the external clock.
 > 
-> This was already suggested by Arnd:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-April/422873.html
-> and Ray was checking some internal datasheets, but I'm afraid he never
-> found info on checking if error was caused by PCIe controller.
-> 
+> This is fine if the frequency is fixed (e.g. an oscillator), but you 
+> should use the clock binding if clocks are programable.
 
-Correct. Based on response from our ASIC team, on Northstar, 1) we
-cannot distinguish between various external imprecise aborts; 2) nor can
-we use the internal PCIe controller register to disable unsupported
-request from being forwarded as APB bus error (and therefore causes the
-abort).
+We've discussed the matter here (v3):
 
-All subsequent iProc SoCs can disable this error forwarding from the
-iProc PCIe controller.
+<URL:http://www.spinics.net/lists/linux-media/msg101210.html>
 
-> Maybe we could think about some BCM5301X API (extra symbol exported by
-> arch code) for starting ignoring aborts and stopping that. We could
-> ignore aborts during scanning only but honestly it sounds like a bit
-> hacky solution to me.
-> 
-> 
+<URL:http://www.spinics.net/lists/linux-media/msg101233.html>
 
-Correct, one possible solution is to only ignoring the aborts during
-condiguration space register access of an endpoint device. Below is the
-logic how I only disable the APB bus error forwarding during these
-accesses (for all other iProc SoCs):
+Pavel, could you add to the desciption e.g.:
 
-+/**
-+ * APB error forwarding can be disabled during access of configuration
-+ * registers of the endpoint device, to prevent unsupported requests
-+ * (typically seen during enumeration with multi-function devices) from
-+ * triggering a system exception
-+ */
-+static inline void iproc_pcie_apb_err_disable(struct pci_bus *bus,
-+					      bool disable)
-+{
-+	struct iproc_pcie *pcie = iproc_data(bus);
-+	u32 val;
-+
-+	if (bus->number && pcie->has_apb_err_disable) {
-+		val = iproc_pcie_read_reg(pcie, IPROC_PCIE_APB_ERR_EN);
-+		if (disable)
-+			val &= ~APB_ERR_EN;
-+		else
-+			val |= APB_ERR_EN;
-+		iproc_pcie_write_reg(pcie, IPROC_PCIE_APB_ERR_EN, val);
-+	}
-+}
-+
-[...]
-+static int iproc_pcie_config_read32(struct pci_bus *bus, unsigned int
-devfn,
-+				    int where, int size, u32 *val)
-+{
-+	int ret;
-+
-+	iproc_pcie_apb_err_disable(bus, true);
-+	ret = pci_generic_config_read32(bus, devfn, where, size, val);
-+	iproc_pcie_apb_err_disable(bus, false);
-+
-+	return ret;
-+}
-+
-+static int iproc_pcie_config_write32(struct pci_bus *bus, unsigned int
-devfn,
-+				     int where, int size, u32 val)
-+{
-+	int ret;
-+
-+	iproc_pcie_apb_err_disable(bus, true);
-+	ret = pci_generic_config_write32(bus, devfn, where, size, val);
-+	iproc_pcie_apb_err_disable(bus, false);
-+
-+	return ret;
-+}
-+
- static struct pci_ops iproc_pcie_ops = {
- 	.map_bus = iproc_pcie_map_cfg_bus,
--	.read = pci_generic_config_read32,
--	.write = pci_generic_config_write32,
-+	.read = iproc_pcie_config_read32,
-+	.write = iproc_pcie_config_write32,
- };
+"The clock frequency is a pre-determined frequency known to be suitable to
+the board."
 
->>> I can certainly advocate that option 3 is the one that gives a working
->>> device, and this is what matters from a distribution perspective like
->>> LEDE/OpenWrt.
->>>
->> Since I don't use BCM5301x option 3 is fine by me.
-> 
-> So for it seems like the best solution to me, but I'm open for changes
-> if someone points another that is clean & better one.
-> 
+-- 
+Kind regards,
 
-I agree with that option 3 is probably the best solution for now, from a
-distribution's perspective.
-
-Thanks,
-
-Ray
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
