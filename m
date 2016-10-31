@@ -1,30 +1,79 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: binding: bcm2835-mbox: fix address typo in
- example
-Date: Sun, 30 Oct 2016 23:31:29 -0500
-Message-ID: <20161031043129.jotjvcxmtmpzn33d@rob-hp-laptop>
-References: <1477505640-26658-1-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for
+ ArticSand devices
+Date: Sun, 30 Oct 2016 23:37:59 -0500
+Message-ID: <20161031043759.s5gmht6obqsqdn2d@rob-hp-laptop>
+References: <1477513801-31350-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477505640-26658-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1477513801-31350-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 06:13:59PM +0000, Stefan Wahren wrote:
-> The address of the mailbox node in the example has a typo.
-> So fix it accordingly.
+On Wed, Oct 26, 2016 at 04:30:01PM -0400, Olimpiu Dejeu wrote:
+> Resubmition of arcxcnn backliught driver bindings with added register
+>  documentation
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Fixes: d4b5c782b9f4 ("dt/bindings: Add binding for the BCM2835 mailbox driver")
+> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> 
 > ---
->  .../bindings/mailbox/brcm,bcm2835-mbox.txt         |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> new file mode 100644
+> index 0000000..a7b6ff2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> @@ -0,0 +1,31 @@
+> +Binding for ArcticSand arc2c0608 LED driver
+> +
+> +Required properties:
+> +- compatible: should be "arc,arc2c0608"
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+What's the correct vendor prefix? arc or arcticsand used below?
+
+> +- reg: slave address
+> +
+> +Optional properties:
+> +- default-brightness: brightness value on boot, value from: 0-4095
+> +- label: The name of the backlight device
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +- led-sources: List of enabled channels from 0 to 5.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +- arcticsand,led-config-0: setting for register ILED_CONFIG_0
+> +- arcticsand,led-config-1: setting for register ILED_CONFIG_1
+> +- arcticsand,dim-freq: PWM mode frequence setting (bits [3:0] used)
+> +- arcticsand,comp-config: setting for register CONFIG_COMP
+> +- arcticsand,filter-config: setting for register FILTER_CONFIG
+> +- arcticsand,trim-config: setting for register IMAXTUNE
+
+What are the default values if not present?
+
+What determines these settings? If the board design, then okay. If a 
+an enduser wants to adjust, then they shouldn't be in DT.
+
+> +
+> +Example:
+> +
+> +arc2c0608@30 {
+> +	compatible = "arc,arc2c0608";
+> +	reg = <0x30>;
+> +	default-brightness = <500>;
+> +	label = "lcd-backlight";
+> +	linux,default-trigger = "backlight";
+> +	led-sources = <0 1 2 5>;
+> +};
+> +
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
