@@ -1,266 +1,100 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 31 Oct 2016 12:12:57 -0600 (MDT)
-Message-ID: <alpine.DEB.2.20.1610311146000.8160@nanos>
-References: <1477899468-5494-1-git-send-email-noamca@mellanox.com> <1477899468-5494-4-git-send-email-noamca@mellanox.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
+Date: Mon, 31 Oct 2016 12:22:23 -0600
+Message-ID: <m2bmy02xb4.fsf@baylibre.com>
+References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+        <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+        <20161031043015.74ppaship5nqfaqt@rob-hp-laptop>
+        <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ@mail.gmail.com>
+        <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
+        <CAMpxmJX7SjE1zs926Fn-=jsZhPsOK6ey0hHM8LBhNS1nuSuFFQ@mail.gmail.com>
+        <0d5d1e41-b8e6-5d60-6da1-5b6ddd9bc07e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477899468-5494-4-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <0d5d1e41-b8e6-5d60-6da1-5b6ddd9bc07e-l0cyMroinI0@public.gmane.org> (Sekhar Nori's
+        message of "Mon, 31 Oct 2016 16:01:09 +0530")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 31 Oct 2016, Noam Camus wrote:
->  
-> -static unsigned long nps_timer_rate;
-> +static unsigned long nps_timer1_freq;
+Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> writes:
 
-This should be either in the previous patch or seperate.
+> On Monday 31 October 2016 03:24 PM, Bartosz Golaszewski wrote:
+>> 2016-10-31 10:52 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+>>> Hi Bartosz,
+>>>
+>>> On Monday 31 October 2016 03:10 PM, Bartosz Golaszewski wrote:
+>>>> 2016-10-31 5:30 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>>>> On Wed, Oct 26, 2016 at 07:35:55PM +0200, Bartosz Golaszewski wrote:
+>>>>>> Create the driver for the da8xx master peripheral priority
+>>>>>> configuration and implement support for writing to the three
+>>>>>> Master Priority registers on da850 SoCs.
+>>>>>>
+>>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+>>>>>>  drivers/bus/Kconfig                                |   9 +
+>>>>>>  drivers/bus/Makefile                               |   2 +
+>>>>>>  drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
+>>>>>>  4 files changed, 297 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>>>  create mode 100644 drivers/bus/da8xx-mstpri.c
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..225af09
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>>> @@ -0,0 +1,20 @@
+>>>>>> +* Device tree bindings for Texas Instruments da8xx master peripheral
+>>>>>> +  priority driver
+>>>>>> +
+>>>>>> +DA8XX SoCs feature a set of registers allowing to change the priority of all
+>>>>>> +peripherals classified as masters.
+>>>>>> +
+>>>>>> +Documentation:
+>>>>>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +
+>>>>>> +- compatible:                "ti,da850-mstpri", "syscon" - for da850 based boards
+>>>>>
+>>>>> Drop syscon. Doesn't look like it is needed and the example doesn't
+>>>>> match.
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> it is needed: syscon_regmap_lookup_by_compatible() fails without it. I
+>>>> fixed the example instead.
+>>>
+>>> Why are master priority registers under syscon? This driver should be
+>>> the only entity touching them. So do we need an MFD driver?
+>>>
+>> 
+>> It should, but syscfg0 registers are mapped all over the place. I
+>
+> Not sure what you mean by this. Yes, the sysconfig module has many
+> functionalities. But the registers for a given functionality are all
+> grouped together AFAICS (except CHIPCFGn, see below).
+>
+> Pinmux registers are part of syscfg module, but don't use syscon.
+>
+> In the work going on for OHCI support, chipcfg registers are being put
+> under a syscon node. But that makes sense, I think, because chipcfg
+> registers are catering to really diverse functionality like PLL and EDMA
+> related stuff being placed in the same register - CHIPCFG0.
+>
+>> thought it would be safer to put them under syscon and Kevin agreed.
+>
+> Before using syscon for the whole syscfg space, I think we need some
+> analysis as to where the likely races are going to be.
 
->  static int nps_get_timer_clk(struct device_node *node,
->  			     unsigned long *timer_freq,
->  			     struct clk *clk)
-> @@ -87,10 +87,10 @@ static int __init nps_setup_clocksource(struct device_node *node)
->  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
->  				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
->  
-> -	nps_get_timer_clk(node, &nps_timer_rate, clk);
-> +	nps_get_timer_clk(node, &nps_timer1_freq, clk);
->  
-> -	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
-> -				    nps_timer_rate, 301, 32, nps_clksrc_read);
-> +	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
-> +				    nps_timer1_freq, 301, 32, nps_clksrc_read);
->  	if (ret) {
->  		pr_err("Couldn't register clock source.\n");
->  		clk_disable_unprepare(clk);
-> @@ -101,3 +101,215 @@ static int __init nps_setup_clocksource(struct device_node *node)
->  
->  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
->  		       nps_setup_clocksource);
-> +CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clk_src, "ezchip,nps400-timer1",
-> +		       nps_setup_clocksource);
+I'm OK with that for now.  It makes the most sense to use sycon only for
+the register (ranges) that will actually be shared.
 
-What's the point of this change?
-
-> +/*
-> + * Arm the timer to interrupt after @cycles
-> + */
-> +static void nps_clkevent_timer_event_setup(unsigned int cycles)
-> +{
-> +	write_aux_reg(NPS_REG_TIMER0_LIMIT, cycles);
-> +	write_aux_reg(NPS_REG_TIMER0_CNT, 0);   /* start from 0 */
-
-Please do not use tail comments. They break the reading flow.
-
-> +
-> +	write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +}
-> +
-> +static void nps_clkevent_rm_thread(bool remove_thread)
-
-I have a hard time to understand why a remove_thread function needs a
-remove_thread boolean argument. Commenting things like this would be more
-helpful than commenting the obvious.
-
-> +{
-> +	unsigned int cflags;
-> +	unsigned int enabled_threads;
-> +	unsigned long flags;
-> +	int thread;
-> +
-> +	local_irq_save(flags);
-
-That's pointless. Both call sites have interrupts disabled.
-
-> +	hw_schd_save(&cflags);
-> +
-> +	enabled_threads = read_aux_reg(AUX_REG_TIMER0_TSI);
-> +
-> +	/* remove thread from TSI1 */
-> +	if (remove_thread) {
-> +		thread = read_aux_reg(CTOP_AUX_THREAD_ID);
-> +		enabled_threads &= ~(1 << thread);
-> +		write_aux_reg(AUX_REG_TIMER0_TSI, enabled_threads);
-> +	}
-> +
-> +	/* Re-arm the timer if needed */
-> +	if (!enabled_threads)
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_NH);
-> +	else
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL,
-> +			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +
-> +	hw_schd_restore(cflags);
-> +	local_irq_restore(flags);
-> +}
-> +
-> +static void nps_clkevent_add_thread(bool set_event)
-> +{
-> +	int thread;
-> +	unsigned int cflags, enabled_threads;
-> +	unsigned long flags;
-> +
-> +	local_irq_save(flags);
-
-Ditto.
-
-> +	hw_schd_save(&cflags);
-> +
-> +	/* add thread to TSI1 */
-> +	thread = read_aux_reg(CTOP_AUX_THREAD_ID);
-> +	enabled_threads = read_aux_reg(AUX_REG_TIMER0_TSI);
-> +	enabled_threads |= (1 << thread);
-> +	write_aux_reg(AUX_REG_TIMER0_TSI, enabled_threads);
-> +
-> +	/* set next timer event */
-> +	if (set_event)
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL,
-> +			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +
-> +	hw_schd_restore(cflags);
-> +	local_irq_restore(flags);
-> +}
-> +
-> +static int nps_clkevent_set_next_event(unsigned long delta,
-> +				       struct clock_event_device *dev)
-> +{
-> +	struct irq_desc *desc = irq_to_desc(nps_timer0_irq);
-> +	struct irq_chip *chip = irq_data_get_irq_chip(&desc->irq_data);
-> +
-> +	nps_clkevent_add_thread(true);
-> +	chip->irq_unmask(&desc->irq_data);
-
-Oh no. You are not supposed to fiddle in the guts of the interrupts from a
-random driver. Can you please explain what you are trying to do and why the
-existing interfaces are not sufficient?
-
-> +/*
-> + * Whenever anyone tries to change modes, we just mask interrupts
-> + * and wait for the next event to get set.
-> + */
-> +static int nps_clkevent_timer_shutdown(struct clock_event_device *dev)
-> +{
-> +	struct irq_desc *desc = irq_to_desc(nps_timer0_irq);
-> +	struct irq_chip *chip = irq_data_get_irq_chip(&desc->irq_data);
-> +
-> +	chip->irq_mask(&desc->irq_data);
-> +
-> +	return 0;
-> +}
-> +
-
-> +static int nps_clkevent_set_periodic(struct clock_event_device *dev)
-> +{
-> +	nps_clkevent_add_thread(false);
-> +	if (read_aux_reg(CTOP_AUX_THREAD_ID) == 0)
-> +		nps_clkevent_timer_event_setup(nps_timer0_freq / HZ);
-
-So how is that enabling interrupts again?
-
-> +
-> +	return 0;
-> +}
-> +
-
-> +static DEFINE_PER_CPU(struct clock_event_device, nps_clockevent_device) = {
-> +	.name				=	"NPS Timer0",
-> +	.features			=	CLOCK_EVT_FEAT_ONESHOT |
-> +						CLOCK_EVT_FEAT_PERIODIC,
-> +	.rating				=	300,
-> +	.set_next_event			=	nps_clkevent_set_next_event,
-> +	.set_state_periodic		=	nps_clkevent_set_periodic,
-> +	.set_state_oneshot		=	nps_clkevent_set_oneshot,
-> +	.set_state_oneshot_stopped	=	nps_clkevent_timer_shutdown,
-> +	.set_state_shutdown		=	nps_clkevent_timer_shutdown,
-> +	.tick_resume			=	nps_clkevent_timer_shutdown,
-> +};
-> +
-> +static irqreturn_t timer_irq_handler(int irq, void *dev_id)
-> +{
-> +	/*
-> +	 * Note that generic IRQ core could have passed @evt for @dev_id if
-> +	 * irq_set_chip_and_handler() asked for handle_percpu_devid_irq()
-
-And why are you not doing that?
-
-> +	 */
-> +	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
-> +	int irq_reenable = clockevent_state_periodic(evt);
-> +
-> +	nps_clkevent_rm_thread(!irq_reenable);
-> +
-> +	evt->event_handler(evt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int nps_timer_starting_cpu(unsigned int cpu)
-> +{
-> +	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
-> +
-> +	evt->cpumask = cpumask_of(smp_processor_id());
-> +
-> +	clockevents_config_and_register(evt, nps_timer0_freq, 0, ULONG_MAX);
-> +	enable_percpu_irq(nps_timer0_irq, 0);
-
-And at the same time you still use the percpu infrastructure ....
-
-> +	return 0;
-> +}
-> +
-> +static int nps_timer_dying_cpu(unsigned int cpu)
-> +{
-> +	disable_percpu_irq(nps_timer0_irq);
-> +	return 0;
-> +}
-> +
-> +static int __init nps_setup_clockevent(struct device_node *node)
-> +{
-> +	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	nps_timer0_irq = irq_of_parse_and_map(node, 0);
-> +	if (nps_timer0_irq <= 0) {
-> +		pr_err("clockevent: missing irq");
-> +		return -EINVAL;
-> +	}
-> +
-> +	nps_get_timer_clk(node, &nps_timer0_freq, clk);
-> +
-> +	/* Needs apriori irq_set_percpu_devid() done in intc map function */
-> +	ret = request_percpu_irq(nps_timer0_irq, timer_irq_handler,
-> +				 "Timer0 (per-cpu-tick)", evt);
-
-This is wrong. the dev_id argument wants to be a __per_cpu pointer. So it
-should be &nps_clockevent_device and not a pointer to the cpu local one.
-
-> +	if (ret) {
-> +		pr_err("Couldn't request irq\n");
-> +		clk_disable_unprepare(clk);
-> +		return ret;
-> +	}
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_NPS_TIMER_STARTING,
-> +				"AP_NPS_TIMER_STARTING",
-
-Please make this "clockevents/nps:starting"
-
-> +				nps_timer_starting_cpu,
-> +				nps_timer_dying_cpu);
-> +	if (ret) {
-> +		pr_err("Failed to setup hotplug state");
-> +		clk_disable_unprepare(clk);
-
-You leave the irq requested....
-
-Thanks,
-
-	tglx
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
