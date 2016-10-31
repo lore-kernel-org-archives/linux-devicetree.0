@@ -1,102 +1,125 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7, 0/8] Add MediaTek USB3 DRD Driver
-Date: Mon, 31 Oct 2016 11:31:30 +0800
-Message-ID: <1477884690.4516.35.camel@mhfsdcap03>
-References: <1476844107-31087-1-git-send-email-chunfeng.yun@mediatek.com>
-         <28f6db69-88ca-4715-1e46-6d5e5efb949c@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sun, 30 Oct 2016 22:39:21 -0500
+Message-ID: <CAL_JsqLhBwb4eJdrAqLLksovcfP1xm9RGTUQKVvF_WxJaMn4WA@mail.gmail.com>
+References: <cover.1476712675.git.hns@goldelico.com> <76746b85957c9f3ef7101a7ee883898a414cabd8.1476712675.git.hns@goldelico.com>
+ <CAL_JsqJhzZC6Hw3eRLFDiBA8jih=N507WvEh=TRbPhLS9EjhBQ@mail.gmail.com> <3D3CBADC-42F7-4A2B-9D0D-40A0649F79FB@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <28f6db69-88ca-4715-1e46-6d5e5efb949c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Oliver Neukum <oneukum-IBi9RG/b67k@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3D3CBADC-42F7-4A2B-9D0D-40A0649F79FB-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>linux-omap <lin>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-10-28 at 12:37 +0200, Matthias Brugger wrote:
-> Hi Chunfeng,
-> 
-> On 10/19/2016 04:28 AM, Chunfeng Yun wrote:
-> > These patches introduce the MediaTek USB3 dual-role controller
-> > driver.
-> >
-> > The driver can be configured as Dual-Role Device (DRD),
-> > Peripheral Only and Host Only (xHCI) modes. It works well
-> > with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
-> > tested on MT8173 platform which only contains USB2.0 device IP,
-> > and on MT6290 platform which contains USB3.0 device IP.
-[...]
-> >
-> > Change in v2:
-> > 1. modify binding docs according to suggestions
-> > 2. modify some comments and remove some dummy blank lines
-> > 3. fix memory leakage
-> >
-> >
-> > Chunfeng Yun (8):
-> >   dt-bindings: mt8173-xhci: support host side of dual-role mode
-> >   dt-bindings: mt8173-mtu3: add devicetree bindings
-> >   usb: xhci-mtk: make IPPC register optional
-> >   usb: Add MediaTek USB3 DRD driver
-> >   usb: mtu3: Super-Speed Peripheral mode support
-> >   usb: mtu3: host only mode support
-> >   usb: mtu3: dual-role mode support
-> >   arm64: dts: mediatek: add USB3 DRD driver
-> >
-> 
-> I tried the driver with my mt8173-evb, but wasn't able to get USB 
-> working (no usb stick detected when adding to the usb port).
-> 
-Can you test it again by USB3.0 type-A port? If it works, then
-regulators of vusb33 and vbus are got after PROBE_DEFER of
-mt6397-regulator driver;
+On Tue, Oct 18, 2016 at 12:27 PM, H. Nikolaus Schaller
+<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+> Hi Rob,
+>
+>> Am 18.10.2016 um 18:22 schrieb Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>
+>> On Mon, Oct 17, 2016 at 8:57 AM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
+>>> commit b98abe52fa8e ("Input: add common DT binding for touchscreens")
+>>> introduced common DT bindings for touchscreens [1] and a helper function to
+>>> parse the DT.
+>>>
+>>> commit ed7c9870c9bc ("Input: of_touchscreen - add support for inverted / swapped axes")
+>>> added another helper for parsing axis inversion and swapping
+>>> and applying them to x and y coordinates.
+>>>
+>>> Both helpers have been integrated to accommodate any orientation of the
+>>> touch panel in relation to the LCD.
+>>
+>> Please add the explanation of why this is a compatible change here.
+>
+> Can you please describe in more detail what you are missing here?
 
-For OTG port, need cherry pick a patch:
+You stop handling ti,fuzzx for example. So the default driver value
+will be used and this is okay because...
 
-https://patchwork.kernel.org/patch/9055261/
+Seems like you would have a regression in behavior if the fuzz values
+specified in an existing DT are ignored.
 
-which is abandoned because GPIO driver owner wants to fix all pins with
-the same problem.
+> The patch simply makes use of the generic helper function introduced by the
+> two patches cited above and is therefore automatically compatible if none of
+> the new properties is defined.
+>
+> The tsc2007 didn't have these features before. So what should we say
+> about compatibility?
 
-Then device will be recognized well when connected to PC with OTG cable.
-
-But it is a trouble for OTG host mode, due to vbus 5.5V of OTG port is
-originally provided by charger driver which is not upstreamed on EVB
-board, we need rework the board to control vbus by gpio.
-There is a simple way, you can plug in a self-powered hub to test OTG
-host mode.
+It certainly had the fuzz features before.
 
 
-> # dmesg |grep mtu
-> [    0.428420] mtu3 11271000.usb: failed to get vusb33
-> [    0.510570] mtu3 11271000.usb: failed to get vbus
-> [    0.592103] mtu3 11271000.usb: failed to get vbus
-> 
-> 
-> Relevant config options:
-> CONFIG_USB_MTU3=y
-> CONFIG_USB_MTU3_HOST=y
-> CONFIG_USB_MTU3_DEBUG=y
-> CONFIG_PHY_MT65XX_USB3=y
-> 
-> 
-> Looks like an error in the device tree. I can see that the mt6397 
-> regulater get's initialized *after* the mtu3 driver:
-> [    0.505166] mt6397-regulator mt6397-regulator: Chip ID = 0x4097
-> 
-> Not sure if this is related.
-> Any idea whats going wrong here?
-> 
-as above.
+>>> -- ti,max-rt: maximum pressure.
+>>> -- ti,fuzzx: specifies the absolute input fuzz x value.
+>>> -  If set, it will permit noise in the data up to +- the value given to the fuzz
+>>> -  parameter, that is used to filter noise from the event stream.
+>>> -- ti,fuzzy: specifies the absolute input fuzz y value.
+>>> -- ti,fuzzz: specifies the absolute input fuzz z value.
+>>> +- ti,max-rt: maximum pressure resistance above which samples are ignored
+>>> +  (default: 4095).
+>>> +- ti,report-resistance: report resistance (no pressure = max_rt) instead
+>>> +  of pressure (no pressure = 0).
+>>> +- ti,min-x: minimum value reported by X axis ADC (default 0).
+>>> +- ti,max-x: maximum value reported by X axis ADC (default 4095).
+>>> +- ti,min-y: minimum value reported by Y axis ADC (default 0).
+>>> +- ti,max-y: maximum value reported by Y axis ADC (default 4095).
+>>
+>> I thought these were going to be common? I think they should be.
+>
+> Yes, we had discussed that before.
+>
+> In a second thought, I found that they are not even existing for the different
+> touch chip drivers that are around. And some chip might not need them (because
+> e.g. min/max are constants or defined my means outside the DT or the chip itself
+> can store them in NV memory).
+>
+> And, since they define ADC raw-values, they are very closely related to the
+> individual chip, so that I am not sure if it is really necessary to make
+> them common. At least if they are properly documented in the bindings for
+> the specific chip they can have different names without disturbing each
+> other.
 
-Sorry for inconvenience
+They wouldn't disturb each other, but then there is no chance to have
+common parsing either.
 
-> Cheers,
-> Matthias
+> So I think it is perfectly reasonable to define common bindings towards
+> the input event layer (e.g. size, fuzz, swapping, inversion) and support
+> them by common code which bakes raw coordinates into input events. The latest
+> helper functions already do most of that fully automatic.
 
+I could argue that size in pixels has no business being in DT. That's
+a property of the panel the touchscreen is glued to. I guess in some
+cases, the controller is internally scaling the ADC values.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Next, I had simply copied them from the ads7846 driver where they
+> exist for a long time. So this is sort of "common", at least for two different
+> chips now. See also patch 6/8 of this series which adds the common properties
+> to the ads7846 as well.
+>
+> For more reference about the existing bindings:
+>
+> Documentation/devicetree/bindings/input/ads7846.txt
+>
+> (btw I think someone should move them to bindings/input/touchscreen).
+
+Patches welcome.
+
+> It appears as if there is some overlap of the new generic properties (for x/y
+> swapping) with the old ads7846 properties, but that is something you had
+> already proposed a while ago to make me the driver recognize both properties to
+> stay compatible with older DT files.
+>
+> So if we now rename the min/max-x/y properties for the tsc2007 we have to rename
+> them for the ads7846 (and maybe others) as well, which might break out-of-tree
+> ads7846 devices or leads to more complex code for handling of property aliases.
+
+We don't have to rename them for ads7846. That's already baked. But
+there's a trend here. You're defining the same property. Use a common
+name, so when the 3rd binding comes along needing the same thing, we
+already have a common binding. If we're catching this on only the 2nd
+binding, we're doing pretty good.
+
+Rob
