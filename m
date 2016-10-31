@@ -1,14 +1,14 @@
 From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: [PATCH v3 2/7] Documentation: dt: Add binding info for
- jz4740-rtc driver
-Date: Mon, 31 Oct 2016 21:39:46 +0100
-Message-ID: <20161031203951.5444-2-paul@crapouillou.net>
+Subject: [PATCH v3 5/7] MIPS: jz4740: DTS: Probe the jz4740-rtc
+ driver from devicetree
+Date: Mon, 31 Oct 2016 21:39:49 +0100
+Message-ID: <20161031203951.5444-5-paul@crapouillou.net>
 References: <20161030230247.20538-1-paul@crapouillou.net>
  <20161031203951.5444-1-paul@crapouillou.net>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBC433LF43MBBBM6Y33AAKGQE6SCKJAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBC433LF43MBBBUOY33AAKGQEF3DGM3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20161031203951.5444-1-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,68 +21,40 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo
 Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documentation for the device-tree bindings of the
-jz4740-rtc driver, which supports the RTC unit present in the JZ4740 and
-JZ4780 SoCs from Ingenic.
+Now that the jz4740-rtc driver supports devicetree, we can add a
+devicetree node for it.
 
 Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
 Acked-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/ingenic,jz4740-rtc.txt | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-v2:
-- Remove 'interrupt-parent' of the list of required properties
-- Add the -msec suffix for the DT entries that represent time
+v2: Previous patch 5/5 was garbage. This is a new patch.
+v3: Changed 'jz4740-rtc@10003000' to 'rtc@10003000'
 
-v3:
-- Replace the -msec suffix by -ms
-- Change the register area size from 0x3F to 0x40
-
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-new file mode 100644
-index 0000000..df97594
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-@@ -0,0 +1,37 @@
-+JZ4740 and similar SoCs real-time clock driver
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index f6ae6ed..c6acd6a 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -44,6 +44,17 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	rtc_dev: rtc@10003000 {
++		compatible = "ingenic,jz4740-rtc";
++		reg = <0x10003000 0x40>;
 +
-+Required properties:
++		interrupt-parent = <&intc>;
++		interrupts = <15>;
 +
-+- compatible: One of:
-+  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
-+  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
-+- reg: Address range of rtc register set
-+- interrupts: IRQ number for the alarm interrupt
-+- clocks: phandle to the "rtc" clock
-+- clock-names: must be "rtc"
++		clocks = <&cgu JZ4740_CLK_RTC>;
++		clock-names = "rtc";
++	};
 +
-+Optional properties:
-+- system-power-controller: To use this component as the
-+  system power controller
-+- reset-pin-assert-time-ms: Reset pin low-level assertion
-+  time after wakeup (default 60ms; range 0-125ms if RTC clock
-+  at 32 kHz)
-+- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
-+  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
-+
-+Example:
-+
-+rtc@10003000 {
-+	compatible = "ingenic,jz4740-rtc";
-+	reg = <0x10003000 0x40>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <32>;
-+
-+	clocks = <&rtc_clock>;
-+	clock-names = "rtc";
-+
-+	system-power-controller;
-+	reset-pin-assert-time-ms = <60>;
-+	min-wakeup-pin-assert-time-ms = <100>;
-+};
+ 	uart0: serial@10030000 {
+ 		compatible = "ingenic,jz4740-uart";
+ 		reg = <0x10030000 0x100>;
 -- 
 2.9.3
 
