@@ -1,61 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
-Date: Sun, 30 Oct 2016 23:30:16 -0500
-Message-ID: <20161031043015.74ppaship5nqfaqt@rob-hp-laptop>
-References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
- <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: binding: bcm2835-mbox: fix address typo in
+ example
+Date: Sun, 30 Oct 2016 23:31:29 -0500
+Message-ID: <20161031043129.jotjvcxmtmpzn33d@rob-hp-laptop>
+References: <1477505640-26658-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+In-Reply-To: <1477505640-26658-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 26, 2016 at 07:35:55PM +0200, Bartosz Golaszewski wrote:
-> Create the driver for the da8xx master peripheral priority
-> configuration and implement support for writing to the three
-> Master Priority registers on da850 SoCs.
+On Wed, Oct 26, 2016 at 06:13:59PM +0000, Stefan Wahren wrote:
+> The address of the mailbox node in the example has a typo.
+> So fix it accordingly.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Fixes: d4b5c782b9f4 ("dt/bindings: Add binding for the BCM2835 mailbox driver")
 > ---
->  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
->  drivers/bus/Kconfig                                |   9 +
->  drivers/bus/Makefile                               |   2 +
->  drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
->  4 files changed, 297 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
->  create mode 100644 drivers/bus/da8xx-mstpri.c
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
-> new file mode 100644
-> index 0000000..225af09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
-> @@ -0,0 +1,20 @@
-> +* Device tree bindings for Texas Instruments da8xx master peripheral
-> +  priority driver
-> +
-> +DA8XX SoCs feature a set of registers allowing to change the priority of all
-> +peripherals classified as masters.
-> +
-> +Documentation:
-> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
-> +
-> +Required properties:
-> +
-> +- compatible:		"ti,da850-mstpri", "syscon" - for da850 based boards
+>  .../bindings/mailbox/brcm,bcm2835-mbox.txt         |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Drop syscon. Doesn't look like it is needed and the example doesn't 
-match.
-
-> +- reg:			offset and length of the mstpri registers
-> +
-> +Example for da850-lcdk is shown below.
-> +
-> +mstpri {
-> +	compatible = "ti,da850-mstpri";
-> +	reg = <0x14110 0x0c>;
-> +};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
