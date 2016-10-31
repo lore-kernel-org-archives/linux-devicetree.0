@@ -1,53 +1,40 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
-Date: Mon, 31 Oct 2016 00:36:04 -0500
-Message-ID: <20161031053604.3rjbuk7maabzbwq7@rob-hp-laptop>
-References: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
- <1477598426-28125-2-git-send-email-tthayer@opensource.altera.com>
+Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: add R8A7745 support
+Date: Mon, 31 Oct 2016 00:36:57 -0500
+Message-ID: <20161031053657.65t33edbvc7ow3ha@rob-hp-laptop>
+References: <13079532.zQoaX56ouR@wasted.cogentembedded.com>
+ <5012234.NZmvoVqhq0@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1477598426-28125-2-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <5012234.NZmvoVqhq0-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 03:00:23PM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Thu, Oct 27, 2016 at 11:43:31PM +0300, Sergei Shtylyov wrote:
+> Add RZ/G1E (R8A7745) Clock  Pulse Generator / Module Standby and Software
+> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> (and RZ/G) code.
 > 
-> Add the Arria10 DevKit System Resource Chip register and state
-> monitoring module to the MFD.
+> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>.
 > 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
-> Note: This needs to be applied to the bindings document that
-> was Acked & Applied but didn't reach the for-next branch.
-> See https://patchwork.ozlabs.org/patch/629397/
-> ---
-> v2  Change compatible string -mon to -monitor for clarity
-> ---
->  Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> index ea151f2..c47be28 100644
-> --- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> @@ -18,6 +18,7 @@ The A10SR consists of these sub-devices:
->  Device                   Description
->  ------                   ----------
->  a10sr_gpio               GPIO Controller
+> ---
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt |    5 
 
-This should be just "gpio" BTW.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +a10sr_monitor            Register and State Monitoring
-
-s/_/-/ or maybe just "monitor". Not really a generic node name to use 
-for this.
-
-Rob
+>  drivers/clk/renesas/Kconfig                                  |    1 
+>  drivers/clk/renesas/Makefile                                 |    1 
+>  drivers/clk/renesas/r8a7745-cpg-mssr.c                       |  261 +++++++++++
+>  drivers/clk/renesas/renesas-cpg-mssr.c                       |    6 
+>  drivers/clk/renesas/renesas-cpg-mssr.h                       |    1 
+>  6 files changed, 273 insertions(+), 2 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
