@@ -1,206 +1,149 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/8] ARM64: dts: meson-gxl: Add pinctrl nodes
-Date: Mon, 31 Oct 2016 17:44:40 +0100
-Message-ID: <1477932286-27482-3-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 7/8] ARM64: dts: meson-gxl-p23x: Add SD/SDIO/MMC and PWM nodes
+Date: Mon, 31 Oct 2016 17:44:45 +0100
+Message-ID: <1477932286-27482-8-git-send-email-narmstrong@baylibre.com>
 References: <1477932286-27482-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477932286-27482-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477932286-27482-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl nodes and pin definitions for Amlogic Meson GXL.
+Add SD/SDIO/MMC nodes and PWM 32768Hz clock configuration to provide
+storage and WiFi functionality on the p23x boards.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 168 +++++++++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
+ .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     | 112 +++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 13b10ee..ce7f550 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -42,7 +42,175 @@
-  */
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+index 666fe2b..7830809 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+@@ -56,6 +56,46 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
+ };
  
- #include "meson-gx.dtsi"
-+#include <dt-bindings/gpio/meson-gxl-gpio.h>
- 
- / {
- 	compatible = "amlogic,meson-gxl";
+ /* This UART is brought out to the DB9 connector */
+@@ -64,3 +104,75 @@
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
  };
 +
-+&aobus {
-+	pinctrl_aobus: pinctrl@14 {
-+		compatible = "amlogic,meson-gxl-aobus-pinctrl";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++/* Wireless SDIO Module */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-names = "default";
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+		gpio_ao: bank@14 {
-+			reg = <0x0 0x00014 0x0 0x8>,
-+			      <0x0 0x0002c 0x0 0x4>,
-+			      <0x0 0x00024 0x0 0x8>;
-+			reg-names = "mux", "pull", "gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
 +
-+		uart_ao_a_pins: uart_ao_a {
-+			mux {
-+				groups = "uart_tx_ao_a", "uart_rx_ao_a";
-+				function = "uart_ao";
-+			};
-+		};
++	non-removable;
++	disable-wp;
 +
-+		remote_input_ao_pins: remote_input_ao {
-+			mux {
-+				groups = "remote_input_ao";
-+				function = "remote_input_ao";
-+			};
-+		};
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
 +	};
 +};
 +
-+&periphs {
-+	pinctrl_periphs: pinctrl@4b0 {
-+		compatible = "amlogic,meson-gxl-periphs-pinctrl";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
 +
-+		gpio: bank@4b0 {
-+			reg = <0x0 0x004b0 0x0 0x28>,
-+			      <0x0 0x004e8 0x0 0x14>,
-+			      <0x0 0x00120 0x0 0x14>,
-+			      <0x0 0x00430 0x0 0x40>;
-+			reg-names = "mux", "pull", "pull-enable", "gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
 +
-+		emmc_pins: emmc {
-+			mux {
-+				groups = "emmc_nand_d07",
-+				       "emmc_cmd",
-+				       "emmc_clk",
-+				       "emmc_ds";
-+				function = "emmc";
-+			};
-+		};
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
 +
-+		sdcard_pins: sdcard {
-+			mux {
-+				groups = "sdcard_d0",
-+				       "sdcard_d1",
-+				       "sdcard_d2",
-+				       "sdcard_d3",
-+				       "sdcard_cmd",
-+				       "sdcard_clk";
-+				function = "sdcard";
-+			};
-+		};
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
 +
-+		sdio_pins: sdio {
-+			mux {
-+				groups = "sdio_d0",
-+				       "sdio_d1",
-+				       "sdio_d2",
-+				       "sdio_d3",
-+				       "sdio_cmd",
-+				       "sdio_clk";
-+				function = "sdio";
-+			};
-+		};
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
 +
-+		sdio_irq_pins: sdio_irq {
-+			mux {
-+				groups = "sdio_irq";
-+				function = "sdio";
-+			};
-+		};
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
 +
-+		uart_a_pins: uart_a {
-+			mux {
-+				groups = "uart_tx_a",
-+				       "uart_rx_a";
-+				function = "uart_a";
-+			};
-+		};
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
 +
-+		uart_b_pins: uart_b {
-+			mux {
-+				groups = "uart_tx_b",
-+				       "uart_rx_b";
-+				function = "uart_b";
-+			};
-+		};
-+
-+		uart_c_pins: uart_c {
-+			mux {
-+				groups = "uart_tx_c",
-+				       "uart_rx_c";
-+				function = "uart_c";
-+			};
-+		};
-+
-+		i2c_a_pins: i2c_a {
-+			mux {
-+				groups = "i2c_sck_a",
-+				     "i2c_sda_a";
-+				function = "i2c_a";
-+			};
-+		};
-+
-+		i2c_b_pins: i2c_b {
-+			mux {
-+				groups = "i2c_sck_b",
-+				      "i2c_sda_b";
-+				function = "i2c_b";
-+			};
-+		};
-+
-+		i2c_c_pins: i2c_c {
-+			mux {
-+				groups = "i2c_sck_c",
-+				      "i2c_sda_c";
-+				function = "i2c_c";
-+			};
-+		};
-+
-+		eth_pins: eth_c {
-+			mux {
-+				groups = "eth_mdio",
-+				       "eth_mdc",
-+				       "eth_clk_rx_clk",
-+				       "eth_rx_dv",
-+				       "eth_rxd0",
-+				       "eth_rxd1",
-+				       "eth_rxd2",
-+				       "eth_rxd3",
-+				       "eth_rgmii_tx_clk",
-+				       "eth_tx_en",
-+				       "eth_txd0",
-+				       "eth_txd1",
-+				       "eth_txd2",
-+				       "eth_txd3";
-+				function = "eth";
-+			};
-+		};
-+
-+		pwm_e_pins: pwm_e {
-+			mux {
-+				groups = "pwm_e";
-+				function = "pwm_e";
-+			};
-+		};
-+	};
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
 +};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
