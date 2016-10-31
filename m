@@ -1,123 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 2/7] ARM: dts: r8a7743: add SYS-DMAC support
-Date: Mon, 31 Oct 2016 22:54:50 +0300
-Message-ID: <2353351.IQDksKJfPV@wasted.cogentembedded.com>
-References: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1746536.qobnGdHRfV-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v3 1/4] cpufreq: pxa: use generic platdev driver for device-tree
+Date: Mon, 31 Oct 2016 20:54:53 +0100
+Message-ID: <1477943696-23477-2-git-send-email-robert.jarzmik@free.fr>
+References: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafael J Wysocki <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe SYS-DMAC0/1 in the R8A7743 device tree.
+For device-tree based pxa25x and pxa27x platforms, cpufreq-dt driver is
+doing the job as well as pxa2xx-cpufreq, so add these platforms to the
+compatibility list.
 
-Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+This won't work for legacy non device-tree platforms where
+pxa2xx-cpufreq is still required.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Changes in version 6:
-- refreshed the patch.
+ drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in version 5:
-- refreshed the patch.
-
-Changes in version 4:
-- refreshed the patch.
-
-Changes in version 3:
-- resolved a reject;
-- updated the "clocks" properties for the CPG/MSSR driver.
-
-Changes in version 2:
-- added Geert's tag.
-
- arch/arm/boot/dts/r8a7743.dtsi |   64 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7743.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7743.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7743.dtsi
-@@ -93,6 +93,70 @@
- 			compatible = "renesas,r8a7743-rst";
- 			reg = <0 0xe6160000 0 0x100>;
- 		};
-+
-+		dmac0: dma-controller@e6700000 {
-+			compatible = "renesas,dmac-r8a7743",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6700000 0 0x20000>;
-+			interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5", "ch6", "ch7",
-+					"ch8", "ch9", "ch10", "ch11",
-+					"ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 219>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
-+
-+		dmac1: dma-controller@e6720000 {
-+			compatible = "renesas,dmac-r8a7743",
-+				     "renesas,rcar-dmac";
-+			reg = <0 0xe6720000 0 0x20000>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5", "ch6", "ch7",
-+					"ch8", "ch9", "ch10", "ch11",
-+					"ch12", "ch13", "ch14";
-+			clocks = <&cpg CPG_MOD 218>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			#dma-cells = <1>;
-+			dma-channels = <15>;
-+		};
- 	};
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index 71267626456b..bc683d6feca8 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -34,6 +34,8 @@ static const struct of_device_id machines[] __initconst = {
+ 	{ .compatible = "fsl,imx7d", },
  
- 	/* External root clock */
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	{ .compatible = "marvell,berlin", },
++	{ .compatible = "marvell,pxa250", },
++	{ .compatible = "marvell,pxa270", },
+ 
+ 	{ .compatible = "samsung,exynos3250", },
+ 	{ .compatible = "samsung,exynos4210", },
+-- 
+2.1.4
