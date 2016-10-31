@@ -1,91 +1,65 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH V3 2/2] iio: adc: spmi-vadc: Changes to support different
- scaling
-Date: Mon, 31 Oct 2016 11:26:53 +0200
-Message-ID: <7c0baa96-51a1-06fb-7a90-1bfb3338a294@linaro.org>
-References: <1477492887-1663-1-git-send-email-rphani@codeaurora.org>
- <1477492887-1663-3-git-send-email-rphani@codeaurora.org>
- <8418e7f1-55d9-2dfa-1dc7-5960f9da0305@linaro.org>
- <be7d758f-1698-1b6d-e6a1-a2910a914737@codeaurora.org>
- <a96141dc-6ee5-2d7c-868c-7cb282002b89@kernel.org>
- <812bb533-0f19-7abc-1fa1-9e83f1db10f4@codeaurora.org>
+From: "Y.B. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [v15, 6/7] base: soc: introduce soc_device_match() interface
+Date: Mon, 31 Oct 2016 09:28:56 +0000
+Message-ID: <DB6PR0401MB2536CAD001BF3CAB4EDB15DCF8AE0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
+	<1477637418-38938-7-git-send-email-yangbo.lu@nxp.com>
+	<2572890.e6aV4hmMEL@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <812bb533-0f19-7abc-1fa1-9e83f1db10f4@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rama Krishna Phani A <rphani@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, linux-arm-msm@vger.kernel.org, smohanad@codeaurora.org, mgautam@codeaurora.org, sivaa@codeaurora.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Julia.Lawall@lip6.fr
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2572890.e6aV4hmMEL@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "M.H. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rama,
-
-On 10/31/2016 09:12 AM, Rama Krishna Phani A wrote:
-> Hi Jonathan,
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: Friday, October 28, 2016 6:48 PM
+> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Y.B. Lu; linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Scott
+> Wood; Mark Rutland; Greg Kroah-Hartman; X.B. Xie; M.H. Lian; linux-
+> i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Qiang Zhao; Russell King;
+> Bhupesh Sharma; Joerg Roedel; Claudiu Manoil; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> Rob Herring; Santosh Shilimkar; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Leo Li;
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Kumar Gala; Geert Uytterhoeven
+> Subject: Re: [v15, 6/7] base: soc: introduce soc_device_match() interface
 > 
-> On 30-Oct-16 10:43 PM, Jonathan Cameron wrote:
->> On 27/10/16 18:37, Phani A, Rama Krishna wrote:
->>> Hi Stan,
->>>
->>> On 27-Oct-16 4:48 PM, Stanimir Varbanov wrote:
->>>> Hi Rama,
->>>>
->>>> On 10/26/2016 05:41 PM, Rama Krishna Phani A wrote:
->>>>> Polling can also be used for End of conversion completion.
->>>>> Implement logic
->>>>> to choose either polling or interrupt for End of conversion
->>>>> completion.
->>>>> Scaling can be done on the voltage to report adc code in physical
->>>>> units.
->>>>> Add changes to support different scale functions to convert adc
->>>>> code to
->>>>> physical units.
->>>>>
->>>>> Signed-off-by: Rama Krishna Phani A <rphani@codeaurora.org>
->>>>> ---
->>>>>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  14 ++
->>>>>  drivers/iio/adc/qcom-spmi-vadc.c                   | 263
->>>>> +++++++++++++++++----
->>>>>  2 files changed, 236 insertions(+), 41 deletions(-)
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>>>> b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>>>> index 0fb4613..39e31c0e 100644
->>>>> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>>>> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->>>>> @@ -37,6 +37,12 @@ VADC node:
->>>>>      Value type: <prop-encoded-array>
->>>>>      Definition: End of conversion interrupt.
->>>>>
->>>>> +- qcom,vadc-poll-eoc:
->>>>> +    Usage: optional
->>>>> +    Value type: <bool>
->>>>> +    Definition: Use polling instead of interrupts for End of
->>>>> Conversion
->>>>> +        completion.
->>>>
->>>> Why you need to add such a flag in DT?
->>>>
->>>> The DT should describe hardware details not how the driver will choose
->>>> pooling vs interrupt.
->>>>
->>>> On which use-case you would prefer pooling?
->>>>
->>>
->>> Few PMIC's support interrupt functionality for ADC where as few
->>> PMIC's dont support. Based on the functionality that is supported in
->>> hardware we choose whether to go for polling or for interrupt.
->> Can't use the usual trick of an optional interrupt in DT?
->> If it's there we try to use it, if not then fall back to polling?
->>
-> Ok., Will check this logic for implementation and will post next patch.
+> On Friday, October 28, 2016 2:50:17 PM CEST Yangbo Lu wrote:
+> > +
+> > +static int soc_device_match_one(struct device *dev, void *arg) {
+> > +       struct soc_device *soc_dev = container_of(dev, struct
+> soc_device, dev);
+> > +       const struct soc_device_attribute *match = arg;
+> > +
+> > +       if (match->machine &&
+> > +           !glob_match(match->machine, soc_dev->attr->machine))
+> > +               return 0;
+> > +
+> > +       if (match->family &&
+> > +           !glob_match(match->family, soc_dev->attr->family))
+> > +               return 0;
+> > +
+> >
+> 
+> Geert found a bug in my code, and submitted a fix at
+> https://patchwork.kernel.org/patch/9361395/
+> 
+> I think you should include that one in your series.
+> 
 
-The interrupts DT property in binding doc is marked as optional already,
-so I can't really understand what you are trying to achieve with this
-new qcom,vadc-poll-eoc boolean property?
+[Lu Yangbo-B47093] Ok, no problem. Thanks :)
 
--- 
-regards,
-Stan
+> 	Arnd
