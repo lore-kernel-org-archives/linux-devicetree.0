@@ -1,59 +1,325 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v3 2/4] ARM: dts: pxa: add pxa25x cpu operating points
-Date: Mon, 31 Oct 2016 20:54:54 +0100
-Message-ID: <1477943696-23477-3-git-send-email-robert.jarzmik@free.fr>
-References: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafael J Wysocki <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
+Date: Mon, 31 Oct 2016 22:55:39 +0300
+Message-ID: <29562553.JmvzVUkhx3@wasted.cogentembedded.com>
+References: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1746536.qobnGdHRfV-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the relevant data taken from the PXA 25x Electrical, Mechanical, and
-Thermal Specfication. This will be input data for cpufreq-dt driver.
+Describe [H]SCIF{|A|B} ports in the R8A7743 device tree.
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
-Since v2: opp definition amended as per Viresh's comment
----
- arch/arm/boot/dts/pxa25x.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Based on the original (and large) patch by Dmitry Shifrin
+<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 
-diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
-index 0d1e012178c4..f9f4726396a0 100644
---- a/arch/arm/boot/dts/pxa25x.dtsi
-+++ b/arch/arm/boot/dts/pxa25x.dtsi
-@@ -89,4 +89,29 @@
- 		clocks = <&clktimer>;
- 		status = "okay";
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+---
+Changes in version 5:
+- refreshed the patch.
+
+Changes in version 4:
+- corrected RBNF in the patch description/subject;
+- used the R-Car gen2 bindings instead of the RZ/G family ones;
+- refreshed the patch;
+- added Geert's tag.
+
+Changes in version 3:
+- resolved  a reject;
+- updated the "clocks" properties for the CPG/MSSR driver;
+- renamed the patch.
+
+Changes in version 2:
+- used  the new RZ/G family "compatible" prop values, reformatting where needed;
+- fixed the size cells of the SCIFB device nodes' "reg" properties;
+- changed the size cells of the "reg" properties to hexadecimal;
+- indented the SCIFA1 device node's closing brace correctly
+- adjusted the patch description, renamed the patch.
+
+ arch/arm/boot/dts/r8a7743.dtsi |  261 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 261 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7743.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7743.dtsi
++++ renesas/arch/arm/boot/dts/r8a7743.dtsi
+@@ -157,6 +157,267 @@
+ 			#dma-cells = <1>;
+ 			dma-channels = <15>;
+ 		};
++
++		scifa0: serial@e6c40000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c40000 0 0x40>;
++			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 204>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x21>, <&dmac0 0x22>,
++			       <&dmac1 0x21>, <&dmac1 0x22>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifa1: serial@e6c50000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c50000 0 0x40>;
++			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 203>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x25>, <&dmac0 0x26>,
++			       <&dmac1 0x25>, <&dmac1 0x26>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifa2: serial@e6c60000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c60000 0 0x40>;
++			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 202>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x27>, <&dmac0 0x28>,
++			       <&dmac1 0x27>, <&dmac1 0x28>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifa3: serial@e6c70000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c70000 0 0x40>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 1106>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x1b>, <&dmac0 0x1c>,
++			       <&dmac1 0x1b>, <&dmac1 0x1c>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifa4: serial@e6c78000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c78000 0 0x40>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 1107>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x1f>, <&dmac0 0x20>,
++			       <&dmac1 0x1f>, <&dmac1 0x20>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifa5: serial@e6c80000 {
++			compatible = "renesas,scifa-r8a7743",
++				     "renesas,rcar-gen2-scifa", "renesas,scifa";
++			reg = <0 0xe6c80000 0 0x40>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 1108>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x23>, <&dmac0 0x24>,
++			       <&dmac1 0x23>, <&dmac1 0x24>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifb0: serial@e6c20000 {
++			compatible = "renesas,scifb-r8a7743",
++				     "renesas,rcar-gen2-scifb", "renesas,scifb";
++			reg = <0 0xe6c20000 0 0x100>;
++			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 206>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x3d>, <&dmac0 0x3e>,
++		       <&dmac1 0x3d>, <&dmac1 0x3e>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifb1: serial@e6c30000 {
++			compatible = "renesas,scifb-r8a7743",
++				     "renesas,rcar-gen2-scifb", "renesas,scifb";
++			reg = <0 0xe6c30000 0 0x100>;
++			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 207>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x19>, <&dmac0 0x1a>,
++			       <&dmac1 0x19>, <&dmac1 0x1a>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scifb2: serial@e6ce0000 {
++			compatible = "renesas,scifb-r8a7743",
++				     "renesas,rcar-gen2-scifb", "renesas,scifb";
++			reg = <0 0xe6ce0000 0 0x100>;
++			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 216>;
++			clock-names = "fck";
++			dmas = <&dmac0 0x1d>, <&dmac0 0x1e>,
++			       <&dmac1 0x1d>, <&dmac1 0x1e>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif0: serial@e6e60000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6e60000 0 0x40>;
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 721>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x29>, <&dmac0 0x2a>,
++			       <&dmac1 0x29>, <&dmac1 0x2a>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif1: serial@e6e68000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6e68000 0 0x40>;
++			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 720>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2d>, <&dmac0 0x2e>,
++			       <&dmac1 0x2d>, <&dmac1 0x2e>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif2: serial@e6e58000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6e58000 0 0x40>;
++			interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 719>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2b>, <&dmac0 0x2c>,
++			       <&dmac1 0x2b>, <&dmac1 0x2c>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif3: serial@e6ea8000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6ea8000 0 0x40>;
++			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 718>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x2f>, <&dmac0 0x30>,
++			       <&dmac1 0x2f>, <&dmac1 0x30>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif4: serial@e6ee0000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6ee0000 0 0x40>;
++			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 715>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0xfb>, <&dmac0 0xfc>,
++			       <&dmac1 0xfb>, <&dmac1 0xfc>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		scif5: serial@e6ee8000 {
++			compatible = "renesas,scif-r8a7743",
++				     "renesas,rcar-gen2-scif", "renesas,scif";
++			reg = <0 0xe6ee8000 0 0x40>;
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 714>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0xfd>, <&dmac0 0xfe>,
++			       <&dmac1 0xfd>, <&dmac1 0xfe>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		hscif0: serial@e62c0000 {
++			compatible = "renesas,hscif-r8a7743",
++				     "renesas,rcar-gen2-hscif", "renesas,hscif";
++			reg = <0 0xe62c0000 0 0x60>;
++			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 717>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x39>, <&dmac0 0x3a>,
++			       <&dmac1 0x39>, <&dmac1 0x3a>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		hscif1: serial@e62c8000 {
++			compatible = "renesas,hscif-r8a7743",
++				     "renesas,rcar-gen2-hscif", "renesas,hscif";
++			reg = <0 0xe62c8000 0 0x60>;
++			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 716>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x4d>, <&dmac0 0x4e>,
++			       <&dmac1 0x4d>, <&dmac1 0x4e>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		hscif2: serial@e62d0000 {
++			compatible = "renesas,hscif-r8a7743",
++				     "renesas,rcar-gen2-hscif", "renesas,hscif";
++			reg = <0 0xe62d0000 0 0x60>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 713>,
++			         <&cpg CPG_CORE R8A7743_CLK_ZS>, <&scif_clk>;
++			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac0 0x3b>, <&dmac0 0x3c>,
++			       <&dmac1 0x3b>, <&dmac1 0x3c>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
  	};
-+
-+	pxa250_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+
-+		opp@99532800 {
-+			opp-hz = /bits/ 64 <99532800>;
-+			opp-microvolt = <1000000 950000 1650000>;
-+			clock-latency-ns = <20>;
-+		};
-+		opp@199065600 {
-+			opp-hz = /bits/ 64 <199065600>;
-+			opp-microvolt = <1000000 950000 1650000>;
-+			clock-latency-ns = <20>;
-+		};
-+		opp@298598400 {
-+			opp-hz = /bits/ 64 <298598400>;
-+			opp-microvolt = <1100000 1045000 1650000>;
-+			clock-latency-ns = <20>;
-+		};
-+		opp@398131200 {
-+			opp-hz = /bits/ 64 <398131200>;
-+			opp-microvolt = <1300000 1235000 1650000>;
-+			clock-latency-ns = <20>;
-+		};
-+	};
- };
--- 
-2.1.4
+ 
+ 	/* External root clock */
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
