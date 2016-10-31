@@ -1,135 +1,95 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] clocksource: update "fn" at
- CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Mon, 31 Oct 2016 11:28:14 +0100
-Message-ID: <20161031102814.GC1506@mai>
-References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
- <1477224748-25223-3-git-send-email-noamca@mellanox.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: bus: da8xx-mstpri: new driver
+Date: Mon, 31 Oct 2016 16:01:09 +0530
+Message-ID: <0d5d1e41-b8e6-5d60-6da1-5b6ddd9bc07e@ti.com>
+References: <1477503355-2600-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477503355-2600-3-git-send-email-bgolaszewski@baylibre.com>
+ <20161031043015.74ppaship5nqfaqt@rob-hp-laptop>
+ <CAMpxmJW85TQObLdoGW2ApnkM8OiM4d1ZDd=9eyGmeVXXwqByPQ@mail.gmail.com>
+ <0cac724d-1aee-dfa7-9b78-8366fd6fceff@ti.com>
+ <CAMpxmJX7SjE1zs926Fn-=jsZhPsOK6ey0hHM8LBhNS1nuSuFFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477224748-25223-3-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAMpxmJX7SjE1zs926Fn-=jsZhPsOK6ey0hHM8LBhNS1nuSuFFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 23, 2016 at 03:12:27PM +0300, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On Monday 31 October 2016 03:24 PM, Bartosz Golaszewski wrote:
+> 2016-10-31 10:52 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+>> Hi Bartosz,
+>>
+>> On Monday 31 October 2016 03:10 PM, Bartosz Golaszewski wrote:
+>>> 2016-10-31 5:30 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>>> On Wed, Oct 26, 2016 at 07:35:55PM +0200, Bartosz Golaszewski wrote:
+>>>>> Create the driver for the da8xx master peripheral priority
+>>>>> configuration and implement support for writing to the three
+>>>>> Master Priority registers on da850 SoCs.
+>>>>>
+>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+>>>>>  drivers/bus/Kconfig                                |   9 +
+>>>>>  drivers/bus/Makefile                               |   2 +
+>>>>>  drivers/bus/da8xx-mstpri.c                         | 266 +++++++++++++++++++++
+>>>>>  4 files changed, 297 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>>  create mode 100644 drivers/bus/da8xx-mstpri.c
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..225af09
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>>>>> @@ -0,0 +1,20 @@
+>>>>> +* Device tree bindings for Texas Instruments da8xx master peripheral
+>>>>> +  priority driver
+>>>>> +
+>>>>> +DA8XX SoCs feature a set of registers allowing to change the priority of all
+>>>>> +peripherals classified as masters.
+>>>>> +
+>>>>> +Documentation:
+>>>>> +OMAP-L138 (DA850) - http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf
+>>>>> +
+>>>>> +Required properties:
+>>>>> +
+>>>>> +- compatible:                "ti,da850-mstpri", "syscon" - for da850 based boards
+>>>>
+>>>> Drop syscon. Doesn't look like it is needed and the example doesn't
+>>>> match.
+>>>
+>>> Hi Rob,
+>>>
+>>> it is needed: syscon_regmap_lookup_by_compatible() fails without it. I
+>>> fixed the example instead.
+>>
+>> Why are master priority registers under syscon? This driver should be
+>> the only entity touching them. So do we need an MFD driver?
+>>
 > 
-> nps_setup_clocksource() should take node as only argument i.e.:
-> replace
-> int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
-> with
-> int __init nps_setup_clocksource(struct device_node *node)
-> 
-> This is also serve as preperation for next patch which adds support
+> It should, but syscfg0 registers are mapped all over the place. I
 
-s/preperation/preparation/
+Not sure what you mean by this. Yes, the sysconfig module has many
+functionalities. But the registers for a given functionality are all
+grouped together AFAICS (except CHIPCFGn, see below).
 
-> for clockevents to nps400.
-> Specifically we add new function nps_get_timer_clk() to serve clocksource
-> and later clockevent registration.
-> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/clocksource/timer-nps.c |   49 ++++++++++++++++++++------------------
->  1 files changed, 26 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-> index 70c149a..6156e54 100644
-> --- a/drivers/clocksource/timer-nps.c
-> +++ b/drivers/clocksource/timer-nps.c
-> @@ -47,6 +47,28 @@
->  static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
->  
->  static unsigned long nps_timer_rate;
-> +static int nps_get_timer_clk(struct device_node *node,
-> +			     unsigned long *timer_freq,
-> +			     struct clk *clk)
+Pinmux registers are part of syscfg module, but don't use syscon.
 
-This function prototype does not make sense. A pointer to a clock is passed
-for nothing here.
+In the work going on for OHCI support, chipcfg registers are being put
+under a syscon node. But that makes sense, I think, because chipcfg
+registers are catering to really diverse functionality like PLL and EDMA
+related stuff being placed in the same register - CHIPCFG0.
 
-> +{
-> +	int ret;
-> +
-> +	clk = of_clk_get(node, 0);
-> +	if (IS_ERR(clk)) {
-> +		pr_err("timer missing clk");
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret) {
-> +		pr_err("Couldn't enable parent clk\n");
-> +		return ret;
-> +	}
-> +
-> +	*timer_freq = clk_get_rate(clk);
-> +
+> thought it would be safer to put them under syscon and Kevin agreed.
 
-	timer_freq check.
+Before using syscon for the whole syscfg space, I think we need some
+analysis as to where the likely races are going to be.
 
-	rollback on error.
-
-> +	return 0;
-> +}
->  
->  static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  {
-> @@ -55,23 +77,17 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
->  }
->  
-> -static int __init nps_setup_clocksource(struct device_node *node,
-> -					struct clk *clk)
-> +static int __init nps_setup_clocksource(struct device_node *node)
->  {
->  	int ret, cluster;
-> +	struct clk *clk;
->  
->  	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
->  		nps_msu_reg_low_addr[cluster] =
->  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
->  				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
->  
-> -	ret = clk_prepare_enable(clk);
-> -	if (ret) {
-> -		pr_err("Couldn't enable parent clock\n");
-> -		return ret;
-> -	}
-> -
-> -	nps_timer_rate = clk_get_rate(clk);
-> +	nps_get_timer_clk(node, &nps_timer_rate, clk);
-
-Return code check ?
-  
->  	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
->  				    nps_timer_rate, 301, 32, nps_clksrc_read);
-> @@ -83,18 +99,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
->  	return ret;
->  }
->  
-> -static int __init nps_timer_init(struct device_node *node)
-> -{
-> -	struct clk *clk;
-> -
-> -	clk = of_clk_get(node, 0);
-> -	if (IS_ERR(clk)) {
-> -		pr_err("Can't get timer clock.\n");
-> -		return PTR_ERR(clk);
-> -	}
-> -
-> -	return nps_setup_clocksource(node, clk);
-> -}
-> -
->  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
-> -		       nps_timer_init);
-> +		       nps_setup_clocksource);
-> -- 
-> 1.7.1
-> 
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
