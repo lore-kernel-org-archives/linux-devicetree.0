@@ -1,130 +1,121 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any
- transmitting time for tx only devices
-Date: Tue, 1 Nov 2016 10:34:08 +0000
-Message-ID: <20161101103408.GA15939@gofer.mess.org>
-References: <20161027143601.GA5103@gofer.mess.org>
- <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-6-andi.shyti@samsung.com>
- <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
- <20160902084158.GA25342@gofer.mess.org>
- <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
- <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
- <20161031170526.GA8183@gofer.mess.org>
- <20161101065111.hofyxjps2iwmxpzj@gangnam.samsung>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: da850-lcdk: add tilcdc panel node
+Date: Tue, 1 Nov 2016 12:38:36 +0200
+Message-ID: <b7ab6df6-a2ff-a0a6-576e-b1f6821a51d5@ti.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-6-git-send-email-bgolaszewski@baylibre.com>
+ <3e8671aa-e59d-4595-c323-af9e6a0ad615@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161101065111.hofyxjps2iwmxpzj@gangnam.samsung>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: multipart/mixed; boundary="===============0853298470=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3e8671aa-e59d-4595-c323-af9e6a0ad615@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+--===============0853298470==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="mhoKpUvNsi0AtVR8x4xu00c2HlI71edDf"
 
-Hi Andi,
+--mhoKpUvNsi0AtVR8x4xu00c2HlI71edDf
+Content-Type: multipart/mixed; boundary="s83C8Jpr0mAi6lPJVgPQ31bhmw60Qjte2";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Sekhar Nori <nsekhar@ti.com>,
+ Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Message-ID: <b7ab6df6-a2ff-a0a6-576e-b1f6821a51d5@ti.com>
+Subject: Re: [PATCH v2 5/5] ARM: dts: da850-lcdk: add tilcdc panel node
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-6-git-send-email-bgolaszewski@baylibre.com>
+ <3e8671aa-e59d-4595-c323-af9e6a0ad615@ti.com>
+In-Reply-To: <3e8671aa-e59d-4595-c323-af9e6a0ad615@ti.com>
 
-On Tue, Nov 01, 2016 at 03:51:11PM +0900, Andi Shyti wrote:
-> > Andi, it would be good to know what the use-case for the original change is.
-> 
-> the use case is the ir-spi itself which doesn't need the lirc to
-> perform any waiting on its behalf.
+--s83C8Jpr0mAi6lPJVgPQ31bhmw60Qjte2
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Here is the crux of the problem: in the ir-spi case no wait will actually 
-happen here, and certainly no "over-wait". The patch below will not change
-behaviour at all.
+On 01/11/16 12:26, Sekhar Nori wrote:
+> On Monday 31 October 2016 08:15 PM, Bartosz Golaszewski wrote:
+>> The tilcdc driver is not yet ready for working together with the
+>> dumb-vga-dac drm bridge. While the work on enabling drm_bridge
+>> support in tilcdc continues, enable the VGA connector on da850-lcdk
+>> with the following workaround: use the tilcdc-panel driver with
+>> a set of common (and tested) resolutions.
+>>
+>> Once the drm bridge support is complete, we'll remove the node added
+>> by this patch and use the correct solution. This change will be
+>> transparent for the user.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>=20
+> I dont think this can be applied. If this goes in v4.10, then the DT
+> blob becomes an ABI and driver will have to support tilcdc-panel driver=
 
-In the ir-spi case, "towait" will be 0 and no wait happens.
+> for DA850 forever.
+>=20
+> Its probably better to wait for the proper driver support to arrive.
 
-I think the code is already in good shape but somehow there is a 
-misunderstanding. Did I miss something?
+Agreed, NAK for this.
+
+ Tomi
 
 
-Sean
+--s83C8Jpr0mAi6lPJVgPQ31bhmw60Qjte2--
 
-> To me it just doesn't look right to simulate a fake transmission
-> period and wait unnecessary time. Of course, the "over-wait" is not
-> a big deal and at the end we can decide to drop it.
-> 
-> Otherwise, an alternative could be to add the boolean
-> 'tx_no_wait' in the rc_dev structure. It could be set by the
-> device driver during the initialization and the we can follow
-> your approach.
-> 
-> Something like this:
-> 
-> diff --git a/drivers/media/rc/ir-lirc-codec.c b/drivers/media/rc/ir-lirc-codec.c
-> index c327730..4553d04 100644
-> --- a/drivers/media/rc/ir-lirc-codec.c
-> +++ b/drivers/media/rc/ir-lirc-codec.c
-> @@ -161,15 +161,19 @@ static ssize_t ir_lirc_transmit_ir(struct file *file, const char __user *buf,
->  
->         ret *= sizeof(unsigned int);
->  
-> -       /*
-> -        * The lircd gap calculation expects the write function to
-> -        * wait for the actual IR signal to be transmitted before
-> -        * returning.
-> -        */
-> -       towait = ktime_us_delta(ktime_add_us(start, duration), ktime_get());
-> -       if (towait > 0) {
-> -               set_current_state(TASK_INTERRUPTIBLE);
-> -               schedule_timeout(usecs_to_jiffies(towait));
-> +       if (!dev->tx_no_wait) {
-> +               /*
-> +                * The lircd gap calculation expects the write function to
-> +                * wait for the actual IR signal to be transmitted before
-> +                * returning.
-> +                */
-> +               towait = ktime_us_delta(ktime_add_us(start, duration),
-> +                                                               ktime_get());
-> +               if (towait > 0) {
-> +                       set_current_state(TASK_INTERRUPTIBLE);
-> +                       schedule_timeout(usecs_to_jiffies(towait));
-> +               }
-> +
->         }
->  
->  out:
-> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-> index fcda1e4..e44abfa 100644
-> --- a/drivers/media/rc/ir-spi.c
-> +++ b/drivers/media/rc/ir-spi.c
-> @@ -149,6 +149,7 @@ static int ir_spi_probe(struct spi_device *spi)
->         if (!idata->rc)
->                 return -ENOMEM;
->  
-> +       idata->rc->tx_no_wait      = true;
->         idata->rc->tx_ir           = ir_spi_tx;
->         idata->rc->s_tx_carrier    = ir_spi_set_tx_carrier;
->         idata->rc->s_tx_duty_cycle = ir_spi_set_duty_cycle;
-> diff --git a/include/media/rc-core.h b/include/media/rc-core.h
-> index fe0c9c4..c3ced9b 100644
-> --- a/include/media/rc-core.h
-> +++ b/include/media/rc-core.h
-> @@ -85,6 +85,9 @@ enum rc_filter_type {
->   * @input_dev: the input child device used to communicate events to userspace
->   * @driver_type: specifies if protocol decoding is done in hardware or software
->   * @idle: used to keep track of RX state
-> + * @tx_no_wait: decides whether to perform or not a sync write or not. The
-> + *      device driver setting it to true must make sure to not break the ABI
-> + *      which requires a sync transfer.
->   * @allowed_protocols: bitmask with the supported RC_BIT_* protocols
->   * @enabled_protocols: bitmask with the enabled RC_BIT_* protocols
->   * @allowed_wakeup_protocols: bitmask with the supported RC_BIT_* wakeup protocols
-> @@ -147,6 +150,7 @@ struct rc_dev {
->         struct input_dev                *input_dev;
->         enum rc_driver_type             driver_type;
->         bool                            idle;
-> +       bool                            tx_no_wait;
->         u64                             allowed_protocols;
->         u64                             enabled_protocols;
->         u64                             allowed_wakeup_protocols;
-> 
-> Thanks,
-> Andi
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mhoKpUvNsi0AtVR8x4xu00c2HlI71edDf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYGHCsAAoJEPo9qoy8lh719I0QAK55gM2pEyC3R4Icx8aKm7xV
+hwKjcesoh57geoZE3lxomM1drR79A+0pu0Aoq6nY9tnLvGrSZDWwpjJPKpg1nalw
+Qp3D2USZDVnh2O6vYKUEku/RhLfAxN8zdjqlpauxcZq4yQIp70cy8t7WehLimW1/
+coeT70Nqr8NRujTLngysF2cmbUiUy63orntrwsXuFKsjGNssqU1+ZQsbmmDMcDyI
+Fkn9xShKnTvIoUyB9oESxi2EZnieI1och7LgdWsBXIHjuUYr1Ssu7c2lyCgHAWJr
+65ILC+XZ90Cif/uDQiuFYSgKuk6VKAOo6ykqk30OGyYOV9TyHCX9ZtjcCDEq+Kj4
+hnojnF/2h1lMrsgGyuZDdGbk60fTHatDIU2o8jyR8ohjAVj+NRVt7dUfL/Ftf35/
+ByDfLm8BSJnpNKosv91HmeTpg369lPIx3/CYV3BcjF8fV3/4Z+80YexNnotuQOEY
+C22zPHE6MSGXw5qJoaE0k8eg+t3iNOoTi8luAjID2YB6aiA5euAo6qEKVg3zOKhd
+CfY4c3skKVkOb2RqFyyqbpTGlZRYq5nONz50JQpnFvpgE9I+m5pVBLGf4kZmyNh6
+XWyxh3WfFzr4TcR9MJzlsw4FMYMrENoltqieiIAucvm6Y8oR0PeUTwEth/w8/eFt
+xC7Hk5J/w3xUT3dkxhIq
+=ayJR
+-----END PGP SIGNATURE-----
+
+--mhoKpUvNsi0AtVR8x4xu00c2HlI71edDf--
+
+--===============0853298470==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0853298470==--
