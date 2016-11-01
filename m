@@ -1,58 +1,40 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH 2/3] ARM: imx: mach-imx6ul: add imx6ull support
-Date: Tue, 1 Nov 2016 10:44:36 +0000
-Message-ID: <HE1PR04MB1450456D09E01C3F308D25AB8BA10@HE1PR04MB1450.eurprd04.prod.outlook.com>
-References: <1477969343-19887-1-git-send-email-peter.chen@nxp.com>
- <1477969343-19887-3-git-send-email-peter.chen@nxp.com>
- <CAOMZO5AsF8s9Ff2NHQ+j2_xSBNEzGY6bGLK-kgvx-aST+K2PNQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5AsF8s9Ff2NHQ+j2_xSBNEzGY6bGLK-kgvx-aST+K2PNQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] of/platform: fix of_platform_device_destroy comment
+Date: Tue,  1 Nov 2016 11:53:21 +0100
+Message-ID: <1477997602-29652-1-git-send-email-johan@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- 
->
->On Tue, Nov 1, 2016 at 1:02 AM, Peter Chen <peter.chen@nxp.com> wrote:
->> imx6ull is derived SoC from imx6ul.
->>
->> Signed-off-by: Peter Chen <peter.chen@nxp.com>
->> ---
->>  arch/arm/mach-imx/mach-imx6ul.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/mach-imx/mach-imx6ul.c
->> b/arch/arm/mach-imx/mach-imx6ul.c index 58a2b88..0b24630 100644
->> --- a/arch/arm/mach-imx/mach-imx6ul.c
->> +++ b/arch/arm/mach-imx/mach-imx6ul.c
->> @@ -89,10 +89,11 @@ static void __init imx6ul_init_late(void)
->>
->>  static const char * const imx6ul_dt_compat[] __initconst = {
->>         "fsl,imx6ul",
->> +       "fsl,imx6ull",
->>         NULL,
->>  };
->>
->> -DT_MACHINE_START(IMX6UL, "Freescale i.MX6 Ultralite (Device Tree)")
->> +DT_MACHINE_START(IMX6UL, "Freescale i.MX6 UltraLite (Device Tree)")
->
->Is this change really needed?
+Update the comment to of_platform_device_destroy() to reflect that it no
+longer returns a status value.
 
-This change does not be related with imx6ull support, but also a needed change since
-the formal name is capital letter "L", if you are concerned with that, I can delete this
-change.
+Fixes: 75f353b61342 ("of/platform: Fix of_platform_device_destroy...")
+Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/platform.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Peter
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index e4bf07d20f9b..cb4c7800f37d 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -558,9 +558,6 @@ static int of_platform_device_destroy(struct device *dev, void *data)
+  * of the given device (and, recurrently, their children) that have been
+  * created from their respective device tree nodes (and only those,
+  * leaving others - eg. manually created - unharmed).
+- *
+- * Returns 0 when all children devices have been removed or
+- * -EBUSY when some children remained.
+  */
+ void of_platform_depopulate(struct device *parent)
+ {
+-- 
+2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
