@@ -1,174 +1,27 @@
-From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [SPAM][PATCH 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq
- implement
-Date: Tue, 1 Nov 2016 20:12:53 +0800
-Message-ID: <1478002373.8890.3.camel@mtksdaap41>
-References: <1476335194-26604-1-git-send-email-youlin.pei@mediatek.com>
- <1476335194-26604-3-git-send-email-youlin.pei@mediatek.com>
- <1477580545.5951.3.camel@mtksdaap41>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: imx: mach-imx6ul: add imx6ull support
+Date: Tue, 1 Nov 2016 10:23:30 -0200
+Message-ID: <CAOMZO5BwfT+pbYeeu1cBB5VndLdCh_Hc6RhkrNTUZxSJ0r-73g@mail.gmail.com>
+References: <1477969343-19887-1-git-send-email-peter.chen@nxp.com>
+ <1477969343-19887-3-git-send-email-peter.chen@nxp.com> <CAOMZO5AsF8s9Ff2NHQ+j2_xSBNEzGY6bGLK-kgvx-aST+K2PNQ@mail.gmail.com>
+ <HE1PR04MB1450456D09E01C3F308D25AB8BA10@HE1PR04MB1450.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1477580545.5951.3.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <HE1PR04MB1450456D09E01C3F308D25AB8BA10-6LN7OEpIatVC+P/YwrXEHc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-10-27 at 23:02 +0800, Yingjoe Chen wrote:
-> On Thu, 2016-10-13 at 13:06 +0800, Youlin Pei wrote:
-> > This commit add the mtk-cirq implement for mt2701.
-> > 
-> > Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/irqchip/Makefile       |    2 +-
-> >  drivers/irqchip/irq-mtk-cirq.c |  257 ++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 258 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
-> > 
-> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > index 4c203b6..eee95c6 100644
-> > --- a/drivers/irqchip/Makefile
-> > +++ b/drivers/irqchip/Makefile
-> > @@ -59,7 +59,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-> >  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-> >  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> >  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
-> > -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
-> > +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
-> >  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
-> >  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
-> >  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
-> > diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-> > new file mode 100644
-> > index 0000000..544767d
-> > --- /dev/null
-> > +++ b/drivers/irqchip/irq-mtk-cirq.c
-> > @@ -0,0 +1,257 @@
-> > +/*
-> > + * Copyright (c) 2016 MediaTek Inc.
-> > + * Author: Youlin.Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/irq.h>
-> > +#include <linux/irqchip.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/io.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/syscore_ops.h>
-> > +
-> > +#define CIRQ_MASK_SET	0xC0
-> > +#define CIRQ_MASK_CLR	0x100
-> > +#define CIRQ_SENS_SET	0x180
-> > +#define CIRQ_SENS_CLR	0x1C0
-> 
-> nit: please use lower case for hex value
+On Tue, Nov 1, 2016 at 8:44 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
 
-fixed in V2, please review in v2.
+> This change does not be related with imx6ull support, but also a needed change since
+> the formal name is capital letter "L", if you are concerned with that, I can delete this
+> change.
 
-> 
-> > +#define CIRQ_POL_SET	0x240
-> > +#define CIRQ_POL_CLR	0x280
-> > +#define CIRQ_CONTROL	0x300
-> > +
-> > +#define CIRQ_EN		0x1
-> 
-> nit: please align
-
-fixed in v2. please review in v2.
-
-> 
-> > +#define CIRQ_EDGE	0x2
-> > +#define CIRQ_FLUSH	0x4
-> > +
-> > +#define CIRQ_IRQ_NUM    0x200
-> > +
-> > +struct mtk_cirq_chip_data {
-> > +	void __iomem *base;
-> > +	unsigned int ext_irq_start;
-> > +};
-> > +
-> 
-> <deleted..>
-> 
-> > +
-> > +static int __init mtk_cirq_of_init(struct device_node *node,
-> > +				   struct device_node *parent)
-> > +{
-> > +	struct irq_domain *domain, *domain_parent;
-> > +	int ret;
-> > +
-> > +	domain_parent = irq_find_host(parent);
-> > +	if (!domain_parent) {
-> > +		pr_err("mtk_cirq: interrupt-parent not found\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	cirq_data = kzalloc(sizeof(*cirq_data), GFP_KERNEL);
-> > +	if (!cirq_data)
-> > +		return -ENOMEM;
-> > +
-> > +	cirq_data->base = of_iomap(node, 0);
-> > +	if (!cirq_data->base) {
-> > +		pr_err("mtk_cirq: unable to map cirq register\n");
-> > +		ret = -ENXIO;
-> > +		goto out_free;
-> > +	}
-> > +
-> > +	if (of_property_read_u32(node, "mediatek,ext-irq-start",
-> > +				 &cirq_data->ext_irq_start)) {
-> > +		ret = -EINVAL;
-> > +		goto out_free;
-> 
-> Please propagate error returned from of_property_read_u32
-> Should goto out_unmap when fail here.
-
-fixed in v2, thanks!
-> 
-> Joe.C
-> 
-> > +	}
-> > +
-> > +	domain = irq_domain_add_hierarchy(domain_parent, 0, CIRQ_IRQ_NUM, node,
-> > +					  &cirq_domain_ops, cirq_data);
-> > +	if (!domain) {
-> > +		ret = -ENOMEM;
-> > +		goto out_unmap;
-> > +	}
-> > +
-> > +	mtk_cirq_syscore_init();
-> > +
-> > +	return 0;
-> > +
-> > +out_unmap:
-> > +	iounmap(cirq_data->base);
-> > +out_free:
-> > +	kfree(cirq_data);
-> > +	return ret;
-> > +}
-> > +
-> > +IRQCHIP_DECLARE(mtk_cirq, "mediatek,mt2701-cirq", mtk_cirq_of_init);
-> 
-> 
+Just make it as a separate patch then. Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
