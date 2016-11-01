@@ -1,123 +1,61 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] net: rfkill-regulator: Add devicetree support
-Date: Tue,  1 Nov 2016 11:58:40 +0100
-Message-ID: <20161101105840.24313-2-paul@crapouillou.net>
-References: <20161101105840.24313-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161101105840.24313-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johannes Berg <johannes@sipsolutions.net>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
-Cc: Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt moderation
+Date: Tue, 01 Nov 2016 13:16:08 +0200
+Message-ID: <87oa1zpi13.fsf@linux.intel.com>
+References: <cover.1477424426.git.johnyoun@synopsys.com> <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com> <20161026105632.GG19965@leverpostej> <36413315-16eb-d690-b559-ab5ae103c5f9@synopsys.com> <20161028102350.GD5806@leverpostej> <87mvhosr4g.fsf@linux.intel.com> <20161028103843.GE5806@leverpostej> <75a1dc4a-1d7e-a8e3-dd71-c0bed1927dca@synopsys.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <75a1dc4a-1d7e-a8e3-dd71-c0bed1927dca-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the support for probing the rfkill-regulator
-from devicetree.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Information about the devicetree bindings can be found here:
-Documentation/devicetree/bindings/net/rfkill-regulator.txt
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- net/rfkill/rfkill-regulator.c | 43 ++++++++++++++++++++++++++++++++-----------
- 1 file changed, 32 insertions(+), 11 deletions(-)
+Hi,
 
-diff --git a/net/rfkill/rfkill-regulator.c b/net/rfkill/rfkill-regulator.c
-index 50cd26a..29ded4c 100644
---- a/net/rfkill/rfkill-regulator.c
-+++ b/net/rfkill/rfkill-regulator.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/err.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-@@ -60,24 +61,38 @@ static struct rfkill_ops rfkill_regulator_ops = {
- static int rfkill_regulator_probe(struct platform_device *pdev)
- {
- 	struct rfkill_regulator_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *node = pdev->dev.of_node;
- 	struct rfkill_regulator_data *rfkill_data;
- 	struct regulator *vcc;
- 	struct rfkill *rf_kill;
-+	const char *name;
-+	u32 type;
- 	int ret = 0;
- 
--	if (pdata == NULL) {
-+	if (pdata) {
-+		if (!pdata->name || !pdata->type) {
-+			dev_err(&pdev->dev, "invalid name or type in platform data\n");
-+			return -EINVAL;
-+		}
-+
-+		name = pdata->name;
-+		type = pdata->type;
-+	} else if (node) {
-+		ret = of_property_read_u32(node, "rfkill-type", &type);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = of_property_read_string(node, "rfkill-name", &name);
-+		if (ret < 0)
-+			return ret;
-+	} else {
- 		dev_err(&pdev->dev, "no platform data\n");
- 		return -ENODEV;
- 	}
- 
--	if (pdata->name == NULL || pdata->type == 0) {
--		dev_err(&pdev->dev, "invalid name or type in platform data\n");
--		return -EINVAL;
--	}
--
- 	vcc = regulator_get_exclusive(&pdev->dev, "vrfkill");
- 	if (IS_ERR(vcc)) {
--		dev_err(&pdev->dev, "Cannot get vcc for %s\n", pdata->name);
-+		dev_err(&pdev->dev, "Cannot get vcc for %s\n", name);
- 		ret = PTR_ERR(vcc);
- 		goto out;
- 	}
-@@ -88,9 +103,8 @@ static int rfkill_regulator_probe(struct platform_device *pdev)
- 		goto err_data_alloc;
- 	}
- 
--	rf_kill = rfkill_alloc(pdata->name, &pdev->dev,
--				pdata->type,
--				&rfkill_regulator_ops, rfkill_data);
-+	rf_kill = rfkill_alloc(name, &pdev->dev, type,
-+			       &rfkill_regulator_ops, rfkill_data);
- 	if (rf_kill == NULL) {
- 		ret = -ENOMEM;
- 		goto err_rfkill_alloc;
-@@ -110,7 +124,7 @@ static int rfkill_regulator_probe(struct platform_device *pdev)
- 	}
- 
- 	platform_set_drvdata(pdev, rfkill_data);
--	dev_info(&pdev->dev, "%s initialized\n", pdata->name);
-+	dev_info(&pdev->dev, "%s initialized\n", name);
- 
- 	return 0;
- 
-@@ -137,11 +151,18 @@ static int rfkill_regulator_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id rfkill_regulator_of_match[] = {
-+	{ .compatible = "rfkill-regulator" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rfkill_regulator_of_match);
-+
- static struct platform_driver rfkill_regulator_driver = {
- 	.probe = rfkill_regulator_probe,
- 	.remove = rfkill_regulator_remove,
- 	.driver = {
- 		.name = "rfkill-regulator",
-+		.of_match_table = of_match_ptr(rfkill_regulator_of_match),
- 	},
- };
- 
--- 
-2.9.3
+John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+>> I'm not sure that it makes sense for this to be in the DT, though I may
+>> have misunderstood.
+>
+> I'm ok omitting the DT binding until it is needed by someone. Since we
+> currently only need it for the workaround, which is detected
+> automatically.
+>
+> Felipe, are you ok with this?
+
+certainly. No problems whatsoever :-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYGHl4AAoJEMy+uJnhGpkGEKsP/0OWJDMNjGpb7sydmJ3Tg8+k
+1lU2nF+nveZNq6DIRUh3R45+bzY/tu73upaz9tvPn05z1kCK7bfGj/fL46d0qg6l
+wOgo0HaUhfAZiphT/Ksz8pDkahdPHljH229/2pPcCfAVa2bQQW9GOkT4o2USqA98
+HnDmKp3GhLPkqkh/mNu4DwBM4ZO5LtsQKMiZZuI/8fpEXQGWzUCgDz9S7T01+bCl
+uDQN1Y3iSI6UI5nGZNNbQ9RLN7KAJhEczVnBnrOBiNddUiHALjxZOisv0ERpXf1D
+ZBG6uREhmHdGlR86UOYbbIRIuoc+aUTcqJoC44jwfc5axSucjGiRXVITY2RhicUc
+mJ8g6D3/88Y3A4Fl0C8GSAF8KW4DQwB5jdgwGYaWMvZLjr1/XWNJH8TP4AIVH3Nf
+aurJCixbeliJTyAoVqcew8SaavHR8Y1G67yFKV4WKxO83DixFEyW9aThIcL2X8BT
+gGzwbmrrNGuSRhcxxeSg0Q0P4YNvhAtU7vxUAoKPfUvfutHrfQjCqhaYaVByQN7R
+WT4AvsFnlppBbaKI/k0Hfw2MiYO5j67vnFmHweNotarCZtO6Fom6Gub3eFNBm/ya
+wtOYAgLNDOElUioCuBVM7EzZ64VdoEFuJjwqxXPpXng87wZDC8KvSJA22u+ti2yY
+l4M7k9zs/pH5uMCAaLVo
+=U4by
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
