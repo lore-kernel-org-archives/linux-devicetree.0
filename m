@@ -1,37 +1,37 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 0/2] mmc: dw_mmc: fix the wrong operation for reset controller
-Date: Tue, 1 Nov 2016 14:56:00 -0700
-Message-ID: <CALAqxLXs704Y-TGAQsggSnDohyFDYvQw=zYuiHRu9UKgHEfbFw@mail.gmail.com>
-References: <20161031024942.4415-1-jh80.chung@samsung.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v8 1/3] ARM: dts: da850: Add cfgchip syscon node
+Date: Tue, 1 Nov 2016 18:12:04 -0500
+Message-ID: <8770cb0a-a113-d9a0-ee71-7463d8042cdd@lechnology.com>
+References: <1477946841-16126-1-git-send-email-david@lechnology.com>
+ <1477946841-16126-2-git-send-email-david@lechnology.com>
+ <b3617c00-1f1d-5ab8-23e9-a96307a53558@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20161031024942.4415-1-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, lkml <linux-kernel@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Leo Yan <leo.yan@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b3617c00-1f1d-5ab8-23e9-a96307a53558@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Axel Haslam <ahaslam@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 30, 2016 at 7:49 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> This patch adds the "reset-names" as reset controller for dwmmc controller.
-> Linaro guys had reported the issue about booting stuck.
+On 11/01/2016 04:53 AM, Sekhar Nori wrote:
+> Hi David,
 >
-> Some SoCs are enabled the CONFIG_RESET_CONTROLLER.
-> then dwmmc controller are waiting for getting reset controller.
-> But if doesn't define "resets" property in device-tree, it should be stuck.
+> On Tuesday 01 November 2016 02:17 AM, David Lechner wrote:
+>> Add a syscon node for the SoC CFGCHIPn registers. It includes a child node
+>> for the USB PHY that is part of this range of registers.
+>>
+>> Also have to add OF_DEV_AUXDATA() entry so that clock lookup will work for
+>> the the USB PHY driver.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
 >
-> If use the reset-names as reset controller for dwmmc controller,
-> it's more stable than now.
-> This commit is related with the below commit.
+> For future, please do not combine device-tree addition and other C code into a
+> single patch. I have applied this patch while splitting it into two as
+> attached.
 >
-> Fixes: d6786fefe816 ("mmc: dw_mmc: add reset support to dwmmc host controller")
 
-So I wasn't hit by the issue, as I don't tend to boot from SD on my
-hikey, but I did run these patches and I'm not seeing any issues with
-my Android environment.
+Sorry. I should know that by now. :-/
 
-So for what its worth:
-Acked-by: John Stultz <john.stultz@linaro.org>
-
-thanks
--john
+Thank you for fixing it for me.
