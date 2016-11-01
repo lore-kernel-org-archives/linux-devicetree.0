@@ -1,59 +1,80 @@
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] clocksource: update "fn" at
- CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Tue, 1 Nov 2016 09:07:38 +0000
-Message-ID: <DB6PR0501MB251840D45FC427B1A7B7572AAAA10@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1477899468-5494-1-git-send-email-noamca@mellanox.com>
- <1477899468-5494-3-git-send-email-noamca@mellanox.com>
- <alpine.DEB.2.20.1610311137290.8160@nanos>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v14 1/4] clk: mediatek: Add MT2701 clock support
+Date: Tue, 1 Nov 2016 17:23:54 +0800
+Message-ID: <1477992234.8785.9.camel@mtksdaap41>
+References: <1477020742-13889-1-git-send-email-erin.lo@mediatek.com>
+         <1477020742-13889-2-git-send-email-erin.lo@mediatek.com>
+         <20161028011753.GS26139@codeaurora.org>
+         <1477896558.5376.13.camel@mtksdaap41>
+         <20161031180647.GR16026@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1610311137290.8160@nanos>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20161031180647.GR16026@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Erin Lo <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, ms.chen@mediatek.com, robert.chou@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Thomas Gleixner [mailto:tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org]=20
-> Sent: Monday, October 31, 2016 7:40 PM
+Hi Stephen,
 
->> =20
->>  static unsigned long nps_timer_rate;
->> +static int nps_get_timer_clk(struct device_node *node,
->
->Please don't glue variables and functions together w/o a new line. That's =
-horrible to read.
-Will be fixed in V4
+On Mon, 2016-10-31 at 11:06 -0700, Stephen Boyd wrote:
+> On 10/31, James Liao wrote:
+> > On Thu, 2016-10-27 at 18:17 -0700, Stephen Boyd wrote:
+> > > On 10/21, Erin Lo wrote:
+> > > > @@ -244,3 +256,31 @@ void mtk_clk_register_composites(const struct mtk_composite *mcs,
+> > > >  			clk_data->clks[mc->id] = clk;
+> > > >  	}
+> > > >  }
+> > > > +
+> > > > +void mtk_clk_register_dividers(const struct mtk_clk_divider *mcds,
+> > > > +			int num, void __iomem *base, spinlock_t *lock,
+> > > > +				struct clk_onecell_data *clk_data)
+> > > > +{
+> > > > +	struct clk *clk;
+> > > > +	int i;
+> > > > +
+> > > > +	for (i = 0; i <  num; i++) {
+> > > > +		const struct mtk_clk_divider *mcd = &mcds[i];
+> > > > +
+> > > > +		if (clk_data && !IS_ERR_OR_NULL(clk_data->clks[mcd->id]))
+> > > 
+> > > NULL is a valid clk. IS_ERR_OR_NULL is usually wrong.
+> > 
+> > Why NULL is a valid clk?
+> 
+> Perhaps at some point we'll want to return a NULL pointer to
+> clk_get() callers so that they can handle things like optional
+> clocks easily without having any storage requirements. I don't
+> know if we'll ever do that, but that's just a possibility.
+> 
+> > 
+> > clk_data is designed for multiple initialization from different clock
+> > types, such as infra_clk_data in clk-mt2701.c. So it will ignore valid
+> > clocks to avoid duplicated clock registration. Here I assume a clock
+> > pointer with error code or NULL to be an invalid (not initialized)
+> > clock.
+> > 
+> 
+> Ok. Would it be possible to initialize the array with all error
+> pointers? That would make things less error prone, but it
 
->> +static int __init nps_setup_clocksource(struct device_node *node)
->>  {
->>  	int ret, cluster;
->> +	struct clk *clk;
->> =20
->>  	for (cluster =3D 0; cluster < NPS_CLUSTER_NUM; cluster++)
->>  		nps_msu_reg_low_addr[cluster] =3D
->>  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
->>  				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
->> =20
->> -	ret =3D clk_prepare_enable(clk);
->> -	if (ret) {
->> -		pr_err("Couldn't enable parent clock\n");
->> -		return ret;
->> -	}
->> -
->> -	nps_timer_rate =3D clk_get_rate(clk);
->> +	nps_get_timer_clk(node, &nps_timer_rate, clk);
+Yes. Current mtk_alloc_clk_data() implementation init all elements with
+ERR_PTR(-ENOENT). 
 
->Why are you ignoring the return code? It was handled before your change ..=
-.
-Will be fixed in V4
+> probably doesn't matter at all anyway because this is done during
+> registration time. IS_ERR_OR_NULL makes me take a second look
+> each time, because it's usually wrong.
 
-Regards,
-Noam
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I see. Although currently all Mediatek clk drivers use
+mtk_alloc_clk_data() to allocate clk_data, I would like to keep the
+flexibility to support zero-initialized clk_data such as a static
+structure. So I prefer to treat a NULL pointer as an uninitialized
+clock.
+
+
+Best regards,
+
+James
+
