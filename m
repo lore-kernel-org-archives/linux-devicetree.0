@@ -1,65 +1,71 @@
-From: Nicolae Rosia <Nicolae_Rosia-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] Documentation: bindings: fix twl-rtc documentation
-Date: Tue, 1 Nov 2016 11:42:36 +0200
-Message-ID: <1477993356-9195-1-git-send-email-Nicolae_Rosia@mentor.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 3/5] ARM64: dts: meson-gxl: Add ethernet nodes with
+ internal PHY
+Date: Tue, 1 Nov 2016 12:48:06 +0300
+Message-ID: <52cb99f1-93ef-ea53-63c1-a661c2790538@cogentembedded.com>
+References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
+ <1477932987-27871-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBAABBFGH4HAAKGQE4CLZM2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolae Rosia <Nicolae_Rosia-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477932987-27871-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupts documentation
-Fix example and formatting
+Hello.
 
-Signed-off-by: Nicolae Rosia <Nicolae_Rosia-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/rtc/twl-rtc.txt | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+On 10/31/2016 7:56 PM, Neil Armstrong wrote:
 
-diff --git a/Documentation/devicetree/bindings/rtc/twl-rtc.txt b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-index 596e0c9..8f9a94f 100644
---- a/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-@@ -1,12 +1,11 @@
--* TI twl RTC
--
--The TWL family (twl4030/6030) contains a RTC.
-+* Texas Instruments TWL4030/6030 RTC
- 
- Required properties:
--- compatible : Should be twl4030-rtc
--
--Examples:
--
--rtc@0 {
--    compatible = "ti,twl4030-rtc";
--};
-+- compatible : Should be "ti,twl4030-rtc"
-+- interrupts : Should be the interrupt number.
-+
-+Example:
-+	rtc {
-+		compatible = "ti,twl4030-rtc";
-+		interrupts = <11>;
-+	};
--- 
-2.5.5
+> Add Ethernet node with Internal PHY selection for the Amlogic GXL SoCs
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 45 ++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> index d1bf381..71670c3 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> @@ -47,6 +47,24 @@
+>
+>  / {
+>  	compatible = "amlogic,meson-gxl";
+> +
+> +
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+    No need for these empty lines.
+
+> +};
+> +
+> +&ethmac {
+> +	reg = <0x0 0xc9410000 0x0 0x10000
+> +	       0x0 0xc8834540 0x0 0x4>;
+> +
+> +	clocks = <&clkc CLKID_ETH>,
+> +		 <&clkc CLKID_FCLK_DIV2>,
+> +		 <&clkc CLKID_MPLL2>;
+> +	clock-names = "stmmaceth", "clkin0", "clkin1";
+> +
+> +	mdio0: mdio0 {
+
+    Should be "mdio0: mdio {" in oprder to comply woth the DT spec.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,dwmac-mdio";
+> +	};
+>  };
+>
+>  &aobus {
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
