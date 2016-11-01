@@ -1,49 +1,109 @@
-From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v16 3/5] arm64: dts: mt8173: Add GCE node
-Date: Tue, 1 Nov 2016 19:28:16 +0800
-Message-ID: <1477999698-6288-4-git-send-email-hs.liao@mediatek.com>
+From: HS Liao <hs.liao@mediatek.com>
+Subject: [PATCH v16 4/5] CMDQ: suspend and resume
+Date: Tue, 1 Nov 2016 19:28:17 +0800
+Message-ID: <1477999698-6288-5-git-send-email-hs.liao@mediatek.com>
 References: <1477999698-6288-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477999698-6288-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477999698-6288-1-git-send-email-hs.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device node of the GCE hardware for CMDQ module.
+take suspend and resume into consideration
 
-Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: HS Liao <hs.liao@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 44 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 1c71e25..d50c044 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -414,6 +414,16 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index d086fd8..747bcd3 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -81,6 +81,7 @@ struct cmdq {
+ 	u32			irq;
+ 	struct cmdq_thread	thread[CMDQ_THR_MAX_COUNT];
+ 	struct clk		*clock;
++	bool			suspended;
+ };
  
-+		gce: gce@10212000 {
-+			compatible = "mediatek,mt8173-gce";
-+			reg = <0 0x10212000 0 0x1000>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
+ static int cmdq_thread_suspend(struct cmdq *cmdq, struct cmdq_thread *thread)
+@@ -206,6 +207,9 @@ static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+ 
+ 	cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+ 
++	/* Client should not flush new tasks if suspended. */
++	WARN_ON(cmdq->suspended);
 +
-+			#mbox-cells = <2>;
-+		};
+ 	task = kzalloc(sizeof(*task), GFP_ATOMIC);
+ 	task->cmdq = cmdq;
+ 	INIT_LIST_HEAD(&task->list_entry);
+@@ -409,6 +413,39 @@ static void cmdq_thread_handle_timeout(unsigned long data)
+ 	spin_unlock_irqrestore(&thread->chan->lock, flags);
+ }
+ 
++static int cmdq_suspend(struct device *dev)
++{
++	struct cmdq *cmdq = dev_get_drvdata(dev);
++	struct cmdq_thread *thread;
++	int i;
++	bool task_running = false;
 +
- 		mipi_tx0: mipi-dphy@10215000 {
- 			compatible = "mediatek,mt8173-mipi-tx";
- 			reg = <0 0x10215000 0 0x1000>;
++	cmdq->suspended = true;
++
++	for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
++		thread = &cmdq->thread[i];
++		if (!list_empty(&thread->task_busy_list)) {
++			task_running = true;
++			break;
++		}
++	}
++
++	if (task_running)
++		dev_warn(dev, "exist running task(s) in suspend\n");
++
++	clk_unprepare(cmdq->clock);
++	return 0;
++}
++
++static int cmdq_resume(struct device *dev)
++{
++	struct cmdq *cmdq = dev_get_drvdata(dev);
++
++	WARN_ON(clk_prepare(cmdq->clock) < 0);
++	cmdq->suspended = false;
++	return 0;
++}
++
+ static int cmdq_remove(struct platform_device *pdev)
+ {
+ 	struct cmdq *cmdq = platform_get_drvdata(pdev);
+@@ -532,9 +569,15 @@ static int cmdq_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, cmdq);
+ 	WARN_ON(clk_prepare(cmdq->clock) < 0);
++
+ 	return 0;
+ }
+ 
++static const struct dev_pm_ops cmdq_pm_ops = {
++	.suspend = cmdq_suspend,
++	.resume = cmdq_resume,
++};
++
+ static const struct of_device_id cmdq_of_ids[] = {
+ 	{.compatible = "mediatek,mt8173-gce",},
+ 	{}
+@@ -545,6 +588,7 @@ static int cmdq_probe(struct platform_device *pdev)
+ 	.remove = cmdq_remove,
+ 	.driver = {
+ 		.name = "mtk_cmdq",
++		.pm = &cmdq_pm_ops,
+ 		.of_match_table = cmdq_of_ids,
+ 	}
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
