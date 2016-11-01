@@ -1,204 +1,134 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH v4 3/7] net: phy: broadcom: Add BCM54810 PHY entry
-Date: Tue,  1 Nov 2016 16:04:38 -0400
-Message-ID: <1478030682-27012-4-git-send-email-jon.mason@broadcom.com>
-References: <1478030682-27012-1-git-send-email-jon.mason@broadcom.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: add specific compatible strings for
+ boards
+Date: Tue, 1 Nov 2016 22:10:38 +0200
+Message-ID: <6ebcc3e9-37b7-7c27-a111-9fc663d07864@mentor.com>
+References: <20161101153817.6977-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478030682-27012-1-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161101153817.6977-1-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM54810 PHY requires some semi-unique configuration, which results
-in some additional configuration in addition to the standard config.
-Also, some users of the BCM54810 require the PHY lanes to be swapped.
-Since there is no way to detect this, add a device tree query to see if
-it is applicable.
+Hi Dinh,
 
-Inspired-by: Vikas Soni <vsoni@broadcom.com>
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- drivers/net/phy/Kconfig    |  2 +-
- drivers/net/phy/broadcom.c | 58 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/brcmphy.h    |  9 +++++++
- 3 files changed, 67 insertions(+), 2 deletions(-)
+On 11/01/2016 05:38 PM, Dinh Nguyen wrote:
+> Add a more specific board compatible entry for all of the SOCFPGA
+> Cyclone 5 based boards.
+>
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> index afea364..5ecd2ef 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> @@ -18,7 +18,7 @@
+>
+>  / {
+>  	model = "Terasic DE-0(Atlas)";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "terasic,de0-atlas", "altr,socfpga-cyclone5", "altr,socfpga";
+>
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> index 424523b..668d77c 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> @@ -19,7 +19,7 @@
+>
+>  / {
+>  	model = "Aries/DENX MCV EVK";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "denx, mcvevk", "altr,socfpga-cyclone5", "altr,socfpga";
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 45f68ea..31967ca 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -217,7 +217,7 @@ config BROADCOM_PHY
- 	select BCM_NET_PHYLIB
- 	---help---
- 	  Currently supports the BCM5411, BCM5421, BCM5461, BCM54616S, BCM5464,
--	  BCM5481 and BCM5482 PHYs.
-+	  BCM5481, BCM54810 and BCM5482 PHYs.
- 
- config CICADA_PHY
- 	tristate "Cicada PHYs"
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 3a64b3d..b1e32e9 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -18,7 +18,7 @@
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/brcmphy.h>
--
-+#include <linux/of.h>
- 
- #define BRCM_PHY_MODEL(phydev) \
- 	((phydev)->drv->phy_id & (phydev)->drv->phy_id_mask)
-@@ -45,6 +45,34 @@ static int bcm54xx_auxctl_write(struct phy_device *phydev, u16 regnum, u16 val)
- 	return phy_write(phydev, MII_BCM54XX_AUX_CTL, regnum | val);
- }
- 
-+static int bcm54810_config(struct phy_device *phydev)
-+{
-+	int rc, val;
-+
-+	val = bcm_phy_read_exp(phydev, BCM54810_EXP_BROADREACH_LRE_MISC_CTL);
-+	val &= ~BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN;
-+	rc = bcm_phy_write_exp(phydev, BCM54810_EXP_BROADREACH_LRE_MISC_CTL,
-+			       val);
-+	if (rc < 0)
-+		return rc;
-+
-+	val = bcm54xx_auxctl_read(phydev, MII_BCM54XX_AUXCTL_SHDWSEL_MISC);
-+	val &= ~MII_BCM54XX_AUXCTL_SHDWSEL_MISC_RGMII_SKEW_EN;
-+	val |= MII_BCM54XX_AUXCTL_MISC_WREN;
-+	rc = bcm54xx_auxctl_write(phydev, MII_BCM54XX_AUXCTL_SHDWSEL_MISC,
-+				  val);
-+	if (rc < 0)
-+		return rc;
-+
-+	val = bcm_phy_read_shadow(phydev, BCM54810_SHD_CLK_CTL);
-+	val &= ~BCM54810_SHD_CLK_CTL_GTXCLK_EN;
-+	rc = bcm_phy_write_shadow(phydev, BCM54810_SHD_CLK_CTL, val);
-+	if (rc < 0)
-+		return rc;
-+
-+	return 0;
-+}
-+
- /* Needs SMDSP clock enabled via bcm54xx_phydsp_config() */
- static int bcm50610_a0_workaround(struct phy_device *phydev)
- {
-@@ -217,6 +245,12 @@ static int bcm54xx_config_init(struct phy_device *phydev)
- 	    (phydev->dev_flags & PHY_BRCM_AUTO_PWRDWN_ENABLE))
- 		bcm54xx_adjust_rxrefclk(phydev);
- 
-+	if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM54810) {
-+		err = bcm54810_config(phydev);
-+		if (err)
-+			return err;
-+	}
-+
- 	bcm54xx_phydsp_config(phydev);
- 
- 	return 0;
-@@ -314,6 +348,7 @@ static int bcm5482_read_status(struct phy_device *phydev)
- 
- static int bcm5481_config_aneg(struct phy_device *phydev)
- {
-+	struct device_node *np = phydev->mdio.dev.of_node;
- 	int ret;
- 
- 	/* Aneg firsly. */
-@@ -344,6 +379,14 @@ static int bcm5481_config_aneg(struct phy_device *phydev)
- 		phy_write(phydev, 0x18, reg);
- 	}
- 
-+	if (of_property_read_bool(np, "enet-phy-lane-swap")) {
-+		/* Lane Swap - Undocumented register...magic! */
-+		ret = bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_SEL_ER + 0x9,
-+					0x11B);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	return ret;
- }
- 
-@@ -578,6 +621,18 @@ static struct phy_driver broadcom_drivers[] = {
- 	.ack_interrupt	= bcm_phy_ack_intr,
- 	.config_intr	= bcm_phy_config_intr,
- }, {
-+	.phy_id         = PHY_ID_BCM54810,
-+	.phy_id_mask    = 0xfffffff0,
-+	.name           = "Broadcom BCM54810",
-+	.features       = PHY_GBIT_FEATURES |
-+			  SUPPORTED_Pause | SUPPORTED_Asym_Pause,
-+	.flags          = PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
-+	.config_init    = bcm54xx_config_init,
-+	.config_aneg    = bcm5481_config_aneg,
-+	.read_status    = genphy_read_status,
-+	.ack_interrupt  = bcm_phy_ack_intr,
-+	.config_intr    = bcm_phy_config_intr,
-+}, {
- 	.phy_id		= PHY_ID_BCM5482,
- 	.phy_id_mask	= 0xfffffff0,
- 	.name		= "Broadcom BCM5482",
-@@ -661,6 +716,7 @@ static struct mdio_device_id __maybe_unused broadcom_tbl[] = {
- 	{ PHY_ID_BCM54616S, 0xfffffff0 },
- 	{ PHY_ID_BCM5464, 0xfffffff0 },
- 	{ PHY_ID_BCM5481, 0xfffffff0 },
-+	{ PHY_ID_BCM54810, 0xfffffff0 },
- 	{ PHY_ID_BCM5482, 0xfffffff0 },
- 	{ PHY_ID_BCM50610, 0xfffffff0 },
- 	{ PHY_ID_BCM50610M, 0xfffffff0 },
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 0ed6691..848dc50 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -13,6 +13,7 @@
- #define PHY_ID_BCM5241			0x0143bc30
- #define PHY_ID_BCMAC131			0x0143bc70
- #define PHY_ID_BCM5481			0x0143bca0
-+#define PHY_ID_BCM54810			0x03625d00
- #define PHY_ID_BCM5482			0x0143bcb0
- #define PHY_ID_BCM5411			0x00206070
- #define PHY_ID_BCM5421			0x002060e0
-@@ -56,6 +57,7 @@
- #define PHY_BRCM_EXT_IBND_TX_ENABLE	0x00002000
- #define PHY_BRCM_CLEAR_RGMII_MODE	0x00004000
- #define PHY_BRCM_DIS_TXCRXC_NOENRGY	0x00008000
-+
- /* Broadcom BCM7xxx specific workarounds */
- #define PHY_BRCM_7XXX_REV(x)		(((x) >> 8) & 0xff)
- #define PHY_BRCM_7XXX_PATCH(x)		((x) & 0xff)
-@@ -111,6 +113,7 @@
- #define MII_BCM54XX_AUXCTL_MISC_RDSEL_MISC	0x7000
- #define MII_BCM54XX_AUXCTL_SHDWSEL_MISC	0x0007
- #define MII_BCM54XX_AUXCTL_SHDWSEL_READ_SHIFT	12
-+#define MII_BCM54XX_AUXCTL_SHDWSEL_MISC_RGMII_SKEW_EN	(1 << 8)
- 
- #define MII_BCM54XX_AUXCTL_SHDWSEL_MASK	0x0007
- 
-@@ -192,6 +195,12 @@
- #define BCM5482_SSD_SGMII_SLAVE_EN	0x0002	/* Slave mode enable */
- #define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
- 
-+/* BCM54810 Registers */
-+#define BCM54810_EXP_BROADREACH_LRE_MISC_CTL	(MII_BCM54XX_EXP_SEL_ER + 0x90)
-+#define BCM54810_EXP_BROADREACH_LRE_MISC_CTL_EN	(1 << 0)
-+#define BCM54810_SHD_CLK_CTL			0x3
-+#define BCM54810_SHD_CLK_CTL_GTXCLK_EN		(1 << 9)
-+
- 
- /*****************************************************************************/
- /* Fast Ethernet Transceiver definitions. */
--- 
-2.7.4
+Redundant space            ^
+
+>
+>  	aliases {
+>  		ethernet0 = &gmac0;
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> index 15e43f4..b0577c1 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> @@ -19,7 +19,7 @@
+>
+>  / {
+>  	model = "Altera SOCFPGA Cyclone V SoC Development Kit";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "altr,socdk", "altr,socfpga-cyclone5", "altr,socfpga";
+>
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> index 02e22f5..c5623a7 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> @@ -19,7 +19,7 @@
+>
+>  / {
+>  	model = "Terasic SoCkit";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "terasic,sockit", "altr,socfpga-cyclone5", "altr,socfpga";
+>
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+> index 9aaf413..992ae49 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+> @@ -21,7 +21,7 @@
+>
+>  / {
+>  	model = "Altera SOCFPGA Cyclone V SoC Macnica Sodia board";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "macnica, sodia", "altr,socfpga-cyclone5", "altr,socfpga";
+
+Redundant space               ^
+
+If it is not yet done, you may consider to add Macnica to
+Documentation/devicetree/bindings/vendor-prefixes.txt
+
+>
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> index b844473..78b187e 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> @@ -51,7 +51,7 @@
+>
+>  / {
+>  	model = "samtec VIN|ING FPGA";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "samtec,vining". "altr,socfpga-cyclone5", "altr,socfpga";
+
+Comma is expected here              ^
+
+Probably Terasic and Samtec are also not in the vendor-prefixes.txt list,
+usually checkpatch complains about it.
+
+>
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200";
+>
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
