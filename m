@@ -1,56 +1,62 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] clk: cdce925: add support for CDCE913, CDCE937, and
- CDCE949
-Date: Tue, 1 Nov 2016 10:48:08 -0700
-Message-ID: <20161101174808.GU16026@codeaurora.org>
-References: <1477848637-5151-1-git-send-email-akinobu.mita@gmail.com>
- <20161031181509.GS16026@codeaurora.org>
- <CAC5umyiVcV_KEL+g=mRL-mGQfJrCU5XrEVNzX=CFFXWNuTMBGQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/6] add NS2 support to bgmac
+Date: Tue,  1 Nov 2016 13:51:28 -0400
+Message-ID: <1478022694-25308-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAC5umyiVcV_KEL+g=mRL-mGQfJrCU5XrEVNzX=CFFXWNuTMBGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01, Akinobu Mita wrote:
-> 2016-11-01 3:15 GMT+09:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
-> > On 10/31, Akinobu Mita wrote:
-> >> @@ -728,13 +780,19 @@ static int cdce925_probe(struct i2c_client *client,
-> >>  }
-> >>
-> >>  static const struct i2c_device_id cdce925_id[] = {
-> >> -     { "cdce925", 0 },
-> >> +     { "cdce913", CDCE913 },
-> >> +     { "cdce925", CDCE925 },
-> >> +     { "cdce937", CDCE937 },
-> >> +     { "cdce949", CDCE949 },
-> >>       { }
-> >>  };
-> >>  MODULE_DEVICE_TABLE(i2c, cdce925_id);
-> >>
-> >>  static const struct of_device_id clk_cdce925_of_match[] = {
-> >> +     { .compatible = "ti,cdce913" },
-> >>       { .compatible = "ti,cdce925" },
-> >> +     { .compatible = "ti,cdce937" },
-> >> +     { .compatible = "ti,cdce949" },
-> >
-> > Doesn't this need to be updated to point to the correct enum
-> > values?
-> 
-> I think it isn't needed. Because the data field in struct of_device_id
-> for this driver is not used even if the device is registered from
-> device tree.  But the driver_data in i2c_device_id is used instead.
+Changes in v3:
+* Clean-up the bgmac DT binding doc (per Rob Herring)
+* Document the lane swap binding and make it generic (Per Andrew Lunn)
 
-Ok. Have you tested this driver with DT or platform data? Do you
-prefix the compatible string with "ti," in the DT case?
+
+Changes in v2:
+* Remove the PHY power-on (per Andrew Lunn)
+* Misc PHY clean-ups regarding comments and #defines (per Andrew Lunn)
+  This results on none of the original PHY code from Vikas being
+  present.  So, I'm removing him as an author and giving him
+  "Inspired-by" credit.
+* Move PHY lane swapping to PHY driver (per Andrew Lunn and Florian
+  Fainelli)
+* Remove bgmac sleep (per Florian Fainelli)
+* Re-add bgmac chip reset (per Florian Fainelli and Ray Jui)
+* Rebased on latest net-next
+* Added patch for bcm54xx_auxctl_read, which is used in the BCM54810
+
+
+Add support for the amac found in the Broadcom Northstar2 SoC to the
+bgmac driver.  This necessitates adding support to connect to an
+externally defined phy (as described in the device tree) in the driver.
+These phy changes are in addition to the changes necessary to get NS2
+working.
+
+
+Jon Mason (6):
+  net: phy: broadcom: add bcm54xx_auxctl_read
+  net: phy: broadcom: Add BCM54810 PHY entry
+  Documentation: devicetree: net: add NS2 bindings to amac
+  net: ethernet: bgmac: device tree phy enablement
+  net: ethernet: bgmac: add NS2 support
+  arm64: dts: NS2: add AMAC ethernet support
+
+ .../devicetree/bindings/net/brcm,amac.txt          |  16 ++--
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |   5 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  12 +++
+ drivers/net/ethernet/broadcom/bgmac-bcma.c         |  48 ++++++++++
+ drivers/net/ethernet/broadcom/bgmac-platform.c     | 100 ++++++++++++++++++++-
+ drivers/net/ethernet/broadcom/bgmac.c              |  55 ++----------
+ drivers/net/ethernet/broadcom/bgmac.h              |   8 ++
+ drivers/net/phy/Kconfig                            |   2 +-
+ drivers/net/phy/broadcom.c                         |  68 +++++++++++++-
+ include/linux/brcmphy.h                            |  11 +++
+ 10 files changed, 268 insertions(+), 57 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
