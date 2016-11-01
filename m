@@ -1,45 +1,110 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add cpu-id nvmem cell node for rk3399
-Date: Wed, 02 Nov 2016 00:30:20 +0100
-Message-ID: <1575310.lunAtp0ymU@diego>
-References: <20161030025725.32155-1-xzy.xu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161030025725.32155-1-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [PATCH] ARM: dts: imx6: Add imx-weim parameters to dtsi's
+Date: Tue,  1 Nov 2016 16:51:45 -0700
+Message-ID: <1478044305-5666-1-git-send-email-stillcompiling@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Joshua Clayton <stillcompiling@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 30. Oktober 2016, 10:57:25 schrieb Ziyuan Xu:
-> There is a 'cpu-id' field in efuse, export it for other drivers
-> reference.
-> 
-> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 76b2864..71c3ce7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1023,6 +1023,9 @@
->  		clock-names = "pclk_efuse";
-> 
->  		/* Data cells */
-> +		cpu_id: cpu-id {
+imx-weim should always set address-cells to 2,
+and size_cells to 1.
+On imx6, fsl,weim-cs-gpr will always be &gpr
 
-I've added the address, so this gets to be cpu_id: cpu-id@7 to make it 
-compliant and applied the result to my dts64 branch for 4.10
+Set these common parameters in the dtsi file,
+rather than in a downstream dts.
 
+Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+---
+ arch/arm/boot/dts/imx6q-evi.dts          | 3 ---
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 2 --
+ arch/arm/boot/dts/imx6qdl.dtsi           | 3 +++
+ arch/arm/boot/dts/imx6sl.dtsi            | 3 +++
+ arch/arm/boot/dts/imx6sx.dtsi            | 3 +++
+ 5 files changed, 9 insertions(+), 5 deletions(-)
 
-Thanks
-Heiko
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index bd0b85c..a88cbd8 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -241,10 +241,7 @@
+ };
+ 
+ &weim {
+-	#address-cells = <2>;
+-	#size-cells = <1>;
+ 	ranges = <0 0 0x08000000 0x08000000>;
+-	fsl,weim-cs-gpr = <&gpr>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_weimfpga &pinctrl_weimcs>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 8006467..52390ba 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -613,8 +613,6 @@
+ &weim {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_weim_nor &pinctrl_weim_cs0>;
+-	#address-cells = <2>;
+-	#size-cells = <1>;
+ 	ranges = <0 0 0x08000000 0x08000000>;
+ 	status = "disabled"; /* pin conflict with SPI NOR */
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 1bbd36f..d7bed1f 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1092,10 +1092,13 @@
+ 			};
+ 
+ 			weim: weim@021b8000 {
++				#address-cells = <2>;
++				#size-cells = <1>;
+ 				compatible = "fsl,imx6q-weim";
+ 				reg = <0x021b8000 0x4000>;
+ 				interrupts = <0 14 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_EIM_SLOW>;
++				fsl,weim-cs-gpr = <&gpr>;
+ 			};
+ 
+ 			ocotp: ocotp@021bc000 {
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 02378db..c2b28c0 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -893,8 +893,11 @@
+ 			};
+ 
+ 			weim: weim@021b8000 {
++				#address-cells = <2>;
++				#size-cells = <1>;
+ 				reg = <0x021b8000 0x4000>;
+ 				interrupts = <0 14 IRQ_TYPE_LEVEL_HIGH>;
++				fsl,weim-cs-gpr = <&gpr>;
+ 			};
+ 
+ 			ocotp: ocotp@021bc000 {
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 9526c38..78eb023 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -968,10 +968,13 @@
+ 			};
+ 
+ 			weim: weim@021b8000 {
++				#address-cells = <2>;
++				#size-cells = <1>;
+ 				compatible = "fsl,imx6sx-weim", "fsl,imx6q-weim";
+ 				reg = <0x021b8000 0x4000>;
+ 				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_EIM_SLOW>;
++				fsl,weim-cs-gpr = <&gpr>;
+ 			};
+ 
+ 			ocotp: ocotp@021bc000 {
+-- 
+2.7.4
