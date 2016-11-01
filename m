@@ -1,166 +1,577 @@
-From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v16 5/5] CMDQ: save energy
-Date: Tue, 1 Nov 2016 19:28:18 +0800
-Message-ID: <1477999698-6288-6-git-send-email-hs.liao@mediatek.com>
-References: <1477999698-6288-1-git-send-email-hs.liao@mediatek.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V6 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++
+ Bridge
+Date: Tue, 01 Nov 2016 12:39:34 +0100
+Message-ID: <1478000374.2475.78.camel@pengutronix.de>
+References: <cover.1477572814.git.peter.senna@collabora.com>
+         <cbdd043a504a10a8f77fedb25d0f62dd8b837aca.1477572814.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477999698-6288-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <cbdd043a504a10a8f77fedb25d0f62dd8b837aca.1477572814.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ykk@rock-chips
 List-Id: devicetree@vger.kernel.org
 
-use clk_disable_unprepare instead of clk_disable to save more energy
-when CMDQ is idle.
+Hi Peter,
 
-Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 52 ++++++++++++++++++++++++++++++++------
- 1 file changed, 44 insertions(+), 8 deletions(-)
+Am Donnerstag, den 27.10.2016, 15:01 +0200 schrieb Peter Senna Tschudin:
+> Add a driver that create a drm_bridge and a drm_connector for the LVDS
+> to DP++ display bridge of the GE B850v3.
+> 
+> There are two physical bridges on the video signal pipeline: a
+> STDP4028(LVDS to DP) and a STDP2690(DP to DP++).  The hardware and
+> firmware made it complicated for this binding to comprise two device
+> tree nodes, as the design goal is to configure both bridges based on
+> the LVDS signal, which leave the driver powerless to control the video
+> processing pipeline. The two bridges behaves as a single bridge, and
+> the driver is only needed for telling the host about EDID / HPD, and
+> for giving the host powers to ack interrupts. The video signal pipeline
+> is as follows:
+> 
+>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+> 
+> Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+> Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> CC: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+> CC: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> CC: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Enric Balletbo <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes from V5:
+>  - Reworked interrupt handler initialization
+>  - Removed useless calls to: drm_connector_register(),
+>    drm_helper_hpd_irq_event(), and drm_bridge_enable()
+> 
+> Changes from V4:
+>  - Renamed the i2c_driver.name from "ge,b850v3-lvds-dp" to "b850v3-lvds-dp" to
+>    remove the comma from the driver name
+> 
+> Changes from V3:
+>  - 3/4 instead of 4/5
+>  - Tested on next-20160804
+> 
+> Changes from V2:
+>  - Made it atomic to be applied on next-20160729 on top of Liu Ying changes
+>    that made imx-ldb atomic
+> 
+> Changes from V1:
+>  - New commit message
+>  - Removed 3 empty entry points
+>  - Removed memory leak from ge_b850v3_lvds_dp_get_modes()
+>  - Added a lock for mode setting
+>  - Removed a few blank lines
+>  - Changed the order at Makefile and Kconfig
+> 
+>  drivers/gpu/drm/bridge/Kconfig             |  11 +
+>  drivers/gpu/drm/bridge/Makefile            |   1 +
+>  drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c | 395 +++++++++++++++++++++++++++++
+>  3 files changed, 407 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index bd6acc8..1d02422 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -39,6 +39,17 @@ config DRM_DW_HDMI_AHB_AUDIO
+>  	  Designware HDMI block.  This is used in conjunction with
+>  	  the i.MX6 HDMI driver.
+>  
+> +config DRM_GE_B850V3_LVDS_DP
+> +	tristate "GE B850v3 LVDS to DP++ display bridge"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	select DRM_PANEL
+> +	---help---
+> +          This is a driver for the display bridge of
+> +          GE B850v3 that convert dual channel LVDS
+> +          to DP++. This is used with the i.MX6 imx-ldb
+> +          driver.
+> +
+>  config DRM_NXP_PTN3460
+>  	tristate "NXP PTN3460 DP/LVDS bridge"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 97ed1a5..b6b44a5 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+>  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+>  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+> +obj-$(CONFIG_DRM_GE_B850V3_LVDS_DP) += ge_b850v3_lvds_dp.o
+>  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+>  obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+>  obj-$(CONFIG_DRM_SII902X) += sii902x.o
+> diff --git a/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c b/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
+> new file mode 100644
+> index 0000000..85875d8
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
+> @@ -0,0 +1,395 @@
+> +/*
+> + * Driver for GE B850v3 DP display bridge
+> +
+> + * Copyright (c) 2016, Collabora Ltd.
+> + * Copyright (c) 2016, General Electric Company
+> +
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> +
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> +
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> +
+> + * This driver creates a drm_bridge and a drm_connector for the LVDS to DP++
+> + * display bridge of the GE B850v3. There are two physical bridges on the video
+> + * signal pipeline: a STDP4028(LVDS to DP) and a STDP2690(DP to DP++). However
+> + * the physical bridges are automatically configured by the input video signal,
+> + * and the driver has no access to the video processing pipeline. The driver is
+> + * only needed to read EDID from the STDP2690 and to handle HPD events from the
+> + * STDP4028. The driver communicates with both bridges over i2c. The video
+> + * signal pipeline is as follows:
+> + *
+> + *   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+> + *
+> + */
+> +
+> +#include <linux/gpio.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drmP.h>
+> +
+> +/*
+> + * 220Mhz is a limitation of the host, as the bridge is capable of up to
+> + * 330Mhz. See section 9.2.1.2.4 of the i.MX 6Dual/6Quad Applications
+> + * Processor Reference Manual for more information about the 220Mhz limit.
+> + * The imx-ldb driver will warn about clocks over 170Mhz, but it seem to work
+> + * fine.
+> + */
+> +#define MAX_PIXEL_CLOCK 220000
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 747bcd3..8771e57 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -22,6 +22,7 @@
- #include <linux/mailbox_controller.h>
- #include <linux/mailbox/mtk-cmdq-mailbox.h>
- #include <linux/timer.h>
-+#include <linux/workqueue.h>
- 
- #define CMDQ_THR_MAX_COUNT		3 /* main, sub, general(misc) */
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
-@@ -75,10 +76,16 @@ struct cmdq_task {
- 	struct cmdq_pkt		*pkt; /* the packet sent from mailbox client */
- };
- 
-+struct cmdq_clk_release {
-+	struct cmdq		*cmdq;
-+	struct work_struct	release_work;
-+};
-+
- struct cmdq {
- 	struct mbox_controller	mbox;
- 	void __iomem		*base;
- 	u32			irq;
-+	struct workqueue_struct	*clk_release_wq;
- 	struct cmdq_thread	thread[CMDQ_THR_MAX_COUNT];
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -203,7 +210,7 @@ static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
- {
- 	struct cmdq *cmdq;
- 	struct cmdq_task *task;
--	unsigned long curr_pa, end_pa;
-+	unsigned long curr_pa, end_pa, flags;
- 
- 	cmdq = dev_get_drvdata(thread->chan->mbox->dev);
- 
-@@ -219,7 +226,14 @@ static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
- 	task->pkt = pkt;
- 
- 	if (list_empty(&thread->task_busy_list)) {
--		WARN_ON(clk_enable(cmdq->clock) < 0);
-+		/*
-+		 * Unlock for clk prepare (sleeping function).
-+		 * This is safe since clk_prepare_enable has internal locks.
-+		 */
-+		spin_unlock_irqrestore(&thread->chan->lock, flags);
-+		WARN_ON(clk_prepare_enable(cmdq->clock) < 0);
-+		spin_lock_irqsave(&thread->chan->lock, flags);
-+
- 		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
- 
- 		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-@@ -301,6 +315,26 @@ static void cmdq_task_handle_error(struct cmdq_task *task)
- 	cmdq_thread_resume(thread);
- }
- 
-+static void cmdq_clk_release_work(struct work_struct *work_item)
-+{
-+	struct cmdq_clk_release *clk_release = container_of(work_item,
-+			struct cmdq_clk_release, release_work);
-+	struct cmdq *cmdq = clk_release->cmdq;
-+
-+	clk_disable_unprepare(cmdq->clock);
-+	kfree(clk_release);
-+}
-+
-+static void cmdq_clk_release_schedule(struct cmdq *cmdq)
-+{
-+	struct cmdq_clk_release *clk_release;
-+
-+	clk_release = kmalloc(sizeof(*clk_release), GFP_ATOMIC);
-+	clk_release->cmdq = cmdq;
-+	INIT_WORK(&clk_release->release_work, cmdq_clk_release_work);
-+	queue_work(cmdq->clk_release_wq, &clk_release->release_work);
-+}
-+
- static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 				    struct cmdq_thread *thread)
- {
-@@ -350,7 +384,7 @@ static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 
- 	if (list_empty(&thread->task_busy_list)) {
- 		cmdq_thread_disable(cmdq, thread);
--		clk_disable(cmdq->clock);
-+		cmdq_clk_release_schedule(cmdq);
- 	} else {
- 		mod_timer(&thread->timeout,
- 			  jiffies + msecs_to_jiffies(CMDQ_TIMEOUT_MS));
-@@ -409,7 +443,7 @@ static void cmdq_thread_handle_timeout(unsigned long data)
- 
- 	cmdq_thread_resume(thread);
- 	cmdq_thread_disable(cmdq, thread);
--	clk_disable(cmdq->clock);
-+	cmdq_clk_release_schedule(cmdq);
- 	spin_unlock_irqrestore(&thread->chan->lock, flags);
- }
- 
-@@ -433,7 +467,7 @@ static int cmdq_suspend(struct device *dev)
- 	if (task_running)
- 		dev_warn(dev, "exist running task(s) in suspend\n");
- 
--	clk_unprepare(cmdq->clock);
-+	flush_workqueue(cmdq->clk_release_wq);
- 	return 0;
- }
- 
-@@ -441,7 +475,6 @@ static int cmdq_resume(struct device *dev)
- {
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
- 
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
- 	cmdq->suspended = false;
- 	return 0;
- }
-@@ -450,8 +483,8 @@ static int cmdq_remove(struct platform_device *pdev)
- {
- 	struct cmdq *cmdq = platform_get_drvdata(pdev);
- 
-+	destroy_workqueue(cmdq->clk_release_wq);
- 	mbox_controller_unregister(&cmdq->mbox);
--	clk_unprepare(cmdq->clock);
- 	return 0;
- }
- 
-@@ -567,8 +600,11 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	cmdq->clk_release_wq = alloc_ordered_workqueue(
-+			"%s", WQ_MEM_RECLAIM | WQ_HIGHPRI,
-+			"cmdq_clk_release");
-+
- 	platform_set_drvdata(pdev, cmdq);
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
- 
- 	return 0;
- }
--- 
-1.9.1
+That is a limitation of the IPU DI pixel clock rate if both DIs are
+active. If only a single DI is active, this limit is 264 MHz on i.MX6Q.
+
+The LDB pixel clock rate maximum is 170 MHz if only a single LDB channel
+is active.
+
+I currently see no way for the crtc and encoder code to have a say about
+maximum pixel clocks when pruning the mode list in .fill_modes.
+
+> +
+> +#define EDID_EXT_BLOCK_CNT 0x7E
+> +
+> +#define STDP4028_IRQ_OUT_CONF_REG 0x02
+> +#define STDP4028_DPTX_IRQ_EN_REG 0x3C
+> +#define STDP4028_DPTX_IRQ_STS_REG 0x3D
+> +#define STDP4028_DPTX_STS_REG 0x3E
+> +
+> +#define STDP4028_DPTX_DP_IRQ_EN 0x1000
+> +
+> +#define STDP4028_DPTX_HOTPLUG_IRQ_EN 0x0400
+> +#define STDP4028_DPTX_LINK_CH_IRQ_EN 0x2000
+> +#define STDP4028_DPTX_IRQ_CONFIG \
+> +		(STDP4028_DPTX_LINK_CH_IRQ_EN | STDP4028_DPTX_HOTPLUG_IRQ_EN)
+> +
+> +#define STDP4028_DPTX_HOTPLUG_STS 0x0200
+> +#define STDP4028_DPTX_LINK_STS 0x1000
+> +#define STDP4028_CON_STATE_CONNECTED \
+> +		(STDP4028_DPTX_HOTPLUG_STS | STDP4028_DPTX_LINK_STS)
+> +
+> +#define STDP4028_DPTX_HOTPLUG_CH_STS 0x0400
+> +#define STDP4028_DPTX_LINK_CH_STS 0x2000
+> +#define STDP4028_DPTX_IRQ_CLEAR \
+> +		(STDP4028_DPTX_LINK_CH_STS | STDP4028_DPTX_HOTPLUG_CH_STS)
+> +
+> +struct ge_b850v3_lvds_dp {
+> +	struct drm_connector connector;
+> +	struct drm_bridge bridge;
+> +	struct i2c_client *ge_b850v3_lvds_dp_i2c;
+> +	struct i2c_client *edid_i2c;
+> +	struct edid *edid;
+> +	struct mutex lock;
+> +};
+> +
+> +static inline struct ge_b850v3_lvds_dp *
+> +		bridge_to_ge_b850v3_lvds_dp(struct drm_bridge *bridge)
+> +{
+> +	return container_of(bridge, struct ge_b850v3_lvds_dp, bridge);
+> +}
+> +
+> +static inline struct ge_b850v3_lvds_dp *
+> +		connector_to_ge_b850v3_lvds_dp(struct drm_connector *connector)
+> +{
+> +	return container_of(connector, struct ge_b850v3_lvds_dp, connector);
+> +}
+> +
+> +u8 *stdp2690_get_edid(struct i2c_client *client)
+> +{
+> +	struct i2c_adapter *adapter = client->adapter;
+> +	unsigned char start = 0x00;
+> +	unsigned int total_size;
+> +	u8 *block = kmalloc(EDID_LENGTH, GFP_KERNEL);
+> +
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +			.addr	= client->addr,
+> +			.flags	= 0,
+> +			.len	= 1,
+> +			.buf	= &start,
+> +		}, {
+> +			.addr	= client->addr,
+> +			.flags	= I2C_M_RD,
+> +			.len	= EDID_LENGTH,
+> +			.buf	= block,
+> +		}
+> +	};
+> +
+> +	if (!block)
+> +		return NULL;
+> +
+> +	if (i2c_transfer(adapter, msgs, 2) != 2) {
+> +		DRM_ERROR("Unable to read EDID.\n");
+> +		goto err;
+> +	}
+> +
+> +	if (!drm_edid_block_valid(block, 0, false, NULL)) {
+> +		DRM_ERROR("Invalid EDID block\n");
+> +		goto err;
+> +	}
+> +
+> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+> +	if (total_size > EDID_LENGTH) {
+> +		kfree(block);
+> +		block = kmalloc(total_size, GFP_KERNEL);
+> +		if (!block)
+> +			return NULL;
+> +
+> +		/* Yes, read the entire buffer, and do not skip the first
+> +		 * EDID_LENGTH bytes.
+> +		 */
+> +		start = 0x00;
+> +		msgs[1].len = total_size;
+> +		msgs[1].buf = block;
+> +
+> +		if (i2c_transfer(adapter, msgs, 2) != 2) {
+> +			DRM_ERROR("Unable to read EDID extension blocks.\n");
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return block;
+> +
+> +err:
+> +	kfree(block);
+> +	return NULL;
+> +}
+> +
+> +static int ge_b850v3_lvds_dp_get_modes(struct drm_connector *connector)
+> +{
+> +	struct ge_b850v3_lvds_dp *ptn_bridge;
+> +	struct i2c_client *client;
+> +	int num_modes = 0;
+> +
+> +	ptn_bridge = connector_to_ge_b850v3_lvds_dp(connector);
+> +	client = ptn_bridge->edid_i2c;
+> +
+> +	mutex_lock(&ptn_bridge->lock);
+
+What does this lock protect?
+
+> +	kfree(ptn_bridge->edid);
+> +	ptn_bridge->edid = (struct edid *) stdp2690_get_edid(client);
+> +
+> +	if (ptn_bridge->edid) {
+> +		drm_mode_connector_update_edid_property(connector,
+> +				ptn_bridge->edid);
+> +		num_modes = drm_add_edid_modes(connector, ptn_bridge->edid);
+> +	}
+> +
+> +	mutex_unlock(&ptn_bridge->lock);
+> +
+> +	return num_modes;
+> +}
+> +
+> +
+> +static enum drm_mode_status ge_b850v3_lvds_dp_mode_valid(
+> +		struct drm_connector *connector, struct drm_display_mode *mode)
+> +{
+> +	if (mode->clock > MAX_PIXEL_CLOCK) {
+> +		DRM_INFO("The pixel clock for the mode %s is too high, and not supported.",
+> +				mode->name);
+> +		return MODE_CLOCK_HIGH;
+> +	}
+> +
+> +	return MODE_OK;
+> +}
+> +
+> +static const struct
+> +drm_connector_helper_funcs ge_b850v3_lvds_dp_connector_helper_funcs = {
+> +	.get_modes = ge_b850v3_lvds_dp_get_modes,
+> +	.mode_valid = ge_b850v3_lvds_dp_mode_valid,
+> +};
+> +
+> +static enum drm_connector_status ge_b850v3_lvds_dp_detect(
+> +		struct drm_connector *connector, bool force)
+> +{
+> +	struct ge_b850v3_lvds_dp *ptn_bridge =
+> +			connector_to_ge_b850v3_lvds_dp(connector);
+> +	struct i2c_client *ge_b850v3_lvds_dp_i2c =
+> +			ptn_bridge->ge_b850v3_lvds_dp_i2c;
+> +	s32 link_state;
+> +
+> +	link_state = i2c_smbus_read_word_data(ge_b850v3_lvds_dp_i2c,
+> +			STDP4028_DPTX_STS_REG);
+> +
+> +	if (link_state == STDP4028_CON_STATE_CONNECTED)
+> +		return connector_status_connected;
+> +
+> +	if (link_state == 0)
+> +		return connector_status_disconnected;
+> +
+> +	return connector_status_unknown;
+> +}
+> +
+> +static const struct drm_connector_funcs ge_b850v3_lvds_dp_connector_funcs = {
+> +	.dpms = drm_atomic_helper_connector_dpms,
+> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> +	.detect = ge_b850v3_lvds_dp_detect,
+> +	.destroy = drm_connector_cleanup,
+> +	.reset = drm_atomic_helper_connector_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static irqreturn_t ge_b850v3_lvds_dp_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct ge_b850v3_lvds_dp *ptn_bridge = dev_id;
+> +	struct i2c_client *ge_b850v3_lvds_dp_i2c
+> +			= ptn_bridge->ge_b850v3_lvds_dp_i2c;
+> +
+> +	mutex_lock(&ptn_bridge->lock);
+
+And what does this lock protect here?
+
+> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
+> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
+> +
+> +	mutex_unlock(&ptn_bridge->lock);
+> +
+> +	if (ptn_bridge->connector.dev)
+> +		drm_kms_helper_hotplug_event(ptn_bridge->connector.dev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ge_b850v3_lvds_dp_attach(struct drm_bridge *bridge)
+> +{
+> +	struct ge_b850v3_lvds_dp *ptn_bridge
+> +			= bridge_to_ge_b850v3_lvds_dp(bridge);
+> +	struct drm_connector *connector = &ptn_bridge->connector;
+> +	struct i2c_client *ge_b850v3_lvds_dp_i2c
+> +			= ptn_bridge->ge_b850v3_lvds_dp_i2c;
+> +	int ret;
+> +
+> +	if (!bridge->encoder) {
+> +		DRM_ERROR("Parent encoder object not found");
+> +		return -ENODEV;
+> +	}
+> +
+> +	connector->polled = DRM_CONNECTOR_POLL_HPD;
+> +
+> +	drm_connector_helper_add(connector,
+> +			&ge_b850v3_lvds_dp_connector_helper_funcs);
+> +
+> +	ret = drm_connector_init(bridge->dev, connector,
+> +			&ge_b850v3_lvds_dp_connector_funcs,
+> +			DRM_MODE_CONNECTOR_DisplayPort);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to initialize connector with drm\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = drm_mode_connector_attach_encoder(connector, bridge->encoder);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Configures the bridge to re-enable interrupts after each ack. */
+> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
+> +			STDP4028_IRQ_OUT_CONF_REG, STDP4028_DPTX_DP_IRQ_EN);
+> +
+> +	/* Enable interrupts */
+> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
+> +			STDP4028_DPTX_IRQ_EN_REG, STDP4028_DPTX_IRQ_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_bridge_funcs ge_b850v3_lvds_dp_funcs = {
+> +	.attach = ge_b850v3_lvds_dp_attach,
+
+What about .detach? Should the interrupt be disabled?
+
+> +};
+> +
+> +static int ge_b850v3_lvds_dp_probe(struct i2c_client *ge_b850v3_lvds_dp_i2c,
+> +				const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &ge_b850v3_lvds_dp_i2c->dev;
+> +	struct ge_b850v3_lvds_dp *ptn_bridge;
+> +	int ret;
+> +	u32 edid_i2c_reg;
+> +
+> +	ptn_bridge = devm_kzalloc(dev, sizeof(*ptn_bridge), GFP_KERNEL);
+> +	if (!ptn_bridge)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&ptn_bridge->lock);
+> +
+> +	ptn_bridge->ge_b850v3_lvds_dp_i2c = ge_b850v3_lvds_dp_i2c;
+> +	ptn_bridge->bridge.driver_private = ptn_bridge;
+> +	i2c_set_clientdata(ge_b850v3_lvds_dp_i2c, ptn_bridge);
+> +
+> +	ret = of_property_read_u32(dev->of_node, "edid-reg", &edid_i2c_reg);
+> +	if (ret) {
+> +		dev_err(dev, "edid-reg not specified, aborting...\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ptn_bridge->edid_i2c = devm_kzalloc(dev,
+> +			sizeof(struct i2c_client), GFP_KERNEL);
+> +
+
+Superfluous empty line, but ...
+
+> +	if (!ptn_bridge->edid_i2c)
+> +		return -ENOMEM;
+> +
+> +	memcpy(ptn_bridge->edid_i2c, ge_b850v3_lvds_dp_i2c,
+> +			sizeof(struct i2c_client));
+> +
+> +	ptn_bridge->edid_i2c->addr = (unsigned short) edid_i2c_reg;
+
+... this looks to me like you should use i2c_new_dummy, or rather
+i2c_new_secondary_device instead. For the latter you'd have to change
+the bindings to use reg and reg-names properties instead of the custom
+edid-reg property.
+
+> +
+> +	ptn_bridge->bridge.funcs = &ge_b850v3_lvds_dp_funcs;
+> +	ptn_bridge->bridge.of_node = dev->of_node;
+> +	ret = drm_bridge_add(&ptn_bridge->bridge);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to add bridge\n");
+> +		return ret;
+> +	}
+
+Just as a note, this currently can not fail. It's just a list_add_tail
+under a mutex lock.
+If it would fail though, it'd be nice to also print the error code.
+
+> +
+> +	/* Clear pending interrupts since power up. */
+> +	i2c_smbus_write_word_data(ge_b850v3_lvds_dp_i2c,
+> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
+> +
+> +	if (ge_b850v3_lvds_dp_i2c->irq) {
+> +		ret = devm_request_threaded_irq(&ge_b850v3_lvds_dp_i2c->dev,
+> +				ge_b850v3_lvds_dp_i2c->irq, NULL,
+> +				ge_b850v3_lvds_dp_irq_handler,
+> +				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +				"ge-b850v3-lvds-dp", ptn_bridge);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+
+Maybe a matter of taste, but this could be changed to:
+
+	/* If no interrupt has to be requested, we're done here */
+	if (!ge_b850v3_lvds_dp_i2c->irq)
+		return 0;
+
+	return devm_request_threaded_irq(&ge_b850v3_lvds_dp_i2c->dev,
+				ge_b850v3_lvds_dp_i2c->irq, NULL,
+				ge_b850v3_lvds_dp_irq_handler,
+				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+				"ge-b850v3-lvds-dp", ptn_bridge);
+
+or, as we know ret to be 0 after the call to drm_bridge_add:
+
+	if (ge_b850v3_lvds_dp_i2c->irq) {
+		ret = devm_request_threaded_irq(&ge_b850v3_lvds_dp_i2c->dev,
+				ge_b850v3_lvds_dp_i2c->irq, NULL,
+				ge_b850v3_lvds_dp_irq_handler,
+				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+				"ge-b850v3-lvds-dp", ptn_bridge);
+	}
+
+	return ret;
+
+> +}
+> +
+> +static int ge_b850v3_lvds_dp_remove(struct i2c_client *ge_b850v3_lvds_dp_i2c)
+> +{
+> +	struct ge_b850v3_lvds_dp *ptn_bridge =
+> +		i2c_get_clientdata(ge_b850v3_lvds_dp_i2c);
+> +
+> +	drm_bridge_remove(&ptn_bridge->bridge);
+> +
+> +	kfree(ptn_bridge->edid);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id ge_b850v3_lvds_dp_i2c_table[] = {
+> +	{"b850v3-lvds-dp", 0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ge_b850v3_lvds_dp_i2c_table);
+> +
+> +static const struct of_device_id ge_b850v3_lvds_dp_match[] = {
+> +	{ .compatible = "ge,b850v3-lvds-dp" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ge_b850v3_lvds_dp_match);
+> +
+> +static struct i2c_driver ge_b850v3_lvds_dp_driver = {
+> +	.id_table	= ge_b850v3_lvds_dp_i2c_table,
+> +	.probe		= ge_b850v3_lvds_dp_probe,
+> +	.remove		= ge_b850v3_lvds_dp_remove,
+> +	.driver		= {
+> +		.name		= "b850v3-lvds-dp",
+> +		.of_match_table = ge_b850v3_lvds_dp_match,
+> +	},
+> +};
+> +module_i2c_driver(ge_b850v3_lvds_dp_driver);
+> +
+> +MODULE_AUTHOR("Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>");
+> +MODULE_AUTHOR("Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("GE LVDS to DP++ display bridge)");
+> +MODULE_LICENSE("GPL v2");
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
