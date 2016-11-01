@@ -1,44 +1,28 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/6] net: phy: broadcom: Add BCM54810 PHY entry
-Date: Tue, 1 Nov 2016 17:26:48 +0100
-Message-ID: <20161101162648.GG10785@lunn.ch>
-References: <1477688219-3871-1-git-send-email-jon.mason@broadcom.com>
- <1477688219-3871-3-git-send-email-jon.mason@broadcom.com>
- <20161029081839.GA32579@lunn.ch>
- <20161101155950.GA19378@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v2 0/2] mmc: sdhci-iproc: Add byte register access support
+Date: Tue,  1 Nov 2016 09:37:55 -0700
+Message-ID: <1478018277-10097-1-git-send-email-scott.branden@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161101155950.GA19378@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-> > > +	if (of_property_read_bool(np, "brcm,enet-phy-lane-swap")) {
-> > > +		/* Lane Swap - Undocumented register...magic! */
-> > > +		ret = bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_SEL_ER + 0x9,
-> > > +					0x11B);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > 
-> > I wounder if this property could be made generic? What exactly are you
-> > swapping? Rx and Tx lanes? Maybe we should add it to phy.txt?
-> 
-> Are you envisioning adding a DT check (similar to the
-> of_property_read_bool above, only with a more generic string) in
-> phy_device_create(), which will then set a PHY device flag?  This flag
-> would then be checked for in the PHY driver and the appropriate action
-> taken (in this case the bcm_phy_write_exp above).
+Add brcm,sdhci-iproc compat string and code for support of newer versions of
+sdhci-iproc controller that allow byte-wise register accesses.
 
-I would keep the parsing of the property in the driver. But if we
-think other PHYs could also support this feature, it would be good to
-avoid having "brcm,enet-phy-lane-swap", "marvell,enet-phy-lane-swap",
-"davicom,enet-phy-lane-swap", etc. It would be better to have one well
-defined property documented in phy.txt which any PHY is free to
-implement.
+Changes from v1:
+- added details to bindings documentation to clarify usage of brcm,sdhci-iproc
+compatibility string
 
-	Andrew
+Scott Branden (2):
+  mmc: sdhci-iproc: Add brcm,sdhci-iproc compat string in bindings
+    document
+  mmc: sdhci-iproc: support standard byte register accesses
+
+ .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  9 ++++++
+ drivers/mmc/host/sdhci-iproc.c                     | 35 ++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
+
+-- 
+2.5.0
