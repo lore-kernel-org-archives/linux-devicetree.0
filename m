@@ -1,80 +1,40 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: RE: [PATCH v3 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Tue, 1 Nov 2016 12:45:49 -0600 (MDT)
-Message-ID: <alpine.DEB.2.20.1611011239150.14687@nanos>
-References: <1477899468-5494-1-git-send-email-noamca@mellanox.com> <1477899468-5494-4-git-send-email-noamca@mellanox.com> <alpine.DEB.2.20.1610311146000.8160@nanos> <DB6PR0501MB2518D05EF3EFC35031C16371AAA10@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 RESEND 0/4] generic TEE subsystem
+Date: Tue, 1 Nov 2016 14:20:58 -0500
+Message-ID: <4eb80778-cfe3-f4c0-d1ee-0d798c8ddd35@ti.com>
+References: <1477649984-16777-1-git-send-email-jens.wiklander@linaro.org>
+ <1e532aeb-4944-62e4-c8c4-1e23438b92cd@ti.com>
+ <20161028181914.xkse5orwwp42dvj3@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR0501MB2518D05EF3EFC35031C16371AAA10@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Noam Camus <noamca@mellanox.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Metcalf <cmetcalf@mellanox.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161028181914.xkse5orwwp42dvj3-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Nov 2016, Noam Camus wrote:
-> >> +static int nps_clkevent_set_next_event(unsigned long delta,
-> >> +				       struct clock_event_device *dev) {
-> >> +	struct irq_desc *desc = irq_to_desc(nps_timer0_irq);
-> >> +	struct irq_chip *chip = irq_data_get_irq_chip(&desc->irq_data);
-> >> +
-> >> +	nps_clkevent_add_thread(true);
-> >> +	chip->irq_unmask(&desc->irq_data);
+On 10/28/2016 01:19 PM, Mark Brown wrote:
+> On Fri, Oct 28, 2016 at 10:43:24AM -0500, Andrew F. Davis wrote:
+> 
+>> Do we see this as a chicken and egg situation, or is there any harm
+>> beyond the pains of supporting an out-of-tree driver for a while, to
+>> wait until we have at least one other TEE to add to this subsystem
+>> before merging?
+> 
+> We haven't been overburneded with TEE vendors wanting to get their
+> driver code into mainline - do we have any reasonable prospect of other
+> TEE vendors with an interest in mainline turning up in any kind of
+> reasonable timeframe?
 > 
 
-> > Oh no. You are not supposed to fiddle in the guts of the interrupts
-> > from a random driver. Can you please explain what you are trying to do
-> > and why the existing interfaces are> > not sufficient?
-
-> This function is assigned and used by several hooks at clock_event_device
-> type.  Main purpose is to support oneshot timer mode and in general
-> support NOHZ_FULL and finally TASK_ISOLATION.
-
-What has the fact that you fiddle in the irq desc to do with nohz full and
-isolation?
-
-> The idea for this is borrowed from arch/tile timer driver that just like
-> us aiming to support the TASK_ISOLATION.
-
-Which does not make it any better.
-
-> Will it be better to replace these with
-> irq_percpu_enable()/irq_percpu_disable() which seem to achieve quiet the
-> same affect?
-
-Correct. Not using existing functions is always a bad idea.
-
-> 
-> >> +static int nps_clkevent_set_periodic(struct clock_event_device *dev) 
-> >> +{
-> >> +	nps_clkevent_add_thread(false);
-> >> +	if (read_aux_reg(CTOP_AUX_THREAD_ID) == 0)
-> >> +		nps_clkevent_timer_event_setup(nps_timer0_freq / HZ);
-> 
-> >So how is that enabling interrupts again?
-
-> I guess that in our system we never switch back to periodic.  Time
-> infrastructure starts as periodic (I set CLOCK_EVT_FEAT_PERIODIC) and
-> when timer is ready state is switched to oneshot mode and never goes back
-> to periodic.  I might be missing here, but couldn't find any place where
-> CLOCK_EVT_STATE_PERIODIC is set but in tick_setup_periodic().  Should I
-> call here to enable interrupts anyway?
-
-Right. We never switch back to periodic when we are in one shot mode. So,
-you can spare that call.
-
-> >> +	ret = cpuhp_setup_state(CPUHP_AP_NPS_TIMER_STARTING,
-> >> +				"AP_NPS_TIMER_STARTING",
-> >
-> >Please make this "clockevents/nps:starting"
-> Sorry but I can't see any similar thing all around.
-> Could you explain why you prefer this format for the string?
-
-Because its way better to read. We messed that up when we started the
-conversion and switched over to the more informative strings later. Still
-need to fixup the existing state derived strings.
-
-Thanks,
-
-	tglx
+Doesn't look like anyone has near-term plans for upstreaming non-OPTEE
+TEEs, we don't at least (TI), so I guess I see no reason right now to
+delay upstreaming of this TEE's driver on the off-chance it is
+incompatible with a TEE that may or may not try to get upstreamed later.
+I'll redact my objection for now.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
