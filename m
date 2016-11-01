@@ -1,114 +1,56 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 4/5] ARM: dts: imx6qdl-nit6xlite: use hyphens for nodes name
-Date: Tue,  1 Nov 2016 18:10:05 +0100
-Message-ID: <20161101171006.24594-5-gary.bisson@boundarydevices.com>
-References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
- <20161101171006.24594-1-gary.bisson@boundarydevices.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] clk: cdce925: add support for CDCE913, CDCE937, and
+ CDCE949
+Date: Tue, 1 Nov 2016 10:48:08 -0700
+Message-ID: <20161101174808.GU16026@codeaurora.org>
+References: <1477848637-5151-1-git-send-email-akinobu.mita@gmail.com>
+ <20161031181509.GS16026@codeaurora.org>
+ <CAC5umyiVcV_KEL+g=mRL-mGQfJrCU5XrEVNzX=CFFXWNuTMBGQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161101171006.24594-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAC5umyiVcV_KEL+g=mRL-mGQfJrCU5XrEVNzX=CFFXWNuTMBGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Therefore aligning the panel nodes name across all platforms.
+On 11/01, Akinobu Mita wrote:
+> 2016-11-01 3:15 GMT+09:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
+> > On 10/31, Akinobu Mita wrote:
+> >> @@ -728,13 +780,19 @@ static int cdce925_probe(struct i2c_client *client,
+> >>  }
+> >>
+> >>  static const struct i2c_device_id cdce925_id[] = {
+> >> -     { "cdce925", 0 },
+> >> +     { "cdce913", CDCE913 },
+> >> +     { "cdce925", CDCE925 },
+> >> +     { "cdce937", CDCE937 },
+> >> +     { "cdce949", CDCE949 },
+> >>       { }
+> >>  };
+> >>  MODULE_DEVICE_TABLE(i2c, cdce925_id);
+> >>
+> >>  static const struct of_device_id clk_cdce925_of_match[] = {
+> >> +     { .compatible = "ti,cdce913" },
+> >>       { .compatible = "ti,cdce925" },
+> >> +     { .compatible = "ti,cdce937" },
+> >> +     { .compatible = "ti,cdce949" },
+> >
+> > Doesn't this need to be updated to point to the correct enum
+> > values?
+> 
+> I think it isn't needed. Because the data field in struct of_device_id
+> for this driver is not used even if the device is registered from
+> device tree.  But the driver_data in i2c_device_id is used instead.
 
-Also removing the bt_rfkill node since the mainline rfkill-gpio driver
-doesn't support device trees.
+Ok. Have you tested this driver with DT or platform data? Do you
+prefix the compatible string with "ti," in the DT case?
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi | 32 +++++---------------------------
- 1 file changed, 5 insertions(+), 27 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-index 880bd78..63acd54 100644
---- a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
-@@ -97,15 +97,6 @@
- 		};
- 	};
- 
--	bt_rfkill {
--		compatible = "rfkill-gpio";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_bt_rfkill>;
--		gpios = <&gpio6 8 GPIO_ACTIVE_HIGH>;
--		name = "bt_rfkill";
--		type = <2>;
--	};
--
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
-@@ -160,7 +151,7 @@
- 		};
- 	};
- 
--	backlight_lcd {
-+	backlight-lcd {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm1 0 5000000>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -169,7 +160,7 @@
- 		status = "okay";
- 	};
- 
--	backlight_lvds0: backlight_lvds0 {
-+	backlight_lvds0: backlight-lvds0 {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm4 0 5000000>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -178,7 +169,7 @@
- 		status = "okay";
- 	};
- 
--	panel_lvds0 {
-+	panel-lvds0 {
- 		compatible = "hannstar,hsd100pxn1";
- 		backlight = <&backlight_lvds0>;
- 
-@@ -328,19 +319,6 @@
- 			>;
- 		};
- 
--		pinctrl_bt_rfkill: bt_rfkillgrp {
--			fsl,pins = <
--				/* BT wake */
--				MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x1b0b0
--				/* BT reset */
--				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x0b0b0
--				/* BT reg en */
--				MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x1b0b0
--				/* BT host wake irq */
--				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x100b0
--			>;
--		};
--
- 		pinctrl_ecspi1: ecspi1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
-@@ -374,7 +352,7 @@
- 			>;
- 		};
- 
--		pinctrl_gpio_keys: gpio_keysgrp {
-+		pinctrl_gpio_keys: gpio-keysgrp {
- 			fsl,pins = <
- 				/* Home Button: J14 pin 5 */
- 				MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0
-@@ -457,7 +435,7 @@
- 			>;
- 		};
- 
--		pinctrl_wlan_vmmc: wlan_vmmcgrp {
-+		pinctrl_wlan_vmmc: wlan-vmmcgrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_NANDF_CLE__GPIO6_IO07	0x030b0
- 			>;
 -- 
-2.9.3
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
