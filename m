@@ -1,53 +1,111 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 0/5] ARM: dts: imx: update Boundary Devices boards support
-Date: Tue,  1 Nov 2016 18:10:01 +0100
-Message-ID: <20161101171006.24594-1-gary.bisson@boundarydevices.com>
+Subject: [PATCH v2 4/5] ARM: dts: imx6qdl-nit6xlite: use hyphens for nodes name
+Date: Tue,  1 Nov 2016 18:10:05 +0100
+Message-ID: <20161101171006.24594-5-gary.bisson@boundarydevices.com>
 References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
+ <20161101171006.24594-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161025211955.5345-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <20161101171006.24594-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Therefore aligning the panel nodes name across all platforms.
 
-This series includes several patches to update the support for our platforms.
+Also removing the bt_rfkill node since the mainline rfkill-gpio driver
+doesn't support device trees.
 
-Here are the main goals of this series:
-1- Adding support for our latest SOM (SOM2)
-2- Replace underscores in nodes name
-3- Fix panel naming consistency across the boards
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi | 32 +++++---------------------------
+ 1 file changed, 5 insertions(+), 27 deletions(-)
 
-Changelog v1->v2:
-- Drop the USB PHY reset changes, waiting for Peter's series [1] to get in.
-- Replace underscores in nodes name
-
-Let me know if you have any question.
-
-Regards,
-Gary
-
-[1] https://www.spinics.net/lists/arm-kernel/msg536105.html
-
-Gary Bisson (5):
-  ARM: dts: imx: add Boundary Devices Nitrogen6_SOM2 support
-  ARM: dts: imx6qdl-sabrelite: use hyphens for nodes name
-  ARM: dts: imx6qdl-nitrogen6x: use hyphens for nodes name
-  ARM: dts: imx6qdl-nit6xlite: use hyphens for nodes name
-  ARM: dts: imx6qdl-nitrogen6_max: use hyphens for nodes name
-
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6q-nitrogen6_som2.dts    |  53 ++
- arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi      |  32 +-
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi  |  18 +-
- arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 770 ++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi     |  12 +-
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi      |  10 +-
- 7 files changed, 849 insertions(+), 47 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6q-nitrogen6_som2.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-
+diff --git a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+index 880bd78..63acd54 100644
+--- a/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nit6xlite.dtsi
+@@ -97,15 +97,6 @@
+ 		};
+ 	};
+ 
+-	bt_rfkill {
+-		compatible = "rfkill-gpio";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_bt_rfkill>;
+-		gpios = <&gpio6 8 GPIO_ACTIVE_HIGH>;
+-		name = "bt_rfkill";
+-		type = <2>;
+-	};
+-
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 		pinctrl-names = "default";
+@@ -160,7 +151,7 @@
+ 		};
+ 	};
+ 
+-	backlight_lcd {
++	backlight-lcd {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm1 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -169,7 +160,7 @@
+ 		status = "okay";
+ 	};
+ 
+-	backlight_lvds0: backlight_lvds0 {
++	backlight_lvds0: backlight-lvds0 {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm4 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -178,7 +169,7 @@
+ 		status = "okay";
+ 	};
+ 
+-	panel_lvds0 {
++	panel-lvds0 {
+ 		compatible = "hannstar,hsd100pxn1";
+ 		backlight = <&backlight_lvds0>;
+ 
+@@ -328,19 +319,6 @@
+ 			>;
+ 		};
+ 
+-		pinctrl_bt_rfkill: bt_rfkillgrp {
+-			fsl,pins = <
+-				/* BT wake */
+-				MX6QDL_PAD_NANDF_D2__GPIO2_IO02		0x1b0b0
+-				/* BT reset */
+-				MX6QDL_PAD_NANDF_ALE__GPIO6_IO08	0x0b0b0
+-				/* BT reg en */
+-				MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x1b0b0
+-				/* BT host wake irq */
+-				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x100b0
+-			>;
+-		};
+-
+ 		pinctrl_ecspi1: ecspi1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
+@@ -374,7 +352,7 @@
+ 			>;
+ 		};
+ 
+-		pinctrl_gpio_keys: gpio_keysgrp {
++		pinctrl_gpio_keys: gpio-keysgrp {
+ 			fsl,pins = <
+ 				/* Home Button: J14 pin 5 */
+ 				MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b0
+@@ -457,7 +435,7 @@
+ 			>;
+ 		};
+ 
+-		pinctrl_wlan_vmmc: wlan_vmmcgrp {
++		pinctrl_wlan_vmmc: wlan-vmmcgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_NANDF_CLE__GPIO6_IO07	0x030b0
+ 			>;
 -- 
 2.9.3
 
