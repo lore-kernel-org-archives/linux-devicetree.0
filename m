@@ -1,71 +1,101 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH v2 3/5] ARM64: dts: meson-gxl: Add ethernet nodes with
- internal PHY
-Date: Tue, 1 Nov 2016 12:48:06 +0300
-Message-ID: <52cb99f1-93ef-ea53-63c1-a661c2790538@cogentembedded.com>
-References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
- <1477932987-27871-4-git-send-email-narmstrong@baylibre.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v8 1/3] ARM: dts: da850: Add cfgchip syscon node
+Date: Tue, 1 Nov 2016 15:23:24 +0530
+Message-ID: <b3617c00-1f1d-5ab8-23e9-a96307a53558@ti.com>
+References: <1477946841-16126-1-git-send-email-david@lechnology.com>
+ <1477946841-16126-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477932987-27871-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477946841-16126-2-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>
+Cc: Axel Haslam <ahaslam@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi David,
 
-On 10/31/2016 7:56 PM, Neil Armstrong wrote:
+On Tuesday 01 November 2016 02:17 AM, David Lechner wrote:
+> Add a syscon node for the SoC CFGCHIPn registers. It includes a child node
+> for the USB PHY that is part of this range of registers.
+> 
+> Also have to add OF_DEV_AUXDATA() entry so that clock lookup will work for
+> the the USB PHY driver.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-> Add Ethernet node with Internal PHY selection for the Amlogic GXL SoCs
->
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 45 ++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> index d1bf381..71670c3 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> @@ -47,6 +47,24 @@
->
->  / {
->  	compatible = "amlogic,meson-gxl";
-> +
-> +
+For future, please do not combine device-tree addition and other C code into a 
+single patch. I have applied this patch while splitting it into two as 
+attached.
 
-    No need for these empty lines.
+Thanks,
+Sekhar
 
-> +};
-> +
-> +&ethmac {
-> +	reg = <0x0 0xc9410000 0x0 0x10000
-> +	       0x0 0xc8834540 0x0 0x4>;
-> +
-> +	clocks = <&clkc CLKID_ETH>,
-> +		 <&clkc CLKID_FCLK_DIV2>,
-> +		 <&clkc CLKID_MPLL2>;
-> +	clock-names = "stmmaceth", "clkin0", "clkin1";
-> +
-> +	mdio0: mdio0 {
+---8<---
+From: David Lechner <david@lechnology.com>
+Date: Mon, 31 Oct 2016 15:47:19 -0500
+Subject: [PATCH] ARM: dts: da850: Add cfgchip syscon node
 
-    Should be "mdio0: mdio {" in oprder to comply woth the DT spec.
+Add a syscon node for the SoC CFGCHIPn registers. It includes a child node
+for the USB PHY that is part of this range of registers.
 
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +	};
->  };
->
->  &aobus {
-[...]
+Signed-off-by: David Lechner <david@lechnology.com>
+[nsekhar@ti.com: drop OF_DEV_AUXDATA() addition]
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/boot/dts/da850.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 4c836133a183..2534aab851e1 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -209,6 +209,16 @@
+ 			};
+ 
+ 		};
++		cfgchip: chip-controller@1417c {
++			compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
++			reg = <0x1417c 0x14>;
++
++			usb_phy: usb-phy {
++				compatible = "ti,da830-usb-phy";
++				#phy-cells = <1>;
++				status = "disabled";
++			};
++		};
+ 		edma0: edma@0 {
+ 			compatible = "ti,edma3-tpcc";
+ 			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
+-- 
+2.9.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---8<---
+From: David Lechner <david@lechnology.com>
+Date: Mon, 31 Oct 2016 15:47:19 -0500
+Subject: [PATCH] ARM: davinci: da8xx-dt: add OF_DEV_AUXDATA entry for USB phy
+
+Add OF_DEV_AUXDATA() entry for USB phy. This is required for
+so that clock lookup will work for the USB PHY driver.
+
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/mach-davinci/da8xx-dt.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 0e45cbd57273..5e67618180a7 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -41,6 +41,7 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("ti,da850-tilcdc", 0x01e13000, "da8xx_lcdc.0", NULL),
+ 	OF_DEV_AUXDATA("ti,da830-ohci", 0x01e25000, "ohci", NULL),
+ 	OF_DEV_AUXDATA("ti,da830-musb", 0x01e00000, "musb-da8xx", NULL),
++	OF_DEV_AUXDATA("ti,da830-usb-phy", 0x01c1417c, "da8xx-usb-phy", NULL),
+ 	{}
+ };
+ 
+-- 
+2.9.0
