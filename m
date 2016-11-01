@@ -1,38 +1,45 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 2/2] of/platform: clarify of_find_device_by_node refcounting
-Date: Tue,  1 Nov 2016 11:53:22 +0100
-Message-ID: <1477997602-29652-2-git-send-email-johan@kernel.org>
-References: <1477997602-29652-1-git-send-email-johan@kernel.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] Documentation: devicetree: Add bindings info for rfkill-regulator
+Date: Tue,  1 Nov 2016 11:58:39 +0100
+Message-ID: <20161101105840.24313-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477997602-29652-1-git-send-email-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+Cc: Maarten ter Huurne <maarten@treewalker.org>, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add comment clarifying that of_find_device_by_node() takes a reference
-to the embedded struct device which needs to be dropped after use.
+This document gives information about how to write a devicetree
+node that corresponds to the rfkill-regulator driver.
 
-Note that most current users fail to do so.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/of/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/net/rfkill-regulator.txt       | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/rfkill-regulator.txt
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index cb4c7800f37d..b8064bc2b6eb 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -45,6 +45,9 @@ static int of_dev_node_match(struct device *dev, void *data)
-  * of_find_device_by_node - Find the platform_device associated with a node
-  * @np: Pointer to device tree node
-  *
-+ * Takes a reference to the embedded struct device which needs to be dropped
-+ * after use.
-+ *
-  * Returns platform_device pointer, or NULL if not found
-  */
- struct platform_device *of_find_device_by_node(struct device_node *np)
+diff --git a/Documentation/devicetree/bindings/net/rfkill-regulator.txt b/Documentation/devicetree/bindings/net/rfkill-regulator.txt
+new file mode 100644
+index 0000000..aac2fe1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/rfkill-regulator.txt
+@@ -0,0 +1,18 @@
++Device tree bindings for the rfkill-regulator driver
++
++Required properties:
++  - compatible:	should be "rfkill-regulator"
++  - rfkill-name:	the name of this rfkill device
++  - rfkill-type:	the type of this rfkill device;
++			must correspond to a valid rfkill_type from <uapi/linux/rfkill.h>
++  - vrfkill-supply:	phandle to a regulator
++
++Example:
++
++	wlan-rfkill {
++		compatible = "rfkill-regulator";
++		rfkill-name = "WLAN power switch";
++		rfkill-type = <1>;
++
++		vrfkill-supply = <&wlan_power>;
++	};
 -- 
-2.7.3
+2.9.3
