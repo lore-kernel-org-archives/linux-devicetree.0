@@ -1,57 +1,33 @@
-From: Jon Mason <jon.mason@broadcom.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH v2 2/6] net: phy: broadcom: Add BCM54810 PHY entry
-Date: Tue, 1 Nov 2016 12:43:39 -0400
-Message-ID: <20161101164337.GA19654@broadcom.com>
+Date: Tue, 1 Nov 2016 17:48:58 +0100
+Message-ID: <20161101164858.GH10785@lunn.ch>
 References: <1477688219-3871-1-git-send-email-jon.mason@broadcom.com>
  <1477688219-3871-3-git-send-email-jon.mason@broadcom.com>
  <20161029081839.GA32579@lunn.ch>
  <20161101155950.GA19378@broadcom.com>
  <20161101162648.GG10785@lunn.ch>
+ <20161101164337.GA19654@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161101162648.GG10785@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161101164337.GA19654-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 01, 2016 at 05:26:48PM +0100, Andrew Lunn wrote:
-> > > > +	if (of_property_read_bool(np, "brcm,enet-phy-lane-swap")) {
-> > > > +		/* Lane Swap - Undocumented register...magic! */
-> > > > +		ret = bcm_phy_write_exp(phydev, MII_BCM54XX_EXP_SEL_ER + 0x9,
-> > > > +					0x11B);
-> > > > +		if (ret < 0)
-> > > > +			return ret;
-> > > > +	}
-> > > > +
-> > > 
-> > > I wounder if this property could be made generic? What exactly are you
-> > > swapping? Rx and Tx lanes? Maybe we should add it to phy.txt?
-> > 
-> > Are you envisioning adding a DT check (similar to the
-> > of_property_read_bool above, only with a more generic string) in
-> > phy_device_create(), which will then set a PHY device flag?  This flag
-> > would then be checked for in the PHY driver and the appropriate action
-> > taken (in this case the bcm_phy_write_exp above).
-> 
-> I would keep the parsing of the property in the driver. But if we
-> think other PHYs could also support this feature, it would be good to
-> avoid having "brcm,enet-phy-lane-swap", "marvell,enet-phy-lane-swap",
-> "davicom,enet-phy-lane-swap", etc. It would be better to have one well
-> defined property documented in phy.txt which any PHY is free to
-> implement.
+> I'll make the generic string be "enet-phy-lane-swap" (without the
+> previous "brcm"), and add the flag to phy.txt to document it.
 
-Okay, I understand what you are saying now.  I will assume that if
-nothing exists today aside from this Broadcom errata, something in the
-future will happen.  So, I agree that making it generic is a good idea.
+Great.
 
-I'll make the generic string be "enet-phy-lane-swap" (without the
-previous "brcm"), and add the flag to phy.txt to document it.
+Please be quite verbose as to what it means.
 
-Thanks,
-Jon
-
-> 
-> 	Andrew
+Thanks
+       Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
