@@ -1,35 +1,37 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 2/7] Documentation: devicetree: add PHY lane swap
- binding
-Date: Tue, 1 Nov 2016 22:09:32 +0100
-Message-ID: <20161101210932.GB21010@lunn.ch>
-References: <1478030682-27012-1-git-send-email-jon.mason@broadcom.com>
- <1478030682-27012-3-git-send-email-jon.mason@broadcom.com>
- <20161101204826.GA21010@lunn.ch>
- <20161101205913.GA27191@broadcom.com>
- <f56145b6-adb6-186b-0b75-45a9f3a6c58e@broadcom.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 0/2] mmc: dw_mmc: fix the wrong operation for reset controller
+Date: Tue, 1 Nov 2016 14:56:00 -0700
+Message-ID: <CALAqxLXs704Y-TGAQsggSnDohyFDYvQw=zYuiHRu9UKgHEfbFw@mail.gmail.com>
+References: <20161031024942.4415-1-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <f56145b6-adb6-186b-0b75-45a9f3a6c58e@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Jon Mason <jon.mason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20161031024942.4415-1-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, lkml <linux-kernel@vger.kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Leo Yan <leo.yan@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> If set, indicates the PHY will swap the TX/RX lanes to compensate
-> for the board being designed with the lanes swapped.
+On Sun, Oct 30, 2016 at 7:49 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> This patch adds the "reset-names" as reset controller for dwmmc controller.
+> Linaro guys had reported the issue about booting stuck.
+>
+> Some SoCs are enabled the CONFIG_RESET_CONTROLLER.
+> then dwmmc controller are waiting for getting reset controller.
+> But if doesn't define "resets" property in device-tree, it should be stuck.
+>
+> If use the reset-names as reset controller for dwmmc controller,
+> it's more stable than now.
+> This commit is related with the below commit.
+>
+> Fixes: d6786fefe816 ("mmc: dw_mmc: add reset support to dwmmc host controller")
 
-Thanks, much better.
+So I wasn't hit by the issue, as I don't tend to boot from SD on my
+hikey, but I did run these patches and I'm not seeing any issues with
+my Android environment.
 
-	Andrew
+So for what its worth:
+Acked-by: John Stultz <john.stultz@linaro.org>
+
+thanks
+-john
