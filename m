@@ -1,52 +1,93 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH] Revert "console: don't prefer first registered if DT specifies stdout-path"
-Date: Tue, 08 Nov 2016 11:46:35 +1100
-Message-ID: <87h97ilrx0.fsf@concordia.ellerman.id.au>
-References: <20161104121135.4780-1-hdegoede@redhat.com> <20161104121135.4780-2-hdegoede@redhat.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCHv2] ARM: dts: socfpga: add specific compatible strings for
+ boards
+Date: Tue, 1 Nov 2016 15:23:52 -0700
+Message-ID: <20161101222352.GA6328@localhost>
+References: <20161101205652.26384-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161104121135.4780-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161101205652.26384-1-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+On Tue, Nov 01, 2016 at 03:56:52PM -0500, Dinh Nguyen wrote:
+> Add a more specific board compatible entry for all of the SOCFPGA
+> Cyclone 5 based boards.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v2: remove extra space and add a comma between compatible entries
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       | 2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> index afea364..5ecd2ef 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> @@ -18,7 +18,7 @@
+>  
+>  / {
+>  	model = "Terasic DE-0(Atlas)";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "terasic,de0-atlas", "altr,socfpga-cyclone5", "altr,socfpga";
+>  
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> index 424523b..e5a98e5 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+> @@ -19,7 +19,7 @@
+>  
+>  / {
+>  	model = "Aries/DENX MCV EVK";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "denx,mcvevk", "altr,socfpga-cyclone5", "altr,socfpga";
+>  
+>  	aliases {
+>  		ethernet0 = &gmac0;
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> index 15e43f4..b0577c1 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+> @@ -19,7 +19,7 @@
+>  
+>  / {
+>  	model = "Altera SOCFPGA Cyclone V SoC Development Kit";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "altr,socdk", "altr,socfpga-cyclone5", "altr,socfpga";
 
-> This reverts commit 05fd007e4629 ("console: don't prefer first registered
-> if DT specifies stdout-path").
->
-> The reverted commit changes existing behavior on which many ARM boards
-> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
-> both a video output and a serial console. Depending on whether the user
-> is using the device as a more regular computer; or as a headless device
-> we need to have the console on either one or the other.
->
-> Many users rely on the kernel behavior of the console being present on
-> both outputs, before the reverted commit the console setup with no
-> console= kernel arguments on an ARM board which sets stdout-path in dt
-> would look like this:
->
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
-> tty0                 -WU (E  p  )    4:1
->
-> Where as after the reverted commit, it looks like this:
->
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
->
-> This commit reverts commit 05fd007e4629 ("console: don't prefer first
-> registered if DT specifies stdout-path") restoring the original behavior.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+This looks a little too generic, what if there's another dk with another
+SoC down the road?
 
-This is also breaking various powerpc systems.
+>  	chosen {
+>  		bootargs = "earlyprintk";
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> index 02e22f5..c5623a7 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+> @@ -19,7 +19,7 @@
+>  
+>  / {
+>  	model = "Terasic SoCkit";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "terasic,sockit", "altr,socfpga-cyclone5", "altr,socfpga";
 
-Linus can you please merge this revert for 4.9 ?
+Same thing here, this seems a bit on the generic side.
 
-cheers
+
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
