@@ -1,68 +1,51 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH v2 0/6] pinctrl: aspeed: Fixes for g5, implement remaining pins
-Date: Thu,  3 Nov 2016 01:07:55 +1030
-Message-ID: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 1/6] pinctrl-aspeed-g5: Never set SCU90[6]
+Date: Thu,  3 Nov 2016 01:07:56 +1030
+Message-ID: <1478097481-14895-2-git-send-email-andrew@aj.id.au>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+If a pin depending on bit 6 in SCU90 is requested for GPIO, the export
+will succeed but changes to the GPIO's value will not be accepted by the
+hardware. This is because the pinmux driver has misconfigured the SCU by
+writing 1 to the reserved bit.
 
-This is v2 of the series implementing the remainder of the pinmux tables for
-the AST2400 and AST2500 SoCs. v1 of the series can be found here:
+The description of SCU90[6] from the datasheet is 'Reserved, must keep
+at value ”0”'. The fix is to switch pinmux from the bit-flipping macro
+to explicitly configuring the .enable and .disable values to zero.
 
-https://lkml.org/lkml/2016/9/27/309
+The patch has been tested on an AST2500 EVB.
 
-The first patch, "pinctrl-aspeed-g5: Never set SCU90[6]", is another fix that
-should be applied for 4.9. Please let me know if I should send such patches
-separately, as the series otherwise targets 4.10.
+Fixes: 56e57cb6c07f (pinctrl: Add pinctrl-aspeed-g5 driver)
+Reported-by: Uma Yadlapati <yadlapat@us.ibm.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
 
-v2 is based on 4.9-rc2 as requested in feedback on v1.
+This patch should be applied for 4.9.
 
-Cheers,
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Andrew
-
-Significant changes since v1:
-
-* Fixes from v1 have been applied, so have been dropped for v2
-* A new fix has appeared, "pinctrl-aspeed-g5: Never set SCU90[6]", as noted
-  above
-* New bindings documents for the SoC Display and LPC Host Controllers, driven
-  by the patch "pinctrl: aspeed: Read and write bits in LPCHC and GFX
-  controllers"
-* The v1 patch "pinctrl: aspeed: Enable capture of off-SCU pinmux state" has
-  been significantly reworked and is now titled "pinctrl: aspeed: Read and
-  write bits in LPCHC and GFX controllers"
-
-Andrew Jeffery (6):
-  pinctrl-aspeed-g5: Never set SCU90[6]
-  mfd: dt: Add bindings for the Aspeed SoC Display Controller (GFX)
-  mfd: dt: Add bindings for the Aspeed LPC Host Controller (LPCHC)
-  pinctrl: aspeed: Read and write bits in LPCHC and GFX controllers
-  pinctrl: aspeed-g4: Add mux configuration for all pins
-  pinctrl: aspeed-g5: Add mux configuration for all pins
-
- .../devicetree/bindings/mfd/aspeed-gfx.txt         |   17 +
- .../devicetree/bindings/mfd/aspeed-lpchc.txt       |   17 +
- .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |   86 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 1115 +++++++++++++-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 1514 +++++++++++++++++++-
- drivers/pinctrl/aspeed/pinctrl-aspeed.c            |   66 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed.h            |   33 +-
- 7 files changed, 2760 insertions(+), 88 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index c8c72e8259d3..87b46390b695 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -26,7 +26,7 @@
+ 
+ #define ASPEED_G5_NR_PINS 228
+ 
+-#define COND1		SIG_DESC_BIT(SCU90, 6, 0)
++#define COND1		{ SCU90, BIT(6), 0, 0 }
+ #define COND2		{ SCU94, GENMASK(1, 0), 0, 0 }
+ 
+ #define B14 0
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
