@@ -1,61 +1,48 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] cpufreq: ti: Add cpufreq driver to determine
- available OPPs at runtime
-Date: Wed, 2 Nov 2016 09:33:11 +0530
-Message-ID: <20161102040311.GB10786@vireshk-i7>
-References: <20161027214131.1725-1-d-gerlach@ti.com>
- <20161027214131.1725-4-d-gerlach@ti.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any transmitting
+ time for tx only devices
+Date: Wed, 02 Nov 2016 13:39:30 +0900
+Message-ID: <20161102043929.eaf7nlje2cru7nky@gangnam.samsung>
+References: <20161027143601.GA5103@gofer.mess.org>
+ <20160901171629.15422-1-andi.shyti@samsung.com>
+ <20160901171629.15422-6-andi.shyti@samsung.com>
+ <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
+ <20160902084158.GA25342@gofer.mess.org>
+ <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
+ <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
+ <20161031170526.GA8183@gofer.mess.org>
+ <20161101065111.hofyxjps2iwmxpzj@gangnam.samsung>
+ <20161101103408.GA15939@gofer.mess.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161027214131.1725-4-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <20161101103408.GA15939@gofer.mess.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: David =?iso-8859-15?Q?H=E4rdeman?= <david@hardeman.nu>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27-10-16, 16:41, Dave Gerlach wrote:
-> Some TI SoCs, like those in the AM335x, AM437x, DRA7x, and AM57x families,
-> have different OPPs available for the MPU depending on which specific
-> variant of the SoC is in use. This can be determined through use of the
-> revision and an eFuse register present in the silicon. Introduce a
-> ti-cpufreq driver that can read the aformentioned values and provide
-> them as version matching data to the opp framework. Through this the
-> opp-supported-hw dt binding that is part of the operating-points-v2
-> table can be used to indicate availability of OPPs for each device.
-> 
-> This driver also creates the "cpufreq-dt" platform_device after passing
-> the version matching data to the OPP framework so that the cpufreq-dt
-> handles the actual cpufreq implementation. Even without the necessary
-> data to pass the version matching data the driver will still create this
-> device to maintain backwards compatibility with operating-points v1
-> tables.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> ---
-> v2-v3:
->  - Use common ti compatible as described in binding and then match
->    against machine type for platform data.
->  - Use newly exposed dev_pm_opp_of_get_opp_desc_node to get
->    operating-points-v2 table now that properties needed by driver are
->    there.
->  - Parse syscon properties from operating-points-v2 node rather
->    than cpu node.
->  - Do not make ti-cpufreq a module-platform-driver and do not allow
->    building as module.
-> 
->  drivers/cpufreq/Kconfig.arm  |  11 ++
->  drivers/cpufreq/Makefile     |   1 +
->  drivers/cpufreq/ti-cpufreq.c | 288 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 300 insertions(+)
->  create mode 100644 drivers/cpufreq/ti-cpufreq.c
+Hi Sean,
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Andi, it would be good to know what the use-case for the original change is.
+> > 
+> > the use case is the ir-spi itself which doesn't need the lirc to
+> > perform any waiting on its behalf.
+> 
+> Here is the crux of the problem: in the ir-spi case no wait will actually 
+> happen here, and certainly no "over-wait". The patch below will not change
+> behaviour at all.
+> 
+> In the ir-spi case, "towait" will be 0 and no wait happens.
+> 
+> I think the code is already in good shape but somehow there is a 
+> misunderstanding. Did I miss something?
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can just drop this patch, it's just something small that is
+bothering me.
+
+I will send a new patchset without this one.
+
+Thanks,
+Andi
