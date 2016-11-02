@@ -1,61 +1,27 @@
 From: William Wu <wulf@rock-chips.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: add usb2-phy otg-port support for rk3399
-Date: Wed,  2 Nov 2016 15:42:18 +0800
-Message-ID: <1478072538-32081-3-git-send-email-wulf@rock-chips.com>
-References: <1478072538-32081-1-git-send-email-wulf@rock-chips.com>
+Subject: [PATCH 0/2] support USB2 PHY OTG port for rk3399
+Date: Wed,  2 Nov 2016 15:42:16 +0800
+Message-ID: <1478072538-32081-1-git-send-email-wulf@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478072538-32081-1-git-send-email-wulf@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, heiko@sntech.de
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, dianders@google.com, briannorris@google.com, groeck@google.com, wulf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Add otg-port nodes for both u2phy0 and u2phy1. The otg-port can
-be used for USB2.0 part of USB3.0 OTG controller.
+This series add support for rk3399 USB2 PHY0 and PHY1 OTG port.
+rk3399 has two USB2 PHYs, and each USB2 PHY is comprised of one
+Host port and one OTG port. We have supported Host port before,
+and try to support OTG port now.
 
-Signed-off-by: William Wu <wulf@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Test on rk3399-evb board.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index b65c193..ea2df51 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1095,6 +1095,17 @@
- 			clock-output-names = "clk_usbphy0_480m";
- 			status = "disabled";
- 
-+			u2phy0_otg: otg-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
-+					     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
-+					     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
-+				interrupt-names = "otg-bvalid", "otg-id",
-+						  "linestate";
-+				status = "disabled";
-+			};
-+
-+
- 			u2phy0_host: host-port {
- 				#phy-cells = <0>;
- 				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
-@@ -1112,6 +1123,16 @@
- 			clock-output-names = "clk_usbphy1_480m";
- 			status = "disabled";
- 
-+			u2phy1_otg: otg-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH 0>,
-+					     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH 0>,
-+					     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>;
-+				interrupt-names = "otg-bvalid", "otg-id",
-+						  "linestate";
-+				status = "disabled";
-+			};
-+
- 			u2phy1_host: host-port {
- 				#phy-cells = <0>;
- 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
+William Wu (2):
+  phy: rockchip-inno-usb2: support otg-port for rk3399
+  arm64: dts: rockchip: add usb2-phy otg-port support for rk3399
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |  21 ++
+ drivers/phy/phy-rockchip-inno-usb2.c     | 609 +++++++++++++++++++++++++++++--
+ 2 files changed, 599 insertions(+), 31 deletions(-)
+
 -- 
 2.0.0
