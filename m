@@ -1,56 +1,99 @@
-From: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/1] dt-binding: remoteproc: Fixup ADSP loader bindings
-Date: Wed,  2 Nov 2016 14:38:09 -0700
-Message-ID: <1478122689-5117-1-git-send-email-spjoshi@codeaurora.org>
+From: Gordan Markus <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/2] input: keyboard: Add devicetree support for lm8333
+Date: Wed,  2 Nov 2016 22:43:48 +0100
+Message-ID: <1478123029-18291-1-git-send-email-gordan.markus@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Trilok Soni <tsoni-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixup "dt-binding: remoteproc: Introduce ADSP loader binding"
-patch to include XO clock required for booting up Qualcomm ADSP
-Processor.
+This adds LM8333 devicetree parsing for the keypad part.
+Optional properties to specify the keypad driver active
+time and debounce time.
 
-Signed-off-by: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/input/keyboard/lm8333.c | 54 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-index 3820151..69f185f 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-@@ -21,6 +21,16 @@ on the Qualcomm ADSP core.
- 	Value type: <stringlist>
- 	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+diff --git a/drivers/input/keyboard/lm8333.c b/drivers/input/keyboard/lm8333.c
+index c717e8f..f1508c5 100644
+--- a/drivers/input/keyboard/lm8333.c
++++ b/drivers/input/keyboard/lm8333.c
+@@ -128,6 +128,51 @@ static irqreturn_t lm8333_irq_thread(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
  
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the xo clock
++static struct lm8333_platform_data *lm8333_parse_dt(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node;
++	struct lm8333_platform_data *pdata;
++	struct matrix_keymap_data *matrix_data;
++	u32 *keymap;
++	u32 prop;
++	int len;
 +
-+- clock-names = "xo";
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must list the xo clock name
++	pdata = devm_kzalloc(&client->dev, sizeof(pdata),
++				GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
 +
- - cx-supply:
- 	Usage: required
- 	Value type: <phandle>
-@@ -61,6 +71,9 @@ ADSP, as it is found on MSM8974 boards.
- 				  "handover",
- 				  "stop-ack";
++	if (!of_property_read_u32(np, "ti,active-time-ms", &prop))
++		pdata->active_time = prop;
++
++	if (!of_property_read_u32(np, "debounce-delay-ms", &prop))
++		pdata->debounce_time = prop;
++	else
++		pdata->debounce_time = 10;
++
++	if (!of_get_property(np, "linux,keymap", &prop))
++		len = prop / sizeof(u32);
++	else {
++		dev_err(&client->dev, "no keymap data defined\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	keymap = devm_kzalloc(&client->dev, sizeof(len) * len, GFP_KERNEL);
++	matrix_data = devm_kzalloc(&client->dev, sizeof(matrix_data),
++					GFP_KERNEL);
++	if (!matrix_data || !keymap)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_property_read_u32_array(np, "linux,keymap", keymap, len)) {
++		matrix_data->keymap_size = len;
++		matrix_data->keymap = keymap;
++
++		pdata->matrix_data = matrix_data;
++	}
++
++	return pdata;
++}
++
+ static int lm8333_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+@@ -137,6 +182,15 @@ static int lm8333_probe(struct i2c_client *client,
+ 	struct input_dev *input;
+ 	int err, active_time;
  
-+		clocks = <&rpmcc RPM_CXO_CLK>;
-+		clock-names = "xo";
++	if (!pdata && client->dev.of_node) {
++		pdata = lm8333_parse_dt(client);
++		if (IS_ERR(pdata)) {
++			dev_err(&client->dev,
++				"could not parse configuration\n");
++			return IS_ERR(pdata);
++		}
++	}
 +
- 		cx-supply = <&pm8841_s2>;
+ 	if (!pdata)
+ 		return -EINVAL;
  
- 		memory-region = <&adsp_region>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
