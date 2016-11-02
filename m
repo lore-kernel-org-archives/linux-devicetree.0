@@ -1,84 +1,108 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 0/6] Add support for IR transmitters
-Date: Wed, 2 Nov 2016 20:57:55 +0100
-Message-ID: <d94abce2-d11d-3776-3724-e2560c217ed2@gmail.com>
-References: <20161102104010.26959-1-andi.shyti@samsung.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
+Date: Wed, 02 Nov 2016 22:58:47 +0200
+Message-ID: <6165707.yDnDHhpUBT@avalon>
+References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <2893157.XL3Txm4q5I@avalon> <SG2PR06MB10389152CEC59BB77A5DA7DDC3A00@SG2PR06MB1038.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161102104010.26959-1-andi.shyti@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB10389152CEC59BB77A5DA7DDC3A00-ESzmfEwOt/zfc7TNChRnj20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org" <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 02.11.2016 um 11:40 schrieb Andi Shyti:
-> Hi,
-> 
-> The main goal is to add support in the rc framework for IR
-> transmitters, which currently is only supported by lirc but that
-> is not the preferred way.
-> 
-> The last patch adds support for an IR transmitter driven by
-> the MOSI line of an SPI controller, it's the case of the Samsung
-> TM2(e) board which support is currently ongoing.
-> 
-> The last patch adds support for an IR transmitter driven by
-> the MOSI line of an SPI controller, it's the case of the Samsung
-> TM2(e) board which support is currently ongoing.
-> 
-> Thanks Sean for your prompt reviews.
-> 
-> Andi
-> 
-> Changelog from version 1:
-> 
-> The RFC is now PATCH. The main difference is that this version
-> doesn't try to add the any bit streaming protocol and doesn't
-> modify any LIRC interface specification.
-> 
-> patch 1: updates all the drivers using rc_allocate_device
-> patch 2: fixed errors and warning reported from the kbuild test
->          robot
-> patch 5: this patch has been dropped and replaced with a new one
->          which avoids waiting for transmitters.
-> patch 6: added new properties to the dts specification
-> patch 7: the driver uses the pulse/space input and converts it to
->          a bit stream.
-> 
-> 
-> Changelog from version 2:
-> 
-> The original patch number 5 has been abandoned because it was not
-> bringing much benenfit.
-> 
-> patch 1: rebased on the new kernel.
-> patch 3: removed the sysfs attribute protocol for transmitters
-> patch 5: the binding has been moved to the leds section instead
->          of the media. Fixed all the comments from Rob
-> patch 6: fixed all the comments from Sean added also Sean's
->          review.
-> 
-> Andi Shyti (6):
->   [media] rc-main: assign driver type during allocation
->   [media] rc-main: split setup and unregister functions
->   [media] rc-core: add support for IR raw transmitters
->   [media] rc-ir-raw: do not generate any receiving thread for raw
->     transmitters
->   Documentation: bindings: add documentation for ir-spi device driver
->   [media] rc: add support for IR LEDs driven through SPI
-> 
-Hi Andi,
+Hi Ramesh,
 
-at least patches 1 and 2 conflict with recent extensions. See commits
-ddbf7d5a698c "rc: core: add managed versions of rc_allocate_device and
-rc_register_device" and b6f3ece38733 "[media] rc: nuvoton: use managed
-versions of rc_allocate_device and rc_register_device".
+On Wednesday 02 Nov 2016 09:00:00 Ramesh Shanmugasundaram wrote:
+> Hi Laurent,
+> 
+> Any further thoughts on the SDR format please (especially the comment
+> below). I would appreciate your feedback.
+>
+> >> On Wednesday 12 Oct 2016 15:10:29 Ramesh Shanmugasundaram wrote:
+> >>> This patch adds documentation for the three new SDR formats
+> >>> 
+> >>> V4L2_SDR_FMT_SCU16BE
+> >>> V4L2_SDR_FMT_SCU18BE
+> >>> V4L2_SDR_FMT_SCU20BE
+> 
+> [snip]
+> 
+> >>> +
+> >>> +       -  start + 0:
+> >>> +
+> >>> +       -  I'\ :sub:`0[D13:D6]`
+> >>> +
+> >>> +       -  I'\ :sub:`0[D5:D0]`
+> >>> +
+> >>> +    -  .. row 2
+> >>> +
+> >>> +       -  start + buffer_size/2:
+> >>> +
+> >>> +       -  Q'\ :sub:`0[D13:D6]`
+> >>> +
+> >>> +       -  Q'\ :sub:`0[D5:D0]`
+> >> 
+> >> The format looks planar, does it use one V4L2 plane (as does NV12) or
+> >> two V4L2 planes (as does NV12M) ? Same question for the other formats.
+> > 
+> > Thank you for bringing up this topic. This is one of the key design
+> > dilemma.
+> > 
+> > The I & Q data for these three SDR formats comes from two different DMA
+> > channels and hence two separate pointers -> we could say it is v4l2 multi-
+> > planar. Right now, I am making it look like a single plane by presenting
+> > the data in one single buffer ptr.
+> > 
+> > For e.g. multi-planar SC16 format would look something like this
+> > 
+> > <------------------------32bits---------------------->
+> > <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 0
+> > <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 4 ...
+> > <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 0
+> > <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 4
+> > 
+> > My concerns are
+> > 
+> > 1) These formats are not a standard as the video "Image Formats". These
+> > formats are possible when we use DRIF + MAX2175 combination. If we
+> > interface with a different tuner vendor, the above format(s) MAY/MAY NOT
+> > be re-usable. We do not know at this point. This is the main open item for
+> > discussion in the cover letter.
 
-It would be good if you could rebase your patch set on top of the
-latest master branch of media tree. Most likely you will have to make
-changes to the recently introduced managed versions of
-rc_allocate_device and rc_register_device.
+If the formats are really device-specific then they should be documented 
+accordingly and not made generic.
 
-Rgds, Heiner
+> > 2) MPLANE support within V4L2 seems specific to video. Please correct me
+> > if this is wrong interpretation.
+> > 
+> > - struct v4l2_format contains v4l2_sdr_format and
+> > v4l2_pix_format_mplane as members of union. Should I create a new
+> > v4l2_sdr_format_mplane? If I have to use v4l2_pix_format_mplane most of
+> > the video specific members would be unused (it would be similar to using
+> > v4l2_pix_format itself instead of v4l2_sdr_format)?
+
+I have no answer to that question as I'm not familiar with SDR. Antti, you've 
+added v4l2_sdr_format to the API, what's your opinion ? Hans, as you've acked 
+the patch, your input would be appreciated as well.
+
+> > - The above decision (accomodate SDR & MPLANE) needs to be
+> > propagated across the framework. Is this the preferred approach?
+> > 
+> > It goes back to point (1). As of today, the change set for this combo
+> > (DRIF+MAX2175) introduces new SDR formats only. Should it add further
+> > SDR+MPLANE support to the framework as well?
+> > 
+> > I would appreciate your suggestions on this regard.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
