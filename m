@@ -1,71 +1,66 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 4/4] spi: sun6i: Support Allwinner H3 SPI controller
-Date: Wed, 2 Nov 2016 14:40:11 +0100
-Message-ID: <20161102134011.aotjogti4vl4ebdt@lukather>
-References: <20161028065412.23008-1-woogyom.kim@gmail.com>
- <20161028065412.23008-5-woogyom.kim@gmail.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to 'aspeed,ast2400-ibt-bmc'
+Date: Thu, 3 Nov 2016 00:26:04 +1030
+Message-ID: <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <1478073426-3714-2-git-send-email-clg@kaod.org> <201611021415.51081.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7jqiaq7vz2zjy3ub"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161028065412.23008-5-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201611021415.51081.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 2, 2016 at 11:45 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 02 November 2016, C=C3=A9dric Le Goater wrote:
+>> The Aspeed SoCs have two BT interfaces : one is IPMI compliant and the
+>> other is H8S/2168 compliant.
+>>
+>> The current ipmi/bt-bmc driver implements the IPMI version and we
+>> should reflect its nature in the compatible node name using
+>> 'aspeed,ast2400-ibt-bmc' instead of 'aspeed,ast2400-bt-bmc'. The
+>> latter should be used for a H8S interface driver if it is implemented
+>> one day.
+>>
+>> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+>
+> We generally try to avoid changing the compatible strings after the
+> fact, but it's probably ok in this case.
+>
+> I don't understand who decides which of the two interfaces is used:
+> is it the same register set that can be driven by either one or the
+> other driver, or do you expect to have two drivers that can both
+> be active in the same system and talk to different hardware once
+> you get there?
 
---7jqiaq7vz2zjy3ub
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's the second case. The H8S BT has a different register layout so it
+would require a different driver.
 
-On Fri, Oct 28, 2016 at 03:54:12PM +0900, Milo Kim wrote:
-> H3 has two SPI controllers. The size of the buffer is 64 * 8.
-> (8 bit transfer by 64 entry FIFO)
-> A31 has four controllers. The size of the buffer is 128 * 8.
-> (8 bit transfer by 128 entry FIFO)
->=20
-> Register maps are sharable, so sun6i SPI driver is reusable with
-> device configuration.
->=20
-> Use the variable, 'fifo_depth' instead of fixed value to support both SPI
-> controllers.
->=20
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+We don't yet have a driver for the other BT device, but there was
+recent talk of using it as an alternate (non-ipmi channel) between the
+BMC and the host. Before that discussion I wasn't aware that the H8S
+BT existed. I suggested we fix this up before it hits a final release.
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+C=C3=A9dric, do you think ast2400-ibt-bmc or ast2400-ipmi-bt-bmc does a
+better job of describing the hardware here?
 
-Thanks!
-Maxime
+While we're modifying the binding, should we add a compat string for
+the ast2500?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Cheers,
 
---7jqiaq7vz2zjy3ub
-Content-Type: application/pgp-signature; name="signature.asc"
+Joel
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYGey7AAoJEBx+YmzsjxAgQ4UP/iJWM6G5KwwVrWCH7+2ZvsyL
-55JXP3XWCOZYELcLJgeksWLuMZMuy/oGtKVNyK91VC33lOYF4RXzHAc27pO8MRN6
-bw6WyNVXobMGPIP1qciH4yLKwwJwGvHMG5a0I5RMBfEOCkOl1HUuNbRwnO8Zrc/5
-i3PLxYR8Y0qciOWrC1f5j84nX92nUz3YiNOTJFWRFM4phtKRCjHWgwYXzHB4xWc2
-cyYrRZ8UzZ9iQvaw7gm1DUheTIzVaUc7S4mtUtrVd6wb4lzAZbOG9MRvfUhQp9TJ
-2Q2d/tDtyfIYn+reRoMly19q4wEqxMqgwINt0V8EIUnOL6jNKQLQVSBDym7swf8R
-7vEYFtcV9H5zjOXHx6ZDgvgFAd7KD9c8WrJ5yybjxgYFEGMWoApbSFXkp/nU8Zjb
-/ZTitSFuPPRTwME1xjQNqunZBHs6WvBFx6V3jdW2GBgA6MgqueudahHb/du+vavi
-ZX5sp5sZApXQ6eK6KeMPk1/Ro3I18pvxDPe0m1TFXNxFfRo1pKQAfHnQH+r51cCA
-pw3uroJr5057xwqj0ESF3f9tWF/l1hCtd27cjwqzzy7dMl+v/BnJ/LE6rDux5/1C
-pmFYhlNJpAl/rUjfctIq4snjjhslArV//nPV0aPoncU/sArJfO2kUL//lBXBctUu
-0mZ4jcEp+TGndnC6yG67
-=JqxL
------END PGP SIGNATURE-----
-
---7jqiaq7vz2zjy3ub--
+>
+> If the first one of these is true, it seems a little awkward to
+> use the DT compatible string to decide which driver to use rather
+> than making the decision in the OS.
+>
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
