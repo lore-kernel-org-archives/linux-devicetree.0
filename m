@@ -1,106 +1,92 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 6/8] dt-bindings: Add support for Amlogic GXBB SCPI
- Interface
-Date: Wed, 2 Nov 2016 16:20:50 -0600
-Message-ID: <20161102222050.GA32189@e106835-lin.cambridge.arm.com>
-References: <1475652814-30619-1-git-send-email-narmstrong@baylibre.com>
- <1475652814-30619-7-git-send-email-narmstrong@baylibre.com>
- <CAOesGMjY5_ibP7E9+DBf30nuV+2z2kecLv_ddnHjp3txuq+Kdg@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RESEND/PATCH v6 3/3] clk: qcom: Add A53 clock driver
+Date: Wed, 2 Nov 2016 15:55:20 -0700
+Message-ID: <20161102225520.GW16026@codeaurora.org>
+References: <20161019132816.31073-4-georgi.djakov@linaro.org>
+ <20161028015438.GG16026@codeaurora.org>
+ <20161102205910.GQ25787@tuxbot>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMjY5_ibP7E9+DBf30nuV+2z2kecLv_ddnHjp3txuq+Kdg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, wxt@rock-chips.com, frank.wang@rock-chips.com, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <20161102205910.GQ25787@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 29, 2016 at 11:39:05AM -0700, Olof Johansson wrote:
-> Hi,
+On 11/02, Bjorn Andersson wrote:
+> On Thu 27 Oct 18:54 PDT 2016, Stephen Boyd wrote:
 > 
+> > On 10/19, Georgi Djakov wrote:
+> > > Add a driver for the A53 Clock Controller. It is a hardware block that
+> > > implements a combined mux and half integer divider functionality. It can
+> > > choose between a fixed-rate clock or the dedicated A53 PLL. The source
+> > > and the divider can be set both at the same time.
+> > > 
+> > > This is required for enabling CPU frequency scaling on platforms like
+> > > MSM8916.
+> > > 
+> > 
+> > Please Cc DT reviewers.
+> > 
+> > > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/clock/qcom,a53cc.txt       |  22 +++
+> > >  drivers/clk/qcom/Kconfig                           |   8 ++
+> > >  drivers/clk/qcom/Makefile                          |   1 +
+> > >  drivers/clk/qcom/a53cc.c                           | 155 +++++++++++++++++++++
+> > >  4 files changed, 186 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> > >  create mode 100644 drivers/clk/qcom/a53cc.c
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> > > new file mode 100644
+> > > index 000000000000..a025f062f177
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> > > @@ -0,0 +1,22 @@
+> > > +Qualcomm A53 CPU Clock Controller Binding
+> > > +------------------------------------------------
+> > > +The A53 CPU Clock Controller is hardware, which provides a combined
+> > > +mux and divider functionality for the CPU clocks. It can choose between
+> > > +a fixed rate clock and the dedicated A53 PLL.
+> > > +
+> > > +Required properties :
+> > > +- compatible : shall contain:
+> > > +
+> > > +			"qcom,a53cc"
+> > > +
+> > > +- reg : shall contain base register location and length
+> > > +	of the APCS region
+> > > +- #clock-cells : shall contain 1
+> > > +
+> > > +Example:
+> > > +
+> > > +	apcs: syscon@b011000 {
+> > > +		compatible = "qcom,a53cc", "syscon";
+> > 
+> > Why is it a syscon? Is that part used?
+> > 
 > 
-> On Wed, Oct 5, 2016 at 12:33 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/arm,scpi.txt | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> > index faa4b44..04bc171 100644
-> > --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> > +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
-> > @@ -7,7 +7,7 @@ by Linux to initiate various system control and power operations.
-> >
-> >  Required properties:
-> >
-> > -- compatible : should be "arm,scpi"
-> > +- compatible : should be "arm,scpi" or "amlogic,meson-gxbb-scpi"
+> I use the register at offset 8 for interrupting the other subsystems, so
+> this must be available as something I can poke.
 > 
-> This doesn't seem right to document here. If anything you might want
-> to have a table of more-specific-compatibles for specific
-> implementations, but "arm,scpi" should still be the compatible of the
-> node (just not the most specific one).
-> 
-
-I completely agree with you and I was pushing for a generic "arm,legacy-scpi"
-compatible until this binding was acked by Rob.
-
-Anyways, I will add the generic compatible and post the changes.
-
-> Also, documenting it here indiciates that non-amlogic implementations
-> can/should use that compatible, which is misleading.
->
-
-Agreed, it's better to keep them out of this generic binding document.
-
-> >  - mboxes: List of phandle and mailbox channel specifiers
-> >           All the channels reserved by remote SCP firmware for use by
-> >           SCPI message protocol should be specified in any order
-> > @@ -60,7 +60,8 @@ A small area of SRAM is reserved for SCPI communication between application
-> >  processors and SCP.
-> >
-> >  Required properties:
-> > -- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
-> > +- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno,
-> > +               or "amlogic,meson-gxbb-sram" for Amlogic GXBB SoC.
-> 
-> Maybe you'd be better of with a meson-specific document that refers to
-> these but with different compatible values.
-> 
-> Come to think of it, the Juno-specific one maybe shouldn't be in
-> arm,scpi at all, since that adds confusion here.
-> 
-> It's somewhat confusing that ARM is both a platform, architecture and
-> in some cases implementer of specific systems. :)
-> 
-
-Sorry for that, I will move all juno specific references in the binding
-out of this document(except the examples, which I assume should be fine)
-
-> >  The rest of the properties should follow the generic mmio-sram description
-> >  found in ../../sram/sram.txt
-> > @@ -70,7 +71,8 @@ Each sub-node represents the reserved area for SCPI.
-> >  Required sub-node properties:
-> >  - reg : The base offset and size of the reserved area with the SRAM
-> >  - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
-> > -              shared memory on Juno platforms
-> > +              shared memory on Juno platforms or
-> > +              "amlogic,meson-gxbb-scp-shmem" for Amlogic GXBB SoC.
-> 
-> Same here. It won't scale if all vendors are expected to add an entry here.
+> Which makes me think that this should be described as a "simple-mfd" and
+> "syscon" with the a53cc node as a child - grabbing the regmap of the
+> syscon parent, rather then ioremapping the same region again.
 > 
 
-I will rework the patches to address the concerns as I too did share same
-concern.
+That's sort of a question for DT reviewers. The register space
+certainly seems like a free for all with a tilt toward power
+management of the CPU, similar to how this was done on Krait
+based designs.
 
+I wonder why we didn't make up some provider/consumer binding for
+the "kicking" feature used by SMD/RPM code. Then this could be a
+clock provider and a "kick" provider (haha #kick-cells) and the
+usage of syscon/regmap wouldn't be mandatory.
 
-Hi Neil,
-
-You may need to rework the DTS files based on that, please be aware of
-that and make the necessary changes.
-
---
-Regards,
-Sudeep
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
