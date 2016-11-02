@@ -1,51 +1,43 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH V8 6/6] ARM64: bcm2835: add thermal driver to default_config
-Date: Wed,  2 Nov 2016 10:18:26 +0000
-Message-ID: <1478081906-12009-7-git-send-email-kernel@martin.sperl.org>
-References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 10/12] ARM: dts: sk-rzg1e: initial device tree
+Date: Wed, 2 Nov 2016 11:26:14 +0100
+Message-ID: <CAMuHMdWtAtALtfpKiVf7sZSd=91v-9gy33apU=gYxT+g66s+GA@mail.gmail.com>
+References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com> <17390303.uDhVlFKVKX@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <17390303.uDhVlFKVKX-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Sat, Oct 29, 2016 at 12:29 AM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add the initial  device tree for the R8A7745 SoC based SK-RZG1E board.
+> The board has 1  debug  serial  port (SCIF2); include support for it,
+> so that the serial console can  work.
+>
+> Based on the original (and large) patch by Dmitry Shifrin
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Add the thermal driver for bcm2837 to list of compiled modules
-in the default config.
+Subject is off-by-one (the series has only 11 patches)
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Changelog:
- V7 -> V8: rebased
+Gr{oetje,eeting}s,
 
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+                        Geert
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index dab2cb0..37b2f0a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -271,6 +271,7 @@ CONFIG_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
-+CONFIG_BCM2835_THERMAL=y
- CONFIG_EXYNOS_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_RENESAS_WDT=y
 --
-2.1.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
