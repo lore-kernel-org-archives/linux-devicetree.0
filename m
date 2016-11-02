@@ -1,112 +1,70 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] mmc: sdhci: Use sdhci-caps-mask and sdhci-caps to
- change the caps read during __sdhci_read_caps
-Date: Wed, 2 Nov 2016 10:39:33 +0200
-Message-ID: <68720b68-430c-bc69-f531-cc9884ade331@intel.com>
-References: <1477670171-30015-1-git-send-email-zach.brown@ni.com>
- <1477670171-30015-3-git-send-email-zach.brown@ni.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r8a7794: remove Z clock
+Date: Wed, 2 Nov 2016 09:50:47 +0100
+Message-ID: <CAMuHMdV11DuFQDciovvk9LH=Gu845ci+3-WJj5Biu16M84K3jg@mail.gmail.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com> <2289596.xFBEUD1OgK@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477670171-30015-3-git-send-email-zach.brown-acOepvfBmUk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2289596.xFBEUD1OgK@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/10/16 18:56, Zach Brown wrote:
-> The sdhci capabilities register can be incorrect. The sdhci-caps-mask
-> and sdhci-caps dt properties specify which bits of the register are
-> incorrect and what their values should be. This patch makes the sdhci
-> driver use those properties to correct the caps during
-> __sdhci_read_caps.
-> 
-> During __sdhci_read_caps
-> Use the sdhci-caps-mask property to turn off the incorrect bits of the
-> sdhci register after reading them.
-> Use the sdhci-caps to turn on bits after using sdhci-caps-mask to turn
-> off the incorrect ones.
-> 
-> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+On Sat, Oct 29, 2016 at 11:31 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> R8A7794 doesn't have Cortex-A15 CPUs, thus there's no Z clock...
+>
+> Fixes: 0dce5454d5c2 ("ARM: shmobile: Initial r8a7794 SoC device tree")
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Apart from minor style issue:
-
-Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 > ---
->  drivers/mmc/host/sdhci.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1e25b01..d5feae4 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -22,6 +22,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/of.h>
->  
->  #include <linux/leds.h>
->  
-> @@ -2991,6 +2992,8 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
->  void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
->  {
->  	u16 v;
-> +	u64 dt_caps_mask = 0;
-> +	u64 dt_caps = 0;
->  
->  	if (host->read_caps)
->  		return;
-> @@ -3005,18 +3008,35 @@ void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
->  
->  	sdhci_do_reset(host, SDHCI_RESET_ALL);
->  
-> +	of_property_read_u64(mmc_dev(host->mmc)->of_node,
-> +			     "sdhci-caps-mask", &dt_caps_mask);
-> +	of_property_read_u64(mmc_dev(host->mmc)->of_node,
-> +			     "sdhci-caps", &dt_caps);
-> +
->  	v = ver ? *ver : sdhci_readw(host, SDHCI_HOST_VERSION);
->  	host->version = (v & SDHCI_SPEC_VER_MASK) >> SDHCI_SPEC_VER_SHIFT;
->  
->  	if (host->quirks & SDHCI_QUIRK_MISSING_CAPS)
->  		return;
->  
-> -	host->caps = caps ? *caps : sdhci_readl(host, SDHCI_CAPABILITIES);
-> +	if (caps)
-> +		host->caps = *caps;
-> +	else {
+> The patch is against the 'master' branch of Simon Horman's 'renesas.git' repo.
+>
+>  arch/arm/boot/dts/r8a7794.dtsi            |    3 +--
+>  include/dt-bindings/clock/r8a7794-clock.h |    3 +--
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -1025,8 +1025,7 @@
+>                         clocks = <&extal_clk &usb_extal_clk>;
+>                         #clock-cells = <1>;
+>                         clock-output-names = "main", "pll0", "pll1", "pll3",
+> -                                            "lb", "qspi", "sdh", "sd0", "z",
+> -                                            "rcan";
+> +                                            "lb", "qspi", "sdh", "sd0", "rcan";
+>                         #power-domain-cells = <0>;
+>                 };
+>                 /* Variable factor clocks */
+> Index: renesas/include/dt-bindings/clock/r8a7794-clock.h
+> ===================================================================
+> --- renesas.orig/include/dt-bindings/clock/r8a7794-clock.h
+> +++ renesas/include/dt-bindings/clock/r8a7794-clock.h
+> @@ -20,8 +20,7 @@
+>  #define R8A7794_CLK_QSPI               5
+>  #define R8A7794_CLK_SDH                        6
+>  #define R8A7794_CLK_SD0                        7
+> -#define R8A7794_CLK_Z                  8
+> -#define R8A7794_CLK_RCAN               9
+> +#define R8A7794_CLK_RCAN               8
 
-All branches of 'if' should have {}.
-i.e. refer results of ./scripts/checkpatch.pl --strict
+JFTR, this changes the bindings file, but the values are solely used
+for indexing
+the clock-output-names array, so this is fine.
 
-> +		host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-> +		host->caps &= ~lower_32_bits(dt_caps_mask);
-> +		host->caps |= lower_32_bits(dt_caps);
-> +	}
->  
->  	if (host->version < SDHCI_SPEC_300)
->  		return;
->  
-> -	host->caps1 = caps1 ? *caps1 : sdhci_readl(host, SDHCI_CAPABILITIES_1);
-> +	if (caps1)
-> +		host->caps1 = *caps1;
-> +	else {
+Gr{oetje,eeting}s,
 
-Ditto
-
-> +		host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
-> +		host->caps1 &= ~upper_32_bits(dt_caps_mask);
-> +		host->caps1 |= upper_32_bits(dt_caps);
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(__sdhci_read_caps);
->  
-> 
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
