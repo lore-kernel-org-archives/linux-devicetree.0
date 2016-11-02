@@ -1,32 +1,26 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 5/7] net: ethernet: bgmac: device tree phy enablement
-Date: Wed, 2 Nov 2016 10:16:39 -0700
-Message-ID: <a6a953b1-d8f1-20b9-aa46-5956affba0af@gmail.com>
+Subject: Re: [PATCH v5 7/7] arm64: dts: NS2: add AMAC ethernet support
+Date: Wed, 2 Nov 2016 10:17:53 -0700
+Message-ID: <c413e1df-45a2-d0b8-c92d-fc0fa2472cf0@gmail.com>
 References: <1478106488-11779-1-git-send-email-jon.mason@broadcom.com>
- <1478106488-11779-6-git-send-email-jon.mason@broadcom.com>
+ <1478106488-11779-8-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478106488-11779-6-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1478106488-11779-8-git-send-email-jon.mason@broadcom.com>
+Sender: netdev-owner@vger.kernel.org
 To: Jon Mason <jon.mason@broadcom.com>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
+Cc: rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 11/02/2016 10:08 AM, Jon Mason wrote:
-> Change the bgmac driver to allow for phy's defined by the device tree
+> Add support for the AMAC ethernet to the Broadcom Northstar2 SoC device
+> tree
 > 
 > Signed-off-by: Jon Mason <jon.mason@broadcom.com>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Provided that the binding is satisfactory, I will take this one via
+ARM64-SoC.
 -- 
 Florian
