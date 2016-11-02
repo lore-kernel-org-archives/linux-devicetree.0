@@ -1,66 +1,84 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 4/7] Documentation: devicetree: net: add NS2 bindings
- to amac
-Date: Wed, 2 Nov 2016 22:52:07 +0300
-Message-ID: <16b4fb52-ed13-c9d9-d82d-862ae34ce850@cogentembedded.com>
-References: <1478106488-11779-1-git-send-email-jon.mason@broadcom.com>
- <1478106488-11779-5-git-send-email-jon.mason@broadcom.com>
- <ab064a45-0172-fa28-4ac6-0d3159a26506@cogentembedded.com>
- <20161102172456.GA11881@broadcom.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 0/6] Add support for IR transmitters
+Date: Wed, 2 Nov 2016 20:57:55 +0100
+Message-ID: <d94abce2-d11d-3776-3724-e2560c217ed2@gmail.com>
+References: <20161102104010.26959-1-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161102172456.GA11881@broadcom.com>
+In-Reply-To: <20161102104010.26959-1-andi.shyti@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2016 08:24 PM, Jon Mason wrote:
+Am 02.11.2016 um 11:40 schrieb Andi Shyti:
+> Hi,
+> 
+> The main goal is to add support in the rc framework for IR
+> transmitters, which currently is only supported by lirc but that
+> is not the preferred way.
+> 
+> The last patch adds support for an IR transmitter driven by
+> the MOSI line of an SPI controller, it's the case of the Samsung
+> TM2(e) board which support is currently ongoing.
+> 
+> The last patch adds support for an IR transmitter driven by
+> the MOSI line of an SPI controller, it's the case of the Samsung
+> TM2(e) board which support is currently ongoing.
+> 
+> Thanks Sean for your prompt reviews.
+> 
+> Andi
+> 
+> Changelog from version 1:
+> 
+> The RFC is now PATCH. The main difference is that this version
+> doesn't try to add the any bit streaming protocol and doesn't
+> modify any LIRC interface specification.
+> 
+> patch 1: updates all the drivers using rc_allocate_device
+> patch 2: fixed errors and warning reported from the kbuild test
+>          robot
+> patch 5: this patch has been dropped and replaced with a new one
+>          which avoids waiting for transmitters.
+> patch 6: added new properties to the dts specification
+> patch 7: the driver uses the pulse/space input and converts it to
+>          a bit stream.
+> 
+> 
+> Changelog from version 2:
+> 
+> The original patch number 5 has been abandoned because it was not
+> bringing much benenfit.
+> 
+> patch 1: rebased on the new kernel.
+> patch 3: removed the sysfs attribute protocol for transmitters
+> patch 5: the binding has been moved to the leds section instead
+>          of the media. Fixed all the comments from Rob
+> patch 6: fixed all the comments from Sean added also Sean's
+>          review.
+> 
+> Andi Shyti (6):
+>   [media] rc-main: assign driver type during allocation
+>   [media] rc-main: split setup and unregister functions
+>   [media] rc-core: add support for IR raw transmitters
+>   [media] rc-ir-raw: do not generate any receiving thread for raw
+>     transmitters
+>   Documentation: bindings: add documentation for ir-spi device driver
+>   [media] rc: add support for IR LEDs driven through SPI
+> 
+Hi Andi,
 
->>> Clean-up the documentation to the bgmac-amac driver, per suggestion by
->>> Rob Herring, and add details for NS2 support.
->>>
->>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->>> ---
->>> Documentation/devicetree/bindings/net/brcm,amac.txt | 16 +++++++++++-----
->>> 1 file changed, 11 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> index ba5ecc1..2fefa1a 100644
->>> --- a/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> +++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
->>> @@ -2,11 +2,17 @@ Broadcom AMAC Ethernet Controller Device Tree Bindings
->>> -------------------------------------------------------------
->>>
->>> Required properties:
->>> - - compatible:	"brcm,amac" or "brcm,nsp-amac"
->>> - - reg:		Address and length of the GMAC registers,
->>> -		Address and length of the GMAC IDM registers
->>> - - reg-names:	Names of the registers.  Must have both "amac_base" and
->>> -		"idm_base"
->>> + - compatible:	"brcm,amac"
->>> +		"brcm,nsp-amac"
->>> +		"brcm,ns2-amac"
->>> + - reg:		Address and length of the register set for the device. It
->>> +		contains the information of registers in the same order as
->>> +		described by reg-names
->>> + - reg-names:	Names of the registers.
->>> +		"amac_base":	Address and length of the GMAC registers
->>> +		"idm_base":	Address and length of the GMAC IDM registers
->>> +		"nicpm_base":	Address and length of the NIC Port Manager
->>> +				registers (required for Northstar2)
->>
->>   Why this "_base" suffix? It looks redundant...
->
-> Yes.  Rob Herring pointed out the same thing.  It is ugly, but follows
-> the existing binding.
+at least patches 1 and 2 conflict with recent extensions. See commits
+ddbf7d5a698c "rc: core: add managed versions of rc_allocate_device and
+rc_register_device" and b6f3ece38733 "[media] rc: nuvoton: use managed
+versions of rc_allocate_device and rc_register_device".
 
-    Sorry, I didn't realize you're reformatting the existing bindings while 
-adding some new text...
+It would be good if you could rebase your patch set on top of the
+latest master branch of media tree. Most likely you will have to make
+changes to the recently introduced managed versions of
+rc_allocate_device and rc_register_device.
 
-> Thanks,
-> Jon
-
-MBR, Sergei
+Rgds, Heiner
