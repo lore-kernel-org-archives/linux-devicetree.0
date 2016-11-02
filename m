@@ -1,460 +1,145 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/2] ARM: dts: Add support for OX820 and Pogoplug V3
-Date: Wed,  2 Nov 2016 15:18:49 +0100
-Message-ID: <20161102141850.25164-2-narmstrong@baylibre.com>
-References: <20161102141850.25164-1-narmstrong@baylibre.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V3 5/9] mfd: da9061: MFD core support
+Date: Wed, 2 Nov 2016 14:28:54 +0000
+Message-ID: <20161102142854.GS13127@dell>
+References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
+ <72145ea5055e95d7b6f05168c641927e4f3830d9.1477929725.git.stwiss.opensource@diasemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161102141850.25164-1-narmstrong@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <72145ea5055e95d7b6f05168c641927e4f3830d9.1477929725.git.stwiss.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-oxnas@lists.tuxfamily.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree for the Oxford Seminconductor OX820 SoC and the
-Cloud Engines PogoPlug v3 board.
-Add the SoC and board compatible strings to oxnas bindings.
+On Mon, 31 Oct 2016, Steve Twiss wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/arm/oxnas.txt    |   5 +
- arch/arm/boot/dts/Makefile                         |   3 +-
- .../boot/dts/cloudengines-pogoplug-series-3.dts    |  94 +++++++
- arch/arm/boot/dts/ox820.dtsi                       | 296 +++++++++++++++++++++
- 4 files changed, 397 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
- create mode 100644 arch/arm/boot/dts/ox820.dtsi
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> MFD support for DA9061 is provided as part of the DA9062 device driver.
+> 
+> The registers header file adds two new chip variant IDs defined in DA9061
+> and DA9062 hardware. The core header file adds new software enumerations
+> for listing the valid DA9061 IRQs and a da9062_compatible_types enumeration
+> for distinguishing between DA9061/62 devices in software.
+> 
+> The core source code adds a new .compatible of_device_id entry. This is
+> extended from DA9062 to support both "dlg,da9061" and "dlg,da9062". The
+> .data entry now holds a reference to the enumerated device type.
+> 
+> A new regmap_irq_chip model is added for DA9061 and this supports the new
+> list of regmap_irq entries. A new mfd_cell da9061_devs[] array lists the
+> new sub system components for DA9061. Support is added for a new DA9061
+> regmap_config which lists the correct readable, writable and volatile
+> ranges for this chip.
+> 
+> The probe function uses the device tree compatible string to switch on the
+> da9062_compatible_types and configure the correct mfd cells, irq chip and
+> regmap config.
+>  
+> Kconfig is updated to reflect support for DA9061 and DA9062 PMICs.
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> ---
+> This patch applies against linux-next and v4.8
+> 
+> v2 -> v3
+>  - NO CODE CHANGE
+>  - Patch renamed from [PATCH V2 05/10] to [PATCH V3 5/9]
+> 
+> v1 -> v2
+>  - Patch renamed from [PATCH V1 01/10] to [PATCH V2 05/10] -- these
+>    changes were made to fix checkpatch warnings caused by the patch
+>    set dependency order
+>  - Fixed typo in the commit message "readble" to "readable"
+>  - Removed the explicit cross-check to decide if there is a conflict
+>    between the device tree compatible string and the hardware definition.
+>    This patch assumes the device tree is correctly written and therefore
+>    removes the need for a hardware/DT sanity check.
+>  - Removed extra semicolon in drivers/mfd/da9062-core.c:877
+>  - Re-write compatible entries into numerical order
+> 
+> Lee,
+> 
+> This patch adds support for the DA9061 PMIC. This is done as part of the
+> existing DA9062 device driver by extending the of_device_id match table.
+> This in turn allows new MFD cells, irq chip and regmap definitions to
+> support DA9061.
+> 
+> Regards,
+> Steve Twiss, Dialog Semiconductor Ltd.
+> 
+> 
+>  drivers/mfd/Kconfig                  |   5 +-
+>  drivers/mfd/da9062-core.c            | 427 +++++++++++++++++++++++++++++++++--
+>  include/linux/mfd/da9062/core.h      |  27 ++-
+>  include/linux/mfd/da9062/registers.h |   2 +
+>  4 files changed, 441 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
-index b9e4971..ac64e60 100644
---- a/Documentation/devicetree/bindings/arm/oxnas.txt
-+++ b/Documentation/devicetree/bindings/arm/oxnas.txt
-@@ -5,5 +5,10 @@ Boards with the OX810SE SoC shall have the following properties:
-   Required root node property:
-     compatible: "oxsemi,ox810se"
- 
-+Boards with the OX820 SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "oxsemi,ox820"
-+
- Board compatible values:
-   - "wd,mbwe" (OX810SE)
-+  - "cloudengines,pogoplugv3" (OX820)
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index befcd26..3b0c74f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -604,7 +604,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
- dtb-$(CONFIG_ARCH_OXNAS) += \
--	wd-mbwe.dtb
-+	wd-mbwe.dtb \
-+	cloudengines-pogoplug-series-3.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8060-dragonboard.dtb \
- 	qcom-apq8064-arrow-sd-600eval.dtb \
-diff --git a/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
-new file mode 100644
-index 0000000..bfde32e
---- /dev/null
-+++ b/arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
-@@ -0,0 +1,94 @@
-+/*
-+ * cloudengines-pogoplug-series-3.dtsi - Device tree file for Cloud Engines PogoPlug Series 3
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/dts-v1/;
-+#include "ox820.dtsi"
-+
-+/ {
-+	model = "Cloud Engines PogoPlug Series 3";
-+
-+	compatible = "cloudengines,pogoplugv3", "oxsemi,ox820";
-+
-+	chosen {
-+		bootargs = "earlyprintk";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		/* 128Mbytes DDR */
-+		reg = <0x60000000 0x8000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "pogoplug:blue";
-+			gpios = <&gpio0 2 0>;
-+			default-state = "keep";
-+		};
-+
-+		orange {
-+			label = "pogoplug:orange";
-+			gpios = <&gpio1 16 1>;
-+			default-state = "keep";
-+		};
-+
-+		green {
-+			label = "pogoplug:green";
-+			gpios = <&gpio1 17 1>;
-+			default-state = "keep";
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+};
-+
-+&nandc {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_nand>;
-+
-+	nand@0 {
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		nand-ecc-mode = "soft";
-+		nand-ecc-algo = "hamming";
-+
-+		partition@0 {
-+			label = "boot";
-+			reg = <0x00000000 0x00e00000>;
-+			read-only;
-+		};
-+
-+		partition@e00000 {
-+			label = "ubi";
-+			reg = <0x00e00000 0x07200000>;
-+		};
-+	};
-+};
-+
-+&etha {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_etha_mdio>;
-+};
-diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
-new file mode 100644
-index 0000000..e40f282
---- /dev/null
-+++ b/arch/arm/boot/dts/ox820.dtsi
-@@ -0,0 +1,296 @@
-+/*
-+ * ox820.dtsi - Device tree file for Oxford Semiconductor OX820 SoC
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/include/ "skeleton.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "oxsemi,ox820";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "oxsemi,ox820-smp";
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,arm11mpcore";
-+			clocks = <&armclk>;
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,arm11mpcore";
-+			clocks = <&armclk>;
-+			reg = <1>;
-+		};
-+	};
-+
-+	memory {
-+		/* Max 512MB @ 0x60000000 */
-+		reg = <0x60000000 0x20000000>;
-+	};
-+
-+	clocks {
-+		osc: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <125000000>;
-+		};
-+
-+		sysclk: sysclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+			clocks = <&osc>;
-+		};
-+
-+		plla: plla {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <850000000>;
-+		};
-+
-+		armclk: armclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+			clocks = <&plla>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+		interrupt-parent = <&gic>;
-+
-+		nandc: nand-controller@41000000 {
-+			compatible = "oxsemi,ox820-nand";
-+			reg = <0x41000000 0x100000>;
-+			clocks = <&stdclk 11>;
-+			resets = <&reset 15>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		etha: ethernet@40400000 {
-+			compatible = "oxsemi,ox820-dwmac", "snps,dwmac";
-+			reg = <0x40400000 0x2000>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq", "eth_wake_irq";
-+			mac-address = [000000000000]; /* Filled in by U-Boot */
-+			phy-mode = "rgmii";
-+
-+			clocks = <&stdclk 9>, <&gmacclk>;
-+			clock-names = "gmac", "stmmaceth";
-+			resets = <&reset 6>;
-+
-+			/* Regmap for sys registers */
-+			oxsemi,sys-ctrl = <&sys>;
-+
-+			status = "disabled";
-+		};
-+
-+		apb-bridge@44000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x44000000 0x1000000>;
-+
-+			pinctrl: pinctrl {
-+				compatible = "oxsemi,ox820-pinctrl";
-+
-+				/* Regmap for sys registers */
-+				oxsemi,sys-ctrl = <&sys>;
-+
-+				pinctrl_uart0: uart0 {
-+					uart0 {
-+						pins = "gpio30", "gpio31";
-+						function = "fct5";
-+					};
-+				};
-+
-+				pinctrl_uart0_modem: uart0_modem {
-+					uart0_modem_a {
-+						pins = "gpio24", "gpio24", "gpio26", "gpio27";
-+						function = "fct4";
-+					};
-+					uart0_modem_b {
-+						pins = "gpio28", "gpio29";
-+						function = "fct5";
-+					};
-+				};
-+
-+				pinctrl_uart1: uart1 {
-+					uart1 {
-+						pins = "gpio7", "gpio8";
-+						function = "fct4";
-+					};
-+				};
-+
-+				pinctrl_uart1_modem: uart1_modem {
-+					uart1_modem {
-+						pins = "gpio5", "gpio6", "gpio40", "gpio41", "gpio42", "gpio43";
-+						function = "fct4";
-+					};
-+				};
-+
-+				pinctrl_etha_mdio: etha_mdio {
-+					etha_mdio {
-+						pins = "gpio3", "gpio4";
-+						function = "fct1";
-+					};
-+				};
-+
-+				pinctrl_nand: nand {
-+					nand {
-+						pins = "gpio12", "gpio13", "gpio14", "gpio15",
-+						     "gpio16", "gpio17", "gpio18", "gpio19",
-+						     "gpio20", "gpio21", "gpio22", "gpio23",
-+						     "gpio24";
-+						function = "fct1";
-+					};
-+				};
-+			};
-+
-+			gpio0: gpio@000000 {
-+				compatible = "oxsemi,ox820-gpio";
-+				reg = <0x000000 0x100000>;
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <32>;
-+				oxsemi,gpio-bank = <0>;
-+				gpio-ranges = <&pinctrl 0 0 32>;
-+			};
-+
-+			gpio1: gpio@100000 {
-+				compatible = "oxsemi,ox820-gpio";
-+				reg = <0x100000 0x100000>;
-+				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <18>;
-+				oxsemi,gpio-bank = <1>;
-+				gpio-ranges = <&pinctrl 0 32 18>;
-+			};
-+
-+			uart0: serial@200000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       clocks = <&sysclk>;
-+			       resets = <&reset 17>;
-+			};
-+
-+			uart1: serial@300000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       clocks = <&sysclk>;
-+			       resets = <&reset 18>;
-+			};
-+
-+			rps@400000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "simple-bus";
-+				ranges = <0 0x400000 0x100000>;
-+
-+				intc: interrupt-controller@0 {
-+					compatible = "oxsemi,ox820-rps-irq", "oxsemi,ox810se-rps-irq";
-+					interrupt-controller;
-+					reg = <0 0x200>;
-+					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+					#interrupt-cells = <1>;
-+					valid-mask = <0xFFFFFFFF>;
-+					clear-mask = <0>;
-+				};
-+
-+				timer0: timer@200 {
-+					compatible = "oxsemi,ox820-rps-timer";
-+					reg = <0x200 0x40>;
-+					clocks = <&sysclk>;
-+					interrupt-parent = <&intc>;
-+					interrupts = <4>;
-+				};
-+			};
-+
-+			sys: sys-ctrl@e00000 {
-+				compatible = "oxsemi,ox820-sys-ctrl", "syscon", "simple-mfd";
-+				reg = <0xe00000 0x200000>;
-+
-+				reset: reset-controller {
-+					compatible = "oxsemi,ox820-reset", "oxsemi,ox810se-reset";
-+					#reset-cells = <1>;
-+				};
-+
-+				stdclk: stdclk {
-+					compatible = "oxsemi,ox820-stdclk", "oxsemi,ox810se-stdclk";
-+					#clock-cells = <1>;
-+				};
-+			};
-+		};
-+
-+		apb-bridge@47000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x47000000 0x1000000>;
-+
-+			scu: scu@0 {
-+				compatible = "arm,arm11mp-scu";
-+				reg = <0x0 0x100>;
-+			};
-+
-+			local-timer@600 {
-+				compatible = "arm,arm11mp-twd-timer";
-+				reg = <0x600 0x20>;
-+				interrupts = <GIC_PPI 13 (GIC_CPU_MASK_RAW(3)|IRQ_TYPE_LEVEL_HIGH)>;
-+				clocks = <&armclk>;
-+			};
-+
-+			gic: gic@1000 {
-+				compatible = "arm,arm11mp-gic";
-+				interrupt-controller;
-+				#interrupt-cells = <3>;
-+				reg = <0x1000 0x1000>,
-+				      <0x100 0x500>;
-+			};
-+		};
-+	};
-+};
+[...]
+
+> @@ -475,7 +855,25 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+>  		return -EINVAL;
+>  	}
+>  
+> -	chip->regmap = devm_regmap_init_i2c(i2c, &da9062_regmap_config);
+> +	switch (chip->chip_type) {
+> +	case(COMPAT_TYPE_DA9061):
+> +		cell = da9061_devs;
+> +		cell_num = ARRAY_SIZE(da9061_devs);
+> +		irq_chip = &da9061_irq_chip;
+> +		config = &da9061_regmap_config;
+> +		break;
+> +	case(COMPAT_TYPE_DA9062):
+> +		cell = da9062_devs;
+> +		cell_num = ARRAY_SIZE(da9062_devs);
+> +		irq_chip = &da9062_irq_chip;
+> +		config = &da9062_regmap_config;
+> +		break;
+> +	default:
+> +		dev_err(chip->dev, "Unrecognised chip type\n");
+> +		return -ENODEV;
+> +	}
+
+I very much dislike when MFD and OF functionality is mixed.
+
+In your case you can use da9062_get_device_type() to dynamically
+interrogate the device and register using the correct MFD cells that
+way.
+
+> +	chip->regmap = devm_regmap_init_i2c(i2c, config);
+>  	if (IS_ERR(chip->regmap)) {
+>  		ret = PTR_ERR(chip->regmap);
+>  		dev_err(chip->dev, "Failed to allocate register map: %d\n",
+> @@ -493,7 +891,7 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+>  
+>  	ret = regmap_add_irq_chip(chip->regmap, i2c->irq,
+>  			IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED,
+> -			-1, &da9062_irq_chip,
+> +			-1, irq_chip,
+
+What is -1?
+
+>  			&chip->regmap_irq);
+>  	if (ret) {
+>  		dev_err(chip->dev, "Failed to request IRQ %d: %d\n",
+> @@ -503,8 +901,8 @@ static int da9062_i2c_probe(struct i2c_client *i2c,
+>  
+>  	irq_base = regmap_irq_chip_get_base(chip->regmap_irq);
+>  
+> -	ret = mfd_add_devices(chip->dev, PLATFORM_DEVID_NONE, da9062_devs,
+> -			      ARRAY_SIZE(da9062_devs), NULL, irq_base,
+> +	ret = mfd_add_devices(chip->dev, PLATFORM_DEVID_NONE, cell,
+> +			      cell_num, NULL, irq_base,
+
+[...]
+
 -- 
-2.7.0
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
