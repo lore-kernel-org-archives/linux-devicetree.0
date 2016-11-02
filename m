@@ -1,116 +1,65 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 34/37] docs: fix locations of several documents that
-	got moved
-Date: Wed, 2 Nov 2016 10:31:54 +0100
-Message-ID: <20161102093154.GC23350@amd>
-References: <cover.1476801354.git.mchehab@s-opensource.com>
-	<28c1f5d3867174a7017e3f3d9e9e4ebb096ceed8.1476801354.git.mchehab@s-opensource.com>
-	<20161019103442.GD1461@amd> <20161019115918.1162d16e@vento.lan>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/2] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
+Date: Wed, 2 Nov 2016 09:33:41 +0000
+Message-ID: <b9cc6c7a-0819-fa6a-d4f9-b057dddda5bb@linaro.org>
+References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1476873827-7191-3-git-send-email-vivek.gautam@codeaurora.org>
+ <a969a6be-472d-a463-790b-1e2f373d19b2@linaro.org>
+ <CAFp+6iG=3QRU+Ffj+8xJaPrpy0p7TyjeX0khiOGQMtz-z-hiSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7680369000982517778=="
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <20161019115918.1162d16e@vento.lan>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Chris Metcalf <cmetcalf@ezchip.com>, Peter Loeffler <peter.loeffler@guruz.at>, Finn Thain <fthain@telegraphics.com.au>, Yaowei Bai <baiyaowei@cmss.chinamobile.com>, Jakub Wilk <jwilk@jwilk.net>, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Guenter Roeck <linux@roeck-us.net>, Petr Mladek <pmladek@suse.com>, Jean Delvare <jdelvare@suse.com>, linux-pm@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Karsten Keil <isdn@linux-pingi.de>, Jiri Kosina <jkosina@suse.cz>, "seokhoon.yoon" <iamyooon@gmail.com>, Li Zefan <lizefan@huawei.com>, Ryan Swan <ryan@ryanswan.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Mark
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iG=3QRU+Ffj+8xJaPrpy0p7TyjeX0khiOGQMtz-z-hiSg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============7680369000982517778==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+nBD6E3TurpgldQp"
-Content-Disposition: inline
 
+On 02/11/16 07:26, Vivek Gautam wrote:
+>>> +               phy_desc->tx = base + qphy->cfg->tx_offsets[id];
+>>> >> +               phy_desc->rx = base + qphy->cfg->rx_offsets[id];
+>>> >> +               phy_desc->pcs = base + qphy->cfg->pcs_offsets[id];
+>>> >> +
+>>> >> +               /*
+>>> >> +                * Get PHY's Pipe clock, if any; USB3 and PCIe are PIPE
+>>> >> +                * based phys, so they essentially have pipe clock
+>>> >> +                */
+>>> >> +               memset(&prop_name, 0, sizeof(prop_name));
+>>> >> +               snprintf(prop_name, MAX_PROP_NAME, "pipe%d", id);
+>>> >> +               phy_desc->pipe_clk = devm_clk_get(dev, prop_name);
+>>> >> +               if (IS_ERR(phy_desc->pipe_clk)) {
+>>> >> +                       if (qphy->cfg->type == PHY_TYPE_PCIE ||
+>>> >> +                           qphy->cfg->type == PHY_TYPE_USB3) {
+>>> >> +                               ret = PTR_ERR(phy_desc->pipe_clk);
+>>> >> +                               if (ret != -EPROBE_DEFER)
+>>> >> +                                       dev_err(dev,
+>>> >> +                                       "failed to get lane%d pipe_clk\n",
+>>> >> id);
+>>> >> +                               return ret;
+>>> >> +                       } else {
+>>> >> +                               phy_desc->pipe_clk = NULL;
+>>> >> +                       }
+>>> >> +               }
+>> >
+>> >
+>> > Do we need to really need phy type for this?
+>> > You should proably make a flag in cfg to mark this rather then using phy
+>> > type. Hopefully it will also simplify the logic.
+> The pipe clock is something that's specific to PCIe and USB3 type
+> phys (both are PIPE3 specs based phys). So i think it is okay
+> to use the PHY_TYPE_{*} macros here. Looks a bit cleaner rather
+> than having a cfg flag. No ?
+Yes, it makes sense, I was not sure of full details of the pipe3 specs, 
+now that you made it more clear.
+Remember to add this in comments.
 
---+nBD6E3TurpgldQp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > Dunno, but kernel-parameters.txt was already quite long... for a file
-> > that is referenced quite often. Adding admin-guide/ into the path does
-> > not really help.
->=20
-> The big string name starts with Documentation/ :) There are some discussi=
-ons=20
-> about changing it to doc/ (or docs/). Also, as you said, kernel-parameters
-> is already a big name. Perhaps we could use, instead,
-> > "kernel-parms".
-
-cmdline?
-
-> If we rename kernel-parameters.rst to kernel-parms.rst, plus the doc/ ren=
-ame,
-> then the string size will actually reduce:
->=20
-> -		(see Documentation/kernel-parameters.txt), the minimum possible
-> +		(see doc/admin-guide/kernel-parms.rst), the minimum possible
->=20
-> > Maybe admin-guide should go directly into Documentation/ , as that's
-> > what our users are interested in?
->=20
-> There are several problems if we keep them at Documentation/ dir:
->=20
-> - We'll end by mixing documents already converted to ReST with documents
->   not converted yet;
->=20
-> - A rename is needed anyway, as Sphinx only accepts ReST files that end
->   with the extension(s) defined at Documentation/conf.py (currently,
->   .rst);
->=20
-> - A partial documentation build is made by sub-directory. If we put
->   files under /Documentation, there's no way to build just one
->   book.
-
-Well, documentation is primarily for users. I'm sure tools can adapt...
-
-> > Plus, I'm not sure how many developers will figure out that process/
-> > is what describes kernel patch submission process. We have processes
-> > in the kernel, after all...
->=20
-> Do you have a better idea?
-
-development/ ?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---+nBD6E3TurpgldQp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlgZsooACgkQMOfwapXb+vKDEwCdEmlwjrrTY1HV6PoP/Pyie4I+
-oBMAnjN0WHtyXtQBydl/7WLL5tES6tZi
-=EDvv
------END PGP SIGNATURE-----
-
---+nBD6E3TurpgldQp--
-
---===============7680369000982517778==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Virtualization mailing list
-Virtualization@lists.linux-foundation.org
-https://lists.linuxfoundation.org/mailman/listinfo/virtualization
---===============7680369000982517778==--
+Thanks,
+srini
+>
+> Using PHY_TYPE_{*} macros will also keep the doors open to
+> other PHY types that are added at a later point in time.
+>
+>> >
