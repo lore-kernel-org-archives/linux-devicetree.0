@@ -1,23 +1,20 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 02/11] soc: renesas: rcar-sysc: add R8A7745 support
-Date: Wed, 2 Nov 2016 10:48:33 +0100
-Message-ID: <CAMuHMdU0x=U3pQKVvAjza_5KGh0YmGDiGSHse2BC_Did82kxAA@mail.gmail.com>
-References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com> <5689104.8HluMoeKiR@wasted.cogentembedded.com>
+Subject: Re: [PATCH 03/11] ARM: shmobile: r8a7745: basic SoC support
+Date: Wed, 2 Nov 2016 10:49:08 +0100
+Message-ID: <CAMuHMdUGHET+b7eoyTeGo8vebxNvFWJsre-cLnk_i4BvgwjK_Q@mail.gmail.com>
+References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com> <1638480.5pJxF7pUnz@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5689104.8HluMoeKiR-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <1638480.5pJxF7pUnz-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 29, 2016 at 12:09 AM, Sergei Shtylyov
+On Sat, Oct 29, 2016 at 12:16 AM, Sergei Shtylyov
 <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add support for RZ/G1E (R8A7745) SoC power areas to the R-Car SYSC driver.
->
-> Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+> Add minimal support for the RZ/G1E (R8A7745) SoC.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
