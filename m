@@ -1,30 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dapm: Introduce DAPM_DOUBLE_R dual channel dual
- register control type" to the asoc tree
-Date: Wed, 02 Nov 2016 10:46:30 -0600
-Message-ID: <E1c1ygI-00067x-TN@finisterre>
-References: <20161003110804.28235-5-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161003110804.28235-5-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: Applied "ASoC: dapm: Introduce DAPM_DOUBLE dual channel control type" to the asoc tree
+Date: Wed, 02 Nov 2016 10:47:03 -0600
+Message-ID: <E1c1ygp-00069E-3q@finisterre>
+References: <20161003110804.28235-4-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161003110804.28235-4-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jaroslav Kysela <perex@perex.cz>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: dapm: Introduce DAPM_DOUBLE_R dual channel dual register control type
+   ASoC: dapm: Introduce DAPM_DOUBLE dual channel control type
 
 has been applied to the asoc tree at
 
@@ -49,14 +37,13 @@ to this mail.
 Thanks,
 Mark
 
->From 02866eab0f0d88c4b6a68de72022c2b26f0359b5 Mon Sep 17 00:00:00 2001
+>From 9ee7ef31b5a07cdca88cae023c613e045af935b9 Mon Sep 17 00:00:00 2001
 From: Chen-Yu Tsai <wens@csie.org>
-Date: Wed, 2 Nov 2016 15:36:01 +0800
-Subject: [PATCH] ASoC: dapm: Introduce DAPM_DOUBLE_R dual channel dual
- register control type
+Date: Wed, 2 Nov 2016 15:36:00 +0800
+Subject: [PATCH] ASoC: dapm: Introduce DAPM_DOUBLE dual channel control type
 
-A DAPM_DOUBLE_R control type can be used for dual channel mixer input
-selectors / mute controls across 2 registers, possibly toggling both
+A DAPM_DOUBLE control type can be used for dual channel mixer input
+selectors / mute controls in one register, possibly toggling both
 channels together.
 
 The control is meant to be shared by 2 widgets, 1 for each channel,
@@ -70,18 +57,18 @@ Signed-off-by: Mark Brown <broonie@kernel.org>
  1 file changed, 5 insertions(+)
 
 diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
-index f74ec19687f8..a466f4bdc835 100644
+index d5f4677776ce..f74ec19687f8 100644
 --- a/include/sound/soc-dapm.h
 +++ b/include/sound/soc-dapm.h
-@@ -277,6 +277,11 @@ struct device;
- 	.info = snd_soc_info_volsw, \
- 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
- 	.private_value = SOC_DOUBLE_VALUE(reg, lshift, rshift, max, invert, 0) }
-+#define SOC_DAPM_DOUBLE_R(xname, lreg, rreg, shift, max, invert) \
+@@ -272,6 +272,11 @@ struct device;
+ 
+ 
+ /* dapm kcontrol types */
++#define SOC_DAPM_DOUBLE(xname, reg, lshift, rshift, max, invert) \
 +{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
 +	.info = snd_soc_info_volsw, \
 +	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
-+	.private_value = SOC_DOUBLE_R_VALUE(lreg, rreg, shift, max, invert) }
++	.private_value = SOC_DOUBLE_VALUE(reg, lshift, rshift, max, invert, 0) }
  #define SOC_DAPM_SINGLE(xname, reg, shift, max, invert) \
  {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
  	.info = snd_soc_info_volsw, \
