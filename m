@@ -1,64 +1,71 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] clk: qcom: ipq4019: Added all the frequencies for
- apps cpu
-Date: Tue, 1 Nov 2016 18:24:50 -0700
-Message-ID: <20161102012450.GD16026@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 5/7] clk: qcom: ipq4019: corrected sdcc frequency and
+ parent name
+Date: Tue, 1 Nov 2016 18:26:02 -0700
+Message-ID: <20161102012602.GE16026@codeaurora.org>
 References: <1474460512-31994-1-git-send-email-absahu@codeaurora.org>
- <1474460512-31994-5-git-send-email-absahu@codeaurora.org>
+ <1474460512-31994-6-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1474460512-31994-5-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pradeepb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ntelkar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1474460512-31994-6-git-send-email-absahu@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/21, Abhishek Sahu wrote:
-> The APPS CPU clock does not contain all the frequencies in its
-> frequency table so this patch adds the same.
+> 1. The parent for sdcc clock is sdccpll so corrected the same
+>    in its parent map.
+> 2. The frequency value was wrong so changed to correct
+>    frequency.
 > 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > ---
->  drivers/clk/qcom/gcc-ipq4019.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+>  drivers/clk/qcom/gcc-ipq4019.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
-> index 211c68c..160e0cf 100644
+> index 160e0cf..b2decd5 100644
 > --- a/drivers/clk/qcom/gcc-ipq4019.c
 > +++ b/drivers/clk/qcom/gcc-ipq4019.c
-> @@ -565,10 +565,20 @@ static struct clk_rcg2  sdcc1_apps_clk_src = {
+> @@ -120,7 +120,7 @@ static struct parent_map gcc_xo_sdcc1_500_map[] = {
+>  
+>  static const char * const gcc_xo_sdcc1_500[] = {
+>  	"xo",
+> -	"ddrpll",
+> +	"ddrpllsdcc",
+>  	"fepll500",
 >  };
 >  
->  static const struct freq_tbl ftbl_gcc_apps_clk[] = {
-> -	F(48000000, P_XO,	   1, 0, 0),
-> +	F(48000000,  P_XO,         1, 0, 0),
->  	F(200000000, P_FEPLL200,   1, 0, 0),
-> +	F(380000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(409000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(444000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(484000000, P_DDRPLLAPSS, 1, 0, 0),
->  	F(500000000, P_FEPLL500,   1, 0, 0),
-> +	F(507000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(532000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(560000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(592000000, P_DDRPLLAPSS, 1, 0, 0),
->  	F(626000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(666000000, P_DDRPLLAPSS, 1, 0, 0),
-> +	F(710000000, P_DDRPLLAPSS, 1, 0, 0),
->  	{ }
+> @@ -540,13 +540,13 @@ static struct clk_branch gcc_gp3_clk = {
 >  };
+>  
+>  static const struct freq_tbl ftbl_gcc_sdcc1_apps_clk[] = {
+> -	F(144000,    P_XO,			1,  3, 240),
+> -	F(400000,    P_XO,			1,  1, 0),
+> -	F(20000000,  P_FEPLL500,		1,  1, 25),
+> -	F(25000000,  P_FEPLL500,		1,  1, 20),
+> -	F(50000000,  P_FEPLL500,		1,  1, 10),
+> -	F(100000000, P_FEPLL500,		1,  1, 5),
 
-Can't we have the determine_rate callback know the speeds of the
-"fixed" PLLs and use those first if the rate hits exactly? And
-then if that doesn't happen go try ddrpllapps and set the rate on
-it? I'm hoping we can get rid of this frequency table.
+None of these changed? Please leave them alone then.
+
+> -	F(193000000, P_DDRPLL,		1,  0, 0),
+> +	F(144000,    P_XO,       1,  3, 240),
+> +	F(400000,    P_XO,       1,  1, 0),
+> +	F(20000000,  P_FEPLL500, 1,  1, 25),
+> +	F(25000000,  P_FEPLL500, 1,  1, 20),
+> +	F(50000000,  P_FEPLL500, 1,  1, 10),
+> +	F(100000000, P_FEPLL500, 1,  1, 5),
+> +	F(190000000, P_DDRPLL,   1,  0, 0),
+
+And tab out this one appropriately so that it lines up. Then the
+diff is very clear.
+
+>  	{ }
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
