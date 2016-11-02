@@ -1,37 +1,28 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 0/3] ARM: dts: sun9i: Enable SDIO-based WiFi
-Date: Wed, 2 Nov 2016 14:32:46 +0100
-Message-ID: <20161102133246.tyvdoxxzekpqhiuu@lukather>
-References: <20161028101154.7350-1-wens@csie.org>
+Subject: Re: [PATCH v2 0/3] ARM: dts: sun8i: Support NanoPi SBCs
+Date: Wed, 2 Nov 2016 14:33:48 +0100
+Message-ID: <20161102133348.4eqdnxxml6a3ca4e@lukather>
+References: <20161028065903.23298-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xzkfs35yrd4dq2wa"
+        protocol="application/pgp-signature"; boundary="4iy3roowem37oiuy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161028101154.7350-1-wens@csie.org>
+In-Reply-To: <20161028065903.23298-1-woogyom.kim@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, James Pettigrew <james@innovum.com.au>
 List-Id: devicetree@vger.kernel.org
 
 
---xzkfs35yrd4dq2wa
+--4iy3roowem37oiuy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 28, 2016 at 06:11:51PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
->=20
-> Now that we have support for both PMICs, we can turn on the
-> regulators needed for the onboard WiFi chips.
->=20
-> This is a fairly simple series. The WiFi chips themselves are
-> supported by the brcmfmac driver, but the user needs to get an
-> nvram.txt file and put it in their firmware directory, in
-> addition to the firmware file in linux-firmware. Otherwise we
-> just need to enable the mmc controller and supply the vmmc and
-> vqmmc regulators.
+On Fri, Oct 28, 2016 at 03:59:00PM +0900, Milo Kim wrote:
+> NanoPi M1 and NEO have common features, so duplicate properties can be=20
+> moved into new dtsi file.
 
 Applied all three, thanks!
 Maxime
@@ -41,24 +32,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---xzkfs35yrd4dq2wa
+--4iy3roowem37oiuy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYGer6AAoJEBx+YmzsjxAgBA4P/1cbaOc95V77c2JnD9502oz/
-DxoBofh3Vg4U0Bqjal4R4esZB9TiRqiRN0vO5Q8qnrSi/3QsjD+ORipdtY5waeFY
-geYSJBJhM5oaQ4IeTL01ouVINscq0ya6VjktzFVxLy8qsVZFlMvNgXXe+MZWwDpi
-2sFt8iteHrBIq0JwNtBT5VYWdExO0aWCcsovwlFbG3WBASydR4rpoFU9t7rkfNfY
-+ThWL+kwHBJt5HxNTVK7dY8hNQkR/jvQhVxmv9ixXBw9lq99I22Fx9xAi/aTETEO
-KXyij3aqlA6QERdfYimUa0EIetj3XbBt1dNkzJm3Yisa+Tv0CeRY+TqXo2LttIRz
-tYoHfQVomVnoiOtg8g4pEc88X0HD8wX2KfjNrjpGUL8LDn47mrfrXYW6nZowe8z+
-Rb7s/5yM13bljKMV7ZzfOaIGfMty6N42QZb942CxJmkF5TGM5deVP13FTtGy6lnv
-Z4F1XKGPF+yriddf9ywdmT0779uld+kXKUiMKWcDWDKTxmh4S50m4MbzL7mnw8z3
-Fz6YRZcA/QUNRDquAfgjycNI6/bqqk5+ohhmlMaMtw84elXLOto6dnk4uYdcR9Cs
-EtTgR/7mETb2zQ4VreSya2IB1DlJfBiT1FPqPUb71NRIPC5v2K+6fCIT95sGKG69
-9Nep1o2A0/e9NE2aogCN
-=KLgR
+iQIcBAEBCAAGBQJYGes8AAoJEBx+YmzsjxAg7MAP/R3Pvmo5ulTrR1w0/qIyccm5
+p7xKKWJij+9ueBHOQMSBw0OQ99ixNsdAFNfFcG2A8ylzF3OJFUAEGuqIFFUh2lme
+nsGTdKSH7PkeLx14Ms+/cHDNwXfWujT0SG5Tu6Vu1/h46tZk5doxvXULzehjhWiR
+u6WKnC6/YZETX2lu3zmEMv0TnQJG+8gpzgcXE8QW3hGN2XuDuQAW2mnmW17IQSZF
+JQ+hVy+tSDo+qIo6NKRJNH/35Ja/PLECG9oQK4Cr9kIdNYDAk2sGhYhyRDk/OaZo
+1IBlyX18qPK+lkuRHzzXNl7/rrUEYBrQ40byZSBERbMVB1CUG5biaAtCcCRJOiop
+Q4VhD2eK0sYE/Y4sGYWVbaoN5PLcnNKCmXHCHzjsCuH51PoZg0hlDn9/b7HALMIL
+F0zrfkcPPBhu4a1G5+0ilLwoNe5INC2NhalaH6e0YTfpcOYWQRnrM5woAym146TX
+c2bPeHYbLf+uo7yMHpkPb4zP/hMNy+R16w7d9jztrbQmqck6MnqVgLUh5yJql6tY
+5uX36LEbzP8gBCw1/2L9VDB5y6BwRBYBhOJD7iz4mVwieHUC4I3s+XdUDjV/nxxE
+uOJcld3XzPhMJodHIC/4oxkVY3kc6gOg+4IHbUbTFNXwvhY9AvccqODh89lKqQdX
+mvmMyYWOPYCjbIxQellZ
+=UXCx
 -----END PGP SIGNATURE-----
 
---xzkfs35yrd4dq2wa--
+--4iy3roowem37oiuy--
