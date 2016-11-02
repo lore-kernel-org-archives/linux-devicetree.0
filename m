@@ -1,113 +1,57 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] regulator: lp873x: Add support for populating
- input supply
-Date: Wed, 2 Nov 2016 10:58:40 +0530
-Message-ID: <e5619d78-5752-c8fb-8a11-6629c4b7c3f6@ti.com>
-References: <20161021103841.8044-1-lokeshvutla@ti.com>
- <20161021103841.8044-5-lokeshvutla@ti.com>
- <20161030204118.ojeetnxl5qsi6lp7@rob-hp-laptop>
+From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: RE: [PATCH v2] ARM: at91/dt: add dts file for sama5d36ek CMP board
+Date: Wed, 2 Nov 2016 05:46:14 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB41DD2B@CHN-SV-EXMX07.mchp-main.com>
+References: <1478055958-8463-1-git-send-email-wenyou.yang@atmel.com>
+ <201611021345.WcgqcfPD%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161030204118.ojeetnxl5qsi6lp7@rob-hp-laptop>
+In-Reply-To: <201611021345.WcgqcfPD%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+To: lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Monday 31 October 2016 02:11 AM, Rob Herring wrote:
-> On Fri, Oct 21, 2016 at 04:08:36PM +0530, Lokesh Vutla wrote:
->> In order to have a proper topology of regulators for a platform, each
->> registering regulator needs to populate supply_name field for identifying
->> its supply's name. Add supply_name field for lp873x regulators.
->>
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
->>  drivers/regulator/lp873x-regulator.c             | 1 +
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
->> index 52766c2..998837a 100644
->> --- a/Documentation/devicetree/bindings/mfd/lp873x.txt
->> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
->> @@ -7,6 +7,9 @@ Required properties:
->>    - #gpio-cells:	Should be two.  The first cell is the pin number and
->>  			the second cell is used to specify flags.
->>  			See ../gpio/gpio.txt for more information.
->> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
->> +			populated under regulators node. xxx should match
->> +			the supply_name populated in driver.
-> 
-> The driver is irrelevant. This should reference a list in this document.
-
-okay. See if the below updated patch is fine.
-
------------------------------8<----------------------------8<----------------------------
->From 666f925423fa35c7bfcc77fa3c883cbea5d8ef8e Mon Sep 17 00:00:00 2001
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Date: Wed, 21 Sep 2016 11:50:49 +0530
-Subject: [PATCH v3] regulator: lp873x: Add support for populating input
-supply
-
-In order to have a proper topology of regulators for a platform, each
-registering regulator needs to populate supply_name field for identifying
-its supply's name. Add supply_name field for lp873x regulators.
-
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
- drivers/regulator/lp873x-regulator.c             | 1 +
- 2 files changed, 9 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt
-b/Documentation/devicetree/bindings/mfd/lp873x.txt
-index 52766c2..ae9cf39 100644
---- a/Documentation/devicetree/bindings/mfd/lp873x.txt
-+++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
-@@ -7,6 +7,9 @@ Required properties:
-   - #gpio-cells:	Should be two.  The first cell is the pin number and
- 			the second cell is used to specify flags.
- 			See ../gpio/gpio.txt for more information.
-+  - xxx-in-supply:	Phandle to parent supply node of each regulator
-+			populated under regulators node. xxx can be
-+			buck0, buck1, ldo0 or ldo1.
-   - regulators:	List of child nodes that specify the regulator
- 			initialization data.
- Example:
-@@ -17,6 +20,11 @@ pmic: lp8733@60 {
- 	gpio-controller;
- 	#gpio-cells = <2>;
-
-+	buck0-in-supply = <&vsys_3v3>;
-+	buck1-in-supply = <&vsys_3v3>;
-+	ldo0-in-supply = <&vsys_3v3>;
-+	ldo1-in-supply = <&vsys_3v3>;
-+
- 	regulators {
- 		lp8733_buck0: buck0 {
- 			regulator-name = "lp8733-buck0";
-diff --git a/drivers/regulator/lp873x-regulator.c
-b/drivers/regulator/lp873x-regulator.c
-index e504b91..70e3df6 100644
---- a/drivers/regulator/lp873x-regulator.c
-+++ b/drivers/regulator/lp873x-regulator.c
-@@ -24,6 +24,7 @@
- 	[_id] = {							\
- 		.desc = {						\
- 			.name			= _name,		\
-+			.supply_name		= _of "-in",		\
- 			.id			= _id,			\
- 			.of_match		= of_match_ptr(_of),	\
- 			.regulators_node	= of_match_ptr("regulators"),\
--- 
-2.10.1
-
+DQoNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGtidWlsZCB0ZXN0
+IHJvYm90IFttYWlsdG86bGtwQGludGVsLmNvbV0NCj4gU2VudDogMjAxNsTqMTHUwjLI1SAxMzoy
+OA0KPiBUbzogV2VueW91IFlhbmcgLSBBNDE1MzUgPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+
+DQo+IENjOiBrYnVpbGQtYWxsQDAxLm9yZzsgTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBh
+dG1lbC5jb20+OyBBbGV4YW5kcmUNCj4gQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1l
+bGVjdHJvbnMuY29tPjsgUnVzc2VsbCBLaW5nDQo+IDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsg
+Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwNCj4gPHBhd2VsLm1v
+bGxAYXJtLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2Ft
+cGJlbGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2Fs
+YWtAY29kZWF1cm9yYS5vcmc+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgV2Vu
+eW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZzsgV2VueW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIEFSTTogYXQ5MS9kdDogYWRkIGR0cyBmaWxlIGZv
+ciBzYW1hNWQzNmVrIENNUCBib2FyZA0KPiANCj4gSGkgV2VueW91LA0KPiANCj4gW2F1dG8gYnVp
+bGQgdGVzdCBFUlJPUiBvbiBhdDkxL2F0OTEtbmV4dF0gW2Fsc28gYnVpbGQgdGVzdCBFUlJPUiBv
+biB2NC45LXJjMw0KPiBuZXh0LTIwMTYxMDI4XSBbaWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRv
+IHRoZSB3cm9uZyBnaXQgdHJlZSwgcGxlYXNlIGRyb3AgdXMgYQ0KPiBub3RlIHRvIGhlbHAgaW1w
+cm92ZSB0aGUgc3lzdGVtXQ0KPiANCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vMGRheS1j
+aS9saW51eC9jb21taXRzL1dlbnlvdS1ZYW5nL0FSTS1hdDkxLWR0LWFkZC0NCj4gZHRzLWZpbGUt
+Zm9yLXNhbWE1ZDM2ZWstQ01QLWJvYXJkLzIwMTYxMTAyLTExMTE1Mg0KPiBiYXNlOiAgIGh0dHBz
+Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L25mZXJyZS9saW51eC1h
+dDkxLmdpdCBhdDkxLQ0KPiBuZXh0DQo+IGNvbmZpZzogYXJtLWF0OTFfZHRfZGVmY29uZmlnIChh
+dHRhY2hlZCBhcyAuY29uZmlnKQ0KPiBjb21waWxlcjogYXJtLWxpbnV4LWdudWVhYmktZ2NjIChE
+ZWJpYW4gNi4xLjEtOSkgNi4xLjEgMjAxNjA3MDUNCj4gcmVwcm9kdWNlOg0KPiAgICAgICAgIHdn
+ZXQgaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvd2ZnL2xrcC0N
+Cj4gdGVzdHMuZ2l0L3BsYWluL3NiaW4vbWFrZS5jcm9zcyAtTyB+L2Jpbi9tYWtlLmNyb3NzDQo+
+ICAgICAgICAgY2htb2QgK3ggfi9iaW4vbWFrZS5jcm9zcw0KPiAgICAgICAgICMgc2F2ZSB0aGUg
+YXR0YWNoZWQgLmNvbmZpZyB0byBsaW51eCBidWlsZCB0cmVlDQo+ICAgICAgICAgbWFrZS5jcm9z
+cyBBUkNIPWFybQ0KPiANCj4gQWxsIGVycm9ycyAobmV3IG9uZXMgcHJlZml4ZWQgYnkgPj4pOg0K
+PiANCj4gPj4gRXJyb3I6IGFyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDN4bWJfY21wLmR0c2k6MTQz
+LjE3LTE4IHN5bnRheCBlcnJvcg0KPiAgICBGQVRBTCBFUlJPUjogVW5hYmxlIHRvIHBhcnNlIGlu
+cHV0IHRyZWUNCg0KT2gsIHRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gdGhlIHBhdGNoIEkgc2VudCBi
+ZWZvcmUuDQpbUEFUQ0hdIHBpbmN0cmw6IGF0OTE6IGFkZCBzdXBwb3J0IGZvciBPVVRQVVQgY29u
+ZmlnDQpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5l
+bC8yMDE2LU9jdG9iZXIvNDY0MzU0Lmh0bWwNCg0KSSBmb3Jnb3QgYWRkaW5nIHRoaXMgaW5mb3Jt
+YXRpb24uDQoNClNvcnJ5LiANCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
