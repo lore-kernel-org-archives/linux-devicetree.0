@@ -1,35 +1,44 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 07/11] ARM: dts: r8a7745: add Ether support
-Date: Wed, 2 Nov 2016 11:14:44 +0100
-Message-ID: <CAMuHMdVju0Vs7Vf9aN3TKsKUB2oaL6pymynyJ8ZBW1mJU6YKBA@mail.gmail.com>
-References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com> <2084001.a6ZvYb0cOj@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2084001.a6ZvYb0cOj@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: kernel@martin.sperl.org
+Subject: Re: [PATCH V7 2/6] thermal: bcm2835: add thermal driver for bcm2835
+ soc
+Date: Wed, 2 Nov 2016 11:14:35 +0100
+Message-ID: <F7D54C7C-FD75-4F66-AF67-CD5C302EEECC@martin.sperl.org>
+References: <1474446227-1147-1-git-send-email-kernel@martin.sperl.org>
+ <1474446227-1147-3-git-send-email-kernel@martin.sperl.org>
+ <87twczg27x.fsf@eliezer.anholt.net>
+ <eaff4043-5a62-da2d-cee1-9962b8c4783a@i2se.com>
+ <87eg35snvg.fsf@eliezer.anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87eg35snvg.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 29, 2016 at 12:21 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A7745 part of the Ether device node.
->
-> Based on the original (and large) patch by Dmitry Shifrin
-> <dmitry.shifrin@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> On 24.10.2016, at 18:38, Eric Anholt <eric@anholt.net> wrote:
+> 
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+> 
+>> Hi Martin,
+>> 
+>> i think it's necessary to rebase the whole series. Maybe we could get it
+>> into 4.10.
+> 
+> Why would it need to be rebased?  The status, as far as I know, is that
+> we're still waiting for the subsystem maintainer to respond.
 
-Gr{oetje,eeting}s,
+Sending out a rebased version 8 (specifically needed for patch 2 and 6).
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Martin
