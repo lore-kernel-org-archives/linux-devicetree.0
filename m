@@ -1,73 +1,70 @@
-From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
-Date: Wed, 2 Nov 2016 09:32:55 -0500
-Message-ID: <1478097178-24341-2-git-send-email-tthayer@opensource.altera.com>
-References: <1478097178-24341-1-git-send-email-tthayer@opensource.altera.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to
+ 'aspeed,ast2400-ibt-bmc'
+Date: Wed, 2 Nov 2016 15:28:01 +0100
+Message-ID: <ebeba60f-429f-fb84-b9da-c27d11d23094@kaod.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <1478073426-3714-2-git-send-email-clg@kaod.org>
+ <201611021415.51081.arnd@arndb.de>
+ <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478097178-24341-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-
-Add the Arria10 DevKit System Resource Chip register and state
-monitoring module to the MFD.
-
-Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
-Note: This needs to be applied to the bindings document that
-was Acked & Applied but didn't reach the for-next branch.
-See https://patchwork.ozlabs.org/patch/629397/
----
-v2  Change compatible string -mon to -monitor for clarity
-v3  Replace node name a10sr_monitor with just monitor.
-    Replace node name a10sr_gpio with just gpio.
----
- Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-index ea151f2..69243d2 100644
---- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-@@ -17,7 +17,8 @@ The A10SR consists of these sub-devices:
- 
- Device                   Description
- ------                   ----------
--a10sr_gpio               GPIO Controller
-+gpio                     GPIO Controller
-+monitor                  Register and State Monitoring
- 
- Arria10 GPIO
- Required Properties:
-@@ -27,6 +28,10 @@ Required Properties:
-                       the second cell is used to specify flags.
-                       See ../gpio/gpio.txt for more information.
- 
-+Arria10 Register and State Monitor
-+Required Properties:
-+- compatible        : Should be "altr,a10sr-monitor"
-+
- Example:
- 
-         resource-manager@0 {
-@@ -43,4 +48,8 @@ Example:
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 		};
-+
-+		monitor {
-+			compatible = "altr,a10sr-monitor";
-+		};
- 	};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMDIvMjAxNiAwMjo1NiBQTSwgSm9lbCBTdGFubGV5IHdyb3RlOgo+IE9uIFdlZCwgTm92
+IDIsIDIwMTYgYXQgMTE6NDUgUE0sIEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+IHdyb3Rl
+Ogo+PiBPbiBXZWRuZXNkYXkgMDIgTm92ZW1iZXIgMjAxNiwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3Jv
+dGU6Cj4+PiBUaGUgQXNwZWVkIFNvQ3MgaGF2ZSB0d28gQlQgaW50ZXJmYWNlcyA6IG9uZSBpcyBJ
+UE1JIGNvbXBsaWFudCBhbmQgdGhlCj4+PiBvdGhlciBpcyBIOFMvMjE2OCBjb21wbGlhbnQuCj4+
+Pgo+Pj4gVGhlIGN1cnJlbnQgaXBtaS9idC1ibWMgZHJpdmVyIGltcGxlbWVudHMgdGhlIElQTUkg
+dmVyc2lvbiBhbmQgd2UKPj4+IHNob3VsZCByZWZsZWN0IGl0cyBuYXR1cmUgaW4gdGhlIGNvbXBh
+dGlibGUgbm9kZSBuYW1lIHVzaW5nCj4+PiAnYXNwZWVkLGFzdDI0MDAtaWJ0LWJtYycgaW5zdGVh
+ZCBvZiAnYXNwZWVkLGFzdDI0MDAtYnQtYm1jJy4gVGhlCj4+PiBsYXR0ZXIgc2hvdWxkIGJlIHVz
+ZWQgZm9yIGEgSDhTIGludGVyZmFjZSBkcml2ZXIgaWYgaXQgaXMgaW1wbGVtZW50ZWQKPj4+IG9u
+ZSBkYXkuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9k
+Lm9yZz4KPj4KPj4gV2UgZ2VuZXJhbGx5IHRyeSB0byBhdm9pZCBjaGFuZ2luZyB0aGUgY29tcGF0
+aWJsZSBzdHJpbmdzIGFmdGVyIHRoZQo+PiBmYWN0LCBidXQgaXQncyBwcm9iYWJseSBvayBpbiB0
+aGlzIGNhc2UuCgpBcyB0aGUgZGV2aWNlIHRyZWUgY2hhbmdlcyBhcmUgbm90IG1lcmdlZCB5ZXQs
+IHdlIHRob3VnaHQgd2UgaGFkIHNvbWUgCm1vcmUgdGltZSB0byBmaW5lIHR1bmUgdGhlIG5hbWlu
+Zy4gCiAKPj4gSSBkb24ndCB1bmRlcnN0YW5kIHdobyBkZWNpZGVzIHdoaWNoIG9mIHRoZSB0d28g
+aW50ZXJmYWNlcyBpcyB1c2VkOgo+PiBpcyBpdCB0aGUgc2FtZSByZWdpc3RlciBzZXQgdGhhdCBj
+YW4gYmUgZHJpdmVuIGJ5IGVpdGhlciBvbmUgb3IgdGhlCj4+IG90aGVyIGRyaXZlciwgb3IgZG8g
+eW91IGV4cGVjdCB0byBoYXZlIHR3byBkcml2ZXJzIHRoYXQgY2FuIGJvdGgKPj4gYmUgYWN0aXZl
+IGluIHRoZSBzYW1lIHN5c3RlbSBhbmQgdGFsayB0byBkaWZmZXJlbnQgaGFyZHdhcmUgb25jZQo+
+PiB5b3UgZ2V0IHRoZXJlPwo+IAo+IEl0J3MgdGhlIHNlY29uZCBjYXNlLiBUaGUgSDhTIEJUIGhh
+cyBhIGRpZmZlcmVudCByZWdpc3RlciBsYXlvdXQgc28gaXQKPiB3b3VsZCByZXF1aXJlIGEgZGlm
+ZmVyZW50IGRyaXZlci4KCnllcy4KIAo+IFdlIGRvbid0IHlldCBoYXZlIGEgZHJpdmVyIGZvciB0
+aGUgb3RoZXIgQlQgZGV2aWNlLCBidXQgdGhlcmUgd2FzCj4gcmVjZW50IHRhbGsgb2YgdXNpbmcg
+aXQgYXMgYW4gYWx0ZXJuYXRlIChub24taXBtaSBjaGFubmVsKSBiZXR3ZWVuIHRoZQo+IEJNQyBh
+bmQgdGhlIGhvc3QuIEJlZm9yZSB0aGF0IGRpc2N1c3Npb24gSSB3YXNuJ3QgYXdhcmUgdGhhdCB0
+aGUgSDhTCj4gQlQgZXhpc3RlZC4gSSBzdWdnZXN0ZWQgd2UgZml4IHRoaXMgdXAgYmVmb3JlIGl0
+IGhpdHMgYSBmaW5hbCByZWxlYXNlLgo+IAo+IEPDqWRyaWMsIGRvIHlvdSB0aGluayBhc3QyNDAw
+LWlidC1ibWMgb3IgYXN0MjQwMC1pcG1pLWJ0LWJtYyBkb2VzIGEKPiBiZXR0ZXIgam9iIG9mIGRl
+c2NyaWJpbmcgdGhlIGhhcmR3YXJlIGhlcmU/CgpUaGUgc3BlY3MgcmVmZXIgdG8gdGhlIHR3byBp
+bnRlcmZhY2VzIGFzIEJUIChub24gSVBNSSkgYW5kIGlCVCAoSVBNSSkuIApJIHRoaW5rIHdlIGNh
+biBrZWVwIHRoZSBzYW1lIG5hbWluZy4KCj4gV2hpbGUgd2UncmUgbW9kaWZ5aW5nIHRoZSBiaW5k
+aW5nLCBzaG91bGQgd2UgYWRkIGEgY29tcGF0IHN0cmluZyBmb3IKPiB0aGUgYXN0MjUwMD8KCldl
+bGwsIGlmIHRoZSBjaGFuZ2UgaW4gdGhpcyBwYXRjaCBpcyBmaW5lIGZvciBhbGwsIG1heSBiZSB3
+ZSBjYW4gYWRkIAp0aGUgYXN0MjUwMCBjb21wYXQgc3RyaW5nIGluIGEgZm9sbG93dXAgcGF0Y2gg
+PwoKVGhhbmtzLAoKQy4gCgo+IENoZWVycywKPiAKPiBKb2VsCj4gCj4+Cj4+IElmIHRoZSBmaXJz
+dCBvbmUgb2YgdGhlc2UgaXMgdHJ1ZSwgaXQgc2VlbXMgYSBsaXR0bGUgYXdrd2FyZCB0bwo+PiB1
+c2UgdGhlIERUIGNvbXBhdGlibGUgc3RyaW5nIHRvIGRlY2lkZSB3aGljaCBkcml2ZXIgdG8gdXNl
+IHJhdGhlcgo+PiB0aGFuIG1ha2luZyB0aGUgZGVjaXNpb24gaW4gdGhlIE9TLgo+Pgo+PiAgICAg
+ICAgIEFybmQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
