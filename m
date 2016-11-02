@@ -1,67 +1,123 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Wed, 2 Nov 2016 16:22:53 -0700
-Message-ID: <ab5de67d-1e63-53ef-2dbf-1df90262e4ba@redhat.com>
-References: <20161031160009.20472-1-michael.scott@linaro.org>
- <20161101235344.GX16026@codeaurora.org>
- <e0bdce76-dcab-36c9-bf39-6c79b1cb2820@linaro.org>
- <20161102183607.GJ16026@codeaurora.org>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead (Nexus 5X)
+ support
+Date: Wed, 2 Nov 2016 16:59:17 -0700
+Message-ID: <be8df858-d427-c2f0-15a8-43cb2ee192a5@redhat.com>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
+ <1477394221-30963-2-git-send-email-jeremymc@redhat.com>
+ <20161028001153.GJ26139@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161102183607.GJ16026-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161028001153.GJ26139@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-02 11:36 AM, Stephen Boyd wrote:
-> On 11/01, Michael Scott wrote:
->>
->> On 11/01/2016 04:53 PM, Stephen Boyd wrote:
->>> On 10/31, Michael Scott wrote:
->>>> +
->>>> +static const struct msm_pingroup msm8994_groups[] = {
->>>> +	PINGROUP(0,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
->>>> +		 NA, NA),
->>> I see an hdmi_rcv group here after blsp_uim1. Please add it for
->>> this gpio.
->>
->> Hi Stephen,
->>
->> Thank you for reviewing the data-- this is really tedious stuff.
->>
->> I'd like to make sure that we're both using tech data for msm8994.
->> I don't see the hdmi_rcv function at all in my docs.
->>
->>>
->>>> +	PINGROUP(1,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
->>>> +		 NA, NA),
->>>> +	PINGROUP(2,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
->>>> +		 NA, NA),
->>>> +	PINGROUP(3,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
->>>> +		 NA, NA),
->>>> +	PINGROUP(4,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_out_b,
->>>> +		 NA, NA, NA, NA, NA, NA, NA),
->>>> +	PINGROUP(5,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_in_b, NA,
->>> The qdss_cti_* is in function 5 for both of these, not function
->>> 4.
->> These are indeed wrong, but my docs both show as function 7.
+On 2016-10-27 5:11 PM, Stephen Boyd wrote:
+> On 10/25, Jeremy McNicoll wrote:
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index 5dd05de..439e40e 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -1,6 +1,8 @@
+>> -dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
+>> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
 >
-> Ok. I think your document is for 8994v1, which never got
-> commercialized. I certainly see that this function assignment
-> changed between v1 and v2 from 7 to 5.
+> This is unrelated. Perhaps make another patch to "correct" it.
 >
 
+I rolled it into this change series as I was asked in previous feedback
+to make them 1 per line.
 
-This is a case where not having the docs and only downstream code as a
-reference is probably a good thing (tm), although the downstream code
-may end up hurting more than helping.
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+>>
+>>  always		:= $(dtb-y)
+>>  subdir-y	:= $(dts-dirs)
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+>> new file mode 100644
+>> index 0000000..8bbf4f3
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+>> @@ -0,0 +1,191 @@
+>> +
+>> +	soc: soc {
+>
+> Do we need the soc phandle? If it isn't used we should leave it
+> out.
+>
+
+What about doing something like:
+
+8992soc: soc {
+
+This will allow it to be overriden.  Or would it be best to add it when
+someone wants / needs to override it.
+
+>> +
+>> +		clock_gcc: qcom,gcc@fc400000 {
+>
+> s/qcom,gcc/clock-controller/
+>
+
+done.
+
+
+> Also we typically just give it a "gcc" phandle to be terse.
+
+is clock_gcc not a little more descriptive from a human perspective?
+
+Sometimes being terse is hard for humans to parse.
+
+>
+>> +			compatible = "qcom,gcc-8994";
+>
+> qcom,gcc-msm8994
+
+
+agreed.
+
+
+>
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <1>;
+>> +			#power-domain-cells = <1>;
+>> +			reg = <0xfc400000 0x2000>;
+>> +		};
+>> +	};
+>> +
+>> +	memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +
+>> +		device_type = "memory";
+>> +		reg = <0 0 0 0>; // bootloader will update
+>> +	};
+>> +
+>> +	clocks {
+>> +		xo_board: xo_board {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <19200000>;
+>> +			clock-output-names = "xo_board";
+>> +		};
+>> +
+>> +		sleep_clk: sleep_clk {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <32768>;
+>> +			clock-output-names = "sleep_clk";
+>
+> clock-output-names can be removed because we use the same string
+> as the node name.
+>
+
+one less line works for me.
 
 -jeremy
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
