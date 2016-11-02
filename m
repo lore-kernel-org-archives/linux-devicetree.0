@@ -1,603 +1,150 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v9 2/3] clk: qcom: Add support for RPM Clocks
-Date: Wed,  2 Nov 2016 17:56:57 +0200
-Message-ID: <20161102155658.32203-3-georgi.djakov@linaro.org>
-References: <20161102155658.32203-1-georgi.djakov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161102155658.32203-1-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@baylibre.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] Documentation: dt: add bindings for ti-cpufreq
+Date: Wed, 2 Nov 2016 11:03:13 -0500
+Message-ID: <9a185460-a241-4876-2915-6975c57527ca@ti.com>
+References: <20161027214131.1725-1-d-gerlach@ti.com>
+ <20161027214131.1725-3-d-gerlach@ti.com> <20161102035941.GA10786@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161102035941.GA10786@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds initial support for clocks controlled by the Resource
-Power Manager (RPM) processor on some Qualcomm SoCs, which use
-the qcom_rpm driver to communicate with RPM.
-Such platforms are apq8064 and msm8960.
+Hi,
+On 11/01/2016 10:59 PM, Viresh Kumar wrote:
+> On 27-10-16, 16:41, Dave Gerlach wrote:
+>> Add the device tree bindings document for the TI CPUFreq/OPP driver
+>> on AM33xx and AM43xx SoCs. The operating-points-v2 binding allows us
+>> to provide an opp-supported-hw property for each OPP to define when
+>> it is available. This driver is responsible for reading and parsing
+>> registers to determine which OPPs can be selectively enabled based
+>> on the specific SoC in use by matching against the opp-supported-hw
+>> data.
+>>
+>> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+>> ---
+>> v2->v3:
+>> - Move ti,syscon-* properties under opp table instead of cpu node, as
+>>   that is a better location for them.
+>> - For the opp table do not use platform specific compatible strings
+>>   but instead a operating-points-v2-ti-cpu
+>>
+>>  .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 132 +++++++++++++++++++++
+>>  1 file changed, 132 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>> new file mode 100644
+>> index 000000000000..467ad29c75c9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>> @@ -0,0 +1,132 @@
+>> +TI CPUFreq and OPP bindings
+>> +================================
+>> +
+>> +Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
+>> +families support different OPPs depending on the silicon variant in use.
+>> +The ti_cpufreq driver can use revision and an efuse value from the SoC to
+>> +provide the OPP framework with supported hardware information. This is
+>> +used to determine which OPPs from the operating-points-v2 table get enabled
+>> +when it is parsed by the OPP framework.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +In 'cpus' nodes:
+>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be 'operating-points-v2-ti-cpu' for am335x, am43xx,
+>> +	      and dra7xx/am57xx SoCs
+>> +- ti,syscon-efuse: Syscon phandle, offset to efuse register, efuse register
+>> +		   mask, and efuse register shift to get the relevant bits
+>> +		   that describe OPP availability.
+>> +- ti,syscon-rev: Syscon and offset used to look up revision value on SoC.
+>> +
+>> +Optional properties:
+>> +--------------------
+>> +For each opp entry in 'operating-points-v2' table:
+>> +- opp-supported-hw: Two bitfields indicating:
+>> +	1. Which revision of the SoC the OPP is supported by
+>> +	2. Which eFuse bits indicate this OPP is available
+>> +
+>> +	A bitwise AND is performed against these values and if any bit
+>> +	matches, the OPP gets enabled. Not providing the property for an
+>> +	entry indicates that an OPP is always supported.
+>> +
+>> +Example:
+>> +--------
+>> +
+>> +/* From arch/arm/boot/dts/am33xx.dtsi */
+>> +cpus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	cpu@0 {
+>> +		compatible = "arm,cortex-a8";
+>> +		device_type = "cpu";
+>> +		reg = <0>;
+>> +
+>> +		operating-points-v2 = <&cpu0_opp_table>;
+>> +
+>> +		clocks = <&dpll_mpu_ck>;
+>> +		clock-names = "cpu";
+>> +
+>> +		clock-latency = <300000>; /* From omap-cpufreq driver */
+>> +	};
+>> +};
+>> +
+>> +/*
+>> + * cpu0 has different OPPs depending on SoC revision and some on revisions
+>> + * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
+>> + */
+>> +cpu0_opp_table: opp_table0 {
+>> +	compatible = "operating-points-v2-ti-am3352-cpu";
+>> +	ti,syscon-efuse = <&scm_conf 0x7fc 0x1fff 0>;
+>> +	ti,syscon-rev = <&scm_conf 0x600>;
+>> +
+>> +	/*
+>> +	 * The three following nodes are marked with opp-suspend
+>> +	 * because they can not be enabled simultaneously on a
+>> +	 * single SoC.
+>> +	 */
+>> +	opp50@300000000 {
+>> +		opp-hz = /bits/ 64 <300000000>;
+>> +		opp-microvolt = <950000 931000 969000>;
+>> +		opp-supported-hw = <0x06 0x0010>;
+>> +		opp-suspend;
+>> +	};
+>> +
+>> +	opp100@275000000 {
+>> +		opp-hz = /bits/ 64 <275000000>;
+>> +		opp-microvolt = <1100000 1078000 1122000>;
+>> +		opp-supported-hw = <0x01 0x00FF>;
+>> +		opp-suspend;
+>> +	};
+>> +
+>> +	opp100@300000000 {
+>> +		opp-hz = /bits/ 64 <300000000>;
+>> +		opp-microvolt = <1100000 1078000 1122000>;
+>> +		opp-supported-hw = <0x06 0x0020>;
+>> +		opp-suspend;
+>
+> Only one OPP in the table can be marked as suspend OPP.
+>
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- .../devicetree/bindings/clock/qcom,rpmcc.txt       |   1 +
- drivers/clk/qcom/Kconfig                           |  13 +
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/clk-rpm.c                         | 489 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h             |  24 +
- 5 files changed, 528 insertions(+)
- create mode 100644 drivers/clk/qcom/clk-rpm.c
+Does that still apply when opp-supported-hw is involved? Based on the 
+comment at the start of the table, those OPPs are all mutually exclusive 
+and will not ever be enabled on the same piece of silicon, they 
+represent the lowest OPP for each of three different supported-hw 
+configurations.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index e3e13226d798..87d3714b956a 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -11,6 +11,7 @@ Required properties :
-                compatible "qcom,rpmcc" should be also included.
- 
- 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
-+			"qcom,rpmcc-apq8064", "qcom,rpmcc"
- 
- - #clock-cells : shall contain 1
- 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index b537c59dcfe6..b82d2f33c9e4 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -12,6 +12,19 @@ config COMMON_CLK_QCOM
- 	select REGMAP_MMIO
- 	select RESET_CONTROLLER
- 
-+config QCOM_CLK_RPM
-+	tristate "RPM based Clock Controller"
-+	depends on COMMON_CLK_QCOM && MFD_QCOM_RPM
-+	select QCOM_RPMCC
-+	help
-+	  The RPM (Resource Power Manager) is a dedicated hardware engine for
-+	  managing the shared SoC resources in order to keep the lowest power
-+	  profile. It communicates with other hardware subsystems via shared
-+	  memory and accepts clock requests, aggregates the requests and turns
-+	  the clocks on/off or scales them on demand.
-+	  Say Y if you want to support the clocks exposed by the RPM on
-+	  platforms such as apq8064, msm8660, msm8960 etc.
-+
- config QCOM_CLK_SMD_RPM
- 	tristate "RPM over SMD based Clock Controller"
- 	depends on COMMON_CLK_QCOM && QCOM_SMD_RPM
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 0dd72e56b7e4..eb2dfb32d960 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -29,4 +29,5 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
- obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
- obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
- obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
-+obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
- obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
-diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-new file mode 100644
-index 000000000000..f9fe452f49d6
---- /dev/null
-+++ b/drivers/clk/qcom/clk-rpm.c
-@@ -0,0 +1,489 @@
-+/*
-+ * Copyright (c) 2016, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/mfd/qcom_rpm.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include <dt-bindings/mfd/qcom-rpm.h>
-+#include <dt-bindings/clock/qcom,rpmcc.h>
-+
-+#define QCOM_RPM_MISC_CLK_TYPE				0x306b6c63
-+#define QCOM_RPM_SCALING_ENABLE_ID			0x2
-+
-+#define DEFINE_CLK_RPM(_platform, _name, _active, r_id)			      \
-+	static struct clk_rpm _platform##_##_active;			      \
-+	static struct clk_rpm _platform##_##_name = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.peer = &_platform##_##_active,				      \
-+		.rate = INT_MAX,					      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_ops,				      \
-+			.name = #_name,					      \
-+			.parent_names = (const char *[]){ "pxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	};								      \
-+	static struct clk_rpm _platform##_##_active = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.peer = &_platform##_##_name,				      \
-+		.active_only = true,					      \
-+		.rate = INT_MAX,					      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_ops,				      \
-+			.name = #_active,				      \
-+			.parent_names = (const char *[]){ "pxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	}
-+
-+#define DEFINE_CLK_RPM_PXO_BRANCH(_platform, _name, _active, r_id, r)	      \
-+	static struct clk_rpm _platform##_##_active;			      \
-+	static struct clk_rpm _platform##_##_name = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.active_only = true,					      \
-+		.peer = &_platform##_##_active,				      \
-+		.rate = (r),						      \
-+		.branch = true,						      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_branch_ops,			      \
-+			.name = #_name,					      \
-+			.parent_names = (const char *[]){ "pxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	};								      \
-+	static struct clk_rpm _platform##_##_active = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.peer = &_platform##_##_name,				      \
-+		.rate = (r),						      \
-+		.branch = true,						      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_branch_ops,			      \
-+			.name = #_active,				      \
-+			.parent_names = (const char *[]){ "pxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	}
-+
-+#define DEFINE_CLK_RPM_CXO_BRANCH(_platform, _name, _active, r_id, r)	      \
-+	static struct clk_rpm _platform##_##_active;			      \
-+	static struct clk_rpm _platform##_##_name = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.peer = &_platform##_##_active,				      \
-+		.rate = (r),						      \
-+		.branch = true,						      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_branch_ops,			      \
-+			.name = #_name,					      \
-+			.parent_names = (const char *[]){ "cxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	};								      \
-+	static struct clk_rpm _platform##_##_active = {			      \
-+		.rpm_clk_id = (r_id),					      \
-+		.active_only = true,					      \
-+		.peer = &_platform##_##_name,				      \
-+		.rate = (r),						      \
-+		.branch = true,						      \
-+		.hw.init = &(struct clk_init_data){			      \
-+			.ops = &clk_rpm_branch_ops,			      \
-+			.name = #_active,				      \
-+			.parent_names = (const char *[]){ "cxo_board" },      \
-+			.num_parents = 1,				      \
-+		},							      \
-+	}
-+
-+#define to_clk_rpm(_hw) container_of(_hw, struct clk_rpm, hw)
-+
-+struct clk_rpm {
-+	const int rpm_clk_id;
-+	const bool active_only;
-+	unsigned long rate;
-+	bool enabled;
-+	bool branch;
-+	struct clk_rpm *peer;
-+	struct clk_hw hw;
-+	struct qcom_rpm *rpm;
-+};
-+
-+struct rpm_cc {
-+	struct qcom_rpm *rpm;
-+	struct clk_hw_onecell_data data;
-+	struct clk_hw *hws[];
-+};
-+
-+struct rpm_clk_desc {
-+	struct clk_rpm **clks;
-+	size_t num_clks;
-+};
-+
-+static DEFINE_MUTEX(rpm_clk_lock);
-+
-+static int clk_rpm_handoff(struct clk_rpm *r)
-+{
-+	int ret;
-+	u32 value = INT_MAX;
-+
-+	ret = qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
-+			     r->rpm_clk_id, &value, 1);
-+	if (ret)
-+		return ret;
-+	ret = qcom_rpm_write(r->rpm, QCOM_RPM_SLEEP_STATE,
-+			     r->rpm_clk_id, &value, 1);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int clk_rpm_set_rate_active(struct clk_rpm *r, unsigned long rate)
-+{
-+	u32 value = DIV_ROUND_UP(rate, 1000); /* to kHz */
-+
-+	return qcom_rpm_write(r->rpm, QCOM_RPM_ACTIVE_STATE,
-+			      r->rpm_clk_id, &value, 1);
-+}
-+
-+static int clk_rpm_set_rate_sleep(struct clk_rpm *r, unsigned long rate)
-+{
-+	u32 value = DIV_ROUND_UP(rate, 1000); /* to kHz */
-+
-+	return qcom_rpm_write(r->rpm, QCOM_RPM_SLEEP_STATE,
-+			      r->rpm_clk_id, &value, 1);
-+}
-+
-+static void to_active_sleep(struct clk_rpm *r, unsigned long rate,
-+			    unsigned long *active, unsigned long *sleep)
-+{
-+	*active = rate;
-+
-+	/*
-+	 * Active-only clocks don't care what the rate is during sleep. So,
-+	 * they vote for zero.
-+	 */
-+	if (r->active_only)
-+		*sleep = 0;
-+	else
-+		*sleep = *active;
-+}
-+
-+static int clk_rpm_prepare(struct clk_hw *hw)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+	struct clk_rpm *peer = r->peer;
-+	unsigned long this_rate = 0, this_sleep_rate = 0;
-+	unsigned long peer_rate = 0, peer_sleep_rate = 0;
-+	unsigned long active_rate, sleep_rate;
-+	int ret = 0;
-+
-+	mutex_lock(&rpm_clk_lock);
-+
-+	/* Don't send requests to the RPM if the rate has not been set. */
-+	if (!r->rate)
-+		goto out;
-+
-+	to_active_sleep(r, r->rate, &this_rate, &this_sleep_rate);
-+
-+	/* Take peer clock's rate into account only if it's enabled. */
-+	if (peer->enabled)
-+		to_active_sleep(peer, peer->rate,
-+				&peer_rate, &peer_sleep_rate);
-+
-+	active_rate = max(this_rate, peer_rate);
-+
-+	if (r->branch)
-+		active_rate = !!active_rate;
-+
-+	ret = clk_rpm_set_rate_active(r, active_rate);
-+	if (ret)
-+		goto out;
-+
-+	sleep_rate = max(this_sleep_rate, peer_sleep_rate);
-+	if (r->branch)
-+		sleep_rate = !!sleep_rate;
-+
-+	ret = clk_rpm_set_rate_sleep(r, sleep_rate);
-+	if (ret)
-+		/* Undo the active set vote and restore it */
-+		ret = clk_rpm_set_rate_active(r, peer_rate);
-+
-+out:
-+	if (!ret)
-+		r->enabled = true;
-+
-+	mutex_unlock(&rpm_clk_lock);
-+
-+	return ret;
-+}
-+
-+static void clk_rpm_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+	struct clk_rpm *peer = r->peer;
-+	unsigned long peer_rate = 0, peer_sleep_rate = 0;
-+	unsigned long active_rate, sleep_rate;
-+	int ret;
-+
-+	mutex_lock(&rpm_clk_lock);
-+
-+	if (!r->rate)
-+		goto out;
-+
-+	/* Take peer clock's rate into account only if it's enabled. */
-+	if (peer->enabled)
-+		to_active_sleep(peer, peer->rate, &peer_rate,
-+				&peer_sleep_rate);
-+
-+	active_rate = r->branch ? !!peer_rate : peer_rate;
-+	ret = clk_rpm_set_rate_active(r, active_rate);
-+	if (ret)
-+		goto out;
-+
-+	sleep_rate = r->branch ? !!peer_sleep_rate : peer_sleep_rate;
-+	ret = clk_rpm_set_rate_sleep(r, sleep_rate);
-+	if (ret)
-+		goto out;
-+
-+	r->enabled = false;
-+
-+out:
-+	mutex_unlock(&rpm_clk_lock);
-+}
-+
-+static int clk_rpm_set_rate(struct clk_hw *hw,
-+			    unsigned long rate, unsigned long parent_rate)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+	struct clk_rpm *peer = r->peer;
-+	unsigned long active_rate, sleep_rate;
-+	unsigned long this_rate = 0, this_sleep_rate = 0;
-+	unsigned long peer_rate = 0, peer_sleep_rate = 0;
-+	int ret = 0;
-+
-+	mutex_lock(&rpm_clk_lock);
-+
-+	if (!r->enabled)
-+		goto out;
-+
-+	to_active_sleep(r, rate, &this_rate, &this_sleep_rate);
-+
-+	/* Take peer clock's rate into account only if it's enabled. */
-+	if (peer->enabled)
-+		to_active_sleep(peer, peer->rate,
-+				&peer_rate, &peer_sleep_rate);
-+
-+	active_rate = max(this_rate, peer_rate);
-+	ret = clk_rpm_set_rate_active(r, active_rate);
-+	if (ret)
-+		goto out;
-+
-+	sleep_rate = max(this_sleep_rate, peer_sleep_rate);
-+	ret = clk_rpm_set_rate_sleep(r, sleep_rate);
-+	if (ret)
-+		goto out;
-+
-+	r->rate = rate;
-+
-+out:
-+	mutex_unlock(&rpm_clk_lock);
-+
-+	return ret;
-+}
-+
-+static long clk_rpm_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *parent_rate)
-+{
-+	/*
-+	 * RPM handles rate rounding and we don't have a way to
-+	 * know what the rate will be, so just return whatever
-+	 * rate is requested.
-+	 */
-+	return rate;
-+}
-+
-+static unsigned long clk_rpm_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_rpm *r = to_clk_rpm(hw);
-+
-+	/*
-+	 * RPM handles rate rounding and we don't have a way to
-+	 * know what the rate will be, so just return whatever
-+	 * rate was set.
-+	 */
-+	return r->rate;
-+}
-+
-+static const struct clk_ops clk_rpm_ops = {
-+	.prepare	= clk_rpm_prepare,
-+	.unprepare	= clk_rpm_unprepare,
-+	.set_rate	= clk_rpm_set_rate,
-+	.round_rate	= clk_rpm_round_rate,
-+	.recalc_rate	= clk_rpm_recalc_rate,
-+};
-+
-+static const struct clk_ops clk_rpm_branch_ops = {
-+	.prepare	= clk_rpm_prepare,
-+	.unprepare	= clk_rpm_unprepare,
-+	.round_rate	= clk_rpm_round_rate,
-+	.recalc_rate	= clk_rpm_recalc_rate,
-+};
-+
-+/* apq8064 */
-+DEFINE_CLK_RPM(apq8064, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
-+DEFINE_CLK_RPM(apq8064, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
-+DEFINE_CLK_RPM(apq8064, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
-+DEFINE_CLK_RPM(apq8064, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
-+DEFINE_CLK_RPM(apq8064, mmfab_clk, mmfab_a_clk, QCOM_RPM_MM_FABRIC_CLK);
-+DEFINE_CLK_RPM(apq8064, mmfpb_clk, mmfpb_a_clk, QCOM_RPM_MMFPB_CLK);
-+DEFINE_CLK_RPM(apq8064, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
-+DEFINE_CLK_RPM(apq8064, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
-+DEFINE_CLK_RPM(apq8064, qdss_clk, qdss_a_clk, QCOM_RPM_QDSS_CLK);
-+
-+static struct clk_rpm *apq8064_clks[] = {
-+	[RPM_APPS_FABRIC_CLK] = &apq8064_afab_clk,
-+	[RPM_APPS_FABRIC_A_CLK] = &apq8064_afab_a_clk,
-+	[RPM_CFPB_CLK] = &apq8064_cfpb_clk,
-+	[RPM_CFPB_A_CLK] = &apq8064_cfpb_a_clk,
-+	[RPM_DAYTONA_FABRIC_CLK] = &apq8064_daytona_clk,
-+	[RPM_DAYTONA_FABRIC_A_CLK] = &apq8064_daytona_a_clk,
-+	[RPM_EBI1_CLK] = &apq8064_ebi1_clk,
-+	[RPM_EBI1_A_CLK] = &apq8064_ebi1_a_clk,
-+	[RPM_MM_FABRIC_CLK] = &apq8064_mmfab_clk,
-+	[RPM_MM_FABRIC_A_CLK] = &apq8064_mmfab_a_clk,
-+	[RPM_MMFPB_CLK] = &apq8064_mmfpb_clk,
-+	[RPM_MMFPB_A_CLK] = &apq8064_mmfpb_a_clk,
-+	[RPM_SYS_FABRIC_CLK] = &apq8064_sfab_clk,
-+	[RPM_SYS_FABRIC_A_CLK] = &apq8064_sfab_a_clk,
-+	[RPM_SFPB_CLK] = &apq8064_sfpb_clk,
-+	[RPM_SFPB_A_CLK] = &apq8064_sfpb_a_clk,
-+	[RPM_QDSS_CLK] = &apq8064_qdss_clk,
-+	[RPM_QDSS_A_CLK] = &apq8064_qdss_a_clk,
-+};
-+
-+static const struct rpm_clk_desc rpm_clk_apq8064 = {
-+	.clks = apq8064_clks,
-+	.num_clks = ARRAY_SIZE(apq8064_clks),
-+};
-+
-+static const struct of_device_id rpm_clk_match_table[] = {
-+	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
-+
-+static int rpm_clk_probe(struct platform_device *pdev)
-+{
-+	struct clk_hw **hws;
-+	struct rpm_cc *rcc;
-+	struct clk_hw_onecell_data *data;
-+	int ret;
-+	size_t num_clks, i;
-+	struct qcom_rpm *rpm;
-+	struct clk_rpm **rpm_clks;
-+	const struct rpm_clk_desc *desc;
-+
-+	rpm = dev_get_drvdata(pdev->dev.parent);
-+	if (!rpm) {
-+		dev_err(&pdev->dev, "Unable to retrieve handle to RPM\n");
-+		return -ENODEV;
-+	}
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	rpm_clks = desc->clks;
-+	num_clks = desc->num_clks;
-+
-+	rcc = devm_kzalloc(&pdev->dev, sizeof(*rcc) + sizeof(*hws) * num_clks,
-+			   GFP_KERNEL);
-+	if (!rcc)
-+		return -ENOMEM;
-+
-+	hws = rcc->hws;
-+	data = &rcc->data;
-+	data->num = num_clks;
-+
-+	for (i = 0; i < num_clks; i++) {
-+		if (!rpm_clks[i])
-+			continue;
-+
-+		rpm_clks[i]->rpm = rpm;
-+
-+		ret = clk_rpm_handoff(rpm_clks[i]);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	for (i = 0; i < num_clks; i++) {
-+		if (!rpm_clks[i]) {
-+			data->hws[i] = ERR_PTR(-ENOENT);
-+			continue;
-+		}
-+
-+		ret = devm_clk_hw_register(&pdev->dev, &rpm_clks[i]->hw);
-+		if (ret)
-+			goto err;
-+		}
-+
-+	ret = of_clk_add_hw_provider(pdev->dev.of_node, of_clk_hw_onecell_get,
-+				     data);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+err:
-+	dev_err(&pdev->dev, "Error registering RPM Clock driver (%d)\n", ret);
-+	return ret;
-+}
-+
-+static int rpm_clk_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+	return 0;
-+}
-+
-+static struct platform_driver rpm_clk_driver = {
-+	.driver = {
-+		.name = "qcom-clk-rpm",
-+		.of_match_table = rpm_clk_match_table,
-+	},
-+	.probe = rpm_clk_probe,
-+	.remove = rpm_clk_remove,
-+};
-+
-+static int __init rpm_clk_init(void)
-+{
-+	return platform_driver_register(&rpm_clk_driver);
-+}
-+core_initcall(rpm_clk_init);
-+
-+static void __exit rpm_clk_exit(void)
-+{
-+	platform_driver_unregister(&rpm_clk_driver);
-+}
-+module_exit(rpm_clk_exit);
-+
-+MODULE_DESCRIPTION("Qualcomm RPM Clock Controller Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:qcom-clk-rpm");
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 9fae52dfe35a..5924cdb71336 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -14,6 +14,30 @@
- #ifndef _DT_BINDINGS_CLK_MSM_RPMCC_H
- #define _DT_BINDINGS_CLK_MSM_RPMCC_H
- 
-+/* apq8064 */
-+#define RPM_PXO_CLK				0
-+#define RPM_PXO_A_CLK				1
-+#define RPM_CXO_CLK				2
-+#define RPM_CXO_A_CLK				3
-+#define RPM_APPS_FABRIC_CLK			4
-+#define RPM_APPS_FABRIC_A_CLK			5
-+#define RPM_CFPB_CLK				6
-+#define RPM_CFPB_A_CLK				7
-+#define RPM_QDSS_CLK				8
-+#define RPM_QDSS_A_CLK				9
-+#define RPM_DAYTONA_FABRIC_CLK			10
-+#define RPM_DAYTONA_FABRIC_A_CLK		11
-+#define RPM_EBI1_CLK				12
-+#define RPM_EBI1_A_CLK				13
-+#define RPM_MM_FABRIC_CLK			14
-+#define RPM_MM_FABRIC_A_CLK			15
-+#define RPM_MMFPB_CLK				16
-+#define RPM_MMFPB_A_CLK				17
-+#define RPM_SYS_FABRIC_CLK			18
-+#define RPM_SYS_FABRIC_A_CLK			19
-+#define RPM_SFPB_CLK				20
-+#define RPM_SFPB_A_CLK				21
-+
- /* msm8916 */
- #define RPM_SMD_XO_CLK_SRC				0
- #define RPM_SMD_XO_A_CLK_SRC			1
+Regards,
+Dave
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
