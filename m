@@ -1,57 +1,58 @@
-From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: RE: [PATCH v2] ARM: at91/dt: add dts file for sama5d36ek CMP board
-Date: Wed, 2 Nov 2016 05:46:14 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB41DD2B@CHN-SV-EXMX07.mchp-main.com>
-References: <1478055958-8463-1-git-send-email-wenyou.yang@atmel.com>
- <201611021345.WcgqcfPD%fengguang.wu@intel.com>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 3/3] clk: imx: clk-imx6ul: add clk support for imx6ull
+Date: Wed, 2 Nov 2016 06:45:57 +0000
+Message-ID: <HE1PR04MB14508C014D6370FBC875B9508BA00@HE1PR04MB1450.eurprd04.prod.outlook.com>
+References: <1477969343-19887-1-git-send-email-peter.chen@nxp.com>
+ <1477969343-19887-4-git-send-email-peter.chen@nxp.com>
+ <20161102001205.GA16026@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201611021345.WcgqcfPD%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20161102001205.GA16026-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>, Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGtidWlsZCB0ZXN0
-IHJvYm90IFttYWlsdG86bGtwQGludGVsLmNvbV0NCj4gU2VudDogMjAxNsTqMTHUwjLI1SAxMzoy
-OA0KPiBUbzogV2VueW91IFlhbmcgLSBBNDE1MzUgPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+
-DQo+IENjOiBrYnVpbGQtYWxsQDAxLm9yZzsgTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBh
-dG1lbC5jb20+OyBBbGV4YW5kcmUNCj4gQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1l
-bGVjdHJvbnMuY29tPjsgUnVzc2VsbCBLaW5nDQo+IDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsg
-Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwNCj4gPHBhd2VsLm1v
-bGxAYXJtLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2Ft
-cGJlbGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2Fs
-YWtAY29kZWF1cm9yYS5vcmc+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgV2Vu
-eW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsgV2VueW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIEFSTTogYXQ5MS9kdDogYWRkIGR0cyBmaWxlIGZv
-ciBzYW1hNWQzNmVrIENNUCBib2FyZA0KPiANCj4gSGkgV2VueW91LA0KPiANCj4gW2F1dG8gYnVp
-bGQgdGVzdCBFUlJPUiBvbiBhdDkxL2F0OTEtbmV4dF0gW2Fsc28gYnVpbGQgdGVzdCBFUlJPUiBv
-biB2NC45LXJjMw0KPiBuZXh0LTIwMTYxMDI4XSBbaWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRv
-IHRoZSB3cm9uZyBnaXQgdHJlZSwgcGxlYXNlIGRyb3AgdXMgYQ0KPiBub3RlIHRvIGhlbHAgaW1w
-cm92ZSB0aGUgc3lzdGVtXQ0KPiANCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vMGRheS1j
-aS9saW51eC9jb21taXRzL1dlbnlvdS1ZYW5nL0FSTS1hdDkxLWR0LWFkZC0NCj4gZHRzLWZpbGUt
-Zm9yLXNhbWE1ZDM2ZWstQ01QLWJvYXJkLzIwMTYxMTAyLTExMTE1Mg0KPiBiYXNlOiAgIGh0dHBz
-Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L25mZXJyZS9saW51eC1h
-dDkxLmdpdCBhdDkxLQ0KPiBuZXh0DQo+IGNvbmZpZzogYXJtLWF0OTFfZHRfZGVmY29uZmlnIChh
-dHRhY2hlZCBhcyAuY29uZmlnKQ0KPiBjb21waWxlcjogYXJtLWxpbnV4LWdudWVhYmktZ2NjIChE
-ZWJpYW4gNi4xLjEtOSkgNi4xLjEgMjAxNjA3MDUNCj4gcmVwcm9kdWNlOg0KPiAgICAgICAgIHdn
-ZXQgaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvd2ZnL2xrcC0N
-Cj4gdGVzdHMuZ2l0L3BsYWluL3NiaW4vbWFrZS5jcm9zcyAtTyB+L2Jpbi9tYWtlLmNyb3NzDQo+
-ICAgICAgICAgY2htb2QgK3ggfi9iaW4vbWFrZS5jcm9zcw0KPiAgICAgICAgICMgc2F2ZSB0aGUg
-YXR0YWNoZWQgLmNvbmZpZyB0byBsaW51eCBidWlsZCB0cmVlDQo+ICAgICAgICAgbWFrZS5jcm9z
-cyBBUkNIPWFybQ0KPiANCj4gQWxsIGVycm9ycyAobmV3IG9uZXMgcHJlZml4ZWQgYnkgPj4pOg0K
-PiANCj4gPj4gRXJyb3I6IGFyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDN4bWJfY21wLmR0c2k6MTQz
-LjE3LTE4IHN5bnRheCBlcnJvcg0KPiAgICBGQVRBTCBFUlJPUjogVW5hYmxlIHRvIHBhcnNlIGlu
-cHV0IHRyZWUNCg0KT2gsIHRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gdGhlIHBhdGNoIEkgc2VudCBi
-ZWZvcmUuDQpbUEFUQ0hdIHBpbmN0cmw6IGF0OTE6IGFkZCBzdXBwb3J0IGZvciBPVVRQVVQgY29u
-ZmlnDQpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5l
-bC8yMDE2LU9jdG9iZXIvNDY0MzU0Lmh0bWwNCg0KSSBmb3Jnb3QgYWRkaW5nIHRoaXMgaW5mb3Jt
-YXRpb24uDQoNClNvcnJ5LiANCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
+=20
+>
+>On 11/01, Peter Chen wrote:
+>>  	clks[IMX6UL_CLK_USDHC1]		=3D imx_clk_gate2("usdhc1",
+>	"usdhc1_podf",	 base + 0x80,	2);
+>>  	clks[IMX6UL_CLK_USDHC2]		=3D imx_clk_gate2("usdhc2",
+>	"usdhc2_podf",	 base + 0x80,	4);
+>> -	clks[IMX6UL_CLK_SIM1]		=3D imx_clk_gate2("sim1",
+>	"sim_sel",	 base + 0x80,	6);
+>> -	clks[IMX6UL_CLK_SIM2]		=3D imx_clk_gate2("sim2",
+>	"sim_sel",	 base + 0x80,	8);
+>> +	if (clk_on_imx6ul()) {
+>> +		clks[IMX6UL_CLK_SIM1]		=3D imx_clk_gate2("sim1",
+>	"sim_sel",	 base + 0x80,	6);
+>> +		clks[IMX6UL_CLK_SIM2]		=3D imx_clk_gate2("sim2",
+>	"sim_sel",	 base + 0x80,	8);
+>> +	}
+>>  	clks[IMX6UL_CLK_EIM]		=3D imx_clk_gate2("eim",
+>	"eim_slow_podf", base + 0x80,	10);
+>>  	clks[IMX6UL_CLK_PWM8]		=3D imx_clk_gate2("pwm8",
+>	"perclk",	 base + 0x80,	16);
+>>  	clks[IMX6UL_CLK_UART8_IPG]	=3D imx_clk_gate2("uart8_ipg",	"ipg",
+>	 base + 0x80,	14);
+>> @@ -430,6 +478,7 @@ static void __init imx6ul_clocks_init(struct device_=
+node
+>*ccm_node)
+>>  	clk_set_rate(clks[IMX6UL_CLK_ENET_REF], 50000000);
+>>  	clk_set_rate(clks[IMX6UL_CLK_ENET2_REF], 50000000);
+>>  	clk_set_rate(clks[IMX6UL_CLK_CSI], 24000000);
+>> +	clk_set_rate(clks[IMX6UL_CLK_PLL3_PFD2], 320000000);
+>
+>Can you use assigned clock rates for this instead?
+>
+
+Thanks, I will move it to dts.
+
+Peter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
