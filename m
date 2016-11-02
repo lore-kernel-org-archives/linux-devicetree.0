@@ -1,30 +1,61 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] ARM: dts: imx: update Boundary Devices boards
- support
-Date: Wed, 2 Nov 2016 15:40:35 +0800
-Message-ID: <20161102074032.GB19126@dragon>
-References: <20161025211955.5345-1-gary.bisson@boundarydevices.com>
- <20161101171006.24594-1-gary.bisson@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161101171006.24594-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+From: William Wu <wulf@rock-chips.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: add usb2-phy otg-port support for rk3399
+Date: Wed,  2 Nov 2016 15:42:18 +0800
+Message-ID: <1478072538-32081-3-git-send-email-wulf@rock-chips.com>
+References: <1478072538-32081-1-git-send-email-wulf@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478072538-32081-1-git-send-email-wulf@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, heiko@sntech.de
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, dianders@google.com, briannorris@google.com, groeck@google.com, wulf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 01, 2016 at 06:10:01PM +0100, Gary Bisson wrote:
-> Gary Bisson (5):
->   ARM: dts: imx: add Boundary Devices Nitrogen6_SOM2 support
->   ARM: dts: imx6qdl-sabrelite: use hyphens for nodes name
->   ARM: dts: imx6qdl-nitrogen6x: use hyphens for nodes name
->   ARM: dts: imx6qdl-nit6xlite: use hyphens for nodes name
->   ARM: dts: imx6qdl-nitrogen6_max: use hyphens for nodes name
+Add otg-port nodes for both u2phy0 and u2phy1. The otg-port can
+be used for USB2.0 part of USB3.0 OTG controller.
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: William Wu <wulf@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index b65c193..ea2df51 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1095,6 +1095,17 @@
+ 			clock-output-names = "clk_usbphy0_480m";
+ 			status = "disabled";
+ 
++			u2phy0_otg: otg-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
++					     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
++					     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
++				interrupt-names = "otg-bvalid", "otg-id",
++						  "linestate";
++				status = "disabled";
++			};
++
++
+ 			u2phy0_host: host-port {
+ 				#phy-cells = <0>;
+ 				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
+@@ -1112,6 +1123,16 @@
+ 			clock-output-names = "clk_usbphy1_480m";
+ 			status = "disabled";
+ 
++			u2phy1_otg: otg-port {
++				#phy-cells = <0>;
++				interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH 0>,
++					     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH 0>,
++					     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>;
++				interrupt-names = "otg-bvalid", "otg-id",
++						  "linestate";
++				status = "disabled";
++			};
++
+ 			u2phy1_host: host-port {
+ 				#phy-cells = <0>;
+ 				interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>;
+-- 
+2.0.0
