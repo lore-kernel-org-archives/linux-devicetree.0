@@ -1,110 +1,112 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 1/2] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
-Date: Wed, 2 Nov 2016 13:41:41 +0530
-Message-ID: <CAFp+6iGe5XBjyUJQ48f5G=z+ctuPFZcDYWC2pd5XOtQC98zmEg@mail.gmail.com>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
- <1476873827-7191-2-git-send-email-vivek.gautam@codeaurora.org> <20161026211611.3rl7mas75ju4x77w@rob-hp-laptop>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] mmc: sdhci: Use sdhci-caps-mask and sdhci-caps to
+ change the caps read during __sdhci_read_caps
+Date: Wed, 2 Nov 2016 10:39:33 +0200
+Message-ID: <68720b68-430c-bc69-f531-cc9884ade331@intel.com>
+References: <1477670171-30015-1-git-send-email-zach.brown@ni.com>
+ <1477670171-30015-3-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161026211611.3rl7mas75ju4x77w@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kishon <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477670171-30015-3-git-send-email-zach.brown-acOepvfBmUk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 28/10/16 18:56, Zach Brown wrote:
+> The sdhci capabilities register can be incorrect. The sdhci-caps-mask
+> and sdhci-caps dt properties specify which bits of the register are
+> incorrect and what their values should be. This patch makes the sdhci
+> driver use those properties to correct the caps during
+> __sdhci_read_caps.
+> 
+> During __sdhci_read_caps
+> Use the sdhci-caps-mask property to turn off the incorrect bits of the
+> sdhci register after reading them.
+> Use the sdhci-caps to turn on bits after using sdhci-caps-mask to turn
+> off the incorrect ones.
+> 
+> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
 
+Apart from minor style issue:
 
-On Thu, Oct 27, 2016 at 2:46 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Oct 19, 2016 at 04:13:46PM +0530, Vivek Gautam wrote:
->> PHY transceiver driver for QUSB2 phy controller that provides
->> HighSpeed functionality for DWC3 controller present on
->> Qualcomm chipsets.
->>
->> This driver is based on phy-msm-qusb driver available in
->> msm-4.4 kernel @codeaurora[1]
->>
->> [1] https://source.codeaurora.org/quic/la/kernel/msm-4.4/log/?h=caf/3.18/msm-3.18
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  37 ++
->
-> It's preferred the bindings are a separate patch.
+Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Sure, will prepare a separate patch for bindings doc for both the phy patches.
+> ---
+>  drivers/mmc/host/sdhci.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 1e25b01..d5feae4 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/scatterlist.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/leds.h>
+>  
+> @@ -2991,6 +2992,8 @@ static int sdhci_set_dma_mask(struct sdhci_host *host)
+>  void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
+>  {
+>  	u16 v;
+> +	u64 dt_caps_mask = 0;
+> +	u64 dt_caps = 0;
+>  
+>  	if (host->read_caps)
+>  		return;
+> @@ -3005,18 +3008,35 @@ void __sdhci_read_caps(struct sdhci_host *host, u16 *ver, u32 *caps, u32 *caps1)
+>  
+>  	sdhci_do_reset(host, SDHCI_RESET_ALL);
+>  
+> +	of_property_read_u64(mmc_dev(host->mmc)->of_node,
+> +			     "sdhci-caps-mask", &dt_caps_mask);
+> +	of_property_read_u64(mmc_dev(host->mmc)->of_node,
+> +			     "sdhci-caps", &dt_caps);
+> +
+>  	v = ver ? *ver : sdhci_readw(host, SDHCI_HOST_VERSION);
+>  	host->version = (v & SDHCI_SPEC_VER_MASK) >> SDHCI_SPEC_VER_SHIFT;
+>  
+>  	if (host->quirks & SDHCI_QUIRK_MISSING_CAPS)
+>  		return;
+>  
+> -	host->caps = caps ? *caps : sdhci_readl(host, SDHCI_CAPABILITIES);
+> +	if (caps)
+> +		host->caps = *caps;
+> +	else {
 
->
->>  drivers/phy/Kconfig                                |  10 +
->>  drivers/phy/Makefile                               |   1 +
->>  drivers/phy/phy-qcom-qusb2.c                       | 577 +++++++++++++++++++++
->>  4 files changed, 625 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->>  create mode 100644 drivers/phy/phy-qcom-qusb2.c
->>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> new file mode 100644
->> index 0000000..97c9ce7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
->> @@ -0,0 +1,37 @@
->> +Qualcomm QUSB2 phy controller
->> +=============================
->> +
->> +QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
->> +
->> +Required properties:
->> + - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
->> + - reg: offset and length of the PHY register set.
->> + - #phy-cells: must be 0.
->> +
->> + - clocks: a list of phandles and clock-specifier pairs,
->> +        one for each entry in clock-names.
->> + - clock-names: must be "cfg_ahb" for phy config clock,
->> +                     "ref_clk" for 19.2 MHz ref clk,
->> +                     "ref_clk_src" reference clock source.
->> +                     "iface" for phy interface clock (Optional).
->> +
->> + - vdd-phy-supply: Phandle to a regulator supply to PHY core block.
->> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
->> + - vdda-phy-dpdm: Phandle to 3.1V regulator supply to Dp/Dm port signals.
->> +
->> + - resets: a list of phandles and reset controller specifier pairs,
->> +        one for each entry in reset-names.
->> + - reset-names: must be "phy" for reset of phy block.
->> +
->> +Optional properties:
->> + - nvmem-cells: a list of phandles to nvmem cells that contain fused
->> +             tuning parameters for qusb2 phy, one for each entry
->> +             in nvmem-cell-names.
->> + - nvmem-cell-names: must be "tune2_hstx_trim_efuse" for cell containing
->> +                  HS Tx trim value.
->> + - qcom,hstx-trim-bit-offset: bit offset within nvmem cell for
->> +                           HS Tx trim value.
->> + - qcom,hstx-trim-bit-len: bit length of HS Tx trim value within nvmem cell.
->
-> When does this change? Why is it not just a different nvmem cell?
+All branches of 'if' should have {}.
+i.e. refer results of ./scripts/checkpatch.pl --strict
 
-This is per-controller bit fields. So for example, msm8996 that
-has couple of controllers, has these bits as a part of same
-cell of 32bits. Bits 21:24 for controller-1, and 25-28 for controller-2.
+> +		host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+> +		host->caps &= ~lower_32_bits(dt_caps_mask);
+> +		host->caps |= lower_32_bits(dt_caps);
+> +	}
+>  
+>  	if (host->version < SDHCI_SPEC_300)
+>  		return;
+>  
+> -	host->caps1 = caps1 ? *caps1 : sdhci_readl(host, SDHCI_CAPABILITIES_1);
+> +	if (caps1)
+> +		host->caps1 = *caps1;
+> +	else {
 
-I thought of using the 'reg' and 'bit' properties of nvmem cell,
-but was unsuccessful in using the same.
+Ditto
 
-Hi Srini,
-Can you please help me with this ? We have one register of 32 bits
-(representing one nvmem cell), that has the value for both the
-QUSB2 controllers. So, we just need to read the values that are placed
-in two different nibbles, for the two controllers, using nvmem cell
-device tree properties (may be 'reg' and 'bit' properties).
+> +		host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
+> +		host->caps1 &= ~upper_32_bits(dt_caps_mask);
+> +		host->caps1 |= upper_32_bits(dt_caps);
+> +	}
+>  }
+>  EXPORT_SYMBOL_GPL(__sdhci_read_caps);
+>  
+> 
 
-
-Thanks
-Vivek
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
