@@ -1,58 +1,65 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V4] pinctrl: qcom: Add msm8994 pinctrl driver
-Date: Wed, 2 Nov 2016 11:36:07 -0700
-Message-ID: <20161102183607.GJ16026@codeaurora.org>
-References: <20161031160009.20472-1-michael.scott@linaro.org>
- <20161101235344.GX16026@codeaurora.org>
- <e0bdce76-dcab-36c9-bf39-6c79b1cb2820@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] ARM: dts: sun8i: Add SPI controller node in H3
+Date: Wed, 2 Nov 2016 19:36:04 +0100
+Message-ID: <20161102183604.b3zqtf6rdavvdlvh@lukather>
+References: <20161028065412.23008-1-woogyom.kim@gmail.com>
+ <20161028065412.23008-3-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwer2lgketwp6d2f"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e0bdce76-dcab-36c9-bf39-6c79b1cb2820@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Scott <michael.scott@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
+In-Reply-To: <20161028065412.23008-3-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01, Michael Scott wrote:
-> 
-> On 11/01/2016 04:53 PM, Stephen Boyd wrote:
-> >On 10/31, Michael Scott wrote:
-> >>+
-> >>+static const struct msm_pingroup msm8994_groups[] = {
-> >>+	PINGROUP(0,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
-> >>+		 NA, NA),
-> >I see an hdmi_rcv group here after blsp_uim1. Please add it for
-> >this gpio.
-> 
-> Hi Stephen,
-> 
-> Thank you for reviewing the data-- this is really tedious stuff.
-> 
-> I'd like to make sure that we're both using tech data for msm8994.
-> I don't see the hdmi_rcv function at all in my docs.
-> 
-> >
-> >>+	PINGROUP(1,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
-> >>+		 NA, NA),
-> >>+	PINGROUP(2,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
-> >>+		 NA, NA),
-> >>+	PINGROUP(3,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
-> >>+		 NA, NA),
-> >>+	PINGROUP(4,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_out_b,
-> >>+		 NA, NA, NA, NA, NA, NA, NA),
-> >>+	PINGROUP(5,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_in_b, NA,
-> >The qdss_cti_* is in function 5 for both of these, not function
-> >4.
-> These are indeed wrong, but my docs both show as function 7.
 
-Ok. I think your document is for 8994v1, which never got
-commercialized. I certainly see that this function assignment
-changed between v1 and v2 from 7 to 5.
+--rwer2lgketwp6d2f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Now that my eyes are bleeding I'm going to do something else.
+1;4600;0c
+On Fri, Oct 28, 2016 at 03:54:10PM +0900, Milo Kim wrote:
+> H3 SPI subsystem is almost same as A31 SPI except buffer size, so those
+> DT properties are reusable.
+>=20
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Applied both, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--rwer2lgketwp6d2f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYGjIQAAoJEBx+YmzsjxAg9bIQAIQUSFhzzMEuNk7pWf1a4aTF
+ifLoqzifD9hRqoHTsoaRqnP3nbWkE10or3xbXiRFGvD4p4IGjlHia9DhJqU7Y3gO
+4AZHlB2kElQzYdA02nELsEWxMaM4Yje5Nn02AvIuHc9CuQkDt+iMsOJ395dCSo+Y
+c6thzwqx2qvqiPXxXOF+DD1syfYX4GgJwPk66qcwdZ/OcNtr1mkZ3/QabJH9oNT2
+E2+9DPS3i+yd4+C8Ak1rLOlNDRphQHz3rIA+LhS0hL9CqkhzhCrXwDUdfVAja4Rt
+3Sg1o+p7i+5aQ2eHAHrz88bs1MJ4TY+VHLz8teCw8mfKenlalGQc/iDOlFP2KFHJ
+Ady6YTtKwdJUlhu0QNG8xPwacFEnErVFLB0zM6k6YfDWfHIpDH0YhC7gJmNjRB3w
++GTkOvGIF7XQj4/+lXt6HwzCuQZtmVSmGlDANLcX7og/HXpondqUKtXfRLA2/bPt
+HN7CIFt/BRCkjHI+x4YPgvEr84pq1/73F0/8FqOtzf1xKqnLVXCJdzxCsbPrPUfE
+YJf3Y1+c40kMn3SS7QFFliNh7uAdXtjL2e36c4dwz5J21oFwx9o1OOMQ6kvtuyq7
+k8EIJrdIj41pOs2jm/c6aGpiMSRJTGoFZYAAIXWsy6r0WIFQxbsKy0S2+xuCzlJV
+6gUmciLKBY7eKIQLgW/W
+=PUJQ
+-----END PGP SIGNATURE-----
+
+--rwer2lgketwp6d2f--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
