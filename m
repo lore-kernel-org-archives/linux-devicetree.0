@@ -1,65 +1,40 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/2] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-Date: Wed, 2 Nov 2016 09:33:41 +0000
-Message-ID: <b9cc6c7a-0819-fa6a-d4f9-b057dddda5bb@linaro.org>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
- <1476873827-7191-3-git-send-email-vivek.gautam@codeaurora.org>
- <a969a6be-472d-a463-790b-1e2f373d19b2@linaro.org>
- <CAFp+6iG=3QRU+Ffj+8xJaPrpy0p7TyjeX0khiOGQMtz-z-hiSg@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 01/11] ARM: shmobile: r8a7745: add power domain index macros
+Date: Wed, 2 Nov 2016 10:46:47 +0100
+Message-ID: <CAMuHMdV+9LPmp5QL_sQ_Ob2H5NzcRASkeA6DoAP0TcrSS44nLA@mail.gmail.com>
+References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com> <1645729.DjklObBkNM@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iG=3QRU+Ffj+8xJaPrpy0p7TyjeX0khiOGQMtz-z-hiSg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1645729.DjklObBkNM-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/11/16 07:26, Vivek Gautam wrote:
->>> +               phy_desc->tx = base + qphy->cfg->tx_offsets[id];
->>> >> +               phy_desc->rx = base + qphy->cfg->rx_offsets[id];
->>> >> +               phy_desc->pcs = base + qphy->cfg->pcs_offsets[id];
->>> >> +
->>> >> +               /*
->>> >> +                * Get PHY's Pipe clock, if any; USB3 and PCIe are PIPE
->>> >> +                * based phys, so they essentially have pipe clock
->>> >> +                */
->>> >> +               memset(&prop_name, 0, sizeof(prop_name));
->>> >> +               snprintf(prop_name, MAX_PROP_NAME, "pipe%d", id);
->>> >> +               phy_desc->pipe_clk = devm_clk_get(dev, prop_name);
->>> >> +               if (IS_ERR(phy_desc->pipe_clk)) {
->>> >> +                       if (qphy->cfg->type == PHY_TYPE_PCIE ||
->>> >> +                           qphy->cfg->type == PHY_TYPE_USB3) {
->>> >> +                               ret = PTR_ERR(phy_desc->pipe_clk);
->>> >> +                               if (ret != -EPROBE_DEFER)
->>> >> +                                       dev_err(dev,
->>> >> +                                       "failed to get lane%d pipe_clk\n",
->>> >> id);
->>> >> +                               return ret;
->>> >> +                       } else {
->>> >> +                               phy_desc->pipe_clk = NULL;
->>> >> +                       }
->>> >> +               }
->> >
->> >
->> > Do we need to really need phy type for this?
->> > You should proably make a flag in cfg to mark this rather then using phy
->> > type. Hopefully it will also simplify the logic.
-> The pipe clock is something that's specific to PCIe and USB3 type
-> phys (both are PIPE3 specs based phys). So i think it is okay
-> to use the PHY_TYPE_{*} macros here. Looks a bit cleaner rather
-> than having a cfg flag. No ?
-Yes, it makes sense, I was not sure of full details of the pipe3 specs, 
-now that you made it more clear.
-Remember to add this in comments.
-
-Thanks,
-srini
+On Sat, Oct 29, 2016 at 12:07 AM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add macros usable by the device tree sources to reference R8A7745 SYSC power
+> domains by index.
 >
-> Using PHY_TYPE_{*} macros will also keep the doors open to
-> other PHY types that are added at a later point in time.
+> Based on the original (and large) patch by Dmitry Shifrin
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 >
->> >
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
