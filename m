@@ -1,56 +1,48 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH 3/3] ipmi/bt-bmc: add a sysfs file to configure a maximum
- response time
-Date: Wed,  2 Nov 2016 08:57:06 +0100
-Message-ID: <1478073426-3714-4-git-send-email-clg@kaod.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 20/23] ARM: shmobile: rcar-gen2: Stop passing mode pins
+ state to clock driver
+Date: Wed, 2 Nov 2016 09:09:15 +0100
+Message-ID: <CAMuHMdVdY6c3C+zLAhBCVvxmWD-HhTOis7rU-+_iFQkER3t3fg@mail.gmail.com>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+ <1477055857-17936-21-git-send-email-geert+renesas@glider.be> <722d91fe-574a-8613-34ff-d44be19157be@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478073426-3714-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Corey Minyard <minyard@acm.org>, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <722d91fe-574a-8613-34ff-d44be19157be@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-V2UgY291bGQgYWxzbyB1c2UgYW4gaW9jdGwgZm9yIHRoYXQgcHVycG9zZS4gc3lzZnMgc2VlbXMg
-YSBiZXR0ZXIKYXBwcm9hY2guCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xn
-QGthb2Qub3JnPgotLS0KIGRyaXZlcnMvY2hhci9pcG1pL2J0LWJtYy5jIHwgMzEgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykK
-CmRpZmYgLS1naXQgYS9kcml2ZXJzL2NoYXIvaXBtaS9idC1ibWMuYyBiL2RyaXZlcnMvY2hhci9p
-cG1pL2J0LWJtYy5jCmluZGV4IGU3NTFlNGE3NTRiNy4uZDcxNDZmMGU5MDBlIDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2NoYXIvaXBtaS9idC1ibWMuYworKysgYi9kcml2ZXJzL2NoYXIvaXBtaS9idC1i
-bWMuYwpAQCAtODQsNiArODQsMzMgQEAgc3RydWN0IGJ0X2JtYyB7CiAKIHN0YXRpYyBhdG9taWNf
-dCBvcGVuX2NvdW50ID0gQVRPTUlDX0lOSVQoMCk7CiAKK3N0YXRpYyBzc2l6ZV90IGJ0X2JtY19z
-aG93X3Jlc3BvbnNlX3RpbWUoc3RydWN0IGRldmljZSAqZGV2LAorCQkJCQkgc3RydWN0IGRldmlj
-ZV9hdHRyaWJ1dGUgKmF0dHIsCisJCQkJCSBjaGFyICpidWYpCit7CisJc3RydWN0IGJ0X2JtYyAq
-YnRfYm1jID0gZGV2X2dldF9kcnZkYXRhKGRldik7CisKKwlyZXR1cm4gc25wcmludGYoYnVmLCBQ
-QUdFX1NJWkUgLSAxLCAiJWRcbiIsIGJ0X2JtYy0+cmVzcG9uc2VfdGltZSk7Cit9CisKK3N0YXRp
-YyBzc2l6ZV90IGJ0X2JtY19zZXRfcmVzcG9uc2VfdGltZShzdHJ1Y3QgZGV2aWNlICpkZXYsCisJ
-CQkJCXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLAorCQkJCQljb25zdCBjaGFyICpidWYs
-IHNpemVfdCBjb3VudCkKK3sKKwlzdHJ1Y3QgYnRfYm1jICpidF9ibWMgPSBkZXZfZ2V0X2RydmRh
-dGEoZGV2KTsKKwl1bnNpZ25lZCBsb25nIHZhbDsKKwlpbnQgZXJyOworCisJZXJyID0ga3N0cnRv
-dWwoYnVmLCAwLCAmdmFsKTsKKwlpZiAoZXJyKQorCQlyZXR1cm4gZXJyOworCWJ0X2JtYy0+cmVz
-cG9uc2VfdGltZSA9IHZhbDsKKwlyZXR1cm4gY291bnQ7Cit9CisKK3N0YXRpYyBERVZJQ0VfQVRU
-UihyZXNwb25zZV90aW1lLCAwNjQ0LAorCQkgICBidF9ibWNfc2hvd19yZXNwb25zZV90aW1lLCBi
-dF9ibWNfc2V0X3Jlc3BvbnNlX3RpbWUpOworCiBzdGF0aWMgdTggYnRfaW5iKHN0cnVjdCBidF9i
-bWMgKmJ0X2JtYywgaW50IHJlZykKIHsKIAlyZXR1cm4gaW9yZWFkOChidF9ibWMtPmJhc2UgKyBy
-ZWcpOwpAQCAtNTcyLDYgKzU5OSwxMCBAQCBzdGF0aWMgaW50IGJ0X2JtY19wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCWJ0X2JtY19jb25maWdfaXJxKGJ0X2JtYywgcGRldik7
-CiAKIAlidF9ibWMtPnJlc3BvbnNlX3RpbWUgPSBCVF9CTUNfUkVTUE9OU0VfVElNRTsKKwlyYyA9
-IGRldmljZV9jcmVhdGVfZmlsZSgmcGRldi0+ZGV2LCAmZGV2X2F0dHJfcmVzcG9uc2VfdGltZSk7
-CisJaWYgKHJjKQorCQlkZXZfd2FybigmcGRldi0+ZGV2LCAiY2FuJ3QgY3JlYXRlIHJlc3BvbnNl
-X3RpbWUgZmlsZVxuIik7CisKIAogCWlmIChidF9ibWMtPmlycSkgewogCQlkZXZfaW5mbyhkZXYs
-ICJVc2luZyBJUlEgJWRcbiIsIGJ0X2JtYy0+aXJxKTsKLS0gCjIuNy40CgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, Nov 1, 2016 at 2:35 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
+>> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+>
+> [...]
+>>
+>> @@ -130,7 +129,7 @@ void __init rcar_gen2_timer_init(void)
+>>         iounmap(base);
+>>  #endif /* CONFIG_ARM_ARCH_TIMER */
+>>
+>> -       rcar_gen2_clocks_init(mode);
+>> +       of_clk_init(NULL);
+>>         clocksource_probe();
+>>  }
+>>
+>
+>   This hunk no longer applies to devel.
+
+Indeed, but I can't update it, as we can't have all mach-shmobile changes in
+the clock tree. So Simon will have to resolve the conflict later.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
