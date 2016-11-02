@@ -1,107 +1,66 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/2] pinctrl: sunxi: Add support for interrupt debouncing
-Date: Wed, 2 Nov 2016 20:51:06 +0100
-Message-ID: <20161102195106.eazrl5oevykltvzd@lukather>
-References: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard@free-electrons.com>
- <fa022cca9917917ace4af7d5e852c9348ec5b553.1476868462.git-series.maxime.ripard@free-electrons.com>
- <CACRpkdaoEH7OixJDkjuZ0qqYVURLvXwn8b41-OvqjZGJ=neh+Q@mail.gmail.com>
- <20161020135625.vro5cxkf3rxevwyn@lukather>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 4/7] Documentation: devicetree: net: add NS2 bindings
+ to amac
+Date: Wed, 2 Nov 2016 22:52:07 +0300
+Message-ID: <16b4fb52-ed13-c9d9-d82d-862ae34ce850@cogentembedded.com>
+References: <1478106488-11779-1-git-send-email-jon.mason@broadcom.com>
+ <1478106488-11779-5-git-send-email-jon.mason@broadcom.com>
+ <ab064a45-0172-fa28-4ac6-0d3159a26506@cogentembedded.com>
+ <20161102172456.GA11881@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mclz7kicg5bjph7n"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161020135625.vro5cxkf3rxevwyn@lukather>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161102172456.GA11881@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/02/2016 08:24 PM, Jon Mason wrote:
 
---mclz7kicg5bjph7n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>> Clean-up the documentation to the bgmac-amac driver, per suggestion by
+>>> Rob Herring, and add details for NS2 support.
+>>>
+>>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+>>> ---
+>>> Documentation/devicetree/bindings/net/brcm,amac.txt | 16 +++++++++++-----
+>>> 1 file changed, 11 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
+>>> index ba5ecc1..2fefa1a 100644
+>>> --- a/Documentation/devicetree/bindings/net/brcm,amac.txt
+>>> +++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
+>>> @@ -2,11 +2,17 @@ Broadcom AMAC Ethernet Controller Device Tree Bindings
+>>> -------------------------------------------------------------
+>>>
+>>> Required properties:
+>>> - - compatible:	"brcm,amac" or "brcm,nsp-amac"
+>>> - - reg:		Address and length of the GMAC registers,
+>>> -		Address and length of the GMAC IDM registers
+>>> - - reg-names:	Names of the registers.  Must have both "amac_base" and
+>>> -		"idm_base"
+>>> + - compatible:	"brcm,amac"
+>>> +		"brcm,nsp-amac"
+>>> +		"brcm,ns2-amac"
+>>> + - reg:		Address and length of the register set for the device. It
+>>> +		contains the information of registers in the same order as
+>>> +		described by reg-names
+>>> + - reg-names:	Names of the registers.
+>>> +		"amac_base":	Address and length of the GMAC registers
+>>> +		"idm_base":	Address and length of the GMAC IDM registers
+>>> +		"nicpm_base":	Address and length of the NIC Port Manager
+>>> +				registers (required for Northstar2)
+>>
+>>   Why this "_base" suffix? It looks redundant...
+>
+> Yes.  Rob Herring pointed out the same thing.  It is ugly, but follows
+> the existing binding.
 
-Hi Linus,
+    Sorry, I didn't realize you're reformatting the existing bindings while 
+adding some new text...
 
-On Thu, Oct 20, 2016 at 03:56:25PM +0200, Maxime Ripard wrote:
-> Hi Linus,
->=20
-> On Thu, Oct 20, 2016 at 03:04:46PM +0200, Linus Walleij wrote:
-> > On Wed, Oct 19, 2016 at 11:15 AM, Maxime Ripard
-> > <maxime.ripard@free-electrons.com> wrote:
-> >=20
-> > > The pin controller found in the Allwinner SoCs has support for interr=
-upts
-> > > debouncing.
-> > >
-> > > However, this is not done per-pin, preventing us from using the gener=
-ic
-> > > pinconf binding for that,
-> >=20
-> > How typical.
-> >=20
-> > > but per irq bank, which, depending on the SoC,
-> > > ranges from one to five.
-> > >
-> > > Introduce a device-wide property to deal with this using a nanosecond
-> > > resolution.
-> > >
-> > > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > (...)
-> > > +Note: For backward compatibility reasons, the hosc and losc clocks a=
-re
-> > > +only required if you need to use the optional
-> > > +allwinner,debounce-time-ns property. Any new device tree should set =
-them.
-> > > +
-> > > +Optional properties:
-> > > +  - allwinner,debounce-time-ns: Array of debouncing periods in
-> > > +    nanoseconds. One period per irq bank found in the controller
-> >=20
-> > Do you really *need* to specify this with nanosecond resolution?
-> >
-> > Else I would suggest to use microsecond resolution and just use
-> > the generic binding (input-debounce) but on the device node instead
-> > of the specific handler.
->=20
-> Theorically, the debouncing clock can be set at 24MHz, which means a
-> 42ns resolution.
->=20
-> I've seen that the other bindings usually use microseconds, but in our
-> case, we can really go lower than that.
->=20
-> I don't really know if it makes sense though.
+> Thanks,
+> Jon
 
-Any comments on this?
-
-Thanks,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---mclz7kicg5bjph7n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYGkOlAAoJEBx+YmzsjxAgkNsP/ia2AJYwOZTQgMrjlwqE65+a
-186mWIuVAbzC56aCmx+2Y3sgoFOx+FiGaVsAZkJy/yUvtkdYvl1B9a14ZSJcTT2y
-LstAi38MpAAYGbZ64iRI5dmJShtJEErZ50Y9PVBwkEh4rcoItt2/bUUyuP2O81sx
-h5jU49yhviB5r2ocnGq7ZDdjNbsqc7zt1nUhy1SWuKn+fkOUiAnbt5lQgiVsWHbg
-t3aoQtbZqqY5o/ArBx2qkMs26R0IuX+D0n+QwcIeGwwN65XIaW1S04vQkj4mru0r
-O+QSP9aJrMjsqnY0EI+vwNCvfhR4cS+dULVJ4oOc2kVoSe0TnFDmoeBBWNOojlfy
-vAaCCF6LER2oH0So27sKi5VA6q9TvIPGwWViO2vjWxXSRqjUpiQmKkNJc3NDjEt5
-ll9aZEP9tHYgJKDM2RkwQNqTMS27ondq3olUkDAoB0WWmnPBPGgahmgWsIvFOZDH
-nqMbWppEE9glxxBLDC3pLIJaajjDICQ0IPx2kGfHxCCh9E21xoHTnzR3Yf40ulxz
-Ja/wSYvSkaBDlVgJ9tUt7kcJavoM5vEzyja4ru4aioCOqpuj3lZKM6d6Fo5dE6P6
-c5pBfa3QS27yzoYkoRYDG786U0Ah79KiXKf4H4tTg0ZUFsSGtgvvLy9pOGqMCsBk
-X036YLI2Ha9JEwgIKABh
-=7Ega
------END PGP SIGNATURE-----
-
---mclz7kicg5bjph7n--
+MBR, Sergei
