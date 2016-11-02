@@ -1,48 +1,46 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any transmitting
- time for tx only devices
-Date: Wed, 02 Nov 2016 13:39:30 +0900
-Message-ID: <20161102043929.eaf7nlje2cru7nky@gangnam.samsung>
-References: <20161027143601.GA5103@gofer.mess.org>
- <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-6-andi.shyti@samsung.com>
- <CGME20160902084206epcas1p26e535506ec1c418ede9ba230d40f0656@epcas1p2.samsung.com>
- <20160902084158.GA25342@gofer.mess.org>
- <20161027074401.wxg5icc6hcpwnfsf@gangnam.samsung>
- <7e2f88ed83c4044c30bc03aaea9f09e1@hardeman.nu>
- <20161031170526.GA8183@gofer.mess.org>
- <20161101065111.hofyxjps2iwmxpzj@gangnam.samsung>
- <20161101103408.GA15939@gofer.mess.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v3 0/4] PXA cpufreq conversion to clock API
+Date: Wed, 2 Nov 2016 10:15:03 +0530
+Message-ID: <20161102044503.GC10786@vireshk-i7>
+References: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <20161101103408.GA15939@gofer.mess.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: David =?iso-8859-15?Q?H=E4rdeman?= <david@hardeman.nu>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-pm-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafael J Wysocki <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
-
-> > > Andi, it would be good to know what the use-case for the original change is.
-> > 
-> > the use case is the ir-spi itself which doesn't need the lirc to
-> > perform any waiting on its behalf.
+On 31-10-16, 20:54, Robert Jarzmik wrote:
+> Hi,
 > 
-> Here is the crux of the problem: in the ir-spi case no wait will actually 
-> happen here, and certainly no "over-wait". The patch below will not change
-> behaviour at all.
+> This serie is a preparation to shift the cpufreq of pxa2xx platforms to clocks
+> API, next iteration.
 > 
-> In the ir-spi case, "towait" will be 0 and no wait happens.
+> The first 3 patches are review and merge material :
+>  - patch 1/4 for Viresh and Rafael
+>  - patches 2/4 and 3/4 for me
 > 
-> I think the code is already in good shape but somehow there is a 
-> misunderstanding. Did I miss something?
+> The 4th on is for review but not merge, as the clock changes must be fully
+> reviewed and go in first as a prequisite
+> 
+> Since previous iteration, 2 and 3 were amended per Viresh's suggestion.
+> 
+> Robert Jarzmik (4):
+>   cpufreq: pxa: use generic platdev driver for device-tree
+>   ARM: dts: pxa: add pxa25x cpu operating points
+>   ARM: dts: pxa: add pxa27x cpu operating points
+>   cpufreq: pxa: convert to clock API
+> 
+>  arch/arm/boot/dts/pxa25x.dtsi        |  25 +++++
+>  arch/arm/boot/dts/pxa27x.dtsi        |  40 ++++++++
+>  drivers/cpufreq/cpufreq-dt-platdev.c |   2 +
+>  drivers/cpufreq/pxa2xx-cpufreq.c     | 191 +++++++----------------------------
+>  4 files changed, 106 insertions(+), 152 deletions(-)
 
-We can just drop this patch, it's just something small that is
-bothering me.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I will send a new patchset without this one.
-
-Thanks,
-Andi
+-- 
+viresh
