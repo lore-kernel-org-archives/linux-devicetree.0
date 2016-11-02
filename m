@@ -1,79 +1,71 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 3/4] mfd: altr-a10sr: Add Arria10 SR Monitor
-Date: Wed, 2 Nov 2016 08:01:39 +0000
-Message-ID: <20161102080138.GQ13127@dell>
-References: <1477598426-28125-1-git-send-email-tthayer@opensource.altera.com>
- <1477598426-28125-4-git-send-email-tthayer@opensource.altera.com>
- <20161031080222.GM13127@dell>
- <39faa26d-ca05-d68d-a50a-03d09d445b77@opensource.altera.com>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH 1/3] ipmi/bt-bmc: change compatible node to 'aspeed,
+ ast2400-ibt-bmc'
+Date: Wed,  2 Nov 2016 08:57:04 +0100
+Message-ID: <1478073426-3714-2-git-send-email-clg@kaod.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <39faa26d-ca05-d68d-a50a-03d09d445b77-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1478073426-3714-1-git-send-email-clg@kaod.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Corey Minyard <minyard@acm.org>, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 31 Oct 2016, Thor Thayer wrote:
-> On 10/31/2016 03:02 AM, Lee Jones wrote:
-> > On Thu, 27 Oct 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> > 
-> > > From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > > 
-> > > Add the Altera Arria10 DevKit System Resource Monitor functionality
-> > > to the MFD device.
-> > > 
-> > > Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > > ---
-> > > v2  Change from -mon to -monitor for clarity
-> > > ---
-> > >  drivers/mfd/altera-a10sr.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> > > index 06e1f7f..30de652 100644
-> > > --- a/drivers/mfd/altera-a10sr.c
-> > > +++ b/drivers/mfd/altera-a10sr.c
-> > > @@ -33,6 +33,10 @@
-> > >  		.name = "altr_a10sr_gpio",
-> > >  		.of_compatible = "altr,a10sr-gpio",
-> > >  	},
-> > > +	{
-> > > +		.name = "altr_a10sr_monitor",
-> > > +		.of_compatible = "altr,a10sr-monitor",
-> > 
-> > So long as you use whichever compatible you agree on with Rob:
-> > 
-> > For my own reference:
-> >   Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> I'm getting a "Non-standard signature" warning for this (even if I make
-> everything lower-case).
-> 
-> Would you prefer I submit it with the warning or should I change it to
-> "Acked-by"?
-
-Please submit it as you see it.  I will amend when applying.
-
-> Thanks for reviewing!
-> 
-> Thor
-> 
-> > > +	},
-> > >  };
-> > > 
-> > >  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
-> > 
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIEFzcGVlZCBTb0NzIGhhdmUgdHdvIEJUIGludGVyZmFjZXMgOiBvbmUgaXMgSVBNSSBjb21w
+bGlhbnQgYW5kIHRoZQpvdGhlciBpcyBIOFMvMjE2OCBjb21wbGlhbnQuCgpUaGUgY3VycmVudCBp
+cG1pL2J0LWJtYyBkcml2ZXIgaW1wbGVtZW50cyB0aGUgSVBNSSB2ZXJzaW9uIGFuZCB3ZQpzaG91
+bGQgcmVmbGVjdCBpdHMgbmF0dXJlIGluIHRoZSBjb21wYXRpYmxlIG5vZGUgbmFtZSB1c2luZwon
+YXNwZWVkLGFzdDI0MDAtaWJ0LWJtYycgaW5zdGVhZCBvZiAnYXNwZWVkLGFzdDI0MDAtYnQtYm1j
+Jy4gVGhlCmxhdHRlciBzaG91bGQgYmUgdXNlZCBmb3IgYSBIOFMgaW50ZXJmYWNlIGRyaXZlciBp
+ZiBpdCBpcyBpbXBsZW1lbnRlZApvbmUgZGF5LgoKU2lnbmVkLW9mZi1ieTogQ8OpZHJpYyBMZSBH
+b2F0ZXIgPGNsZ0BrYW9kLm9yZz4KLS0tCiAuLi4vaXBtaS97YXNwZWVkLGFzdDI0MDAtYnQtYm1j
+LnR4dCA9PiBhc3BlZWQsYXN0MjQwMC1pYnQtYm1jLnR4dH0gICAgfCA0ICsrLS0KIGRyaXZlcnMv
+Y2hhci9pcG1pL2J0LWJtYy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDQgKystLQogMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRp
+b25zKC0pCiByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lwbWkve2Fz
+cGVlZCxhc3QyNDAwLWJ0LWJtYy50eHQgPT4gYXNwZWVkLGFzdDI0MDAtaWJ0LWJtYy50eHR9ICg4
+NSUpCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lwbWkv
+YXNwZWVkLGFzdDI0MDAtYnQtYm1jLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9pcG1pL2FzcGVlZCxhc3QyNDAwLWlidC1ibWMudHh0CnNpbWlsYXJpdHkgaW5kZXggODUl
+CnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pcG1pL2FzcGVl
+ZCxhc3QyNDAwLWJ0LWJtYy50eHQKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9pcG1pL2FzcGVlZCxhc3QyNDAwLWlidC1ibWMudHh0CmluZGV4IGZiYmFjZDk1ODI0
+MC4uNmYyODk2OWFmOWRjIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvaXBtaS9hc3BlZWQsYXN0MjQwMC1idC1ibWMudHh0CisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9pcG1pL2FzcGVlZCxhc3QyNDAwLWlidC1ibWMudHh0CkBAIC02
+LDcgKzYsNyBAQCBwZXJmb3JtIGluLWJhbmQgSVBNSSBjb21tdW5pY2F0aW9uIHdpdGggdGhlaXIg
+aG9zdC4KIAogUmVxdWlyZWQgcHJvcGVydGllczoKIAotLSBjb21wYXRpYmxlIDogc2hvdWxkIGJl
+ICJhc3BlZWQsYXN0MjQwMC1idC1ibWMiCistIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImFzcGVl
+ZCxhc3QyNDAwLWlidC1ibWMiCiAtIHJlZzogcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0
+aGUgcmVnaXN0ZXJzCiAKIE9wdGlvbmFsIHByb3BlcnRpZXM6CkBAIC0xNyw3ICsxNyw3IEBAIE9w
+dGlvbmFsIHByb3BlcnRpZXM6CiBFeGFtcGxlOgogCiAJaWJ0QDFlNzg5MTQwIHsKLQkJY29tcGF0
+aWJsZSA9ICJhc3BlZWQsYXN0MjQwMC1idC1ibWMiOworCQljb21wYXRpYmxlID0gImFzcGVlZCxh
+c3QyNDAwLWlidC1ibWMiOwogCQlyZWcgPSA8MHgxZTc4OTE0MCAweDE4PjsKIAkJaW50ZXJydXB0
+cyA9IDw4PjsKIAl9OwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMgYi9k
+cml2ZXJzL2NoYXIvaXBtaS9idC1ibWMuYwppbmRleCBiNDllNjEzMjA5NTIuLmZjOWU4ODkxZWFl
+MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMKKysrIGIvZHJpdmVycy9j
+aGFyL2lwbWkvYnQtYm1jLmMKQEAgLTQ4NCw3ICs0ODQsNyBAQCBzdGF0aWMgaW50IGJ0X2JtY19y
+ZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIH0KIAogc3RhdGljIGNvbnN0IHN0
+cnVjdCBvZl9kZXZpY2VfaWQgYnRfYm1jX21hdGNoW10gPSB7Ci0JeyAuY29tcGF0aWJsZSA9ICJh
+c3BlZWQsYXN0MjQwMC1idC1ibWMiIH0sCisJeyAuY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0MjQw
+MC1pYnQtYm1jIiB9LAogCXsgfSwKIH07CiAKQEAgLTUwMiw0ICs1MDIsNCBAQCBtb2R1bGVfcGxh
+dGZvcm1fZHJpdmVyKGJ0X2JtY19kcml2ZXIpOwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYnRf
+Ym1jX21hdGNoKTsKIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKIE1PRFVMRV9BVVRIT1IoIkFsaXN0
+YWlyIFBvcHBsZSA8YWxpc3RhaXJAcG9wcGxlLmlkLmF1PiIpOwotTU9EVUxFX0RFU0NSSVBUSU9O
+KCJMaW51eCBkZXZpY2UgaW50ZXJmYWNlIHRvIHRoZSBCVCBpbnRlcmZhY2UiKTsKK01PRFVMRV9E
+RVNDUklQVElPTigiTGludXggZGV2aWNlIGludGVyZmFjZSB0byB0aGUgSVBNSSBCVCBpbnRlcmZh
+Y2UiKTsKLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
