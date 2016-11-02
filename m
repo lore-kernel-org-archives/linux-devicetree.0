@@ -1,65 +1,41 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 2/2] dt-bindings: net: Add OXNAS DWMAC Bindings
-Date: Wed,  2 Nov 2016 15:02:37 +0100
-Message-ID: <20161102140237.6955-3-narmstrong@baylibre.com>
-References: <20161102140237.6955-1-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161102140237.6955-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: peppe.cavallaro@st.com, alexandre.torgue@st.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, netdev@vger.kernel.org, linux-oxnas@lists.tuxfamily.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 2/2] MAINTAINERS: oxnas: Add new files definitions
+Date: Wed,  2 Nov 2016 15:18:50 +0100
+Message-ID: <20161102141850.25164-3-narmstrong@baylibre.com>
+References: <20161102141850.25164-1-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161102141850.25164-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/net/oxnas-dwmac.txt        | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/oxnas-dwmac.txt
+Fix the dts files maintained by the OXNAS platform, add a new board.
 
-diff --git a/Documentation/devicetree/bindings/net/oxnas-dwmac.txt b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
-new file mode 100644
-index 0000000..df0534e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/oxnas-dwmac.txt
-@@ -0,0 +1,39 @@
-+* Oxford Semiconductor OXNAS DWMAC Ethernet controller
-+
-+The device inherits all the properties of the dwmac/stmmac devices
-+described in the file stmmac.txt in the current directory with the
-+following changes.
-+
-+Required properties on all platforms:
-+
-+- compatible:	For the OX820 SoC, it should be :
-+		- "oxsemi,ox820-dwmac" to select glue
-+		- "snps,dwmac-3.512" to select IP version.
-+
-+- clocks: Should contain phandles to the following clocks
-+- clock-names:	Should contain the following:
-+		- "stmmaceth" for the host clock - see stmmac.txt
-+		- "gmac" for the peripheral gate clock
-+
-+- oxsemi,sys-ctrl: a phandle to the system controller syscon node
-+
-+Example :
-+
-+etha: ethernet@40400000 {
-+	compatible = "oxsemi,ox820-dwmac", "snps,dwmac-3.512";
-+	reg = <0x40400000 0x2000>;
-+	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "macirq", "eth_wake_irq";
-+	mac-address = [000000000000]; /* Filled in by U-Boot */
-+	phy-mode = "rgmii";
-+
-+	clocks = <&stdclk CLK_820_ETHA>, <&gmacclk>;
-+	clock-names = "gmac", "stmmaceth";
-+	resets = <&reset RESET_MAC>;
-+
-+	/* Regmap for sys registers */
-+	oxsemi,sys-ctrl = <&sys>;
-+
-+	status = "disabled";
-+};
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1cd38a7..29d8853 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1478,8 +1478,9 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ L:	linux-oxnas-Xt5XgHjqiBU06sgRBLv0+0B+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-oxnas/
+-F:	arch/arm/boot/dts/oxnas*
++F:	arch/arm/boot/dts/ox8*.dtsi
+ F:	arch/arm/boot/dts/wd-mbwe.dts
++F:	arch/arm/boot/dts/cloudengines-pogoplug-series-3.dts
+ N:	oxnas
+ 
+ ARM/Mediatek RTC DRIVER
 -- 
 2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
