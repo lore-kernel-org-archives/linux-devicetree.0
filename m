@@ -1,92 +1,67 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RESEND/PATCH v6 3/3] clk: qcom: Add A53 clock driver
-Date: Wed, 2 Nov 2016 15:55:20 -0700
-Message-ID: <20161102225520.GW16026@codeaurora.org>
-References: <20161019132816.31073-4-georgi.djakov@linaro.org>
- <20161028015438.GG16026@codeaurora.org>
- <20161102205910.GQ25787@tuxbot>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4] pinctrl: qcom: Add msm8994 pinctrl driver
+Date: Wed, 2 Nov 2016 16:22:53 -0700
+Message-ID: <ab5de67d-1e63-53ef-2dbf-1df90262e4ba@redhat.com>
+References: <20161031160009.20472-1-michael.scott@linaro.org>
+ <20161101235344.GX16026@codeaurora.org>
+ <e0bdce76-dcab-36c9-bf39-6c79b1cb2820@linaro.org>
+ <20161102183607.GJ16026@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161102205910.GQ25787@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161102183607.GJ16026-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joonwoo Park <joonwoop-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02, Bjorn Andersson wrote:
-> On Thu 27 Oct 18:54 PDT 2016, Stephen Boyd wrote:
-> 
-> > On 10/19, Georgi Djakov wrote:
-> > > Add a driver for the A53 Clock Controller. It is a hardware block that
-> > > implements a combined mux and half integer divider functionality. It can
-> > > choose between a fixed-rate clock or the dedicated A53 PLL. The source
-> > > and the divider can be set both at the same time.
-> > > 
-> > > This is required for enabling CPU frequency scaling on platforms like
-> > > MSM8916.
-> > > 
-> > 
-> > Please Cc DT reviewers.
-> > 
-> > > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > > ---
-> > >  .../devicetree/bindings/clock/qcom,a53cc.txt       |  22 +++
-> > >  drivers/clk/qcom/Kconfig                           |   8 ++
-> > >  drivers/clk/qcom/Makefile                          |   1 +
-> > >  drivers/clk/qcom/a53cc.c                           | 155 +++++++++++++++++++++
-> > >  4 files changed, 186 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> > >  create mode 100644 drivers/clk/qcom/a53cc.c
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> > > new file mode 100644
-> > > index 000000000000..a025f062f177
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> > > @@ -0,0 +1,22 @@
-> > > +Qualcomm A53 CPU Clock Controller Binding
-> > > +------------------------------------------------
-> > > +The A53 CPU Clock Controller is hardware, which provides a combined
-> > > +mux and divider functionality for the CPU clocks. It can choose between
-> > > +a fixed rate clock and the dedicated A53 PLL.
-> > > +
-> > > +Required properties :
-> > > +- compatible : shall contain:
-> > > +
-> > > +			"qcom,a53cc"
-> > > +
-> > > +- reg : shall contain base register location and length
-> > > +	of the APCS region
-> > > +- #clock-cells : shall contain 1
-> > > +
-> > > +Example:
-> > > +
-> > > +	apcs: syscon@b011000 {
-> > > +		compatible = "qcom,a53cc", "syscon";
-> > 
-> > Why is it a syscon? Is that part used?
-> > 
-> 
-> I use the register at offset 8 for interrupting the other subsystems, so
-> this must be available as something I can poke.
-> 
-> Which makes me think that this should be described as a "simple-mfd" and
-> "syscon" with the a53cc node as a child - grabbing the regmap of the
-> syscon parent, rather then ioremapping the same region again.
-> 
+On 2016-11-02 11:36 AM, Stephen Boyd wrote:
+> On 11/01, Michael Scott wrote:
+>>
+>> On 11/01/2016 04:53 PM, Stephen Boyd wrote:
+>>> On 10/31, Michael Scott wrote:
+>>>> +
+>>>> +static const struct msm_pingroup msm8994_groups[] = {
+>>>> +	PINGROUP(0,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
+>>>> +		 NA, NA),
+>>> I see an hdmi_rcv group here after blsp_uim1. Please add it for
+>>> this gpio.
+>>
+>> Hi Stephen,
+>>
+>> Thank you for reviewing the data-- this is really tedious stuff.
+>>
+>> I'd like to make sure that we're both using tech data for msm8994.
+>> I don't see the hdmi_rcv function at all in my docs.
+>>
+>>>
+>>>> +	PINGROUP(1,   blsp_spi1, blsp_uart1, blsp_uim1, NA, NA, NA, NA, NA, NA,
+>>>> +		 NA, NA),
+>>>> +	PINGROUP(2,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
+>>>> +		 NA, NA),
+>>>> +	PINGROUP(3,   blsp_spi1, blsp_uart1, blsp_i2c1, NA, NA, NA, NA, NA, NA,
+>>>> +		 NA, NA),
+>>>> +	PINGROUP(4,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_out_b,
+>>>> +		 NA, NA, NA, NA, NA, NA, NA),
+>>>> +	PINGROUP(5,   blsp_spi2, blsp_uart2, blsp_uim2, qdss_cti_trig_in_b, NA,
+>>> The qdss_cti_* is in function 5 for both of these, not function
+>>> 4.
+>> These are indeed wrong, but my docs both show as function 7.
+>
+> Ok. I think your document is for 8994v1, which never got
+> commercialized. I certainly see that this function assignment
+> changed between v1 and v2 from 7 to 5.
+>
 
-That's sort of a question for DT reviewers. The register space
-certainly seems like a free for all with a tilt toward power
-management of the CPU, similar to how this was done on Krait
-based designs.
 
-I wonder why we didn't make up some provider/consumer binding for
-the "kicking" feature used by SMD/RPM code. Then this could be a
-clock provider and a "kick" provider (haha #kick-cells) and the
-usage of syscon/regmap wouldn't be mandatory.
+This is a case where not having the docs and only downstream code as a
+reference is probably a good thing (tm), although the downstream code
+may end up hurting more than helping.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-jeremy
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
