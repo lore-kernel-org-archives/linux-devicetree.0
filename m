@@ -1,65 +1,62 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: [PATCH] ARM: DTS: r8a7794: alt: Fix PCF names for DU
-Date: Thu,  3 Nov 2016 14:42:54 +0100
-Message-ID: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3 1/6] clk: tegra: add TEGRA20_CLK_NOR to init table
+Date: Thu, 3 Nov 2016 13:45:04 +0000
+Message-ID: <db982af8-28e1-bc63-3272-d40cb640dd45@nvidia.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
+ <1477576872-2665-2-git-send-email-mirza.krak@gmail.com>
+ <df12a1f0-316d-64a4-54fe-f7559742eeca@nvidia.com>
+ <CALw8SCWyLAw=yZ-W_nAFuDAazpa4HJfZuzqLDKQKYLWjV5JzYw@mail.gmail.com>
+ <CALw8SCWC7RmNLVv4vxO9xw3jHVkgCaevbL61sJcpcva9CiaAVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CALw8SCWC7RmNLVv4vxO9xw3jHVkgCaevbL61sJcpcva9CiaAVQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mirza Krak <mirza.krak@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux@armlinux.org.uk, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the PCF pin groups and function names of DU interface for
-r8a7794 ALT board.
 
-The currently specified pin groups and function names prevented PCF and
-DU interfaces from being correctly configured:
+On 03/11/16 12:30, Mirza Krak wrote:
+> 2016-11-03 13:26 GMT+01:00 Mirza Krak <mirza.krak@gmail.com>:
+>> 2016-11-03 11:06 GMT+01:00 Jon Hunter <jonathanh@nvidia.com>:
+>>> Hi Mirza,
+>>>
+>>> On 27/10/16 15:01, Mirza Krak wrote:
+>>>>
+>>>> From: Mirza Krak <mirza.krak@gmail.com>
+>>>>
+>>>> Add TEGRA20_CLK_NOR to init table and set default rate to 92 MHz which
+>>>> is max rate.
+>>>>
+>>>> The maximum rate value of 92 MHz is pulled from the downstream L4T
+>>>> kernel.
+>>>
+>>>
+>>> Thanks for adding this. I assume that this is from an L4T r16 release with a
+>>> v3.1 kernel. I had a quick poke through the kernel sources for v3.1 but was
+>>> unable to see where this is set. Obviously v3.1 did not have CCF and so
+>>> everything seems to be in the arch/arm/mach-tegra directory for setting up
+>>> clocks. Can you point me to the appropriate sources so I can ACK this?
+>>
+>> I use the kernel sources provided by Toradex, and these sources are
+>> based on L4T r16 release.
+>>
+>> http://git.toradex.com/cgit/linux-toradex.git/tree/arch/arm/mach-tegra/tegra2_clocks.c?h=tegra#n2463
+>
+> Ops, pre-mature send.
+>
+> I also added Marcel from Toradex on CC.
+>
+> The link to the source are [1] for Tegra2 and  [2] for Tegra3.
+>
+> [1]. http://git.toradex.com/cgit/linux-toradex.git/tree/arch/arm/mach-tegra/tegra2_clocks.c?h=tegra#n2463
+> [2]. http://git.toradex.com/cgit/linux-toradex.git/tree/arch/arm/mach-tegra/tegra3_clocks.c?h=tegra#n4353
 
-sh-pfc e6060000.pin-controller: function 'du' not supported
-sh-pfc e6060000.pin-controller: invalid function du in map table
-sh-pfc e6060000.pin-controller: function 'du' not supported
-sh-pfc e6060000.pin-controller: invalid function du in map table
-sh-pfc e6060000.pin-controller: function 'du' not supported
-sh-pfc e6060000.pin-controller: invalid function du in map table
-sh-pfc e6060000.pin-controller: function 'du' not supported
-sh-pfc e6060000.pin-controller: invalid function du in map table
-rcar-du: probe of feb00000.display failed with error -22
+Great. Yes I see the same. Thanks!
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
+Jon
 
-Patch applied against Simon Horman's renesas/master branch.
-The PCF pin groups and function renaming was introduced by commit 56ed4bb9 and
-DTS for ALT board has never been update accordingly.
-Tested displaying frames on VGA interface: the rcar-du driver loads correctly.
-
- arch/arm/boot/dts/r8a7794-alt.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-index 8d1b35a..9d65fb3 100644
---- a/arch/arm/boot/dts/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-@@ -165,8 +165,8 @@
- 	pinctrl-names = "default";
- 
- 	du_pins: du {
--		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_dotclkout0";
--		function = "du";
-+		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_clk0_out";
-+		function = "du1";
- 	};
- 
- 	scif2_pins: scif2 {
 -- 
-2.7.4
+nvpublic
