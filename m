@@ -1,94 +1,74 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH v2 04/14] ASoC: sun4i-codec: Increase DMA
- max burst to 8
-Date: Thu, 03 Nov 2016 10:42:59 +0200
-Message-ID: <1478162579.8841.1.camel@plaes.org>
-References: <20161103075556.29018-1-wens@csie.org>
-	 <20161103075556.29018-5-wens@csie.org>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 09/13] mmc: dw_mmc: remove the "clock-freq-min-max" property
+Date: Thu, 03 Nov 2016 17:42:30 +0900
+Message-ID: <5e85773f-0af1-fcd9-1430-0a36c8f868b5@samsung.com>
+References: <20161103062135.10697-1-jh80.chung@samsung.com>
+ <20161103062135.10697-10-jh80.chung@samsung.com>
+ <CGME20161103082058epcas4p130e9419cefd2a5bb5626781d94acaa07@epcas4p1.samsung.com>
+ <20823767.hqlyMd1aKN@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDJLTBEBXENBBFPR5PAAKGQEBH6SWCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161103075556.29018-5-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: wens-jdAy2FN1RRM@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20823767.hqlyMd1aKN@diego>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-11-03 at 15:55 +0800, Chen-Yu Tsai wrote:
-> According to the DMA engine API documentation, maxburst denotes the
-> largest possible size of a single transfer, so as not to overflow
-> destination FIFOs as explained in this excerpt from dmaengine.h
->=20
-> =C2=A0* @src_maxburst: the maximum number of words (note: words, as in
-> =C2=A0* units of the src_addr_width member, not bytes) that can be sent
-> =C2=A0* in one burst to the device. Typically something like half the
-> =C2=A0* FIFO depth on I/O peripherals so you don't overflow it. This
-> =C2=A0* may or may not be applicable on memory sources.
-> =C2=A0* @dst_maxburst: same as src_maxburst but for destination target
+Hi Heiko.
 
-> =C2=A0* mutatis mutandis.
+On 11/03/2016 05:20 PM, Heiko Stübner wrote:
+> Hi Jaehoon,
+> 
+> Am Donnerstag, 3. November 2016, 15:21:31 schrieb Jaehoon Chung:
+>> Remove the "clock-freq-min-max" property.
+>> There is "max-frequency" property in drivers/mmc/core/host.c
+>> It can be used for getting maximum frequency.
+>>
+>> And minimum clock value is assigned to 100K by default.
+>> Because MMC core should check the initial clock value from
+>> 400K to 100K until finding correct value.
+>> It's why Minimum value puts 100K by default.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt |  3 ---
+>>  drivers/mmc/host/dw_mmc.c                                  | 13
+>> ++++--------- 2 files changed, 4 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>> b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt index
+>> 4e00e85..21c8251 100644
+>> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>> @@ -56,9 +56,6 @@ Optional properties:
+>>    is specified and the ciu clock is specified then we'll try to set the ciu
+>> clock to this at probe time.
+>>
+>> -* clock-freq-min-max: Minimum and Maximum clock frequency for card output
+>> -  clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz
+>> by default. -
+> 
+> I'd think devicetree people will protest about simply removing this property 
+> without deprecating it first - to be backwards compatible with old devicetrees.
+> 
+> Especially as this property was added already back in 2013, so has been in use 
+> for quite some time.
 
-^^ :)
+Thanks for pointing out. I will resend the patchset with changing this.
+And maintain the backwards compatible.
 
->=20
-> The TX FIFO is 64 samples deep for stereo, and the RX FIFO is 16
-> samples deep. So maxburst could be 32 and 8 for TX and RX
-> respectively.
->=20
-> Unfortunately the sunxi DMA controller driver takes maxburst as
-> the requested burst size, rather than a limit, and returns an error
-> for unsupported values. The original value was 4, but some later
-> SoCs do not officially support this burst size.
->=20
-> This patch increases maxburst on the TX side to 8, which is supported
-> by all variants of the sunxi DMA controller.
->=20
-> Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> =C2=A0sound/soc/sunxi/sun4i-codec.c | 4 ++--
-> =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-
-> codec.c
-> index 61ae502a5061..d867b96d367b 100644
-> --- a/sound/soc/sunxi/sun4i-codec.c
-> +++ b/sound/soc/sunxi/sun4i-codec.c
-> @@ -886,12 +886,12 @@ static int sun4i_codec_probe(struct
-> platform_device *pdev)
-> =C2=A0
-> =C2=A0	/* DMA configuration for TX FIFO */
-> =C2=A0	scodec->playback_dma_data.addr =3D res->start + quirks-
-> >reg_dac_txdata;
-> -	scodec->playback_dma_data.maxburst =3D 4;
-> +	scodec->playback_dma_data.maxburst =3D 8;
-> =C2=A0	scodec->playback_dma_data.addr_width =3D
-> DMA_SLAVE_BUSWIDTH_2_BYTES;
-> =C2=A0
-> =C2=A0	/* DMA configuration for RX FIFO */
-> =C2=A0	scodec->capture_dma_data.addr =3D res->start + quirks-
-> >reg_adc_rxdata;
-> -	scodec->capture_dma_data.maxburst =3D 4;
-> +	scodec->capture_dma_data.maxburst =3D 8;
-> =C2=A0	scodec->capture_dma_data.addr_width =3D
-> DMA_SLAVE_BUSWIDTH_2_BYTES;
-> =C2=A0
-> =C2=A0	ret =3D snd_soc_register_codec(&pdev->dev, quirks->codec,
-> --=C2=A0
-> 2.10.2
->=20
+Best Regards,
+Jaehoon Chung
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> 
+> Heiko
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
