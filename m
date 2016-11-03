@@ -1,123 +1,53 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH 1/6] arm64: dts: msm8992 SoC and LG Bullhead (Nexus 5X)
- support
-Date: Wed, 2 Nov 2016 16:59:17 -0700
-Message-ID: <be8df858-d427-c2f0-15a8-43cb2ee192a5@redhat.com>
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/6] dt-bindings: qcom: clocks: Add msm8994 clock bindings
+Date: Wed, 2 Nov 2016 17:01:43 -0700
+Message-ID: <b8aa5e01-cdc1-be9e-9852-1f056d75addf@redhat.com>
 References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-2-git-send-email-jeremymc@redhat.com>
- <20161028001153.GJ26139@codeaurora.org>
+ <1477394221-30963-3-git-send-email-jeremymc@redhat.com>
+ <20161028000811.GI26139@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161028001153.GJ26139@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161028000811.GI26139-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-27 5:11 PM, Stephen Boyd wrote:
+On 2016-10-27 5:08 PM, Stephen Boyd wrote:
 > On 10/25, Jeremy McNicoll wrote:
->> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
->> index 5dd05de..439e40e 100644
->> --- a/arch/arm64/boot/dts/qcom/Makefile
->> +++ b/arch/arm64/boot/dts/qcom/Makefile
->> @@ -1,6 +1,8 @@
->> -dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
->> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
->
-> This is unrelated. Perhaps make another patch to "correct" it.
->
-
-I rolled it into this change series as I was asked in previous feedback
-to make them 1 per line.
-
->>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
->> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/clock/qcom,gcc.txt         |   2 +
+>>  include/dt-bindings/clock/qcom,gcc-msm8994.h       | 145 +++++++++++++++++++++
+>>  2 files changed, 147 insertions(+)
+>>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8994.h
 >>
->>  always		:= $(dtb-y)
->>  subdir-y	:= $(dts-dirs)
->> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
->> new file mode 100644
->> index 0000000..8bbf4f3
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
->> @@ -0,0 +1,191 @@
->> +
->> +	soc: soc {
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> index 3cf4421..58c7e76 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>> @@ -14,6 +14,8 @@ Required properties :
+>>  			"qcom,gcc-msm8974"
+>>  			"qcom,gcc-msm8974pro"
+>>  			"qcom,gcc-msm8974pro-ac"
+>> +			"qcom,gcc-msm8994"
+>> +			"qcom,gcc-msm8994v2"
 >
-> Do we need the soc phandle? If it isn't used we should leave it
-> out.
->
-
-What about doing something like:
-
-8992soc: soc {
-
-This will allow it to be overriden.  Or would it be best to add it when
-someone wants / needs to override it.
-
->> +
->> +		clock_gcc: qcom,gcc@fc400000 {
->
-> s/qcom,gcc/clock-controller/
->
-
-done.
+> Just drop the v2 and treat it like gcc-msm8994.
 
 
-> Also we typically just give it a "gcc" phandle to be terse.
-
-is clock_gcc not a little more descriptive from a human perspective?
-
-Sometimes being terse is hard for humans to parse.
-
->
->> +			compatible = "qcom,gcc-8994";
->
-> qcom,gcc-msm8994
-
-
-agreed.
-
-
->
->> +			#clock-cells = <1>;
->> +			#reset-cells = <1>;
->> +			#power-domain-cells = <1>;
->> +			reg = <0xfc400000 0x2000>;
->> +		};
->> +	};
->> +
->> +	memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +
->> +		device_type = "memory";
->> +		reg = <0 0 0 0>; // bootloader will update
->> +	};
->> +
->> +	clocks {
->> +		xo_board: xo_board {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <19200000>;
->> +			clock-output-names = "xo_board";
->> +		};
->> +
->> +		sleep_clk: sleep_clk {
->> +			compatible = "fixed-clock";
->> +			#clock-cells = <0>;
->> +			clock-frequency = <32768>;
->> +			clock-output-names = "sleep_clk";
->
-> clock-output-names can be removed because we use the same string
-> as the node name.
->
-
-one less line works for me.
+Right got it, so the 8994v2 is really the 8994.
 
 -jeremy
+>
+>>  			"qcom,gcc-msm8996"
+>>  			"qcom,gcc-mdm9615"
+>>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
