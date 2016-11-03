@@ -1,49 +1,80 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: base: Export symbol of __of_find_all_nodes()
-Date: Thu, 3 Nov 2016 09:16:12 -0500
-Message-ID: <CAL_JsqLMfKNUxgYLSePAD7msW+nVdze3LgNrUMXMY1BfYkzs0A@mail.gmail.com>
-References: <1477654092-12406-1-git-send-email-ldewangan@nvidia.com>
- <CAL_JsqJnAzJDeTS1Sr2H66++78zF+8wJfN8iYAQ3sbxJw1Axdw@mail.gmail.com> <581ACA0B.3010107@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv3 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
+Date: Thu, 3 Nov 2016 14:39:23 +0000
+Message-ID: <20161103143923.GZ13127@dell>
+References: <1478097178-24341-1-git-send-email-tthayer@opensource.altera.com>
+ <1478097178-24341-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <581ACA0B.3010107-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478097178-24341-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@opensource.altera.com, linux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org, davem@davemloft.net, geert@linux-m68k.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 3, 2016 at 12:24 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On Thursday 03 November 2016 09:09 AM, Rob Herring wrote:
->>
->> On Fri, Oct 28, 2016 at 6:28 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> wrote:
->>>
->>> The function __of_find_all_nodes() is used in the public header
->>> linux/of.h and if any driver developed using this API then
->>> it reports error as unknown symbol if compiled as module.
->>>
->>> Export this APIs using EXPORT_SYMBOL() so that it can be used
->>> from driver compiled as module.
->>
->> What driver needs this? This isn't really a function I'd expect drivers to
->> use.
->>
->
-> I am using the for loop for each node using the macro
-> for_each_of_allnodes_from() which is define as
->
-> #define for_each_of_allnodes_from(from, dn) \
->         for (dn = __of_find_all_nodes(from); dn; dn =
-> __of_find_all_nodes(dn))
->
-> and this is using the above APIs.
+On Wed, 02 Nov 2016, tthayer@opensource.altera.com wrote:
 
-And then what driver is using this define?
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> Add the Arria10 DevKit System Resource Chip register and state
+> monitoring module to the MFD.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> Note: This needs to be applied to the bindings document that
+> was Acked & Applied but didn't reach the for-next branch.
+> See https://patchwork.ozlabs.org/patch/629397/
+> ---
+> v2  Change compatible string -mon to -monitor for clarity
+> v3  Replace node name a10sr_monitor with just monitor.
+>     Replace node name a10sr_gpio with just gpio.
+> ---
+>  Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> index ea151f2..69243d2 100644
+> --- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> @@ -17,7 +17,8 @@ The A10SR consists of these sub-devices:
+>  
+>  Device                   Description
+>  ------                   ----------
+> -a10sr_gpio               GPIO Controller
+> +gpio                     GPIO Controller
+> +monitor                  Register and State Monitoring
+>  
+>  Arria10 GPIO
+>  Required Properties:
+> @@ -27,6 +28,10 @@ Required Properties:
+>                        the second cell is used to specify flags.
+>                        See ../gpio/gpio.txt for more information.
+>  
+> +Arria10 Register and State Monitor
+> +Required Properties:
+> +- compatible        : Should be "altr,a10sr-monitor"
+> +
+>  Example:
+>  
+>          resource-manager@0 {
+> @@ -43,4 +48,8 @@ Example:
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
+>  		};
+> +
+> +		monitor {
+> +			compatible = "altr,a10sr-monitor";
+> +		};
+>  	};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
