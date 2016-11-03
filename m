@@ -1,71 +1,64 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 2/5] pinctrl: samsung: Add GPF support for Exynos5433
-Date: Thu, 3 Nov 2016 21:20:02 +0200
-Message-ID: <20161103192002.GB12945@kozik-lap>
-References: <1478155149-28527-1-git-send-email-cw00.choi@samsung.com>
- <1478155149-28527-3-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478155149-28527-3-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: krzk@kernel.org, kgene@kernel.org, javier@osg.samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, andi.shyti@samsung.com, chanwoo@kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+From: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] ARM: DTS: r8a7794: alt: Fix PFC names for DU
+Date: Thu,  3 Nov 2016 20:34:46 +0100
+Message-ID: <1478201686-25488-1-git-send-email-jacopo@jmondi.org>
+References: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478180574-15464-1-git-send-email-jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 03:39:06PM +0900, Chanwoo Choi wrote:
-> This patch add the support of GPF[1-5] pin of Exynos5433 SoC. The GPFx need
-> to support the multiple memory map because the registers of GPFx are located
-> in the different domain.
-> 
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/pinctrl/samsung/pinctrl-exynos.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Update the PFC pin groups and function names of DU interface for
+r8a7794 ALT board.
 
-I think that, instead of in previous patch, the
-"samsung,exynos5433-pinctrl" compatible should be documented here along
-with information that it requires two addresses for mappings.
+The currently specified pin groups and function names prevented PFC and
+DU interfaces from being correctly configured:
 
-Best regards,
-Krzysztof
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+rcar-du: probe of feb00000.display failed with error -22
 
+Signed-off-by: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+---
 
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> index d657b52dfdb5..12f7d1eb65bc 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -1339,6 +1339,11 @@ static void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
->  	EXYNOS_PIN_BANK_EINTW(8, 0x020, "gpa1", 0x04),
->  	EXYNOS_PIN_BANK_EINTW(8, 0x040, "gpa2", 0x08),
->  	EXYNOS_PIN_BANK_EINTW(8, 0x060, "gpa3", 0x0c),
-> +	EXYNOS_PIN_BANK_EINTW_EXT(8, 0x020, "gpf1", 0x1004, 1),
-> +	EXYNOS_PIN_BANK_EINTW_EXT(4, 0x040, "gpf2", 0x1008, 1),
-> +	EXYNOS_PIN_BANK_EINTW_EXT(4, 0x060, "gpf3", 0x100c, 1),
-> +	EXYNOS_PIN_BANK_EINTW_EXT(8, 0x080, "gpf4", 0x1010, 1),
-> +	EXYNOS_PIN_BANK_EINTW_EXT(8, 0x0a0, "gpf5", 0x1014, 1),
->  };
->  
->  /* pin banks of exynos5433 pin-controller - AUD */
-> @@ -1420,6 +1425,7 @@ static void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
->  		.eint_wkup_init = exynos_eint_wkup_init,
->  		.suspend	= exynos_pinctrl_suspend,
->  		.resume		= exynos_pinctrl_resume,
-> +		.nr_ext_resources = 1,
->  	}, {
->  		/* pin-controller instance 1 data */
->  		.pin_banks	= exynos5433_pin_banks1,
-> -- 
-> 1.9.1
-> 
+v1->v2:
+    - s/PCF/PFC/ in commit message according to Sergei Shtylyov's comment
+
+Patch applied against Simon Horman's renesas/master branch.
+The PCF pin groups and function renaming was introduced by commit 56ed4bb9 and
+DTS for ALT board has never been update accordingly.
+Tested displaying frames on VGA interface: the rcar-du driver loads correctly.
+
+ arch/arm/boot/dts/r8a7794-alt.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+index 8d1b35a..9d65fb3 100644
+--- a/arch/arm/boot/dts/r8a7794-alt.dts
++++ b/arch/arm/boot/dts/r8a7794-alt.dts
+@@ -165,8 +165,8 @@
+ 	pinctrl-names = "default";
+ 
+ 	du_pins: du {
+-		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_dotclkout0";
+-		function = "du";
++		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_clk0_out";
++		function = "du1";
+ 	};
+ 
+ 	scif2_pins: scif2 {
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
