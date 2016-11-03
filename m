@@ -1,35 +1,151 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC PATCH 00/10] ARM: dts: exynos: Fix invalid GIC interrupt
- flags
-Date: Thu, 3 Nov 2016 23:21:47 +0200
-Message-ID: <20161103212147.GA15161@kozik-lap>
-References: <1474054971-16831-1-git-send-email-krzk@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v10 03/11] remoteproc: Update Kconfig setup to 'depends
+ on REMOTEPROC'
+Date: Thu, 3 Nov 2016 14:24:39 -0700
+Message-ID: <20161103212439.GS25787@tuxbot>
+References: <1475931154-1021-1-git-send-email-peter.griffin@linaro.org>
+ <1475931154-1021-4-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1474054971-16831-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1475931154-1021-4-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Alban Browaeys <alban.browaeys@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>
+To: vinod.koul@intel.com, Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, dan.j.williams@intel.com, patrice.chotard@st.com, ohad@wizery.com, arnaud.pouliquen@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2016 at 09:42:41PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> Marek (internally), Geert and Alban reported errors like:
-> 	genirq: Setting trigger mode 0 for irq 16 failed (gic_set_type+0x0/0x68)
-> The patchset fixes this issue.
-> 
-> Tested on:
-> 1. Exynos4412: Odroid U3,
-> 2. Exynos5410: Odroid XU,
-> 3. Exynos5422: Odroid XU3.
-> 
-> Other platforms not tested so testing would be highly appreciated.
+On Sat 08 Oct 05:52 PDT 2016, Peter Griffin wrote:
 
-Applied entire patchset for v4.10. Let it boil for some time in
-linux-next.
+> Make REMOTEPROC core a selectable kconfig option, and update
+> remoteproc client drivers to 'depends on' the core. This avoids
+> some nasty Kconfig recursive dependency issues. Also when using
+> menuconfig client drivers will be hidden until the core has been
+> enabled.
+> 
+> Documentation/kbuild/kconfig-language.txt:
+> 
+>   Note:
+>         select should be used with care. select will force
+>         a symbol to a value without visiting the dependencies.
+>         By abusing select you are able to select a symbol FOO even
+>         if FOO depends on BAR that is not set.
+>         In general use select only for non-visible symbols
+>         (no prompts anywhere) and for symbols with no dependencies.
+>         That will limit the usefulness but on the other hand avoid
+>         the illegal configurations all over.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 
-Best regards,
-Krzysztof
+Sorry, I missed this patch in the set - but spotted it in linux-next.
+
+I still don't like the change, but remoteproc has dependencies so I
+guess I have to pick it until we fix that.
+
+It's however not okay to take this patch through the DMA tree, as it
+effectively stops me from introducing any changes in the rproc tree.
+Further more, it's not based on v4.9, so it currently introduces another
+Kconfig dependency problem - that I can't fix in my tree without
+conflicting with Vinod's.
+
+
+So, Vinod, can you please drop this patch from your tree? I'll pick it
+up for now.
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/remoteproc/Kconfig | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index a7bedc6..decdcbe 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -1,20 +1,21 @@
+>  menu "Remoteproc drivers"
+>  
+> -# REMOTEPROC gets selected by whoever wants it
+>  config REMOTEPROC
+> -	tristate
+> +	tristate "Support for Remote Processor subsystem"
+>  	depends on HAS_DMA
+>  	select CRC32
+>  	select FW_LOADER
+>  	select VIRTIO
+>  	select VIRTUALIZATION
+>  
+> +if REMOTEPROC
+> +
+>  config OMAP_REMOTEPROC
+>  	tristate "OMAP remoteproc support"
+>  	depends on HAS_DMA
+>  	depends on ARCH_OMAP4 || SOC_OMAP5
+>  	depends on OMAP_IOMMU
+> -	select REMOTEPROC
+> +	depends on REMOTEPROC
+>  	select MAILBOX
+>  	select OMAP2PLUS_MBOX
+>  	select RPMSG
+> @@ -34,7 +35,7 @@ config OMAP_REMOTEPROC
+>  config STE_MODEM_RPROC
+>  	tristate "STE-Modem remoteproc support"
+>  	depends on HAS_DMA
+> -	select REMOTEPROC
+> +	depends on REMOTEPROC
+>  	default n
+>  	help
+>  	  Say y or m here to support STE-Modem shared memory driver.
+> @@ -44,7 +45,7 @@ config STE_MODEM_RPROC
+>  config WKUP_M3_RPROC
+>  	tristate "AMx3xx Wakeup M3 remoteproc support"
+>  	depends on SOC_AM33XX || SOC_AM43XX
+> -	select REMOTEPROC
+> +	depends on REMOTEPROC
+>  	help
+>  	  Say y here to support Wakeup M3 remote processor on TI AM33xx
+>  	  and AM43xx family of SoCs.
+> @@ -57,8 +58,8 @@ config WKUP_M3_RPROC
+>  config DA8XX_REMOTEPROC
+>  	tristate "DA8xx/OMAP-L13x remoteproc support"
+>  	depends on ARCH_DAVINCI_DA8XX
+> +	depends on REMOTEPROC
+>  	select CMA if MMU
+> -	select REMOTEPROC
+>  	select RPMSG
+>  	help
+>  	  Say y here to support DA8xx/OMAP-L13x remote processors via the
+> @@ -84,9 +85,9 @@ config QCOM_Q6V5_PIL
+>  	tristate "Qualcomm Hexagon V5 Peripherial Image Loader"
+>  	depends on OF && ARCH_QCOM
+>  	depends on QCOM_SMEM
+> +	depends on REMOTEPROC
+>  	select MFD_SYSCON
+>  	select QCOM_MDT_LOADER
+> -	select REMOTEPROC
+>  	help
+>  	  Say y here to support the Qualcomm Peripherial Image Loader for the
+>  	  Hexagon V5 based remote processors.
+> @@ -94,7 +95,7 @@ config QCOM_Q6V5_PIL
+>  config ST_REMOTEPROC
+>  	tristate "ST remoteproc support"
+>  	depends on ARCH_STI
+> -	select REMOTEPROC
+> +	depends on REMOTEPROC
+>  	help
+>  	  Say y here to support ST's adjunct processors via the remote
+>  	  processor framework.
+> @@ -102,6 +103,8 @@ config ST_REMOTEPROC
+>  
+>  config ST_SLIM_REMOTEPROC
+>  	tristate
+> -	select REMOTEPROC
+> +	depends on REMOTEPROC
+> +
+> +endif # REMOTEPROC
+>  
+>  endmenu
+> -- 
+> 1.9.1
+> 
