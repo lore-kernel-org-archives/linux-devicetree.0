@@ -1,71 +1,63 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
- support
-Date: Thu, 3 Nov 2016 16:04:29 -0700
-Message-ID: <20161103230429.GW25787@tuxbot>
-References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
- <20161028000656.GH26139@codeaurora.org>
- <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
- <20161103223246.GA5135@hector>
- <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v2 3/6] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LPCHC)
+Date: Fri, 4 Nov 2016 09:36:29 +1030
+Message-ID: <CACPK8XezumurK6TStNhmTnHdhoJuZBzkJrS3iOArKz1tf1=nLw@mail.gmail.com>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au> <1478097481-14895-4-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Jeremy McNicoll <jmcnicol@redhat.com>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, arnd@arndb.de, mark.rutland@arm.com, michael.scott@linaro.org, Bastian K?cher <mail@kchr.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1478097481-14895-4-git-send-email-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 03 Nov 15:42 PDT 2016, Stephen Boyd wrote:
+On Thu, Nov 3, 2016 at 1:07 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> The Aspeed LPC Host Controller is presented as a syscon device to
+> arbitrate access by LPC and pinmux drivers. LPC pinmux configuration on
+> fifth generation SoCs depends on bits in both the System Control Unit
+> and the LPC Host Controller.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> new file mode 100644
+> index 000000000000..792651488c3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> @@ -0,0 +1,17 @@
+> +* Device tree bindings for the Aspeed LPC Host Controller (LPCHC)
 
-> On 11/03/2016 03:32 PM, Andy Gross wrote:
-> > On Thu, Oct 27, 2016 at 05:54:01PM -0700, Jeremy McNicoll wrote:
-> >> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
-> >>> On 10/25, Jeremy McNicoll wrote:
-> >>>> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> >>>> new file mode 100644
-> >>>> index 0000000..2fc68c4
-> >>>> --- /dev/null
-> >>>> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> >>>> @@ -0,0 +1,40 @@
-> >>>> +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
-> >>>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> >>>> + *
-> >>>> + * This program is free software; you can redistribute it and/or modify
-> >>>> + * it under the terms of the GNU General Public License version 2 and
-> >>>> + * only version 2 as published by the Free Software Foundation.
-> >>>> + *
-> >>>> + * This program is distributed in the hope that it will be useful,
-> >>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >>>> + * GNU General Public License for more details.
-> >>>> + */
-> >>>> +
-> >>>> +/dts-v1/;
-> >>>> +
-> >>>> +#include "msm8994-v2.0.dtsi"
-> >>>> +
-> >>>> +/ {
-> >>>> +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
-> >>>> +	compatible = "qcom,msm8994";
-> >>> Please replace this with something more specific for the actual
-> >>> board. Preferably with the board manufacturer vendor prefix and
-> >>> some sort of string for the board.
-> > Something like?
-> >
-> > "huawei,nexus-6P", "qcom,msm8994"
-> 
-> Sure, except completely remove qcom,msm8994 from there.
+I had to check the data sheet for that acronym. They call the
+registers LHC. I somewhat prefer that name, but if you're happy with
+it as-is then that's fine.
 
-Why? So far we have always used the form <device>, <platform> as
-compatible. This is even in line with ePAPR, what changed?
+I assume this is not an issue on the g4/ast2400?
 
-Also, the compatible should be "huawei,angler" (if I read the internet
-correctly) and the model should contain the product name
-(Huawei Nexus 6P).
+> +
+> +The LPCHC registers configure LPC behaviour between the BMC and the host
+> +system. The LPCHC also participates in pinmux requests on g5 SoCs and is
+> +therefore considered a syscon device.
+> +
+> +Required properties:
+> +- compatible:          "aspeed,ast2500-lpchc", "syscon"
+> +- reg:                 contains offset/length value of the LPCHC memory
+> +                       region.
+> +
+> +Example:
+> +
+> +lpchc: lpchc@1e7890a0 {
+> +       compatible = "aspeed,ast2500-lpchc", "syscon";
+> +       reg = <0x1e7890a0 0xc4>;
 
-Regards,
-Bjorn
+Where's the 0xc4 come from? I can see 9 registers, which would mean
+the length should be 0x24?
+
+Cheers,
+
+Joel
