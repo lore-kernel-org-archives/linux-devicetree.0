@@ -1,80 +1,89 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv3 1/4] dt-bindings: mfd: Add Altera Arria10 SR Monitor
-Date: Thu, 3 Nov 2016 14:39:23 +0000
-Message-ID: <20161103143923.GZ13127@dell>
-References: <1478097178-24341-1-git-send-email-tthayer@opensource.altera.com>
- <1478097178-24341-2-git-send-email-tthayer@opensource.altera.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v2] of, numa: Return NUMA_NO_NODE from disable
+ of_node_to_nid() if nid not possible.
+Date: Thu, 3 Nov 2016 08:11:05 -0700
+Message-ID: <93b7769a-4907-176e-9f18-0bf6bd72d15d@caviumnetworks.com>
+References: <1477689302-32671-1-git-send-email-ddaney.cavm@gmail.com>
+ <CAL_JsqKnXk99SUa1cjC2QFA9rizjn4=JHZh3ua_gvcOtpGx8jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478097178-24341-2-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@opensource.altera.com, linux@armlinux.org.uk, arnd@arndb.de, gregkh@linuxfoundation.org, davem@davemloft.net, geert@linux-m68k.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKnXk99SUa1cjC2QFA9rizjn4=JHZh3ua_gvcOtpGx8jg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Robert Richter <rric@kernel.org>, David Daney <david.daney@cavium.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gilbert Netzer <noname@pdc.kth.se>, Hanjun Guo <hanjun.guo@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 02 Nov 2016, tthayer@opensource.altera.com wrote:
+On 11/02/2016 08:37 PM, Rob Herring wrote:
+> On Fri, Oct 28, 2016 at 4:15 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+>> From: David Daney <david.daney@cavium.com>
+>>
+>> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+>> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+>> non-zero nodes will crash the system with an OOPS:
+>>
+>> [    0.000000] ITS@0x0000901000020000: allocated 2097152 Devices @10002000000 (flat, esz 8, psz 64K, shr 1)
+>> [    0.000000] Unable to handle kernel NULL pointer dereference at virtual address 00001680
+>> [    0.000000] pgd = fffffc0009470000
+>> [    0.000000] [00001680] *pgd=0000010ffff90003, *pud=0000010ffff90003, *pmd=0000010ffff90003, *pte=0000000000000000
+>> [    0.000000] Internal error: Oops: 96000006 [#1] SMP
+>> .
+>> .
+>> .
+>> [    0.000000] [<fffffc00081c8950>] __alloc_pages_nodemask+0xa4/0xe68
+>> [    0.000000] [<fffffc000821fa70>] new_slab+0xd0/0x564
+>> [    0.000000] [<fffffc0008221e24>] ___slab_alloc+0x2e4/0x514
+>> [    0.000000] [<fffffc0008239498>] __slab_alloc+0x48/0x58
+>> [    0.000000] [<fffffc0008222c20>] __kmalloc_node+0xd0/0x2dc
+>> [    0.000000] [<fffffc0008115374>] __irq_domain_add+0x7c/0x164
+>> [    0.000000] [<fffffc0008b461dc>] its_probe+0x784/0x81c
+>> [    0.000000] [<fffffc0008b462bc>] its_init+0x48/0x1b0
+>> [    0.000000] [<fffffc0008b4543c>] gic_init_bases+0x228/0x360
+>> [    0.000000] [<fffffc0008b456bc>] gic_of_init+0x148/0x1cc
+>> [    0.000000] [<fffffc0008b5aec8>] of_irq_init+0x184/0x298
+>> [    0.000000] [<fffffc0008b43f9c>] irqchip_init+0x14/0x38
+>> [    0.000000] [<fffffc0008b12d60>] init_IRQ+0xc/0x30
+>> [    0.000000] [<fffffc0008b10a3c>] start_kernel+0x240/0x3b8
+>> [    0.000000] [<fffffc0008b101c4>] __primary_switched+0x30/0x6c
+>> [    0.000000] Code: 912ec2a0 b9403809 0a0902fb 37b007db (f9400300)
+>> .
+>> .
+>> .
+>>
+>> This is caused by code like this in kernel/irq/irqdomain.c
+>>
+>>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>>                   GFP_KERNEL, of_node_to_nid(of_node));
+>>
+>> When NUMA is disabled, the concept of a node is really undefined, so
+>> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+>>
+>> Fix by returning NUMA_NO_NODE when the nid is not in the set of
+>> possible nodes.
+>>
+>> Reported-by: Gilbert Netzer <noname@pdc.kth.se>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>
+> Does this need to go in 4.9?
 
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Add the Arria10 DevKit System Resource Chip register and state
-> monitoring module to the MFD.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> Note: This needs to be applied to the bindings document that
-> was Acked & Applied but didn't reach the for-next branch.
-> See https://patchwork.ozlabs.org/patch/629397/
-> ---
-> v2  Change compatible string -mon to -monitor for clarity
-> v3  Replace node name a10sr_monitor with just monitor.
->     Replace node name a10sr_gpio with just gpio.
-> ---
->  Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+That would be my preference.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> stable? If so, since what kernel version?
+>
 
-> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> index ea151f2..69243d2 100644
-> --- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> @@ -17,7 +17,8 @@ The A10SR consists of these sub-devices:
->  
->  Device                   Description
->  ------                   ----------
-> -a10sr_gpio               GPIO Controller
-> +gpio                     GPIO Controller
-> +monitor                  Register and State Monitoring
->  
->  Arria10 GPIO
->  Required Properties:
-> @@ -27,6 +28,10 @@ Required Properties:
->                        the second cell is used to specify flags.
->                        See ../gpio/gpio.txt for more information.
->  
-> +Arria10 Register and State Monitor
-> +Required Properties:
-> +- compatible        : Should be "altr,a10sr-monitor"
-> +
->  Example:
->  
->          resource-manager@0 {
-> @@ -43,4 +48,8 @@ Example:
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  		};
-> +
-> +		monitor {
-> +			compatible = "altr,a10sr-monitor";
-> +		};
->  	};
+v4.7 and later would be nice.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I guess if you merge it, you could add the Cc: stable@ tag
+
+
+Thanks for looking at this,
+David Daney
