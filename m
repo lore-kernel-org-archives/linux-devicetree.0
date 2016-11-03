@@ -1,133 +1,69 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: rockchip: add rockchip RK1108 Evaluation board
-Date: Thu,  3 Nov 2016 20:43:59 +0800
-Message-ID: <1478177039-12257-1-git-send-email-andy.yan@rock-chips.com>
-References: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478175975-11779-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
+Date: Thu, 3 Nov 2016 13:47:49 +0100
+Message-ID: <20161103124749.GA22180@amd>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RK1108EVB is designed by Rockchip for CVR field.
-This patch add basic support for it, which can boot with
-initramfs into shell.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/arm/rockchip.txt |  3 +
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/rk1108-evb.dts                   | 69 ++++++++++++++++++++++
- 3 files changed, 73 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk1108-evb.dts
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 10b92b5..8670181 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -1,5 +1,8 @@
- Rockchip platforms device tree bindings
- ---------------------------------------
-+- Rockchip RK1108 Evaluation board
-+    Required root node properties:
-+      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
- 
- - Kylin RK3036 board:
-     Required root node properties:
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e49476a..249dca9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -635,6 +635,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pba8.dtb \
- 	arm-realview-pbx-a9.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
-+	rk1108-evb.dtb \
- 	rk3036-evb.dtb \
- 	rk3036-kylin.dtb \
- 	rk3066a-bqcurie2.dtb \
-diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rk1108-evb.dts
-new file mode 100644
-index 0000000..3956cff
---- /dev/null
-+++ b/arch/arm/boot/dts/rk1108-evb.dts
-@@ -0,0 +1,69 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *  Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "rk1108.dtsi"
-+
-+/ {
-+	model = "Rockchip RK1108 Evaluation board";
-+	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x08000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
--- 
-2.7.4
+> > +Mandatory properties
+> > +--------------------
+> > +
+> > +- compatible: "toshiba,et8ek8"
+> > +- reg: I2C address (0x3e, or an alternative address)
+> > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> > +- clocks: External clock to the sensor
+> > +- clock-frequency: Frequency of the external clock to the sensor. Came=
+ra
+> > +  driver will set this frequency on the external clock.
+>=20
+> This is fine if the frequency is fixed (e.g. an oscillator), but you=20
+> should use the clock binding if clocks are programable.
 
+It is fixed. So I assume this can stay as is? Or do you want me to add
+"The clock frequency is a pre-determined frequency known to be
+suitable to the board." as Sakari suggests?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- reset-gpios: XSHUTDOWN GPIO
+>=20
+> Please state what the active polarity is.
+
+As in "This gpio will be set to 1 when the chip is powered." ?
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgbMfUACgkQMOfwapXb+vLRFQCdFTMF0elT5tSOWocc/9aWOFrL
+RFwAnRwMNhbl2WCsFd3ZLyGZ5XaE8bJ6
+=neek
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
