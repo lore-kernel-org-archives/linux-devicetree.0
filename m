@@ -1,36 +1,65 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Thu, 03 Nov 2016 19:10:48 +0900
-Message-ID: <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
-References: <20161102104010.26959-1-andi.shyti@samsung.com>
- <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
- <20161102104010.26959-6-andi.shyti@samsung.com>
- <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V3 4/6] ARM: tegra: Add Tegra30 GMI support
+Date: Thu, 3 Nov 2016 10:15:57 +0000
+Message-ID: <d1c2fe5d-fb20-459a-2f85-95df8fb777a2@nvidia.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
+ <1477576872-2665-5-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1477576872-2665-5-git-send-email-mirza.krak@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mirza Krak <mirza.krak@gmail.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com
+Cc: gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
 
-> Only DT bindings of LED class drivers should be placed in
-> Documentation/devicetree/bindings/leds. Please move it to the
-> media bindings.
+On 27/10/16 15:01, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak@gmail.com>
+>
+> Add a device node for the GMI controller found on Tegra30.
+>
+> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+> ---
+>
+> Changes in v2:
+> - added address-cells, size-cells and ranges properties
+>
+> Changes in v3:
+> - no changes
+>
+>  arch/arm/boot/dts/tegra30.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index 5030065..bbb1c00 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -439,6 +439,19 @@
+>  		status = "disabled";
+>  	};
+>
+> +	gmi@70009000 {
+> +		compatible = "nvidia,tegra30-gmi";
+> +		reg = <0x70009000 0x1000>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x48000000 0x7ffffff>;
+> +		clocks = <&tegra_car TEGRA30_CLK_NOR>;
+> +		clock-names = "gmi";
+> +		resets = <&tegra_car 42>;
+> +		reset-names = "gmi";
+> +		status = "disabled";
+> +	};
+> +
 
-that's where I placed it first, but Rob asked me to put it in the
-LED directory and Cc the LED mailining list.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-That's the discussion of the version 2:
+Cheers
+Jon
 
-https://lkml.org/lkml/2016/9/12/380
-
-Rob, Jacek, could you please agree where I can put the binding?
-
-Thanks,
-Andi
+-- 
+nvpublic
