@@ -1,41 +1,75 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 7/9] arm64: dts: m3ulcb: enable EXTALR clk
-Date: Thu,  3 Nov 2016 21:08:02 +0300
-Message-ID: <1478196482-1434-1-git-send-email-vladimir.barinov@cogentembedded.com>
-References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478196375-1131-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RESEND PATCH v1 05/11] dt-bindings: perf: hisi: Add Devicetree
+ bindings for Hisilicon SoC PMU
+Date: Thu, 3 Nov 2016 20:26:09 +0200
+Message-ID: <20161103182609.GA11071@kozik-lap>
+References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
+ <1478151727-20250-6-git-send-email-anurup.m@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478151727-20250-6-git-send-email-anurup.m@huawei.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-This enables EXTALR clock that can be used for the watchdog.
+On Thu, Nov 03, 2016 at 01:42:01AM -0400, Anurup M wrote:
+> 	1) Device tree bindings for Hisilicon SoC PMU.
+> 	2) Add example for Hisilicon L3 cache, MN and DDRC PMU.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Get rid of this weird indentation in all patches.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-index 3682bcc..6936288 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-@@ -74,6 +74,10 @@
- 	clock-frequency = <16666666>;
- };
- 
-+&extalr_clk {
-+	clock-frequency = <32768>;
-+};
-+
- &pfc {
- 	pinctrl-0 = <&scif_clk_pins>;
- 	pinctrl-names = "default";
--- 
-1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Signed-off-by: Anurup M <anurup.m@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> ---
+>  .../devicetree/bindings/arm/hisilicon/pmu.txt      | 127 +++++++++++++++++++++
+>  1 file changed, 127 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> new file mode 100644
+> index 0000000..e7b35e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+> @@ -0,0 +1,127 @@
+> +Hisilicon SoC hip05/06/07 ARMv8 PMU
+> +===================================
+> +
+> +The Hisilicon SoC chips like hip05/06/07 etc. consist of varous independent
+> +system device PMU's such as L3 cache (L3C), Miscellaneous Nodes(MN) and DDR
+> +comtroller. These PMU devices are independent and have hardware logic to
+> +gather statistics and performance information.
+> +
+> +HiSilicon SoC chip is encapsulated by multiple CPU and IO die's. The CPU die
+> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
+> +is further grouped as CPU clusters (CCL) which includes 4 cpu-cores each.
+> +e.g. In the case of hip05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
+> +
+> +The Hisilicon SoC PMU DT node bindigs for uncore PMU devices are as below.
+> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
+> +the parent node will be the djtag node of the corresponding CPU die(SCCL).
+> +
+> +For uncore PMU devices there are some common required properties as detailed
+> +below.
+> +
+> +Required properties:
+> +	- compatible : This field contain two values. The first value is
+> +		always "hisilicon" and second value is the Module type as shown
+> +		in below examples:
+
+Over-complicated sentence. Just:
+
+	- compatible : One of:
+		"hisilicon,hisi-pmu-l3c-v1" for Hisilicon SoC L3C PMU
+			device (Version 1)
+		...
+		...
+
+BTW, No need of CC-ing me. I am not a maintainer of relevant subsystems.
+
+Best regards,
+Krzysztof
