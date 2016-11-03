@@ -1,63 +1,36 @@
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Subject: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for ArticSand devices
-Date: Thu,  3 Nov 2016 14:29:28 -0400
-Message-ID: <1478197768-3694-1-git-send-email-olimpiu@arcticsand.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 10/13] ARM: dts: exynos: replace to "max-frequecy"
+ instead of "clock-freq-min-max"
+Date: Thu, 3 Nov 2016 20:41:12 +0200
+Message-ID: <20161103184112.GB11071@kozik-lap>
+References: <20161103062135.10697-1-jh80.chung@samsung.com>
+ <20161103062135.10697-11-jh80.chung@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161103062135.10697-11-jh80.chung@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jg1.han@samsung.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, heiko@sntech.de, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Resubmition of arcxcnn backliught driver addressing the naming convention
- concerns raised by Rob H. Note that all the device tree properties are
- determined by the board design or IC EPROM settings and are not intended
- to be user adjustable.
+On Thu, Nov 03, 2016 at 03:21:32PM +0900, Jaehoon Chung wrote:
+> In drivers/mmc/core/host.c, there is "max-frequency" property.
+> It should be same behavior. So Use the "max-frequency" instead of
+> "clock-freq-min-max".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos3250-artik5-eval.dts | 2 +-
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi     | 2 +-
+>  arch/arm/boot/dts/exynos3250-monk.dts        | 2 +-
+>  arch/arm/boot/dts/exynos3250-rinato.dts      | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 
-Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+This looks totally independent to rest of patches so it can be applied
+separately without any functional impact (except lack of minimum
+frequency). Is that correct?
 
----
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..a7b6ff2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,33 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible: should be "arc,arc2c0608"
-+- reg: slave address
-+
-+Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+- label: The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources: List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+- arc,led-config-0: setting for register ILED_CONFIG_0
-+- arc,led-config-1: setting for register ILED_CONFIG_1
-+- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
-+- arc,comp-config: setting for register CONFIG_COMP
-+- arc,filter-config: setting for register FILTER_CONFIG
-+- arc,trim-config: setting for register IMAXTUNE
-+
-+Note: Optional properties not specified will default to values in IC EPROM
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+};
-+
--- 
-2.7.4
+Best regards,
+Krzysztof
