@@ -1,153 +1,57 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [RESEND PATCH v1 11/11] dts: arm64: hip06: Add Hisilicon SoC PMU support
-Date: Thu,  3 Nov 2016 01:42:07 -0400
-Message-ID: <1478151727-20250-12-git-send-email-anurup.m@huawei.com>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com
-Cc: guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com, anurupvasu@gmail.com
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 00/13] mmc: dw_mmc: cleans the codes for dwmmc controller
+Date: Thu, 03 Nov 2016 15:21:22 +0900
+Message-ID: <20161103062135.10697-1-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, heiko@sntech.de, shawn.lin@rock-chips.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-	1. Add nodes for hip06 L3 cache to support uncore events.
-	2. Add nodes for hip06 MN to support uncore events.
-	3. Add nodes for hip06 DDRC to support uncore events.
+This patchset is modified the some minor fixing and cleaning code.
+If needs to split the patches, i will re-send the patches.
 
-Signed-off-by: Anurup M <anurup.m@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hip06.dtsi | 116 +++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+* Major changes
+- Use the cookie enum values like sdhci controller.
+- Remove the unnecessary codes and use stop_abort() by default.
+- Remove the obsoleted property "supports-highspeed"
+- Remove the "clock-freq-min-max" property. Instead, use "max-frequency"
+- Minimum clock value is set to 100K by default.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-index cb9e018..9ff3afe 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-@@ -980,6 +980,122 @@
- 			status = "disabled";
- 		};
- 
-+		djtag0: djtag@60010000 {
-+			compatible = "hisilicon,hip06-cpu-djtag-v1";
-+			reg = <0x0 0x60010000 0x0 0x10000>;
-+
-+			/* L3 cache for socket0 CPU die scl#2 */
-+			pmul3c0 {
-+				compatible = "hisilicon,hisi-pmu-l3c-v1";
-+				scl-id = <0x02>;
-+				num-events = <0x16>;
-+				num-counters = <0x08>;
-+				module-id = <0x04 0x04 0x04 0x04>;
-+				num-banks = <0x04>;
-+				cfgen-map = <0x02 0x04 0x01 0x08>;
-+				counter-reg = <0x170>;
-+				evctrl-reg = <0x04>;
-+				event-en = <0x1000000>;
-+				evtype-reg = <0x140>;
-+			};
-+
-+			/* Miscellaneous node for socket0
-+			 * CPU die scl#2
-+			 */
-+			pmumn0 {
-+				compatible = "hisilicon,hisi-pmu-mn-v1";
-+				scl-id = <0x02>;
-+				num-events = <0x09>;
-+				num-counters = <0x04>;
-+				module-id = <0x0b>;
-+				cfgen-map = <0x01>;
-+				counter-reg = <0x30>;
-+				evctrl-reg = <0x40>;
-+				event-en = <0x01>;
-+				evtype-reg = <0x48>;
-+			};
-+		};
-+
-+		djtag1: djtag@40010000 {
-+			compatible = "hisilicon,hip06-cpu-djtag-v1";
-+			reg = <0x0 0x40010000 0x0 0x10000>;
-+
-+			/* L3 cache for socket0 CPU die scl#1 */
-+			pmul3c1 {
-+				compatible = "hisilicon,hisi-pmu-l3c-v1";
-+				scl-id = <0x01>;
-+				num-events = <0x16>;
-+				num-counters = <0x08>;
-+				module-id = <0x04 0x04 0x04 0x04>;
-+				num-banks = <0x04>;
-+				cfgen-map = <0x02 0x04 0x01 0x08>;
-+				counter-reg = <0x170>;
-+				evctrl-reg = <0x04>;
-+				event-en = <0x1000000>;
-+				evtype-reg = <0x140>;
-+			};
-+
-+			/* Miscellaneous node for socket0
-+			 * CPU die scl#1
-+			 */
-+			pmumn1 {
-+				compatible = "hisilicon,hisi-pmu-mn-v1";
-+				scl-id = <0x01>;
-+				num-events = <0x09>;
-+				num-counters = <0x04>;
-+				module-id = <0x0b>;
-+				cfgen-map = <0x01>;
-+				counter-reg = <0x30>;
-+				evctrl-reg = <0x40>;
-+				event-en = <0x01>;
-+				evtype-reg = <0x48>;
-+			};
-+		};
-+
-+		/* DDRC for CPU die scl #1 Channel #0 */
-+		pmu_sccl0_ddrc0: pmu_ddrc0@40348000 {
-+			compatible = "hisilicon,hisi-pmu-ddrc-v1";
-+			scl-id = <0x01>;
-+			ch-id = <0x0>;
-+			num-events = <0x0d>;
-+			num-counters = <0x04>;
-+			reg = <0x0 0x40348000 0x0 0x10000>; /* TOTEMA DDRC0 */
-+			status = "okay";
-+		};
-+
-+		/* DDRC for CPU die scl #1 Channel #1 */
-+		pmu_sccl0_ddrc1: pmu_ddrc1@40358000 {
-+			compatible = "hisilicon,hisi-pmu-ddrc-v1";
-+			scl-id = <0x01>;
-+			ch-id = <0x01>;
-+			num-events = <0x0d>;
-+			num-counters = <0x04>;
-+			reg = <0x0 0x40358000 0x0 0x10000>; /* TOTEMA DDRC1 */
-+			status = "okay";
-+		};
-+
-+		/* DDRC for CPU die scl #2 Channel #0 */
-+		pmu_sccl1_ddrc0: pmu_ddrc0@60348000 {
-+			compatible = "hisilicon,hisi-pmu-ddrc-v1";
-+			scl-id = <0x02>;
-+			ch-id = <0x0>;
-+			num-events = <0x0d>;
-+			num-counters = <0x04>;
-+			reg = <0x0 0x60348000 0x0 0x10000>; /* TOTEMC DDRC0 */
-+			status = "okay";
-+		};
-+
-+		/* DDRC for CPU die scl #2 Channel #1 */
-+		pmu_sccl1_ddrc1: pmu_ddrc1@60358000 {
-+			compatible = "hisilicon,hisi-pmu-ddrc-v1";
-+			scl-id = <0x02>;
-+			ch-id = <0x01>;
-+			num-events = <0x0d>;
-+			num-counters = <0x04>;
-+			reg = <0x0 0x60358000 0x0 0x10000>; /* TOTEMC DDRC1 */
-+			status = "okay";
-+		};
-+
- 		sas1: sas@a2000000 {
- 			compatible = "hisilicon,hip06-sas-v2";
- 			reg = <0 0xa2000000 0 0x10000>;
+Jaehoon Chung (13):
+  mmc: dw_mmc: display the real register value on debugfs
+  mmc: dw_mmc: fix the debug message for checking card's present
+  mmc: dw_mmc: change the DW_MCI_FREQ_MIN from 400K to 100K
+  mmc: dw_mmc: use the hold register when send stop command
+  mmc: dw_mmc: call the dw_mci_prep_stop_abort() by default
+  mmc: core: move the cookie's enum values from sdhci.h to mmc.h
+  mmc: dw_mmc: use the cookie's enum values for post/pre_req()
+  mmc: dw_mmc: remove the unnecessary mmc_data structure
+  mmc: dw_mmc: remove the "clock-freq-min-max" property
+  ARM: dts: exynos: replace to "max-frequecy" instead of
+    "clock-freq-min-max"
+  ARM: dts: rockchip: replace to "max-frequency" instead of
+    "clock-freq-min-max"
+  ARM64: dts: rockchip: replace to "max-frequency" instead of
+    "clock-freq-min-max"
+  Documentation: synopsys-dw-mshc: remove the unused properties
+
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  8 --
+ arch/arm/boot/dts/exynos3250-artik5-eval.dts       |  2 +-
+ arch/arm/boot/dts/exynos3250-artik5.dtsi           |  2 +-
+ arch/arm/boot/dts/exynos3250-monk.dts              |  2 +-
+ arch/arm/boot/dts/exynos3250-rinato.dts            |  2 +-
+ arch/arm/boot/dts/rk3036.dtsi                      |  6 +-
+ arch/arm/boot/dts/rk322x.dtsi                      |  2 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |  8 +-
+ .../boot/dts/rockchip/rk3368-orion-r68-meta.dts    |  2 +-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  6 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  4 +-
+ drivers/mmc/host/dw_mmc.c                          | 99 ++++++++++------------
+ drivers/mmc/host/sdhci.h                           |  6 --
+ include/linux/mmc/core.h                           |  6 ++
+ 14 files changed, 68 insertions(+), 87 deletions(-)
+
 -- 
-2.1.4
+2.10.1
 
