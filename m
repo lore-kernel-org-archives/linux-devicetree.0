@@ -1,177 +1,380 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/3] drm/tilcdc: Add drm bridge support for attaching drm
- bridge drivers
-Date: Thu, 03 Nov 2016 19:50:08 +0200
-Message-ID: <4030126.Q3156qUFoV@avalon>
-References: <cover.1478103726.git.jsarha@ti.com>
- <463d18493ac508708ed764e71d11c2b89662544c.1478103726.git.jsarha@ti.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] reset: Add the TI SCI reset driver
+Date: Thu, 3 Nov 2016 12:50:34 -0500
+Message-ID: <6c5a77b0-fc1f-33c8-ff1d-83e198e4acda@ti.com>
+References: <20161027214941.24641-1-afd@ti.com>
+ <20161027214941.24641-4-afd@ti.com> <1477647364.3010.28.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <463d18493ac508708ed764e71d11c2b89662544c.1478103726.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477647364.3010.28.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gV2VkbmVzZGF5IDAyIE5vdiAy
-MDE2IDE4OjMyOjE3IEp5cmkgU2FyaGEgd3JvdGU6Cj4gQWRkcyBkcm0gYnJpZGUgc3VwcG9ydCBm
-b3IgYXR0YWNoaW5nIGRybSBicmlkZ2UgZHJpdmVycyB0byB0aWxjZGMuIFRoZQo+IGRlY2lzaW9u
-IHdoZXRoZXIgYSB2aWRlbyBwb3J0IGxlYWRzIHRvIGFuIGV4dGVybmFsIGVuY29kZXIgb3IgYnJp
-ZGdlCj4gaXMgbWFkZSBzaW1wbHkgYmFzZWQgb24gcmVtb3RlIGRldmljZSdzIGNvbXBhdGlibGUg
-c3RyaW5nLiBUaGUgY29kZQo+IGhhcyBiZWVuIHRlc3RlZCB3aXRoIEJlYWdsZUJvbmUtQmxhY2sg
-d2l0aCBhbmQgd2l0aG91dCBCZWFnbGVCb25lCj4gRFZJLUQgQ2FwZSBSZXYgQTMgdXNpbmcgdGkt
-dGZwNDEwIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGku
-Y29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxj
-ZGMudHh0ICB8ICAgNyArLQo+ICBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYyAg
-ICAgICAgICAgICAgICB8ICAgNyArLQo+ICBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19k
-cnYuaCAgICAgICAgICAgICAgICB8ICAgMiArCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
-Y2RjX2V4dGVybmFsLmMgICAgICAgICAgIHwgMTQwICsrKysrKysrKysrKysrLS0tCj4gIGRyaXZl
-cnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmggICAgICAgICAgIHwgICAxICsKPiAg
-NSBmaWxlcyBjaGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pCj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Rp
-bGNkYy90aWxjZGMudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS90aWxjZGMvdGlsY2RjLnR4dCBpbmRleAo+IDZmZGRiNGYuLmFlN2E5NDIgMTAwNjQ0Cj4g
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3Rp
-bGNkYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aWxjZGMvdGlsY2RjLnR4dAo+IEBAIC0zNCw5ICszNCwxMCBAQCBPcHRpb25hbCBwcm9wZXJ0
-aWVzOgo+IAo+ICBPcHRpb25hbCBub2RlczoKPiAKPiAtIC0gcG9ydC9wb3J0czogdG8gZGVzY3Jp
-YmUgYSBjb25uZWN0aW9uIHRvIGFuIGV4dGVybmFsIGVuY29kZXIuIFRoZQo+IC0gICBiaW5kaW5n
-IGZvbGxvd3MgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCBhbmQK
-PiAtICAgc3VwcG9ycyBhIHNpbmdsZSBwb3J0IHdpdGggYSBzaW5nbGUgZW5kcG9pbnQuCj4gKyAt
-IHBvcnQvcG9ydHM6IHRvIGRlc2NyaWJlIGEgY29ubmVjdGlvbiB0byBhbiBleHRlcm5hbCBlbmNv
-ZGVyIG9yCj4gKyAgIGJyaWRnZS4gVGhlIGJpbmRpbmcgZm9sbG93cwoKV2hhdCdzIHRoZSBkaWZm
-ZXJlbmNlIGJldHdlZW4gZW5jb2RlciBhbmQgYnJpZGdlIGhlcmUgPyBkcm1fYnJpZGdlIGFuZCAK
-ZHJtX2VuY29kZXIgYXJlIGlycmVsZXZhbnQgdG8gRFQgYmluZGluZ3MsIHdlIHNob3VsZCBvbmx5
-IGNhcmUgYWJvdXQgdGhlIApoYXJkd2FyZSB2aWV3IG9mIHRoZSBzeXN0ZW0gaGVyZS4KCj4gKyAg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQgYW5kIHN1cHBvcnMg
-YSBzaW5nbGUKPiArICAgcG9ydCB3aXRoIGEgc2luZ2xlIGVuZHBvaW50Lgo+IAo+ICAgLSBTZWUg
-YWxzbyBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aWxjZGMvcGFu
-ZWwudHh0IGFuZAo+ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aWxjZGMvdGZwNDEwLnR4dCBmb3IKPiBjb25uZWN0aW5nIGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYwo+IGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90
-aWxjZGNfZHJ2LmMgaW5kZXggZGNjOTYyMS4uZWMyMjU3NiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90aWxj
-ZGMvdGlsY2RjX2Rydi5jCj4gQEAgLTM4NCw5ICszODQsMTQgQEAgc3RhdGljIGludCB0aWxjZGNf
-aW5pdChzdHJ1Y3QgZHJtX2RyaXZlciAqZGRydiwgc3RydWN0Cj4gZGV2aWNlICpkZXYpIHJldCA9
-IHRpbGNkY19hZGRfZXh0ZXJuYWxfZW5jb2RlcnMoZGRldik7Cj4gIAkJaWYgKHJldCA8IDApCj4g
-IAkJCWdvdG8gaW5pdF9mYWlsZWQ7Cj4gKwl9IGVsc2Ugewo+ICsJCXJldCA9IHRpbGNkY19hdHRh
-Y2hfcmVtb3RlX2RldmljZShkZGV2KTsKPiArCQlpZiAocmV0KQo+ICsJCQlnb3RvIGluaXRfZmFp
-bGVkOwo+ICAJfQo+IAo+IC0JaWYgKChwcml2LT5udW1fZW5jb2RlcnMgPT0gMCkgfHwgKHByaXYt
-Pm51bV9jb25uZWN0b3JzID09IDApKSB7Cj4gKwlpZiAoIXByaXYtPnJlbW90ZV9lbmNvZGVyICYm
-Cj4gKwkgICAgKChwcml2LT5udW1fZW5jb2RlcnMgPT0gMCkgfHwgKHByaXYtPm51bV9jb25uZWN0
-b3JzID09IDApKSkgewo+ICAJCWRldl9lcnIoZGV2LCAibm8gZW5jb2RlcnMvY29ubmVjdG9ycyBm
-b3VuZFxuIik7Cj4gIAkJcmV0ID0gLUVOWElPOwo+ICAJCWdvdG8gaW5pdF9mYWlsZWQ7Cj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oCj4gYi9kcml2ZXJz
-L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuaCBpbmRleCBkMzFmZTVkLi4yODNmZjI4IDEwMDY0
-NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oCj4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmgKPiBAQCAtOTAsNiArOTAsOCBAQCBzdHJ1
-Y3QgdGlsY2RjX2RybV9wcml2YXRlIHsKPiAgCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0
-b3JzWzhdOwo+ICAJY29uc3Qgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzICpjb25u
-ZWN0b3JfZnVuY3NbOF07Cj4gCj4gKwlzdHJ1Y3QgZHJtX2VuY29kZXIgKnJlbW90ZV9lbmNvZGVy
-Owo+ICsKPiAgCWJvb2wgaXNfcmVnaXN0ZXJlZDsKPiAgCWJvb2wgaXNfY29tcG9uZW50aXplZDsK
-PiAgfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZXh0ZXJu
-YWwuYwo+IGIvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZXh0ZXJuYWwuYyBpbmRleCAw
-NmE0YzU4Li5iY2IxMzI0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
-Y2RjX2V4dGVybmFsLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRl
-cm5hbC5jCj4gQEAgLTI4LDYgKzI4LDE4IEBACj4gIAkJLnJhc3Rlcl9vcmRlciAgICAgICAgICAg
-PSAwLAo+ICB9Owo+IAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHRpbGNkY19wYW5lbF9pbmZvIHBh
-bmVsX2luZm9fZGVmYXVsdCA9IHsKPiArCQkuYWNfYmlhcyAgICAgICAgICAgICAgICA9IDI1NSwK
-PiArCQkuYWNfYmlhc19pbnRycHQgICAgICAgICA9IDAsCj4gKwkJLmRtYV9idXJzdF9zeiAgICAg
-ICAgICAgPSAxNiwKPiArCQkuYnBwICAgICAgICAgICAgICAgICAgICA9IDE2LAo+ICsJCS5mZGQg
-ICAgICAgICAgICAgICAgICAgID0gMHg4MCwKPiArCQkudGZ0X2FsdF9tb2RlICAgICAgICAgICA9
-IDAsCj4gKwkJLnN5bmNfZWRnZSAgICAgICAgICAgICAgPSAwLAo+ICsJCS5zeW5jX2N0cmwgICAg
-ICAgICAgICAgID0gMSwKPiArCQkucmFzdGVyX29yZGVyICAgICAgICAgICA9IDAsCj4gK307Cj4g
-Kwo+ICBzdGF0aWMgaW50IHRpbGNkY19leHRlcm5hbF9tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY29u
-bmVjdG9yICpjb25uZWN0b3IsCj4gIAkJCQkgICAgICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAq
-bW9kZSkKPiAgewo+IEBAIC0xMzAsNiArMTQyLDEwMSBAQCB2b2lkIHRpbGNkY19yZW1vdmVfZXh0
-ZXJuYWxfZW5jb2RlcnMoc3RydWN0IGRybV9kZXZpY2UKPiAqZGV2KSBwcml2LT5jb25uZWN0b3Jf
-ZnVuY3NbaV0pOwo+ICB9Cj4gCj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX2VuY29kZXJfZnVuY3MgdGls
-Y2RjX3JlbW90ZV9lbmNvZGVyX2Z1bmNzID0gewo+ICsJLmRlc3Ryb3kJPSBkcm1fZW5jb2Rlcl9j
-bGVhbnVwLAo+ICt9Owo+ICsKPiArc3RhdGljCj4gK2ludCB0aWxjZGNfYXR0YWNoX2JyaWRnZShz
-dHJ1Y3QgZHJtX2RldmljZSAqZGRldiwgc3RydWN0IGRybV9icmlkZ2UKPiAqYnJpZGdlKSArewo+
-ICsJc3RydWN0IHRpbGNkY19kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOwo+
-ICsJaW50IHJldDsKPiArCj4gKwlwcml2LT5yZW1vdGVfZW5jb2Rlci0+cG9zc2libGVfY3J0Y3Mg
-PSBCSVQoMCk7Cj4gKwlwcml2LT5yZW1vdGVfZW5jb2Rlci0+YnJpZGdlID0gYnJpZGdlOwo+ICsJ
-YnJpZGdlLT5lbmNvZGVyID0gcHJpdi0+cmVtb3RlX2VuY29kZXI7Cj4gKwo+ICsJcmV0ID0gZHJt
-X2JyaWRnZV9hdHRhY2goZGRldiwgYnJpZGdlKTsKPiArCWlmIChyZXQpIHsKPiArCQlkZXZfZXJy
-KGRkZXYtPmRldiwgImRybV9icmlkZ2VfYXR0YWNoKCkgZmFpbGVkICVkXG4iLCByZXQpOwo+ICsJ
-CXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJdGlsY2RjX2NydGNfc2V0X3BhbmVsX2luZm8ocHJp
-di0+Y3J0YywgJnBhbmVsX2luZm9fZGVmYXVsdCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiAr
-Cj4gK3N0YXRpYyBpbnQgdGlsY2RjX25vZGVfaGFzX3BvcnQoc3RydWN0IGRldmljZV9ub2RlICpk
-ZXZfbm9kZSkKPiArewo+ICsJc3RydWN0IGRldmljZV9ub2RlICpub2RlOwo+ICsKPiArCW5vZGUg
-PSBvZl9nZXRfY2hpbGRfYnlfbmFtZShkZXZfbm9kZSwgInBvcnRzIik7Cj4gKwlpZiAoIW5vZGUp
-Cj4gKwkJbm9kZSA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKGRldl9ub2RlLCAicG9ydCIpOwo+ICsJ
-aWYgKCFub2RlKQo+ICsJCXJldHVybiAwOwo+ICsJb2Zfbm9kZV9wdXQobm9kZSk7Cj4gKwo+ICsJ
-cmV0dXJuIDE7Cj4gK30KPiArCj4gK3N0YXRpYwo+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKnRpbGNk
-Y19nZXRfcmVtb3RlX25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+ICt7Cj4gKwlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKmVwOwo+ICsJc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQ7Cj4gKwo+
-ICsJaWYgKCF0aWxjZGNfbm9kZV9oYXNfcG9ydChub2RlKSkKPiArCQlyZXR1cm4gTlVMTDsKPiAr
-Cj4gKwllcCA9IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KG5vZGUsIE5VTEwpOwo+ICsJaWYg
-KCFlcCkKPiArCQlyZXR1cm4gTlVMTDsKPiArCj4gKwlwYXJlbnQgPSBvZl9ncmFwaF9nZXRfcmVt
-b3RlX3BvcnRfcGFyZW50KGVwKTsKPiArCW9mX25vZGVfcHV0KGVwKTsKPiArCj4gKwlyZXR1cm4g
-cGFyZW50Owo+ICt9Cj4gKwo+ICtpbnQgdGlsY2RjX2F0dGFjaF9yZW1vdGVfZGV2aWNlKHN0cnVj
-dCBkcm1fZGV2aWNlICpkZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgdGlsY2RjX2RybV9wcml2YXRlICpw
-cml2ID0gZGRldi0+ZGV2X3ByaXZhdGU7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJlbW90ZV9u
-b2RlOwo+ICsJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZTsKPiArCWludCByZXQ7Cj4gKwo+ICsJ
-cmVtb3RlX25vZGUgPSB0aWxjZGNfZ2V0X3JlbW90ZV9ub2RlKGRkZXYtPmRldi0+b2Zfbm9kZSk7
-Cj4gKwlpZiAoIXJlbW90ZV9ub2RlKQo+ICsJCXJldHVybiAwOwo+ICsKPiArCWJyaWRnZSA9IG9m
-X2RybV9maW5kX2JyaWRnZShyZW1vdGVfbm9kZSk7Cj4gKwlvZl9ub2RlX3B1dChyZW1vdGVfbm9k
-ZSk7Cj4gKwlpZiAoIWJyaWRnZSkKPiArCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCj4gKwlw
-cml2LT5yZW1vdGVfZW5jb2RlciA9IGRldm1fa3phbGxvYyhkZGV2LT5kZXYsCj4gKwkJCQkJICAg
-IHNpemVvZigqcHJpdi0+cmVtb3RlX2VuY29kZXIpLAo+ICsJCQkJCSAgICBHRlBfS0VSTkVMKTsK
-PiArCWlmICghcHJpdi0+cmVtb3RlX2VuY29kZXIpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+
-ICsJcmV0ID0gZHJtX2VuY29kZXJfaW5pdChkZGV2LCBwcml2LT5yZW1vdGVfZW5jb2RlciwKPiAr
-CQkJICAgICAgICZ0aWxjZGNfcmVtb3RlX2VuY29kZXJfZnVuY3MsCj4gKwkJCSAgICAgICBEUk1f
-TU9ERV9FTkNPREVSX05PTkUsIE5VTEwpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGRl
-di0+ZGV2LCAiZHJtX2VuY29kZXJfaW5pdCgpIGZhaWxlZCAlZFxuIiwgcmV0KTsKPiArCQlyZXR1
-cm4gcmV0Owo+ICsJfQo+ICsKPiArCXJldCA9IHRpbGNkY19hdHRhY2hfYnJpZGdlKGRkZXYsIGJy
-aWRnZSk7Cj4gKwlpZiAocmV0KQo+ICsJCWRybV9lbmNvZGVyX2NsZWFudXAocHJpdi0+cmVtb3Rl
-X2VuY29kZXIpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gIHN0YXRpYyBpbnQgZGV2
-X21hdGNoX29mKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqZGF0YSkKPiAgewo+ICAJcmV0dXJu
-IGRldi0+b2Zfbm9kZSA9PSBkYXRhOwo+IEBAIC0xNDEsMTYgKzI0OCwxMCBAQCBpbnQgdGlsY2Rj
-X2dldF9leHRlcm5hbF9jb21wb25lbnRzKHN0cnVjdCBkZXZpY2UgKmRldiwKPiBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5vZGU7Cj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVwID0gTlVMTDsKPiAgCWlu
-dCBjb3VudCA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiAKPiAtCS8qIEF2b2lkIGVycm9yIHByaW50
-IGJ5IG9mX2dyYXBoX2dldF9uZXh0X2VuZHBvaW50KCkgaWYgdGhlcmUKPiAtCSAqIGlzIG5vIHBv
-cnRzIHByZXNlbnQuCj4gLQkgKi8KPiAtCW5vZGUgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShkZXYt
-Pm9mX25vZGUsICJwb3J0cyIpOwo+IC0JaWYgKCFub2RlKQo+IC0JCW5vZGUgPSBvZl9nZXRfY2hp
-bGRfYnlfbmFtZShkZXYtPm9mX25vZGUsICJwb3J0Iik7Cj4gLQlpZiAoIW5vZGUpCj4gKwlpZiAo
-IXRpbGNkY19ub2RlX2hhc19wb3J0KGRldi0+b2Zfbm9kZSkpCj4gIAkJcmV0dXJuIDA7Cj4gLQlv
-Zl9ub2RlX3B1dChub2RlKTsKPiAKPiAgCXdoaWxlICgoZXAgPSBvZl9ncmFwaF9nZXRfbmV4dF9l
-bmRwb2ludChkZXYtPm9mX25vZGUsIGVwKSkpIHsKPiAgCQlub2RlID0gb2ZfZ3JhcGhfZ2V0X3Jl
-bW90ZV9wb3J0X3BhcmVudChlcCk7Cj4gQEAgLTE2MCwxNyArMjYxLDIwIEBAIGludCB0aWxjZGNf
-Z2V0X2V4dGVybmFsX2NvbXBvbmVudHMoc3RydWN0IGRldmljZSAqZGV2LAo+IH0KPiAKPiAgCQlk
-ZXZfZGJnKGRldiwgIlN1YmRldmljZSBub2RlICclcycgZm91bmRcbiIsIG5vZGUtPm5hbWUpOwo+
-IC0JCWlmIChtYXRjaCkKPiAtCQkJZHJtX29mX2NvbXBvbmVudF9tYXRjaF9hZGQoZGV2LCBtYXRj
-aCwgZGV2X21hdGNoX29mLAo+IC0JCQkJCQkgICBub2RlKTsKPiAtCQlvZl9ub2RlX3B1dChub2Rl
-KTsKPiAtCQljb3VudCsrOwo+IC0JfQo+IAo+IC0JaWYgKGNvdW50ID4gMSkgewo+IC0JCWRldl9l
-cnIoZGV2LCAiT25seSBvbmUgZXh0ZXJuYWwgZW5jb2RlciBpcyBzdXBwb3J0ZWRcbiIpOwo+IC0J
-CXJldHVybiAtRUlOVkFMOwo+ICsJCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShub2RlLCAi
-bnhwLHRkYTk5OHgiKSkgewo+ICsJCQlpZiAobWF0Y2gpCj4gKwkJCQlkcm1fb2ZfY29tcG9uZW50
-X21hdGNoX2FkZChkZXYsIG1hdGNoLAo+ICsJCQkJCQkJICAgZGV2X21hdGNoX29mLCAKbm9kZSk7
-Cj4gKwkJCXJldCA9IDE7Cj4gKwkJfQo+ICsKPiArCQlvZl9ub2RlX3B1dChub2RlKTsKPiArCQlp
-ZiAoY291bnQrKyA+IDEpIHsKPiArCQkJZGV2X2VycihkZXYsICJPbmx5IG9uZSBwb3J0IGlzIHN1
-cHBvcnRlZFxuIik7Cj4gKwkJCXJldHVybiAtRUlOVkFMOwo+ICsJCX0KPiAgCX0KPiAKPiAtCXJl
-dHVybiBjb3VudDsKPiArCXJldHVybiByZXQ7Cj4gIH0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL3RpbGNkYy90aWxjZGNfZXh0ZXJuYWwuaAo+IGIvZHJpdmVycy9ncHUvZHJtL3RpbGNk
-Yy90aWxjZGNfZXh0ZXJuYWwuaCBpbmRleCBjNzAwZTBjLi5hMjdjMzY1IDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmgKPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRlcm5hbC5oCj4gQEAgLTIyLDQgKzIyLDUgQEAKPiAg
-dm9pZCB0aWxjZGNfcmVtb3ZlX2V4dGVybmFsX2VuY29kZXJzKHN0cnVjdCBkcm1fZGV2aWNlICpk
-ZXYpOwo+ICBpbnQgdGlsY2RjX2dldF9leHRlcm5hbF9jb21wb25lbnRzKHN0cnVjdCBkZXZpY2Ug
-KmRldiwKPiAgCQkJCSAgIHN0cnVjdCBjb21wb25lbnRfbWF0Y2ggKiptYXRjaCk7Cj4gK2ludCB0
-aWxjZGNfYXR0YWNoX3JlbW90ZV9kZXZpY2Uoc3RydWN0IGRybV9kZXZpY2UgKmRkZXYpOwo+ICAj
-ZW5kaWYgLyogX19USUxDRENfU0xBVkVfSF9fICovCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGlu
-Y2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 10/28/2016 04:36 AM, Philipp Zabel wrote:
+> Hi Andrew,
+> 
+> is there (going to be) as stable branch I can base these on, or should I
+> just wait until the prerequisite patches appear in arm-soc/for-next?
+> 
+> Am Donnerstag, den 27.10.2016, 16:49 -0500 schrieb Andrew F. Davis:
+>> Some TI Keystone family of SoCs contain a system controller (like the
+>> Power Management Micro Controller (PMMC) on K2G SoCs) that manage the
+>> low-level device control (like clocks, resets etc) for the various
+>> hardware modules present on the SoC. These device control operations
+>> are provided to the host processor OS through a communication protocol
+>> called the TI System Control Interface (TI SCI) protocol.
+>>
+>> This patch adds a reset driver that communicates to the system
+>> controller over the TI SCI protocol for performing reset management
+>> of various devices present on the SoC. Various reset functionalities
+>> are achieved by the means of different TI SCI device operations
+>> provided by the TI SCI framework.
+>>
+>> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>> [s-anna-l0cyMroinI0@public.gmane.org: documentation changes, revised commit message]
+>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  MAINTAINERS                  |   1 +
+>>  drivers/reset/Kconfig        |   9 ++
+>>  drivers/reset/Makefile       |   1 +
+>>  drivers/reset/reset-ti-sci.c | 262 +++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 273 insertions(+)
+>>  create mode 100644 drivers/reset/reset-ti-sci.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index accf991..b93d91a 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -11901,6 +11901,7 @@ F:	include/dt-bindings/clock/k2g.h
+>>  F:	drivers/clk/keystone/sci-clk.c
+>>  F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+>>  F:	include/dt-bindings/reset/k2g.h
+>> +F:	drivers/reset/reset-ti-sci.c
+>>  
+>>  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
+>>  M:	Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index 06d9fa2..4c21c9d 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -66,6 +66,15 @@ config RESET_SUNXI
+>>  	help
+>>  	  This enables the reset driver for Allwinner SoCs.
+>>  
+>> +config RESET_TI_SCI
+>> +	tristate "TI System Control Interface (TI-SCI) reset driver"
+>> +	depends on RESET_CONTROLLER
+>> +	depends on TI_SCI_PROTOCOL
+>> +	help
+>> +	  This enables the reset driver support over TI System Control Interface
+>> +	  available on some new TI SoCs. If you wish to use reset resources
+>> +	  managed by the TI System Controller, say Y here. Otherwise, say N.
+>> +
+>>  config TI_SYSCON_RESET
+>>  	tristate "TI SYSCON Reset Driver"
+>>  	depends on HAS_IOMEM
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index bbe7026..36321f2 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>>  obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
+>>  obj-$(CONFIG_RESET_STM32) += reset-stm32.o
+>>  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+>> +obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
+>>  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+>>  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+>>  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+>> diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
+>> new file mode 100644
+>> index 0000000..42ccf12
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-ti-sci.c
+>> @@ -0,0 +1,262 @@
+>> +/*
+>> + * Texas Instrument's System Control Interface (TI-SCI) reset driver
+>> + *
+>> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+>> + *	Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/idr.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/soc/ti/ti_sci_protocol.h>
+>> +
+>> +/**
+>> + * struct ti_sci_reset_control - reset control structure
+>> + * @dev_id: SoC-specific device identifier
+>> + * @reset_mask: reset mask to use for toggling reset
+>> + */
+>> +struct ti_sci_reset_control {
+>> +	u32 dev_id;
+>> +	u32 reset_mask;
+>> +};
+>> +
+>> +/**
+>> + * struct ti_sci_reset_data - reset controller information structure
+>> + * @rcdev: reset controller entity
+>> + * @dev: reset controller device pointer
+>> + * @sci: TI SCI handle used for communication with system controller
+>> + * @idr: idr structure for mapping ids to reset control structures
+>> + */
+>> +struct ti_sci_reset_data {
+>> +	struct reset_controller_dev rcdev;
+>> +	struct device *dev;
+>> +	const struct ti_sci_handle *sci;
+>> +	struct idr idr;
+>> +};
+>> +
+>> +#define to_ti_sci_reset_data(p)	\
+>> +	container_of((p), struct ti_sci_reset_data, rcdev)
+>> +
+>> +/**
+>> + * ti_sci_reset_set() - program a device's reset
+>> + * @rcdev: reset controller entity
+>> + * @id: ID of the reset to toggle
+>> + * @assert: boolean flag to indicate assert or deassert
+>> + *
+>> + * This is a common internal function used to assert or deassert a device's
+>> + * reset using the TI SCI protocol. The device's reset is asserted if the
+>> + * @assert argument is true, or deasserted if @assert argument is false.
+>> + * The mechanism itself is a read-modify-write procedure, the current device
+>> + * reset register is read using a TI SCI device operation, the new value is
+>> + * set or un-set using the reset's mask, and the new reset value written by
+>> + * using another TI SCI device operation.
+>> + *
+>> + * Return: 0 for successful request, else a corresponding error value
+>> + */
+>> +static int ti_sci_reset_set(struct reset_controller_dev *rcdev,
+>> +			    unsigned long id, bool assert)
+>> +{
+>> +	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
+>> +	const struct ti_sci_handle *sci = data->sci;
+>> +	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
+>> +	struct ti_sci_reset_control *control;
+>> +	u32 reset_state;
+>> +	int ret;
+>> +
+>> +	control = idr_find(&data->idr, id);
+>> +	if (!control)
+>> +		return -EINVAL;
+>> +
+>> +	ret = dev_ops->get_device_resets(sci, control->dev_id,
+>> +					 &reset_state);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (assert)
+>> +		reset_state |= control->reset_mask;
+>> +	else
+>> +		reset_state &= ~control->reset_mask;
+>> +
+>> +	return dev_ops->set_device_resets(sci, control->dev_id,
+>> +					  reset_state);
+> 
+> Without any locking? Maybe the read-modify-write could just be moved one
+> level down with an update_bits type of callback in the ti_sci_dev_ops.
+> 
+
+That may be useful to add at some point, for now I want to work with the
+existing framework, it can always be moved later. I'll add some
+per-control locks for v3.
+
+Thanks,
+Andrew
+
+>> +}
+>> +
+>> +/**
+>> + * ti_sci_reset_assert() - assert device reset
+>> + * @rcdev: reset controller entity
+>> + * @id: ID of the reset to be asserted
+>> + *
+>> + * This function implements the reset driver op to assert a device's reset
+>> + * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
+>> + * with the corresponding parameters as passed in, but with the @assert
+>> + * argument set to true for asserting the reset.
+>> + *
+>> + * Return: 0 for successful request, else a corresponding error value
+>> + */
+>> +static int ti_sci_reset_assert(struct reset_controller_dev *rcdev,
+>> +			       unsigned long id)
+>> +{
+>> +	return ti_sci_reset_set(rcdev, id, true);
+>> +}
+>> +
+>> +/**
+>> + * ti_sci_reset_deassert() - deassert device reset
+>> + * @rcdev: reset controller entity
+>> + * @id: ID of the reset to be deasserted
+>> + *
+>> + * This function implements the reset driver op to deassert a device's reset
+>> + * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
+>> + * with the corresponding parameters as passed in, but with the @assert
+>> + * argument set to false for deasserting the reset.
+>> + *
+>> + * Return: 0 for successful request, else a corresponding error value
+>> + */
+>> +static int ti_sci_reset_deassert(struct reset_controller_dev *rcdev,
+>> +				 unsigned long id)
+>> +{
+>> +	return ti_sci_reset_set(rcdev, id, false);
+>> +}
+>> +
+>> +/**
+>> + * ti_sci_reset_status() - check device reset status
+>> + * @rcdev: reset controller entity
+>> + * @id: ID of reset to be checked
+>> + *
+>> + * This function implements the reset driver op to return the status of a
+>> + * device's reset using the TI SCI protocol. The reset register value is read
+>> + * by invoking the TI SCI device opertation .get_device_resets(), and the
+>> + * status of the specific reset is extracted and returned using this reset's
+>> + * reset mask.
+>> + *
+>> + * Return: 0 if reset is deasserted, or a non-zero value if reset is asserted
+>> + */
+>> +static int ti_sci_reset_status(struct reset_controller_dev *rcdev,
+>> +			       unsigned long id)
+>> +{
+>> +	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
+>> +	const struct ti_sci_handle *sci = data->sci;
+>> +	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
+>> +	struct ti_sci_reset_control *control;
+>> +	u32 reset_state;
+>> +	int ret;
+>> +
+>> +	control = idr_find(&data->idr, id);
+>> +	if (!control)
+>> +		return -EINVAL;
+>> +
+>> +	ret = dev_ops->get_device_resets(sci, control->dev_id,
+>> +					 &reset_state);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return reset_state & control->reset_mask;
+>> +}
+>> +
+>> +static struct reset_control_ops ti_sci_reset_ops = {
+>> +	.assert		= ti_sci_reset_assert,
+>> +	.deassert	= ti_sci_reset_deassert,
+>> +	.status		= ti_sci_reset_status,
+>> +};
+>> +
+>> +/**
+>> + * ti_sci_reset_of_xlate() - translate a set of OF arguments to a reset ID
+>> + * @rcdev: reset controller entity
+>> + * @reset_spec: OF reset argument specifier
+>> + *
+>> + * This function performs the translation of the reset argument specifier
+>> + * values defined in a reset consumer device node. The function allocates a
+>> + * reset control structure for that device reset, and will be used by the
+>> + * driver for performing any reset functions on that reset. An idr structure
+>> + * is allocated and used to map to the reset control structure. This idr
+>> + * is used by the driver to do reset lookups.
+>> + *
+>> + * Return: 0 for successful request, else a corresponding error value
+>> + */
+>> +static int ti_sci_reset_of_xlate(struct reset_controller_dev *rcdev,
+>> +				 const struct of_phandle_args *reset_spec)
+>> +{
+>> +	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
+>> +	struct ti_sci_reset_control *control;
+>> +
+>> +	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
+>> +		return -EINVAL;
+>> +
+>> +	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
+>> +	if (!control)
+>> +		return -ENOMEM;
+>> +
+>> +	control->dev_id = reset_spec->args[0];
+>> +	control->reset_mask = reset_spec->args[1];
+>> +
+>> +	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
+>> +}
+>> +
+>> +static const struct of_device_id ti_sci_reset_of_match[] = {
+>> +	{ .compatible = "ti,sci-reset", },
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ti_sci_reset_of_match);
+>> +
+>> +static int ti_sci_reset_probe(struct platform_device *pdev)
+>> +{
+>> +	struct ti_sci_reset_data *data;
+>> +
+>> +	if (!pdev->dev.of_node)
+>> +		return -ENODEV;
+>> +
+>> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	data->sci = devm_ti_sci_get_handle(&pdev->dev);
+>> +	if (IS_ERR(data->sci))
+>> +		return PTR_ERR(data->sci);
+>> +
+>> +	data->rcdev.ops = &ti_sci_reset_ops;
+>> +	data->rcdev.owner = THIS_MODULE;
+>> +	data->rcdev.of_node = pdev->dev.of_node;
+>> +	data->rcdev.of_reset_n_cells = 2;
+>> +	data->rcdev.of_xlate = ti_sci_reset_of_xlate;
+>> +	data->dev = &pdev->dev;
+>> +	idr_init(&data->idr);
+>> +
+>> +	platform_set_drvdata(pdev, data);
+>> +
+>> +	return reset_controller_register(&data->rcdev);
+>> +}
+>> +
+>> +static int ti_sci_reset_remove(struct platform_device *pdev)
+>> +{
+>> +	struct ti_sci_reset_data *data = platform_get_drvdata(pdev);
+>> +
+>> +	reset_controller_unregister(&data->rcdev);
+>> +
+>> +	idr_destroy(&data->idr);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver ti_sci_reset_driver = {
+>> +	.probe = ti_sci_reset_probe,
+>> +	.remove = ti_sci_reset_remove,
+>> +	.driver = {
+>> +		.name = "ti-sci-reset",
+>> +		.of_match_table = ti_sci_reset_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(ti_sci_reset_driver);
+>> +
+>> +MODULE_AUTHOR("Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>");
+>> +MODULE_DESCRIPTION("TI System Control Interface (TI SCI) Reset driver");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> regards
+> Philipp
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
