@@ -1,28 +1,44 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v5 0/7] add NS2 support to bgmac
-Date: Thu, 03 Nov 2016 16:02:44 -0400 (EDT)
-Message-ID: <20161103.160244.678792221354219550.davem@davemloft.net>
-References: <1478106488-11779-1-git-send-email-jon.mason@broadcom.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Thu, 3 Nov 2016 22:10:21 +0200
+Message-ID: <20161103201021.GA9379@kozik-lap>
+References: <1478155149-28527-1-git-send-email-cw00.choi@samsung.com>
+ <1478155149-28527-4-git-send-email-cw00.choi@samsung.com>
+ <20161103194716.GC12945@kozik-lap>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478106488-11779-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161103194716.GC12945@kozik-lap>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Date: Wed,  2 Nov 2016 13:08:01 -0400
+On Thu, Nov 03, 2016 at 09:47:16PM +0200, Krzysztof Kozlowski wrote:
+> On Thu, Nov 03, 2016 at 03:39:07PM +0900, Chanwoo Choi wrote:
+> > This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
+> > Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
+> > PSCI (Power State Coordination Interface) v0.1.
+> > 
+> > This patch includes following Device Tree node to support Exynos5433 SoC:
+> > 1. Octa cores for big.LITTLE architecture
+> > - Cortex-A53 LITTLE Quad-core
+> > - Cortex-A57 big Quad-core
+> > - Support PSCI v0.1
+> > 
+> 
+> Patch looks good to me. The GIC interrupt flags will have to be fixed
+> someday (e.f. https://patchwork.kernel.org/patch/9336553/) but this may
+> wait... It is violating the GIC since ancient times so I guess we can
+> violate it some more till someone will be annoyed enough to fix it. :)
 
-> Add support for the amac found in the Broadcom Northstar2 SoC to the
-> bgmac driver.  This necessitates adding support to connect to an
-> externally defined phy (as described in the device tree) in the driver.
-> These phy changes are in addition to the changes necessary to get NS2
-> working.
+Thanks, applied.
 
-This does not apply cleanly to the net-next, please respin.
+Best regards,
+Krzysztof
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
