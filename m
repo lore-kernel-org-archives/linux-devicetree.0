@@ -1,93 +1,83 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-Date: Thu, 3 Nov 2016 12:24:06 +0200
-Message-ID: <8b4504e5-7503-596c-377b-ddce0b7c5166@ti.com>
-References: <cover.1478103726.git.jsarha@ti.com>
- <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 5/6] ARM: tegra: Add Tegra20 GMI support
+Date: Thu, 3 Nov 2016 10:29:14 +0000
+Message-ID: <d8ab8a32-8019-45e6-59b1-8914937e1705@nvidia.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
+ <1477576872-2665-6-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1934942460=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: bcousson@baylibre.com, khilman@baylibre.com, bgolaszewski@baylibre.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477576872-2665-6-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1934942460==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd"
 
---6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd
-Content-Type: multipart/mixed; boundary="Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com,
- robdclark@gmail.com, bgolaszewski@baylibre.com, khilman@baylibre.com,
- bcousson@baylibre.com
-Message-ID: <8b4504e5-7503-596c-377b-ddce0b7c5166@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-References: <cover.1478103726.git.jsarha@ti.com>
- <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
-In-Reply-To: <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+On 27/10/16 15:01, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Add a device node for the GMI controller found on Tegra20.
+>
+> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+> ---
+>
+> Changes in v2:
+> - added address-cells, size-cells and ranges properties
+>
+> Changes in v3:
+> - fixed range address which is not the same as Tegra30.
+>
+>  arch/arm/boot/dts/tegra20.dtsi | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 2207c08..b22cddb 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -1,4 +1,4 @@
+> -#include <dt-bindings/clock/tegra20-car.h>
+> +include <dt-bindings/clock/tegra20-car.h>
 
---Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+After fixing up this, can you also ...
 
-On 02/11/16 18:32, Jyri Sarha wrote:
-> Add very basic ti-ftp410 HDMI transmitter driver. The only feature
+>  #include <dt-bindings/gpio/tegra-gpio.h>
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> @@ -376,6 +376,20 @@
+>  		status = "disabled";
+>  	};
+>
+> +
 
-It's DVI encoder, not HDMI.
+Drop this additional line?
 
- Tomi
+> +	gmi@70009000 {
+> +		compatible = "nvidia,tegra20-gmi";
+> +		reg = <0x70009000 0x1000>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0xd0000000 0xfffffff>;
+> +		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+> +		clock-names = "gmi";
+> +		resets = < &tegra_car 42>;
 
+Get rid of this additional space?
 
---Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK--
+> +		reset-names = "gmi";
+> +		status = "disabled";
+> +	};
+> +
 
---6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Otherwise ...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-iQIcBAEBCAAGBQJYGxBGAAoJEPo9qoy8lh71qDAQAIglakQXUJdj0QclTGHHXZDw
-HPwFHMoU4FabiIEdps1x1N9+H41g+aHG69bmzDqi5M+XwUDCTRM+6sFOes4IthqQ
-8AbcAEjabM01xiH6Y8C3Kg3KGQztP/448iJF7utzCcFlbk2pYgBoux9u+VvuVfbE
-7aLkeVuMT3Xyx0/lFaOBb//71JLObBNTivOpZkQUHW6chgCezA3SgOSezwtgYDIU
-fqv5NlRILOo4XwUDOX75DrCyZV4/yQp2GTYjiwftuyh1OKmLJwNkqVrsQKWAKAaQ
-qHtfRITT/2AsOkDagAUfPCeXpAVKz3VMTf2NQoYCMWN+q7EtHU9aNviZOBS7Cbk1
-XomopBWhhcsrsB9wXeOQk/QMu/YZ+b+Wkz7vO20I9N9Hikm+DQvcCAWoIjWSbhUQ
-D0ScWbWQ8Xc3+BjNXU+ySraVXzL/p91KzeHmwY9+mH2p70l4foiwmbMCU25FF1nS
-C7hyL3VEsWUATJZZ6kSCO387YA/q+qspyfAFd44bbpWfPq9SALLfIB889woK9Lc6
-ZPXdwe6iZFGQxpH3TF9cdC1U+7u1Rpzjw4bD7X6z5HPLuq3FBkoolg3kmePE9DSk
-2lDmg4Gl84sCmofxoBNa1GV8GL0pZso0VLdnHKzUvaNjCCHMZhXyPqx4sIxuBmKd
-iT7W1+Nm7CO7RsGSPwmp
-=tky+
------END PGP SIGNATURE-----
+Cheers
+Jon
 
---6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd--
-
---===============1934942460==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1934942460==--
+-- 
+nvpublic
