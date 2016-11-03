@@ -1,105 +1,127 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: sun4i-codec: Increase DMA max burst to
- 8" to the asoc tree
-Date: Thu, 03 Nov 2016 14:33:53 -0600
-Message-ID: <E1c2Ohu-0004P5-01@finisterre>
-References: <20161103075556.29018-5-wens@csie.org>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
+Date: Thu, 3 Nov 2016 22:36:28 +0200
+Message-ID: <9ec35a3a-02a7-8067-8f7c-23243de8456a@iki.fi>
+References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <2893157.XL3Txm4q5I@avalon>
+ <SG2PR06MB10389152CEC59BB77A5DA7DDC3A00@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <6165707.yDnDHhpUBT@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBB2F653AAKGQEOSFZBWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161103075556.29018-5-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6165707.yDnDHhpUBT@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org" <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hello
 
-   ASoC: sun4i-codec: Increase DMA max burst to 8
+On 11/02/2016 10:58 PM, Laurent Pinchart wrote:
+> Hi Ramesh,
+>
+> On Wednesday 02 Nov 2016 09:00:00 Ramesh Shanmugasundaram wrote:
+>> Hi Laurent,
+>>
+>> Any further thoughts on the SDR format please (especially the comment
+>> below). I would appreciate your feedback.
+>>
+>>>> On Wednesday 12 Oct 2016 15:10:29 Ramesh Shanmugasundaram wrote:
+>>>>> This patch adds documentation for the three new SDR formats
+>>>>>
+>>>>> V4L2_SDR_FMT_SCU16BE
+>>>>> V4L2_SDR_FMT_SCU18BE
+>>>>> V4L2_SDR_FMT_SCU20BE
+>>
+>> [snip]
+>>
+>>>>> +
+>>>>> +       -  start + 0:
+>>>>> +
+>>>>> +       -  I'\ :sub:`0[D13:D6]`
+>>>>> +
+>>>>> +       -  I'\ :sub:`0[D5:D0]`
+>>>>> +
+>>>>> +    -  .. row 2
+>>>>> +
+>>>>> +       -  start + buffer_size/2:
+>>>>> +
+>>>>> +       -  Q'\ :sub:`0[D13:D6]`
+>>>>> +
+>>>>> +       -  Q'\ :sub:`0[D5:D0]`
+>>>>
+>>>> The format looks planar, does it use one V4L2 plane (as does NV12) or
+>>>> two V4L2 planes (as does NV12M) ? Same question for the other formats.
+>>>
+>>> Thank you for bringing up this topic. This is one of the key design
+>>> dilemma.
+>>>
+>>> The I & Q data for these three SDR formats comes from two different DMA
+>>> channels and hence two separate pointers -> we could say it is v4l2 multi-
+>>> planar. Right now, I am making it look like a single plane by presenting
+>>> the data in one single buffer ptr.
+>>>
+>>> For e.g. multi-planar SC16 format would look something like this
+>>>
+>>> <------------------------32bits---------------------->
+>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 0
+>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 4 ...
+>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 0
+>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 4
+>>>
+>>> My concerns are
+>>>
+>>> 1) These formats are not a standard as the video "Image Formats". These
+>>> formats are possible when we use DRIF + MAX2175 combination. If we
+>>> interface with a different tuner vendor, the above format(s) MAY/MAY NOT
+>>> be re-usable. We do not know at this point. This is the main open item for
+>>> discussion in the cover letter.
+>
+> If the formats are really device-specific then they should be documented
+> accordingly and not made generic.
+>
+>>> 2) MPLANE support within V4L2 seems specific to video. Please correct me
+>>> if this is wrong interpretation.
+>>>
+>>> - struct v4l2_format contains v4l2_sdr_format and
+>>> v4l2_pix_format_mplane as members of union. Should I create a new
+>>> v4l2_sdr_format_mplane? If I have to use v4l2_pix_format_mplane most of
+>>> the video specific members would be unused (it would be similar to using
+>>> v4l2_pix_format itself instead of v4l2_sdr_format)?
+>
+> I have no answer to that question as I'm not familiar with SDR. Antti, you've
+> added v4l2_sdr_format to the API, what's your opinion ? Hans, as you've acked
+> the patch, your input would be appreciated as well.
 
-has been applied to the asoc tree at
+If I understood correctly this hardware provides I and Q samples via 
+different channels and driver now combines those channels as a 
+sequential IQ sample pairs. I have never seen any other than hw which 
+provides IQ IQ IQ IQ ... IQ.
+This is
+I I I I ... I
+Q Q Q Q ... Q
+I am not very familiar with planars, but it sounds like it is correct 
+approach. So I think should be added rather than emulate packet 
+sequential format.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+>
+>>> - The above decision (accomodate SDR & MPLANE) needs to be
+>>> propagated across the framework. Is this the preferred approach?
+>>>
+>>> It goes back to point (1). As of today, the change set for this combo
+>>> (DRIF+MAX2175) introduces new SDR formats only. Should it add further
+>>> SDR+MPLANE support to the framework as well?
+>>>
+>>> I would appreciate your suggestions on this regard.
+>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+regards
+Antti
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 730e2dd0cbc7a7ec10174d9d291cdd8e8082a948 Mon Sep 17 00:00:00 2001
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Date: Thu, 3 Nov 2016 15:55:46 +0800
-Subject: [PATCH] ASoC: sun4i-codec: Increase DMA max burst to 8
-
-According to the DMA engine API documentation, maxburst denotes the
-largest possible size of a single transfer, so as not to overflow
-destination FIFOs as explained in this excerpt from dmaengine.h
-
- * @src_maxburst: the maximum number of words (note: words, as in
- * units of the src_addr_width member, not bytes) that can be sent
- * in one burst to the device. Typically something like half the
- * FIFO depth on I/O peripherals so you don't overflow it. This
- * may or may not be applicable on memory sources.
- * @dst_maxburst: same as src_maxburst but for destination target
- * mutatis mutandis.
-
-The TX FIFO is 64 samples deep for stereo, and the RX FIFO is 16
-samples deep. So maxburst could be 32 and 8 for TX and RX respectively.
-
-Unfortunately the sunxi DMA controller driver takes maxburst as
-the requested burst size, rather than a limit, and returns an error
-for unsupported values. The original value was 4, but some later
-SoCs do not officially support this burst size.
-
-This patch increases maxburst on the TX side to 8, which is supported
-by all variants of the sunxi DMA controller.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- sound/soc/sunxi/sun4i-codec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index 61ae502a5061..d867b96d367b 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -886,12 +886,12 @@ static int sun4i_codec_probe(struct platform_device *pdev)
- 
- 	/* DMA configuration for TX FIFO */
- 	scodec->playback_dma_data.addr = res->start + quirks->reg_dac_txdata;
--	scodec->playback_dma_data.maxburst = 4;
-+	scodec->playback_dma_data.maxburst = 8;
- 	scodec->playback_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
- 
- 	/* DMA configuration for RX FIFO */
- 	scodec->capture_dma_data.addr = res->start + quirks->reg_adc_rxdata;
--	scodec->capture_dma_data.maxburst = 4;
-+	scodec->capture_dma_data.maxburst = 8;
- 	scodec->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
- 
- 	ret = snd_soc_register_codec(&pdev->dev, quirks->codec,
 -- 
-2.10.1
+http://palosaari.fi/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
