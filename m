@@ -1,56 +1,56 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 8/8] firmware: arm_scpi: add support for legacy SCPI compatible
-Date: Wed,  2 Nov 2016 22:52:11 -0600
-Message-ID: <1478148731-11712-9-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v5 7/8] Documentation: bindings: Add support for Amlogic GXBB SCPI protocol
+Date: Wed,  2 Nov 2016 22:52:10 -0600
+Message-ID: <1478148731-11712-8-git-send-email-sudeep.holla@arm.com>
 References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478148731-11712-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds new DT match table to setup the support for legacy SCPI
-protocol. It aldo adds "arm,legacy-scpi" to the legacy match entry.
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+(decoupled from the generic scpi binding)
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/firmware/arm_scpi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../devicetree/bindings/arm/amlogic,scpi.txt         | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic,scpi.txt
 
-diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
-index 902233642bd3..a38e1537fb8e 100644
---- a/drivers/firmware/arm_scpi.c
-+++ b/drivers/firmware/arm_scpi.c
-@@ -871,6 +871,11 @@ static int scpi_alloc_xfer_list(struct device *dev, struct scpi_chan *ch)
- 	return 0;
- }
- 
-+static const struct of_device_id legacy_scpi_of_match[] = {
-+	{.compatible = "arm,legacy-scpi"},
-+	{},
-+};
+diff --git a/Documentation/devicetree/bindings/arm/amlogic,scpi.txt b/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
+new file mode 100644
+index 000000000000..7b9a861e9306
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/amlogic,scpi.txt
+@@ -0,0 +1,20 @@
++System Control and Power Interface (SCPI) Message Protocol
++(in addition to the standard binding in [0])
++----------------------------------------------------------
++Required properties
 +
- static int scpi_probe(struct platform_device *pdev)
- {
- 	int count, idx, ret;
-@@ -883,6 +888,9 @@ static int scpi_probe(struct platform_device *pdev)
- 	if (!scpi_info)
- 		return -ENOMEM;
- 
-+	if (of_match_device(legacy_scpi_of_match, &pdev->dev))
-+		scpi_info->is_legacy = true;
++- compatible : should be "amlogic,meson-gxbb-scpi"
 +
- 	count = of_count_phandle_with_args(np, "mboxes", "#mbox-cells");
- 	if (count < 0) {
- 		dev_err(dev, "no mboxes property in '%s'\n", np->full_name);
-@@ -984,6 +992,7 @@ static int scpi_probe(struct platform_device *pdev)
- 
- static const struct of_device_id scpi_of_match[] = {
- 	{.compatible = "arm,scpi"},
-+	{.compatible = "arm,legacy-scpi"},
- 	{},
- };
- 
++AMLOGIC SRAM and Shared Memory for SCPI
++------------------------------------
++
++Required properties:
++- compatible : should be "amlogic,meson-gxbb-sram"
++
++Each sub-node represents the reserved area for SCPI.
++
++Required sub-node properties:
++- compatible : should be "amlogic,meson-gxbb-scp-shmem" for SRAM based shared
++		memory on Amlogic GXBB SoC.
++
++[0] Documentation/devicetree/bindings/arm/arm,scpi.txt
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
