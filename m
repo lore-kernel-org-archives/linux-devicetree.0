@@ -1,36 +1,59 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 4/6] ARM: dts: add basic support for Rockchip RK1108 SOC
-Date: Thu,  3 Nov 2016 20:40:48 +0800
-Message-ID: <1478176848-12132-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 6/6] ARM: dts: rockchip: add rockchip RK1108 Evaluation board
+Date: Thu,  3 Nov 2016 20:43:59 +0800
+Message-ID: <1478177039-12257-1-git-send-email-andy.yan@rock-chips.com>
 References: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: elaine.zhang@rock-chips.com, mturquette@baylibre.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478175975-11779-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RK1108 is embedded with an ARM Cortex-A7 single core and a DSP core.
-It is designed for varies application scenario such as car DVR, sports
-DV, secure camera and UAV camera.
+RK1108EVB is designed by Rockchip for CVR field.
+This patch add basic support for it, which can boot with
+initramfs into shell.
 
-This patch add basic support for it with DMAC / UART / CRU / pinctrl
-enabled.
-
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- arch/arm/boot/dts/rk1108.dtsi     | 420 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c |   1 +
- 2 files changed, 421 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk1108.dtsi
+ Documentation/devicetree/bindings/arm/rockchip.txt |  3 +
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/rk1108-evb.dts                   | 69 ++++++++++++++++++++++
+ 3 files changed, 73 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk1108-evb.dts
 
-diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 10b92b5..8670181 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -1,5 +1,8 @@
+ Rockchip platforms device tree bindings
+ ---------------------------------------
++- Rockchip RK1108 Evaluation board
++    Required root node properties:
++      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
+ 
+ - Kylin RK3036 board:
+     Required root node properties:
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e49476a..249dca9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -635,6 +635,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
+ 	arm-realview-pba8.dtb \
+ 	arm-realview-pbx-a9.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
++	rk1108-evb.dtb \
+ 	rk3036-evb.dtb \
+ 	rk3036-kylin.dtb \
+ 	rk3066a-bqcurie2.dtb \
+diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rk1108-evb.dts
 new file mode 100644
-index 0000000..9dccfea
+index 0000000..3956cff
 --- /dev/null
-+++ b/arch/arm/boot/dts/rk1108.dtsi
-@@ -0,0 +1,420 @@
++++ b/arch/arm/boot/dts/rk1108-evb.dts
+@@ -0,0 +1,69 @@
 +/*
 + * This file is dual-licensed: you can use it either under the terms
 + * of the GPL or the X11 license, at your option. Note that this dual
@@ -47,7 +70,7 @@ index 0000000..9dccfea
 + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + *     GNU General Public License for more details.
 + *
-+ * Or, alternatively,
++ *  Or, alternatively,
 + *
 + *  b) Permission is hereby granted, free of charge, to any person
 + *     obtaining a copy of this software and associated documentation
@@ -71,399 +94,40 @@ index 0000000..9dccfea
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/rk1108-cru.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
++/dts-v1/;
++
++#include "rk1108.dtsi"
++
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++	model = "Rockchip RK1108 Evaluation board";
++	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
 +
-+	compatible = "rockchip,rk1108";
-+
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
++	memory@60000000 {
++		device_type = "memory";
++		reg = <0x60000000 0x08000000>;
 +	};
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@f00 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf00>;
-+		};
-+
-+	};
-+
-+	amba {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		pdma: pdma@102a0000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x102a0000 0x4000>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			arm,pl330-broken-no-flushp;
-+			clocks = <&cru ACLK_DMAC>;
-+			clock-names = "apb_pclk";
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+		clock-frequency = <24000000>;
-+	};
-+
-+	xin24m: oscillator {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xin24m";
-+		#clock-cells = <0>;
-+	};
-+
-+	bus_intmem@10080000 {
-+		compatible = "mmio-sram";
-+		reg = <0x10080000 0x2000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x10080000 0x2000>;
-+	};
-+
-+	grf: syscon@10300000 {
-+		compatible = "rockchip,rk1108-grf", "syscon";
-+		reg = <0x10300000 0x1000>;
-+	};
-+
-+	emmc: dwmmc@30110000 {
-+		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
-+		clock-freq-min-max = <400000 150000000>;
-+		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
-+			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0x30110000 0x4000>;
-+		status = "disabled";
-+	};
-+
-+	sdio: dwmmc@30120000 {
-+		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
-+		clock-freq-min-max = <400000 150000000>;
-+		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
-+			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0x30120000 0x4000>;
-+		status = "disabled";
-+	};
-+
-+	sdmmc: dwmmc@30130000 {
-+		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
-+		clock-freq-min-max = <400000 100000000>;
-+		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
-+			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0x30130000 0x4000>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@10210000 {
-+		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
-+		reg = <0x10210000 0x100>;
-+		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <24000000>;
-+		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
-+		clock-names = "baudclk", "apb_pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&uart2m0_xfer>;
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@10220000 {
-+		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
-+		reg = <0x10220000 0x100>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <24000000>;
-+		clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
-+		clock-names = "baudclk", "apb_pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&uart1_xfer>;
-+		status = "disabled";
-+	};
-+
-+	uart0: serial@10230000 {
-+		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
-+		reg = <0x10230000 0x100>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		clock-frequency = <24000000>;
-+		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+		clock-names = "baudclk", "apb_pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+		status = "disabled";
-+	};
-+
-+	cru: clock-controller@20200000 {
-+		compatible = "rockchip,rk1108-cru";
-+		reg = <0x20200000 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	gic: interrupt-controller@32010000 {
-+		compatible = "arm,cortex-a15-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		#address-cells = <0>;
-+
-+		reg = <0x32011000 0x1000>,
-+		      <0x32012000 0x1000>;
-+	};
-+
-+	pinctrl: pinctrl {
-+		compatible = "rockchip,rk1108-pinctrl";
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		gpio0: gpio0@20030000 {
-+			compatible = "rockchip,gpio-bank";
-+			reg = <0x20030000 0x100>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio1: gpio1@10310000 {
-+			compatible = "rockchip,gpio-bank";
-+			reg = <0x10310000 0x100>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio2: gpio2@10320000 {
-+			compatible = "rockchip,gpio-bank";
-+			reg = <0x10320000 0x100>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio3: gpio3@10330000 {
-+			compatible = "rockchip,gpio-bank";
-+			reg = <0x10330000 0x100>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		pcfg_pull_up: pcfg-pull-up {
-+			bias-pull-up;
-+		};
-+
-+		pcfg_pull_down: pcfg-pull-down {
-+			bias-pull-down;
-+		};
-+
-+		pcfg_pull_none: pcfg-pull-none {
-+			bias-disable;
-+		};
-+
-+		pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
-+			drive-strength = <8>;
-+		};
-+
-+		pcfg_pull_none_drv_12ma: pcfg-pull-none-drv-12ma {
-+			drive-strength = <12>;
-+		};
-+
-+		pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
-+			bias-pull-up;
-+			drive-strength = <8>;
-+		};
-+
-+		pcfg_pull_none_drv_4ma: pcfg-pull-none-drv-4ma {
-+			drive-strength = <4>;
-+		};
-+
-+		pcfg_pull_up_drv_4ma: pcfg-pull-up-drv-4ma {
-+			bias-pull-up;
-+			drive-strength = <4>;
-+		};
-+
-+		pcfg_output_high: pcfg-output-high {
-+			output-high;
-+		};
-+
-+		pcfg_output_low: pcfg-output-low {
-+			output-low;
-+		};
-+
-+		pcfg_input_high: pcfg-input-high {
-+			bias-pull-up;
-+			input-enable;
-+		};
-+
-+		i2c1 {
-+			i2c1_xfer: i2c1-xfer {
-+				rockchip,pins = <2 RK_PD3 RK_FUNC_1 &pcfg_pull_up>,
-+						<2 RK_PD4 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		i2c2m1 {
-+			i2c2m1_xfer: i2c2m1-xfer {
-+				rockchip,pins = <0 RK_PC2 RK_FUNC_2 &pcfg_pull_none>,
-+						<0 RK_PC6 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+
-+			i2c2m1_gpio: i2c2m1-gpio {
-+				rockchip,pins = <0 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>,
-+						<0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c2m05v {
-+			i2c2m05v_xfer: i2c2m05v-xfer {
-+				rockchip,pins = <1 RK_PD5 RK_FUNC_2 &pcfg_pull_none>,
-+						<1 RK_PD4 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+
-+			i2c2m05v_gpio: i2c2m05v-gpio {
-+				rockchip,pins = <1 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>,
-+						<1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+		};
-+
-+		i2c3 {
-+			i2c3_xfer: i2c3-xfer {
-+				rockchip,pins = <0 RK_PB6 RK_FUNC_1 &pcfg_pull_none>,
-+						<0 RK_PC4 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		uart0 {
-+			uart0_xfer: uart0-xfer {
-+				rockchip,pins = <3 RK_PA6 RK_FUNC_1 &pcfg_pull_up>,
-+						<3 RK_PA5 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart0_cts: uart0-cts {
-+				rockchip,pins = <3 RK_PA4 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart0_rts: uart0-rts {
-+				rockchip,pins = <3 RK_PA3 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart0_rts_gpio: uart0-rts-gpio {
-+				rockchip,pins = <3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+			};
-+		};
-+
-+		uart1 {
-+			uart1_xfer: uart1-xfer {
-+				rockchip,pins = <1 RK_PD3 RK_FUNC_1 &pcfg_pull_up>,
-+						<1 RK_PD2 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart1_cts: uart1-cts {
-+				rockchip,pins = <1 RK_PD0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart1_rts: uart1-rts {
-+				rockchip,pins = <1 RK_PD1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		uart2m0 {
-+			uart2m0_xfer: uart2m0-xfer {
-+				rockchip,pins = <2 RK_PD2 RK_FUNC_1 &pcfg_pull_up>,
-+						<2 RK_PD1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		uart2m1 {
-+			uart2m1_xfer: uart2m1-xfer {
-+				rockchip,pins = <3 RK_PC3 RK_FUNC_2 &pcfg_pull_up>,
-+						<3 RK_PC2 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		uart2_5v {
-+			uart2_5v_cts: uart2_5v-cts {
-+				rockchip,pins = <1 RK_PD4 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			uart2_5v_rts: uart2_5v-rts {
-+				rockchip,pins = <1 RK_PD5 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
++	chosen {
++		stdout-path = "serial2:1500000n8";
 +	};
 +};
-diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
-index a7ab9ec..e7fdf06 100644
---- a/arch/arm/mach-rockchip/rockchip.c
-+++ b/arch/arm/mach-rockchip/rockchip.c
-@@ -76,6 +76,7 @@ static void __init rockchip_dt_init(void)
- }
- 
- static const char * const rockchip_board_dt_compat[] = {
-+	"rockchip,rk1108",
- 	"rockchip,rk2928",
- 	"rockchip,rk3066a",
- 	"rockchip,rk3066b",
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
 -- 
 2.7.4
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
