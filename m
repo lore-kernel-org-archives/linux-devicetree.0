@@ -1,39 +1,65 @@
-From: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 0/4] dmaengine: qcom_hidma: add MSI interrupt support
-Date: Thu, 3 Nov 2016 13:17:29 +0000
-Message-ID: <1478179048.6505.29.camel@intel.com>
-References: <1477067879-23750-1-git-send-email-okaya@codeaurora.org>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: [PATCH] ARM: DTS: r8a7794: alt: Fix PCF names for DU
+Date: Thu,  3 Nov 2016 14:42:54 +0100
+Message-ID: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477067879-23750-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Content-ID: <91DD0C4EB6484346B6FBAE7F01701494-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-10-21 at 12:37 -0400, Sinan Kaya wrote:
-+AD4- The new version of the HW supports MSI interrupts instead of wired
-+AD4- interrupts. The MSI interrupts are especially useful for the guest
-+AD4- machine
-+AD4- execution. The wired interrupts usually trap to the hypervisor and
-+AD4- then are
-+AD4- relayed to the actual interrupt.
-+AD4- 
-+AD4- The MSI interrupts can be directly fed into the interrupt controller.
-+AD4- 
-+AD4- Adding a new OF compat string (qcom,hidma-1.1) and ACPI string
-+AD4- (QCOM8062)
-+AD4- to distinguish newer HW from the older ones.
+Update the PCF pin groups and function names of DU interface for
+r8a7794 ALT board.
 
-Applied, thanks
+The currently specified pin groups and function names prevented PCF and
+DU interfaces from being correctly configured:
 
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+sh-pfc e6060000.pin-controller: function 'du' not supported
+sh-pfc e6060000.pin-controller: invalid function du in map table
+rcar-du: probe of feb00000.display failed with error -22
+
+Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+---
+
+Patch applied against Simon Horman's renesas/master branch.
+The PCF pin groups and function renaming was introduced by commit 56ed4bb9 and
+DTS for ALT board has never been update accordingly.
+Tested displaying frames on VGA interface: the rcar-du driver loads correctly.
+
+ arch/arm/boot/dts/r8a7794-alt.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+index 8d1b35a..9d65fb3 100644
+--- a/arch/arm/boot/dts/r8a7794-alt.dts
++++ b/arch/arm/boot/dts/r8a7794-alt.dts
+@@ -165,8 +165,8 @@
+ 	pinctrl-names = "default";
+ 
+ 	du_pins: du {
+-		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_dotclkout0";
+-		function = "du";
++		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_clk0_out";
++		function = "du1";
+ 	};
+ 
+ 	scif2_pins: scif2 {
 -- 
-+AH4-Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
