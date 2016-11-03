@@ -1,83 +1,52 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 5/6] ARM: tegra: Add Tegra20 GMI support
-Date: Thu, 3 Nov 2016 10:29:14 +0000
-Message-ID: <d8ab8a32-8019-45e6-59b1-8914937e1705@nvidia.com>
-References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
- <1477576872-2665-6-git-send-email-mirza.krak@gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
+ ir-spi device driver
+Date: Thu, 03 Nov 2016 11:39:21 +0100
+Message-ID: <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
+References: <20161102104010.26959-1-andi.shyti@samsung.com>
+ <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
+ <20161102104010.26959-6-andi.shyti@samsung.com>
+ <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
+ <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477576872-2665-6-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 27/10/16 15:01, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 11/03/2016 11:10 AM, Andi Shyti wrote:
+> Hi Jacek,
 >
-> Add a device node for the GMI controller found on Tegra20.
+>> Only DT bindings of LED class drivers should be placed in
+>> Documentation/devicetree/bindings/leds. Please move it to the
+>> media bindings.
 >
-> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
-> ---
+> that's where I placed it first, but Rob asked me to put it in the
+> LED directory and Cc the LED mailining list.
 >
-> Changes in v2:
-> - added address-cells, size-cells and ranges properties
+> That's the discussion of the version 2:
 >
-> Changes in v3:
-> - fixed range address which is not the same as Tegra30.
+> https://lkml.org/lkml/2016/9/12/380
 >
->  arch/arm/boot/dts/tegra20.dtsi | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index 2207c08..b22cddb 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -1,4 +1,4 @@
-> -#include <dt-bindings/clock/tegra20-car.h>
-> +include <dt-bindings/clock/tegra20-car.h>
+> Rob, Jacek, could you please agree where I can put the binding?
 
-After fixing up this, can you also ...
+I'm not sure if this is a good approach. I've noticed also that
+backlight bindings have been moved to leds, whereas they don't look
+similarly.
 
->  #include <dt-bindings/gpio/tegra-gpio.h>
->  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> @@ -376,6 +376,20 @@
->  		status = "disabled";
->  	};
->
-> +
+We have common.txt LED bindings, that all LED class drivers' bindings
+have to follow. Neither backlight bindings nor these ones do that,
+which introduces some mess.
 
-Drop this additional line?
-
-> +	gmi@70009000 {
-> +		compatible = "nvidia,tegra20-gmi";
-> +		reg = <0x70009000 0x1000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0xd0000000 0xfffffff>;
-> +		clocks = <&tegra_car TEGRA20_CLK_NOR>;
-> +		clock-names = "gmi";
-> +		resets = < &tegra_car 42>;
-
-Get rid of this additional space?
-
-> +		reset-names = "gmi";
-> +		status = "disabled";
-> +	};
-> +
-
-Otherwise ...
-
-Acked-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-Cheers
-Jon
+Eventually adding a sub-directory, e.g. remote_control could make it
+somehow logically justified, but still - shouldn't bindings be
+placed in the documentation directory related to the subsystem of the
+driver they are predestined to?
 
 -- 
-nvpublic
+Best regards,
+Jacek Anaszewski
