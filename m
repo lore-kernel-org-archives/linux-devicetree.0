@@ -1,120 +1,121 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 01/11] remoteproc: st_slim_rproc: add a slimcore
- rproc driver
-Date: Thu, 3 Nov 2016 14:37:03 -0700
-Message-ID: <20161103213703.GA15449@tuxbot>
-References: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
- <1476783556-2501-2-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476783556-2501-2-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Thu,  3 Nov 2016 14:54:35 -0700
+Message-ID: <1478210075-92045-2-git-send-email-lina.iyer@linaro.org>
+References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 18 Oct 02:39 PDT 2016, Peter Griffin wrote:
+Re-using idle state definition provided by arm,idle-state for domain
+idle states creates a lot of confusion and limits further evolution of
+the domain idle definition. To keep things clear and simple, define a
+idle states for domain using a new compatible "domain-idle-state".
 
-> slim core is used as a basis for many IPs in the STi
-> chipsets such as fdma and demux. To avoid duplicating
-> the elf loading code in each device driver a slim
-> rproc driver has been created.
-> 
-> This driver is designed to be used by other device drivers
-> such as fdma, or demux whose IP is based around a slim core.
-> The device driver can call slim_rproc_alloc() to allocate
-> a slim rproc and slim_rproc_put() when finished.
-> 
-> This driver takes care of ioremapping the slim
-> registers (dmem, imem, slimcore, peripherals), whose offsets
-> and sizes can change between IP's. It also obtains and enables
-> any clocks used by the device. This approach avoids having
-> a double mapping of the registers as slim_rproc does not register
-> its own platform device. It also maps well to device tree
-> abstraction as it allows us to have one dt node for the whole
-> device.
-> 
-> All of the generic rproc elf loading code can be reused, and
-> we provide start() stop() hooks to start and stop the slim
-> core once the firmware has been loaded. This has been tested
-> successfully with fdma driver.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/remoteproc/Kconfig               |   7 +-
->  drivers/remoteproc/Makefile              |   1 +
->  drivers/remoteproc/st_slim_rproc.c       | 364 +++++++++++++++++++++++++++++++
->  include/linux/remoteproc/st_slim_rproc.h |  58 +++++
->  4 files changed, 428 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/remoteproc/st_slim_rproc.c
->  create mode 100644 include/linux/remoteproc/st_slim_rproc.h
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index f396bfe..9270c8e 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -58,7 +58,6 @@ config DA8XX_REMOTEPROC
->  	tristate "DA8xx/OMAP-L13x remoteproc support"
->  	depends on ARCH_DAVINCI_DA8XX
->  	select CMA if MMU
-> -	select REMOTEPROC
+Fix existing PM domains code to look for the newly defined compatible.
 
-No, this is an unrelated change to this patch.
+Cc: <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+ .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+ drivers/base/power/domain.c                        |  2 +-
+ 3 files changed, 38 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
 
->  	select RPMSG_VIRTIO
->  	help
->  	  Say y here to support DA8xx/OMAP-L13x remote processors via the
-> @@ -99,10 +98,10 @@ config QCOM_WCNSS_PIL
->  	tristate "Qualcomm WCNSS Peripheral Image Loader"
->  	depends on OF && ARCH_QCOM
->  	depends on QCOM_SMEM
-> +	depends on REMOTEPROC
->  	select QCOM_MDT_LOADER
->  	select QCOM_SCM
->  	select QCOM_WCNSS_IRIS
-> -	select REMOTEPROC
+diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+new file mode 100644
+index 0000000..eefc7ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+@@ -0,0 +1,33 @@
++PM Domain Idle State Node:
++
++A domain idle state node represents the state parameters that will be used to
++select the state when there are no active components in the domain.
++
++The state node has the following parameters -
++
++- compatible:
++	Usage: Required
++	Value type: <string>
++	Definition: Must be "domain-idle-state".
++
++- entry-latency-us
++	Usage: Required
++	Value type: <prop-encoded-array>
++	Definition: u32 value representing worst case latency in
++		    microseconds required to enter the idle state.
++		    The exit-latency-us duration may be guaranteed
++		    only after entry-latency-us has passed.
++
++- exit-latency-us
++	Usage: Required
++	Value type: <prop-encoded-array>
++	Definition: u32 value representing worst case latency
++		    in microseconds required to exit the idle state.
++
++- min-residency-us
++	Usage: Required
++	Value type: <prop-encoded-array>
++	Definition: u32 value representing minimum residency duration
++		    in microseconds after which the idle state will yield
++		    power benefits after overcoming the overhead in entering
++i		    the idle state.
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index e165036..723e1ad 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -31,7 +31,7 @@ Optional properties:
+ 
+ - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+                 generic domain power state. The idle state definitions are
+-                compatible with arm,idle-state specified in [1].
++                compatible with domain-idle-state specified in [1].
+   The domain-idle-state property reflects the idle state of this PM domain and
+   not the idle states of the devices or sub-domains in the PM domain. Devices
+   and sub-domains have their own idle-states independent of the parent
+@@ -85,7 +85,7 @@ Example 3:
+ 	};
+ 
+ 	DOMAIN_RET: state@0 {
+-		compatible = "arm,idle-state";
++		compatible = "domain-idle-state";
+ 		reg = <0x0>;
+ 		entry-latency-us = <1000>;
+ 		exit-latency-us = <2000>;
+@@ -93,7 +93,7 @@ Example 3:
+ 	};
+ 
+ 	DOMAIN_PWR_DN: state@1 {
+-		compatible = "arm,idle-state";
++		compatible = "domain-idle-state";
+ 		reg = <0x1>;
+ 		entry-latency-us = <5000>;
+ 		exit-latency-us = <8000>;
+@@ -118,4 +118,4 @@ The node above defines a typical PM domain consumer device, which is located
+ inside a PM domain with index 0 of a power controller represented by a node
+ with the label "power".
+ 
+-[1]. Documentation/devicetree/bindings/arm/idle-states.txt
++[1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 661737c..f0bc672 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2048,7 +2048,7 @@ int genpd_dev_pm_attach(struct device *dev)
+ EXPORT_SYMBOL_GPL(genpd_dev_pm_attach);
+ 
+ static const struct of_device_id idle_state_match[] = {
+-	{ .compatible = "arm,idle-state", },
++	{ .compatible = "domain-idle-state", },
+ 	{ }
+ };
+ 
+-- 
+2.7.4
 
-Dito.
-
-
-As you now make changes to the entire remoteproc Kconfig file, rather
-than simply add a Kconfig symbol we can't bring this in via Vinod's tree
-without providing Linus with a messy merge conflict.
-
-So the remoteproc parts now has to go through my tree.
-
->  	help
->  	  Say y here to support the Peripheral Image Loader for the Qualcomm
->  	  Wireless Connectivity Subsystem.
-> @@ -116,4 +115,8 @@ config ST_REMOTEPROC
->  	  processor framework.
->  	  This can be either built-in or a loadable module.
->  
-> +config ST_SLIM_REMOTEPROC
-> +	tristate
-> +	select REMOTEPROC
-> +
->  endmenu
-[..]
-> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-[..]
-> +struct st_slim_rproc *st_slim_rproc_alloc(struct platform_device *pdev,
-> +				char *fw_name)
-> +{
-[..]
-> +	rproc = rproc_alloc(dev, np->name, &slim_rproc_ops,
-> +			fw_name, sizeof(*slim_rproc));
-[..]
-> +	rproc_put(rproc);
-
-As of v4.9 you need to rproc_free() rather than rproc_put() to undo
-rproc_alloc().
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
