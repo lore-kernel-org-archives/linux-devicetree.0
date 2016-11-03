@@ -1,59 +1,43 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI
- protocol
-Date: Thu, 3 Nov 2016 10:12:29 +0100
-Message-ID: <3a1824cc-83b4-a7ae-4a72-03f83bc2348f@baylibre.com>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 1/6] clk: tegra: add TEGRA20_CLK_NOR to init table
+Date: Thu, 3 Nov 2016 10:06:27 +0000
+Message-ID: <df12a1f0-316d-64a4-54fe-f7559742eeca@nvidia.com>
+References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
+ <1477576872-2665-2-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477576872-2665-2-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2016 05:52 AM, Sudeep Holla wrote:
-> Hi,
-> 
-> This is minor rework of the series[1] from Neil Armstrong's to support
-> legacy SCPI protocol to make DT bindings more generic and move out all
-> the platform specific bindings out of the generic binding document.
-> 
-> --
-> Regards,
-> Sudeep
-> 
-> [1] http://www.spinics.net/lists/arm-kernel/msg534999.html
-> 
-> Neil Armstrong (4):
->   firmware: arm_scpi: increase MAX_DVFS_OPPS to 16 entries
->   firmware: arm_scpi: add alternative legacy structures, functions and
->     macros
->   firmware: arm_scpi: allow firmware with get_capabilities not
->     implemented
->   Documentation: bindings: Add support for Amlogic GXBB SCPI protocol
-> 
-> Sudeep Holla (4):
->   firmware: arm_scpi: add command indirection to support legacy commands
->   Documentation: bindings: decouple juno specific details from generic
->     binding
->   Documentation: bindings: add compatible specific to legacy SCPI
->     protocol
->   firmware: arm_scpi: add support for legacy SCPI compatible
-> 
->  .../devicetree/bindings/arm/amlogic,scpi.txt       |  20 ++
->  Documentation/devicetree/bindings/arm/arm,scpi.txt |  24 +-
->  .../devicetree/bindings/arm/juno,scpi.txt          |  26 ++
->  drivers/firmware/arm_scpi.c                        | 276 ++++++++++++++++++---
->  4 files changed, 300 insertions(+), 46 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic,scpi.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/juno,scpi.txt
-> 
+Hi Mirza,
 
-Hi Sudeep,
+On 27/10/16 15:01, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Add TEGRA20_CLK_NOR to init table and set default rate to 92 MHz which
+> is max rate.
+>
+> The maximum rate value of 92 MHz is pulled from the downstream L4T
+> kernel.
 
-Ok for me, I submitted the fix for the GXBB dtsi.
+Thanks for adding this. I assume that this is from an L4T r16 release 
+with a v3.1 kernel. I had a quick poke through the kernel sources for 
+v3.1 but was unable to see where this is set. Obviously v3.1 did not 
+have CCF and so everything seems to be in the arch/arm/mach-tegra 
+directory for setting up clocks. Can you point me to the appropriate 
+sources so I can ACK this?
 
-Neil
+Cheers
+Jon
+
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
