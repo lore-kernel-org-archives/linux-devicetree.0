@@ -1,51 +1,31 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: clocks: Add msm8994 clock bindings
-Date: Wed, 2 Nov 2016 17:01:43 -0700
-Message-ID: <b8aa5e01-cdc1-be9e-9852-1f056d75addf@redhat.com>
-References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-3-git-send-email-jeremymc@redhat.com>
- <20161028000811.GI26139@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/2] support USB2 PHY OTG port for rk3399
+Date: Thu,  3 Nov 2016 10:06:12 +0800
+Message-ID: <1478138774-3254-1-git-send-email-wulf@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161028000811.GI26139-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-10-27 5:08 PM, Stephen Boyd wrote:
-> On 10/25, Jeremy McNicoll wrote:
->> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,gcc.txt         |   2 +
->>  include/dt-bindings/clock/qcom,gcc-msm8994.h       | 145 +++++++++++++++++++++
->>  2 files changed, 147 insertions(+)
->>  create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8994.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> index 3cf4421..58c7e76 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> @@ -14,6 +14,8 @@ Required properties :
->>  			"qcom,gcc-msm8974"
->>  			"qcom,gcc-msm8974pro"
->>  			"qcom,gcc-msm8974pro-ac"
->> +			"qcom,gcc-msm8994"
->> +			"qcom,gcc-msm8994v2"
->
-> Just drop the v2 and treat it like gcc-msm8994.
+This series add support for rk3399 USB2 PHY0 and PHY1 OTG port.
+rk3399 has two USB2 PHYs, and each USB2 PHY is comprised of one
+Host port and one OTG port. We have supported Host port before,
+and try to support OTG port now.
 
+Test on rk3399-evb board.
 
-Right got it, so the 8994v2 is really the 8994.
+William Wu (2):
+  phy: rockchip-inno-usb2: support otg-port for rk3399
+  arm64: dts: rockchip: add usb2-phy otg-port support for rk3399
 
--jeremy
->
->>  			"qcom,gcc-msm8996"
->>  			"qcom,gcc-mdm9615"
->>
->
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |  21 ++
+ drivers/phy/phy-rockchip-inno-usb2.c     | 593 +++++++++++++++++++++++++++++--
+ 2 files changed, 583 insertions(+), 31 deletions(-)
+
+-- 
+2.0.0
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
