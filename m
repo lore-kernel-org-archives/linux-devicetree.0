@@ -1,55 +1,56 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
-Date: Fri, 4 Nov 2016 00:20:14 +0200
-Message-ID: <20161103222014.GI3217@valkosipuli.retiisi.org.uk>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
- <20161103124749.GA22180@amd>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
+ support
+Date: Thu, 3 Nov 2016 16:32:46 -0600
+Message-ID: <20161103223246.GA5135@hector>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
+ <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
+ <20161028000656.GH26139@codeaurora.org>
+ <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161103124749.GA22180@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh@kernel.org>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jmcnicol@redhat.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org, Bastian =?iso-8859-1?Q?K=F6cher?= <mail@kchr.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel and Rob,
+On Thu, Oct 27, 2016 at 05:54:01PM -0700, Jeremy McNicoll wrote:
+> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
+> >On 10/25, Jeremy McNicoll wrote:
+> >>diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> >>new file mode 100644
+> >>index 0000000..2fc68c4
+> >>--- /dev/null
+> >>+++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> >>@@ -0,0 +1,40 @@
+> >>+/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+> >>+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> >>+ *
+> >>+ * This program is free software; you can redistribute it and/or modify
+> >>+ * it under the terms of the GNU General Public License version 2 and
+> >>+ * only version 2 as published by the Free Software Foundation.
+> >>+ *
+> >>+ * This program is distributed in the hope that it will be useful,
+> >>+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >>+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >>+ * GNU General Public License for more details.
+> >>+ */
+> >>+
+> >>+/dts-v1/;
+> >>+
+> >>+#include "msm8994-v2.0.dtsi"
+> >>+
+> >>+/ {
+> >>+	model = "HUAWEI MSM8994 ANGLER rev-1.01";
+> >>+	compatible = "qcom,msm8994";
+> >
+> >Please replace this with something more specific for the actual
+> >board. Preferably with the board manufacturer vendor prefix and
+> >some sort of string for the board.
 
-On Thu, Nov 03, 2016 at 01:47:49PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > +Mandatory properties
-> > > +--------------------
-> > > +
-> > > +- compatible: "toshiba,et8ek8"
-> > > +- reg: I2C address (0x3e, or an alternative address)
-> > > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-> > > +- clocks: External clock to the sensor
-> > > +- clock-frequency: Frequency of the external clock to the sensor. Camera
-> > > +  driver will set this frequency on the external clock.
-> > 
-> > This is fine if the frequency is fixed (e.g. an oscillator), but you 
-> > should use the clock binding if clocks are programable.
-> 
-> It is fixed. So I assume this can stay as is? Or do you want me to add
-> "The clock frequency is a pre-determined frequency known to be
-> suitable to the board." as Sakari suggests?
-> 
-> > > +- reset-gpios: XSHUTDOWN GPIO
-> > 
-> > Please state what the active polarity is.
-> 
-> As in "This gpio will be set to 1 when the chip is powered." ?
+Something like?
 
-How about:
-
-"The XSHUTDOWN signal is active high. The sensor is in hardware standby
-mode when the signal is in low state."
-
-These bindings start looking more precise than the smiapp ones. :-)
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+"huawei,nexus-6P", "qcom,msm8994"
