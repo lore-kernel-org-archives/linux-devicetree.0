@@ -1,49 +1,63 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 6/8] dt-bindings: Add support for Amlogic GXBB SCPI
- Interface
-Date: Thu, 3 Nov 2016 09:48:26 +0100
-Message-ID: <f9db6bdd-a494-0b5d-2081-e26f02b8ba78@baylibre.com>
-References: <1475652814-30619-1-git-send-email-narmstrong@baylibre.com>
- <1475652814-30619-7-git-send-email-narmstrong@baylibre.com>
- <CAOesGMjY5_ibP7E9+DBf30nuV+2z2kecLv_ddnHjp3txuq+Kdg@mail.gmail.com>
- <20161102222050.GA32189@e106835-lin.cambridge.arm.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v2 0/6] STM32F4 Add RTC & QSPI clocks
+Date: Thu, 3 Nov 2016 09:52:38 +0100
+Message-ID: <68855ca8-a74f-7c76-342f-de0aeec51ca1@st.com>
+References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161102222050.GA32189-/VhreBaVJnzZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2016 11:20 PM, Sudeep Holla wrote:
-> On Sat, Oct 29, 2016 at 11:39:05AM -0700, Olof Johansson wrote:
-> 
-> I will rework the patches to address the concerns as I too did share same
-> concern.
-> 
-> 
-> Hi Neil,
-> 
-> You may need to rework the DTS files based on that, please be aware of
-> that and make the necessary changes.
+Hi Gabriel,
+
+On 10/14/2016 11:18 AM, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>
+> v2:
+>  - rename compatible property "st,stm32f46xx-rcc" into "st,stm32f469-rcc"
+>  - cosmetic: remove bad copy/paste
+>
+> This patch-set introduce RTC and QSPI clocks for STM32F4 socs
+> RTC clock has 3 parents clock oscillators (lsi/lse/hse_rtc)
+>
+> example to use rtc clock:
+>
+> 		rtc: rtc@40002800 {
+> 			compatible = "st,stm32-rtc";
+> 			reg = <0x40002800 0x400>;
+> 			...
+> 			clocks = <&rcc 1 CLK_RTC>;
+>
+> 			assigned-clocks =  <&rcc 1 CLK_RTC>;
+> 			assigned-clock-parents = <&rcc 1 CLK_LSE>;
+> 			...
+> 		};
+>
+> Gabriel Fernandez (6):
+>   clk: stm32f4: Add LSI & LSE clocks
+>   ARM: dts: stm32f429: add LSI and LSE clocks
+>   arm: stmf32: Enable SYSCON
+>   clk: stm32f4: Add RTC clock
+>   clk: stm32f469: Add QSPI clock
+>   ARM: dts: stm32f429: Add QSPI clock
+
+You sent a V3 without DT patches. Should I take DT patches from this V2 
+patchset ?
+
+Regards
+Alex
 
 
-Hi,
-
-I will post the necessary changes since kevin already applied the previous patches.
-
-Thanks,
-Neil
-
-> 
-> --
-> Regards,
-> Sudeep
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>  .../devicetree/bindings/clock/st,stm32-rcc.txt     |   4 +-
+>  arch/arm/boot/dts/stm32f429.dtsi                   |  18 +
+>  arch/arm/boot/dts/stm32f469-disco.dts              |   4 +
+>  arch/arm/configs/stm32_defconfig                   |   1 +
+>  drivers/clk/clk-stm32f4.c                          | 442 ++++++++++++++++++++-
+>  5 files changed, 447 insertions(+), 22 deletions(-)
+>
