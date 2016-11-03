@@ -1,62 +1,57 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 6/6] ARM: dts: stm32f429: Add QSPI clock
-Date: Thu, 3 Nov 2016 17:45:05 +0100
-Message-ID: <25482d71-4d19-997c-656a-75fbe1f43131@st.com>
-References: <1476436699-21879-1-git-send-email-gabriel.fernandez@st.com>
- <1476436699-21879-7-git-send-email-gabriel.fernandez@st.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: DTS: r8a7794: alt: Fix PCF names for DU
+Date: Thu, 3 Nov 2016 19:57:43 +0300
+Message-ID: <085d178c-b0fb-ed42-79ce-590507baeba7@cogentembedded.com>
+References: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1476436699-21879-7-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478180574-15464-1-git-send-email-jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Hello.
 
-On 10/14/2016 11:18 AM, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On 11/03/2016 04:42 PM, Jacopo Mondi wrote:
+
+> Update the PCF pin groups and function names of DU interface for
+
+    PFC maybe?
+
+> r8a7794 ALT board.
 >
-> This patch adds the QSPI clock for stm32f469 discovery board.
+> The currently specified pin groups and function names prevented PCF and
+> DU interfaces from being correctly configured:
 >
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> sh-pfc e6060000.pin-controller: function 'du' not supported
+> sh-pfc e6060000.pin-controller: invalid function du in map table
+> sh-pfc e6060000.pin-controller: function 'du' not supported
+> sh-pfc e6060000.pin-controller: invalid function du in map table
+> sh-pfc e6060000.pin-controller: function 'du' not supported
+> sh-pfc e6060000.pin-controller: invalid function du in map table
+> sh-pfc e6060000.pin-controller: function 'du' not supported
+> sh-pfc e6060000.pin-controller: invalid function du in map table
+> rcar-du: probe of feb00000.display failed with error -22
+>
+> Signed-off-by: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stm32f469-disco.dts | 4 ++++
->  1 file changed, 4 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-> index e911af8..4052023 100644
-> --- a/arch/arm/boot/dts/stm32f469-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
-> @@ -66,6 +66,10 @@
->  	};
->  };
->
-> +&rcc {
-> +	compatible = "st,stm32f469-rcc", "st,stm32-rcc";
-> +};
-> +
+> Patch applied against Simon Horman's renesas/master branch.
+> The PCF pin groups and function renaming was introduced by commit 56ed4bb9 and
+> DTS for ALT board has never been update accordingly.
 
-With this patch, stm32f469-disco doesn't boot if clk drivers patch are 
-not applied.
-Can you please send a new version to keep compatibility with older clk 
-driver.
+    We didn't care about Alt at the time, the patch was done in the interests 
+of the SILK board. I didn't realize the DU pin groups were used for Alt before 
+the actual support was added for them. Thank you for finally fixing this!
 
-&rcc {
- > +	compatible = "st,stm32f469-rcc", "st,stm32-rcc";
--> compatible = "st,stm32f469-rcc", "st,stm32f42xx-rcc", "st,stm32-rcc";
- > +};
- > +
-I will take it in next pull request round.
+> Tested displaying frames on VGA interface: the rcar-du driver loads correctly.
 
+MBR, Sergei
 
-Regards
-Alex
-
-
->  &clk_hse {
->  	clock-frequency = <8000000>;
->  };
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
