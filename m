@@ -1,28 +1,70 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] PXA cpufreq conversion to clock API
-Date: Thu, 3 Nov 2016 07:46:24 +0530
-Message-ID: <20161103021624.GG10786@vireshk-i7>
-References: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr>
- <20161102044503.GC10786@vireshk-i7>
- <87d1idzh56.fsf@belgarion.home>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] of, numa: Return NUMA_NO_NODE from disable
+ of_node_to_nid() if nid not possible.
+Date: Wed, 2 Nov 2016 22:37:27 -0500
+Message-ID: <CAL_JsqKnXk99SUa1cjC2QFA9rizjn4=JHZh3ua_gvcOtpGx8jg@mail.gmail.com>
+References: <1477689302-32671-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87d1idzh56.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
+In-Reply-To: <1477689302-32671-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rafael J Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-11-16, 22:49, Robert Jarzmik wrote:
-> Would you or Rafael take patch 1/4 "cpufreq: pxa: use generic platdev driver for
-> device-tree" through your tree please ?
+On Fri, Oct 28, 2016 at 4:15 PM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>
+> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+> non-zero nodes will crash the system with an OOPS:
+>
+> [    0.000000] ITS@0x0000901000020000: allocated 2097152 Devices @10002000000 (flat, esz 8, psz 64K, shr 1)
+> [    0.000000] Unable to handle kernel NULL pointer dereference at virtual address 00001680
+> [    0.000000] pgd = fffffc0009470000
+> [    0.000000] [00001680] *pgd=0000010ffff90003, *pud=0000010ffff90003, *pmd=0000010ffff90003, *pte=0000000000000000
+> [    0.000000] Internal error: Oops: 96000006 [#1] SMP
+> .
+> .
+> .
+> [    0.000000] [<fffffc00081c8950>] __alloc_pages_nodemask+0xa4/0xe68
+> [    0.000000] [<fffffc000821fa70>] new_slab+0xd0/0x564
+> [    0.000000] [<fffffc0008221e24>] ___slab_alloc+0x2e4/0x514
+> [    0.000000] [<fffffc0008239498>] __slab_alloc+0x48/0x58
+> [    0.000000] [<fffffc0008222c20>] __kmalloc_node+0xd0/0x2dc
+> [    0.000000] [<fffffc0008115374>] __irq_domain_add+0x7c/0x164
+> [    0.000000] [<fffffc0008b461dc>] its_probe+0x784/0x81c
+> [    0.000000] [<fffffc0008b462bc>] its_init+0x48/0x1b0
+> [    0.000000] [<fffffc0008b4543c>] gic_init_bases+0x228/0x360
+> [    0.000000] [<fffffc0008b456bc>] gic_of_init+0x148/0x1cc
+> [    0.000000] [<fffffc0008b5aec8>] of_irq_init+0x184/0x298
+> [    0.000000] [<fffffc0008b43f9c>] irqchip_init+0x14/0x38
+> [    0.000000] [<fffffc0008b12d60>] init_IRQ+0xc/0x30
+> [    0.000000] [<fffffc0008b10a3c>] start_kernel+0x240/0x3b8
+> [    0.000000] [<fffffc0008b101c4>] __primary_switched+0x30/0x6c
+> [    0.000000] Code: 912ec2a0 b9403809 0a0902fb 37b007db (f9400300)
+> .
+> .
+> .
+>
+> This is caused by code like this in kernel/irq/irqdomain.c
+>
+>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+>                   GFP_KERNEL, of_node_to_nid(of_node));
+>
+> When NUMA is disabled, the concept of a node is really undefined, so
+> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+>
+> Fix by returning NUMA_NO_NODE when the nid is not in the set of
+> possible nodes.
+>
+> Reported-by: Gilbert Netzer <noname-QVTQ4TwcpgDLoDKTGw+V6w@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Rafael is the one who applies the patches.
+Does this need to go in 4.9? stable? If so, since what kernel version?
 
--- 
-viresh
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
