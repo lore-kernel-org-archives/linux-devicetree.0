@@ -1,65 +1,93 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V3 4/6] ARM: tegra: Add Tegra30 GMI support
-Date: Thu, 3 Nov 2016 10:15:57 +0000
-Message-ID: <d1c2fe5d-fb20-459a-2f85-95df8fb777a2@nvidia.com>
-References: <1477576872-2665-1-git-send-email-mirza.krak@gmail.com>
- <1477576872-2665-5-git-send-email-mirza.krak@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
+Date: Thu, 3 Nov 2016 12:24:06 +0200
+Message-ID: <8b4504e5-7503-596c-377b-ddce0b7c5166@ti.com>
+References: <cover.1478103726.git.jsarha@ti.com>
+ <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1477576872-2665-5-git-send-email-mirza.krak@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com
-Cc: gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1934942460=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: bcousson@baylibre.com, khilman@baylibre.com, bgolaszewski@baylibre.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
+--===============1934942460==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd"
 
-On 27/10/16 15:01, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak@gmail.com>
->
-> Add a device node for the GMI controller found on Tegra30.
->
-> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
-> ---
->
-> Changes in v2:
-> - added address-cells, size-cells and ranges properties
->
-> Changes in v3:
-> - no changes
->
->  arch/arm/boot/dts/tegra30.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-> index 5030065..bbb1c00 100644
-> --- a/arch/arm/boot/dts/tegra30.dtsi
-> +++ b/arch/arm/boot/dts/tegra30.dtsi
-> @@ -439,6 +439,19 @@
->  		status = "disabled";
->  	};
->
-> +	gmi@70009000 {
-> +		compatible = "nvidia,tegra30-gmi";
-> +		reg = <0x70009000 0x1000>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0x48000000 0x7ffffff>;
-> +		clocks = <&tegra_car TEGRA30_CLK_NOR>;
-> +		clock-names = "gmi";
-> +		resets = <&tegra_car 42>;
-> +		reset-names = "gmi";
-> +		status = "disabled";
-> +	};
-> +
+--6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd
+Content-Type: multipart/mixed; boundary="Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org
+Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com,
+ robdclark@gmail.com, bgolaszewski@baylibre.com, khilman@baylibre.com,
+ bcousson@baylibre.com
+Message-ID: <8b4504e5-7503-596c-377b-ddce0b7c5166@ti.com>
+Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
+References: <cover.1478103726.git.jsarha@ti.com>
+ <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+In-Reply-To: <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+--Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Cheers
-Jon
+On 02/11/16 18:32, Jyri Sarha wrote:
+> Add very basic ti-ftp410 HDMI transmitter driver. The only feature
 
--- 
-nvpublic
+It's DVI encoder, not HDMI.
+
+ Tomi
+
+
+--Llg8Eg48WpbsgBbx9PAHg664qJ3qNvQQK--
+
+--6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYGxBGAAoJEPo9qoy8lh71qDAQAIglakQXUJdj0QclTGHHXZDw
+HPwFHMoU4FabiIEdps1x1N9+H41g+aHG69bmzDqi5M+XwUDCTRM+6sFOes4IthqQ
+8AbcAEjabM01xiH6Y8C3Kg3KGQztP/448iJF7utzCcFlbk2pYgBoux9u+VvuVfbE
+7aLkeVuMT3Xyx0/lFaOBb//71JLObBNTivOpZkQUHW6chgCezA3SgOSezwtgYDIU
+fqv5NlRILOo4XwUDOX75DrCyZV4/yQp2GTYjiwftuyh1OKmLJwNkqVrsQKWAKAaQ
+qHtfRITT/2AsOkDagAUfPCeXpAVKz3VMTf2NQoYCMWN+q7EtHU9aNviZOBS7Cbk1
+XomopBWhhcsrsB9wXeOQk/QMu/YZ+b+Wkz7vO20I9N9Hikm+DQvcCAWoIjWSbhUQ
+D0ScWbWQ8Xc3+BjNXU+ySraVXzL/p91KzeHmwY9+mH2p70l4foiwmbMCU25FF1nS
+C7hyL3VEsWUATJZZ6kSCO387YA/q+qspyfAFd44bbpWfPq9SALLfIB889woK9Lc6
+ZPXdwe6iZFGQxpH3TF9cdC1U+7u1Rpzjw4bD7X6z5HPLuq3FBkoolg3kmePE9DSk
+2lDmg4Gl84sCmofxoBNa1GV8GL0pZso0VLdnHKzUvaNjCCHMZhXyPqx4sIxuBmKd
+iT7W1+Nm7CO7RsGSPwmp
+=tky+
+-----END PGP SIGNATURE-----
+
+--6SAQ8wCbGrdjuPknTj3AMOGhtXoGFPAtd--
+
+--===============1934942460==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1934942460==--
