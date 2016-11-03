@@ -1,54 +1,56 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 09/13] mmc: dw_mmc: remove the "clock-freq-min-max" property
-Date: Thu, 03 Nov 2016 09:20:15 +0100
-Message-ID: <20823767.hqlyMd1aKN@diego>
-References: <20161103062135.10697-1-jh80.chung@samsung.com> <20161103062135.10697-10-jh80.chung@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/14] ASoC: sun4i-codec: Move data
+ structures to add create_card call to quirks
+Date: Thu, 3 Nov 2016 09:23:14 +0100
+Message-ID: <20161103082314.gtrb42pttayndnbc@lukather>
+References: <20161103075556.29018-1-wens@csie.org>
+ <20161103075556.29018-2-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20161103062135.10697-10-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, shawn.lin@rock-chips.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oby3df2u5a7cmzgr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5HH5PAAKGQE2SLXSOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20161103075556.29018-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
 
-Am Donnerstag, 3. November 2016, 15:21:31 schrieb Jaehoon Chung:
-> Remove the "clock-freq-min-max" property.
-> There is "max-frequency" property in drivers/mmc/core/host.c
-> It can be used for getting maximum frequency.
+--oby3df2u5a7cmzgr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Nov 03, 2016 at 03:55:43PM +0800, Chen-Yu Tsai wrote:
+> The audio codec on later Allwinner SoCs have a different layout and
+> audio path compared to the A10/A20. However the PCM parts are still
+> the same.
 > 
-> And minimum clock value is assigned to 100K by default.
-> Because MMC core should check the initial clock value from
-> 400K to 100K until finding correct value.
-> It's why Minimum value puts 100K by default.
+> The different layout and audio paths mean we need a different
+> create_card function for different families, so they can create
+> DAPM endpoint widgets and routes.
 > 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt |  3 ---
->  drivers/mmc/host/dw_mmc.c                                  | 13
-> ++++--------- 2 files changed, 4 insertions(+), 12 deletions(-)
+> This patch moves the regmap configs, quirks and of_device_id
+> structures to just before the probe function, so we can, among other
+> things, include a pointer for the create_card function. None of the
+> lines of code were changed.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt index
-> 4e00e85..21c8251 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -56,9 +56,6 @@ Optional properties:
->    is specified and the ciu clock is specified then we'll try to set the ciu
-> clock to this at probe time.
-> 
-> -* clock-freq-min-max: Minimum and Maximum clock frequency for card output
-> -  clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz
-> by default. -
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-I'd think devicetree people will protest about simply removing this property 
-without deprecating it first - to be backwards compatible with old devicetrees.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Especially as this property was added already back in 2013, so has been in use 
-for quite some time.
+Thanks!
+Maxime
 
-
-Heiko
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--oby3df2u5a7cmzgr--
