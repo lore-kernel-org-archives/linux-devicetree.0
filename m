@@ -1,53 +1,111 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 4/8] firmware: arm_scpi: allow firmware with
- get_capabilities not implemented
-Date: Wed,  2 Nov 2016 22:52:07 -0600
-Message-ID: <1478148731-11712-5-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 5/8] Documentation: bindings: decouple juno specific details from generic binding
+Date: Wed,  2 Nov 2016 22:52:08 -0600
+Message-ID: <1478148731-11712-6-git-send-email-sudeep.holla@arm.com>
 References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+Since SCPI is a generic protocol and the bindings are intended to be
+generic, we need to decouple all the platform specific binding details
+out of the generic bindings.
 
-On Amlogic SCPI legacy implementation, the GET_CAPABILITIES command is
-not supported, failover by using 0.0.0 version.
+This patch moves are the Juno platform specific details into a separate
+binding document.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-[sudeep.holla@arm.com: changed the subject]
+Cc: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scpi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 20 ++++++-----------
+ .../devicetree/bindings/arm/juno,scpi.txt          | 26 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/juno,scpi.txt
 
-diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
-index 2982bc7b8c33..902233642bd3 100644
---- a/drivers/firmware/arm_scpi.c
-+++ b/drivers/firmware/arm_scpi.c
-@@ -783,6 +783,10 @@ static int scpi_init_versions(struct scpi_drvinfo *info)
- 		info->protocol_version = le32_to_cpu(caps.protocol_version);
- 		info->firmware_version = le32_to_cpu(caps.platform_version);
- 	}
-+	/* Ignore error if not implemented */
-+	if (scpi_info->is_legacy && ret == -EOPNOTSUPP)
-+		return 0;
-+
- 	return ret;
- }
+diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+index faa4b44572e3..d1882c4540d0 100644
+--- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
++++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+@@ -59,18 +59,14 @@ SRAM and Shared Memory for SCPI
+ A small area of SRAM is reserved for SCPI communication between application
+ processors and SCP.
  
+-Required properties:
+-- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
+-
+-The rest of the properties should follow the generic mmio-sram description
+-found in ../../sram/sram.txt
++The properties should follow the generic mmio-sram description found in [3]
+ 
+ Each sub-node represents the reserved area for SCPI.
+ 
+ Required sub-node properties:
+ - reg : The base offset and size of the reserved area with the SRAM
+-- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+-	       shared memory on Juno platforms
++- compatible : should be "arm,scp-shmem" for Non-secure SRAM based
++	       shared memory
+ 
+ Sensor bindings for the sensors based on SCPI Message Protocol
+ --------------------------------------------------------------
+@@ -81,11 +77,9 @@ SCPI provides an API to access the various sensors on the SoC.
+ - #thermal-sensor-cells: should be set to 1. This property follows the
+ 			 thermal device tree bindings[2].
+ 
+-			 Valid cell values are raw identifiers (Sensor
+-			 ID) as used by the firmware. Refer to
+-			 platform documentation for your
+-			 implementation for the IDs to use. For Juno
+-			 R0 and Juno R1 refer to [3].
++			 Valid cell values are raw identifiers (Sensor ID)
++			 as used by the firmware. Refer to  platform details
++			 for your implementation for the IDs to use.
+ 
+ Power domain bindings for the power domains based on SCPI Message Protocol
+ ------------------------------------------------------------
+@@ -112,7 +106,7 @@ PM domain consumers
+ [0] http://infocenter.arm.com/help/topic/com.arm.doc.dui0922b/index.html
+ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+ [2] Documentation/devicetree/bindings/thermal/thermal.txt
+-[3] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
++[3] Documentation/devicetree/bindings/sram/sram.txt
+ [4] Documentation/devicetree/bindings/power/power_domain.txt
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/arm/juno,scpi.txt b/Documentation/devicetree/bindings/arm/juno,scpi.txt
+new file mode 100644
+index 000000000000..2ace8696bbee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/juno,scpi.txt
+@@ -0,0 +1,26 @@
++System Control and Power Interface (SCPI) Message Protocol
++(in addition to the standard binding in [0])
++
++Juno SRAM and Shared Memory for SCPI
++------------------------------------
++
++Required properties:
++- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM
++
++Each sub-node represents the reserved area for SCPI.
++
++Required sub-node properties:
++- reg : The base offset and size of the reserved area with the SRAM
++- compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
++	       shared memory on Juno platforms
++
++Sensor bindings for the sensors based on SCPI Message Protocol
++--------------------------------------------------------------
++Required properties:
++- compatible : should be "arm,scpi-sensors".
++- #thermal-sensor-cells: should be set to 1.
++			 For Juno R0 and Juno R1 refer to [1] for the
++			 sensor identifiers
++
++[0] Documentation/devicetree/bindings/arm/arm,scpi.txt
++[1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0922b/apas03s22.html
 -- 
 1.9.1
