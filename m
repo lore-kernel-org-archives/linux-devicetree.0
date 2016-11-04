@@ -1,51 +1,155 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 10/13] ARM: dts: exynos: replace to "max-frequecy" instead
- of "clock-freq-min-max"
-Date: Fri, 04 Nov 2016 19:21:30 +0900
-Message-ID: <ecf4fac2-0ab7-d4c4-69e3-d498ee5b601c@samsung.com>
-References: <20161103062135.10697-1-jh80.chung@samsung.com>
- <20161103062135.10697-11-jh80.chung@samsung.com>
- <CGME20161103184120epcas1p3e51865aa2ea7b6073bcb72f5cba5772f@epcas1p3.samsung.com>
- <20161103184112.GB11071@kozik-lap>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH 6/6] ARM: dts: rockchip: add rockchip RK1108 Evaluation
+ board
+Date: Fri, 4 Nov 2016 18:54:35 +0800
+Message-ID: <ce6e9d62-75e5-60bc-2775-507aa326e3a2@rock-chips.com>
+References: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com>
+ <1478177039-12257-1-git-send-email-andy.yan@rock-chips.com>
+ <3057904.hZPZRUIUZe@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <20161103184112.GB11071@kozik-lap>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, heiko@sntech.de, shawn.lin@rock-chips.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3057904.hZPZRUIUZe@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/2016 03:41 AM, Krzysztof Kozlowski wrote:
-> On Thu, Nov 03, 2016 at 03:21:32PM +0900, Jaehoon Chung wrote:
->> In drivers/mmc/core/host.c, there is "max-frequency" property.
->> It should be same behavior. So Use the "max-frequency" instead of
->> "clock-freq-min-max".
+Hi Heiko:
+
+
+On 2016年11月04日 18:03, Heiko Stuebner wrote:
+> Am Donnerstag, 3. November 2016, 20:43:59 CET schrieb Andy Yan:
+>> RK1108EVB is designed by Rockchip for CVR field.
+>> This patch add basic support for it, which can boot with
+>> initramfs into shell.
 >>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> looks good, the only thing I can also change myself is moving the board in the
+> rockchip.txt to the block of Rockchip boards (i.e. sorting by manufacturer and
+> board name).
+>
+>
+> Heiko
+
+     You mean it's better to put it between "Rockchip RK3368 evb" and 
+"Rockchip PX5 Evaluation board"? if so, I will change it in next version.
 >> ---
->>  arch/arm/boot/dts/exynos3250-artik5-eval.dts | 2 +-
->>  arch/arm/boot/dts/exynos3250-artik5.dtsi     | 2 +-
->>  arch/arm/boot/dts/exynos3250-monk.dts        | 2 +-
->>  arch/arm/boot/dts/exynos3250-rinato.dts      | 2 +-
->>  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> This looks totally independent to rest of patches so it can be applied
-> separately without any functional impact (except lack of minimum
-> frequency). Is that correct?
-
-You're right. I will split the patches. And will resend.
-Thanks!
-
-Best Regards,
-Jaehoon Chung
-
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> 
-> 
-
+>>
+>>   Documentation/devicetree/bindings/arm/rockchip.txt |  3 +
+>>   arch/arm/boot/dts/Makefile                         |  1 +
+>>   arch/arm/boot/dts/rk1108-evb.dts                   | 69
+>> ++++++++++++++++++++++ 3 files changed, 73 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/rk1108-evb.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
+>> b/Documentation/devicetree/bindings/arm/rockchip.txt index 10b92b5..8670181
+>> 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+>> @@ -1,5 +1,8 @@
+>>   Rockchip platforms device tree bindings
+>>   ---------------------------------------
+>> +- Rockchip RK1108 Evaluation board
+>> +    Required root node properties:
+>> +      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
+>>
+>>   - Kylin RK3036 board:
+>>       Required root node properties:
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index e49476a..249dca9 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -635,6 +635,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
+>>   	arm-realview-pba8.dtb \
+>>   	arm-realview-pbx-a9.dtb
+>>   dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>> +	rk1108-evb.dtb \
+>>   	rk3036-evb.dtb \
+>>   	rk3036-kylin.dtb \
+>>   	rk3066a-bqcurie2.dtb \
+>> diff --git a/arch/arm/boot/dts/rk1108-evb.dts
+>> b/arch/arm/boot/dts/rk1108-evb.dts new file mode 100644
+>> index 0000000..3956cff
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/rk1108-evb.dts
+>> @@ -0,0 +1,69 @@
+>> +/*
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + *  Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "rk1108.dtsi"
+>> +
+>> +/ {
+>> +	model = "Rockchip RK1108 Evaluation board";
+>> +	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
+>> +
+>> +	memory@60000000 {
+>> +		device_type = "memory";
+>> +		reg = <0x60000000 0x08000000>;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial2:1500000n8";
+>> +	};
+>> +};
+>> +
+>> +&uart0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&uart1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&uart2 {
+>> +	status = "okay";
+>> +};
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+>
