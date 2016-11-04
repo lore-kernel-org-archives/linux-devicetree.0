@@ -1,69 +1,104 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH v6 7/7] arm64: dts: NS2: add AMAC ethernet support
-Date: Fri,  4 Nov 2016 01:11:02 -0400
-Message-ID: <1478236262-3351-8-git-send-email-jon.mason@broadcom.com>
-References: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
+ support
+Date: Thu, 3 Nov 2016 23:18:23 -0600
+Message-ID: <a0da6469-ba83-d6a8-be90-5df7f4b47120@redhat.com>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
+ <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
+ <20161028000656.GH26139@codeaurora.org>
+ <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
+ <20161103223246.GA5135@hector>
+ <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
+ <20161103230429.GW25787@tuxbot> <20161104002005.GA15578@mini-rhel.redhat.com>
+ <20161104015713.GX25787@tuxbot>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161104015713.GX25787@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Bastian K?cher <mail-LJ92rlH3Dns@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the AMAC ethernet to the Broadcom Northstar2 SoC device
-tree
+On 2016-11-03 7:57 PM, Bjorn Andersson wrote:
+> On Thu 03 Nov 17:20 PDT 2016, Jeremy McNicoll wrote:
+>
+>> On Thu, Nov 03, 2016 at 04:04:29PM -0700, Bjorn Andersson wrote:
+>>> On Thu 03 Nov 15:42 PDT 2016, Stephen Boyd wrote:
+>>>
+>>>> On 11/03/2016 03:32 PM, Andy Gross wrote:
+>>>>> On Thu, Oct 27, 2016 at 05:54:01PM -0700, Jeremy McNicoll wrote:
+>>>>>> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
+>>>>>>> On 10/25, Jeremy McNicoll wrote:
+>>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>>>>>>>> new file mode 100644
+>>>>>>>> index 0000000..2fc68c4
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+>>>>>>>> @@ -0,0 +1,40 @@
+>>>>>>>> +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
+>>>>>>>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+>>>>>>>> + *
+>>>>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>>>>> + * it under the terms of the GNU General Public License version 2 and
+>>>>>>>> + * only version 2 as published by the Free Software Foundation.
+>>>>>>>> + *
+>>>>>>>> + * This program is distributed in the hope that it will be useful,
+>>>>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>>>>> + * GNU General Public License for more details.
+>>>>>>>> + */
+>>>>>>>> +
+>>>>>>>> +/dts-v1/;
+>>>>>>>> +
+>>>>>>>> +#include "msm8994-v2.0.dtsi"
+>>>>>>>> +
+>>>>>>>> +/ {
+>>>>>>>> +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
+>>>>>>>> +	compatible = "qcom,msm8994";
+>>>>>>> Please replace this with something more specific for the actual
+>>>>>>> board. Preferably with the board manufacturer vendor prefix and
+>>>>>>> some sort of string for the board.
+>>>>> Something like?
+>>>>>
+>>>>> "huawei,nexus-6P", "qcom,msm8994"
+>>>>
+>>>> Sure, except completely remove qcom,msm8994 from there.
+>>>
+>>> Why? So far we have always used the form <device>, <platform> as
+>>> compatible. This is even in line with ePAPR, what changed?
+>>>
+>>> Also, the compatible should be "huawei,angler" (if I read the internet
+>>> correctly) and the model should contain the product name
+>>> (Huawei Nexus 6P).
+>>>
+>>
+>> What about
+>>
+>>   model = "Huawei Nexus 6P";
+>>   compatible = "huawei, angler", "qcom,msm8994";
+>                          ^
+> 			 |
+>                    unwanted space
+>
+> Apart from that, I think it looks good and in line with how we've done
+> the other boards.
+>
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts |  5 +++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 12 ++++++++++++
- 2 files changed, 17 insertions(+)
+... just for completeness sake.  Here is what I plan on using for the 5X
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index b09f3bc..c4d5442 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -56,6 +56,10 @@
- 	};
- };
- 
-+&enet {
-+	status = "ok";
-+};
-+
- &pci_phy0 {
- 	status = "ok";
- };
-@@ -174,6 +178,7 @@
- &mdio_mux_iproc {
- 	mdio@10 {
- 		gphy0: eth-phy@10 {
-+			enet-phy-lane-swap;
- 			reg = <0x10>;
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index d95dc40..773ed59 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -191,6 +191,18 @@
- 
- 		#include "ns2-clock.dtsi"
- 
-+		enet: ethernet@61000000 {
-+			compatible = "brcm,ns2-amac";
-+			reg = <0x61000000 0x1000>,
-+			      <0x61090000 0x1000>,
-+			      <0x61030000 0x100>;
-+			reg-names = "amac_base", "idm_base", "nicpm_base";
-+			interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
-+			phy-handle = <&gphy0>;
-+			phy-mode = "rgmii";
-+			status = "disabled";
-+		};
-+
- 		dma0: dma@61360000 {
- 			compatible = "arm,pl330", "arm,primecell";
- 			reg = <0x61360000 0x1000>;
--- 
-2.7.4
+model = "LG Nexus 5X";
+compatible = "lg,bullhead", "qcom,msm8992";
+
+
+-jeremy
+
+> Regards,
+> Bjorn
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
