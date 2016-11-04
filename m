@@ -1,7 +1,7 @@
 From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V6 2/6] dt-bindings: qcom: clocks: Add msm8994 clock bindings
-Date: Fri,  4 Nov 2016 13:56:32 -0700
-Message-ID: <1478292996-29559-3-git-send-email-jeremymc@redhat.com>
+Subject: [PATCH V6 3/6] dt-bindings: qcom: Add msm899(2/4) bindings
+Date: Fri,  4 Nov 2016 13:56:33 -0700
+Message-ID: <1478292996-29559-4-git-send-email-jeremymc@redhat.com>
 References: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1478292996-29559-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,176 +10,27 @@ To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY
 Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mail-LJ92rlH3Dns@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/clock/qcom,gcc.txt         |   1 +
- include/dt-bindings/clock/qcom,gcc-msm8994.h       | 145 +++++++++++++++++++++
- 2 files changed, 146 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,gcc-msm8994.h
+ Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-index 3cf4421..5b4dfc1 100644
---- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-@@ -14,6 +14,7 @@ Required properties :
- 			"qcom,gcc-msm8974"
- 			"qcom,gcc-msm8974pro"
- 			"qcom,gcc-msm8974pro-ac"
-+			"qcom,gcc-msm8994"
- 			"qcom,gcc-msm8996"
- 			"qcom,gcc-mdm9615"
+diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+index 3e24518..eb4057e 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.txt
++++ b/Documentation/devicetree/bindings/arm/qcom.txt
+@@ -21,6 +21,8 @@ The 'SoC' element must be one of the following strings:
+ 	apq8096
+ 	msm8916
+ 	msm8974
++	msm8992
++	msm8994
+ 	msm8996
  
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bindings/clock/qcom,gcc-msm8994.h
-new file mode 100644
-index 0000000..0ae494b
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
-@@ -0,0 +1,145 @@
-+/*
-+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+
-+#ifndef _DT_BINDINGS_CLK_MSM_GCC_8994_H
-+#define _DT_BINDINGS_CLK_MSM_GCC_8994_H
-+
-+#define GPLL0_EARLY				0
-+#define GPLL0					1
-+#define GPLL4_EARLY				2
-+#define GPLL4					3
-+#define UFS_AXI_CLK_SRC				4
-+#define USB30_MASTER_CLK_SRC			5
-+#define BLSP1_QUP1_I2C_APPS_CLK_SRC		6
-+#define BLSP1_QUP1_SPI_APPS_CLK_SRC		7
-+#define BLSP1_QUP2_I2C_APPS_CLK_SRC		8
-+#define BLSP1_QUP2_SPI_APPS_CLK_SRC		9
-+#define BLSP1_QUP3_I2C_APPS_CLK_SRC		10
-+#define BLSP1_QUP3_SPI_APPS_CLK_SRC		11
-+#define BLSP1_QUP4_I2C_APPS_CLK_SRC		12
-+#define BLSP1_QUP4_SPI_APPS_CLK_SRC		13
-+#define BLSP1_QUP5_I2C_APPS_CLK_SRC		14
-+#define BLSP1_QUP5_SPI_APPS_CLK_SRC		15
-+#define BLSP1_QUP6_I2C_APPS_CLK_SRC		16
-+#define BLSP1_QUP6_SPI_APPS_CLK_SRC		17
-+#define BLSP1_UART1_APPS_CLK_SRC		18
-+#define BLSP1_UART2_APPS_CLK_SRC		19
-+#define BLSP1_UART3_APPS_CLK_SRC		20
-+#define BLSP1_UART4_APPS_CLK_SRC		21
-+#define BLSP1_UART5_APPS_CLK_SRC		22
-+#define BLSP1_UART6_APPS_CLK_SRC		23
-+#define BLSP2_QUP1_I2C_APPS_CLK_SRC		24
-+#define BLSP2_QUP1_SPI_APPS_CLK_SRC		25
-+#define BLSP2_QUP2_I2C_APPS_CLK_SRC		26
-+#define BLSP2_QUP2_SPI_APPS_CLK_SRC		27
-+#define BLSP2_QUP3_I2C_APPS_CLK_SRC		28
-+#define BLSP2_QUP3_SPI_APPS_CLK_SRC		29
-+#define BLSP2_QUP4_I2C_APPS_CLK_SRC		30
-+#define BLSP2_QUP4_SPI_APPS_CLK_SRC		31
-+#define BLSP2_QUP5_I2C_APPS_CLK_SRC		32
-+#define BLSP2_QUP5_SPI_APPS_CLK_SRC		33
-+#define BLSP2_QUP6_I2C_APPS_CLK_SRC		34
-+#define BLSP2_QUP6_SPI_APPS_CLK_SRC		35
-+#define BLSP2_UART1_APPS_CLK_SRC		36
-+#define BLSP2_UART2_APPS_CLK_SRC		37
-+#define BLSP2_UART3_APPS_CLK_SRC		38
-+#define BLSP2_UART4_APPS_CLK_SRC		39
-+#define BLSP2_UART5_APPS_CLK_SRC		40
-+#define BLSP2_UART6_APPS_CLK_SRC		41
-+#define GP1_CLK_SRC				42
-+#define GP2_CLK_SRC				43
-+#define GP3_CLK_SRC				44
-+#define PCIE_0_AUX_CLK_SRC			45
-+#define PCIE_0_PIPE_CLK_SRC			46
-+#define PCIE_1_AUX_CLK_SRC			47
-+#define PCIE_1_PIPE_CLK_SRC			48
-+#define PDM2_CLK_SRC				49
-+#define SDCC1_APPS_CLK_SRC			50
-+#define SDCC2_APPS_CLK_SRC			51
-+#define SDCC3_APPS_CLK_SRC			52
-+#define SDCC4_APPS_CLK_SRC			53
-+#define TSIF_REF_CLK_SRC			54
-+#define USB30_MOCK_UTMI_CLK_SRC			55
-+#define USB3_PHY_AUX_CLK_SRC			56
-+#define USB_HS_SYSTEM_CLK_SRC			57
-+#define GCC_BLSP1_AHB_CLK			58
-+#define GCC_BLSP1_QUP1_I2C_APPS_CLK		59
-+#define GCC_BLSP1_QUP1_SPI_APPS_CLK		60
-+#define GCC_BLSP1_QUP2_I2C_APPS_CLK		61
-+#define GCC_BLSP1_QUP2_SPI_APPS_CLK		62
-+#define GCC_BLSP1_QUP3_I2C_APPS_CLK		63
-+#define GCC_BLSP1_QUP3_SPI_APPS_CLK		64
-+#define GCC_BLSP1_QUP4_I2C_APPS_CLK		65
-+#define GCC_BLSP1_QUP4_SPI_APPS_CLK		66
-+#define GCC_BLSP1_QUP5_I2C_APPS_CLK		67
-+#define GCC_BLSP1_QUP5_SPI_APPS_CLK		68
-+#define GCC_BLSP1_QUP6_I2C_APPS_CLK		69
-+#define GCC_BLSP1_QUP6_SPI_APPS_CLK		70
-+#define GCC_BLSP1_UART1_APPS_CLK		71
-+#define GCC_BLSP1_UART2_APPS_CLK		72
-+#define GCC_BLSP1_UART3_APPS_CLK		73
-+#define GCC_BLSP1_UART4_APPS_CLK		74
-+#define GCC_BLSP1_UART5_APPS_CLK		75
-+#define GCC_BLSP1_UART6_APPS_CLK		76
-+#define GCC_BLSP2_AHB_CLK			77
-+#define GCC_BLSP2_QUP1_I2C_APPS_CLK		78
-+#define GCC_BLSP2_QUP1_SPI_APPS_CLK		79
-+#define GCC_BLSP2_QUP2_I2C_APPS_CLK		80
-+#define GCC_BLSP2_QUP2_SPI_APPS_CLK		81
-+#define GCC_BLSP2_QUP3_I2C_APPS_CLK		82
-+#define GCC_BLSP2_QUP3_SPI_APPS_CLK		83
-+#define GCC_BLSP2_QUP4_I2C_APPS_CLK		84
-+#define GCC_BLSP2_QUP4_SPI_APPS_CLK		85
-+#define GCC_BLSP2_QUP5_I2C_APPS_CLK		86
-+#define GCC_BLSP2_QUP5_SPI_APPS_CLK		87
-+#define GCC_BLSP2_QUP6_I2C_APPS_CLK		88
-+#define GCC_BLSP2_QUP6_SPI_APPS_CLK		89
-+#define GCC_BLSP2_UART1_APPS_CLK		90
-+#define GCC_BLSP2_UART2_APPS_CLK		91
-+#define GCC_BLSP2_UART3_APPS_CLK		92
-+#define GCC_BLSP2_UART4_APPS_CLK		93
-+#define GCC_BLSP2_UART5_APPS_CLK		94
-+#define GCC_BLSP2_UART6_APPS_CLK		95
-+#define GCC_GP1_CLK				96
-+#define GCC_GP2_CLK				97
-+#define GCC_GP3_CLK				98
-+#define GCC_PCIE_0_AUX_CLK			99
-+#define GCC_PCIE_0_PIPE_CLK			100
-+#define GCC_PCIE_1_AUX_CLK			101
-+#define GCC_PCIE_1_PIPE_CLK			102
-+#define GCC_PDM2_CLK				103
-+#define GCC_SDCC1_APPS_CLK			104
-+#define GCC_SDCC2_APPS_CLK			105
-+#define GCC_SDCC3_APPS_CLK			106
-+#define GCC_SDCC4_APPS_CLK			107
-+#define GCC_SYS_NOC_UFS_AXI_CLK			108
-+#define GCC_SYS_NOC_USB3_AXI_CLK		109
-+#define GCC_TSIF_REF_CLK			110
-+#define GCC_UFS_AXI_CLK				111
-+#define GCC_UFS_RX_CFG_CLK			112
-+#define GCC_UFS_TX_CFG_CLK			113
-+#define GCC_USB30_MASTER_CLK			114
-+#define GCC_USB30_MOCK_UTMI_CLK			115
-+#define GCC_USB3_PHY_AUX_CLK			116
-+#define GCC_USB_HS_SYSTEM_CLK			117
-+
-+/* Indexes for GDSCs */
-+#define BIMC_GDSC				0
-+#define VENUS_GDSC				1
-+#define MDSS_GDSC				2
-+#define JPEG_GDSC				3
-+#define VFE_GDSC				4
-+#define OXILI_GDSC				5
-+
-+#endif
+ The 'board' element must be one of the following strings:
 -- 
 2.9.2
 
