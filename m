@@ -1,274 +1,93 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: [PATCH v3 2/6] arm64: arch_timer: Introduce a generic erratum handing
- mechanism for fsl-a008585
-Date: Fri, 4 Nov 2016 21:06:30 +0800
-Message-ID: <1478264794-14652-2-git-send-email-dingtianhong@huawei.com>
-References: <1478264794-14652-1-git-send-email-dingtianhong@huawei.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [REGRESSION] "console: don't prefer first registered if DT
+ specifies stdout-path" breaks console on video outputs of various ARM boards
+Date: Fri, 4 Nov 2016 14:22:17 +0100
+Message-ID: <d3f0f1f4-d6f6-1e75-499c-789b82b5bb1b@redhat.com>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
+ <17833033.PtOSTzKXGD@np-p-burton>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478264794-14652-1-git-send-email-dingtianhong@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, hanjun.guo@linaro.org
-Cc: Ding Tianhong <dingtianhong@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <17833033.PtOSTzKXGD@np-p-burton>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The workaround for hisilicon,161601 will check the return value of the system counter
-by different way, in order to distinguish with the fsl-a008585 workaround, introduce
-a new generic erratum handing mechanism for fsl-a008585 and rename some functions.
+Hi,
 
-v2: Introducing a new generic erratum handling mechanism for fsl erratum a008585.
+On 04-11-16 13:30, Paul Burton wrote:
+> Hi Hans,
+>
+> On Friday, 4 November 2016 13:11:34 GMT Hans de Goede wrote:
+>> Hi All,
+>>
+>> While booting 4.9-rc# for the first time on an Allwinner A33 tablet,
+>> I noticed that after u-boot the LCD display stayed black. It turns out
+>> that there was an issue which caused X to never get up, and all kernel
+>> (and other startup) messages prior to that only went to ttyS0 which
+>> consists of 2 tiny testpads on the PCB with this tablet.
+>>
+>> The same issue will also happen on any ARM boards which have a HDMI or
+>> composite video output and which use a stdout-path pointing to their
+>> serial console. I think this will e.g. also impact the Raspberry Pi,
+>> I know for certain that this will impact the 99 different Allwinnner
+>> boards currently supported by mainline u-boot + the mainline kernel.
+>>
+>> This is a behavior changes from previous kernels and I consider this
+>> a regression. Thus I propose to revert the commit in question, for more
+>> info here is a partial copy of the commit message of the proposed revert:
+>>
+>> The reverted commit changes existing behavior on which many ARM boards
+>> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+>> both a video output and a serial console. Depending on whether the user
+>> is using the device as a more regular computer; or as a headless device
+>> we need to have the console on either one or the other.
+>>
+>> Many users rely on the kernel behavior of the console being present on
+>> both outputs, before the reverted commit the console setup with no
+>> console= kernel arguments on an ARM board which sets stdout-path in dt
+>> would look like this:
+>>
+>> [root@localhost ~]# cat /proc/consoles
+>> ttyS0                -W- (EC p a)    4:64
+>> tty0                 -WU (E  p  )    4:1
+>>
+>> Where as after the reverted commit, it looks like this:
+>>
+>> [root@localhost ~]# cat /proc/consoles
+>> ttyS0                -W- (EC p a)    4:64
+>>
+>> This commit reverts commit 05fd007e4629 ("console: don't prefer first
+>> registered if DT specifies stdout-path") restoring the original behavior.
+>>
+>> Regards,
+>>
+>> Hans
+>
+> Ugh... so the devices you're talking about rely upon set stdout-path in their
+> device tree but effectively rely upon us ignoring it?
 
-v3: Introducing the erratum_workaround_set_sne generic function for fsl erratum a008585
-    and make the #define __fsl_a008585_read_reg to be private to the .c file instead of
-    being globally visible. After discussion with Marc and Will, a consensus decision was
-    made to remove the commandline parameter for enabling fsl,erratum-a008585 erratum,
-    and make some generic name more specific, export timer_unstable_counter_workaround
-    for module access.
+No they rely on the kernel using stdout-path as an extra console while keeping
+tty0 as console, not ignoring it. This how stdout-path has always worked
+(at least as long as the Allwinner boards have used it, which has been
+  2 - 3 years now).
 
-Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
----
- Documentation/kernel-parameters.txt  |  9 -----
- arch/arm64/include/asm/arch_timer.h  | 36 ++++++-----------
- drivers/clocksource/arm_arch_timer.c | 78 +++++++++++++++++++++---------------
- 3 files changed, 58 insertions(+), 65 deletions(-)
+If you want only the console specified by stdout-path you can get this by
+specifying it with console=... on the kernel cmdline.
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 6fa1d8a..738de4e 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -698,15 +698,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			loops can be debugged more effectively on production
- 			systems.
- 
--	clocksource.arm_arch_timer.fsl-a008585=
--			[ARM64]
--			Format: <bool>
--			Enable/disable the workaround of Freescale/NXP
--			erratum A-008585.  This can be useful for KVM
--			guests, if the guest device tree doesn't show the
--			erratum.  If unspecified, the workaround is
--			enabled based on the device tree.
--
- 	clearcpuid=BITNUM [X86]
- 			Disable CPUID feature X for the kernel. See
- 			arch/x86/include/asm/cpufeatures.h for the valid bit
-diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-index eaa5bbe..f882c7c 100644
---- a/arch/arm64/include/asm/arch_timer.h
-+++ b/arch/arm64/include/asm/arch_timer.h
-@@ -31,39 +31,27 @@
- 
- #if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
- extern struct static_key_false arch_timer_read_ool_enabled;
--#define needs_fsl_a008585_workaround() \
-+#define needs_unstable_timer_counter_workaround() \
- 	static_branch_unlikely(&arch_timer_read_ool_enabled)
- #else
--#define needs_fsl_a008585_workaround()  false
-+#define needs_unstable_timer_counter_workaround()  false
- #endif
- 
--u32 __fsl_a008585_read_cntp_tval_el0(void);
--u32 __fsl_a008585_read_cntv_tval_el0(void);
--u64 __fsl_a008585_read_cntvct_el0(void);
- 
--/*
-- * The number of retries is an arbitrary value well beyond the highest number
-- * of iterations the loop has been observed to take.
-- */
--#define __fsl_a008585_read_reg(reg) ({			\
--	u64 _old, _new;					\
--	int _retries = 200;				\
--							\
--	do {						\
--		_old = read_sysreg(reg);		\
--		_new = read_sysreg(reg);		\
--		_retries--;				\
--	} while (unlikely(_old != _new) && _retries);	\
--							\
--	WARN_ON_ONCE(!_retries);			\
--	_new;						\
--})
-+struct arch_timer_erratum_workaround {
-+	int erratum;		/* Indicate the Erratum ID */
-+	u32 (*read_cntp_tval_el0)(void);
-+	u32 (*read_cntv_tval_el0)(void);
-+	u64 (*read_cntvct_el0)(void);
-+};
-+
-+extern struct arch_timer_erratum_workaround *timer_unstable_counter_workaround;
- 
- #define arch_timer_reg_read_stable(reg) 		\
- ({							\
- 	u64 _val;					\
--	if (needs_fsl_a008585_workaround())		\
--		_val = __fsl_a008585_read_##reg();	\
-+	if (needs_unstable_timer_counter_workaround())		\
-+		_val = timer_unstable_counter_workaround->read_##reg();\
- 	else						\
- 		_val = read_sysreg(reg);		\
- 	_val;						\
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 73c487d..696386f 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -95,40 +95,53 @@ early_param("clocksource.arm_arch_timer.evtstrm", early_evtstrm_cfg);
-  */
- 
- #ifdef CONFIG_FSL_ERRATUM_A008585
--DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
--EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
--
--static int fsl_a008585_enable = -1;
-+struct arch_timer_erratum_workaround *timer_unstable_counter_workaround = NULL;
-+EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
- 
--static int __init early_fsl_a008585_cfg(char *buf)
--{
--	int ret;
--	bool val;
-+#define        FSL_A008585	0x0001
- 
--	ret = strtobool(buf, &val);
--	if (ret)
--		return ret;
--
--	fsl_a008585_enable = val;
--	return 0;
--}
--early_param("clocksource.arm_arch_timer.fsl-a008585", early_fsl_a008585_cfg);
-+DEFINE_STATIC_KEY_FALSE(arch_timer_read_ool_enabled);
-+EXPORT_SYMBOL_GPL(arch_timer_read_ool_enabled);
- 
--u32 __fsl_a008585_read_cntp_tval_el0(void)
-+/*
-+ * The number of retries is an arbitrary value well beyond the highest number
-+ * of iterations the loop has been observed to take.
-+ */
-+#define __fsl_a008585_read_reg(reg) ({			\
-+	u64 _old, _new;					\
-+	int _retries = 200;				\
-+							\
-+	do {						\
-+		_old = read_sysreg(reg);		\
-+		_new = read_sysreg(reg);		\
-+		_retries--;				\
-+	} while (unlikely(_old != _new) && _retries);	\
-+							\
-+	WARN_ON_ONCE(!_retries);			\
-+	_new;						\
-+})
-+
-+static u32 fsl_a008585_read_cntp_tval_el0(void)
- {
- 	return __fsl_a008585_read_reg(cntp_tval_el0);
- }
- 
--u32 __fsl_a008585_read_cntv_tval_el0(void)
-+static  u32 fsl_a008585_read_cntv_tval_el0(void)
- {
- 	return __fsl_a008585_read_reg(cntv_tval_el0);
- }
- 
--u64 __fsl_a008585_read_cntvct_el0(void)
-+static u64 fsl_a008585_read_cntvct_el0(void)
- {
- 	return __fsl_a008585_read_reg(cntvct_el0);
- }
--EXPORT_SYMBOL(__fsl_a008585_read_cntvct_el0);
-+
-+static struct arch_timer_erratum_workaround arch_timer_fsl_a008585 = {
-+	.erratum = FSL_A008585,
-+	.read_cntp_tval_el0 = fsl_a008585_read_cntp_tval_el0,
-+	.read_cntv_tval_el0 = fsl_a008585_read_cntv_tval_el0,
-+	.read_cntvct_el0 = fsl_a008585_read_cntvct_el0,
-+};
- #endif /* CONFIG_FSL_ERRATUM_A008585 */
- 
- static __always_inline
-@@ -281,7 +294,7 @@ static __always_inline void set_next_event(const int access, unsigned long evt,
- }
- 
- #ifdef CONFIG_FSL_ERRATUM_A008585
--static __always_inline void fsl_a008585_set_next_event(const int access,
-+static __always_inline void erratum_set_next_event_generic(const int access,
- 		unsigned long evt, struct clock_event_device *clk)
- {
- 	unsigned long ctrl;
-@@ -299,17 +312,17 @@ static __always_inline void fsl_a008585_set_next_event(const int access,
- 	arch_timer_reg_write(access, ARCH_TIMER_REG_CTRL, ctrl, clk);
- }
- 
--static int fsl_a008585_set_next_event_virt(unsigned long evt,
-+static int erratum_set_next_event_virt(unsigned long evt,
- 					   struct clock_event_device *clk)
- {
--	fsl_a008585_set_next_event(ARCH_TIMER_VIRT_ACCESS, evt, clk);
-+	erratum_set_next_event_generic(ARCH_TIMER_VIRT_ACCESS, evt, clk);
- 	return 0;
- }
- 
--static int fsl_a008585_set_next_event_phys(unsigned long evt,
-+static int erratum_set_next_event_phys(unsigned long evt,
- 					   struct clock_event_device *clk)
- {
--	fsl_a008585_set_next_event(ARCH_TIMER_PHYS_ACCESS, evt, clk);
-+	erratum_set_next_event_generic(ARCH_TIMER_PHYS_ACCESS, evt, clk);
- 	return 0;
- }
- #endif /* CONFIG_FSL_ERRATUM_A008585 */
-@@ -342,16 +355,16 @@ static int arch_timer_set_next_event_phys_mem(unsigned long evt,
- 	return 0;
- }
- 
--static void fsl_a008585_set_sne(struct clock_event_device *clk)
-+static void erratum_workaround_set_sne(struct clock_event_device *clk)
- {
- #ifdef CONFIG_FSL_ERRATUM_A008585
- 	if (!static_branch_unlikely(&arch_timer_read_ool_enabled))
- 		return;
- 
- 	if (arch_timer_uses_ppi == VIRT_PPI)
--		clk->set_next_event = fsl_a008585_set_next_event_virt;
-+		clk->set_next_event = erratum_set_next_event_virt;
- 	else
--		clk->set_next_event = fsl_a008585_set_next_event_phys;
-+		clk->set_next_event = erratum_set_next_event_phys;
- #endif
- }
- 
-@@ -384,7 +397,7 @@ static void __arch_timer_setup(unsigned type,
- 			BUG();
- 		}
- 
--		fsl_a008585_set_sne(clk);
-+		erratum_workaround_set_sne(clk);
- 	} else {
- 		clk->features |= CLOCK_EVT_FEAT_DYNIRQ;
- 		clk->name = "arch_mem_timer";
-@@ -891,9 +904,10 @@ static int __init arch_timer_of_init(struct device_node *np)
- 	arch_timer_c3stop = !of_property_read_bool(np, "always-on");
- 
- #ifdef CONFIG_FSL_ERRATUM_A008585
--	if (fsl_a008585_enable < 0)
--		fsl_a008585_enable = of_property_read_bool(np, "fsl,erratum-a008585");
--	if (fsl_a008585_enable) {
-+	if (!timer_unstable_counter_workaround && of_property_read_bool(np, "fsl,erratum-a008585"))
-+		timer_unstable_counter_workaround = &arch_timer_fsl_a008585;
-+
-+	if (timer_unstable_counter_workaround) {
- 		static_branch_enable(&arch_timer_read_ool_enabled);
- 		pr_info("Enabling workaround for FSL erratum A-008585\n");
- 	}
--- 
-1.9.0
+> If that's the case then I guess reverting is probably the best option, but it
+> does restore us to a position where we honor stdout-path for earlycon & then
+> essentially ignore it for the proper kernel console. That seems pretty bust to
+> me...
+
+We do not ignore it, we use both the tty pointed to by stdout-path and tty0.
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
