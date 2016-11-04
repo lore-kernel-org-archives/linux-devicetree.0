@@ -1,52 +1,109 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH] Revert
- "console: don't prefer first registered if DT specifies stdout-path"
-Date: Fri, 4 Nov 2016 12:39:03 -0700
-Message-ID: <20161104123903.0693053785eb32f63822ac33@linux-foundation.org>
-References: <20161104121135.4780-1-hdegoede@redhat.com>
-        <20161104121135.4780-2-hdegoede@redhat.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Fri, 4 Nov 2016 12:49:14 -0700
+Message-ID: <20161104194914.GB16026@codeaurora.org>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg@mail.gmail.com>
+ <20161031081923.GF18195@verge.net.au>
+ <CAMuHMdXA-hemOT=ZysEfettei9=HsDddGhqddkw38hwRrdeagw@mail.gmail.com>
+ <20161031232537.GT16026@codeaurora.org>
+ <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161104121135.4780-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  4 Nov 2016 13:11:35 +0100 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+On 11/02, Geert Uytterhoeven wrote:
+> On Tue, Nov 1, 2016 at 12:25 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >
+> > Would the pull requests for clk also have dts changes at the base
+> > of the tree? Perhaps clk side can just ack the clk patches and
+> 
+> Yes they would: this is moving functionality from platform code to DT.
+> Without the DT updates, it will break bisection (except for R-Car Gen2,
+> where we have fallback code to handle old DTBs).
+> 
+> > then have it all routed through arm-soc? The only worry I have is
+> > if we need to make some sort of change in clk side that conflicts
+> > with these changes. I don't usually like taking dts changes
+> > through clk tree, so I'd like to avoid that if possible.
+> 
+> Everything could go through arm-soc only with your Acked-by.
+> However, there are new clock drivers pending on this series.
+> Either they have to go through arm-soc, too, or this series would
+> be pulled into the clk tree with these new clock drivers.
+> 
+> > Part E could happen anytime after everything else happens, so
+> > that doesn't seem like a concern.
+> 
+> Part E can indeed by postponed.
+> But if parts A-D are applied together, there's no reason to postpone part E.
+> 
+> > Part C could also be made to
+> > only call into the new reset drivers if the reset dts nodes are
+> > present? If that's done then we could merge clk patches anytime
+> > and remove the dead code and the node search at some later time
+> > when everything has settled?
+> 
+> That would require adding more backwards compatibility code for
+> old DTBs, even for platform where we're not interested in maintaining
+> that. In addition, Part C depends on the header file for the reset driver
+> to compile the clock driver, even if you would add some DT detection,
+> and on the reset driver to link. So I'm afraid this is not feasible.
+> 
 
-> This reverts commit 05fd007e4629 ("console: don't prefer first registered
-> if DT specifies stdout-path").
-> 
-> The reverted commit changes existing behavior on which many ARM boards
-> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
-> both a video output and a serial console. Depending on whether the user
-> is using the device as a more regular computer; or as a headless device
-> we need to have the console on either one or the other.
-> 
-> Many users rely on the kernel behavior of the console being present on
-> both outputs, before the reverted commit the console setup with no
-> console= kernel arguments on an ARM board which sets stdout-path in dt
-> would look like this:
-> 
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
-> tty0                 -WU (E  p  )    4:1
-> 
-> Where as after the reverted commit, it looks like this:
-> 
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
-> 
-> This commit reverts commit 05fd007e4629 ("console: don't prefer first
-> registered if DT specifies stdout-path") restoring the original behavior.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+TL;DR: Sounds fine, I'll be on the lookout for the PR.
 
-I've added cc:stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to my copy of this.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Longer version: Let me step back a bit and actually think about
+this longer than 2 minutes. From what I see
+rcar_rst_read_mode_pins() already returns -ENODEV if the nodes
+aren't present. Great.
+
+So clk tree could be given a pull for the clk patches, part C, on
+top of part A, the reset driver. If the rcar_rst_read_mode_pins()
+returns failure because the node is missing, we fall back to the
+old style of doing things. Some drivers already do that anyway,
+so this looks to be replacing things like 
+
+	if (rcar_rst_read_mode_pins())
+		return;
+		
+with
+	
+	if (rcar_rst_read_mode_pins() != -ENODEV)
+		return;
+
+
+Then in arm-soc tree, the dts patches are merged. That causes us
+to do some duplicate work reading the pins twice in mach-shmobile
+and in the new reset driver. That's duplicate/wasteful, but it
+works. Finally, everything is merged together into a tagged
+release. The mach-shmobile changes can happen anytime after that
+(part D). Again we're left with dead code in the clk driver (part
+E) until the dependency merges, but that's ok. Once part D merges
+we can get rid of the dead code in part E and any backwards
+compatibility we don't want to maintain.
+
+In summary, it's all feasible to do this and most people wouldn't
+have had to know about the dependency chain but it's not fast by
+any means. Instead we merge everything in one shot and get it
+over with now.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
