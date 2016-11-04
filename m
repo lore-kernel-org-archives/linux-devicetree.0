@@ -1,74 +1,56 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 1/3] bus: simple-pm: add support to pm clocks
-Date: Fri,  4 Nov 2016 12:59:45 +0000
-Message-ID: <1478264387-17914-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1478264387-17914-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478264387-17914-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: svarbanov@mm-sol.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH v3 1/6] arm64: arch_timer: Add device tree binding for
+ hisilicon-161601 erratum
+Date: Fri, 4 Nov 2016 21:06:29 +0800
+Message-ID: <1478264794-14652-1-git-send-email-dingtianhong@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, hanjun.guo@linaro.org
+Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to pm clocks via device tree, so that the clocks
-can be turned on and off during runtime pm. This patch is required for
-Qualcomm msm8996 pcie controller which sits on a bus with its own
-power-domain and clocks.
+This erratum describes a bug in logic outside the core, so MIDR can't be
+used to identify its presence, and reading an SoC-specific revision
+register from common arch timer code would be awkward.  So, describe it
+in the device tree.
 
-Without this patch the clock associated with the bus are never turned on.
+v2: Use the new erratum name and update the description.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-index c5eb46c..63b7e8c 100644
---- a/drivers/bus/simple-pm-bus.c
-+++ b/drivers/bus/simple-pm-bus.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_clock.h>
- #include <linux/pm_runtime.h>
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index ef5fbe9..c27b2c4 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
+   This also affects writes to the tval register, due to the implicit
+   counter read.
  
- 
-@@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	if (np)
-+	if (np) {
-+		of_pm_clk_add_clks(&pdev->dev);
- 		of_platform_populate(np, NULL, NULL, &pdev->dev);
-+	}
- 
- 	return 0;
- }
- 
-+static const struct dev_pm_ops simple_pm_bus_pm_ops = {
-+	SET_RUNTIME_PM_OPS(pm_clk_suspend,
-+			   pm_clk_resume, NULL)
-+};
++- hisilicon,erratum-161601 : A boolean property. Indicates the presence of
++  erratum 161601, which says that reading the counter is unreliable unless
++  reading twice on the register and the value of the second read is larger
++  than the first by less than 32. If the verification is unsuccessful, then
++  discard the value of this read and repeat this procedure until the verification
++  is successful.  This also affects writes to the tval register, due to the
++  implicit counter read.
 +
- static int simple_pm_bus_remove(struct platform_device *pdev)
- {
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
+ ** Optional properties:
  
- 	pm_runtime_disable(&pdev->dev);
-+	pm_clk_destroy(&pdev->dev);
-+
- 	return 0;
- }
- 
-@@ -48,6 +58,7 @@ static struct platform_driver simple_pm_bus_driver = {
- 	.driver = {
- 		.name = "simple-pm-bus",
- 		.of_match_table = simple_pm_bus_of_match,
-+		.pm = &simple_pm_bus_pm_ops,
- 	},
- };
- 
+ - arm,cpu-registers-not-fw-configured : Firmware does not initialize
 -- 
-2.10.1
+1.9.0
