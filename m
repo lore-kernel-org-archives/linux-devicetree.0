@@ -1,53 +1,60 @@
-From: Jeremy McNicoll <jeremymc@redhat.com>
-Subject: [PATCH V6 1/6] arm64: dts: msm8992 SoC and LG Bullhead (Nexus 5X) support
-Date: Fri,  4 Nov 2016 13:56:31 -0700
-Message-ID: <1478292996-29559-2-git-send-email-jeremymc@redhat.com>
+From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V6 6/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P) support
+Date: Fri,  4 Nov 2016 13:56:36 -0700
+Message-ID: <1478292996-29559-7-git-send-email-jeremymc@redhat.com>
 References: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, mail@kchr.de, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org, jeremymc@redhat.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478292996-29559-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mail-LJ92rlH3Dns@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy McNicoll <jmcnicol@redhat.com>
+From: Bastian Köcher <git-LJ92rlH3Dns@public.gmane.org>
 
-Initial device tree support for Qualcomm MSM8992 SoC and
-LG Bullhead / Google Nexus 5X support.
+Initial device tree support for Qualcomm MSM8994 SoC and
+Huawei Angler / Google Nexus 6P support.
 
-Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+The device tree is based on the Google 3.10 kernel tree.
+
+The device can be booted into the initrd with only one CPU running.
+
+Signed-off-by: Bastian Köcher <mail-LJ92rlH3Dns@public.gmane.org>
+[jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: removed Kconfig, defconfig, move from Huawei to qcom dir]
+Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Tested-by: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/qcom/Makefile                  |   6 +-
- .../boot/dts/qcom/msm8992-bullhead-rev-101.dts     |  41 +++++
- arch/arm64/boot/dts/qcom/msm8992-pins.dtsi         |  38 +++++
- arch/arm64/boot/dts/qcom/msm8992.dtsi              | 184 +++++++++++++++++++++
- 4 files changed, 267 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8992.dtsi
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts |  40 ++++
+ arch/arm64/boot/dts/qcom/msm8994-pins.dtsi         |  38 ++++
+ arch/arm64/boot/dts/qcom/msm8994.dtsi              | 216 +++++++++++++++++++++
+ 4 files changed, 295 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8994.dtsi
 
 diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 5dd05de..439e40e 100644
+index 439e40e..cc0f02d 100644
 --- a/arch/arm64/boot/dts/qcom/Makefile
 +++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -1,6 +1,8 @@
--dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
  
  always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
 new file mode 100644
-index 0000000..4542133
+index 0000000..dfa08f5
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dts
-@@ -0,0 +1,41 @@
-+/* Copyright (c) 2015, LGE Inc. All rights reserved.
++++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+@@ -0,0 +1,40 @@
++/* Copyright (c) 2015, Huawei Inc. All rights reserved.
 + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -62,14 +69,13 @@ index 0000000..4542133
 +
 +/dts-v1/;
 +
-+#include "msm8992.dtsi"
++#include "msm8994.dtsi"
 +
 +/ {
-+	model = "LG Nexus 5X";
-+	compatible = "lg,bullhead", "qcom,msm8992";
++	model = "Huawei Nexus 6P";
++	compatible = "huawei,angler", "qcom,msm8994";
 +	/* required for bootloader to select correct board */
-+	qcom,board-id = <0xb64 0>;
-+	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
++	qcom,board-id = <8026 0>;
 +
 +	aliases {
 +		serial0 = &blsp1_uart2;
@@ -88,14 +94,14 @@ index 0000000..4542133
 +		};
 +	};
 +};
-diff --git a/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
 new file mode 100644
-index 0000000..d2a26f0
+index 0000000..0e4eea0
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8992-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
 @@ -0,0 +1,38 @@
 +/*
-+ * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 and
@@ -132,12 +138,12 @@ index 0000000..d2a26f0
 +		};
 +	};
 +};
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
 new file mode 100644
-index 0000000..44b2d37
+index 0000000..f33c41d
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -0,0 +1,184 @@
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -0,0 +1,216 @@
 +/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -154,10 +160,12 @@ index 0000000..44b2d37
 +#include <dt-bindings/clock/qcom,gcc-msm8994.h>
 +
 +/ {
-+	model = "Qualcomm Technologies, Inc. MSM 8992";
-+	compatible = "qcom,msm8992";
-+	// msm-id needed by bootloader for selecting correct blob
-+	qcom,msm-id = <251 0>, <252 0>;
++	model = "Qualcomm Technologies, Inc. MSM 8994";
++	compatible = "qcom,msm8994";
++	// msm-id and pmic-id are required by bootloader for
++	// proper selection of dt blob
++	qcom,msm-id = <207 0x20000>;
++	qcom,pmic-id = <0x10009 0x1000A 0x0 0x0>;
 +	interrupt-parent = <&intc>;
 +
 +	#address-cells = <2>;
@@ -166,7 +174,7 @@ index 0000000..44b2d37
 +	chosen { };
 +
 +	cpus {
-+		#address-cells = <2>;
++		#address-cells = <1>;
 +		#size-cells = <0>;
 +		cpu-map {
 +			cluster0 {
@@ -179,36 +187,25 @@ index 0000000..44b2d37
 +		CPU0: cpu@0 {
 +			device_type = "cpu";
 +			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
++			reg = <0x0>;
 +			next-level-cache = <&L2_0>;
 +			L2_0: l2-cache {
-+				compatible = "cache";
-+				cache-level = <2>;
++			      compatible = "cache";
++			      cache-level = <2>;
 +			};
 +		};
 +	};
 +
 +	timer {
 +		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		interrupts = <1 2 0xff08>,
++			     <1 3 0xff08>,
++			     <1 4 0xff08>,
++			     <1 1 0xff08>;
 +	};
 +
-+	xo_board: xo_board {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <19200000>;
-+	};
++	soc: soc {
 +
-+	sleep_clk: sleep_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+	};
-+
-+	soc {
 +		#address-cells = <1>;
 +		#size-cells = <1>;
 +		ranges = <0 0 0 0xffffffff>;
@@ -219,7 +216,7 @@ index 0000000..44b2d37
 +			interrupt-controller;
 +			#interrupt-cells = <3>;
 +			reg = <0xf9000000 0x1000>,
-+				<0xf9002000 0x1000>;
++				  <0xf9002000 0x1000>;
 +		};
 +
 +		timer@f9020000 {
@@ -232,9 +229,9 @@ index 0000000..44b2d37
 +			frame@f9021000 {
 +				frame-number = <0>;
 +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+						<GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++					     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
 +				reg = <0xf9021000 0x1000>,
-+					<0xf9022000 0x1000>;
++				      <0xf9022000 0x1000>;
 +			};
 +
 +			frame@f9023000 {
@@ -298,11 +295,16 @@ index 0000000..44b2d37
 +		blsp1_uart2: serial@f991e000 {
 +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
 +			reg = <0xf991e000 0x1000>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
 +			status = "disabled";
 +			clock-names = "core", "iface";
 +			clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
-+				<&clock_gcc GCC_BLSP1_AHB_CLK>;
++				 <&clock_gcc GCC_BLSP1_AHB_CLK>;
++		};
++
++		tcsr_mutex_regs: syscon@fd484000 {
++			compatible = "syscon";
++			reg = <0xfd484000 0x2000>;
 +		};
 +
 +		clock_gcc: clock-controller@fc400000 {
@@ -316,11 +318,52 @@ index 0000000..44b2d37
 +
 +	memory {
 +		device_type = "memory";
-+		reg = <0 0 0 0>; // bootloader will update
++		// We expect the bootloader to fill in the reg
++		reg = <0 0 0 0>;
++	};
++
++	xo_board: xo_board {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <19200000>;
++	};
++
++	sleep_clk: sleep_clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smem_mem: smem_region@6a00000 {
++			reg = <0x0 0x6a00000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x80>;
++		#hwlock-cells = <1>;
++	};
++
++	qcom,smem@6a00000 {
++		compatible = "qcom,smem";
++		memory-region = <&smem_mem>;
++		hwlocks = <&tcsr_mutex 3>;
 +	};
 +};
 +
 +
-+#include "msm8992-pins.dtsi"
++#include "msm8994-pins.dtsi"
 -- 
 2.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
