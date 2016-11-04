@@ -1,82 +1,37 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] msm8994 clocks: global clock support for msm8994 SOC.
-Date: Thu, 3 Nov 2016 16:43:52 -0700
-Message-ID: <20161103234351.GA15102@mini-rhel.redhat.com>
-References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-4-git-send-email-jeremymc@redhat.com>
- <20161103224234.GB30414@remoulade>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 0/3] Remove clocks dependency from SCM driver
+Date: Thu,  3 Nov 2016 17:10:34 -0700
+Message-ID: <1478218237-1737-1-git-send-email-spjoshi@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161103224234.GB30414@remoulade>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, mail-LJ92rlH3Dns@public.gmane.org
-Cc: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Trilok Soni <tsoni-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 10:42:34PM +0000, Mark Rutland wrote:
-> On Tue, Oct 25, 2016 at 04:16:58AM -0700, Jeremy McNicoll wrote:
-> > +static const struct qcom_cc_desc gcc_msm8994_desc = {
-> > +	.config = &gcc_msm8994_regmap_config,
-> > +	.clks = gcc_msm8994_clocks,
-> > +	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
-> > +	.resets = NULL,
-> > +	.num_resets = 0,
-> > +	.gdscs = NULL,
-> > +	.num_gdscs = 0,
-> > +};
-> > +
-> > +static const struct of_device_id gcc_msm8994_match_table[] = {
-> > +	{ .compatible = "qcom,gcc-8994" },
-> > +	{ .compatible = "qcom,gcc-8994v2" },
-> > +	{}
-> > +}
-> > +
-> > +MODULE_DEVICE_TABLE(of, gcc_msm8994_match_table);
-> > +
-> > +static int gcc_msm8994_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct clk *clk;
-> > +	const char *compat = NULL;
-> > +	int compatlen = 0;
-> > +	bool is_v2 = false;
-> > +
-> > +	clk = devm_clk_register(dev, &xo.hw);
-> > +	if (IS_ERR(clk))
-> > +		return PTR_ERR(clk);
-> > +
-> > +	compat = of_get_property(pdev->dev.of_node, "compatible", &compatlen);
-> > +	if (!compat || (compatlen <= 0))
-> > +		return -EINVAL;
-> 
-> It is almost never correct to use of_get_property(). Please avoid it.
->
+On earlier chiptsets (APQ8064, MSM8660, MSM8690, MSM8916,
+APQ8084, MSM8974) crypto operations of TZ were depends on crypto
+clocks controlled by users/clients. However on MSM8996 crypto clocks
+control is handled internally in TZ itself. The current series of
+patches handle this clock dependency in SCM driver.
 
-Hi Bastian, 
+Changes since v1:
+- Added Rob's Acked-by
+- Removed of_device_is_compatible check from probe (Stephen)
+- Modified typecast to take care of 32-bit pointer
 
-Mark is basically suggesting that instead of using of_get_property() you
-should be using  something like of_device_compatible_match, or 
-of_device_is_compatible.   This should simplify the code a little bit
-too. 
+Sarangdhar Joshi (3):
+  dt-bindings: firmware: scm: Add MSM8996 DT bindings
+  firmware: qcom: scm: Remove core, iface and bus clocks dependency
+  firmware: qcom: scm: Return PTR_ERR when devm_clk_get fails
 
-Unless I am misunderstanding Mark's comment.
+ .../devicetree/bindings/firmware/qcom,scm.txt      |  2 +
+ drivers/firmware/qcom_scm.c                        | 49 ++++++++++++++++------
+ 2 files changed, 39 insertions(+), 12 deletions(-)
 
--jeremy
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-
-> > +
-> > +	is_v2 = !strcmp(compat, "qcom,gcc-8994v2");
-> > +	if (is_v2)
-> > +		msm_gcc_8994v2_fixup();
-> 
-> Either put some data in the of_device_id tables, and use that to determine what
-> to do here, or use of_device_is_compatible() or of_match_node() to check the
-> string.
-> 
-> Thanks,
-> Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
