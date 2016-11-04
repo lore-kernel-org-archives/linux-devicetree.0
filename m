@@ -1,100 +1,89 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [REGRESSION] "console: don't prefer first registered if DT specifies stdout-path" breaks console on video outputs of various ARM boards
-Date: Fri, 4 Nov 2016 12:30:35 +0000
-Message-ID: <17833033.PtOSTzKXGD@np-p-burton>
-References: <20161104121135.4780-1-hdegoede@redhat.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Update comment for main PLL frequency
+Date: Fri, 04 Nov 2016 13:33:59 +0100
+Message-ID: <874m3no24o.fsf@free-electrons.com>
+References: <20161025235242.31764-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart10734688.zpdo6DTjzD";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161104121135.4780-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161025235242.31764-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
+        Packham's message of "Wed, 26 Oct 2016 12:52:42 +1300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart10734688.zpdo6DTjzD
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Hi Chris,
+ 
+ On mer., oct. 26 2016, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-Hi Hans,
+> The actual frequency was updated in commit ae142bd99765 ("ARM: mvebu:
+> Fix the main PLL frequency on Armada 375, 38x and 39x SoCs") but the
+> comment was not updated. Update it now.
+>
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 
-On Friday, 4 November 2016 13:11:34 GMT Hans de Goede wrote:
-> Hi All,
-> 
-> While booting 4.9-rc# for the first time on an Allwinner A33 tablet,
-> I noticed that after u-boot the LCD display stayed black. It turns out
-> that there was an issue which caused X to never get up, and all kernel
-> (and other startup) messages prior to that only went to ttyS0 which
-> consists of 2 tiny testpads on the PCB with this tablet.
-> 
-> The same issue will also happen on any ARM boards which have a HDMI or
-> composite video output and which use a stdout-path pointing to their
-> serial console. I think this will e.g. also impact the Raspberry Pi,
-> I know for certain that this will impact the 99 different Allwinnner
-> boards currently supported by mainline u-boot + the mainline kernel.
-> 
-> This is a behavior changes from previous kernels and I consider this
-> a regression. Thus I propose to revert the commit in question, for more
-> info here is a partial copy of the commit message of the proposed revert:
-> 
-> The reverted commit changes existing behavior on which many ARM boards
-> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
-> both a video output and a serial console. Depending on whether the user
-> is using the device as a more regular computer; or as a headless device
-> we need to have the console on either one or the other.
-> 
-> Many users rely on the kernel behavior of the console being present on
-> both outputs, before the reverted commit the console setup with no
-> console= kernel arguments on an ARM board which sets stdout-path in dt
-> would look like this:
-> 
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
-> tty0                 -WU (E  p  )    4:1
-> 
-> Where as after the reverted commit, it looks like this:
-> 
-> [root@localhost ~]# cat /proc/consoles
-> ttyS0                -W- (EC p a)    4:64
-> 
-> This commit reverts commit 05fd007e4629 ("console: don't prefer first
-> registered if DT specifies stdout-path") restoring the original behavior.
-> 
-> Regards,
-> 
-> Hans
-
-Ugh... so the devices you're talking about rely upon set stdout-path in their 
-device tree but effectively rely upon us ignoring it?
-
-If that's the case then I guess reverting is probably the best option, but it 
-does restore us to a position where we honor stdout-path for earlycon & then 
-essentially ignore it for the proper kernel console. That seems pretty bust to 
-me...
+Applied on mvebu/dt
 
 Thanks,
-    Paul
---nextPart10734688.zpdo6DTjzD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
 
------BEGIN PGP SIGNATURE-----
+Gregory
 
-iQIcBAABCAAGBQJYHH9rAAoJEIIg2fppPBxl34sP/3eBsFz+Py27TY9MTC8SrgVA
-Qz0ci+m/noH44R17XPQpIxS5xegN52A3VfL2yL/L/iPkX8eWW5btFumNusqgHlUS
-wlFoAJDCUNNjdEYGZx4BIuTqDRcHl7MF2VXKo0dgTeoqO9+ayxYUrnzdX8xLKSlK
-A/xL5MUeADF5iUzbuAxUrYBtvNRm6QB+KwQN6nwOe/9ichxINgp9+J7beFBhvtzM
-Fg0U3kgFubSpkB2AKLly4gAXLNbGE13KWPa9SIpOzJZnr2EqAX5pQFZCZtSOTDyY
-CTs5orsTDuT7hKqtLQjD21mtrF9Oan9D6JhuUd9HLz+6a9RTwiuWffMe/nTZ8UMU
-+zABhTiQrfEhwOpjWYzIRMSCK5RlKEvkvP7Fa2f2j4HPD4yBmHem7bIUIE0sjkgu
-1Ke/f6mfNTaBx1XFoY4xtsixS/0C4RemXlLBG7I8YThsvusI/0QrtRiCVHiMPr45
-RlbuXIZAu/sXG0zRJGLCFxpS2Cl5jsKmpvYTGPlTFuQV025eCwPtM1EwsIjKVRS4
-vb90X9WgoZDkzVkWc4H3IGRMquE5AZQ62i/9EtnpoVYSm4oMD6a70qSiGEx7zmLI
-32lSnkoBel3IKVvX13bXr7ImhedKz3oB1QVRlfK5+1Rz2dyzE2NO0STBCt7cq+q5
-HbG0b0F1Yu8mboxlVcMz
-=+W3i
------END PGP SIGNATURE-----
+> ---
+>  arch/arm/boot/dts/armada-375.dtsi | 2 +-
+>  arch/arm/boot/dts/armada-38x.dtsi | 2 +-
+>  arch/arm/boot/dts/armada-39x.dtsi | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+> index cc952cf8ec30..45fa92f9cf5c 100644
+> --- a/arch/arm/boot/dts/armada-375.dtsi
+> +++ b/arch/arm/boot/dts/armada-375.dtsi
+> @@ -65,7 +65,7 @@
+>  	};
+>  
+>  	clocks {
+> -		/* 2 GHz fixed main PLL */
+> +		/* 1 GHz fixed main PLL */
+>  		mainpll: mainpll {
+>  			compatible = "fixed-clock";
+>  			#clock-cells = <0>;
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index 2d7668848c5a..7450e9fea45d 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -661,7 +661,7 @@
+>  	};
+>  
+>  	clocks {
+> -		/* 2 GHz fixed main PLL */
+> +		/* 1 GHz fixed main PLL */
+>  		mainpll: mainpll {
+>  			compatible = "fixed-clock";
+>  			#clock-cells = <0>;
+> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+> index 34cba87f9200..de171baffcf6 100644
+> --- a/arch/arm/boot/dts/armada-39x.dtsi
+> +++ b/arch/arm/boot/dts/armada-39x.dtsi
+> @@ -573,7 +573,7 @@
+>  	};
+>  
+>  	clocks {
+> -		/* 2 GHz fixed main PLL */
+> +		/* 1 GHz fixed main PLL */
+>  		mainpll: mainpll {
+>  			compatible = "fixed-clock";
+>  			#clock-cells = <0>;
+> -- 
+> 2.10.1
+>
 
---nextPart10734688.zpdo6DTjzD--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
