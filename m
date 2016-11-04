@@ -1,109 +1,135 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for
- obtaining mode pin state
-Date: Fri, 4 Nov 2016 12:49:14 -0700
-Message-ID: <20161104194914.GB16026@codeaurora.org>
-References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg@mail.gmail.com>
- <20161031081923.GF18195@verge.net.au>
- <CAMuHMdXA-hemOT=ZysEfettei9=HsDddGhqddkw38hwRrdeagw@mail.gmail.com>
- <20161031232537.GT16026@codeaurora.org>
- <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
+Date: Fri, 4 Nov 2016 14:59:43 -0500
+Message-ID: <b92f729b-5897-c29a-31ec-97510776d85d@ti.com>
+References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
+ <1476855239-32730-3-git-send-email-j-keerthy@ti.com>
+ <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
+ <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com>
+ <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
+ <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com>
+ <CACRpkdZmuc__QL6b7Jvb8xL5Bm+PD2X60NtiugrnH7iAO=-tLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZmuc__QL6b7Jvb8xL5Bm+PD2X60NtiugrnH7iAO=-tLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02, Geert Uytterhoeven wrote:
-> On Tue, Nov 1, 2016 at 12:25 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> >
-> > Would the pull requests for clk also have dts changes at the base
-> > of the tree? Perhaps clk side can just ack the clk patches and
-> 
-> Yes they would: this is moving functionality from platform code to DT.
-> Without the DT updates, it will break bisection (except for R-Car Gen2,
-> where we have fallback code to handle old DTBs).
-> 
-> > then have it all routed through arm-soc? The only worry I have is
-> > if we need to make some sort of change in clk side that conflicts
-> > with these changes. I don't usually like taking dts changes
-> > through clk tree, so I'd like to avoid that if possible.
-> 
-> Everything could go through arm-soc only with your Acked-by.
-> However, there are new clock drivers pending on this series.
-> Either they have to go through arm-soc, too, or this series would
-> be pulled into the clk tree with these new clock drivers.
-> 
-> > Part E could happen anytime after everything else happens, so
-> > that doesn't seem like a concern.
-> 
-> Part E can indeed by postponed.
-> But if parts A-D are applied together, there's no reason to postpone part E.
-> 
-> > Part C could also be made to
-> > only call into the new reset drivers if the reset dts nodes are
-> > present? If that's done then we could merge clk patches anytime
-> > and remove the dead code and the node search at some later time
-> > when everything has settled?
-> 
-> That would require adding more backwards compatibility code for
-> old DTBs, even for platform where we're not interested in maintaining
-> that. In addition, Part C depends on the header file for the reset driver
-> to compile the clock driver, even if you would add some DT detection,
-> and on the reset driver to link. So I'm afraid this is not feasible.
-> 
 
-TL;DR: Sounds fine, I'll be on the lookout for the PR.
 
-Longer version: Let me step back a bit and actually think about
-this longer than 2 minutes. From what I see
-rcar_rst_read_mode_pins() already returns -ENODEV if the nodes
-aren't present. Great.
+On 11/04/2016 09:28 AM, Linus Walleij wrote:
+> On Thu, Oct 27, 2016 at 10:07 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+>> On Thursday 27 October 2016 01:23 PM, Roger Quadros wrote:
+>>> On 27/10/16 06:42, Keerthy wrote:
+>>>> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
+>>>>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+>>>>>> From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> 
+>>>> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
+>>>> GPIO0 comprises of 144 GPIOs
+>>>> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is
+>>>> being modeled.
+>>>>
+>>>> I am creating a controller for every 32 GPIOs under the big module each
+>>>> containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
+>>>> Each 16 GPIO bank has an interrupt.
+>>>>
+>>>> Is this modeling fine or do you think creating one chip with 144 pins and
+>>>> another with 68 pins is a better way?
+>>>
+>>>
+>>> If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144
+>>> GPIOs?
+>>> What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+>>
+>> 144 GPIOs where in 16 GPIOs form a bank. So about 9 banks with one interrupt
+>> each. So split it into gpiochips with 32 GPIOs each handling 2 Interrupts.
+> 
+> I'm a bit confused.
+> 
+> This sounds like you should either have one gpio_chip per interrupt
+> (if that fits with how the device tree looks) or one big gpio_chip for
+> all the lines.
 
-So clk tree could be given a pull for the clk patches, part C, on
-top of part A, the reset driver. If the rcar_rst_read_mode_pins()
-returns failure because the node is missing, we fall back to the
-old style of doing things. Some drivers already do that anyway,
-so this looks to be replacing things like 
+yep. This HW confuses a bit :(, So, there are few links on TRMs/DM and
+my brief overview:
+Keystone k2g (66AK2G02) http://www.ti.com/lit/ug/spruhy8d/spruhy8d.pdf
+Keystone k2hk/e/l http://www.ti.com/lit/ug/sprugv1/sprugv1.pdf
+omap-l138 http://www.ti.com/lit/ug/spruh77c/spruh77c.pdf
 
-	if (rcar_rst_read_mode_pins())
-		return;
+Each GPIO IP is implemented as GPIO controller which has some set of
+common registers (minimum BINTEN) and up to 16 (?) gpio banks - 16 pins per bank.
+SoC may contain more than one GPIO controllers.  
+
+GPIO banks groped by two in 32 bit registers, so overall registers structure:
+
+common		0h GPIO_PID Peripheral Identification Register
+common		8h GPIO_BINTEN Interrupt Per-Bank Enable Register
 		
-with
-	
-	if (rcar_rst_read_mode_pins() != -ENODEV)
-		return;
+banks0&1	10h GPIO_DIR01 Direction 0 and 1 Register
+		14h GPIO_OUT_DATA01 Output Data 0 and 1 Register
+		18h GPIO_SET_DATA01 Set Data 0 and 1 Register
+		1Ch GPIO_CLR_DATA01 Clear Data 0 and 1 Register
+		
+		20h GPIO_IN_DATA01 Input Data 0 and 1
+		24h GPIO_SET_RIS_TRIG01 Set Rising Edge Interrupt 0 and 1
+		28h GPIO_CLR_RIS_TRIG01 Clear Rising Edge Interrupt 0 and 1
+		2Ch GPIO_SET_FAL_TRIG01 Set Falling Edge Interrupt 0 and 1
+		30h GPIO_CLR_FAL_TRIG01 Clear Falling Edge Interrupt 0 and 1
+		34h GPIO_INTSTAT01 GPIO Interrupt status 0 and 1 Register
+		
+banks2&3	38h DIR23 GPIO Banks 2 and 3 Direction Register
+...
+
+IRQ handling can be done in two ways - depending on SoC - which can be combined
+on some SoCs (not supported by current driver)
+1) Direct IRQs - each GPIO pin has separate IRQ line assigned in Main IRQ controller (example k2hk/e/l)
+2) banked IRQs - each bank (16 pins) has one assigned IRQ. So, two IRQs per banksX&Y register set.
+
+> 
+> The DT model sort of mandates how the interrupts should be mapped
+> at this point, and as far as I can tell from the binding the example looks
+> like so:
+> 
+> gpio: gpio@1e26000 {
+>         compatible = "ti,dm6441-gpio";
+>         gpio-controller;
+>         #gpio-cells = <2>;
+>         reg = <0x226000 0x1000>;
+>         interrupt-parent = <&intc>;
+>         interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
+>                 44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
+>                 46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
+>                 48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
+>                 50 IRQ_TYPE_EDGE_BOTH>;
+>         ti,ngpio = <144>;
+>         ti,davinci-gpio-unbanked = <0>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>;
+> };
+
+Above, DT bindings models Davinci GPIO IP as monolithic GPIO controller
+with N gpio pins, but internally separate GPIO chips are created for each
+banksX&Y register set (32 pins, 2 banked irq -or- 32 direct irqs).
+
+Translation from linear GPIO numbering to the proper internal GPIO chip is done
+using chip.of_xlate().
+
+> 
+> So I don't see any reason to split this up in subchips internally in
+> Linux?
+> 
 
 
-Then in arm-soc tree, the dts patches are merged. That causes us
-to do some duplicate work reading the pins twice in mach-shmobile
-and in the new reset driver. That's duplicate/wasteful, but it
-works. Finally, everything is merged together into a tagged
-release. The mach-shmobile changes can happen anytime after that
-(part D). Again we're left with dead code in the clk driver (part
-E) until the dependency merges, but that's ok. Once part D merges
-we can get rid of the dead code in part E and any backwards
-compatibility we don't want to maintain.
-
-In summary, it's all feasible to do this and most people wouldn't
-have had to know about the dependency chain but it's not fast by
-any means. Instead we merge everything in one shot and get it
-over with now.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
