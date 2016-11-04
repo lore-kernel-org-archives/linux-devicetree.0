@@ -1,44 +1,39 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] arm64: arch_timer: Introduce a generic erratum
- handing mechanism for fsl-a008585
-Date: Fri, 4 Nov 2016 18:55:40 +0000
-Message-ID: <20161104185540.GA22791@arm.com>
-References: <1478264794-14652-1-git-send-email-dingtianhong@huawei.com>
- <1478264794-14652-2-git-send-email-dingtianhong@huawei.com>
- <20161104182050.GA1651@buserror.net>
+From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Issue with dt_to_config with dts files that include headers from dt-bindings
+Date: Fri, 4 Nov 2016 19:19:35 +0000
+Message-ID: <CALeDE9NVuztzMe8iO+OhOrwg3YxCr9VbEwh24-3MLK+5U82fYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161104182050.GA1651-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scott-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2016 at 01:20:50PM -0500, Scott Wood wrote:
-> On Fri, Nov 04, 2016 at 09:06:30PM +0800, Ding Tianhong wrote:
-> > The workaround for hisilicon,161601 will check the return value of the system counter
-> > by different way, in order to distinguish with the fsl-a008585 workaround, introduce
-> > a new generic erratum handing mechanism for fsl-a008585 and rename some functions.
-> > 
-> > v2: Introducing a new generic erratum handling mechanism for fsl erratum a008585.
-> > 
-> > v3: Introducing the erratum_workaround_set_sne generic function for fsl erratum a008585
-> >     and make the #define __fsl_a008585_read_reg to be private to the .c file instead of
-> >     being globally visible. After discussion with Marc and Will, a consensus decision was
-> >     made to remove the commandline parameter for enabling fsl,erratum-a008585 erratum,
-> >     and make some generic name more specific, export timer_unstable_counter_workaround
-> >     for module access.
-> 
-> The command line paramter was added at Marc's request to provide a way of
-> enbaling the workaround in a KVM guest, until API is added to allow QEMU to
-> discover the need to set the property in the guest device tree.  Is there an
-> alternative?
+Hi Gaurav, Rob and Frank,
 
-Yes -- generate the device-tree property to indicate that there's an issue.
+I've just discovered the dt_to_config script (awesome thanks!) but it
+errors out when a dts(i) includes a header file from dt-bindings. EG
 
-Will
+./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts
+In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:
+arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which
+to search for dt-bindings/gpio/gpio.h
+ #include <dt-bindings/gpio/gpio.h>
+                                   ^
+arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which
+to search for dt-bindings/pinctrl/am33xx.h
+ #include <dt-bindings/pinctrl/am33xx.h>
+                                        ^
+arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path
+in which to search for dt-bindings/display/tda998x.h
+ #include <dt-bindings/display/tda998x.h>
+                                         ^
+Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error
+FATAL ERROR: Unable to parse input tree
+
+
+Regards,
+Peter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
