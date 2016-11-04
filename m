@@ -1,80 +1,32 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3] clk: mediatek: Allow changing PLL rate when it is off
-Date: Fri, 4 Nov 2016 14:42:56 +0800
-Message-ID: <1478241776-50687-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Rafal Milecki <rafal@milecki.pl>
+Subject: Re: [PATCH v6 5/7] net: ethernet: bgmac: device tree phy enablement
+Date: Fri, 4 Nov 2016 07:43:20 +0100
+Message-ID: <407c4eaa-d001-e1f8-1473-37efbbab4395@milecki.pl>
+References: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
+ <1478236262-3351-6-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1478236262-3351-6-git-send-email-jon.mason@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Mason <jon.mason@broadcom.com>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some modules may need to change its clock rate before turn on it.
-So changing PLL's rate when it is off should be allowed.
-This patch removes PLL enabled check before set rate, so that
-PLLs can set new frequency even if they are off.
-
-On MT8173 for example, ARMPLL's enable bit can be controlled by
-other HW. That means ARMPLL may be turned on even if we (CPU / SW)
-set ARMPLL's enable bit as 0. In this case, SW may want and can
-still change ARMPLL's rate by changing its pcw and postdiv settings.
-But without this patch, new pcw setting will not be applied because
-its enable bit is 0.
-
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Michael Turquette <mturuqette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
-Please refer to previous comments in [1] and [2].
-
-changes since v2:
-- Rebase to v4.9-rc1.
-
-changes since v1:
-- Add more explanation in commit messages.
-
-[1] https://patchwork.kernel.org/patch/7983221/
-[2] https://patchwork.kernel.org/patch/7998891/
-
- drivers/clk/mediatek/clk-pll.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-index 0c2deac..80f57b4 100644
---- a/drivers/clk/mediatek/clk-pll.c
-+++ b/drivers/clk/mediatek/clk-pll.c
-@@ -91,9 +91,6 @@ static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
- 		int postdiv)
- {
- 	u32 con1, val;
--	int pll_en;
--
--	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
- 
- 	/* set postdiv */
- 	val = readl(pll->pd_addr);
-@@ -114,15 +111,13 @@ static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
- 
- 	con1 = readl(pll->base_addr + REG_CON1);
- 
--	if (pll_en)
--		con1 |= CON0_PCW_CHG;
-+	con1 |= CON0_PCW_CHG;
- 
- 	writel(con1, pll->base_addr + REG_CON1);
- 	if (pll->tuner_addr)
- 		writel(con1 + 1, pll->tuner_addr);
- 
--	if (pll_en)
--		udelay(20);
-+	udelay(20);
- }
- 
- /*
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMDQvMjAxNiAwNjoxMSBBTSwgSm9uIE1hc29uIHdyb3RlOgo+IENoYW5nZSB0aGUgYmdt
+YWMgZHJpdmVyIHRvIGFsbG93IGZvciBwaHkncyBkZWZpbmVkIGJ5IHRoZSBkZXZpY2UgdHJlZQo+
+Cj4gU2lnbmVkLW9mZi1ieTogSm9uIE1hc29uIDxqb24ubWFzb25AYnJvYWRjb20uY29tPgoKQ2hl
+Y2tlZCBmb3IgcG9zc2libGUgcmVncmVzc2lvbnMgb24gTm9ydGhzdGFyLCBsb29rcyBPSy4KCkFj
+a2VkLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
