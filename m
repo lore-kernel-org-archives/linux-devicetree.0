@@ -1,116 +1,61 @@
-From: Markus Mayer <markus.mayer@broadcom.com>
-Subject: Re: [PATCH v5 0/3] Broadcom STB AVS CPUfreq driver
-Date: Fri, 4 Nov 2016 10:00:19 -0700
-Message-ID: <CAGt4E5siDGgE=s1gZc80RSjDTptAhCm6ecrrw_4NpJwmrnU-CA@mail.gmail.com>
-References: <20161027210536.98988-1-code@mmayer.net>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/2] Add TI SCI Reset Driver
+Date: Fri, 4 Nov 2016 12:42:38 -0500
+Message-ID: <20161104174240.9688-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161027210536.98988-1-code@mmayer.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 October 2016 at 14:05, Markus Mayer <code@mmayer.net> wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
->
-> This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
-> Firmware" for voltage and frequency scaling. All voltage and frequency
-> transitions are performed by the firmware and are therefore hidden from
-> Linux.
->
-> The driver provides a standard CPUfreq interface to other kernel
-> components and to userland on the one hand and communicates with the
-> AVS co-processor on the other.
->
-> Communication between the two processors is via shared mailbox
-> registers and interrupts (ARM -> AVS to tell the firmware that there is
-> a command to process and AVS -> ARM to tell the driver that a command
-> finished executing).
+Hello all,
 
-Viresh, Rafael, are you ready to take this series? Rob gave his Ack
-for the DT binding.
+This series adds a reset controller driver that uses the TI SCI
+protocol to manage resets.
 
-You can pull from [1] if you prefer. The branch already has all the Acks.
+The TI SCI protocol is used to communicate with power management
+controllers used by some SoCs. These controllers manage the various
+power domains, clocks, and resets available on a SoC.
+
+This series is based on drivers for TI SCI and the first two controlled
+elements above, these series can be found here:
+
+TI-SCI: http://www.spinics.net/lists/arm-kernel/msg536851.html
+PM Domains: http://www.spinics.net/lists/devicetree/msg146621.html
+Clocks: https://www.spinics.net/lists/linux-clk/msg12785.html
 
 Thanks,
--Markus
+Andrew
 
-[1] https://github.com/mmayer/linux/commits/upstream-avs-cpufreq-4.9-v5
+Changes from v2:
+ - Merged DT binding patch and reset header patch
+ - Added locking for reset bit mask
 
-> Changes from v4:
->     - Addressed comments regarding the binding document (see also
->       https://lkml.org/lkml/2016/10/19/642)
->     - Added Virsh's Acks
->     - Rebased on v4.9-rc1
->     - Patches sent from non-Broadcom account on purpose to prevent series
->       from being marked as spam (this is currently happening for some
->       recipients)
->     - No changes to any code
->
-> Changes from v3:
->     - moved code from brcm_avs_cpufreq_exit() into brcm_avs_cpufreq_remove()
->     - removed brcm_avs_cpufreq_exit() altogether
->
-> Changes from v2:
->     - removed file Documentation/cpu-freq/brcmstb-avs-cpufreq.txt, instead
->       adding the text as comment in the driver itself
->     - wildcard match in MAINTAINERS file (drivers/cpufreq/brcmstb*)
->     - drivers/cpufreq/Kconfig.arm: have ARM_BRCMSTB_AVS_CPUFREQ default y
->       for ARCH_BRCMSTB
->     - fixed naming and Kconfig entry for CONFIG_ARM_BRCMSTB_AVS_CPUFREQ_DEBUG
->     - reordered and fixed include files
->     - made sure driver name doesn't exceed size of cpufreq_driver.name
->     - got rid of device_node pointers in struct private_data; there's no
->       need for them, as we can call of_node_put() in __map_region()
->     - don't set driver_data for CPUFREQ_TABLE_END
->     - have brcm_avs_cpufreq_get() read from the firmware rather than return
->       policy->cur
->     - don't update policy->cur in brcm_avs_target_index()
->     - created new function brcm_avs_prepare_init() to handle compatibility
->       checks during initialization and moved corresponding code from
->       brcm_avs_cpufreq_init() to the new function
->     - brcm_avs_prepare_init() is called from brcm_avs_cpufreq_probe() and
->       therefore will only be called once, even in the case of an error,
->       whereas brcm_avs_cpufreq_init() is called for every core if there is
->       an error
->     - renamed brcm_avs_cpu_(init|exit) to brcm_avs_cpufreq_(init|exit)
->     - added platform_set_drvdata(pdev, NULL) upon deregistration
->     - fixed various style complaints by checkpatch.pl --strict
->     - fixed other style issues
->     - updated and improved some comments
->     - added Viresh's Acks to patches 1/3 and 3/3
->
-> Changes from v1:
->     - renamed binding document
->     - rewrote the introduction of the binding document
->     - created a new driver documentation file that contains Linux specific
->       information that was previously part of the binding document
->     - renamed the driver (and related config options) to include a reference
->       to "STB", since this implementation is primarily intended for use on
->       set-top boxes
->     - improved comments
->     - updated function __map_region()
->     - updated struct private_data
->     - added code to unmap memory regions in the error and exit paths
->     - added new sysfs property to report frequency directly from the
->       co-processor register
->
-> Markus Mayer (3):
->   dt: cpufreq: brcm: New binding document for brcmstb-avs-cpufreq
->   cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs
->   cpufreq: brcmstb-avs-cpufreq: add debugfs support
->
->  .../bindings/cpufreq/brcm,stb-avs-cpu-freq.txt     |   78 ++
->  MAINTAINERS                                        |    8 +
->  drivers/cpufreq/Kconfig.arm                        |   21 +
->  drivers/cpufreq/Makefile                           |    1 +
->  drivers/cpufreq/brcmstb-avs-cpufreq.c              | 1057 ++++++++++++++++++++
->  5 files changed, 1165 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
->  create mode 100644 drivers/cpufreq/brcmstb-avs-cpufreq.c
->
-> --
-> 2.7.4
->
+Changes from v1:
+ - Revised dt binding
+ - CC Linux ARM list
+
+Andrew F. Davis (2):
+  Documentation: dt: reset: Add TI SCI reset binding
+  reset: Add the TI SCI reset driver
+
+ .../devicetree/bindings/reset/ti,sci-reset.txt     |  65 +++++
+ MAINTAINERS                                        |   3 +
+ drivers/reset/Kconfig                              |   9 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-ti-sci.c                       | 272 +++++++++++++++++++++
+ include/dt-bindings/reset/k2g.h                    |  22 ++
+ 6 files changed, 372 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+ create mode 100644 drivers/reset/reset-ti-sci.c
+ create mode 100644 include/dt-bindings/reset/k2g.h
+
+-- 
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
