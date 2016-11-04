@@ -1,91 +1,88 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: DTS: r8a7794: alt: Fix PFC names for DU
-Date: Fri, 4 Nov 2016 10:02:23 +0100
-Message-ID: <20161104090223.GA4801@verge.net.au>
-References: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
- <1478201686-25488-1-git-send-email-jacopo@jmondi.org>
+From: Bastian =?ISO-8859-1?Q?K=F6cher?= <mail@kchr.de>
+Subject: Re: [PATCH 3/6] msm8994 clocks: global clock support for msm8994 SOC.
+Date: Fri, 04 Nov 2016 10:12:25 +0100
+Message-ID: <25490396.6WRoEgapGl@bastiultrabook>
+References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com> <20161103224234.GB30414@remoulade> <20161103234351.GA15102@mini-rhel.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478201686-25488-1-git-send-email-jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161103234351.GA15102@mini-rhel.redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jmcnicol@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, arnd@arndb.de, bjorn.andersson@linaro.org, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Donnerstag, 3. November 2016 16:43:52 CET Jeremy McNicoll wrote:
+> On Thu, Nov 03, 2016 at 10:42:34PM +0000, Mark Rutland wrote:
+> > On Tue, Oct 25, 2016 at 04:16:58AM -0700, Jeremy McNicoll wrote:
+> > > +static const struct qcom_cc_desc gcc_msm8994_desc = {
+> > > +	.config = &gcc_msm8994_regmap_config,
+> > > +	.clks = gcc_msm8994_clocks,
+> > > +	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
+> > > +	.resets = NULL,
+> > > +	.num_resets = 0,
+> > > +	.gdscs = NULL,
+> > > +	.num_gdscs = 0,
+> > > +};
+> > > +
+> > > +static const struct of_device_id gcc_msm8994_match_table[] = {
+> > > +	{ .compatible = "qcom,gcc-8994" },
+> > > +	{ .compatible = "qcom,gcc-8994v2" },
+> > > +	{}
+> > > +}
+> > > +
+> > > +MODULE_DEVICE_TABLE(of, gcc_msm8994_match_table);
+> > > +
+> > > +static int gcc_msm8994_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct clk *clk;
+> > > +	const char *compat = NULL;
+> > > +	int compatlen = 0;
+> > > +	bool is_v2 = false;
+> > > +
+> > > +	clk = devm_clk_register(dev, &xo.hw);
+> > > +	if (IS_ERR(clk))
+> > > +		return PTR_ERR(clk);
+> > > +
+> > > +	compat = of_get_property(pdev->dev.of_node, "compatible", &compatlen);
+> > > +	if (!compat || (compatlen <= 0))
+> > > +		return -EINVAL;
+> > 
+> > It is almost never correct to use of_get_property(). Please avoid it.
+> >
+> 
+> Hi Bastian, 
+> 
+> Mark is basically suggesting that instead of using of_get_property() you
+> should be using  something like of_device_compatible_match, or 
+> of_device_is_compatible.   This should simplify the code a little bit
+> too. 
+> 
+> Unless I am misunderstanding Mark's comment.
+> 
+> -jeremy
 
-On Thu, Nov 03, 2016 at 08:34:46PM +0100, Jacopo Mondi wrote:
-> Update the PFC pin groups and function names of DU interface for
-> r8a7794 ALT board.
-> 
-> The currently specified pin groups and function names prevented PFC and
-> DU interfaces from being correctly configured:
-> 
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> rcar-du: probe of feb00000.display failed with error -22
-> 
-> Signed-off-by: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> v1->v2:
->     - s/PCF/PFC/ in commit message according to Sergei Shtylyov's comment
-> 
-> Patch applied against Simon Horman's renesas/master branch.
-> The PCF pin groups and function renaming was introduced by commit 56ed4bb9 and
-> DTS for ALT board has never been update accordingly.
-> Tested displaying frames on VGA interface: the rcar-du driver loads correctly.
+We do not need that anymore, because that was required for the "v2" check. 
 
-Thanks for noticing this.
+Bastian
 
-There is no need to repost to update the subject, but for reference I would
-prefer the prefix to be "ARM: dts: alt:". Assuming there are no other
-changes I can fix that up when queuing up this change.
-
-I am wondering if this should be queued up as a fix for v4.9 and in turn
-v4.8-stable. Or if it should just be queued up for v4.10.
-
-In the case of the former I'd advocate adding the following tag
-(again no need to repost just to update this):
-
-Fixes: 56ed4bb984ac ("pinctrl: sh-pfc: r8a7794: Add DU pin groups")
-
->  arch/arm/boot/dts/r8a7794-alt.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-> index 8d1b35a..9d65fb3 100644
-> --- a/arch/arm/boot/dts/r8a7794-alt.dts
-> +++ b/arch/arm/boot/dts/r8a7794-alt.dts
-> @@ -165,8 +165,8 @@
->  	pinctrl-names = "default";
->  
->  	du_pins: du {
-> -		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_dotclkout0";
-> -		function = "du";
-> +		groups = "du1_rgb666", "du1_sync", "du1_disp", "du1_clk0_out";
-> +		function = "du1";
->  	};
->  
->  	scif2_pins: scif2 {
-> -- 
-> 2.7.4
 > 
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > +
+> > > +	is_v2 = !strcmp(compat, "qcom,gcc-8994v2");
+> > > +	if (is_v2)
+> > > +		msm_gcc_8994v2_fixup();
+> > 
+> > Either put some data in the of_device_id tables, and use that to determine what
+> > to do here, or use of_device_is_compatible() or of_match_node() to check the
+> > string.
+> > 
+> > Thanks,
+> > Mark.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
