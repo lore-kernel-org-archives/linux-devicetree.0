@@ -1,53 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 07/11] ARM: dts: r8a7745: add Ether support
-Date: Fri, 04 Nov 2016 14:57:01 -0700 (PDT)
-Message-ID: <3730528.dQt2IAcchy@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 08/11] ARM: dts: r8a7745: add IRQC support
+Date: Sat, 05 Nov 2016 00:59:37 +0300
+Message-ID: <2945818.yZ5dZgkJFz@wasted.cogentembedded.com>
 References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2368353.xfo5beGC5E-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7745 part of the Ether device node.
+Describe the IRQC interrupt controller in the R8A7745 device tree.
 
 Based on the original (and large) patch by Dmitry Shifrin
-<dmitry.shifrin@cogentembedded.com>.
+<dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
 ---
 Changes in version 2:
-- added Geert's tag.
+- added Geert's tag;
+- refreshed the patch.
 
- arch/arm/boot/dts/r8a7745.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/r8a7745.dtsi |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 Index: renesas/arch/arm/boot/dts/r8a7745.dtsi
 ===================================================================
 --- renesas.orig/arch/arm/boot/dts/r8a7745.dtsi
 +++ renesas/arch/arm/boot/dts/r8a7745.dtsi
-@@ -418,6 +418,18 @@
- 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
- 			status = "disabled";
+@@ -62,6 +62,25 @@
+ 						 IRQ_TYPE_LEVEL_HIGH)>;
  		};
-+
-+		ether: ethernet@ee700000 {
-+			compatible = "renesas,ether-r8a7745";
-+			reg = <0 0xee700000 0 0x400>;
-+			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 813>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			phy-mode = "rmii";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
  
- 	/* External root clock */
++		irqc: interrupt-controller@e61c0000 {
++			compatible = "renesas,irqc-r8a7745", "renesas,irqc";
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			reg = <0 0xe61c0000 0 0x200>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 407>;
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv7-timer";
+ 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
