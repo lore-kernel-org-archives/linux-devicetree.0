@@ -1,69 +1,51 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 0/5] ARM64: Add Internal PHY support for Meson GXL
-Date: Fri, 4 Nov 2016 11:55:01 +0100
-Message-ID: <19618350-9a4b-2b4e-6853-720101e39932@baylibre.com>
-References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
+From: Meng Yi <meng.yi@nxp.com>
+Subject: RE: [PATCH v5] drm/fsl-dcu: Implement gamma_lut atomic crtc properties
+Date: Fri, 4 Nov 2016 06:42:04 +0000
+Message-ID: <DB6PR0401MB26313384936AF862EC5A8D10ECA20@DB6PR0401MB2631.eurprd04.prod.outlook.com>
+References: <1475051069-24452-1-git-send-email-meng.yi@nxp.com>
+ <2e4a55f00c57b094e376a743d7b056f7@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477932987-27871-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2e4a55f00c57b094e376a743d7b056f7@agner.ch>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2016 05:56 PM, Neil Armstrong wrote:
-> The Amlogic Meson GXL SoCs have an internal RMII PHY that is muxed with the
-> external RGMII pins.
-> 
-> In order to support switching between the two PHYs links, extended registers
-> size for mdio-mux-mmioreg must be added.
-> 
-> Finally, the internal PHY is added in the GXL dtsi and support for each
-> board is added in intermediate board family dtsi or final dts.
-> 
-> This patchset depends on ARM64 dts patch at [1]
-> 
-> Changes since original RFC patchset at : [2]
->  - Remove meson8b experimental phy switching
->  - Switch to mdio-mux-mmioreg with extennded size support
->  - Add internal phy support for S905x and p231
->  - Add external PHY support for p230
-> 
-> [1] http://lkml.kernel.org/r/1477932286-27482-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> [2] http://lkml.kernel.org/r/1477060838-14164-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> 
-> Neil Armstrong (5):
->   net: mdio-mux-mmioreg: Add support for 16bit and 32bit register sizes
->   net: phy: Add Meson GXL Internal PHY driver
->   ARM64: dts: meson-gxl: Add ethernet nodes with internal PHY
->   ARM64: dts: meson-gxl-p23x: Enable ethernet
->   ARM64: dts: meson-gxl-s905x: Enable internal ethernet PHY
-> 
->  .../devicetree/bindings/net/mdio-mux-mmioreg.txt   |  4 +-
->  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      | 16 +++++
->  .../boot/dts/amlogic/meson-gxl-s905d-p231.dts      |  6 ++
->  .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     |  4 ++
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |  6 ++
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 45 ++++++++++++
->  drivers/net/phy/Kconfig                            |  5 ++
->  drivers/net/phy/Makefile                           |  1 +
->  drivers/net/phy/mdio-mux-mmioreg.c                 | 60 ++++++++++++----
->  drivers/net/phy/meson-gxl.c                        | 81 ++++++++++++++++++++++
->  10 files changed, 213 insertions(+), 15 deletions(-)
->  create mode 100644 drivers/net/phy/meson-gxl.c
-> 
-
-Hi Florian, Andrew, Sergei,
-
-Thanks for reviews,
-
-Since the meson-gxl dtsi has a lot of changes pending, the patches 3, 4 & 5 will be sent in a separate patchset,
-and patches 1 & 2 will be send to netdev -next.
-
-Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU3RlZmFuLAoKPiAKPiBIb3cgZGlkIHlvdSBhY3R1YWxseSB0ZXN0IHRoYXQ/IEkgaGF2ZSBh
+IGhhcmQgdGltZSB0byBnZXQgYW55dGhpbmcgdXNlYWJsZSB3aXRoCj4gdGhpcyBjb2RlLgo+IAo+
+IFRoZSBkaXNwbGF5IGxvb2tzIGNvbXBsZXRlbHkgYm9ya2VkIChjb2xvcnMgYXJlIHdheSBvZmYs
+IGFuZCBhdCByYW5kb20gZWl0aGVyCj4gdG9vIGRhcmsgb3IgdG9vIGJyaWdodCkuCj4gCj4gSSB0
+aGVuIGFsc28gYWRkZWQgR2FtbWEgMS4wIChhbmQgZGlmZmVyZW50IHZhbHVlcykgdG8gdGhlIE1v
+bml0b3Igc2VjdGlvbiBvZgo+IHhvcmcuY29uZiwgYnV0IHN0aWxsIG5vdCByZWFsbHkgdXNhYmxl
+Lgo+IAoKSSBqdXN0IGRpZCBmZXcgbW9yZSB0ZXN0IHVzaW5nIGxpYmRybSB3aGljaCBoYWQgYmVl
+biBtb2RpZmllZCBmb3IgdGVzdGluZyBnYW1tYS4gCkFuZCBJIGZpbmQgeW91IGFyZSByaWdodC4g
+SXQncyBteSBuZWdsaWdlbmNlIHRoYXQganVzdCB0ZXN0ZWQgb25lIGNhc2UgZm9yIGdhbW1hIHVz
+aW5nIGFsbCAweGZmOwoKCi4uLi4uCgo+ID4gIAkJCWRybV9jcnRjX3NlbmRfdmJsYW5rX2V2ZW50
+KGNydGMsIGV2ZW50KTsKPiA+ICAJCXNwaW5fdW5sb2NrX2lycSgmY3J0Yy0+ZGV2LT5ldmVudF9s
+b2NrKTsKPiA+ICAJfQo+ID4gKwo+ID4gKwlpZiAoY3J0Yy0+c3RhdGUtPmNvbG9yX21nbXRfY2hh
+bmdlZCAmJiBjcnRjLT5zdGF0ZS0+Z2FtbWFfbHV0KQo+ID4gKwkJZnNsX2NydGNfZ2FtbWFfc2V0
+KGNydGMsIChzdHJ1Y3QgZHJtX2NvbG9yX2x1dCAqKQo+ID4gKwkJCQkgICBjcnRjLT5zdGF0ZS0+
+Z2FtbWFfbHV0LT5kYXRhLCAyNTYpOwo+IAo+IFNvIHRoaXMgaXMgY2FsbGVkIHdoaWxlIHRoZSBD
+UlRDIGlzIGVuYWJsZWQuIE90aGVycyBkbyBpdCB0aGVyZSB0b28sIGJ1dCBJIHRoaW5rIGluCj4g
+b3VyIGNhc2Ugd2Ugc2hvdWxkIG5vdC4gVGhlIHJlZmVyZW5jZSBtYW51YWwgc2F5czoKPiAKPiAi
+VGhlIGdhbW1hIHRhYmxlIGNhbiBvbmx5IGJlIHJlYWQgb3Igd3JpdHRlbiB3aGVuIHRoZSAyRC1B
+Q0UgaXMgbm90IGVuYWJsZWQKPiBvciBkdXJpbmcgdGhlIHZlcnRpY2FsIGJsYW5raW5nIHBlcmlv
+ZC4iCj4gCgpZZXMsIG5vdyBnYW1tYSBjb3JyZWN0aW9uIGZ1bmN0aW9uIGJlaGF2aW9yIHdlaXJk
+LgpXaGVuIHNldHRpbmcgZ2FtbWEgdGFibGUgd2l0aGluIGNydGMgZW5hYmxlIGR1cmluZyBpbml0
+aWFsaXppbmcsIGl0IHdvcmtzIGNvcnJlY3RseS4gQW5kIG5vdCByaWdodCBkdXJpbmcgcnVudGlt
+ZSBzbyBmYXIuCgoKVGhhbmtzLApNZW5nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
