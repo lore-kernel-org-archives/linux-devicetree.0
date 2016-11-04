@@ -1,89 +1,51 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Update comment for main PLL frequency
-Date: Fri, 04 Nov 2016 13:33:59 +0100
-Message-ID: <874m3no24o.fsf@free-electrons.com>
-References: <20161025235242.31764-1-chris.packham@alliedtelesis.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161025235242.31764-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
-        Packham's message of "Wed, 26 Oct 2016 12:52:42 +1300")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/3] PCI: qcom: Add support to msm8996 pcie controller.
+Date: Fri,  4 Nov 2016 12:59:44 +0000
+Message-ID: <1478264387-17914-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: svarbanov@mm-sol.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On mer., oct. 26 2016, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+This patchset adds support to msm8996 pcie controller. I tested this patch on
+v4.9-rc2 along with phy driver patch [1] and
+"PCI: designware: check for iATU unroll support after initializing host"
+fix [2] on DB820c APQ8096 board on port B and port C using sata and
+ethernet controller.
 
-> The actual frequency was updated in commit ae142bd99765 ("ARM: mvebu:
-> Fix the main PLL frequency on Armada 375, 38x and 39x SoCs") but the
-> comment was not updated. Update it now.
->
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Changes since v2:
+	- Removed regulators that belong to phy, spotted by Stephen
+	- Removed clocks in to simple pm bus driver, spotted by Stephen
+	- renamed msm8996 ops to v2 ops as suggested by Stephen.
+	- cleanups as suggested by Stephen.
+	- Add runtime pm support to driver.
+	- Added pm clk support to simple pm bus driver.
 
-Applied on mvebu/dt
+Changes since v1:
+	- Fixed dt example as suggested by Rob
+	- added smmu bus clk dependency as smmu sits in between
+	  system NOC and PCIe.
+	- Removed smmu configuration from bindings and driver as
+	  the smmu Level2 translation on this SOC is controlled by
+	  the secure world, and level 1 translation is disabled,
+	  so there is one-to-one mapping of the address space.
 
 Thanks,
+srini
 
-Gregory
+[1] https://patchwork.kernel.org/patch/9384711/
+[2] https://patchwork.kernel.org/patch/9377557/
 
-> ---
->  arch/arm/boot/dts/armada-375.dtsi | 2 +-
->  arch/arm/boot/dts/armada-38x.dtsi | 2 +-
->  arch/arm/boot/dts/armada-39x.dtsi | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-> index cc952cf8ec30..45fa92f9cf5c 100644
-> --- a/arch/arm/boot/dts/armada-375.dtsi
-> +++ b/arch/arm/boot/dts/armada-375.dtsi
-> @@ -65,7 +65,7 @@
->  	};
->  
->  	clocks {
-> -		/* 2 GHz fixed main PLL */
-> +		/* 1 GHz fixed main PLL */
->  		mainpll: mainpll {
->  			compatible = "fixed-clock";
->  			#clock-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 2d7668848c5a..7450e9fea45d 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -661,7 +661,7 @@
->  	};
->  
->  	clocks {
-> -		/* 2 GHz fixed main PLL */
-> +		/* 1 GHz fixed main PLL */
->  		mainpll: mainpll {
->  			compatible = "fixed-clock";
->  			#clock-cells = <0>;
-> diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-> index 34cba87f9200..de171baffcf6 100644
-> --- a/arch/arm/boot/dts/armada-39x.dtsi
-> +++ b/arch/arm/boot/dts/armada-39x.dtsi
-> @@ -573,7 +573,7 @@
->  	};
->  
->  	clocks {
-> -		/* 2 GHz fixed main PLL */
-> +		/* 1 GHz fixed main PLL */
->  		mainpll: mainpll {
->  			compatible = "fixed-clock";
->  			#clock-cells = <0>;
-> -- 
-> 2.10.1
->
+Srinivas Kandagatla (3):
+  bus: simple-pm: add support to pm clocks
+  PCI: qcom: add support to msm8996 PCIE controller
+  PCI: qcom: add runtime pm support to pcie_port
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  68 +++++++-
+ drivers/bus/simple-pm-bus.c                        |  13 +-
+ drivers/pci/host/pcie-qcom.c                       | 183 ++++++++++++++++++++-
+ 3 files changed, 257 insertions(+), 7 deletions(-)
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.1
