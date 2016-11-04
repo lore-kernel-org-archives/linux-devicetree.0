@@ -1,41 +1,24 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] ARM: DTS: r8a7794: alt: Fix PFC names for DU
-Date: Fri, 4 Nov 2016 14:43:18 +0300
-Message-ID: <c0a3c44b-545c-7af3-feed-857cb20ef698@cogentembedded.com>
-References: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
- <1478201686-25488-1-git-send-email-jacopo@jmondi.org>
+From: jify <maryjify00aaz01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: I need your urgent reply.
+Date: Fri, 4 Nov 2016 11:55:02 +0000 (UTC)
+Message-ID: <1582635385.154572.1478260502422@mail.yahoo.com>
+References: <1582635385.154572.1478260502422.ref@mail.yahoo.com>
+Reply-To: jify <maryjify00aaz01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1478201686-25488-1-git-send-email-jacopo@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo@jmondi.org>, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 11/3/2016 10:34 PM, Jacopo Mondi wrote:
 
-> Update the PFC pin groups and function names of DU interface for
-> r8a7794 ALT board.
->
-> The currently specified pin groups and function names prevented PFC and
-> DU interfaces from being correctly configured:
->
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> sh-pfc e6060000.pin-controller: function 'du' not supported
-> sh-pfc e6060000.pin-controller: invalid function du in map table
-> rcar-du: probe of feb00000.display failed with error -22
->
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+Greetings my dear friend and how are you doing today? I am Mary Jify from Republic of Togo, am the only child of my late father, am 19years of age and right now am contacting you for the transfer of $11m.400 from the bank of Burkina to your own bank account in your country for my coming over for investment, Please reply me very urgent so that i can give you more details of the transfer and myself and will also send you my photo immediately i read from you.
 
-Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-MBR, Sergei
+I wait your reply
+Best Regards
+Mary.Jify.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
