@@ -1,93 +1,198 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
- support
-Date: Thu, 3 Nov 2016 17:20:05 -0700
-Message-ID: <20161104002005.GA15578@mini-rhel.redhat.com>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [PATCH 3/6] msm8994 clocks: global clock support for msm8994 SOC.
+Date: Thu, 3 Nov 2016 17:37:51 -0700
+Message-ID: <20161104003751.GB15578@mini-rhel.redhat.com>
 References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
- <20161028000656.GH26139@codeaurora.org>
- <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
- <20161103223246.GA5135@hector>
- <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
- <20161103230429.GW25787@tuxbot>
+ <1477394221-30963-4-git-send-email-jeremymc@redhat.com>
+ <20161028001800.GK26139@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161103230429.GW25787@tuxbot>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Bastian K?cher <mail-LJ92rlH3Dns@public.gmane.org>
+In-Reply-To: <20161028001800.GK26139@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Jeremy McNicoll <jeremymc@redhat.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 04:04:29PM -0700, Bjorn Andersson wrote:
-> On Thu 03 Nov 15:42 PDT 2016, Stephen Boyd wrote:
+On Thu, Oct 27, 2016 at 05:18:00PM -0700, Stephen Boyd wrote:
+> On 10/25, Jeremy McNicoll wrote:
+> > diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> > index 0146d3c..3b78803 100644
+> > --- a/drivers/clk/qcom/Kconfig
+> > +++ b/drivers/clk/qcom/Kconfig
+> > @@ -132,6 +132,15 @@ config MSM_MMCC_8974
+> >  	  Say Y if you want to support multimedia devices such as display,
+> >  	  graphics, video encode/decode, camera, etc.
+> >  
+> > +config MSM_GCC_8994
+> > +	tristate "MSM8994 Global Clock Controller"
+> > +	select QCOM_GDSC
 > 
-> > On 11/03/2016 03:32 PM, Andy Gross wrote:
-> > > On Thu, Oct 27, 2016 at 05:54:01PM -0700, Jeremy McNicoll wrote:
-> > >> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
-> > >>> On 10/25, Jeremy McNicoll wrote:
-> > >>>> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > >>>> new file mode 100644
-> > >>>> index 0000000..2fc68c4
-> > >>>> --- /dev/null
-> > >>>> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > >>>> @@ -0,0 +1,40 @@
-> > >>>> +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
-> > >>>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> > >>>> + *
-> > >>>> + * This program is free software; you can redistribute it and/or modify
-> > >>>> + * it under the terms of the GNU General Public License version 2 and
-> > >>>> + * only version 2 as published by the Free Software Foundation.
-> > >>>> + *
-> > >>>> + * This program is distributed in the hope that it will be useful,
-> > >>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > >>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > >>>> + * GNU General Public License for more details.
-> > >>>> + */
-> > >>>> +
-> > >>>> +/dts-v1/;
-> > >>>> +
-> > >>>> +#include "msm8994-v2.0.dtsi"
-> > >>>> +
-> > >>>> +/ {
-> > >>>> +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
-> > >>>> +	compatible = "qcom,msm8994";
-> > >>> Please replace this with something more specific for the actual
-> > >>> board. Preferably with the board manufacturer vendor prefix and
-> > >>> some sort of string for the board.
-> > > Something like?
-> > >
-> > > "huawei,nexus-6P", "qcom,msm8994"
-> > 
-> > Sure, except completely remove qcom,msm8994 from there.
+> But we aren't populating GDSCs so this is unnecessary right now.
 > 
-> Why? So far we have always used the form <device>, <platform> as
-> compatible. This is even in line with ePAPR, what changed?
+> > +	depends on COMMON_CLK_QCOM
+> > +	help
+> > +	  Support for the global clock controller on msm8994 devices.
+> > +	  Say Y if you want to use peripheral devices such as UART, SPI,
+> > +	  i2c, USB, SD/eMMC, SATA, PCIe, etc.
 > 
-> Also, the compatible should be "huawei,angler" (if I read the internet
-> correctly) and the model should contain the product name
-> (Huawei Nexus 6P).
+> Is there a sata controller on 8994? Is there an emmc/sd
+> controller?
 >
 
-What about 
+According to this marketing slide. 
 
-  model = "Huawei Nexus 6P";
-  compatible = "huawei, angler", "qcom,msm8994";
+https://www.qualcomm.com/products/snapdragon/processors/810
 
-?
+We will strip down the list to something like:
 
-Obviously I will update the Nexus5X to look similar. 
+....Say Y if you want to use peripheral devices such as UART, USB, etc..
+
+BTW - the help message was identical to the msm8996 which is currently 
+in tree.   Hopefully that help message is accurately describes the HW.
 
 -jeremy
 
-> Regards,
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > +
+> >  config MSM_GCC_8996
+> >  	tristate "MSM8996 Global Clock Controller"
+> >  	select QCOM_GDSC
+> > diff --git a/drivers/clk/qcom/gcc-msm8994.c b/drivers/clk/qcom/gcc-msm8994.c
+> > new file mode 100644
+> > index 0000000..39b40d4
+> > --- /dev/null
+> > +++ b/drivers/clk/qcom/gcc-msm8994.c
+> > @@ -0,0 +1,2501 @@
+> > +/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/init.h>
+> > +#include <linux/err.h>
+> > +#include <linux/ctype.h>
+> > +#include <linux/io.h>
+> > +#include <linux/clk.h>
+> 
+> Is this include used? Should probably be clk-provider instead.
+> 
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#include <dt-bindings/clock/qcom,gcc-msm8994.h>
+> > +
+> > +#include "common.h"
+> > +#include "clk-regmap.h"
+> > +#include "clk-pll.h"
+> 
+> Is this include used?
+> 
+> > +#include "clk-alpha-pll.h"
+> > +#include "clk-rcg.h"
+> > +#include "clk-branch.h"
+> > +#include "reset.h"
+> > +
+> > +static struct clk_branch gcc_usb30_mock_utmi_clk = {
+> > +	.halt_reg = 0x03D0,
+> 
+> Lowercase hex everywhere please.
+> 
+> > +
+> > +
+> > +static void msm_gcc_8994v2_fixup(void)
+> > +{
+> > +	ufs_axi_clk_src.freq_tbl = ftbl_ufs_axi_clk_src_v2;
+> > +
+> > +	blsp1_qup1_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp1_qup2_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp1_qup3_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp1_qup4_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp1_qup5_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp1_qup6_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup1_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup2_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup3_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup4_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup5_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> > +	blsp2_qup6_spi_apps_clk_src.freq_tbl = ftbl_blspqup_spi_apps_clk_src_v2;
+> 
+> Please no, just assume v2.
+> 
+> > +}
+> > +
+> > +static const struct regmap_config gcc_msm8994_regmap_config = {
+> > +	.reg_bits	= 32,
+> > +	.reg_stride	= 4,
+> > +	.val_bits	= 32,
+> > +	.max_register	= 0x2000,
+> > +	.fast_io	= true,
+> > +};
+> > +
+> > +static const struct qcom_cc_desc gcc_msm8994_desc = {
+> > +	.config = &gcc_msm8994_regmap_config,
+> > +	.clks = gcc_msm8994_clocks,
+> > +	.num_clks = ARRAY_SIZE(gcc_msm8994_clocks),
+> > +	.resets = NULL,
+> > +	.num_resets = 0,
+> > +	.gdscs = NULL,
+> > +	.num_gdscs = 0,
+> 
+> We don't have to be explicit. Does this even work? I thought
+> common.c expected there to be a reset list? I guess we would have
+> a reset controller with no resets. Should be possible to grab
+> some of the resets out of the android driver though.
+> 
+> > +};
+> > +
+> > +static const struct of_device_id gcc_msm8994_match_table[] = {
+> > +	{ .compatible = "qcom,gcc-8994" },
+> > +	{ .compatible = "qcom,gcc-8994v2" },
+> 
+> Please add msm and drop the v2 one.
+> 
+> > +	{}
+> > +}
+> > +
+> > +MODULE_DEVICE_TABLE(of, gcc_msm8994_match_table);
+> > +
+> > +static int gcc_msm8994_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct clk *clk;
+> > +	const char *compat = NULL;
+> > +	int compatlen = 0;
+> > +	bool is_v2 = false;
+> > +
+> > +	clk = devm_clk_register(dev, &xo.hw);
+> > +	if (IS_ERR(clk))
+> > +		return PTR_ERR(clk);
+> > +
+> > +	compat = of_get_property(pdev->dev.of_node, "compatible", &compatlen);
+> > +	if (!compat || (compatlen <= 0))
+> > +		return -EINVAL;
+> > +
+> > +	is_v2 = !strcmp(compat, "qcom,gcc-8994v2");
+> > +	if (is_v2)
+> > +		msm_gcc_8994v2_fixup();
+> 
+> This should simplify greatly.
+> 
+> > +
+> > +	return qcom_cc_probe(pdev, &gcc_msm8994_desc);
+> > +}
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
