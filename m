@@ -1,60 +1,57 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
- support
-Date: Fri, 4 Nov 2016 13:12:26 -0700
-Message-ID: <20161104201226.GC16026@codeaurora.org>
-References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
- <20161028000656.GH26139@codeaurora.org>
- <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
- <20161103223246.GA5135@hector>
- <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
- <20161103224422.GB5135@hector>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 14/17] ASoC: add simple-graph-card document
+Date: Fri, 4 Nov 2016 14:33:42 -0600
+Message-ID: <20161104203342.aizjufjokuqrlyhh@sirena.org.uk>
+References: <87pomhba6r.wl%kuninori.morimoto.gx@renesas.com>
+ <8760o9b9xm.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vcshtpj3anbp2h2m"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161103224422.GB5135@hector>
+In-Reply-To: <8760o9b9xm.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Bastian =?iso-8859-1?Q?K=F6cher?= <mail-LJ92rlH3Dns@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03, Andy Gross wrote:
-> On Thu, Nov 03, 2016 at 03:42:36PM -0700, Stephen Boyd wrote:
-> > On 11/03/2016 03:32 PM, Andy Gross wrote:
-> > >> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
-> > >>> Please replace this with something more specific for the actual
-> > >>> board. Preferably with the board manufacturer vendor prefix and
-> > >>> some sort of string for the board.
-> > > Something like?
-> > >
-> > > "huawei,nexus-6P", "qcom,msm8994"
-> > 
-> > Sure, except completely remove qcom,msm8994 from there.
-> 
-> Hmmm ok.  I just briefly looked at one of the sony boards and used that as an
-> example.  So there shouldn't be any link to the underlying soc in the compat?
 
-Two people asked the same question. I don't see how having the
-SoC in the root compatible string does anything. Of course,
-having it there doesn't hurt anything either so I don't really
-care. And it may help if we want to test for SoC compatibility at
-some point.
+--vcshtpj3anbp2h2m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Of course, we have an SoC node, so I'd think we would put the SoC
-model number into that node's compatible string. In the ePAPR it
-looks like they have compatible = “fsl,mpc8572ds”, which is a
-board/platform. The "SoC" on there is an mpc8572e.
+On Mon, Oct 31, 2016 at 01:19:58AM +0000, Kuninori Morimoto wrote:
 
-In practice, there doesn't seem to be any consistency here and it
-feels like everything is vague on purpose with regards to
-compatible strings, so either way is fine for me.
+> +This Simple-Graph-Card should be located as CPU driver's port[s].
+> +And then, CPU driver need to probe it by itself.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This document really needs quite a bit of fleshing out but I'm not sure
+that should be a blocker for the series as a whole especially given that
+English is not your native language - we can build out later.  I think
+based on what I'm understanding here I like what I'm seeing.  It'd be
+good to get some confirmation from the people with more of_graph
+knowledge that this is a good usage.
+
+One thing I'm not 100% clear on here is why it has to be a CPU DAI (I'm
+guessing just one of them though the above says ports as an option?)
+that creates the card?  Is there a concrete reason for that or is it
+just being defined as good pracctice?
+
+--vcshtpj3anbp2h2m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYHPClAAoJECTWi3JdVIfQiNgH/3unAu79po41rnmGcpxj9keq
+Y9Ot59ZAHJjPyrGS/yMvbo0mlgZ954uhlw4qG/A876C2XAn/usFdbOwBfcXR9UJ6
+lMhfVnnK9C5Wh5gmIYr3EhoihfRxAHzuxjNrvZsBH8qe6qGwHOhSx9AFdhGgfuuq
+7u7IE8gIH9ZZDYAch9fvAfnpVu1eFd3bQKWijNupQpiu51/0LWiPqC5D5ZA+2trB
+YTcIZ3YRzEwlfcYOQirBo1xdzP/oq/OB8hNQCoR1cw3oxMzyFB9rDwRJ+KFcE9aa
+M4CDP+uNSlwQpeTf8DWPJ6mV0UuZwrg9Yf3K3gQp/q9tMcRYpCCcfx+/Jxd3Mhg=
+=uorA
+-----END PGP SIGNATURE-----
+
+--vcshtpj3anbp2h2m--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
