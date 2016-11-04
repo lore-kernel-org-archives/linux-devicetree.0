@@ -1,39 +1,51 @@
-From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Issue with dt_to_config with dts files that include headers from dt-bindings
-Date: Fri, 4 Nov 2016 19:19:35 +0000
-Message-ID: <CALeDE9NVuztzMe8iO+OhOrwg3YxCr9VbEwh24-3MLK+5U82fYg@mail.gmail.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH] Revert
+ "console: don't prefer first registered if DT specifies stdout-path"
+Date: Fri, 4 Nov 2016 12:39:03 -0700
+Message-ID: <20161104123903.0693053785eb32f63822ac33@linux-foundation.org>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
+        <20161104121135.4780-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161104121135.4780-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gaurav, Rob and Frank,
+On Fri,  4 Nov 2016 13:11:35 +0100 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-I've just discovered the dt_to_config script (awesome thanks!) but it
-errors out when a dts(i) includes a header file from dt-bindings. EG
+> This reverts commit 05fd007e4629 ("console: don't prefer first registered
+> if DT specifies stdout-path").
+> 
+> The reverted commit changes existing behavior on which many ARM boards
+> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+> both a video output and a serial console. Depending on whether the user
+> is using the device as a more regular computer; or as a headless device
+> we need to have the console on either one or the other.
+> 
+> Many users rely on the kernel behavior of the console being present on
+> both outputs, before the reverted commit the console setup with no
+> console= kernel arguments on an ARM board which sets stdout-path in dt
+> would look like this:
+> 
+> [root@localhost ~]# cat /proc/consoles
+> ttyS0                -W- (EC p a)    4:64
+> tty0                 -WU (E  p  )    4:1
+> 
+> Where as after the reverted commit, it looks like this:
+> 
+> [root@localhost ~]# cat /proc/consoles
+> ttyS0                -W- (EC p a)    4:64
+> 
+> This commit reverts commit 05fd007e4629 ("console: don't prefer first
+> registered if DT specifies stdout-path") restoring the original behavior.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts
-In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:
-arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which
-to search for dt-bindings/gpio/gpio.h
- #include <dt-bindings/gpio/gpio.h>
-                                   ^
-arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which
-to search for dt-bindings/pinctrl/am33xx.h
- #include <dt-bindings/pinctrl/am33xx.h>
-                                        ^
-arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path
-in which to search for dt-bindings/display/tda998x.h
- #include <dt-bindings/display/tda998x.h>
-                                         ^
-Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error
-FATAL ERROR: Unable to parse input tree
-
-
-Regards,
-Peter
+I've added cc:stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to my copy of this.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
