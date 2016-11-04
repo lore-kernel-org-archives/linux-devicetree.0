@@ -1,53 +1,53 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] pinctrl: tegra: Add DT binding for io pads control
-Date: Fri, 4 Nov 2016 23:29:32 +0100
-Message-ID: <CACRpkdZb4dQu431n4gUM=5TDmADpu7P9gE2v0AxokS_2bRSa1Q@mail.gmail.com>
-References: <1478077742-25437-1-git-send-email-ldewangan@nvidia.com> <1478077742-25437-2-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH V5] pinctrl: qcom: Add msm8994 pinctrl driver
+Date: Fri, 4 Nov 2016 23:58:15 +0100
+Message-ID: <CACRpkdZ4EyicXz0rR6cm6xvRmsk4r5=jxyZ4Nn6rmgHt2QL0aA@mail.gmail.com>
+References: <20161103211526.6095-1-michael.scott@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478077742-25437-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161103211526.6095-1-michael.scott@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Michael Scott <michael.scott@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Joonwoo Park <joonwoop@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 2, 2016 at 10:09 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+On Thu, Nov 3, 2016 at 10:15 PM, Michael Scott <michael.scott@linaro.org> w=
+rote:
 
-> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-> low power state of some of its IO pads. The IO pads can work in
-> the voltage of the 1.8V and 3.3V of IO power rail sources. When IO
-> interface are not used then IO pads can be configure in low power
-> state to reduce the power from that IO pads.
+> Initial pinctrl driver for QCOM msm8994 platforms.
 >
-> On Tegra124, the IO power rail source is auto detected by SoC and hence
-> it is only require to configure in low power mode if IO pads are not
-> used.
+> In order to continue the initial board support for QCOM msm8994/msm8992
+> presented in patches from Jeremy McNicoll <jeremymc@redhat.com>, let's pu=
+t
+> a proper pinctrl driver in place.
 >
-> On T210 onwards, the auto-detection is removed from SoC and hence SW
-> must configure the PMC register explicitly to set proper voltage in
-> IO pads based on IO rail power source voltage.
+> Currently, the DT for these platforms uses the msm8x74 pinctrl driver to
+> enable basic UART.  Beyond the first few pins the rest are different enou=
+gh
+> to justify it's own driver.
 >
-> Add DT binding document for detailing the DT properties for
-> configuring IO pads voltage levels and its power state.
+> Note: This driver is also used by QCOM's msm8992 platform as it's TLM blo=
+ck
+> is the same.
 >
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-(...)
+> - Initial formatting and style was taken from the msm8x74 pinctrl driver
+>   added by Bj=C3=B6rn Andersson <bjorn.andersson@linaro.org>
+> - Data was then adjusted per QCOM MSM8994v2 documentation for Top Level
+>   Multiplexing
+> - Bindings documentation was based on qcom,msm8996-pinctrl.txt by
+>   Joonwoo Park <joonwoop@codeaurora.org> and then modified for msm8994
+>   content
+>
+> Signed-off-by: Michael Scott <michael.scott@linaro.org>
+> Tested-by: Jeremy McNicoll <jeremymc@redhat.com>
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> V5:
 
-> +-nvidia,power-source-voltage:  Integer. The voltage level of IO pads. The
-> +                               valid values are 1.8V and 3.3V. Macros are
-> +                               defined for these voltage levels in
-> +                               <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
-> +                               Use TEGRA_IO_PAD_POWER_SOURCE_1800000UV for 1.8V
-> +                               Use TEGRA_IO_PAD_POWER_SOURCE_3300000UV for 3.3V
-> +
-> +                               All IO pads do not support the 1.8V/3.3V
-> +                               configurations. Valid values for "pins" are
-> +                               audio-hv, dmic, gpio, sdmmc1, sdmmc3, spi-hv.
-
-
-As mentioned in another patch, what is wrong with the standard
-power-source binding?
+This v5 version applied.
 
 Yours,
 Linus Walleij
