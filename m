@@ -1,176 +1,60 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq implement
-Date: Fri, 04 Nov 2016 22:21:46 +0000
-Message-ID: <867f8ilwcl.fsf@arm.com>
-References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
-        <1478001122-8664-3-git-send-email-youlin.pei@mediatek.com>
-        <86twbrj586.fsf@arm.com> <1478234577.7975.29.camel@mtksdaap41>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: tegra: Add driver to configure voltage and
+ power of io pads
+Date: Fri, 4 Nov 2016 23:24:46 +0100
+Message-ID: <CACRpkdb4DQLzQWHxuZi=TDaeigNzVJV8TN1jsQfOHKF7yPLrUg@mail.gmail.com>
+References: <1478077742-25437-1-git-send-email-ldewangan@nvidia.com> <1478077742-25437-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478234577.7975.29.camel@mtksdaap41> (Youlin Pei's message of
-        "Fri, 4 Nov 2016 12:42:57 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chieh-jay.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1478077742-25437-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Hunter <jonathanh@nvidia.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04 2016 at 04:42:57 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Tue, 2016-11-01 at 20:49 +0000, Marc Zyngier wrote:
->> On Tue, Nov 01 2016 at 11:52:01 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> > In Mediatek SOCs, the CIRQ is a low power interrupt controller
->> > designed to works outside MCUSYS which comprises with Cortex-Ax
->> > cores,CCI and GIC.
->> >
->> > The CIRQ controller is integrated in between MCUSYS( include
->> > Cortex-Ax, CCI and GIC ) and interrupt sources as the second
->> > level interrupt controller. The external interrupts which outside
->> > MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
->> > all edge trigger interupts. When an edge interrupt is triggered,
->> > CIRQ can record the status and generate a pulse signal to GIC when
->> > flush command executed.
->> >
->> > When system enters sleep mode, MCUSYS will be turned off to improve
->> > power consumption, also GIC is power down. The edge trigger interrupts
->> > will be lost in this scenario without CIRQ.
->> >
->> > This commit provides the CIRQ irqchip implement.
->> >
->> > Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > ---
->> >  drivers/irqchip/Makefile       |    2 +-
->> >  drivers/irqchip/irq-mtk-cirq.c |  262 ++++++++++++++++++++++++++++++++++++++++
->> >  2 files changed, 263 insertions(+), 1 deletion(-)
->> >  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
->> >
->> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->> > index e4dbfc8..8f33580 100644
->> > --- a/drivers/irqchip/Makefile
->> > +++ b/drivers/irqchip/Makefile
->> > @@ -60,7 +60,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
->> >  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
->> >  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
->> >  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
->> > -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
->> > +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
->> >  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
->> >  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
->> >  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
->> > diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
->> > new file mode 100644
->> > index 0000000..fc43ef3
->> > --- /dev/null
->> > +++ b/drivers/irqchip/irq-mtk-cirq.c
->> > @@ -0,0 +1,262 @@
->> > +/*
->> > + * Copyright (c) 2016 MediaTek Inc.
->> > + * Author: Youlin.Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > + *
->> > + * This program is free software; you can redistribute it and/or modify
->> > + * it under the terms of the GNU General Public License version 2 as
->> > + * published by the Free Software Foundation.
->> > + *
->> > + * This program is distributed in the hope that it will be useful,
->> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> > + * GNU General Public License for more details.
->> > + */
->> > +
->> > +#include <linux/irq.h>
->> > +#include <linux/irqchip.h>
->> > +#include <linux/irqdomain.h>
->> > +#include <linux/of.h>
->> > +#include <linux/of_irq.h>
->> > +#include <linux/of_address.h>
->> > +#include <linux/io.h>
->> > +#include <linux/slab.h>
->> > +#include <linux/syscore_ops.h>
->> > +
->> > +#define CIRQ_ACK	0x40
->> > +#define CIRQ_MASK_SET	0xc0
->> > +#define CIRQ_MASK_CLR	0x100
->> > +#define CIRQ_SENS_SET	0x180
->> > +#define CIRQ_SENS_CLR	0x1c0
->> > +#define CIRQ_POL_SET	0x240
->> > +#define CIRQ_POL_CLR	0x280
->> > +#define CIRQ_CONTROL	0x300
->> > +
->> > +#define CIRQ_EN	0x1
->> > +#define CIRQ_EDGE	0x2
->> > +#define CIRQ_FLUSH	0x4
->> > +
->> > +#define CIRQ_IRQ_NUM    0x200
->> > +
->> > +struct mtk_cirq_chip_data {
->> > +	void __iomem *base;
->> > +	unsigned int ext_irq_start;
->> > +};
->> > +
->> > +static struct mtk_cirq_chip_data *cirq_data;
->> 
->> Are you guaranteed that you'll only ever have a single CIRQ in any
->> system?
->
-> In Mediatek's SOC, only hace a single CIRQ.
->
->> 
->> > +
->> > +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
->> > +{
->> > +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
->> > +	unsigned int cirq_num = data->hwirq;
->> > +	u32 mask = 1 << (cirq_num % 32);
->> > +
->> > +	writel(mask, chip_data->base + offset + (cirq_num / 32) * 4);
->> 
->> Why can't you use the relaxed accessors?
->
-> It seems that i use wrong function, i will change the writel to
-> writel_relaxed in next version.
->
->> 
->> > +}
->> > +
->> > +static void mtk_cirq_mask(struct irq_data *data)
->> > +{
->> > +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
->> > +	irq_chip_mask_parent(data);
->> > +}
->> > +
->> > +static void mtk_cirq_unmask(struct irq_data *data)
->> > +{
->> > +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
->> > +	irq_chip_unmask_parent(data);
->> > +}
->> > +
->> > +static void mtk_cirq_eoi(struct irq_data *data)
->> > +{
->> > +	mtk_cirq_write_mask(data, CIRQ_ACK);
->> 
->> EOI and ACK have very different semantics. What is this write actually
->> doing? Also, you're now doing an additional MMIO write on each interrupt
->> EOI, doubling its cost. Do you really need to do actually signal the HW
->> that we've EOIed an interrupt? I would have hoped that you'd be able to
->> put it in "bypass" mode as long as you're not suspending...
->> 
->
-> When external interrupt happened, CIRQ status register record the status
-> even CIRQ is not enabled. when execute the flush command, CIRQ will
-> resend the signals according to the status. So if don't clear the
-> status, CIRQ will resend the wrong signals. the ACK write operation will
-> clear the status.
+On Wed, Nov 2, 2016 at 10:09 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-But at this time, we haven't suspended yet, and there is nothing to
-replay. Also, you only enable the edge capture when suspending. So what
-are you ACKing here? Can't you simply clear everything right when
-suspending and not do it at all on the fast path?
+> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
+> low power state of some of its IO pads. The IO pads can work in
+> the voltage of the 1.8V and 3.3V of IO power rail sources. When IO
+> interface are not used then IO pads can be configure in low power
+> state to reduce the power from that IO pads.
+>
+> On Tegra124, the IO power rail source is auto detected by SoC and hence
+> it is only require to configure in low power mode if IO pads are not
+> used.
+>
+> On T210 onwards, the auto-detection is removed from SoC and hence SW
+> must configure the PMC register explicitly to set proper voltage in
+> IO pads based on IO rail power source voltage.
+>
+> This driver adds the IO pad driver to configure the power state and
+> IO pad voltage based on the usage and power tree via pincontrol
+> framework. The configuration can be static and dynamic.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Thanks,
+Looking for an ACK from Stephen &| Thierry.
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> On top of the branch from Thierry's T186 work
+>         https://github.com/thierryreding/linux/tree/tegra186
+
+But it's an orthogonal patch right?
+
+The build robot seems to have problems with it so pls fix these.
+
+> +static const struct pinconf_generic_params tegra_io_pads_cfg_params[] = {
+> +       {
+> +               .property = "nvidia,power-source-voltage",
+> +               .param = TEGRA_IO_PAD_POWER_SOURCE_VOLTAGE,
+> +       },
+> +};
+
+Why can you not use the standard power-source binding
+from Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+instead of inventing this nvidia,* variant?
+
+Yours,
+Linus Walleij
