@@ -1,91 +1,129 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/6] arm64: dts: msm8994 SoC and Huawei Angler (Nexus 6P)
- support
-Date: Thu, 3 Nov 2016 18:57:13 -0700
-Message-ID: <20161104015713.GX25787@tuxbot>
-References: <1477394221-30963-1-git-send-email-jeremymc@redhat.com>
- <1477394221-30963-6-git-send-email-jeremymc@redhat.com>
- <20161028000656.GH26139@codeaurora.org>
- <822ebad4-4fdf-574a-12cb-75b0165f4746@redhat.com>
- <20161103223246.GA5135@hector>
- <9e0555fa-d689-e26e-feba-9daa815eb1c5@codeaurora.org>
- <20161103230429.GW25787@tuxbot>
- <20161104002005.GA15578@mini-rhel.redhat.com>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LPCHC)
+Date: Fri, 04 Nov 2016 14:15:57 +1030
+Message-ID: <1478231157.27396.72.camel@aj.id.au>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+         <1478097481-14895-4-git-send-email-andrew@aj.id.au>
+         <CACPK8XezumurK6TStNhmTnHdhoJuZBzkJrS3iOArKz1tf1=nLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-tXmS+8vWBUT1mhXC1E52"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161104002005.GA15578-IfqqoHeSVXkD/aak0adQqVaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CACPK8XezumurK6TStNhmTnHdhoJuZBzkJrS3iOArKz1tf1=nLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Bastian K?cher <mail-LJ92rlH3Dns@public.gmane.org>
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 03 Nov 17:20 PDT 2016, Jeremy McNicoll wrote:
 
-> On Thu, Nov 03, 2016 at 04:04:29PM -0700, Bjorn Andersson wrote:
-> > On Thu 03 Nov 15:42 PDT 2016, Stephen Boyd wrote:
-> > 
-> > > On 11/03/2016 03:32 PM, Andy Gross wrote:
-> > > > On Thu, Oct 27, 2016 at 05:54:01PM -0700, Jeremy McNicoll wrote:
-> > > >> On 2016-10-27 5:06 PM, Stephen Boyd wrote:
-> > > >>> On 10/25, Jeremy McNicoll wrote:
-> > > >>>> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > > >>>> new file mode 100644
-> > > >>>> index 0000000..2fc68c4
-> > > >>>> --- /dev/null
-> > > >>>> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
-> > > >>>> @@ -0,0 +1,40 @@
-> > > >>>> +/* Copyright (c) 2015, Huawei Inc. All rights reserved.
-> > > >>>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> > > >>>> + *
-> > > >>>> + * This program is free software; you can redistribute it and/or modify
-> > > >>>> + * it under the terms of the GNU General Public License version 2 and
-> > > >>>> + * only version 2 as published by the Free Software Foundation.
-> > > >>>> + *
-> > > >>>> + * This program is distributed in the hope that it will be useful,
-> > > >>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > >>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > >>>> + * GNU General Public License for more details.
-> > > >>>> + */
-> > > >>>> +
-> > > >>>> +/dts-v1/;
-> > > >>>> +
-> > > >>>> +#include "msm8994-v2.0.dtsi"
-> > > >>>> +
-> > > >>>> +/ {
-> > > >>>> +	model = "HUAWEI MSM8994 ANGLER rev-1.01";
-> > > >>>> +	compatible = "qcom,msm8994";
-> > > >>> Please replace this with something more specific for the actual
-> > > >>> board. Preferably with the board manufacturer vendor prefix and
-> > > >>> some sort of string for the board.
-> > > > Something like?
-> > > >
-> > > > "huawei,nexus-6P", "qcom,msm8994"
-> > > 
-> > > Sure, except completely remove qcom,msm8994 from there.
-> > 
-> > Why? So far we have always used the form <device>, <platform> as
-> > compatible. This is even in line with ePAPR, what changed?
-> > 
-> > Also, the compatible should be "huawei,angler" (if I read the internet
-> > correctly) and the model should contain the product name
-> > (Huawei Nexus 6P).
-> >
-> 
-> What about 
-> 
->   model = "Huawei Nexus 6P";
->   compatible = "huawei, angler", "qcom,msm8994";
-                         ^
-			 |
-                   unwanted space
+--=-tXmS+8vWBUT1mhXC1E52
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Apart from that, I think it looks good and in line with how we've done
-the other boards.
+On Fri, 2016-11-04 at 09:36 +1030, Joel Stanley wrote:
+> On Thu, Nov 3, 2016 at 1:07 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+> >=20
+> > The Aspeed LPC Host Controller is presented as a syscon device to
+> > arbitrate access by LPC and pinmux drivers. LPC pinmux configuration on
+> > fifth generation SoCs depends on bits in both the System Control Unit
+> > and the LPC Host Controller.
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> > ---
+> > =C2=A0Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt | 17 +++++=
+++++++++++++
+> > =C2=A01 file changed, 17 insertions(+)
+> > =C2=A0create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-l=
+pchc.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt b/D=
+ocumentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> > new file mode 100644
+> > index 000000000000..792651488c3d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> > @@ -0,0 +1,17 @@
+> > +* Device tree bindings for the Aspeed LPC Host Controller (LPCHC)
+> I had to check the data sheet for that acronym. They call the
+> registers LHC. I somewhat prefer that name, but if you're happy with
+> it as-is then that's fine.
 
-Regards,
-Bjorn
+I had an internal debate about this. I figured LPCHC might give a bit
+more context to the acronym. I'm not unhappy with it but I wouldn't
+claim I'm happy either. I will change it to LHC since you somewhat
+prefer it, and it better aligns with the datasheet.
+
+>=20
+> I assume this is not an issue on the g4/ast2400?
+
+Correct, we don't have the issue of pinmux needing to reach into the
+LPC IO space on the AST2400. I don't think we've had anything else to
+drive us to looking at the host controller space there, so I wasn't
+going to add it to the bindings yet.
+
+>=20
+> >=20
+> > +
+> > +The LPCHC registers configure LPC behaviour between the BMC and the ho=
+st
+> > +system. The LPCHC also participates in pinmux requests on g5 SoCs and =
+is
+> > +therefore considered a syscon device.
+> > +
+> > +Required properties:
+> > +- compatible:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0"aspeed,ast2500-lpchc", "syscon"
+> > +- reg:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0contains offset/length value of the =
+LPCHC memory
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0region=
+.
+> > +
+> > +Example:
+> > +
+> > +lpchc: lpchc@1e7890a0 {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "aspeed,ast25=
+00-lpchc", "syscon";
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D <0x1e7890a0 0xc4>;
+> Where's the 0xc4 come from? I can see 9 registers, which would mean
+> the length should be 0x24?
+
+Yes, it should be 0x24. I can't even claim that 'c' is near '2'. Thanks
+for catching that.
+
+Andrew
+
+>=20
+> Cheers,
+>=20
+> Joel
+--=-tXmS+8vWBUT1mhXC1E52
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCgAGBQJYHAR1AAoJEJ0dnzgO5LT5ERkP/R1u6OEeqrLaQHd2h9UYOQoo
+q2zD2IICzEYXaM/hs+1zufwvxLOkHNwzL/pU3AydrAKPETc+02PPwflW38ACgu+w
+CYqnLwn5cRnvjEUUBNPYP1KblgrAWwYUs4QvUBx5R1pBIyu69k+zrCscJRhznxXQ
+42Yls860sD4F/KU6umkeTXVcKx3Nx6l0J9RgHV5f05hT2m9TlHGy1U8vjV6d1yPt
+sPWFYlhP2MbuCN9p5eVAD8P4mB5ZNVGdKetAhk87szXmL1SOgF5B+bGkuy8x1yPd
+uSLFbWz7YweYVY/Ui+WBLvY1oVqYtCzkn+KBqp9MS2FlaeprI4LSnmFqDyKkq0uB
+1zU2wzgeVsHcuDFntvddR5d+R4gA4I7NjXO6wj6PZuRho1ph06hejveS5Qy7ltiG
+GDp5PFhfvPP0fdu8xOOHxzwI7drgSApFhEIKIQzeiyAg/8U37jsSR8Ll5VjubeX/
+hJ6axd6GOp5seAhQFb91mUj25P5FnfmWxBBROn/ajUL9fr+XHMR/vc/ygMXlEFqK
+W3ipLPnrX50leepfVpHbz4oMOdNH4uDkY6s83p9urfaMaULCgSRj5iPQMi1a8lIB
+WFd2L8awFytuiqw3uYoXXk7hu0DksOyS6sNgfmuSS0swgUlPrPU9Me6qHikn09Sn
+zeVNScB+e1pbYrnQ3822
+=GVxM
+-----END PGP SIGNATURE-----
+
+--=-tXmS+8vWBUT1mhXC1E52--
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
