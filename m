@@ -1,11 +1,11 @@
 From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Subject: [PATCH v2 11/13] Documentation: devicetree: dwc2: Add host DMA binding
 Date: Thu, 03 Nov 2016 17:56:10 -0700
-Message-ID: <6eb07c204dcbe7d3d9cb3db593828558ad6b3117.1478220875.git.johnyoun@synopsys.com>
+Message-ID: <6eb07c204dcbe7d3d9cb3db593828558ad6b3117.1478220875.git.johnyoun__38629.9166399569$1478221000$gmane$org@synopsys.com>
 References: <cover.1478220875.git.johnyoun@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1478220875.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
@@ -33,6 +33,6 @@ index 2c30a54..9472111 100644
 2.10.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
