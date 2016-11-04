@@ -1,82 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
-Date: Fri, 4 Nov 2016 15:28:42 +0100
-Message-ID: <CACRpkdZmuc__QL6b7Jvb8xL5Bm+PD2X60NtiugrnH7iAO=-tLQ@mail.gmail.com>
-References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
- <1476855239-32730-3-git-send-email-j-keerthy@ti.com> <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
- <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com> <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
- <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/9] pinctrl: meson: allow gpio to request irq
+Date: Fri, 4 Nov 2016 15:40:53 +0100
+Message-ID: <CACRpkdbXFv8pnwbajTruUU66JhgfYy=3iG6dex=XpNNOEt7Pqw@mail.gmail.com>
+References: <1476871709-8359-1-git-send-email-jbrunet@baylibre.com>
+ <1476871709-8359-5-git-send-email-jbrunet@baylibre.com> <CACRpkdaCZPS45t3eTcjJExOu=YT_YkjNkdpg09jQqvLQOJH=Qw@mail.gmail.com>
+ <1477040798.15560.96.camel@baylibre.com> <CACRpkdYUVXny57AC9rKX3VRAyooEk_2XLvqe9jOuT3rOaE75rg@mail.gmail.com>
+ <ec7c6cc5-cf9a-9c75-4b07-e337064c7d6e@arm.com> <1477400900.2482.51.camel@baylibre.com>
+ <dee26f0b-e175-f8a0-2b73-08e8e324841c@arm.com> <1477405332.2482.87.camel@baylibre.com>
+ <bbc268c8-35c3-206a-46b1-62cebef174b2@arm.com> <1477409478.2482.113.camel@baylibre.com>
+ <CACRpkdbGo4BJOdzkgBrE9jT-rKodd4zssCnOtOuGS+OqV-Uc6Q@mail.gmail.com>
+ <1477491766.2482.159.camel@baylibre.com> <CACRpkdYqoU0foW1izcZapbgUm+NO4quz9AZZBmts4841BRcigA@mail.gmail.com>
+ <7hk2cvrtxt.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hk2cvrtxt.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Marc Zyngier <marc.zyngier@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2016 at 10:07 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
-> On Thursday 27 October 2016 01:23 PM, Roger Quadros wrote:
->> On 27/10/16 06:42, Keerthy wrote:
->>> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
->>>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
->>>>> From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+On Wed, Oct 26, 2016 at 5:50 PM, Kevin Hilman <khilman@baylibre.com> wrote:
 
->>> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
->>> GPIO0 comprises of 144 GPIOs
->>> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is
->>> being modeled.
->>>
->>> I am creating a controller for every 32 GPIOs under the big module each
->>> containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
->>> Each 16 GPIO bank has an interrupt.
->>>
->>> Is this modeling fine or do you think creating one chip with 144 pins and
->>> another with 68 pins is a better way?
->>
->>
->> If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144
->> GPIOs?
->> What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+>> Yes they are all wrong. They should all be using irq_find_mapping().
 >
-> 144 GPIOs where in 16 GPIOs form a bank. So about 9 banks with one interrupt
-> each. So split it into gpiochips with 32 GPIOs each handling 2 Interrupts.
+> So, dumb question from someone trying (but having a hard time) to follow
+> and understand the rationale...
+>
+> If it's wrong enough to completely reject, why are changes still being
+> merged that are doing it so wrong?  (e.g. like this one[1], just merged
+> for v4.9)
 
-I'm a bit confused.
+It's a bug.
 
-This sounds like you should either have one gpio_chip per interrupt
-(if that fits with how the device tree looks) or one big gpio_chip for
-all the lines.
+It's that problem that Wolfram brought up in a recent lecture
+about maintainer scaling: if noone but the subsystem maintainer
+reviews the code, things like this will happen.
 
-The DT model sort of mandates how the interrupts should be mapped
-at this point, and as far as I can tell from the binding the example looks
-like so:
+I need more review...
 
-gpio: gpio@1e26000 {
-        compatible = "ti,dm6441-gpio";
-        gpio-controller;
-        #gpio-cells = <2>;
-        reg = <0x226000 0x1000>;
-        interrupt-parent = <&intc>;
-        interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
-                44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
-                46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
-                48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
-                50 IRQ_TYPE_EDGE_BOTH>;
-        ti,ngpio = <144>;
-        ti,davinci-gpio-unbanked = <0>;
-        interrupt-controller;
-        #interrupt-cells = <2>;
-};
+> [1] 0eb9f683336d pinctrl: Add IRQ support to STM32 gpios
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/pinctrl/stm32/pinctrl-stm32.c?id=0eb9f683336d7eb99a3b75987620417c574ffb57
 
-So I don't see any reason to split this up in subchips internally in
-Linux?
-
-It looks like the irqdomain will be a bit tricksy though.
+Alexandre, Maxime: can you please make a patch for the STM32
+driver that remove the semantic dependence for .to_irq() to be called
+before an interrupt can be used? It should be possible to use
+the irqs directly from the irqchip.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
