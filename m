@@ -1,286 +1,82 @@
-From: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
-Subject: [PATCH v2 1/3] remoteproc: qcom: Encapsulate pvt data structure for q6v56 hexagon.
-Date: Fri,  4 Nov 2016 19:30:54 +0530
-Message-ID: <1478268057-11847-2-git-send-email-akdwived@codeaurora.org>
-References: <1478268057-11847-1-git-send-email-akdwived@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478268057-11847-1-git-send-email-akdwived@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org
-Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REMOTE PROCESSOR
-        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
+Date: Fri, 4 Nov 2016 15:28:42 +0100
+Message-ID: <CACRpkdZmuc__QL6b7Jvb8xL5Bm+PD2X60NtiugrnH7iAO=-tLQ@mail.gmail.com>
+References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
+ <1476855239-32730-3-git-send-email-j-keerthy@ti.com> <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
+ <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com> <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
+ <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Encapsulate resources specific to each version of hexagon chip to
-device node to avoid conditional check for manipulation of those
-resources in driver code.
+On Thu, Oct 27, 2016 at 10:07 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+> On Thursday 27 October 2016 01:23 PM, Roger Quadros wrote:
+>> On 27/10/16 06:42, Keerthy wrote:
+>>> On Sunday 23 October 2016 04:02 PM, Linus Walleij wrote:
+>>>> On Wed, Oct 19, 2016 at 7:33 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+>>>>> From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 
-Signed-off-by: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
----
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
- drivers/remoteproc/qcom_q6v5_pil.c                 | 137 ++++++++++++++++++---
- 2 files changed, 120 insertions(+), 18 deletions(-)
+>>> In case of k2g. There are 2 big GPIO modules GPIO0 and GPIO1.
+>>> GPIO0 comprises of 144 GPIOs
+>>> and GPIO1 has about 68 GPIOs. Wanted feedback from you on how this is
+>>> being modeled.
+>>>
+>>> I am creating a controller for every 32 GPIOs under the big module each
+>>> containing a gpio_chip. Each 32 GPIOs chip has 2 banks of 16 GPIOs each.
+>>> Each 16 GPIO bank has an interrupt.
+>>>
+>>> Is this modeling fine or do you think creating one chip with 144 pins and
+>>> another with 68 pins is a better way?
+>>
+>>
+>> If GPIO0 has 144 GPIOs, why don't we model it as a gpiochip with 144
+>> GPIOs?
+>> What is the benefit of partitioning it into gpiochips of 32 GPIOs each?
+>
+> 144 GPIOs where in 16 GPIOs form a bank. So about 9 banks with one interrupt
+> each. So split it into gpiochips with 32 GPIOs each handling 2 Interrupts.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 57cb49e..cbc165c 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -8,6 +8,7 @@ on the Qualcomm Hexagon core.
- 	Value type: <string>
- 	Definition: must be one of:
- 		    "qcom,q6v5-pil"
-+		"qcom,q6v56-pil"
- 
- - reg:
- 	Usage: required
-diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-index 2e0caaa..3d26199 100644
---- a/drivers/remoteproc/qcom_q6v5_pil.c
-+++ b/drivers/remoteproc/qcom_q6v5_pil.c
-@@ -30,13 +30,13 @@
- #include <linux/reset.h>
- #include <linux/soc/qcom/smem.h>
- #include <linux/soc/qcom/smem_state.h>
-+#include <linux/of_device.h>
- 
- #include "remoteproc_internal.h"
- #include "qcom_mdt_loader.h"
- 
- #include <linux/qcom_scm.h>
- 
--#define MBA_FIRMWARE_NAME		"mba.b00"
- #define MPSS_FIRMWARE_NAME		"modem.mdt"
- 
- #define MPSS_CRASH_REASON_SMEM		421
-@@ -93,13 +93,32 @@
- #define QDSS_BHS_ON			BIT(21)
- #define QDSS_LDO_BYP			BIT(22)
- 
-+struct q6_rproc_res {
-+	char **proxy_clks;
-+	int proxy_clk_cnt;
-+	char **active_clks;
-+	int active_clk_cnt;
-+	char **proxy_regs;
-+	int proxy_reg_cnt;
-+	char **active_regs;
-+	int active_reg_cnt;
-+	int **proxy_reg_action;
-+	int **active_reg_action;
-+	int *proxy_reg_load;
-+	int *active_reg_load;
-+	int *proxy_reg_voltage;
-+	int *active_reg_voltage;
-+	char *q6_version;
-+	char *q6_mba_image;
-+	int (*q6_reset_init)(void *q, void *p);
-+};
- struct q6v5 {
- 	struct device *dev;
- 	struct rproc *rproc;
- 
- 	void __iomem *reg_base;
- 	void __iomem *rmb_base;
--
-+	void __iomem *restart_reg;
- 	struct regmap *halt_map;
- 	u32 halt_q6;
- 	u32 halt_modem;
-@@ -111,7 +130,7 @@ struct q6v5 {
- 	unsigned stop_bit;
- 
- 	struct regulator_bulk_data supply[4];
--
-+	struct q6_rproc_res *q6_rproc_res;
- 	struct clk *ahb_clk;
- 	struct clk *axi_clk;
- 	struct clk *rom_clk;
-@@ -198,7 +217,7 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
- 	return 0;
- }
- 
--static const struct rproc_fw_ops q6v5_fw_ops = {
-+static const struct rproc_fw_ops q6_fw_ops = {
- 	.find_rsc_table = qcom_mdt_find_rsc_table,
- 	.load = q6v5_load,
- };
-@@ -599,7 +618,7 @@ static void *q6v5_da_to_va(struct rproc *rproc, u64 da, int len)
- 	return qproc->mpss_region + offset;
- }
- 
--static const struct rproc_ops q6v5_ops = {
-+static const struct rproc_ops q6_ops = {
- 	.start = q6v5_start,
- 	.stop = q6v5_stop,
- 	.da_to_va = q6v5_da_to_va,
-@@ -736,6 +755,22 @@ static int q6v5_init_reset(struct q6v5 *qproc)
- 	return 0;
- }
- 
-+static int q6v56_init_reset(void *q, void *p)
-+{
-+	struct resource *res;
-+	struct q6v5 *qproc = q;
-+	struct platform_device *pdev = p;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "restart_reg");
-+	qproc->restart_reg = devm_ioremap(qproc->dev, res->start,
-+							resource_size(res));
-+	if (IS_ERR(qproc->restart_reg)) {
-+		dev_err(qproc->dev, "failed to get restart_reg\n");
-+		return PTR_ERR(qproc->restart_reg);
-+	}
-+
-+	return 0;
-+}
- static int q6v5_request_irq(struct q6v5 *qproc,
- 			     struct platform_device *pdev,
- 			     const char *name,
-@@ -803,20 +838,25 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
- 	return 0;
- }
- 
--static int q6v5_probe(struct platform_device *pdev)
-+static int q6_probe(struct platform_device *pdev)
- {
- 	struct q6v5 *qproc;
- 	struct rproc *rproc;
-+	struct q6_rproc_res *desc;
- 	int ret;
- 
--	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
--			    MBA_FIRMWARE_NAME, sizeof(*qproc));
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6_ops,
-+			    desc->q6_mba_image, sizeof(*qproc));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
- 	}
- 
--	rproc->fw_ops = &q6v5_fw_ops;
-+	rproc->fw_ops = &q6_fw_ops;
- 
- 	qproc = (struct q6v5 *)rproc->priv;
- 	qproc->dev = &pdev->dev;
-@@ -826,6 +866,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	init_completion(&qproc->start_done);
- 	init_completion(&qproc->stop_done);
- 
-+	qproc->q6_rproc_res = desc;
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
- 		goto free_rproc;
-@@ -842,7 +883,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = q6v5_init_reset(qproc);
-+	ret = qproc->q6_rproc_res->q6_reset_init(qproc, pdev);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -880,7 +921,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int q6v5_remove(struct platform_device *pdev)
-+static int q6_remove(struct platform_device *pdev)
- {
- 	struct q6v5 *qproc = platform_get_drvdata(pdev);
- 
-@@ -890,20 +931,80 @@ static int q6v5_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id q6v5_of_match[] = {
--	{ .compatible = "qcom,q6v5-pil", },
-+char *proxy_8x96_reg_str[] = {"mx", "cx", "vdd_pll"};
-+int  proxy_8x96_reg_action[3][2] = { {0, 1}, {1, 1}, {1, 0} };
-+int  proxy_8x96_reg_load[] = {0, 100000, 100000};
-+int  proxy_8x96_reg_min_voltage[] = {1050000, 1250000, 0};
-+char *proxy_8x96_clk_str[] = {"xo", "pnoc", "qdss"};
-+char *active_8x96_clk_str[] = {"iface", "bus", "mem", "gpll0_mss_clk",
-+		"snoc_axi_clk", "mnoc_axi_clk"};
-+
-+static struct q6_rproc_res msm_8996_res = {
-+	.proxy_clks = proxy_8x96_clk_str,
-+	.proxy_clk_cnt = 3,
-+	.active_clks = active_8x96_clk_str,
-+	.active_clk_cnt = 6,
-+	.proxy_regs = proxy_8x96_reg_str,
-+	.active_regs = NULL,
-+	.proxy_reg_action = (int **)proxy_8x96_reg_action,
-+	.proxy_reg_load = (int *)proxy_8x96_reg_load,
-+	.active_reg_action = NULL,
-+	.active_reg_load = NULL,
-+	.proxy_reg_voltage = (int *)proxy_8x96_reg_min_voltage,
-+	.active_reg_voltage = NULL,
-+	.proxy_reg_cnt = 3,
-+	.active_reg_cnt = 0,
-+	.q6_reset_init = q6v56_init_reset,
-+	.q6_version = "v56",
-+	.q6_mba_image = "mba.mbn",
-+};
-+
-+char *proxy_8x16_reg_str[] = {"mx", "cx", "pll"};
-+char *active_8x16_reg_str[] = {"mss"};
-+int  proxy_8x16_reg_action[4][2] = { {0, 1}, {1, 0}, {1, 0} };
-+int  active_8x16_reg_action[1][2] = { {1, 1} };
-+int  proxy_8x16_reg_load[] = {100000, 0, 100000, 100000};
-+int  active_8x16_reg_load[] = {100000};
-+int  proxy_8x16_reg_min_voltage[] = {1050000, 0, 0};
-+int  active_8x16_reg_min_voltage[] = {1000000};
-+char *proxy_8x16_clk_str[] = {"xo"};
-+char *active_8x16_clk_str[] = {"iface", "bus", "mem"};
-+
-+static struct q6_rproc_res msm_8916_res = {
-+	.proxy_clks = proxy_8x16_clk_str,
-+	.proxy_clk_cnt = 1,
-+	.active_clks = active_8x16_clk_str,
-+	.active_clk_cnt = 3,
-+	.proxy_regs = proxy_8x16_reg_str,
-+	.active_regs = active_8x16_reg_str,
-+	.proxy_reg_action = (int **)proxy_8x16_reg_action,
-+	.proxy_reg_load = (int *)proxy_8x16_reg_load,
-+	.active_reg_action = (int **)active_8x16_reg_action,
-+	.active_reg_load = (int *)active_8x16_reg_load,
-+	.proxy_reg_voltage = (int *)proxy_8x16_reg_min_voltage,
-+	.active_reg_voltage = active_8x16_reg_min_voltage,
-+	.proxy_reg_cnt = 3,
-+	.active_reg_cnt = 1,
-+	.q6_reset_init = q6v5_init_reset,
-+	.q6_version = "v5",
-+	.q6_mba_image = "mba.b00",
-+};
-+
-+static const struct of_device_id q6_of_match[] = {
-+	{ .compatible = "qcom,q6v5-pil", .data = &msm_8916_res},
-+	{ .compatible = "qcom,q6v56-pil", .data = &msm_8996_res},
- 	{ },
- };
- 
--static struct platform_driver q6v5_driver = {
--	.probe = q6v5_probe,
--	.remove = q6v5_remove,
-+static struct platform_driver q6_driver = {
-+	.probe = q6_probe,
-+	.remove = q6_remove,
- 	.driver = {
- 		.name = "qcom-q6v5-pil",
--		.of_match_table = q6v5_of_match,
-+		.of_match_table = q6_of_match,
- 	},
- };
--module_platform_driver(q6v5_driver);
-+module_platform_driver(q6_driver);
- 
- MODULE_DESCRIPTION("Peripheral Image Loader for Hexagon");
- MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I'm a bit confused.
+
+This sounds like you should either have one gpio_chip per interrupt
+(if that fits with how the device tree looks) or one big gpio_chip for
+all the lines.
+
+The DT model sort of mandates how the interrupts should be mapped
+at this point, and as far as I can tell from the binding the example looks
+like so:
+
+gpio: gpio@1e26000 {
+        compatible = "ti,dm6441-gpio";
+        gpio-controller;
+        #gpio-cells = <2>;
+        reg = <0x226000 0x1000>;
+        interrupt-parent = <&intc>;
+        interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
+                44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
+                46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
+                48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
+                50 IRQ_TYPE_EDGE_BOTH>;
+        ti,ngpio = <144>;
+        ti,davinci-gpio-unbanked = <0>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+};
+
+So I don't see any reason to split this up in subchips internally in
+Linux?
+
+It looks like the irqdomain will be a bit tricksy though.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
