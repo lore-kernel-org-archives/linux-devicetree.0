@@ -1,15 +1,15 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
-Date: Fri, 04 Nov 2016 13:41:45 -0700
-Message-ID: <7hshr72d12.fsf@baylibre.com>
+Subject: Re: [PATCH v2 2/5] ARM: bus: da8xx-mstpri: new driver
+Date: Fri, 04 Nov 2016 13:42:48 -0700
+Message-ID: <7hlgwz2czb.fsf@baylibre.com>
 References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
- <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
- (Bartosz Golaszewski's message of "Mon, 31 Oct 2016 15:45:34 +0100")
+In-Reply-To: <1477925138-23457-3-git-send-email-bgolaszewski@baylibre.com>
+ (Bartosz Golaszewski's message of "Mon, 31 Oct 2016 15:45:35 +0100")
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -24,11 +24,11 @@ Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kerne
 List-Id: devicetree@vger.kernel.org
 
 QmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4gd3JpdGVzOgoK
-PiBDcmVhdGUgYSBuZXcgZHJpdmVyIGZvciB0aGUgZGE4eHggRERSMi9tRERSIGNvbnRyb2xsZXIg
-YW5kIGltcGxlbWVudAo+IHN1cHBvcnQgZm9yIHdyaXRpbmcgdG8gdGhlIFBlcmlwaGVyYWwgQnVz
-IEJ1cnN0IFByaW9yaXR5IFJlZ2lzdGVyLgo+Cj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xh
-c3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KClJldmlld2VkLWJ5OiBLZXZpbiBI
-aWxtYW4gPGtoaWxtYW5AYmF5bGlicmUuY29tPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+PiBDcmVhdGUgdGhlIGRyaXZlciBmb3IgdGhlIGRhOHh4IG1hc3RlciBwZXJpcGhlcmFsIHByaW9y
+aXR5Cj4gY29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50IHN1cHBvcnQgZm9yIHdyaXRpbmcgdG8g
+dGhlIHRocmVlCj4gTWFzdGVyIFByaW9yaXR5IHJlZ2lzdGVycyBvbiBkYTg1MCBTb0NzLgo+Cj4g
+U2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJl
+LmNvbT4KClJldmlld2VkLWJ5OiBLZXZpbiBIaWxtYW4gPGtoaWxtYW5AYmF5bGlicmUuY29tPgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
