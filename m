@@ -1,36 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] pinctrl: single: Use generic parser and
- #pinctrl-cells for pinctrl-single,pins
-Date: Fri, 4 Nov 2016 22:41:26 +0100
-Message-ID: <CACRpkdY4X8MEUWU4_zuzqT9Vg7d8i236dostABEWFPcK76_w5A@mail.gmail.com>
-References: <20161025164538.453-1-tony@atomide.com> <20161025164538.453-3-tony@atomide.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/11] Add R8A7745/SK-RZG1E board support
+Date: Sat, 05 Nov 2016 00:42:33 +0300
+Message-ID: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161025164538.453-3-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2016 at 6:45 PM, Tony Lindgren <tony@atomide.com> wrote:
+Hello.
 
-> We can now use generic parser. To support the legacy binding without
-> #pinctrl-cells, add pcs_quirk_missing_pinctrl_cells() and warn about
-> missing #pinctrl-cells.
->
-> Let's also update the documentation for struct pcs_soc_data while at it
-> as that seems to be out of date.
->
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+   Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-201611104-v4.9-rc3' tag plus the R8A7743/SK-RZG1M patch series
+posted earlier. I'm adding the device tree support for the R8A7745-based
+SK-RZG1E board. The SoC is close to R8A7794 and the board seems identical to the
+R8A7794/SILK board. The device tree patches depend on the R8A7745 CPG/MSSR
+driver series in order to compile and work.
 
-Patch applied.
+[01/11] ARM: shmobile: r8a7745: add power domain index macros
+[02/11] soc: renesas: rcar-sysc: add R8A7745 support
+[03/11] ARM: shmobile: r8a7745: basic SoC support
+[04/11] ARM: dts: r8a7745: initial SoC device tree
+[05/11] ARM: dts: r8a7745: add SYS-DMAC support
+[06/11] ARM: dts: r8a7745: add [H]SCIF{|A|B} support
+[07/11] ARM: dts: r8a7745: add Ether support
+[08/11] ARM: dts: r8a7745: add IRQC support
+[09/11] ARM: shmobile: document SK-RZG1E board
+[10/11] ARM: dts: sk-rzg1e: initial device tree
+[11/11] ARM: dts: sk-rzg1e: add Ether support
 
-> Looking at some make randconfig results, looks like we don't have
-> of_add_property() and of_remove_property() exported. Is there some
-> reason not to export them?
-
-If there is too much fuzz from the builders we need to think of something.
-
-Yours,
-Linus Walleij
+WBR, Sergei
