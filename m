@@ -1,60 +1,49 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: device tree verification tools
-Date: Fri, 4 Nov 2016 22:08:50 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1611042208270.2019@hadrien>
-References: <alpine.DEB.2.10.1607262241240.3426@hadrien> <581CE982.60605@gmail.com> <CACxGe6vFmHRtE+=rJnsWrm7BGqqXBXq8FJq_T0r5deGP5pnCYw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vFmHRtE+=rJnsWrm7BGqqXBXq8FJq_T0r5deGP5pnCYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/2] regulator: fixed: dt: Allow an optional over current pin
+Date: Fri,  4 Nov 2016 22:35:35 +0100
+Message-ID: <20161104213536.28496-2-ahaslam@baylibre.com>
+References: <20161104213536.28496-1-ahaslam@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161104213536.28496-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, girdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add support for an optional over current input pin which
+can be used to send an over current event to the regulator
+consumer.
 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Fri, 4 Nov 2016, Grant Likely wrote:
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 4fae41d..b145abb 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -11,6 +11,7 @@ If this property is missing, the default assumed is Active low.
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+ -vin-supply: Input supply name.
++- over-current-gpios: Input gpio that signal an over current condition.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+@@ -26,6 +27,7 @@ Example:
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 		gpio = <&gpio1 16 0>;
++		over-current-gpios = <&gpio1 18 0>;
+ 		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 		regulator-boot-on;
+-- 
+2.10.1
 
-> On Fri, Nov 4, 2016 at 2:03 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On 07/26/16 13:43, Julia Lawall wrote:
-> >> I saw that there will be a microconference on device trees at Linux
-> >> Plumbers.  Unfortunately, I won't be able to attend, due to another event
-> >> at the same time, but I was wondering what is the status of verification
-> >> tools for device tree specifications?
-> >>
-> >> thanks,
-> >> julia
-> >>
-> >
-> > Hi Julia,
-> >
-> > Grant Likely is breathing new life into the verification effort.
->
-> Hey Julia,
->
-> The status is: there are no verification tools for dt.  :-)
->
-> I'm /hoping/ to fix that. I've started experimenting with a grammar
-> for DT schema and writing a schema validation tool, but this isn't my
-> domain of expertise. I could certainly use your insight. You can see
-> some of what I've been playing with in this git tree:
->
-> https://github.com/glikely/dtgendoc
->
-> It is little more than prototype code, and nothing has been formalized
-> yet. I'm open to taking other approaches.
-
-Thanks for the pointer.  I haven't had a chance to look into it, but I
-hope to get to it soon.
-
-julia
-
->
-> Cheers,
-> g.
->
->
-> >
-> > -Frank
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
