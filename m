@@ -1,33 +1,44 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Sat, 5 Nov 2016 22:23:26 +0100
-Message-ID: <20161105212326.GC1216@lunn.ch>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: add R8A7745 support
+Date: Sun, 6 Nov 2016 00:25:15 +0300
+Message-ID: <34a88248-72db-e526-d6e7-30ac2009415b@cogentembedded.com>
+References: <13079532.zQoaX56ouR@wasted.cogentembedded.com>
+ <5012234.NZmvoVqhq0@wasted.cogentembedded.com>
+ <CAMuHMdUD_U5YqOnWv3Oo8P_Oxbh=qMP9wAtJmEgt-2eW4y3XqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161105203841.9661-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Strba??ka <martin.strbacka-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUD_U5YqOnWv3Oo8P_Oxbh=qMP9wAtJmEgt-2eW4y3XqQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-> Still missing is support for the switch.
+On 11/02/2016 06:47 PM, Geert Uytterhoeven wrote:
 
-Is it a Marvell Switch? armada-370-rd.dts would be a good start for
-the old binding? vf610-zii-dev-rev-b.dts uses the new binding.
+>> Add RZ/G1E (R8A7745) Clock  Pulse Generator / Module Standby and Software
+>> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+>> (and RZ/G) code.
+>>
+>> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+>> <geert+renesas@glider.be>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> Thanks a lot for your patch!
+>
+>> --- /dev/null
+>> +++ linux/drivers/clk/renesas/r8a7745-cpg-mssr.c
+>> @@ -0,0 +1,261 @@
+[...]
+>> +static const struct mssr_mod_clk r8a7745_mod_clks[] __initconst = {
+>
+>> +       DEF_MOD("fdp1-1",         118,  R8A7745_CLK_ZS),
+>
+> FDP1-1 does not exist on RZ/G1E.
 
-> SFP is untested as is UART1.
+    Sorry, I somehow forgot about this one... will respin!
 
-UART would be unusual. They are normally i2c.
+MBR, Sergei
 
-> Do I need to "register" turris in vendor-prefixes.txt for that?
-
-Yes please.
-
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
