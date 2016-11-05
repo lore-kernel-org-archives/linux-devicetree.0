@@ -1,174 +1,161 @@
-From: Corey Minyard <minyard@acm.org>
-Subject: Re: [PATCH 2/3] ipmi/bt-bmc: maintain a
-	request expiry list
-Date: Mon, 7 Nov 2016 13:04:43 -0600
-Message-ID: <a7aea2a7-6cb4-655e-3c69-1a156945e27b@acm.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
-	<1478073426-3714-3-git-send-email-clg@kaod.org>
-Reply-To: minyard@acm.org
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 7/8] ARM64: dts: meson-gxl-p23x: Add SD/SDIO/MMC and PWM nodes
+Date: Sat, 05 Nov 2016 17:10:17 -0500
+Message-ID: <m21syp8to6.fsf@baylibre.com>
+References: <1477932286-27482-1-git-send-email-narmstrong@baylibre.com>
+        <1477932286-27482-8-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <1478073426-3714-3-git-send-email-clg@kaod.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1477932286-27482-8-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Mon, 31 Oct 2016 17:44:45 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDIvMjAxNiAwMjo1NyBBTSwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3JvdGU6Cj4gUmVnYXJk
-aW5nIHRoZSByZXNwb25zZSBleHBpcmF0aW9uIGhhbmRsaW5nLCB0aGUgSVBNSSBzcGVjIHNheXMg
-Ogo+Cj4gICAgIFRoZSBCTUMgbXVzdCBub3QgcmV0dXJuIGEgZ2l2ZW4gcmVzcG9uc2Ugb25jZSB0
-aGUgY29ycmVzcG9uZGluZwo+ICAgICBSZXF1ZXN0LXRvLVJlc3BvbnNlIGludGVydmFsIGhhcyBw
-YXNzZWQuIFRoZSBCTUMgY2FuIGVuc3VyZSB0aGlzCj4gICAgIGJ5IG1haW50YWluaW5nIGl0cyBv
-d24gaW50ZXJuYWwgbGlzdCBvZiBvdXRzdGFuZGluZyByZXF1ZXN0cyB0aHJvdWdoCj4gICAgIHRo
-ZSBpbnRlcmZhY2UuIFRoZSBCTUMgY291bGQgYWdlIGFuZCBleHBpcmUgdGhlIGVudHJpZXMgaW4g
-dGhlIGxpc3QKPiAgICAgYnkgZXhwaXJpbmcgdGhlIGVudHJpZXMgYXQgYW4gaW50ZXJ2YWwgdGhh
-dCBpcyBzb21ld2hhdCBzaG9ydGVyIHRoYW4KPiAgICAgdGhlIHNwZWNpZmllZCBSZXF1ZXN0LXRv
-LVJlc3BvbnNlIGludGVydmFsLi4uLgo+Cj4gVG8gaGFuZGxlIHN1Y2ggY2FzZSwgd2UgbWFpbnRh
-aW4gbGlzdCBvZiByZWNlaXZlZCByZXF1ZXN0cyB1c2luZyB0aGUKPiBzZXEgbnVtYmVyIG9mIHRo
-ZSBCVCBtZXNzYWdlIHRvIGlkZW50aWZ5IHRoZW0uIFRoZSBsaXN0IGlzIHVwZGF0ZWQKPiBlYWNo
-IHRpbWUgYSByZXF1ZXN0IGlzIHJlY2VpdmVkIGFuZCBhIHJlc3BvbnNlIGlzIHNlbnQuIFRoZSBl
-eHBpcmF0aW9uCj4gb2YgdGhlIHJlcG9uc2VzIGlzIGhhbmRsZWQgYXQgZWFjaCB1cGRhdGVzIGJ1
-dCBhbHNvIHdpdGggYSB0aW1lci4KClRoaXMgbG9va3MgY29ycmVjdCwgYnV0IGl0IHNlZW1zIGF3
-ZnVsbHkgY29tcGxpY2F0ZWQuCgpXaHkgY2FuJ3QgeW91IGdldCB0aGUgY3VycmVudCB0aW1lIGJl
-Zm9yZSB0aGUgd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkKYW5kIHRoZW4gY29tcGFyZSB0aGUg
-dGltZSBiZWZvcmUgeW91IGRvIHRoZSB3cml0ZT8gIFRoYXQgd291bGQgc2VlbSB0bwphY2NvbXBs
-aXNoIHRoZSBzYW1lIHRoaW5nIHdpdGhvdXQgYW55IGxpc3RzIG9yIGV4dHJhIGxvY2tzLgoKQWxz
-bywgaWYgeW91IGFyZSBnb2luZyB0byBoYXZlIG11bHRpcGxlIHdyaXRlcnMgb24gdGhpcyBpbnRl
-cmZhY2UsIEkgZG9uJ3QKdGhpbmsgdGhlIGludGVyZmFjZSB3aWxsIHdvcmsgY29ycmVjdGx5LiAg
-SSB0aGluayB5b3UgbmVlZCB0byBjbGFpbSB0aGUKbXV0ZXggZmlyc3QuICBPdGhlcndpc2UgeW91
-IG1pZ2h0IGdldCBpbnRvIGEgc2l0dWF0aW9uIHdoZXJlIHR3byB3cml0ZXJzCndpbGwgd2FrZSB1
-cCBhdCB0aGUgc2FtZSB0aW1lLCB0aGUgZmlyc3Qgd3JpdGVzIGFuZCByZWxlYXNlcyB0aGUgbXV0
-ZXgsCnRoZW4gdGhlIHNlY29uZCB3aWxsIGZpbmQgdGhhdCB0aGUgaW50ZXJmYWNlIGlzIGJ1c3kg
-YW5kIGZhaWwuCgpJZiBJIGFtIGNvcnJlY3QsIHRoZSBtdXRleCB3aWxsIG5lZWQgdG8gYmVjb21l
-IGludGVycnVwdGlibGUgYW5kIGNvbWUKZmlyc3QsIEkgdGhpbmsuICAoQW5kIHRoZSB0aW1pbmcg
-d291bGQgaGF2ZSB0byBzdGFydCBiZWZvcmUgdGhlIG11dGV4LApvZiBjb3Vyc2UuKSAgVGhpcyBh
-cHBsaWVzIHRvIGJvdGggdGhlIHJlYWQgYW5kIHdyaXRlIGludGVyZmFjZS4KCkFub3RoZXIgdGhp
-bmcgaXMgdGhhdCB0aGlzIGlzIHJlcXVlc3QtdG8tcmVsZWFzZSB0aW1lLiAgSWYgYSByZXF1ZXN0
-IHRha2VzCmEgbG9uZyB0aW1lIHRvIHByb2Nlc3MgKHNheSwgYSB3cml0ZSB0byBhIGZsYXNoIGRl
-dmljZSkgdGhlIHRpbWVvdXQgd291bGQKbmVlZCB0byBiZSBkZWNyZWFzZWQgYnkgdGhlIHByb2Nl
-c3NpbmcgdGltZS4gIEl0J3MgcHJvYmFibHkgb2sgdG8gbm90CmRvIHRoYXQgZm9yIHRoZSBtb21l
-bnQsIGJ1dCB5b3UgbWF5IHdhbnQgdG8gYWRkIGEgbm90ZS4gIEZpeGluZyB0aGF0CndvdWxkIHJl
-cXVpcmUgYWRkaW5nIGEgdGltZW91dCBmb3IgZWFjaCBtZXNzYWdlLgoKLWNvcmV5CgoKPiBTaWdu
-ZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qub3JnPgo+IC0tLQo+ICAgZHJp
-dmVycy9jaGFyL2lwbWkvYnQtYm1jLmMgfCAxMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKykK
-Pgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2NoYXIvaXBtaS9idC1ibWMuYyBiL2RyaXZlcnMvY2hh
-ci9pcG1pL2J0LWJtYy5jCj4gaW5kZXggZmM5ZTg4OTFlYWUzLi5lNzUxZTRhNzU0YjcgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMKPiArKysgYi9kcml2ZXJzL2NoYXIv
-aXBtaS9idC1ibWMuYwo+IEBAIC0xNyw2ICsxNyw3IEBACj4gICAjaW5jbHVkZSA8bGludXgvcGxh
-dGZvcm1fZGV2aWNlLmg+Cj4gICAjaW5jbHVkZSA8bGludXgvcG9sbC5oPgo+ICAgI2luY2x1ZGUg
-PGxpbnV4L3NjaGVkLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4gICAjaW5jbHVkZSA8
-bGludXgvdGltZXIuaD4KPiAgIAo+ICAgLyoKPiBAQCAtNTcsNiArNTgsMTUgQEAKPiAgIAo+ICAg
-I2RlZmluZSBCVF9CTUNfQlVGRkVSX1NJWkUgMjU2Cj4gICAKPiArI2RlZmluZSBCVF9CTUNfUkVT
-UE9OU0VfVElNRQk1IC8qIHNlY29uZHMgKi8KPiArCj4gK3N0cnVjdCBpcG1pX3JlcXVlc3Qgewo+
-ICsJc3RydWN0IGxpc3RfaGVhZCBsaXN0Owo+ICsKPiArCXU4IHNlcTsKPiArCXVuc2lnbmVkIGxv
-bmcgZXhwaXJlczsKPiArfTsKPiArCj4gICBzdHJ1Y3QgYnRfYm1jIHsKPiAgIAlzdHJ1Y3QgZGV2
-aWNlCQlkZXY7Cj4gICAJc3RydWN0IG1pc2NkZXZpY2UJbWlzY2RldjsKPiBAQCAtNjUsNiArNzUs
-MTEgQEAgc3RydWN0IGJ0X2JtYyB7Cj4gICAJd2FpdF9xdWV1ZV9oZWFkX3QJcXVldWU7Cj4gICAJ
-c3RydWN0IHRpbWVyX2xpc3QJcG9sbF90aW1lcjsKPiAgIAlzdHJ1Y3QgbXV0ZXgJCW11dGV4Owo+
-ICsKPiArCXVuc2lnbmVkIGludAkJcmVzcG9uc2VfdGltZTsKPiArCXN0cnVjdCB0aW1lcl9saXN0
-CXJlcXVlc3RzX3RpbWVyOwo+ICsJc3BpbmxvY2tfdCAgICAgICAgICAgICAgcmVxdWVzdHNfbG9j
-azsKPiArCXN0cnVjdCBsaXN0X2hlYWQgICAgICAgIHJlcXVlc3RzOwo+ICAgfTsKPiAgIAo+ICAg
-c3RhdGljIGF0b21pY190IG9wZW5fY291bnQgPSBBVE9NSUNfSU5JVCgwKTsKPiBAQCAtMTYzLDYg
-KzE3OCw5NCBAQCBzdGF0aWMgaW50IGJ0X2JtY19vcGVuKHN0cnVjdCBpbm9kZSAqaW5vZGUsIHN0
-cnVjdCBmaWxlICpmaWxlKQo+ICAgfQo+ICAgCj4gICAvKgo+ICsgKiBsb2NrIHNob3VsZCBiZSBo
-ZWxkCj4gKyAqLwo+ICtzdGF0aWMgdm9pZCBkcm9wX2V4cGlyZWRfcmVxdWVzdHMoc3RydWN0IGJ0
-X2JtYyAqYnRfYm1jKQo+ICt7Cj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzID0gMDsKPiArCXN0cnVj
-dCBpcG1pX3JlcXVlc3QgKnJlcSwgKm5leHQ7Cj4gKwl1bnNpZ25lZCBsb25nIG5leHRfZXhwaXJl
-cyA9IDA7Cj4gKwlpbnQgc3RhcnRfdGltZXIgPSAwOwo+ICsKPiArCXNwaW5fbG9ja19pcnFzYXZl
-KCZidF9ibWMtPnJlcXVlc3RzX2xvY2ssIGZsYWdzKTsKPiArCWxpc3RfZm9yX2VhY2hfZW50cnlf
-c2FmZShyZXEsIG5leHQsICZidF9ibWMtPnJlcXVlc3RzLCBsaXN0KSB7Cj4gKwkJaWYgKHRpbWVf
-YWZ0ZXJfZXEoamlmZmllcywgcmVxLT5leHBpcmVzKSkgewo+ICsJCQlwcl93YXJuKCJCVDogcmVx
-dWVzdCBzZXE6JWQgaGFzIGV4cGlyZWQuIGRyb3BwaW5nXG4iLAo+ICsJCQkJcmVxLT5zZXEpOwo+
-ICsJCQlsaXN0X2RlbCgmcmVxLT5saXN0KTsKPiArCQkJa2ZyZWUocmVxKTsKPiArCQkJY29udGlu
-dWU7Cj4gKwkJfQo+ICsJCWlmICghc3RhcnRfdGltZXIpIHsKPiArCQkJc3RhcnRfdGltZXIgPSAx
-Owo+ICsJCQluZXh0X2V4cGlyZXMgPSByZXEtPmV4cGlyZXM7Cj4gKwkJfSBlbHNlIHsKPiArCQkJ
-bmV4dF9leHBpcmVzID0gbWluKG5leHRfZXhwaXJlcywgcmVxLT5leHBpcmVzKTsKPiArCQl9Cj4g
-Kwl9Cj4gKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZidF9ibWMtPnJlcXVlc3RzX2xvY2ssIGZs
-YWdzKTsKPiArCj4gKwkvKiBhbmQgcG9zc2libHkgcmVzdGFydCAqLwo+ICsJaWYgKHN0YXJ0X3Rp
-bWVyKQo+ICsJCW1vZF90aW1lcigmYnRfYm1jLT5yZXF1ZXN0c190aW1lciwgbmV4dF9leHBpcmVz
-KTsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgcmVxdWVzdHNfdGltZXIodW5zaWduZWQgbG9uZyBk
-YXRhKQo+ICt7Cj4gKwlzdHJ1Y3QgYnRfYm1jICpidF9ibWMgPSAodm9pZCAqKWRhdGE7Cj4gKwo+
-ICsJZHJvcF9leHBpcmVkX3JlcXVlc3RzKGJ0X2JtYyk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQg
-YnRfYm1jX2FkZF9yZXF1ZXN0KHN0cnVjdCBidF9ibWMgKmJ0X2JtYywgdTggc2VxKQo+ICt7Cj4g
-KwlzdHJ1Y3QgaXBtaV9yZXF1ZXN0ICpyZXE7Cj4gKwo+ICsJcmVxID0ga21hbGxvYyhzaXplb2Yo
-KnJlcSksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFyZXEpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4g
-Kwo+ICsJcmVxLT5zZXEgPSBzZXE7Cj4gKwlyZXEtPmV4cGlyZXMgPSBqaWZmaWVzICsKPiArCQlt
-c2Vjc190b19qaWZmaWVzKGJ0X2JtYy0+cmVzcG9uc2VfdGltZSAqIDEwMDApOwo+ICsKPiArCXNw
-aW5fbG9jaygmYnRfYm1jLT5yZXF1ZXN0c19sb2NrKTsKPiArCWxpc3RfYWRkKCZyZXEtPmxpc3Qs
-ICZidF9ibWMtPnJlcXVlc3RzKTsKPiArCXNwaW5fdW5sb2NrKCZidF9ibWMtPnJlcXVlc3RzX2xv
-Y2spOwo+ICsKPiArCWRyb3BfZXhwaXJlZF9yZXF1ZXN0cyhidF9ibWMpOwo+ICsJcmV0dXJuIDA7
-Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgYnRfYm1jX3JlbW92ZV9yZXF1ZXN0KHN0cnVjdCBidF9i
-bWMgKmJ0X2JtYywgdTggc2VxKQo+ICt7Cj4gKwlzdHJ1Y3QgaXBtaV9yZXF1ZXN0ICpyZXEsICpu
-ZXh0Owo+ICsJaW50IHJldCA9IC1FQkFEUlFDOyAvKiBJbnZhbGlkIHJlcXVlc3QgY29kZSAqLwo+
-ICsKPiArCXNwaW5fbG9jaygmYnRfYm1jLT5yZXF1ZXN0c19sb2NrKTsKPiArCWxpc3RfZm9yX2Vh
-Y2hfZW50cnlfc2FmZShyZXEsIG5leHQsICZidF9ibWMtPnJlcXVlc3RzLCBsaXN0KSB7Cj4gKwkJ
-LyoKPiArCQkgKiBUaGUgc2VxdWVuY2UgbnVtYmVyIHNob3VsZCBiZSB1bmlxdWUsIHNvIHJlbW92
-ZSB0aGUKPiArCQkgKiBmaXJzdCBtYXRjaGluZyByZXF1ZXN0IGZvdW5kLiBJZiB0aGVyZSBhcmUg
-b3RoZXJzLAo+ICsJCSAqIHRoZXkgc2hvdWxkIGV4cGlyZQo+ICsJCSAqLwo+ICsJCWlmIChyZXEt
-PnNlcSA9PSBzZXEpIHsKPiArCQkJbGlzdF9kZWwoJnJlcS0+bGlzdCk7Cj4gKwkJCWtmcmVlKHJl
-cSk7Cj4gKwkJCXJldCA9IDA7Cj4gKwkJCWJyZWFrOwo+ICsJCX0KPiArCX0KPiArCXNwaW5fdW5s
-b2NrKCZidF9ibWMtPnJlcXVlc3RzX2xvY2spOwo+ICsKPiArCWlmIChyZXQpCj4gKwkJcHJfd2Fy
-bigiQlQ6IHJlcXVlc3Qgc2VxOiVkIGlzIGludmFsaWRcbiIsIHNlcSk7Cj4gKwo+ICsJZHJvcF9l
-eHBpcmVkX3JlcXVlc3RzKGJ0X2JtYyk7Cj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICsvKgo+
-ICAgICogVGhlIEJUIChCbG9jayBUcmFuc2ZlcikgaW50ZXJmYWNlIG1lYW5zIHRoYXQgZW50aXJl
-IG1lc3NhZ2VzIGFyZQo+ICAgICogYnVmZmVyZWQgYnkgdGhlIGhvc3QgYmVmb3JlIGEgbm90aWZp
-Y2F0aW9uIGlzIHNlbnQgdG8gdGhlIEJNQyB0aGF0Cj4gICAgKiB0aGVyZSBpcyBkYXRhIHRvIGJl
-IHJlYWQuIFRoZSBmaXJzdCBieXRlIGlzIHRoZSBsZW5ndGggYW5kIHRoZQo+IEBAIC0yMzEsNiAr
-MzM0LDEzIEBAIHN0YXRpYyBzc2l6ZV90IGJ0X2JtY19yZWFkKHN0cnVjdCBmaWxlICpmaWxlLCBj
-aGFyIF9fdXNlciAqYnVmLAo+ICAgCQlsZW5fYnl0ZSA9IDA7Cj4gICAJfQo+ICAgCj4gKwlpZiAo
-cmV0ID4gMCkgewo+ICsJCWludCByZXQyID0gYnRfYm1jX2FkZF9yZXF1ZXN0KGJ0X2JtYywga2J1
-ZmZlclsyXSk7Cj4gKwo+ICsJCWlmIChyZXQyKQo+ICsJCQlyZXQgPSByZXQyOwo+ICsJfQo+ICsK
-PiAgIAljbHJfYl9idXN5KGJ0X2JtYyk7Cj4gICAKPiAgIG91dF91bmxvY2s6Cj4gQEAgLTI4Mywx
-MiArMzkzLDIwIEBAIHN0YXRpYyBzc2l6ZV90IGJ0X2JtY193cml0ZShzdHJ1Y3QgZmlsZSAqZmls
-ZSwgY29uc3QgY2hhciBfX3VzZXIgKmJ1ZiwKPiAgIAljbHJfd3JfcHRyKGJ0X2JtYyk7Cj4gICAK
-PiAgIAl3aGlsZSAoY291bnQpIHsKPiArCQlpbnQgcmV0MjsKPiArCj4gICAJCW53cml0dGVuID0g
-bWluX3Qoc3NpemVfdCwgY291bnQsIHNpemVvZihrYnVmZmVyKSk7Cj4gICAJCWlmIChjb3B5X2Zy
-b21fdXNlcigma2J1ZmZlciwgYnVmLCBud3JpdHRlbikpIHsKPiAgIAkJCXJldCA9IC1FRkFVTFQ7
-Cj4gICAJCQlicmVhazsKPiAgIAkJfQo+ICAgCj4gKwkJcmV0MiA9IGJ0X2JtY19yZW1vdmVfcmVx
-dWVzdChidF9ibWMsIGtidWZmZXJbMl0pOwo+ICsJCWlmIChyZXQyKSB7Cj4gKwkJCXJldCA9IHJl
-dDI7Cj4gKwkJCWJyZWFrOwo+ICsJCX0KPiArCj4gICAJCWJ0X3dyaXRlbihidF9ibWMsIGtidWZm
-ZXIsIG53cml0dGVuKTsKPiAgIAo+ICAgCQljb3VudCAtPSBud3JpdHRlbjsKPiBAQCAtNDM4LDYg
-KzU1Niw4IEBAIHN0YXRpYyBpbnQgYnRfYm1jX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCj4gICAKPiAgIAltdXRleF9pbml0KCZidF9ibWMtPm11dGV4KTsKPiAgIAlpbml0X3dh
-aXRxdWV1ZV9oZWFkKCZidF9ibWMtPnF1ZXVlKTsKPiArCUlOSVRfTElTVF9IRUFEKCZidF9ibWMt
-PnJlcXVlc3RzKTsKPiArCXNwaW5fbG9ja19pbml0KCZidF9ibWMtPnJlcXVlc3RzX2xvY2spOwo+
-ICAgCj4gICAJYnRfYm1jLT5taXNjZGV2Lm1pbm9yCT0gTUlTQ19EWU5BTUlDX01JTk9SLAo+ICAg
-CQlidF9ibWMtPm1pc2NkZXYubmFtZQk9IERFVklDRV9OQU1FLAo+IEBAIC00NTEsNiArNTcxLDgg
-QEAgc3RhdGljIGludCBidF9ibWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
-PiAgIAo+ICAgCWJ0X2JtY19jb25maWdfaXJxKGJ0X2JtYywgcGRldik7Cj4gICAKPiArCWJ0X2Jt
-Yy0+cmVzcG9uc2VfdGltZSA9IEJUX0JNQ19SRVNQT05TRV9USU1FOwo+ICsKPiAgIAlpZiAoYnRf
-Ym1jLT5pcnEpIHsKPiAgIAkJZGV2X2luZm8oZGV2LCAiVXNpbmcgSVJRICVkXG4iLCBidF9ibWMt
-PmlycSk7Cj4gICAJfSBlbHNlIHsKPiBAQCAtNDY4LDYgKzU5MCw5IEBAIHN0YXRpYyBpbnQgYnRf
-Ym1jX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gICAJCSAgQlRfQ1IwX0VO
-QUJMRV9JQlQsCj4gICAJCSAgYnRfYm1jLT5iYXNlICsgQlRfQ1IwKTsKPiAgIAo+ICsJc2V0dXBf
-dGltZXIoJmJ0X2JtYy0+cmVxdWVzdHNfdGltZXIsIHJlcXVlc3RzX3RpbWVyLAo+ICsJCSAgICAo
-dW5zaWduZWQgbG9uZylidF9ibWMpOwo+ICsKPiAgIAljbHJfYl9idXN5KGJ0X2JtYyk7Cj4gICAK
-PiAgIAlyZXR1cm4gMDsKPiBAQCAtNDc2LDEwICs2MDEsMTcgQEAgc3RhdGljIGludCBidF9ibWNf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgIHN0YXRpYyBpbnQgYnRfYm1j
-X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAgewo+ICAgCXN0cnVjdCBi
-dF9ibWMgKmJ0X2JtYyA9IGRldl9nZXRfZHJ2ZGF0YSgmcGRldi0+ZGV2KTsKPiArCXN0cnVjdCBp
-cG1pX3JlcXVlc3QgKnJlcSwgKm5leHQ7Cj4gICAKPiAgIAltaXNjX2RlcmVnaXN0ZXIoJmJ0X2Jt
-Yy0+bWlzY2Rldik7Cj4gICAJaWYgKCFidF9ibWMtPmlycSkKPiAgIAkJZGVsX3RpbWVyX3N5bmMo
-JmJ0X2JtYy0+cG9sbF90aW1lcik7Cj4gKwo+ICsJZGVsX3RpbWVyX3N5bmMoJmJ0X2JtYy0+cmVx
-dWVzdHNfdGltZXIpOwo+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKHJlcSwgbmV4dCwgJmJ0
-X2JtYy0+cmVxdWVzdHMsIGxpc3QpIHsKPiArCQlsaXN0X2RlbCgmcmVxLT5saXN0KTsKPiArCQlr
-ZnJlZShyZXEpOwo+ICsJfQo+ICAgCXJldHVybiAwOwo+ICAgfQo+ICAgCgoKCi0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQpEZXZlbG9wZXIgQWNjZXNzIFByb2dyYW0gZm9yIEludGVsIFhlb24gUGhpIFBy
-b2Nlc3NvcnMKQWNjZXNzIHRvIEludGVsIFhlb24gUGhpIHByb2Nlc3Nvci1iYXNlZCBkZXZlbG9w
-ZXIgcGxhdGZvcm1zLgpXaXRoIG9uZSB5ZWFyIG9mIEludGVsIFBhcmFsbGVsIFN0dWRpbyBYRS4K
-VHJhaW5pbmcgYW5kIHN1cHBvcnQgZnJvbSBDb2xmYXguCk9yZGVyIHlvdXIgcGxhdGZvcm0gdG9k
-YXkuIGh0dHA6Ly9zZG0ubGluay94ZW9ucGhpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCk9wZW5pcG1pLWRldmVsb3BlciBtYWlsaW5nIGxpc3QKT3Blbmlw
-bWktZGV2ZWxvcGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZv
-cmdlLm5ldC9saXN0cy9saXN0aW5mby9vcGVuaXBtaS1kZXZlbG9wZXIK
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+
+> Add SD/SDIO/MMC nodes and PWM 32768Hz clock configuration to provide
+> storage and WiFi functionality on the p23x boards.
+
+Just curious... what storage functionality are you referring to here?
+
+Kevin
+
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     | 112 +++++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+> index 666fe2b..7830809 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+> @@ -56,6 +56,46 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x0 0x0 0x80000000>;
+>  	};
+> +
+> +	vddio_boot: regulator-vddio_boot {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_BOOT";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	vddao_3v3: regulator-vddao_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDAO_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vcc_3v3: regulator-vcc_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible = "mmc-pwrseq-emmc";
+> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	wifi32k: wifi32k {
+> +		compatible = "pwm-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
+> +		clocks = <&wifi32k>;
+> +		clock-names = "ext_clock";
+> +	};
+>  };
+>  
+>  /* This UART is brought out to the DB9 connector */
+> @@ -64,3 +104,75 @@
+>  	pinctrl-0 = <&uart_ao_a_pins>;
+>  	pinctrl-names = "default";
+>  };
+> +
+> +/* Wireless SDIO Module */
+> +&sd_emmc_a {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdio_pins>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +
+> +	non-removable;
+> +	disable-wp;
+> +
+> +	mmc-pwrseq = <&sdio_pwrseq>;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +
+> +	brcmf: bcrmf@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +	};
+> +};
+> +
+> +/* SD card */
+> +&sd_emmc_b {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdcard_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +	disable-wp;
+> +
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +};
+> +
+> +/* eMMC */
+> +&sd_emmc_c {
+> +	status = "okay";
+> +	pinctrl-0 = <&emmc_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <8>;
+> +	cap-sd-highspeed;
+> +	cap-mmc-highspeed;
+> +	max-frequency = <200000000>;
+> +	non-removable;
+> +	disable-wp;
+> +	mmc-ddr-1_8v;
+> +	mmc-hs200-1_8v;
+> +
+> +	mmc-pwrseq = <&emmc_pwrseq>;
+> +	vmmc-supply = <&vcc_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +};
+> +
+> +&pwm_ef {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm_e_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&clkc CLKID_FCLK_DIV4>;
+> +	clock-names = "clkin0";
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
