@@ -1,10 +1,10 @@
 From: Paul Burton <paul.burton@imgtec.com>
 Subject: Re: [REGRESSION] "console: don't prefer first registered if DT specifies stdout-path" breaks console on video outputs of various ARM boards
-Date: Sat, 5 Nov 2016 10:40:02 +0000
-Message-ID: <1573891.u0IFOelkNI@np-p-burton>
+Date: Sat, 5 Nov 2016 11:00:23 +0000
+Message-ID: <2806714.DJA9EBBcvx@np-p-burton>
 References: <20161104121135.4780-1-hdegoede@redhat.com> <17833033.PtOSTzKXGD@np-p-burton> <d3f0f1f4-d6f6-1e75-499c-789b82b5bb1b@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1743643.7HBd3xU0qz";
+Content-Type: multipart/signed; boundary="nextPart1801633.8lPRXRx3SU";
         micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <d3f0f1f4-d6f6-1e75-499c-789b82b5bb1b@redhat.com>
@@ -13,7 +13,7 @@ To: Hans de Goede <hdegoede@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart1743643.7HBd3xU0qz
+--nextPart1801633.8lPRXRx3SU
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
@@ -125,26 +125,26 @@ can see we simply do not honor stdout-path for the real kernel console.
 
 Thanks,
     Paul
---nextPart1743643.7HBd3xU0qz
+--nextPart1801633.8lPRXRx3SU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part.
 Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJYHbcCAAoJEIIg2fppPBxlmigP+wV+EOQ1EN8HfJxNkwRcehXW
-vYzYjvOcACEC3NOuB1bIWrszk7XDi2rBdFA0xDbjIa2+UQKoJ4Rth+jnpxn0gsk6
-3141Lb7bx7H4spA69brvC1jGzdUkLU3isaCFLnIkDant56WXupVjf0aTjr2j7x7O
-Wi7D1BNQZwOc6RWVqRcKem0g05Lq7z/M2u2eQHHV3K9EL67P/YrIQG0S/5YzKj2i
-I5Sj5+epPt11Q7WhUUC0UEs5FrURbYYrDACUwcv/67vWipn2eNw5CcrKBgcNvKez
-EtDpkSJ3rcXF9uG3qDTEMjMJTg5hFuAF/aTsAPEJbNpKUi02eMLcf56W1pY2fQOK
-UQy6Vqki1bF8mim4rzTW4VA/whN4kobfHsIUSx1w8Oz2O4GaHJWVUa7XjQK042mX
-JtLQykvSUA+srpauk3+g2tgARKmjKpS7w3ciIB1jLeGRnMBzRMaEHEJXdvj9ca98
-ADeMT7Yh+czUZGHHEXol4UWPHSaIHC1RUYpXbi2i/65c3VVOlmVjRJkbgEC2qCeA
-fvsKdDwfQvDuI76UgVCkQJu8GVCWx0uBNmueN2DG3diwoRoCVaEKFeQHTOUQwY0h
-YhvrbrusesmOBFy19peiK9EV8YO4PB/CjgfTzZX716MkWHHk/AxkEtdd0BiyIj0q
-pj51dGaezoIrTkY572o3
-=yl2g
+iQIcBAABCAAGBQJYHbvHAAoJEIIg2fppPBxlRO4P/iypGs5IKAT7TVAWs9PdgEl0
+9PT6dK+VgosH0eQpwn7WPih/pUzsL13HqcXql3KZLdsa4+E8devPM0KUqSisXuiA
+AsNO1e1WCWCU45LQZxqOUUuIvInfmI2LuB3KFAgD+xdAOv85/LGEa+kSB/kF5C0K
+aZrNsymq8Np1Xlp350mDurutNKaIm/IMKN42/wSppfCcyMUT/EIMJoluEgbDzJjA
+QTs4IrQT3vthCsP9+vJyGtARaZm+Ij5dOz357OtWyvAY13f+rj8CyTYXs3YGqRe8
+cZvtKyTfQygdWGHKznJT/pSrbG5xISqRKBzjmF0JzlHQ/BUGlYm+zcSomTmpE2PB
+iVP90WDOarO2hvVVD/dw9ewU/KxuWPVX7RdlNUwHAR8Jp2g2IqnLzq7ckH4VE+1D
+wHvWt2S2S8LoS+0pxL9gyw+1iRhlzz6mKDvQb4rDx2ZzxSY1hXNOZSrP4BcTiFW8
+rwTVwD3NxfsxDwuCBaHNGgTAJ7XeMlQvJGfsnfXjTnkvaNjt+ycltMGI2Vvbfx95
+RS+SAJbsUBkAE/pwthM0g3n6anJbGaxxUXPRZRIBFMq3rMvlG9PB5C/WC8zSvlET
+iwD8+8jPWqPgWa1u0+ZDpeMmXDh9cg6xwcipRVuqJKTCWNFSmSDaNbBje0N/vxnQ
+Lpk5Dz/tg0xZaIfm9LFK
+=IA7d
 -----END PGP SIGNATURE-----
 
---nextPart1743643.7HBd3xU0qz--
+--nextPart1801633.8lPRXRx3SU--
