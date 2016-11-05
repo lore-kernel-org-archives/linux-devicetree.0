@@ -1,137 +1,128 @@
-From: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Subject: [PATCH 1/2] mfd: rn5t618: Add Ricoh RC5T619 PMIC support
-Date: Sat,  5 Nov 2016 17:19:24 +0100
-Message-ID: <20161105161925.14910-2-phh@phh.me>
+From: Pierre-Hugues Husson <phh@phh.me>
+Subject: [PATCH 2/2] regulator: rn5t618: add RC5T619 PMIC support
+Date: Sat,  5 Nov 2016 17:19:25 +0100
+Message-ID: <20161105161925.14910-3-phh@phh.me>
 References: <20161105161925.14910-1-phh@phh.me>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161105161925.14910-1-phh-8tEavu1zA38@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161105161925.14910-1-phh@phh.me>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pierre-Hugues Husson <phh@phh.me>
 List-Id: devicetree@vger.kernel.org
 
-The Ricoh RN5T567 is from the same family as the Ricoh RN5T618 is,
-the differences are:
+Extend the driver to support Ricoh RC5T619.
+Support the additional regulators and slightly different voltage ranges.
 
-+ DCDC4/DCDC5
-+ LDO7-10
-+ Slightly different output voltage/currents
-+ 32kHz Output
-+ RTC
-+ USB Charger detection
-
-Signed-off-by: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
+Signed-off-by: Pierre-Hugues Husson <phh@phh.me>
 ---
- Documentation/devicetree/bindings/mfd/rn5t618.txt | 16 ++++++++++------
- drivers/mfd/Kconfig                               |  3 ++-
- drivers/mfd/rn5t618.c                             |  1 +
- include/linux/mfd/rn5t618.h                       |  9 +++++++++
- 4 files changed, 22 insertions(+), 7 deletions(-)
+ drivers/regulator/Kconfig             |  4 ++--
+ drivers/regulator/rn5t618-regulator.c | 35 +++++++++++++++++++++++++++++++----
+ include/linux/mfd/rn5t618.h           |  6 ++++++
+ 3 files changed, 39 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rn5t618.txt b/Documentation/devicetree/bindings/mfd/rn5t618.txt
-index 9e6770b..65c2326 100644
---- a/Documentation/devicetree/bindings/mfd/rn5t618.txt
-+++ b/Documentation/devicetree/bindings/mfd/rn5t618.txt
-@@ -1,21 +1,25 @@
- * Ricoh RN5T567/RN5T618 PMIC
- 
--Ricoh RN5T567/RN5T618 is a power management IC family which integrates
--3 to 4 step-down DCDC converters, 7 low-dropout regulators, GPIOs and
--a watchdog timer. The RN5T618 provides additionally a Li-ion battery
--charger, fuel gauge and an ADC. It can be controlled through an I2C
--interface.
-+Ricoh RN5T567/RN5T618/RC5T619 is a power management IC family which
-+integrates 3 to 5 step-down DCDC converters, 7 to 10 low-dropout regulators,
-+GPIOs, and a watchdog timer. It can be controlled through an I2C interface.
-+The RN5T618/RC5T619 provides additionally a Li-ion battery charger,
-+fuel gauge, and an ADC.
-+The RC5T619 additionnally includes USB charger detection and an RTC.
- 
- Required properties:
-  - compatible: must be one of
- 		"ricoh,rn5t567"
- 		"ricoh,rn5t618"
-+		"ricoh,rc5t619"
-  - reg: the I2C slave address of the device
- 
- Sub-nodes:
-  - regulators: the node is required if the regulator functionality is
-    needed. The valid regulator names are: DCDC1, DCDC2, DCDC3, DCDC4
--   (RN5T567), LDO1, LDO2, LDO3, LDO4, LDO5, LDORTC1 and LDORTC2.
-+   (RN5T567/RC5T619), LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7, LDO8,
-+   LDO9, LDO10, LDORTC1 and LDORTC2.
-+   LDO7-10 are specific to RC5T619.
-    The common bindings for each individual regulator can be found in:
-    Documentation/devicetree/bindings/regulator/regulator.txt
- 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index c6df644..65d0a65 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -881,7 +881,8 @@ config MFD_RN5T618
- 	select MFD_CORE
- 	select REGMAP_I2C
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 936f7cc..7b48b1a 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -656,8 +656,8 @@ config REGULATOR_RN5T618
+ 	tristate "Ricoh RN5T567/618 voltage regulators"
+ 	depends on MFD_RN5T618
  	help
--	  Say yes here to add support for the Ricoh RN5T567 or R5T618 PMIC.
-+	  Say yes here to add support for the Ricoh RN5T567,
-+          RN5T618, RC5T619 PMIC.
- 	  This driver provides common support for accessing the device,
- 	  additional drivers must be enabled in order to use the
- 	  functionality of the device.
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 9d377d6..0b5a2a1 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -87,6 +87,7 @@ static int rn5t618_restart(struct notifier_block *this,
- static const struct of_device_id rn5t618_of_match[] = {
- 	{ .compatible = "ricoh,rn5t567", .data = (void *)RN5T567 },
- 	{ .compatible = "ricoh,rn5t618", .data = (void *)RN5T618 },
-+	{ .compatible = "ricoh,rc5t619", .data = (void *)RC5T619 },
- 	{ }
+-	  Say y here to support the regulators found on Ricoh RN5T567 or
+-	  RN5T618 PMIC.
++	  Say y here to support the regulators found on Ricoh RN5T567,
++	  RN5T618 or RC5T619 PMIC.
+ 
+ config REGULATOR_RT5033
+ 	tristate "Richtek RT5033 Regulators"
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index 9c930eb..e7bc15b 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -79,6 +79,29 @@ static struct regulator_desc rn5t618_regulators[] = {
+ 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
  };
- MODULE_DEVICE_TABLE(of, rn5t618_of_match);
+ 
++static struct regulator_desc rc5t619_regulators[] = {
++	/* DCDC */
++	REG(DCDC1, DC1CTL, BIT(0), DC1DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC2, DC2CTL, BIT(0), DC2DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC3, DC3CTL, BIT(0), DC3DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC4, DC4CTL, BIT(0), DC4DAC, 0xff, 600000, 3500000, 12500),
++	REG(DCDC5, DC5CTL, BIT(0), DC5DAC, 0xff, 600000, 3500000, 12500),
++	/* LDO */
++	REG(LDO1, LDOEN1, BIT(0), LDO1DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO2, LDOEN1, BIT(1), LDO2DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO3, LDOEN1, BIT(2), LDO3DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO4, LDOEN1, BIT(3), LDO4DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO5, LDOEN1, BIT(4), LDO5DAC, 0x7f, 600000, 3500000, 25000),
++	REG(LDO6, LDOEN1, BIT(5), LDO6DAC, 0x7f, 600000, 3500000, 25000),
++	REG(LDO7, LDOEN1, BIT(6), LDO7DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO8, LDOEN1, BIT(7), LDO8DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO9, LDOEN2, BIT(0), LDO9DAC, 0x7f, 900000, 3500000, 25000),
++	REG(LDO10, LDOEN2, BIT(0), LDO10DAC, 0x7f, 900000, 3500000, 25000),
++	/* LDO RTC */
++	REG(LDORTC1, LDOEN2, BIT(4), LDORTCDAC, 0x7f, 1700000, 3500000, 25000),
++	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
++};
++
+ static int rn5t618_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
+@@ -86,13 +109,20 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
+ 	struct regulator_dev *rdev;
+ 	struct regulator_desc *regulators;
+ 	int i;
++	int num_regulators = 0;
+ 
+ 	switch (rn5t618->variant) {
+ 	case RN5T567:
+ 		regulators = rn5t567_regulators;
++		num_regulators = ARRAY_SIZE(rn5t567_regulators);
+ 		break;
+ 	case RN5T618:
+ 		regulators = rn5t618_regulators;
++		num_regulators = ARRAY_SIZE(rn5t618_regulators);
++		break;
++	case RC5T619:
++		regulators = rc5t619_regulators;
++		num_regulators = ARRAY_SIZE(rc5t619_regulators);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -101,10 +131,7 @@ static int rn5t618_regulator_probe(struct platform_device *pdev)
+ 	config.dev = pdev->dev.parent;
+ 	config.regmap = rn5t618->regmap;
+ 
+-	for (i = 0; i < RN5T618_REG_NUM; i++) {
+-		if (!regulators[i].name)
+-			continue;
+-
++	for (i = 0; i < num_regulators; i++) {
+ 		rdev = devm_regulator_register(&pdev->dev,
+ 					       &regulators[i],
+ 					       &config);
 diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index cadc654..e5a6cde 100644
+index e5a6cde..d61bc58 100644
 --- a/include/linux/mfd/rn5t618.h
 +++ b/include/linux/mfd/rn5t618.h
-@@ -58,10 +58,13 @@
- #define RN5T618_DC3CTL2			0x31
- #define RN5T618_DC4CTL			0x32
- #define RN5T618_DC4CTL2			0x33
-+#define RN5T618_DC5CTL			0x34
-+#define RN5T618_DC5CTL2			0x35
- #define RN5T618_DC1DAC			0x36
- #define RN5T618_DC2DAC			0x37
- #define RN5T618_DC3DAC			0x38
- #define RN5T618_DC4DAC			0x39
-+#define RN5T618_DC5DAC			0x3a
- #define RN5T618_DC1DAC_SLP		0x3b
- #define RN5T618_DC2DAC_SLP		0x3c
- #define RN5T618_DC3DAC_SLP		0x3d
-@@ -77,6 +80,11 @@
- #define RN5T618_LDO3DAC			0x4e
- #define RN5T618_LDO4DAC			0x4f
- #define RN5T618_LDO5DAC			0x50
-+#define RN5T618_LDO6DAC			0x51
-+#define RN5T618_LDO7DAC			0x52
-+#define RN5T618_LDO8DAC			0x53
-+#define RN5T618_LDO9DAC			0x54
-+#define RN5T618_LDO10DAC		0x55
- #define RN5T618_LDORTCDAC		0x56
- #define RN5T618_LDORTC2DAC		0x57
- #define RN5T618_LDO1DAC_SLP		0x58
-@@ -231,6 +239,7 @@ enum {
- enum {
- 	RN5T567 = 0,
- 	RN5T618,
-+	RC5T619,
- };
- 
- struct rn5t618 {
+@@ -226,11 +226,17 @@ enum {
+ 	RN5T618_DCDC2,
+ 	RN5T618_DCDC3,
+ 	RN5T618_DCDC4,
++	RN5T618_DCDC5,
+ 	RN5T618_LDO1,
+ 	RN5T618_LDO2,
+ 	RN5T618_LDO3,
+ 	RN5T618_LDO4,
+ 	RN5T618_LDO5,
++	RN5T618_LDO6,
++	RN5T618_LDO7,
++	RN5T618_LDO8,
++	RN5T618_LDO9,
++	RN5T618_LDO10,
+ 	RN5T618_LDORTC1,
+ 	RN5T618_LDORTC2,
+ 	RN5T618_REG_NUM,
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
