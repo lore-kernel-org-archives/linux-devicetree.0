@@ -1,61 +1,56 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] drivers: gpio: Add support for multiple IPs
-Date: Sat, 5 Nov 2016 09:23:05 +0100
-Message-ID: <CACRpkdac_UgM=xeXkSZ+rOvZvutt40USjCoEt5-SoFkqspuExw@mail.gmail.com>
-References: <1476855239-32730-1-git-send-email-j-keerthy@ti.com>
- <1476855239-32730-3-git-send-email-j-keerthy@ti.com> <CACRpkdbsgM-yiWpiA5G35jQR8v3FO=Me+4rhe6TzE0qsWOJ8Ew@mail.gmail.com>
- <c5c95d86-2c89-3819-725c-ee0b86c37ec0@ti.com> <98447580-cbc4-152e-f2cb-7c4756545479@ti.com>
- <c047fb27-a8bb-c10d-2b16-a3e6bf45d88f@ti.com> <CACRpkdZmuc__QL6b7Jvb8xL5Bm+PD2X60NtiugrnH7iAO=-tLQ@mail.gmail.com>
- <b92f729b-5897-c29a-31ec-97510776d85d@ti.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6sx-sdb: update TX D_CAL for USBPHY
+Date: Sat, 5 Nov 2016 16:31:46 +0800
+Message-ID: <20161105083145.GF5597@dragon>
+References: <1477882709-2518-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b92f729b-5897-c29a-31ec-97510776d85d-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1477882709-2518-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 4, 2016 at 8:59 PM, Grygorii Strashko
-<grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
-> On 11/04/2016 09:28 AM, Linus Walleij wrote:
+On Mon, Oct 31, 2016 at 10:58:28AM +0800, Peter Chen wrote:
+> We need to change trimming value (as a percentage) of the 17.78mA TX
+> reference current for better signal quality. With this change, we
+> can patch the eye-diagram test on this board.
 
->> The DT model sort of mandates how the interrupts should be mapped
->> at this point, and as far as I can tell from the binding the example looks
->> like so:
->>
->> gpio: gpio@1e26000 {
->>         compatible = "ti,dm6441-gpio";
->>         gpio-controller;
->>         #gpio-cells = <2>;
->>         reg = <0x226000 0x1000>;
->>         interrupt-parent = <&intc>;
->>         interrupts = <42 IRQ_TYPE_EDGE_BOTH 43 IRQ_TYPE_EDGE_BOTH
->>                 44 IRQ_TYPE_EDGE_BOTH 45 IRQ_TYPE_EDGE_BOTH
->>                 46 IRQ_TYPE_EDGE_BOTH 47 IRQ_TYPE_EDGE_BOTH
->>                 48 IRQ_TYPE_EDGE_BOTH 49 IRQ_TYPE_EDGE_BOTH
->>                 50 IRQ_TYPE_EDGE_BOTH>;
->>         ti,ngpio = <144>;
->>         ti,davinci-gpio-unbanked = <0>;
->>         interrupt-controller;
->>         #interrupt-cells = <2>;
->> };
->
-> Above, DT bindings models Davinci GPIO IP as monolithic GPIO controller
-> with N gpio pins, but internally separate GPIO chips are created for each
-> banksX&Y register set (32 pins, 2 banked irq -or- 32 direct irqs).
+s/patch/pass?  I just want to confirm this is a typo, and can fix it up
+when applying.
 
-Hm it would be good to get away from that and just have one big gpio
-chip.
+Shawn
 
-> Translation from linear GPIO numbering to the proper internal GPIO chip is done
-> using chip.of_xlate().
-
-Yeah :/ this could be made simpler with a single chip just spanning all
-the banks and the common registers I think.
-
-Yours,
-Linus Walleij
+> 
+> Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sx-sdb.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> index 85f56a5..4933c56 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> @@ -317,6 +317,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&usbphy1 {
+> +	fsl,tx-d-cal = <106>;
+> +};
+> +
+> +&usbphy2 {
+> +	fsl,tx-d-cal = <106>;
+> +};
+> +
+>  &usdhc2 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc2>;
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
