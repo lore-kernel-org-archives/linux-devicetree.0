@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 10/19] ARM: dts: armada-xp: Fixup pcie DT warnings
-Date: Sun,  6 Nov 2016 23:27:03 +0100
-Message-ID: <20161106222712.27366-11-gregory.clement@free-electrons.com>
+Subject: [PATCH 16/19] ARM: dts: armada-370-xp: Fixup memory DT warning
+Date: Sun,  6 Nov 2016 23:27:09 +0100
+Message-ID: <20161106222712.27366-17-gregory.clement@free-electrons.com>
 References: <20161106222712.27366-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161106222712.27366-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,575 +10,264 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PCIe has a range property, so the unit name should contain an address.
-Take the opportunity to use the node label instead of the full name.
+memory has a reg property so the unit name should contain an address.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 44 ++++++++--------
- arch/arm/boot/dts/armada-xp-db.dts               | 66 ++++++++++++------------
- arch/arm/boot/dts/armada-xp-gp.dts               | 42 +++++++--------
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  | 31 ++++++-----
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts    | 44 ++++++++--------
- arch/arm/boot/dts/armada-xp-matrix.dts           | 18 +++----
- arch/arm/boot/dts/armada-xp-mv78230.dtsi         |  2 +-
- arch/arm/boot/dts/armada-xp-mv78260.dtsi         |  2 +-
- arch/arm/boot/dts/armada-xp-mv78460.dtsi         |  2 +-
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 44 ++++++++--------
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 18 +++----
- arch/arm/boot/dts/armada-xp-synology-ds414.dts   | 45 ++++++++--------
- 12 files changed, 179 insertions(+), 179 deletions(-)
+ arch/arm/boot/dts/armada-370-db.dts                      | 2 +-
+ arch/arm/boot/dts/armada-370-dlink-dns327l.dts           | 2 +-
+ arch/arm/boot/dts/armada-370-mirabox.dts                 | 2 +-
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts           | 2 +-
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts           | 2 +-
+ arch/arm/boot/dts/armada-370-rd.dts                      | 2 +-
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi       | 2 +-
+ arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi | 2 +-
+ arch/arm/boot/dts/armada-370-synology-ds213j.dts         | 2 +-
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts                | 2 +-
+ arch/arm/boot/dts/armada-xp-db.dts                       | 2 +-
+ arch/arm/boot/dts/armada-xp-gp.dts                       | 2 +-
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts          | 2 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts            | 2 +-
+ arch/arm/boot/dts/armada-xp-matrix.dts                   | 2 +-
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts           | 2 +-
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts         | 2 +-
+ arch/arm/boot/dts/armada-xp-synology-ds414.dts           | 2 +-
+ 18 files changed, 18 insertions(+), 18 deletions(-)
 
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index 6cfd827272bb..4e081723cc25 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -67,7 +67,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x40000000>; /* 1 GB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+index 42d2b1077d42..ec154f170ac7 100644
+--- a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
++++ b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
+@@ -62,7 +62,7 @@
+ 		stdout-path = &uart0;
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MiB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index e2880bed9339..f01e332deb70 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -54,7 +54,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+index 39c00013ac61..273db24d57b7 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+@@ -56,7 +56,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+index 741a9be59a8a..c12e8ab9e037 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+@@ -56,7 +56,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index cb016f43789e..8223e0aefac8 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -67,7 +67,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+index 58a9455e978e..15d6aee02e17 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+@@ -23,7 +23,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+index 7c0252a830a2..f77a08ebe7b6 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+@@ -24,7 +24,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
+diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
+index 4e71a3524ed4..2cf02f286391 100644
+--- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
++++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
+@@ -70,7 +70,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-index 7038c8625ac5..d12b06bf0d60 100644
+index aa9974e3e72d..4c199ef539c1 100644
 --- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
 +++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-@@ -73,28 +73,6 @@
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* First mini-PCIe port */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Second mini-PCIe port */
--			pcie@2,0 {
--				/* Port 0, Lane 1 */
--				status = "okay";
--			};
--
--			/* Renesas uPD720202 USB 3.0 controller */
--			pcie@3,0 {
--				/* Port 0, Lane 3 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			/* UART0 */
- 			serial@12000 {
-@@ -153,6 +131,28 @@
+@@ -62,7 +62,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/* First mini-PCIe port */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Second mini-PCIe port */
-+	pcie@2,0 {
-+		/* Port 0, Lane 1 */
-+		status = "okay";
-+	};
-+
-+	/* Renesas uPD720202 USB 3.0 controller */
-+	pcie@3,0 {
-+		/* Port 0, Lane 3 */
-+		status = "okay";
-+	};
-+};
-+
- &pinctrl {
- 	pinctrl-0 = <&phy_int_pin>;
- 	pinctrl-names = "default";
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x00000000 0x00000000 0x40000000>; /* 1GB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index 486caf887da4..607ce1f2ddd6 100644
+index 697784557931..3f8807a60b04 100644
 --- a/arch/arm/boot/dts/armada-xp-db.dts
 +++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -80,39 +80,6 @@
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
- 			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/*
--			 * All 6 slots are physically present as
--			 * standard PCIe slots on the board.
--			 */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--			pcie@2,0 {
--				/* Port 0, Lane 1 */
--				status = "okay";
--			};
--			pcie@3,0 {
--				/* Port 0, Lane 2 */
--				status = "okay";
--			};
--			pcie@4,0 {
--				/* Port 0, Lane 3 */
--				status = "okay";
--			};
--			pcie@9,0 {
--				/* Port 2, Lane 0 */
--				status = "okay";
--			};
--			pcie@10,0 {
--				/* Port 3, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -244,6 +211,39 @@
+@@ -67,7 +67,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/*
-+	 * All 6 slots are physically present as
-+	 * standard PCIe slots on the board.
-+	 */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+	pcie@2,0 {
-+		/* Port 0, Lane 1 */
-+		status = "okay";
-+	};
-+	pcie@3,0 {
-+		/* Port 0, Lane 2 */
-+		status = "okay";
-+	};
-+	pcie@4,0 {
-+		/* Port 0, Lane 3 */
-+		status = "okay";
-+	};
-+	pcie@9,0 {
-+		/* Port 2, Lane 0 */
-+		status = "okay";
-+	};
-+	pcie@10,0 {
-+		/* Port 3, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &bm_bppi {
- 	status = "okay";
- };
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0 0x00000000 0 0x80000000>; /* 2 GB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 65d960defff3..015b8ab722a5 100644
+index 3fcae0e47d9c..39235d5d055a 100644
 --- a/arch/arm/boot/dts/armada-xp-gp.dts
 +++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -99,27 +99,6 @@
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
- 			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/*
--			 * The 3 slots are physically present as
--			 * standard PCIe slots on the board.
--			 */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--			pcie@9,0 {
--				/* Port 2, Lane 0 */
--				status = "okay";
--			};
--			pcie@10,0 {
--				/* Port 3, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -229,6 +208,27 @@
+@@ -68,7 +68,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/*
-+	 * The 3 slots are physically present as
-+	 * standard PCIe slots on the board.
-+	 */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+	pcie@9,0 {
-+		/* Port 2, Lane 0 */
-+		status = "okay";
-+	};
-+	pcie@10,0 {
-+		/* Port 3, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &bm_bppi {
- 	status = "okay";
- };
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		/*
+                  * 8 GB of plug-in RAM modules by default.The amount
 diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index 0a6a43692620..1dce74d9b616 100644
+index 33dcb56486f1..085f6362305a 100644
 --- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
 +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -68,22 +68,6 @@
- 			MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Quad port sata: Marvell 88SX7042 */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* USB 3.0 xHCI controller: NEC D720200F1 */
--			pcie@5,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -285,6 +269,21 @@
- 		gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+@@ -57,7 +57,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
-+&pciec {
-+	status = "okay";
-+
-+	/* Quad port sata: Marvell 88SX7042 */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* USB 3.0 xHCI controller: NEC D720200F1 */
-+	pcie@5,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
  
- &mdio {
- 	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0 0x00000000 0 0x20000000>; /* 512MB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index 076f27f22c3b..488a047481d4 100644
+index ce86ceab9289..fa1a84b20268 100644
 --- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
 +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -73,28 +73,6 @@
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Etron EJ168 USB 3.0 controller */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* First mini-PCIe port */
--			pcie@2,0 {
--				/* Port 0, Lane 1 */
--				status = "okay";
--			};
--
--			/* Second mini-PCIe port */
--			pcie@3,0 {
--				/* Port 0, Lane 3 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 
- 			rtc@10300 {
-@@ -369,6 +347,28 @@
+@@ -62,7 +62,7 @@
+ 		stdout-path = &uart0;
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/* Etron EJ168 USB 3.0 controller */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* First mini-PCIe port */
-+	pcie@2,0 {
-+		/* Port 0, Lane 1 */
-+		status = "okay";
-+	};
-+
-+	/* Second mini-PCIe port */
-+	pcie@3,0 {
-+		/* Port 0, Lane 3 */
-+		status = "okay";
-+	};
-+};
-+
- &pinctrl {
- 
- 	keys_pin: keys-pin {
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-matrix.dts b/arch/arm/boot/dts/armada-xp-matrix.dts
-index e1509f4c5114..8b5a4e79d26b 100644
+index e202890780c2..1edbf8bcb787 100644
 --- a/arch/arm/boot/dts/armada-xp-matrix.dts
 +++ b/arch/arm/boot/dts/armada-xp-matrix.dts
-@@ -71,15 +71,6 @@
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -114,3 +105,12 @@
- 		};
+@@ -55,7 +55,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
-+
-+&pciec {
-+	status = "okay";
-+
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-index ebf79d6de1a1..05c164b5786d 100644
---- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-@@ -86,7 +86,7 @@
- 		 * configured as x4 or quad x1 lanes. One unit is
- 		 * x1 only.
- 		 */
--		pciec: pcie-controller {
-+		pciec: pcie-controller@82000000 {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-index 34e78a568460..07894b0d3e59 100644
---- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-@@ -87,7 +87,7 @@
- 		 * configured as x4 or quad x1 lanes. One unit is
- 		 * x4 only.
- 		 */
--		pciec: pcie-controller {
-+		pciec: pcie-controller@82000000 {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-index 5148827ed934..775bee53ce86 100644
---- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-@@ -104,7 +104,7 @@
- 		 * configured as x4 or quad x1 lanes. Two units are
- 		 * x4/x1.
- 		 */
--		pciec: pcie-controller {
-+		pciec: pcie-controller@82000000 {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
+ 
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		/*
+ 		 * This board has 4 GB of RAM, but the last 256 MB of
 diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index c4685cb86f06..5aaaf0fb2330 100644
+index df7e196bbc37..cdab131cb7c2 100644
 --- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 +++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -67,28 +67,6 @@
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Connected to first Marvell 88SE9170 SATA controller */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Connected to second Marvell 88SE9170 SATA controller */
--			pcie@2,0 {
--				/* Port 0, Lane 1 */
--				status = "okay";
--			};
--
--			/* Connected to Fresco Logic FL1009 USB 3.0 controller */
--			pcie@5,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 
- 			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-@@ -290,6 +268,28 @@
+@@ -56,7 +56,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/* Connected to first Marvell 88SE9170 SATA controller */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Connected to second Marvell 88SE9170 SATA controller */
-+	pcie@2,0 {
-+		/* Port 0, Lane 1 */
-+		status = "okay";
-+	};
-+
-+	/* Connected to Fresco Logic FL1009 USB 3.0 controller */
-+	pcie@5,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
- 		reg = <0>;
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 7cd2d74e0161..e40f3314b699 100644
+index 3d1c533605ce..cf7b6759baf1 100644
 --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
 +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -70,15 +70,6 @@
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
- 			  MBUS_ID(0x0c, 0x04) 0 0 0xd1200000 0x100000>;
+@@ -57,7 +57,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
--		pcie-controller {
--			status = "okay";
--			/* Internal mini-PCIe connector */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			rtc@10300 {
- 				/* No crystal connected to the internal RTC */
-@@ -222,6 +213,15 @@
- 	status = "okay";
- };
- 
-+&pciec {
-+	status = "okay";
-+	/* Internal mini-PCIe connector */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	phy0: ethernet-phy@0 {
- 		reg = <0>;
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0 0x00000000 0 0x40000000>; /* 1 GB soldered on */
+ 	};
 diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-index 189ec7f4667c..d5630a7b4b18 100644
+index 43e501f2c307..91cd30946d91 100644
 --- a/arch/arm/boot/dts/armada-xp-synology-ds414.dts
 +++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -81,28 +81,6 @@
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
- 			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/*
--			 * Connected to Marvell 88SX7042 SATA-II controller
--			 * handling the four disks.
--			 */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/*
--			 * Connected to EtronTech EJ168A XHCI controller
--			 * providing the two rear USB 3.0 ports.
--			 */
--			pcie@5,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 
- 			/* RTC is provided by Seiko S-35390A below */
-@@ -230,6 +208,29 @@
+@@ -70,7 +70,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+&pciec {
-+	status = "okay";
-+
-+	/*
-+	 * Connected to Marvell 88SX7042 SATA-II controller
-+	 * handling the four disks.
-+	 */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/*
-+	 * Connected to EtronTech EJ168A XHCI controller
-+	 * providing the two rear USB 3.0 ports.
-+	 */
-+	pcie@5,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
-+
- &mdio {
- 	phy0: ethernet-phy@0 { /* Marvell 88E1512 */
- 		reg = <0>;
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0 0x00000000 0 0x40000000>; /* 1GB */
+ 	};
 -- 
 2.10.1
 
