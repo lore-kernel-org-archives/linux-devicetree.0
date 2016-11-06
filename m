@@ -1,51 +1,28 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Issue with dt_to_config with dts files that include headers from dt-bindings
-Date: Sat, 5 Nov 2016 19:01:27 -0600
-Message-ID: <CA+rpMbKmufA9O-n1o4JJpOFR+56pSL6hQy4OJmOqcB7hvixLzw@mail.gmail.com>
-References: <CALeDE9NVuztzMe8iO+OhOrwg3YxCr9VbEwh24-3MLK+5U82fYg@mail.gmail.com>
- <CA+rpMbK=T+Z=-pML4RHLJpLziy-UuANpUcgKNbq06tMNrdAPKw@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Date: Sun, 6 Nov 2016 11:19:37 +0100
+Message-ID: <20161106101937.GA9617@lunn.ch>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+ <20161105210441.GB1216@lunn.ch>
+ <20161105220848.k6rrjmvvhdaeduma@perseus.defre.kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbK=T+Z=-pML4RHLJpLziy-UuANpUcgKNbq06tMNrdAPKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161105220848.k6rrjmvvhdaeduma-jgopVnDzZD+b0XQX99//ntPVjbGH4+40kFgPdswSElo@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Strba??ka <martin.strbacka-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 5, 2016 at 2:56 PM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Nov 4, 2016 1:19 PM, "Peter Robinson" <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> Hi Gaurav, Rob and Frank,
->>
->> I've just discovered the dt_to_config script (awesome thanks!) but it
->> errors out when a dts(i) includes a header file from dt-bindings. EG
->>
->> ./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts
->> In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:
->> arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which
->> to search for dt-bindings/gpio/gpio.h
->>  #include <dt-bindings/gpio/gpio.h>
->>                                    ^
->> arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which
->> to search for dt-bindings/pinctrl/am33xx.h
->>  #include <dt-bindings/pinctrl/am33xx.h>
->>                                         ^
->> arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path
->> in which to search for dt-bindings/display/tda998x.h
->>  #include <dt-bindings/display/tda998x.h>
->>                                          ^
->> Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error
->> FATAL ERROR: Unable to parse input tree
->>
->
-> In bash do, export ARCH=arm
->
-> Works for me!
->
->>
->> Regards,
->> Peter
+> Will do for v2. arch/arm/boot/dts/keystone-* needs fixing in this
+> regard, too.
+
+There is a whitelist of compatible strings which are ignored, for
+backwards compatibility. See of_mdiobus_child_is_phy(). It would be
+nice to fix keystone, but it is not required.
+
+     Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
