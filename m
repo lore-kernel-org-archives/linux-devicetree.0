@@ -1,102 +1,78 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [RFC PATCH] ARM: dts: add panel and tcon nodes to
- Allwinner A33 Q8 tablet dts
-Date: Sun,  6 Nov 2016 19:11:19 +0800
-Message-ID: <20161106111119.14927-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
+Subject: Re: [REGRESSION] "console: don't prefer first registered if DT
+ specifies stdout-path" breaks console on video outputs of various ARM boards
+Date: Sun, 6 Nov 2016 13:13:11 +0100
+Message-ID: <3e36340a-299d-5151-a83e-ea1f337111d7@leemhuis.info>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBC5A7TAAKGQELPS37MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161104121135.4780-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-All A33 Q8 tablets features a LCD panel, with a resolution of either
-800x480 or 1024x600.
+JFYI: I added below report to the list of regressions for Linux 4.9.
+I'll watch this thread for further updates on this issue to document
+progress in my weekly reports. Please let me know via
+regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org in case the discussion moves to a different
+place (bugzilla or another mail thread for example).
 
-Add "bone" device nodes to the device tree.
+Current status (afaics): Revert discussed
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
+tia! Ciao, Thorsten
 
-Maybe it will be better to add them to sun8i-q8-reference-tablet.dtsi, as
-these pin configurations are part of reference design of both A23 and A33,
-not only restricted to Q8.
+P.S.: Thx for CCing me!
 
-The DTS file is tested by me, after cherry-picks this patch from Chen-Yu Tsai:
-https://github.com/wens/linux/commit/2823b887a289fbee5f97f3c6b45ed6c74a6368c6
-
-And add these commands to my U-Boot boot command:
-
-fdt addr 0x43000000
-fdt resize
-fdt set /panel compatible "urt,umsh-8596md-t"
-fdt set /panel status "okay"
-fdt set /display-engine status "okay"
-fdt set /soc@01c00000/lcd-controller@01c0c000 status "okay"
-
- arch/arm/boot/dts/sun8i-a33-q8-tablet.dts | 44 +++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-index b0bc236..871a20c 100644
---- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
-@@ -47,4 +47,48 @@
- / {
- 	model = "Q8 A33 Tablet";
- 	compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
-+
-+	panel: panel {
-+		/* compatible should be set according to the panel */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_en_q8>;
-+		backlight = <&backlight>;
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+		power-supply = <&reg_dc1sw>;
-+		status = "disabled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			panel_input: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_out_lcd>;
-+			};
-+		};
-+	};
-+};
-+
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+};
-+
-+&tcon0_out {
-+	tcon0_out_lcd: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
-+&pio {
-+	lcd_en_q8: lcd_en@0 {
-+		allwinner,pins = "PH7";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
--- 
-2.10.1
+On 04.11.2016 13:11, Hans de Goede wrote:
+> Hi All,
+> 
+> While booting 4.9-rc# for the first time on an Allwinner A33 tablet,
+> I noticed that after u-boot the LCD display stayed black. It turns out
+> that there was an issue which caused X to never get up, and all kernel
+> (and other startup) messages prior to that only went to ttyS0 which
+> consists of 2 tiny testpads on the PCB with this tablet.
+> 
+> The same issue will also happen on any ARM boards which have a HDMI or
+> composite video output and which use a stdout-path pointing to their
+> serial console. I think this will e.g. also impact the Raspberry Pi,
+> I know for certain that this will impact the 99 different Allwinnner
+> boards currently supported by mainline u-boot + the mainline kernel.
+> 
+> This is a behavior changes from previous kernels and I consider this
+> a regression. Thus I propose to revert the commit in question, for more
+> info here is a partial copy of the commit message of the proposed revert:
+> 
+> The reverted commit changes existing behavior on which many ARM boards
+> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+> both a video output and a serial console. Depending on whether the user
+> is using the device as a more regular computer; or as a headless device
+> we need to have the console on either one or the other.
+> 
+> Many users rely on the kernel behavior of the console being present on
+> both outputs, before the reverted commit the console setup with no
+> console= kernel arguments on an ARM board which sets stdout-path in dt
+> would look like this:
+> 
+> [root@localhost ~]# cat /proc/consoles
+> ttyS0                -W- (EC p a)    4:64
+> tty0                 -WU (E  p  )    4:1
+> 
+> Where as after the reverted commit, it looks like this:
+> 
+> [root@localhost ~]# cat /proc/consoles
+> ttyS0                -W- (EC p a)    4:64
+> 
+> This commit reverts commit 05fd007e4629 ("console: don't prefer first
+> registered if DT specifies stdout-path") restoring the original behavior.
+> 
+> Regards,
+> 
+> Hans
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
