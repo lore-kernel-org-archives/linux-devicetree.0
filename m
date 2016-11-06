@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 16/19] ARM: dts: armada-370-xp: Fixup memory DT warning
-Date: Sun,  6 Nov 2016 23:27:09 +0100
-Message-ID: <20161106222712.27366-17-gregory.clement@free-electrons.com>
+Subject: [PATCH 18/19] ARM: dts: armada-370-xp: Remove button address and fixup names
+Date: Sun,  6 Nov 2016 23:27:11 +0100
+Message-ID: <20161106222712.27366-19-gregory.clement@free-electrons.com>
 References: <20161106222712.27366-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161106222712.27366-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,264 +10,132 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-memory has a reg property so the unit name should contain an address.
+The gpio-key nodes do not have a reg property, so remove the address from
+the unit name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-db.dts                      | 2 +-
- arch/arm/boot/dts/armada-370-dlink-dns327l.dts           | 2 +-
- arch/arm/boot/dts/armada-370-mirabox.dts                 | 2 +-
- arch/arm/boot/dts/armada-370-netgear-rn102.dts           | 2 +-
- arch/arm/boot/dts/armada-370-netgear-rn104.dts           | 2 +-
  arch/arm/boot/dts/armada-370-rd.dts                      | 2 +-
- arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi       | 2 +-
- arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi | 2 +-
- arch/arm/boot/dts/armada-370-synology-ds213j.dts         | 2 +-
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi       | 6 +++---
+ arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi | 6 +++---
  arch/arm/boot/dts/armada-xp-axpwifiap.dts                | 2 +-
- arch/arm/boot/dts/armada-xp-db.dts                       | 2 +-
- arch/arm/boot/dts/armada-xp-gp.dts                       | 2 +-
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts          | 2 +-
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts            | 2 +-
- arch/arm/boot/dts/armada-xp-matrix.dts                   | 2 +-
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts           | 2 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts            | 4 ++--
  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts         | 2 +-
- arch/arm/boot/dts/armada-xp-synology-ds414.dts           | 2 +-
- 18 files changed, 18 insertions(+), 18 deletions(-)
+ 6 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index 6cfd827272bb..4e081723cc25 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -67,7 +67,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x40000000>; /* 1 GB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-index 42d2b1077d42..ec154f170ac7 100644
---- a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-+++ b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-@@ -62,7 +62,7 @@
- 		stdout-path = &uart0;
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MiB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index e2880bed9339..f01e332deb70 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -54,7 +54,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index 39c00013ac61..273db24d57b7 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -56,7 +56,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index 741a9be59a8a..c12e8ab9e037 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -56,7 +56,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
 diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index cb016f43789e..8223e0aefac8 100644
+index cff178004f59..4e9ad4b5bf94 100644
 --- a/arch/arm/boot/dts/armada-370-rd.dts
 +++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -67,7 +67,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
+@@ -122,7 +122,7 @@
+ 				compatible = "gpio-keys";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				button@1 {
++				button {
+ 					label = "Software Button";
+ 					linux,code = <KEY_POWER>;
+ 					gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-index 58a9455e978e..15d6aee02e17 100644
+index 15d6aee02e17..d0c749cf369c 100644
 --- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
 +++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-@@ -23,7 +23,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -141,19 +141,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
+-		button@1 {
++		power {
+ 			label = "Power button";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@2 {
++		backup {
+ 			label = "Backup button";
+ 			linux,code = <KEY_OPTION>;
+ 			gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@3 {
++		reset {
+ 			label = "Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-index 7c0252a830a2..f77a08ebe7b6 100644
+index f77a08ebe7b6..1937a0991179 100644
 --- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
 +++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-@@ -24,7 +24,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -89,19 +89,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-index 4e71a3524ed4..2cf02f286391 100644
---- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-+++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-@@ -70,7 +70,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x20000000>; /* 512 MB */
- 	};
+-		button@1 {
++		power {
+ 			label = "Power button";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@2 {
++		reset {
+ 			label = "Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@3 {
++		button {
+ 			label = "USB VBUS error";
+ 			linux,code = <KEY_UNKNOWN>;
+ 			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-index aa9974e3e72d..4c199ef539c1 100644
+index 4c199ef539c1..1b294b3814c5 100644
 --- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
 +++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-@@ -62,7 +62,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -113,7 +113,7 @@
+ 		pinctrl-0 = <&keys_pin>;
+ 		pinctrl-names = "default";
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x00000000 0x00000000 0x40000000>; /* 1GB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index 697784557931..3f8807a60b04 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -67,7 +67,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0 0x00000000 0 0x80000000>; /* 2 GB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 3fcae0e47d9c..39235d5d055a 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -68,7 +68,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		/*
-                  * 8 GB of plug-in RAM modules by default.The amount
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index 33dcb56486f1..085f6362305a 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -57,7 +57,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0 0x00000000 0 0x20000000>; /* 512MB */
- 	};
+-		button@1 {
++		reset {
+ 			label = "Factory Reset Button";
+ 			linux,code = <KEY_SETUP>;
+ 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index ce86ceab9289..fa1a84b20268 100644
+index fd16af578fa8..ee10e1aa9225 100644
 --- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
 +++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -62,7 +62,7 @@
- 		stdout-path = &uart0;
- 	};
+@@ -267,13 +267,13 @@
+ 		pinctrl-0 = <&keys_pin>;
+ 		pinctrl-names = "default";
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
- 	};
-diff --git a/arch/arm/boot/dts/armada-xp-matrix.dts b/arch/arm/boot/dts/armada-xp-matrix.dts
-index e202890780c2..1edbf8bcb787 100644
---- a/arch/arm/boot/dts/armada-xp-matrix.dts
-+++ b/arch/arm/boot/dts/armada-xp-matrix.dts
-@@ -55,7 +55,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+-		button@1 {
++		wps {
+ 			label = "WPS";
+ 			linux,code = <KEY_WPS_BUTTON>;
+ 			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+ 		};
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		/*
- 		 * This board has 4 GB of RAM, but the last 256 MB of
-diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index df7e196bbc37..cdab131cb7c2 100644
---- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -56,7 +56,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0 0x00000000 0 0x80000000>; /* 2GB */
- 	};
+-		button@2 {
++		reset {
+ 			label = "Factory Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
 diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 3d1c533605ce..cf7b6759baf1 100644
+index cf7b6759baf1..229ec4b2dae1 100644
 --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
 +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -57,7 +57,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -111,7 +111,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0 0x00000000 0 0x40000000>; /* 1 GB soldered on */
- 	};
-diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-index 43e501f2c307..91cd30946d91 100644
---- a/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-+++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -70,7 +70,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0 0x00000000 0 0x40000000>; /* 1GB */
- 	};
+-				button@1 {
++				init {
+ 					label = "Init Button";
+ 					linux,code = <KEY_POWER>;
+ 					gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
 -- 
 2.10.1
 
