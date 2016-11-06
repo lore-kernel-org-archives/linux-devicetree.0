@@ -1,75 +1,51 @@
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/3] Add clockevet for timer-nps driver to NPS400 SoC
-Date: Sun, 6 Nov 2016 19:44:55 +0200
-Message-ID: <1478454298-381-1-git-send-email-noamca@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 06/19] ARM: dts: armada-370-xp: Fixup bootrom DT warning
+Date: Sun,  6 Nov 2016 23:26:59 +0100
+Message-ID: <20161106222712.27366-7-gregory.clement@free-electrons.com>
+References: <20161106222712.27366-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161106222712.27366-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+bootrom has a reg property so the unit name should contain an address.
 
-Change log
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
-V3 --> V4
-Main changes are [Thanks for the review]:
-Fix many typos at log [Daniel]
-Add handling for bad return values [Daniel and Thomas]
-Replace use of internal irqchip pointers with existing IRQ API [Thomas]
-Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
-Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+ arch/arm/boot/dts/armada-370.dtsi | 2 +-
+ arch/arm/boot/dts/armada-xp.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-V2 --> V3
-Apply Rob Herring comment about backword compatibility
-
-V1 --> V2
-Apply Daniel Lezcano comments:
-	CLOCKSOURCE_OF_DECLARE return value
-	update hotplug callbacks usage
-	squash of 2 first commits.
-In this version I created new commit to serve as preperation for adding clockevents.
-This way the last patch is more readable with clockevent content.
----
-
-In first version of this driver we supported clocksource for the NPS400.
-The support for clockevent was taken from Synopsys ARC timer driver.
-This was good for working with our simulator of NPS400.
-However in NPS400 ASIC the timers behave differently than simulation.
-The timers in ASIC are shared between all threads whithin a core
-and hence need different driver to support this behaviour.
-
-The idea of this design is that we got 16 HW threads per core
-each represented at bimask in a shared register in this core.
-So when thread wants that next clockevent expiration will produce
-timer interrupt to itself the correspondance bit in this register
-should be set.
-So theoretically if all 16 bits are set then all HW threads will get
-timer interrupt on next expiration of timer 0.
-
-Note that we use Synopsys ARC design naming convention for the timers
-where:
-timer0 is used for clockevents
-timer1 is used for clocksource.
-
-Noam Camus (3):
-  soc: Support for NPS HW scheduling
-  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
-  clocksource: Add clockevent support to NPS400 driver
-
- .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
- .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
- .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
- arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
- drivers/clocksource/timer-nps.c                    |  264 ++++++++++++++++++--
- include/soc/nps/mtm.h                              |   59 +++++
- 6 files changed, 335 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
- create mode 100644 include/soc/nps/mtm.h
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 079494e52554..c376c2399d5c 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -65,7 +65,7 @@
+ 	soc {
+ 		compatible = "marvell,armada370-mbus", "simple-bus";
+ 
+-		bootrom {
++		bootrom@0 {
+ 			compatible = "marvell,bootrom";
+ 			reg = <MBUS_ID(0x01, 0xe0) 0 0x100000>;
+ 		};
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index bb8f7dcaf656..61f2880f1195 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -64,7 +64,7 @@
+ 	soc {
+ 		compatible = "marvell,armadaxp-mbus", "simple-bus";
+ 
+-		bootrom {
++		bootrom@0 {
+ 			compatible = "marvell,bootrom";
+ 			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
+ 		};
+-- 
+2.10.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
