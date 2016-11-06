@@ -1,151 +1,102 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [REGRESSION] "console: don't prefer first registered if DT
- specifies stdout-path" breaks console on video outputs of various ARM boards
-Date: Sun, 6 Nov 2016 11:54:35 +0100
-Message-ID: <cf275db8-6d2b-c891-9280-f141c6f10733@redhat.com>
-References: <20161104121135.4780-1-hdegoede@redhat.com>
- <17833033.PtOSTzKXGD@np-p-burton>
- <d3f0f1f4-d6f6-1e75-499c-789b82b5bb1b@redhat.com>
- <1573891.u0IFOelkNI@np-p-burton>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [RFC PATCH] ARM: dts: add panel and tcon nodes to
+ Allwinner A33 Q8 tablet dts
+Date: Sun,  6 Nov 2016 19:11:19 +0800
+Message-ID: <20161106111119.14927-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1573891.u0IFOelkNI@np-p-burton>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBC5A7TAAKGQELPS37MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+All A33 Q8 tablets features a LCD panel, with a resolution of either
+800x480 or 1024x600.
 
-On 05-11-16 11:40, Paul Burton wrote:
-> On Friday, 4 November 2016 14:22:17 GMT Hans de Goede wrote:
->> Hi,
->>
->> On 04-11-16 13:30, Paul Burton wrote:
->>> Hi Hans,
->>>
->>> On Friday, 4 November 2016 13:11:34 GMT Hans de Goede wrote:
->>>> Hi All,
->>>>
->>>> While booting 4.9-rc# for the first time on an Allwinner A33 tablet,
->>>> I noticed that after u-boot the LCD display stayed black. It turns out
->>>> that there was an issue which caused X to never get up, and all kernel
->>>> (and other startup) messages prior to that only went to ttyS0 which
->>>> consists of 2 tiny testpads on the PCB with this tablet.
->>>>
->>>> The same issue will also happen on any ARM boards which have a HDMI or
->>>> composite video output and which use a stdout-path pointing to their
->>>> serial console. I think this will e.g. also impact the Raspberry Pi,
->>>> I know for certain that this will impact the 99 different Allwinnner
->>>> boards currently supported by mainline u-boot + the mainline kernel.
->>>>
->>>> This is a behavior changes from previous kernels and I consider this
->>>> a regression. Thus I propose to revert the commit in question, for more
->>>> info here is a partial copy of the commit message of the proposed revert:
->>>>
->>>> The reverted commit changes existing behavior on which many ARM boards
->>>> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
->>>> both a video output and a serial console. Depending on whether the user
->>>> is using the device as a more regular computer; or as a headless device
->>>> we need to have the console on either one or the other.
->>>>
->>>> Many users rely on the kernel behavior of the console being present on
->>>> both outputs, before the reverted commit the console setup with no
->>>> console= kernel arguments on an ARM board which sets stdout-path in dt
->>>> would look like this:
->>>>
->>>> [root@localhost ~]# cat /proc/consoles
->>>> ttyS0                -W- (EC p a)    4:64
->>>> tty0                 -WU (E  p  )    4:1
->>>>
->>>> Where as after the reverted commit, it looks like this:
->>>>
->>>> [root@localhost ~]# cat /proc/consoles
->>>> ttyS0                -W- (EC p a)    4:64
->>>>
->>>> This commit reverts commit 05fd007e4629 ("console: don't prefer first
->>>> registered if DT specifies stdout-path") restoring the original behavior.
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>
->>> Ugh... so the devices you're talking about rely upon set stdout-path in
->>> their device tree but effectively rely upon us ignoring it?
->>
->> No they rely on the kernel using stdout-path as an extra console while
->> keeping tty0 as console, not ignoring it. This how stdout-path has always
->> worked (at least as long as the Allwinner boards have used it, which has
->> been 2 - 3 years now).
->>
->> If you want only the console specified by stdout-path you can get this by
->> specifying it with console=... on the kernel cmdline.
->>
->>> If that's the case then I guess reverting is probably the best option, but
->>> it does restore us to a position where we honor stdout-path for earlycon
->>> & then essentially ignore it for the proper kernel console. That seems
->>> pretty bust to me...
->>
->> We do not ignore it, we use both the tty pointed to by stdout-path and tty0.
->>
->> Regards,
->>
->> Hans
->
-> Hi Hans,
->
-> Could you walk me though how you're getting that behaviour from the current
-> code? I don't see how that would happen besides perhaps if drivers are probed
-> in a fortunate order. Is that what you're relying upon?
+Add "bone" device nodes to the device tree.
 
-I guess so, I never looked carefully at this, it has just always worked
-until your patch.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
 
-> What I see in my systems, and what 05fd007e4629 ("console: don't prefer first
-> registered if DT specifies stdout-path") addressed, is that if there are for
-> example 2 UARTs uart0 & uart1 that are probed in that order and stdout-path
-> indicates that we should use uart1 we wind up essentially ignoring it because
-> the ordering of the relevant calls goes:
->
->   - of_console_check() for uart0
->   - add_preferred_console() for uart0
->   - register_console() for uart0
->   - of_console_check() for uart1
->   - add_preferred_console() for uart1
->   - register_console() for uart1
->
-> Since of_check_console() doesn't get called for uart1 until after uart0 has
-> been probed, we don't add an entry for it to the console_cmdline array until
-> after register_console() has already decided to enable uart0 because
-> preferred_console == -1.
->
-> I'm not the only one seeing this oddity either, for example see the discussion
-> on this patch:
->
-> https://patchwork.kernel.org/patch/9263753/
->
-> By simply reverting my patch you restore us to a position where so far as I
-> can see we simply do not honor stdout-path for the real kernel console.
+Maybe it will be better to add them to sun8i-q8-reference-tablet.dtsi, as
+these pin configurations are part of reference design of both A23 and A33,
+not only restricted to Q8.
 
-As said before, we do still honor it, but in your probe example we also get
-a (second) serial console on uart0, where as you only want one on uart1.
+The DTS file is tested by me, after cherry-picks this patch from Chen-Yu Tsai:
+https://github.com/wens/linux/commit/2823b887a289fbee5f97f3c6b45ed6c74a6368c6
 
-So I see a few possible solutions here:
+And add these commands to my U-Boot boot command:
 
-1) Do a new version of your patch which changes the  "&& !of_specified_console"
-    check to "&& (newcon == tty0 || !of_specified_console)", then we would still
-    always register tty0 (as long as it gets registered first, just like now) and
-    we would not register uart0 in your above example, note the "newcon == tty0"
-    check in my example is pseudo-code. I would be happy to try out such a patch
+fdt addr 0x43000000
+fdt resize
+fdt set /panel compatible "urt,umsh-8596md-t"
+fdt set /panel status "okay"
+fdt set /display-engine status "okay"
+fdt set /soc@01c00000/lcd-controller@01c0c000 status "okay"
 
-2) Add a new dt property to enable the new behavior you seek
+ arch/arm/boot/dts/sun8i-a33-q8-tablet.dts | 44 +++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-I'm myself tending towards 1 as a better solution: treat tty0 special, because
-some existing setups rely on it always being registered as a console even if
-stdout-path is specified and otherwise always honor stdout-path.
-
-Regards,
-
-Hans
+diff --git a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+index b0bc236..871a20c 100644
+--- a/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
++++ b/arch/arm/boot/dts/sun8i-a33-q8-tablet.dts
+@@ -47,4 +47,48 @@
+ / {
+ 	model = "Q8 A33 Tablet";
+ 	compatible = "allwinner,q8-a33", "allwinner,sun8i-a33";
++
++	panel: panel {
++		/* compatible should be set according to the panel */
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_en_q8>;
++		backlight = <&backlight>;
++		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
++		power-supply = <&reg_dc1sw>;
++		status = "disabled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			panel_input: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&tcon0_out_lcd>;
++			};
++		};
++	};
++};
++
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++};
++
++&tcon0_out {
++	tcon0_out_lcd: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
++};
++
++&pio {
++	lcd_en_q8: lcd_en@0 {
++		allwinner,pins = "PH7";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
+ };
+-- 
+2.10.1
