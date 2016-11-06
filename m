@@ -1,110 +1,70 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: [PATCH v4 1/3] soc: Support for NPS HW scheduling
-Date: Sun, 6 Nov 2016 19:44:56 +0200
-Message-ID: <1478454298-381-2-git-send-email-noamca@mellanox.com>
-References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] ASoC: sunxi: Add sun8i I2S driver
+Date: Sun, 6 Nov 2016 19:02:48 +0100
+Message-ID: <20161106190248.48b59e166bcd9d6f0ebb4d04@free.fr>
+References: <cover.1477142934.git.moinejf@free.fr>
+	<bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
+	<CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478454298-381-1-git-send-email-noamca@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
-Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBTPA7XAAKGQEWKPDF7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca@mellanox.com>
+On Sun, 23 Oct 2016 09:33:16 +0800
+Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 
-This new header file is for NPS400 SoC (part of ARC architecture).
-The header file includes macros for save/restore of HW scheduling.
-The control of HW scheduling is achieved by writing core registers.
-This code was moved from arc/plat-eznps so it can be used
-from drivers/clocksource/, available only for CONFIG_EZNPS_MTM_EXT.
+> On Fri, Oct 21, 2016 at 4:36 PM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wr=
+ote:
+> > This patch adds I2S support to sun8i SoCs as the A83T and H3.
+> >
+> > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> > ---
+> > Note: This driver is closed to the sun4i-i2s except that:
+> > - it handles the H3
+>=20
+> If it's close to sun4i-i2s, you should probably rework that one to suppor=
+t
+> the newer SoCs.
 
-Signed-off-by: Noam Camus <noamca@mellanox.com>
----
- arch/arc/plat-eznps/include/plat/ctop.h |    2 -
- include/soc/nps/mtm.h                   |   59 +++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+), 2 deletions(-)
- create mode 100644 include/soc/nps/mtm.h
+I started to add the H3 into the sun4i-i2s, but I am blocked with
+regmap.
+Many H3 registers are common with the A10, but some of them have more
+or less fields, the fields may be at different offsets. And, finally,
+some registers are completely different.
+This would not raise any problem, except with regmap which is really
+painful.
 
-diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
-index 9d6718c..ee2e32d 100644
---- a/arch/arc/plat-eznps/include/plat/ctop.h
-+++ b/arch/arc/plat-eznps/include/plat/ctop.h
-@@ -46,9 +46,7 @@
- #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
- 
- /* EZchip core instructions */
--#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
- #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
--#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
- #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
- #define CTOP_INST_SCHD_RW			0x3E6F7004
- #define CTOP_INST_SCHD_RD			0x3E6F7084
-diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
-new file mode 100644
-index 0000000..d2f5e7e
---- /dev/null
-+++ b/include/soc/nps/mtm.h
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
-+ *
-+ * This software is available to you under a choice of one of two
-+ * licenses.  You may choose to be licensed under the terms of the GNU
-+ * General Public License (GPL) Version 2, available from the file
-+ * COPYING in the main directory of this source tree, or the
-+ * OpenIB.org BSD license below:
-+ *
-+ *     Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *      - Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *
-+ *      - Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
-+
-+#ifndef SOC_NPS_MTM_H
-+#define SOC_NPS_MTM_H
-+
-+#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
-+#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
-+
-+static inline void hw_schd_save(unsigned int *flags)
-+{
-+	__asm__ __volatile__(
-+	"       .word %1\n"
-+	"       st r3,[%0]\n"
-+	:
-+	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
-+	: "r3", "memory");
-+}
-+
-+static inline void hw_schd_restore(unsigned int flags)
-+{
-+	__asm__ __volatile__(
-+	"       mov r3, %0\n"
-+	"       .word %1\n"
-+	:
-+	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
-+	: "r3");
-+}
-+
-+#endif /* SOC_NPS_MTM_H */
--- 
-1.7.1
+As I may understood, regmap is used to simplify suspend/resume, but, is
+it useful to save the I2S register on suspend?
+Practically, I am streaming some tune on my device. I suspend it for
+any reason. The next morning, I resume it. Are you sure I want to
+continue to hear the end of the tune?
+
+I better think that streaming should be simply stopped on suspend.
+Then, there is no need to save the playing registers, and, here I am,
+there is no need to use regmap.
+
+May I go this way?
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
