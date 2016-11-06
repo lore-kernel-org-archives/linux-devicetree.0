@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 09/19] ARM: dts: armada-370-xp: Fixup sa-ram DT warning
-Date: Sun,  6 Nov 2016 23:27:02 +0100
-Message-ID: <20161106222712.27366-10-gregory.clement@free-electrons.com>
+Subject: [PATCH 17/19] ARM: dts: armada-370-xp: Remove address from dsa unit name
+Date: Sun,  6 Nov 2016 23:27:10 +0100
+Message-ID: <20161106222712.27366-18-gregory.clement@free-electrons.com>
 References: <20161106222712.27366-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161106222712.27366-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,50 +10,41 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-sa-ram which is a mmio-sram has a reg property so the unit name should
-contain an address.
+The dsa node does not have a reg property, so remove the address from the
+unit name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/armada-370-rd.dts           | 2 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index c376c2399d5c..19a9a8a67739 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -262,7 +262,7 @@
- 			};
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 8223e0aefac8..cff178004f59 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -172,7 +172,7 @@
  		};
+ 	};
  
--		crypto_sram: sa-sram {
-+		crypto_sram: sa-sram@0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x01) 0 0x800>;
- 			reg-names = "sram";
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index fff1b81b8f5f..4cfec3ceb523 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -230,7 +230,7 @@
- 			};
- 		};
+-	dsa@0 {
++	dsa {
+ 		compatible = "marvell,dsa";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+index fa1a84b20268..fd16af578fa8 100644
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -301,7 +301,7 @@
+ 				      4500 1>;
+ 	};
  
--		crypto_sram0: sa-sram0 {
-+		crypto_sram0: sa-sram0@0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
- 			clocks = <&gateclk 23>;
-@@ -239,7 +239,7 @@
- 			ranges = <0 MBUS_ID(0x09, 0x09) 0 0x800>;
- 		};
- 
--		crypto_sram1: sa-sram1 {
-+		crypto_sram1: sa-sram1@0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
- 			clocks = <&gateclk 23>;
+-	dsa@0 {
++	dsa {
+ 		compatible = "marvell,dsa";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
 -- 
 2.10.1
 
