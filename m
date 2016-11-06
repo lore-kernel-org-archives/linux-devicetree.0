@@ -1,29 +1,151 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Sun, 6 Nov 2016 11:19:37 +0100
-Message-ID: <20161106101937.GA9617@lunn.ch>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <20161105210441.GB1216@lunn.ch>
- <20161105220848.k6rrjmvvhdaeduma@perseus.defre.kleine-koenig.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [REGRESSION] "console: don't prefer first registered if DT
+ specifies stdout-path" breaks console on video outputs of various ARM boards
+Date: Sun, 6 Nov 2016 11:54:35 +0100
+Message-ID: <cf275db8-6d2b-c891-9280-f141c6f10733@redhat.com>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
+ <17833033.PtOSTzKXGD@np-p-burton>
+ <d3f0f1f4-d6f6-1e75-499c-789b82b5bb1b@redhat.com>
+ <1573891.u0IFOelkNI@np-p-burton>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161105220848.k6rrjmvvhdaeduma-jgopVnDzZD+b0XQX99//ntPVjbGH4+40kFgPdswSElo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Strba??ka <martin.strbacka-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1573891.u0IFOelkNI@np-p-burton>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Will do for v2. arch/arm/boot/dts/keystone-* needs fixing in this
-> regard, too.
+Hi,
 
-There is a whitelist of compatible strings which are ignored, for
-backwards compatibility. See of_mdiobus_child_is_phy(). It would be
-nice to fix keystone, but it is not required.
+On 05-11-16 11:40, Paul Burton wrote:
+> On Friday, 4 November 2016 14:22:17 GMT Hans de Goede wrote:
+>> Hi,
+>>
+>> On 04-11-16 13:30, Paul Burton wrote:
+>>> Hi Hans,
+>>>
+>>> On Friday, 4 November 2016 13:11:34 GMT Hans de Goede wrote:
+>>>> Hi All,
+>>>>
+>>>> While booting 4.9-rc# for the first time on an Allwinner A33 tablet,
+>>>> I noticed that after u-boot the LCD display stayed black. It turns out
+>>>> that there was an issue which caused X to never get up, and all kernel
+>>>> (and other startup) messages prior to that only went to ttyS0 which
+>>>> consists of 2 tiny testpads on the PCB with this tablet.
+>>>>
+>>>> The same issue will also happen on any ARM boards which have a HDMI or
+>>>> composite video output and which use a stdout-path pointing to their
+>>>> serial console. I think this will e.g. also impact the Raspberry Pi,
+>>>> I know for certain that this will impact the 99 different Allwinnner
+>>>> boards currently supported by mainline u-boot + the mainline kernel.
+>>>>
+>>>> This is a behavior changes from previous kernels and I consider this
+>>>> a regression. Thus I propose to revert the commit in question, for more
+>>>> info here is a partial copy of the commit message of the proposed revert:
+>>>>
+>>>> The reverted commit changes existing behavior on which many ARM boards
+>>>> rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+>>>> both a video output and a serial console. Depending on whether the user
+>>>> is using the device as a more regular computer; or as a headless device
+>>>> we need to have the console on either one or the other.
+>>>>
+>>>> Many users rely on the kernel behavior of the console being present on
+>>>> both outputs, before the reverted commit the console setup with no
+>>>> console= kernel arguments on an ARM board which sets stdout-path in dt
+>>>> would look like this:
+>>>>
+>>>> [root@localhost ~]# cat /proc/consoles
+>>>> ttyS0                -W- (EC p a)    4:64
+>>>> tty0                 -WU (E  p  )    4:1
+>>>>
+>>>> Where as after the reverted commit, it looks like this:
+>>>>
+>>>> [root@localhost ~]# cat /proc/consoles
+>>>> ttyS0                -W- (EC p a)    4:64
+>>>>
+>>>> This commit reverts commit 05fd007e4629 ("console: don't prefer first
+>>>> registered if DT specifies stdout-path") restoring the original behavior.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>>
+>>> Ugh... so the devices you're talking about rely upon set stdout-path in
+>>> their device tree but effectively rely upon us ignoring it?
+>>
+>> No they rely on the kernel using stdout-path as an extra console while
+>> keeping tty0 as console, not ignoring it. This how stdout-path has always
+>> worked (at least as long as the Allwinner boards have used it, which has
+>> been 2 - 3 years now).
+>>
+>> If you want only the console specified by stdout-path you can get this by
+>> specifying it with console=... on the kernel cmdline.
+>>
+>>> If that's the case then I guess reverting is probably the best option, but
+>>> it does restore us to a position where we honor stdout-path for earlycon
+>>> & then essentially ignore it for the proper kernel console. That seems
+>>> pretty bust to me...
+>>
+>> We do not ignore it, we use both the tty pointed to by stdout-path and tty0.
+>>
+>> Regards,
+>>
+>> Hans
+>
+> Hi Hans,
+>
+> Could you walk me though how you're getting that behaviour from the current
+> code? I don't see how that would happen besides perhaps if drivers are probed
+> in a fortunate order. Is that what you're relying upon?
 
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess so, I never looked carefully at this, it has just always worked
+until your patch.
+
+> What I see in my systems, and what 05fd007e4629 ("console: don't prefer first
+> registered if DT specifies stdout-path") addressed, is that if there are for
+> example 2 UARTs uart0 & uart1 that are probed in that order and stdout-path
+> indicates that we should use uart1 we wind up essentially ignoring it because
+> the ordering of the relevant calls goes:
+>
+>   - of_console_check() for uart0
+>   - add_preferred_console() for uart0
+>   - register_console() for uart0
+>   - of_console_check() for uart1
+>   - add_preferred_console() for uart1
+>   - register_console() for uart1
+>
+> Since of_check_console() doesn't get called for uart1 until after uart0 has
+> been probed, we don't add an entry for it to the console_cmdline array until
+> after register_console() has already decided to enable uart0 because
+> preferred_console == -1.
+>
+> I'm not the only one seeing this oddity either, for example see the discussion
+> on this patch:
+>
+> https://patchwork.kernel.org/patch/9263753/
+>
+> By simply reverting my patch you restore us to a position where so far as I
+> can see we simply do not honor stdout-path for the real kernel console.
+
+As said before, we do still honor it, but in your probe example we also get
+a (second) serial console on uart0, where as you only want one on uart1.
+
+So I see a few possible solutions here:
+
+1) Do a new version of your patch which changes the  "&& !of_specified_console"
+    check to "&& (newcon == tty0 || !of_specified_console)", then we would still
+    always register tty0 (as long as it gets registered first, just like now) and
+    we would not register uart0 in your above example, note the "newcon == tty0"
+    check in my example is pseudo-code. I would be happy to try out such a patch
+
+2) Add a new dt property to enable the new behavior you seek
+
+I'm myself tending towards 1 as a better solution: treat tty0 special, because
+some existing setups rely on it always being registered as a console even if
+stdout-path is specified and otherwise always honor stdout-path.
+
+Regards,
+
+Hans
