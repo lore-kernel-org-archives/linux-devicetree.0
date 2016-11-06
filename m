@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 12/19] ARM: dts: armada-370-xp: Remove skeleton.dtsi
-Date: Sun,  6 Nov 2016 23:27:05 +0100
-Message-ID: <20161106222712.27366-13-gregory.clement@free-electrons.com>
+Subject: [PATCH 08/19] ARM: dts: armada-370-xp: Fixup bm-bppi DT warning
+Date: Sun,  6 Nov 2016 23:27:01 +0100
+Message-ID: <20161106222712.27366-9-gregory.clement@free-electrons.com>
 References: <20161106222712.27366-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161106222712.27366-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,65 +10,108 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The skeleton.dtsi file was removed in ARM64 for different reasons as
-explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
-
-These also applies to ARM and it will also allow to get rid of the
-following DTC warnings in the future:
-
-"Node /memory has a reg or ranges property, but no unit name"
+bm-bppi has a reg property so the unit name should contain an address.
+Take the opportunity to use the node label instead of the full name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi | 2 --
- arch/arm/boot/dts/armada-370.dtsi    | 4 +++-
- arch/arm/boot/dts/armada-xp.dtsi     | 3 +++
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/armada-xp-db.dts               | 8 ++++----
+ arch/arm/boot/dts/armada-xp-gp.dts               | 8 ++++----
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 8 ++++----
+ arch/arm/boot/dts/armada-xp.dtsi                 | 2 +-
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 620b37db542b..9f65ff99fb16 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -50,8 +50,6 @@
-  * 370 and Armada XP SoC.
-  */
- 
--/include/ "skeleton64.dtsi"
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index 9e3bb3d7b4dc..486caf887da4 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -213,10 +213,6 @@
+ 				};
+ 			};
+ 		};
 -
- #define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
  
- / {
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 775cd0e5dd90..cb0db6d673ef 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -50,9 +50,11 @@
-  */
+@@ -248,6 +244,10 @@
+ 	};
+ };
  
- #include "armada-370-xp.dtsi"
--/include/ "skeleton.dtsi"
- 
- / {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
++&bm_bppi {
++	status = "okay";
++};
 +
- 	model = "Marvell Armada 370 family SoC";
- 	compatible = "marvell,armada370", "marvell,armada-370-xp";
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 9918c7883a36..65d960defff3 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -198,10 +198,6 @@
+ 				nand-on-flash-bbt;
+ 			};
+ 		};
+-
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
  
+@@ -233,6 +229,10 @@
+ 	};
+ };
+ 
++&bm_bppi {
++	status = "okay";
++};
++
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <16>;
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index c8dd5a3bccb6..7cd2d74e0161 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -187,10 +187,6 @@
+ 				status = "okay";
+ 			};
+ 		};
+-
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
+ 
+@@ -222,6 +218,10 @@
+ 	};
+ };
+ 
++&bm_bppi {
++	status = "okay";
++};
++
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
 diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 4cfec3ceb523..642561e38ac2 100644
+index 61f2880f1195..fff1b81b8f5f 100644
 --- a/arch/arm/boot/dts/armada-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -53,6 +53,9 @@
- #include "armada-370-xp.dtsi"
+@@ -248,7 +248,7 @@
+ 			ranges = <0 MBUS_ID(0x09, 0x05) 0 0x800>;
+ 		};
  
- / {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
- 	model = "Marvell Armada XP family SoC";
- 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
- 
+-		bm_bppi: bm-bppi {
++		bm_bppi: bm-bppi@0 {
+ 			compatible = "mmio-sram";
+ 			reg = <MBUS_ID(0x0c, 0x04) 0 0x100000>;
+ 			ranges = <0 MBUS_ID(0x0c, 0x04) 0 0x100000>;
 -- 
 2.10.1
 
