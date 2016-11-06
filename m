@@ -1,74 +1,47 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 06/14] ASoC: sun4i-codec: Add support for
- A31 playback through headphone output
-Date: Sun, 6 Nov 2016 19:57:15 +0100
-Message-ID: <20161106185715.tlvcakzqay2lamd5@lukather>
-References: <20161103075556.29018-1-wens@csie.org>
- <20161103075556.29018-7-wens@csie.org>
- <20161103173602.zchyciwj66zdibc7@lukather>
- <CAGb2v65CZJ+1LTWWk3+vABV8PDgsDta+nZ7o3H2Z--KFPe2kog@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH] ARM64: dts: amlogic: Reorder copyrights for meson-gx
+Date: Sun,  6 Nov 2016 20:25:34 +0100
+Message-ID: <1478460334-17644-1-git-send-email-afaerber@suse.de>
+References: <1475595430-30075-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hupmdhuzwb6qkxbg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDH27XAAKGQEWZJT4NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65CZJ+1LTWWk3+vABV8PDgsDta+nZ7o3H2Z--KFPe2kog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1475595430-30075-2-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+meson-gx.dtsi was directly derived from meson-gxbb.dtsi, so keep the
+copyrights in chronological order to not give a wrong impression.
 
---hupmdhuzwb6qkxbg
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Fixes: c328666d58aa ("ARM64: dts: amlogic: Add Meson GX dtsi from GXBB")
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Fri, Nov 04, 2016 at 09:08:11AM +0800, Chen-Yu Tsai wrote:
-> On Fri, Nov 4, 2016 at 1:36 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Thu, Nov 03, 2016 at 03:55:48PM +0800, Chen-Yu Tsai wrote:
-> >> +/* headphone controls */
-> >> +static const char * const sun6i_codec_hp_src_enum_text[] = {
-> >> +     "DAC", "Mixer",
-> >> +};
-> >> +
-> >> +static SOC_ENUM_DOUBLE_DECL(sun6i_codec_hp_src_enum,
-> >> +                         SUN6I_CODEC_OM_DACA_CTRL,
-> >> +                         SUN6I_CODEC_OM_DACA_CTRL_LHPIS,
-> >> +                         SUN6I_CODEC_OM_DACA_CTRL_RHPIS,
-> >> +                         sun6i_codec_hp_src_enum_text);
-> >> +
-> >> +static const struct snd_kcontrol_new sun6i_codec_hp_src[] = {
-> >> +     SOC_DAPM_ENUM("Headphone Source Playback Route",
-> >> +                   sun6i_codec_hp_src_enum),
-> >> +};
-> >
-> > What is that route exactly? A muxer?
-> 
-> Yup. The following is part of the widgets list later in the code:
-> 
-> +       /* Headphone output path */
-> +       SND_SOC_DAPM_MUX("Headphone Source Playback Route",
-> +                        SND_SOC_NOPM, 0, 0, sun6i_codec_hp_src),
-
-Oh, right.
-
-You can add my Acked-by on this one and the other patches too.
-
-Thanks!
-Maxime
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index fd1d0deef889..0b57d037974c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -1,12 +1,12 @@
+ /*
++ * Copyright (c) 2016 Andreas Färber
++ *
+  * Copyright (c) 2016 BayLibre, SAS.
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  *
+  * Copyright (c) 2016 Endless Computers, Inc.
+  * Author: Carlo Caione <carlo@endlessm.com>
+  *
+- * Copyright (c) 2016 Andreas Färber
+- *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+  * licensing only applies to this file, and not this project as a
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---hupmdhuzwb6qkxbg--
+2.6.6
