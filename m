@@ -1,91 +1,107 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] ARM: tegra: nyan: Enable GPU node and related supply
-Date: Mon, 7 Nov 2016 13:00:10 +0000
-Message-ID: <ba759743-2ec1-c818-0b82-a3b27348aab6@nvidia.com>
-References: <20160918141311.17140-1-contact@paulk.fr>
- <f2489bf5-bb08-11f5-1b53-7a1568f20b6b@nvidia.com>
- <1474395433.1215.23.camel@paulk.fr>
- <e95335ae-ad19-b8cd-634b-63c6a0b88e01@nvidia.com>
- <CAAVeFuLb5gU70B0jP0YNPB58NcuR_D0e--6zn3dG7VOmZafLRA@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/9] arm64: dts: m3ulcb: enable SDHI0
+Date: Mon, 7 Nov 2016 14:00:54 +0100
+Message-ID: <20161107130054.GG12319@verge.net.au>
+References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1478196471-1381-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFuLb5gU70B0jP0YNPB58NcuR_D0e--6zn3dG7VOmZafLRA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Paul Kocialkowski <contact@paulk.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478196471-1381-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry,
+On Thu, Nov 03, 2016 at 09:07:51PM +0300, Vladimir Barinov wrote:
+> This supports SDHI0 on M3ULCB board SD card slot
 
-On 07/11/16 12:51, Alexandre Courbot wrote:
-> On Wed, Sep 21, 2016 at 4:57 PM, Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->> On 20/09/16 19:17, Paul Kocialkowski wrote:
->>> * PGP Signed by an unknown key
->>>
->>> Le mardi 20 septembre 2016 à 13:24 +0100, Jon Hunter a écrit :
->>>> On 18/09/16 15:13, Paul Kocialkowski wrote:
->>>>>
->>>>> This enables the GPU node for tegra124 nyan boards, which is required to
->>>>> get graphics acceleration with nouveau on these devices.
->>>>>
->>>>> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
->>>>> ---
->>>>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 8 +++++++-
->>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi
->>>>> b/arch/arm/boot/dts/tegra124-nyan.dtsi
->>>>> index dab9509..225ca77 100644
->>>>> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
->>>>> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
->>>>> @@ -42,6 +42,12 @@
->>>>>             };
->>>>>     };
->>>>>
->>>>> +   gpu@0,57000000 {
->>>>> +           status = "okay";
->>>>> +
->>>>> +           vdd-supply = <&vdd_gpu>;
->>>>> +   };
->>>>> +
->>>>>     serial@70006000 {
->>>>>             /* Debug connector on the bottom of the board near SD card.
->>>>> */
->>>>>             status = "okay";
->>>>> @@ -214,7 +220,7 @@
->>>>>                                     regulator-always-on;
->>>>>                             };
->>>>>
->>>>> -                           sd6 {
->>>>> +                           vdd_gpu: sd6 {
->>>>>                                     regulator-name = "+VDD_GPU_AP";
->>>>>                                     regulator-min-microvolt = <650000>;
->>>>>                                     regulator-max-microvolt =
->>>>> <1200000>;
->>>>>
->>>>
->>>> Looks good to me. I see the following error when booting but looking at the
->>>> code appears to be benign. Thierry, Alex, is this normal/okay?
->>>
->>> I have the same messages and asked Alexandre about them the other day. He told
->>> me that it looks normal.
->>
->> Ok great. Hopefully, Alex can ACK then.
+Is SDHI3 also exposed on the M3ULCB?
+If so could you consider sending patches to enable it?
+
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 48 ++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
 > 
-> Apologies for the (very) delayed reply.
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+> index 3329f78..5be0cf6 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+> @@ -44,6 +44,30 @@
+>  			gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
+>  		};
+>  	};
+> +
+> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "SDHI0 Vcc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vccq_sdhi0: regulator-vccq-sdhi0 {
+> +		compatible = "regulator-gpio";
+> +
+> +		regulator-name = "SDHI0 VccQ";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+> +		gpios-states = <1>;
+> +		states = <3300000 1
+> +			  1800000 0>;
+> +	};
+>  };
+>  
+>  &extal_clk {
+> @@ -68,8 +92,33 @@
+>  		groups = "scif_clk_a";
+>  		function = "scif_clk";
+>  	};
+> +
+> +	sdhi0_pins_3v3: sd0_3v3 {
+> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+> +		function = "sdhi0";
+> +		power-source = <3300>;
+> +	};
+> +
+> +	sdhi0_pins_1v8: sd0_1v8 {
+> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+> +		function = "sdhi0";
+> +		power-source = <1800>;
+> +	};
+
+I would prefer the pin nodes to be named as follows:
+
+ sdhi0_pins_3v3 ->  sdhi0_pins_3v3
+ sdhi0_pins_1v8 -> sdhi0_pins_uhs
+
+Likewise for SDHI2.
+
+>  };
+>  
+> +&sdhi0 {
+> +	pinctrl-0 = <&sdhi0_pins_3v3>;
+> +	pinctrl-1 = <&sdhi0_pins_1v8>;
+> +	pinctrl-names = "default", "state_uhs";
+> +
+> +	vmmc-supply = <&vcc_sdhi0>;
+> +	vqmmc-supply = <&vccq_sdhi0>;
+> +	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
+> +	bus-width = <4>;
+> +	sd-uhs-sdr50;
+> +	status = "okay";
+> +};
+> +
+>  &scif2 {
+>  	pinctrl-0 = <&scif2_pins>;
+>  	pinctrl-names = "default";
+> -- 
+> 1.9.1
 > 
-> Yes, the messages you are seeing are part of the normal probe sequence
-> on Tegra. So this looks good to me.
-> 
-> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
-
-Can you pick this one up for v4.10 as well?
-
-Cheers
-Jon
-
--- 
-nvpublic
