@@ -1,39 +1,74 @@
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V3 4/9] Documentation: devicetree: mfd: da9062/61 MFD
- binding
-Date: Mon, 7 Nov 2016 15:28:39 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE7CC5@SW-EX-MBX02.diasemi.com>
-References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
- <502d13b97c67023f2193abfa235e8884eb0ea02f.1477929725.git.stwiss.opensource@diasemi.com>
- <20161102143201.GT13127@dell>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
+ provide _available attributes
+Date: Mon, 7 Nov 2016 12:57:43 +0100
+Message-ID: <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+ <1477262381-7800-2-git-send-email-peda@axentia.se>
+ <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161102143201.GT13127@dell>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIgTm92ZW1iZXIgMjAxNiAxNDozMiwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
-MzEgT2N0IDIwMTYsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KPiA+IEZyb206IFN0ZXZlIFR3aXNzIDxz
-dHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPg0KPiA+IFsuLi5dDQo+ID4NCj4gPiAr
-LSBvbmtleSA6IFNlZSAuLi9pbnB1dC9kYTkwNjItb25rZXkudHh0DQo+ID4gKw0KPiA+ICsNCj4g
-PiArLSB3YXRjaGRvZzogU2VlIC4uL3dhdGNoZG9nL2RhOTA2Mi13YXRjaGRvZy50eHQNCj4gPiAr
-DQo+ID4gKw0KPiA+ICstIHRoZXJtYWwgOiBTZWUgLi4vdGhlcm1hbC9kYTkwNjItdGhlcm1hbC50
-eHQNCj4gDQo+IFJlbW92ZSBhbGwgdGhvc2UgZXh0cmEgbGluZXMgaW4gYmV0d2Vlbi4NCg0KT2su
-DQoNCj4gPiAgRXhhbXBsZToNCj4gPiBAQCAtNjQsMTAgKzk2LDYgQEAgRXhhbXBsZToNCj4gPiAg
-CQkJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYyLXJ0YyI7DQo+ID4gIAkJfTsNCj4gPg0KPiA+IC0J
-CXdhdGNoZG9nIHsNCj4gPiAtCQkJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYyLXdhdGNoZG9nIjsN
-Cj4gPiAtCQl9Ow0KPiA+IC0NCj4gDQo+IFdoeSBkb24ndCB5b3UgaW5jbHVkZSBhIHN1Yi1ub2Rl
-IHBlciBjaGlsZCBkZXZpY2UgYW5kIHVzZQ0KPiBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIHRvIHJl
-Z2lzdGVyIHRoZSBkZXZpY2VzPw0KDQpJbiB0aGlzIGNhc2UgSSdtIGp1c3QgbW92aW5nIHRoZSBi
-aW5kaW5nIGRlc2NyaXB0aW9ucyBpbnRvIGENCmRpZmZlcmVudCBmaWxlLiBJJ20gbm90IHN1cmUg
-SSB1bmRlcnN0YW5kIHdoYXQgeW91IG1lYW4gaGVyZS4NCldoYXQgZG8geW91IGhhdmUgaW4gbWlu
-ZD8NCg0KUmVnYXJkcywNClN0ZXZlDQo=
+On 2016-11-07 12:37, Daniel Baluta wrote:
+> On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+>> From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> A large number of attributes can only take a limited range of values.
+>> Currently in IIO this is handled by directly registering additional
+>> *_available attributes thus providing this information to userspace.
+>>
+>> It is desirable to provide this information via the core for much the same
+>> reason this was done for the actual channel information attributes in the
+>> first place.  If it isn't there, then it can only really be accessed from
+>> userspace.  Other in kernel IIO consumers have no access to what valid
+>> parameters are.
+>>
+>> Two forms are currently supported:
+>> * list of values in one particular IIO_VAL_* format.
+>>         e.g. 1.300000 1.500000 1.730000
+>> * range specification with a step size:
+>>         e.g. [1.000000 0.500000 2.500000]
+>>         equivalent to 1.000000 1.5000000 2.000000 2.500000
+> 
+> Is there any driver using this format? :)
+
+Yes, soon. Hopefully. See patch 3/8
+iio: mcp4531: provide range of available raw values
+https://patchwork.kernel.org/patch/9391283/
+
+>>
+>> An addition set of masks are used to allow different sharing rules for the
+>> *_available attributes generated.
+>>
+>> This allows for example:
+>>
+>> in_accel_x_offset
+>> in_accel_y_offset
+>> in_accel_offset_available.
+>>
+>> We could have gone with having a specification for each and every
+>> info_mask element but that would have meant changing the existing userspace
+>> ABI.  This approach does not.
+>>
+>> Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> [forward ported, added some docs and fixed buffer overflows /peda]
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> 
+> The patch looks good to me at a first glance.
+
+Thanks, may I add your acked-by if/when I respin?
+
+Cheers,
+Peter
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
