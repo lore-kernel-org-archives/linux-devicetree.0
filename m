@@ -1,56 +1,91 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 4/9] arm64: dts: m3ulcb: enable GPIO leds
-Date: Mon, 7 Nov 2016 13:57:37 +0100
-Message-ID: <20161107125737.GF12319@verge.net.au>
-References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1478196451-1298-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH] ARM: tegra: nyan: Enable GPU node and related supply
+Date: Mon, 7 Nov 2016 13:00:10 +0000
+Message-ID: <ba759743-2ec1-c818-0b82-a3b27348aab6@nvidia.com>
+References: <20160918141311.17140-1-contact@paulk.fr>
+ <f2489bf5-bb08-11f5-1b53-7a1568f20b6b@nvidia.com>
+ <1474395433.1215.23.camel@paulk.fr>
+ <e95335ae-ad19-b8cd-634b-63c6a0b88e01@nvidia.com>
+ <CAAVeFuLb5gU70B0jP0YNPB58NcuR_D0e--6zn3dG7VOmZafLRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478196451-1298-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuLb5gU70B0jP0YNPB58NcuR_D0e--6zn3dG7VOmZafLRA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Paul Kocialkowski <contact@paulk.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 09:07:31PM +0300, Vladimir Barinov wrote:
-> This supports GPIO leds on M3ULCB board
+Thierry,
 
-Are GPIO leds and keys also present on the H3ULCB.
-If so could you consider sending patches to enable them?
+On 07/11/16 12:51, Alexandre Courbot wrote:
+> On Wed, Sep 21, 2016 at 4:57 PM, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>> On 20/09/16 19:17, Paul Kocialkowski wrote:
+>>> * PGP Signed by an unknown key
+>>>
+>>> Le mardi 20 septembre 2016 à 13:24 +0100, Jon Hunter a écrit :
+>>>> On 18/09/16 15:13, Paul Kocialkowski wrote:
+>>>>>
+>>>>> This enables the GPU node for tegra124 nyan boards, which is required to
+>>>>> get graphics acceleration with nouveau on these devices.
+>>>>>
+>>>>> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 8 +++++++-
+>>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi
+>>>>> b/arch/arm/boot/dts/tegra124-nyan.dtsi
+>>>>> index dab9509..225ca77 100644
+>>>>> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
+>>>>> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+>>>>> @@ -42,6 +42,12 @@
+>>>>>             };
+>>>>>     };
+>>>>>
+>>>>> +   gpu@0,57000000 {
+>>>>> +           status = "okay";
+>>>>> +
+>>>>> +           vdd-supply = <&vdd_gpu>;
+>>>>> +   };
+>>>>> +
+>>>>>     serial@70006000 {
+>>>>>             /* Debug connector on the bottom of the board near SD card.
+>>>>> */
+>>>>>             status = "okay";
+>>>>> @@ -214,7 +220,7 @@
+>>>>>                                     regulator-always-on;
+>>>>>                             };
+>>>>>
+>>>>> -                           sd6 {
+>>>>> +                           vdd_gpu: sd6 {
+>>>>>                                     regulator-name = "+VDD_GPU_AP";
+>>>>>                                     regulator-min-microvolt = <650000>;
+>>>>>                                     regulator-max-microvolt =
+>>>>> <1200000>;
+>>>>>
+>>>>
+>>>> Looks good to me. I see the following error when booting but looking at the
+>>>> code appears to be benign. Thierry, Alex, is this normal/okay?
+>>>
+>>> I have the same messages and asked Alexandre about them the other day. He told
+>>> me that it looks normal.
+>>
+>> Ok great. Hopefully, Alex can ACK then.
+> 
+> Apologies for the (very) delayed reply.
+> 
+> Yes, the messages you are seeing are part of the normal probe sequence
+> on Tegra. So this looks good to me.
+> 
+> Acked-by: Alexandre Courbot <acourbot@nvidia.com>
 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> index fb694b8..3329f78 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> @@ -31,6 +31,17 @@
->  		/* first 128MB is reserved for secure area. */
->  		reg = <0x0 0x48000000 0x0 0x38000000>;
->  	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		led5 {
-> +			gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> +		};
-> +		led6 {
-> +			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
->  };
->  
->  &extal_clk {
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you pick this one up for v4.10 as well?
+
+Cheers
+Jon
+
+-- 
+nvpublic
