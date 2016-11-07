@@ -1,44 +1,38 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: Add #pinctrl-cells for pinctrl-single
- instances
-Date: Mon, 7 Nov 2016 10:39:46 -0700
-Message-ID: <20161107173946.GB2428@atomide.com>
-References: <20161103163550.27330-1-tony@atomide.com>
- <20161103163550.27330-5-tony@atomide.com>
- <CACRpkdaRGmUg19zu1kTm6ZcODPFxjXnOKxATbp7HbKnGsPESCQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/6] clk: Add driver for Maxim-8997 PMIC clocks
+Date: Mon, 7 Nov 2016 19:41:58 +0200
+Message-ID: <20161107174158.GB4865@kozik-lap>
+References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
+ <1478513376-14307-4-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaRGmUg19zu1kTm6ZcODPFxjXnOKxATbp7HbKnGsPESCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478513376-14307-4-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161104 14:55]:
-> On Thu, Nov 3, 2016 at 5:35 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+On Mon, Nov 07, 2016 at 03:39:33PM +0530, Pankaj Dubey wrote:
+> The MAX8997 PMIC has 32.786kHz crystal oscillator which provides an
+> accurate low frequency clock for MAX8997 internal circuit as well as
+> external circuit. This patch adds support for these two clocks.
 > 
-> > Drivers using pinctrl-single,pins have #pinctrl-cells = <1>, while
-> > pinctrl-single,bits need #pinctrl-cells = <2>.
-> >
-> > Note that this patch can be optionally applied separately from the
-> > driver changes as the driver supports also the legacy binding without
-> > #pinctrl-cells.
-> >
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Please take this through the OMAP tree to avoid hazzle.
+> CC: Michael Turquette <mturquette@baylibre.com>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> CC: linux-clk@vger.kernel.org
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  drivers/clk/Kconfig                       | 10 ++++
+>  drivers/clk/Makefile                      |  1 +
+>  drivers/clk/clk-max8997.c                 | 76 +++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/maxim,max8997.h | 23 ++++++++++
 
-OK applied into omap-for-v4.10/pinctrl-cells.
+You need to split the dt-bindings header into separate one so others
+could pull it.  Please also mention the dependencies between patches in
+cover letter, because it does not look like it could be applied as is.
 
-Thanks,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
