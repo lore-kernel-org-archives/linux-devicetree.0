@@ -1,34 +1,93 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] Documentation: DT: add dma compatible for sun50i
- A64 SOC.
-Date: Mon, 7 Nov 2016 20:54:29 +0100
-Message-ID: <20161107195429.u4j6mbow5m6ix7g3@lukather>
-References: <20161107181457.GA3619@arx12>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] [PATCH v5 4/7] ASoC: sunxi: Add sun8i I2S driver
+Date: Mon, 7 Nov 2016 21:05:05 +0100
+Message-ID: <20161107200505.g76zz7adtfy4ltku@lukather>
+References: <cover.1477142934.git.moinejf@free.fr>
+ <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
+ <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+ <20161106190248.48b59e166bcd9d6f0ebb4d04@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4vljs442isn73eq4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161107181457.GA3619@arx12>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0842595860=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161106190248.48b59e166bcd9d6f0ebb4d04@free.fr>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---4vljs442isn73eq4
+--===============0842595860==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5mqrdtho4x2pm45f"
+Content-Disposition: inline
+
+
+--5mqrdtho4x2pm45f
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 08, 2016 at 02:14:57AM +0800, Hao Zhang wrote:
-> This adds documentation of the sun50i a64 dma binding compatible.
+Hi,
+
+On Sun, Nov 06, 2016 at 07:02:48PM +0100, Jean-Francois Moine wrote:
+> On Sun, 23 Oct 2016 09:33:16 +0800
+> Chen-Yu Tsai <wens@csie.org> wrote:
 >=20
-> Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > On Fri, Oct 21, 2016 at 4:36 PM, Jean-Francois Moine <moinejf@free.fr> =
+wrote:
+> > > This patch adds I2S support to sun8i SoCs as the A83T and H3.
+> > >
+> > > Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+> > > ---
+> > > Note: This driver is closed to the sun4i-i2s except that:
+> > > - it handles the H3
+> >=20
+> > If it's close to sun4i-i2s, you should probably rework that one to supp=
+ort
+> > the newer SoCs.
+>=20
+> I started to add the H3 into the sun4i-i2s, but I am blocked with
+> regmap.
+> Many H3 registers are common with the A10, but some of them have more
+> or less fields, the fields may be at different offsets. And, finally,
+> some registers are completely different.
+> This would not raise any problem, except with regmap which is really
+> painful.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+That's weird, because regmap's regmap_field should make that much
+easier.
 
-Thanks,
+> As I may understood, regmap is used to simplify suspend/resume, but, is
+> it useful to save the I2S register on suspend?
+> Practically, I am streaming some tune on my device. I suspend it for
+> any reason. The next morning, I resume it. Are you sure I want to
+> continue to hear the end of the tune?
+>=20
+> I better think that streaming should be simply stopped on suspend.
+
+You're mistaken. The code in there is for *runtime* suspend, ie when
+the device is no longer used, so that case shouldn't even happen at
+all.
+
+(And real suspend isn't supported anyway)
+
+> Then, there is no need to save the playing registers, and, here I am,
+> there is no need to use regmap.
+>=20
+> May I go this way?
+
+No, please don't. regmap is also providing very useful features, such
+as access to all the registers through debugfs, or tracing. What
+exactly feels painful to you?
+
 Maxime
 
 --=20
@@ -36,28 +95,36 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---4vljs442isn73eq4
+--5mqrdtho4x2pm45f
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYINvsAAoJEBx+YmzsjxAgNxkQAIr/e9ffHCHvnq21IzTFRDVu
-ZLby+aVFKzKVfoJKSIgX4KblMDa0vHjFPbjIM0Fg+TuGkX6UNcc4Dg8VaMO6zY6E
-IQ9a+pdtuArNwkebBl8AkROSGLvoeOZlse4M0+6KuQ4U7HRy4ZnDBJMgGbD2P0f1
-QsJUyWTGaRidX7EZVegRo35/qsL+3x/FM2ZjKr8pN1BlWG0t2qFdysX36fFRQ4Wo
-Pr7TbRBzACmWh8xYqv/9pniFLx2MgebMYqx5l5OPxvtWeRp7IhuAtHG86VuJ2n39
-hlX21u0Lu+FM0ZvFfqxAOsNy4DoW77LdgOCdYNfU5wpnH/IC6KX/xul3Q/m2u4dd
-+OhhZ6DxLZSWznTEfeB5Z2WqLgF1dk1X+0X4f4/J/u3ru0MQXFk2DXWXOlYn2o3M
-1pl5O6G6XhUioBM6WJJi/8Wk7RlRFEB/Yv+RfKDcmal85T+anzSrYZsZ2bHfYQh+
-goeT+H9ccj/HNojicUZhIhmY96zIcdEAHaph/IpQNecpMx4UUw+754lP3S7qNvy4
-PW7916NGWkJ9FgVQFPusTffAtdc3NQ5MhahYtSKGG7UONQcQ9PX4khlYOaZW45LQ
-248BS2c+3b/RHnoOzWBNOlWlXoHxm99E8ZHn9kEDuLVyXNPpb8BzuSHNXspGXh4q
-LaMUvUhmD096savMmEuh
-=cA/B
+iQIcBAEBCAAGBQJYIN5sAAoJEBx+YmzsjxAgZDAQAIalAWDwR9jey/epeDiTOb3A
+vin599o3eGK+6CqAHSSrDoXujKCHerEVu9tsa1XnkPNXcAW4TdZJxswRxmcv/2W5
+4XT2EQqWRVBtJGSiQ1gaXcVIIGi9W3lu/YNs6DbuICxZcqSWLHOFvTYHiRV6Xr1r
+tL3xUb+nIGvnltUzb3o3PprbOH6yAPYN7AISuRqGp2TXj5eWFC8hH/lFjiT5wYSo
+7b3+82xXI9+ep7QYpnOzdpujNgPkLbdwZms7FFtNaJ/CIXqn7/RY5qkNy2ucXb98
+xSwYyGKq/K+xbc27qQJH7HzsC+dHIEdj6o4h29ZpevN7O6u5orrZAgFp8pKpkNAq
+YkzY5EvCbJJH0J0Z1jzQm2wNtuJlq4o55o4v3Q/dTOS1t10VRDlB1fWzAQGhdPLN
+ctbr/JYIOLzUUYm2fJ82T7ZfvGqCYqReYKvFUx4yZbUgJ1HdsSYGQ80FUWwdpl0A
+H71CWgMK5HxdALMc9eh/uDbBFyg+vet8khV6xdjjVo9JxcmBPebwLghBHAzlnnY5
+agRrtdibo8zdtNsoSM/C9NOBpKmPHJ39Ocv6OngwQU6yKNq8gv+EY6PNKyRfaKaa
+DuqzfD9FXGV1jBkrAI0pclvAOQ75OWbmkT9DkvEIImTvFfpE2lhVSPUqeKMUXhCK
+TrTpUoaCQUjE64cSA58v
+=X+8k
 -----END PGP SIGNATURE-----
 
---4vljs442isn73eq4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5mqrdtho4x2pm45f--
+
+--===============0842595860==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0842595860==--
