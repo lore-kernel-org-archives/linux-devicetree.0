@@ -1,75 +1,62 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V4 2/6] clk: tegra: add TEGRA30_CLK_NOR to init table
-Date: Mon, 7 Nov 2016 12:28:09 +0100
-Message-ID: <20161107112809.GB28616@ulmo.ba.sec>
-References: <1478507405-13204-1-git-send-email-mirza.krak@gmail.com>
- <1478507405-13204-3-git-send-email-mirza.krak@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478507405-13204-3-git-send-email-mirza.krak@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>
-Cc: swarren@wwwdotorg.org, jonathanh@nvidia.com, gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: [PATCH v6 09/14] mmc: sdhci-msm: Add clock changes for DDR mode.
+Date: Mon,  7 Nov 2016 16:54:32 +0530
+Message-ID: <1478517877-23733-10-git-send-email-riteshh@codeaurora.org>
+References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, Ritesh Harjani <riteshh@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+SDHC MSM controller need 2x clock for MCLK at GCC.
+Hence make required changes to have 2x clock for
+DDR timing modes.
 
---l76fUT7nc3MelDdI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+---
+ drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-On Mon, Nov 07, 2016 at 09:30:01AM +0100, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak@gmail.com>
->=20
-> Add TEGRA30_CLK_NOR to init table and set default rate to 127 MHz which
-> is max rate.
->=20
-> The maximum rate value of 127 MHz is pulled from the downstream L4T
-> kernel.
->=20
-> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->=20
-> Changes in v2:
-> - no changes
->=20
-> Changes in v3:
-> - Added comment in commit message where I got the maximum rates from.
->=20
-> Changes in V4:
-> - no changes
->=20
->  drivers/clk/tegra/clk-tegra30.c | 1 +
->  1 file changed, 1 insertion(+)
-
-Applied, thanks.
-
-Thierry
-
---l76fUT7nc3MelDdI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYIGVJAAoJEN0jrNd/PrOh/doP/2JWIvBlg+DoY2mutjYlqTws
-unnwrXkRQAHqoV7wgivdqyTNJxTjkBO7yXOamG1ASGzgZOYUmtoXTe7JRU5GAgzG
-61kVpmHjAj8QwfuptuLA/+uDq06ztI7we+5csDOk8HbsD3hjQqTekEGA1U2cYu7s
-K2ddJX3WyjpNbzRe2pqU99P1DqoZGYI6qAU88hZ9PSkIMltpseoDKQmr8UnwCclj
-CyvsXmQfS3hnC/TVSKw5Sba6Bihhh6DxqxMWQiolRRlu5ZnvmX9uFhQr3bggo/+Z
-K2i6mksPnmyOUbByeuNCj+/MUNo356aNc4Gzxr9WYH1/ep8ofLlNInaWVe8/qxJS
-cbY8aNDtzQb9g5suwZAboA5C/hTg+xzjrjAtrdHlrYruZz3IylnMTyaXTcta9Rj4
-ZitT/W25MaCs2hANh2pqlceP/1BBECmFsY8k8mtqMBg/whG6c9aV/IM/hRGqH1as
-CZQjUVgQXCXZLzMlTml3BV1qn5qOHSIUZ6pDsTmotOjKTOo5nysLTjZbVkzdoQqG
-1sSkLEoBfXNibwZR/uP0utv1GbN6RLneBxGEVWVGFlw8mA8GqL8S29Zx8yyiCTCd
-Q96AHYAXUxJDr+TBgraDpKghO8ybHYgqoo3IyahItmoTyK2XNeV6l0I7Q4pV8ww+
-x4bm7Qm0WVUWGs4HELAi
-=27av
------END PGP SIGNATURE-----
-
---l76fUT7nc3MelDdI--
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index ff0915b..220567c 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -633,6 +633,7 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
++	struct mmc_ios curr_ios = host->mmc->ios;
+ 	int rc;
+ 
+ 	if (!clock) {
+@@ -641,11 +642,23 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	}
+ 
+ 	spin_unlock_irq(&host->lock);
++	/*
++	 * The SDHC requires internal clock frequency to be double the
++	 * actual clock that will be set for DDR mode. The controller
++	 * uses the faster clock(100/400MHz) for some of its parts and
++	 * send the actual required clock (50/200MHz) to the card.
++	 */
++	if ((curr_ios.timing == MMC_TIMING_UHS_DDR50) ||
++	    (curr_ios.timing == MMC_TIMING_MMC_DDR52) ||
++	    (curr_ios.timing == MMC_TIMING_MMC_HS400))
++		clock *= 2;
++
+ 	if (clock != msm_host->clk_rate) {
+ 		rc = clk_set_rate(msm_host->clk, clock);
+ 		if (rc) {
+-			pr_err("%s: Failed to set clock at rate %u\n",
+-			       mmc_hostname(host->mmc), clock);
++			pr_err("%s: Failed to set clock at rate %u at timing %d\n",
++			       mmc_hostname(host->mmc), clock,
++			       curr_ios.timing);
+ 			spin_lock_irq(&host->lock);
+ 			goto out;
+ 		}
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
+a Linux Foundation Collaborative Project.
