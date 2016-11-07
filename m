@@ -1,160 +1,62 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 7/8] ARM64: dts: meson-gxl-p23x: Add SD/SDIO/MMC and PWM nodes
-Date: Sat, 05 Nov 2016 17:10:17 -0500
-Message-ID: <m21syp8to6.fsf@baylibre.com>
-References: <1477932286-27482-1-git-send-email-narmstrong@baylibre.com>
-        <1477932286-27482-8-git-send-email-narmstrong@baylibre.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: DT: add dma compatible for sun50i
+ A64 SOC.
+Date: Mon, 7 Nov 2016 20:54:29 +0100
+Message-ID: <20161107195429.u4j6mbow5m6ix7g3@lukather>
+References: <20161107181457.GA3619@arx12>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4vljs442isn73eq4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477932286-27482-8-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Mon, 31 Oct 2016 17:44:45 +0100")
+Content-Disposition: inline
+In-Reply-To: <20161107181457.GA3619@arx12>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-> Add SD/SDIO/MMC nodes and PWM 32768Hz clock configuration to provide
-> storage and WiFi functionality on the p23x boards.
+--4vljs442isn73eq4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just curious... what storage functionality are you referring to here?
+On Tue, Nov 08, 2016 at 02:14:57AM +0800, Hao Zhang wrote:
+> This adds documentation of the sun50i a64 dma binding compatible.
+>=20
+> Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Kevin
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     | 112 +++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
-> index 666fe2b..7830809 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
-> @@ -56,6 +56,46 @@
->  		device_type = "memory";
->  		reg = <0x0 0x0 0x0 0x80000000>;
->  	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
->  };
->  
->  /* This UART is brought out to the DB9 connector */
-> @@ -64,3 +104,75 @@
->  	pinctrl-0 = <&uart_ao_a_pins>;
->  	pinctrl-names = "default";
->  };
-> +
-> +/* Wireless SDIO Module */
-> +&sd_emmc_a {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-names = "default";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +
-> +	non-removable;
-> +	disable-wp;
-> +
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> +	cd-inverted;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <8>;
-> +	cap-sd-highspeed;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--4vljs442isn73eq4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYINvsAAoJEBx+YmzsjxAgNxkQAIr/e9ffHCHvnq21IzTFRDVu
+ZLby+aVFKzKVfoJKSIgX4KblMDa0vHjFPbjIM0Fg+TuGkX6UNcc4Dg8VaMO6zY6E
+IQ9a+pdtuArNwkebBl8AkROSGLvoeOZlse4M0+6KuQ4U7HRy4ZnDBJMgGbD2P0f1
+QsJUyWTGaRidX7EZVegRo35/qsL+3x/FM2ZjKr8pN1BlWG0t2qFdysX36fFRQ4Wo
+Pr7TbRBzACmWh8xYqv/9pniFLx2MgebMYqx5l5OPxvtWeRp7IhuAtHG86VuJ2n39
+hlX21u0Lu+FM0ZvFfqxAOsNy4DoW77LdgOCdYNfU5wpnH/IC6KX/xul3Q/m2u4dd
++OhhZ6DxLZSWznTEfeB5Z2WqLgF1dk1X+0X4f4/J/u3ru0MQXFk2DXWXOlYn2o3M
+1pl5O6G6XhUioBM6WJJi/8Wk7RlRFEB/Yv+RfKDcmal85T+anzSrYZsZ2bHfYQh+
+goeT+H9ccj/HNojicUZhIhmY96zIcdEAHaph/IpQNecpMx4UUw+754lP3S7qNvy4
+PW7916NGWkJ9FgVQFPusTffAtdc3NQ5MhahYtSKGG7UONQcQ9PX4khlYOaZW45LQ
+248BS2c+3b/RHnoOzWBNOlWlXoHxm99E8ZHn9kEDuLVyXNPpb8BzuSHNXspGXh4q
+LaMUvUhmD096savMmEuh
+=cA/B
+-----END PGP SIGNATURE-----
+
+--4vljs442isn73eq4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
