@@ -1,151 +1,76 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v10 01/11] remoteproc: st_slim_rproc: add a slimcore
- rproc driver
-Date: Mon, 7 Nov 2016 13:57:35 +0000
-Message-ID: <20161107135735.GA27280@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
- <1476783556-2501-2-git-send-email-peter.griffin@linaro.org>
- <20161103213703.GA15449@tuxbot>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 1/6] clk: stm32f4: Add PLL_I2S & PLL_SAI for STM32F429/469
+ boards
+Date: Mon, 7 Nov 2016 15:05:46 +0100
+Message-ID: <42c31c00-3b0b-b1e7-46c1-0c849b14dae2@st.com>
+References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
+ <1478523943-23142-2-git-send-email-gabriel.fernandez@st.com>
+ <d60df94d-8f42-12eb-af55-2fc839c126bc@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20161103213703.GA15449@tuxbot>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d60df94d-8f42-12eb-af55-2fc839c126bc@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, andrea.merello@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Daniel,
 
-On Thu, 03 Nov 2016, Bjorn Andersson wrote:
+Thanks for reviewing.
 
-> On Tue 18 Oct 02:39 PDT 2016, Peter Griffin wrote:
-> 
-> > slim core is used as a basis for many IPs in the STi
-> > chipsets such as fdma and demux. To avoid duplicating
-> > the elf loading code in each device driver a slim
-> > rproc driver has been created.
-> > 
-> > This driver is designed to be used by other device drivers
-> > such as fdma, or demux whose IP is based around a slim core.
-> > The device driver can call slim_rproc_alloc() to allocate
-> > a slim rproc and slim_rproc_put() when finished.
-> > 
-> > This driver takes care of ioremapping the slim
-> > registers (dmem, imem, slimcore, peripherals), whose offsets
-> > and sizes can change between IP's. It also obtains and enables
-> > any clocks used by the device. This approach avoids having
-> > a double mapping of the registers as slim_rproc does not register
-> > its own platform device. It also maps well to device tree
-> > abstraction as it allows us to have one dt node for the whole
-> > device.
-> > 
-> > All of the generic rproc elf loading code can be reused, and
-> > we provide start() stop() hooks to start and stop the slim
-> > core once the firmware has been loaded. This has been tested
-> > successfully with fdma driver.
-> > 
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  drivers/remoteproc/Kconfig               |   7 +-
-> >  drivers/remoteproc/Makefile              |   1 +
-> >  drivers/remoteproc/st_slim_rproc.c       | 364 +++++++++++++++++++++++++++++++
-> >  include/linux/remoteproc/st_slim_rproc.h |  58 +++++
-> >  4 files changed, 428 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/remoteproc/st_slim_rproc.c
-> >  create mode 100644 include/linux/remoteproc/st_slim_rproc.h
-> > 
-> > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> > index f396bfe..9270c8e 100644
-> > --- a/drivers/remoteproc/Kconfig
-> > +++ b/drivers/remoteproc/Kconfig
-> > @@ -58,7 +58,6 @@ config DA8XX_REMOTEPROC
-> >  	tristate "DA8xx/OMAP-L13x remoteproc support"
-> >  	depends on ARCH_DAVINCI_DA8XX
-> >  	select CMA if MMU
-> > -	select REMOTEPROC
-> 
-> No, this is an unrelated change to this patch.
 
-Sorry that crept in as part of the rebase. Will fix.
-> 
-> >  	select RPMSG_VIRTIO
-> >  	help
-> >  	  Say y here to support DA8xx/OMAP-L13x remote processors via the
-> > @@ -99,10 +98,10 @@ config QCOM_WCNSS_PIL
-> >  	tristate "Qualcomm WCNSS Peripheral Image Loader"
-> >  	depends on OF && ARCH_QCOM
-> >  	depends on QCOM_SMEM
-> > +	depends on REMOTEPROC
-> >  	select QCOM_MDT_LOADER
-> >  	select QCOM_SCM
-> >  	select QCOM_WCNSS_IRIS
-> > -	select REMOTEPROC
-> 
-> Dito.
+On 11/07/2016 02:53 PM, Daniel Thompson wrote:
+> On 07/11/16 13:05, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> This patch introduces PLL_I2S and PLL_SAI.
+>> Vco clock of these PLLs can be modify by DT (only n multiplicator,
+>> m divider is still fixed by the boot-loader).
+>> Each PLL has 3 dividers. PLL should be off when we modify the rate.
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> ---
+>>  drivers/clk/clk-stm32f4.c | 371 
+>> ++++++++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 359 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+>> index c2661e2..7641acd 100644
+>> --- a/drivers/clk/clk-stm32f4.c
+>> +++ b/drivers/clk/clk-stm32f4.c
+>> @@ -28,6 +28,7 @@
+> > ...
+>> +static const struct clk_div_table pll_divp_table[] = {
+>> +    { 0, 2 }, { 1, 4 }, { 2, 6 }, { 3, 8 },
+>> +};
+>> +
+>>  /*
+>>   * Decode current PLL state and (statically) model the state we 
+>> inherit from
+>>   * the bootloader.
+>>   */
+>
+> This comment isn't right. For a start the model is no longer static.
+>
+you're right, i will suppress it.
 
-Will fix.
+>
+>> @@ -615,18 +944,24 @@ struct stm32f4_clk_data {
+>>      const struct stm32f4_gate_data *gates_data;
+>>      const u64 *gates_map;
+>>      int gates_num;
+>> +    const struct stm32f4_pll_data *pll_data;
+>> +    int pll_num;
+>
+> pll_num is unused.
+>
+ok
 
-> 
-> 
-> As you now make changes to the entire remoteproc Kconfig file, rather
-> than simply add a Kconfig symbol we can't bring this in via Vinod's tree
-> without providing Linus with a messy merge conflict.
-> 
-> So the remoteproc parts now has to go through my tree.
+BR
 
-OK, I think the best approach is for Vinod to create an immutable
-branch with the entire fdma series on, and then both of you merge that branch into
-your respective trees.
+Gabriel
 
-That way there won't be any conflicts and you can both accept further changes
-for v4.9 release. Trying to take half the series via rproc, and half via dma trees won't work
-because they have dependencies on each other.
-
-I will send a v11 series in a moment which includes the feedback in this email
-and also include the additional fixes which Vinod has applied since the driver
-has been in linux-next.
-
-> 
-> >  	help
-> >  	  Say y here to support the Peripheral Image Loader for the Qualcomm
-> >  	  Wireless Connectivity Subsystem.
-> > @@ -116,4 +115,8 @@ config ST_REMOTEPROC
-> >  	  processor framework.
-> >  	  This can be either built-in or a loadable module.
-> >  
-> > +config ST_SLIM_REMOTEPROC
-> > +	tristate
-> > +	select REMOTEPROC
-> > +
-> >  endmenu
-> [..]
-> > diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-> [..]
-> > +struct st_slim_rproc *st_slim_rproc_alloc(struct platform_device *pdev,
-> > +				char *fw_name)
-> > +{
-> [..]
-> > +	rproc = rproc_alloc(dev, np->name, &slim_rproc_ops,
-> > +			fw_name, sizeof(*slim_rproc));
-> [..]
-> > +	rproc_put(rproc);
-> 
-> As of v4.9 you need to rproc_free() rather than rproc_put() to undo
-> rproc_alloc().
-
-Will fix.
-
-regards,
-
-Peter.
+>
+> Daniel.
