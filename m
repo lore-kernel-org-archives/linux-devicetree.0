@@ -1,74 +1,108 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] pinctrl-aspeed-g5: Never set SCU90[6]
-Date: Tue, 08 Nov 2016 09:12:00 +1030
-Message-ID: <1478558520.6206.4.camel@aj.id.au>
-References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
-         <1478097481-14895-2-git-send-email-andrew@aj.id.au>
-         <CACPK8Xcbv5VjE9deETV6zC4cPSfeBSgP96QYqV_ebAgtB9Jwtw@mail.gmail.com>
-         <CACRpkdbH8eubEHwHCsdJsmqVp3hkBW4vb5DCHvJxz+tyfFqbKQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Z/xRCEM9XY+M6QxYiCB8"
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v3] tpm_tis: Allow tpm_tis to be bound using DT
+Date: Mon,  7 Nov 2016 15:44:31 -0700
+Message-ID: <1478558671-13256-1-git-send-email-jgunthorpe@obsidianresearch.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbH8eubEHwHCsdJsmqVp3hkBW4vb5DCHvJxz+tyfFqbKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This provides an open firwmare driver binding for tpm_tis. OF
+is useful on arches where ACPI/PNP is not used.
 
---=-Z/xRCEM9XY+M6QxYiCB8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The tcg,tpm-tis-mmio register map interface is specified by the TCG.
 
-On Mon, 2016-11-07 at 10:34 +0100, Linus Walleij wrote:
-> > On Thu, Nov 3, 2016 at 11:59 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
->=20
-> > In the future I think we should send fixes separately from the rest of
-> > the series, so it's clear to Linus where we expect patches to end up.
-> >=20
-> > Perhaps Linus can share his preference with us?
->=20
-> Just make it clear to me where the patch is headed, if it is
-> a fix or a new feature.
->=20
-> Also mixing stuff in big series is of course problematic because
-> all the CC:in on MFD patches and whatnot that I don't apply
-> makes the picture blurry, but sometimes it is anyways needed
-> for context so it is a soft requirement.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+---
+ .../bindings/security/tpm/tpm_tis_mmio.txt         | 25 ++++++++++++++++++++++
+ drivers/char/tpm/Kconfig                           |  2 +-
+ drivers/char/tpm/tpm_tis.c                         | 11 ++++++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
 
-Context was my concern here and I would otherwise have split the rest
-of the patches along mfd/pinctrl boundaries. I felt the situation was
-odd enough to warrant presenting the full picture.
-
-Andrew
-
->=20
-> Yours,
-> Linus Walleij
---=-Z/xRCEM9XY+M6QxYiCB8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJYIQM4AAoJEJ0dnzgO5LT51TMP/iYPAQbwRgS2VWuUX3ksTkjN
-Y0MH2xXKidNEwyVQK8n+G+O5igGHGCTx10abTBPkoO5nfRJW2/EetcPukc+yURy7
-EI4tknVbkdP/1HG/BmKOMbLkVaQC0iN4rioB/xwgpIdpGU58XwUU2GcPt6ALl29z
-q5MXCKG7YN9l50QKV6ZcOoK3aT178Q02/iakSG9wvQ9QzAv2OEkFtf6aajOk6fHH
-JiB3n3uG70SR9FbWwByM702ofhEjZ6bHZ6VtvRGZI+RzVWdyfZSLbh1Lif7GBqIx
-1K8gLqhVn4desupPlMG/em3V5nBH6eHyw9NCxXCHnMy2hViw0TQ5lQwRYoWeSNpj
-x8Z6K4X9m7NPKW42NzkAEFNFdOr7+xyKawbUU+/nPAbdj1EUkvDBMalixXfCbMII
-X1PjBjonUXBwUdjt+KuZ6Pz3Ax0R8OknhqXJ+udY71/9bUEEJnCqHORGjvML+KY1
-hmqg0h/oXlNZHYwi5cmG67si47vKqNemyPxVtVOk1F1mXe38lbV/FxxJCJfKK8bl
-sdRKAVG2yoptkLEeMWqLv7YCluI8ODsU1U8GpDVrm7lkic266a4X9kgkJc9fw8TK
-4lZNu4rxUeyja9t5QgecGGMT7pMRtC+KIMSdi5b/e3zrcrY2rWvr289o/JI8beTF
-ILkp74RX1PK8o2t9/Sfo
-=OccC
------END PGP SIGNATURE-----
-
---=-Z/xRCEM9XY+M6QxYiCB8--
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+new file mode 100644
+index 000000000000..41d740545189
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+@@ -0,0 +1,25 @@
++Trusted Computing Group MMIO Trusted Platform Module
++
++The TCG defines multi vendor standard for accessing a TPM chip, this
++is the standard protocol defined to access the TPM via MMIO. Typically
++this interface will be implemented over Intel's LPC bus.
++
++Refer to the 'TCG PC Client Specific TPM Interface Specification (TIS)' TCG
++publication for the specification.
++
++Required properties:
++
++- compatible: should contain a string below for the chip, followed by
++              "tcg,tpm-tis-mmio". Valid chip strings are:
++	          * "atmel,at97sc3204"
++- reg: The location of the MMIO registers, should be at least 0x5000 bytes
++- interrupt-parent/interrupts: An optional interrupt indicating command completion.
++
++Example:
++
++	tpm_tis@90000 {
++				compatible = "atmel,at97sc3204", "tcg,tpm-tis-mmio";
++				reg = <0x90000 0x5000>;
++				interrupt-parent = <&EIC0>;
++				interrupts = <1 2>;
++	};
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 9faa0b1e7766..277186d3b668 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -32,7 +32,7 @@ config TCG_TIS_CORE
+ 
+ config TCG_TIS
+ 	tristate "TPM Interface Specification 1.2 Interface / TPM 2.0 FIFO Interface"
+-	depends on X86
++	depends on X86 || OF
+ 	select TCG_TIS_CORE
+ 	---help---
+ 	  If you have a TPM security chip that is compliant with the
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index eaf5730d79eb..0127af130cb1 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -28,6 +28,8 @@
+ #include <linux/wait.h>
+ #include <linux/acpi.h>
+ #include <linux/freezer.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include "tpm.h"
+ #include "tpm_tis_core.h"
+ 
+@@ -354,12 +356,21 @@ static int tpm_tis_plat_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id tis_of_platform_match[] = {
++	{.compatible = "tcg,tpm-tis-mmio"},
++	{},
++};
++MODULE_DEVICE_TABLE(of, tis_of_platform_match);
++#endif
++
+ static struct platform_driver tis_drv = {
+ 	.probe = tpm_tis_plat_probe,
+ 	.remove = tpm_tis_plat_remove,
+ 	.driver = {
+ 		.name		= "tpm_tis",
+ 		.pm		= &tpm_tis_pm,
++		.of_match_table = of_match_ptr(tis_of_platform_match),
+ 	},
+ };
+ 
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
