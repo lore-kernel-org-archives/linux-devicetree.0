@@ -1,37 +1,63 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 2/6] dt-bindings: clk: max8997: Add DT binding
- documentation
-Date: Mon, 7 Nov 2016 11:47:03 -0300
-Message-ID: <a390e669-eb08-9844-809e-2075088dc4c2@osg.samsung.com>
-References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
- <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
+From: =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>
+Subject: Re: [PATCH 1/6] clk: stm32f4: Add PLL_I2S & PLL_SAI for STM32F429/469 boards
+Date: Mon, 7 Nov 2016 15:57:05 +0100
+Message-ID: <CAFvLkMQxvo=2Ak033n2XkPgdDfU5DLCMF7dj487QFB0e7WceCQ@mail.gmail.com>
+References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com> <1478523943-23142-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: krzk@kernel.org, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478523943-23142-2-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Pankaj,
+> +static struct clk_hw *clk_register_pll_div(const char *name,
+> +               const char *parent_name, unsigned long flags,
+> +               void __iomem *reg, u8 shift, u8 width,
+> +               u8 clk_divider_flags, const struct clk_div_table *table,
+> +               struct clk_hw *pll_hw, spinlock_t *lock)
+> +{
+> +       struct stm32f4_pll_div *pll_div;
+> +       struct clk_hw *hw;
+> +       struct clk_init_data init;
+> +       int ret;
+> +
+> +       /* allocate the divider */
+> +       pll_div = kzalloc(sizeof(*pll_div), GFP_KERNEL);
+> +       if (!pll_div)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       init.name = name;
+> +       init.ops = &stm32f4_pll_div_ops;
+> +       init.flags = flags;
+Maybe it's worth to have CLK_SET_RATE_PARENT here and the VCO clock
+should have CLK_SET_RATE_GATE flag and we can get rid of custom
+divider ops.
 
-On 11/07/2016 07:09 AM, Pankaj Dubey wrote:
-> Add Device Tree binding documentation for the clocks
-> outputs in the Maxim-8997 Power Management IC.
-> 
-> CC: Michael Turquette <mturquette@baylibre.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: devicetree@vger.kernel.org
-> CC: linux-clk@vger.kernel.org
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> -static void stm32f4_rcc_register_pll(const char *hse_clk, const char *hsi_clk)
+> +
+> +static struct clk_hw *stm32f4_rcc_register_pll(const char *pllsrc,
+> +               const struct stm32f4_pll_data *data,  spinlock_t *lock)
+>  {
+> -       unsigned long pllcfgr = readl(base + STM32F4_RCC_PLLCFGR);
+> +       struct stm32f4_pll *pll;
+> +       struct clk_init_data init = { NULL };
+> +       void __iomem *reg;
+> +       struct clk_hw *pll_hw;
+> +       int ret;
+> +
+> +       pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> +       if (!pll)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       init.name = data->vco_name;
+> +       init.ops = &stm32f4_pll_gate_ops;
+> +       init.flags = CLK_IGNORE_UNUSED;
+CLK_SET_RATE_GATE here
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Moreover why not having VCO as a composite clock from gate and mult ?
+
+According to docs SAI VCO (don't know about I2S ) must be within
+certain range so clk_set_rate_range should be somewhere.
