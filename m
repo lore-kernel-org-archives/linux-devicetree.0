@@ -1,85 +1,87 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
-Date: Mon, 7 Nov 2016 11:36:48 +0100
-Message-ID: <20161107103648.GA5326@amd>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
- <20161103124749.GA22180@amd>
- <20161103222014.GI3217@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161103222014.GI3217@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Rob Herring <robh@kernel.org>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] ARM64: dts: meson-gxl: Add ethernet nodes with internal PHY
+Date: Mon,  7 Nov 2016 11:43:55 +0100
+Message-ID: <20161107104357.24428-2-narmstrong@baylibre.com>
+References: <20161107104357.24428-1-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161107104357.24428-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add Ethernet node with Internal PHY selection for the Amlogic GXL SoCs
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 43 ++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-On Fri 2016-11-04 00:20:14, Sakari Ailus wrote:
-> Hi Pavel and Rob,
->=20
-> On Thu, Nov 03, 2016 at 01:47:49PM +0100, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > > +Mandatory properties
-> > > > +--------------------
-> > > > +
-> > > > +- compatible: "toshiba,et8ek8"
-> > > > +- reg: I2C address (0x3e, or an alternative address)
-> > > > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-> > > > +- clocks: External clock to the sensor
-> > > > +- clock-frequency: Frequency of the external clock to the sensor. =
-Camera
-> > > > +  driver will set this frequency on the external clock.
-> > >=20
-> > > This is fine if the frequency is fixed (e.g. an oscillator), but you=
-=20
-> > > should use the clock binding if clocks are programable.
-> >=20
-> > It is fixed. So I assume this can stay as is? Or do you want me to add
-> > "The clock frequency is a pre-determined frequency known to be
-> > suitable to the board." as Sakari suggests?
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index d1bf381..3af54dc 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -49,6 +49,22 @@
+ 	compatible = "amlogic,meson-gxl";
+ };
+ 
++&ethmac {
++	reg = <0x0 0xc9410000 0x0 0x10000
++	       0x0 0xc8834540 0x0 0x4>;
++
++	clocks = <&clkc CLKID_ETH>,
++		 <&clkc CLKID_FCLK_DIV2>,
++		 <&clkc CLKID_MPLL2>;
++	clock-names = "stmmaceth", "clkin0", "clkin1";
++
++	mdio0: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++	};
++};
++
+ &aobus {
+ 	pinctrl_aobus: pinctrl@14 {
+ 		compatible = "amlogic,meson-gxl-aobus-pinctrl";
+@@ -214,6 +230,33 @@
+ 			};
+ 		};
+ 	};
++
++	eth-phy-mux {
++		compatible = "mdio-mux-mmioreg", "mdio-mux";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x0 0x55c 0x0 0x4>;
++		mux-mask = <0xffffffff>;
++		mdio-parent-bus = <&mdio0>;
++
++		internal_mdio: mdio@e40908ff {
++			reg = <0xe40908ff>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			internal_phy: ethernet-phy@8 {
++				compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
++				reg = <8>;
++				max-speed = <100>;
++			};
++		};
++
++		external_mdio: mdio@2009087f {
++			reg = <0x2009087f>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
+ };
+ 
+ &hiubus {
+-- 
+2.7.0
 
-Rob?
-								Pavel
-
-> > > > +- reset-gpios: XSHUTDOWN GPIO
-> > >=20
-> > > Please state what the active polarity is.
-> >=20
-> > As in "This gpio will be set to 1 when the chip is powered." ?
->=20
-> How about:
->=20
-> "The XSHUTDOWN signal is active high. The sensor is in hardware standby
-> mode when the signal is in low state."
->=20
-> These bindings start looking more precise than the smiapp ones. :-)
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlggWUAACgkQMOfwapXb+vLiEwCdH7WwBwuaU+W+vkyxV0rgCAW0
-SFQAoJobgzgs8G1P1rq7cJoo5gO0rMpK
-=PtQ4
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
