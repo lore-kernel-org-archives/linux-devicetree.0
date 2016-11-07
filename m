@@ -1,53 +1,93 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v6 0/7] add NS2 support to bgmac
-Date: Mon, 07 Nov 2016 13:11:41 -0500 (EST)
-Message-ID: <20161107.131141.526803424224367244.davem@davemloft.net>
-References: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Mon, 7 Nov 2016 19:01:12 +0100
+Message-ID: <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jon.mason@broadcom.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478486962-26794-3-git-send-email-joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Mason <jon.mason@broadcom.com>
-Date: Fri,  4 Nov 2016 01:10:55 -0400
+On 11/07/2016 03:49 AM, Joel Holdsworth wrote:
+> The Lattice iCE40 is a family of FPGAs with a minimalistic architecture
+> and very regular structure, designed for low-cost, high-volume consumer
+> and system applications.
 
-> Changes in v6:
-> * Use a common bgmac_phy_connect_direct (per Rafal Milecki) 
-> * Rebased on latest net-next
-> * Added Reviewed-by to the relevant patches
-> 
-> 
-> Changes in v5:
-> * Change a pr_err to netdev_err (per Scott Branden)
-> * Reword the lane swap binding documentation (per Andrew Lunn)
-> 
-> 
-> Changes in v4:
-> * Actually send out the lane swap binding doc patch (Per Scott Branden)
-> * Remove unused #define (Per Andrew Lunn)
-> 
-> 
-> Changes in v3:
-> * Clean-up the bgmac DT binding doc (per Rob Herring)
-> * Document the lane swap binding and make it generic (Per Andrew Lunn)
-> 
-> 
-> Changes in v2:
-> * Remove the PHY power-on (per Andrew Lunn)
-> * Misc PHY clean-ups regarding comments and #defines (per Andrew Lunn)
->   This results on none of the original PHY code from Vikas being
->   present.  So, I'm removing him as an author and giving him
->   "Inspired-by" credit.
-> * Move PHY lane swapping to PHY driver (per Andrew Lunn and Florian
->   Fainelli)
-> * Remove bgmac sleep (per Florian Fainelli)
-> * Re-add bgmac chip reset (per Florian Fainelli and Ray Jui)
-> * Rebased on latest net-next
-> * Added patch for bcm54xx_auxctl_read, which is used in the BCM54810
+[...]
 
-Series applied, thanks.
+> +static int ice40_fpga_ops_write_init(struct fpga_manager *mgr, u32 flags,
+> +				     const char *buf, size_t count)
+> +{
+> +	struct ice40_fpga_priv *priv = mgr->priv;
+> +	struct spi_device *dev = priv->dev;
+> +	struct spi_message message;
+> +	struct spi_transfer assert_cs_then_reset_delay = {.cs_change = 1,
+> +		.delay_usecs = ICE40_SPI_FPGAMGR_RESET_DELAY};
+
+Should be this way for the sake of readability, fix globally:
+
+	struct spi_transfer assert_cs_then_reset_delay = {
+		.cs_change	= 1,
+		.delay_usecs	= ICE40_SPI_FPGAMGR_RESET_DELAY
+	};
+
+Also I believe this could be const.
+
+> +	struct spi_transfer housekeeping_delay_then_release_cs = {
+> +		.delay_usecs = ICE40_SPI_FPGAMGR_HOUSEKEEPING_DELAY};
+
+Don't we have some less hacky way of toggling the nCS ? Is this even nCS
+or is this some control pin of the FPGA ? Maybe it should be treated
+like a regular GPIO instead ?
+
+[...]
+
+> +static int ice40_fpga_ops_write_complete(struct fpga_manager *mgr, u32 flags)
+> +{
+> +	struct ice40_fpga_priv *priv = mgr->priv;
+> +	struct spi_device *dev = priv->dev;
+> +	const u8 padding[ICE40_SPI_FPGAMGR_NUM_ACTIVATION_BYTES] = {0,};
+
+The comma is not needed.
+
+> +
+> +	/* Check CDONE is asserted */
+> +	if (!gpiod_get_value(priv->cdone)) {
+> +		dev_err(&dev->dev,
+> +			"CDONE was not asserted after firmware transfer\n");
+> +		return -EIO;
+> +	}
+> +
+> +	/* Send of zero-padding to activate the firmware */
+> +	return spi_write(dev, padding, sizeof(padding));
+> +}
+
+[...]
+
+> +	/* Check board setup data. */
+> +	if (spi->max_speed_hz > 25000000) {
+> +		dev_err(dev, "Speed is too high\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (spi->max_speed_hz < 1000000) {
+> +		dev_err(dev, "Speed is too low\n");
+> +		return -EINVAL;
+> +	}
+
+Do you have some explanation for this limitation ?
+
+[...]
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
