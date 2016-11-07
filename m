@@ -1,78 +1,87 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] soc: renesas: Identify SoC and register with the
- SoC bus
-Date: Mon, 7 Nov 2016 20:33:26 +0200
-Message-ID: <20161107183326.GA8329@kozik-lap>
-References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdV4HG0aOr4Qp_OZXU=3jLeOJ2QaMKp09a3v4489ABbRcA@mail.gmail.com>
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH 3/3] ipmi/bt-bmc: add a sysfs file to configure a maximum
+ response time
+Date: Mon, 7 Nov 2016 12:37:41 -0600
+Message-ID: <3a1f8e6d-c935-3404-ffa0-81b19d170731@acm.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <1478073426-3714-4-git-send-email-clg@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV4HG0aOr4Qp_OZXU=3jLeOJ2QaMKp09a3v4489ABbRcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1478073426-3714-4-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-fy+rA21nqHI@public.gmane.org>
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 07, 2016 at 10:35:31AM +0100, Geert Uytterhoeven wrote:
-> On Mon, Oct 31, 2016 at 12:30 PM, Geert Uytterhoeven
-> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> > Some Renesas SoCs may exist in different revisions, providing slightly
-> > different functionalities (e.g. R-Car H3 ES1.x and ES2.0), and behavior
-> > (errate and quirks).  This needs to be catered for by drivers and/or
-> > platform code.  The recently proposed soc_device_match() API seems like
-> > a good fit to handle this.
-> >
-> > This patch series implements the core infrastructure to provide SoC and
-> > revision information through the SoC bus for Renesas ARM SoCs. It
-> > consists of 7 patches:
-> >   - Patches 1-4 provide soc_device_match(), with some related fixes,
-> >   - Patches 5-7 implement identification of Renesas SoCs and
-> >     registration with the SoC bus,
-> >
-> > Changes compared to v1:
-> >   - Add Acked-by,
-> >   - New patches:
-> >       - "[4/7] base: soc: Provide a dummy implementation of
-> >                soc_device_match()",
-> >       - "[5/7] ARM: shmobile: Document DT bindings for CCCR and PRR",
-> >       - "[6/7] arm64: dts: r8a7795: Add device node for PRR"
-> >         (more similar patches available, I'm not yet spamming you all
-> >          with them),
-> >   - Drop SoC families and family names; use fixed "Renesas" instead,
-> >   - Drop EMEV2, which doesn't have a chip ID register, and doesn't share
-> >     devices with other SoCs,
-> >   - Drop RZ/A1H and R-CAR M1A, which don't have chip ID registers (for
-> >     M1A: not accessible from the ARM core?),
-> >   - On arm, move "select SOC_BUS" from ARCH_RENESAS to Kconfig symbols
-> >     for SoCs that provide a chip ID register,
-> >   - Build renesas-soc only if SOC_BUS is enabled,
-> >   - Use "renesas,prr" and "renesas,cccr" device nodes in DT if
-> >     available, else fall back to hardcoded addresses for compatibility
-> >     with existing DTBs,
-> >   - Remove verification of product IDs; just print the ID instead,
-> >   - Don't register the SoC bus if the chip ID register is missing,
-> >   - Change R-Mobile APE6 fallback to use PRR instead of CCCR (it has
-> >     both).
-> >
-> > Merge strategy:
-> >   - In theory, patches 1-4 should go through Greg's driver core tree.
-> >     But it's a hard dependency for all users.
-> >     If people agree, I can provide an immutable branch in my
-> >     renesas-drivers repository, to be merged by all interested parties.
-> >     So far I'm aware of Freescale/NXP, and Renesas.
-> 
-> And Samsung.
+Sorry, I was at Plumbers and extra busy with other stuff.  Just getting 
+around to reviewing this.
 
-Yes, I would need it as well.
+On 11/02/2016 02:57 AM, Cédric Le Goater wrote:
+> We could also use an ioctl for that purpose. sysfs seems a better
+> approach.
+>
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+>   drivers/char/ipmi/bt-bmc.c | 31 +++++++++++++++++++++++++++++++
+>   1 file changed, 31 insertions(+)
+>
+> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+> index e751e4a754b7..d7146f0e900e 100644
+> --- a/drivers/char/ipmi/bt-bmc.c
+> +++ b/drivers/char/ipmi/bt-bmc.c
+> @@ -84,6 +84,33 @@ struct bt_bmc {
+>   
+>   static atomic_t open_count = ATOMIC_INIT(0);
+>   
+> +static ssize_t bt_bmc_show_response_time(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 char *buf)
+> +{
+> +	struct bt_bmc *bt_bmc = dev_get_drvdata(dev);
+> +
+> +	return snprintf(buf, PAGE_SIZE - 1, "%d\n", bt_bmc->response_time);
+> +}
+> +
+> +static ssize_t bt_bmc_set_response_time(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf, size_t count)
+> +{
+> +	struct bt_bmc *bt_bmc = dev_get_drvdata(dev);
+> +	unsigned long val;
+> +	int err;
+> +
+> +	err = kstrtoul(buf, 0, &val);
+> +	if (err)
+> +		return err;
+> +	bt_bmc->response_time = val;
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR(response_time, 0644,
+> +		   bt_bmc_show_response_time, bt_bmc_set_response_time);
+> +
+>   static u8 bt_inb(struct bt_bmc *bt_bmc, int reg)
+>   {
+>   	return ioread8(bt_bmc->base + reg);
+> @@ -572,6 +599,10 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>   	bt_bmc_config_irq(bt_bmc, pdev);
+>   
+>   	bt_bmc->response_time = BT_BMC_RESPONSE_TIME;
+> +	rc = device_create_file(&pdev->dev, &dev_attr_response_time);
+> +	if (rc)
+> +		dev_warn(&pdev->dev, "can't create response_time file\n");
+> +
 
-> Shall I create the immutable branch now?
+You added an extra space here.
 
-...or the applying person could provide one.
+>   
+>   	if (bt_bmc->irq) {
+>   		dev_info(dev, "Using IRQ %d\n", bt_bmc->irq);
 
-Best regards,
-Krzysztof
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
