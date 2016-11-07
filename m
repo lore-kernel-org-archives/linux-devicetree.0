@@ -1,7 +1,7 @@
 From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/3] arm64: dts: hisi: fix hip06 sas am-max-trans quirk
-Date: Tue, 8 Nov 2016 00:44:23 +0800
-Message-ID: <1478537065-169286-2-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 3/3] arm64: dts: hisi: add refclk node to hip06 dts files for SAS
+Date: Tue, 8 Nov 2016 00:44:25 +0800
+Message-ID: <1478537065-169286-4-git-send-email-john.garry@huawei.com>
 References: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,28 +12,57 @@ To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The string for the am max transmissions quirk property
-is not correct -> fix it.
+We will only maintain 1 dts for D03 and there are 50MHz
+and 66MHz versions of D03: so we expect UEFI to update
+refclk rate in the fdt at boot time.
 
 Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Reviewed-by: Xiang Chen <chenxiang66-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hip06.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-index b548763..5330abb 100644
+index 5330abb..7b40dce 100644
 --- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-@@ -590,7 +590,7 @@
- 			reg = <0 0xa2000000 0 0x10000>;
- 			sas-addr = [50 01 88 20 16 00 00 00];
- 			hisilicon,sas-syscon = <&pcie_subctl>;
--			am-max-trans;
-+			hip06-sas-v2-quirk-amt;
+@@ -318,6 +318,12 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		refclk: refclk {
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++			#clock-cells = <0>;
++		};
++
+ 		usb_ohci: ohci@a7030000 {
+ 			compatible = "generic-ohci";
+ 			reg = <0x0 0xa7030000 0x0 0x10000>;
+@@ -552,6 +558,7 @@
+ 			ctrl-reset-reg = <0xa60>;
+ 			ctrl-reset-sts-reg = <0x5a30>;
+ 			ctrl-clock-ena-reg = <0x338>;
++			clocks = <&refclk 0>;
+ 			queue-count = <16>;
+ 			phy-count = <8>;
+ 			dma-coherent;
+@@ -594,6 +601,7 @@
  			ctrl-reset-reg = <0xa18>;
  			ctrl-reset-sts-reg = <0x5a0c>;
  			ctrl-clock-ena-reg = <0x318>;
++			clocks = <&refclk 0>;
+ 			queue-count = <16>;
+ 			phy-count = <8>;
+ 			dma-coherent;
+@@ -635,6 +643,7 @@
+ 			ctrl-reset-reg = <0xae0>;
+ 			ctrl-reset-sts-reg = <0x5a70>;
+ 			ctrl-clock-ena-reg = <0x3a8>;
++			clocks = <&refclk 0>;
+ 			queue-count = <16>;
+ 			phy-count = <9>;
+ 			dma-coherent;
 -- 
 1.9.1
 
