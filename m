@@ -1,134 +1,79 @@
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/3] clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Sun, 6 Nov 2016 19:44:57 +0200
-Message-ID: <1478454298-381-3-git-send-email-noamca@mellanox.com>
-References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 10/13] ARM: dts: exynos: replace to "max-frequecy" instead
+ of "clock-freq-min-max"
+Date: Mon, 07 Nov 2016 09:38:15 +0900
+Message-ID: <72612112-3b79-8fd3-8be4-a8f60ab3b68a@samsung.com>
+References: <20161103062135.10697-1-jh80.chung@samsung.com>
+ <20161103184112.GB11071@kozik-lap>
+ <ecf4fac2-0ab7-d4c4-69e3-d498ee5b601c@samsung.com> <4066252.a1W9ejEKHX@phil>
+ <CGME20161104150527epcas4p4004d2c3a8686cccef97760dacdb2892c@epcas4p4.samsung.com>
+ <20161104150447.GA4829@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478454298-381-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20161104150447.GA4829@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On 11/05/2016 12:04 AM, Krzysztof Kozlowski wrote:
+> On Fri, Nov 04, 2016 at 12:19:49PM +0100, Heiko Stuebner wrote:
+>> Hi Jaehoon,
+>>
+>> Am Freitag, 4. November 2016, 19:21:30 CET schrieb Jaehoon Chung:
+>>> On 11/04/2016 03:41 AM, Krzysztof Kozlowski wrote:
+>>>> On Thu, Nov 03, 2016 at 03:21:32PM +0900, Jaehoon Chung wrote:
+>>>>> In drivers/mmc/core/host.c, there is "max-frequency" property.
+>>>>> It should be same behavior. So Use the "max-frequency" instead of
+>>>>> "clock-freq-min-max".
+>>>>>
+>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>>>> ---
+>>>>>
+>>>>>  arch/arm/boot/dts/exynos3250-artik5-eval.dts | 2 +-
+>>>>>  arch/arm/boot/dts/exynos3250-artik5.dtsi     | 2 +-
+>>>>>  arch/arm/boot/dts/exynos3250-monk.dts        | 2 +-
+>>>>>  arch/arm/boot/dts/exynos3250-rinato.dts      | 2 +-
+>>>>>  4 files changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> This looks totally independent to rest of patches so it can be applied
+>>>> separately without any functional impact (except lack of minimum
+>>>> frequency). Is that correct?
+>>>
+>>> You're right. I will split the patches. And will resend.
+>>> Thanks!
+>>
+>> I think what Krzysztof was asking was just if he can simply pick up this patch 
+>> alone, as it does not require any of the previous changes.
+>>
+>> Same is true for the Rockchip patches I guess, so we could just take them 
+>> individually into samsung/rockchip dts branches.
+> 
+> Yes, I wanted to get exactly this information. I couldn't find it in
+> cover letter.
 
-nps_setup_clocksource() should take node as only argument i.e.:
-replace
-int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
-with
-int __init nps_setup_clocksource(struct device_node *node)
+In drivers/mmc/core/host.c, there already is "max-frequency" property.
+It's same functionality with "clock-freq-min-max". 
+Minimum clock value can be fixed to 100K. because MMC core will check clock value from 400K to 100K.
+But max-frequency can be difference.
+If we can use "max-frequency" property, we don't need to use "clock-freq-min-max" property anymore.
+I will resend the deprecated property instead of removing "clock-freq-min-max".
 
-This is also serve as preperation for next patch which adds support
-for clockevents to nps400.
-Specifically we add new function nps_get_timer_clk() to serve clocksource
-and later clockevent registration.
+If you want to pick this, it's possible to pick. Then i will resend the patches without dt patches.
 
-Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
- drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
- 1 files changed, 37 insertions(+), 26 deletions(-)
+Best Regards,
+Jaehoon Chung
 
-diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-index 70c149a..1533349 100644
---- a/drivers/clocksource/timer-nps.c
-+++ b/drivers/clocksource/timer-nps.c
-@@ -46,7 +46,33 @@
- /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
- static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
- 
--static unsigned long nps_timer_rate;
-+static int nps_get_timer_clk(struct device_node *node,
-+			     unsigned long *timer_freq,
-+			     struct clk **clk)
-+{
-+	int ret;
-+
-+	*clk = of_clk_get(node, 0);
-+	if (IS_ERR(*clk)) {
-+		pr_err("timer missing clk");
-+		return PTR_ERR(*clk);
-+	}
-+
-+	ret = clk_prepare_enable(*clk);
-+	if (ret) {
-+		pr_err("Couldn't enable parent clk\n");
-+		return ret;
-+	}
-+
-+	*timer_freq = clk_get_rate(*clk);
-+	if (!(*timer_freq)) {
-+		pr_err("Couldn't clk get rate\n");
-+		clk_disable_unprepare(*clk);
-+		return *timer_freq;
-+	}
-+
-+	return 0;
-+}
- 
- static cycle_t nps_clksrc_read(struct clocksource *clksrc)
- {
-@@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
- 	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
- }
- 
--static int __init nps_setup_clocksource(struct device_node *node,
--					struct clk *clk)
-+static int __init nps_setup_clocksource(struct device_node *node)
- {
- 	int ret, cluster;
-+	struct clk *clk;
-+	unsigned long nps_timer1_freq;
-+
- 
- 	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
- 		nps_msu_reg_low_addr[cluster] =
- 			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
--				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
-+				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
- 
--	ret = clk_prepare_enable(clk);
--	if (ret) {
--		pr_err("Couldn't enable parent clock\n");
-+	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
-+	if (ret)
- 		return ret;
--	}
- 
--	nps_timer_rate = clk_get_rate(clk);
--
--	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
--				    nps_timer_rate, 301, 32, nps_clksrc_read);
-+	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
-+				    nps_timer1_freq, 301, 32, nps_clksrc_read);
- 	if (ret) {
- 		pr_err("Couldn't register clock source.\n");
- 		clk_disable_unprepare(clk);
-@@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
- 	return ret;
- }
- 
--static int __init nps_timer_init(struct device_node *node)
--{
--	struct clk *clk;
--
--	clk = of_clk_get(node, 0);
--	if (IS_ERR(clk)) {
--		pr_err("Can't get timer clock.\n");
--		return PTR_ERR(clk);
--	}
--
--	return nps_setup_clocksource(node, clk);
--}
--
- CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
--		       nps_timer_init);
-+		       nps_setup_clocksource);
--- 
-1.7.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Best regards,
+> Krzysztof
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
