@@ -1,10 +1,12 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH 0/6] Add STM32F4 missing clocks
-Date: Mon, 7 Nov 2016 14:05:37 +0100
-Message-ID: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH 3/6] clk: stm32f4: Add post divisor for I2S & SAI PLLs and Add lcd-tft clock
+Date: Mon, 7 Nov 2016 14:05:40 +0100
+Message-ID: <1478523943-23142-4-git-send-email-gabriel.fernandez@st.com>
+References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
@@ -12,25 +14,75 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch-set adds:
- - I2S & SAI PLLs
- - SDIO & 48 Mhz clocks
- - LCD-TFT clock
- - I2S & SAI clocks
+This patch adds post dividers of I2S & SAI PLLs.
+These dividers are managed by a dedicated register (RCC_DCKCFGR).
+The PLL should be off before a set rate.
+This patch also introduces the lcd-tft clock.
 
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+---
+ drivers/clk/clk-stm32f4.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-Gabriel Fernandez (6):
-  clk: stm32f4: Add PLL_I2S & PLL_SAI for STM32F429/469 boards
-  clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
-  clk: stm32f4: Add post divisor for I2S & SAI PLLs and Add lcd-tft
-    clock
-  clk: stm32f4: Add I2S clock
-  clk: stm32f4: Add SAI clocks
-  arm: dts: stm32f4: Add external I2S clock
-
- arch/arm/boot/dts/stm32f429.dtsi |   8 +-
- drivers/clk/clk-stm32f4.c        | 441 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 434 insertions(+), 15 deletions(-)
-
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+index dda15bc..5fa5d51 100644
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -215,6 +215,7 @@ struct stm32f4_gate_data {
+ enum {
+ 	SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC,
+ 	PLL_VCO_I2S, PLL_VCO_SAI,
++	CLK_LCD,
+ 	END_PRIMARY_CLK
+ };
+ 
+@@ -599,6 +600,9 @@ static struct clk_hw *clk_register_pll_div(const char *name,
+ static const struct clk_div_table pll_divp_table[] = {
+ 	{ 0, 2 }, { 1, 4 }, { 2, 6 }, { 3, 8 },
+ };
++static const struct clk_div_table pll_lcd_div_table[] = {
++	{ 0, 2 }, { 1, 4 }, { 2, 8 }, { 3, 16 },
++};
+ 
+ /*
+  * Decode current PLL state and (statically) model the state we inherit from
+@@ -659,16 +663,35 @@ static struct clk_hw *stm32f4_rcc_register_pll(const char *pllsrc,
+ 		clk_register_pll_div(data->p_name, data->vco_name, 0, reg,
+ 				16, 2, 0, pll_divp_table, pll_hw, lock);
+ 
+-	if (data->q_name)
++	if (data->q_name) {
+ 		clk_register_pll_div(data->q_name, data->vco_name, 0, reg,
+ 				24, 4, CLK_DIVIDER_ONE_BASED, NULL,
+ 				pll_hw, lock);
+ 
+-	if (data->r_name)
++		if (data->pll_num == PLL_I2S)
++			clk_register_pll_div("plli2s-q-div", data->q_name,
++				0, base + STM32F4_RCC_DCKCFGR,
++				0, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
++
++		if (data->pll_num == PLL_SAI)
++			clk_register_pll_div("pllsai-q-div", data->q_name,
++				0, base + STM32F4_RCC_DCKCFGR,
++				8, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
++	}
++
++	if (data->r_name) {
+ 		clk_register_pll_div(data->r_name, data->vco_name, 0, reg,
+ 				28, 3, CLK_DIVIDER_ONE_BASED, NULL,  pll_hw,
+ 				lock);
+ 
++		if (data->pll_num == PLL_SAI)
++			clks[CLK_LCD] = clk_register_pll_div("lcd-tft",
++					data->r_name, CLK_SET_RATE_PARENT,
++					base + STM32F4_RCC_DCKCFGR, 16, 2, 0,
++					pll_lcd_div_table, pll_hw,
++					&stm32f4_clk_lock);
++	}
++
+ 	return pll_hw;
+ }
+ 
 -- 
 1.9.1
