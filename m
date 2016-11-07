@@ -1,51 +1,62 @@
-From: Slawomir Stepien <sst@poczta.fm>
-Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
- provide _available attributes
-Date: Mon, 7 Nov 2016 17:46:41 +0100
-Message-ID: <20161107164641.GA29162@x220.localdomain>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
- <1477262381-7800-2-git-send-email-peda@axentia.se>
- <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
- <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v17 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Mon, 7 Nov 2016 17:53:42 +0100
+Message-ID: <3e2dfdfd-9d87-b49a-4012-6027bdca10f5@gmail.com>
+References: <1472280263-18177-1-git-send-email-jitao.shi@mediatek.com>
+ <1472280263-18177-2-git-send-email-jitao.shi@mediatek.com>
+ <CAFqH_50_OwsbMWHkT_eukF52BVZYyMbGiamXO=pV4PpJq6BADA@mail.gmail.com>
+ <e00519e2-990c-b9b2-71d4-a4c8d36f5e65@gmail.com>
+ <CAGS+omDmFdqzuFqcCe9gFGemZc88Yt0_3_o2KwOgW=GN_kCakQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Daniel Baluta <daniel.baluta@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGS+omDmFdqzuFqcCe9gFGemZc88Yt0_3_o2KwOgW=GN_kCakQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, stonea168-9Onoh4P/yGk@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Nov 07, 2016 12:57, Peter Rosin wrote:
-> On 2016-11-07 12:37, Daniel Baluta wrote:
-> > On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda@axentia.se> wrote:
-> >> From: Jonathan Cameron <jic23@kernel.org>
-> >>
-> >> A large number of attributes can only take a limited range of values.
-> >> Currently in IIO this is handled by directly registering additional
-> >> *_available attributes thus providing this information to userspace.
-> >>
-> >> It is desirable to provide this information via the core for much the same
-> >> reason this was done for the actual channel information attributes in the
-> >> first place.  If it isn't there, then it can only really be accessed from
-> >> userspace.  Other in kernel IIO consumers have no access to what valid
-> >> parameters are.
-> >>
-> >> Two forms are currently supported:
-> >> * list of values in one particular IIO_VAL_* format.
-> >>         e.g. 1.300000 1.500000 1.730000
-> >> * range specification with a step size:
-> >>         e.g. [1.000000 0.500000 2.500000]
-> >>         equivalent to 1.000000 1.5000000 2.000000 2.500000
-> > 
-> > Is there any driver using this format? :)
-> 
-> Yes, soon. Hopefully. See patch 3/8
-> iio: mcp4531: provide range of available raw values
-> https://patchwork.kernel.org/patch/9391283/
 
-I would also like to add this to mcp4131.c and ds1803.c.
 
--- 
-Slawomir Stepien
+On 05/11/16 00:21, Daniel Kurtz wrote:
+> On Tue, Oct 25, 2016 at 6:23 AM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> On 10/18/2016 04:37 PM, Enric Balletbo Serra wrote:
+>> [...]
+>>>> --- /dev/null
+>>>> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+>> [...]
+>>>>
+>>>> +
+>>>> +/* Firmware */
+>>>> +#define PS_FW_NAME             "ps864x_fw.bin"
+>>>> +
+>>>
+>>> From where I can download this firmware image?
+>>
+>> I suppose this FW bits have to be added to linux-firmware repository first, before this patch can be accepted.
+>
+> All PS8640 devices should already ship with working firmware.
+> The firmware update procedure is only used in the unlikely event where
+> one wants to update the bridge to a different firmware provided by
+> Parade.
+>
+> Why must the lack of firmware really block landing this driver?
+>
+> If this is really so, can we just land the functional part of the
+> driver first, and add the firmware update in a follow-up patch.
+>
+
+After checking other users of request_firmware and check them against 
+linux-firmware I think we don't need the FW in linux-firmware to get the 
+driver merged. Especially as there already is a working FW stored on the 
+device.
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
