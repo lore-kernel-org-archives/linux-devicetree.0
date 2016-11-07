@@ -1,67 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7745 support
-Date: Mon, 7 Nov 2016 09:41:31 +0100
-Message-ID: <CAMuHMdVbEP+pB6Bi1WmXy9MZREa30RiLZiZ0p+8YxYvuMUDj4g@mail.gmail.com>
-References: <3539878.XFtRJDB9iq@wasted.cogentembedded.com> <4419870.yM1Fh9cWBP@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add tango NFC dt bindings doc
+Date: Mon, 07 Nov 2016 10:18:10 +0100
+Message-ID: <1978954.SRtJpfOGp1@wuerfel>
+References: <580F5AD2.9020909@sigmadesigns.com> <580F5B06.6030608@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <4419870.yM1Fh9cWBP@wasted.cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <580F5B06.6030608-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Cc: linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Sat, Nov 5, 2016 at 11:34 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add RZ/G1E (R8A7745) Clock  Pulse Generator / Module Standby and Software
-> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
-> (and RZ/G) code.
->
-> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
-> <geert+renesas@glider.be>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
+On Tuesday, October 25, 2016 3:15:50 PM CET Marc Gonzalez wrote:
+> Add the tango NAND Flash Controller dt bindings documentation.
+> 
+> Signed-off-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
 > ---
-> Changes in version 3:
-> - removed the FDP1-1 module clock;
-> - added Geert's tag.
->
-> Changes in version 2:
-> - changed the Z2 clock's divisor to 3.
-
+>  Documentation/devicetree/bindings/mtd/tango-nand.txt | 38 ++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> new file mode 100644
+> index 000000000000..3cbf95d6595a
 > --- /dev/null
-> +++ linux/drivers/clk/renesas/r8a7745-cpg-mssr.c
-> @@ -0,0 +1,260 @@
-
-> +static const struct cpg_core_clk r8a7745_core_clks[] __initconst = {
-
-> +       /* Core Clock Outputs */
-
-> +       DEF_FIXED("acp",    R8A7745_CLK_ACP,   CLK_EXTAL,         2, 1),
-
-This clock is called CPEX instead of ACP in rev. 1.00 of the RZ/G Series User's
-Manual: Hardware.
-
-> +};
+> +++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> @@ -0,0 +1,38 @@
+> +Sigma Designs Tango4 NAND Flash Controller (NFC)
 > +
-> +static const struct mssr_mod_clk r8a7745_mod_clks[] __initconst = {
+> +Required properties:
+> +
+> +- compatible: "sigma,smp8758-nand"
+> +- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
+> +- dmas: reference to the DMA channel used by the controller
+> +- dma-names: "nfc_sbox"
 
-> +       DEF_MOD("thermal",        522,  CLK_EXTAL),
+Drop the "nfc_" prefix here, it seems redundant.
 
-RZ/G1E does not have the thermal sensor (confirmed by rev. 1.00).
+> +- clocks: reference to the system clock
+> +- #address-cells: <1>
+> +- #size-cells: <0>
+> +
+> +Children nodes represent the available NAND chips.
+> +See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+> +
+> +Example:
+> +
+> +	nand: nand@2c000 {
+> +		compatible = "sigma,smp8758-nand";
+> +		reg = <0x2c000 0x30 0x2d000 0x800 0x20000 0x1000>;
 
-Gr{oetje,eeting}s,
+It would be nicer to write this as
 
-                        Geert
+	reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
 
+which is identical in binary format.
+
+	Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
