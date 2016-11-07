@@ -1,238 +1,245 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v4 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <CAL_JsqLhBwb4eJdrAqLLksovcfP1xm9RGTUQKVvF_WxJaMn4WA@mail.gmail.com>
-Date: Fri, 11 Nov 2016 20:01:42 +0100
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5B9946BF-1688-4BC8-82D5-A2A972B2B3C1@goldelico.com>
-References: <cover.1476712675.git.hns@goldelico.com> <76746b85957c9f3ef7101a7ee883898a414cabd8.1476712675.git.hns@goldelico.com> <CAL_JsqJhzZC6Hw3eRLFDiBA8jih=N507WvEh=TRbPhLS9EjhBQ@mail.gmail.com> <3D3CBADC-42F7-4A2B-9D0D-40A0649F79FB@goldelico.com> <CAL_JsqLhBwb4eJdrAqLLksovcfP1xm9RGTUQKVvF_WxJaMn4WA@mail.gmail.com>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, kernel@pyra-handheld.com
+Return-Path: <radoslaw.pietrzyk@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <1478523943-23142-4-git-send-email-gabriel.fernandez@st.com>
+References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com> <1478523943-23142-4-git-send-email-gabriel.fernandez@st.com>
+From: =?UTF-8?Q?Rados=C5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>
+Date: Mon, 7 Nov 2016 14:48:15 +0100
+Message-ID: <CAFvLkMTM_g8UbCbNTs6_bVoCOgYucpvqABhyPZ77takmuOX13g@mail.gmail.com>
+Subject: Re: [PATCH 3/6] clk: stm32f4: Add post divisor for I2S & SAI PLLs and
+ Add lcd-tft clock
+Content-Type: multipart/alternative; boundary=94eb2c0d90589be52f0540b64687
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
-finally I found time to catch up. Sorry for the delay.
+--94eb2c0d90589be52f0540b64687
+Content-Type: text/plain; charset=UTF-8
 
-> Am 31.10.2016 um 04:39 schrieb Rob Herring <robh+dt@kernel.org>:
->=20
-> On Tue, Oct 18, 2016 at 12:27 PM, H. Nikolaus Schaller
-> <hns@goldelico.com> wrote:
->> Hi Rob,
->>=20
->>> Am 18.10.2016 um 18:22 schrieb Rob Herring <robh+dt@kernel.org>:
->>>=20
->>> On Mon, Oct 17, 2016 at 8:57 AM, H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->>>> commit b98abe52fa8e ("Input: add common DT binding for =
-touchscreens")
->>>> introduced common DT bindings for touchscreens [1] and a helper =
-function to
->>>> parse the DT.
->>>>=20
->>>> commit ed7c9870c9bc ("Input: of_touchscreen - add support for =
-inverted / swapped axes")
->>>> added another helper for parsing axis inversion and swapping
->>>> and applying them to x and y coordinates.
->>>>=20
->>>> Both helpers have been integrated to accommodate any orientation of =
-the
->>>> touch panel in relation to the LCD.
->>>=20
->>> Please add the explanation of why this is a compatible change here.
->>=20
->> Can you please describe in more detail what you are missing here?
->=20
-> You stop handling ti,fuzzx for example. So the default driver value
-> will be used and this is okay because...
+Wouldn't it be good to connect ltdc gate clock with lcd-tft clock to enable
+the whole LCD clock chain in once ?
 
-Ok, now I see. Thanks!
+2016-11-07 14:05 GMT+01:00 <gabriel.fernandez@st.com>:
 
->=20
-> Seems like you would have a regression in behavior if the fuzz values
-> specified in an existing DT are ignored.
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>
+> This patch adds post dividers of I2S & SAI PLLs.
+> These dividers are managed by a dedicated register (RCC_DCKCFGR).
+> The PLL should be off before a set rate.
+> This patch also introduces the lcd-tft clock.
+>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> ---
+>  drivers/clk/clk-stm32f4.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+> index dda15bc..5fa5d51 100644
+> --- a/drivers/clk/clk-stm32f4.c
+> +++ b/drivers/clk/clk-stm32f4.c
+> @@ -215,6 +215,7 @@ struct stm32f4_gate_data {
+>  enum {
+>         SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC,
+>         PLL_VCO_I2S, PLL_VCO_SAI,
+> +       CLK_LCD,
+>         END_PRIMARY_CLK
+>  };
+>
+> @@ -599,6 +600,9 @@ static struct clk_hw *clk_register_pll_div(const char
+> *name,
+>  static const struct clk_div_table pll_divp_table[] = {
+>         { 0, 2 }, { 1, 4 }, { 2, 6 }, { 3, 8 },
+>  };
+> +static const struct clk_div_table pll_lcd_div_table[] = {
+> +       { 0, 2 }, { 1, 4 }, { 2, 8 }, { 3, 16 },
+> +};
+>
+>  /*
+>   * Decode current PLL state and (statically) model the state we inherit
+> from
+> @@ -659,16 +663,35 @@ static struct clk_hw *stm32f4_rcc_register_pll(const
+> char *pllsrc,
+>                 clk_register_pll_div(data->p_name, data->vco_name, 0, reg,
+>                                 16, 2, 0, pll_divp_table, pll_hw, lock);
+>
+> -       if (data->q_name)
+> +       if (data->q_name) {
+>                 clk_register_pll_div(data->q_name, data->vco_name, 0, reg,
+>                                 24, 4, CLK_DIVIDER_ONE_BASED, NULL,
+>                                 pll_hw, lock);
+>
+> -       if (data->r_name)
+> +               if (data->pll_num == PLL_I2S)
+> +                       clk_register_pll_div("plli2s-q-div", data->q_name,
+> +                               0, base + STM32F4_RCC_DCKCFGR,
+> +                               0, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
+> +
+> +               if (data->pll_num == PLL_SAI)
+> +                       clk_register_pll_div("pllsai-q-div", data->q_name,
+> +                               0, base + STM32F4_RCC_DCKCFGR,
+> +                               8, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
+> +       }
+> +
+> +       if (data->r_name) {
+>                 clk_register_pll_div(data->r_name, data->vco_name, 0, reg,
+>                                 28, 3, CLK_DIVIDER_ONE_BASED, NULL,
+> pll_hw,
+>                                 lock);
+>
+> +               if (data->pll_num == PLL_SAI)
+> +                       clks[CLK_LCD] = clk_register_pll_div("lcd-tft",
+> +                                       data->r_name, CLK_SET_RATE_PARENT,
+> +                                       base + STM32F4_RCC_DCKCFGR, 16, 2,
+> 0,
+> +                                       pll_lcd_div_table, pll_hw,
+> +                                       &stm32f4_clk_lock);
+> +       }
+> +
+>         return pll_hw;
+>  }
+>
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
-Well, is there any existing DT using this ti,fuzz property for a =
-tsc2007?
+--94eb2c0d90589be52f0540b64687
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I did not find any use of it in arch/arm/boot/dts.
+<div dir=3D"ltr">Wouldn&#39;t it be good to connect ltdc gate clock with lc=
+d-tft clock to enable the whole LCD clock chain in once ?=C2=A0</div><div c=
+lass=3D"gmail_extra"><br><div class=3D"gmail_quote">2016-11-07 14:05 GMT+01=
+:00  <span dir=3D"ltr">&lt;<a href=3D"mailto:gabriel.fernandez@st.com" targ=
+et=3D"_blank">gabriel.fernandez@st.com</a>&gt;</span>:<br><blockquote class=
+=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
+ing-left:1ex">From: Gabriel Fernandez &lt;<a href=3D"mailto:gabriel.fernand=
+ez@st.com">gabriel.fernandez@st.com</a>&gt;<br>
+<br>
+This patch adds post dividers of I2S &amp; SAI PLLs.<br>
+These dividers are managed by a dedicated register (RCC_DCKCFGR).<br>
+The PLL should be off before a set rate.<br>
+This patch also introduces the lcd-tft clock.<br>
+<br>
+Signed-off-by: Gabriel Fernandez &lt;<a href=3D"mailto:gabriel.fernandez@st=
+.com">gabriel.fernandez@st.com</a>&gt;<br>
+---<br>
+=C2=A0drivers/clk/clk-stm32f4.c | 27 +++++++++++++++++++++++++--<br>
+=C2=A01 file changed, 25 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c<br>
+index dda15bc..5fa5d51 100644<br>
+--- a/drivers/clk/clk-stm32f4.c<br>
++++ b/drivers/clk/clk-stm32f4.c<br>
+@@ -215,6 +215,7 @@ struct stm32f4_gate_data {<br>
+=C2=A0enum {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, C=
+LK_RTC,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 PLL_VCO_I2S, PLL_VCO_SAI,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0CLK_LCD,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 END_PRIMARY_CLK<br>
+=C2=A0};<br>
+<br>
+@@ -599,6 +600,9 @@ static struct clk_hw *clk_register_pll_div(const char *=
+name,<br>
+=C2=A0static const struct clk_div_table pll_divp_table[] =3D {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 { 0, 2 }, { 1, 4 }, { 2, 6 }, { 3, 8 },<br>
+=C2=A0};<br>
++static const struct clk_div_table pll_lcd_div_table[] =3D {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0{ 0, 2 }, { 1, 4 }, { 2, 8 }, { 3, 16 },<br>
++};<br>
+<br>
+=C2=A0/*<br>
+=C2=A0 * Decode current PLL state and (statically) model the state we inher=
+it from<br>
+@@ -659,16 +663,35 @@ static struct clk_hw *stm32f4_rcc_register_pll(<wbr>c=
+onst char *pllsrc,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clk_register_pll_di=
+v(data-&gt;p_<wbr>name, data-&gt;vco_name, 0, reg,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 16, 2, 0, pll_divp_table, pll_hw, lo=
+ck);<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;q_name)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;q_name) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clk_register_pll_di=
+v(data-&gt;q_<wbr>name, data-&gt;vco_name, 0, reg,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 24, 4, CLK_DIVIDER_ONE_BASED, NULL,<=
+br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pll_hw, lock);<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;r_name)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;pll_nu=
+m =3D=3D PLL_I2S)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0clk_register_pll_div(&quot;plli2s-<wbr>q-div&quot;, data-&gt;q_na=
+me,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00, base + STM32F4_RCC_DCKCFGR,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00, 5, 0, NULL, pll_hw, &amp;stm32f4_c=
+lk_lock);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;pll_nu=
+m =3D=3D PLL_SAI)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0clk_register_pll_div(&quot;pllsai-<wbr>q-div&quot;, data-&gt;q_na=
+me,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00, base + STM32F4_RCC_DCKCFGR,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A08, 5, 0, NULL, pll_hw, &amp;stm32f4_c=
+lk_lock);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;r_name) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clk_register_pll_di=
+v(data-&gt;r_<wbr>name, data-&gt;vco_name, 0, reg,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 28, 3, CLK_DIVIDER_ONE_BASED, NULL,=
+=C2=A0 pll_hw,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lock);<br>
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (data-&gt;pll_nu=
+m =3D=3D PLL_SAI)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0clks[CLK_LCD] =3D clk_register_pll_div(&quot;lcd-tft&quot;<wbr>,<=
+br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0data-&gt;=
+r_name, CLK_SET_RATE_PARENT,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0base + ST=
+M32F4_RCC_DCKCFGR, 16, 2, 0,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pll_lcd_d=
+iv_table, pll_hw,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&amp;stm3=
+2f4_clk_lock);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return pll_hw;<br>
+=C2=A0}<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+1.9.1<br>
+<br>
+<br>
+______________________________<wbr>_________________<br>
+linux-arm-kernel mailing list<br>
+<a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@li=
+sts.<wbr>infradead.org</a><br>
+<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" re=
+l=3D"noreferrer" target=3D"_blank">http://lists.infradead.org/<wbr>mailman/=
+listinfo/linux-arm-<wbr>kernel</a><br>
+</font></span></blockquote></div><br></div>
 
-Since we mainly want to fix arch/arm/boot/dts/omap3-gta04.dts we do not
-want to introduce the old ti,fuzzx any more. Rather we want to use the
-new "touchscreen-fuzz-x".
-
-Therefore, I thought that it is safe to remove them - and forgot to
-mention that anywhere.
-
-If someone shows a device where the ti,fuzz is still used, we can still
-add code to override what has been parsed by the common bindings. Or =
-he/she
-can change the DT of the device.
-
->=20
->> The patch simply makes use of the generic helper function introduced =
-by the
->> two patches cited above and is therefore automatically compatible if =
-none of
->> the new properties is defined.
->>=20
->> The tsc2007 didn't have these features before. So what should we say
->> about compatibility?
->=20
-> It certainly had the fuzz features before.
-
->=20
->=20
->>>> -- ti,max-rt: maximum pressure.
->>>> -- ti,fuzzx: specifies the absolute input fuzz x value.
->>>> -  If set, it will permit noise in the data up to +- the value =
-given to the fuzz
->>>> -  parameter, that is used to filter noise from the event stream.
->>>> -- ti,fuzzy: specifies the absolute input fuzz y value.
->>>> -- ti,fuzzz: specifies the absolute input fuzz z value.
-
-I have now added a note in the commit message that the ti,fuzz =
-properties are
-removed as well by this patch.
-
->>>> +- ti,max-rt: maximum pressure resistance above which samples are =
-ignored
->>>> +  (default: 4095).
->>>> +- ti,report-resistance: report resistance (no pressure =3D max_rt) =
-instead
->>>> +  of pressure (no pressure =3D 0).
->>>> +- ti,min-x: minimum value reported by X axis ADC (default 0).
->>>> +- ti,max-x: maximum value reported by X axis ADC (default 4095).
->>>> +- ti,min-y: minimum value reported by Y axis ADC (default 0).
->>>> +- ti,max-y: maximum value reported by Y axis ADC (default 4095).
->>>=20
->>> I thought these were going to be common? I think they should be.
->>=20
->> Yes, we had discussed that before.
->>=20
->> In a second thought, I found that they are not even existing for the =
-different
->> touch chip drivers that are around. And some chip might not need them =
-(because
->> e.g. min/max are constants or defined my means outside the DT or the =
-chip itself
->> can store them in NV memory).
->>=20
->> And, since they define ADC raw-values, they are very closely related =
-to the
->> individual chip, so that I am not sure if it is really necessary to =
-make
->> them common. At least if they are properly documented in the bindings =
-for
->> the specific chip they can have different names without disturbing =
-each
->> other.
->=20
-> They wouldn't disturb each other, but then there is no chance to have
-> common parsing either.
-
-What do we need common parsing for these, if they are really specific to =
-the
-combination of some touch and exactly this chip?
-
-This is different from specifying a touch dimension or fuzz value in =
-pixels.
-Those are passed to the input layer and must be common. But these here =
-are
-not and it is the purpose of the driver to hide them from user space =
-(unless
-they are used as "reasonable" defaults because DT isn't complete or not =
-up
-to date).
-
->=20
->> So I think it is perfectly reasonable to define common bindings =
-towards
->> the input event layer (e.g. size, fuzz, swapping, inversion) and =
-support
->> them by common code which bakes raw coordinates into input events. =
-The latest
->> helper functions already do most of that fully automatic.
->=20
-> I could argue that size in pixels has no business being in DT.
-
-The touchscreen common bindings define the units as "size in pixels".
-
-> That's a property of the panel the touchscreen is glued to. I guess in =
-some
-> cases, the controller is internally scaling the ADC values.
-
-Yes and that scaling is what the tsc2007 driver is doing here because =
-the
-controller doesn't internally like for e.g. USB connected touch screens.
-
->=20
->> Next, I had simply copied them from the ads7846 driver where they
->> exist for a long time. So this is sort of "common", at least for two =
-different
->> chips now. See also patch 6/8 of this series which adds the common =
-properties
->> to the ads7846 as well.
->>=20
->> For more reference about the existing bindings:
->>=20
->> Documentation/devicetree/bindings/input/ads7846.txt
->>=20
->> (btw I think someone should move them to bindings/input/touchscreen).
->=20
-> Patches welcome.
-
-I have added a patch to [PATCH v7].
-
->=20
->> It appears as if there is some overlap of the new generic properties =
-(for x/y
->> swapping) with the old ads7846 properties, but that is something you =
-had
->> already proposed a while ago to make me the driver recognize both =
-properties to
->> stay compatible with older DT files.
->>=20
->> So if we now rename the min/max-x/y properties for the tsc2007 we =
-have to rename
->> them for the ads7846 (and maybe others) as well, which might break =
-out-of-tree
->> ads7846 devices or leads to more complex code for handling of =
-property aliases.
->=20
-> We don't have to rename them for ads7846. That's already baked.
-
-And the longer I think about it, the more I think it is well baked as it =
-is.
-
-> But there's a trend here.
-
-Which trend do you see?
-
-IMHO these adc-min/max properties are very chip specific and there have =
-not been
-many new resistive touch controllers announced recently. So I do not see =
-anything
-which could become a trend.
-
-> You're defining the same property. Use a common
-> name, so when the 3rd binding comes along needing the same thing, we
-> already have a common binding.
-
-Why not take the already existing 1st binding of the ads7846 and let the =
-tsc2007
-come along as the 2nd one which needs the same thing?
-
-Then we have a common binding between these two now and don't need to =
-wait for
-a 3rd one to come (in some uncertain future).
-
-Therefore, I have not yet touched code or description in this area =
-because I don't
-know how to do it really better than proposed in [PATCH v4].
-
-[Patch v7] for the whole series will come right after this mail.
-
-BR and thanks,
-Nikolaus
+--94eb2c0d90589be52f0540b64687--
