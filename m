@@ -1,20 +1,14 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for obtaining
- mode pin state
-Date: Mon, 7 Nov 2016 10:30:05 +0100
-Message-ID: <CAMuHMdUL3GcOoNjd78wn_m0YRQvh8D5RGcC+RaRxEDpQCQxB5g@mail.gmail.com>
-References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg@mail.gmail.com>
- <20161031081923.GF18195@verge.net.au>
- <CAMuHMdXA-hemOT=ZysEfettei9=HsDddGhqddkw38hwRrdeagw@mail.gmail.com>
- <20161031232537.GT16026@codeaurora.org>
- <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
- <20161104194914.GB16026@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/6] pinctrl-aspeed-g5: Never set SCU90[6]
+Date: Mon, 7 Nov 2016 10:32:30 +0100
+Message-ID: <CACRpkdack8N+eAmNXwke_s_ZD+sUC+KnTF1GEJQJV0D=s=_U2Q@mail.gmail.com>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+ <1478097481-14895-2-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161104194914.GB16026@codeaurora.org>
+In-Reply-To: <1478097481-14895-2-git-send-email-andrew@aj.id.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,76 +18,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Fri, Nov 4, 2016 at 8:49 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 11/02, Geert Uytterhoeven wrote:
->> On Tue, Nov 1, 2016 at 12:25 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> >
->> > Would the pull requests for clk also have dts changes at the base
->> > of the tree? Perhaps clk side can just ack the clk patches and
->>
->> Yes they would: this is moving functionality from platform code to DT.
->> Without the DT updates, it will break bisection (except for R-Car Gen2,
->> where we have fallback code to handle old DTBs).
->>
->> > then have it all routed through arm-soc? The only worry I have is
->> > if we need to make some sort of change in clk side that conflicts
->> > with these changes. I don't usually like taking dts changes
->> > through clk tree, so I'd like to avoid that if possible.
->>
->> Everything could go through arm-soc only with your Acked-by.
->> However, there are new clock drivers pending on this series.
->> Either they have to go through arm-soc, too, or this series would
->> be pulled into the clk tree with these new clock drivers.
->>
->> > Part E could happen anytime after everything else happens, so
->> > that doesn't seem like a concern.
->>
->> Part E can indeed by postponed.
->> But if parts A-D are applied together, there's no reason to postpone part E.
->>
->> > Part C could also be made to
->> > only call into the new reset drivers if the reset dts nodes are
->> > present? If that's done then we could merge clk patches anytime
->> > and remove the dead code and the node search at some later time
->> > when everything has settled?
->>
->> That would require adding more backwards compatibility code for
->> old DTBs, even for platform where we're not interested in maintaining
->> that. In addition, Part C depends on the header file for the reset driver
->> to compile the clock driver, even if you would add some DT detection,
->> and on the reset driver to link. So I'm afraid this is not feasible.
->
-> TL;DR: Sounds fine, I'll be on the lookout for the PR.
-
-Thank you very much!
-
-> Longer version: Let me step back a bit and actually think about
-> this longer than 2 minutes. From what I see
-> rcar_rst_read_mode_pins() already returns -ENODEV if the nodes
-> aren't present. Great.
->
-> So clk tree could be given a pull for the clk patches, part C, on
-> top of part A, the reset driver. If the rcar_rst_read_mode_pins()
-> returns failure because the node is missing, we fall back to the
-> old style of doing things. Some drivers already do that anyway,
-
-For R-Car Gen2, we want to keep backwards compatibility for a while.
-But not for the others, and I didn't want to add more code that was going
-to be removed again soon.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gV2VkLCBOb3YgMiwgMjAxNiBhdCAzOjM3IFBNLCBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFq
+LmlkLmF1PiB3cm90ZToKCj4gSWYgYSBwaW4gZGVwZW5kaW5nIG9uIGJpdCA2IGluIFNDVTkwIGlz
+IHJlcXVlc3RlZCBmb3IgR1BJTywgdGhlIGV4cG9ydAo+IHdpbGwgc3VjY2VlZCBidXQgY2hhbmdl
+cyB0byB0aGUgR1BJTydzIHZhbHVlIHdpbGwgbm90IGJlIGFjY2VwdGVkIGJ5IHRoZQo+IGhhcmR3
+YXJlLiBUaGlzIGlzIGJlY2F1c2UgdGhlIHBpbm11eCBkcml2ZXIgaGFzIG1pc2NvbmZpZ3VyZWQg
+dGhlIFNDVSBieQo+IHdyaXRpbmcgMSB0byB0aGUgcmVzZXJ2ZWQgYml0Lgo+Cj4gVGhlIGRlc2Ny
+aXB0aW9uIG9mIFNDVTkwWzZdIGZyb20gdGhlIGRhdGFzaGVldCBpcyAnUmVzZXJ2ZWQsIG11c3Qg
+a2VlcAo+IGF0IHZhbHVlIOKAnTDigJ0nLiBUaGUgZml4IGlzIHRvIHN3aXRjaCBwaW5tdXggZnJv
+bSB0aGUgYml0LWZsaXBwaW5nIG1hY3JvCj4gdG8gZXhwbGljaXRseSBjb25maWd1cmluZyB0aGUg
+LmVuYWJsZSBhbmQgLmRpc2FibGUgdmFsdWVzIHRvIHplcm8uCj4KPiBUaGUgcGF0Y2ggaGFzIGJl
+ZW4gdGVzdGVkIG9uIGFuIEFTVDI1MDAgRVZCLgo+Cj4gRml4ZXM6IDU2ZTU3Y2I2YzA3ZiAocGlu
+Y3RybDogQWRkIHBpbmN0cmwtYXNwZWVkLWc1IGRyaXZlcikKPiBSZXBvcnRlZC1ieTogVW1hIFlh
+ZGxhcGF0aSA8eWFkbGFwYXRAdXMuaWJtLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgSmVm
+ZmVyeSA8YW5kcmV3QGFqLmlkLmF1Pgo+IC0tLQo+Cj4gVGhpcyBwYXRjaCBzaG91bGQgYmUgYXBw
+bGllZCBmb3IgNC45LgoKUGF0Y2ggYXBwbGllZCBmb3IgZml4ZXMsIGFkZGluZyBKb2VsJ3MgcmV2
+aWV3IHRhZy4KCllvdXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
