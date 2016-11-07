@@ -1,44 +1,59 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 1/2] ARM: shmobile: r8a7745: add CPG clock index macros
-Date: Mon, 7 Nov 2016 09:34:35 +0100
-Message-ID: <CAMuHMdVcCwbXRCVy50k=tm=PKi3F3nnyq8UMjdq71k7Yd1tBtA@mail.gmail.com>
-References: <3539878.XFtRJDB9iq@wasted.cogentembedded.com> <6619847.B5XdH7v7xE@wasted.cogentembedded.com>
+Subject: Re: [PATCH v3 2/2] clk: renesas: cpg-mssr: add R8A7745 support
+Date: Mon, 7 Nov 2016 09:41:31 +0100
+Message-ID: <CAMuHMdVbEP+pB6Bi1WmXy9MZREa30RiLZiZ0p+8YxYvuMUDj4g@mail.gmail.com>
+References: <3539878.XFtRJDB9iq@wasted.cogentembedded.com> <4419870.yM1Fh9cWBP@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <6619847.B5XdH7v7xE@wasted.cogentembedded.com>
+In-Reply-To: <4419870.yM1Fh9cWBP@wasted.cogentembedded.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
 Hi Sergei,
 
-On Sat, Nov 5, 2016 at 11:31 PM, Sergei Shtylyov
+On Sat, Nov 5, 2016 at 11:34 PM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Add macros usable by  the device tree sources to reference the R8A7745 CPG
-> clocks  by index. The data comes from the  table 7.2c in the revision 0.50
-> of the RZ/G Series User's Manual.
+> Add RZ/G1E (R8A7745) Clock  Pulse Generator / Module Standby and Software
+> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+> (and RZ/G) code.
+>
+> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+> <geert+renesas@glider.be>.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
 > ---
-> Changes in version 2:
+> Changes in version 3:
+> - removed the FDP1-1 module clock;
 > - added Geert's tag.
 >
->  include/dt-bindings/clock/r8a7745-cpg-mssr.h |   44 +++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> Index: linux/include/dt-bindings/clock/r8a7745-cpg-mssr.h
-> ===================================================================
-> --- /dev/null
-> +++ linux/include/dt-bindings/clock/r8a7745-cpg-mssr.h
+> Changes in version 2:
+> - changed the Z2 clock's divisor to 3.
 
-> +#define R8A7745_CLK_ACP                26
+> --- /dev/null
+> +++ linux/drivers/clk/renesas/r8a7745-cpg-mssr.c
+> @@ -0,0 +1,260 @@
+
+> +static const struct cpg_core_clk r8a7745_core_clks[] __initconst = {
+
+> +       /* Core Clock Outputs */
+
+> +       DEF_FIXED("acp",    R8A7745_CLK_ACP,   CLK_EXTAL,         2, 1),
 
 This clock is called CPEX instead of ACP in rev. 1.00 of the RZ/G Series User's
 Manual: Hardware.
+
+> +};
+> +
+> +static const struct mssr_mod_clk r8a7745_mod_clks[] __initconst = {
+
+> +       DEF_MOD("thermal",        522,  CLK_EXTAL),
+
+RZ/G1E does not have the thermal sensor (confirmed by rev. 1.00).
 
 Gr{oetje,eeting}s,
 
