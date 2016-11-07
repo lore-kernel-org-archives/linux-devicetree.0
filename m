@@ -1,61 +1,85 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 2/2] clk: renesas: cpg-mssr: add R8A7743 support
-Date: Mon, 7 Nov 2016 13:35:09 +0300
-Message-ID: <d6c20d8f-3406-bba7-62f9-2f409f8da44a@cogentembedded.com>
-References: <1737840.BeMyoUTlpl@wasted.cogentembedded.com>
- <7514228.6CSyDUjs5Q@wasted.cogentembedded.com>
- <CAMuHMdXmoGoTQP0QdG_1xg7fTyaa8x5ujbVW9XoJ5GQgg+oEpQ@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4] media: et8ek8: add device tree binding documentation
+Date: Mon, 7 Nov 2016 11:36:48 +0100
+Message-ID: <20161107103648.GA5326@amd>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+ <20161103124749.GA22180@amd>
+ <20161103222014.GI3217@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXmoGoTQP0QdG_1xg7fTyaa8x5ujbVW9XoJ5GQgg+oEpQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161103222014.GI3217@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Rob Herring <robh@kernel.org>, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 11/7/2016 1:09 PM, Geert Uytterhoeven wrote:
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
->> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
->> (and RZ/G) code.
->>
->> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
->> <geert+renesas@glider.be>.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> ---
->> Changes in version 5:
->> - describe the Z clock as PLL0/VCO divided by 2.
->
-> Why did you do that?
+On Fri 2016-11-04 00:20:14, Sakari Ailus wrote:
+> Hi Pavel and Rob,
+>=20
+> On Thu, Nov 03, 2016 at 01:47:49PM +0100, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > > +Mandatory properties
+> > > > +--------------------
+> > > > +
+> > > > +- compatible: "toshiba,et8ek8"
+> > > > +- reg: I2C address (0x3e, or an alternative address)
+> > > > +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> > > > +- clocks: External clock to the sensor
+> > > > +- clock-frequency: Frequency of the external clock to the sensor. =
+Camera
+> > > > +  driver will set this frequency on the external clock.
+> > >=20
+> > > This is fine if the frequency is fixed (e.g. an oscillator), but you=
+=20
+> > > should use the clock binding if clocks are programable.
+> >=20
+> > It is fixed. So I assume this can stay as is? Or do you want me to add
+> > "The clock frequency is a pre-determined frequency known to be
+> > suitable to the board." as Sakari suggests?
 
-    I did it because I removed the divisor-by-2 from PLL0.
+Rob?
+								Pavel
 
->> --- /dev/null
->> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
->> @@ -0,0 +1,270 @@
->
->> +       DEF_FIXED("z",     R8A7743_CLK_Z,       CLK_PLL0,           2, 1),
->
-> FTR, previous version had
->
->        DEF_BASE("z",    R8A7743_CLK_Z,    CLK_TYPE_GEN2_Z,     CLK_PLL0),
->
-> which made the "z" clock configurable.
+> > > > +- reset-gpios: XSHUTDOWN GPIO
+> > >=20
+> > > Please state what the active polarity is.
+> >=20
+> > As in "This gpio will be set to 1 when the chip is powered." ?
+>=20
+> How about:
+>=20
+> "The XSHUTDOWN signal is active high. The sensor is in hardware standby
+> mode when the signal is in low state."
+>=20
+> These bindings start looking more precise than the smiapp ones. :-)
+>=20
 
-     I see your point -- I should have included the divisor-by-2 into the 
-common R-Car gen2 driver code instead...
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> Gr{oetje,eeting}s,
->
->                         Geert
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-MBR, Sergei
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlggWUAACgkQMOfwapXb+vLiEwCdH7WwBwuaU+W+vkyxV0rgCAW0
+SFQAoJobgzgs8G1P1rq7cJoo5gO0rMpK
+=PtQ4
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
