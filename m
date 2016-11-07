@@ -1,33 +1,59 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 3/3] ARM64: dts: meson-gxl-s905x: Enable internal ethernet PHY
-Date: Mon,  7 Nov 2016 11:43:57 +0100
-Message-ID: <20161107104357.24428-4-narmstrong@baylibre.com>
-References: <20161107104357.24428-1-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161107104357.24428-1-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/3] ARM64: dts: meson-gxl: Enable Ethernet
+Date: Mon,  7 Nov 2016 11:43:54 +0100
+Message-ID: <20161107104357.24428-1-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+The Amlogic Meson GXL SoCs have an internal RMII PHY that is muxed with the
+external RGMII pins.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-index 07f0e0b..08237ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
-@@ -46,3 +46,9 @@
- / {
- 	compatible = "amlogic,s905x", "amlogic,meson-gxl";
- };
-+
-+/* S905X Only has access to its internal PHY */
-+&ethmac {
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
+The internal PHY is added in the GXL dtsi and support for each
+board is added in intermediate board family dtsi or final dts.
+
+This patchset depends on ARM64 dts patch at [1]
+
+Changes since v2 RFC at : [3]
+ - Change phy Kconfig/Makefile alphabetic order
+ - GXL dtsi cleanup
+ - Add P230 External PHY reset
+ - Add external PHY compatible ID string
+
+Changes since original RFC patchset at : [2]
+ - Remove meson8b experimental phy switching
+ - Switch to mdio-mux-mmioreg with extennded size support
+ - Add internal phy support for S905x and p231
+ - Add external PHY support for p230
+
+[1] http://lkml.kernel.org/r/1477932286-27482-1-git-send-email-narmstrong@baylibre.com
+[2] http://lkml.kernel.org/r/1477060838-14164-1-git-send-email-narmstrong@baylibre.com
+[3] http://lkml.kernel.org/r/1477932987-27871-1-git-send-email-narmstrong@baylibre.com
+
+Neil Armstrong (3):
+  ARM64: dts: meson-gxl: Add ethernet nodes with internal PHY
+  ARM64: dts: meson-gxl-p23x: Enable ethernet
+  ARM64: dts: meson-gxl-s905x: Enable internal ethernet PHY
+
+ .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      | 25 +++++++++++++
+ .../boot/dts/amlogic/meson-gxl-s905d-p231.dts      |  6 +++
+ .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |  6 +++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 43 ++++++++++++++++++++++
+ 5 files changed, 84 insertions(+)
+
 -- 
 2.7.0
