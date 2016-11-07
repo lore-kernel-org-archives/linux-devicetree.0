@@ -1,34 +1,60 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 6/6] ARM: dts: Extend the S3C RTC node with rtc_src clock
-Date: Mon, 7 Nov 2016 12:09:03 -0300
-Message-ID: <387864ed-b61b-14e9-1171-f9061fb4c322@osg.samsung.com>
-References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
- <1478513376-14307-7-git-send-email-pankaj.dubey@samsung.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 5/9] mfd: da9061: MFD core support
+Date: Mon, 7 Nov 2016 15:25:00 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE7CB6@SW-EX-MBX02.diasemi.com>
+References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
+ <72145ea5055e95d7b6f05168c641927e4f3830d9.1477929725.git.stwiss.opensource@diasemi.com>
+ <20161102142854.GS13127@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1478513376-14307-7-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: krzk@kernel.org, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161102142854.GS13127@dell>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Pankaj,
-
-On 11/07/2016 07:09 AM, Pankaj Dubey wrote:
-> Extend the S3C RTC node with rtc_src clock so it could be operational.
-> The rtc_src clock is provided by MAX8997.
-> 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+T24gMDIgTm92ZW1iZXIgMjAxNiAxNDoyOSwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
+MzEgT2N0IDIwMTYsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KPiA+IEZyb206IFN0ZXZlIFR3aXNzIDxz
+dHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiANCj4gPiBAQCAtNDc1LDcgKzg1NSwy
+NSBAQCBzdGF0aWMgaW50IGRhOTA2Ml9pMmNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywN
+Cj4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiAgCX0NCj4gPg0KPiA+IC0JY2hpcC0+cmVnbWFw
+ID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoaTJjLCAmZGE5MDYyX3JlZ21hcF9jb25maWcpOw0KPiA+
+ICsJc3dpdGNoIChjaGlwLT5jaGlwX3R5cGUpIHsNCj4gPiArCWNhc2UoQ09NUEFUX1RZUEVfREE5
+MDYxKToNCj4gPiArCQljZWxsID0gZGE5MDYxX2RldnM7DQo+ID4gKwkJY2VsbF9udW0gPSBBUlJB
+WV9TSVpFKGRhOTA2MV9kZXZzKTsNCj4gPiArCQlpcnFfY2hpcCA9ICZkYTkwNjFfaXJxX2NoaXA7
+DQo+ID4gKwkJY29uZmlnID0gJmRhOTA2MV9yZWdtYXBfY29uZmlnOw0KPiA+ICsJCWJyZWFrOw0K
+PiA+ICsJY2FzZShDT01QQVRfVFlQRV9EQTkwNjIpOg0KPiA+ICsJCWNlbGwgPSBkYTkwNjJfZGV2
+czsNCj4gPiArCQljZWxsX251bSA9IEFSUkFZX1NJWkUoZGE5MDYyX2RldnMpOw0KPiA+ICsJCWly
+cV9jaGlwID0gJmRhOTA2Ml9pcnFfY2hpcDsNCj4gPiArCQljb25maWcgPSAmZGE5MDYyX3JlZ21h
+cF9jb25maWc7DQo+ID4gKwkJYnJlYWs7DQo+ID4gKwlkZWZhdWx0Og0KPiA+ICsJCWRldl9lcnIo
+Y2hpcC0+ZGV2LCAiVW5yZWNvZ25pc2VkIGNoaXAgdHlwZVxuIik7DQo+ID4gKwkJcmV0dXJuIC1F
+Tk9ERVY7DQo+ID4gKwl9DQo+IA0KPiBJIHZlcnkgbXVjaCBkaXNsaWtlIHdoZW4gTUZEIGFuZCBP
+RiBmdW5jdGlvbmFsaXR5IGlzIG1peGVkLg0KPiANCj4gSW4geW91ciBjYXNlIHlvdSBjYW4gdXNl
+IGRhOTA2Ml9nZXRfZGV2aWNlX3R5cGUoKSB0byBkeW5hbWljYWxseQ0KPiBpbnRlcnJvZ2F0ZSB0
+aGUgZGV2aWNlIGFuZCByZWdpc3RlciB1c2luZyB0aGUgY29ycmVjdCBNRkQgY2VsbHMgdGhhdA0K
+PiB3YXkuDQoNCkhpIExlZSwNCg0KSXQncyB0aGUgZGV2aWNlIHRyZWUgdGhhdCBkZWNpZGVzIHdo
+YXQgdGhlIGNoaXAgdHlwZSBpcy4gSXQncyBub3QgY2hpcA0KaW50ZXJyb2dhdGlvbiBpbiB0aGlz
+IGNhc2UuIFRoZSBvcmRlcmluZyBkaWN0YXRlcyB0aGlzIEkgdGhpbms6IHRvIGFjY2VzcyB0aGUN
+CmhhcmR3YXJlIElEIHJlZ2lzdGVyLCBhIHJlZ21hcCBkZWZpbml0aW9uIGlzIG5lZWRlZCBmaXJz
+dC4gQnV0IGJlY2F1c2UgdGhlDQpjb3JyZWN0IEkyQyByZWdpc3RlciBtYXAgcmVxdWlyZXMgYSBr
+bm93bGVkZ2Ugb2Ygd2hhdCBjaGlwIGlzIGJlaW5nIHVzZWQsDQppdCBiZWNvbWVzIGEgY2lyY3Vs
+YXIgZGVwZW5kZW5jeS4NCg0KVG8gc29sdmUgdGhpcyBkZXBlbmRlbmN5LCBJIGRlZmluZSB0aGUg
+Y2hpcCB0eXBlIChEQTkwNjEgb3IgREE5MDYyKSBpbiB0aGUNCmRldmljZSB0cmVlIGFuZCBhc3Np
+Z24gdGhlIGNvcnJlY3QgcmVnbWFwIGZpcnN0IGJlZm9yZSBhY2Nlc3NpbmcgYW55IHJlZ2lzdGVy
+cy4NCg0KPiA+ICsJY2hpcC0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoaTJjLCBjb25m
+aWcpOw0KPiA+ICAJaWYgKElTX0VSUihjaGlwLT5yZWdtYXApKSB7DQo+ID4gIAkJcmV0ID0gUFRS
+X0VSUihjaGlwLT5yZWdtYXApOw0KPiA+ICAJCWRldl9lcnIoY2hpcC0+ZGV2LCAiRmFpbGVkIHRv
+IGFsbG9jYXRlIHJlZ2lzdGVyIG1hcDogJWRcbiIsDQo+ID4gQEAgLTQ5Myw3ICs4OTEsNyBAQCBz
+dGF0aWMgaW50IGRhOTA2Ml9pMmNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywNCj4gPg0K
+PiA+ICAJcmV0ID0gcmVnbWFwX2FkZF9pcnFfY2hpcChjaGlwLT5yZWdtYXAsIGkyYy0+aXJxLA0K
+PiA+ICAJCQlJUlFGX1RSSUdHRVJfTE9XIHwgSVJRRl9PTkVTSE9UIHxJUlFGX1NIQVJFRCwNCj4g
+PiAtCQkJLTEsICZkYTkwNjJfaXJxX2NoaXAsDQo+ID4gKwkJCS0xLCBpcnFfY2hpcCwNCj4gDQo+
+IFdoYXQgaXMgLTE/DQoNCi4uIGl0J3MgYSByZXF1ZXN0IGZvciBhbiBpcnFfYmFzZS4NCmh0dHA6
+Ly9seHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9rZXJuZWwvaXJxL2lycWRlc2MuYyNMNDc3
+DQoNCklzIHRoZXJlIGEgcmVhc29uIEkgc2hvdWxkbid0IGJlIGRvaW5nIHRoYXQ/DQpUaGVyZSBk
+b2Vzbid0IHNlZW0gdG8gYmUgYSAjZGVmaW5lIGFueXdoZXJlLCBhbmQgdXNpbmcgLTEgc2VlbXMN
+CnRvIGJlIHRoZSBzdGFuZGFyZCBpbiB0aGUga2VybmVsIGF0IHRoZSBtb21lbnQuDQoNClJlZ2Fy
+ZHMsDQpTdGV2ZQ0KDQo=
