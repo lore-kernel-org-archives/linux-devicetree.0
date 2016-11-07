@@ -1,65 +1,39 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] pinctrl: Introduce generic #pinctrl-cells and
- pinctrl_parse_index_with_args
-Date: Mon, 7 Nov 2016 08:26:13 -0700
-Message-ID: <20161107152613.GA2428@atomide.com>
-References: <20161103163550.27330-1-tony@atomide.com>
- <20161103163550.27330-2-tony@atomide.com>
- <CACRpkdaCF4Jc7QY+L44obce=V_W4xgVbPXfuiE7bXJs7ud9q9A@mail.gmail.com>
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V3 4/9] Documentation: devicetree: mfd: da9062/61 MFD
+ binding
+Date: Mon, 7 Nov 2016 15:28:39 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE7CC5@SW-EX-MBX02.diasemi.com>
+References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
+ <502d13b97c67023f2193abfa235e8884eb0ea02f.1477929725.git.stwiss.opensource@diasemi.com>
+ <20161102143201.GT13127@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaCF4Jc7QY+L44obce=V_W4xgVbPXfuiE7bXJs7ud9q9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161102143201.GT13127@dell>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161104 14:50]:
-> On Thu, Nov 3, 2016 at 5:35 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> > Introduce #pinctrl-cells helper binding and generic helper functions
-> > pinctrl_count_index_with_args() and pinctrl_parse_index_with_args().
-> >
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> 
-> Ooops applied this v2 version instead of the v1.
-
-No problem, only the pinctrl-single patches needed
-reposting.
-
-> * kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> [161103 13:29]:
-> >    In file included from drivers/pinctrl/core.c:36:0:
-> > >> drivers/pinctrl/devicetree.h:29:14: warning: 'struct of_phandle_args' declared inside parameter list will not be visible outside of this
-> definition or declaratio
-> 
-> > Hmm maybe we should just include of.h in core.c?
-> 
-> Nah. I just did this:
-> 
-> diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
-> index 7f0a5c4e15ad..c2d1a5505850 100644
-> --- a/drivers/pinctrl/devicetree.h
-> +++ b/drivers/pinctrl/devicetree.h
-> @@ -16,6 +16,8 @@
->   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->   */
-> 
-> +struct of_phandle_args;
-> +
->  #ifdef CONFIG_OF
-> 
-> Let's see if it works!
-
-OK so do we know now? It seems there was one more email
-about it but it may have been without it.
-
-Thanks,
-
-Tony
+T24gMDIgTm92ZW1iZXIgMjAxNiAxNDozMiwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
+MzEgT2N0IDIwMTYsIFN0ZXZlIFR3aXNzIHdyb3RlOg0KPiA+IEZyb206IFN0ZXZlIFR3aXNzIDxz
+dHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPg0KPiA+IFsuLi5dDQo+ID4NCj4gPiAr
+LSBvbmtleSA6IFNlZSAuLi9pbnB1dC9kYTkwNjItb25rZXkudHh0DQo+ID4gKw0KPiA+ICsNCj4g
+PiArLSB3YXRjaGRvZzogU2VlIC4uL3dhdGNoZG9nL2RhOTA2Mi13YXRjaGRvZy50eHQNCj4gPiAr
+DQo+ID4gKw0KPiA+ICstIHRoZXJtYWwgOiBTZWUgLi4vdGhlcm1hbC9kYTkwNjItdGhlcm1hbC50
+eHQNCj4gDQo+IFJlbW92ZSBhbGwgdGhvc2UgZXh0cmEgbGluZXMgaW4gYmV0d2Vlbi4NCg0KT2su
+DQoNCj4gPiAgRXhhbXBsZToNCj4gPiBAQCAtNjQsMTAgKzk2LDYgQEAgRXhhbXBsZToNCj4gPiAg
+CQkJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYyLXJ0YyI7DQo+ID4gIAkJfTsNCj4gPg0KPiA+IC0J
+CXdhdGNoZG9nIHsNCj4gPiAtCQkJY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYyLXdhdGNoZG9nIjsN
+Cj4gPiAtCQl9Ow0KPiA+IC0NCj4gDQo+IFdoeSBkb24ndCB5b3UgaW5jbHVkZSBhIHN1Yi1ub2Rl
+IHBlciBjaGlsZCBkZXZpY2UgYW5kIHVzZQ0KPiBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIHRvIHJl
+Z2lzdGVyIHRoZSBkZXZpY2VzPw0KDQpJbiB0aGlzIGNhc2UgSSdtIGp1c3QgbW92aW5nIHRoZSBi
+aW5kaW5nIGRlc2NyaXB0aW9ucyBpbnRvIGENCmRpZmZlcmVudCBmaWxlLiBJJ20gbm90IHN1cmUg
+SSB1bmRlcnN0YW5kIHdoYXQgeW91IG1lYW4gaGVyZS4NCldoYXQgZG8geW91IGhhdmUgaW4gbWlu
+ZD8NCg0KUmVnYXJkcywNClN0ZXZlDQo=
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
