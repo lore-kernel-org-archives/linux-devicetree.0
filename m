@@ -1,46 +1,53 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 6/6] ARM: dts: Extend the S3C RTC node with rtc_src clock
-Date: Mon, 7 Nov 2016 19:44:11 +0200
-Message-ID: <20161107174411.GC4865@kozik-lap>
-References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
- <1478513376-14307-7-git-send-email-pankaj.dubey@samsung.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v6 0/7] add NS2 support to bgmac
+Date: Mon, 07 Nov 2016 13:11:41 -0500 (EST)
+Message-ID: <20161107.131141.526803424224367244.davem@davemloft.net>
+References: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478513376-14307-7-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478236262-3351-1-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jon.mason@broadcom.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rafal@milecki.pl, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 07, 2016 at 03:39:36PM +0530, Pankaj Dubey wrote:
-> Extend the S3C RTC node with rtc_src clock so it could be operational.
-> The rtc_src clock is provided by MAX8997.
+From: Jon Mason <jon.mason@broadcom.com>
+Date: Fri,  4 Nov 2016 01:10:55 -0400
+
+> Changes in v6:
+> * Use a common bgmac_phy_connect_direct (per Rafal Milecki) 
+> * Rebased on latest net-next
+> * Added Reviewed-by to the relevant patches
 > 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4210-origen.dts | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-> index 6c7ef4e..4cac9b6 100644
-> --- a/arch/arm/boot/dts/exynos4210-origen.dts
-> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
-> @@ -18,6 +18,7 @@
->  #include "exynos4210.dtsi"
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/clock/maxim,max8997.h>
+> Changes in v5:
+> * Change a pr_err to netdev_err (per Scott Branden)
+> * Reword the lane swap binding documentation (per Andrew Lunn)
+> 
+> 
+> Changes in v4:
+> * Actually send out the lane swap binding doc patch (Per Scott Branden)
+> * Remove unused #define (Per Andrew Lunn)
+> 
+> 
+> Changes in v3:
+> * Clean-up the bgmac DT binding doc (per Rob Herring)
+> * Document the lane swap binding and make it generic (Per Andrew Lunn)
+> 
+> 
+> Changes in v2:
+> * Remove the PHY power-on (per Andrew Lunn)
+> * Misc PHY clean-ups regarding comments and #defines (per Andrew Lunn)
+>   This results on none of the original PHY code from Vikas being
+>   present.  So, I'm removing him as an author and giving him
+>   "Inspired-by" credit.
+> * Move PHY lane swapping to PHY driver (per Andrew Lunn and Florian
+>   Fainelli)
+> * Remove bgmac sleep (per Florian Fainelli)
+> * Re-add bgmac chip reset (per Florian Fainelli and Ray Jui)
+> * Rebased on latest net-next
+> * Added patch for bcm54xx_auxctl_read, which is used in the BCM54810
 
-Just a nit: put the system-wide includes in alphabetical order, so
-clock, gpio and finally input. It helps reducing conflicting changes
-(when more people add includes in the same time).
-
-Beside that, looks good, but it requires a dt-bindings in separate patch
-so I could pull it.
-
-Best regards,
-Krzysztof
+Series applied, thanks.
