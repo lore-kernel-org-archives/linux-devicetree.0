@@ -1,152 +1,95 @@
-From: James Schulman <james.schulman@cirrus.com>
-Subject: [PATCH 2/2] ASoC: cs42l42: Add devicetree bindings for
-	CS42L42
-Date: Mon, 7 Nov 2016 14:38:38 -0600
-Message-ID: <139006a2-bc5f-4a49-8269-89c1adc3acf0@EX4.ad.cirrus.com>
-References: <1478551118-14760-1-git-send-email-james.schulman@cirrus.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: [PATCH v3 00/10] Add DT support for ohci-da8xx
+Date: Mon,  7 Nov 2016 21:39:38 +0100
+Message-ID: <20161107203948.28324-1-ahaslam@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1478551118-14760-1-git-send-email-james.schulman@cirrus.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, brian.austin@cirrus.com, broonie@kernel.org, lgirdwood@gmail.com, James Schulman <james.schulman@cirrus.com>, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings documentation file for Cirrus
-Logic CS42L42 codec.
+The purpose of this patch series is to add DT support for the davinci
+ohci driver.
 
-Signed-off-by: James Schulman <james.schulman@cirrus.com>
----
- .../devicetree/bindings/sound/cs42l42.txt          | 110 +++++++++++++++++++++
- 1 file changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs42l42.txt
+To be able to use device tree to probe the driver, we need to remove
+the platform callbacks that are handling vbus and over current.
 
-diff --git a/Documentation/devicetree/bindings/sound/cs42l42.txt b/Documentation/devicetree/bindings/sound/cs42l42.txt
-new file mode 100644
-index 0000000..9a2c5e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs42l42.txt
-@@ -0,0 +1,110 @@
-+CS42L42 audio CODEC
-+
-+Required properties:
-+
-+  - compatible : "cirrus,cs42l42"
-+
-+  - reg : the I2C address of the device for I2C.
-+
-+  - VP-supply, VCP-supply, VD_FILT-supply, VL-supply, VA-supply :
-+  power supplies for the device, as covered in
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+Optional properties:
-+
-+  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
-+  deasserted before communication to the codec starts.
-+
-+  - interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from CS42L42 are delivered to.
-+
-+  - interrupts : IRQ line info CS42L42.
-+  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+  for further information relating to interrupt properties)
-+
-+  - cirrus,ts-inv : Boolean property. For jacks that invert the tip sense
-+  polarity. Normal jacks will short tip sense pin to HS1 when headphones are
-+  plugged in and leave tip sense floating when not plugged in. Inverting jacks
-+  short tip sense when unplugged and float when plugged in.
-+
-+  0 = (Default) Non-inverted
-+  1 = Inverted
-+
-+  - cirrus,ts-dbnc-rise : Debounce the rising edge of TIP_SENSE_PLUG. With no
-+  debounce, the tip sense pin might be noisy on a plug event.
-+
-+  0 - 0ms,
-+  1 - 125ms,
-+  2 - 250ms,
-+  3 - 500ms,
-+  4 - 750ms,
-+  5 - (Default) 1s,
-+  6 - 1.25s,
-+  7 - 1.5s,
-+
-+  - cirrus,ts-dbnc-fall : Debounce the falling edge of TIP_SENSE_UNPLUG.
-+  With no debounce, the tip sense pin might be noisy on an unplug event.
-+
-+  0 - 0ms,
-+  1 - 125ms,
-+  2 - 250ms,
-+  3 - 500ms,
-+  4 - 750ms,
-+  5 - (Default) 1s,
-+  6 - 1.25s,
-+  7 - 1.5s,
-+
-+  - cirrus,btn-det-init-dbnce : This sets how long the driver sleeps after
-+  enabling button detection interrupts. After auto-detection and before
-+  servicing button interrupts, the HS bias needs time to settle. If you
-+  don't wait, there is possibility for erroneous button interrupt.
-+
-+  0ms - 200ms,
-+  Default = 100ms
-+
-+  - cirrus,btn-det-event-dbnce : This sets how long the driver delays after
-+  receiving a button press interrupt. With level detect interrupts, you want
-+  to wait a small amount of time to make sure the button press is making a
-+  clean connection with the bias resistors.
-+
-+  0ms - 20ms,
-+  Default = 10ms
-+
-+  - cirrus,bias-lvls : For a level-detect headset button scheme, each button
-+  will bias the mic pin to a certain voltage. To determine which button was
-+  pressed, the driver will compare this biased voltage to sequential,
-+  decreasing voltages and will stop when a comparator is tripped,
-+  indicating a comparator voltage < bias voltage. This value represents a
-+  percentage of the internally generated HS bias voltage. For different
-+  hardware setups, a designer might want to tweak this. This is an array of
-+  descending values for the comparator voltage.
-+
-+  Array of 4 values
-+  Each 0-63
-+  < x1 x2 x3 x4 >
-+  Default = < 15 8 4 1>
-+
-+
-+Example:
-+
-+cs42l42: cs42l42@48 {
-+	compatible = "cirrus,cs42l42";
-+	reg = <0x48>;
-+	VA-supply = <&dummy_vreg>;
-+	VP-supply = <&dummy_vreg>;
-+	VCP-supply = <&dummy_vreg>;
-+	VD_FILT-supply = <&dummy_vreg>;
-+	VL-supply = <&dummy_vreg>;
-+
-+	reset-gpios = <&axi_gpio_0 1 0>;
-+	interrupt-parent = <&gpio0>;
-+	interrupts = <55 8>
-+
-+	cirrus,ts-inv = <0x00>;
-+	cirrus,ts-dbnc-rise = <0x05>;
-+	cirrus,ts-dbnc-fall = <0x00>;
-+	cirrus,btn-det-init-dbnce = <100>;
-+	cirrus,btn-det-event-dbnce = <10>;
-+	cirrus,bias-lvls = <0x0F 0x08 0x04 0x01>;
-+	cirrus,hs-bias-ramp-rate = <0x02>;
-+};
-\ No newline at end of file
+The first four patches prepare the stage by allowing to use a regulator
+instead of the callbacks.
+
+The next three patches convert the callback users to use a regulator
+instead and then remove the callbacks from the driver and platform code.
+
+Finally, we add device tree bindings and support in the driver.
+
+DEPENDENCIES:
+This series has depends on some patches currently under review
+but mostly accepted:
+1. [PATCH 0/3] fix ohci phy name [1] (accepted)
+2. [PATCH/RFC v2 0/3] regulator: handling of error conditions for usb drivers [2] (accepted)
+3. [PATCH] gpio: davinci: Use unique labels for each gpio chip [3] (review pending)
+
+Also the current davinci baranches soon to be pulled to linux-next:
+davinci-for-v4.10/soc
+davinci-for-v4.10/dt
+davinci-for-v4.10/defconfig
+davinci-for-v4.10/cleanup
+
+A branch with all the dependencies can be found here [4].
+
+Changes form v2->v3
+* drop patches that have been integrated to arch/arm
+* drop regulator patches which will be integrated through regulator tree
+* use of the accepted regulator API to get over current status
+* better patch separation with the use of wrappers
+
+Changes from v1->v2
+* Rebased and added patch to make ohci a separate driver
+* Use a regulator instead of handling Gpios (David Lechner)
+* Add an over current mode to regulator framework
+* Fixed regulator is able to register for and over current irq
+* Added patch by Alexandre to remove build warnings
+* Moved global variables into private hcd structure.
+
+[1] https://lkml.org/lkml/2016/11/2/208
+[2] https://lkml.org/lkml/2016/11/3/188
+[3] http://www.spinics.net/lists/linux-gpio/msg17710.html
+[4] https://github.com/axelhaslamx/linux-axel/commits/ohci-da8xx-dt-v3
+
+Axel Haslam (10):
+  USB: ohci: da8xx: use ohci priv data instead of globals
+  USB: ohci: da8xx: Prepare to remove platform callbacks
+  USB: ohci: da8xx: Allow a regulator to handle VBUS
+  ARM: davinci: da830: Handle vbus with a regulator
+  ARM: davinci: hawk: Remove vbus and over current gpios
+  USB: ohci: da8xx: Remove ohci platform callbacks
+  USB: ohci: da8xx: use a flag instead of mask for ocic
+  USB: ohci: da8xx: Add devicetree bindings
+  USB: ohci: da8xx: Allow probing from DT
+  ARM: dts: da850: add usb device node
+
+ .../devicetree/bindings/usb/ohci-da8xx.txt         |  39 ++++
+ arch/arm/boot/dts/da850-lcdk.dts                   |   8 +
+ arch/arm/boot/dts/da850.dtsi                       |   8 +
+ arch/arm/mach-davinci/board-da830-evm.c            | 108 ++++-----
+ arch/arm/mach-davinci/board-omapl138-hawk.c        |  99 +-------
+ arch/arm/mach-davinci/include/mach/da8xx.h         |   2 +-
+ arch/arm/mach-davinci/usb-da8xx.c                  |   3 +-
+ drivers/usb/host/ohci-da8xx.c                      | 253 +++++++++++++++------
+ include/linux/platform_data/usb-davinci.h          |  20 --
+ 9 files changed, 283 insertions(+), 257 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+
 -- 
-1.9.1
+2.10.1
