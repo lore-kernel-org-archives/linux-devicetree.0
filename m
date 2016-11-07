@@ -1,56 +1,98 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
- provide _available attributes
-Date: Mon, 7 Nov 2016 13:37:44 +0200
-Message-ID: <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se> <1477262381-7800-2-git-send-email-peda@axentia.se>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V4 1/6] clk: tegra: add TEGRA20_CLK_NOR to init table
+Date: Mon, 7 Nov 2016 12:27:53 +0100
+Message-ID: <20161107112753.GA28616@ulmo.ba.sec>
+References: <1478507405-13204-1-git-send-email-mirza.krak@gmail.com>
+ <1478507405-13204-2-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477262381-7800-2-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============6423845510374872831=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1478507405-13204-2-git-send-email-mirza.krak@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mirza Krak <mirza.krak@gmail.com>
+Cc: mark.rutland@arm.com, gnurou@gmail.com, pgaikwad@nvidia.com, linux-clk@vger.kernel.org, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, pdeschrijver@nvidia.com, sboyd@codeaurora.org, linux@armlinux.org.uk, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-tegra@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda@axentia.se> wrote:
-> From: Jonathan Cameron <jic23@kernel.org>
->
-> A large number of attributes can only take a limited range of values.
-> Currently in IIO this is handled by directly registering additional
-> *_available attributes thus providing this information to userspace.
->
-> It is desirable to provide this information via the core for much the same
-> reason this was done for the actual channel information attributes in the
-> first place.  If it isn't there, then it can only really be accessed from
-> userspace.  Other in kernel IIO consumers have no access to what valid
-> parameters are.
->
-> Two forms are currently supported:
-> * list of values in one particular IIO_VAL_* format.
->         e.g. 1.300000 1.500000 1.730000
-> * range specification with a step size:
->         e.g. [1.000000 0.500000 2.500000]
->         equivalent to 1.000000 1.5000000 2.000000 2.500000
 
-Is there any driver using this format? :)
+--===============6423845510374872831==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Disposition: inline
 
->
-> An addition set of masks are used to allow different sharing rules for the
-> *_available attributes generated.
->
-> This allows for example:
->
-> in_accel_x_offset
-> in_accel_y_offset
-> in_accel_offset_available.
->
-> We could have gone with having a specification for each and every
-> info_mask element but that would have meant changing the existing userspace
-> ABI.  This approach does not.
->
-> Signed-off-by: Jonathan Cameron <jic23@kernel.org>
-> [forward ported, added some docs and fixed buffer overflows /peda]
-> Signed-off-by: Peter Rosin <peda@axentia.se>
 
-The patch looks good to me at a first glance.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 07, 2016 at 09:30:00AM +0100, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak@gmail.com>
+>=20
+> Add TEGRA20_CLK_NOR to init table and set default rate to 92 MHz which
+> is max rate.
+>=20
+> The maximum rate value of 92 MHz is pulled from the downstream L4T
+> kernel.
+>=20
+> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>=20
+> Changes in v2:
+> - no changes
+>=20
+> Changes in v3:
+> - Added comment in commit message where I got the maximum rates from.
+>=20
+> Changes in V4:
+> - no changes
+
+Applied, thanks.
+
+Thierry
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJYIGU2AAoJEN0jrNd/PrOht9AP/0roeEvmAvdXBNDHsabHt6md
+rTyHNMy4pyI/nrV6UJCqDZdsyd90r02hclwT8wSzRUqlb8Nb6MkoV399An5TjDp7
+iuIj/ENZ2U2Zy/wsiDuOvs+j9Yx5AII9fabPc635rkjgarTkTmgVXOh4i7KWfqEC
+dAogdbbcsVNnmigmU/MY0nHwMyRqTQg/0oifcSnnncdtHq/U8UFkqx78GAmAI6gp
+7hecLkzALHq133LzFD+d4w9iAH+yuNac0L5/IgzMFlSul7Bna1Wq3sIxtanMhYCu
+2ff6l7GXfF2m2hNG5W3MrN6dh3LjoXkqCQLWoeYCbI63js3c49UvPdg2si2VIP9I
+Weqx8/RKafOCwkcCSdCYCjatoA7ru6lrnv0ZQeuNg+bNEUEWYuBQbnhnQtx4PNXc
+O5xlw0Fw3nJ6ga8A46AUdqRvOk+Qv1wNaAU6Grx8Mw69dVmsuxXqsE9v5TCFwotZ
+M2zliYjMsKO3/pk8U4R2Z3CbagG91FNs9nJyaM1av3tp/lU6OzWWmbKQfEQ8lepZ
+Q3BlnsehHJ65CvIbx3GLp789q0QfllyL9D3tYMkm8wFn3vQ/yDDH19R2ONsGiN87
+PLLI13BmK96omNhq8sTaPxb1vNnIJjtewoyavHJTjbyL1ygCrpAVCeAyieM7+Rh1
+CzaYifKKB3m4BEDWInb9
+=CBbR
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
+
+
+--===============6423845510374872831==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6423845510374872831==--
