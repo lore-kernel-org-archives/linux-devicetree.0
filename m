@@ -1,53 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 5/6] ARM: dts: sun6i: hummingbird: Enable internal audio codec
-Date: Mon,  7 Nov 2016 18:07:02 +0800
-Message-ID: <20161107100703.5586-6-wens@csie.org>
-References: <20161107100703.5586-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161107100703.5586-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 2/2] clk: renesas: cpg-mssr: add R8A7743 support
+Date: Mon, 7 Nov 2016 13:35:09 +0300
+Message-ID: <d6c20d8f-3406-bba7-62f9-2f409f8da44a@cogentembedded.com>
+References: <1737840.BeMyoUTlpl@wasted.cogentembedded.com>
+ <7514228.6CSyDUjs5Q@wasted.cogentembedded.com>
+ <CAMuHMdXmoGoTQP0QdG_1xg7fTyaa8x5ujbVW9XoJ5GQgg+oEpQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXmoGoTQP0QdG_1xg7fTyaa8x5ujbVW9XoJ5GQgg+oEpQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-The Hummingbird A31 has headset and line in audio jacks and an onboard
-mic routed to the pins for the SoC's internal codec. The line out pins
-are routed to an onboard speaker amp, whose output is available on a
-pin header.
+Hello.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+On 11/7/2016 1:09 PM, Geert Uytterhoeven wrote:
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 9a74637f677f..4e0516026596 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -69,6 +69,19 @@
- 	};
- };
- 
-+&codec {
-+	allwinner,audio-routing =
-+		"Headphone", "HP",
-+		"Speaker", "LINEOUT",
-+		"LINEIN", "Line In",
-+		"MIC1", "Mic",
-+		"MIC2", "Headset Mic",
-+		"Mic",	"MBIAS",
-+		"Headset Mic", "HBIAS";
-+	allwinner,pa-gpios = <&pio 7 22 GPIO_ACTIVE_HIGH>; /* PH22 */
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&reg_dcdc3>;
- };
--- 
-2.10.2
+>> Add RZ/G1M (R8A7743) Clock  Pulse Generator / Module Standby and Software
+>> Reset support, using the CPG/MSSR driver core and the common R-Car Gen2
+>> (and RZ/G) code.
+>>
+>> Based on the proof-of-concept R8A7791 CPG/MSSR patch by Geert Uytterhoeven
+>> <geert+renesas@glider.be>.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> ---
+>> Changes in version 5:
+>> - describe the Z clock as PLL0/VCO divided by 2.
+>
+> Why did you do that?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    I did it because I removed the divisor-by-2 from PLL0.
+
+>> --- /dev/null
+>> +++ renesas/drivers/clk/renesas/r8a7743-cpg-mssr.c
+>> @@ -0,0 +1,270 @@
+>
+>> +       DEF_FIXED("z",     R8A7743_CLK_Z,       CLK_PLL0,           2, 1),
+>
+> FTR, previous version had
+>
+>        DEF_BASE("z",    R8A7743_CLK_Z,    CLK_TYPE_GEN2_Z,     CLK_PLL0),
+>
+> which made the "z" clock configurable.
+
+     I see your point -- I should have included the divisor-by-2 into the 
+common R-Car gen2 driver code instead...
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+
+MBR, Sergei
+
