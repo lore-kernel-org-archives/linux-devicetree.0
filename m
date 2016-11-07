@@ -1,69 +1,245 @@
 From: Axel Haslam <ahaslam@baylibre.com>
-Subject: [PATCH v3 08/10] USB: ohci: da8xx: Add devicetree bindings
-Date: Mon,  7 Nov 2016 21:39:46 +0100
-Message-ID: <20161107203948.28324-9-ahaslam@baylibre.com>
+Subject: [PATCH v3 02/10] USB: ohci: da8xx: Prepare to remove platform
+ callbacks
+Date: Mon,  7 Nov 2016 21:39:40 +0100
+Message-ID: <20161107203948.28324-3-ahaslam@baylibre.com>
 References: <20161107203948.28324-1-ahaslam@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20161107203948.28324-1-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
+Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the device tree bindings required for
-the ohci controller found in TI da8xx family of SoC's
+Wrap the platform data callbacks into separate functions.
+This will help migrate to using a regulator by providing a well defined
+place to implement the regulator functions while the platform calls
+are still in place and users have not been converted.
 
-Cc: devicetree@vger.kernel.org
+The platform callbacks will be removed on a following patch.
+
 Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 ---
- .../devicetree/bindings/usb/ohci-da8xx.txt         | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+ drivers/usb/host/ohci-da8xx.c | 125 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 102 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-new file mode 100644
-index 0000000..f18e82c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-@@ -0,0 +1,39 @@
-+DA8XX USB OHCI controller
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 0442c64..9ed43c7 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -80,6 +80,72 @@ static void ohci_da8xx_disable(struct usb_hcd *hcd)
+ 	clk_disable_unprepare(da8xx_ohci->usb11_clk);
+ }
+ 
++static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
 +
-+Required properties:
++	if (hub && hub->set_power)
++		return hub->set_power(1, on);
 +
-+ - compatible: Should be "ti,da830-ohci"
-+ - reg:        Should contain one register range i.e. start and length
-+ - interrupts: Description of the interrupt line
-+ - phys:       Phandle for the PHY device
-+ - phy-names:  Should be "usb-phy"
++	return 0;
++}
 +
-+Optional properties:
-+ - vbus-supply: Regulator that controls vbus power
++static int ohci_da8xx_get_power(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
 +
-+Example:
++	if (hub && hub->get_power)
++		return hub->get_power(1);
 +
-+reg_usb_ohci: regulator@0 {
-+        compatible = "regulator-fixed";
-+        gpio = <&gpio 109 0>;
-+        over-current-gpios = <&gpio 36 0>;
-+        regulator-boot-on;
-+        enable-active-high;
-+        regulator-name = "usb_ohci_vbus";
-+        regulator-min-microvolt = <5000000>;
-+        regulator-max-microvolt = <5000000>;
-+};
++	return 1;
++}
 +
-+usb_phy: usb-phy {
-+        compatible = "ti,da830-usb-phy";
-+        #phy-cells = <1>;
-+};
++static int ohci_da8xx_get_oci(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
 +
-+ohci: usb@0225000 {
-+        compatible = "ti,da830-ohci";
-+        reg = <0x225000 0x1000>;
-+        interrupts = <59>;
-+        phys = <&usb_phy 1>;
-+        phy-names = "usb-phy";
-+        vbus-supply = <&reg_usb_ohci>;
-+};
++	if (hub && hub->get_oci)
++		return hub->get_oci(1);
++
++	return 0;
++}
++
++static int ohci_da8xx_has_set_power(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++
++	if (hub && hub->set_power)
++		return 1;
++
++	return 0;
++}
++
++static int ohci_da8xx_has_oci(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++
++	if (hub && hub->get_oci)
++		return 1;
++
++	return 0;
++}
++
++static int ohci_da8xx_has_potpgt(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++
++	if (hub && hub->potpgt)
++		return 1;
++
++	return 0;
++}
++
+ /*
+  * Handle the port over-current indicator change.
+  */
+@@ -93,6 +159,26 @@ static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub,
+ 		hub->set_power(port, 0);
+ }
+ 
++static int ohci_da8xx_register_notify(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++
++	if (hub && hub->ocic_notify)
++		return hub->ocic_notify(ohci_da8xx_ocic_handler);
++
++	return 0;
++}
++
++static void ohci_da8xx_unregister_notify(struct usb_hcd *hcd)
++{
++	struct device *dev		= hcd->self.controller;
++	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
++
++	if (hub && hub->ocic_notify)
++		hub->ocic_notify(NULL);
++}
++
+ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ {
+ 	struct device *dev		= hcd->self.controller;
+@@ -126,16 +212,18 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ 	 * the correct hub descriptor...
+ 	 */
+ 	rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
+-	if (hub->set_power) {
++	if (ohci_da8xx_has_set_power(hcd)) {
+ 		rh_a &= ~RH_A_NPS;
+ 		rh_a |=  RH_A_PSM;
+ 	}
+-	if (hub->get_oci) {
++	if (ohci_da8xx_has_oci(hcd)) {
+ 		rh_a &= ~RH_A_NOCP;
+ 		rh_a |=  RH_A_OCPM;
+ 	}
+-	rh_a &= ~RH_A_POTPGT;
+-	rh_a |= hub->potpgt << 24;
++	if (ohci_da8xx_has_potpgt(hcd)) {
++		rh_a &= ~RH_A_POTPGT;
++		rh_a |= hub->potpgt << 24;
++	}
+ 	ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
+ 
+ 	return result;
+@@ -168,7 +256,6 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 				  u16 wIndex, char *buf, u16 wLength)
+ {
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+ 	int temp;
+ 
+ 	switch (typeReq) {
+@@ -182,11 +269,11 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 		temp = roothub_portstatus(hcd_to_ohci(hcd), wIndex - 1);
+ 
+ 		/* The port power status (PPS) bit defaults to 1 */
+-		if (hub->get_power && hub->get_power(wIndex) == 0)
++		if (!ohci_da8xx_get_power(hcd))
+ 			temp &= ~RH_PS_PPS;
+ 
+ 		/* The port over-current indicator (POCI) bit is always 0 */
+-		if (hub->get_oci && hub->get_oci(wIndex) > 0)
++		if (ohci_da8xx_get_oci(hcd))
+ 			temp |=  RH_PS_POCI;
+ 
+ 		/* The over-current indicator change (OCIC) bit is 0 too */
+@@ -211,10 +298,7 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex, "POWER");
+ 
+-			if (!hub->set_power)
+-				return -EPIPE;
+-
+-			return hub->set_power(wIndex, temp) ? -EPIPE : 0;
++			return ohci_da8xx_set_power(hcd, temp) ? -EPIPE : 0;
+ 		case USB_PORT_FEAT_C_OVER_CURRENT:
+ 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
+ 				temp ? "Set" : "Clear", wIndex,
+@@ -236,15 +320,10 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 
+ static int ohci_da8xx_probe(struct platform_device *pdev)
+ {
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
+ 	struct da8xx_ohci_hcd *da8xx_ohci;
+ 	struct usb_hcd	*hcd;
+ 	struct resource *mem;
+ 	int error, irq;
+-
+-	if (hub == NULL)
+-		return -ENODEV;
+-
+ 	hcd = usb_create_hcd(&ohci_da8xx_hc_driver, &pdev->dev,
+ 				dev_name(&pdev->dev));
+ 	if (!hcd)
+@@ -290,12 +369,13 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+ 
+ 	device_wakeup_enable(hcd->self.controller);
+ 
+-	if (hub->ocic_notify) {
+-		error = hub->ocic_notify(ohci_da8xx_ocic_handler);
+-		if (!error)
+-			return 0;
+-	}
++	error = ohci_da8xx_register_notify(hcd);
++	if (error)
++		goto err_remove_hcd;
++
++	return 0;
+ 
++err_remove_hcd:
+ 	usb_remove_hcd(hcd);
+ err:
+ 	usb_put_hcd(hcd);
+@@ -305,9 +385,8 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
+ static int ohci_da8xx_remove(struct platform_device *pdev)
+ {
+ 	struct usb_hcd	*hcd = platform_get_drvdata(pdev);
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
+ 
+-	hub->ocic_notify(NULL);
++	ohci_da8xx_unregister_notify(hcd);
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
+ 
 -- 
 2.10.1
