@@ -1,95 +1,76 @@
-From: John Youn <johnyoun@synopsys.com>
-Subject: [PATCH 00/30] usb: dwc2: Gadget descriptor DMA and IOT
-Date: Mon, 07 Nov 2016 14:39:43 -0800
-Message-ID: <cover.1478558343.git.johnyoun__31134.3519286767$1478558484$gmane$org@synopsys.com>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] pinctrl-aspeed-g5: Never set SCU90[6]
+Date: Tue, 08 Nov 2016 09:12:00 +1030
+Message-ID: <1478558520.6206.4.camel@aj.id.au>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+         <1478097481-14895-2-git-send-email-andrew@aj.id.au>
+         <CACPK8Xcbv5VjE9deETV6zC4cPSfeBSgP96QYqV_ebAgtB9Jwtw@mail.gmail.com>
+         <CACRpkdbH8eubEHwHCsdJsmqVp3hkBW4vb5DCHvJxz+tyfFqbKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Matthias Brugger <mbrugger@suse.com>, Wei Xu <xuwei5@hisilicon.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Vahram Aharonyan <vahrama@synopsys.com>, Vardan Mikayelyan <mvardan@synopsys.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-Z/xRCEM9XY+M6QxYiCB8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbH8eubEHwHCsdJsmqVp3hkBW4vb5DCHvJxz+tyfFqbKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series implements gadget-side descriptor DMA for the DWC_hsotg
-controller.
 
-It also includes support for DWC USB IOT controllers which use the
-descriptor DMA mode of operation exclusively. These are two new
-device-only USB controller IPs based on DWC_hsotg.
+--=-Z/xRCEM9XY+M6QxYiCB8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tested on HAPS platform with:
-* HSOTG IP version 3.30a
-* FS/LS IOT IP version 1.00a
-* HS IOT IP version 1.00a
+On Mon, 2016-11-07 at 10:34 +0100, Linus Walleij wrote:
+> > On Thu, Nov 3, 2016 at 11:59 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+>=20
+> > In the future I think we should send fixes separately from the rest of
+> > the series, so it's clear to Linus where we expect patches to end up.
+> >=20
+> > Perhaps Linus can share his preference with us?
+>=20
+> Just make it clear to me where the patch is headed, if it is
+> a fix or a new feature.
+>=20
+> Also mixing stuff in big series is of course problematic because
+> all the CC:in on MFD patches and whatnot that I don't apply
+> makes the picture blurry, but sometimes it is anyways needed
+> for context so it is a soft requirement.
 
-This series should be applied on top of:
-http://marc.info/?l=linux-usb&m=147822095118860&w=2
+Context was my concern here and I would otherwise have split the rest
+of the patches along mfd/pinctrl boundaries. I felt the situation was
+odd enough to warrant presenting the full picture.
 
-Regards,
-John
+Andrew
 
+>=20
+> Yours,
+> Linus Walleij
+--=-Z/xRCEM9XY+M6QxYiCB8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-John Youn (2):
-  usb: dwc2: Deprecate g-use-dma binding
-  usb: dwc2: Enable gadget DDMA by default for HAPS
+-----BEGIN PGP SIGNATURE-----
 
-Vahram Aharonyan (25):
-  usb: dwc2: Update DMA descriptor structure
-  usb: dwc2: gadget: Add descriptor DMA binding
-  usb: dwc2: gadget: Add DMA descriptor status quadlet fields
-  usb: dwc2: gadget: Enable BNA interrupt in descriptor DMA mode
-  usb: dwc2: gadget: Add DMA descriptor chains for EP 0
-  usb: dwc2: host: Rename MAX_DMA_DESC_SIZE to HOST_DMA_NBYTES_LIMIT
-  usb: dwc2: gadget: Transfer length limit checking for DDMA
-  usb: dwc2: gadget: Add DDMA chain pointers to dwc2_hsotg_ep structure
-  usb: dwc2: gadget: Add DDMA chain fill and parse functions
-  usb: dwc2: gadget: EP 0 specific DDMA programming
-  usb: dwc2: gadget: DDMA transfer start and complete
-  usb: dwc2: gadget: Fixes for StsPhseRcvd interrupt
-  usb: dwc2: gadget: Start DDMA IN status phase in StsPhseRcvd handler
-  usb: dwc2: gadget: Enable descriptor DMA mode
-  usb: dwc2: gadget: Add DDMA isoc related fields to dwc2_hsotg_ep
-  usb: dwc2: gadget: Fill isoc descriptor and start transfer in DDMA
-  usb: dwc2: gadget: Add completions for DDMA isoc transfers
-  usb: dwc2: gadget: In DDMA keep incompISOOUT and incompISOIN masked
-  usb: dwc2: gadget: Add start and complete calls for DDMA ISOC
-  usb: dwc2: gadget: Adjust ISOC OUT request's actual len for DDMA
-  usb: dwc2: gadget: Adjustments in debug prints
-  usb: dwc2: gadget: For DDMA parse setup only after SetUp interrupt
-  usb: dwc2: gadget: Correct dwc2_hsotg_ep_stop_xfr() function
-  usb: dwc2: gadget: Disable enabled HW endpoint in
-    dwc2_hsotg_ep_disable
-  usb: dwc2: Add support of dedicated full-speed PHY interface
+iQIcBAABCgAGBQJYIQM4AAoJEJ0dnzgO5LT51TMP/iYPAQbwRgS2VWuUX3ksTkjN
+Y0MH2xXKidNEwyVQK8n+G+O5igGHGCTx10abTBPkoO5nfRJW2/EetcPukc+yURy7
+EI4tknVbkdP/1HG/BmKOMbLkVaQC0iN4rioB/xwgpIdpGU58XwUU2GcPt6ALl29z
+q5MXCKG7YN9l50QKV6ZcOoK3aT178Q02/iakSG9wvQ9QzAv2OEkFtf6aajOk6fHH
+JiB3n3uG70SR9FbWwByM702ofhEjZ6bHZ6VtvRGZI+RzVWdyfZSLbh1Lif7GBqIx
+1K8gLqhVn4desupPlMG/em3V5nBH6eHyw9NCxXCHnMy2hViw0TQ5lQwRYoWeSNpj
+x8Z6K4X9m7NPKW42NzkAEFNFdOr7+xyKawbUU+/nPAbdj1EUkvDBMalixXfCbMII
+X1PjBjonUXBwUdjt+KuZ6Pz3Ax0R8OknhqXJ+udY71/9bUEEJnCqHORGjvML+KY1
+hmqg0h/oXlNZHYwi5cmG67si47vKqNemyPxVtVOk1F1mXe38lbV/FxxJCJfKK8bl
+sdRKAVG2yoptkLEeMWqLv7YCluI8ODsU1U8GpDVrm7lkic266a4X9kgkJc9fw8TK
+4lZNu4rxUeyja9t5QgecGGMT7pMRtC+KIMSdi5b/e3zrcrY2rWvr289o/JI8beTF
+ILkp74RX1PK8o2t9/Sfo
+=OccC
+-----END PGP SIGNATURE-----
 
-Vardan Mikayelyan (3):
-  usb: dwc2: gadget: Add IOT device IDs, configure core accordingly
-  usb: dwc2: gadget: Program ep0_mps for LS
-  usb: dwc2: gadget: Add new core parameter for low speed
+--=-Z/xRCEM9XY+M6QxYiCB8--
 
- Documentation/devicetree/bindings/usb/dwc2.txt |   6 +-
- arch/arm/boot/dts/rk3036.dtsi                  |   2 +-
- arch/arm/boot/dts/rk3288.dtsi                  |   2 +-
- arch/arm/boot/dts/rk3xxx.dtsi                  |   2 +-
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |   2 +-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi       |   2 +-
- drivers/usb/dwc2/core.h                        |  48 ++
- drivers/usb/dwc2/gadget.c                      | 978 ++++++++++++++++++++++---
- drivers/usb/dwc2/hcd.c                         |  12 +-
- drivers/usb/dwc2/hcd.h                         |   2 +-
- drivers/usb/dwc2/hcd_ddma.c                    |  52 +-
- drivers/usb/dwc2/hw.h                          |  48 +-
- drivers/usb/dwc2/params.c                      |  42 +-
- drivers/usb/dwc2/pci.c                         |   3 +-
- 14 files changed, 1039 insertions(+), 162 deletions(-)
-
--- 
-2.10.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
