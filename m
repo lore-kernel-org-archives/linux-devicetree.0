@@ -1,107 +1,60 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 6/9] arm64: dts: m3ulcb: enable SDHI0
-Date: Mon, 7 Nov 2016 14:00:54 +0100
-Message-ID: <20161107130054.GG12319@verge.net.au>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 4/9] arm64: dts: m3ulcb: enable GPIO leds
+Date: Mon, 7 Nov 2016 16:02:05 +0300
+Message-ID: <7749722a-93d5-0d8b-a18c-8858e448f216@cogentembedded.com>
 References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1478196471-1381-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1478196451-1298-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <20161107125737.GF12319@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478196471-1381-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <20161107125737.GF12319@verge.net.au>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+To: Simon Horman <horms@verge.net.au>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 09:07:51PM +0300, Vladimir Barinov wrote:
-> This supports SDHI0 on M3ULCB board SD card slot
+Hi Simon,
 
-Is SDHI3 also exposed on the M3ULCB?
-If so could you consider sending patches to enable it?
+On 07.11.2016 15:57, Simon Horman wrote:
+> On Thu, Nov 03, 2016 at 09:07:31PM +0300, Vladimir Barinov wrote:
+>> This supports GPIO leds on M3ULCB board
+> Are GPIO leds and keys also present on the H3ULCB.
+Yes.
+> If so could you consider sending patches to enable them?
+H3ULCB already includes GPIO leds and keys support in upstream kernel.
 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 48 ++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> index 3329f78..5be0cf6 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-> @@ -44,6 +44,30 @@
->  			gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
->  		};
->  	};
-> +
-> +	vcc_sdhi0: regulator-vcc-sdhi0 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "SDHI0 Vcc";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vccq_sdhi0: regulator-vccq-sdhi0 {
-> +		compatible = "regulator-gpio";
-> +
-> +		regulator-name = "SDHI0 VccQ";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-> +		gpios-states = <1>;
-> +		states = <3300000 1
-> +			  1800000 0>;
-> +	};
->  };
->  
->  &extal_clk {
-> @@ -68,8 +92,33 @@
->  		groups = "scif_clk_a";
->  		function = "scif_clk";
->  	};
-> +
-> +	sdhi0_pins_3v3: sd0_3v3 {
-> +		groups = "sdhi0_data4", "sdhi0_ctrl";
-> +		function = "sdhi0";
-> +		power-source = <3300>;
-> +	};
-> +
-> +	sdhi0_pins_1v8: sd0_1v8 {
-> +		groups = "sdhi0_data4", "sdhi0_ctrl";
-> +		function = "sdhi0";
-> +		power-source = <1800>;
-> +	};
-
-I would prefer the pin nodes to be named as follows:
-
- sdhi0_pins_3v3 ->  sdhi0_pins_3v3
- sdhi0_pins_1v8 -> sdhi0_pins_uhs
-
-Likewise for SDHI2.
-
->  };
->  
-> +&sdhi0 {
-> +	pinctrl-0 = <&sdhi0_pins_3v3>;
-> +	pinctrl-1 = <&sdhi0_pins_1v8>;
-> +	pinctrl-names = "default", "state_uhs";
-> +
-> +	vmmc-supply = <&vcc_sdhi0>;
-> +	vqmmc-supply = <&vccq_sdhi0>;
-> +	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
-> +	bus-width = <4>;
-> +	sd-uhs-sdr50;
-> +	status = "okay";
-> +};
-> +
->  &scif2 {
->  	pinctrl-0 = <&scif2_pins>;
->  	pinctrl-names = "default";
-> -- 
-> 1.9.1
-> 
+Regards,
+Vladimir
+>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> ---
+>>   arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 13 +++++++++++++
+>>   1 file changed, 13 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> index fb694b8..3329f78 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> @@ -31,6 +31,17 @@
+>>   		/* first 128MB is reserved for secure area. */
+>>   		reg = <0x0 0x48000000 0x0 0x38000000>;
+>>   	};
+>> +
+>> +	leds {
+>> +		compatible = "gpio-leds";
+>> +
+>> +		led5 {
+>> +			gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+>> +		};
+>> +		led6 {
+>> +			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+>> +		};
+>> +	};
+>>   };
+>>   
+>>   &extal_clk {
+>> -- 
+>> 1.9.1
+>>
