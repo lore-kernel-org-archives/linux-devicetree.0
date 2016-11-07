@@ -1,14 +1,15 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v2 1/6] pinctrl-aspeed-g5: Never set SCU90[6]
-Date: Mon, 7 Nov 2016 10:32:30 +0100
-Message-ID: <CACRpkdack8N+eAmNXwke_s_ZD+sUC+KnTF1GEJQJV0D=s=_U2Q@mail.gmail.com>
+Date: Mon, 7 Nov 2016 10:34:14 +0100
+Message-ID: <CACRpkdbH8eubEHwHCsdJsmqVp3hkBW4vb5DCHvJxz+tyfFqbKQ@mail.gmail.com>
 References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
  <1478097481-14895-2-git-send-email-andrew@aj.id.au>
+ <CACPK8Xcbv5VjE9deETV6zC4cPSfeBSgP96QYqV_ebAgtB9Jwtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478097481-14895-2-git-send-email-andrew@aj.id.au>
+In-Reply-To: <CACPK8Xcbv5VjE9deETV6zC4cPSfeBSgP96QYqV_ebAgtB9Jwtw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,26 +19,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMiwgMjAxNiBhdCAzOjM3IFBNLCBBbmRyZXcgSmVmZmVyeSA8YW5kcmV3QGFq
-LmlkLmF1PiB3cm90ZToKCj4gSWYgYSBwaW4gZGVwZW5kaW5nIG9uIGJpdCA2IGluIFNDVTkwIGlz
-IHJlcXVlc3RlZCBmb3IgR1BJTywgdGhlIGV4cG9ydAo+IHdpbGwgc3VjY2VlZCBidXQgY2hhbmdl
-cyB0byB0aGUgR1BJTydzIHZhbHVlIHdpbGwgbm90IGJlIGFjY2VwdGVkIGJ5IHRoZQo+IGhhcmR3
-YXJlLiBUaGlzIGlzIGJlY2F1c2UgdGhlIHBpbm11eCBkcml2ZXIgaGFzIG1pc2NvbmZpZ3VyZWQg
-dGhlIFNDVSBieQo+IHdyaXRpbmcgMSB0byB0aGUgcmVzZXJ2ZWQgYml0Lgo+Cj4gVGhlIGRlc2Ny
-aXB0aW9uIG9mIFNDVTkwWzZdIGZyb20gdGhlIGRhdGFzaGVldCBpcyAnUmVzZXJ2ZWQsIG11c3Qg
-a2VlcAo+IGF0IHZhbHVlIOKAnTDigJ0nLiBUaGUgZml4IGlzIHRvIHN3aXRjaCBwaW5tdXggZnJv
-bSB0aGUgYml0LWZsaXBwaW5nIG1hY3JvCj4gdG8gZXhwbGljaXRseSBjb25maWd1cmluZyB0aGUg
-LmVuYWJsZSBhbmQgLmRpc2FibGUgdmFsdWVzIHRvIHplcm8uCj4KPiBUaGUgcGF0Y2ggaGFzIGJl
-ZW4gdGVzdGVkIG9uIGFuIEFTVDI1MDAgRVZCLgo+Cj4gRml4ZXM6IDU2ZTU3Y2I2YzA3ZiAocGlu
-Y3RybDogQWRkIHBpbmN0cmwtYXNwZWVkLWc1IGRyaXZlcikKPiBSZXBvcnRlZC1ieTogVW1hIFlh
-ZGxhcGF0aSA8eWFkbGFwYXRAdXMuaWJtLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgSmVm
-ZmVyeSA8YW5kcmV3QGFqLmlkLmF1Pgo+IC0tLQo+Cj4gVGhpcyBwYXRjaCBzaG91bGQgYmUgYXBw
-bGllZCBmb3IgNC45LgoKUGF0Y2ggYXBwbGllZCBmb3IgZml4ZXMsIGFkZGluZyBKb2VsJ3MgcmV2
-aWV3IHRhZy4KCllvdXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, Nov 3, 2016 at 11:59 PM, Joel Stanley <joel@jms.id.au> wrote:
+
+> In the future I think we should send fixes separately from the rest of
+> the series, so it's clear to Linus where we expect patches to end up.
+>
+> Perhaps Linus can share his preference with us?
+
+Just make it clear to me where the patch is headed, if it is
+a fix or a new feature.
+
+Also mixing stuff in big series is of course problematic because
+all the CC:in on MFD patches and whatnot that I don't apply
+makes the picture blurry, but sometimes it is anyways needed
+for context so it is a soft requirement.
+
+Yours,
+Linus Walleij
