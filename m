@@ -1,104 +1,95 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 03/30] usb: dwc2: gadget: Add descriptor DMA binding
-Date: Mon, 07 Nov 2016 14:39:53 -0800
-Message-ID: <e0d302ebcbad32242da84894c173b743b9199f71.1478558343.git.johnyoun__39685.472023166$1478558440$gmane$org@synopsys.com>
-References: <cover.1478558343.git.johnyoun@synopsys.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1478558343.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: John Youn <johnyoun@synopsys.com>
+Subject: [PATCH 00/30] usb: dwc2: Gadget descriptor DMA and IOT
+Date: Mon, 07 Nov 2016 14:39:43 -0800
+Message-ID: <cover.1478558343.git.johnyoun__31134.3519286767$1478558484$gmane$org@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Matthias Brugger <mbrugger@suse.com>, Wei Xu <xuwei5@hisilicon.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Vahram Aharonyan <vahrama@synopsys.com>, Vardan Mikayelyan <mvardan@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+This series implements gadget-side descriptor DMA for the DWC_hsotg
+controller.
 
-Add the devicetree binding to enable descriptor DMA and read it in to
-the corresponding parameter during probe.
+It also includes support for DWC USB IOT controllers which use the
+descriptor DMA mode of operation exclusively. These are two new
+device-only USB controller IPs based on DWC_hsotg.
 
-Signed-off-by: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
- drivers/usb/dwc2/core.h                        |  4 ++++
- drivers/usb/dwc2/gadget.c                      | 11 +++++++++++
- drivers/usb/dwc2/params.c                      |  4 ++++
- 4 files changed, 20 insertions(+)
+Tested on HAPS platform with:
+* HSOTG IP version 3.30a
+* FS/LS IOT IP version 1.00a
+* HS IOT IP version 1.00a
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 389a461..1db9c37 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -27,6 +27,7 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
-   Refer to usb/generic.txt
- - snps,host-dma-disable: disable host DMA mode.
- - snps,gadget-dma-enable: enable gadget DMA mode.
-+- snps,gadget-dma-desc-enable: enable gadget DMA descriptor mode.
- - g-rx-fifo-size: size of rx fifo size in gadget mode.
- - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
- - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index a1075ad..322ffe0 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -421,6 +421,9 @@ enum dwc2_ep0_state {
-  * @g_dma:              If true, enables dma usage on the device. This
-  *                      setting is not auto-detected. It must be
-  *                      explicitly enabled (default: false).
-+ * @g_dma_desc:         If true, enables descriptor DMA. this
-+ *                      setting is not auto-detected. It must be
-+ *                      explicitly enabled (default: false).
-  * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-  *			DWORDS from 16-32768 (default: 2048 if
-  *			possible, otherwise autodetect).
-@@ -500,6 +503,7 @@ struct dwc2_core_params {
- 
- 	/* Gadget parameters */
- 	bool g_dma;
-+	bool g_dma_desc;
- 	u16 g_rx_fifo_size;
- 	u16 g_np_tx_fifo_size;
- 	u32 g_tx_fifo_size[MAX_EPS_CHANNELS];
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 1ba0bfc..4013518 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -96,6 +96,17 @@ static inline bool using_dma(struct dwc2_hsotg *hsotg)
- 	return hsotg->params.g_dma;
- }
- 
-+/*
-+ * using_desc_dma - return the descriptor DMA status of the driver.
-+ * @hsotg: The driver state.
-+ *
-+ * Return true if we're using descriptor DMA.
-+ */
-+static inline bool using_desc_dma(struct dwc2_hsotg *hsotg)
-+{
-+	return hsotg->params.g_dma_desc;
-+}
-+
- /**
-  * dwc2_gadget_incr_frame_num - Increments the targeted frame number.
-  * @hs_ep: The endpoint
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index aeece91..244ac0b 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -1172,6 +1172,10 @@ static void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
- 					    false, false,
- 					    dma_capable);
- 
-+		dwc2_set_param_bool(hsotg, &p->g_dma_desc, true,
-+				    "snps,gadget-dma-desc-enable",
-+				    false, false, !!hw->dma_desc_enable);
-+
- 		/*
- 		 * The values for g_rx_fifo_size (2048) and
- 		 * g_np_tx_fifo_size (1024) come from the legacy s3c
+This series should be applied on top of:
+http://marc.info/?l=linux-usb&m=147822095118860&w=2
+
+Regards,
+John
+
+
+John Youn (2):
+  usb: dwc2: Deprecate g-use-dma binding
+  usb: dwc2: Enable gadget DDMA by default for HAPS
+
+Vahram Aharonyan (25):
+  usb: dwc2: Update DMA descriptor structure
+  usb: dwc2: gadget: Add descriptor DMA binding
+  usb: dwc2: gadget: Add DMA descriptor status quadlet fields
+  usb: dwc2: gadget: Enable BNA interrupt in descriptor DMA mode
+  usb: dwc2: gadget: Add DMA descriptor chains for EP 0
+  usb: dwc2: host: Rename MAX_DMA_DESC_SIZE to HOST_DMA_NBYTES_LIMIT
+  usb: dwc2: gadget: Transfer length limit checking for DDMA
+  usb: dwc2: gadget: Add DDMA chain pointers to dwc2_hsotg_ep structure
+  usb: dwc2: gadget: Add DDMA chain fill and parse functions
+  usb: dwc2: gadget: EP 0 specific DDMA programming
+  usb: dwc2: gadget: DDMA transfer start and complete
+  usb: dwc2: gadget: Fixes for StsPhseRcvd interrupt
+  usb: dwc2: gadget: Start DDMA IN status phase in StsPhseRcvd handler
+  usb: dwc2: gadget: Enable descriptor DMA mode
+  usb: dwc2: gadget: Add DDMA isoc related fields to dwc2_hsotg_ep
+  usb: dwc2: gadget: Fill isoc descriptor and start transfer in DDMA
+  usb: dwc2: gadget: Add completions for DDMA isoc transfers
+  usb: dwc2: gadget: In DDMA keep incompISOOUT and incompISOIN masked
+  usb: dwc2: gadget: Add start and complete calls for DDMA ISOC
+  usb: dwc2: gadget: Adjust ISOC OUT request's actual len for DDMA
+  usb: dwc2: gadget: Adjustments in debug prints
+  usb: dwc2: gadget: For DDMA parse setup only after SetUp interrupt
+  usb: dwc2: gadget: Correct dwc2_hsotg_ep_stop_xfr() function
+  usb: dwc2: gadget: Disable enabled HW endpoint in
+    dwc2_hsotg_ep_disable
+  usb: dwc2: Add support of dedicated full-speed PHY interface
+
+Vardan Mikayelyan (3):
+  usb: dwc2: gadget: Add IOT device IDs, configure core accordingly
+  usb: dwc2: gadget: Program ep0_mps for LS
+  usb: dwc2: gadget: Add new core parameter for low speed
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |   6 +-
+ arch/arm/boot/dts/rk3036.dtsi                  |   2 +-
+ arch/arm/boot/dts/rk3288.dtsi                  |   2 +-
+ arch/arm/boot/dts/rk3xxx.dtsi                  |   2 +-
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |   2 +-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi       |   2 +-
+ drivers/usb/dwc2/core.h                        |  48 ++
+ drivers/usb/dwc2/gadget.c                      | 978 ++++++++++++++++++++++---
+ drivers/usb/dwc2/hcd.c                         |  12 +-
+ drivers/usb/dwc2/hcd.h                         |   2 +-
+ drivers/usb/dwc2/hcd_ddma.c                    |  52 +-
+ drivers/usb/dwc2/hw.h                          |  48 +-
+ drivers/usb/dwc2/params.c                      |  42 +-
+ drivers/usb/dwc2/pci.c                         |   3 +-
+ 14 files changed, 1039 insertions(+), 162 deletions(-)
+
 -- 
 2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
