@@ -1,245 +1,181 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: [PATCH v3 02/10] USB: ohci: da8xx: Prepare to remove platform
- callbacks
-Date: Mon,  7 Nov 2016 21:39:40 +0100
-Message-ID: <20161107203948.28324-3-ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 04/10] ARM: davinci: da830: Handle vbus with a regulator
+Date: Mon,  7 Nov 2016 21:39:42 +0100
+Message-ID: <20161107203948.28324-5-ahaslam@baylibre.com>
 References: <20161107203948.28324-1-ahaslam@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161107203948.28324-1-ahaslam@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161107203948.28324-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Wrap the platform data callbacks into separate functions.
-This will help migrate to using a regulator by providing a well defined
-place to implement the regulator functions while the platform calls
-are still in place and users have not been converted.
+The usb driver can now take a regulator instead of the platform
+callbacks for vbus handling. Lets use a regulator so we can remove
+the callbacks in a later patch.
 
-The platform callbacks will be removed on a following patch.
-
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/host/ohci-da8xx.c | 125 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 102 insertions(+), 23 deletions(-)
+ arch/arm/mach-davinci/board-da830-evm.c | 108 +++++++++++---------------------
+ 1 file changed, 38 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index 0442c64..9ed43c7 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -80,6 +80,72 @@ static void ohci_da8xx_disable(struct usb_hcd *hcd)
- 	clk_disable_unprepare(da8xx_ohci->usb11_clk);
- }
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 5db0901..16a401a 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -14,6 +14,7 @@
+ #include <linux/console.h>
+ #include <linux/interrupt.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/machine.h>
+ #include <linux/platform_device.h>
+ #include <linux/i2c.h>
+ #include <linux/i2c/pcf857x.h>
+@@ -28,6 +29,7 @@
+ #include <linux/platform_data/spi-davinci.h>
+ #include <linux/platform_data/usb-davinci.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/fixed.h>
  
-+static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->set_power)
-+		return hub->set_power(1, on);
-+
-+	return 0;
-+}
-+
-+static int ohci_da8xx_get_power(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->get_power)
-+		return hub->get_power(1);
-+
-+	return 1;
-+}
-+
-+static int ohci_da8xx_get_oci(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->get_oci)
-+		return hub->get_oci(1);
-+
-+	return 0;
-+}
-+
-+static int ohci_da8xx_has_set_power(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->set_power)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int ohci_da8xx_has_oci(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->get_oci)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int ohci_da8xx_has_potpgt(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->potpgt)
-+		return 1;
-+
-+	return 0;
-+}
-+
- /*
-  * Handle the port over-current indicator change.
-  */
-@@ -93,6 +159,26 @@ static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub,
- 		hub->set_power(port, 0);
- }
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -38,72 +40,48 @@
+ #include <mach/da8xx.h>
  
-+static int ohci_da8xx_register_notify(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->ocic_notify)
-+		return hub->ocic_notify(ohci_da8xx_ocic_handler);
-+
-+	return 0;
-+}
-+
-+static void ohci_da8xx_unregister_notify(struct usb_hcd *hcd)
-+{
-+	struct device *dev		= hcd->self.controller;
-+	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
-+
-+	if (hub && hub->ocic_notify)
-+		hub->ocic_notify(NULL);
-+}
-+
- static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ #define DA830_EVM_PHY_ID		""
+-/*
+- * USB1 VBUS is controlled by GPIO1[15], over-current is reported on GPIO2[4].
+- */
+-#define ON_BD_USB_DRV	GPIO_TO_PIN(1, 15)
+-#define ON_BD_USB_OVC	GPIO_TO_PIN(2, 4)
+ 
+ static const short da830_evm_usb11_pins[] = {
+ 	DA830_GPIO1_15, DA830_GPIO2_4,
+ 	-1
+ };
+ 
+-static da8xx_ocic_handler_t da830_evm_usb_ocic_handler;
+-
+-static int da830_evm_usb_set_power(unsigned port, int on)
+-{
+-	gpio_set_value(ON_BD_USB_DRV, on);
+-	return 0;
+-}
++static struct regulator_consumer_supply usb_ohci_consumer_supply =
++	REGULATOR_SUPPLY("vbus", "ohci-da8xx");
+ 
+-static int da830_evm_usb_get_power(unsigned port)
+-{
+-	return gpio_get_value(ON_BD_USB_DRV);
+-}
+-
+-static int da830_evm_usb_get_oci(unsigned port)
+-{
+-	return !gpio_get_value(ON_BD_USB_OVC);
+-}
+-
+-static irqreturn_t da830_evm_usb_ocic_irq(int, void *);
+-
+-static int da830_evm_usb_ocic_notify(da8xx_ocic_handler_t handler)
+-{
+-	int irq 	= gpio_to_irq(ON_BD_USB_OVC);
+-	int error	= 0;
+-
+-	if (handler != NULL) {
+-		da830_evm_usb_ocic_handler = handler;
+-
+-		error = request_irq(irq, da830_evm_usb_ocic_irq,
+-				    IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+-				    "OHCI over-current indicator", NULL);
+-		if (error)
+-			pr_err("%s: could not request IRQ to watch over-current indicator changes\n",
+-			       __func__);
+-	} else
+-		free_irq(irq, NULL);
+-
+-	return error;
+-}
++static struct regulator_init_data usb_ohci_initdata = {
++	.consumer_supplies = &usb_ohci_consumer_supply,
++	.num_consumer_supplies = 1,
++	.constraints = {
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++};
+ 
+-static struct da8xx_ohci_root_hub da830_evm_usb11_pdata = {
+-	.set_power	= da830_evm_usb_set_power,
+-	.get_power	= da830_evm_usb_get_power,
+-	.get_oci	= da830_evm_usb_get_oci,
+-	.ocic_notify	= da830_evm_usb_ocic_notify,
++static struct fixed_voltage_config usb_ohci_config = {
++	.supply_name		= "vbus",
++	.microvolts		= 5000000,
++	.gpio			= GPIO_TO_PIN(1, 15),
++	.enable_high		= 1,
++	.enabled_at_boot	= 0,
++	.init_data		= &usb_ohci_initdata,
++};
+ 
+-	/* TPS2065 switch @ 5V */
+-	.potpgt		= (3 + 1) / 2,	/* 3 ms max */
++static struct platform_device da8xx_usb11_regulator = {
++	.name	= "reg-fixed-voltage",
++	.id	= 0,
++	.dev	= {
++		.platform_data = &usb_ohci_config,
++	},
+ };
+ 
+-static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
+-{
+-	da830_evm_usb_ocic_handler(&da830_evm_usb11_pdata, 1);
+-	return IRQ_HANDLED;
+-}
++static struct gpiod_lookup_table usb11_gpios_table = {
++	.dev_id = "reg-fixed-voltage.0",
++	.table = {
++		/* gpio chip 1 contains gpio range 32-63 */
++		GPIO_LOOKUP("davinci_gpio.1", 4, "over-current",
++				GPIO_ACTIVE_LOW),
++	},
++};
+ 
+ static __init void da830_evm_usb_init(void)
  {
- 	struct device *dev		= hcd->self.controller;
-@@ -126,16 +212,18 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
- 	 * the correct hub descriptor...
- 	 */
- 	rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
--	if (hub->set_power) {
-+	if (ohci_da8xx_has_set_power(hcd)) {
- 		rh_a &= ~RH_A_NPS;
- 		rh_a |=  RH_A_PSM;
+@@ -145,23 +123,13 @@ static __init void da830_evm_usb_init(void)
+ 		return;
  	}
--	if (hub->get_oci) {
-+	if (ohci_da8xx_has_oci(hcd)) {
- 		rh_a &= ~RH_A_NOCP;
- 		rh_a |=  RH_A_OCPM;
- 	}
--	rh_a &= ~RH_A_POTPGT;
--	rh_a |= hub->potpgt << 24;
-+	if (ohci_da8xx_has_potpgt(hcd)) {
-+		rh_a &= ~RH_A_POTPGT;
-+		rh_a |= hub->potpgt << 24;
-+	}
- 	ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
  
- 	return result;
-@@ -168,7 +256,6 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 				  u16 wIndex, char *buf, u16 wLength)
- {
- 	struct device *dev		= hcd->self.controller;
--	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
- 	int temp;
- 
- 	switch (typeReq) {
-@@ -182,11 +269,11 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 		temp = roothub_portstatus(hcd_to_ohci(hcd), wIndex - 1);
- 
- 		/* The port power status (PPS) bit defaults to 1 */
--		if (hub->get_power && hub->get_power(wIndex) == 0)
-+		if (!ohci_da8xx_get_power(hcd))
- 			temp &= ~RH_PS_PPS;
- 
- 		/* The port over-current indicator (POCI) bit is always 0 */
--		if (hub->get_oci && hub->get_oci(wIndex) > 0)
-+		if (ohci_da8xx_get_oci(hcd))
- 			temp |=  RH_PS_POCI;
- 
- 		/* The over-current indicator change (OCIC) bit is 0 too */
-@@ -211,10 +298,7 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
- 				temp ? "Set" : "Clear", wIndex, "POWER");
- 
--			if (!hub->set_power)
--				return -EPIPE;
--
--			return hub->set_power(wIndex, temp) ? -EPIPE : 0;
-+			return ohci_da8xx_set_power(hcd, temp) ? -EPIPE : 0;
- 		case USB_PORT_FEAT_C_OVER_CURRENT:
- 			dev_dbg(dev, "%sPortFeature(%u): %s\n",
- 				temp ? "Set" : "Clear", wIndex,
-@@ -236,15 +320,10 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 
- static int ohci_da8xx_probe(struct platform_device *pdev)
- {
--	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
- 	struct da8xx_ohci_hcd *da8xx_ohci;
- 	struct usb_hcd	*hcd;
- 	struct resource *mem;
- 	int error, irq;
--
--	if (hub == NULL)
--		return -ENODEV;
--
- 	hcd = usb_create_hcd(&ohci_da8xx_hc_driver, &pdev->dev,
- 				dev_name(&pdev->dev));
- 	if (!hcd)
-@@ -290,12 +369,13 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
- 
- 	device_wakeup_enable(hcd->self.controller);
- 
--	if (hub->ocic_notify) {
--		error = hub->ocic_notify(ohci_da8xx_ocic_handler);
--		if (!error)
--			return 0;
+-	ret = gpio_request(ON_BD_USB_DRV, "ON_BD_USB_DRV");
+-	if (ret) {
+-		pr_err("%s: failed to request GPIO for USB 1.1 port power control: %d\n",
+-		       __func__, ret);
+-		return;
 -	}
-+	error = ohci_da8xx_register_notify(hcd);
-+	if (error)
-+		goto err_remove_hcd;
-+
-+	return 0;
+-	gpio_direction_output(ON_BD_USB_DRV, 0);
++	gpiod_add_lookup_table(&usb11_gpios_table);
  
-+err_remove_hcd:
- 	usb_remove_hcd(hcd);
- err:
- 	usb_put_hcd(hcd);
-@@ -305,9 +385,8 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
- static int ohci_da8xx_remove(struct platform_device *pdev)
- {
- 	struct usb_hcd	*hcd = platform_get_drvdata(pdev);
--	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
+-	ret = gpio_request(ON_BD_USB_OVC, "ON_BD_USB_OVC");
+-	if (ret) {
+-		pr_err("%s: failed to request GPIO for USB 1.1 port over-current indicator: %d\n",
+-		       __func__, ret);
+-		return;
+-	}
+-	gpio_direction_input(ON_BD_USB_OVC);
++	ret = platform_device_register(&da8xx_usb11_regulator);
++	if (ret)
++		pr_warn("fail to add ohci regulator\n");
  
--	hub->ocic_notify(NULL);
-+	ohci_da8xx_unregister_notify(hcd);
- 	usb_remove_hcd(hcd);
- 	usb_put_hcd(hcd);
- 
+-	ret = da8xx_register_usb11(&da830_evm_usb11_pdata);
++	ret = da8xx_register_usb11(NULL);
+ 	if (ret)
+ 		pr_warn("%s: USB 1.1 registration failed: %d\n", __func__, ret);
+ }
 -- 
 2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
