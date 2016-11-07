@@ -1,76 +1,46 @@
-From: Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
- provide _available attributes
-Date: Mon, 7 Nov 2016 14:18:12 +0200
-Message-ID: <CAEnQRZCOVFjT-rnY3t-DZFp9KCoznQeJsr4238eLk4VGOtNVNw@mail.gmail.com>
-References: <1477262381-7800-1-git-send-email-peda@axentia.se>
- <1477262381-7800-2-git-send-email-peda@axentia.se> <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
- <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: DTS: r8a7794: alt: Fix PFC names for DU
+Date: Mon, 7 Nov 2016 13:40:45 +0100
+Message-ID: <20161107124044.GE12319@verge.net.au>
+References: <1478180574-15464-1-git-send-email-jacopo@jmondi.org>
+ <1478201686-25488-1-git-send-email-jacopo@jmondi.org>
+ <c0a3c44b-545c-7af3-feed-857cb20ef698@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <62f150ba-abc0-8e45-1355-8a61354ee3e1-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c0a3c44b-545c-7af3-feed-857cb20ef698-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 7, 2016 at 1:57 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
-> On 2016-11-07 12:37, Daniel Baluta wrote:
->> On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
->>> From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>
->>> A large number of attributes can only take a limited range of values.
->>> Currently in IIO this is handled by directly registering additional
->>> *_available attributes thus providing this information to userspace.
->>>
->>> It is desirable to provide this information via the core for much the same
->>> reason this was done for the actual channel information attributes in the
->>> first place.  If it isn't there, then it can only really be accessed from
->>> userspace.  Other in kernel IIO consumers have no access to what valid
->>> parameters are.
->>>
->>> Two forms are currently supported:
->>> * list of values in one particular IIO_VAL_* format.
->>>         e.g. 1.300000 1.500000 1.730000
->>> * range specification with a step size:
->>>         e.g. [1.000000 0.500000 2.500000]
->>>         equivalent to 1.000000 1.5000000 2.000000 2.500000
->>
->> Is there any driver using this format? :)
->
-> Yes, soon. Hopefully. See patch 3/8
-> iio: mcp4531: provide range of available raw values
-> https://patchwork.kernel.org/patch/9391283/
->
->>>
->>> An addition set of masks are used to allow different sharing rules for the
->>> *_available attributes generated.
->>>
->>> This allows for example:
->>>
->>> in_accel_x_offset
->>> in_accel_y_offset
->>> in_accel_offset_available.
->>>
->>> We could have gone with having a specification for each and every
->>> info_mask element but that would have meant changing the existing userspace
->>> ABI.  This approach does not.
->>>
->>> Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> [forward ported, added some docs and fixed buffer overflows /peda]
->>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->>
->> The patch looks good to me at a first glance.
->
-> Thanks, may I add your acked-by if/when I respin?
+On Fri, Nov 04, 2016 at 02:43:18PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 11/3/2016 10:34 PM, Jacopo Mondi wrote:
+> 
+> >Update the PFC pin groups and function names of DU interface for
+> >r8a7794 ALT board.
+> >
+> >The currently specified pin groups and function names prevented PFC and
+> >DU interfaces from being correctly configured:
+> >
+> >sh-pfc e6060000.pin-controller: function 'du' not supported
+> >sh-pfc e6060000.pin-controller: invalid function du in map table
+> >sh-pfc e6060000.pin-controller: function 'du' not supported
+> >sh-pfc e6060000.pin-controller: invalid function du in map table
+> >sh-pfc e6060000.pin-controller: function 'du' not supported
+> >sh-pfc e6060000.pin-controller: invalid function du in map table
+> >sh-pfc e6060000.pin-controller: function 'du' not supported
+> >sh-pfc e6060000.pin-controller: invalid function du in map table
+> >rcar-du: probe of feb00000.display failed with error -22
+> >
+> >Signed-off-by: Jacopo Mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> 
+> Acked-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Yes. You can have it from here:
-
-Acked-by: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
-thanks,
-Daniel.
+Thanks, I have queued this up.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
