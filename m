@@ -1,79 +1,140 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: nyan: Mark all USB ports as host
-Date: Tue, 8 Nov 2016 11:09:57 +0000
-Message-ID: <3fbd3fb9-1dc5-a46d-355b-f7c94b3c43ef@nvidia.com>
-References: <20160918102852.6593-1-contact@paulk.fr>
- <20161107132854.GF12559@ulmo.ba.sec>
- <13e7ff98-8bc2-ccf7-94bb-4e1d3c61b20d@nvidia.com>
- <20161108085420.GG2478@tbergstrom-lnx.Nvidia.com>
- <58046fbb-8e19-e629-770a-940a40ca6ef9@nvidia.com>
- <20161108110735.GA13098@ulmo.ba.sec>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Mon, 7 Nov 2016 19:53:42 +0100
+Message-ID: <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
+ <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+ <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108110735.GA13098-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Holdsworth <joel@airwebreathe.org.uk>, atull@opensource.altera.com, moritz.fischer@ettus.com, geert@linux-m68k.org, robh@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, clifford@clifford.at
 List-Id: devicetree@vger.kernel.org
 
+On 11/07/2016 07:49 PM, Joel Holdsworth wrote:
+> Hi Marek,
 
-On 08/11/16 11:07, Thierry Reding wrote:
-> * PGP Signed by an unknown key
+Hi,
+
+> Thanks again for your comments.
 > 
-> On Tue, Nov 08, 2016 at 09:47:42AM +0000, Jon Hunter wrote:
+> 
+> On 07/11/16 11:01, Marek Vasut wrote:
+>> On 11/07/2016 03:49 AM, Joel Holdsworth wrote:
+>>> The Lattice iCE40 is a family of FPGAs with a minimalistic architecture
+>>> and very regular structure, designed for low-cost, high-volume consumer
+>>> and system applications.
 >>
->> On 08/11/16 08:54, Peter De Schrijver wrote:
->>> On Mon, Nov 07, 2016 at 02:09:31PM +0000, Jon Hunter wrote:
->>>>
->>>> On 07/11/16 13:28, Thierry Reding wrote:
->>>>>> Old Signed by an unknown key
->>>>>
->>>>> On Sun, Sep 18, 2016 at 12:28:52PM +0200, Paul Kocialkowski wrote:
->>>>>> Nyan boards only have host USB ports (2 external, 1 internal), there is
->>>>>> no OTG-enabled connector.
->>>>>>
->>>>>> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
->>>>>> ---
->>>>>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> Where is this information coming from? I don't have one of the Nyans
->>>>> myself, but one of the Tegra132 devices I have, which I think was
->>>>> derived from one of the Nyans uses one of the external host ports as
->>>>> forced recovery port, for which it would need OTG.
->>>>>
->>>>> I suspect that the way to get U-Boot onto the Nyans is via tegrarcm?
->>>>> In that case I think one of the ports must be OTG.
->>>>
->>>> It is true that the port on the back on the nyan-big can be used with
->>>> recovery mode. I was thinking that this is not a true OTG port as it is
->>>> just a 4-pin type A socket and does not have an ID pin. Thinking some
->>>> more about this the USB spec does include a "Host Negotiation Protocol
->>>> (HNP)" that allows a host and device to swap roles and so keeping it as
->>>> OTG seems valid afterall.
->>>
->>> I don't think the bootrom implements that though. I expect recovery mode
->>> to just program the controller in device mode, without performing any
->>> negotiation.
+>> [...]
 >>
->> I am not talking about the bootrom and I would not expect the bootrom to
->> do that. However, the kernel could.
+>>> +static int ice40_fpga_ops_write_init(struct fpga_manager *mgr, u32
+>>> flags,
+>>> +                     const char *buf, size_t count)
+>>> +{
+>>> +    struct ice40_fpga_priv *priv = mgr->priv;
+>>> +    struct spi_device *dev = priv->dev;
+>>> +    struct spi_message message;
+>>> +    struct spi_transfer assert_cs_then_reset_delay = {.cs_change = 1,
+>>> +        .delay_usecs = ICE40_SPI_FPGAMGR_RESET_DELAY};
+>>
+>> Should be this way for the sake of readability, fix globally:
+>>
+>>     struct spi_transfer assert_cs_then_reset_delay = {
+>>         .cs_change    = 1,
+>>         .delay_usecs    = ICE40_SPI_FPGAMGR_RESET_DELAY
+>>     };
 > 
-> Either way, configuring the controller in device mode is enough to make
-> the host detect it, otherwise tegrarcm wouldn't work.
-> 
-> From the point of view of the binding I think "otg" is the most accurate
-> option because we know that the controller can operate in both modes. If
-> it currently doesn't or how exactly switching modes is done is outside
-> the scope of this property.
-> 
-> Is everyone okay with just dropping this patch?
+> Sure ok. Personally, I prefer it to be concise, but I'm happy to accept
+> the norms.
 
-Fine with me.
+I prefer it to be readable :)
 
-Jon
+>> Also I believe this could be const.
+> 
+> It doesn't work const - I tried it. spi_message_add_tail() expects it to
+> be non-const. Looking at 'struct spi_transfer' it appears there is
+> various bits of state used to perform the transfer, as well as the
+> pointer to the next item in the single-linked list.
+
+Ah, right.
+
+>>
+>>> +    struct spi_transfer housekeeping_delay_then_release_cs = {
+>>> +        .delay_usecs = ICE40_SPI_FPGAMGR_HOUSEKEEPING_DELAY};
+>>
+>> Don't we have some less hacky way of toggling the nCS ? Is this even nCS
+>> or is this some control pin of the FPGA ? Maybe it should be treated
+>> like a regular GPIO instead ?
+> 
+> I've been round this loop before also. drivers/spi/spi.c has a static
+> function 'static void spi_set_cs(struct spi_device *dev, bool enable)'.
+> It manipulates the CS line of devices where CS is built into the SPI
+> master, and manipulates the GPIO on other devices.
+> 
+> I don't know why it's non-public - I tried to get an answer from the SPI
+> folks, but didn't get one. I guess they don't want to encourage drivers
+> to manually manipulate the CS line - because SPI transfers are usually
+> meant to be interruptible by higher priority transfers to other devices
+> at any time. The only reason it's legit for me to manually manipulate CS
+> is because I first lock the bus.
+> 
+> Previously I had a copy of spi_set_cs copy-pasted into my driver, but in
+> the end I decided to replace that with the zero-length transfers because
+> there's a danger that if the original spi_set_cs() gets rewritten some
+> time, my copy-paste code would leave around some nasty legacy.
+> 
+> On the whole, I don't think the zero-length transfers are too
+> egregiously bad, and all the alternatives seem worse to me.
+
+So why not turn the CS line into GPIO and just toggle the GPIO?
+
+>>> +    const u8 padding[ICE40_SPI_FPGAMGR_NUM_ACTIVATION_BYTES] = {0,};
+>>
+>> The comma is not needed.
+> 
+> True. I'll make that change.
+> 
+> 
+>>> +    /* Check board setup data. */
+>>> +    if (spi->max_speed_hz > 25000000) {
+>>> +        dev_err(dev, "Speed is too high\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>> +
+>>> +    if (spi->max_speed_hz < 1000000) {
+>>> +        dev_err(dev, "Speed is too low\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>
+>> Do you have some explanation for this limitation ?
+>>
+> 
+> Not really no.
+> 
+> The 'DS1040 - iCE40 LP/HX Family Data Sheet' page 3-18 claims f_max for
+> Slave SPI Writing is >=1MHz && <=25MHz.
+> 
+> The exact reason I don't know.
+
+OK
+
+> Are they running a PLL off the clock? What if the clock is really
+> jittery - it seems to work fine when I've tested it with bit-banged SPI
+> on the RPi; just as well as with hardware SPI.
+> 
+> Or is it something to do with some pre-commit on-chip firmware storage?
+> e.g. to check the CRC. Does the storage buffer have some time limitation
+> before it gets committed to the FPGA core?
+> 
+> I'm not sure, so I decided to just reflect the datasheet instructions
+> back to the user.
+
+Sounds good, thanks.
 
 -- 
-nvpublic
+Best regards,
+Marek Vasut
