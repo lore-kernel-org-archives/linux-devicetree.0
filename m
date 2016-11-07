@@ -1,51 +1,55 @@
-From: Hao Zhang <hao5781286@gmail.com>
-Subject: [PATCH v3 2/3] ARM64: dts: sun6i: add dma node for a64.
-Date: Tue, 8 Nov 2016 02:22:47 +0800
-Message-ID: <20161107182247.GA3669@arx12>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 1/2] ARM: shmobile: r8a7745: add CPG clock index macros
+Date: Mon, 7 Nov 2016 19:41:19 +0100
+Message-ID: <CAMuHMdWKK0Zb8K_fs2G+CGQeGsb3MkAURHAhXb6QWvDO2PYTCQ@mail.gmail.com>
+References: <3539878.XFtRJDB9iq@wasted.cogentembedded.com> <6619847.B5XdH7v7xE@wasted.cogentembedded.com>
+ <CAMuHMdVcCwbXRCVy50k=tm=PKi3F3nnyq8UMjdq71k7Yd1tBtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: hao5781286@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVcCwbXRCVy50k=tm=PKi3F3nnyq8UMjdq71k7Yd1tBtA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-This adds the dma node for sun50i a64.
+On Mon, Nov 7, 2016 at 9:34 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sat, Nov 5, 2016 at 11:31 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+>> Add macros usable by  the device tree sources to reference the R8A7745 CPG
+>> clocks  by index. The data comes from the  table 7.2c in the revision 0.50
+>> of the RZ/G Series User's Manual.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> ---
+>> Changes in version 2:
+>> - added Geert's tag.
+>>
+>>  include/dt-bindings/clock/r8a7745-cpg-mssr.h |   44 +++++++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>
+>> Index: linux/include/dt-bindings/clock/r8a7745-cpg-mssr.h
+>> ===================================================================
+>> --- /dev/null
+>> +++ linux/include/dt-bindings/clock/r8a7745-cpg-mssr.h
+>
+>> +#define R8A7745_CLK_ACP                26
+>
+> This clock is called CPEX instead of ACP in rev. 1.00 of the RZ/G Series User's
+> Manual: Hardware.
 
-Signed-off-by: Hao Zhang <hao5781286@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Applied with s/ACP/CPEX/, and included in second clk-renesas-for-v4.10
+pull request.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index e3c3d7d8..855ae2c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -227,6 +227,15 @@
- 			};
- 		};
- 
-+		dma: dma-controller@01c02000 {
-+			compatible = "allwinner,sun50i-a64-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
-+
- 		uart0: serial@1c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
--- 
-2.7.4
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
