@@ -1,84 +1,99 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: Re: [PATCH v7 1/2] mtd: nand: add tango NFC dt bindings doc
-Date: Mon, 7 Nov 2016 10:26:48 +0100
-Message-ID: <582048D8.3000000@sigmadesigns.com>
-References: <580F5AD2.9020909@sigmadesigns.com>
- <580F5B06.6030608@sigmadesigns.com> <1978954.SRtJpfOGp1@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 00/23] soc: renesas: Add R-Car RST driver for obtaining
+ mode pin state
+Date: Mon, 7 Nov 2016 10:30:05 +0100
+Message-ID: <CAMuHMdUL3GcOoNjd78wn_m0YRQvh8D5RGcC+RaRxEDpQCQxB5g@mail.gmail.com>
+References: <1477055857-17936-1-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdVbpuv94x-ocTSDoEj+SbnESDbkuMXsXExQvoyZepp+Zg@mail.gmail.com>
+ <20161031081923.GF18195@verge.net.au>
+ <CAMuHMdXA-hemOT=ZysEfettei9=HsDddGhqddkw38hwRrdeagw@mail.gmail.com>
+ <20161031232537.GT16026@codeaurora.org>
+ <CAMuHMdXOW4Ubafu=x9pCw_W-MtLGe3N974dbfHCH5TJuUAeYrQ@mail.gmail.com>
+ <20161104194914.GB16026@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1978954.SRtJpfOGp1@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, DT <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Mason <slash.tmp@free.fr>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Sebastian Frias <sf84@laposte.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161104194914.GB16026@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2016 10:18, Arnd Bergmann wrote:
-> On Tuesday, October 25, 2016 3:15:50 PM CET Marc Gonzalez wrote:
->> Add the tango NAND Flash Controller dt bindings documentation.
+Hi Stephen,
+
+On Fri, Nov 4, 2016 at 8:49 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 11/02, Geert Uytterhoeven wrote:
+>> On Tue, Nov 1, 2016 at 12:25 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> >
+>> > Would the pull requests for clk also have dts changes at the base
+>> > of the tree? Perhaps clk side can just ack the clk patches and
 >>
->> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
->> ---
->>  Documentation/devicetree/bindings/mtd/tango-nand.txt | 38 ++++++++++++++++++++++++++++++
->>  1 file changed, 38 insertions(+)
+>> Yes they would: this is moving functionality from platform code to DT.
+>> Without the DT updates, it will break bisection (except for R-Car Gen2,
+>> where we have fallback code to handle old DTBs).
 >>
->> diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
->> new file mode 100644
->> index 000000000000..3cbf95d6595a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
->> @@ -0,0 +1,38 @@
->> +Sigma Designs Tango4 NAND Flash Controller (NFC)
->> +
->> +Required properties:
->> +
->> +- compatible: "sigma,smp8758-nand"
->> +- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
->> +- dmas: reference to the DMA channel used by the controller
->> +- dma-names: "nfc_sbox"
-> 
-> Drop the "nfc_" prefix here, it seems redundant.
+>> > then have it all routed through arm-soc? The only worry I have is
+>> > if we need to make some sort of change in clk side that conflicts
+>> > with these changes. I don't usually like taking dts changes
+>> > through clk tree, so I'd like to avoid that if possible.
+>>
+>> Everything could go through arm-soc only with your Acked-by.
+>> However, there are new clock drivers pending on this series.
+>> Either they have to go through arm-soc, too, or this series would
+>> be pulled into the clk tree with these new clock drivers.
+>>
+>> > Part E could happen anytime after everything else happens, so
+>> > that doesn't seem like a concern.
+>>
+>> Part E can indeed by postponed.
+>> But if parts A-D are applied together, there's no reason to postpone part E.
+>>
+>> > Part C could also be made to
+>> > only call into the new reset drivers if the reset dts nodes are
+>> > present? If that's done then we could merge clk patches anytime
+>> > and remove the dead code and the node search at some later time
+>> > when everything has settled?
+>>
+>> That would require adding more backwards compatibility code for
+>> old DTBs, even for platform where we're not interested in maintaining
+>> that. In addition, Part C depends on the header file for the reset driver
+>> to compile the clock driver, even if you would add some DT detection,
+>> and on the reset driver to link. So I'm afraid this is not feasible.
+>
+> TL;DR: Sounds fine, I'll be on the lookout for the PR.
 
-I don't think it's redundant; there are switch boxes for several
-different HW blocks; nfc_sbox is the first one to be exposed.
+Thank you very much!
 
->> +- clocks: reference to the system clock
->> +- #address-cells: <1>
->> +- #size-cells: <0>
->> +
->> +Children nodes represent the available NAND chips.
->> +See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
->> +
->> +Example:
->> +
->> +	nand: nand@2c000 {
->> +		compatible = "sigma,smp8758-nand";
->> +		reg = <0x2c000 0x30 0x2d000 0x800 0x20000 0x1000>;
-> 
-> It would be nicer to write this as
-> 
-> 	reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
-> 
-> which is identical in binary format.
+> Longer version: Let me step back a bit and actually think about
+> this longer than 2 minutes. From what I see
+> rcar_rst_read_mode_pins() already returns -ENODEV if the nodes
+> aren't present. Great.
+>
+> So clk tree could be given a pull for the clk patches, part C, on
+> top of part A, the reset driver. If the rcar_rst_read_mode_pins()
+> returns failure because the node is missing, we fall back to the
+> old style of doing things. Some drivers already do that anyway,
 
-I didn't know that, thanks for pointing it out.
+For R-Car Gen2, we want to keep backwards compatibility for a while.
+But not for the others, and I didn't want to add more code that was going
+to be removed again soon.
 
-Unfortunately, Boris already accepted the patch yesterday :-(
+Gr{oetje,eeting}s,
 
-Boris, do you fixup patches in your tree?
+                        Geert
 
-Regards.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
