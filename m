@@ -1,76 +1,90 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: sunxi: Add support for interrupt debouncing
-Date: Mon, 7 Nov 2016 10:40:04 +0100
-Message-ID: <CACRpkdZ40e03VV_ScKceahG-7jmFmbBmgCqxBv9bGcvS3TnrOA@mail.gmail.com>
-References: <cover.ed6c19bdf01ae70096f3d96af4805f59ef16f94a.1476868462.git-series.maxime.ripard@free-electrons.com>
- <fa022cca9917917ace4af7d5e852c9348ec5b553.1476868462.git-series.maxime.ripard@free-electrons.com>
- <CACRpkdaoEH7OixJDkjuZ0qqYVURLvXwn8b41-OvqjZGJ=neh+Q@mail.gmail.com>
- <20161020135625.vro5cxkf3rxevwyn@lukather> <20161102195106.eazrl5oevykltvzd@lukather>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] mtd: nand: add tango NFC dt bindings doc
+Date: Mon, 7 Nov 2016 10:40:14 +0100
+Message-ID: <20161107104014.2eeec802@bbrezillon>
+References: <580F5AD2.9020909@sigmadesigns.com>
+        <580F5B06.6030608@sigmadesigns.com>
+        <1978954.SRtJpfOGp1@wuerfel>
+        <582048D8.3000000@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161102195106.eazrl5oevykltvzd@lukather>
+In-Reply-To: <582048D8.3000000-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 2, 2016 at 8:51 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Oct 20, 2016 at 03:56:25PM +0200, Maxime Ripard wrote:
->> On Thu, Oct 20, 2016 at 03:04:46PM +0200, Linus Walleij wrote:
->> > On Wed, Oct 19, 2016 at 11:15 AM, Maxime Ripard
->> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >
->> > > The pin controller found in the Allwinner SoCs has support for interrupts
->> > > debouncing.
->> > >
->> > > However, this is not done per-pin, preventing us from using the generic
->> > > pinconf binding for that,
->> >
->> > How typical.
->> >
->> > > but per irq bank, which, depending on the SoC,
->> > > ranges from one to five.
->> > >
->> > > Introduce a device-wide property to deal with this using a nanosecond
->> > > resolution.
->> > >
->> > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> > (...)
->> > > +Note: For backward compatibility reasons, the hosc and losc clocks are
->> > > +only required if you need to use the optional
->> > > +allwinner,debounce-time-ns property. Any new device tree should set them.
->> > > +
->> > > +Optional properties:
->> > > +  - allwinner,debounce-time-ns: Array of debouncing periods in
->> > > +    nanoseconds. One period per irq bank found in the controller
->> >
->> > Do you really *need* to specify this with nanosecond resolution?
->> >
->> > Else I would suggest to use microsecond resolution and just use
->> > the generic binding (input-debounce) but on the device node instead
->> > of the specific handler.
->>
->> Theorically, the debouncing clock can be set at 24MHz, which means a
->> 42ns resolution.
->>
->> I've seen that the other bindings usually use microseconds, but in our
->> case, we can really go lower than that.
->>
->> I don't really know if it makes sense though.
->
-> Any comments on this?
+On Mon, 7 Nov 2016 10:26:48 +0100
+Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org> wrote:
 
-My first thought: can you atleast support both?
+> On 07/11/2016 10:18, Arnd Bergmann wrote:
+> > On Tuesday, October 25, 2016 3:15:50 PM CET Marc Gonzalez wrote:  
+> >> Add the tango NAND Flash Controller dt bindings documentation.
+> >>
+> >> Signed-off-by: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mtd/tango-nand.txt | 38 ++++++++++++++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/tango-nand.txt b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> >> new file mode 100644
+> >> index 000000000000..3cbf95d6595a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mtd/tango-nand.txt
+> >> @@ -0,0 +1,38 @@
+> >> +Sigma Designs Tango4 NAND Flash Controller (NFC)
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible: "sigma,smp8758-nand"
+> >> +- reg: address/size of nfc_reg, nfc_mem, and pbus_reg
+> >> +- dmas: reference to the DMA channel used by the controller
+> >> +- dma-names: "nfc_sbox"  
+> > 
+> > Drop the "nfc_" prefix here, it seems redundant.  
+> 
+> I don't think it's redundant; there are switch boxes for several
+> different HW blocks; nfc_sbox is the first one to be exposed.
 
-My preference would be to add the standard binding and use that,
-and the day you realize that "howli mackarowli, this thingofabob
-actually needs to specify with nanosecond precision" then we
-could add the nanosecond granularity binding?
+The dma-names are local to the device, so I think the nfc_ prefix is
+indeed not needed.
 
-Yours,
-Linus Walleij
+> 
+> >> +- clocks: reference to the system clock
+> >> +- #address-cells: <1>
+> >> +- #size-cells: <0>
+> >> +
+> >> +Children nodes represent the available NAND chips.
+> >> +See Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+> >> +
+> >> +Example:
+> >> +
+> >> +	nand: nand@2c000 {
+> >> +		compatible = "sigma,smp8758-nand";
+> >> +		reg = <0x2c000 0x30 0x2d000 0x800 0x20000 0x1000>;  
+> > 
+> > It would be nicer to write this as
+> > 
+> > 	reg = <0x2c000 0x30>, <0x2d000 0x800>, <0x20000 0x1000>;
+> > 
+> > which is identical in binary format.  
+> 
+> I didn't know that, thanks for pointing it out.
+> 
+> Unfortunately, Boris already accepted the patch yesterday :-(
+> 
+> Boris, do you fixup patches in your tree?
+
+I usually try to avoid that, unless one of the patches breaks
+bisectibility (which is not the case here). Please send new patches to
+fix that.
+
+Thanks,
+
+Boris
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
