@@ -1,39 +1,215 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/3] Various ARM64 Armada DT warning fixup
-Date: Mon,  7 Nov 2016 22:41:25 +0100
-Message-ID: <20161107214128.18401-1-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/8] ARM64: dts: meson-gxl: Add pinctrl nodes
+Date: Mon, 07 Nov 2016 14:30:55 -0800
+Message-ID: <m27f8e7wio.fsf@baylibre.com>
+References: <1477932286-27482-1-git-send-email-narmstrong@baylibre.com>
+        <1477932286-27482-3-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477932286-27482-3-git-send-email-narmstrong@baylibre.com> (Neil
+        Armstrong's message of "Mon, 31 Oct 2016 17:44:40 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, linus.walleij@linaro.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Following the series sent for Armada 370/XP, this patchset fixes up
-various warning from the DT compiler when using the flag W=1 with
-make.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Being a fresh new port, the arm64 we did a better job for dt than for
-the arm32 so there is only a few patches needed.
+> Add pinctrl nodes and pin definitions for Amlogic Meson GXL.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 168 +++++++++++++++++++++++++++++
+>  1 file changed, 168 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> index 13b10ee..ce7f550 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> @@ -42,7 +42,175 @@
+>   */
+>  
+>  #include "meson-gx.dtsi"
+> +#include <dt-bindings/gpio/meson-gxl-gpio.h>
 
-Gregory
+Oops, this has a dependency on the patch going through the pinctrl tree,
+which causes probelems we like to avoid in the arm-soc tree.
 
-Gregory CLEMENT (3):
-  arm64: dts: marvell: Fixup internal-regs DT warning for Armada 37xx
-  arm64: dts: marvell: Fixup config-space DT warning For Armada 7K/8K
-  ARM64: dts: marvell: Fixup memory DT warning for Armada 37xx
+For now, I've changed this to use the GXBB include since the values used
+are the same, but we can fix this for good in v4.10-rc, after the GXL
+pinctrl changes are merged.
 
- arch/arm64/boot/dts/marvell/armada-3720-db.dts          | 2 +-
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 2 +-
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi            | 2 +-
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi           | 2 +-
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi    | 2 +-
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi     | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+Kevin
 
--- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] [PATCH] pinctrl: meson: Add GXL pinctrl definitions
+>  / {
+>  	compatible = "amlogic,meson-gxl";
+>  };
+> +
+> +&aobus {
+> +	pinctrl_aobus: pinctrl@14 {
+> +		compatible = "amlogic,meson-gxl-aobus-pinctrl";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		gpio_ao: bank@14 {
+> +			reg = <0x0 0x00014 0x0 0x8>,
+> +			      <0x0 0x0002c 0x0 0x4>,
+> +			      <0x0 0x00024 0x0 0x8>;
+> +			reg-names = "mux", "pull", "gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +
+> +		uart_ao_a_pins: uart_ao_a {
+> +			mux {
+> +				groups = "uart_tx_ao_a", "uart_rx_ao_a";
+> +				function = "uart_ao";
+> +			};
+> +		};
+> +
+> +		remote_input_ao_pins: remote_input_ao {
+> +			mux {
+> +				groups = "remote_input_ao";
+> +				function = "remote_input_ao";
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&periphs {
+> +	pinctrl_periphs: pinctrl@4b0 {
+> +		compatible = "amlogic,meson-gxl-periphs-pinctrl";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		gpio: bank@4b0 {
+> +			reg = <0x0 0x004b0 0x0 0x28>,
+> +			      <0x0 0x004e8 0x0 0x14>,
+> +			      <0x0 0x00120 0x0 0x14>,
+> +			      <0x0 0x00430 0x0 0x40>;
+> +			reg-names = "mux", "pull", "pull-enable", "gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +
+> +		emmc_pins: emmc {
+> +			mux {
+> +				groups = "emmc_nand_d07",
+> +				       "emmc_cmd",
+> +				       "emmc_clk",
+> +				       "emmc_ds";
+> +				function = "emmc";
+> +			};
+> +		};
+> +
+> +		sdcard_pins: sdcard {
+> +			mux {
+> +				groups = "sdcard_d0",
+> +				       "sdcard_d1",
+> +				       "sdcard_d2",
+> +				       "sdcard_d3",
+> +				       "sdcard_cmd",
+> +				       "sdcard_clk";
+> +				function = "sdcard";
+> +			};
+> +		};
+> +
+> +		sdio_pins: sdio {
+> +			mux {
+> +				groups = "sdio_d0",
+> +				       "sdio_d1",
+> +				       "sdio_d2",
+> +				       "sdio_d3",
+> +				       "sdio_cmd",
+> +				       "sdio_clk";
+> +				function = "sdio";
+> +			};
+> +		};
+> +
+> +		sdio_irq_pins: sdio_irq {
+> +			mux {
+> +				groups = "sdio_irq";
+> +				function = "sdio";
+> +			};
+> +		};
+> +
+> +		uart_a_pins: uart_a {
+> +			mux {
+> +				groups = "uart_tx_a",
+> +				       "uart_rx_a";
+> +				function = "uart_a";
+> +			};
+> +		};
+> +
+> +		uart_b_pins: uart_b {
+> +			mux {
+> +				groups = "uart_tx_b",
+> +				       "uart_rx_b";
+> +				function = "uart_b";
+> +			};
+> +		};
+> +
+> +		uart_c_pins: uart_c {
+> +			mux {
+> +				groups = "uart_tx_c",
+> +				       "uart_rx_c";
+> +				function = "uart_c";
+> +			};
+> +		};
+> +
+> +		i2c_a_pins: i2c_a {
+> +			mux {
+> +				groups = "i2c_sck_a",
+> +				     "i2c_sda_a";
+> +				function = "i2c_a";
+> +			};
+> +		};
+> +
+> +		i2c_b_pins: i2c_b {
+> +			mux {
+> +				groups = "i2c_sck_b",
+> +				      "i2c_sda_b";
+> +				function = "i2c_b";
+> +			};
+> +		};
+> +
+> +		i2c_c_pins: i2c_c {
+> +			mux {
+> +				groups = "i2c_sck_c",
+> +				      "i2c_sda_c";
+> +				function = "i2c_c";
+> +			};
+> +		};
+> +
+> +		eth_pins: eth_c {
+> +			mux {
+> +				groups = "eth_mdio",
+> +				       "eth_mdc",
+> +				       "eth_clk_rx_clk",
+> +				       "eth_rx_dv",
+> +				       "eth_rxd0",
+> +				       "eth_rxd1",
+> +				       "eth_rxd2",
+> +				       "eth_rxd3",
+> +				       "eth_rgmii_tx_clk",
+> +				       "eth_tx_en",
+> +				       "eth_txd0",
+> +				       "eth_txd1",
+> +				       "eth_txd2",
+> +				       "eth_txd3";
+> +				function = "eth";
+> +			};
+> +		};
+> +
+> +		pwm_e_pins: pwm_e {
+> +			mux {
+> +				groups = "pwm_e";
+> +				function = "pwm_e";
+> +			};
+> +		};
+> +	};
+> +};
