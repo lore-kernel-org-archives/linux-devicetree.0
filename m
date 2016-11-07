@@ -1,37 +1,37 @@
-From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Sun, 6 Nov 2016 17:46:03 -0700
-Message-ID: <edb1b434-af6c-08aa-c1e6-f67671afcd5f@airwebreathe.org.uk>
-References: <1478236004-7852-1-git-send-email-joel@airwebreathe.org.uk>
- <1478236004-7852-3-git-send-email-joel@airwebreathe.org.uk>
- <alpine.DEB.2.10.1611040945100.2940@atull-VirtualBox>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH 1/2] ARM: dts: imx6sx-sdb: update TX D_CAL for USBPHY
+Date: Mon, 7 Nov 2016 01:32:29 +0000
+Message-ID: <VI1PR04MB14556348390F18AF8D5A261D8BA70@VI1PR04MB1455.eurprd04.prod.outlook.com>
+References: <1477882709-2518-1-git-send-email-peter.chen@nxp.com>
+ <20161105083145.GF5597@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.10.1611040945100.2940@atull-VirtualBox>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161105083145.GF5597@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
->> +#include <linux/fpga/fpga-mgr.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/spi/spi.h>
+ 
+>On Mon, Oct 31, 2016 at 10:58:28AM +0800, Peter Chen wrote:
+>> We need to change trimming value (as a percentage) of the 17.78mA TX
+>> reference current for better signal quality. With this change, we can
+>> patch the eye-diagram test on this board.
 >
-> Hi Joel,
->
-> The build breaks without this:
->
-> #include <linux/module.h>
->
-> Alan
+>s/patch/pass?  I just want to confirm this is a typo, and can fix it up when applying.
 >
 
-Go it! - thanks!
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, Shawn. It is a typo. Help me to change both of patches please.
+
+Peter
