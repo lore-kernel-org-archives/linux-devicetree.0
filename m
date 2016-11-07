@@ -1,40 +1,77 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 0/2] mmc: sdhci-iproc: Add byte register access support
-Date: Mon, 7 Nov 2016 13:14:40 +0100
-Message-ID: <CAPDyKFrWffNpwvXA7Yj2=t_9g-ikJnhpwqMpTp3+jCu1A9FRnQ@mail.gmail.com>
-References: <1478018277-10097-1-git-send-email-scott.branden@broadcom.com>
+From: Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
+ provide _available attributes
+Date: Mon, 7 Nov 2016 14:18:12 +0200
+Message-ID: <CAEnQRZCOVFjT-rnY3t-DZFp9KCoznQeJsr4238eLk4VGOtNVNw@mail.gmail.com>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+ <1477262381-7800-2-git-send-email-peda@axentia.se> <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
+ <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478018277-10097-1-git-send-email-scott.branden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <62f150ba-abc0-8e45-1355-8a61354ee3e1-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 November 2016 at 17:37, Scott Branden <scott.branden@broadcom.com> wrote:
-> Add brcm,sdhci-iproc compat string and code for support of newer versions of
-> sdhci-iproc controller that allow byte-wise register accesses.
+On Mon, Nov 7, 2016 at 1:57 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+> On 2016-11-07 12:37, Daniel Baluta wrote:
+>> On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+>>> From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>> A large number of attributes can only take a limited range of values.
+>>> Currently in IIO this is handled by directly registering additional
+>>> *_available attributes thus providing this information to userspace.
+>>>
+>>> It is desirable to provide this information via the core for much the same
+>>> reason this was done for the actual channel information attributes in the
+>>> first place.  If it isn't there, then it can only really be accessed from
+>>> userspace.  Other in kernel IIO consumers have no access to what valid
+>>> parameters are.
+>>>
+>>> Two forms are currently supported:
+>>> * list of values in one particular IIO_VAL_* format.
+>>>         e.g. 1.300000 1.500000 1.730000
+>>> * range specification with a step size:
+>>>         e.g. [1.000000 0.500000 2.500000]
+>>>         equivalent to 1.000000 1.5000000 2.000000 2.500000
+>>
+>> Is there any driver using this format? :)
 >
-> Changes from v1:
-> - added details to bindings documentation to clarify usage of brcm,sdhci-iproc
-> compatibility string
+> Yes, soon. Hopefully. See patch 3/8
+> iio: mcp4531: provide range of available raw values
+> https://patchwork.kernel.org/patch/9391283/
 >
-> Scott Branden (2):
->   mmc: sdhci-iproc: Add brcm,sdhci-iproc compat string in bindings
->     document
->   mmc: sdhci-iproc: support standard byte register accesses
+>>>
+>>> An addition set of masks are used to allow different sharing rules for the
+>>> *_available attributes generated.
+>>>
+>>> This allows for example:
+>>>
+>>> in_accel_x_offset
+>>> in_accel_y_offset
+>>> in_accel_offset_available.
+>>>
+>>> We could have gone with having a specification for each and every
+>>> info_mask element but that would have meant changing the existing userspace
+>>> ABI.  This approach does not.
+>>>
+>>> Signed-off-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> [forward ported, added some docs and fixed buffer overflows /peda]
+>>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>
+>> The patch looks good to me at a first glance.
 >
->  .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  9 ++++++
->  drivers/mmc/host/sdhci-iproc.c                     | 35 ++++++++++++++++++++--
->  2 files changed, 42 insertions(+), 2 deletions(-)
->
-> --
-> 2.5.0
->
+> Thanks, may I add your acked-by if/when I respin?
 
-It seems I had already applied v1 of this series. I have dropped those
-now, waiting to receive an ack from Rob first.
+Yes. You can have it from here:
 
-Kind regards
-Uffe
+Acked-by: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+thanks,
+Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
