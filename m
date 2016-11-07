@@ -1,90 +1,78 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 6/6] bus: Add support for Tegra Generic Memory
- Interface
-Date: Mon, 7 Nov 2016 12:49:37 +0100
-Message-ID: <20161107114937.GD28616@ulmo.ba.sec>
-References: <1478507405-13204-1-git-send-email-mirza.krak@gmail.com>
- <1478507405-13204-7-git-send-email-mirza.krak@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] Documentation: devicetree: dwc3: Add interrupt
+ moderation
+Date: Mon, 7 Nov 2016 12:00:00 +0000
+Message-ID: <20161107115959.GE19796@leverpostej>
+References: <cover.1477424426.git.johnyoun@synopsys.com>
+ <e7a864e5a2af12d5a8d97f2591065f4aa85f86cb.1477424426.git.johnyoun@synopsys.com>
+ <87eg32t6fn.fsf@linux.intel.com>
+ <911fcadd-b852-d9db-c733-2df7c106c8d1@synopsys.com>
+ <87shrgss3f.fsf@linux.intel.com>
+ <d2e54dd2-a400-39d4-3fc9-c41ba45bdb18@synopsys.com>
+ <87lgx3phxi.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9dgjiU4MmWPVapMU"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478507405-13204-7-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <87lgx3phxi.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 01, 2016 at 01:18:17PM +0200, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+> >>>> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+> >>>>> Add interrupt moderation interval binding for dwc3.
+> >>>>>
+> >>>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> >>>>> ---
+> >>>>>  Documentation/devicetree/bindings/usb/dwc3.txt | 1 +
+> >>>>>  1 file changed, 1 insertion(+)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>>>> index e3e6983..17de9fc 100644
+> >>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >>>>> @@ -53,6 +53,7 @@ Optional properties:
+> >>>>>   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+> >>>>>  	register for post-silicon frame length adjustment when the
+> >>>>>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
+> >>>>> + - snps,imod_interval: the interrupt moderation interval.
+> >>>>
+> >>>> on top of all other comments, what's the unit here? nanoseconds? clock cycles?
+> >>>>
+> >>>
+> >>> Number of 250 ns intervals. I'll update the description to clarify.
+> >> 
+> >> it's probably better to add it in nanoseconds itself, then let driver
+> >> compute register value with DIV_ROUND_UP()
+> >> 
+> >
+> > I'm fine with it either way, but I think "increments of 250 ns" is
+> > slightly cleaner in that it reflects the exact settings that are
+> > possible and documented, and also fits neatly into a u16.
+> 
+> I don't know, I'll leave this to Mark and the other devicetree folks,
+> but I remember there was a preference of not passing register values via
+> devicetree. What if a following HW revision decides to change 250ns
+> increments to 125ns increments?
+> 
+> Mark?
 
---9dgjiU4MmWPVapMU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Generally, directly human-readable units are preferable, with some
+validation/reporting left to the driver for cases the HW cannot support.
+In this case, some *-interval-ns property would be better.
 
-On Mon, Nov 07, 2016 at 09:30:05AM +0100, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> The Generic Memory Interface bus can be used to connect high-speed
-> devices such as NOR flash, FPGAs, DSPs...
->=20
-> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
-> ---
->=20
-> Changes in v2:
->  - Fixed some checkpatch errors
->  - Re-ordered probe to get rid of local variables
->  - Moved of_platform_default_populate call to the end of probe
->  - Use the timing and configuration properties from the child device
->  - Added warning if more then 1 child device exist
->=20
-> Changes in v3:
->  - added helper function to disable the controller which is used in remov=
-e and
->  on error.
->  - Added logic to parse CS# from "ranges" property with fallback to "reg"
->  property
->=20
-> Changes in v4:
-> - added sanity check of chip-select property (fail if invalid)
-> - adjusted for device tree binding property name changes
-> - fail probe if there are no child nodes
-> - removed superfluous error message
-> - removed superfluous newline in Kconfig
->=20
->  drivers/bus/Kconfig     |   7 ++
->  drivers/bus/Makefile    |   1 +
->  drivers/bus/tegra-gmi.c | 275 ++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 283 insertions(+)
->  create mode 100644 drivers/bus/tegra-gmi.c
-
-Applied with a bit of code reshuffling to make things more symmetric as
-well as a couple of pedantic cleanups because I couldn't resist.
+That said, it sounds like we're all agreed that we don't need this
+property for now. :)
 
 Thanks,
-Thierry
-
---9dgjiU4MmWPVapMU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYIGpOAAoJEN0jrNd/PrOhXXQP/Rqjl3rQapa2nVOHkGCCi+bM
-kWf/lHmMIeW6wY9n26Nv6ZWoOKIO22hxZmH0zztBwx8HZ8ysJkUEdTVw3lbYaLHr
-fRTVkqFa4ikG2yqZgOgGZkgRdTp7zaYWKGL32HLJI/61V/oqMLzqZV5X5fjBOsqT
-zqAVtRIy+KZc6ZLZ34f+tElcDhgmbdRrxlOngw5HgV1GBL9P5kU/xH5njqk0beaq
-tjHGHWYYqv4v0tvcx/X+ScEcr7ISKIJrvUvllIHGgZCx2T56kAliMvZbA/cVVJjC
-7tHBJZ6VRKP5hnPsHMHpw7u3i1v/pRnZffrY7AL93hgOv6Y7iVnmNH9gk11/lpcV
-W3AQUCph62tQqSAwtrDkrIlkBJwU3TA2TPHBmdr5QXGYOcMYUY6ONYj0UG5orVLZ
-nJhw8keVjp4Tp04WTg9wnJ7+KdzOI4xONHf8rs76Gt9JI/ufpTIk2SnrRLXQr0L0
-wUPJjP3l1XyzKgbfGzQRH2TXYw5LXp2qoPWbHNQ8SGGKzSHSkr3Pc+XtL5VucCS4
-E5HOu5uHDsRRxs1k/C9bLKWqfxpX7rEfkHg3z2CRh/zLg5Ngl5iVd1ymL1xtQpBw
-m0mNRFJLel/ogrPP60TrVauStg7jQujWEy4e82PNrNV7Q5viOaEaKK6dtRk9Hl1E
-b/a79oEOJDy1QJ3eR1vP
-=JhXv
------END PGP SIGNATURE-----
-
---9dgjiU4MmWPVapMU--
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
