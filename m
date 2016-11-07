@@ -1,53 +1,113 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: nyan: Mark all USB ports as host
-Date: Mon, 7 Nov 2016 14:09:31 +0000
-Message-ID: <13e7ff98-8bc2-ccf7-94bb-4e1d3c61b20d@nvidia.com>
-References: <20160918102852.6593-1-contact@paulk.fr>
- <20161107132854.GF12559@ulmo.ba.sec>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 4/6] clk: stm32f4: Add I2S clock
+Date: Mon, 7 Nov 2016 14:14:55 +0000
+Message-ID: <08ad0f8c-bcdf-4835-9f07-167e129604bd@linaro.org>
+References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
+ <1478523943-23142-5-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161107132854.GF12559-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478523943-23142-5-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, andrea.merello@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
+On 07/11/16 13:05, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>
+> This patch introduces I2S clock for stm32f4 soc.
+> The I2S clock could be derived from an external clock or from pll-i2s
+>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> ---
+>  drivers/clk/clk-stm32f4.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+> index 5fa5d51..b7cb359 100644
+> --- a/drivers/clk/clk-stm32f4.c
+> +++ b/drivers/clk/clk-stm32f4.c
+> @@ -216,6 +216,7 @@ enum {
+>  	SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC,
+>  	PLL_VCO_I2S, PLL_VCO_SAI,
+>  	CLK_LCD,
+> +	CLK_I2S,
 
-On 07/11/16 13:28, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Sun, Sep 18, 2016 at 12:28:52PM +0200, Paul Kocialkowski wrote:
->> Nyan boards only have host USB ports (2 external, 1 internal), there is
->> no OTG-enabled connector.
->>
->> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Where is this information coming from? I don't have one of the Nyans
-> myself, but one of the Tegra132 devices I have, which I think was
-> derived from one of the Nyans uses one of the external host ports as
-> forced recovery port, for which it would need OTG.
-> 
-> I suspect that the way to get U-Boot onto the Nyans is via tegrarcm?
-> In that case I think one of the ports must be OTG.
+Sorry, this has just clicked and it applies to most of the other 
+patches, but adding things to this list effectively extends the clock 
+bindings (i.e. the list of valid "other" clocks access with a primary 
+index of 1).
 
-It is true that the port on the back on the nyan-big can be used with
-recovery mode. I was thinking that this is not a true OTG port as it is
-just a 4-pin type A socket and does not have an ID pin. Thinking some
-more about this the USB spec does include a "Host Negotiation Protocol
-(HNP)" that allows a host and device to swap roles and so keeping it as
-OTG seems valid afterall.
+This list if a list of "arbitrary" constants by which DT periphericals 
+can be linked to specific clocks.
 
-Cheers
-Jon
+So...
 
--- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  1)  If a clock is introduced here we should update the clock binding
+      documentations.
+
+  2)  If no peripheral can connect to the clock (because it is internal
+      to the clock gen logic and peripherals must connect to the gated
+      version) it should not be included in this enum.
+
+  3)  I failed to mention this when the four undocumented clocks
+      (LSI, LSE, HSE_RTC and RTC) were added.
+
+  4)  I *should* have added a comment explaining the above to the code.
+
+
+>  	END_PRIMARY_CLK
+>  };
+>
+> @@ -967,6 +968,8 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+>
+>  static const char *sdmux_parents[2] = { "pll48", "sys" };
+>
+> +static const char *i2s_parents[2] = { "plli2s-r", NULL };
+> +
+>  struct stm32f4_clk_data {
+>  	const struct stm32f4_gate_data *gates_data;
+>  	const u64 *gates_map;
+> @@ -1005,7 +1008,7 @@ struct stm32f4_clk_data {
+>
+>  static void __init stm32f4_rcc_init(struct device_node *np)
+>  {
+> -	const char *hse_clk;
+> +	const char *hse_clk, *i2s_in_clk;
+>  	int n;
+>  	const struct of_device_id *match;
+>  	const struct stm32f4_clk_data *data;
+> @@ -1038,6 +1041,7 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+>  	stm32f4_gate_map = data->gates_map;
+>
+>  	hse_clk = of_clk_get_parent_name(np, 0);
+> +	i2s_in_clk = of_clk_get_parent_name(np, 1);
+
+Again this looks like a change to the DT bindings.
+
+Also does the code work if i2s_in_clk is NULL or as you hoping to get 
+away with a not-backwards compatible change?
+
+
+Daniel.
+
+
+>
+>  	clk_register_fixed_rate_with_accuracy(NULL, "hsi", NULL, 0,
+>  			16000000, 160000);
+> @@ -1053,6 +1057,12 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+>  	clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll(pllsrc,
+>  			&data->pll_data[2], &stm32f4_clk_lock);
+>
+> +	i2s_parents[1] = i2s_in_clk;
+> +
+> +	clks[CLK_I2S] =	clk_hw_register_mux_table(NULL, "i2s",
+> +				i2s_parents, ARRAY_SIZE(i2s_parents), 0,
+> +				base + STM32F4_RCC_CFGR, 23, 1, 0, NULL,
+> +				&stm32f4_clk_lock);
+>  	sys_parents[1] = hse_clk;
+>  	clk_register_mux_table(
+>  	    NULL, "sys", sys_parents, ARRAY_SIZE(sys_parents), 0,
+>
