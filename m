@@ -1,106 +1,72 @@
-From: =?UTF-8?Q?Martin_Strba=c4=8dka?= <martin.strbacka@nic.cz>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Mon, 7 Nov 2016 08:41:39 +0100
-Message-ID: <e8f73fe4-0b8b-0b53-4ae1-c592ac5b576a@nic.cz>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <20161105212326.GC1216@lunn.ch>
- <20161105212748.vtdprlxxismy5xmk@perseus.defre.kleine-koenig.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8545141832835743603=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161105212748.vtdprlxxismy5xmk@perseus.defre.kleine-koenig.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Tomas Hlavacek <tomas.hlavacek@nic.cz>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V4 0/6] Add support for Tegra GMI bus controller
+Date: Mon,  7 Nov 2016 09:29:59 +0100
+Message-ID: <1478507405-13204-1-git-send-email-mirza.krak@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mirza Krak <mirza.krak-3xdUHytR7SMQwY+2splSUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8545141832835743603==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="QN31JgM8CLKKH2kcWJQx0IBCMLFGs2vUo"
+From: Mirza Krak <mirza.krak-3xdUHytR7SMQwY+2splSUA@public.gmane.org>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---QN31JgM8CLKKH2kcWJQx0IBCMLFGs2vUo
-Content-Type: multipart/mixed; boundary="Qdh2OCRT7kjvfKinIs6imXHv6ta58jaI9";
- protected-headers="v1"
-From: =?UTF-8?Q?Martin_Strba=c4=8dka?= <martin.strbacka@nic.cz>
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
- Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>,
- Gregory Clement <gregory.clement@free-electrons.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Tomas Hlavacek <tomas.hlavacek@nic.cz>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <e8f73fe4-0b8b-0b53-4ae1-c592ac5b576a@nic.cz>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <20161105212326.GC1216@lunn.ch>
- <20161105212748.vtdprlxxismy5xmk@perseus.defre.kleine-koenig.org>
-In-Reply-To: <20161105212748.vtdprlxxismy5xmk@perseus.defre.kleine-koenig.org>
+Hi.
 
---Qdh2OCRT7kjvfKinIs6imXHv6ta58jaI9
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+This patch series adds support for the Tegra GMI bus controller.
 
-On 5.11.2016 22:27, Uwe Kleine-K=F6nig wrote:
->>> Do I need to "register" turris in vendor-prefixes.txt for that?
->> >=20
->> > Yes please.
-> OK, will wait for Martin to comment what we want there. cznic or turris=
-=2E
+I have tested this series on a Tegra30 using a Colibri T30 SOM on a custom
+carrier board which has multiple CAN controllers (SJA1000) connected to the
+GMI bus.
 
-Hello,
+I have re-based on top of latest tegra/for-next in V4. Also see individual
+patches for changes in V4.
 
-please use CZ.NIC in this case. Turris Omnia is a model name.
+Hopefully this will be the last round.
 
-Thanks for your work!
+See below links for previous discussions.
 
-Martin
---=20
-Martin Strbacka CZ.NIC, z.s.p.o. tel. +420 604 217 854
+Comments on RFC:
+https://marc.info/?l=linux-clk&m=146893557629903&w=2
+https://marc.info/?l=linux-tegra&m=146893541829801&w=2
+https://marc.info/?l=linux-tegra&m=146893542429814&w=2
 
+Comments on V1:
+https://marc.info/?l=linux-arm-kernel&m=147051551821122&w=2
+https://marc.info/?l=linux-arm-kernel&m=147051553121150&w=2
+https://marc.info/?l=linux-arm-kernel&m=147194856600627&w=2
+https://marc.info/?l=linux-arm-kernel&m=147072742432211&w=2
 
---Qdh2OCRT7kjvfKinIs6imXHv6ta58jaI9--
+Comments on V2:
+https://marc.info/?l=devicetree&m=147522253920226&w=2
+https://marc.info/?l=linux-tegra&m=147204588027687&w=2
+https://marc.info/?l=linux-tegra&m=147204588027687&w=2
+https://marc.info/?l=devicetree&m=147256931318922&w=2
 
---QN31JgM8CLKKH2kcWJQx0IBCMLFGs2vUo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Comments on V3:
+https://marc.info/?l=linux-tegra&m=147789181607782&w=2
+https://marc.info/?l=linux-tegra&m=147816818203104&w=2
+https://marc.info/?l=linux-tegra&m=147816897003332&w=2
+https://marc.info/?l=linux-tegra&m=147818119107204&w=2
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Mirza Krak (6):
+  clk: tegra: add TEGRA20_CLK_NOR to init table
+  clk: tegra: add TEGRA30_CLK_NOR to init table
+  dt/bindings: Add bindings for Tegra GMI controller
+  ARM: tegra: Add Tegra30 GMI support
+  ARM: tegra: Add Tegra20 GMI support
+  bus: Add support for Tegra Generic Memory Interface
 
-iQEcBAEBCAAGBQJYIDA0AAoJEIHiGEHFlmvPnSEIALAid45RpkSB//8E/nxjPUDQ
-yT9tr52SEpoSbHDbeYGQ6vi6gOEqzFFugEz0nwoOxY0GDPGaLgWJqCg1UMve6lNS
-9Hg3k8yjhalxlXU75Sb2Aw4CJTbZViXy0AWjltlBT3SMPo446DDJBDby67x0OHaD
-4MLACO20lZYkSDMZ4VxGvytbt7us4J/D1oL0Yv2hXb5NVfy/kpQDmkyyoBzF6xJ0
-cWis9sg1krf5SO/c1iQwkg5A1+kCRXnaQqiP/lja3u6VLoI5e51XiZwdhUXZHAIq
-Iv4tUy1UngIX+oF4vSmdqibSnVmcLVGj7zymz2+dwfmJlfK8QAjCShs3dS2TsW4=
-=9uHj
------END PGP SIGNATURE-----
+ .../devicetree/bindings/bus/nvidia,tegra20-gmi.txt | 132 ++++++++++
+ arch/arm/boot/dts/tegra20.dtsi                     |  13 +
+ arch/arm/boot/dts/tegra30.dtsi                     |  13 +
+ drivers/bus/Kconfig                                |   7 +
+ drivers/bus/Makefile                               |   1 +
+ drivers/bus/tegra-gmi.c                            | 275 +++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c                    |   1 +
+ drivers/clk/tegra/clk-tegra30.c                    |   1 +
+ 8 files changed, 443 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
+ create mode 100644 drivers/bus/tegra-gmi.c
 
---QN31JgM8CLKKH2kcWJQx0IBCMLFGs2vUo--
-
-
---===============8545141832835743603==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8545141832835743603==--
+--
+2.1.4
