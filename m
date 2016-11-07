@@ -1,110 +1,37 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH v5] media: et8ek8: add device tree binding documentation
-Date: Mon, 7 Nov 2016 11:46:48 +0100
-Message-ID: <20161107104648.GB5326@amd>
-References: <20161023191706.GA25754@amd>
- <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH V4 6/6] bus: Add support for Tegra Generic Memory
+ Interface
+Date: Mon, 7 Nov 2016 11:13:37 +0000
+Message-ID: <79d74277-7de5-edf8-1ee1-14261ef03791@nvidia.com>
+References: <1478507405-13204-1-git-send-email-mirza.krak@gmail.com>
+ <1478507405-13204-7-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1478507405-13204-7-git-send-email-mirza.krak@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mirza Krak <mirza.krak@gmail.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com
+Cc: gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07/11/16 08:30, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak@gmail.com>
+> 
+> The Generic Memory Interface bus can be used to connect high-speed
+> devices such as NOR flash, FPGAs, DSPs...
+> 
+> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Tested-on: Colibri T20/T30 on EvalBoard V3.x and GMI-Memory Board
 
-Add device tree binding documentation for toshiba et8ek8 sensor.
+Thanks for the update.
 
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt=
- b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-new file mode 100644
-index 0000000..b03b21d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
-@@ -0,0 +1,53 @@
-+Toshiba et8ek8 5MP sensor
-+
-+Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
-+
-+More detailed documentation can be found in
-+Documentation/devicetree/bindings/media/video-interfaces.txt .
-+
-+
-+Mandatory properties
-+--------------------
-+
-+- compatible: "toshiba,et8ek8"
-+- reg: I2C address (0x3e, or an alternative address)
-+- vana-supply: Analogue voltage supply (VANA), 2.8 volts
-+- clocks: External clock to the sensor
-+- clock-frequency: Frequency of the external clock to the sensor. Camera
-+  driver will set this frequency on the external clock. The clock frequenc=
-y is
-+  a pre-determined frequency known to be suitable to the board.
-+- reset-gpios: XSHUTDOWN GPIO. The XSHUTDOWN signal is active high. The se=
-nsor
-+  is in hardware standby mode when the signal is in low state.
-+
-+
-+Endpoint node mandatory properties
-+----------------------------------
-+
-+- remote-endpoint: A phandle to the bus receiver's endpoint node.
-+
-+Endpoint node optional properties
-+----------------------------------
-+
-+- clock-lanes: <0>
-+- data-lanes: <1..n>
-+
-+Example
-+-------
-+
-+&i2c3 {
-+	clock-frequency =3D <400000>;
-+
-+	cam1: camera@3e {
-+		compatible =3D "toshiba,et8ek8";
-+		reg =3D <0x3e>;
-+		vana-supply =3D <&vaux4>;
-+		clocks =3D <&isp 0>;
-+		clock-frequency =3D <9600000>;
-+		reset-gpio =3D <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
-+		port {
-+			csi_cam1: endpoint {
-+				remote-endpoint =3D <&csi_out1>;
-+			};
-+		};
-+	};
-+};
+Cheers
+Jon
 
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlggW5gACgkQMOfwapXb+vLeuACgtejVA3pOIANAr+FAJAwDEfAB
-WeMAn1JE9Hkr8eIbUciHIkO8AaUiwPyP
-=HG2Y
------END PGP SIGNATURE-----
-
---kXdP64Ggrk/fb43R--
+-- 
+nvpublic
