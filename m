@@ -1,92 +1,53 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 2/6] clk: stm32f4: SDIO & 48Mhz clock management for
- STM32F469 board
-Date: Mon, 7 Nov 2016 15:06:16 +0100
-Message-ID: <5954f521-91ea-b415-99e9-8a73abb88bcb@st.com>
-References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
- <1478523943-23142-3-git-send-email-gabriel.fernandez@st.com>
- <45a332b6-5170-9ae3-8d5e-c5f827c3edea@linaro.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: nyan: Mark all USB ports as host
+Date: Mon, 7 Nov 2016 14:09:31 +0000
+Message-ID: <13e7ff98-8bc2-ccf7-94bb-4e1d3c61b20d@nvidia.com>
+References: <20160918102852.6593-1-contact@paulk.fr>
+ <20161107132854.GF12559@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <45a332b6-5170-9ae3-8d5e-c5f827c3edea@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, andrea.merello@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161107132854.GF12559-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
 
-
-On 11/07/2016 02:55 PM, Daniel Thompson wrote:
-> On 07/11/16 13:05, gabriel.fernandez@st.com wrote:
->> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On 07/11/16 13:28, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Sun, Sep 18, 2016 at 12:28:52PM +0200, Paul Kocialkowski wrote:
+>> Nyan boards only have host USB ports (2 external, 1 internal), there is
+>> no OTG-enabled connector.
 >>
->> In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
->> from pll-sai-p.
->>
->> The SDIO clock could be also derived from 48Mhz or from sys clock.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 >> ---
->>  drivers/clk/clk-stm32f4.c | 18 +++++++++++++++++-
->>  1 file changed, 17 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
->> index 7641acd..dda15bc 100644
->> --- a/drivers/clk/clk-stm32f4.c
->> +++ b/drivers/clk/clk-stm32f4.c
->> @@ -199,7 +199,7 @@ struct stm32f4_gate_data {
->>      { STM32F4_RCC_APB2ENR,  8,    "adc1",        "apb2_div" },
->>      { STM32F4_RCC_APB2ENR,  9,    "adc2",        "apb2_div" },
->>      { STM32F4_RCC_APB2ENR, 10,    "adc3",        "apb2_div" },
->> -    { STM32F4_RCC_APB2ENR, 11,    "sdio",        "pll48" },
->> +    { STM32F4_RCC_APB2ENR, 11,    "sdio",        "sdmux" },
->
-> I'm confused. How do the "sdmux" clock come to exist on STM32F429?
->
-"sdmux" only exist on STM32F469 (struct stm32f4_gate_data stm32f469_gates[])
+>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Where is this information coming from? I don't have one of the Nyans
+> myself, but one of the Tegra132 devices I have, which I think was
+> derived from one of the Nyans uses one of the external host ports as
+> forced recovery port, for which it would need OTG.
+> 
+> I suspect that the way to get U-Boot onto the Nyans is via tegrarcm?
+> In that case I think one of the ports must be OTG.
 
-BR
+It is true that the port on the back on the nyan-big can be used with
+recovery mode. I was thinking that this is not a true OTG port as it is
+just a 4-pin type A socket and does not have an ID pin. Thinking some
+more about this the USB spec does include a "Host Negotiation Protocol
+(HNP)" that allows a host and device to swap roles and so keeping it as
+OTG seems valid afterall.
 
-Gabriel
->
->>      { STM32F4_RCC_APB2ENR, 12, "spi1",        "apb2_div" },
->>      { STM32F4_RCC_APB2ENR, 13,    "spi4",        "apb2_div" },
->>      { STM32F4_RCC_APB2ENR, 14,    "syscfg",    "apb2_div" },
->> @@ -940,6 +940,10 @@ static struct clk_hw *stm32_register_cclk(struct 
->> device *dev, const char *name,
->>      "no-clock", "lse", "lsi", "hse-rtc"
->>  };
->>
->> +static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
->> +
->> +static const char *sdmux_parents[2] = { "pll48", "sys" };
->> +
->>  struct stm32f4_clk_data {
->>      const struct stm32f4_gate_data *gates_data;
->>      const u64 *gates_map;
->> @@ -1109,6 +1113,18 @@ static void __init stm32f4_rcc_init(struct 
->> device_node *np)
->>          goto fail;
->>      }
->>
->> +    if (of_device_is_compatible(np, "st,stm32f469-rcc")) {
->> +        clk_hw_register_mux_table(NULL, "pll48",
->> +                pll48_parents, ARRAY_SIZE(pll48_parents), 0,
->> +                base + STM32F4_RCC_DCKCFGR, 27, 1, 0, NULL,
->> +                &stm32f4_clk_lock);
->> +
->> +        clk_hw_register_mux_table(NULL, "sdmux",
->> +                sdmux_parents, ARRAY_SIZE(sdmux_parents), 0,
->> +                base + STM32F4_RCC_DCKCFGR, 28, 1, 0, NULL,
->> +                &stm32f4_clk_lock);
->> +    }
->> +
->>      of_clk_add_hw_provider(np, stm32f4_rcc_lookup_clk, NULL);
->>      return;
->>  fail:
->>
->
+Cheers
+Jon
 
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
