@@ -1,83 +1,81 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] clk: stm32f4: SDIO & 48Mhz clock management for
- STM32F469 board
-Date: Mon, 7 Nov 2016 13:55:29 +0000
-Message-ID: <45a332b6-5170-9ae3-8d5e-c5f827c3edea@linaro.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 3/6] clk: stm32f4: Add post divisor for I2S & SAI PLLs and
+ Add lcd-tft clock
+Date: Mon, 7 Nov 2016 13:58:40 +0000
+Message-ID: <860ce6a2-066f-2b44-3cf5-2d73720ed588@linaro.org>
 References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
- <1478523943-23142-3-git-send-email-gabriel.fernandez@st.com>
+ <1478523943-23142-4-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478523943-23142-3-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478523943-23142-4-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, andrea.merello@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/16 13:05, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
-> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+On 07/11/16 13:05, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 >
-> In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
-> from pll-sai-p.
+> This patch adds post dividers of I2S & SAI PLLs.
+> These dividers are managed by a dedicated register (RCC_DCKCFGR).
+> The PLL should be off before a set rate.
+> This patch also introduces the lcd-tft clock.
 >
-> The SDIO clock could be also derived from 48Mhz or from sys clock.
->
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
->  drivers/clk/clk-stm32f4.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+>  drivers/clk/clk-stm32f4.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
 >
 > diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-> index 7641acd..dda15bc 100644
+> index dda15bc..5fa5d51 100644
 > --- a/drivers/clk/clk-stm32f4.c
 > +++ b/drivers/clk/clk-stm32f4.c
-> @@ -199,7 +199,7 @@ struct stm32f4_gate_data {
->  	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
->  	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
->  	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
-> -	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
-> +	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"sdmux" },
-
-I'm confused. How do the "sdmux" clock come to exist on STM32F429?
-
-
->  	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
->  	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
->  	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
-> @@ -940,6 +940,10 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
->  	"no-clock", "lse", "lsi", "hse-rtc"
+> @@ -215,6 +215,7 @@ struct stm32f4_gate_data {
+>  enum {
+>  	SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC,
+>  	PLL_VCO_I2S, PLL_VCO_SAI,
+> +	CLK_LCD,
+>  	END_PRIMARY_CLK
 >  };
 >
-> +static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
-> +
-> +static const char *sdmux_parents[2] = { "pll48", "sys" };
-> +
->  struct stm32f4_clk_data {
->  	const struct stm32f4_gate_data *gates_data;
->  	const u64 *gates_map;
-> @@ -1109,6 +1113,18 @@ static void __init stm32f4_rcc_init(struct device_node *np)
->  		goto fail;
->  	}
+> @@ -599,6 +600,9 @@ static struct clk_hw *clk_register_pll_div(const char *name,
+>  static const struct clk_div_table pll_divp_table[] = {
+>  	{ 0, 2 }, { 1, 4 }, { 2, 6 }, { 3, 8 },
+>  };
+> +static const struct clk_div_table pll_lcd_div_table[] = {
+> +	{ 0, 2 }, { 1, 4 }, { 2, 8 }, { 3, 16 },
+> +};
 >
-> +	if (of_device_is_compatible(np, "st,stm32f469-rcc")) {
-> +		clk_hw_register_mux_table(NULL, "pll48",
-> +				pll48_parents, ARRAY_SIZE(pll48_parents), 0,
-> +				base + STM32F4_RCC_DCKCFGR, 27, 1, 0, NULL,
-> +				&stm32f4_clk_lock);
+>  /*
+>   * Decode current PLL state and (statically) model the state we inherit from
+> @@ -659,16 +663,35 @@ static struct clk_hw *stm32f4_rcc_register_pll(const char *pllsrc,
+>  		clk_register_pll_div(data->p_name, data->vco_name, 0, reg,
+>  				16, 2, 0, pll_divp_table, pll_hw, lock);
+>
+> -	if (data->q_name)
+> +	if (data->q_name) {
+>  		clk_register_pll_div(data->q_name, data->vco_name, 0, reg,
+>  				24, 4, CLK_DIVIDER_ONE_BASED, NULL,
+>  				pll_hw, lock);
+>
+> -	if (data->r_name)
+> +		if (data->pll_num == PLL_I2S)
+> +			clk_register_pll_div("plli2s-q-div", data->q_name,
+> +				0, base + STM32F4_RCC_DCKCFGR,
+> +				0, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
 > +
-> +		clk_hw_register_mux_table(NULL, "sdmux",
-> +				sdmux_parents, ARRAY_SIZE(sdmux_parents), 0,
-> +				base + STM32F4_RCC_DCKCFGR, 28, 1, 0, NULL,
-> +				&stm32f4_clk_lock);
+> +		if (data->pll_num == PLL_SAI)
+> +			clk_register_pll_div("pllsai-q-div", data->q_name,
+> +				0, base + STM32F4_RCC_DCKCFGR,
+> +				8, 5, 0, NULL, pll_hw, &stm32f4_clk_lock);
 > +	}
-> +
->  	of_clk_add_hw_provider(np, stm32f4_rcc_lookup_clk, NULL);
->  	return;
->  fail:
->
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shouldn't this be in the config structures?
+
+It seems very odd to me to allow the config structures to control 
+whether we take the branch or not and then add these hard coded hacks.
+
+
+Daniel.
