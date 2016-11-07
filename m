@@ -1,59 +1,123 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] serial: tegra20-hsuart: fix typo in dmas DT binding
- description
-Date: Mon, 7 Nov 2016 14:01:03 +0100
-Message-ID: <20161107130103.GC12559@ulmo.ba.sec>
-References: <1468787481-27753-1-git-send-email-mirza.krak@gmail.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/9] arm64: dts: m3ulcb: enable SDHI0
+Date: Mon, 7 Nov 2016 16:05:33 +0300
+Message-ID: <817acf53-b979-b79f-bdea-4d1d1919ec09@cogentembedded.com>
+References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1478196471-1381-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <20161107130054.GG12319@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1468787481-27753-1-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161107130054.GG12319-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
---2JFBq9zoW8cOFH7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07.11.2016 16:00, Simon Horman wrote:
+> On Thu, Nov 03, 2016 at 09:07:51PM +0300, Vladimir Barinov wrote:
+>> This supports SDHI0 on M3ULCB board SD card slot
+> Is SDHI3 also exposed on the M3ULCB?
+No, SDHI3 is not exposed on M3ULCB.
 
-On Sun, Jul 17, 2016 at 10:31:21PM +0200, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> The description for dmas references a second property, which should be
-> "dma-names" instead of "clock-names".
->=20
-> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/serial/nvidia,tegra20-hsuart.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Only SDHI0 exposed to SD slot and SDHI2 as eMMC.
 
-Applied, thanks.
+> If so could you consider sending patches to enable it?
+>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> ---
+>>   arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 48 ++++++++++++++++++++++++++
+>>   1 file changed, 48 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> index 3329f78..5be0cf6 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
+>> @@ -44,6 +44,30 @@
+>>   			gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
+>>   		};
+>>   	};
+>> +
+>> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+>> +		compatible = "regulator-fixed";
+>> +
+>> +		regulator-name = "SDHI0 Vcc";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	vccq_sdhi0: regulator-vccq-sdhi0 {
+>> +		compatible = "regulator-gpio";
+>> +
+>> +		regulator-name = "SDHI0 VccQ";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+>> +		gpios-states = <1>;
+>> +		states = <3300000 1
+>> +			  1800000 0>;
+>> +	};
+>>   };
+>>   
+>>   &extal_clk {
+>> @@ -68,8 +92,33 @@
+>>   		groups = "scif_clk_a";
+>>   		function = "scif_clk";
+>>   	};
+>> +
+>> +	sdhi0_pins_3v3: sd0_3v3 {
+>> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+>> +		function = "sdhi0";
+>> +		power-source = <3300>;
+>> +	};
+>> +
+>> +	sdhi0_pins_1v8: sd0_1v8 {
+>> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+>> +		function = "sdhi0";
+>> +		power-source = <1800>;
+>> +	};
+> I would prefer the pin nodes to be named as follows:
+>
+>   sdhi0_pins_3v3 ->  sdhi0_pins_3v3
+>   sdhi0_pins_1v8 -> sdhi0_pins_uhs
+>
+> Likewise for SDHI2.
+Okay, I will resend these changes in the next try.
 
-Thierry
+Regards,
+Vladimir
 
---2JFBq9zoW8cOFH7v
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>>   };
+>>   
+>> +&sdhi0 {
+>> +	pinctrl-0 = <&sdhi0_pins_3v3>;
+>> +	pinctrl-1 = <&sdhi0_pins_1v8>;
+>> +	pinctrl-names = "default", "state_uhs";
+>> +
+>> +	vmmc-supply = <&vcc_sdhi0>;
+>> +	vqmmc-supply = <&vccq_sdhi0>;
+>> +	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
+>> +	bus-width = <4>;
+>> +	sd-uhs-sdr50;
+>> +	status = "okay";
+>> +};
+>> +
+>>   &scif2 {
+>>   	pinctrl-0 = <&scif2_pins>;
+>>   	pinctrl-names = "default";
+>> -- 
+>> 1.9.1
+>>
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYIHsPAAoJEN0jrNd/PrOhji4P/3fLEqsdDaIQSjRLrRcpqGIU
-A9Y+nIIDuK27FbxpH5dJgD8sS+LPT+F2eKSQ98e3Bm+eU35P8YVllfPbVdFUBTrG
-VLhebsAKNihI3fKHidvpCT+1vb2I7TGNZJbPKSU799GLkXs4+KhxIKEkIO/5jYqM
-OF8Gn6rFHs5AaPlVDuNwHfdSEooipBAJGvx7oG+r4Q2zqNewAWf524KCCAhB35kH
-5oYWrFPqLzRcqAIATbJ4VRZ+39qGZ1t0uyiZGy4neYcJpQzaezEnx9ZGi5oukUzA
-NrQ9c8ztvED2+ewEnQ10Vtyax15UXSp9Zp+oM8c8CRT7S2o45ZEqwgoUsURTyggD
-4iTD7h9USyuJf9luS9vhMpVVgdFBxHUn68eCec00FXJJNAd3N3ZEI8rY1I1a1b+y
-5TlfFyNgmsBhq7JpJvSrWbpryYbTiknP59MV67kELSLp5wbR+FL2EncBdgrVhQzi
-76bMu/30eH0NTAHd9W/iU2OTFRC+NqRh+FH4GyHLR+xtEsY2PZCav5bn1ICEYNbH
-nTgWCIYycflc6ADuFCvBEa15LyZ4H+8dE7ho3gLcv/9MSIgBI+PtzJepH4Pr2+ov
-mh17ojNQi1rkk7Mu/NDQthD+rA73Raz3PKkj6StptaeceucTX/LqzWEjplgfHeBa
-XbrNOQFF9ksmLv8mzXlz
-=BGjm
------END PGP SIGNATURE-----
-
---2JFBq9zoW8cOFH7v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
