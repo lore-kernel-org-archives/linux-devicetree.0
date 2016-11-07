@@ -1,48 +1,25 @@
 From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 2/3] arm64: dts: hisi: disable sas0 and sas2 for d03
-Date: Tue, 8 Nov 2016 00:44:24 +0800
-Message-ID: <1478537065-169286-3-git-send-email-john.garry@huawei.com>
-References: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 0/3] arm64: dts: hisi: hip06 SAS device tree fixes
+Date: Tue, 8 Nov 2016 00:44:22 +0800
+Message-ID: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, John Garry <john.garry@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-The SAS nodes sas0 and sas2 are not available on d03, so
-disable them.
+This patchset resolves some hip06 SAS device tree issues.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Xu Wei <xuwei5@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hip06-d03.dts | 8 --------
- 1 file changed, 8 deletions(-)
+John Garry (3):
+  arm64: dts: hisi: fix hip06 sas am-max-trans quirk
+  arm64: dts: hisi: disable sas0 and sas2 for d03
+  arm64: dts: hisi: add refclk node to hip06 dts files for SAS
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts b/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
-index f54b283..7c4114a 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
-@@ -41,18 +41,10 @@
- 	status = "ok";
- };
- 
--&sas0 {
--	status = "ok";
--};
--
- &sas1 {
- 	status = "ok";
- };
- 
--&sas2 {
--	status = "ok";
--};
--
- &usb_ohci {
- 	status = "ok";
- };
+ arch/arm64/boot/dts/hisilicon/hip06-d03.dts |  8 --------
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi    | 11 ++++++++++-
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
 -- 
 1.9.1
