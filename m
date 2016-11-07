@@ -1,181 +1,61 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 04/10] ARM: davinci: da830: Handle vbus with a regulator
-Date: Mon,  7 Nov 2016 21:39:42 +0100
-Message-ID: <20161107203948.28324-5-ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: [PATCH v3 10/10] ARM: dts: da850: add usb device node
+Date: Mon,  7 Nov 2016 21:39:48 +0100
+Message-ID: <20161107203948.28324-11-ahaslam@baylibre.com>
 References: <20161107203948.28324-1-ahaslam@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161107203948.28324-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161107203948.28324-1-ahaslam@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The usb driver can now take a regulator instead of the platform
-callbacks for vbus handling. Lets use a regulator so we can remove
-the callbacks in a later patch.
+This adds the ohci device node for the da850 soc.
+It also enables it for the omapl138 hawk board.
 
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 ---
- arch/arm/mach-davinci/board-da830-evm.c | 108 +++++++++++---------------------
- 1 file changed, 38 insertions(+), 70 deletions(-)
+ arch/arm/boot/dts/da850-lcdk.dts | 8 ++++++++
+ arch/arm/boot/dts/da850.dtsi     | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index 5db0901..16a401a 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -14,6 +14,7 @@
- #include <linux/console.h>
- #include <linux/interrupt.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/platform_device.h>
- #include <linux/i2c.h>
- #include <linux/i2c/pcf857x.h>
-@@ -28,6 +29,7 @@
- #include <linux/platform_data/spi-davinci.h>
- #include <linux/platform_data/usb-davinci.h>
- #include <linux/regulator/machine.h>
-+#include <linux/regulator/fixed.h>
- 
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -38,72 +40,48 @@
- #include <mach/da8xx.h>
- 
- #define DA830_EVM_PHY_ID		""
--/*
-- * USB1 VBUS is controlled by GPIO1[15], over-current is reported on GPIO2[4].
-- */
--#define ON_BD_USB_DRV	GPIO_TO_PIN(1, 15)
--#define ON_BD_USB_OVC	GPIO_TO_PIN(2, 4)
- 
- static const short da830_evm_usb11_pins[] = {
- 	DA830_GPIO1_15, DA830_GPIO2_4,
- 	-1
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 7b8ab21..aaf533e 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -86,6 +86,14 @@
+ 	};
  };
  
--static da8xx_ocic_handler_t da830_evm_usb_ocic_handler;
--
--static int da830_evm_usb_set_power(unsigned port, int on)
--{
--	gpio_set_value(ON_BD_USB_DRV, on);
--	return 0;
--}
-+static struct regulator_consumer_supply usb_ohci_consumer_supply =
-+	REGULATOR_SUPPLY("vbus", "ohci-da8xx");
- 
--static int da830_evm_usb_get_power(unsigned port)
--{
--	return gpio_get_value(ON_BD_USB_DRV);
--}
--
--static int da830_evm_usb_get_oci(unsigned port)
--{
--	return !gpio_get_value(ON_BD_USB_OVC);
--}
--
--static irqreturn_t da830_evm_usb_ocic_irq(int, void *);
--
--static int da830_evm_usb_ocic_notify(da8xx_ocic_handler_t handler)
--{
--	int irq 	= gpio_to_irq(ON_BD_USB_OVC);
--	int error	= 0;
--
--	if (handler != NULL) {
--		da830_evm_usb_ocic_handler = handler;
--
--		error = request_irq(irq, da830_evm_usb_ocic_irq,
--				    IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
--				    "OHCI over-current indicator", NULL);
--		if (error)
--			pr_err("%s: could not request IRQ to watch over-current indicator changes\n",
--			       __func__);
--	} else
--		free_irq(irq, NULL);
--
--	return error;
--}
-+static struct regulator_init_data usb_ohci_initdata = {
-+	.consumer_supplies = &usb_ohci_consumer_supply,
-+	.num_consumer_supplies = 1,
-+	.constraints = {
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
++&usb_phy {
++	status = "okay";
 +};
- 
--static struct da8xx_ohci_root_hub da830_evm_usb11_pdata = {
--	.set_power	= da830_evm_usb_set_power,
--	.get_power	= da830_evm_usb_get_power,
--	.get_oci	= da830_evm_usb_get_oci,
--	.ocic_notify	= da830_evm_usb_ocic_notify,
-+static struct fixed_voltage_config usb_ohci_config = {
-+	.supply_name		= "vbus",
-+	.microvolts		= 5000000,
-+	.gpio			= GPIO_TO_PIN(1, 15),
-+	.enable_high		= 1,
-+	.enabled_at_boot	= 0,
-+	.init_data		= &usb_ohci_initdata,
++
++&ohci {
++	status = "okay";
 +};
- 
--	/* TPS2065 switch @ 5V */
--	.potpgt		= (3 + 1) / 2,	/* 3 ms max */
-+static struct platform_device da8xx_usb11_regulator = {
-+	.name	= "reg-fixed-voltage",
-+	.id	= 0,
-+	.dev	= {
-+		.platform_data = &usb_ohci_config,
-+	},
- };
- 
--static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
--{
--	da830_evm_usb_ocic_handler(&da830_evm_usb11_pdata, 1);
--	return IRQ_HANDLED;
--}
-+static struct gpiod_lookup_table usb11_gpios_table = {
-+	.dev_id = "reg-fixed-voltage.0",
-+	.table = {
-+		/* gpio chip 1 contains gpio range 32-63 */
-+		GPIO_LOOKUP("davinci_gpio.1", 4, "over-current",
-+				GPIO_ACTIVE_LOW),
-+	},
-+};
- 
- static __init void da830_evm_usb_init(void)
- {
-@@ -145,23 +123,13 @@ static __init void da830_evm_usb_init(void)
- 		return;
- 	}
- 
--	ret = gpio_request(ON_BD_USB_DRV, "ON_BD_USB_DRV");
--	if (ret) {
--		pr_err("%s: failed to request GPIO for USB 1.1 port power control: %d\n",
--		       __func__, ret);
--		return;
--	}
--	gpio_direction_output(ON_BD_USB_DRV, 0);
-+	gpiod_add_lookup_table(&usb11_gpios_table);
- 
--	ret = gpio_request(ON_BD_USB_OVC, "ON_BD_USB_OVC");
--	if (ret) {
--		pr_err("%s: failed to request GPIO for USB 1.1 port over-current indicator: %d\n",
--		       __func__, ret);
--		return;
--	}
--	gpio_direction_input(ON_BD_USB_OVC);
-+	ret = platform_device_register(&da8xx_usb11_regulator);
-+	if (ret)
-+		pr_warn("fail to add ohci regulator\n");
- 
--	ret = da8xx_register_usb11(&da830_evm_usb11_pdata);
-+	ret = da8xx_register_usb11(NULL);
- 	if (ret)
- 		pr_warn("%s: USB 1.1 registration failed: %d\n", __func__, ret);
- }
++
+ &serial2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&serial2_rxtx_pins>;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 2534aab..50e86da 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -405,6 +405,14 @@
+ 					>;
+ 			status = "disabled";
+ 		};
++		ohci: usb@0225000 {
++			compatible = "ti,da830-ohci";
++			reg = <0x225000 0x1000>;
++			interrupts = <59>;
++			phys = <&usb_phy 1>;
++			phy-names = "usb-phy";
++			status = "disabled";
++		};
+ 		gpio: gpio@226000 {
+ 			compatible = "ti,dm6441-gpio";
+ 			gpio-controller;
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
