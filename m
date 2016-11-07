@@ -1,190 +1,291 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: [PATCH v3 01/10] USB: ohci: da8xx: use ohci priv data instead of globals
-Date: Mon,  7 Nov 2016 21:39:39 +0100
-Message-ID: <20161107203948.28324-2-ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 06/10] USB: ohci: da8xx: Remove ohci platform callbacks
+Date: Mon,  7 Nov 2016 21:39:44 +0100
+Message-ID: <20161107203948.28324-7-ahaslam@baylibre.com>
 References: <20161107203948.28324-1-ahaslam@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161107203948.28324-1-ahaslam@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161107203948.28324-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of global variables, use the extra_priv_size of
-the ohci driver.
+Now that all ohci users are are using a regulator, we can
+remove the platform callbacks and data.
 
-We cannot yet move the ocic mask because this is used on
-the interrupt handler which is registerded through platform
-data and does not have an hcd pointer. This will be moved
-on a later patch.
+potpgt is no longer necessary as a power on delay time can
+be specified for the regulator itself.
 
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/host/ohci-da8xx.c | 72 +++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 30 deletions(-)
+ arch/arm/mach-davinci/board-da830-evm.c     |  2 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  2 +-
+ arch/arm/mach-davinci/include/mach/da8xx.h  |  2 +-
+ arch/arm/mach-davinci/usb-da8xx.c           |  3 +-
+ drivers/usb/host/ohci-da8xx.c               | 84 ++---------------------------
+ include/linux/platform_data/usb-davinci.h   | 20 -------
+ 6 files changed, 9 insertions(+), 104 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index 429d58b..0442c64 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -35,43 +35,49 @@ static int (*orig_ohci_hub_control)(struct usb_hcd  *hcd, u16 typeReq,
- 			u16 wValue, u16 wIndex, char *buf, u16 wLength);
- static int (*orig_ohci_hub_status_data)(struct usb_hcd *hcd, char *buf);
- 
--static struct clk *usb11_clk;
--static struct phy *usb11_phy;
-+struct da8xx_ohci_hcd {
-+	struct clk *usb11_clk;
-+	struct phy *usb11_phy;
-+};
-+#define to_da8xx_ohci(hcd) (struct da8xx_ohci_hcd *)(hcd_to_ohci(hcd)->priv)
- 
- /* Over-current indicator change bitmask */
- static volatile u16 ocic_mask;
- 
--static int ohci_da8xx_enable(void)
-+static int ohci_da8xx_enable(struct usb_hcd *hcd)
- {
-+	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
- 	int ret;
- 
--	ret = clk_prepare_enable(usb11_clk);
-+	ret = clk_prepare_enable(da8xx_ohci->usb11_clk);
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 16a401a..cb67885 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -129,7 +129,7 @@ static __init void da830_evm_usb_init(void)
  	if (ret)
- 		return ret;
+ 		pr_warn("fail to add ohci regulator\n");
  
--	ret = phy_init(usb11_phy);
-+	ret = phy_init(da8xx_ohci->usb11_phy);
+-	ret = da8xx_register_usb11(NULL);
++	ret = da8xx_register_usb11();
  	if (ret)
- 		goto err_phy_init;
- 
--	ret = phy_power_on(usb11_phy);
-+	ret = phy_power_on(da8xx_ohci->usb11_phy);
- 	if (ret)
- 		goto err_phy_power_on;
- 
- 	return 0;
- 
- err_phy_power_on:
--	phy_exit(usb11_phy);
-+	phy_exit(da8xx_ohci->usb11_phy);
- err_phy_init:
--	clk_disable_unprepare(usb11_clk);
-+	clk_disable_unprepare(da8xx_ohci->usb11_clk);
- 
- 	return ret;
+ 		pr_warn("%s: USB 1.1 registration failed: %d\n", __func__, ret);
  }
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index a252404..cbe7324 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -197,7 +197,7 @@ static __init void omapl138_hawk_usb_init(void)
+ 		pr_warn("%s: USB PHY registration failed: %d\n",
+ 			__func__, ret);
  
--static void ohci_da8xx_disable(void)
-+static void ohci_da8xx_disable(struct usb_hcd *hcd)
- {
--	phy_power_off(usb11_phy);
--	phy_exit(usb11_phy);
--	clk_disable_unprepare(usb11_clk);
-+	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
-+
-+	phy_power_off(da8xx_ohci->usb11_phy);
-+	phy_exit(da8xx_ohci->usb11_phy);
-+	clk_disable_unprepare(da8xx_ohci->usb11_clk);
- }
- 
- /*
-@@ -97,7 +103,7 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
- 
- 	dev_dbg(dev, "starting USB controller\n");
- 
--	result = ohci_da8xx_enable();
-+	result = ohci_da8xx_enable(hcd);
- 	if (result < 0)
- 		return result;
- 
-@@ -109,7 +115,7 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
- 
- 	result = ohci_setup(hcd);
- 	if (result < 0) {
--		ohci_da8xx_disable();
-+		ohci_da8xx_disable(hcd);
- 		return result;
- 	}
- 
-@@ -231,6 +237,7 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- static int ohci_da8xx_probe(struct platform_device *pdev)
- {
- 	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(&pdev->dev);
-+	struct da8xx_ohci_hcd *da8xx_ohci;
- 	struct usb_hcd	*hcd;
- 	struct resource *mem;
- 	int error, irq;
-@@ -238,25 +245,29 @@ static int ohci_da8xx_probe(struct platform_device *pdev)
- 	if (hub == NULL)
- 		return -ENODEV;
- 
--	usb11_clk = devm_clk_get(&pdev->dev, "usb11");
--	if (IS_ERR(usb11_clk)) {
--		if (PTR_ERR(usb11_clk) != -EPROBE_DEFER)
-+	hcd = usb_create_hcd(&ohci_da8xx_hc_driver, &pdev->dev,
-+				dev_name(&pdev->dev));
-+	if (!hcd)
-+		return -ENOMEM;
-+
-+	da8xx_ohci = to_da8xx_ohci(hcd);
-+
-+	da8xx_ohci->usb11_clk = devm_clk_get(&pdev->dev, "usb11");
-+	if (IS_ERR(da8xx_ohci->usb11_clk)) {
-+		if (PTR_ERR(da8xx_ohci->usb11_clk) != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "Failed to get clock.\n");
--		return PTR_ERR(usb11_clk);
-+		error = PTR_ERR(da8xx_ohci->usb11_clk);
-+		goto err;
- 	}
- 
--	usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
--	if (IS_ERR(usb11_phy)) {
--		if (PTR_ERR(usb11_phy) != -EPROBE_DEFER)
-+	da8xx_ohci->usb11_phy = devm_phy_get(&pdev->dev, "usb-phy");
-+	if (IS_ERR(da8xx_ohci->usb11_phy)) {
-+		if (PTR_ERR(da8xx_ohci->usb11_phy) != -EPROBE_DEFER)
- 			dev_err(&pdev->dev, "Failed to get phy.\n");
--		return PTR_ERR(usb11_phy);
-+		error = PTR_ERR(da8xx_ohci->usb11_phy);
-+		goto err;
- 	}
- 
--	hcd = usb_create_hcd(&ohci_da8xx_hc_driver, &pdev->dev,
--				dev_name(&pdev->dev));
--	if (!hcd)
--		return -ENOMEM;
--
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	hcd->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(hcd->regs)) {
-@@ -321,7 +332,7 @@ static int ohci_da8xx_suspend(struct platform_device *pdev,
+-	ret = da8xx_register_usb11(NULL);
++	ret = da8xx_register_usb11();
  	if (ret)
- 		return ret;
- 
--	ohci_da8xx_disable();
-+	ohci_da8xx_disable(hcd);
- 	hcd->state = HC_STATE_SUSPENDED;
- 
- 	return ret;
-@@ -337,7 +348,7 @@ static int ohci_da8xx_resume(struct platform_device *dev)
- 		msleep(5);
- 	ohci->next_statechange = jiffies;
- 
--	ret = ohci_da8xx_enable();
-+	ret = ohci_da8xx_enable(hcd);
- 	if (ret)
- 		return ret;
- 
-@@ -349,7 +360,8 @@ static int ohci_da8xx_resume(struct platform_device *dev)
- #endif
- 
- static const struct ohci_driver_overrides da8xx_overrides __initconst = {
--	.reset		= ohci_da8xx_reset,
-+	.reset		 = ohci_da8xx_reset,
-+	.extra_priv_size = sizeof(struct da8xx_ohci_hcd),
+ 		pr_warn("%s: USB 1.1 registration failed: %d\n",
+ 			__func__, ret);
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index 43322be..6096402 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -91,7 +91,7 @@ int da8xx_register_spi_bus(int instance, unsigned num_chipselect);
+ int da8xx_register_watchdog(void);
+ int da8xx_register_usb_phy(void);
+ int da8xx_register_usb20(unsigned mA, unsigned potpgt);
+-int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
++int da8xx_register_usb11(void);
+ int da8xx_register_usb_refclkin(int rate);
+ int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
+ int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index c6feecf..4ea91bb 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -119,9 +119,8 @@ static struct platform_device da8xx_usb11_device = {
+ 	.resource	= da8xx_usb11_resources,
  };
  
+-int __init da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata)
++int __init da8xx_register_usb11(void)
+ {
+-	da8xx_usb11_device.dev.platform_data = pdata;
+ 	return platform_device_register(&da8xx_usb11_device);
+ }
+ 
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 0a4b885..3dcbf1f 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -89,12 +89,8 @@ static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+ 	int ret;
+ 
+-	if (hub && hub->set_power)
+-		return hub->set_power(1, on);
+-
+ 	if (!da8xx_ohci->vbus_reg)
+ 		return 0;
+ 
+@@ -121,11 +117,6 @@ static int ohci_da8xx_set_power(struct usb_hcd *hcd, int on)
+ static int ohci_da8xx_get_power(struct usb_hcd *hcd)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+-	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+-
+-	if (hub && hub->get_power)
+-		return hub->get_power(1);
+ 
+ 	if (da8xx_ohci->vbus_reg)
+ 		return regulator_is_enabled(da8xx_ohci->vbus_reg);
+@@ -137,13 +128,9 @@ static int ohci_da8xx_get_oci(struct usb_hcd *hcd)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+ 	unsigned int flags;
+ 	int ret;
+ 
+-	if (hub && hub->get_oci)
+-		return hub->get_oci(1);
+-
+ 	if (!da8xx_ohci->vbus_reg)
+ 		return 0;
+ 
+@@ -159,29 +146,9 @@ static int ohci_da8xx_get_oci(struct usb_hcd *hcd)
+ 	return 0;
+ }
+ 
+-static int ohci_da8xx_has_set_power(struct usb_hcd *hcd)
++static int ohci_da8xx_has_regulator(struct usb_hcd *hcd)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+-	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+-
+-	if (hub && hub->set_power)
+-		return 1;
+-
+-	if (da8xx_ohci->vbus_reg)
+-		return 1;
+-
+-	return 0;
+-}
+-
+-static int ohci_da8xx_has_oci(struct usb_hcd *hcd)
+-{
+-	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+-	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+-
+-	if (hub && hub->get_oci)
+-		return 1;
+ 
+ 	if (da8xx_ohci->vbus_reg)
+ 		return 1;
+@@ -189,30 +156,9 @@ static int ohci_da8xx_has_oci(struct usb_hcd *hcd)
+ 	return 0;
+ }
+ 
+-static int ohci_da8xx_has_potpgt(struct usb_hcd *hcd)
+-{
+-	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+-
+-	if (hub && hub->potpgt)
+-		return 1;
+-
+-	return 0;
+-}
+-
  /*
+  * Handle the port over-current indicator change.
+  */
+-static void ohci_da8xx_ocic_handler(struct da8xx_ohci_root_hub *hub,
+-				    unsigned port)
+-{
+-	ocic_mask |= 1 << port;
+-
+-	/* Once over-current is detected, the port needs to be powered down */
+-	if (hub->get_oci(port) > 0)
+-		hub->set_power(port, 0);
+-}
+-
+ static int ohci_da8xx_regulator_event(struct notifier_block *nb,
+ 				unsigned long event, void *data)
+ {
+@@ -233,12 +179,9 @@ static int ohci_da8xx_register_notify(struct usb_hcd *hcd)
+ {
+ 	struct da8xx_ohci_hcd *da8xx_ohci = to_da8xx_ohci(hcd);
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+ 	int ret = 0;
+ 
+-	if (hub && hub->ocic_notify)
+-		ret = hub->ocic_notify(ohci_da8xx_ocic_handler);
+-	else if (da8xx_ohci->vbus_reg) {
++	if (da8xx_ohci->vbus_reg) {
+ 		da8xx_ohci->nb.notifier_call = ohci_da8xx_regulator_event;
+ 		ret = devm_regulator_register_notifier(da8xx_ohci->vbus_reg,
+ 						&da8xx_ohci->nb);
+@@ -250,19 +193,9 @@ static int ohci_da8xx_register_notify(struct usb_hcd *hcd)
+ 	return ret;
+ }
+ 
+-static void ohci_da8xx_unregister_notify(struct usb_hcd *hcd)
+-{
+-	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+-
+-	if (hub && hub->ocic_notify)
+-		hub->ocic_notify(NULL);
+-}
+-
+ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ {
+ 	struct device *dev		= hcd->self.controller;
+-	struct da8xx_ohci_root_hub *hub	= dev_get_platdata(dev);
+ 	struct ohci_hcd	*ohci		= hcd_to_ohci(hcd);
+ 	int result;
+ 	u32 rh_a;
+@@ -291,20 +224,14 @@ static int ohci_da8xx_reset(struct usb_hcd *hcd)
+ 	 * register's default value, so that ohci_hub_control() could return
+ 	 * the correct hub descriptor...
+ 	 */
+-	rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
+-	if (ohci_da8xx_has_set_power(hcd)) {
++	if (ohci_da8xx_has_regulator(hcd)) {
++		rh_a = ohci_readl(ohci, &ohci->regs->roothub.a);
+ 		rh_a &= ~RH_A_NPS;
+ 		rh_a |=  RH_A_PSM;
+-	}
+-	if (ohci_da8xx_has_oci(hcd)) {
+ 		rh_a &= ~RH_A_NOCP;
+ 		rh_a |=  RH_A_OCPM;
++		ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
+ 	}
+-	if (ohci_da8xx_has_potpgt(hcd)) {
+-		rh_a &= ~RH_A_POTPGT;
+-		rh_a |= hub->potpgt << 24;
+-	}
+-	ohci_writel(ohci, rh_a, &ohci->regs->roothub.a);
+ 
+ 	return result;
+ }
+@@ -479,7 +406,6 @@ static int ohci_da8xx_remove(struct platform_device *pdev)
+ {
+ 	struct usb_hcd	*hcd = platform_get_drvdata(pdev);
+ 
+-	ohci_da8xx_unregister_notify(hcd);
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
+ 
+diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
+index 0926e99..58f4be0 100644
+--- a/include/linux/platform_data/usb-davinci.h
++++ b/include/linux/platform_data/usb-davinci.h
+@@ -11,26 +11,6 @@
+ #ifndef __ASM_ARCH_USB_H
+ #define __ASM_ARCH_USB_H
+ 
+-struct	da8xx_ohci_root_hub;
+-
+-typedef void (*da8xx_ocic_handler_t)(struct da8xx_ohci_root_hub *hub,
+-				     unsigned port);
+-
+-/* Passed as the platform data to the OHCI driver */
+-struct	da8xx_ohci_root_hub {
+-	/* Switch the port power on/off */
+-	int	(*set_power)(unsigned port, int on);
+-	/* Read the port power status */
+-	int	(*get_power)(unsigned port);
+-	/* Read the port over-current indicator */
+-	int	(*get_oci)(unsigned port);
+-	/* Over-current indicator change notification (pass NULL to disable) */
+-	int	(*ocic_notify)(da8xx_ocic_handler_t handler);
+-
+-	/* Time from power on to power good (in 2 ms units) */
+-	u8	potpgt;
+-};
+-
+ void davinci_setup_usb(unsigned mA, unsigned potpgt_ms);
+ 
+ #endif	/* ifndef __ASM_ARCH_USB_H */
 -- 
 2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
