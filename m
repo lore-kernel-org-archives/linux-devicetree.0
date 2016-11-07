@@ -1,72 +1,51 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: hisi: add refclk node to hip06 dts files for SAS
-Date: Tue, 8 Nov 2016 00:44:25 +0800
-Message-ID: <1478537065-169286-4-git-send-email-john.garry@huawei.com>
-References: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
+From: Slawomir Stepien <sst@poczta.fm>
+Subject: Re: [PATCH v3 1/8] iio:core: add a callback to allow drivers to
+ provide _available attributes
+Date: Mon, 7 Nov 2016 17:46:41 +0100
+Message-ID: <20161107164641.GA29162@x220.localdomain>
+References: <1477262381-7800-1-git-send-email-peda@axentia.se>
+ <1477262381-7800-2-git-send-email-peda@axentia.se>
+ <CAEnQRZDgF-x6rNiS1Uv9Evdt1sVfUu9pMF98Z4=r-vKP52C1kA@mail.gmail.com>
+ <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478537065-169286-1-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <62f150ba-abc0-8e45-1355-8a61354ee3e1@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Daniel Baluta <daniel.baluta@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We will only maintain 1 dts for D03 and there are 50MHz
-and 66MHz versions of D03: so we expect UEFI to update
-refclk rate in the fdt at boot time.
+On Nov 07, 2016 12:57, Peter Rosin wrote:
+> On 2016-11-07 12:37, Daniel Baluta wrote:
+> > On Mon, Oct 24, 2016 at 1:39 AM, Peter Rosin <peda@axentia.se> wrote:
+> >> From: Jonathan Cameron <jic23@kernel.org>
+> >>
+> >> A large number of attributes can only take a limited range of values.
+> >> Currently in IIO this is handled by directly registering additional
+> >> *_available attributes thus providing this information to userspace.
+> >>
+> >> It is desirable to provide this information via the core for much the same
+> >> reason this was done for the actual channel information attributes in the
+> >> first place.  If it isn't there, then it can only really be accessed from
+> >> userspace.  Other in kernel IIO consumers have no access to what valid
+> >> parameters are.
+> >>
+> >> Two forms are currently supported:
+> >> * list of values in one particular IIO_VAL_* format.
+> >>         e.g. 1.300000 1.500000 1.730000
+> >> * range specification with a step size:
+> >>         e.g. [1.000000 0.500000 2.500000]
+> >>         equivalent to 1.000000 1.5000000 2.000000 2.500000
+> > 
+> > Is there any driver using this format? :)
+> 
+> Yes, soon. Hopefully. See patch 3/8
+> iio: mcp4531: provide range of available raw values
+> https://patchwork.kernel.org/patch/9391283/
 
-Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Xiang Chen <chenxiang66-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hip06.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I would also like to add this to mcp4131.c and ds1803.c.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-index 5330abb..7b40dce 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-@@ -318,6 +318,12 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		refclk: refclk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+			#clock-cells = <0>;
-+		};
-+
- 		usb_ohci: ohci@a7030000 {
- 			compatible = "generic-ohci";
- 			reg = <0x0 0xa7030000 0x0 0x10000>;
-@@ -552,6 +558,7 @@
- 			ctrl-reset-reg = <0xa60>;
- 			ctrl-reset-sts-reg = <0x5a30>;
- 			ctrl-clock-ena-reg = <0x338>;
-+			clocks = <&refclk 0>;
- 			queue-count = <16>;
- 			phy-count = <8>;
- 			dma-coherent;
-@@ -594,6 +601,7 @@
- 			ctrl-reset-reg = <0xa18>;
- 			ctrl-reset-sts-reg = <0x5a0c>;
- 			ctrl-clock-ena-reg = <0x318>;
-+			clocks = <&refclk 0>;
- 			queue-count = <16>;
- 			phy-count = <8>;
- 			dma-coherent;
-@@ -635,6 +643,7 @@
- 			ctrl-reset-reg = <0xae0>;
- 			ctrl-reset-sts-reg = <0x5a70>;
- 			ctrl-clock-ena-reg = <0x3a8>;
-+			clocks = <&refclk 0>;
- 			queue-count = <16>;
- 			phy-count = <9>;
- 			dma-coherent;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Slawomir Stepien
