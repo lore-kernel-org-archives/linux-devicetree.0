@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/3] ARM64: dts: marvell: Fixup memory DT warning for Armada 37xx
-Date: Mon,  7 Nov 2016 22:41:28 +0100
-Message-ID: <20161107214128.18401-4-gregory.clement@free-electrons.com>
+Subject: [PATCH 1/3] arm64: dts: marvell: Fixup internal-regs DT warning for Armada 37xx
+Date: Mon,  7 Nov 2016 22:41:26 +0100
+Message-ID: <20161107214128.18401-2-gregory.clement@free-electrons.com>
 References: <20161107214128.18401-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161107214128.18401-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,40 +10,27 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-memory has a reg property so the unit name should contain an address.
+internal-regs has a ranges property so the unit name should contain an
+address.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-db.dts          | 2 +-
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-index 1372e9a6aaa4..a260ae25b658 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -56,7 +56,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index c4762538ec01..f1596daa2bc7 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -91,7 +91,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index eadd5993c7bd..83178d909fc2 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -55,7 +55,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@0 {
- 		device_type = "memory";
- 		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
- 	};
+-		internal-regs {
++		internal-regs@d0000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "simple-bus";
 -- 
 2.10.1
 
