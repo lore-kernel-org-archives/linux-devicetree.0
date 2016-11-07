@@ -1,97 +1,124 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/6] dt-bindings: clk: max8997: Add DT binding documentation
-Date: Mon, 07 Nov 2016 15:39:32 +0530
-Message-ID: <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
-References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1478513376-14307-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 1/6] ASoC: sun4i-codec: Add support for
+ optional reset control to quirks
+Date: Mon,  7 Nov 2016 18:06:58 +0800
+Message-ID: <20161107100703.5586-2-wens@csie.org>
+References: <20161107100703.5586-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBSVEQHAQKGQEDEGC5MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161107100703.5586-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree binding documentation for the clocks
-outputs in the Maxim-8997 Power Management IC.
+The later Allwinner SoCs have a dedicated reset controller, and
+peripherals have dedicated reset controls which need to be deasserted
+before the associated peripheral can be used.
 
-CC: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Add support for this to the quirks structure and probe/remove functions.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/clock/maxim,max8997.txt    | 44 ++++++++++++++++++++++
- .../bindings/regulator/max8997-regulator.txt       |  3 ++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/maxim,max8997.txt
+ sound/soc/sunxi/sun4i-codec.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/maxim,max8997.txt b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
-new file mode 100644
-index 0000000..d2e2a74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
-@@ -0,0 +1,44 @@
-+Binding for Maxim MAX8997 32k clock generator block
-+
-+This is a part of device tree bindings of MAX8997 multi-function device.
-+More information can be found in bindings/regulator/max8997-regulator.txt file.
-+
-+The MAX8997 contains two 32.768khz clock outputs that can be controlled
-+(gated/ungated) over I2C.
-+
-+Following properties should be presend in main device node of the MFD chip.
-+
-+Required properties:
-+
-+- #clock-cells: from common clock binding; shall be set to 1.
-+
-+Optional properties:
-+- clock-output-names: From common clock binding.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Following indices are allowed:
-+    - 0: 32khz_ap clock,
-+    - 1: 32khz_cp clock,
-+
-+Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max8997.h
-+header and can be used in device tree sources.
-+
-+Example: Node of the MFD chip
-+
-+	max8997: max8997_pmic@66 {
-+		compatible = "maxim,max8997-pmic";
-+		reg = <0x66>;
-+		interrupt-parent = <&gpx0>;
-+		interrupts = <4 0>, <3 0>;
-+		#clock-cells = <1>;
-+		/* ... */
-+	};
-+
-+Example: Clock consumer node
-+
-+	foo@0 {
-+		compatible = "bar,foo";
-+		/* ... */
-+		clocks = <&max8997 MAX8997_CLK_AP>;
-+		clock-names = "my-clock";
-+	};
-diff --git a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-index 5c186a7..af1f9c0 100644
---- a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-@@ -6,6 +6,9 @@ interfaced to the host controller using a i2c interface. Each sub-block is
- addressed by the host system using different i2c slave address. This document
- describes the bindings for 'pmic' sub-block of max8997.
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 1934db29b2b5..b28b82a5ec62 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -30,6 +30,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/clk.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
+ #include <linux/gpio/consumer.h>
  
-+Binding for the built-in 32k clock generator block is defined separately
-+in bindings/clk/maxim,max8997.txt file
+ #include <sound/core.h>
+@@ -217,6 +218,7 @@ struct sun4i_codec {
+ 	struct regmap	*regmap;
+ 	struct clk	*clk_apb;
+ 	struct clk	*clk_module;
++	struct reset_control *rst;
+ 	struct gpio_desc *gpio_pa;
+ 
+ 	/* ADC_FIFOC register is at different offset on different SoCs */
+@@ -1167,6 +1169,7 @@ struct sun4i_codec_quirks {
+ 	struct reg_field reg_adc_fifoc;	/* used for regmap_field */
+ 	unsigned int reg_dac_txdata;	/* TX FIFO offset for DMA config */
+ 	unsigned int reg_adc_rxdata;	/* RX FIFO offset for DMA config */
++	bool has_reset;
+ };
+ 
+ static const struct sun4i_codec_quirks sun4i_codec_quirks = {
+@@ -1262,6 +1265,14 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 		return PTR_ERR(scodec->clk_module);
+ 	}
+ 
++	if (quirks->has_reset) {
++		scodec->rst = devm_reset_control_get(&pdev->dev, NULL);
++		if (IS_ERR(scodec->rst)) {
++			dev_err(&pdev->dev, "Failed to get reset control\n");
++			return PTR_ERR(scodec->rst);
++		}
++	};
 +
- Required properties:
- - compatible: Should be "maxim,max8997-pmic".
- - reg: Specifies the i2c slave address of the pmic block. It should be 0x66.
+ 	scodec->gpio_pa = devm_gpiod_get_optional(&pdev->dev, "allwinner,pa",
+ 						  GPIOD_OUT_LOW);
+ 	if (IS_ERR(scodec->gpio_pa)) {
+@@ -1288,6 +1299,16 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Deassert the reset control */
++	if (scodec->rst) {
++		ret = reset_control_deassert(scodec->rst);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Failed to deassert the reset control\n");
++			goto err_clk_disable;
++		}
++	}
++
+ 	/* DMA configuration for TX FIFO */
+ 	scodec->playback_dma_data.addr = res->start + quirks->reg_dac_txdata;
+ 	scodec->playback_dma_data.maxburst = 8;
+@@ -1302,7 +1323,7 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 				     &sun4i_codec_dai, 1);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to register our codec\n");
+-		goto err_clk_disable;
++		goto err_assert_reset;
+ 	}
+ 
+ 	ret = devm_snd_soc_register_component(&pdev->dev,
+@@ -1339,6 +1360,9 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 
+ err_unregister_codec:
+ 	snd_soc_unregister_codec(&pdev->dev);
++err_assert_reset:
++	if (scodec->rst)
++		reset_control_assert(scodec->rst);
+ err_clk_disable:
+ 	clk_disable_unprepare(scodec->clk_apb);
+ 	return ret;
+@@ -1351,6 +1375,8 @@ static int sun4i_codec_remove(struct platform_device *pdev)
+ 
+ 	snd_soc_unregister_card(card);
+ 	snd_soc_unregister_codec(&pdev->dev);
++	if (scodec->rst)
++		reset_control_assert(scodec->rst);
+ 	clk_disable_unprepare(scodec->clk_apb);
+ 
+ 	return 0;
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.2
