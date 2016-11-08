@@ -1,60 +1,51 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v6 04/14] mmc: sdhci-msm: Change poor style writel/readl
- of registers
-Date: Tue, 8 Nov 2016 15:07:24 -0800
-Message-ID: <20161108230724.GO16026@codeaurora.org>
-References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
- <1478517877-23733-5-git-send-email-riteshh@codeaurora.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for
+ special ISA
+Date: Wed, 09 Nov 2016 10:12:59 +1100
+Message-ID: <1478646779.7430.66.camel@kernel.crashing.org>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+         <1478576829-112707-3-git-send-email-yuanzhichang@hisilicon.com>
+         <20161108114953.GB15297@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478517877-23733-5-git-send-email-riteshh@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161108114953.GB15297@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07, Ritesh Harjani wrote:
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 8ef44a2a..42f42aa 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -137,8 +137,9 @@ static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
->  	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->  
->  	/* Set CK_OUT_EN bit of DLL_CONFIG register to 1. */
-> -	writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
-> -			| CORE_CK_OUT_EN), host->ioaddr + CORE_DLL_CONFIG);
-> +	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
-> +	config |= CORE_CK_OUT_EN;
-> +	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->  
->  	/* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '1' */
->  	rc = msm_dll_poll_ck_out_en(host, 1);
-> @@ -305,6 +306,7 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->  	struct mmc_host *mmc = host->mmc;
->  	int wait_cnt = 50;
->  	unsigned long flags;
-> +	u32 config = 0;
+On Tue, 2016-11-08 at 11:49 +0000, Mark Rutland wrote:
+> 
+> My understanding of ISA (which may be flawed) is that it's not part of
+> the PCI host bridge, but rather on x86 it happens to share the IO space
+> with PCI.
 
-It needs to be initialized?
+Sort-of. On some systems it actually goes through PCI and there's a
+PCI->ISA bridge that uses substractive decoding to the legacy devices.
 
->  
->  	spin_lock_irqsave(&host->lock, flags);
->  
-> @@ -313,33 +315,40 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->  	 * tuning is in progress. Keeping PWRSAVE ON may
->  	 * turn off the clock.
->  	 */
-> -	writel_relaxed((readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC)
-> -			& ~CORE_CLK_PWRSAVE), host->ioaddr + CORE_VENDOR_SPEC);
-> +	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
+> So, how about this becomes:
+> 
+>   Hisilicon Hip06 SoCs implement a Low Pin Count (LPC) controller, which
+>   provides access to some legacy ISA devices.
+> 
+> I believe that we could theoretically have multiple independent LPC/ISA
+> busses, as is possible with PCI on !x86 systems. If the current ISA code
+> assumes a singleton bus, I think that's something that needs to be fixed
+> up more generically.
+> 
+> I don't see why we should need any architecture-specific code here. Why
+> can we not fix up the ISA bus code in drivers/of/address.c such that it
+> handles multiple ISA bus instances, and translates all sub-device
+> addresses relative to the specific bus instance?
 
-It's written here unconditionally though?
+What in that code prevents that today ?
 
-> +	config &= ~CORE_CLK_PWRSAVE;
+Cheers,
+Ben.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
