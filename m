@@ -1,94 +1,58 @@
-From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Tue, 8 Nov 2016 10:13:58 -0700
-Message-ID: <a86d41da-c7df-4c07-d18e-b751cff9edc7@airwebreathe.org.uk>
-References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
- <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
- <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
- <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
- <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: xilinx: dt-binding: Add clock node
+Date: Tue, 8 Nov 2016 06:48:46 -0800
+Message-ID: <20161108144846.GQ14444@xsjsorenbubuntu>
+References: <1478581990-28276-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4bdba358-db18-48f1-3286-a7a7f4c30215-ynQEQJNshbs@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478581990-28276-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Tue, 2016-11-08 at 10:43:09 +0530, Shubhrajyoti Datta wrote:
+> Add the clock node to the dt binding.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xilinx.txt       |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+> index 63bf4be..0821b9d 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>  - #gpio-cells : Should be two. The first cell is the pin number and the
+>    second cell is used to specify optional parameters (currently unused).
+>  - gpio-controller : Marks the device node as a GPIO controller.
+> +- clocks: Input clock specifier. Refer to common clock bindings.
+>  
+>  Optional properties:
+>  - interrupts : Interrupt mapping for GPIO IRQ.
+> @@ -25,12 +26,14 @@ Optional properties:
+>  - xlnx,dout-default-2 : as above but the second channel
+>  - xlnx,gpio2-width : as above but for the second channel
+>  - xlnx,tri-default-2 : as above but for the second channel
+> +- clock-names: Input clock name
 
->>> Should be this way for the sake of readability, fix globally:
->>>
->>>     struct spi_transfer assert_cs_then_reset_delay = {
->>>         .cs_change    = 1,
->>>         .delay_usecs    = ICE40_SPI_FPGAMGR_RESET_DELAY
->>>     };
->>
->> Sure ok. Personally, I prefer it to be concise, but I'm happy to accept
->> the norms.
->
-> I prefer it to be readable :)
->
+Clock names are driver specific and must be documented here.
 
-I'll conform to what you're saying.
+>  
+>  
+>  Example:
+>  gpio: gpio@40000000 {
+>  	#gpio-cells = <2>;
+>  	compatible = "xlnx,xps-gpio-1.00.a";
+> +	clocks = <&clkc 15>;
 
-But I just want to point out that this...
+Where are the clock-names?
 
-
-spi_message_add_tail(&(struct spi_transfer){.cs_change = 1,
-	.delay_usecs = ICE40_SPI_FPGAMGR_RESET_DELAY}, &message);
-
-
-...is clearly more readable than this...
-
-
-struct spi_transfer assert_cs_then_reset_delay = {
-     .cs_change    = 1,
-     .delay_usecs  = ICE40_SPI_FPGAMGR_RESET_DELAY
-};
-
-....
-<30 lines of unrelated code>
-....
-
-spi_message_add_tail(&assert_cs_then_reset_delay, &message);
-
-
-
-...in my opinion anyway ;)
-
-
-
->> Previously I had a copy of spi_set_cs copy-pasted into my driver, but in
->> the end I decided to replace that with the zero-length transfers because
->> there's a danger that if the original spi_set_cs() gets rewritten some
->> time, my copy-paste code would leave around some nasty legacy.
->>
->> On the whole, I don't think the zero-length transfers are too
->> egregiously bad, and all the alternatives seem worse to me.
->
-> So why not turn the CS line into GPIO and just toggle the GPIO?
->
-
-Two reasons.
-
-1. On some devices the CS line is built into the SPI master, rather than 
-being a normal GPIO.
-
-2. The SPI driver stack addresses SPI devices in terms of which CS line 
-they are attached to. You can't have an spi_device in the kernel where 
-the SPI driver machinery doesn't have a CS line to control. Moreover it 
-needs to be possible for another SPI device to interrupt a running 
-transfer to the FPGA. Supporting this involves the SPI framework 
-managing the CS line.
-
-
-
-Thanks
-Joel
-
-
+	Sören
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
