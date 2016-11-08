@@ -1,98 +1,614 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 2/3] ARM64: dts: sun6i: add dma node for a64.
-Date: Tue, 8 Nov 2016 19:47:15 +0100
-Message-ID: <20161108184715.x5kjhjthmuxor2xz@lukather>
-References: <20161107182247.GA3669@arx12>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 2/2] ASoC: axentia: tse850: add ASoC driver for
+	the Axentia TSE-850
+Date: Tue, 8 Nov 2016 17:20:57 +0100
+Message-ID: <1478622057-12426-3-git-send-email-peda@axentia.se>
+References: <1478622057-12426-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8789798629269140898=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161107182247.GA3669@arx12>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hao Zhang <hao5781286@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1478622057-12426-1-git-send-email-peda@axentia.se>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
+The TSE-850 is an FM Transmitter Station Equipment, designed to generate
+baseband signals for FM, mainly the DARC subcarrier, but other signals
+are also possible.
 
---===============8789798629269140898==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="blsduocvkwalq6g6"
-Content-Disposition: inline
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ MAINTAINERS                        |   1 +
+ sound/soc/Kconfig                  |   1 +
+ sound/soc/Makefile                 |   1 +
+ sound/soc/axentia/Kconfig          |  10 +
+ sound/soc/axentia/Makefile         |   3 +
+ sound/soc/axentia/tse850-pcm5142.c | 504 +++++++++++++++++++++++++++++++++++++
+ 6 files changed, 520 insertions(+)
+ create mode 100644 sound/soc/axentia/Kconfig
+ create mode 100644 sound/soc/axentia/Makefile
+ create mode 100644 sound/soc/axentia/tse850-pcm5142.c
 
-
---blsduocvkwalq6g6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Nov 08, 2016 at 02:22:47AM +0800, Hao Zhang wrote:
-> This adds the dma node for sun50i a64.
->=20
-> Signed-off-by: Hao Zhang <hao5781286@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index e3c3d7d8..855ae2c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -227,6 +227,15 @@
->  			};
->  		};
-> =20
-> +		dma: dma-controller@01c02000 {
-
-Please order the nodes by base adress, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---blsduocvkwalq6g6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYIh2zAAoJEBx+YmzsjxAgcEwP/1jS2TVF2oacnbYiRvDCwgnx
-i+GEKb5VQOoceEztK3cnm5fSHxpKxl/id4H3ogu+XTsMOuTRel2gbbNF8qgWmfMd
-FYG9rl3mK8HYzpuhr6f1juIRkrpq6nkDoTRnLzSC1Zaao7zH6laxDfBxa0GjTrPa
-iIvymMI6GOM0FgdJ36WiIb42oVJyH5VhjidviWCcof9ATpHRpgHQ0AfootZFxiu6
-Ytssl0OyzpvakqaseDspBnx844RRk1vJW916SdP7N7nRuG2s7Sv2e0/4jDnxc2YG
-qDTBdFwLWK2i0PfgC4AFALuv7m7TqPUhPOm5FiVQ/7RG6ztwMX2TNrLJ4f4EAdh0
-JSB2JKVFIlt1NmSAWlZk+vu/8ZQAoCFpZmY8LuCMh1f1OU2ksx4Ol7AbpXhFJ/RJ
-eAdWtT1OZo7PR0NGFyVsNqtcCVacjfMmyi+8dkaf/hyaa3ZcFWY+7IEDTwwxFxGH
-n5IT64ldldTx5InwfFn9tiMsc44clgjt5iyN8J3XaumFoENiGAdgTL8XbCMZLaR1
-yfc49jHRFMZ6JIMiSS3CVIiL5yBPs7H33lei9lHFARfq0MdybShLVvPxV+ASHrx+
-yWjAUUTzLSqrst6y6sckx7CTW1gt66bH+DD+PGB9gbJsrDCK4zKGwfqpQIa+h4JK
-NIrG7ScO5Nftrnjwy4R3
-=jqcV
------END PGP SIGNATURE-----
-
---blsduocvkwalq6g6--
-
-
---===============8789798629269140898==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8789798629269140898==--
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4f2ebf3ab51a..e966dfa79680 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2323,6 +2323,7 @@ M:	Peter Rosin <peda@axentia.se>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/sound/axentia,*
++F:	sound/soc/axentia/
+ 
+ AZ6007 DVB DRIVER
+ M:	Mauro Carvalho Chehab <mchehab@s-opensource.com>
+diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
+index 182d92efc7c8..5e2f9e58710b 100644
+--- a/sound/soc/Kconfig
++++ b/sound/soc/Kconfig
+@@ -41,6 +41,7 @@ source "sound/soc/adi/Kconfig"
+ source "sound/soc/amd/Kconfig"
+ source "sound/soc/atmel/Kconfig"
+ source "sound/soc/au1x/Kconfig"
++source "sound/soc/axentia/Kconfig"
+ source "sound/soc/bcm/Kconfig"
+ source "sound/soc/blackfin/Kconfig"
+ source "sound/soc/cirrus/Kconfig"
+diff --git a/sound/soc/Makefile b/sound/soc/Makefile
+index 9a30f21d16ee..dcdd41358e2a 100644
+--- a/sound/soc/Makefile
++++ b/sound/soc/Makefile
+@@ -21,6 +21,7 @@ obj-$(CONFIG_SND_SOC)	+= adi/
+ obj-$(CONFIG_SND_SOC)	+= amd/
+ obj-$(CONFIG_SND_SOC)	+= atmel/
+ obj-$(CONFIG_SND_SOC)	+= au1x/
++obj-$(CONFIG_SND_SOC)	+= axentia/
+ obj-$(CONFIG_SND_SOC)	+= bcm/
+ obj-$(CONFIG_SND_SOC)	+= blackfin/
+ obj-$(CONFIG_SND_SOC)	+= cirrus/
+diff --git a/sound/soc/axentia/Kconfig b/sound/soc/axentia/Kconfig
+new file mode 100644
+index 000000000000..7c760edd4bed
+--- /dev/null
++++ b/sound/soc/axentia/Kconfig
+@@ -0,0 +1,10 @@
++config SND_SOC_AXENTIA_TSE850_PCM5142
++	tristate "ASoC driver for the Axentia TSE-850"
++	depends on ARCH_AT91 && OF
++	select ATMEL_SSC
++	select SND_ATMEL_SOC
++	select SND_ATMEL_SOC_SSC_DMA
++	select SND_SOC_PCM512x_I2C
++	help
++	  Say Y if you want to add support for the ASoC driver for the
++	  Axentia TSE-850 with a PCM5142 codec.
+diff --git a/sound/soc/axentia/Makefile b/sound/soc/axentia/Makefile
+new file mode 100644
+index 000000000000..d4ef52915809
+--- /dev/null
++++ b/sound/soc/axentia/Makefile
+@@ -0,0 +1,3 @@
++snd-soc-tse850-pcm5142-objs := tse850-pcm5142.o
++
++obj-$(CONFIG_SND_SOC_AXENTIA_TSE850_PCM5142) += snd-soc-tse850-pcm5142.o
+diff --git a/sound/soc/axentia/tse850-pcm5142.c b/sound/soc/axentia/tse850-pcm5142.c
+new file mode 100644
+index 000000000000..1865f1eea554
+--- /dev/null
++++ b/sound/soc/axentia/tse850-pcm5142.c
+@@ -0,0 +1,504 @@
++/*
++ * TSE-850 audio - ASoC driver for the Axentia TSE-850 with a PCM5142 codec
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ *               loop1 relays
++ *   IN1 +---o  +------------+  o---+ OUT1
++ *            \                /
++ *             +              +
++ *             |   /          |
++ *             +--o  +--.     |
++ *             |  add   |     |
++ *             |        V     |
++ *             |      .---.   |
++ *   DAC +----------->|Sum|---+
++ *             |      '---'   |
++ *             |              |
++ *             +              +
++ *
++ *   IN2 +---o--+------------+--o---+ OUT2
++ *               loop2 relays
++ *
++ * The 'loop1' gpio pin controlls two relays, which are either in loop
++ * position, meaning that input and output are directly connected, or
++ * they are in mixer position, meaning that the signal is passed through
++ * the 'Sum' mixer. Similarly for 'loop2'.
++ *
++ * In the above, the 'loop1' relays are inactive, thus feeding IN1 to the
++ * mixer (if 'add' is active) and feeding the mixer output to OUT1. The
++ * 'loop2' relays are active, short-cutting the TSE-850 from channel 2.
++ * IN1, IN2, OUT1 and OUT2 are TSE-850 connectors and DAC is the PCB name
++ * of the (filtered) output from the PCM5142 codec.
++ */
++
++#include <linux/clk.h>
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/consumer.h>
++
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
++
++#include "../atmel/atmel_ssc_dai.h"
++
++struct tse850_priv {
++	int ssc_id;
++
++	struct gpio_desc *add;
++	struct gpio_desc *loop1;
++	struct gpio_desc *loop2;
++
++	struct regulator *ana;
++};
++
++static int tse850_get_mux1(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = gpiod_get_value(tse850->loop1);
++	if (ret < 0)
++		return ret;
++
++	ucontrol->value.enumerated.item[0] = ret;
++
++	return 0;
++}
++
++static int tse850_put_mux1(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int val = ucontrol->value.enumerated.item[0];
++
++	if (val >= e->items)
++		return -EINVAL;
++
++	gpiod_set_value(tse850->loop1, val);
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++static int tse850_get_mux2(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = gpiod_get_value(tse850->loop2);
++	if (ret < 0)
++		return ret;
++
++	ucontrol->value.enumerated.item[0] = ret;
++
++	return 0;
++}
++
++static int tse850_put_mux2(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int val = ucontrol->value.enumerated.item[0];
++
++	if (val >= e->items)
++		return -EINVAL;
++
++	gpiod_set_value(tse850->loop2, val);
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++int tse850_get_mix(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = gpiod_get_value(tse850->add);
++	if (ret < 0)
++		return ret;
++
++	ucontrol->value.enumerated.item[0] = ret;
++
++	return 0;
++}
++
++int tse850_put_mix(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int old;
++	int connect;
++
++	connect = !!ucontrol->value.integer.value[0];
++	old = gpiod_get_value(tse850->add);
++
++	if (old == connect)
++		return 0;
++
++	/*
++	 * Hmmm, this gpiod_set_value call should probably happen
++	 * inside snd_soc_dapm_mixer_update_power in the loop.
++	 */
++	gpiod_set_value(tse850->add, connect);
++
++	snd_soc_dapm_mixer_update_power(dapm, kctrl, connect, NULL);
++	return 1;
++}
++
++int tse850_get_ana(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = regulator_get_voltage(tse850->ana);
++	if (ret < 0)
++		return ret;
++
++	if (ret < 11000000)
++		ret = 11000000;
++	else if (ret > 20000000)
++		ret = 20000000;
++	ret -= 11000000;
++	ret = (ret + 500000) / 1000000;
++
++	ucontrol->value.enumerated.item[0] = ret;
++
++	return 0;
++}
++
++int tse850_put_ana(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int uV = ucontrol->value.enumerated.item[0];
++	int ret;
++
++	if (uV >= e->items)
++		return -EINVAL;
++
++	/*
++	 * Map enum zero (Low) to 2 volts on the regulator, do this since
++	 * the ana regulator is supplied by the system 12V voltage and
++	 * requesting anything below the system voltage causes the system
++	 * voltage to be passed through the regulator. Also, the ana
++	 * regulator induces noise when requesting voltages near the
++	 * system voltage. So, by mapping Low to 2V, that noise is
++	 * eliminated when all that is needed is 12V (the system voltage).
++	 */
++	if (uV)
++		uV = 11000000 + (1000000 * uV);
++	else
++		uV = 2000000;
++
++	ret = regulator_set_voltage(tse850->ana, uV, uV);
++	if (ret < 0)
++		return ret;
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++static const char * const mux_text[] = { "Mixer", "Loop" };
++
++static const struct soc_enum mux_enum =
++	SOC_ENUM_SINGLE(SND_SOC_NOPM, 0, 2, mux_text);
++
++static const struct snd_kcontrol_new mux1 =
++	SOC_DAPM_ENUM_EXT("MUX1", mux_enum, tse850_get_mux1, tse850_put_mux1);
++
++static const struct snd_kcontrol_new mux2 =
++	SOC_DAPM_ENUM_EXT("MUX2", mux_enum, tse850_get_mux2, tse850_put_mux2);
++
++#define TSE850_DAPM_SINGLE_EXT(xname, reg, shift, max, invert, xget, xput) \
++{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
++	.info = snd_soc_info_volsw, \
++	.get = xget, \
++	.put = xput, \
++	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
++
++static const struct snd_kcontrol_new mix[] = {
++	TSE850_DAPM_SINGLE_EXT("IN Switch", SND_SOC_NOPM, 0, 1, 0,
++			       tse850_get_mix, tse850_put_mix),
++};
++
++static const char * const ana_text[] = {
++	"Low", "12V", "13V", "14V", "15V", "16V", "17V", "18V", "19V", "20V"
++};
++
++static const struct soc_enum ana_enum =
++	SOC_ENUM_SINGLE(SND_SOC_NOPM, 0, 9, ana_text);
++
++static const struct snd_kcontrol_new out =
++	SOC_DAPM_ENUM_EXT("ANA", ana_enum, tse850_get_ana, tse850_put_ana);
++
++static const struct snd_soc_dapm_widget tse850_dapm_widgets[] = {
++	SND_SOC_DAPM_LINE("OUT1", NULL),
++	SND_SOC_DAPM_LINE("OUT2", NULL),
++	SND_SOC_DAPM_LINE("IN1", NULL),
++	SND_SOC_DAPM_LINE("IN2", NULL),
++	SND_SOC_DAPM_INPUT("DAC"),
++	SND_SOC_DAPM_AIF_IN("AIFINL", "Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("AIFINR", "Playback", 1, SND_SOC_NOPM, 0, 0),
++	SOC_MIXER_ARRAY("MIX", SND_SOC_NOPM, 0, 0, mix),
++	SND_SOC_DAPM_MUX("MUX1", SND_SOC_NOPM, 0, 0, &mux1),
++	SND_SOC_DAPM_MUX("MUX2", SND_SOC_NOPM, 0, 0, &mux2),
++	SND_SOC_DAPM_OUT_DRV("OUT", SND_SOC_NOPM, 0, 0, &out, 1),
++};
++
++/*
++ * These connections are not entirely correct, since both IN1 and IN2
++ * are always fed to MIX (if the "IN switch" is set so), i.e. without
++ * regard to the loop1 and loop2 relays that according to this only
++ * control MUX1 and MUX2 but in fact also control how the input signals
++ * are routed.
++ * But, 1) I don't know how to do it right, and 2) it doesn't seem to
++ * matter in practice since nothing is powered in those sections anyway.
++ */
++static const struct snd_soc_dapm_route tse850_intercon[] = {
++	{ "OUT1", NULL, "MUX1" },
++	{ "OUT2", NULL, "MUX2" },
++
++	{ "MUX1", "Loop",  "IN1" },
++	{ "MUX1", "Mixer", "OUT" },
++
++	{ "MUX2", "Loop",  "IN2" },
++	{ "MUX2", "Mixer", "OUT" },
++
++	{ "OUT", NULL, "MIX" },
++
++	{ "MIX", NULL, "DAC" },
++	{ "MIX", "IN Switch", "IN1" },
++	{ "MIX", "IN Switch", "IN2" },
++
++	/* connect board input to the codec left channel output pin */
++	{ "DAC", NULL, "OUTL" },
++};
++
++static int tse850_hw_params(struct snd_pcm_substream *substream,
++			    struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct device *dev = rtd->dev;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	int dir = substream->stream != SNDRV_PCM_STREAM_PLAYBACK;
++	int div_id = dir ? ATMEL_SSC_RCMR_PERIOD : ATMEL_SSC_TCMR_PERIOD;
++	int period = snd_soc_params_to_frame_size(params) / 2 - 1;
++	int ret;
++
++	ret = snd_soc_dai_set_clkdiv(cpu_dai, div_id, period);
++	if (ret < 0) {
++		dev_err(dev, "failed to set cpu dai lrclk %d divider\n", dir);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_ops tse850_ops = {
++	.hw_params = tse850_hw_params,
++};
++
++static int tse850_init(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_dapm_context *dapm = &rtd->card->dapm;
++
++	return snd_soc_dapm_add_routes(dapm, tse850_intercon,
++				       ARRAY_SIZE(tse850_intercon));
++}
++
++static struct snd_soc_dai_link tse850_dailink = {
++	.name = "TSE-850",
++	.stream_name = "TSE-850-PCM",
++	.codec_dai_name = "pcm512x-hifi",
++	.dai_fmt = SND_SOC_DAIFMT_I2S
++		 | SND_SOC_DAIFMT_NB_NF
++		 | SND_SOC_DAIFMT_CBM_CFS,
++	.init = tse850_init,
++	.ops = &tse850_ops,
++};
++
++static struct snd_soc_card tse850_card = {
++	.name = "TSE-850-ASoC",
++	.owner = THIS_MODULE,
++	.dai_link = &tse850_dailink,
++	.num_links = 1,
++	.dapm_widgets = tse850_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(tse850_dapm_widgets),
++	.fully_routed = true,
++};
++
++static int tse850_dt_init(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *codec_np, *cpu_np;
++	struct snd_soc_card *card = &tse850_card;
++	struct snd_soc_dai_link *dailink = &tse850_dailink;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	if (!np) {
++		dev_err(&pdev->dev, "only device tree supported\n");
++		return -EINVAL;
++	}
++
++	cpu_np = of_parse_phandle(np, "axentia,ssc-controller", 0);
++	if (!cpu_np) {
++		dev_err(&pdev->dev, "failed to get dai and pcm info\n");
++		return -EINVAL;
++	}
++	dailink->cpu_of_node = cpu_np;
++	dailink->platform_of_node = cpu_np;
++	tse850->ssc_id = of_alias_get_id(cpu_np, "ssc");
++	of_node_put(cpu_np);
++
++	codec_np = of_parse_phandle(np, "axentia,audio-codec", 0);
++	if (!codec_np) {
++		dev_err(&pdev->dev, "failed to get codec info\n");
++		return -EINVAL;
++	}
++	dailink->codec_of_node = codec_np;
++	of_node_put(codec_np);
++
++	return 0;
++}
++
++static int tse850_probe(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = &tse850_card;
++	struct device *dev = card->dev = &pdev->dev;
++	struct tse850_priv *tse850;
++	int ret;
++
++	tse850 = devm_kzalloc(dev, sizeof(*tse850), GFP_KERNEL);
++	if (!tse850)
++		return -ENOMEM;
++
++	snd_soc_card_set_drvdata(card, tse850);
++
++	ret = tse850_dt_init(pdev);
++	if (ret) {
++		dev_err(dev, "failed to init dt info\n");
++		return ret;
++	}
++
++	tse850->add = devm_gpiod_get(dev, "axentia,add", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->add)) {
++		if (PTR_ERR(tse850->add) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'add' gpio\n");
++		return PTR_ERR(tse850->add);
++	}
++
++	tse850->loop1 = devm_gpiod_get(dev, "axentia,loop1", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->loop1)) {
++		if (PTR_ERR(tse850->loop1) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'loop1' gpio\n");
++		return PTR_ERR(tse850->loop1);
++	}
++
++	tse850->loop2 = devm_gpiod_get(dev, "axentia,loop2", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->loop2)) {
++		if (PTR_ERR(tse850->loop2) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'loop2' gpio\n");
++		return PTR_ERR(tse850->loop2);
++	}
++
++	tse850->ana = devm_regulator_get(dev, "axentia,ana");
++	if (IS_ERR(tse850->ana)) {
++		if (PTR_ERR(tse850->ana) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'ana' regulator\n");
++		return PTR_ERR(tse850->ana);
++	}
++
++	ret = regulator_enable(tse850->ana);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable the 'ana' regulator\n");
++		return ret;
++	}
++
++	ret = atmel_ssc_set_audio(tse850->ssc_id);
++	if (ret != 0) {
++		dev_err(dev,
++			"failed to set SSC %d for audio\n", tse850->ssc_id);
++		goto err_disable_ana;
++	}
++
++	ret = snd_soc_register_card(card);
++	if (ret) {
++		dev_err(dev, "snd_soc_register_card failed\n");
++		goto err_put_audio;
++	}
++
++	return 0;
++
++err_put_audio:
++	atmel_ssc_put_audio(tse850->ssc_id);
++err_disable_ana:
++	regulator_disable(tse850->ana);
++	return ret;
++}
++
++static int tse850_remove(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = platform_get_drvdata(pdev);
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	snd_soc_unregister_card(card);
++	atmel_ssc_put_audio(tse850->ssc_id);
++	regulator_disable(tse850->ana);
++
++	return 0;
++}
++
++static const struct of_device_id tse850_dt_ids[] = {
++	{ .compatible = "axentia,tse850-pcm5142", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, tse850_dt_ids);
++
++static struct platform_driver tse850_driver = {
++	.driver = {
++		.name = "axentia-tse850-pcm5142",
++		.of_match_table = of_match_ptr(tse850_dt_ids),
++	},
++	.probe = tse850_probe,
++	.remove = tse850_remove,
++};
++
++module_platform_driver(tse850_driver);
++
++/* Module information */
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_DESCRIPTION("ALSA SoC driver for TSE-850 with PCM5142 codec");
++MODULE_LICENSE("GPL");
+-- 
+2.1.4
