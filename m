@@ -1,138 +1,49 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 1/2] dt-bindings: sound: document axentia,tse850-pcm5142 bindings
-Date: Tue, 8 Nov 2016 17:20:56 +0100
-Message-ID: <1478622057-12426-2-git-send-email-peda@axentia.se>
-References: <1478622057-12426-1-git-send-email-peda@axentia.se>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 3/4] regulator: pv88080: Update Regulator driver for
+ MFD support
+Date: Tue, 8 Nov 2016 16:37:21 +0000
+Message-ID: <20161108163721.4qwuhwrdferbluxg@sirena.org.uk>
+References: <cover.1477530195.git.eric.jeong@diasemi.com>
+ <711afefe3e65c166111473024bf9b54f3d4cc8b6.1477530195.git.eric.jeong@diasemi.com>
+ <20161027110337.GJ25322@sirena.org.uk>
+ <8FA4409277D6E54680546B8811D85410029DFAA2EA@NB-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6t75qqul3cb56xah"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478622057-12426-1-git-send-email-peda@axentia.se>
+Content-Disposition: inline
+In-Reply-To: <8FA4409277D6E54680546B8811D85410029DFAA2EA@NB-EX-MBX01.diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+To: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-The TSE-850 is an FM Transmitter Station Equipment, designed to generate
-baseband signals for FM, mainly the DARC subcarrier, but other signals
-are also possible.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- .../bindings/sound/axentia,tse850-pcm5142.txt      | 88 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 ++
- 2 files changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
+--6t75qqul3cb56xah
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-new file mode 100644
-index 000000000000..0c2d44fda17e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-@@ -0,0 +1,88 @@
-+ASoC driver for the Axentia TSE-850 with a PCM5142 codec
-+
-+Required properties:
-+  - compatible: "axentia,tse850-pcm5142"
-+  - axentia,ssc-controller: The phandle of the atmel SSC controller used as
-+    cpu dai.
-+  - axentia,audio-codec: The phandle of the PCM5142 codec.
-+  - axentia,add-gpios: gpio specifier that controls the mixer.
-+  - axentia,loop1-gpios: gpio specifier that controls loop relays on channel 1.
-+  - axentia,loop2-gpios: gpio specifier that controls loop relays on channel 2.
-+  - axentia,ana-supply: Regulator that supplies the output amplifier. Must
-+    support voltages in the 2V - 20V range, in 1V steps.
-+
-+The schematics explaining the gpios are as follows:
-+
-+               loop1 relays
-+   IN1 +---o  +------------+  o---+ OUT1
-+            \                /
-+             +              +
-+             |   /          |
-+             +--o  +--.     |
-+             |  add   |     |
-+             |        V     |
-+             |      .---.   |
-+   DAC +----------->|Sum|---+
-+             |      '---'   |
-+             |              |
-+             +              +
-+
-+   IN2 +---o--+------------+--o---+ OUT2
-+               loop2 relays
-+
-+The 'loop1' gpio pin controlls two relays, which are either in loop position,
-+meaning that input and output are directly connected, or they are in mixer
-+position, meaning that the signal is passed through the 'Sum' mixer. Similarly
-+for 'loop2'.
-+
-+In the above, the 'loop1' relays are inactive, thus feeding IN1 to the mixer
-+(if 'add' is active) and feeding the mixer output to OUT1. The 'loop2' relays
-+are active, short-cutting the TSE-850 from channel 2. IN1, IN2, OUT1 and OUT2
-+are TSE-850 connectors and DAC is the PCB name of the (filtered) output from
-+the PCM5142 codec.
-+
-+Example:
-+
-+	&i2c {
-+		codec: pcm5142@4c {
-+			compatible = "ti,pcm5142";
-+
-+			reg = <0x4c>;
-+
-+			AVDD-supply = <&reg_3v3>;
-+			DVDD-supply = <&reg_3v3>;
-+			CPVDD-supply = <&reg_3v3>;
-+
-+			clocks = <&sck>;
-+
-+			pll-in = <3>;
-+			pll-out = <6>;
-+		};
-+	};
-+
-+	ana: ana-reg {
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "ANA";
-+
-+		pwms = <&pwm0 2 1000 PWM_POLARITY_INVERTED>;
-+		pwm-dutycycle-unit = <1000>;
-+		pwm-dutycycle-range = <100 1000>;
-+
-+		regulator-min-microvolt = <2000000>;
-+		regulator-max-microvolt = <20000000>;
-+		regulator-ramp-delay = <1000>;
-+	};
-+
-+	sound {
-+		compatible = "axentia,tse850-pcm5142";
-+
-+		axentia,ssc-controller = <&ssc0>;
-+		axentia,audio-codec = <&codec>;
-+
-+		axentia,add-gpios = <&pioA 8 GPIO_ACTIVE_LOW>;
-+		axentia,loop1-gpios = <&pioA 10 GPIO_ACTIVE_LOW>;
-+		axentia,loop2-gpios = <&pioA 11 GPIO_ACTIVE_LOW>;
-+
-+		axentia,ana-supply = <&ana>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 539b20baf791..4f2ebf3ab51a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2318,6 +2318,12 @@ F:	include/uapi/linux/ax25.h
- F:	include/net/ax25.h
- F:	net/ax25/
- 
-+AXENTIA ASOC DRIVERS
-+M:	Peter Rosin <peda@axentia.se>
-+L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/sound/axentia,*
-+
- AZ6007 DVB DRIVER
- M:	Mauro Carvalho Chehab <mchehab@s-opensource.com>
- M:	Mauro Carvalho Chehab <mchehab@kernel.org>
--- 
-2.1.4
+On Tue, Nov 08, 2016 at 05:59:41AM +0000, Eric Hyeung Dong Jeong wrote:
+
+> Thank you for the comments.
+> There was an internal request to release driver based on Kernel 3.18 for GPIO and MFD support.
+> After that, the code has been kept. I will send a patch again after changes.
+
+Please don't submit code for ancient kernels upstream, we can't merge
+anything that isn't for current kernels.
+
+--6t75qqul3cb56xah
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYIf88AAoJECTWi3JdVIfQRQUH/i+bnzIDbjl0iqdG+sNK7WKO
+okR/BhBvOGbUtzyZ9coHpQwXG/hGp5x3Ug0qXV4wLpjaLZ3AJgwJmvreZOKOfVPX
+6V31HNJFSvO2PKAKK/mATurVMnVsiGjw3jZVh9WAwsdSW3UPEHP1LV0cttoroDMC
+sOroLkSVU3YvTXAI0pveJJwF1wJE0kwlZ0Y706nwZIJSYTIwGwRGKJgoHYy+cXSK
+vLLCAeihEbI97V2J/x5wPn23yTMU+DSFSM/jkq9D1eV/VZ1NedV40vFVTYIMM1m4
+DdTYndSm7PnIlrTyIJUchES7XsWCYFy5tZxO4xrH7Kf505AHhO0zxYsr2DqSKjI=
+=CBiF
+-----END PGP SIGNATURE-----
+
+--6t75qqul3cb56xah--
