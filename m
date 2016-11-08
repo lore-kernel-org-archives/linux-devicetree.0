@@ -1,49 +1,100 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 3/4] regulator: pv88080: Update Regulator driver for
- MFD support
-Date: Tue, 8 Nov 2016 16:37:21 +0000
-Message-ID: <20161108163721.4qwuhwrdferbluxg@sirena.org.uk>
-References: <cover.1477530195.git.eric.jeong@diasemi.com>
- <711afefe3e65c166111473024bf9b54f3d4cc8b6.1477530195.git.eric.jeong@diasemi.com>
- <20161027110337.GJ25322@sirena.org.uk>
- <8FA4409277D6E54680546B8811D85410029DFAA2EA@NB-EX-MBX01.diasemi.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: Re: [PATCH v3 00/10] Add DT support for ohci-da8xx
+Date: Tue, 8 Nov 2016 17:37:41 +0100
+Message-ID: <CAKXjFTN04Wz5jsaHsyvDD7G8QqXQvCE4D-YbHtGT=jUqELiS_w@mail.gmail.com>
+References: <20161107203948.28324-1-ahaslam@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6t75qqul3cb56xah"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8FA4409277D6E54680546B8811D85410029DFAA2EA@NB-EX-MBX01.diasemi.com>
+In-Reply-To: <20161107203948.28324-1-ahaslam@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Alan Stern <stern@rowland.harvard.edu>, Greg KH <gregkh@linuxfoundation.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---6t75qqul3cb56xah
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Nov 7, 2016 at 9:39 PM, Axel Haslam <ahaslam@baylibre.com> wrote:
+> The purpose of this patch series is to add DT support for the davinci
+> ohci driver.
+>
 
-On Tue, Nov 08, 2016 at 05:59:41AM +0000, Eric Hyeung Dong Jeong wrote:
+To make it easier to review. I will split the arch/arm and driver
+patches into separate series.
 
-> Thank you for the comments.
-> There was an internal request to release driver based on Kernel 3.18 for GPIO and MFD support.
-> After that, the code has been kept. I will send a patch again after changes.
+Regards
+Axel
 
-Please don't submit code for ancient kernels upstream, we can't merge
-anything that isn't for current kernels.
 
---6t75qqul3cb56xah
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJYIf88AAoJECTWi3JdVIfQRQUH/i+bnzIDbjl0iqdG+sNK7WKO
-okR/BhBvOGbUtzyZ9coHpQwXG/hGp5x3Ug0qXV4wLpjaLZ3AJgwJmvreZOKOfVPX
-6V31HNJFSvO2PKAKK/mATurVMnVsiGjw3jZVh9WAwsdSW3UPEHP1LV0cttoroDMC
-sOroLkSVU3YvTXAI0pveJJwF1wJE0kwlZ0Y706nwZIJSYTIwGwRGKJgoHYy+cXSK
-vLLCAeihEbI97V2J/x5wPn23yTMU+DSFSM/jkq9D1eV/VZ1NedV40vFVTYIMM1m4
-DdTYndSm7PnIlrTyIJUchES7XsWCYFy5tZxO4xrH7Kf505AHhO0zxYsr2DqSKjI=
-=CBiF
------END PGP SIGNATURE-----
-
---6t75qqul3cb56xah--
+> To be able to use device tree to probe the driver, we need to remove
+> the platform callbacks that are handling vbus and over current.
+>
+> The first four patches prepare the stage by allowing to use a regulator
+> instead of the callbacks.
+>
+> The next three patches convert the callback users to use a regulator
+> instead and then remove the callbacks from the driver and platform code.
+>
+> Finally, we add device tree bindings and support in the driver.
+>
+> DEPENDENCIES:
+> This series has depends on some patches currently under review
+> but mostly accepted:
+> 1. [PATCH 0/3] fix ohci phy name [1] (accepted)
+> 2. [PATCH/RFC v2 0/3] regulator: handling of error conditions for usb drivers [2] (accepted)
+> 3. [PATCH] gpio: davinci: Use unique labels for each gpio chip [3] (review pending)
+>
+> Also the current davinci baranches soon to be pulled to linux-next:
+> davinci-for-v4.10/soc
+> davinci-for-v4.10/dt
+> davinci-for-v4.10/defconfig
+> davinci-for-v4.10/cleanup
+>
+> A branch with all the dependencies can be found here [4].
+>
+> Changes form v2->v3
+> * drop patches that have been integrated to arch/arm
+> * drop regulator patches which will be integrated through regulator tree
+> * use of the accepted regulator API to get over current status
+> * better patch separation with the use of wrappers
+>
+> Changes from v1->v2
+> * Rebased and added patch to make ohci a separate driver
+> * Use a regulator instead of handling Gpios (David Lechner)
+> * Add an over current mode to regulator framework
+> * Fixed regulator is able to register for and over current irq
+> * Added patch by Alexandre to remove build warnings
+> * Moved global variables into private hcd structure.
+>
+> [1] https://lkml.org/lkml/2016/11/2/208
+> [2] https://lkml.org/lkml/2016/11/3/188
+> [3] http://www.spinics.net/lists/linux-gpio/msg17710.html
+> [4] https://github.com/axelhaslamx/linux-axel/commits/ohci-da8xx-dt-v3
+>
+> Axel Haslam (10):
+>   USB: ohci: da8xx: use ohci priv data instead of globals
+>   USB: ohci: da8xx: Prepare to remove platform callbacks
+>   USB: ohci: da8xx: Allow a regulator to handle VBUS
+>   ARM: davinci: da830: Handle vbus with a regulator
+>   ARM: davinci: hawk: Remove vbus and over current gpios
+>   USB: ohci: da8xx: Remove ohci platform callbacks
+>   USB: ohci: da8xx: use a flag instead of mask for ocic
+>   USB: ohci: da8xx: Add devicetree bindings
+>   USB: ohci: da8xx: Allow probing from DT
+>   ARM: dts: da850: add usb device node
+>
+>  .../devicetree/bindings/usb/ohci-da8xx.txt         |  39 ++++
+>  arch/arm/boot/dts/da850-lcdk.dts                   |   8 +
+>  arch/arm/boot/dts/da850.dtsi                       |   8 +
+>  arch/arm/mach-davinci/board-da830-evm.c            | 108 ++++-----
+>  arch/arm/mach-davinci/board-omapl138-hawk.c        |  99 +-------
+>  arch/arm/mach-davinci/include/mach/da8xx.h         |   2 +-
+>  arch/arm/mach-davinci/usb-da8xx.c                  |   3 +-
+>  drivers/usb/host/ohci-da8xx.c                      | 253 +++++++++++++++------
+>  include/linux/platform_data/usb-davinci.h          |  20 --
+>  9 files changed, 283 insertions(+), 257 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+>
+> --
+> 2.10.1
+>
