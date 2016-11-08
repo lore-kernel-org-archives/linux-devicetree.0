@@ -1,50 +1,45 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for
- special ISA
-Date: Wed, 09 Nov 2016 10:12:59 +1100
-Message-ID: <1478646779.7430.66.camel@kernel.crashing.org>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
-         <1478576829-112707-3-git-send-email-yuanzhichang@hisilicon.com>
-         <20161108114953.GB15297@leverpostej>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 05/14] mmc: sdhci-msm: Update DLL reset sequence
+Date: Wed, 09 Nov 2016 00:14:18 +0100
+Message-ID: <4491681.Re2JGGCuz1@wuerfel>
+References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org> <1478517877-23733-6-git-send-email-riteshh@codeaurora.org> <20161108230622.GN16026@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108114953.GB15297@leverpostej>
+In-Reply-To: <20161108230622.GN16026-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kdorfman-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-11-08 at 11:49 +0000, Mark Rutland wrote:
+On Tuesday, November 8, 2016 3:06:22 PM CET Stephen Boyd wrote:
+> > +
+> > +             config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG_2);
+> > +             config &= ~(0xFF << 10);
+> > +             config |= mclk_freq << 10;
+> > +
+> > +             writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG_2);
+> > +             /* wait for 5us before enabling DLL clock */
 > 
-> My understanding of ISA (which may be flawed) is that it's not part of
-> the PCI host bridge, but rather on x86 it happens to share the IO space
-> with PCI.
-
-Sort-of. On some systems it actually goes through PCI and there's a
-PCI->ISA bridge that uses substractive decoding to the legacy devices.
-
-> So, how about this becomes:
+> Usually there's a barrier between writel_relaxed() and delay
+> because we don't know when the writel will be posted out and the
+> delay is there to wait for the operation to happen. Probably
+> should change this to be a writel() instead.
 > 
->   Hisilicon Hip06 SoCs implement a Low Pin Count (LPC) controller, which
->   provides access to some legacy ISA devices.
-> 
-> I believe that we could theoretically have multiple independent LPC/ISA
-> busses, as is possible with PCI on !x86 systems. If the current ISA code
-> assumes a singleton bus, I think that's something that needs to be fixed
-> up more generically.
-> 
-> I don't see why we should need any architecture-specific code here. Why
-> can we not fix up the ISA bus code in drivers/of/address.c such that it
-> handles multiple ISA bus instances, and translates all sub-device
-> addresses relative to the specific bus instance?
 
-What in that code prevents that today ?
+The barrier in writel() is not for posted writes, it is to synchronize
+with memory accesses *before* the write.
 
-Cheers,
-Ben.
+In general, if you want to ensure that a write has made it to the
+device, you need to read back from the same address (the specific
+behavior may depend on the bus).
 
+While in general, using the non-relaxed accessors should be the
+default (and there should be a comment for each *_relaxed access),
+but I don't think using writel() would let you skip the delay here.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
