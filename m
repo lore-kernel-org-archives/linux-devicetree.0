@@ -1,51 +1,106 @@
-From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
-Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to
- 'aspeed,ast2400-ibt-bmc'
-Date: Tue, 8 Nov 2016 12:15:57 -0600
-Message-ID: <c749ff0a-bc71-bc9f-0e8c-326db2cea0fb@acm.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
- <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
- <ebeba60f-429f-fb84-b9da-c27d11d23094@kaod.org> <2368736.y6FyG1ESuP@wuerfel>
- <a886778e-a85e-758e-3a61-c4909652e39d@kaod.org>
-Reply-To: minyard-HInyCGIudOg@public.gmane.org
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a
+ DAC and a comparator
+Date: Tue, 8 Nov 2016 19:38:31 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1611081809320.3501@nanos>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se> <1478606339-31253-9-git-send-email-peda@axentia.se> <alpine.DEB.2.20.1611081630450.3501@nanos> <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a886778e-a85e-758e-3a61-c4909652e39d-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2016 09:52 AM, Cédric Le Goater wrote:
-> O
-snip
+On Tue, 8 Nov 2016, Peter Rosin wrote:
+> On 2016-11-08 16:59, Thomas Gleixner wrote:
 
->>>> While we're modifying the binding, should we add a compat string for
->>>> the ast2500?
->>> Well, if the change in this patch is fine for all, may be we can add
->>> the ast2500 compat string in a followup patch ?
->> Sounds good to me.
-> OK. So, how do we proceed with this patch ? Who would include it in its
-> tree ?
+> > So you need that whole dance including the delayed work because you cannot
+> > call iio_write_channel_raw() from hard interrupt context, right?
+> 
+> It's not the "cannot call from hard irq context" that made me do that, it's..
 
-I don't have anything for 4.9 at the moment.  Arnd, if you have 
-something, can
-you take this?  Otherwise I will.
+Well, what guarantees you that the DAC is writeable from IRQ context? It
+might be hanging off an i2c/spi bus as well....
 
-And I guess I should add:
+> > The core will mask the interrupt line until the threaded handler is
+> > finished. The threaded handler is invoked with preemption enabled, so you
+> > can sleep there as long as you want. So you can do everything in your
+> > handler and the above dance is just not required.
+> 
+> ...that I couldn't work out how to reenable a oneshot irq once it had fired,
+> short of freeing the irq and requesting it again. That seemed entirely
+> bogus, the driver shouldn't risk losing a resource like that so I don't know
+> what I didn't see? Or maybe it was that I had a hard time resolving the race
+> between the irq and the timeout in a nice way. I honestly don't remember
+> why exactly I abandoned oneshot irqs, but this enable/sync/enable dance
+> was much nicer than what I came up with for the oneshot irq solution I
+> originally worked on.
 
-Acked-by: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Threaded ONESHOT irqs work this way:
 
--corey
+ interrupt fires
+   mask interrupt
+   handler thread is woken
+ 
+ handler thread runs
+   invokes isr
+   unmask interrupt
 
-> Thanks,
->
-> C.
->
+So if you rewrite the DAC to the new value in your ISR, then you should not
+get any spurious interrupt.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Note, that this only works for level type interrupts.
+
+We do not mask edge type interrupts as we might lose an edge, but if that
+helps the cause of your problem it's simple enough to make it conditionally
+doing so in the core.
+
+> Or maybe I had problems with the possibly pending irq also when using a
+> oneshot irq, but didn't realize it? That was something I discovered quite
+> late in the process, some time after moving away from oneshot irqs. Are
+> pending irqs cleared when requesting (or reenabling, however that is done)
+> a oneshot irq?
+
+Pending irqs are only replayed, when you reenable an interrupt via
+enable_irq(). That can happen either by software or by hardware.
+
+> Anyway, I do not want the interrupt to be serviced when no one is interested,
+> since I'm afraid that nasty input might generate a flood of interrupts that
+> might disturb other things that the cpu is doing. Which means that I need
+> to enable/disable the interrupt as needed.
+
+So the main issue I'm seing here, is that your comparator does not have
+means to prevent it from firing interrupts.
+
+> However, what *I* thought Jonathan wanted input on was the part where the
+> interrupt edge/level is flipped when requesting "inverted" signals in
+> envelope_store_invert(). That could perhaps be seen as unorthodox and in
+> need of more eyes?
+
+Flipping the dectection level of the interrupt is fine, but what's the
+guarantee that it is correct in the first place? I don't see anything which
+makes that sure at all. Aside of that this bit does not makes sense:
+
+> +	env->comp_irq_trigger = irq_get_trigger_type(env->comp_irq);
+> +	if (env->comp_irq_trigger & IRQF_TRIGGER_RISING)
+> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_FALLING;
+
+What's the |= about?
+
+> +	if (env->comp_irq_trigger & IRQF_TRIGGER_FALLING)
+
+and this should be 'else if'. If the interrupt is configured for both
+edges, which is possible with some interrupt controllers then the whole
+thing does not work at all.
+
+> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_RISING;
+> +	if (env->comp_irq_trigger & IRQF_TRIGGER_HIGH)
+> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_LOW;
+> +	if (env->comp_irq_trigger & IRQF_TRIGGER_LOW)
+> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_HIGH;
+
+Thanks,
+
+	tglx
