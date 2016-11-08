@@ -1,62 +1,40 @@
-From: Eric Hyeung Dong Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V2 3/4] regulator: pv88080: Update Regulator driver for
- MFD support
-Date: Tue, 8 Nov 2016 05:59:41 +0000
-Message-ID: <8FA4409277D6E54680546B8811D85410029DFAA2EA@NB-EX-MBX01.diasemi.com>
-References: <cover.1477530195.git.eric.jeong@diasemi.com>
- <711afefe3e65c166111473024bf9b54f3d4cc8b6.1477530195.git.eric.jeong@diasemi.com>
- <20161027110337.GJ25322@sirena.org.uk>
+From: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] Support sdio feature
+Date: Tue, 8 Nov 2016 14:08:57 +0800
+Message-ID: <1478585341-6749-1-git-send-email-yong.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161027110337.GJ25322-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-GPIO <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, YH Huang <yh.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, October 27, 2016 8:04 PM, Mark Brown wrote:
+Fix CMD6 timeout issue
+Add irqlock to protect accessing the shared register
+Modify the implementation of msdc_card_busy
+Add msdc_recheck_sdio_irq mechanism
+Support sdr104_clk_delay in sdio
+Add description of mmc3 for supporting sdio feature
 
-> On Thu, Oct 27, 2016 at 10:03:14AM +0900, Eric Jeong wrote:
-> 
-> >  config REGULATOR_PV88080
-> > -	tristate "Powerventure Semiconductor PV88080 regulator"
-> > -	depends on I2C
-> > -	select REGMAP_I2C
-> > +	bool "Powerventure Semiconductor PV88080 regulator"
-> > +	depends on MFD_PV88080
-> 
-> Forcing the driver to be built in looks like a regression, why would we want to
-> do that?
-> 
-> > +	irq = platform_get_irq_byname(pdev, "regulator-irq");
-> > +	if (irq < 0) {
-> > +		dev_err(&pdev->dev, "Failed to get IRQ.\n");
-> > +		return irq;
-> >  	}
-> 
-> What's the _byname() adding here given that the name is so generic?  It feels
-> like if the name ever becomes important then this particular name is going to
-> be a problem.
-> 
-> > -module_i2c_driver(pv88080_regulator_driver);
-> > +static int __init pv88080_regulator_init(void) {
-> > +	return platform_driver_register(&pv88080_regulator_driver);
-> > +}
-> > +subsys_initcall(pv88080_regulator_init);
-> 
-> Why are you converting this to subsys_initcall()?  This looks like another
-> regression.
+yong mao (4):
+  mmc: mediatek: Fix CMD6 timeout issue
+  sdio: mediatek: Support sdio feature
+  sdio: mediatek: support sdr104_clk_delay in sdio
+  dts: arm64: enable mmc3 for supporting sdio feature
 
-Thank you for the comments.
-There was an internal request to release driver based on Kernel 3.18 for GPIO and MFD support.
-After that, the code has been kept. I will send a patch again after changes.
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts |  82 +++++++++
+ drivers/mmc/host/mtk-sd.c                   | 254 +++++++++++++++++++++-------
+ 2 files changed, 271 insertions(+), 65 deletions(-)
 
-Regards
-Eric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.1.1.dirty
