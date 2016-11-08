@@ -1,109 +1,117 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC
- and a comparator
-Date: Tue, 8 Nov 2016 18:03:04 +0100
-Message-ID: <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se>
- <1478606339-31253-9-git-send-email-peda@axentia.se>
- <alpine.DEB.2.20.1611081630450.3501@nanos>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a
+ DAC and a comparator
+Date: Tue, 8 Nov 2016 22:47:00 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1611082146560.3501@nanos>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se> <1478606339-31253-9-git-send-email-peda@axentia.se> <alpine.DEB.2.20.1611081630450.3501@nanos> <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se> <alpine.DEB.2.20.1611081809320.3501@nanos>
+ <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1611081630450.3501@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1c104a31-6c66-9537-9b90-ede58c8e1a92-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-08 16:59, Thomas Gleixner wrote:
-> On Tue, 8 Nov 2016, Peter Rosin wrote:
->> +/*
->> + * The envelope_detector_comp_latch function works together with the compare
->> + * interrupt service routine below (envelope_detector_comp_isr) as a latch
->> + * (one-bit memory) for if the interrupt has triggered since last calling
->> + * this function.
->> + * The ..._comp_isr function disables the interrupt so that the cpu does not
->> + * need to service a possible interrupt flood from the comparator when no-one
->> + * cares anyway, and this ..._comp_latch function reenables them again if
->> + * needed.
->> + */
->> +static int envelope_detector_comp_latch(struct envelope *env)
->> +{
->> +	int comp;
->> +
->> +	spin_lock_irq(&env->comp_lock);
->> +	comp = env->comp;
->> +	env->comp = 0;
->> +	spin_unlock_irq(&env->comp_lock);
->> +
->> +	if (!comp)
->> +		return 0;
->> +
->> +	/*
->> +	 * The irq was disabled, and is reenabled just now.
->> +	 * But there might have been a pending irq that
->> +	 * happened while the irq was disabled that fires
->> +	 * just as the irq is reenabled. That is not what
->> +	 * is desired.
->> +	 */
->> +	enable_irq(env->comp_irq);
->> +
->> +	/* So, synchronize this possibly pending irq... */
->> +	synchronize_irq(env->comp_irq);
->> +
->> +	/* ...and redo the whole dance. */
->> +	spin_lock_irq(&env->comp_lock);
->> +	comp = env->comp;
->> +	env->comp = 0;
->> +	spin_unlock_irq(&env->comp_lock);
->> +
->> +	if (comp)
->> +		enable_irq(env->comp_irq);
-> 
-> So you need that whole dance including the delayed work because you cannot
-> call iio_write_channel_raw() from hard interrupt context, right?
+On Tue, 8 Nov 2016, Peter Rosin wrote:
+> So, to sum up, in order for this to work with threaded oneshot
+> interrupts, I still need to either keep the enable/sync/enable-dance
+> or tweak the irq core to handle my case better. The only gain would
+> be that I could fire the next step of the search from the threaded
+> irq handler directly (but it needs some new race-killing code).
+> Or am I missing something? If not, there's no pressing reason to
+> switch to threaded oneshot interrupts, right?
 
-It's not the "cannot call from hard irq context" that made me do that, it's...
+There is no pressing reason, but that misfire prevention dance looks
+fragile and overly complex to me.
 
-> So you might just register a threaded interrupt handler, which should make
-> this whole thing way simpler.
-> 
->      devm_request_threaded_irq(dev, irq, NULL, your_isr, IRQF_ONESHOT, ...);
-> 
-> The core will mask the interrupt line until the threaded handler is
-> finished. The threaded handler is invoked with preemption enabled, so you
-> can sleep there as long as you want. So you can do everything in your
-> handler and the above dance is just not required.
+The completely untested patch below should block the replay for edge
+interrupts from the core code. It also makes sure that the edge interrupt
+is masked until the thread handler returns. All you have to do is
+requesting your threaded handler with IRQF_ONESHOT | IRQF_NO_REPLAY.
 
-...that I couldn't work out how to reenable a oneshot irq once it had fired,
-short of freeing the irq and requesting it again. That seemed entirely
-bogus, the driver shouldn't risk losing a resource like that so I don't know
-what I didn't see? Or maybe it was that I had a hard time resolving the race
-between the irq and the timeout in a nice way. I honestly don't remember
-why exactly I abandoned oneshot irqs, but this enable/sync/enable dance
-was much nicer than what I came up with for the oneshot irq solution I
-originally worked on.
+I don't think you need extra race handling with that, but I might be wrong
+as usual.
 
-Or maybe I had problems with the possibly pending irq also when using a
-oneshot irq, but didn't realize it? That was something I discovered quite
-late in the process, some time after moving away from oneshot irqs. Are
-pending irqs cleared when requesting (or reenabling, however that is done)
-a oneshot irq?
+Thanks,
 
-Anyway, I do not want the interrupt to be serviced when no one is interested,
-since I'm afraid that nasty input might generate a flood of interrupts that
-might disturb other things that the cpu is doing. Which means that I need
-to enable/disable the interrupt as needed.
+	tglx
 
-However, what *I* thought Jonathan wanted input on was the part where the
-interrupt edge/level is flipped when requesting "inverted" signals in
-envelope_store_invert(). That could perhaps be seen as unorthodox and in
-need of more eyes?
-
-Cheers,
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+8<------------------
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -74,6 +74,7 @@
+ #define IRQF_NO_THREAD		0x00010000
+ #define IRQF_EARLY_RESUME	0x00020000
+ #define IRQF_COND_SUSPEND	0x00040000
++#define IRQF_NO_REPLAY		0x00080000
+ 
+ #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
+ 
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -57,6 +57,7 @@ enum {
+ 	IRQS_WAITING		= 0x00000080,
+ 	IRQS_PENDING		= 0x00000200,
+ 	IRQS_SUSPENDED		= 0x00000800,
++	IRQS_NO_REPLAY		= 0x00001000,
+ };
+ 
+ #include "debug.h"
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -1212,7 +1212,8 @@ static int
+ 		 */
+ 		if (!((old->flags & new->flags) & IRQF_SHARED) ||
+ 		    ((old->flags ^ new->flags) & IRQF_TRIGGER_MASK) ||
+-		    ((old->flags ^ new->flags) & IRQF_ONESHOT))
++		    ((old->flags ^ new->flags) & IRQF_ONESHOT) ||
++		    ((old->flags ^ new->flags) & IRQF_NO_REPLAY))
+ 			goto mismatch;
+ 
+ 		/* All handlers must agree on per-cpuness */
+@@ -1324,6 +1325,9 @@ static int
+ 		if (new->flags & IRQF_ONESHOT)
+ 			desc->istate |= IRQS_ONESHOT;
+ 
++		if (new->flags & IRQF_NO_REPLAY)
++			desc->istate |= IRQS_NO_REPLAY;
++
+ 		if (irq_settings_can_autoenable(desc))
+ 			irq_startup(desc, true);
+ 		else
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -56,12 +56,12 @@ static DECLARE_TASKLET(resend_tasklet, r
+ void check_irq_resend(struct irq_desc *desc)
+ {
+ 	/*
+-	 * We do not resend level type interrupts. Level type
+-	 * interrupts are resent by hardware when they are still
+-	 * active. Clear the pending bit so suspend/resume does not
+-	 * get confused.
++	 * We do not resend level type interrupts. Level type interrupts
++	 * are resent by hardware when they are still active. Also prevent
++	 * resend when the user requested so.  Clear the pending bit so
++	 * suspend/resume does not get confused.
+ 	 */
+-	if (irq_settings_is_level(desc)) {
++	if (irq_settings_is_level(desc) || (desc->istate & IRQS_NO_REPLAY)) {
+ 		desc->istate &= ~IRQS_PENDING;
+ 		return;
+ 	}
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -643,7 +643,10 @@ void handle_edge_irq(struct irq_desc *de
+ 	kstat_incr_irqs_this_cpu(desc);
+ 
+ 	/* Start handling the irq */
+-	desc->irq_data.chip->irq_ack(&desc->irq_data);
++	if (!(desc->istate & (IRQS_NO_REPLAY | IRQS_ONESHOT))
++		desc->irq_data.chip->irq_ack(&desc->irq_data);
++	else
++		mask_ack_irq(desc);
+ 
+ 	do {
+ 		if (unlikely(!desc->action)) {
