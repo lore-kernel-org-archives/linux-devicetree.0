@@ -1,53 +1,61 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] USB: ohci: da8xx: Allow probing from DT
-Date: Tue,  8 Nov 2016 19:58:30 +0100
-Message-ID: <20161108185831.17683-3-ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: [PATCH 3/3] ARM: dts: da850: add usb device node
+Date: Tue,  8 Nov 2016 19:58:31 +0100
+Message-ID: <20161108185831.17683-4-ahaslam@baylibre.com>
 References: <20161108185831.17683-1-ahaslam@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108185831.17683-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161108185831.17683-1-ahaslam@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the compatible string to the ohci driver
-to be able to probe from DT
+This adds the ohci device node for the da850 soc.
+It also enables it for the omapl138 hawk board.
 
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
 ---
- drivers/usb/host/ohci-da8xx.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/da850-lcdk.dts | 8 ++++++++
+ arch/arm/boot/dts/da850.dtsi     | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
-index 83b182e..bbfe342 100644
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -321,6 +321,13 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- }
- 
- /*-------------------------------------------------------------------------*/
-+#ifdef CONFIG_OF
-+static const struct of_device_id da8xx_ohci_ids[] = {
-+	{ .compatible = "ti,da830-ohci" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da8xx_ohci_ids);
-+#endif
- 
- static int ohci_da8xx_probe(struct platform_device *pdev)
- {
-@@ -472,6 +479,7 @@ static struct platform_driver ohci_hcd_da8xx_driver = {
- #endif
- 	.driver		= {
- 		.name	= DRV_NAME,
-+		.of_match_table = of_match_ptr(da8xx_ohci_ids),
- 	},
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 7b8ab21..aaf533e 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -86,6 +86,14 @@
+ 	};
  };
  
++&usb_phy {
++	status = "okay";
++};
++
++&ohci {
++	status = "okay";
++};
++
+ &serial2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&serial2_rxtx_pins>;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 2534aab..c74f1a6 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -405,6 +405,14 @@
+ 					>;
+ 			status = "disabled";
+ 		};
++		ohci: usb@225000 {
++			compatible = "ti,da830-ohci";
++			reg = <0x225000 0x1000>;
++			interrupts = <59>;
++			phys = <&usb_phy 1>;
++			phy-names = "usb-phy";
++			status = "disabled";
++		};
+ 		gpio: gpio@226000 {
+ 			compatible = "ti,dm6441-gpio";
+ 			gpio-controller;
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
