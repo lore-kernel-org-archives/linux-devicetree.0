@@ -1,117 +1,112 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a
- DAC and a comparator
-Date: Tue, 8 Nov 2016 22:47:00 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1611082146560.3501@nanos>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se> <1478606339-31253-9-git-send-email-peda@axentia.se> <alpine.DEB.2.20.1611081630450.3501@nanos> <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se> <alpine.DEB.2.20.1611081809320.3501@nanos>
- <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1c104a31-6c66-9537-9b90-ede58c8e1a92-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv3] ARM: dts: socfpga: add specific compatible strings for boards
+Date: Tue,  8 Nov 2016 15:50:12 -0600
+Message-ID: <20161108215012.23647-1-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Nov 2016, Peter Rosin wrote:
-> So, to sum up, in order for this to work with threaded oneshot
-> interrupts, I still need to either keep the enable/sync/enable-dance
-> or tweak the irq core to handle my case better. The only gain would
-> be that I could fire the next step of the search from the threaded
-> irq handler directly (but it needs some new race-killing code).
-> Or am I missing something? If not, there's no pressing reason to
-> switch to threaded oneshot interrupts, right?
+Add a more specific board compatible entry for all of the SOCFPGA
+Cyclone 5 based boards.
 
-There is no pressing reason, but that misfire prevention dance looks
-fragile and overly complex to me.
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v3: Be a bit more specific with the c5 dk and sockit, use
+    "altr,socfpga-cyclone5-socdk" and "terasic,socfpga-cyclone5-sockit"
+v2: remove extra space and add a comma between compatible entries
+---
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-The completely untested patch below should block the replay for edge
-interrupts from the core code. It also makes sure that the edge interrupt
-is masked until the thread handler returns. All you have to do is
-requesting your threaded handler with IRQF_ONESHOT | IRQF_NO_REPLAY.
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index afea364..5ecd2ef 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -18,7 +18,7 @@
+ 
+ / {
+ 	model = "Terasic DE-0(Atlas)";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "terasic,de0-atlas", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+index 424523b..e5a98e5 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
+@@ -19,7 +19,7 @@
+ 
+ / {
+ 	model = "Aries/DENX MCV EVK";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "denx,mcvevk", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	aliases {
+ 		ethernet0 = &gmac0;
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 15e43f4..7a5f42d 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -19,7 +19,7 @@
+ 
+ / {
+ 	model = "Altera SOCFPGA Cyclone V SoC Development Kit";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "altr,socfpga-cyclone5-socdk", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+index 02e22f5..fcacaf7b 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+@@ -19,7 +19,7 @@
+ 
+ / {
+ 	model = "Terasic SoCkit";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "terasic,socfpga-cyclone5-sockit", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+index 9aaf413..5b7e3c2 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+@@ -21,7 +21,7 @@
+ 
+ / {
+ 	model = "Altera SOCFPGA Cyclone V SoC Macnica Sodia board";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "macnica,sodia", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk";
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+index b844473..363ee62 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+@@ -51,7 +51,7 @@
+ 
+ / {
+ 	model = "samtec VIN|ING FPGA";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200";
+-- 
+2.8.3
 
-I don't think you need extra race handling with that, but I might be wrong
-as usual.
-
-Thanks,
-
-	tglx
-
-8<------------------
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -74,6 +74,7 @@
- #define IRQF_NO_THREAD		0x00010000
- #define IRQF_EARLY_RESUME	0x00020000
- #define IRQF_COND_SUSPEND	0x00040000
-+#define IRQF_NO_REPLAY		0x00080000
- 
- #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
- 
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -57,6 +57,7 @@ enum {
- 	IRQS_WAITING		= 0x00000080,
- 	IRQS_PENDING		= 0x00000200,
- 	IRQS_SUSPENDED		= 0x00000800,
-+	IRQS_NO_REPLAY		= 0x00001000,
- };
- 
- #include "debug.h"
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -1212,7 +1212,8 @@ static int
- 		 */
- 		if (!((old->flags & new->flags) & IRQF_SHARED) ||
- 		    ((old->flags ^ new->flags) & IRQF_TRIGGER_MASK) ||
--		    ((old->flags ^ new->flags) & IRQF_ONESHOT))
-+		    ((old->flags ^ new->flags) & IRQF_ONESHOT) ||
-+		    ((old->flags ^ new->flags) & IRQF_NO_REPLAY))
- 			goto mismatch;
- 
- 		/* All handlers must agree on per-cpuness */
-@@ -1324,6 +1325,9 @@ static int
- 		if (new->flags & IRQF_ONESHOT)
- 			desc->istate |= IRQS_ONESHOT;
- 
-+		if (new->flags & IRQF_NO_REPLAY)
-+			desc->istate |= IRQS_NO_REPLAY;
-+
- 		if (irq_settings_can_autoenable(desc))
- 			irq_startup(desc, true);
- 		else
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -56,12 +56,12 @@ static DECLARE_TASKLET(resend_tasklet, r
- void check_irq_resend(struct irq_desc *desc)
- {
- 	/*
--	 * We do not resend level type interrupts. Level type
--	 * interrupts are resent by hardware when they are still
--	 * active. Clear the pending bit so suspend/resume does not
--	 * get confused.
-+	 * We do not resend level type interrupts. Level type interrupts
-+	 * are resent by hardware when they are still active. Also prevent
-+	 * resend when the user requested so.  Clear the pending bit so
-+	 * suspend/resume does not get confused.
- 	 */
--	if (irq_settings_is_level(desc)) {
-+	if (irq_settings_is_level(desc) || (desc->istate & IRQS_NO_REPLAY)) {
- 		desc->istate &= ~IRQS_PENDING;
- 		return;
- 	}
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -643,7 +643,10 @@ void handle_edge_irq(struct irq_desc *de
- 	kstat_incr_irqs_this_cpu(desc);
- 
- 	/* Start handling the irq */
--	desc->irq_data.chip->irq_ack(&desc->irq_data);
-+	if (!(desc->istate & (IRQS_NO_REPLAY | IRQS_ONESHOT))
-+		desc->irq_data.chip->irq_ack(&desc->irq_data);
-+	else
-+		mask_ack_irq(desc);
- 
- 	do {
- 		if (unlikely(!desc->action)) {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
