@@ -1,57 +1,79 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: apalis-tk1: Drop leading 0 from unit-address
-Date: Tue, 8 Nov 2016 12:11:24 +0100
-Message-ID: <20161108111124.GA2085@ulmo.ba.sec>
-References: <20161107134923.5615-1-thierry.reding@gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: nyan: Mark all USB ports as host
+Date: Tue, 8 Nov 2016 11:09:57 +0000
+Message-ID: <3fbd3fb9-1dc5-a46d-355b-f7c94b3c43ef@nvidia.com>
+References: <20160918102852.6593-1-contact@paulk.fr>
+ <20161107132854.GF12559@ulmo.ba.sec>
+ <13e7ff98-8bc2-ccf7-94bb-4e1d3c61b20d@nvidia.com>
+ <20161108085420.GG2478@tbergstrom-lnx.Nvidia.com>
+ <58046fbb-8e19-e629-770a-940a40ca6ef9@nvidia.com>
+ <20161108110735.GA13098@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161107134923.5615-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20161108110735.GA13098-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---J2SCkAp4GZ/dPZZf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/11/16 11:07, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Nov 08, 2016 at 09:47:42AM +0000, Jon Hunter wrote:
+>>
+>> On 08/11/16 08:54, Peter De Schrijver wrote:
+>>> On Mon, Nov 07, 2016 at 02:09:31PM +0000, Jon Hunter wrote:
+>>>>
+>>>> On 07/11/16 13:28, Thierry Reding wrote:
+>>>>>> Old Signed by an unknown key
+>>>>>
+>>>>> On Sun, Sep 18, 2016 at 12:28:52PM +0200, Paul Kocialkowski wrote:
+>>>>>> Nyan boards only have host USB ports (2 external, 1 internal), there is
+>>>>>> no OTG-enabled connector.
+>>>>>>
+>>>>>> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+>>>>>> ---
+>>>>>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> Where is this information coming from? I don't have one of the Nyans
+>>>>> myself, but one of the Tegra132 devices I have, which I think was
+>>>>> derived from one of the Nyans uses one of the external host ports as
+>>>>> forced recovery port, for which it would need OTG.
+>>>>>
+>>>>> I suspect that the way to get U-Boot onto the Nyans is via tegrarcm?
+>>>>> In that case I think one of the ports must be OTG.
+>>>>
+>>>> It is true that the port on the back on the nyan-big can be used with
+>>>> recovery mode. I was thinking that this is not a true OTG port as it is
+>>>> just a 4-pin type A socket and does not have an ID pin. Thinking some
+>>>> more about this the USB spec does include a "Host Negotiation Protocol
+>>>> (HNP)" that allows a host and device to swap roles and so keeping it as
+>>>> OTG seems valid afterall.
+>>>
+>>> I don't think the bootrom implements that though. I expect recovery mode
+>>> to just program the controller in device mode, without performing any
+>>> negotiation.
+>>
+>> I am not talking about the bootrom and I would not expect the bootrom to
+>> do that. However, the kernel could.
+> 
+> Either way, configuring the controller in device mode is enough to make
+> the host detect it, otherwise tegrarcm wouldn't work.
+> 
+> From the point of view of the binding I think "otg" is the most accurate
+> option because we know that the controller can operate in both modes. If
+> it currently doesn't or how exactly switching modes is done is outside
+> the scope of this property.
+> 
+> Is everyone okay with just dropping this patch?
 
-On Mon, Nov 07, 2016 at 02:49:23PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> According to the latest best practices, unit-addresses should be
-> represented without any leading zeroes.
->=20
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra124-apalis.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Fine with me.
 
-Applied.
+Jon
 
-Thierry
-
---J2SCkAp4GZ/dPZZf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYIbLcAAoJEN0jrNd/PrOhk1wP/369OSX6WIjOmmEsBYwa0VrI
-7QCSHwBurn0hBTpODOnAvzAAIcChjkjQ3iunIhRE7lKdKeuAeZiUPPeHDsafDvqJ
-+b5FRsdmLA53WkZipqXh3BGAAP3n7qFhoK7OQ8GmL9sbqSWeX5sVGBvaY96z6Kc7
-8RD8RqqSCETpRzlMrKKdtCPibef2xVn5WaEaw4UsoQkm8XHNlx2PhkCcCcHK+ayi
-TegECHYbkxX961pJwsxlqnIEi5CcfY+NfGQTk5MAfI6FJpIhlPWp7WzlbkXVeOLU
-z9PUumLKZYAbEps6wrQYT2lb3ZDvZkgbV8u2VJlPszKYUsfMMugquiwPqGO/1Qg0
-+pLzWiLNpzqdKUORwtPTCylnMLntlWdNRPoy/vr7Ol8hf4RRg5W5hFa1LfR2duMG
-o9pq3mMVi40IvWsy/iv+ZW+9L8tfTrdsETG9mZkSvwzSUnad7VDLrPAhEJG/A/zL
-8kFr/DWW9KOAel3NB0aGTVirugwiPvjnc9MQbryTqf0+aUOac3sgg5PNa49gFNLc
-bgw6/nXr04CGBq4QJAfuijUQiSj4BvKWJLPnMpmH5ZTgAEumzv4qAYKexHfV6Kpa
-zcjDE5T+Gm9krVkfuzg8bVceoSgvDj6GeKPTOcJlgca5zH7L3kyvhPV4A0RC30C9
-wXqBV40LQ/TOz6OO/OM2
-=weRG
------END PGP SIGNATURE-----
-
---J2SCkAp4GZ/dPZZf--
+-- 
+nvpublic
