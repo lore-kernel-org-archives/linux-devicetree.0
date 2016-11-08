@@ -1,7 +1,7 @@
 From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/3] USB: ohci: da8xx: Add devicetree bindings
-Date: Tue,  8 Nov 2016 19:58:29 +0100
-Message-ID: <20161108185831.17683-2-ahaslam@baylibre.com>
+Subject: [PATCH 2/3] USB: ohci: da8xx: Allow probing from DT
+Date: Tue,  8 Nov 2016 19:58:30 +0100
+Message-ID: <20161108185831.17683-3-ahaslam@baylibre.com>
 References: <20161108185831.17683-1-ahaslam@baylibre.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161108185831.17683-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
@@ -10,61 +10,40 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6d
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the device tree bindings required for
-the ohci controller found in TI da8xx family of SoC's
+This adds the compatible string to the ohci driver
+to be able to probe from DT
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/usb/ohci-da8xx.txt         | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+ drivers/usb/host/ohci-da8xx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-new file mode 100644
-index 0000000..66672e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-@@ -0,0 +1,39 @@
-+DA8XX USB OHCI controller
-+
-+Required properties:
-+
-+ - compatible: Should be "ti,da830-ohci"
-+ - reg:        Should contain one register range i.e. start and length
-+ - interrupts: Description of the interrupt line
-+ - phys:       Phandle for the PHY device
-+ - phy-names:  Should be "usb-phy"
-+
-+Optional properties:
-+ - vbus-supply: Regulator that controls vbus power
-+
-+Example:
-+
-+reg_usb_ohci: regulator@0 {
-+        compatible = "regulator-fixed";
-+        gpio = <&gpio 109 0>;
-+        over-current-gpios = <&gpio 36 0>;
-+        regulator-boot-on;
-+        enable-active-high;
-+        regulator-name = "usb_ohci_vbus";
-+        regulator-min-microvolt = <5000000>;
-+        regulator-max-microvolt = <5000000>;
+diff --git a/drivers/usb/host/ohci-da8xx.c b/drivers/usb/host/ohci-da8xx.c
+index 83b182e..bbfe342 100644
+--- a/drivers/usb/host/ohci-da8xx.c
++++ b/drivers/usb/host/ohci-da8xx.c
+@@ -321,6 +321,13 @@ static int ohci_da8xx_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ }
+ 
+ /*-------------------------------------------------------------------------*/
++#ifdef CONFIG_OF
++static const struct of_device_id da8xx_ohci_ids[] = {
++	{ .compatible = "ti,da830-ohci" },
++	{ }
 +};
-+
-+usb_phy: usb-phy {
-+        compatible = "ti,da830-usb-phy";
-+        #phy-cells = <1>;
-+};
-+
-+ohci: usb@0225000 {
-+        compatible = "ti,da830-ohci";
-+        reg = <0x225000 0x1000>;
-+        interrupts = <59>;
-+        phys = <&usb_phy 1>;
-+        phy-names = "usb-phy";
-+        vbus-supply = <&reg_usb_ohci>;
-+};
++MODULE_DEVICE_TABLE(of, da8xx_ohci_ids);
++#endif
+ 
+ static int ohci_da8xx_probe(struct platform_device *pdev)
+ {
+@@ -472,6 +479,7 @@ static struct platform_driver ohci_hcd_da8xx_driver = {
+ #endif
+ 	.driver		= {
+ 		.name	= DRV_NAME,
++		.of_match_table = of_match_ptr(da8xx_ohci_ids),
+ 	},
+ };
+ 
 -- 
 2.10.1
 
