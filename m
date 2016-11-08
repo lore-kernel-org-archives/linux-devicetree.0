@@ -1,103 +1,100 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: marvell: Add I2C definitions for the Armada 3700
-Date: Tue, 08 Nov 2016 16:52:01 +0100
-Message-ID: <87h97im0ke.fsf@free-electrons.com>
-References: <20161108151506.1131-1-romain.perier@free-electrons.com>
-        <20161108151506.1131-3-romain.perier@free-electrons.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to
+ 'aspeed,ast2400-ibt-bmc'
+Date: Tue, 8 Nov 2016 16:52:43 +0100
+Message-ID: <a886778e-a85e-758e-3a61-c4909652e39d@kaod.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
+ <ebeba60f-429f-fb84-b9da-c27d11d23094@kaod.org> <2368736.y6FyG1ESuP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108151506.1131-3-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Romain
-        Perier's message of "Tue, 8 Nov 2016 16:15:05 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2368736.y6FyG1ESuP@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain and Wolfram, 
- 
- On mar., nov. 08 2016, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On 11/07/2016 02:02 PM, Arnd Bergmann wrote:
+> On Wednesday, November 2, 2016 3:28:01 PM CET C=E9dric Le Goater wrote:
+>> On 11/02/2016 02:56 PM, Joel Stanley wrote:
+>>> On Wed, Nov 2, 2016 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>> On Wednesday 02 November 2016, C=E9dric Le Goater wrote:
+>>>>> The Aspeed SoCs have two BT interfaces : one is IPMI compliant and the
+>>>>> other is H8S/2168 compliant.
+>>>>>
+>>>>> The current ipmi/bt-bmc driver implements the IPMI version and we
+>>>>> should reflect its nature in the compatible node name using
+>>>>> 'aspeed,ast2400-ibt-bmc' instead of 'aspeed,ast2400-bt-bmc'. The
+>>>>> latter should be used for a H8S interface driver if it is implemented
+>>>>> one day.
+>>>>>
+>>>>> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+>>>>
+>>>> We generally try to avoid changing the compatible strings after the
+>>>> fact, but it's probably ok in this case.
+>>
+>> As the device tree changes are not merged yet, we thought we had some =
 
-> The Armada 3700 has two i2c bus interface units, this commit adds the
-> definitions of the corresponding device nodes. It also enables the node
-> on the development board for this SoC.
->
-> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> more time to fine tune the naming. =
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> =
 
-This patch is OK for me but I would like to apply it myself on
-mvebu/dt. Indeed Thomas Petazzoni pointed that I made a typo on the
-peripheral clock label: nb_perih_clk instead of nb_periph_clk. I would
-like to fix it and by applying this patch I will avoid a merge conflict
-or worse a mismatch with the label name.
+> Ok, I see. No problem then.
+> =
 
-Wolfram, once you will be OK with the patch 1 and 3, I will apply the
-patch 2.
+>>>> I don't understand who decides which of the two interfaces is used:
+>>>> is it the same register set that can be driven by either one or the
+>>>> other driver, or do you expect to have two drivers that can both
+>>>> be active in the same system and talk to different hardware once
+>>>> you get there?
+>>>
+>>> It's the second case. The H8S BT has a different register layout so it
+>>> would require a different driver.
+>>
+>> yes.
+>>  =
+
+>>> We don't yet have a driver for the other BT device, but there was
+>>> recent talk of using it as an alternate (non-ipmi channel) between the
+>>> BMC and the host. Before that discussion I wasn't aware that the H8S
+>>> BT existed. I suggested we fix this up before it hits a final release.
+>>>
+>>> C=E9dric, do you think ast2400-ibt-bmc or ast2400-ipmi-bt-bmc does a
+>>> better job of describing the hardware here?
+>>
+>> The specs refer to the two interfaces as BT (non IPMI) and iBT (IPMI). =
+
+>> I think we can keep the same naming.
+> =
+
+> Ok
+> =
+
+>>> While we're modifying the binding, should we add a compat string for
+>>> the ast2500?
+>>
+>> Well, if the change in this patch is fine for all, may be we can add =
+
+>> the ast2500 compat string in a followup patch ?
+> =
+
+> Sounds good to me.
+
+OK. So, how do we proceed with this patch ? Who would include it in its =
+
+tree ? =
+
 
 Thanks,
 
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-3720-db.dts |  4 ++++
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 18 ++++++++++++++++++
->  2 files changed, 22 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> index 1372e9a6..16d84af 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-> @@ -62,6 +62,10 @@
->  	};
->  };
->  
-> +&i2c0 {
-> +	status = "okay";
-> +};
-> +
->  /* CON3 */
->  &sata {
->  	status = "okay";
-> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> index c476253..bf2d73d 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-> @@ -98,6 +98,24 @@
->  			/* 32M internal register @ 0xd000_0000 */
->  			ranges = <0x0 0x0 0xd0000000 0x2000000>;
->  
-> +			i2c0: i2c@11000 {
-> +				compatible = "marvell,armada-3700-i2c";
-> +				reg = <0x11000 0x24>;
-> +				clocks = <&nb_perih_clk 10>;
-> +				interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> +				mrvl,i2c-fast-mode;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c1: i2c@11080 {
-> +				compatible = "marvell,armada-3700-i2c";
-> +				reg = <0x11080 0x24>;
-> +				clocks = <&nb_perih_clk 9>;
-> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +				mrvl,i2c-fast-mode;
-> +				status = "disabled";
-> +			};
-> +
->  			uart0: serial@12000 {
->  				compatible = "marvell,armada-3700-uart";
->  				reg = <0x12000 0x400>;
-> -- 
-> 2.9.3
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+C.
