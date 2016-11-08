@@ -1,247 +1,125 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: RE: [PATCH v2 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Tue, 8 Nov 2016 08:30:03 +0000
-Message-ID: <DB6PR0501MB25184EFB9A5CFD3AA41CFDC1AAA60@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
- <1477224748-25223-4-git-send-email-noamca@mellanox.com>
- <20161031105251.GD1506@mai>
- <DB6PR0501MB2518720A0F95ACBBBCB1CB27AAAE0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
- <20161101200141.GF1506@mai>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] ARM: tegra: nyan: Mark all USB ports as host
+Date: Tue, 8 Nov 2016 12:07:35 +0100
+Message-ID: <20161108110735.GA13098@ulmo.ba.sec>
+References: <20160918102852.6593-1-contact@paulk.fr>
+ <20161107132854.GF12559@ulmo.ba.sec>
+ <13e7ff98-8bc2-ccf7-94bb-4e1d3c61b20d@nvidia.com>
+ <20161108085420.GG2478@tbergstrom-lnx.Nvidia.com>
+ <58046fbb-8e19-e629-770a-940a40ca6ef9@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161101200141.GF1506@mai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Content-Type: multipart/mixed; boundary="===============2491869050391619138=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <58046fbb-8e19-e629-770a-940a40ca6ef9@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Paul Kocialkowski <contact@paulk.fr>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org]=20
-> Sent: Tuesday, November 1, 2016 10:02 PM
-...
->Assuming cpu0 and cpu1 are sibling, does
 
->taskset 0x1 time sleep 2 & taskset 0x2 time sleep 3
+--===============2491869050391619138==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Content-Disposition: inline
 
-I will use 16,17 instead of 0,1
->give a correct result without a dmesg log ?
-[root@192.168.8.2 /]$ [root@192.168.8.2 /]$ taskset 65536 time sleep 2 & ta=
-skset 131072 time sleep 3
-real    0m 2.54s
-user    0m 0.04s
-sys     0m 0.14s
-real    0m 3.47s
-user    0m 0.00s
-sys     0m 0.15s
-[1]+  Done                       taskset 65536 time sleep 2
 
-Seem OK to me.
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Can you give the content of the /proc/timer_list ?
-[root@192.168.8.2 /]$ cat /proc/timer_list
-Timer List Version: v0.8
-HRTIMER_MAX_CLOCK_BASES: 4
-now at 2421277626774 nsecs
+On Tue, Nov 08, 2016 at 09:47:42AM +0000, Jon Hunter wrote:
+>=20
+> On 08/11/16 08:54, Peter De Schrijver wrote:
+> > On Mon, Nov 07, 2016 at 02:09:31PM +0000, Jon Hunter wrote:
+> >>
+> >> On 07/11/16 13:28, Thierry Reding wrote:
+> >>> * PGP Signed by an unknown key
+> >>>
+> >>> On Sun, Sep 18, 2016 at 12:28:52PM +0200, Paul Kocialkowski wrote:
+> >>>> Nyan boards only have host USB ports (2 external, 1 internal), there=
+ is
+> >>>> no OTG-enabled connector.
+> >>>>
+> >>>> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+> >>>> ---
+> >>>>  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
+> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> Where is this information coming from? I don't have one of the Nyans
+> >>> myself, but one of the Tegra132 devices I have, which I think was
+> >>> derived from one of the Nyans uses one of the external host ports as
+> >>> forced recovery port, for which it would need OTG.
+> >>>
+> >>> I suspect that the way to get U-Boot onto the Nyans is via tegrarcm?
+> >>> In that case I think one of the ports must be OTG.
+> >>
+> >> It is true that the port on the back on the nyan-big can be used with
+> >> recovery mode. I was thinking that this is not a true OTG port as it is
+> >> just a 4-pin type A socket and does not have an ID pin. Thinking some
+> >> more about this the USB spec does include a "Host Negotiation Protocol
+> >> (HNP)" that allows a host and device to swap roles and so keeping it as
+> >> OTG seems valid afterall.
+> >=20
+> > I don't think the bootrom implements that though. I expect recovery mode
+> > to just program the controller in device mode, without performing any
+> > negotiation.
+>=20
+> I am not talking about the bootrom and I would not expect the bootrom to
+> do that. However, the kernel could.
 
-cpu: 0
- clock 0:
-  .base:       9fccb540
-  .index:      0
-  .resolution: 1 nsecs
-  .get_time:   ktime_get
-  .offset:     0 nsecs
-active timers:
- #0: <9fccb69c>, tick_sched_timer, S:01
- # expires at 2421140000000-2421140000000 nsecs [in -137626774 to -13762677=
-4 nsecs]
- clock 1:
-  .base:       9fccb560
-  .index:      1
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_real
-  .offset:     0 nsecs
-active timers:
- clock 2:
-  .base:       9fccb580
-  .index:      2
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_boottime
-  .offset:     0 nsecs
-active timers:
- clock 3:
-  .base:       9fccb5a0
-  .index:      3
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_clocktai
-  .offset:     0 nsecs
-active timers:
-  .expires_next   : 2421140000000 nsecs
-  .hres_active    : 1
-  .nr_events      : 615427
-  .nr_retries     : 10052
-  .nr_hangs       : 37
-  .max_hang_time  : 682411010
-  .nohz_mode      : 2
-  .last_tick      : 0 nsecs
-  .tick_stopped   : 0
-  .idle_jiffies   : 0
-  .idle_calls     : 0
-  .idle_sleeps    : 0
-  .idle_entrytime : 2421131605769 nsecs
-  .idle_waketime  : 0 nsecs
-  .idle_exittime  : 0 nsecs
-  .idle_sleeptime : 1900903609165 nsecs
-  .iowait_sleeptime: 0 nsecs
-  .last_jiffies   : 0
-  .next_timer     : 0
-  .idle_expires   : 0 nsecs
-jiffies: 212114
+Either way, configuring the controller in device mode is enough to make
+the host detect it, otherwise tegrarcm wouldn't work.
 
-cpu: 16
- clock 0:
-  .base:       9fcd7540
-  .index:      0
-  .resolution: 1 nsecs
-  .get_time:   ktime_get
-  .offset:     0 nsecs
-active timers:
- clock 1:
-  .base:       9fcd7560
-  .index:      1
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_real
-  .offset:     0 nsecs
-active timers:
- clock 2:
-  .base:       9fcd7580
-  .index:      2
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_boottime
-  .offset:     0 nsecs
-active timers:
- clock 3:
-  .base:       9fcd75a0
-  .index:      3
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_clocktai
-  .offset:     0 nsecs
-active timers:
-  .expires_next   : 9223372036854775807 nsecs
-  .hres_active    : 1
-  .nr_events      : 18
-  .nr_retries     : 1
-  .nr_hangs       : 0
-  .max_hang_time  : 0
-  .nohz_mode      : 2
-  .last_tick      : 2410120000000 nsecs
-  .tick_stopped   : 1
-  .idle_jiffies   : 211017
-  .idle_calls     : 27
-  .idle_sleeps    : 27
-  .idle_entrytime : 2410189597725 nsecs
-  .idle_waketime  : 2410189342725 nsecs
-  .idle_exittime  : 2410110197721 nsecs
-  .idle_sleeptime : 2408852044732 nsecs
-  .iowait_sleeptime: 0 nsecs
-  .last_jiffies   : 211019
-  .next_timer     : 9223372036854775807
-  .idle_expires   : 9223372036854775807 nsecs
-jiffies: 212114
+=46rom the point of view of the binding I think "otg" is the most accurate
+option because we know that the controller can operate in both modes. If
+it currently doesn't or how exactly switching modes is done is outside
+the scope of this property.
 
-cpu: 17
- clock 0:
-  .base:       9fce3540
-  .index:      0
-  .resolution: 1 nsecs
-  .get_time:   ktime_get
-  .offset:     0 nsecs
-active timers:
- clock 1:
-  .base:       9fce3560
-  .index:      1
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_real
-  .offset:     0 nsecs
-active timers:
- clock 2:
-  .base:       9fce3580
-  .index:      2
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_boottime
-  .offset:     0 nsecs
-active timers:
- clock 3:
-  .base:       9fce35a0
-  .index:      3
-  .resolution: 1 nsecs
-  .get_time:   ktime_get_clocktai
-  .offset:     0 nsecs
-active timers:
-  .expires_next   : 9223372036854775807 nsecs
-  .hres_active    : 1
-  .nr_events      : 22
-  .nr_retries     : 1
-  .nr_hangs       : 0
-  .max_hang_time  : 0
-  .nohz_mode      : 2
-  .last_tick      : 2412120000000 nsecs
-  .tick_stopped   : 1
-  .idle_jiffies   : 211212
-  .idle_calls     : 32
-  .idle_sleeps    : 32
-  .idle_entrytime : 2412123353729 nsecs
-  .idle_waketime  : 2412123049733 nsecs
-  .idle_exittime  : 2412110161733 nsecs
-  .idle_sleeptime : 2410832354720 nsecs
-  .iowait_sleeptime: 0 nsecs
-  .last_jiffies   : 211213
-  .next_timer     : 9223372036854775807
-  .idle_expires   : 9223372036854775807 nsecs
-jiffies: 212114
+Is everyone okay with just dropping this patch?
 
-Tick Device: mode:     1
-Per CPU device: 0
-Clock Event Device: ARC Timer0
- max_delta_ns:   51539607733
- min_delta_ns:   1000
- mult:           178956970
- shift:          31
- mode:           3
- next_event:     2421140000000 nsecs
- set_next_event: arc_clkevent_set_next_event
- periodic: arc_clkevent_set_periodic
- event_handler:  hrtimer_interrupt
- retries:        0
+Thierry
 
-Tick Device: mode:     1
-Per CPU device: 16
-Clock Event Device: ARC Timer0
- max_delta_ns:   51539607733
- min_delta_ns:   1000
- mult:           178956970
- shift:          31
- mode:           3
- next_event:     9223372036854775807 nsecs
- set_next_event: arc_clkevent_set_next_event
- periodic: arc_clkevent_set_periodic
- event_handler:  hrtimer_interrupt
- retries:        2
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Tick Device: mode:     1
-Per CPU device: 17
-Clock Event Device: ARC Timer0
- max_delta_ns:   51539607733
- min_delta_ns:   1000
- mult:           178956970
- shift:          31
- mode:           3
- next_event:     9223372036854775807 nsecs
- set_next_event: arc_clkevent_set_next_event
- periodic: arc_clkevent_set_periodic
- event_handler:  hrtimer_interrupt
- retries:        2
+-----BEGIN PGP SIGNATURE-----
 
--Noam
+iQIcBAABCAAGBQJYIbH0AAoJEN0jrNd/PrOh29sP/3+aaWRVziIIjgkZWYMuASGh
+CAsLXuKmvQENkDQb0UJ6IccdHIYMt85yFm39kG3m6qCwT1y1asVygj61wPBsQkPk
+DcNdJ5uMT+NNiTfs/IZl2yHkfu5/lld4LamqKP6tlGHdzwk/M4ppaiTv3WEbM/nX
+57IcVz4N93NIjM9bv/HyqfsYtUCVZVorFg6ruLXGUrP3bP8P8fUc1s+pbmmmebdM
+g5JomvW2yvrupDeIWszUTIw+28sPUoTddumx+x63IcLs20mvRkFFCNv73ndREmEw
+cWgtrcnvoWES5MkyOBlh+83HSyST/4/Zw+GeSbAFBELQZ1ZrEE3jhX0c+oKqOts2
+e9ei7h6kWQufcbJhckgdemSWUcb3hArVbi9sF34paR+nlH+oaN0p/RZcy6RieVNF
+Uth0C37VAfVgpTpCRCeiGJQHtv1MYD4TjzRUWtW6KgX/EawDCWyZvYZB08TkrdXB
+lkyA9Xkj6jO7BHdOsm20WRslkdb+IF0OfGYJ5WaCl6J0jjK9gxPnEXKUYcL69KkS
+TjlVl1SE3tc0zAVh9JMk8LRGYPJynBQf4vuQfNw1oWmgAt8cqwzF4Ev/W88tmVzz
+tgjasdtD4rJTrMqJNdLSjjwv41IBdwXxig4SoiReNsF0mYxiW3T0PbEBYBUyH4AX
+GEczRb81nCMfr3NADyNn
+=z+5o
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
+
+
+--===============2491869050391619138==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2491869050391619138==--
