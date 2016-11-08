@@ -1,72 +1,64 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v2 3/4] Device bindings documentation updated ACPI-enabled
- platforms not currently supported
-Date: Tue, 8 Nov 2016 14:18:44 +0000
-Message-ID: <9a3dd667-b8ac-7116-a855-538f3e91572f@synopsys.com>
-References: <cover.1476462204.git.lolivei@synopsys.com>
- <36f4b1736e36b039af15b13645df0de492f1b6e1.1476462204.git.lolivei@synopsys.com>
- <20161014173014.GA26269@leverpostej> <20161014182045.GA1509@katana>
- <55cc91af-8d24-8aea-f74f-2ef40cd8ea5a@synopsys.com>
- <20161018151706.GA1433@katana>
- <76ab13e9-9aa5-97c3-2328-928bbcef9877@synopsys.com>
- <1477047272.6423.6.camel@linux.intel.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
+ to legacy SCPI protocol
+Date: Tue, 8 Nov 2016 14:32:11 +0000
+Message-ID: <7870a99c-c0a7-a39e-62c9-de1139d03846@arm.com>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <1478148731-11712-7-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477047272.6423.6.camel@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, Wolfram Sang <wsa@the-dreams.de>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1478148731-11712-7-git-send-email-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
+On 03/11/16 04:52, Sudeep Holla wrote:
+> This patch adds specific compatible to support legacy SCPI protocol.
+>
 
-As you suggested I will split the drivers. I am thinking of doing 5 patches:
+Sorry for messing it up before, I think this version is much better.
 
-- factor out master() parts
+Only this patch introduces new compatible, while 5,7,8/8 are just
+reorganization to move the platform specific stuff out of the generic
+SCPI bindings. It would be good if you can have a quick look and
+provide ack if you are happy with these patches.
 
-- separate Master part to i2c-designware-master.c (changes in i2c-designware-core.c)
-
-- enable Slave part to i2c-designware-slave (changes in i2c-designware-core.c)
-
-- glue drivers and device bindings
-
-- cleaning
-
-
+-- 
 Regards,
+Sudeep
 
-Luis
-
-On 21-Oct-16 11:54, Andy Shevchenko wrote:
-> On Fri, 2016-10-21 at 10:56 +0100, Luis Oliveira wrote:
->> Since practically 90% of the code is shared between master and slave,
->> I was
->> thinking if it will be acceptable to use the same driver for both but
->> differentiate the master/slave mode by the compatible strings.
-> It might be possible to split like other drivers do:
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> 1. Core part (i2c-designware-core.c)
-> 2. Master part (i2c-designware-master.c)
-> 3. Slave part (i2c-designware-slave.c)
-> 4. Glue drivers (like: i2c-designware-platdrv.c)
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index d1882c4540d0..ebd03fc93135 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -7,7 +7,9 @@ by Linux to initiate various system control and power operations.
 >
->> Thanks,
->> Luis
->>
->> On 10/18/2016 16:17, Wolfram Sang wrote:
->>>> This is needed because the configuration is different and the i2c-
->>>> designware
->>>> cannot be master/slave without a reset. To resolve that I added
->>>> this property
->>>> to bind it as a slave when needed.
->>> Aww, pity that the HW can't do that. Do you have details why?
->>>
->>> If that is really a HW limitation, then I'd suggest having a
->>> seperate
->>> driver for slave-only mode so we can differentiate by compatible
->>> strings.
->>>
->>
+>  Required properties:
+>
+> -- compatible : should be "arm,scpi"
+> +- compatible : should be
+> +	* "arm,scpi" : For implementations complying to SCPI v1.0 or above
+> +	* "arm,legacy-scpi" : For implementations complying pre SCPI v1.0
+>  - mboxes: List of phandle and mailbox channel specifiers
+>  	  All the channels reserved by remote SCP firmware for use by
+>  	  SCPI message protocol should be specified in any order
+>
