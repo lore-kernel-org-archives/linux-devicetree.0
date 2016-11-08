@@ -1,213 +1,377 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v4 3/8] iio: mcp4531: provide range of available raw values
-Date: Tue, 8 Nov 2016 12:58:53 +0100
-Message-ID: <1478606339-31253-4-git-send-email-peda@axentia.se>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v4 6/8] iio: dpot-dac: DAC driver based on a digital potentiometer
+Date: Tue, 8 Nov 2016 12:58:56 +0100
+Message-ID: <1478606339-31253-7-git-send-email-peda@axentia.se>
 References: <1478606339-31253-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478606339-31253-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478606339-31253-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, Thomas Gleixner <tglx@linutronix.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Example:
+It is assumed that the dpot is used as a voltage divider between the
+current dpot wiper setting and the maximum resistance of the dpot. The
+divided voltage is provided by a vref regulator.
 
-$ cat '/sys/bus/iio/devices/iio:device0/out_resistance_raw_available'
-[0 1 256]
+                  .------.
+   .-----------.  |      |
+   | vref      |--'    .---.
+   | regulator |--.    |   |
+   '-----------'  |    | d |
+                  |    | p |
+                  |    | o |  wiper
+                  |    | t |<---------+
+                  |    |   |
+                  |    '---'       dac output voltage
+                  |      |
+                  '------+------------+
 
-Meaning: min 0, step 1 and max 256.
-
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../testing/sysfs-bus-iio-potentiometer-mcp4531    |   8 ++
- MAINTAINERS                                        |   1 +
- drivers/iio/potentiometer/mcp4531.c                | 104 ++++++++++++---------
- 3 files changed, 71 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+ .../ABI/testing/sysfs-bus-iio-dac-dpot-dac         |   8 +
+ MAINTAINERS                                        |   2 +
+ drivers/iio/dac/Kconfig                            |  10 +
+ drivers/iio/dac/Makefile                           |   1 +
+ drivers/iio/dac/dpot-dac.c                         | 266 +++++++++++++++++++++
+ 5 files changed, 287 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+ create mode 100644 drivers/iio/dac/dpot-dac.c
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531 b/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
 new file mode 100644
-index 000000000000..2a91fbe394fc
+index 000000000000..580e93f373f6
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
++++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
 @@ -0,0 +1,8 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/out_resistance_raw_available
++What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_raw_available
 +Date:		October 2016
 +KernelVersion:	4.9
-+Contact:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++Contact:	Peter Rosin <peda@axentia.se>
 +Description:
 +		The range of available values represented as the minimum value,
 +		the step and the maximum value, all enclosed in square brackets.
 +		Example: [0 1 256]
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 411e3b87b8c2..2409e1d79cb6 100644
+index 4ff9c12b1313..583c6c93b6f3 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -7707,6 +7707,7 @@ MCP4531 MICROCHIP DIGITAL POTENTIOMETER DRIVER
- M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
- L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+@@ -6128,7 +6128,9 @@ IIO DIGITAL POTENTIOMETER DAC
+ M:	Peter Rosin <peda@axentia.se>
+ L:	linux-iio@vger.kernel.org
  S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
- F:	drivers/iio/potentiometer/mcp4531.c
++F:	Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+ F:	Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
++F:	drivers/iio/dac/dpot-dac.c
  
- MEASUREMENT COMPUTING CIO-DAC IIO DRIVER
-diff --git a/drivers/iio/potentiometer/mcp4531.c b/drivers/iio/potentiometer/mcp4531.c
-index 13b6ae2fcf7b..0d1bcf89ae17 100644
---- a/drivers/iio/potentiometer/mcp4531.c
-+++ b/drivers/iio/potentiometer/mcp4531.c
-@@ -38,7 +38,7 @@
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23@kernel.org>
+diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+index 120b24478469..d3084028905b 100644
+--- a/drivers/iio/dac/Kconfig
++++ b/drivers/iio/dac/Kconfig
+@@ -200,6 +200,16 @@ config AD8801
+ 	  To compile this driver as a module choose M here: the module will be called
+ 	  ad8801.
  
- struct mcp4531_cfg {
- 	int wipers;
--	int max_pos;
-+	int avail[3];
- 	int kohms;
- };
- 
-@@ -78,38 +78,38 @@ enum mcp4531_type {
- };
- 
- static const struct mcp4531_cfg mcp4531_cfg[] = {
--	[MCP453x_502] = { .wipers = 1, .max_pos = 128, .kohms =   5, },
--	[MCP453x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
--	[MCP453x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
--	[MCP453x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
--	[MCP454x_502] = { .wipers = 1, .max_pos = 128, .kohms =   5, },
--	[MCP454x_103] = { .wipers = 1, .max_pos = 128, .kohms =  10, },
--	[MCP454x_503] = { .wipers = 1, .max_pos = 128, .kohms =  50, },
--	[MCP454x_104] = { .wipers = 1, .max_pos = 128, .kohms = 100, },
--	[MCP455x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
--	[MCP455x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
--	[MCP455x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
--	[MCP455x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
--	[MCP456x_502] = { .wipers = 1, .max_pos = 256, .kohms =   5, },
--	[MCP456x_103] = { .wipers = 1, .max_pos = 256, .kohms =  10, },
--	[MCP456x_503] = { .wipers = 1, .max_pos = 256, .kohms =  50, },
--	[MCP456x_104] = { .wipers = 1, .max_pos = 256, .kohms = 100, },
--	[MCP463x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
--	[MCP463x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
--	[MCP463x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
--	[MCP463x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
--	[MCP464x_502] = { .wipers = 2, .max_pos = 128, .kohms =   5, },
--	[MCP464x_103] = { .wipers = 2, .max_pos = 128, .kohms =  10, },
--	[MCP464x_503] = { .wipers = 2, .max_pos = 128, .kohms =  50, },
--	[MCP464x_104] = { .wipers = 2, .max_pos = 128, .kohms = 100, },
--	[MCP465x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
--	[MCP465x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
--	[MCP465x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
--	[MCP465x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
--	[MCP466x_502] = { .wipers = 2, .max_pos = 256, .kohms =   5, },
--	[MCP466x_103] = { .wipers = 2, .max_pos = 256, .kohms =  10, },
--	[MCP466x_503] = { .wipers = 2, .max_pos = 256, .kohms =  50, },
--	[MCP466x_104] = { .wipers = 2, .max_pos = 256, .kohms = 100, },
-+	[MCP453x_502] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =   5, },
-+	[MCP453x_103] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  10, },
-+	[MCP453x_503] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  50, },
-+	[MCP453x_104] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms = 100, },
-+	[MCP454x_502] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =   5, },
-+	[MCP454x_103] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  10, },
-+	[MCP454x_503] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms =  50, },
-+	[MCP454x_104] = { .wipers = 1, .avail = { 0, 1, 128 }, .kohms = 100, },
-+	[MCP455x_502] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =   5, },
-+	[MCP455x_103] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  10, },
-+	[MCP455x_503] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  50, },
-+	[MCP455x_104] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms = 100, },
-+	[MCP456x_502] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =   5, },
-+	[MCP456x_103] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  10, },
-+	[MCP456x_503] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms =  50, },
-+	[MCP456x_104] = { .wipers = 1, .avail = { 0, 1, 256 }, .kohms = 100, },
-+	[MCP463x_502] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =   5, },
-+	[MCP463x_103] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  10, },
-+	[MCP463x_503] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  50, },
-+	[MCP463x_104] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms = 100, },
-+	[MCP464x_502] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =   5, },
-+	[MCP464x_103] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  10, },
-+	[MCP464x_503] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms =  50, },
-+	[MCP464x_104] = { .wipers = 2, .avail = { 0, 1, 128 }, .kohms = 100, },
-+	[MCP465x_502] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =   5, },
-+	[MCP465x_103] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  10, },
-+	[MCP465x_503] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  50, },
-+	[MCP465x_104] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms = 100, },
-+	[MCP466x_502] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =   5, },
-+	[MCP466x_103] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  10, },
-+	[MCP466x_503] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms =  50, },
-+	[MCP466x_104] = { .wipers = 2, .avail = { 0, 1, 256 }, .kohms = 100, },
- };
- 
- #define MCP4531_WRITE (0 << 2)
-@@ -124,13 +124,14 @@ struct mcp4531_data {
- 	const struct mcp4531_cfg *cfg;
- };
- 
--#define MCP4531_CHANNEL(ch) {					\
--	.type = IIO_RESISTANCE,					\
--	.indexed = 1,						\
--	.output = 1,						\
--	.channel = (ch),					\
--	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
--	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+#define MCP4531_CHANNEL(ch) {						\
-+	.type = IIO_RESISTANCE,						\
-+	.indexed = 1,							\
-+	.output = 1,							\
-+	.channel = (ch),						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
-+	.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_RAW),	\
- }
- 
- static const struct iio_chan_spec mcp4531_channels[] = {
-@@ -156,13 +157,31 @@ static int mcp4531_read_raw(struct iio_dev *indio_dev,
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = 1000 * data->cfg->kohms;
--		*val2 = data->cfg->max_pos;
-+		*val2 = data->cfg->avail[2];
- 		return IIO_VAL_FRACTIONAL;
- 	}
- 
- 	return -EINVAL;
- }
- 
-+static int mcp4531_read_avail(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan,
-+			      const int **vals, int *type, int *length,
-+			      long mask)
++config DPOT_DAC
++	tristate "DAC emulation using a DPOT"
++	depends on OF
++	help
++	  Say yes here to build support for DAC emulation using a digital
++	  potentiometer.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called dpot-dac.
++
+ config LPC18XX_DAC
+ 	tristate "NXP LPC18xx DAC driver"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
+diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+index 27642bbf75f2..f01bf4a99867 100644
+--- a/drivers/iio/dac/Makefile
++++ b/drivers/iio/dac/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_AD5686) += ad5686.o
+ obj-$(CONFIG_AD7303) += ad7303.o
+ obj-$(CONFIG_AD8801) += ad8801.o
+ obj-$(CONFIG_CIO_DAC) += cio-dac.o
++obj-$(CONFIG_DPOT_DAC) += dpot-dac.o
+ obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
+ obj-$(CONFIG_M62332) += m62332.o
+ obj-$(CONFIG_MAX517) += max517.o
+diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
+new file mode 100644
+index 000000000000..eb1f0509a3ec
+--- /dev/null
++++ b/drivers/iio/dac/dpot-dac.c
+@@ -0,0 +1,266 @@
++/*
++ * IIO DAC emulation driver using a digital potentiometer
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ * It is assumed that the dpot is used as a voltage divider between the
++ * current dpot wiper setting and the maximum resistance of the dpot. The
++ * divided voltage is provided by a vref regulator.
++ *
++ *                   .------.
++ *    .-----------.  |      |
++ *    | vref      |--'    .---.
++ *    | regulator |--.    |   |
++ *    '-----------'  |    | d |
++ *                   |    | p |
++ *                   |    | o |  wiper
++ *                   |    | t |<---------+
++ *                   |    |   |
++ *                   |    '---'       dac output voltage
++ *                   |      |
++ *                   '------+------------+
++ */
++
++#include <linux/err.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++
++struct dpot_dac {
++	struct regulator *vref;
++	struct iio_channel *dpot;
++	u32 max_ohms;
++};
++
++static const struct iio_chan_spec dpot_dac_iio_channel = {
++	.type = IIO_VOLTAGE,
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++			    | BIT(IIO_CHAN_INFO_SCALE),
++	.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW),
++	.output = 1,
++	.indexed = 1,
++};
++
++static int dpot_dac_read_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int *val, int *val2, long mask)
 +{
-+	struct mcp4531_data *data = iio_priv(indio_dev);
++	struct dpot_dac *dac = iio_priv(indio_dev);
++	int ret;
++	unsigned long long tmp;
 +
 +	switch (mask) {
 +	case IIO_CHAN_INFO_RAW:
-+		*length = ARRAY_SIZE(data->cfg->avail);
-+		*vals = data->cfg->avail;
-+		*type = IIO_VAL_INT;
-+		return IIO_AVAIL_RANGE;
++		return iio_read_channel_raw(dac->dpot, val);
++
++	case IIO_CHAN_INFO_SCALE:
++		ret = iio_read_channel_scale(dac->dpot, val, val2);
++		switch (ret) {
++		case IIO_VAL_FRACTIONAL_LOG2:
++			tmp = *val * 1000000000LL;
++			do_div(tmp, dac->max_ohms);
++			tmp *= regulator_get_voltage(dac->vref) / 1000;
++			do_div(tmp, 1000000000LL);
++			*val = tmp;
++			return ret;
++		case IIO_VAL_INT:
++			/*
++			 * Convert integer scale to fractional scale by
++			 * setting the denominator (val2) to one...
++			 */
++			*val2 = 1;
++			ret = IIO_VAL_FRACTIONAL;
++			/* ...and fall through. */
++		case IIO_VAL_FRACTIONAL:
++			*val *= regulator_get_voltage(dac->vref) / 1000;
++			*val2 *= dac->max_ohms;
++			break;
++		}
++
++		return ret;
 +	}
 +
 +	return -EINVAL;
 +}
 +
- static int mcp4531_write_raw(struct iio_dev *indio_dev,
- 			     struct iio_chan_spec const *chan,
- 			     int val, int val2, long mask)
-@@ -172,7 +191,7 @@ static int mcp4531_write_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (val > data->cfg->max_pos || val < 0)
-+		if (val > data->cfg->avail[2] || val < 0)
- 			return -EINVAL;
- 		break;
- 	default:
-@@ -186,6 +205,7 @@ static int mcp4531_write_raw(struct iio_dev *indio_dev,
- 
- static const struct iio_info mcp4531_info = {
- 	.read_raw = mcp4531_read_raw,
-+	.read_avail = mcp4531_read_avail,
- 	.write_raw = mcp4531_write_raw,
- 	.driver_module = THIS_MODULE,
- };
++static int dpot_dac_read_avail(struct iio_dev *indio_dev,
++			       struct iio_chan_spec const *chan,
++			       const int **vals, int *type, int *length,
++			       long mask)
++{
++	struct dpot_dac *dac = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		*type = IIO_VAL_INT;
++		return iio_read_avail_channel_raw(dac->dpot, vals, length);
++	}
++
++	return -EINVAL;
++}
++
++static int dpot_dac_write_raw(struct iio_dev *indio_dev,
++			      struct iio_chan_spec const *chan,
++			      int val, int val2, long mask)
++{
++	struct dpot_dac *dac = iio_priv(indio_dev);
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		return iio_write_channel_raw(dac->dpot, val);
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info dpot_dac_info = {
++	.read_raw = dpot_dac_read_raw,
++	.read_avail = dpot_dac_read_avail,
++	.write_raw = dpot_dac_write_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int dpot_dac_channel_max_ohms(struct iio_dev *indio_dev)
++{
++	struct device *dev = &indio_dev->dev;
++	struct dpot_dac *dac = iio_priv(indio_dev);
++	unsigned long long tmp;
++	int ret;
++	int val;
++	int val2;
++	int max;
++
++	ret = iio_read_max_channel_raw(dac->dpot, &max);
++	if (ret < 0) {
++		dev_err(dev, "dpot does not indicate its raw maximum value\n");
++		return ret;
++	}
++
++	switch (iio_read_channel_scale(dac->dpot, &val, &val2)) {
++	case IIO_VAL_INT:
++		return max * val;
++	case IIO_VAL_FRACTIONAL:
++		tmp = (unsigned long long)max * val;
++		do_div(tmp, val2);
++		return tmp;
++	case IIO_VAL_FRACTIONAL_LOG2:
++		tmp = val * 1000000000LL * max >> val2;
++		do_div(tmp, 1000000000LL);
++		return tmp;
++	default:
++		dev_err(dev, "dpot has a scale that is too weird\n");
++	}
++
++	return -EINVAL;
++}
++
++static int dpot_dac_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct dpot_dac *dac;
++	enum iio_chan_type type;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*dac));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, indio_dev);
++	dac = iio_priv(indio_dev);
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &dpot_dac_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = &dpot_dac_iio_channel;
++	indio_dev->num_channels = 1;
++
++	dac->vref = devm_regulator_get(dev, "vref");
++	if (IS_ERR(dac->vref)) {
++		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "failed to get vref regulator\n");
++		return PTR_ERR(dac->vref);
++	}
++
++	dac->dpot = devm_iio_channel_get(dev, "dpot");
++	if (IS_ERR(dac->dpot)) {
++		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get dpot input channel\n");
++		return PTR_ERR(dac->dpot);
++	}
++
++	ret = iio_get_channel_type(dac->dpot, &type);
++	if (ret < 0)
++		return ret;
++
++	if (type != IIO_RESISTANCE) {
++		dev_err(dev, "dpot is of the wrong type\n");
++		return -EINVAL;
++	}
++
++	ret = dpot_dac_channel_max_ohms(indio_dev);
++	if (ret < 0)
++		return ret;
++	dac->max_ohms = ret;
++
++	ret = regulator_enable(dac->vref);
++	if (ret) {
++		dev_err(dev, "failed to enable the vref regulator\n");
++		return ret;
++	}
++
++	ret = iio_device_register(indio_dev);
++	if (ret) {
++		dev_err(dev, "failed to register iio device\n");
++		goto disable_reg;
++	}
++
++	return 0;
++
++disable_reg:
++	regulator_disable(dac->vref);
++	return ret;
++}
++
++static int dpot_dac_remove(struct platform_device *pdev)
++{
++	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++	struct dpot_dac *dac = iio_priv(indio_dev);
++
++	iio_device_unregister(indio_dev);
++	regulator_disable(dac->vref);
++
++	return 0;
++}
++
++static const struct of_device_id dpot_dac_match[] = {
++	{ .compatible = "dpot-dac" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dpot_dac_match);
++
++static struct platform_driver dpot_dac_driver = {
++	.probe = dpot_dac_probe,
++	.remove = dpot_dac_remove,
++	.driver = {
++		.name = "iio-dpot-dac",
++		.of_match_table = dpot_dac_match,
++	},
++};
++module_platform_driver(dpot_dac_driver);
++
++MODULE_DESCRIPTION("DAC emulation driver using a digital potentiometer");
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
