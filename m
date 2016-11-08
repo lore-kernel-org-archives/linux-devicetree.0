@@ -1,64 +1,69 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: dts: add basic support for Rockchip RK1108 SOC
-Date: Tue, 08 Nov 2016 14:20:17 +0100
-Message-ID: <2018991.LuBz7Cl7BQ@diego>
-References: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com> <1788707.rfxhNfegGu@phil> <0516ad0b-bfbe-ec80-fdb6-e118dab3e758@rock-chips.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: tegra: Add driver to configure voltage and
+ power of io pads
+Date: Tue, 8 Nov 2016 14:29:01 +0100
+Message-ID: <CACRpkdYO9ZCTGVdnyhVZ4DNLsHq+d-1_xuws2be8yab+MsyyVw@mail.gmail.com>
+References: <1478077742-25437-1-git-send-email-ldewangan@nvidia.com>
+ <1478077742-25437-3-git-send-email-ldewangan@nvidia.com> <CACRpkdb4DQLzQWHxuZi=TDaeigNzVJV8TN1jsQfOHKF7yPLrUg@mail.gmail.com>
+ <58201401.8050805@nvidia.com> <CACRpkdZo+527t4O9gX0U2VOaAYj7fnt7X0wynByBdYN5=2mDsA@mail.gmail.com>
+ <5821A6D3.7010000@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0516ad0b-bfbe-ec80-fdb6-e118dab3e758-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <5821A6D3.7010000-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: elaine.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 8. November 2016, 20:31:55 schrieb Andy Yan:
-> Hi Heiko:
-> 
-> On 2016年11月04日 16:00, Heiko Stuebner wrote:
-> > Am Donnerstag, 3. November 2016, 20:40:48 CET schrieb Andy Yan:
+On Tue, Nov 8, 2016 at 11:20 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tuesday 08 November 2016 03:45 PM, Linus Walleij wrote:
 
-> >> +	gic: interrupt-controller@32010000 {
-> >> +		compatible = "arm,cortex-a15-gic";
-> > 
-> > compatible = "arm,gic-400"; ?
-> > 
-> >> +		interrupt-controller;
-> >> +		#interrupt-cells = <3>;
-> >> +		#address-cells = <0>;
-> >> +
-> >> +		reg = <0x32011000 0x1000>,
-> >> +		      <0x32012000 0x1000>;
-> > 
-> > please provide all 4 register areas and also the interrupt (
-> 
->      I only found 2 register areas in our rockchip linux 3.10 source
-> code. And haven't found the interrupt. From the arm,gic bindings, the
-> interrupt property is optional. So am not sure if we
-> really need it here.
+>> If you can *actually* change the volatage, it needs to be modeled
+>> as a (fixed voltage?) regulator, not as a custom property for the pin
+>> control attributes. I guess you definiately need the regulator framework
+>> to accumulate and infer the different consumer requirements anyway
+>> in that case.
+>
+> The PMIC voltage output is changed via regulator calls.
+> Here, we need to have two configruations for given voltage level of
+> interface:
+> * One at IO voltage from PMIC via regulator call to change votlage of IO
+> rail.
+> * Second, configure the IO pad register to tell the IO voltage level so that
+> it can configured internally for that level.
 
-Devicetree is a hardware description, so it's not a factor if we "need" it but 
-only if it is present in the hardware. And we really want this information to 
-be complete, as these additional areas are necessary if someone wants to use 
-the virtualization extensions the cortext-A7 does contain.
+I understand! (I think.)
 
-The gic is a very standard component and the gic400 used here should definitly 
-have those two additional areas as well as the interrupt.
+But then the two things (A) changing the regulator voltage and (B) changing
+the pin setting need to happen at the same time do they
+not?
 
-I think the memory areas are pretty standard and should be for the rk1108:
-reg = <0x32011000 0x1000>,
-      <0x32012000 0x1000>,
-      <0x32014000 0x2000>,
-      <0x32016000 0x2000>;
+Now you're just hardcoding something into these device tree properties
+and hoping that the regulators will somehow be set up in accordance to
+what you set up for the pads in the device tree, correct?
 
-The TRM talks about 128 SPI and 3 PPI interrupts but the irq-list does not 
-contain them, so this seems to be an error in the TRM, as the gic interrupt 
-should be one of those PPI interrupts.
+To me it seems like the pins/pads should all have an <&phandle> to
+the regulator controlling its voltage output, in the device tree.
 
+In the Linux kernel, the driver has to regulator_[bulk_]get() this for
+each pin, check the voltage with regulator_get_voltage() and set up
+this according to the supplied voltage.
 
-Heiko
+The driver then ideally should subscribe to regulator voltage notifier
+events to change the setting if the voltage changes. I guess. But
+atleast the first step seems inevitable: get the voltage from a regulator.
 
+Else there is no dependency between the regulator and its consumer.
+
+So what your pins need is a regulator phandle, not a magic value to
+be poked into a register, hoping things will match up.
+
+I understand that this is a simple quick-and-dirty solution but it is
+not the right solution.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
