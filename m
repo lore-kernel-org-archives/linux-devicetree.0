@@ -1,48 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] pinctrl: samsung: Add GPF support for Exynos5433
-Date: Tue, 8 Nov 2016 10:36:51 +0100
-Message-ID: <CACRpkdabGcpDzvQq1rFP7uO8+mLuPDUHQgzh_ooUyy+0nTAvBw@mail.gmail.com>
-References: <1478155149-28527-1-git-send-email-cw00.choi@samsung.com>
- <1478155149-28527-3-git-send-email-cw00.choi@samsung.com> <20161103192002.GB12945@kozik-lap>
+From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Subject: [RESEND][PATCH 5/6] dt-bindings: gpio: Update gpio bindings for LS2088A
+Date: Tue, 8 Nov 2016 15:04:23 +0530
+Message-ID: <1478597664-14799-6-git-send-email-abhimanyu.saini@nxp.com>
+References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161103192002.GB12945@kozik-lap>
+In-Reply-To: <1478597664-14799-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang@s
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 3, 2016 at 8:20 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Nov 03, 2016 at 03:39:06PM +0900, Chanwoo Choi wrote:
->> This patch add the support of GPF[1-5] pin of Exynos5433 SoC. The GPFx need
->> to support the multiple memory map because the registers of GPFx are located
->> in the different domain.
->>
->> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  drivers/pinctrl/samsung/pinctrl-exynos.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->
-> I think that, instead of in previous patch, the
-> "samsung,exynos5433-pinctrl" compatible should be documented here along
-> with information that it requires two addresses for mappings.
+Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+---
+ Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-True but too small detail to respin the patches about,
-and I'm not perfectionist, so patch applied anyways.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+index 4b6cc63..9b1be49 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+@@ -4,7 +4,7 @@ Required properties:
+ - compatible : Should be "fsl,<soc>-gpio"
+   The following <soc>s are known to be supported:
+ 	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
+-	ls1021a, ls1043a, ls2080a.
++	ls1021a, ls1043a, ls2080a, ls2088a.
+ - reg : Address and length of the register set for the device
+ - interrupts : Should be the port interrupt shared by all 32 pins.
+ - #gpio-cells : Should be two.  The first cell is the pin number and
+-- 
+1.9.1
 
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
