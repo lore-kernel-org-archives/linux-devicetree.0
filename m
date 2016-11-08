@@ -1,63 +1,40 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 03/30] usb: dwc2: gadget: Add descriptor DMA binding
-Date: Tue, 8 Nov 2016 14:32:16 -0800
-Message-ID: <1a86e2e9-9719-40f6-978f-073783bcd920@synopsys.com>
-References: <cover.1478558343.git.johnyoun@synopsys.com>
- <e0d302ebcbad32242da84894c173b743b9199f71.1478558343.git.johnyoun@synopsys.com>
- <87r36mib8z.fsf@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Tue, 08 Nov 2016 23:35:27 +0100
+Message-ID: <2479288.4UmF9SBrq1@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <8adfe182-4939-479d-6013-25ec40021b20@huawei.com> <20161108164948.GG20591@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87r36mib8z.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161108164948.GG20591@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Will Deacon <will.deacon@arm.com>, John Garry <john.garry@huawei.com>, mark.rutland@arm.com, catalin.marinas@arm.com, gabriele.paoloni@huawei.com, linux-pci@vger.kernel.org, liviu.dudau@arm.com, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, minyard@acm.org, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, benh@kernel.crashing.org, devicetree@vger.kernel.org, zhichang.yuan02@gmail.com, olof@lixom.net, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, linux-kernel@vger.kernel.org, "zhichang.yuan" <yuanzhichang@hisilicon.com>, zourongrong@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/8/2016 1:15 AM, Felipe Balbi wrote:
-> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
-> 
->> From: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>
->> Add the devicetree binding to enable descriptor DMA and read it in to
->> the corresponding parameter during probe.
->>
->> Signed-off-by: Vahram Aharonyan <vahrama-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
->>  drivers/usb/dwc2/core.h                        |  4 ++++
->>  drivers/usb/dwc2/gadget.c                      | 11 +++++++++++
->>  drivers/usb/dwc2/params.c                      |  4 ++++
->>  4 files changed, 20 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 389a461..1db9c37 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -27,6 +27,7 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
->>    Refer to usb/generic.txt
->>  - snps,host-dma-disable: disable host DMA mode.
->>  - snps,gadget-dma-enable: enable gadget DMA mode.
->> +- snps,gadget-dma-desc-enable: enable gadget DMA descriptor mode.
-> 
-> seems to be discoverable as well:
-> 
-> #define GHWCFG4_DESC_DMA_DYN			(1 << 31)
-> #define GHWCFG4_DESC_DMA			(1 << 30)
-> 
-> care to comment?
-> 
+On Tuesday, November 8, 2016 4:49:49 PM CET Will Deacon wrote:
+> On Tue, Nov 08, 2016 at 04:33:44PM +0000, John Garry wrote:
+> > On 08/11/2016 16:12, Will Deacon wrote:
+> > >On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
 
-This is just following patch 1/30 for consistency.
+> > >Is there no way to make this slightly more generic, so that it can be
+> > >re-used elsewhere? For example, if struct extio_ops was common, then
+> > >you could have the singleton (which maybe should be an interval tree?),
+> > >type definition, setter function and the BUILD_EXTIO invocations
+> > >somewhere generic, rather than squirelled away in the arch backend.
+> > >
+> > The concern would be that some architecture which uses generic higher-level
+> > ISA accessor ops, but have IO space, could be affected.
+> 
+> You're already adding a Kconfig symbol for this stuff, so you can keep
+> that if you don't want it on other architectures. I'm just arguing that
+> plumbing drivers directly into arch code via arm64_set_extops is not
+> something I'm particularly fond of, especially when it looks like it
+> could be avoided with a small amount of effort.
 
-We can make it discoverable and set automatically as well.
+Agreed, I initially suggested putting this into arch/arm64/, but there isn't
+really a reason why it couldn't just live in lib/ with the header file
+bits moved to include/asm-generic/io.h which we already use.
 
-John
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
