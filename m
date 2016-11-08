@@ -1,51 +1,34 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI
- protocol
-Date: Tue, 8 Nov 2016 15:11:07 +0000
-Message-ID: <28decdc3-6b86-924f-d3c1-9873a8cfce77@arm.com>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
- <20161108145118.GR1041@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108145118.GR1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Romain Perier <romain.perier@free-electrons.com>
+Subject: [PATCH 3/3] dt-bindings: i2c: pxa: Update the documentation for the Armada 3700
+Date: Tue,  8 Nov 2016 16:15:06 +0100
+Message-ID: <20161108151506.1131-4-romain.perier@free-electrons.com>
+References: <20161108151506.1131-1-romain.perier@free-electrons.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20161108151506.1131-1-romain.perier@free-electrons.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
+This commit documents the compatible string to have the compatibility for
+the I2C unit found in the Armada 3700.
 
+Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 08/11/16 14:51, Russell King - ARM Linux wrote:
-> On Wed, Nov 02, 2016 at 10:52:03PM -0600, Sudeep Holla wrote:
->> This is minor rework of the series[1] from Neil Armstrong's to support
->> legacy SCPI protocol to make DT bindings more generic and move out all
->> the platform specific bindings out of the generic binding document.
->
-> Is this what would be in my HBI0282B Juno?
->
-
-No, it's one on the AmLogic Meson GXBB platform. Juno never supported
-that except that old firmware use it internally. By that I mean some
-version of trusted firmware used legacy SCPI but they are generally
-bundled together in fip, so you should not see any issue with upgrade.
-
-> (Note: I only have the original firmware on the board, as the Linaro
-> firmware drops are completely broken for it.)
->
-
-I am currently trying to run Linaro 16.10 release, I don't see any issue
-except network boot from UEFI which is known and reported.
-
-I will go through your logs in detail and try to replicate your issue.
-I assume you have tried replacing the entry contents of the uSD with the
-release. I will start with that now.
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+index 12b78ac..b1b995c 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+@@ -7,6 +7,7 @@ Required properties :
+    compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
+    For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
+    as shown in the example below.
++   For the Armada 3700, the compatible should be "marvell,armada-3700".
+ 
+ Recommended properties :
+ 
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
