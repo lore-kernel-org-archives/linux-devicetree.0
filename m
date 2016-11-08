@@ -1,40 +1,74 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: [PATCH 0/3] [PART 4/4] USB: ohci-da8xx: Add DT support
-Date: Tue,  8 Nov 2016 19:58:28 +0100
-Message-ID: <20161108185831.17683-1-ahaslam@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, nsekhar@ti.com, khilman@kernel.org, david@lechnology.com, robh+dt@kernel.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>
+From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] USB: ohci: da8xx: Add devicetree bindings
+Date: Tue,  8 Nov 2016 19:58:29 +0100
+Message-ID: <20161108185831.17683-2-ahaslam@baylibre.com>
+References: <20161108185831.17683-1-ahaslam@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161108185831.17683-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series defines the bindings and adds device tree support
-for the davinci OHCI driver.
+This patch documents the device tree bindings required for
+the ohci controller found in TI da8xx family of SoC's
 
-DEPENDENCIES:
-1. [PATCH 0/3] fix ohci phy name
-https://lkml.org/lkml/2016/11/2/208
-2. [PATCH/RFC v2 0/3] regulator: handling of error conditions for usb drivers
-https://lkml.org/lkml/2016/11/3/188
-3. [PATCH v4 0/3] [PART 1/4] USB: ohci-da8xx: Allow a regulator for VBUS and over current
-4. [PATCH 0/3] [PART 2/4] ARM: davinci: OHCI: Use a regulator instead of callbacks
-5. [PATCH 0/2] [PART 3/4] USB: ohci-da8xx: Remove platform callbacks
-
-A branch with all the dependencies can be found here:
-https://github.com/axelhaslamx/linux-axel/commits/ohci-da8xx-dt-v4
-
-
-Axel Haslam (3):
-  USB: ohci: da8xx: Add devicetree bindings
-  USB: ohci: da8xx: Allow probing from DT
-  ARM: dts: da850: add usb device node
-
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
  .../devicetree/bindings/usb/ohci-da8xx.txt         | 39 ++++++++++++++++++++++
- arch/arm/boot/dts/da850-lcdk.dts                   |  8 +++++
- arch/arm/boot/dts/da850.dtsi                       |  8 +++++
- drivers/usb/host/ohci-da8xx.c                      |  8 +++++
- 4 files changed, 63 insertions(+)
+ 1 file changed, 39 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
 
+diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+new file mode 100644
+index 0000000..66672e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+@@ -0,0 +1,39 @@
++DA8XX USB OHCI controller
++
++Required properties:
++
++ - compatible: Should be "ti,da830-ohci"
++ - reg:        Should contain one register range i.e. start and length
++ - interrupts: Description of the interrupt line
++ - phys:       Phandle for the PHY device
++ - phy-names:  Should be "usb-phy"
++
++Optional properties:
++ - vbus-supply: Regulator that controls vbus power
++
++Example:
++
++reg_usb_ohci: regulator@0 {
++        compatible = "regulator-fixed";
++        gpio = <&gpio 109 0>;
++        over-current-gpios = <&gpio 36 0>;
++        regulator-boot-on;
++        enable-active-high;
++        regulator-name = "usb_ohci_vbus";
++        regulator-min-microvolt = <5000000>;
++        regulator-max-microvolt = <5000000>;
++};
++
++usb_phy: usb-phy {
++        compatible = "ti,da830-usb-phy";
++        #phy-cells = <1>;
++};
++
++ohci: usb@0225000 {
++        compatible = "ti,da830-ohci";
++        reg = <0x225000 0x1000>;
++        interrupts = <59>;
++        phys = <&usb_phy 1>;
++        phy-names = "usb-phy";
++        vbus-supply = <&reg_usb_ohci>;
++};
 -- 
 2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
