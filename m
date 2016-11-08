@@ -1,92 +1,191 @@
-From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v9 7/8] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-Date: Tue, 8 Nov 2016 10:51:11 +0800
-Message-ID: <1478573472-29516-8-git-send-email-peter.chen@nxp.com>
-References: <1478573472-29516-1-git-send-email-peter.chen@nxp.com>
+From: Youlin Pei <youlin.pei@mediatek.com>
+Subject: Re: [PATCH v2 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq
+ implement
+Date: Tue, 8 Nov 2016 10:57:13 +0800
+Message-ID: <1478573833.32099.11.camel@mtksdaap41>
+References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
+         <1478001122-8664-3-git-send-email-youlin.pei@mediatek.com>
+         <86twbrj586.fsf@arm.com> <1478234577.7975.29.camel@mtksdaap41>
+         <867f8ilwcl.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478573472-29516-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <867f8ilwcl.fsf@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, hongkun.cao@mediatek.com, yong.wu@mediatek.com, erin.lo@mediatek.com, chieh-jay.liu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The current dts describes USB HUB's property at USB controller's
-entry, it is improper. The USB HUB should be the child node
-under USB controller, and power sequence properties are under
-it. Besides, using gpio pinctrl setting for USB2415's reset pin.
+On Fri, 2016-11-04 at 22:21 +0000, Marc Zyngier wrote:
+> On Fri, Nov 04 2016 at 04:42:57 AM, Youlin Pei <youlin.pei@mediatek.com> wrote:
+> > On Tue, 2016-11-01 at 20:49 +0000, Marc Zyngier wrote:
+> >> On Tue, Nov 01 2016 at 11:52:01 AM, Youlin Pei <youlin.pei@mediatek.com> wrote:
+> >> > In Mediatek SOCs, the CIRQ is a low power interrupt controller
+> >> > designed to works outside MCUSYS which comprises with Cortex-Ax
+> >> > cores,CCI and GIC.
+> >> >
+> >> > The CIRQ controller is integrated in between MCUSYS( include
+> >> > Cortex-Ax, CCI and GIC ) and interrupt sources as the second
+> >> > level interrupt controller. The external interrupts which outside
+> >> > MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
+> >> > all edge trigger interupts. When an edge interrupt is triggered,
+> >> > CIRQ can record the status and generate a pulse signal to GIC when
+> >> > flush command executed.
+> >> >
+> >> > When system enters sleep mode, MCUSYS will be turned off to improve
+> >> > power consumption, also GIC is power down. The edge trigger interrupts
+> >> > will be lost in this scenario without CIRQ.
+> >> >
+> >> > This commit provides the CIRQ irqchip implement.
+> >> >
+> >> > Signed-off-by: Youlin Pei <youlin.pei@mediatek.com>
+> >> > ---
+> >> >  drivers/irqchip/Makefile       |    2 +-
+> >> >  drivers/irqchip/irq-mtk-cirq.c |  262 ++++++++++++++++++++++++++++++++++++++++
+> >> >  2 files changed, 263 insertions(+), 1 deletion(-)
+> >> >  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
+> >> >
+> >> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> >> > index e4dbfc8..8f33580 100644
+> >> > --- a/drivers/irqchip/Makefile
+> >> > +++ b/drivers/irqchip/Makefile
+> >> > @@ -60,7 +60,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
+> >> >  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
+> >> >  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
+> >> >  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
+> >> > -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
+> >> > +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
+> >> >  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
+> >> >  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
+> >> >  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
+> >> > diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
+> >> > new file mode 100644
+> >> > index 0000000..fc43ef3
+> >> > --- /dev/null
+> >> > +++ b/drivers/irqchip/irq-mtk-cirq.c
+> >> > @@ -0,0 +1,262 @@
+> >> > +/*
+> >> > + * Copyright (c) 2016 MediaTek Inc.
+> >> > + * Author: Youlin.Pei <youlin.pei@mediatek.com>
+> >> > + *
+> >> > + * This program is free software; you can redistribute it and/or modify
+> >> > + * it under the terms of the GNU General Public License version 2 as
+> >> > + * published by the Free Software Foundation.
+> >> > + *
+> >> > + * This program is distributed in the hope that it will be useful,
+> >> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >> > + * GNU General Public License for more details.
+> >> > + */
+> >> > +
+> >> > +#include <linux/irq.h>
+> >> > +#include <linux/irqchip.h>
+> >> > +#include <linux/irqdomain.h>
+> >> > +#include <linux/of.h>
+> >> > +#include <linux/of_irq.h>
+> >> > +#include <linux/of_address.h>
+> >> > +#include <linux/io.h>
+> >> > +#include <linux/slab.h>
+> >> > +#include <linux/syscore_ops.h>
+> >> > +
+> >> > +#define CIRQ_ACK	0x40
+> >> > +#define CIRQ_MASK_SET	0xc0
+> >> > +#define CIRQ_MASK_CLR	0x100
+> >> > +#define CIRQ_SENS_SET	0x180
+> >> > +#define CIRQ_SENS_CLR	0x1c0
+> >> > +#define CIRQ_POL_SET	0x240
+> >> > +#define CIRQ_POL_CLR	0x280
+> >> > +#define CIRQ_CONTROL	0x300
+> >> > +
+> >> > +#define CIRQ_EN	0x1
+> >> > +#define CIRQ_EDGE	0x2
+> >> > +#define CIRQ_FLUSH	0x4
+> >> > +
+> >> > +#define CIRQ_IRQ_NUM    0x200
+> >> > +
+> >> > +struct mtk_cirq_chip_data {
+> >> > +	void __iomem *base;
+> >> > +	unsigned int ext_irq_start;
+> >> > +};
+> >> > +
+> >> > +static struct mtk_cirq_chip_data *cirq_data;
+> >> 
+> >> Are you guaranteed that you'll only ever have a single CIRQ in any
+> >> system?
+> >
+> > In Mediatek's SOC, only hace a single CIRQ.
+> >
+> >> 
+> >> > +
+> >> > +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
+> >> > +{
+> >> > +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
+> >> > +	unsigned int cirq_num = data->hwirq;
+> >> > +	u32 mask = 1 << (cirq_num % 32);
+> >> > +
+> >> > +	writel(mask, chip_data->base + offset + (cirq_num / 32) * 4);
+> >> 
+> >> Why can't you use the relaxed accessors?
+> >
+> > It seems that i use wrong function, i will change the writel to
+> > writel_relaxed in next ve
+> >
+> >> 
+> >> > +}
+> >> > +
+> >> > +static void mtk_cirq_mask(struct irq_data *data)
+> >> > +{
+> >> > +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
+> >> > +	irq_chip_mask_parent(data);
+> >> > +}
+> >> > +
+> >> > +static void mtk_cirq_unmask(struct irq_data *data)
+> >> > +{
+> >> > +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
+> >> > +	irq_chip_unmask_parent(data);
+> >> > +}
+> >> > +
+> >> > +static void mtk_cirq_eoi(struct irq_data *data)
+> >> > +{
+> >> > +	mtk_cirq_write_mask(data, CIRQ_ACK);
+> >> 
+> >> EOI and ACK have very different semantics. What is this write actually
+> >> doing? Also, you're now doing an additional MMIO write on each interrupt
+> >> EOI, doubling its cost. Do you really need to do actually signal the HW
+> >> that we've EOIed an interrupt? I would have hoped that you'd be able to
+> >> put it in "bypass" mode as long as you're not suspending...
+> >> 
+> >
+> > When external interrupt happened, CIRQ status register record the status
+> > even CIRQ is not enabled. when execute the flush command, CIRQ will
+> > resend the signals according to the status. So if don't clear the
+> > status, CIRQ will resend the wrong signals. the ACK write operation will
+> > clear the status.
+> 
+> But at this time, we haven't suspended yet, and there is nothing to
+> replay. Also, you only enable the edge capture when suspending. So what
+> are you ACKing here? Can't you simply clear everything right when
+> suspending and not do it at all on the fast path?
 
-Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Tested-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+I had planned to ACK the status in cirq suspend callback, but
+encountered a problem.
+following is a piece of code from
+http://lxr.free-electrons.com/source/kernel/power/suspend.c#L361
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index c96c91d..a173de2 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -9,6 +9,8 @@
-  *
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	aliases {
- 		backlight = &backlight;
-@@ -58,17 +60,6 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		reg_usb_h1_vbus: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			enable-active-high;
--			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
--			gpio = <&gpio7 12 0>;
--		};
--
- 		reg_panel: regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
-@@ -188,7 +179,7 @@
- 
- 		pinctrl_usbh: usbhgrp {
- 			fsl,pins = <
--				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
-+				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x1b0b0
- 				MX6QDL_PAD_NANDF_CS2__CCM_CLKO2 0x130b0
- 			>;
- 		};
-@@ -259,9 +250,16 @@
- &usbh1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbh>;
--	vbus-supply = <&reg_usb_h1_vbus>;
--	clocks = <&clks IMX6QDL_CLK_CKO>;
- 	status = "okay";
-+
-+	usb2415: hub@1 {
-+		compatible = "usb424,2514";
-+		reg = <1>;
-+
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+		reset-duration-us = <3000>;
-+	};
- };
- 
- &usdhc3 {
--- 
-2.7.4
+arch_suspend_disable_irqs(); ---step1
+BUG_ON(!irqs_disabled());
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+error = syscore_suspend();
+           |
+           ---cirq suspend(); ---step2
+
+if ack the status in cirq suspend, the interrupts will be lost which
+happened during step1 to step2.
+
+So would you mind give me some suggestions about this?
+Thanks a lot!
+> 
+> Thanks,
+> 
+> 	M.
