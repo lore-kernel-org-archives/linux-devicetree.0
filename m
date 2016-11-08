@@ -1,92 +1,91 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH 6/9 v2] arm64: dts: m3ulcb: enable SDHI0
-Date: Tue,  8 Nov 2016 17:14:21 +0300
-Message-ID: <1478614461-9918-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 9/9 v2] arm64: dts: m3ulcb: enable SDHI2
+Date: Tue,  8 Nov 2016 17:14:42 +0300
+Message-ID: <1478614482-9959-1-git-send-email-vladimir.barinov@cogentembedded.com>
 References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478196375-1131-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This supports SDHI0 on M3ULCB board SD card slot
+This supports SDHI2 for M3ULCB onboard eMMC
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Reviewed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Reviewed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 ---
 Changes in version 2:
-- renamed sdhi0_pins_3v3 to sdhi0_pins
-- renamed sd0_3v3 to sd0
-- renamed sdhi0_pins_1v8 to sdhi0_pins_uhs
-- renamed sd0_1v8 to sd0_uhs
+- renamed sdhi2_pins_3v3 to sdhi2_pins
+- renamed sd2_3v3 to sd2
+- renamed sdhi2_pins_1v8 to sdhi2_pins_uhs
+- renamed sd2_1v8 to sd2_uhs
 
- arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 48 ++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts | 43 ++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-index 3329f78..5be0cf6 100644
+index a244edb..e46687e 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts
-@@ -44,6 +44,30 @@
- 			gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
+@@ -55,6 +55,24 @@
  		};
  	};
-+
-+	vcc_sdhi0: regulator-vcc-sdhi0 {
+ 
++	reg_1p8v: regulator0 {
 +		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
 +
-+		regulator-name = "SDHI0 Vcc";
++	reg_3p3v: regulator1 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
 +		regulator-min-microvolt = <3300000>;
 +		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
 +
-+	vccq_sdhi0: regulator-vccq-sdhi0 {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "SDHI0 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+		states = <3300000 1
-+			  1800000 0>;
-+	};
- };
+ 	vcc_sdhi0: regulator-vcc-sdhi0 {
+ 		compatible = "regulator-fixed";
  
- &extal_clk {
-@@ -68,8 +92,33 @@
- 		groups = "scif_clk_a";
- 		function = "scif_clk";
+@@ -113,6 +131,18 @@
+ 		function = "sdhi0";
+ 		power-source = <1800>;
  	};
 +
-+	sdhi0_pins: sd0 {
-+		groups = "sdhi0_data4", "sdhi0_ctrl";
-+		function = "sdhi0";
++	sdhi2_pins: sd2 {
++		groups = "sdhi2_data8", "sdhi2_ctrl";
++		function = "sdhi2";
 +		power-source = <3300>;
 +	};
 +
-+	sdhi0_pins_uhs: sd0_uhs {
-+		groups = "sdhi0_data4", "sdhi0_ctrl";
-+		function = "sdhi0";
++	sdhi2_pins_uhs: sd2_uhs {
++		groups = "sdhi2_data8", "sdhi2_ctrl";
++		function = "sdhi2";
 +		power-source = <1800>;
 +	};
  };
  
-+&sdhi0 {
-+	pinctrl-0 = <&sdhi0_pins>;
-+	pinctrl-1 = <&sdhi0_pins_uhs>;
+ &sdhi0 {
+@@ -128,6 +158,19 @@
+ 	status = "okay";
+ };
+ 
++&sdhi2 {
++	/* used for on-board 8bit eMMC */
++	pinctrl-0 = <&sdhi2_pins>;
++	pinctrl-1 = <&sdhi2_pins_uhs>;
 +	pinctrl-names = "default", "state_uhs";
 +
-+	vmmc-supply = <&vcc_sdhi0>;
-+	vqmmc-supply = <&vccq_sdhi0>;
-+	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	sd-uhs-sdr50;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	bus-width = <8>;
++	non-removable;
 +	status = "okay";
 +};
 +
@@ -95,3 +94,8 @@ index 3329f78..5be0cf6 100644
  	pinctrl-names = "default";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
