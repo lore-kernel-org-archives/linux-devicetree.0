@@ -1,50 +1,64 @@
-From: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Subject: RE: [PATCH V2 2/4] mfd: pv88080: MFD core support
-Date: Tue, 8 Nov 2016 06:18:28 +0000
-Message-ID: <8FA4409277D6E54680546B8811D85410029DFAA33C@NB-EX-MBX01.diasemi.com>
+From: Eric Hyeung Dong Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V2 1/4] Documentation: pv88080: Move binding document
+Date: Tue, 8 Nov 2016 06:21:11 +0000
+Message-ID: <8FA4409277D6E54680546B8811D85410029DFAA347@NB-EX-MBX01.diasemi.com>
 References: <cover.1477530195.git.eric.jeong@diasemi.com>
- <6dcaf788e4ebffd5c753e5fc5ae67668f74f7c32.1477530195.git.eric.jeong@diasemi.com>
- <CACRpkdZMhtiyk1iyBE-j7rAS6yhSCBsa57-VMnyL=tsUi9wQZg@mail.gmail.com>
+ <4e0bd042e35f13c06511ca9b3f790b5ceaf34451.1477530195.git.eric.jeong@diasemi.com>
+ <20161031044403.a34ylc6tpbp2pg7h@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZMhtiyk1iyBE-j7rAS6yhSCBsa57-VMnyL=tsUi9wQZg@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161031044403.a34ylc6tpbp2pg7h@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-GPIO <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBPY3RvYmVyIDI4LCAyMDE2IDk6MTggUE0sIExpbnVzIFdhbGxlaWogd3JvdGU6
-DQoNCj4gT24gVGh1LCBPY3QgMjcsIDIwMTYgYXQgMzowMyBBTSwgRXJpYyBKZW9uZw0KPiA8ZXJp
-Yy5qZW9uZy5vcGVuc291cmNlQGRpYXNlbWkuY29tPiB3cm90ZToNCj4gDQo+ID4gKysrIGIvZHJp
-dmVycy9tZmQvcHY4ODA4MC1pMmMuYw0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgcHY4ODA4MF9vZl9tYXRjaF90YWJsZVtdID0gew0KPiA+ICsgICAgICAgeyAu
-Y29tcGF0aWJsZSA9ICJwdnMscHY4ODA4MCIsICAgIC5kYXRhID0gKHZvaWQgKilUWVBFX1BWODgw
-ODBfQUEgfSwNCj4gPiArICAgICAgIHsgLmNvbXBhdGlibGUgPSAicHZzLHB2ODgwODAtYWEiLCAu
-ZGF0YSA9ICh2b2lkICopVFlQRV9QVjg4MDgwX0FBIH0sDQo+ID4gKyAgICAgICB7IC5jb21wYXRp
-YmxlID0gInB2cyxwdjg4MDgwLWJhIiwgLmRhdGEgPSAodm9pZCAqKVRZUEVfUFY4ODA4MF9CQSB9
-LA0KPiA+ICsgICAgICAgeyB9LA0KPiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9m
-LCBwdjg4MDgwX29mX21hdGNoX3RhYmxlKTsNCj4gDQo+IEFjdHVhbGx5IHlvdSBhcmUgZG9pbmcg
-c29tZXRoaW5nIHdlaXJkLg0KPiANCj4gVGhlIG9ubHkgdGhpbmcgeW91IHB1dCBpbiB5b3VyIGRl
-dmljZSB0cmVlIGlzIHRoaXMgSSBndWVzcy4NCj4gDQo+IFRoYXQgbWVhbnMgdGhhdCB0aGUgR1BJ
-TyBjaGlwIGRvZXMgKm5vdCogaGF2ZSBhIGRldmljZSB0cmVlIGVudHJ5LCBzbyB5b3UNCj4gY2Fu
-bm90IHJlZmVyZW5jZSB0aGUgR1BJT3MgdGhlcmUgd2l0aCAmcGhhbmRsZSBub3RhdGlvbi4NCj4g
-DQo+IFBsZWFzZSBsb29rIGFyb3VuZCBhIGJpdCB0byBzZWUgaG93IG90aGVyIE9GLU1GRHMgZG8g
-aXQ6IHRoZXkgcmVnaXN0ZXIgYW5kDQo+IHBvcHVsYXRlIGJ5IHN0cnVjdCBtZmRfY2VsbCB1c2lu
-ZyB0aGUgLm9mX2NvbXBhdGlibGUgbWVtYmVyIHNvIHRoYXQNCj4gc3ViZGV2aWNlcyBnZXQgdGhl
-aXIgb3duIERUIG5vZGVzLCB3aGljaCBpcyBuZWNlc3NhcnkgZm9yIG5vZGVzIHByb3ZpZGluZw0K
-PiByZXNvdXJjZXMgc3VjaCBhcyBHUElPcywgcmVndWxhdG9ycyBhbmQgY2xvY2tzLCBsZXN0IHlv
-dSBjYW5ub3QgcmVmZXJlbmNlIHRoZW0NCj4gaW4geW91ciBkZXZpY2UgdHJlZSENCj4gDQo+IFRo
-ZXJlZm9yZSBJIHRoaW5rIGFsbCB5b3VyIHN1YmRldmljZXMgc2hvdWxkIGluc3RhbnRpYXRlIGZy
-b20gZGV2aWNlIHRyZWUgd2l0aA0KPiBjb21wYXRpYmxlIG1hdGNoaW5nIGFzIHdlbGwsIG5vdCBh
-cyBwbGF0Zm9ybSBkZXZpY2VzLg0KPiANCj4gPiArc3RydWN0IHB2ODgwODBfcGRhdGEgew0KPiA+
-ICsgICAgICAgaW50ICgqaW5pdCkoc3RydWN0IHB2ODgwODAgKnB2ODgwODApOw0KPiA+ICsgICAg
-ICAgaW50IGlycV9iYXNlOw0KPiA+ICsgICAgICAgaW50IGdwaW9fYmFzZTsNCj4gDQo+IE5BSy4N
-Cj4gDQo+IEdldCBpcnEgZnJvbSB0aGUgZGV2aWNlIHRyZWUsIGFzc2lnbiBncGlvIGJhc2UgZHlu
-YW1pY2FsbHkuDQo+IA0KPiA+ICsgICAgICAgc3RydWN0IHJlZ3VsYXRvcl9pbml0X2RhdGENCj4g
-PiArICpyZWd1bGF0b3JzW1BWODgwODBfTUFYX1JFR1VMQVRPUlNdOw0KPiANCj4gSSBzdXNwZWN0
-IGFsc28gdGhpcyBzaG91bGQgY29tZSBmcm9tIHRoZSBkZXZpY2UgdHJlZS4NCj4gDQo+IFlvdXJz
-LA0KPiBMaW51cyBXYWxsZWlqDQoNClRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnRzLg0KSSB3aWxs
-IHNlbmQgcGF0Y2ggYWdhaW4uDQoNClJlZ2FyZHMNCkVyaWMNCg==
+On Monday, October 31, 2016 1:44 PM, Rob Herring wrote:
+
+> On Thu, Oct 27, 2016 at 10:03:14AM +0900, Eric Jeong wrote:
+> >
+> > From: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> >
+> > The change is to move pv88080 binding document from the regulator
+> > directory to mfd binding directory for PV88080 PMIC MFD support.
+> >
+> >
+> > Signed-off-by: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> >
+> > ---
+> > This patch applies against linux-next and next-20161026
+> >
+> > Hi,
+> >
+> > Change since PATCH V1
+> >  - Patch separated from PATCH V1
+> >
+> > Regards,
+> > Eric Jeong, Dialog Semiconductor Ltd.
+> >
+> >
+> >  Documentation/devicetree/bindings/mfd/pv88080.txt  |   63
+> ++++++++++++++++++++
+> >  .../devicetree/bindings/regulator/pv88080.txt      |   62 -------------------
+> >  2 files changed, 63 insertions(+), 62 deletions(-)  create mode
+> > 100644 Documentation/devicetree/bindings/mfd/pv88080.txt
+> >  delete mode 100644
+> > Documentation/devicetree/bindings/regulator/pv88080.txt
+> 
+> Please resend using git-format-patch -M option.
+> 
+> Rob
+
+Thank you for the comments.
+Maybe the document will be updated additionally.
+I will send patch again.
+
+Regards
+Eric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
