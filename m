@@ -1,100 +1,53 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to
- 'aspeed,ast2400-ibt-bmc'
-Date: Tue, 8 Nov 2016 16:52:43 +0100
-Message-ID: <a886778e-a85e-758e-3a61-c4909652e39d@kaod.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
- <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
- <ebeba60f-429f-fb84-b9da-c27d11d23094@kaod.org> <2368736.y6FyG1ESuP@wuerfel>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 3/3] dt-bindings: i2c: pxa: Update the documentation for the Armada 3700
+Date: Tue, 08 Nov 2016 16:55:36 +0100
+Message-ID: <87d1i6m0ef.fsf@free-electrons.com>
+References: <20161108151506.1131-1-romain.perier@free-electrons.com>
+        <20161108151506.1131-4-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2368736.y6FyG1ESuP@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20161108151506.1131-4-romain.perier@free-electrons.com> (Romain
+        Perier's message of "Tue, 8 Nov 2016 16:15:06 +0100")
+Sender: linux-i2c-owner@vger.kernel.org
+To: Romain Perier <romain.perier@free-electrons.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2016 02:02 PM, Arnd Bergmann wrote:
-> On Wednesday, November 2, 2016 3:28:01 PM CET C=E9dric Le Goater wrote:
->> On 11/02/2016 02:56 PM, Joel Stanley wrote:
->>> On Wed, Nov 2, 2016 at 11:45 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wednesday 02 November 2016, C=E9dric Le Goater wrote:
->>>>> The Aspeed SoCs have two BT interfaces : one is IPMI compliant and the
->>>>> other is H8S/2168 compliant.
->>>>>
->>>>> The current ipmi/bt-bmc driver implements the IPMI version and we
->>>>> should reflect its nature in the compatible node name using
->>>>> 'aspeed,ast2400-ibt-bmc' instead of 'aspeed,ast2400-bt-bmc'. The
->>>>> latter should be used for a H8S interface driver if it is implemented
->>>>> one day.
->>>>>
->>>>> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
->>>>
->>>> We generally try to avoid changing the compatible strings after the
->>>> fact, but it's probably ok in this case.
->>
->> As the device tree changes are not merged yet, we thought we had some =
+Hi Romain,
+ 
+ On mar., nov. 08 2016, Romain Perier <romain.perier@free-electrons.com> wrote:
 
->> more time to fine tune the naming. =
+> This commit documents the compatible string to have the compatibility for
+> the I2C unit found in the Armada 3700.
+>
+> Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-pxa.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> index 12b78ac..b1b995c 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+> @@ -7,6 +7,7 @@ Required properties :
+>     compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
+>     For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
+>     as shown in the example below.
+> +   For the Armada 3700, the compatible should be "marvell,armada-3700".
 
-> =
+You meant "marvell,armada-3700-i2c" I guess.
 
-> Ok, I see. No problem then.
-> =
+Gregory
 
->>>> I don't understand who decides which of the two interfaces is used:
->>>> is it the same register set that can be driven by either one or the
->>>> other driver, or do you expect to have two drivers that can both
->>>> be active in the same system and talk to different hardware once
->>>> you get there?
->>>
->>> It's the second case. The H8S BT has a different register layout so it
->>> would require a different driver.
->>
->> yes.
->>  =
+>  Recommended properties :
+>  
+> -- 
+> 2.9.3
+>
 
->>> We don't yet have a driver for the other BT device, but there was
->>> recent talk of using it as an alternate (non-ipmi channel) between the
->>> BMC and the host. Before that discussion I wasn't aware that the H8S
->>> BT existed. I suggested we fix this up before it hits a final release.
->>>
->>> C=E9dric, do you think ast2400-ibt-bmc or ast2400-ipmi-bt-bmc does a
->>> better job of describing the hardware here?
->>
->> The specs refer to the two interfaces as BT (non IPMI) and iBT (IPMI). =
-
->> I think we can keep the same naming.
-> =
-
-> Ok
-> =
-
->>> While we're modifying the binding, should we add a compat string for
->>> the ast2500?
->>
->> Well, if the change in this patch is fine for all, may be we can add =
-
->> the ast2500 compat string in a followup patch ?
-> =
-
-> Sounds good to me.
-
-OK. So, how do we proceed with this patch ? Who would include it in its =
-
-tree ? =
-
-
-Thanks,
-
-C.
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
