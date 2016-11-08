@@ -1,34 +1,84 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI
- protocol
-Date: Tue, 8 Nov 2016 14:51:18 +0000
-Message-ID: <20161108145118.GR1041@n2100.armlinux.org.uk>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 0/5] ARM: da850: new drivers for better LCDC support
+Date: Tue, 8 Nov 2016 20:20:28 +0530
+Message-ID: <c54e9b5e-c37f-c0d3-d369-40c9fe4d7074@ti.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478148731-11712-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2016 at 10:52:03PM -0600, Sudeep Holla wrote:
-> This is minor rework of the series[1] from Neil Armstrong's to support
-> legacy SCPI protocol to make DT bindings more generic and move out all
-> the platform specific bindings out of the generic binding document.
++ Arnd, Olof
 
-Is this what would be in my HBI0282B Juno?
+On Monday 31 October 2016 08:15 PM, Bartosz Golaszewski wrote:
+> This series adds two new drivers in order to better support the LCDC
+> rev1 present on the da850 boards.
+> 
+> The first patch adds a new memory driver which allows to write to the
+> DDR2/mDDR memory controller present on the da8xx SoCs.
+> 
+> The second patch adds a new bus driver which allows to interact with
+> the MSTPRI registers of the SYSCFG0 module
 
-(Note: I only have the original firmware on the board, as the Linaro
-firmware drops are completely broken for it.)
+I think patches 1/5 and 2/5 are ready to be merged. If there are no
+objections I would like to send a pull request for them to be merged
+through ARM-SoC tree for v4.10 kernel.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
+
+> 
+> As is mentioned in the comments: we don't want to commit to supporting
+> stable interfaces (DT bindings or sysfs attributes) so we hardcode the
+> settings required by some boards (for now only da850-lcdk) with the
+> hope that linux gets an appropriate framework for performance knobs
+> in the future.
+> 
+> Potential extensions of these drivers should be straightforward in the
+> future.
+> 
+> Subsequent patches add DT nodes for the new drivers: disabled nodes
+> in da850.dtsi and enabled in da850-lcdk.dts.
+> 
+> The last patch adds a workaround for current lack of support for drm
+> bridges in tilcdc.
+> 
+> Tested on a da850-lcdk with a display connected over VGA and two
+> additional patches for tilcdc (sent to linux-drm): ran simple modetest
+> for supported resolutions, used X.org and fluxbox as graphical
+> environment, played video with mplayer.
+> 
+> v1 -> v2:
+> - used regular readl()/writel() instead of __raw_** versions
+> - used resource_size() instead of calculating the size by hand
+> - used ioremap instead of syscon in patch [2/5]
+> - added the DT nodes in patches [3/5]-[5/5]
+> 
+> Bartosz Golaszewski (5):
+>   ARM: memory: da8xx-ddrctl: new driver
+>   ARM: bus: da8xx-mstpri: new driver
+>   ARM: dts: da850: add the mstpri and ddrctl nodes
+>   ARM: dts: da850-lcdk: enable mstpri and ddrctl nodes
+>   ARM: dts: da850-lcdk: add tilcdc panel node
+> 
+>  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
+>  .../memory-controllers/ti-da8xx-ddrctl.txt         |  20 ++
+>  arch/arm/boot/dts/da850-lcdk.dts                   |  71 ++++++
+>  arch/arm/boot/dts/da850.dtsi                       |  11 +
+>  drivers/bus/Kconfig                                |   9 +
+>  drivers/bus/Makefile                               |   2 +
+>  drivers/bus/da8xx-mstpri.c                         | 269 +++++++++++++++++++++
+>  drivers/memory/Kconfig                             |   8 +
+>  drivers/memory/Makefile                            |   1 +
+>  drivers/memory/da8xx-ddrctl.c                      | 175 ++++++++++++++
+>  10 files changed, 586 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
+>  create mode 100644 drivers/bus/da8xx-mstpri.c
+>  create mode 100644 drivers/memory/da8xx-ddrctl.c
+> 
