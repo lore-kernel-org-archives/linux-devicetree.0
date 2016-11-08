@@ -1,78 +1,51 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 0/2] ASoC driver for the TSE-850
-Date: Tue, 8 Nov 2016 17:20:55 +0100
-Message-ID: <1478622057-12426-1-git-send-email-peda@axentia.se>
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible node to
+ 'aspeed,ast2400-ibt-bmc'
+Date: Tue, 8 Nov 2016 12:15:57 -0600
+Message-ID: <c749ff0a-bc71-bc9f-0e8c-326db2cea0fb@acm.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <CACPK8XcM1_xmmUu-cCZrSR67Y_qeXuSJ4Xmd_2gcgDT321LdBQ@mail.gmail.com>
+ <ebeba60f-429f-fb84-b9da-c27d11d23094@kaod.org> <2368736.y6FyG1ESuP@wuerfel>
+ <a886778e-a85e-758e-3a61-c4909652e39d@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a886778e-a85e-758e-3a61-c4909652e39d-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 11/08/2016 09:52 AM, Cédric Le Goater wrote:
+> O
+snip
 
-The TSE-850 is an FM Transmitter Station Equipment, designed to generate
-baseband signals for FM, mainly the DARC subcarrier, but other signals
-are also possible.
+>>>> While we're modifying the binding, should we add a compat string for
+>>>> the ast2500?
+>>> Well, if the change in this patch is fine for all, may be we can add
+>>> the ast2500 compat string in a followup patch ?
+>> Sounds good to me.
+> OK. So, how do we proceed with this patch ? Who would include it in its
+> tree ?
 
-This adds a driver for the "sound" bits of the device (quoted since it
-is normally not used for normal sound output, but that works too of
-course). 
+I don't have anything for 4.9 at the moment.  Arnd, if you have 
+something, can
+you take this?  Otherwise I will.
 
-I have not provided a patch to add axentia as a devicetree vendor prefix,
-since such a patch is already pending in an IIO series [1] that seems
-close to being accepted.
+And I guess I should add:
 
-However, there are a couple of points that I'm not 100% satisfied with
-for this driver.
+Acked-by: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 
-First, I do not know how to describe the relays that control if the
-IN1/IN2 signals are directly routed towards OUT1/OUT2 or if they are
-routed to the "add" switch. The dapm routing treats this as if the
-IN1/IN2 signals are always routed to both the "add" switch and to
-the muxes feeding OUT1/OUT2. This is fine with me since nothing is
-powered in those sections anyway, so what dapm thinks does not really
-matter. But it is a wart all the same.
+-corey
 
-Second, there's my comment in tse850_put_mix() when the "add" switch
-is updated. I believe this update should really happen as a side
-effect of the call to snd_soc_dapm_mixer_update_power(), so that it
-happens at the right point compared to other stuff that is powered.
-But I do not know how to hook that up and instead I flip the switch
-before the call since it doesn't really matter. I.e., any noise
-resulting from this badness is negligeble in practice.
+> Thanks,
+>
+> C.
+>
 
-Cheers,
-Peter
-
-[1] http://www.spinics.net/lists/devicetree/thrd3.html#147258
-
-Peter Rosin (2):
-  dt-bindings: sound: document axentia,tse850-pcm5142 bindings
-  ASoC: axentia: tse850: add ASoC driver for the Axentia TSE-850
-
- .../bindings/sound/axentia,tse850-pcm5142.txt      |  88 ++++
- MAINTAINERS                                        |   7 +
- sound/soc/Kconfig                                  |   1 +
- sound/soc/Makefile                                 |   1 +
- sound/soc/axentia/Kconfig                          |  10 +
- sound/soc/axentia/Makefile                         |   3 +
- sound/soc/axentia/tse850-pcm5142.c                 | 504 +++++++++++++++++++++
- 7 files changed, 614 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
- create mode 100644 sound/soc/axentia/Kconfig
- create mode 100644 sound/soc/axentia/Makefile
- create mode 100644 sound/soc/axentia/tse850-pcm5142.c
-
--- 
-2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
