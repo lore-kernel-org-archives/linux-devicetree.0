@@ -1,191 +1,258 @@
-From: Youlin Pei <youlin.pei@mediatek.com>
-Subject: Re: [PATCH v2 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq
- implement
-Date: Tue, 8 Nov 2016 10:57:13 +0800
-Message-ID: <1478573833.32099.11.camel@mtksdaap41>
-References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
-         <1478001122-8664-3-git-send-email-youlin.pei@mediatek.com>
-         <86twbrj586.fsf@arm.com> <1478234577.7975.29.camel@mtksdaap41>
-         <867f8ilwcl.fsf@arm.com>
+From: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Tue, 8 Nov 2016 11:47:07 +0800
+Message-ID: <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <867f8ilwcl.fsf@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, hongkun.cao@mediatek.com, yong.wu@mediatek.com, erin.lo@mediatek.com, chieh-jay.liu@mediatek.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478576829-112707-1-git-send-email-yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-04 at 22:21 +0000, Marc Zyngier wrote:
-> On Fri, Nov 04 2016 at 04:42:57 AM, Youlin Pei <youlin.pei@mediatek.com> wrote:
-> > On Tue, 2016-11-01 at 20:49 +0000, Marc Zyngier wrote:
-> >> On Tue, Nov 01 2016 at 11:52:01 AM, Youlin Pei <youlin.pei@mediatek.com> wrote:
-> >> > In Mediatek SOCs, the CIRQ is a low power interrupt controller
-> >> > designed to works outside MCUSYS which comprises with Cortex-Ax
-> >> > cores,CCI and GIC.
-> >> >
-> >> > The CIRQ controller is integrated in between MCUSYS( include
-> >> > Cortex-Ax, CCI and GIC ) and interrupt sources as the second
-> >> > level interrupt controller. The external interrupts which outside
-> >> > MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
-> >> > all edge trigger interupts. When an edge interrupt is triggered,
-> >> > CIRQ can record the status and generate a pulse signal to GIC when
-> >> > flush command executed.
-> >> >
-> >> > When system enters sleep mode, MCUSYS will be turned off to improve
-> >> > power consumption, also GIC is power down. The edge trigger interrupts
-> >> > will be lost in this scenario without CIRQ.
-> >> >
-> >> > This commit provides the CIRQ irqchip implement.
-> >> >
-> >> > Signed-off-by: Youlin Pei <youlin.pei@mediatek.com>
-> >> > ---
-> >> >  drivers/irqchip/Makefile       |    2 +-
-> >> >  drivers/irqchip/irq-mtk-cirq.c |  262 ++++++++++++++++++++++++++++++++++++++++
-> >> >  2 files changed, 263 insertions(+), 1 deletion(-)
-> >> >  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
-> >> >
-> >> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> >> > index e4dbfc8..8f33580 100644
-> >> > --- a/drivers/irqchip/Makefile
-> >> > +++ b/drivers/irqchip/Makefile
-> >> > @@ -60,7 +60,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-> >> >  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-> >> >  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> >> >  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
-> >> > -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
-> >> > +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
-> >> >  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
-> >> >  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
-> >> >  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
-> >> > diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-> >> > new file mode 100644
-> >> > index 0000000..fc43ef3
-> >> > --- /dev/null
-> >> > +++ b/drivers/irqchip/irq-mtk-cirq.c
-> >> > @@ -0,0 +1,262 @@
-> >> > +/*
-> >> > + * Copyright (c) 2016 MediaTek Inc.
-> >> > + * Author: Youlin.Pei <youlin.pei@mediatek.com>
-> >> > + *
-> >> > + * This program is free software; you can redistribute it and/or modify
-> >> > + * it under the terms of the GNU General Public License version 2 as
-> >> > + * published by the Free Software Foundation.
-> >> > + *
-> >> > + * This program is distributed in the hope that it will be useful,
-> >> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> > + * GNU General Public License for more details.
-> >> > + */
-> >> > +
-> >> > +#include <linux/irq.h>
-> >> > +#include <linux/irqchip.h>
-> >> > +#include <linux/irqdomain.h>
-> >> > +#include <linux/of.h>
-> >> > +#include <linux/of_irq.h>
-> >> > +#include <linux/of_address.h>
-> >> > +#include <linux/io.h>
-> >> > +#include <linux/slab.h>
-> >> > +#include <linux/syscore_ops.h>
-> >> > +
-> >> > +#define CIRQ_ACK	0x40
-> >> > +#define CIRQ_MASK_SET	0xc0
-> >> > +#define CIRQ_MASK_CLR	0x100
-> >> > +#define CIRQ_SENS_SET	0x180
-> >> > +#define CIRQ_SENS_CLR	0x1c0
-> >> > +#define CIRQ_POL_SET	0x240
-> >> > +#define CIRQ_POL_CLR	0x280
-> >> > +#define CIRQ_CONTROL	0x300
-> >> > +
-> >> > +#define CIRQ_EN	0x1
-> >> > +#define CIRQ_EDGE	0x2
-> >> > +#define CIRQ_FLUSH	0x4
-> >> > +
-> >> > +#define CIRQ_IRQ_NUM    0x200
-> >> > +
-> >> > +struct mtk_cirq_chip_data {
-> >> > +	void __iomem *base;
-> >> > +	unsigned int ext_irq_start;
-> >> > +};
-> >> > +
-> >> > +static struct mtk_cirq_chip_data *cirq_data;
-> >> 
-> >> Are you guaranteed that you'll only ever have a single CIRQ in any
-> >> system?
-> >
-> > In Mediatek's SOC, only hace a single CIRQ.
-> >
-> >> 
-> >> > +
-> >> > +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
-> >> > +{
-> >> > +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
-> >> > +	unsigned int cirq_num = data->hwirq;
-> >> > +	u32 mask = 1 << (cirq_num % 32);
-> >> > +
-> >> > +	writel(mask, chip_data->base + offset + (cirq_num / 32) * 4);
-> >> 
-> >> Why can't you use the relaxed accessors?
-> >
-> > It seems that i use wrong function, i will change the writel to
-> > writel_relaxed in next ve
-> >
-> >> 
-> >> > +}
-> >> > +
-> >> > +static void mtk_cirq_mask(struct irq_data *data)
-> >> > +{
-> >> > +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
-> >> > +	irq_chip_mask_parent(data);
-> >> > +}
-> >> > +
-> >> > +static void mtk_cirq_unmask(struct irq_data *data)
-> >> > +{
-> >> > +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
-> >> > +	irq_chip_unmask_parent(data);
-> >> > +}
-> >> > +
-> >> > +static void mtk_cirq_eoi(struct irq_data *data)
-> >> > +{
-> >> > +	mtk_cirq_write_mask(data, CIRQ_ACK);
-> >> 
-> >> EOI and ACK have very different semantics. What is this write actually
-> >> doing? Also, you're now doing an additional MMIO write on each interrupt
-> >> EOI, doubling its cost. Do you really need to do actually signal the HW
-> >> that we've EOIed an interrupt? I would have hoped that you'd be able to
-> >> put it in "bypass" mode as long as you're not suspending...
-> >> 
-> >
-> > When external interrupt happened, CIRQ status register record the status
-> > even CIRQ is not enabled. when execute the flush command, CIRQ will
-> > resend the signals according to the status. So if don't clear the
-> > status, CIRQ will resend the wrong signals. the ACK write operation will
-> > clear the status.
-> 
-> But at this time, we haven't suspended yet, and there is nothing to
-> replay. Also, you only enable the edge capture when suspending. So what
-> are you ACKing here? Can't you simply clear everything right when
-> suspending and not do it at all on the fast path?
+For arm64, there is no I/O space as other architectural platforms, such as
+X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
+such as Hip06, when accessing some legacy ISA devices connected to LPC, those
+known port addresses are used to control the corresponding target devices, for
+example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
+normal MMIO mode in using.
 
-I had planned to ACK the status in cirq suspend callback, but
-encountered a problem.
-following is a piece of code from
-http://lxr.free-electrons.com/source/kernel/power/suspend.c#L361
+To drive these devices, this patch introduces a method named indirect-IO.
+In this method the in/out pair in arch/arm64/include/asm/io.h will be
+redefined. When upper layer drivers call in/out with those known legacy port
+addresses to access the peripherals, the hooking functions corrresponding to
+those target peripherals will be called. Through this way, those upper layer
+drivers which depend on in/out can run on Hip06 without any changes.
 
-arch_suspend_disable_irqs(); ---step1
-BUG_ON(!irqs_disabled());
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: zhichang.yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/Kconfig             |  6 +++
+ arch/arm64/include/asm/extio.h | 94 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm64/include/asm/io.h    | 29 +++++++++++++
+ arch/arm64/kernel/Makefile     |  1 +
+ arch/arm64/kernel/extio.c      | 27 ++++++++++++
+ 5 files changed, 157 insertions(+)
+ create mode 100644 arch/arm64/include/asm/extio.h
+ create mode 100644 arch/arm64/kernel/extio.c
 
-error = syscore_suspend();
-           |
-           ---cirq suspend(); ---step2
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 969ef88..b44070b 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -163,6 +163,12 @@ config ARCH_MMAP_RND_COMPAT_BITS_MIN
+ config ARCH_MMAP_RND_COMPAT_BITS_MAX
+        default 16
+ 
++config ARM64_INDIRECT_PIO
++	bool "access peripherals with legacy I/O port"
++	help
++	  Support special accessors for ISA I/O devices. This is needed for
++	  SoCs that do not support standard read/write for the ISA range.
++
+ config NO_IOPORT_MAP
+ 	def_bool y if !PCI
+ 
+diff --git a/arch/arm64/include/asm/extio.h b/arch/arm64/include/asm/extio.h
+new file mode 100644
+index 0000000..6ae0787
+--- /dev/null
++++ b/arch/arm64/include/asm/extio.h
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
++ * Author: Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __LINUX_EXTIO_H
++#define __LINUX_EXTIO_H
++
++struct extio_ops {
++	unsigned long start;/* inclusive, sys io addr */
++	unsigned long end;/* inclusive, sys io addr */
++
++	u64 (*pfin)(void *devobj, unsigned long ptaddr,	size_t dlen);
++	void (*pfout)(void *devobj, unsigned long ptaddr, u32 outval,
++					size_t dlen);
++	u64 (*pfins)(void *devobj, unsigned long ptaddr, void *inbuf,
++				size_t dlen, unsigned int count);
++	void (*pfouts)(void *devobj, unsigned long ptaddr,
++				const void *outbuf, size_t dlen,
++				unsigned int count);
++	void *devpara;
++};
++
++extern struct extio_ops *arm64_extio_ops;
++
++#define DECLARE_EXTIO(bw, type)						\
++extern type in##bw(unsigned long addr);					\
++extern void out##bw(type value, unsigned long addr);			\
++extern void ins##bw(unsigned long addr, void *buffer, unsigned int count);\
++extern void outs##bw(unsigned long addr, const void *buffer, unsigned int count);
++
++#define BUILD_EXTIO(bw, type)						\
++type in##bw(unsigned long addr)						\
++{									\
++	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
++			arm64_extio_ops->end < addr)			\
++		return read##bw(PCI_IOBASE + addr);			\
++	return arm64_extio_ops->pfin ?					\
++		arm64_extio_ops->pfin(arm64_extio_ops->devpara,		\
++			addr, sizeof(type)) : -1;			\
++}									\
++									\
++void out##bw(type value, unsigned long addr)				\
++{									\
++	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
++			arm64_extio_ops->end < addr)			\
++		write##bw(value, PCI_IOBASE + addr);			\
++	else								\
++		if (arm64_extio_ops->pfout)				\
++			arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
++				addr, value, sizeof(type));		\
++}									\
++									\
++void ins##bw(unsigned long addr, void *buffer, unsigned int count)	\
++{									\
++	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
++			arm64_extio_ops->end < addr)			\
++		reads##bw(PCI_IOBASE + addr, buffer, count);		\
++	else								\
++		if (arm64_extio_ops->pfins)				\
++			arm64_extio_ops->pfins(arm64_extio_ops->devpara,\
++				addr, buffer, sizeof(type), count);	\
++}									\
++									\
++void outs##bw(unsigned long addr, const void *buffer, unsigned int count)	\
++{									\
++	if (!arm64_extio_ops || arm64_extio_ops->start > addr ||	\
++			arm64_extio_ops->end < addr)			\
++		writes##bw(PCI_IOBASE + addr, buffer, count);		\
++	else								\
++		if (arm64_extio_ops->pfouts)				\
++			arm64_extio_ops->pfouts(arm64_extio_ops->devpara,\
++				addr, buffer, sizeof(type), count);	\
++}
++
++static inline void arm64_set_extops(struct extio_ops *ops)
++{
++	if (ops)
++		WRITE_ONCE(arm64_extio_ops, ops);
++}
++
++#endif /* __LINUX_EXTIO_H*/
+diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+index 0bba427..136735d 100644
+--- a/arch/arm64/include/asm/io.h
++++ b/arch/arm64/include/asm/io.h
+@@ -31,6 +31,7 @@
+ #include <asm/early_ioremap.h>
+ #include <asm/alternative.h>
+ #include <asm/cpufeature.h>
++#include <asm/extio.h>
+ 
+ #include <xen/xen.h>
+ 
+@@ -149,6 +150,34 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
+ #define IO_SPACE_LIMIT		(PCI_IO_SIZE - 1)
+ #define PCI_IOBASE		((void __iomem *)PCI_IO_START)
+ 
++
++/*
++ * redefine the in(s)b/out(s)b for indirect-IO.
++ */
++#ifdef CONFIG_ARM64_INDIRECT_PIO
++#define inb inb
++#define outb outb
++#define insb insb
++#define outsb outsb
++/* external declaration */
++DECLARE_EXTIO(b, u8)
++
++#define inw inw
++#define outw outw
++#define insw insw
++#define outsw outsw
++
++DECLARE_EXTIO(w, u16)
++
++#define inl inl
++#define outl outl
++#define insl insl
++#define outsl outsl
++
++DECLARE_EXTIO(l, u32)
++#endif
++
++
+ /*
+  * String version of I/O memory access operations.
+  */
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 7d66bba..60e0482 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -31,6 +31,7 @@ arm64-obj-$(CONFIG_COMPAT)		+= sys32.o kuser32.o signal32.o 	\
+ 					   sys_compat.o entry32.o
+ arm64-obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace.o entry-ftrace.o
+ arm64-obj-$(CONFIG_MODULES)		+= arm64ksyms.o module.o
++arm64-obj-$(CONFIG_ARM64_INDIRECT_PIO)	+= extio.o
+ arm64-obj-$(CONFIG_ARM64_MODULE_PLTS)	+= module-plts.o
+ arm64-obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
+ arm64-obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o
+diff --git a/arch/arm64/kernel/extio.c b/arch/arm64/kernel/extio.c
+new file mode 100644
+index 0000000..647b3fa
+--- /dev/null
++++ b/arch/arm64/kernel/extio.c
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
++ * Author: Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/io.h>
++
++struct extio_ops *arm64_extio_ops;
++
++
++BUILD_EXTIO(b, u8)
++
++BUILD_EXTIO(w, u16)
++
++BUILD_EXTIO(l, u32)
+-- 
+1.9.1
 
-if ack the status in cirq suspend, the interrupts will be lost which
-happened during step1 to step2.
-
-So would you mind give me some suggestions about this?
-Thanks a lot!
-> 
-> Thanks,
-> 
-> 	M.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
