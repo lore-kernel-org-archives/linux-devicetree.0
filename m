@@ -1,172 +1,63 @@
-From: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 0/3] Add Mediatek JPEG Decoder
-Date: Tue, 8 Nov 2016 14:34:37 +0800
-Message-ID: <1478586880-3923-1-git-send-email-rick.chang@mediatek.com>
+From: "Y.B. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [v15, 3/7] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+Date: Tue, 8 Nov 2016 06:49:51 +0000
+Message-ID: <DB6PR0401MB25366BC8FF59C68E2823245EF8A60@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
+ <2723366.1bJeJ7SKI6@wuerfel>
+ <DB6PR0401MB2536B1B2E6AC36BDC8FC540DF8AE0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+ <1543282.vWjeo4ynTa@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1543282.vWjeo4ynTa@wuerfel>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "X.B. Xie" <xiaobo.xie@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series of patches provide a v4l2 driver to control Mediatek JPEG decoder
-for decoding JPEG image and Motion JPEG bitstream.
-
-changes since v4:
-- Change file name of binding documentation
-- Revise DT binding documentation
-- Revise compatible string
-
-changes since v3:
-- Revise DT binding documentation
-- Revise compatible string
-
-changes since v2:
-- Revise DT binding documentation 
-
-changes since v1:
-- Rebase for v4.9-rc1.
-- Update Compliance test version and result
-- Remove redundant path in Makefile
-- Fix potential build error without CONFIG_PM_RUNTIME and CONFIG_PM_SLEEP
-- Fix warnings from patch check and smatch check
-
-* Dependency
-The patch "arm: dts: mt2701: Add node for JPEG decoder" depends on: 
-  CCF "Add clock support for Mediatek MT2701"[1]
-  iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
-
-[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
-[2] https://patchwork.kernel.org/patch/9164013/
-
-* Compliance test
-v4l2-compliance SHA   : 4ad7174b908a36c4f315e3fe2efa7e2f8a6f375a
-
-Driver Info:
-        Driver name   : mtk-jpeg decode
-        Card type     : mtk-jpeg decoder
-        Bus info      : platform:15004000.jpegdec
-        Driver version: 4.9.0
-        Capabilities  : 0x84204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x04204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video3 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-                test VIDIOC_QUERYCTRL: OK (Not Supported)
-                test VIDIOC_G/S_CTRL: OK (Not Supported)
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 0 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK
-                test Scaling: OK
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
+Hi Arnd,
 
 
-Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Tuesday, November 08, 2016 5:20 AM
+> To: Y.B. Lu
+> Cc: linuxppc-dev@lists.ozlabs.org; linux-mmc@vger.kernel.org;
+> ulf.hansson@linaro.org; Scott Wood; Mark Rutland; Greg Kroah-Hartman; X.B=
+.
+> Xie; M.H. Lian; linux-i2c@vger.kernel.org; linux-clk@vger.kernel.org;
+> Qiang Zhao; Russell King; Bhupesh Sharma; Joerg Roedel; Claudiu Manoil;
+> devicetree@vger.kernel.org; Rob Herring; Santosh Shilimkar; linux-arm-
+> kernel@lists.infradead.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Leo Li; iommu@lists.linux-foundation.org; Kumar
+> Gala
+> Subject: Re: [v15, 3/7] powerpc/fsl: move mpc85xx.h to include/linux/fsl
+>=20
+> On Monday, October 31, 2016 9:35:33 AM CET Y.B. Lu wrote:
+> > >
+> > > I don't see any of the contents of this header referenced by the soc
+> > > driver any more. I think you can just drop this patch.
+> > >
+> >
+> > [Lu Yangbo-B47093] This header file was included by guts.c.
+> > The guts driver used macro SVR_MAJ/SVR_MIN for calculation.
+> >
+> > This header file was for powerpc arch before. And this patch is to
+> > made it as common header file for both ARM and PPC.
+> > Sooner or later this is needed.
+>=20
+> Let's discuss it once we actually need the header then, ok?
 
-Rick Chang (3):
-  dt-bindings: mediatek: Add a binding for Mediatek JPEG Decoder
-  vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-  arm: dts: mt2701: Add node for Mediatek JPEG Decoder
+[Lu Yangbo-B47093] As I said, this header file was included by guts.c in pa=
+tch 4.
+The guts driver used macro SVR_MAJ/SVR_MIN for calculation which were defin=
+ed in this header file.
+Did you suggest we dropped this patch and just calculated them in driver?
 
- .../bindings/media/mediatek-jpeg-decoder.txt       |   37 +
- arch/arm/boot/dts/mt2701.dtsi                      |   14 +
- drivers/media/platform/Kconfig                     |   15 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/mtk-jpeg/Makefile           |    2 +
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 1275 ++++++++++++++++++++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  141 +++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c      |  417 +++++++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h      |   91 ++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c   |  160 +++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h   |   25 +
- drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h     |   58 +
- 12 files changed, 2237 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
- create mode 100644 drivers/media/platform/mtk-jpeg/Makefile
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+Thanks :)
 
--- 
-1.9.1
+
+>=20
+> 	Arnd
