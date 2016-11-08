@@ -1,63 +1,94 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for
- special ISA
-Date: Tue, 8 Nov 2016 17:10:04 +0000
-Message-ID: <20161108171004.GF15297@leverpostej>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <1478576829-112707-3-git-send-email-yuanzhichang@hisilicon.com>
- <20161108114953.GB15297@leverpostej>
- <2368890.jTbyGqYR0M@wuerfel>
+From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Tue, 8 Nov 2016 10:13:58 -0700
+Message-ID: <a86d41da-c7df-4c07-d18e-b751cff9edc7@airwebreathe.org.uk>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
+ <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+ <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
+ <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2368890.jTbyGqYR0M@wuerfel>
+In-Reply-To: <4bdba358-db18-48f1-3286-a7a7f4c30215-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 05:19:54PM +0100, Arnd Bergmann wrote:
-> On Tuesday, November 8, 2016 11:49:53 AM CET Mark Rutland wrote:
-> > My understanding of ISA (which may be flawed) is that it's not part of
-> > the PCI host bridge, but rather on x86 it happens to share the IO space
-> > with PCI.
-> 
-> On normal systems, ISA or LPC are behind a PCI bridge device, which
-> passes down both low addresses of I/O space and memory space.
+Hi Marek,
 
-Ok, so the use of those address spaces is an artifact of the ISA
-controller being a device under the PCI host bridge.
+>>> Should be this way for the sake of readability, fix globally:
+>>>
+>>>     struct spi_transfer assert_cs_then_reset_delay = {
+>>>         .cs_change    = 1,
+>>>         .delay_usecs    = ICE40_SPI_FPGAMGR_RESET_DELAY
+>>>     };
+>>
+>> Sure ok. Personally, I prefer it to be concise, but I'm happy to accept
+>> the norms.
+>
+> I prefer it to be readable :)
+>
 
-Given we can have multiple domains, surely that implies we can have
-multiple ISA controllers in general?
+I'll conform to what you're saying.
 
-> > I believe that we could theoretically have multiple independent LPC/ISA
-> > busses, as is possible with PCI on !x86 systems. If the current ISA code
-> > assumes a singleton bus, I think that's something that needs to be fixed
-> > up more generically.
-> > 
-> > I don't see why we should need any architecture-specific code here. Why
-> > can we not fix up the ISA bus code in drivers/of/address.c such that it
-> > handles multiple ISA bus instances, and translates all sub-device
-> > addresses relative to the specific bus instance?
-> 
-> I think it is a relatively safe assumption that there is only one
-> ISA bridge. A lot of old drivers hardcode PIO or memory addresses
-> when talking to an ISA device, so having multiple instances is
-> already problematic.
+But I just want to point out that this...
 
-I'm worried that this might not be a safe assumption. Hardware these
-days has a habit of pushing the boundaries of our expectations.
 
-If we're going to assume that, I'd certainly want the kernel to verify
-that it's true for all instanciated ISA/LPC devices. Otherwise, I can
-imagine people relying on (or working around) that assumption in ACPI
-tables and DTs, and that will be a nightmare (at best) to untangle in
-future.
+spi_message_add_tail(&(struct spi_transfer){.cs_change = 1,
+	.delay_usecs = ICE40_SPI_FPGAMGR_RESET_DELAY}, &message);
 
-Thanks,
-Mark.
+
+...is clearly more readable than this...
+
+
+struct spi_transfer assert_cs_then_reset_delay = {
+     .cs_change    = 1,
+     .delay_usecs  = ICE40_SPI_FPGAMGR_RESET_DELAY
+};
+
+....
+<30 lines of unrelated code>
+....
+
+spi_message_add_tail(&assert_cs_then_reset_delay, &message);
+
+
+
+...in my opinion anyway ;)
+
+
+
+>> Previously I had a copy of spi_set_cs copy-pasted into my driver, but in
+>> the end I decided to replace that with the zero-length transfers because
+>> there's a danger that if the original spi_set_cs() gets rewritten some
+>> time, my copy-paste code would leave around some nasty legacy.
+>>
+>> On the whole, I don't think the zero-length transfers are too
+>> egregiously bad, and all the alternatives seem worse to me.
+>
+> So why not turn the CS line into GPIO and just toggle the GPIO?
+>
+
+Two reasons.
+
+1. On some devices the CS line is built into the SPI master, rather than 
+being a normal GPIO.
+
+2. The SPI driver stack addresses SPI devices in terms of which CS line 
+they are attached to. You can't have an spi_device in the kernel where 
+the SPI driver machinery doesn't have a CS line to control. Moreover it 
+needs to be possible for another SPI device to interrupt a running 
+transfer to the FPGA. Supporting this involves the SPI framework 
+managing the CS line.
+
+
+
+Thanks
+Joel
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
