@@ -1,84 +1,83 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 0/5] ARM: da850: new drivers for better LCDC support
-Date: Tue, 8 Nov 2016 20:20:28 +0530
-Message-ID: <c54e9b5e-c37f-c0d3-d369-40c9fe4d7074@ti.com>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 2/2] gpio: xilinx: Add clock support
+Date: Tue, 8 Nov 2016 06:52:31 -0800
+Message-ID: <20161108145231.GR14444@xsjsorenbubuntu>
+References: <1478581990-28276-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1478581990-28276-2-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478581990-28276-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-+ Arnd, Olof
+On Tue, 2016-11-08 at 10:43:10 +0530, Shubhrajyoti Datta wrote:
+> Add basic clock support for xilinx gpio.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c |   22 ++++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 14b2a62..923cab8 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -13,6 +13,7 @@
+>   */
+>  
+>  #include <linux/bitops.h>
+> +#include <linux/clk.h>
+>  #include <linux/init.h>
+>  #include <linux/errno.h>
+>  #include <linux/module.h>
+> @@ -45,6 +46,7 @@
+>   * @gpio_state: GPIO state shadow register
+>   * @gpio_dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+> + * @clk: Clock resource for this controller
+>   */
+>  struct xgpio_instance {
+>  	struct of_mm_gpio_chip mmchip;
+> @@ -52,6 +54,7 @@ struct xgpio_instance {
+>  	u32 gpio_state[2];
+>  	u32 gpio_dir[2];
+>  	spinlock_t gpio_lock[2];
+> +	struct clk *clk;
+>  };
+>  
+>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
+>  	struct xgpio_instance *chip = platform_get_drvdata(pdev);
+>  
+>  	of_mm_gpiochip_remove(&chip->mmchip);
+> +	clk_disable_unprepare(chip->clk);
+>  
+>  	return 0;
+>  }
+> @@ -307,6 +311,23 @@ static int xgpio_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, chip);
+>  
+> +	/* Retrieve GPIO clock */
+> +	chip->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(chip->clk)) {
+> +		if (PTR_ERR(chip->clk) == -ENOENT) {
+> +			dev_info(&pdev->dev, "No clocks found for clk\n");
+> +			chip->clk = NULL;
+> +		} else {
+> +			dev_err(&pdev->dev, "axi clock error\n");
+> +			return PTR_ERR(chip->clk);
+> +		}
+> +	}
 
-On Monday 31 October 2016 08:15 PM, Bartosz Golaszewski wrote:
-> This series adds two new drivers in order to better support the LCDC
-> rev1 present on the da850 boards.
-> 
-> The first patch adds a new memory driver which allows to write to the
-> DDR2/mDDR memory controller present on the da8xx SoCs.
-> 
-> The second patch adds a new bus driver which allows to interact with
-> the MSTPRI registers of the SYSCFG0 module
+In the bindings you document 'clocks' as required, but it's handled as
+optional here. Things should be consistent and given that the existing
+binding doesn't require clocks, we're probably stuck with having the
+clock optional.
 
-I think patches 1/5 and 2/5 are ready to be merged. If there are no
-objections I would like to send a pull request for them to be merged
-through ARM-SoC tree for v4.10 kernel.
-
-Thanks,
-Sekhar
-
-> 
-> As is mentioned in the comments: we don't want to commit to supporting
-> stable interfaces (DT bindings or sysfs attributes) so we hardcode the
-> settings required by some boards (for now only da850-lcdk) with the
-> hope that linux gets an appropriate framework for performance knobs
-> in the future.
-> 
-> Potential extensions of these drivers should be straightforward in the
-> future.
-> 
-> Subsequent patches add DT nodes for the new drivers: disabled nodes
-> in da850.dtsi and enabled in da850-lcdk.dts.
-> 
-> The last patch adds a workaround for current lack of support for drm
-> bridges in tilcdc.
-> 
-> Tested on a da850-lcdk with a display connected over VGA and two
-> additional patches for tilcdc (sent to linux-drm): ran simple modetest
-> for supported resolutions, used X.org and fluxbox as graphical
-> environment, played video with mplayer.
-> 
-> v1 -> v2:
-> - used regular readl()/writel() instead of __raw_** versions
-> - used resource_size() instead of calculating the size by hand
-> - used ioremap instead of syscon in patch [2/5]
-> - added the DT nodes in patches [3/5]-[5/5]
-> 
-> Bartosz Golaszewski (5):
->   ARM: memory: da8xx-ddrctl: new driver
->   ARM: bus: da8xx-mstpri: new driver
->   ARM: dts: da850: add the mstpri and ddrctl nodes
->   ARM: dts: da850-lcdk: enable mstpri and ddrctl nodes
->   ARM: dts: da850-lcdk: add tilcdc panel node
-> 
->  .../devicetree/bindings/bus/ti,da850-mstpri.txt    |  20 ++
->  .../memory-controllers/ti-da8xx-ddrctl.txt         |  20 ++
->  arch/arm/boot/dts/da850-lcdk.dts                   |  71 ++++++
->  arch/arm/boot/dts/da850.dtsi                       |  11 +
->  drivers/bus/Kconfig                                |   9 +
->  drivers/bus/Makefile                               |   2 +
->  drivers/bus/da8xx-mstpri.c                         | 269 +++++++++++++++++++++
->  drivers/memory/Kconfig                             |   8 +
->  drivers/memory/Makefile                            |   1 +
->  drivers/memory/da8xx-ddrctl.c                      | 175 ++++++++++++++
->  10 files changed, 586 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/ti,da850-mstpri.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti-da8xx-ddrctl.txt
->  create mode 100644 drivers/bus/da8xx-mstpri.c
->  create mode 100644 drivers/memory/da8xx-ddrctl.c
-> 
+	Sören
