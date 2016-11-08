@@ -1,212 +1,63 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 2/8] iio: inkern: add helpers to query available values from channels
-Date: Tue, 8 Nov 2016 12:58:52 +0100
-Message-ID: <1478606339-31253-3-git-send-email-peda@axentia.se>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2] ARM: dts: socfpga: add specific compatible strings for
+ boards
+Date: Tue, 8 Nov 2016 14:53:08 -0600
+Message-ID: <17b93c4e-eb42-0bc1-07d7-98d52a3f057f@kernel.org>
+References: <20161101205652.26384-1-dinguyen@kernel.org>
+ <20161101222352.GA6328@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478606339-31253-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, Thomas Gleixner <tglx@linutronix.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161101222352.GA6328@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Specifically a helper for reading the available maximum raw value of a
-channel and a helper for forwarding read_avail requests for raw values
-from one iio driver to an iio channel that is consumed.
 
-These rather specific helpers are in turn built with generic helpers
-making it easy to build more helpers for available values as needed.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/iio/inkern.c         | 104 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/iio/consumer.h |  28 ++++++++++++
- include/linux/iio/iio.h      |  17 +++++++
- 3 files changed, 149 insertions(+)
+On 11/01/2016 05:23 PM, Olof Johansson wrote:
+> On Tue, Nov 01, 2016 at 03:56:52PM -0500, Dinh Nguyen wrote:
+>> Add a more specific board compatible entry for all of the SOCFPGA
+>> Cyclone 5 based boards.
+>>
 
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index c4757e6367e7..cfca17ba2535 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -703,6 +703,110 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val, int *val2)
- }
- EXPORT_SYMBOL_GPL(iio_read_channel_scale);
- 
-+static int iio_channel_read_avail(struct iio_channel *chan,
-+				  const int **vals, int *type, int *length,
-+				  enum iio_chan_info_enum info)
-+{
-+	if (!iio_channel_has_available(chan->channel, info))
-+		return -EINVAL;
-+
-+	return chan->indio_dev->info->read_avail(chan->indio_dev, chan->channel,
-+						 vals, type, length, info);
-+}
-+
-+int iio_read_avail_channel_raw(struct iio_channel *chan,
-+			       const int **vals, int *length)
-+{
-+	int ret;
-+	int type;
-+
-+	mutex_lock(&chan->indio_dev->info_exist_lock);
-+	if (!chan->indio_dev->info) {
-+		ret = -ENODEV;
-+		goto err_unlock;
-+	}
-+
-+	ret = iio_channel_read_avail(chan,
-+				     vals, &type, length, IIO_CHAN_INFO_RAW);
-+err_unlock:
-+	mutex_unlock(&chan->indio_dev->info_exist_lock);
-+
-+	if (ret >= 0 && type != IIO_VAL_INT) {
-+		/* raw values are assumed to be IIO_VAL_INT */
-+		ret = -EINVAL;
-+		goto err_unlock;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iio_read_avail_channel_raw);
-+
-+static int iio_channel_read_max(struct iio_channel *chan,
-+				int *val, int *val2, int *type,
-+				enum iio_chan_info_enum info)
-+{
-+	int unused;
-+	const int *vals;
-+	int length;
-+	int ret;
-+
-+	if (!val2)
-+		val2 = &unused;
-+
-+	ret = iio_channel_read_avail(chan, &vals, type, &length, info);
-+	switch (ret) {
-+	case IIO_AVAIL_RANGE:
-+		switch (*type) {
-+		case IIO_VAL_INT:
-+			*val = vals[2];
-+			break;
-+		default:
-+			*val = vals[4];
-+			*val2 = vals[5];
-+		}
-+		return 0;
-+
-+	case IIO_AVAIL_LIST:
-+		if (length <= 0)
-+			return -EINVAL;
-+		switch (*type) {
-+		case IIO_VAL_INT:
-+			*val = vals[--length];
-+			while (length) {
-+				if (vals[--length] > *val)
-+					*val = vals[length];
-+			}
-+			break;
-+		default:
-+			/* FIXME: learn about max for other iio values */
-+			return -EINVAL;
-+		}
-+		return 0;
-+
-+	default:
-+		return ret;
-+	}
-+}
-+
-+int iio_read_max_channel_raw(struct iio_channel *chan, int *val)
-+{
-+	int ret;
-+	int type;
-+
-+	mutex_lock(&chan->indio_dev->info_exist_lock);
-+	if (!chan->indio_dev->info) {
-+		ret = -ENODEV;
-+		goto err_unlock;
-+	}
-+
-+	ret = iio_channel_read_max(chan, val, NULL, &type, IIO_CHAN_INFO_RAW);
-+err_unlock:
-+	mutex_unlock(&chan->indio_dev->info_exist_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iio_read_max_channel_raw);
-+
- int iio_get_channel_type(struct iio_channel *chan, enum iio_chan_type *type)
- {
- 	int ret = 0;
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 9edccfba1ffb..9a4f336d8b4a 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -226,6 +226,34 @@ int iio_read_channel_processed(struct iio_channel *chan, int *val);
- int iio_write_channel_raw(struct iio_channel *chan, int val);
- 
- /**
-+ * iio_read_max_channel_raw() - read maximum available raw value from a given
-+ *				channel, i.e. the maximum possible value.
-+ * @chan:		The channel being queried.
-+ * @val:		Value read back.
-+ *
-+ * Note raw reads from iio channels are in adc counts and hence
-+ * scale will need to be applied if standard units are required.
-+ */
-+int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
-+
-+/**
-+ * iio_read_avail_channel_raw() - read available raw values from a given channel
-+ * @chan:		The channel being queried.
-+ * @vals:		Available values read back.
-+ * @length:		Number of entries in vals.
-+ *
-+ * Returns an error code, IIO_AVAIL_RANGE or IIO_AVAIL_LIST.
-+ *
-+ * For ranges, three vals are always returned; min, step and max.
-+ * For lists, all the possible values are enumerated.
-+ *
-+ * Note raw available values from iio channels are in adc counts and
-+ * hence scale will need to be applied if standard units are required.
-+ */
-+int iio_read_avail_channel_raw(struct iio_channel *chan,
-+			       const int **vals, int *length);
-+
-+/**
-  * iio_get_channel_type() - get the type of a channel
-  * @channel:		The channel being queried.
-  * @type:		The type of the channel.
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 45b781084a4b..f9be8836ef23 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -315,6 +315,23 @@ static inline bool iio_channel_has_info(const struct iio_chan_spec *chan,
- 		(chan->info_mask_shared_by_all & BIT(type));
- }
- 
-+/**
-+ * iio_channel_has_available() - Checks if a channel has an available attribute
-+ * @chan: The channel to be queried
-+ * @type: Type of the available attribute to be checked
-+ *
-+ * Returns true if the channel supports reporting available values for the
-+ * given attribute type, false otherwise.
-+ */
-+static inline bool iio_channel_has_available(const struct iio_chan_spec *chan,
-+					     enum iio_chan_info_enum type)
-+{
-+	return (chan->info_mask_separate_available & BIT(type)) |
-+		(chan->info_mask_shared_by_type_available & BIT(type)) |
-+		(chan->info_mask_shared_by_dir_available & BIT(type)) |
-+		(chan->info_mask_shared_by_all_available & BIT(type));
-+}
-+
- #define IIO_CHAN_SOFT_TIMESTAMP(_si) {					\
- 	.type = IIO_TIMESTAMP,						\
- 	.channel = -1,							\
--- 
-2.1.4
+[snip]
+
+>>  / {
+>>  	model = "Altera SOCFPGA Cyclone V SoC Development Kit";
+>> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+>> +	compatible = "altr,socdk", "altr,socfpga-cyclone5", "altr,socfpga";
+> 
+> This looks a little too generic, what if there's another dk with another
+> SoC down the road?
+> 
+
+Right...I'll change it to "altr,socfpga-cyclone5-socdk",
+
+>>  	chosen {
+>>  		bootargs = "earlyprintk";
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> index 02e22f5..c5623a7 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> @@ -19,7 +19,7 @@
+>>  
+>>  / {
+>>  	model = "Terasic SoCkit";
+>> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+>> +	compatible = "terasic,sockit", "altr,socfpga-cyclone5", "altr,socfpga";
+> 
+> Same thing here, this seems a bit on the generic side.
+> 
+
+perhaps "terasic,socfpga-cyclone5-sockit" ?
+
+Thanks for reviewing.
+
+Dinh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
