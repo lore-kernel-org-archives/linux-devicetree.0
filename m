@@ -1,60 +1,80 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH 3/3] clk: imx: clk-imx6ul: add clk support for imx6ull
-Date: Tue, 8 Nov 2016 03:44:37 +0000
-Message-ID: <HE1PR04MB1450B9A947E90F1E17DABB118BA60@HE1PR04MB1450.eurprd04.prod.outlook.com>
-References: <1477969343-19887-1-git-send-email-peter.chen@nxp.com>
- <1477969343-19887-4-git-send-email-peter.chen@nxp.com>
- <20161105090506.GH5597@dragon>
+From: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 01/14] clk: Add clk_hw_get_clk() helper API to be used
+ by clk providers
+Date: Tue, 8 Nov 2016 09:38:40 +0530
+Message-ID: <22a27198-5659-2442-ce12-e1155a9699e7@codeaurora.org>
+References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
+ <1478517877-23733-2-git-send-email-riteshh@codeaurora.org>
+ <58214862.8080604@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161105090506.GH5597@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58214862.8080604-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kdorfman-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks, Shawn. All comments will be adopted in v2.
+Hi,
 
-Peter
-
->> +"pll4_audio_div", "pll3_pfd2_508m", "pll5_video_div", "pll3_usb_otg",
->> +}; static const char *epdc_sels[] = { "epdc_podf", "ipp_di0",
->> +"ipp_di1", "ldb_di0", "ldb_di1", };
->> +
+On 11/8/2016 9:07 AM, Rajendra Nayak wrote:
 >
->The new line is not needed.  There is already one below.
 >
+> On 11/07/2016 04:54 PM, Ritesh Harjani wrote:
+>> From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 >>
->>  static struct clk *clks[IMX6UL_CLK_END];  static struct
->> clk_onecell_data clk_data;
+>> Add a helper API that will allow clk providers to turn their clk_hw
+>> structures into struct clk pointer.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 >
- 
->> -#define IMX6UL_CLK_END			225
->> +/* For i.MX6ULL */
->> +#define IMX6UL_CLK_ESAI_PRED		225
->> +#define IMX6UL_CLK_ESAI_PODF		226
->> +#define IMX6UL_CLK_ESAI_EXTAL		227
->> +#define IMX6UL_CLK_ESAI_MEM		228
->> +#define IMX6UL_CLK_ESAI_IPG		229
->> +#define IMX6UL_CLK_DCP_CLK		230
->> +#define IMX6UL_CLK_EPDC_PRE_SEL		231
->> +#define IMX6UL_CLK_EPDC_SEL		232
->> +#define IMX6UL_CLK_EPDC_PODF		233
->> +#define IMX6UL_CLK_EPDC_ACLK		234
->> +#define IMX6UL_CLK_EPDC_PIX		235
->> +#define IMX6UL_CLK_ESAI_SEL		236
+> Please drop this patch, it isn't needed here anyway, besides
+> it needs to be reworked as already discussed.
+Ok, sure.
+
 >
->Can we have these imx6ull only clocks named after IMX6ULL_xxx?
+>> ---
+>>  drivers/clk/clk.c            | 6 ++++++
+>>  include/linux/clk-provider.h | 1 +
+>>  2 files changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+>> index 0fb39fe..52ef035 100644
+>> --- a/drivers/clk/clk.c
+>> +++ b/drivers/clk/clk.c
+>> @@ -186,6 +186,12 @@ const char *clk_hw_get_name(const struct clk_hw *hw)
+>>  }
+>>  EXPORT_SYMBOL_GPL(clk_hw_get_name);
+>>
+>> +struct clk *clk_hw_get_clk(const struct clk_hw *hw)
+>> +{
+>> +	return hw->clk;
+>> +}
+>> +EXPORT_SYMBOL_GPL(clk_hw_get_clk);
+>> +
+>>  struct clk_hw *__clk_get_hw(struct clk *clk)
+>>  {
+>>  	return !clk ? NULL : clk->core->hw;
+>> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+>> index af59638..37022a9 100644
+>> --- a/include/linux/clk-provider.h
+>> +++ b/include/linux/clk-provider.h
+>> @@ -729,6 +729,7 @@ struct clk_hw *clk_hw_register_gpio_mux(struct device *dev, const char *name,
+>>  /* helper functions */
+>>  const char *__clk_get_name(const struct clk *clk);
+>>  const char *clk_hw_get_name(const struct clk_hw *hw);
+>> +struct clk *clk_hw_get_clk(const struct clk_hw *hw);
+>>  struct clk_hw *__clk_get_hw(struct clk *clk);
+>>  unsigned int clk_hw_get_num_parents(const struct clk_hw *hw);
+>>  struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw);
+>>
 >
->Shawn
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
