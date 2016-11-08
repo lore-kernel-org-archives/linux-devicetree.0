@@ -1,69 +1,67 @@
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 1/6] clk: stm32f4: Add PLL_I2S & PLL_SAI for STM32F429/469
- boards
-Date: Tue, 8 Nov 2016 17:19:13 +0100
-Message-ID: <0368d067-461d-2edb-5561-9717934e0dde@st.com>
-References: <1478523943-23142-1-git-send-email-gabriel.fernandez@st.com>
- <1478523943-23142-2-git-send-email-gabriel.fernandez@st.com>
- <CAFvLkMQxvo=2Ak033n2XkPgdDfU5DLCMF7dj487QFB0e7WceCQ@mail.gmail.com>
- <ebadfacf-73fb-01a6-791a-324daad5e695@st.com>
- <CAFvLkMSwwyoi8Vb_-+6dViB8PaBRUoCZYBcrzDjgX9EJnv_mvQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for special
+ ISA
+Date: Tue, 08 Nov 2016 17:19:54 +0100
+Message-ID: <2368890.jTbyGqYR0M@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1478576829-112707-3-git-send-email-yuanzhichang@hisilicon.com>
+ <20161108114953.GB15297@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFvLkMSwwyoi8Vb_-+6dViB8PaBRUoCZYBcrzDjgX9EJnv_mvQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Rados=c5=82aw_Pietrzyk?= <radoslaw.pietrzyk@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Thompson <daniel.thompson@linaro.org>, Andrea Merello <andrea.merello@gmail.com>, devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161108114953.GB15297@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: gabriele.paoloni@huawei.com, benh@kernel.crashing.org, will.deacon@arm.com, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, minyard@acm.org, marc.zyngier@arm.com, liviu.dudau@arm.com, john.garry@huawei.com, zourongrong@gmail.com, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, "zhichang.yuan" <yuanzhichang@hisilicon.com>, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2016 09:52 AM, Radosław Pietrzyk wrote:
-> 2016-11-08 9:35 GMT+01:00 Gabriel Fernandez <gabriel.fernandez@st.com>:
->> Hi Radosław
->>
->> Many thanks for reviewing.
->>
->> On 11/07/2016 03:57 PM, Radosław Pietrzyk wrote:
->>>> +static struct clk_hw *clk_register_pll_div(const char *name,
->>>> +               const char *parent_name, unsigned long flags,
->>>> +               void __iomem *reg, u8 shift, u8 width,
->>>> +               u8 clk_divider_flags, const struct clk_div_table *table,
->>>> +               struct clk_hw *pll_hw, spinlock_t *lock)
->>>> +{
->>>> +       struct stm32f4_pll_div *pll_div;
->>>> +       struct clk_hw *hw;
->>>> +       struct clk_init_data init;
->>>> +       int ret;
->>>> +
->>>> +       /* allocate the divider */
->>>> +       pll_div = kzalloc(sizeof(*pll_div), GFP_KERNEL);
->>>> +       if (!pll_div)
->>>> +               return ERR_PTR(-ENOMEM);
->>>> +
->>>> +       init.name = name;
->>>> +       init.ops = &stm32f4_pll_div_ops;
->>>> +       init.flags = flags;
->>> Maybe it's worth to have CLK_SET_RATE_PARENT here and the VCO clock
->>> should have CLK_SET_RATE_GATE flag and we can get rid of custom
->>> divider ops.
->> I don't want to offer the possibility to change the vco clock through the
->> divisor of the pll (only by a boot-loader or by DT).
->>
->> e.g. if i make a set rate on lcd-tft clock, i don't want to change the SAI
->> frequencies.
->>
->> I used same structure for internal divisors of the pll (p, q, r) and for
->> post divisors (plli2s-q-div, pllsai-q-div & pllsai-r-div).
->> That why the CLK_SET_RATE_PARENT flag is transmit by parameter.
->>
->> These divisors are similar because we have to switch off the pll before
->> changing the rate.
->>
-> But changing pll and lcd dividers only may not be enough for getting
-> very specific pixelclocks and that might require changing the VCO
-> frequency itself. The rest of the SAI tree should be recalculated
-> then.
-I agree but it seems to be too much complicated to recalculate all PLL 
-divisors if we change the vco clock.
-You mean to use Clock notifier callback ?
+On Tuesday, November 8, 2016 11:49:53 AM CET Mark Rutland wrote:
+> On Tue, Nov 08, 2016 at 11:47:08AM +0800, zhichang.yuan wrote:
+> > +Hisilicon Hip06 low-pin-count device
+> > +  Usually LPC controller is part of PCI host bridge, so the legacy ISA ports
+> > +  locate on LPC bus can be accessed direclty. But some SoCs have independent
+> > +  LPC controller, and access the legacy ports by triggering LPC I/O cycles.
+> > +  Hisilicon Hip06 implements this LPC device.
+> 
+> s/direclty/directly/
+> 
+> My understanding of ISA (which may be flawed) is that it's not part of
+> the PCI host bridge, but rather on x86 it happens to share the IO space
+> with PCI.
+
+On normal systems, ISA or LPC are behind a PCI bridge device, which
+passes down both low addresses of I/O space and memory space.
+
+> So, how about this becomes:
+> 
+>   Hisilicon Hip06 SoCs implement a Low Pin Count (LPC) controller, which
+>   provides access to some legacy ISA devices.
+> 
+> I believe that we could theoretically have multiple independent LPC/ISA
+> busses, as is possible with PCI on !x86 systems. If the current ISA code
+> assumes a singleton bus, I think that's something that needs to be fixed
+> up more generically.
+> 
+> I don't see why we should need any architecture-specific code here. Why
+> can we not fix up the ISA bus code in drivers/of/address.c such that it
+> handles multiple ISA bus instances, and translates all sub-device
+> addresses relative to the specific bus instance?
+
+I think it is a relatively safe assumption that there is only one
+ISA bridge. A lot of old drivers hardcode PIO or memory addresses
+when talking to an ISA device, so having multiple instances is
+already problematic.
+
+What is odd about ARM64 here is that the PIO space is not shared among
+all ISA and PCI buses in some cases.
+
+	Arnd
