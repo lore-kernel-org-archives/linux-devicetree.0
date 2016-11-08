@@ -1,7 +1,7 @@
 From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Subject: [RESEND][PATCH 1/6] dt-bindings: arm: Update bindings for LS2088A targets
-Date: Tue, 8 Nov 2016 15:04:19 +0530
-Message-ID: <1478597664-14799-2-git-send-email-abhimanyu.saini@nxp.com>
+Subject: [RESEND][PATCH 4/6] dt-bindings: spi: Update dspi bindings for LS2088A
+Date: Tue, 8 Nov 2016 15:04:22 +0530
+Message-ID: <1478597664-14799-5-git-send-email-abhimanyu.saini@nxp.com>
 References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,30 +12,27 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROf
 Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings for LS2088A RDB and QDS board.
-
 Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/fsl.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index d6ee9c6..cad97d2 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -179,3 +179,10 @@ LS2080A ARMv8 based RDB Board
- Required root node properties:
-     - compatible = "fsl,ls2080a-rdb", "fsl,ls2080a";
- 
-+LS2088A ARMv8 based QDS Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-qds", "fsl,ls2088a"
-+
-+LS2088A ARMv8 based RDB Board
-+Required root node properties:
-+    - compatible = "fsl,ls2088a-rdb", "fsl,ls2088a"
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+index ff5893d..0870660 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+@@ -4,7 +4,8 @@ Required properties:
+ - compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi",
+ 		"fsl,ls2085a-dspi"
+ 		or
+-		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
++		"fsl,<chip>-dspi" followed by "fsl,ls2085a-dspi",
++		<chip> can be: ls2080a, ls2088a
+ - reg : Offset and length of the register set for the device
+ - interrupts : Should contain SPI controller interrupt
+ - clocks: from common clock binding: handle to dspi clock.
 -- 
 1.9.1
 
