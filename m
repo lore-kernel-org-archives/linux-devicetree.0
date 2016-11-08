@@ -1,304 +1,561 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH 4/6] ARM: dts: add basic support for Rockchip RK1108 SOC
-Date: Tue, 8 Nov 2016 20:31:55 +0800
-Message-ID: <0516ad0b-bfbe-ec80-fdb6-e118dab3e758@rock-chips.com>
-References: <1478175975-11779-1-git-send-email-andy.yan@rock-chips.com>
- <1478176848-12132-1-git-send-email-andy.yan@rock-chips.com>
- <1788707.rfxhNfegGu@phil>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC and a comparator
+Date: Tue, 8 Nov 2016 12:58:58 +0100
+Message-ID: <1478606339-31253-9-git-send-email-peda@axentia.se>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1788707.rfxhNfegGu@phil>
+In-Reply-To: <1478606339-31253-1-git-send-email-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: elaine.zhang@rock-chips.com, mturquette@baylibre.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, Thomas Gleixner <tglx@linutronix.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko:
+The DAC is used to find the peak level of an alternating voltage input
+signal by a binary search using the output of a comparator wired to
+an interrupt pin. Like so:
+                          _
+                         | \
+    input +------>-------|+ \
+                         |   \
+           .-------.     |    }---.
+           |       |     |   /    |
+           |    dac|-->--|- /     |
+           |       |     |_/      |
+           |       |              |
+           |       |              |
+           |    irq|------<-------'
+           |       |
+           '-------'
 
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../testing/sysfs-bus-iio-adc-envelope-detector    |  36 ++
+ MAINTAINERS                                        |   2 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/envelope-detector.c                | 422 +++++++++++++++++++++
+ 5 files changed, 471 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+ create mode 100644 drivers/iio/adc/envelope-detector.c
 
-On 2016年11月04日 16:00, Heiko Stuebner wrote:
-> Am Donnerstag, 3. November 2016, 20:40:48 CET schrieb Andy Yan:
->> RK1108 is embedded with an ARM Cortex-A7 single core and a DSP core.
->> It is designed for varies application scenario such as car DVR, sports
->> DV, secure camera and UAV camera.
->>
->> This patch add basic support for it with DMAC / UART / CRU / pinctrl
->> enabled.
->>
->> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->> ---
->>
->>   arch/arm/boot/dts/rk1108.dtsi     | 420
->> ++++++++++++++++++++++++++++++++++++++ arch/arm/mach-rockchip/rockchip.c |
->>   1 +
->>   2 files changed, 421 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/rk1108.dtsi
->>
->> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
->> new file mode 100644
->> index 0000000..9dccfea
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/rk1108.dtsi
->> @@ -0,0 +1,420 @@
->> +/*
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> + */
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/rk1108-cru.h>
->> +#include <dt-bindings/pinctrl/rockchip.h>
->> +/ {
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +
->> +	compatible = "rockchip,rk1108";
->> +
->> +	interrupt-parent = <&gic>;
->> +
->> +	aliases {
->> +		serial0 = &uart0;
->> +		serial1 = &uart1;
->> +		serial2 = &uart2;
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		cpu0: cpu@f00 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a7";
->> +			reg = <0xf00>;
->> +		};
->> +
-> unnecessary empty line
-
-     Okay, I will remove it.
->> +	};
->> +
->> +	amba {
->> +		compatible = "simple-bus";
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		pdma: pdma@102a0000 {
->> +			compatible = "arm,pl330", "arm,primecell";
->> +			reg = <0x102a0000 0x4000>;
->> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> +			#dma-cells = <1>;
->> +			arm,pl330-broken-no-flushp;
->> +			clocks = <&cru ACLK_DMAC>;
->> +			clock-names = "apb_pclk";
->> +		};
->> +	};
->> +
->> +	arm-pmu {
->> +		compatible = "arm,cortex-a7-pmu";
->> +		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
->> +	};
->> +
->> +
->> +	timer {
->> +		compatible = "arm,armv7-timer";
->> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-> IRQ_TYPE_LEVEL_HIGH)>,
->> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> CPU_MASK_SIMPLE(4)? You only have one core, not 4.
->
->
->> +		clock-frequency = <24000000>;
->> +	};
->> +
->> +	xin24m: oscillator {
->> +		compatible = "fixed-clock";
->> +		clock-frequency = <24000000>;
->> +		clock-output-names = "xin24m";
->> +		#clock-cells = <0>;
->> +	};
->> +
->> +	bus_intmem@10080000 {
->> +		compatible = "mmio-sram";
->> +		reg = <0x10080000 0x2000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges = <0 0x10080000 0x2000>;
->> +	};
->> +
->> +	grf: syscon@10300000 {
->> +		compatible = "rockchip,rk1108-grf", "syscon";
->> +		reg = <0x10300000 0x1000>;
->> +	};
->> +
->> +	emmc: dwmmc@30110000 {
->> +		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
->> +		clock-freq-min-max = <400000 150000000>;
->> +		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
->> +			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
->> +		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> +		fifo-depth = <0x100>;
->> +		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg = <0x30110000 0x4000>;
->> +		status = "disabled";
->> +	};
->> +
->> +	sdio: dwmmc@30120000 {
->> +		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
->> +		clock-freq-min-max = <400000 150000000>;
->> +		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
->> +			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
->> +		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> +		fifo-depth = <0x100>;
->> +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg = <0x30120000 0x4000>;
->> +		status = "disabled";
->> +	};
->> +
->> +	sdmmc: dwmmc@30130000 {
-> ordering by register address please (uart2 before sdmmc etc; same for
-> everything else)
->
->
->> +		compatible = "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc";
->> +		clock-freq-min-max = <400000 100000000>;
->> +		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
->> +			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
->> +		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> +		fifo-depth = <0x100>;
->> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg = <0x30130000 0x4000>;
->> +		status = "disabled";
->> +	};
->> +
->> +	uart2: serial@10210000 {
->> +		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
->> +		reg = <0x10210000 0x100>;
->> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift = <2>;
->> +		reg-io-width = <4>;
->> +		clock-frequency = <24000000>;
->> +		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
->> +		clock-names = "baudclk", "apb_pclk";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&uart2m0_xfer>;
->> +		status = "disabled";
->> +	};
->> +
->> +	uart1: serial@10220000 {
->> +		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
->> +		reg = <0x10220000 0x100>;
->> +		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift = <2>;
->> +		reg-io-width = <4>;
->> +		clock-frequency = <24000000>;
->> +		clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
->> +		clock-names = "baudclk", "apb_pclk";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&uart1_xfer>;
->> +		status = "disabled";
->> +	};
->> +
->> +	uart0: serial@10230000 {
->> +		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
->> +		reg = <0x10230000 0x100>;
->> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift = <2>;
->> +		reg-io-width = <4>;
->> +		clock-frequency = <24000000>;
->> +		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
->> +		clock-names = "baudclk", "apb_pclk";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
->> +		status = "disabled";
->> +	};
->> +
->> +	cru: clock-controller@20200000 {
->> +		compatible = "rockchip,rk1108-cru";
->> +		reg = <0x20200000 0x1000>;
->> +		rockchip,grf = <&grf>;
->> +		#clock-cells = <1>;
->> +		#reset-cells = <1>;
->> +	};
->> +
->> +	gic: interrupt-controller@32010000 {
->> +		compatible = "arm,cortex-a15-gic";
-> compatible = "arm,gic-400"; ?
->
->> +		interrupt-controller;
->> +		#interrupt-cells = <3>;
->> +		#address-cells = <0>;
->> +
->> +		reg = <0x32011000 0x1000>,
->> +		      <0x32012000 0x1000>;
-> please provide all 4 register areas and also the interrupt (
-
-     I only found 2 register areas in our rockchip linux 3.10 source 
-code. And haven't found the interrupt. From the arm,gic bindings, the 
-interrupt property is optional. So am not sure if we
-really need it here.
->
->> +	};
->> +
-> [...]
->
->> diff --git a/arch/arm/mach-rockchip/rockchip.c
->> b/arch/arm/mach-rockchip/rockchip.c index a7ab9ec..e7fdf06 100644
->> --- a/arch/arm/mach-rockchip/rockchip.c
->> +++ b/arch/arm/mach-rockchip/rockchip.c
->> @@ -76,6 +76,7 @@ static void __init rockchip_dt_init(void)
->>   }
->>
->>   static const char * const rockchip_board_dt_compat[] = {
->> +	"rockchip,rk1108",
->>   	"rockchip,rk2928",
->>   	"rockchip,rk3066a",
->>   	"rockchip,rk3066b",
-> please split this into a separate patch, as code and dts changes need to go
-> through different branches.
->
->
-> Thanks
-> Heiko
->
->
->
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+new file mode 100644
+index 000000000000..2071f9bcfaa5
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+@@ -0,0 +1,36 @@
++What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_invert
++Date:		October 2016
++KernelVersion:	4.9
++Contact:	Peter Rosin <peda@axentia.se>
++Description:
++		The DAC is used to find the peak level of an alternating
++		voltage input signal by a binary search using the output
++		of a comparator wired to an interrupt pin. Like so:
++		                           _
++		                          | \
++		     input +------>-------|+ \
++		                          |   \
++		            .-------.     |    }---.
++		            |       |     |   /    |
++		            |    dac|-->--|- /     |
++		            |       |     |_/      |
++		            |       |              |
++		            |       |              |
++		            |    irq|------<-------'
++		            |       |
++		            '-------'
++		The boolean invert attribute (0/1) should be set when the
++		input signal is centered around the maximum value of the
++		dac instead of zero. The envelope detector will search
++		from below in this case and will also invert the result.
++		The edge/level of the interrupt is also switched to its
++		opposite value.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_altvoltageY_compare_interval
++Date:		October 2016
++KernelVersion:	4.9
++Contact:	Peter Rosin <peda@axentia.se>
++Description:
++		Number of milliseconds to wait for the comparator in each
++		step of the binary search for the input peak level. Needs
++		to relate to the frequency of the input signal.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0e13066ca3a2..539b20baf791 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6136,7 +6136,9 @@ IIO ENVELOPE DETECTOR
+ M:	Peter Rosin <peda@axentia.se>
+ L:	linux-iio@vger.kernel.org
+ S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+ F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
++F:	drivers/iio/adc/envelope-detector.c
+ 
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23@kernel.org>
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 99c051490eff..de4030894f23 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -195,6 +195,16 @@ config DA9150_GPADC
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called berlin2-adc.
+ 
++config ENVELOPE_DETECTOR
++	tristate "Envelope detector using a DAC and a comparator"
++	depends on OF
++	help
++	  Say yes here to build support for an envelope detector using a DAC
++	  and a comparator.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called envelope-detector.
++
+ config EXYNOS_ADC
+ 	tristate "Exynos ADC driver support"
+ 	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+index 7a40c04c311f..0d773c6a0578 100644
+--- a/drivers/iio/adc/Makefile
++++ b/drivers/iio/adc/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
+ obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
+ obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+ obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
++obj-$(CONFIG_ENVELOPE_DETECTOR) += envelope-detector.o
+ obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+ obj-$(CONFIG_FSL_MX25_ADC) += fsl-imx25-gcq.o
+ obj-$(CONFIG_HI8435) += hi8435.o
+diff --git a/drivers/iio/adc/envelope-detector.c b/drivers/iio/adc/envelope-detector.c
+new file mode 100644
+index 000000000000..fef15c0d7c9c
+--- /dev/null
++++ b/drivers/iio/adc/envelope-detector.c
+@@ -0,0 +1,422 @@
++/*
++ * Driver for an envelope detector using a DAC and a comparator
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/*
++ * The DAC is used to find the peak level of an alternating voltage input
++ * signal by a binary search using the output of a comparator wired to
++ * an interrupt pin. Like so:
++ *                           _
++ *                          | \
++ *     input +------>-------|+ \
++ *                          |   \
++ *            .-------.     |    }---.
++ *            |       |     |   /    |
++ *            |    dac|-->--|- /     |
++ *            |       |     |_/      |
++ *            |       |              |
++ *            |       |              |
++ *            |    irq|------<-------'
++ *            |       |
++ *            '-------'
++ */
++
++#include <linux/completion.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include <linux/workqueue.h>
++
++struct envelope {
++	spinlock_t comp_lock; /* protects comp */
++	int comp;
++
++	struct mutex read_lock; /* protects everything else */
++
++	int comp_irq;
++	u32 comp_irq_trigger;
++	u32 comp_irq_trigger_inv;
++
++	struct iio_channel *dac;
++	struct delayed_work comp_timeout;
++
++	unsigned int comp_interval;
++	bool invert;
++	u32 dac_max;
++
++	int high;
++	int level;
++	int low;
++
++	struct completion done;
++};
++
++/*
++ * The envelope_detector_comp_latch function works together with the compare
++ * interrupt service routine below (envelope_detector_comp_isr) as a latch
++ * (one-bit memory) for if the interrupt has triggered since last calling
++ * this function.
++ * The ..._comp_isr function disables the interrupt so that the cpu does not
++ * need to service a possible interrupt flood from the comparator when no-one
++ * cares anyway, and this ..._comp_latch function reenables them again if
++ * needed.
++ */
++static int envelope_detector_comp_latch(struct envelope *env)
++{
++	int comp;
++
++	spin_lock_irq(&env->comp_lock);
++	comp = env->comp;
++	env->comp = 0;
++	spin_unlock_irq(&env->comp_lock);
++
++	if (!comp)
++		return 0;
++
++	/*
++	 * The irq was disabled, and is reenabled just now.
++	 * But there might have been a pending irq that
++	 * happened while the irq was disabled that fires
++	 * just as the irq is reenabled. That is not what
++	 * is desired.
++	 */
++	enable_irq(env->comp_irq);
++
++	/* So, synchronize this possibly pending irq... */
++	synchronize_irq(env->comp_irq);
++
++	/* ...and redo the whole dance. */
++	spin_lock_irq(&env->comp_lock);
++	comp = env->comp;
++	env->comp = 0;
++	spin_unlock_irq(&env->comp_lock);
++
++	if (comp)
++		enable_irq(env->comp_irq);
++
++	return 1;
++}
++
++static irqreturn_t envelope_detector_comp_isr(int irq, void *ctx)
++{
++	struct envelope *env = ctx;
++
++	spin_lock(&env->comp_lock);
++	env->comp = 1;
++	disable_irq_nosync(env->comp_irq);
++	spin_unlock(&env->comp_lock);
++
++	return IRQ_HANDLED;
++}
++
++static void envelope_detector_setup_compare(struct envelope *env)
++{
++	int ret;
++
++	/*
++	 * Do a binary search for the peak input level, and stop
++	 * when that level is "trapped" between two adjacent DAC
++	 * values.
++	 * When invert is active, use the midpoint floor so that
++	 * env->level ends up as env->low when the termination
++	 * criteria below is fulfilled, and use the midpoint
++	 * ceiling when invert is not active so that env->level
++	 * ends up as env->high in that case.
++	 */
++	env->level = (env->high + env->low + !env->invert) / 2;
++
++	if (env->high == env->low + 1) {
++		complete(&env->done);
++		return;
++	}
++
++	/* Set a "safe" DAC level (if there is such a thing)... */
++	ret = iio_write_channel_raw(env->dac, env->invert ? 0 : env->dac_max);
++	if (ret < 0)
++		goto err;
++
++	/* ...clear the comparison result... */
++	envelope_detector_comp_latch(env);
++
++	/* ...set the real DAC level... */
++	ret = iio_write_channel_raw(env->dac, env->level);
++	if (ret < 0)
++		goto err;
++
++	/* ...and wait for a bit to see if the latch catches anything. */
++	schedule_delayed_work(&env->comp_timeout,
++			      msecs_to_jiffies(env->comp_interval));
++	return;
++
++err:
++	env->level = ret;
++	complete(&env->done);
++}
++
++static void envelope_detector_timeout(struct work_struct *work)
++{
++	struct envelope *env = container_of(work, struct envelope,
++					    comp_timeout.work);
++
++	/* Adjust low/high depending on the latch content... */
++	if (!envelope_detector_comp_latch(env) ^ !env->invert)
++		env->low = env->level;
++	else
++		env->high = env->level;
++
++	/* ...and continue the search. */
++	envelope_detector_setup_compare(env);
++}
++
++static int envelope_detector_read_raw(struct iio_dev *indio_dev,
++				      struct iio_chan_spec const *chan,
++				      int *val, int *val2, long mask)
++{
++	struct envelope *env = iio_priv(indio_dev);
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		/*
++		 * When invert is active, start with high=max+1 and low=0
++		 * since we will end up with the low value when the
++		 * termination criteria is fulfilled (rounding down). And
++		 * start with high=max and low=-1 when invert is not active
++		 * since we will end up with the high value in that case.
++		 * This ensures that the returned value in both cases are
++		 * in the same range as the DAC and is a value that has not
++		 * triggered the comparator.
++		 */
++		mutex_lock(&env->read_lock);
++		env->high = env->dac_max + env->invert;
++		env->low = -1 + env->invert;
++		envelope_detector_setup_compare(env);
++		wait_for_completion(&env->done);
++		if (env->level < 0) {
++			ret = env->level;
++			goto err_unlock;
++		}
++		*val = env->invert ? env->dac_max - env->level : env->level;
++		mutex_unlock(&env->read_lock);
++
++		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_SCALE:
++		return iio_read_channel_scale(env->dac, val, val2);
++	}
++
++	return -EINVAL;
++
++err_unlock:
++	mutex_unlock(&env->read_lock);
++	return ret;
++}
++
++static ssize_t envelope_show_invert(struct iio_dev *indio_dev,
++				    uintptr_t private,
++				    struct iio_chan_spec const *ch, char *buf)
++{
++	struct envelope *env = iio_priv(indio_dev);
++
++	return sprintf(buf, "%u\n", env->invert);
++}
++
++static ssize_t envelope_store_invert(struct iio_dev *indio_dev,
++				     uintptr_t private,
++				     struct iio_chan_spec const *ch,
++				     const char *buf, size_t len)
++{
++	struct envelope *env = iio_priv(indio_dev);
++	unsigned long invert;
++	int ret;
++	u32 trigger;
++
++	ret = kstrtoul(buf, 0, &invert);
++	if (ret < 0)
++		return ret;
++	if (invert > 1)
++		return -EINVAL;
++
++	trigger = invert ? env->comp_irq_trigger_inv : env->comp_irq_trigger;
++
++	mutex_lock(&env->read_lock);
++	if (invert != env->invert)
++		ret = irq_set_irq_type(env->comp_irq, trigger);
++	if (!ret) {
++		env->invert = invert;
++		ret = len;
++	}
++	mutex_unlock(&env->read_lock);
++
++	return ret;
++}
++
++static ssize_t envelope_show_comp_interval(struct iio_dev *indio_dev,
++					   uintptr_t private,
++					   struct iio_chan_spec const *ch,
++					   char *buf)
++{
++	struct envelope *env = iio_priv(indio_dev);
++
++	return sprintf(buf, "%u\n", env->comp_interval);
++}
++
++static ssize_t envelope_store_comp_interval(struct iio_dev *indio_dev,
++					    uintptr_t private,
++					    struct iio_chan_spec const *ch,
++					    const char *buf, size_t len)
++{
++	struct envelope *env = iio_priv(indio_dev);
++	unsigned long interval;
++	int ret;
++
++	ret = kstrtoul(buf, 0, &interval);
++	if (ret < 0)
++		return ret;
++	if (interval > 1000)
++		return -EINVAL;
++
++	mutex_lock(&env->read_lock);
++	env->comp_interval = interval;
++	mutex_unlock(&env->read_lock);
++
++	return len;
++}
++
++static const struct iio_chan_spec_ext_info envelope_detector_ext_info[] = {
++	{ .name = "invert",
++	  .read = envelope_show_invert,
++	  .write = envelope_store_invert, },
++	{ .name = "compare_interval",
++	  .read = envelope_show_comp_interval,
++	  .write = envelope_store_comp_interval, },
++	{ /* sentinel */ }
++};
++
++static const struct iio_chan_spec envelope_detector_iio_channel = {
++	.type = IIO_ALTVOLTAGE,
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++			    | BIT(IIO_CHAN_INFO_SCALE),
++	.ext_info = envelope_detector_ext_info,
++	.indexed = 1,
++};
++
++static const struct iio_info envelope_detector_info = {
++	.read_raw = &envelope_detector_read_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int envelope_detector_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct iio_dev *indio_dev;
++	struct envelope *env;
++	enum iio_chan_type type;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*env));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, indio_dev);
++	env = iio_priv(indio_dev);
++	env->comp_interval = 50; /* some sensible default? */
++
++	spin_lock_init(&env->comp_lock);
++	mutex_init(&env->read_lock);
++	init_completion(&env->done);
++	INIT_DELAYED_WORK(&env->comp_timeout, envelope_detector_timeout);
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->dev.of_node = dev->of_node;
++	indio_dev->info = &envelope_detector_info;
++	indio_dev->channels = &envelope_detector_iio_channel;
++	indio_dev->num_channels = 1;
++
++	env->dac = devm_iio_channel_get(dev, "dac");
++	if (IS_ERR(env->dac)) {
++		if (PTR_ERR(env->dac) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get dac input channel\n");
++		return PTR_ERR(env->dac);
++	}
++
++	env->comp_irq = platform_get_irq_byname(pdev, "comp");
++	if (env->comp_irq < 0) {
++		if (env->comp_irq != -EPROBE_DEFER)
++			dev_err(dev, "failed to get compare interrupt\n");
++		return env->comp_irq;
++	}
++
++	ret = devm_request_irq(dev, env->comp_irq, envelope_detector_comp_isr,
++			       0, "envelope-detector", env);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to request interrupt\n");
++		return ret;
++	}
++	env->comp_irq_trigger = irq_get_trigger_type(env->comp_irq);
++	if (env->comp_irq_trigger & IRQF_TRIGGER_RISING)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_FALLING;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_FALLING)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_RISING;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_HIGH)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_LOW;
++	if (env->comp_irq_trigger & IRQF_TRIGGER_LOW)
++		env->comp_irq_trigger_inv |= IRQF_TRIGGER_HIGH;
++
++	ret = iio_get_channel_type(env->dac, &type);
++	if (ret < 0)
++		return ret;
++
++	if (type != IIO_VOLTAGE) {
++		dev_err(dev, "dac is of the wrong type\n");
++		return -EINVAL;
++	}
++
++	ret = iio_read_max_channel_raw(env->dac, &env->dac_max);
++	if (ret < 0) {
++		dev_err(dev, "dac does not indicate its raw maximum value\n");
++		return ret;
++	}
++
++	return devm_iio_device_register(dev, indio_dev);
++}
++
++static const struct of_device_id envelope_detector_match[] = {
++	{ .compatible = "axentia,tse850-envelope-detector", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, envelope_detector_match);
++
++static struct platform_driver envelope_detector_driver = {
++	.probe = envelope_detector_probe,
++	.driver = {
++		.name = "iio-envelope-detector",
++		.of_match_table = envelope_detector_match,
++	},
++};
++module_platform_driver(envelope_detector_driver);
++
++MODULE_DESCRIPTION("Envelope detector using a DAC and a comparator");
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.4
