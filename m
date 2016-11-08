@@ -1,31 +1,106 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Tue, 8 Nov 2016 09:06:10 -0800
-Message-ID: <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
-References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
- <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
- <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de> <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
- <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Tue, 8 Nov 2016 17:05:50 +0000
+Message-ID: <ecf81900-8116-2ef7-8ebb-e5739cc91de7@huawei.com>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
+ <20161108161245.GD20591@arm.com>
+ <8adfe182-4939-479d-6013-25ec40021b20@huawei.com>
+ <20161108164948.GG20591@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Joel Holdsworth <joel@airwebreathe.org.uk>, Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi@vger.kernel.org, Clifford Wolf <clifford@clifford.at>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161108164948.GG20591@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, minyard@acm.org, arnd@arndb.de, catalin.marinas@arm.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, olof@lixom.net, robh+dt@kernel.org, zourongrong@gmail.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kantyzc@163.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Marek,
-
-On Mon, Nov 7, 2016 at 10:53 AM, Marek Vasut <marex@denx.de> wrote:
-
->> On the whole, I don't think the zero-length transfers are too
->> egregiously bad, and all the alternatives seem worse to me.
+On 08/11/2016 16:49, Will Deacon wrote:
+> On Tue, Nov 08, 2016 at 04:33:44PM +0000, John Garry wrote:
+>> On 08/11/2016 16:12, Will Deacon wrote:
+>>> On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
+>>>> +static inline void arm64_set_extops(struct extio_ops *ops)
+>>>> +{
+>>>> +	if (ops)
+>>>> +		WRITE_ONCE(arm64_extio_ops, ops);
+>>>
+>>> Why does this need to be WRITE_ONCE? You don't have READ_ONCE on the reader
+>>> side. Also, what if multiple drivers want to set different ops for distinct
+>>> address ranges?
+>>
+>> I think that the idea here is that we only have possibly one master in the
+>> system which offers indirectIO backend, so another one could not possibly
+>> re-set this value.
 >
-> So why not turn the CS line into GPIO and just toggle the GPIO?
+> Why is that assumption valid, and why does WRITE_ONCE help there? It's not
+> ONCE as in WARN_ONCE, more ONCE as in exactly-once-per-invocation.
 
-Does that work with *all* SPI controllers?
+It's only valid based on the inherent assumption that all indirectIO is 
+redirected to one backend master, i.e. LPC driver.
+
+Anyway, right, I don't think that WRITE_ONCE is correct. Zhichang was 
+looking for something which would only allow the pointer to be written 
+once ever.
+
+>
+>>>> diff --git a/arch/arm64/kernel/extio.c b/arch/arm64/kernel/extio.c
+>>>> new file mode 100644
+>>>> index 0000000..647b3fa
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/kernel/extio.c
+>>>> @@ -0,0 +1,27 @@
+>>>> +/*
+>>>> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
+>>>> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>> + * published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + *
+>>>> + * You should have received a copy of the GNU General Public License
+>>>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>>> + */
+>>>> +
+>>>> +#include <linux/io.h>
+>>>> +
+>>>> +struct extio_ops *arm64_extio_ops;
+>>>> +
+>>>> +
+>>>> +BUILD_EXTIO(b, u8)
+>>>> +
+>>>> +BUILD_EXTIO(w, u16)
+>>>> +
+>>>> +BUILD_EXTIO(l, u32)
+>>>
+>>> Is there no way to make this slightly more generic, so that it can be
+>>> re-used elsewhere? For example, if struct extio_ops was common, then
+>>> you could have the singleton (which maybe should be an interval tree?),
+>>> type definition, setter function and the BUILD_EXTIO invocations
+>>> somewhere generic, rather than squirelled away in the arch backend.
+>>>
+>> The concern would be that some architecture which uses generic higher-level
+>> ISA accessor ops, but have IO space, could be affected.
+>
+> You're already adding a Kconfig symbol for this stuff, so you can keep
+> that if you don't want it on other architectures. I'm just arguing that
+> plumbing drivers directly into arch code via arm64_set_extops is not
+> something I'm particularly fond of, especially when it looks like it
+> could be avoided with a small amount of effort.
+
+We'll check this.
 
 Cheers,
+John
 
-Moritz
+>
+> Will
+>
+> .
+>
