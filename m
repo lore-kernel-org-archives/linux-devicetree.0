@@ -1,83 +1,51 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 2/2] gpio: xilinx: Add clock support
-Date: Tue, 8 Nov 2016 06:52:31 -0800
-Message-ID: <20161108145231.GR14444@xsjsorenbubuntu>
-References: <1478581990-28276-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1478581990-28276-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI
+ protocol
+Date: Tue, 8 Nov 2016 15:11:07 +0000
+Message-ID: <28decdc3-6b86-924f-d3c1-9873a8cfce77@arm.com>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <20161108145118.GR1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478581990-28276-2-git-send-email-shubhrajyoti.datta@xilinx.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161108145118.GR1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-11-08 at 10:43:10 +0530, Shubhrajyoti Datta wrote:
-> Add basic clock support for xilinx gpio.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  drivers/gpio/gpio-xilinx.c |   22 ++++++++++++++++++++++
->  1 files changed, 22 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 14b2a62..923cab8 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -13,6 +13,7 @@
->   */
->  
->  #include <linux/bitops.h>
-> +#include <linux/clk.h>
->  #include <linux/init.h>
->  #include <linux/errno.h>
->  #include <linux/module.h>
-> @@ -45,6 +46,7 @@
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
-> + * @clk: Clock resource for this controller
->   */
->  struct xgpio_instance {
->  	struct of_mm_gpio_chip mmchip;
-> @@ -52,6 +54,7 @@ struct xgpio_instance {
->  	u32 gpio_state[2];
->  	u32 gpio_dir[2];
->  	spinlock_t gpio_lock[2];
-> +	struct clk *clk;
->  };
->  
->  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
->  	struct xgpio_instance *chip = platform_get_drvdata(pdev);
->  
->  	of_mm_gpiochip_remove(&chip->mmchip);
-> +	clk_disable_unprepare(chip->clk);
->  
->  	return 0;
->  }
-> @@ -307,6 +311,23 @@ static int xgpio_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, chip);
->  
-> +	/* Retrieve GPIO clock */
-> +	chip->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(chip->clk)) {
-> +		if (PTR_ERR(chip->clk) == -ENOENT) {
-> +			dev_info(&pdev->dev, "No clocks found for clk\n");
-> +			chip->clk = NULL;
-> +		} else {
-> +			dev_err(&pdev->dev, "axi clock error\n");
-> +			return PTR_ERR(chip->clk);
-> +		}
-> +	}
 
-In the bindings you document 'clocks' as required, but it's handled as
-optional here. Things should be consistent and given that the existing
-binding doesn't require clocks, we're probably stuck with having the
-clock optional.
 
-	Sören
+On 08/11/16 14:51, Russell King - ARM Linux wrote:
+> On Wed, Nov 02, 2016 at 10:52:03PM -0600, Sudeep Holla wrote:
+>> This is minor rework of the series[1] from Neil Armstrong's to support
+>> legacy SCPI protocol to make DT bindings more generic and move out all
+>> the platform specific bindings out of the generic binding document.
+>
+> Is this what would be in my HBI0282B Juno?
+>
+
+No, it's one on the AmLogic Meson GXBB platform. Juno never supported
+that except that old firmware use it internally. By that I mean some
+version of trusted firmware used legacy SCPI but they are generally
+bundled together in fip, so you should not see any issue with upgrade.
+
+> (Note: I only have the original firmware on the board, as the Linaro
+> firmware drops are completely broken for it.)
+>
+
+I am currently trying to run Linaro 16.10 release, I don't see any issue
+except network boot from UEFI which is known and reported.
+
+I will go through your logs in detail and try to replicate your issue.
+I assume you have tried replacing the entry contents of the uSD with the
+release. I will start with that now.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
