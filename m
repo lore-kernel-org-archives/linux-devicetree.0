@@ -1,106 +1,98 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a
- DAC and a comparator
-Date: Tue, 8 Nov 2016 19:38:31 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1611081809320.3501@nanos>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se> <1478606339-31253-9-git-send-email-peda@axentia.se> <alpine.DEB.2.20.1611081630450.3501@nanos> <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 2/3] ARM64: dts: sun6i: add dma node for a64.
+Date: Tue, 8 Nov 2016 19:47:15 +0100
+Message-ID: <20161108184715.x5kjhjthmuxor2xz@lukather>
+References: <20161107182247.GA3669@arx12>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============8789798629269140898=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161107182247.GA3669@arx12>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hao Zhang <hao5781286@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Nov 2016, Peter Rosin wrote:
-> On 2016-11-08 16:59, Thomas Gleixner wrote:
 
-> > So you need that whole dance including the delayed work because you cannot
-> > call iio_write_channel_raw() from hard interrupt context, right?
-> 
-> It's not the "cannot call from hard irq context" that made me do that, it's..
+--===============8789798629269140898==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="blsduocvkwalq6g6"
+Content-Disposition: inline
 
-Well, what guarantees you that the DAC is writeable from IRQ context? It
-might be hanging off an i2c/spi bus as well....
 
-> > The core will mask the interrupt line until the threaded handler is
-> > finished. The threaded handler is invoked with preemption enabled, so you
-> > can sleep there as long as you want. So you can do everything in your
-> > handler and the above dance is just not required.
-> 
-> ...that I couldn't work out how to reenable a oneshot irq once it had fired,
-> short of freeing the irq and requesting it again. That seemed entirely
-> bogus, the driver shouldn't risk losing a resource like that so I don't know
-> what I didn't see? Or maybe it was that I had a hard time resolving the race
-> between the irq and the timeout in a nice way. I honestly don't remember
-> why exactly I abandoned oneshot irqs, but this enable/sync/enable dance
-> was much nicer than what I came up with for the oneshot irq solution I
-> originally worked on.
+--blsduocvkwalq6g6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Threaded ONESHOT irqs work this way:
+Hi,
 
- interrupt fires
-   mask interrupt
-   handler thread is woken
- 
- handler thread runs
-   invokes isr
-   unmask interrupt
+On Tue, Nov 08, 2016 at 02:22:47AM +0800, Hao Zhang wrote:
+> This adds the dma node for sun50i a64.
+>=20
+> Signed-off-by: Hao Zhang <hao5781286@gmail.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-a64.dtsi
+> index e3c3d7d8..855ae2c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -227,6 +227,15 @@
+>  			};
+>  		};
+> =20
+> +		dma: dma-controller@01c02000 {
 
-So if you rewrite the DAC to the new value in your ISR, then you should not
-get any spurious interrupt.
+Please order the nodes by base adress, thanks!
+Maxime
 
-Note, that this only works for level type interrupts.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-We do not mask edge type interrupts as we might lose an edge, but if that
-helps the cause of your problem it's simple enough to make it conditionally
-doing so in the core.
+--blsduocvkwalq6g6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Or maybe I had problems with the possibly pending irq also when using a
-> oneshot irq, but didn't realize it? That was something I discovered quite
-> late in the process, some time after moving away from oneshot irqs. Are
-> pending irqs cleared when requesting (or reenabling, however that is done)
-> a oneshot irq?
+-----BEGIN PGP SIGNATURE-----
 
-Pending irqs are only replayed, when you reenable an interrupt via
-enable_irq(). That can happen either by software or by hardware.
+iQIcBAEBCAAGBQJYIh2zAAoJEBx+YmzsjxAgcEwP/1jS2TVF2oacnbYiRvDCwgnx
+i+GEKb5VQOoceEztK3cnm5fSHxpKxl/id4H3ogu+XTsMOuTRel2gbbNF8qgWmfMd
+FYG9rl3mK8HYzpuhr6f1juIRkrpq6nkDoTRnLzSC1Zaao7zH6laxDfBxa0GjTrPa
+iIvymMI6GOM0FgdJ36WiIb42oVJyH5VhjidviWCcof9ATpHRpgHQ0AfootZFxiu6
+Ytssl0OyzpvakqaseDspBnx844RRk1vJW916SdP7N7nRuG2s7Sv2e0/4jDnxc2YG
+qDTBdFwLWK2i0PfgC4AFALuv7m7TqPUhPOm5FiVQ/7RG6ztwMX2TNrLJ4f4EAdh0
+JSB2JKVFIlt1NmSAWlZk+vu/8ZQAoCFpZmY8LuCMh1f1OU2ksx4Ol7AbpXhFJ/RJ
+eAdWtT1OZo7PR0NGFyVsNqtcCVacjfMmyi+8dkaf/hyaa3ZcFWY+7IEDTwwxFxGH
+n5IT64ldldTx5InwfFn9tiMsc44clgjt5iyN8J3XaumFoENiGAdgTL8XbCMZLaR1
+yfc49jHRFMZ6JIMiSS3CVIiL5yBPs7H33lei9lHFARfq0MdybShLVvPxV+ASHrx+
+yWjAUUTzLSqrst6y6sckx7CTW1gt66bH+DD+PGB9gbJsrDCK4zKGwfqpQIa+h4JK
+NIrG7ScO5Nftrnjwy4R3
+=jqcV
+-----END PGP SIGNATURE-----
 
-> Anyway, I do not want the interrupt to be serviced when no one is interested,
-> since I'm afraid that nasty input might generate a flood of interrupts that
-> might disturb other things that the cpu is doing. Which means that I need
-> to enable/disable the interrupt as needed.
+--blsduocvkwalq6g6--
 
-So the main issue I'm seing here, is that your comparator does not have
-means to prevent it from firing interrupts.
 
-> However, what *I* thought Jonathan wanted input on was the part where the
-> interrupt edge/level is flipped when requesting "inverted" signals in
-> envelope_store_invert(). That could perhaps be seen as unorthodox and in
-> need of more eyes?
+--===============8789798629269140898==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Flipping the dectection level of the interrupt is fine, but what's the
-guarantee that it is correct in the first place? I don't see anything which
-makes that sure at all. Aside of that this bit does not makes sense:
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +	env->comp_irq_trigger = irq_get_trigger_type(env->comp_irq);
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_RISING)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_FALLING;
-
-What's the |= about?
-
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_FALLING)
-
-and this should be 'else if'. If the interrupt is configured for both
-edges, which is possible with some interrupt controllers then the whole
-thing does not work at all.
-
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_RISING;
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_HIGH)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_LOW;
-> +	if (env->comp_irq_trigger & IRQF_TRIGGER_LOW)
-> +		env->comp_irq_trigger_inv |= IRQF_TRIGGER_HIGH;
-
-Thanks,
-
-	tglx
+--===============8789798629269140898==--
