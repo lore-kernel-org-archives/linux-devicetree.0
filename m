@@ -1,83 +1,34 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v6 0/4] enable movable nodes on non-x86 configs
-Date: Mon,  7 Nov 2016 17:44:32 -0600
-Message-ID: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: Reorder copyrights for meson-gx
+Date: Mon, 07 Nov 2016 16:27:46 -0800
+Message-ID: <m21sym7r3x.fsf@baylibre.com>
+References: <1475595430-30075-2-git-send-email-narmstrong@baylibre.com>
+        <1478460334-17644-1-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478460334-17644-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org> ("Andreas
+        =?utf-8?Q?F=C3=A4rber=22's?= message of "Sun, 6 Nov 2016 20:25:34 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset allows more configs to make use of movable nodes. When
-CONFIG_MOVABLE_NODE is selected, there are two ways to introduce such
-nodes into the system:
+Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> writes:
 
-1. Discover movable nodes at boot. Currently this is only possible on
-   x86, but we will enable configs supporting fdt to do the same.
+> meson-gx.dtsi was directly derived from meson-gxbb.dtsi, so keep the
+> copyrights in chronological order to not give a wrong impression.
+>
+> Fixes: c328666d58aa ("ARM64: dts: amlogic: Add Meson GX dtsi from GXBB")
+> Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-2. Hotplug and online all of a node's memory using online_movable. This
-   is already possible on any config supporting memory hotplug, not 
-   just x86, but the Kconfig doesn't say so. We will fix that.
+Applied.
 
-We'll also remove some cruft on power which would prevent (2).
-
-/* changelog */
-
-v6:
-* Add a patch enabling the fdt to describe hotpluggable memory.
-
-v5:
-* http://lkml.kernel.org/r/1477339089-5455-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Drop the patches which recognize the "status" property of dt memory
-  nodes. Firmware can set the size of "linux,usable-memory" to zero instead.
-
-v4:
-* http://lkml.kernel.org/r/1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Rename of_fdt_is_available() to of_fdt_device_is_available().
-  Rename of_flat_dt_is_available() to of_flat_dt_device_is_available().
-
-* Instead of restoring top-down allocation, ensure it never goes
-  bottom-up in the first place, by making movable_node arch-specific.
-
-* Use MEMORY_HOTPLUG instead of PPC64 in the mm/Kconfig patch.
-
-v3:
-* http://lkml.kernel.org/r/1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Use Rob Herring's suggestions to improve the node availability check.
-
-* More verbose commit log in the patch enabling CONFIG_MOVABLE_NODE.
-
-* Add a patch to restore top-down allocation the way x86 does.
-
-v2:
-* http://lkml.kernel.org/r/1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Use the "status" property of standard dt memory nodes instead of
-  introducing a new "ibm,hotplug-aperture" compatible id.
-
-* Remove the patch which explicitly creates a memoryless node. This set
-  no longer has any bearing on whether the pgdat is created at boot or
-  at the time of memory addition.
-
-v1:
-* http://lkml.kernel.org/r/1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com
-
-Reza Arbab (4):
-  powerpc/mm: allow memory hotplug into a memoryless node
-  mm: remove x86-only restriction of movable_node
-  mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
-  of/fdt: mark hotpluggable memory
-
- Documentation/kernel-parameters.txt |  2 +-
- arch/powerpc/mm/numa.c              | 13 +------------
- arch/x86/kernel/setup.c             | 24 ++++++++++++++++++++++++
- drivers/of/fdt.c                    |  6 ++++++
- mm/Kconfig                          |  2 +-
- mm/memory_hotplug.c                 | 20 --------------------
- 6 files changed, 33 insertions(+), 34 deletions(-)
-
--- 
-1.8.3.1
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
