@@ -1,98 +1,78 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 01/30] usb: dwc2: Deprecate g-use-dma binding
-Date: Tue, 8 Nov 2016 09:48:03 -0800
-Message-ID: <6e90b835-73b1-3970-24a4-eab72381b469@synopsys.com>
-References: <cover.1478558343.git.johnyoun@synopsys.com>
- <e99e9d8df77884671f94734109a1a8d76a0222c1.1478558343.git.johnyoun@synopsys.com>
- <87wpgeibdh.fsf@linux.intel.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/2] ASoC driver for the TSE-850
+Date: Tue, 8 Nov 2016 17:20:55 +0100
+Message-ID: <1478622057-12426-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87wpgeibdh.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On 11/8/2016 1:12 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
->> Add a vendor prefix and make the name more consistent by renaming it to
->> "snps,gadget-dma-enable".
->>
->> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt | 5 ++++-
->>  arch/arm/boot/dts/rk3036.dtsi                  | 2 +-
->>  arch/arm/boot/dts/rk3288.dtsi                  | 2 +-
->>  arch/arm/boot/dts/rk3xxx.dtsi                  | 2 +-
->>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 2 +-
->>  arch/arm64/boot/dts/rockchip/rk3368.dtsi       | 2 +-
->>  drivers/usb/dwc2/params.c                      | 9 ++++++++-
->>  drivers/usb/dwc2/pci.c                         | 2 +-
->>  8 files changed, 18 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 9472111..389a461 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -26,11 +26,14 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
->>  - dr_mode: shall be one of "host", "peripheral" and "otg"
->>    Refer to usb/generic.txt
->>  - snps,host-dma-disable: disable host DMA mode.
->> -- g-use-dma: enable dma usage in gadget driver.
->> +- snps,gadget-dma-enable: enable gadget DMA mode.
-> 
-> I don't see why you even have this binding. Looking through the code,
-> you have:
-> 
-> #define GHWCFG2_SLAVE_ONLY_ARCH			0
-> #define GHWCFG2_EXT_DMA_ARCH			1
-> #define GHWCFG2_INT_DMA_ARCH			2
-> 
-> void dwc2_set_param_dma_enable(struct dwc2_hsotg *hsotg, int val)
-> {
-> 	int valid = 1;
-> 
-> 	if (val > 0 && hsotg->hw_params.arch == GHWCFG2_SLAVE_ONLY_ARCH)
-> 		valid = 0;
-> 	if (val < 0)
-> 		valid = 0;
-> 
-> 	if (!valid) {
-> 		if (val >= 0)
-> 			dev_err(hsotg->dev,
-> 				"%d invalid for dma_enable parameter. Check HW configuration.\n",
-> 				val);
-> 		val = hsotg->hw_params.arch != GHWCFG2_SLAVE_ONLY_ARCH;
-> 		dev_dbg(hsotg->dev, "Setting dma_enable to %d\n", val);
-> 	}
-> 
-> 	hsotg->core_params->dma_enable = val;
-> }
-> 
-> which seems to hint that DMA support is discoverable. If there is DMA,
-> why would disable it?
-> 
+Hi!
 
-Yes that's the case and I would prefer to make it discoverable and
-enabled by default.
+The TSE-850 is an FM Transmitter Station Equipment, designed to generate
+baseband signals for FM, mainly the DARC subcarrier, but other signals
+are also possible.
 
-But the legacy behavior has always been like this because DMA was
-never fully implemented in the gadget driver and it was an opt-in
-feature. Periodic support was only added recently.
+This adds a driver for the "sound" bits of the device (quoted since it
+is normally not used for normal sound output, but that works too of
+course). 
 
-What do you think about enabling it by default now? I think most
-platforms already use DMA.
+I have not provided a patch to add axentia as a devicetree vendor prefix,
+since such a patch is already pending in an IIO series [1] that seems
+close to being accepted.
 
-We would still need a "disable" binding for IP validation purposes at
-least.
+However, there are a couple of points that I'm not 100% satisfied with
+for this driver.
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+First, I do not know how to describe the relays that control if the
+IN1/IN2 signals are directly routed towards OUT1/OUT2 or if they are
+routed to the "add" switch. The dapm routing treats this as if the
+IN1/IN2 signals are always routed to both the "add" switch and to
+the muxes feeding OUT1/OUT2. This is fine with me since nothing is
+powered in those sections anyway, so what dapm thinks does not really
+matter. But it is a wart all the same.
+
+Second, there's my comment in tse850_put_mix() when the "add" switch
+is updated. I believe this update should really happen as a side
+effect of the call to snd_soc_dapm_mixer_update_power(), so that it
+happens at the right point compared to other stuff that is powered.
+But I do not know how to hook that up and instead I flip the switch
+before the call since it doesn't really matter. I.e., any noise
+resulting from this badness is negligeble in practice.
+
+Cheers,
+Peter
+
+[1] http://www.spinics.net/lists/devicetree/thrd3.html#147258
+
+Peter Rosin (2):
+  dt-bindings: sound: document axentia,tse850-pcm5142 bindings
+  ASoC: axentia: tse850: add ASoC driver for the Axentia TSE-850
+
+ .../bindings/sound/axentia,tse850-pcm5142.txt      |  88 ++++
+ MAINTAINERS                                        |   7 +
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/axentia/Kconfig                          |  10 +
+ sound/soc/axentia/Makefile                         |   3 +
+ sound/soc/axentia/tse850-pcm5142.c                 | 504 +++++++++++++++++++++
+ 7 files changed, 614 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
+ create mode 100644 sound/soc/axentia/Kconfig
+ create mode 100644 sound/soc/axentia/Makefile
+ create mode 100644 sound/soc/axentia/tse850-pcm5142.c
+
+-- 
+2.1.4
