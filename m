@@ -1,63 +1,62 @@
-From: "Y.B. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [v15, 3/7] powerpc/fsl: move mpc85xx.h to include/linux/fsl
-Date: Tue, 8 Nov 2016 06:49:51 +0000
-Message-ID: <DB6PR0401MB25366BC8FF59C68E2823245EF8A60@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <1477637418-38938-1-git-send-email-yangbo.lu@nxp.com>
- <2723366.1bJeJ7SKI6@wuerfel>
- <DB6PR0401MB2536B1B2E6AC36BDC8FC540DF8AE0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
- <1543282.vWjeo4ynTa@wuerfel>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] Revert "console: don't prefer first registered if DT
+ specifies stdout-path"
+Date: Tue, 8 Nov 2016 08:00:32 +0100
+Message-ID: <20161108070032.GB13866@kroah.com>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
+ <20161104121135.4780-2-hdegoede@redhat.com>
+ <87h97ilrx0.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543282.vWjeo4ynTa@wuerfel>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Scott Wood <oss@buserror.net>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "X.B. Xie" <xiaobo.xie@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87h97ilrx0.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Tuesday, November 08, 2016 5:20 AM
-> To: Y.B. Lu
-> Cc: linuxppc-dev@lists.ozlabs.org; linux-mmc@vger.kernel.org;
-> ulf.hansson@linaro.org; Scott Wood; Mark Rutland; Greg Kroah-Hartman; X.B=
-.
-> Xie; M.H. Lian; linux-i2c@vger.kernel.org; linux-clk@vger.kernel.org;
-> Qiang Zhao; Russell King; Bhupesh Sharma; Joerg Roedel; Claudiu Manoil;
-> devicetree@vger.kernel.org; Rob Herring; Santosh Shilimkar; linux-arm-
-> kernel@lists.infradead.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Leo Li; iommu@lists.linux-foundation.org; Kumar
-> Gala
-> Subject: Re: [v15, 3/7] powerpc/fsl: move mpc85xx.h to include/linux/fsl
->=20
-> On Monday, October 31, 2016 9:35:33 AM CET Y.B. Lu wrote:
-> > >
-> > > I don't see any of the contents of this header referenced by the soc
-> > > driver any more. I think you can just drop this patch.
-> > >
+On Tue, Nov 08, 2016 at 11:46:35AM +1100, Michael Ellerman wrote:
+> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> writes:
+> 
+> > This reverts commit 05fd007e4629 ("console: don't prefer first registered
+> > if DT specifies stdout-path").
 > >
-> > [Lu Yangbo-B47093] This header file was included by guts.c.
-> > The guts driver used macro SVR_MAJ/SVR_MIN for calculation.
+> > The reverted commit changes existing behavior on which many ARM boards
+> > rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+> > both a video output and a serial console. Depending on whether the user
+> > is using the device as a more regular computer; or as a headless device
+> > we need to have the console on either one or the other.
 > >
-> > This header file was for powerpc arch before. And this patch is to
-> > made it as common header file for both ARM and PPC.
-> > Sooner or later this is needed.
->=20
-> Let's discuss it once we actually need the header then, ok?
+> > Many users rely on the kernel behavior of the console being present on
+> > both outputs, before the reverted commit the console setup with no
+> > console= kernel arguments on an ARM board which sets stdout-path in dt
+> > would look like this:
+> >
+> > [root@localhost ~]# cat /proc/consoles
+> > ttyS0                -W- (EC p a)    4:64
+> > tty0                 -WU (E  p  )    4:1
+> >
+> > Where as after the reverted commit, it looks like this:
+> >
+> > [root@localhost ~]# cat /proc/consoles
+> > ttyS0                -W- (EC p a)    4:64
+> >
+> > This commit reverts commit 05fd007e4629 ("console: don't prefer first
+> > registered if DT specifies stdout-path") restoring the original behavior.
+> >
+> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> This is also breaking various powerpc systems.
+> 
+> Linus can you please merge this revert for 4.9 ?
 
-[Lu Yangbo-B47093] As I said, this header file was included by guts.c in pa=
-tch 4.
-The guts driver used macro SVR_MAJ/SVR_MIN for calculation which were defin=
-ed in this header file.
-Did you suggest we dropped this patch and just calculated them in driver?
+I'll queue it up with other tty changes for 4.9-final.
 
-Thanks :)
+thanks,
 
-
->=20
-> 	Arnd
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
