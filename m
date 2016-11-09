@@ -1,110 +1,53 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 3/9] arm64: dts: rockchip: add VOP and VOP iommu node for
- rk3399
-Date: Wed,  9 Nov 2016 21:21:55 +0800
-Message-ID: <1478697721-2323-4-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v2 7/9] arm64: dts: rockchip: add pd_edp node for rk3399
+Date: Wed,  9 Nov 2016 21:21:59 +0800
+Message-ID: <1478697721-2323-8-git-send-email-wxt@rock-chips.com>
 References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1478697721-2323-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: eddie.cai@rock-chips.com, tfiga@chromium.org, zhangqing <zhangqing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: zhangqing <zhangqing@rock-chips.com>
 
-Add the core display-subsystem node and the two display controllers
-available on the rk3399.
+1. add pd node for RK3399 Soc
+2. create power domain tree
+3. add qos node for domain
+4. add the pd support for edp
 
-Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
 Changes in v2: None
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 58 ++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e5b5b3d..f1d289a 100644
+index 74deb44..09ebf4e 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1290,6 +1290,64 @@
- 		status = "disabled";
- 	};
+@@ -835,6 +835,10 @@
+ 			};
  
-+	vopl: vop@ff8f0000 {
-+		compatible = "rockchip,rk3399-vop-lit";
-+		reg = <0x0 0xff8f0000 0x0 0x3efc>;
-+		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
-+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
-+		reset-names = "axi", "ahb", "dclk";
-+		iommus = <&vopl_mmu>;
-+		status = "disabled";
-+
-+		vopl_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	vopl_mmu: iommu@ff8f3f00 {
-+		compatible = "rockchip,iommu";
-+		reg = <0x0 0xff8f3f00 0x0 0x100>;
-+		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopl_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	vopb: vop@ff900000 {
-+		compatible = "rockchip,rk3399-vop-big";
-+		reg = <0x0 0xff900000 0x0 0x3efc>;
-+		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
-+		reset-names = "axi", "ahb", "dclk";
-+		iommus = <&vopb_mmu>;
-+		status = "disabled";
-+
-+		vopb_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	vopb_mmu: iommu@ff903f00 {
-+		compatible = "rockchip,iommu";
-+		reg = <0x0 0xff903f00 0x0 0x100>;
-+		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vopb_mmu";
-+		#iommu-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	display_subsystem: display-subsystem {
-+		compatible = "rockchip,display-subsystem";
-+		ports = <&vopl_out>, <&vopb_out>;
-+		status = "disabled";
-+	};
-+
- 	pinctrl: pinctrl {
- 		compatible = "rockchip,rk3399-pinctrl";
- 		rockchip,grf = <&grf>;
+ 			/* These power domains are grouped by VD_LOGIC */
++			pd_edp@RK3399_PD_EDP {
++				reg = <RK3399_PD_EDP>;
++				clocks = <&cru PCLK_EDP_CTRL>;
++			};
+ 			pd_emmc@RK3399_PD_EMMC {
+ 				reg = <RK3399_PD_EMMC>;
+ 				clocks = <&cru ACLK_EMMC>;
+@@ -1364,6 +1368,7 @@
+ 		status = "disabled";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&edp_hpd>;
++		power-domains = <&power RK3399_PD_EDP>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
 -- 
 2.7.4
