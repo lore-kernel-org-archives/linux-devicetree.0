@@ -1,50 +1,27 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/6] dt-bindings: mdio-mux: Add documentation for mdio
- mux for NSP SoC
-Date: Wed, 9 Nov 2016 15:34:25 +0100
-Message-ID: <20161109143425.GE15386@lunn.ch>
-References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
- <1478683994-12008-2-git-send-email-yendapally.reddy@broadcom.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 12/13] ARM64: dts: rockchip: replace to "max-frequency" instead of "clock-freq-min-max"
+Date: Wed, 09 Nov 2016 15:37:17 +0100
+Message-ID: <8752381.WGgomIQVST@phil>
+References: <20161103062135.10697-1-jh80.chung@samsung.com> <20161103062135.10697-13-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478683994-12008-2-git-send-email-yendapally.reddy@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20161103062135.10697-13-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 04:33:09AM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
-> Add documentation for mdio mux available in Broadcom NSP SoC
+Am Donnerstag, 3. November 2016, 15:21:34 CET schrieb Jaehoon Chung:
+> In drivers/mmc/core/host.c, there is "max-freqeuncy" property.
+> It should be same behavior, So Use the "max-frequency" instead of
+> "clock-freq-min-max".
 > 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-> ---
->  .../devicetree/bindings/net/brcm,mdio-mux-nsp.txt  | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt b/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
-> new file mode 100644
-> index 0000000..b749a2b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
-> @@ -0,0 +1,57 @@
-> +Properties for an MDIO bus multiplexer available in Broadcom NSP SoC.
-> +
-> +This MDIO bus multiplexer defines buses that could access the internal
-> +phys as well as external to SoCs. When child bus is selected, one needs
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Hi Yendapally
+applied to my dts64 branch for 4.10
 
-Since we are in the networking subsystem, when we see phy, we think
-Ethernet PHY. But broadcom mdio mux is generic and can have any sort
-of PHY or device connected to it. To avoid confusion and
-missunderstanding, please could you try to prefix each 'PHY' in the
-with an indication of what type it is, 'Ethernet PHY', 'USB phy',
-'SERDES PHY', or 'generic PHY/mdio device'.
-
-And i mean this in general, not just this patch.
 
 Thanks
-	Andrew
+Heiko
