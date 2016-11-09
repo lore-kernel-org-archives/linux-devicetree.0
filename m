@@ -1,99 +1,46 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 8/9] arm64: dts: rockchip: support dwc3 USB for rk3399
-Date: Wed,  9 Nov 2016 21:22:00 +0800
-Message-ID: <1478697721-2323-9-git-send-email-wxt@rock-chips.com>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478697721-2323-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: document axentia,tse850-pcm5142
+ bindings
+Date: Wed, 9 Nov 2016 13:25:47 +0000
+Message-ID: <20161109132547.fzaidqyuhirrgtqa@sirena.org.uk>
+References: <1478622057-12426-1-git-send-email-peda@axentia.se>
+ <1478622057-12426-2-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tqb53ekjmdwogve4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478622057-12426-2-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Add the dwc3 usb needed node information for rk3399.
+--tqb53ekjmdwogve4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+On Tue, Nov 08, 2016 at 05:20:56PM +0100, Peter Rosin wrote:
+> The TSE-850 is an FM Transmitter Station Equipment, designed to generate
+> baseband signals for FM, mainly the DARC subcarrier, but other signals
+> are also possible.
 
-Changes in v2:
-- the original patches from brian posting on
-  https://chromium-review.googlesource.com/343603
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 54 ++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+--tqb53ekjmdwogve4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 09ebf4e..3659c56 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -353,6 +353,60 @@
- 		status = "disabled";
- 	};
- 
-+	usbdrd3_0: usb@fe800000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
-+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "ref_clk", "suspend_clk",
-+			      "bus_clk", "grf_clk";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		usbdrd_dwc3_0: dwc3@fe800000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe800000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
-+			dr_mode = "otg";
-+			phys = <&tcphy0_usb3>;
-+			phy-names = "usb3-phy";
-+			phy_type = "utmi_wide";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			snps,xhci-slow-suspend-quirk;
-+			status = "disabled";
-+		};
-+	};
-+
-+	usbdrd3_1: usb@fe900000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
-+			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "ref_clk", "suspend_clk",
-+			      "bus_clk", "grf_clk";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		usbdrd_dwc3_1: dwc3@fe900000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe900000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
-+			dr_mode = "host";
-+			phys = <&tcphy1_usb3>;
-+			phy-names = "usb3-phy";
-+			phy_type = "utmi_wide";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			snps,xhci-slow-suspend-quirk;
-+			status = "disabled";
-+		};
-+	};
-+
- 	gic: interrupt-controller@fee00000 {
- 		compatible = "arm,gic-v3";
- 		#interrupt-cells = <4>;
--- 
-2.7.4
+-----BEGIN PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQEcBAABCAAGBQJYIyPaAAoJECTWi3JdVIfQwi0IAIAiw2xiDuYj0B9oHQiNQ6qC
+D7TNHL/l91Y4nXKfb/cdCsSXn6EzAVqRRswF7meX4C3/FYGNvnLz2sSgZZ876wfH
+E4gpG4m+7WrMjSKhBT+1qSz8qK44z5y+sB8r2gtqNVcjaDve2DFse+UooP2qRgfj
+JL/SNPw03R8rXdfJBm1SZZWfZuXV5H/Cm301Lt1vU7lYbikH/vEBIBGJRCDy+txt
++A5AOyUf47QRysPtB209sSb3/TaMVPgI8tiHlJ/BLbfNBMbV2MFmFkt5chkgUHll
+KHDh/GdGDr866q+xgh4phaJgQb8ZjG0gDnJ/5Nmifb3oLa+VHuPFT5/M1RXUrQc=
+=EqKO
+-----END PGP SIGNATURE-----
+
+--tqb53ekjmdwogve4--
