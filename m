@@ -1,70 +1,58 @@
-From: <sushildhimanphotography-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Subject: 1804 devicetree
-Date: Wed, 09 Nov 2016 07:54:46 -0000
-Message-ID: <147867808618.13243.13180289196548764110@hinet.net>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 6/9 v2] arm64: dts: m3ulcb: enable SDHI0
+Date: Wed, 9 Nov 2016 11:06:33 +0300
+Message-ID: <2532ccaa-fbf5-914d-40cb-e27eabdca70f@cogentembedded.com>
+References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1478614461-9918-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <20161109074418.GC30093@verge.net.au>
 Mime-Version: 1.0
-Content-Type: application/zip; name="MESSAGE_077122902700505_devicetree.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20161109074418.GC30093@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UEsDBBQAAgAIAIFtaUlvTzKX5goAAPMKAAAaABwATk9USUZJQ0FUSU9OXzI4MzQ2X1pJUC56aXBV
-VAkAA8HTIljB0yJYdXgLAAEEAAAAAAQAAAAAdZZ3PBSMH8dPZ2SU1ZERmWVF7pDsmXNmGXdXiYwu
-I+OEc/Y4q8yQeclOVifOToo4Mk5kRuaDw1ln9fjV8/z3e72e7+vz+Y4/Pv99/3hbwID0FwBnAGcB
-4R6PoZeW8/jALAAAhyQAAAIIAszMraCGUD0dK6i52QPFG2CI8jVXtLUVMwDYQRaF//HTAFYAHT3g
-d/3TKIjppEkiZ+jMCagqXLfZ6+t7954Mghdr3QqdVARp7vznvWQ7OuMScaTwSIM+73F7JrhIfGIc
-uwoT4jFCuS6pdGbNJQv6dCqz83ftMFQG6AnjeU6DaRZDJZXbBjn4x198AkNCaNtVYt8iQBKVTPU3
-5DJAcre5BhfBiriohSIUKRuwSZz0vNeD4U1sOow2pKiKGGsYJYvM8w2ArzEkDpCTuTGCigIH2kDm
-3kmIdWRtE0+ISFV6Eb/kGRkKqoPfWXjVTV8HQzxYXH710IDwd6NqaN9Yu9XbAnzRyE9fJNwjf6Fl
-QI7CkgSccbodvVylUv96EVI+tBY7TTToTbYjzr0wP84/L7g+vVGPuyvm6Au7p//DxI6PvzPX5bqS
-Fe6SfMD00qthZUjiLtRxzE5t+6mRkWAKCeAwg2Jaa3sumh+mdVxJ0EJ1o/PTavYEwlZr8jCDLhDP
-+psWyFpn5HqmaBXqqksa9+08zIt6BQJW7KxYcN1LyIJg/EueaH2kiDAjDCHKiM9lHSXVt2cdFjhJ
-BEu4yqbvl4Aq3+WcWCtowD8zxiZa81Ti45s4ldqphVx0SS5XFP3+QjDVwkP8ff03uiaFlGMoVOIP
-yqWBfTOmzRUPs8R591ydX4J+ic1aE1j/CvGt4+6BesqHdopftb2WlER3p4P/ttNJUvwJs0h5Oa9U
-yXYzI0hqv30kif8Af8WfMB7AtnjIzmDbpCW9UX1AzdZ0/zvenUHaK2rapeFOfV/GQOuYe++3L8ZM
-9aB6fO05hOuB/5X4oYeHgiiQlpjLSs7B7pv4Rku67gPp5XNM2pQpcMlSzBgkr6UVW4MG4qbHZTuV
-QC2hU47WsyBQ/+n0uD5vaCvNpvwjm5WxArQmRyb/I1/f8dvjCge9I8shnzu91ClLv8Rz+Pv9WsH5
-BAfDoNOhXBOQzDryZmM68DtP6a+llQCifk0WyKZXXaLTpFoJKOVRjIqzwB25K9OD6g0XOBBS9gUX
-eEOZzfdbkwicrhxrrXvT3g1AgVuG1PnNzmVPCedr9q3ScqCpyKhG2h21hFOnhe5cW4M9xC2A9a8N
-lhaVw+7TASeM5KyykWNqt+5GxIMM6SgSLaE423CcYFbVSt3PKHI4SImTApj02faQ56Ly+ZmxF7mS
-rTbCPzxZK/jAdY6+13/l8uwQdNbByv4y25UwBQ1L7sAEv3JiJOMuN7GXtug5Qahx7aQ7nyZvw7bO
-fpm2SRv8xe0rrHMzcilp8G04lX6e8Wydl/ZB1RyWDn8aPgPeDbTPLSgY5LCHjN7wxXJ67ceIV5ZL
-UtGS/OrrqPYDOzw06U0uJjAotUzTReq++kSArkaNF/WAaXAH4ppW2ixasZmW3/TUeKcsDs8TYgA9
-c1G24M2Lj+UVCg+06Z9hy7Cj9NSfllmFOBYjU17Tb8Ps2/MOmrxPNxOusYRi6cmhr4d+xPzk3Gu3
-fUomYy+5KbEdbG8pIHZET4HB71MfyJOHKtPNS/2Fh+2KfKyCTbTaBUw/ZwNkDdQyIQ6PyvQzh5Gx
-XVave2JXvu9JQMVWxy6wGkxqEI8XL15cZZe1t716v4Wi3zKcepTqYlRluHJ2FQNlSV2qvIYShnc6
-IgR0pB6/6K7gC2BCDrc9h4pkcIFTryyK72ImOK8iip3FVEu8u2FlkZlMx7MTaQItMgZiotd9Lfp6
-GoE4o6b6Bef+MOJUL9B5Pydag9mp/FJH35Oxry7+ggjVOCMyFQZwFLhpg0vOVoulwTXxvnSVel/f
-hYPoRgZH013ytoLdRoRjW6IfjuyPdv+6sF3AoSlsv2wZxKdSCbzMiN18Yq8I0eGLcIXqpSmbLgHC
-MGDrlD3XeEe7Au+NDnR92mPElxO0AAnLqe+sFi2OGqBPHZoloV6lcuoOg58H8Q/7JH/otOQrIQvd
-Ab0hs/eOZhsAw4sENqVC04i4kH15CEook0yRKHncFMUAkTy9p1soVuYvTdZaOafzQ8nszRMbobVm
-A8lr9sr3rvl9nTBk+vbuOlwRkdw48vqqzHCuis9N+58Wq+H+kbHcXI796wFMjaVa5lsQF2aSQdKO
-etrjUTskYikmVVPHJgGarptd1tiOlI3+kcKqguO0lApELnxqNxmLSuF9r0SJUTY47n324CUPG9fQ
-PSMcugUhvF7od3WBWUMPJfnB1caHaSgvvY36bIlN/JMzoS6v8JEAbljHTrvKS2S8ce3XDdGqT7DL
-EWxkWEK1Yd0ZvrDyZuT3nPd2BGJx2wrEfeLl0XYga3PmN0YP6bfUXAV46pU3t6PanJ1uXfEvvFnc
-pVN8Thajy++NJQte2jfQGwA1fpjzgXvuD+Dk1LegvCkbhhIbfGC9qkdYR37LlLCYeSpuJUW8tmo5
-SxUhsWt8VM0mMH89X5VoPBK8E+m91M+LmJ8iqI95c+Ack6o5G9ygeEHO5tnRQLWmh34eFwbzH3gV
-okePsyQaglJjO76XdsFdZJ9F96n1eI+qfVaIU3YP4u6Au6m7weJpAZN22GZKCEskC+3k4s5yNJpQ
-xppCFemisZJSlN658cWN318cz6HJxklMKuUm3PZpTRV/KCFOKXJ0ju/bQvewhHgohMsh+jGBz+Kd
-w2/o2alOjKGNg7YeZsDlIKvnHXoaV8sZqNqpnJ9ZYeMgRRTUpzERi+RyvHReNH2y7qxIfkbLYlNh
-N5TeXMTnVoz+jCfbzmFW7mLGjw+Y6wnVPGlRH2dmn7E3WjWsdTrYwOPeLXTIYCpeC4l7ZNY4IM/I
-qyySx9T+vpvftviXSnbptnuu4u5Sz4amea1rI4a+BbiS/M3j5Ud9uE6/jN1asroCIsUPPjB+/L4Q
-fBv0RFYK2Ue0hJu16bqNPLuIVeTYKINPKGmkmdWrl2173H9/WNhW1iKMv4+vWyBF9AI9U7WZ9iIr
-+wrzNGTuMMxZfxrjIX1thrtpC5S+Zqx/6rvgPJX9Uvwx9+5U2+dHqjTYbQJMLoulbhgpOSuHGu96
-y0kF0Dgj0YX7E5b4F48yXoU9Iq0dbTNyxMYeRsfixtQx119f1woihbkn+VM5bDfGKNrVXs6TzxGq
-Jfm53Td4V1lEWAfGd7IICNLx0PML6TDZYiWoFyJD3T3mSxPB5Jc9Fhxuv3WwzEVcEZzO+bTgPe3X
-+uXrlm3UXoeJtuUuZPXQ1PtNX7mR7U4VyiFauMFtDG26MZgsHeYzNMPvJFSy/ZNsiEiYXLerGquc
-eSEUH97rytgCtqj4a+9UZuT73R7ToPba55bZ4ft8zz/J3Cnrvcnzk3TkjZ1al4tMsyqate72EtZM
-TOs6lrGWlzf2UZpv05WFDvYG162LMCsdjr98UWtiMj6oGy+XldsVovqtEDFhY8vp04JpQmdlxycy
-eBkoAGSKGXTA9uuVI8VCn1kxPC6imX6mDcK+tkK2mpoVJmhs8ylCk33GtacBfHRXs5DScBJEGvAE
-a/WrnUzfnRi6OzkzR+mh/VZOyPb7ltb5gNF/3qIhu1T+FGgBozsjBPwvBr34hyoBdL9dFP5n+w8i
-ZfiXSP+PRi1gDIz/xukAd3/PCJY/1/8AUEsBAh4DFAACAAgAgW1pSW9PMpfmCgAA8woAABoAGAAA
-AAAAAAAAAKSBAAAAAE5PVElGSUNBVElPTl8yODM0Nl9aSVAuemlwVVQFAAPB0yJYdXgLAAEEAAAA
-AAQAAAAAUEsFBgAAAAABAAEAYAAAADoLAAAAAA==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Simon,
+
+On 09.11.2016 10:44, Simon Horman wrote:
+> On Tue, Nov 08, 2016 at 05:14:21PM +0300, Vladimir Barinov wrote:
+>> This supports SDHI0 on M3ULCB board SD card slot
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Reviewed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> Thanks Vladimir,
+>
+> I have queued up the following patches:
+>
+> arm64: dts: h3ulcb: rename SDHI0 pins
+> arm64: dts: h3ulcb: enable SDHI2
+> arm64: dts: m3ulcb: enable SDHI2
+> arm64: dts: m3ulcb: enable SDHI0
+>
+> For reference I would, however, like to make some comments regarding the
+> way you have submitted these:
+>
+> 1. I did not provide a Reviewed-off-by tag or any other tag as far as I
+>     recall. So its not appropriate for you to add one when posting patches.
+>     I have removed it.
+>
+> 2. Not withstanding the above, Reviewed-off-by is an invalid tag.
+>     Perhaps you mean Reviewed-by.
+>
+> 3. When you repost patches I have a slight preference for you to repost
+>     them in a fresh thread. And if the patchset has more than one patch then
+>     with a fresh cover letter. This makes it a little easier for me
+>     to see what is going on. And gives a more natural place for
+>     me to respond to a patchset.
+
+Thank you for these valuable comments!
+
+I will follow them for further work.
+
+
+Regards,
+
+Vladimir
