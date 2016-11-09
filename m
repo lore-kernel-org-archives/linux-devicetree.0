@@ -1,150 +1,176 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC
- and a comparator
-Date: Wed, 9 Nov 2016 16:01:33 +0100
-Message-ID: <ac908a97-77b8-046a-a0e9-74cc97f56c9b@axentia.se>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se>
- <1478606339-31253-9-git-send-email-peda@axentia.se>
- <alpine.DEB.2.20.1611081630450.3501@nanos>
- <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
- <alpine.DEB.2.20.1611081809320.3501@nanos>
- <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
- <alpine.DEB.2.20.1611082146560.3501@nanos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: cs42l42: Add devicetree bindings for CS42L42" to the asoc tree
+Date: Wed, 09 Nov 2016 14:59:52 +0000
+Message-ID: <E1c4ULw-0002hY-Ke@finisterre>
+References: <139006a2-bc5f-4a49-8269-89c1adc3acf0@EX4.ad.cirrus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1611082146560.3501@nanos>
+In-Reply-To: <139006a2-bc5f-4a49-8269-89c1adc3acf0-k7YZYYsDncjfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Schulman <james.schulman-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-08 22:47, Thomas Gleixner wrote:
-> On Tue, 8 Nov 2016, Peter Rosin wrote:
->> So, to sum up, in order for this to work with threaded oneshot
->> interrupts, I still need to either keep the enable/sync/enable-dance
->> or tweak the irq core to handle my case better. The only gain would
->> be that I could fire the next step of the search from the threaded
->> irq handler directly (but it needs some new race-killing code).
->> Or am I missing something? If not, there's no pressing reason to
->> switch to threaded oneshot interrupts, right?
-> 
-> There is no pressing reason, but that misfire prevention dance looks
-> fragile and overly complex to me.
+The patch
 
-I don't see any fragility? But I wouldn't complain if there was some
-simpler way to enable an irq in such a way that only new and fresh
-irqs are considered.
+   ASoC: cs42l42: Add devicetree bindings for CS42L42
 
-> The completely untested patch below should block the replay for edge
+has been applied to the asoc tree at
 
-[it is missing a ')', see inline comment below]
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> interrupts from the core code. It also makes sure that the edge interrupt
-> is masked until the thread handler returns. All you have to do is
-> requesting your threaded handler with IRQF_ONESHOT | IRQF_NO_REPLAY.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-It doesn't appear to work. I still get irqs that reasonably should
-only have happened *during* the handling of a previous irq. And I
-still need to dance when enabling the irq, otherwise I get spurious
-hits.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> I don't think you need extra race handling with that, but I might be wrong
-> as usual.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-There's obviously no way to determine which of the timeout or the
-interrupt that happens first without some race handling, so I don't
-know what you mean? If the timeout happens first, there is also a
-need to handle late hits from the irq that might come in during the
-preparation for the next step in the binary search. It gets messy
-quickly compared to the simplicity of the current implementation.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Cheers,
-Peter
+Thanks,
+Mark
 
-> 8<------------------
-> --- a/include/linux/interrupt.h
-> +++ b/include/linux/interrupt.h
-> @@ -74,6 +74,7 @@
->  #define IRQF_NO_THREAD		0x00010000
->  #define IRQF_EARLY_RESUME	0x00020000
->  #define IRQF_COND_SUSPEND	0x00040000
-> +#define IRQF_NO_REPLAY		0x00080000
->  
->  #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
->  
-> --- a/kernel/irq/internals.h
-> +++ b/kernel/irq/internals.h
-> @@ -57,6 +57,7 @@ enum {
->  	IRQS_WAITING		= 0x00000080,
->  	IRQS_PENDING		= 0x00000200,
->  	IRQS_SUSPENDED		= 0x00000800,
-> +	IRQS_NO_REPLAY		= 0x00001000,
->  };
->  
->  #include "debug.h"
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -1212,7 +1212,8 @@ static int
->  		 */
->  		if (!((old->flags & new->flags) & IRQF_SHARED) ||
->  		    ((old->flags ^ new->flags) & IRQF_TRIGGER_MASK) ||
-> -		    ((old->flags ^ new->flags) & IRQF_ONESHOT))
-> +		    ((old->flags ^ new->flags) & IRQF_ONESHOT) ||
-> +		    ((old->flags ^ new->flags) & IRQF_NO_REPLAY))
->  			goto mismatch;
->  
->  		/* All handlers must agree on per-cpuness */
-> @@ -1324,6 +1325,9 @@ static int
->  		if (new->flags & IRQF_ONESHOT)
->  			desc->istate |= IRQS_ONESHOT;
->  
-> +		if (new->flags & IRQF_NO_REPLAY)
-> +			desc->istate |= IRQS_NO_REPLAY;
-> +
->  		if (irq_settings_can_autoenable(desc))
->  			irq_startup(desc, true);
->  		else
-> --- a/kernel/irq/resend.c
-> +++ b/kernel/irq/resend.c
-> @@ -56,12 +56,12 @@ static DECLARE_TASKLET(resend_tasklet, r
->  void check_irq_resend(struct irq_desc *desc)
->  {
->  	/*
-> -	 * We do not resend level type interrupts. Level type
-> -	 * interrupts are resent by hardware when they are still
-> -	 * active. Clear the pending bit so suspend/resume does not
-> -	 * get confused.
-> +	 * We do not resend level type interrupts. Level type interrupts
-> +	 * are resent by hardware when they are still active. Also prevent
-> +	 * resend when the user requested so.  Clear the pending bit so
-> +	 * suspend/resume does not get confused.
->  	 */
-> -	if (irq_settings_is_level(desc)) {
-> +	if (irq_settings_is_level(desc) || (desc->istate & IRQS_NO_REPLAY)) {
->  		desc->istate &= ~IRQS_PENDING;
->  		return;
->  	}
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -643,7 +643,10 @@ void handle_edge_irq(struct irq_desc *de
->  	kstat_incr_irqs_this_cpu(desc);
->  
->  	/* Start handling the irq */
-> -	desc->irq_data.chip->irq_ack(&desc->irq_data);
-> +	if (!(desc->istate & (IRQS_NO_REPLAY | IRQS_ONESHOT))
+>From da16c55793539a8c83c81240984915ce6d0140fe Mon Sep 17 00:00:00 2001
+From: James Schulman <james.schulman-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Date: Mon, 7 Nov 2016 14:38:38 -0600
+Subject: [PATCH] ASoC: cs42l42: Add devicetree bindings for CS42L42
 
-Missing ')' at the end.
+Add devicetree bindings documentation file for Cirrus
+Logic CS42L42 codec.
 
-> +		desc->irq_data.chip->irq_ack(&desc->irq_data);
-> +	else
-> +		mask_ack_irq(desc);
->  
->  	do {
->  		if (unlikely(!desc->action)) {
-> 
-> 
+Signed-off-by: James Schulman <james.schulman-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/sound/cs42l42.txt          | 110 +++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs42l42.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/cs42l42.txt b/Documentation/devicetree/bindings/sound/cs42l42.txt
+new file mode 100644
+index 000000000000..9a2c5e2423d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs42l42.txt
+@@ -0,0 +1,110 @@
++CS42L42 audio CODEC
++
++Required properties:
++
++  - compatible : "cirrus,cs42l42"
++
++  - reg : the I2C address of the device for I2C.
++
++  - VP-supply, VCP-supply, VD_FILT-supply, VL-supply, VA-supply :
++  power supplies for the device, as covered in
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Optional properties:
++
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++  deasserted before communication to the codec starts.
++
++  - interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from CS42L42 are delivered to.
++
++  - interrupts : IRQ line info CS42L42.
++  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++  for further information relating to interrupt properties)
++
++  - cirrus,ts-inv : Boolean property. For jacks that invert the tip sense
++  polarity. Normal jacks will short tip sense pin to HS1 when headphones are
++  plugged in and leave tip sense floating when not plugged in. Inverting jacks
++  short tip sense when unplugged and float when plugged in.
++
++  0 = (Default) Non-inverted
++  1 = Inverted
++
++  - cirrus,ts-dbnc-rise : Debounce the rising edge of TIP_SENSE_PLUG. With no
++  debounce, the tip sense pin might be noisy on a plug event.
++
++  0 - 0ms,
++  1 - 125ms,
++  2 - 250ms,
++  3 - 500ms,
++  4 - 750ms,
++  5 - (Default) 1s,
++  6 - 1.25s,
++  7 - 1.5s,
++
++  - cirrus,ts-dbnc-fall : Debounce the falling edge of TIP_SENSE_UNPLUG.
++  With no debounce, the tip sense pin might be noisy on an unplug event.
++
++  0 - 0ms,
++  1 - 125ms,
++  2 - 250ms,
++  3 - 500ms,
++  4 - 750ms,
++  5 - (Default) 1s,
++  6 - 1.25s,
++  7 - 1.5s,
++
++  - cirrus,btn-det-init-dbnce : This sets how long the driver sleeps after
++  enabling button detection interrupts. After auto-detection and before
++  servicing button interrupts, the HS bias needs time to settle. If you
++  don't wait, there is possibility for erroneous button interrupt.
++
++  0ms - 200ms,
++  Default = 100ms
++
++  - cirrus,btn-det-event-dbnce : This sets how long the driver delays after
++  receiving a button press interrupt. With level detect interrupts, you want
++  to wait a small amount of time to make sure the button press is making a
++  clean connection with the bias resistors.
++
++  0ms - 20ms,
++  Default = 10ms
++
++  - cirrus,bias-lvls : For a level-detect headset button scheme, each button
++  will bias the mic pin to a certain voltage. To determine which button was
++  pressed, the driver will compare this biased voltage to sequential,
++  decreasing voltages and will stop when a comparator is tripped,
++  indicating a comparator voltage < bias voltage. This value represents a
++  percentage of the internally generated HS bias voltage. For different
++  hardware setups, a designer might want to tweak this. This is an array of
++  descending values for the comparator voltage.
++
++  Array of 4 values
++  Each 0-63
++  < x1 x2 x3 x4 >
++  Default = < 15 8 4 1>
++
++
++Example:
++
++cs42l42: cs42l42@48 {
++	compatible = "cirrus,cs42l42";
++	reg = <0x48>;
++	VA-supply = <&dummy_vreg>;
++	VP-supply = <&dummy_vreg>;
++	VCP-supply = <&dummy_vreg>;
++	VD_FILT-supply = <&dummy_vreg>;
++	VL-supply = <&dummy_vreg>;
++
++	reset-gpios = <&axi_gpio_0 1 0>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <55 8>
++
++	cirrus,ts-inv = <0x00>;
++	cirrus,ts-dbnc-rise = <0x05>;
++	cirrus,ts-dbnc-fall = <0x00>;
++	cirrus,btn-det-init-dbnce = <100>;
++	cirrus,btn-det-event-dbnce = <10>;
++	cirrus,bias-lvls = <0x0F 0x08 0x04 0x01>;
++	cirrus,hs-bias-ramp-rate = <0x02>;
++};
+\ No newline at end of file
+-- 
+2.10.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
