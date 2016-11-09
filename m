@@ -1,89 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v15 4/4] arm: dts: mt2701: Use real clock for UARTs
-Date: Wed, 9 Nov 2016 18:20:21 +0100
-Message-ID: <eece3eba-fd24-ad96-ca20-c08403894b00@gmail.com>
-References: <1478245388-1412-1-git-send-email-erin.lo@mediatek.com>
- <1478245388-1412-5-git-send-email-erin.lo@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of/irq: improve error message on irq discovery process failure
+Date: Wed, 9 Nov 2016 12:05:23 -0600
+Message-ID: <CAL_JsqL13-e5RGfafsLfP7EoJWTkAsuRG4mAF-t52GoDXeQS-Q@mail.gmail.com>
+References: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478245388-1412-5-git-send-email-erin.lo@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, ms.chen@mediatek.com, robert.chou@mediatek.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/04/2016 08:43 AM, Erin Lo wrote:
-> We used to use a fixed rate clock for the UARTs. Now that we have clock
-> support we can associate the correct clocks to the UARTs and drop the
-> 26MHz fixed rate UART clock.
+On Wed, Nov 9, 2016 at 8:05 AM, Guilherme G. Piccoli
+<gpiccoli@linux.vnet.ibm.com> wrote:
+> On PowerPC machines some PCI slots might not have Level-triggered
+> interrupts capability (also know as Level Signaled Interrupts - LSI),
+> leading of_irq_parse_pci() to complain by presenting error messages
+> on the kernel log - in this case, the properties "interrupt-map" and
+> "interrupt-map-mask" are not present on the device's node on device
+> tree.
 >
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-
-Applied, thanks.
-
+> This patch introduces a different message for this specific case,
+> and it also reduces the level of the message from error to warning.
+> Before this patch, when an adapter was plugged in a slot without Level
+> interrupts capabilities, we saw generic error messages like this:
+>
+>     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-22
+>
+> Now, with this applied, we see the following specific message:
+>
+>     [19.947] pci 0014:60:00.0: of_irq_parse_pci() gave up. The slot of this
+>     device has no Level-triggered Interrupts capability.
+>
+> No functional changes were introduced.
+>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@linux.vnet.ibm.com>
 > ---
->  arch/arm/boot/dts/mt2701.dtsi | 18 ++++++++----------
->  1 file changed, 8 insertions(+), 10 deletions(-)
+>  drivers/of/irq.c        | 5 ++++-
+>  drivers/of/of_pci_irq.c | 8 +++++++-
+>  2 files changed, 11 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index c9a8dbf..7eab6f4 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -73,12 +73,6 @@
->  		#clock-cells = <0>;
->  	};
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 393fea8..1ad6882 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -275,7 +275,10 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+>         of_node_put(ipar);
+>         of_node_put(newpar);
 >
-> -	uart_clk: dummy26m {
-> -		compatible = "fixed-clock";
-> -		clock-frequency = <26000000>;
-> -		#clock-cells = <0>;
-> -	};
-> -
->  	clk26m: oscillator@0 {
->  		compatible = "fixed-clock";
->  		#clock-cells = <0>;
-> @@ -186,7 +180,8 @@
->  			     "mediatek,mt6577-uart";
->  		reg = <0 0x11002000 0 0x400>;
->  		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-> -		clocks = <&uart_clk>;
-> +		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
-> +		clock-names = "baud", "bus";
->  		status = "disabled";
->  	};
->
-> @@ -195,7 +190,8 @@
->  			     "mediatek,mt6577-uart";
->  		reg = <0 0x11003000 0 0x400>;
->  		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-> -		clocks = <&uart_clk>;
-> +		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
-> +		clock-names = "baud", "bus";
->  		status = "disabled";
->  	};
->
-> @@ -204,7 +200,8 @@
->  			     "mediatek,mt6577-uart";
->  		reg = <0 0x11004000 0 0x400>;
->  		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
-> -		clocks = <&uart_clk>;
-> +		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
-> +		clock-names = "baud", "bus";
->  		status = "disabled";
->  	};
->
-> @@ -213,7 +210,8 @@
->  			     "mediatek,mt6577-uart";
->  		reg = <0 0x11005000 0 0x400>;
->  		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
-> -		clocks = <&uart_clk>;
-> +		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
-> +		clock-names = "baud", "bus";
->  		status = "disabled";
->  	};
->  };
->
+> -       return -EINVAL;
+> +       /* Positive non-zero return means no Level-triggered Interrupts
+> +        * capability was found.
+> +        */
+> +       return ENOENT;
+
+It's not really a normal pattern to return positive errno values. You
+should return a negative value and check for that specific error value
+or perhaps move the print statement into this function.
+
+Rob
