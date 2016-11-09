@@ -1,38 +1,110 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Wed, 9 Nov 2016 13:01:56 +0100
-Message-ID: <f7917987-a4cb-2840-8128-07eebd242c17@denx.de>
-References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
- <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
- <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
- <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
- <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
- <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
- <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V3 8/9] thermal: da9062/61: Thermal junction temperature
+ monitoring driver
+Date: Wed, 9 Nov 2016 18:20:58 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE91AE@SW-EX-MBX02.diasemi.com>
+References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
+ <52d74c72cc445d2bc911014f38b79c1f10426878.1477929725.git.stwiss.opensource@diasemi.com>
+ <b5789f09-0053-f0fc-ee35-c8c32969852b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Holdsworth <joel@airwebreathe.org.uk>, Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi@vger.kernel.org, Clifford Wolf <clifford@clifford.at>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <b5789f09-0053-f0fc-ee35-c8c32969852b@arm.com>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Lukasz Luba <lukasz.luba@arm.com>, Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2016 06:30 PM, Joel Holdsworth wrote:
->>>> On the whole, I don't think the zero-length transfers are too
->>>> egregiously bad, and all the alternatives seem worse to me.
->>>
->>> So why not turn the CS line into GPIO and just toggle the GPIO?
->>
->> Does that work with *all* SPI controllers?
->>
-> 
-> It does not - no. See my other email.
+On 02 November 2016 13:29, Lukasz Luba wrote:
+[...]
 
-And is that line an actual CS of that lattice chip or a generic input
-which almost works like CS?
+> Apart from these 2 comments, 10sec is not to long
+> (waiting for the temperature change)?
 
--- 
-Best regards,
-Marek Vasut
+Hi Lukasz,
+
+Are you saying the maximum polling time is too long or too short if it
+is fixed in the driver at 10 seconds?
+
+Certainly 10 seconds can be seen as either too long or too short a time
+when waiting for the temperature to fall-back below a threshold.
+But, this maximum polling time will be application dependent I think.
+
+However, this is a repeated polling event notifying of a warning
+over-temperature condition, so, it is already known that the
+temperature is above the threshold and action should already be
+in progress to reduce the temperature.
+
+#define DA9062_DEFAULT_POLLING_MS_PERIOD	3000
+#define DA9062_MAX_POLLING_MS_PERIOD		10000
+#define DA9062_MIN_POLLING_MS_PERIOD		1000
+
+The TEMP_WARN first level temperature supervision is intended for
+non-invasive temperature controlling measures for cooling the system
+and are left to the host software. This first level temperature
+TEMP_WARN (125 degC) is only +15degC off the next TEMP_CRIT
+(140 degC) temperature threshold. And this TEMP_CRIT is where
+the hardware will automatically shutdown.
+
+I suppose it all depends on how fast the temperature is expected to
+rise and fall.
+
+In any case, this 10 second polling maximum value was provided as part
+of guidance from a specific solution with this hardware. It would be expected
+that any final implementation will also include a notify() function and any
+of these settings could be altered to match the application where
+appropriate.
+
+I've added a comment above these defined variables for the next code
+patch.
+
+> On 31/10/16 16:02, Steve Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+> >
+> > +static int da9062_thermal_probe(struct platform_device *pdev)
+> > +{
+> > +	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
+> > +	struct da9062_thermal *thermal;
+> > +	unsigned int pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
+> > +	const struct of_device_id *match;
+> > +	int ret = 0;
+> > +
+> > +	match = of_match_node(da9062_compatible_reg_id_table,
+> > +			      pdev->dev.of_node);
+> > +	if (!match)
+> > +		return -ENXIO;
+> > +
+> > +	if (pdev->dev.of_node) {
+> > +		if (!of_property_read_u32(pdev->dev.of_node,
+> > +					"dlg,tjunc-temp-polling-period-ms",
+> > +					&pp_tmp)) {
+> > +			if (pp_tmp < DA9062_MIN_POLLING_MS_PERIOD ||
+> > +				pp_tmp > DA9062_MAX_POLLING_MS_PERIOD)
+> > +				pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
+>
+> Maybe it's worth to add some print here just to mention about
+> the DT value out of range. When you saw a dmesg with
+> this print on some bug report, you would know about wrong DT entry
+> (even if debug was not set).
+
+I can add a dev_warn() here explaining the invalid configuration.
+
+[...]
+
+> > +static int da9062_thermal_remove(struct platform_device *pdev)
+> > +{
+> > +	struct	da9062_thermal *thermal = platform_get_drvdata(pdev);
+> > +
+> > +	free_irq(thermal->irq, thermal);
+> > +	thermal_zone_device_unregister(thermal->zone);
+> > +	cancel_delayed_work_sync(&thermal->work);
+>
+> You should change the order for these two functions
+> and cancel the work before unregistering thermal zone device.
+
+ok
+
+Regards,
+Steve
