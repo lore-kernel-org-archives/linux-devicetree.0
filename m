@@ -1,99 +1,48 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] i2c: pxa: Add support for the I2C units found in
- Armada 3700
-Date: Wed, 9 Nov 2016 10:59:47 +0200
-Message-ID: <20161109085946.cmd4ltaxpiojq7il@tarshish>
-References: <20161109081431.10115-1-romain.perier@free-electrons.com>
- <20161109081431.10115-2-romain.perier@free-electrons.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [v16, 0/7] Fix eSDHC host version register bug
+Date: Wed, 9 Nov 2016 10:18:33 +0100
+Message-ID: <20161109091832.GC1807@katana>
+References: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161109081431.10115-2-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
+In-Reply-To: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang Zhao <qiang.zhao@nxp.com>, Kumar Gala <galak@codeaurora.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
 
-On Wed, Nov 09, 2016 at 09:14:29AM +0100, Romain Perier wrote:
-> The Armada 3700 has two I2C controllers that is compliant with the I2C
-> Bus Specificiation 2.1, supports multi-master and different bus speed:
-> Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
-> High speed mode (up to 3.4 Mhz).
-> 
-> This IP block has a lot of similarity with the PXA, except some register
-> offsets and bitfield. This commits adds a basic support for this I2C
-> unit.
-> 
-> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--uh9ZiVrAOUUm9fzH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[...]
 
-> @@ -122,7 +131,9 @@ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
->  #define ICR_SADIE	(1 << 13)	   /* slave address detected int enable */
->  #define ICR_UR		(1 << 14)	   /* unit reset */
->  #define ICR_FM		(1 << 15)	   /* fast mode */
-> +#define ICR_BUSMODE_FM	(1 << 16)	   /* shifted fast mode for armada-3700 */
->  #define ICR_HS		(1 << 16)	   /* High Speed mode */
-> +#define ICR_BUSMODE_HS	(1 << 17)	   /* shifted high speed mode for armada-3700 */
->  #define ICR_GPIOEN	(1 << 19)	   /* enable GPIO mode for SCL in HS */
->  
->  #define ISR_RWM		(1 << 0)	   /* read/write mode */
-> @@ -193,6 +204,8 @@ struct pxa_i2c {
->  	unsigned char		master_code;
->  	unsigned long		rate;
->  	bool			highmode_enter;
-> +	unsigned long		fm_mask;
-> +	unsigned long		hs_mask;
+Can you please update your CC list? There is nothing i2c related in this
+patch series, so you could drop the i2c-list.
 
-Do you really need 64bit for that?
 
-baruch
+--uh9ZiVrAOUUm9fzH
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  };
->  
->  #define _IBMR(i2c)	((i2c)->reg_ibmr)
-> @@ -503,8 +516,8 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
->  		writel(i2c->slave_addr, _ISAR(i2c));
->  
->  	/* set control register values */
-> -	writel(I2C_ICR_INIT | (i2c->fast_mode ? ICR_FM : 0), _ICR(i2c));
-> -	writel(readl(_ICR(i2c)) | (i2c->high_mode ? ICR_HS : 0), _ICR(i2c));
-> +	writel(I2C_ICR_INIT | (i2c->fast_mode ? i2c->fm_mask : 0), _ICR(i2c));
-> +	writel(readl(_ICR(i2c)) | (i2c->high_mode ? i2c->hs_mask : 0), _ICR(i2c));
->  
->  #ifdef CONFIG_I2C_PXA_SLAVE
->  	dev_info(&i2c->adap.dev, "Enabling slave mode\n");
-> @@ -1137,6 +1150,7 @@ static const struct of_device_id i2c_pxa_dt_ids[] = {
->  	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
->  	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
->  	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
-> +	{ .compatible = "marvell,armada-3700-i2c", .data = (void *)REGS_A3700 },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
-> @@ -1158,6 +1172,13 @@ static int i2c_pxa_probe_dt(struct platform_device *pdev, struct pxa_i2c *i2c,
->  		i2c->use_pio = 1;
->  	if (of_get_property(np, "mrvl,i2c-fast-mode", NULL))
->  		i2c->fast_mode = 1;
-> +	if (of_device_is_compatible(np, "marvell,armada-3700-i2c")) {
-> +		i2c->fm_mask = ICR_BUSMODE_FM;
-> +		i2c->hs_mask = ICR_BUSMODE_HS;
-> +	} else {
-> +		i2c->fm_mask = ICR_FM;
-> +		i2c->hs_mask = ICR_HS;
-> +	}
->  
->  	*i2c_types = (enum pxa_i2c_types)(of_id->data);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJYIunoAAoJEBQN5MwUoCm2JCAP/0clLR2IchSWDZ0rRwfbLcAL
+aKM/ckNIlHdPmOCq/KnJcPpGux4l6J+WkODLGpCJSMJzI0/WwjPIcNGITaapo7Ue
+U0NlY49zQ6scE9OMwsCwW22Ao5sArOi+6PAZSjmXYMN2+a+k+AnnWc+mmVmHZ9Y4
+lWVeksXVm4Lg2xEtq84ceXOpatb/4KE3M3iOKgcg+9T+Fro+/NnTjf+AkuF9Xkay
+jNqGoOdeIzD2WvrjCRD7+ApBfZZyz/Za89cGtkTvK69QqON6HB6xiesDF/YbPoz3
+UYn91ab+/teyAvoN5kDHaRcEQT2L47rQPY2hh26eCV4pyepp+23sAZ9nMakYOZRl
+rV7/ZBUh6GvyUSxDW8ud/G/O52wbdSObyBjj+qUhCQ5LjtHgcaSZwg8/Brml7YsS
+NO205lIMOsjGiB+vs9N1QhApga6Rcamb3RgIeg3un6gHCFsqnG3xEyeEDhYNNzia
+AIa+xhQ/8MAps3yjGQDp3rDJ+kxzn1qHfsEBCkOEloGsDlKt1L8R9t/05/dYwJGd
+7aKyLlhCXMGbdgzKxPcWNCiKm/UP+pZns4ABDJA8Gi9xkkEJrcr87IQ070M8N4if
+gMRmGS8Q4Yr7MXLC44C2+aStjQWk/058IuKXV/oGHvrj3Buh+IKBl4GazD2tECj5
+gmp4R7RKlYgaZUklTDQT
+=Bmj3
+-----END PGP SIGNATURE-----
+
+--uh9ZiVrAOUUm9fzH--
