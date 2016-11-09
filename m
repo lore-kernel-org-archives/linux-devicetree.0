@@ -1,204 +1,61 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 0/5] Add V4L2 SDR (DRIF & MAX2175) driver
-Date: Wed,  9 Nov 2016 15:44:39 +0000
-Message-ID: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org
-Cc: chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
+Date: Wed,  9 Nov 2016 15:44:42 +0000
+Message-ID: <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-media-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+This patch adds support for the three new SDR formats. These formats
+were prefixed with "sliced" indicating I data constitutes the top half and
+Q data constitutes the bottom half of the received buffer.
 
-This patch set contains two drivers
- - R-Car Digital Radio Interface (DRIF) driver
- - Maxim's MAX2175 RF to Bits tuner driver
+V4L2_SDR_FMT_SCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
+inside 16-bit. V4L2 FourCC: SC16
 
-These patches were based on top of media-next repo
-commit: 778de01402328ca88cda84491d819bfc949935ff
+V4L2_SDR_FMT_SCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
+inside 18-bit. V4L2 FourCC: SC18
 
-These two drivers combined together expose a V4L2 SDR device that is compliant
-with the V4L2 framework [1]. The RFC series of these two drivers were
-published few weeks ago and the discussion thread is here [2]. Agreed review
-comments are incorporated in this series.
+V4L2_SDR_FMT_SCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
+inside 20-bit. V4L2 FourCC: SC20
 
-Brief description of devices below
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+---
+ drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
+ include/uapi/linux/videodev2.h       | 3 +++
+ 2 files changed, 6 insertions(+)
 
-DRIF:
------
-This is a receive only slave controller that receives data into a FIFO from a
-master device and uses DMA engine to move it from device to memory. It is a
-serial I/O like controller with a design goal to act as digital radio receiver
-targeting SDR solutions.
-
-MAX2175:
---------
-This is a RF front end tuner device that supports tuning to different bands &
-frequency. It supports I2S output with programmable word lengths & single/dual
-data lines usage based on selected receive mode. Each receive mode is
-designated with a sample rate.
-
-+---------------------+                +---------------------+
-|                     |-----SCK------->|                     |
-| MAX2175 (master)    |-----SS-------->|  DRIF (slave)       |
-|                     |-----SD0------->|                     |
-|                     |-----SD1------->|                     |
-+---------------------+                +---------------------+
-
-New SDR formats:
-----------------
-The combined driver exposes new SDR formats. DRIF as such requires the receive
-word length as the only programmable parameter in a normal case. Otherwise it is
-agnostic of the tuner.
-
-V4L2 framework requires publishing SDR formats about position of I & Q data
-within the buffers. I have published three such formats to give an example. More
-such formats are possible and will be added when needed.
-
-References:
-------------
-[1] v4l2-compliance test report
-
-root@salvator-x:~# v4l2-compliance -S /dev/swradio0
-v4l2-compliance SHA   : 788b674f3827607c09c31be11c91638f816aa6ae
-
-Driver Info:
-        Driver name   : rcar_drif
-        Card type     : R-Car DRIF
-        Bus info      : platform:R-Car DRIF
-        Driver version: 4.9.0
-        Capabilities  : 0x85310000
-                SDR Capture
-                Tuner
-                Read/Write
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x05310000
-                SDR Capture
-                Tuner
-                Read/Write
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/swradio0 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second sdr open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
-        test VIDIOC_G/S_FREQUENCY: OK
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 1
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-                test VIDIOC_QUERYCTRL: OK
-                test VIDIOC_G/S_CTRL: OK
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 5 Private Controls: 4
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK (Not Supported)
-                test Scaling: OK (Not Supported)
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK (Not Supported)
-
-Test input 0:
-
-
-Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
-root@salvator-x:~#
-
-[2] RFC patch set discussion thread
-https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg07968.html
-
-Ramesh Shanmugasundaram (5):
-  media: v4l2-ctrls: Reserve controls for MAX217X
-  media: i2c: max2175: Add MAX2175 support
-  media: Add new SDR formats SC16, SC18 & SC20
-  doc_rst: media: New SDR formats SC16, SC18 & SC20
-  media: platform: rcar_drif: Add DRIF support
-
- .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
- .../devicetree/bindings/media/renesas,drif.txt     |  136 ++
- .../media/uapi/v4l/pixfmt-sdr-scu16be.rst          |   80 +
- .../media/uapi/v4l/pixfmt-sdr-scu18be.rst          |   80 +
- .../media/uapi/v4l/pixfmt-sdr-scu20be.rst          |   80 +
- Documentation/media/uapi/v4l/sdr-formats.rst       |    3 +
- drivers/media/i2c/Kconfig                          |    4 +
- drivers/media/i2c/Makefile                         |    2 +
- drivers/media/i2c/max2175/Kconfig                  |    8 +
- drivers/media/i2c/max2175/Makefile                 |    4 +
- drivers/media/i2c/max2175/max2175.c                | 1558 +++++++++++++++++++
- drivers/media/i2c/max2175/max2175.h                |  108 ++
- drivers/media/platform/Kconfig                     |   25 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/rcar_drif.c                 | 1574 ++++++++++++++++++++
- drivers/media/v4l2-core/v4l2-ioctl.c               |    3 +
- include/uapi/linux/v4l2-controls.h                 |    5 +
- include/uapi/linux/videodev2.h                     |    3 +
- 18 files changed, 3735 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
- create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-scu16be.rst
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-scu18be.rst
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-scu20be.rst
- create mode 100644 drivers/media/i2c/max2175/Kconfig
- create mode 100644 drivers/media/i2c/max2175/Makefile
- create mode 100644 drivers/media/i2c/max2175/max2175.c
- create mode 100644 drivers/media/i2c/max2175/max2175.h
- create mode 100644 drivers/media/platform/rcar_drif.c
-
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 181381d..d36b386 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1207,6 +1207,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+ 	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
+ 	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
++	case V4L2_SDR_FMT_SCU16BE:	descr = "Sliced Complex U16BE"; break;
++	case V4L2_SDR_FMT_SCU18BE:	descr = "Sliced Complex U18BE"; break;
++	case V4L2_SDR_FMT_SCU20BE:	descr = "Sliced Complex U20BE"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 4364ce6..34a9c30 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -666,6 +666,9 @@ struct v4l2_pix_format {
+ #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /* complex s8 */
+ #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /* complex s14le */
+ #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /* real u12le */
++#define V4L2_SDR_FMT_SCU16BE	  v4l2_fourcc('S', 'C', '1', '6') /* sliced complex u16be */
++#define V4L2_SDR_FMT_SCU18BE	  v4l2_fourcc('S', 'C', '1', '8') /* sliced complex u18be */
++#define V4L2_SDR_FMT_SCU20BE	  v4l2_fourcc('S', 'C', '2', '0') /* sliced complex u20be */
+ 
+ /* Touch formats - used for Touch devices */
+ #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-bit signed deltas */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
