@@ -1,356 +1,153 @@
-From: liviu.dudau-5wv7dgnIgG8@public.gmane.org
-Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for
- special ISA
-Date: Wed, 9 Nov 2016 11:39:55 +0000
-Message-ID: <20161109113955.GD10219@e106497-lin.cambridge.arm.com>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <1478576829-112707-3-git-send-email-yuanzhichang@hisilicon.com>
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: Re: [PATCH v6 02/14] clk: qcom: Add rcg ops to return floor value
+ closest to the requested rate
+Date: Wed, 9 Nov 2016 17:23:04 +0530
+Message-ID: <723dd8bd-c13c-ebd1-f391-2d9f7d56a852@codeaurora.org>
+References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
+ <1478517877-23733-3-git-send-email-riteshh@codeaurora.org>
+ <20161108230217.GM16026@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478576829-112707-3-git-send-email-yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20161108230217.GM16026@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 11:47:08AM +0800, zhichang.yuan wrote:
-> This patch solves two issues:
-> 1) parse and get the right I/O range from DTS node whose parent does not
-> define the corresponding ranges property;
-> 
-> There are some special ISA/LPC devices that work on a specific I/O range where
-> it is not correct to specify a ranges property in DTS parent node as cpu
-> addresses translated from DTS node are only for memory space on some
-> architectures, such as Arm64. Without the parent 'ranges' property, current
-> of_translate_address() return an error.
-> Here we add a fixup function, of_get_isa_indirect_io(). During the OF address
-> translation, this fixup will be called to check the 'reg' address to be
-> translating is for those sepcial ISA/LPC devices and get the I/O range
-> directly from the 'reg' property.
-> 
-> 2) eliminate the I/O range conflict risk with PCI/PCIE leagecy I/O device;
-> 
-> The current __of_address_to_resource() always translates the I/O range to PIO.
-> But this processing is not suitable for our ISA/LPC devices whose I/O range is
-> not cpu address(Arnd had stressed this in his comments on V2,V3 patch-set).
-> Here, we bypass the mapping between cpu address and PIO for the special
-> ISA/LPC devices. But to drive these ISA/LPC devices, a I/O port address below
-> PCIBIOS_MIN_IO is needed by in*/out*(). Which means there is conflict risk
-> between I/O range of [0, PCIBIOS_MIN_IO) and PCI/PCIE legacy I/O range of [0,
-> IO_SPACE_LIMIT).
-> To avoid the I/O conflict, this patch reserve the I/O range below
-> PCIBIOS_MIN_IO.
-> 
-> Signed-off-by: zhichang.yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../arm/hisilicon/hisilicon-low-pin-count.txt      | 31 ++++++++++++
->  arch/arm64/include/asm/io.h                        |  6 +++
->  arch/arm64/kernel/extio.c                          | 25 ++++++++++
->  drivers/of/address.c                               | 56 +++++++++++++++++++++-
->  drivers/pci/pci.c                                  |  6 +--
->  include/linux/of_address.h                         | 17 +++++++
->  include/linux/pci.h                                |  8 ++++
->  7 files changed, 145 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> new file mode 100644
-> index 0000000..13c8ddd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
-> @@ -0,0 +1,31 @@
-> +Hisilicon Hip06 low-pin-count device
-> +  Usually LPC controller is part of PCI host bridge, so the legacy ISA ports
-> +  locate on LPC bus can be accessed direclty. But some SoCs have independent
-> +  LPC controller, and access the legacy ports by triggering LPC I/O cycles.
-> +  Hisilicon Hip06 implements this LPC device.
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,low-pin-count"
-> +- #address-cells: must be 2 which stick to the ISA/EISA binding doc.
-> +- #size-cells: must be 1 which stick to the ISA/EISA binding doc.
-> +- reg: base memory range where the register set of this device is mapped.
-> +
-> +Note:
-> +  The node name before '@' must be "isa" to represent the binding stick to the
-> +  ISA/EISA binding specification.
-> +
-> +Example:
-> +
-> +isa@a01b0000 {
-> +	compatible = "hisilicom,low-pin-count";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	reg = <0x0 0xa01b0000 0x0 0x1000>;
-> +
-> +	ipmi0: bt@e4 {
-> +		compatible = "ipmi-bt";
-> +		device_type = "ipmi";
-> +		reg = <0x01 0xe4 0x04>;
-> +		status = "disabled";
-> +	};
-> +};
+Hi Stephen,
 
+Thanks for the review.
 
-This documentation file needs to be part of the next patch. It has nothing to do with
-what you are trying to fix here.
+On 11/9/2016 4:32 AM, Stephen Boyd wrote:
+> On 11/07, Ritesh Harjani wrote:
+>> diff --git a/drivers/clk/qcom/clk-rcg.h b/drivers/clk/qcom/clk-rcg.h
+>> index b904c33..1b3e8d2 100644
+>> --- a/drivers/clk/qcom/clk-rcg.h
+>> +++ b/drivers/clk/qcom/clk-rcg.h
+>> @@ -173,6 +173,7 @@ struct clk_rcg2 {
+>>  #define to_clk_rcg2(_hw) container_of(to_clk_regmap(_hw), struct clk_rcg2, clkr)
+>>
+>>  extern const struct clk_ops clk_rcg2_ops;
+>> +extern const struct clk_ops clk_rcg2_floor_ops;
+>>  extern const struct clk_ops clk_rcg2_shared_ops;
+>>  extern const struct clk_ops clk_edp_pixel_ops;
+>>  extern const struct clk_ops clk_byte_ops;
+>> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+>> index a071bba..04433a6 100644
+>> --- a/drivers/clk/qcom/clk-rcg2.c
+>> +++ b/drivers/clk/qcom/clk-rcg2.c
+>> @@ -47,6 +47,11 @@
+>>  #define N_REG			0xc
+>>  #define D_REG			0x10
+>>
+>> +enum {
+>> +	FLOOR,
+>> +	CEIL,
+>> +};
+>
+> Give it a name.
+Yes, sure. I will keep it as freq_policy.
 
+>
+>> +
+>>  static int clk_rcg2_is_enabled(struct clk_hw *hw)
+>>  {
+>>  	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+>> @@ -176,15 +181,25 @@ static int clk_rcg2_set_parent(struct clk_hw *hw, u8 index)
+>>  	return calc_rate(parent_rate, m, n, mode, hid_div);
+>>  }
+>>
+>> -static int _freq_tbl_determine_rate(struct clk_hw *hw,
+>> -		const struct freq_tbl *f, struct clk_rate_request *req)
+>> +static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
+>> +				    struct clk_rate_request *req, bool match)
+>
+> Use the enum please. Also name it something besides match.
+> policy?
+Sure. (freq_policy)
 
-> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-> index 136735d..c26b7cc 100644
-> --- a/arch/arm64/include/asm/io.h
-> +++ b/arch/arm64/include/asm/io.h
-> @@ -175,6 +175,12 @@ static inline u64 __raw_readq(const volatile void __iomem *addr)
->  #define outsl outsl
->  
->  DECLARE_EXTIO(l, u32)
-> +
-> +#define indirect_io_enabled indirect_io_enabled
-> +extern bool indirect_io_enabled(void);
-> +
-> +#define addr_is_indirect_io addr_is_indirect_io
-> +extern int addr_is_indirect_io(u64 taddr);
->  #endif
->  
->  
-> diff --git a/arch/arm64/kernel/extio.c b/arch/arm64/kernel/extio.c
-> index 647b3fa..3d45fa8 100644
-> --- a/arch/arm64/kernel/extio.c
-> +++ b/arch/arm64/kernel/extio.c
-> @@ -19,6 +19,31 @@
->  
->  struct extio_ops *arm64_extio_ops;
->  
-> +/**
-> + * indirect_io_enabled - check whether indirectIO is enabled.
-> + *	arm64_extio_ops will be set only when indirectIO mechanism had been
-> + *	initialized.
-> + *
-> + * Returns true when indirectIO is enabled.
-> + */
-> +bool indirect_io_enabled(void)
-> +{
-> +	return arm64_extio_ops ? true : false;
-> +}
-> +
-> +/**
-> + * addr_is_indirect_io - check whether the input taddr is for indirectIO.
-> + * @taddr: the io address to be checked.
-> + *
-> + * Returns 1 when taddr is in the range; otherwise return 0.
-> + */
-> +int addr_is_indirect_io(u64 taddr)
-> +{
-> +	if (arm64_extio_ops->start > taddr || arm64_extio_ops->end < taddr)
+>
+>>  {
+>>  	unsigned long clk_flags, rate = req->rate;
+>>  	struct clk_hw *p;
+>>  	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+>>  	int index;
+>>
+>> -	f = qcom_find_freq(f, rate);
+>> +	switch (match) {
+>> +	case FLOOR:
+>> +		f = qcom_find_freq_floor(f, rate);
+>> +		break;
+>> +	case CEIL:
+>> +		f = qcom_find_freq(f, rate);
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	};
+>> +
+>>  	if (!f)
+>>  		return -EINVAL;
+>>
+>> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+>> index fffcbaf..cf6b87f 100644
+>> --- a/drivers/clk/qcom/common.c
+>> +++ b/drivers/clk/qcom/common.c
+>> @@ -46,6 +46,32 @@ struct freq_tbl *qcom_find_freq(const struct freq_tbl *f, unsigned long rate)
+>>  }
+>>  EXPORT_SYMBOL_GPL(qcom_find_freq);
+>>
+>> +const
+>> +struct freq_tbl *qcom_find_freq_floor(const struct freq_tbl *f,
+>
+> We can't put const and struct on the same line?
+Ok sure.
 
-start >= taddr ?
+>
+>> +				      unsigned long rate)
+>> +{
+>> +	int size = 0;
+>> +
+>> +	if (!f)
+>> +		return NULL;
+>> +
+>> +	/*
+>> +	 * The freq table has entries in the ascending order of frequencies
+>> +	 * To find the floor for a given frequency, we need to do a reverse
+>> +	 * lookup of the table
+>> +	 */
+>> +	for (; f->freq; f++, size++)
+>> +		;
+>> +
+>> +	for (f--; size; f--, size--)
+>> +		if (rate >= f->freq)
+>> +			return f;
+>
+> I don't understand why we can't do this while iterating through
+> the table. We shouldn't need to size up the frequency table first.
+>
+> 	const struct freq_tbl *best = NULL;
+>
+> 	for ( ; f->freq; f++) {
+> 		if (rate >= f->freq)
+> 			best = f->freq;
+> 		else
+> 			break;
+> 	}
+> 	
+> 	return best;
+>
+Yes, will do above change.
 
-> +		return 0;
-> +
-> +	return 1;
-> +}
->  
->  BUILD_EXTIO(b, u8)
->  
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 02b2903..cc2a05d 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -479,6 +479,50 @@ static int of_empty_ranges_quirk(struct device_node *np)
->  	return false;
->  }
->  
-> +
-> +/*
-> + * of_isa_indirect_io - get the IO address from some isa reg property value.
-> + *	For some isa/lpc devices, no ranges property in ancestor node.
-> + *	The device addresses are described directly in their regs property.
-> + *	This fixup function will be called to get the IO address of isa/lpc
-> + *	devices when the normal of_translation failed.
-> + *
-> + * @parent:	points to the parent dts node;
-> + * @bus:		points to the of_bus which can be used to parse address;
-> + * @addr:	the address from reg property;
-> + * @na:		the address cell counter of @addr;
-> + * @presult:	store the address paresed from @addr;
-> + *
-> + * return 1 when successfully get the I/O address;
-> + * 0 will return for some failures.
-
-Bah, you are returning a signed int, why 0 for failure? Return a negative value with
-error codes. Otherwise change the return value into a bool.
-
-> + */
-> +static int of_get_isa_indirect_io(struct device_node *parent,
-> +				struct of_bus *bus, __be32 *addr,
-> +				int na, u64 *presult)
-> +{
-> +	unsigned int flags;
-> +	unsigned int rlen;
-> +
-> +	/* whether support indirectIO */
-> +	if (!indirect_io_enabled())
-> +		return 0;
-> +
-> +	if (!of_bus_isa_match(parent))
-> +		return 0;
-> +
-> +	flags = bus->get_flags(addr);
-> +	if (!(flags & IORESOURCE_IO))
-> +		return 0;
-> +
-> +	/* there is ranges property, apply the normal translation directly. */
-
-s/there is ranges/if we have a 'ranges'/
-
-> +	if (of_get_property(parent, "ranges", &rlen))
-> +		return 0;
-> +
-> +	*presult = of_read_number(addr + 1, na - 1);
-> +	/* this fixup is only valid for specific I/O range. */
-> +	return addr_is_indirect_io(*presult);
-> +}
-> +
->  static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->  			    struct of_bus *pbus, __be32 *addr,
->  			    int na, int ns, int pna, const char *rprop)
-> @@ -595,6 +639,15 @@ static u64 __of_translate_address(struct device_node *dev,
->  			result = of_read_number(addr, na);
->  			break;
->  		}
-> +		/*
-> +		 * For indirectIO device which has no ranges property, get
-> +		 * the address from reg directly.
-> +		 */
-> +		if (of_get_isa_indirect_io(dev, bus, addr, na, &result)) {
-> +			pr_debug("isa indirectIO matched(%s)..addr = 0x%llx\n",
-> +				of_node_full_name(dev), result);
-> +			break;
-> +		}
->  
->  		/* Get new parent bus and counts */
->  		pbus = of_match_bus(parent);
-> @@ -688,8 +741,9 @@ static int __of_address_to_resource(struct device_node *dev,
->  	if (taddr == OF_BAD_ADDR)
->  		return -EINVAL;
->  	memset(r, 0, sizeof(struct resource));
-> -	if (flags & IORESOURCE_IO) {
-> +	if (flags & IORESOURCE_IO && taddr >= PCIBIOS_MIN_IO) {
->  		unsigned long port;
-> +
->  		port = pci_address_to_pio(taddr);
->  		if (port == (unsigned long)-1)
->  			return -EINVAL;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index ba34907..1a08511 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3263,7 +3263,7 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
->  
->  #ifdef PCI_IOBASE
->  	struct io_range *range;
-> -	resource_size_t allocated_size = 0;
-> +	resource_size_t allocated_size = PCIBIOS_MIN_IO;
->  
->  	/* check if the range hasn't been previously recorded */
->  	spin_lock(&io_range_lock);
-> @@ -3312,7 +3312,7 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
->  
->  #ifdef PCI_IOBASE
->  	struct io_range *range;
-> -	resource_size_t allocated_size = 0;
-> +	resource_size_t allocated_size = PCIBIOS_MIN_IO;
-
-Have you checked that pci_pio_to_address still returns valid values after this? I know that
-you are trying to take into account PCIBIOS_MIN_IO limit when allocating reserving the IO ranges,
-but the values added in the io_range_list are still starting from zero, no from PCIBIOS_MIN_IO,
-so the calculation of the address in this function could return negative values casted to pci_addr_t.
-
-Maybe you want to adjust the range->start value in pci_register_io_range() as well to have it
-offset by PCIBIOS_MIN_IO as well.
-
-Best regards,
-Liviu
-
->  
->  	if (pio > IO_SPACE_LIMIT)
->  		return address;
-> @@ -3335,7 +3335,7 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
->  {
->  #ifdef PCI_IOBASE
->  	struct io_range *res;
-> -	resource_size_t offset = 0;
-> +	resource_size_t offset = PCIBIOS_MIN_IO;
->  	unsigned long addr = -1;
->  
->  	spin_lock(&io_range_lock);
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 3786473..deec469 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -24,6 +24,23 @@ struct of_pci_range {
->  #define for_each_of_pci_range(parser, range) \
->  	for (; of_pci_range_parser_one(parser, range);)
->  
-> +
-> +#ifndef indirect_io_enabled
-> +#define indirect_io_enabled indirect_io_enabled
-> +static inline bool indirect_io_enabled(void)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
-> +#ifndef addr_is_indirect_io
-> +#define addr_is_indirect_io addr_is_indirect_io
-> +static inline int addr_is_indirect_io(u64 taddr)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  /* Translate a DMA address from device space to CPU space */
->  extern u64 of_translate_dma_address(struct device_node *dev,
->  				    const __be32 *in_addr);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0e49f70..7f6bbb6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2130,4 +2130,12 @@ static inline bool pci_ari_enabled(struct pci_bus *bus)
->  /* provide the legacy pci_dma_* API */
->  #include <linux/pci-dma-compat.h>
->  
-> +/*
-> + * define this macro here to refrain from compilation error for some
-> + * platforms. Please keep this macro at the end of this header file.
-> + */
-> +#ifndef PCIBIOS_MIN_IO
-> +#define PCIBIOS_MIN_IO		0
-> +#endif
-> +
->  #endif /* LINUX_PCI_H */
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +
+>> +	/* could not find any rates lower than *rate* */
+>
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qcom_find_freq_floor);
+>
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
