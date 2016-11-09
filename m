@@ -1,68 +1,38 @@
-From: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
-Date: Wed, 9 Nov 2016 11:54:06 -0700
-Message-ID: <d3af549a-0f68-7511-ad38-b9ec8aab62ca@airwebreathe.org.uk>
-References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
- <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
- <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
- <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
- <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
- <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
- <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
- <f7917987-a4cb-2840-8128-07eebd242c17@denx.de>
- <5828eb84-ab29-49e2-34f0-3cd7e527ca66@airwebreathe.org.uk>
- <a580bfa4-7852-aaf8-3a44-24da717f3d51@denx.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 00/13] mmc: dw_mmc: cleans the codes for dwmmc controller
+Date: Wed, 09 Nov 2016 19:55:21 +0100
+Message-ID: <1862686.MpoeR9Brjy@phil>
+References: <20161103062135.10697-1-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a580bfa4-7852-aaf8-3a44-24da717f3d51-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Clifford Wolf <clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161103062135.10697-1-jh80.chung@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/16 11:39, Marek Vasut wrote:
-> On 11/09/2016 07:37 PM, Joel Holdsworth wrote:
->> On 09/11/16 05:01, Marek Vasut wrote:
->>> On 11/08/2016 06:30 PM, Joel Holdsworth wrote:
->>>>>>> On the whole, I don't think the zero-length transfers are too
->>>>>>> egregiously bad, and all the alternatives seem worse to me.
->>>>>>
->>>>>> So why not turn the CS line into GPIO and just toggle the GPIO?
->>>>>
->>>>> Does that work with *all* SPI controllers?
->>>>>
->>>>
->>>> It does not - no. See my other email.
->>>
->>> And is that line an actual CS of that lattice chip or a generic input
->>> which almost works like CS?
->>>
->>
->> I mean a generic output vs. a special CS output built into the SPI
->> master of the application processor. Take a look at how spi_set_cs(..)
->> works:
->
-> No. I am asking whether the signal which is INPUT on the iCE40 side is
-> really a chipselect signal for the SPI bus OR something which mostly
-> behaves/looks like a chipselect but is not really a chipselect.
+Am Donnerstag, 3. November 2016, 15:21:22 CET schrieb Jaehoon Chung:
+> This patchset is modified the some minor fixing and cleaning code.
+> If needs to split the patches, i will re-send the patches.
+> 
+> * Major changes
+> - Use the cookie enum values like sdhci controller.
+> - Remove the unnecessary codes and use stop_abort() by default.
+> - Remove the obsoleted property "supports-highspeed"
+> - Remove the "clock-freq-min-max" property. Instead, use "max-frequency"
+> - Minimum clock value is set to 100K by default.
+> 
+> Jaehoon Chung (13):
+>   mmc: dw_mmc: display the real register value on debugfs
+>   mmc: dw_mmc: fix the debug message for checking card's present
+>   mmc: dw_mmc: change the DW_MCI_FREQ_MIN from 400K to 100K
+>   mmc: dw_mmc: use the hold register when send stop command
+>   mmc: dw_mmc: call the dw_mci_prep_stop_abort() by default
+>   mmc: core: move the cookie's enum values from sdhci.h to mmc.h
+>   mmc: dw_mmc: use the cookie's enum values for post/pre_req()
+>   mmc: dw_mmc: remove the unnecessary mmc_data structure
 
-Oh I see. The SS_B line is the SPI SlaveSelect for the configuration port.
-
-This is the text from the datasheet:
-
-"SPI Slave Select. Active Low. Includes an internal weak pull-up 
-resistor to VCC_SPI during configuration. During configuration, the 
-logic level sampled on this pin deter-mines the configuration mode used 
-by the iCE40 device. An input when sampled at the start of 
-configuration. An input when in SPI Peripheral configuration mode 
-(SPI_SS_B = Low). An output when in Master SPI Flash configuration mode."
-
-So yes - it is a "real" SPI chip-select line.
-
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+patches 1-8 on rk3036, rk3288, rk3368 and rk3399 Rockchip platforms
+Tested-by: Heiko Stuebner <heiko@sntech.de>
