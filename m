@@ -1,47 +1,29 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: rn5t618: add RC5T619 PMIC support
-Date: Wed, 9 Nov 2016 14:02:58 +0000
-Message-ID: <20161109140258.25miftfbklwo3apz@sirena.org.uk>
-References: <20161105161925.14910-1-phh@phh.me>
- <20161105161925.14910-3-phh@phh.me>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 11/13] ARM: dts: rockchip: replace to "max-frequency" instead of "clock-freq-min-max"
+Date: Wed, 09 Nov 2016 15:05:03 +0100
+Message-ID: <9130443.30mF7DGnI2@phil>
+References: <20161103062135.10697-1-jh80.chung@samsung.com> <20161103062135.10697-12-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lyjmpdesrwly3m6s"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161105161925.14910-3-phh-8tEavu1zA38@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20161103062135.10697-12-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, ulf.hansson@linaro.org, robh+dt@kernel.org, krzk@kernel.org, shawn.lin@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Am Donnerstag, 3. November 2016, 15:21:33 CET schrieb Jaehoon Chung:
+> In drivers/mmc/core/host.c, there is "max-frequency" property.
+> It should be same behavior. So use the "max-frequency" instead of
+> "clock-freq-min-max".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
---lyjmpdesrwly3m6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+looks good, my veyron-pinky and rk3036-kylin still seem to work and hopefully 
+I haven't missed any spelling errors in the properties :-), so applied to my 
+dts32 branch for 4.10
 
-On Sat, Nov 05, 2016 at 05:19:25PM +0100, Pierre-Hugues Husson wrote:
-> Extend the driver to support Ricoh RC5T619.
-> Support the additional regulators and slightly different voltage ranges.
 
-Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---lyjmpdesrwly3m6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJYIyySAAoJECTWi3JdVIfQqYAH/RwlnS/NULfdGlIb0E8AUKRV
-XmShGtI7BzYK5aQtVKNy9EIiS5jPXBcOBz6vLDpcdw3F+fQ9QOdeYAVVl6yyUgHP
-G8gpLEri/NK/AVMlTmQDyIu+zeteNwK+KGwS8/vQlI7cjT3RFRYORNQAmYrSkXdw
-6W4fnYOdOsXvBUMiP1dZ4M8fFvryjzV+4+sHAA6/dcL3nuO2aSRjXGx6xTKFX19m
-OK7eINnuuSST0seZ3PgJZZwUHRn+UmVh95Mz1RsD8hiISdmilmbXvqerguHPKza5
-ATnkwU9FbXZrDk9UVM5hZpg2MBJgeLJFEgI1Hl/LZwxmruXeOruMJNAo3qCh6zQ=
-=8ovj
------END PGP SIGNATURE-----
-
---lyjmpdesrwly3m6s--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
