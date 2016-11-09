@@ -1,70 +1,142 @@
-From: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 04/14] mmc: sdhci-msm: Change poor style writel/readl
- of registers
-Date: Wed, 9 Nov 2016 17:25:28 +0530
-Message-ID: <4f889254-9c5b-b459-7566-1b8b1ff5cbd0@codeaurora.org>
-References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
- <1478517877-23733-5-git-send-email-riteshh@codeaurora.org>
- <20161108230724.GO16026@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/3] i2c: pxa: Add support for the I2C units found in Armada 3700
+Date: Wed,  9 Nov 2016 12:57:13 +0100
+Message-ID: <20161109115715.2557-2-romain.perier@free-electrons.com>
+References: <20161109115715.2557-1-romain.perier@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108230724.GO16026-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20161109115715.2557-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kdorfman-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+The Armada 3700 has two I2C controllers that is compliant with the I2C
+Bus Specificiation 2.1, supports multi-master and different bus speed:
+Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
+High speed mode (up to 3.4 Mhz).
 
-On 11/9/2016 4:37 AM, Stephen Boyd wrote:
-> On 11/07, Ritesh Harjani wrote:
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index 8ef44a2a..42f42aa 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -137,8 +137,9 @@ static int msm_config_cm_dll_phase(struct sdhci_host *host, u8 phase)
->>  	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->>
->>  	/* Set CK_OUT_EN bit of DLL_CONFIG register to 1. */
->> -	writel_relaxed((readl_relaxed(host->ioaddr + CORE_DLL_CONFIG)
->> -			| CORE_CK_OUT_EN), host->ioaddr + CORE_DLL_CONFIG);
->> +	config = readl_relaxed(host->ioaddr + CORE_DLL_CONFIG);
->> +	config |= CORE_CK_OUT_EN;
->> +	writel_relaxed(config, host->ioaddr + CORE_DLL_CONFIG);
->>
->>  	/* Wait until CK_OUT_EN bit of DLL_CONFIG register becomes '1' */
->>  	rc = msm_dll_poll_ck_out_en(host, 1);
->> @@ -305,6 +306,7 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->>  	struct mmc_host *mmc = host->mmc;
->>  	int wait_cnt = 50;
->>  	unsigned long flags;
->> +	u32 config = 0;
->
-> It needs to be initialized?
-No, will make it uninitialized.
+This IP block has a lot of similarity with the PXA, except some register
+offsets and bitfield. This commits adds a basic support for this I2C
+unit.
 
->
->>
->>  	spin_lock_irqsave(&host->lock, flags);
->>
->> @@ -313,33 +315,40 @@ static int msm_init_cm_dll(struct sdhci_host *host)
->>  	 * tuning is in progress. Keeping PWRSAVE ON may
->>  	 * turn off the clock.
->>  	 */
->> -	writel_relaxed((readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC)
->> -			& ~CORE_CLK_PWRSAVE), host->ioaddr + CORE_VENDOR_SPEC);
->> +	config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
->
-> It's written here unconditionally though?
->
->> +	config &= ~CORE_CLK_PWRSAVE;
->
+Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
 
+Changes in v4:
+ - Replaced the type of hs_mask and fm_mask by u32, instead of
+   unsigned int, As writel() take an u32 as first argument...
+
+Changes in v3:
+ - Replaced the type of hs_mask and fm_mask by unsigned int,
+   instead of unsigned long.
+
+ drivers/i2c/busses/Kconfig   |  2 +-
+ drivers/i2c/busses/i2c-pxa.c | 25 +++++++++++++++++++++++--
+ 2 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index d252276..2f56a26 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -763,7 +763,7 @@ config I2C_PUV3
+ 
+ config I2C_PXA
+ 	tristate "Intel PXA2XX I2C adapter"
+-	depends on ARCH_PXA || ARCH_MMP || (X86_32 && PCI && OF)
++	depends on ARCH_PXA || ARCH_MMP || ARCH_MVEBU || (X86_32 && PCI && OF)
+ 	help
+ 	  If you have devices in the PXA I2C bus, say yes to this option.
+ 	  This driver can also be built as a module.  If so, the module
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index e28b825..09b4705 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -55,6 +55,7 @@ enum pxa_i2c_types {
+ 	REGS_PXA3XX,
+ 	REGS_CE4100,
+ 	REGS_PXA910,
++	REGS_A3700,
+ };
+ 
+ /*
+@@ -91,6 +92,13 @@ static struct pxa_reg_layout pxa_reg_layout[] = {
+ 		.ilcr = 0x28,
+ 		.iwcr = 0x30,
+ 	},
++	[REGS_A3700] = {
++		.ibmr = 0x00,
++		.idbr = 0x04,
++		.icr =	0x08,
++		.isr =	0x0c,
++		.isar = 0x10,
++	},
+ };
+ 
+ static const struct platform_device_id i2c_pxa_id_table[] = {
+@@ -98,6 +106,7 @@ static const struct platform_device_id i2c_pxa_id_table[] = {
+ 	{ "pxa3xx-pwri2c",	REGS_PXA3XX },
+ 	{ "ce4100-i2c",		REGS_CE4100 },
+ 	{ "pxa910-i2c",		REGS_PXA910 },
++	{ "armada-3700-i2c",	REGS_A3700  },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
+@@ -122,7 +131,9 @@ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
+ #define ICR_SADIE	(1 << 13)	   /* slave address detected int enable */
+ #define ICR_UR		(1 << 14)	   /* unit reset */
+ #define ICR_FM		(1 << 15)	   /* fast mode */
++#define ICR_BUSMODE_FM	(1 << 16)	   /* shifted fast mode for armada-3700 */
+ #define ICR_HS		(1 << 16)	   /* High Speed mode */
++#define ICR_BUSMODE_HS	(1 << 17)	   /* shifted high speed mode for armada-3700 */
+ #define ICR_GPIOEN	(1 << 19)	   /* enable GPIO mode for SCL in HS */
+ 
+ #define ISR_RWM		(1 << 0)	   /* read/write mode */
+@@ -193,6 +204,8 @@ struct pxa_i2c {
+ 	unsigned char		master_code;
+ 	unsigned long		rate;
+ 	bool			highmode_enter;
++	u32			fm_mask;
++	u32			hs_mask;
+ };
+ 
+ #define _IBMR(i2c)	((i2c)->reg_ibmr)
+@@ -503,8 +516,8 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
+ 		writel(i2c->slave_addr, _ISAR(i2c));
+ 
+ 	/* set control register values */
+-	writel(I2C_ICR_INIT | (i2c->fast_mode ? ICR_FM : 0), _ICR(i2c));
+-	writel(readl(_ICR(i2c)) | (i2c->high_mode ? ICR_HS : 0), _ICR(i2c));
++	writel(I2C_ICR_INIT | (i2c->fast_mode ? i2c->fm_mask : 0), _ICR(i2c));
++	writel(readl(_ICR(i2c)) | (i2c->high_mode ? i2c->hs_mask : 0), _ICR(i2c));
+ 
+ #ifdef CONFIG_I2C_PXA_SLAVE
+ 	dev_info(&i2c->adap.dev, "Enabling slave mode\n");
+@@ -1137,6 +1150,7 @@ static const struct of_device_id i2c_pxa_dt_ids[] = {
+ 	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
+ 	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
+ 	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
++	{ .compatible = "marvell,armada-3700-i2c", .data = (void *)REGS_A3700 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
+@@ -1158,6 +1172,13 @@ static int i2c_pxa_probe_dt(struct platform_device *pdev, struct pxa_i2c *i2c,
+ 		i2c->use_pio = 1;
+ 	if (of_get_property(np, "mrvl,i2c-fast-mode", NULL))
+ 		i2c->fast_mode = 1;
++	if (of_device_is_compatible(np, "marvell,armada-3700-i2c")) {
++		i2c->fm_mask = ICR_BUSMODE_FM;
++		i2c->hs_mask = ICR_BUSMODE_HS;
++	} else {
++		i2c->fm_mask = ICR_FM;
++		i2c->hs_mask = ICR_HS;
++	}
+ 
+ 	*i2c_types = (enum pxa_i2c_types)(of_id->data);
+ 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
