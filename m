@@ -1,106 +1,72 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 01/30] usb: dwc2: Deprecate g-use-dma binding
-Date: Wed, 9 Nov 2016 10:47:22 -0800
-Message-ID: <45cd6a79-84fe-5b49-5d34-9e1360e54351@synopsys.com>
-References: <cover.1478558343.git.johnyoun@synopsys.com>
- <e99e9d8df77884671f94734109a1a8d76a0222c1.1478558343.git.johnyoun@synopsys.com>
- <87wpgeibdh.fsf@linux.intel.com>
- <6e90b835-73b1-3970-24a4-eab72381b469@synopsys.com>
- <87zil9gkcq.fsf@linux.intel.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Wed, 9 Nov 2016 19:39:59 +0100
+Message-ID: <a580bfa4-7852-aaf8-3a44-24da717f3d51@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
+ <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+ <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
+ <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+ <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
+ <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
+ <f7917987-a4cb-2840-8128-07eebd242c17@denx.de>
+ <5828eb84-ab29-49e2-34f0-3cd7e527ca66@airwebreathe.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87zil9gkcq.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5828eb84-ab29-49e2-34f0-3cd7e527ca66@airwebreathe.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Holdsworth <joel@airwebreathe.org.uk>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi@vger.kernel.org, Clifford Wolf <clifford@clifford.at>
 List-Id: devicetree@vger.kernel.org
 
-On 11/8/2016 11:54 PM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
->> On 11/8/2016 1:12 AM, Felipe Balbi wrote:
->>>
->>> Hi,
->>>
->>> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
->>>> Add a vendor prefix and make the name more consistent by renaming it to
->>>> "snps,gadget-dma-enable".
+On 11/09/2016 07:37 PM, Joel Holdsworth wrote:
+> On 09/11/16 05:01, Marek Vasut wrote:
+>> On 11/08/2016 06:30 PM, Joel Holdsworth wrote:
+>>>>>> On the whole, I don't think the zero-length transfers are too
+>>>>>> egregiously bad, and all the alternatives seem worse to me.
+>>>>>
+>>>>> So why not turn the CS line into GPIO and just toggle the GPIO?
 >>>>
->>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/usb/dwc2.txt | 5 ++++-
->>>>  arch/arm/boot/dts/rk3036.dtsi                  | 2 +-
->>>>  arch/arm/boot/dts/rk3288.dtsi                  | 2 +-
->>>>  arch/arm/boot/dts/rk3xxx.dtsi                  | 2 +-
->>>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 2 +-
->>>>  arch/arm64/boot/dts/rockchip/rk3368.dtsi       | 2 +-
->>>>  drivers/usb/dwc2/params.c                      | 9 ++++++++-
->>>>  drivers/usb/dwc2/pci.c                         | 2 +-
->>>>  8 files changed, 18 insertions(+), 8 deletions(-)
+>>>> Does that work with *all* SPI controllers?
 >>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> index 9472111..389a461 100644
->>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> @@ -26,11 +26,14 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
->>>>  - dr_mode: shall be one of "host", "peripheral" and "otg"
->>>>    Refer to usb/generic.txt
->>>>  - snps,host-dma-disable: disable host DMA mode.
->>>> -- g-use-dma: enable dma usage in gadget driver.
->>>> +- snps,gadget-dma-enable: enable gadget DMA mode.
 >>>
->>> I don't see why you even have this binding. Looking through the code,
->>> you have:
->>>
->>> #define GHWCFG2_SLAVE_ONLY_ARCH			0
->>> #define GHWCFG2_EXT_DMA_ARCH			1
->>> #define GHWCFG2_INT_DMA_ARCH			2
->>>
->>> void dwc2_set_param_dma_enable(struct dwc2_hsotg *hsotg, int val)
->>> {
->>> 	int valid = 1;
->>>
->>> 	if (val > 0 && hsotg->hw_params.arch == GHWCFG2_SLAVE_ONLY_ARCH)
->>> 		valid = 0;
->>> 	if (val < 0)
->>> 		valid = 0;
->>>
->>> 	if (!valid) {
->>> 		if (val >= 0)
->>> 			dev_err(hsotg->dev,
->>> 				"%d invalid for dma_enable parameter. Check HW configuration.\n",
->>> 				val);
->>> 		val = hsotg->hw_params.arch != GHWCFG2_SLAVE_ONLY_ARCH;
->>> 		dev_dbg(hsotg->dev, "Setting dma_enable to %d\n", val);
->>> 	}
->>>
->>> 	hsotg->core_params->dma_enable = val;
->>> }
->>>
->>> which seems to hint that DMA support is discoverable. If there is DMA,
->>> why would disable it?
->>>
+>>> It does not - no. See my other email.
 >>
->> Yes that's the case and I would prefer to make it discoverable and
->> enabled by default.
+>> And is that line an actual CS of that lattice chip or a generic input
+>> which almost works like CS?
 >>
->> But the legacy behavior has always been like this because DMA was
->> never fully implemented in the gadget driver and it was an opt-in
->> feature. Periodic support was only added recently.
 > 
-> legacy behavior can be changed if another 'policy' makes more
-> sense. IMHO, whatever can be discovered in runtime, should be enabled by
-> default. That way, we force people to use it and find bugs in certain
-> features.
+> I mean a generic output vs. a special CS output built into the SPI
+> master of the application processor. Take a look at how spi_set_cs(..)
+> works:
 
-Sounds good to me. I'll make the changes.
+No. I am asking whether the signal which is INPUT on the iCE40 side is
+really a chipselect signal for the SPI bus OR something which mostly
+behaves/looks like a chipselect but is not really a chipselect.
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/spi/spi.c?id=refs/tags/v4.9-rc4#n695
+> 
+> 
+> static void spi_set_cs(struct spi_device *spi, bool enable)
+> {
+>     if (spi->mode & SPI_CS_HIGH)
+>         enable = !enable;
+> 
+>     if (gpio_is_valid(spi->cs_gpio))
+>         gpio_set_value(spi->cs_gpio, !enable);
+>     else if (spi->master->set_cs)
+>         spi->master->set_cs(spi, !enable);
+> }
+> 
+> So on some SPI masters, spi->master->set_cs is handled separately from
+> normal GPIOs. Hence why I want to use this machinery, rather than doing
+> it with a GPIO.
+
+This is not relevant. FYI: using separate GPIO as a SPI chip select has
+it's own problems.
+
+-- 
+Best regards,
+Marek Vasut
