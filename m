@@ -1,57 +1,26 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C
- bus bitbang for HDMI
-Date: Tue, 08 Nov 2016 16:50:24 -0800
-Message-ID: <57268103e8fabf344723eae99b45ec7d@agner.ch>
-References: <2263d508999ada9476268138b2922702eb50131f.1474260360.git.maitysanchayan@gmail.com>
- <20161022032559.GL30578@tiger>
- <3d2b6dfd-c03c-e635-8dc1-2dc9ac454f5a@mentor.com>
- <20161108173315.GA16082@Sanchayan-Arch.localdomain>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 2/2] ARM: sunxi: Add the missing clocks to the pinctrl nodes
+Date: Wed, 9 Nov 2016 09:30:13 +0800
+Message-ID: <CAGb2v67psWrGV+s0BtoexcCGNkAEe=FwdBGCWTRioiT61nC4qw@mail.gmail.com>
+References: <cover.61acad25a6fb233e39141b52acd217415281bd73.1478636546.git-series.maxime.ripard@free-electrons.com>
+ <dbf6796cb2857e09072d57dc29152c153c2c8f61.1478636546.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161108173315.GA16082@Sanchayan-Arch.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maitysanchayan@gmail.com
-Cc: Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, marcel.ziswiler@toradex.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <dbf6796cb2857e09072d57dc29152c153c2c8f61.1478636546.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-08 09:33, maitysanchayan@gmail.com wrote:
-> Hello Shawn,
-> 
-> On 16-10-22 15:43:04, Vladimir Zapolskiy wrote:
->> Hi Shawn,
->>
->> On 10/22/2016 06:25 AM, Shawn Guo wrote:
->> > On Mon, Sep 19, 2016 at 10:41:51AM +0530, Sanchayan Maity wrote:
->> > > Remove the use of DDC I2C bus bitbang to support reading of EDID
->> > > and rely on support from internal HDMI I2C master controller instead.
->> > > As a result remove the device tree property ddc-i2c-bus.
->> > >
->> > > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
->> >
->> > I think that the dw-hdmi i2c support [1] is a prerequisite of this
->> > patch.  I do not see it lands on v4.9-rc1.  Or am I missing something?
->> >
->> > Shawn
->> >
->> > [1] https://patchwork.kernel.org/patch/9296883/
->> >
->>
->> I'm adding Philipp to Cc, since he is the last one who tested the change
->> and helped me to push the change to the mainline:
->>
->>   https://lists.freedesktop.org/archives/dri-devel/2016-September/118569.html
->>
->> The problem is that there is no official DW HDMI bridge maintainer, may be
->> you can review the change, and if you find it satisfactory push it through
->> ARM/iMX tree.
-> 
-> Shawn, is it okay if that patch goes through your ARM/iMX tree?
+On Wed, Nov 9, 2016 at 4:24 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The pin controllers also use the two oscillators for debouncing. Add them
+> to the DTs.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I don't think it makes sense that the DRM bridge changes go through
-Shawn's tree. Dave should merge Philipps pull request...
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
---
-Stefan
+You should also do the R_PIO block for the ones that have them too.
