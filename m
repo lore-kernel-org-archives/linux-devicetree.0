@@ -1,690 +1,466 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] backlight: arcxcnn: add support for ArticSand devices
-Date: Wed, 9 Nov 2016 15:53:07 +0000
-Message-ID: <20161109155307.GH13127@dell>
-References: <1477513778-31297-1-git-send-email-olimpiu@arcticsand.com>
+From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Subject: Re: [PATCH 2/3] ipmi/bt-bmc: maintain a request expiry list
+Date: Wed, 9 Nov 2016 09:52:03 -0600
+Message-ID: <1e0187c4-d503-ce4a-3d4c-cf21f0bffb96@acm.org>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <1478073426-3714-3-git-send-email-clg@kaod.org>
+ <a7aea2a7-6cb4-655e-3c69-1a156945e27b@acm.org>
+ <6117c1fd-b969-9394-0be5-d46f64269cac@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1477513778-31297-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+In-Reply-To: <6117c1fd-b969-9394-0be5-d46f64269cac-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jingoo?
+On 11/09/2016 08:30 AM, Cédric Le Goater wrote:
+> On 11/07/2016 08:04 PM, Corey Minyard wrote:
+>> On 11/02/2016 02:57 AM, Cédric Le Goater wrote:
+>>> Regarding the response expiration handling, the IPMI spec says :
+>>>
+>>>      The BMC must not return a given response once the corresponding
+>>>      Request-to-Response interval has passed. The BMC can ensure this
+>>>      by maintaining its own internal list of outstanding requests through
+>>>      the interface. The BMC could age and expire the entries in the list
+>>>      by expiring the entries at an interval that is somewhat shorter than
+>>>      the specified Request-to-Response interval....
+>>>
+>>> To handle such case, we maintain list of received requests using the
+>>> seq number of the BT message to identify them. The list is updated
+>>> each time a request is received and a response is sent. The expiration
+>>> of the reponses is handled at each updates but also with a timer.
+>> This looks correct, but it seems awfully complicated.
+>>
+>> Why can't you get the current time before the wait_event_interruptible()
+>> and then compare the time before you do the write?  That would seem to
+>> accomplish the same thing without any lists or extra locks.
+> Well, the expiry list needs a request identifier and it is currently using
+> the Seq byte for this purpose. So the BT message needs to be read to grab
+> that byte. The request is added to a list and that involves some locking.
+>
+> When the response is written, the first matching request is removed from
+> the list and a garbage collector loop is also run. Then, as we might not
+> get any responses to run that loop, we use a timer to empty the list from
+> any expired requests.
+>
+> The read/write ops of the driver are protected with a mutex, the list and
+> the timer add their share of locking. That could have been done with RCU
+> surely but we don't really need performance in this driver.
+>
+> Caveats :
+>
+> bt_bmc_remove_request() should not be done in the writing loop though.
+> It needs a fix.
+>
+> The request identifier is currently Seq but the spec say we should use
+> Seq, NetFn, and Command or an internal Seq value as a request identifier.
+> Google is also working on an OEM/Group extension (Brendan in CC: )
+> which has a different message format. I need to look closer at what
+> should be done in this case.
 
-On Wed, 26 Oct 2016, Olimpiu Dejeu wrote:
+I'm still not sure why the list is necessary.  You have a separate
+thread of execution for each writer, why not just time it in that
+thread?
 
-> Resubmition of arcxcnn backliught driver adding devicetree entries
->  for all registers
-> 
-> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> 
-> ---
->  drivers/video/backlight/Kconfig      |   7 +
->  drivers/video/backlight/Makefile     |   1 +
->  drivers/video/backlight/arcxcnn_bl.c | 541 +++++++++++++++++++++++++++++++++++
->  include/linux/i2c/arcxcnn.h          |  67 +++++
->  4 files changed, 616 insertions(+)
->  create mode 100644 drivers/video/backlight/arcxcnn_bl.c
->  create mode 100644 include/linux/i2c/arcxcnn.h
-> 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 5ffa4b4..4e1d2ad 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -460,6 +460,13 @@ config BACKLIGHT_BD6107
->  	help
->  	  If you have a Rohm BD6107 say Y to enable the backlight driver.
->  
-> +config BACKLIGHT_ARCXCNN
-> +	tristate "Backlight driver for the Arctic Sands ARCxCnnnn family"
-> +	depends on I2C
-> +	help
-> +	  If you have an ARCxCnnnn family backlight say Y to enable
-> +	  the backlight driver.
-> +
->  endif # BACKLIGHT_CLASS_DEVICE
->  
->  endif # BACKLIGHT_LCD_SUPPORT
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index 16ec534..8905129 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -55,3 +55,4 @@ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
->  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
->  obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
->  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-> +obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
-> diff --git a/drivers/video/backlight/arcxcnn_bl.c b/drivers/video/backlight/arcxcnn_bl.c
-> new file mode 100644
-> index 0000000..1dad680
-> --- /dev/null
-> +++ b/drivers/video/backlight/arcxcnn_bl.c
-> @@ -0,0 +1,541 @@
-> +/*
-> + * Backlight driver for ArcticSand ARC_X_C_0N_0N Devices
-> + *
-> + * Copyright 2016 ArcticSand, Inc.
-> + *
-> + * Licensed under the GPL-2 or later.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/i2c.h>
-> +#include <linux/backlight.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include "linux/i2c/arcxcnn.h"
-> +
-> +#define ARCXCNN_CMD		(0x00)  /* Command Register */
-> +#define ARCXCNN_CMD_STDBY	(0x80)	/* I2C Standby */
-> +#define ARCXCNN_CMD_RESET	(0x40)	/* Reset */
-> +#define ARCXCNN_CMD_BOOST	(0x10)	/* Boost */
-> +#define ARCXCNN_CMD_OVP_MASK	(0x0C)	/* --- Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_XXV	(0x0C)	/* <rsvrd> Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_20V	(0x08)	/* 20v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_24V	(0x04)	/* 24v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_31V	(0x00)	/* 31.4v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_EXT_COMP	(0x01)	/* part (0) or full (1) external comp */
-> +
-> +#define ARCXCNN_CONFIG	(0x01)  /* Configuration */
-> +#define ARCXCNN_STATUS1	(0x02)  /* Status 1 */
-> +#define ARCXCNN_STATUS2	(0x03)  /* Status 2 */
-> +#define ARCXCNN_FADECTRL	(0x04)  /* Fading Control */
-> +#define ARCXCNN_ILED_CONFIG	(0x05)  /* ILED Configuration */
-> +
-> +#define ARCXCNN_LEDEN		(0x06)  /* LED Enable Register */
-> +#define ARCXCNN_LEDEN_ISETEXT	(0x80)	/* Full-scale current set externally */
-> +#define ARCXCNN_LEDEN_MASK	(0x3F)	/* LED string enables */
-> +#define ARCXCNN_LEDEN_LED1	(0x01)
-> +#define ARCXCNN_LEDEN_LED2	(0x02)
-> +#define ARCXCNN_LEDEN_LED3	(0x04)
-> +#define ARCXCNN_LEDEN_LED4	(0x08)
-> +#define ARCXCNN_LEDEN_LED5	(0x10)
-> +#define ARCXCNN_LEDEN_LED6	(0x20)
-> +
-> +#define ARCXCNN_WLED_ISET_LSB	(0x07)  /* LED ISET LSB (in upper nibble) */
-> +#define ARCXCNN_WLED_ISET_MSB	(0x08)  /* LED ISET MSB (8 bits) */
-> +
-> +#define ARCXCNN_DIMFREQ		(0x09)
-> +#define ARCXCNN_COMP_CONFIG	(0x0A)
-> +#define ARCXCNN_FILT_CONFIG	(0x0B)
-> +#define ARCXCNN_IMAXTUNE	(0x0C)
-> +
-> +#define DEFAULT_BL_NAME		"arctic_bl"
-> +#define MAX_BRIGHTNESS		4095
-> +
-> +static int s_no_reset_on_remove;
-> +module_param_named(noreset, s_no_reset_on_remove, int, 0644);
-> +MODULE_PARM_DESC(noreset, "No reset on module removal");
-> +
-> +static int s_ibright = 60;
-> +module_param_named(ibright, s_ibright, int, 0644);
-> +MODULE_PARM_DESC(ibright, "Initial brightness (when no plat data)");
-> +
-> +static int s_iledstr = 0x3F;
-> +module_param_named(iledstr, s_iledstr, int, 0644);
-> +MODULE_PARM_DESC(iledstr, "Initial LED String (when no plat data)");
-> +
-> +static int s_retries = 2; /* 1 == only one try */
-> +module_param_named(retries, s_retries, int, 0644);
-> +MODULE_PARM_DESC(retries, "I2C retries attempted");
-> +
-> +enum arcxcnn_brightness_ctrl_mode {
-> +	PWM_BASED = 1,
-> +	REGISTER_BASED,
-> +};
-> +
-> +struct arcxcnn;
-> +
-> +struct arcxcnn {
-> +	char chipname[64];
-> +	enum arcxcnn_chip_id chip_id;
-> +	enum arcxcnn_brightness_ctrl_mode mode;
-> +	struct i2c_client *client;
-> +	struct backlight_device *bl;
-> +	struct device *dev;
-> +	struct arcxcnn_platform_data *pdata;
-> +	struct pwm_device *pwm;
-> +	struct regulator *supply;	/* regulator for VDD input */
-> +};
-> +
-> +static int arcxcnn_write_byte(struct arcxcnn *lp, u8 reg, u8 data)
-> +{
-> +	s32 ret = -1;
-> +	int att;
-> +
-> +	for (att = 0; att < s_retries; att++) {
-> +		ret = i2c_smbus_write_byte_data(lp->client, reg, data);
-> +		if (ret >= 0)
-> +			return 0;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static u8 arcxcnn_read_byte(struct arcxcnn *lp, u8 reg)
-> +{
-> +	int val;
-> +	int att;
-> +
-> +	for (att = 0; att < s_retries; att++) {
-> +		val = i2c_smbus_read_byte_data(lp->client, reg);
-> +		if (val >= 0)
-> +			return (u8)val;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int arcxcnn_update_bit(struct arcxcnn *lp, u8 reg, u8 mask, u8 data)
-> +{
-> +	int ret, att;
-> +	u8 tmp;
-> +
-> +	for (att = 0, ret = -1; att < s_retries; att++) {
-> +		ret = i2c_smbus_read_byte_data(lp->client, reg);
-> +		if (ret >= 0)
-> +			break;
-> +	}
-> +	if (ret < 0) {
-> +		dev_err(lp->dev, "failed to read 0x%.2x\n", reg);
-> +		return ret;
-> +	}
-> +
-> +	tmp = (u8)ret;
-> +	tmp &= ~mask;
-> +	tmp |= data & mask;
-> +
-> +	return arcxcnn_write_byte(lp, reg, tmp);
-> +}
-> +
-> +static int arcxcnn_set_brightness(struct arcxcnn *lp, u32 brightness)
-> +{
-> +	int ret;
-> +	u8 val;
-> +
-> +	val = (brightness & 0xF) << 4;
-> +	ret = arcxcnn_write_byte(lp, ARCXCNN_WLED_ISET_LSB, val);
-> +	if (ret < 0)
-> +		return ret;
-> +	val = (brightness >> 4);
-> +	ret = arcxcnn_write_byte(lp, ARCXCNN_WLED_ISET_MSB, val);
-> +	return ret;
-> +}
-> +
-> +static int arcxcnn_bl_update_status(struct backlight_device *bl)
-> +{
-> +	struct arcxcnn *lp = bl_get_data(bl);
-> +	u32 brightness = bl->props.brightness;
-> +
-> +	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
-> +		brightness = 0;
-> +
-> +	/* set brightness */
-> +	if (lp->mode == PWM_BASED)
-> +		; /* via pwm */
-> +	else if (lp->mode == REGISTER_BASED)
-> +		arcxcnn_set_brightness(lp, brightness);
-> +
-> +	/* set power-on/off/save modes */
-> +	if (bl->props.power == 0)
-> +		/* take out of standby */
-> +		arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY, 0);
-> +	else
-> +		/* 1-3 == power save, 4 = off
-> +		 * place in low-power standby mode
-> +		 */
-> +		arcxcnn_update_bit(lp, ARCXCNN_CMD,
-> +				ARCXCNN_CMD_STDBY, ARCXCNN_CMD_STDBY);
-> +	return 0;
-> +}
-> +
-> +static const struct backlight_ops arcxcnn_bl_ops = {
-> +	.options = BL_CORE_SUSPENDRESUME,
-> +	.update_status = arcxcnn_bl_update_status,
-> +};
-> +
-> +static int arcxcnn_backlight_register(struct arcxcnn *lp)
-> +{
-> +	struct backlight_device *bl;
-> +	struct backlight_properties props;
-> +	struct arcxcnn_platform_data *pdata = lp->pdata;
-> +	const char *name = pdata->name ? : DEFAULT_BL_NAME;
-> +
-> +	memset(&props, 0, sizeof(props));
-> +	props.type = BACKLIGHT_PLATFORM;
-> +	props.max_brightness = MAX_BRIGHTNESS;
-> +
-> +	if (pdata->initial_brightness > props.max_brightness)
-> +		pdata->initial_brightness = props.max_brightness;
-> +
-> +	props.brightness = pdata->initial_brightness;
-> +
-> +	bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
-> +				       &arcxcnn_bl_ops, &props);
-> +	if (IS_ERR(bl))
-> +		return PTR_ERR(bl);
-> +
-> +	lp->bl = bl;
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t arcxcnn_get_chip_id(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%s\n", lp->chipname);
-> +}
-> +
-> +static ssize_t arcxcnn_get_led_str(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%02X\n", lp->pdata->led_str);
-> +}
-> +
-> +static ssize_t arcxcnn_set_led_str(struct device *dev,
-> +		struct device_attribute *attr, const char *buf, size_t len)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +	unsigned long ledstr;
-> +
-> +	if (kstrtoul(buf, 0, &ledstr))
-> +		return 0;
-> +
-> +	if (ledstr != lp->pdata->led_str) {
-> +		/* don't allow 0 for ledstr, use power to turn all off */
-> +		if (ledstr == 0)
-> +			return 0;
-> +		lp->pdata->led_str = ledstr & 0x3F;
-> +		arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
-> +			ARCXCNN_LEDEN_MASK, lp->pdata->led_str);
-> +	}
-> +	return len;
-> +}
-> +
-> +static ssize_t arcxcnn_get_bl_ctl_mode(struct device *dev,
-> +	     struct device_attribute *attr, char *buf)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +	char *strmode = NULL;
-> +
-> +	if (lp->mode == PWM_BASED)
-> +		strmode = "pwm based";
-> +	else if (lp->mode == REGISTER_BASED)
-> +		strmode = "register based";
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%s\n", strmode);
-> +}
-> +
-> +static DEVICE_ATTR(chip_id, 0444, arcxcnn_get_chip_id, NULL);
-> +static DEVICE_ATTR(led_str, 0664, arcxcnn_get_led_str, arcxcnn_set_led_str);
-> +static DEVICE_ATTR(bl_ctl_mode, 0444, arcxcnn_get_bl_ctl_mode, NULL);
-> +
-> +static struct attribute *arcxcnn_attributes[] = {
-> +	&dev_attr_chip_id.attr,
-> +	&dev_attr_led_str.attr,
-> +	&dev_attr_bl_ctl_mode.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group arcxcnn_attr_group = {
-> +	.attrs = arcxcnn_attributes,
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +static int arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	struct device *dev = lp->dev;
-> +	struct device_node *node = dev->of_node;
-> +	u32 prog_val, num_entry, sources[6];
-> +	int ret;
-> +
-> +	if (!node) {
-> +		dev_err(dev, "no platform data.\n");
-> +		return -EINVAL;
-> +	}
-> +	lp->pdata->led_config_0_set = false;
-> +	lp->pdata->led_config_1_set = false;
-> +	lp->pdata->dim_freq_set = false;
-> +	lp->pdata->comp_config_set = false;
-> +	lp->pdata->filter_config_set = false;
-> +	lp->pdata->trim_config_set = false;
-> +
-> +	ret = of_property_read_string(node, "label", &lp->pdata->name);
-> +	if (ret < 0)
-> +		lp->pdata->name = NULL;
-> +
-> +	ret = of_property_read_u32(node, "default-brightness", &prog_val);
-> +	if (ret < 0)
-> +		prog_val = s_ibright;
-> +	lp->pdata->initial_brightness = prog_val;
-> +	if (lp->pdata->initial_brightness > MAX_BRIGHTNESS)
-> +		lp->pdata->initial_brightness = MAX_BRIGHTNESS;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,led-config-0", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->led_config_0 = (u8)prog_val;
-> +		lp->pdata->led_config_0_set = true;
-> +	}
-> +	ret = of_property_read_u32(node, "arcticsand,led-config-1", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->led_config_1 = (u8)prog_val;
-> +		lp->pdata->led_config_1_set = true;
-> +	}
-> +	ret = of_property_read_u32(node, "arcticsand,dim-freq", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->dim_freq = (u8)prog_val;
-> +		lp->pdata->dim_freq_set = true;
-> +	}
-> +	ret = of_property_read_u32(node, "arcticsand,comp-config", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->comp_config = (u8)prog_val;
-> +		lp->pdata->comp_config_set = true;
-> +	}
-> +	ret = of_property_read_u32(node, "arcticsand,filter-config", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->filter_config = (u8)prog_val;
-> +		lp->pdata->filter_config_set = true;
-> +	}
-> +	ret = of_property_read_u32(node, "arcticsand,trim-config", &prog_val);
-> +	if (ret == 0) {
-> +		lp->pdata->trim_config = (u8)prog_val;
-> +		lp->pdata->trim_config_set = true;
-> +	}
-> +	ret = of_property_count_u32_elems(node, "led-sources");
-> +	if (ret < 0)
-> +		lp->pdata->led_str = 0x3F;
-> +	else {
-> +		num_entry = ret;
-> +		if (num_entry > 6)
-> +			num_entry = 6;
-> +
-> +		ret = of_property_read_u32_array(node, "led-sources", sources,
-> +					num_entry);
-> +		if (ret < 0) {
-> +			dev_err(dev, "led-sources node is invalid.\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		lp->pdata->led_str = 0;
-> +		while (num_entry > 0)
-> +			lp->pdata->led_str |= (1 << sources[--num_entry]);
-> +	}
-> +	return 0;
-> +}
-> +#else
-> +static int arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	return -EINVAL;
-> +}
-> +#endif
-> +
-> +static int arcxcnn_probe(struct i2c_client *cl, const struct i2c_device_id *id)
-> +{
-> +	struct arcxcnn *lp;
-> +	int ret;
-> +	u8 regval;
-> +	u16 chipid;
-> +
-> +	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-> +		return -EIO;
-> +
-> +	lp = devm_kzalloc(&cl->dev, sizeof(*lp), GFP_KERNEL);
-> +	if (!lp)
-> +		return -ENOMEM;
-> +
-> +	lp->client = cl;
-> +	lp->dev = &cl->dev;
-> +	lp->chip_id = id->driver_data;
-> +	lp->pdata = dev_get_platdata(&cl->dev);
-> +
-> +	if (!lp->pdata) {
-> +		lp->pdata = devm_kzalloc(lp->dev,
-> +				sizeof(*lp->pdata), GFP_KERNEL);
-> +		if (!lp->pdata)
-> +			return -ENOMEM;
-> +
-> +		/* no platform data, parse the device-tree for info.  if there
-> +		 * is no device tree entry, we are being told we exist because
-> +		 * user-land said so, so make up the info we need
-> +		 */
-> +		ret = arcxcnn_parse_dt(lp);
-> +		if (ret < 0) {
-> +			/* no device tree, use defaults based on module params
-> +			 */
-> +			lp->pdata->led_config_0_set = false;
-> +			lp->pdata->led_config_1_set = false;
-> +			lp->pdata->dim_freq_set = false;
-> +			lp->pdata->comp_config_set = false;
-> +			lp->pdata->filter_config_set = false;
-> +			lp->pdata->trim_config_set = false;
-> +
-> +			lp->pdata->name = NULL;
-> +			lp->pdata->initial_brightness = s_ibright;
-> +			lp->pdata->led_str = s_iledstr;
-> +		}
-> +	}
-> +
-> +	if (lp->pdata->dim_freq_set)
-> +		lp->mode = PWM_BASED;
-> +	else
-> +		lp->mode = REGISTER_BASED;
-> +
-> +	i2c_set_clientdata(cl, lp);
-> +
-> +	/* read device ID */
-> +	regval = arcxcnn_read_byte(lp, 0x1E);
-> +	chipid = regval;
-> +	chipid <<= 8;
-> +	regval = arcxcnn_read_byte(lp, 0x1F);
-> +	chipid |= regval;
-> +
-> +	/* make sure it belongs to this driver
-> +	 * TODO - handle specific ids
-> +	 */
-> +	if (chipid != 0x02A5) {
-> +		#if 1
-> +		dev_info(&cl->dev, "Chip Id is %04X\n", chipid);
-> +		#else
-> +		dev_err(&cl->dev, "%04X is not ARC2C\n", chipid);
-> +		return -ENODEV;
-> +		#endif
-> +	}
-> +	/* reset the device */
-> +	arcxcnn_write_byte(lp, ARCXCNN_CMD, ARCXCNN_CMD_RESET);
-> +
-> +	/* set initial brightness */
-> +	arcxcnn_set_brightness(lp, lp->pdata->initial_brightness);
-> +
-> +	/* if fadectrl set in DT, set the value directly, else leave default */
-> +	if (lp->pdata->led_config_0_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_FADECTRL,
-> +			lp->pdata->led_config_0);
-> +
-> +	/* if iled config set in DT, set the value, else internal mode */
-> +	if (lp->pdata->led_config_1_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_ILED_CONFIG,
-> +			lp->pdata->led_config_1);
-> +	else
-> +		arcxcnn_write_byte(lp, ARCXCNN_ILED_CONFIG, 0x57);
-> +
-> +	/* other misc DT settings */
-> +	if (lp->pdata->dim_freq_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_FADECTRL, lp->pdata->dim_freq);
-> +	if (lp->pdata->comp_config_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_COMP_CONFIG,
-> +			lp->pdata->comp_config);
-> +	if (lp->pdata->filter_config_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_FILT_CONFIG,
-> +			lp->pdata->filter_config);
-> +	if (lp->pdata->trim_config_set)
-> +		arcxcnn_write_byte(lp, ARCXCNN_IMAXTUNE,
-> +			lp->pdata->trim_config);
-> +
-> +	/* set initial LED Strings */
-> +	arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
-> +		ARCXCNN_LEDEN_MASK, lp->pdata->led_str);
-> +
-> +	snprintf(lp->chipname, sizeof(lp->chipname),
-> +		"%s-%04X", id->name, chipid);
-> +
-> +	ret = arcxcnn_backlight_register(lp);
-> +	if (ret) {
-> +		dev_err(lp->dev,
-> +			"failed to register backlight. err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = sysfs_create_group(&lp->dev->kobj, &arcxcnn_attr_group);
-> +	if (ret) {
-> +		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	backlight_update_status(lp->bl);
-> +	return 0;
-> +}
-> +
-> +static int arcxcnn_remove(struct i2c_client *cl)
-> +{
-> +	struct arcxcnn *lp = i2c_get_clientdata(cl);
-> +
-> +	if (!s_no_reset_on_remove) {
-> +		/* disable all strings */
-> +		arcxcnn_write_byte(lp, ARCXCNN_LEDEN, 0x00);
-> +		/* reset the device */
-> +		arcxcnn_write_byte(lp, ARCXCNN_CMD, ARCXCNN_CMD_RESET);
-> +	}
-> +	lp->bl->props.brightness = 0;
-> +	backlight_update_status(lp->bl);
-> +	if (lp->supply)
-> +		regulator_disable(lp->supply);
-> +	sysfs_remove_group(&lp->dev->kobj, &arcxcnn_attr_group);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id arcxcnn_dt_ids[] = {
-> +	{ .compatible = "arc,arc2c0608" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, arcxcnn_dt_ids);
-> +
-> +/* Note that the device/chip ID is not fixed in silicon so
-> + * auto-probing of these devices on the bus is most likely
-> + * not possible, use device tree to set i2c bus address
-> + */
-> +static const struct i2c_device_id arcxcnn_ids[] = {
-> +	{"arc2c0608", ARC2C0608},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, arcxcnn_ids);
-> +
-> +static struct i2c_driver arcxcnn_driver = {
-> +	.driver = {
-> +		   .name = "arcxcnn_bl",
-> +		   .of_match_table = of_match_ptr(arcxcnn_dt_ids),
-> +		   },
-> +	.probe = arcxcnn_probe,
-> +	.remove = arcxcnn_remove,
-> +	.id_table = arcxcnn_ids,
-> +};
-> +
-> +module_i2c_driver(arcxcnn_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Brian Dodge <bdodge09-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_DESCRIPTION("ARCXCNN Backlight driver");
-> diff --git a/include/linux/i2c/arcxcnn.h b/include/linux/i2c/arcxcnn.h
-> new file mode 100644
-> index 0000000..1c681dd
-> --- /dev/null
-> +++ b/include/linux/i2c/arcxcnn.h
-> @@ -0,0 +1,67 @@
-> +/*
-> + * Backlight driver for ArcticSand ARC2C0608 Backlight Devices
-> + *
-> + * Copyright 2016 ArcticSand, Inc.
-> + *
-> + * Licensed under the GPL-2 or later.
-> + */
-> +
-> +#ifndef _ARCXCNN_H
-> +#define _ARCXCNN_H
-> +
-> +enum arcxcnn_chip_id {
-> +	ARC2C0608
-> +};
-> +
-> +enum arcxcnn_brightness_source {
-> +	ARCXCNN_PWM_ONLY,
-> +	ARCXCNN_I2C_ONLY = 2,
-> +};
-> +
-> +#define ARCXCNN_MAX_PROGENTRIES	48	/* max a/v pairs for custom */
-> +
-> +/**
-> + * struct arcxcnn_platform_data
-> + * @name : Backlight driver name. If it is not defined, default name is set.
-> + * @initial_brightness : initial value of backlight brightness
-> + * @led_str	 : initial LED string enables, upper bit is global on/off
-> + * @led_config_0 : fading speed (period between intensity steps)
-> + * @led_config_1 : misc settings, see datasheet
-> + * @dim_freq	 : pwm dimming frequency if in pwm mode
-> + * @comp_config	 : misc config, see datasheet
-> + * @filter_config: RC/PWM filter config, see datasheet
-> + * @trim_config	 : full scale current trim, see datasheet
-> + * @led_config_0_set	: the value in led_config_0 is valid
-> + * @led_config_1_set	: the value in led_config_1 is valid
-> + * @dim_freq_set	: the value in dim_freq is valid
-> + * @comp_config_set	: the value in comp_config is valid
-> + * @filter_config_set	: the value in filter_config is valid
-> + * @trim_config_set	: the value in trim_config is valid
-> + *
-> + * the _set flags are used to indicate that the value was explicitly set
-> + * in the device tree or platform data. settings not set are left as default
-> + * power-on default values of the chip except for led_str and led_config_1
-> + * which are set by the driver (led_str is specified indirectly in the
-> + * device tree via "led-sources")
-> + */
-> +struct arcxcnn_platform_data {
-> +	const char *name;
-> +	u16 initial_brightness;
-> +	u8	led_str;
-> +
-> +	u8	led_config_0;
-> +	u8	led_config_1;
-> +	u8	dim_freq;
-> +	u8	comp_config;
-> +	u8	filter_config;
-> +	u8	trim_config;
-> +
-> +	bool	led_config_0_set;
-> +	bool	led_config_1_set;
-> +	bool	dim_freq_set;
-> +	bool	comp_config_set;
-> +	bool	filter_config_set;
-> +	bool	trim_config_set;
-> +};
-> +
-> +#endif
+What about the following, not even compile-tested, patch?  I'm
+sure my mailer will munge this up, I can send you a clean version
+if you like.
 
+ From 1a73585a9c1c74ac1d59d82f22e05b30447619a6 Mon Sep 17 00:00:00 2001
+From: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Date: Wed, 9 Nov 2016 09:07:48 -0600
+Subject: [PATCH] ipmi:bt-bmc: Fix a multi-user race, time out responses
+
+The IPMI spec says to time out responses after a given amount of
+time, so don't let a writer send something after an amount of time
+has elapsed.
+
+Also, fix a race condition in the same area where if you have two
+writers at the same time, one can get a EIO return when it should
+still be waiting its turn to send.  A mutex_lock_interruptible_timeout()
+would be handy here, but it doesn't exist.
+
+Signed-off-by: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+---
+  drivers/char/ipmi/bt-bmc.c | 39 ++++++++++++++++++++++++---------------
+  1 file changed, 24 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+index b49e613..5be94cf 100644
+--- a/drivers/char/ipmi/bt-bmc.c
++++ b/drivers/char/ipmi/bt-bmc.c
+@@ -57,6 +57,8 @@
+
+  #define BT_BMC_BUFFER_SIZE 256
+
++#define BT_BMC_RESPONSE_JIFFIES    (5 * HZ)
++
+  struct bt_bmc {
+      struct device        dev;
+      struct miscdevice    miscdev;
+@@ -190,14 +192,12 @@ static ssize_t bt_bmc_read(struct file *file, char 
+__user *buf,
+
+      WARN_ON(*ppos);
+
+-    if (wait_event_interruptible(bt_bmc->queue,
+-                     bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN))
++    if (mutex_lock_interruptible(&bt_bmc->mutex))
+          return -ERESTARTSYS;
+
+-    mutex_lock(&bt_bmc->mutex);
+-
+-    if (unlikely(!(bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN))) {
+-        ret = -EIO;
++    if (wait_event_interruptible(bt_bmc->queue,
++                bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN)) {
++        ret = -ERESTARTSYS;
+          goto out_unlock;
+      }
+
+@@ -251,6 +251,7 @@ static ssize_t bt_bmc_write(struct file *file, const 
+char __user *buf,
+      u8 kbuffer[BT_BMC_BUFFER_SIZE];
+      ssize_t ret = 0;
+      ssize_t nwritten;
++    unsigned long start_jiffies = jiffies, wait_time;
+
+      /*
+       * send a minimum response size
+@@ -263,23 +264,31 @@ static ssize_t bt_bmc_write(struct file *file, 
+const char __user *buf,
+
+      WARN_ON(*ppos);
+
++    if (mutex_lock_interruptible(&bt_bmc->mutex))
++        return -ERESTARTSYS;
++
++    wait_time = jiffies - start_jiffies;
++    if (wait_time >= BT_BMC_RESPONSE_TIME_JIFFIES) {
++        ret = -ETIMEDOUT;
++        goto out_unlock;
++    }
++    wait_time = BT_BMC_RESPONSE_TIME_JIFFIES - wait_time;
++
+      /*
+       * There's no interrupt for clearing bmc busy so we have to
+       * poll
+       */
+-    if (wait_event_interruptible(bt_bmc->queue,
++    ret = wait_event_interruptible_timeout(bt_bmc->queue,
+                       !(bt_inb(bt_bmc, BT_CTRL) &
+-                       (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN))))
+-        return -ERESTARTSYS;
+-
+-    mutex_lock(&bt_bmc->mutex);
+-
+-    if (unlikely(bt_inb(bt_bmc, BT_CTRL) &
+-             (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN))) {
+-        ret = -EIO;
++                       (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN)),
++                     wait_time);
++    if (ret <= 0) {
++        if (ret == 0)
++            ret = -ETIMEDOUT;
+          goto out_unlock;
+      }
+
++    ret = 0;
+      clr_wr_ptr(bt_bmc);
+
+      while (count) {
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
+
+
+>> Also, if you are going to have multiple writers on this interface, I don't
+>> think the interface will work correctly.  I think you need to claim the
+>> mutex first.  Otherwise you might get into a situation where two writers
+>> will wake up at the same time, the first writes and releases the mutex,
+>> then the second will find that the interface is busy and fail.
+> yes. that is a current problem in the driver and it is not really an
+> elegant way to handle concurrency. We are fine for the moment as we
+> only have one single threaded process using the device.
+>
+>> If I am correct, the mutex will need to become interruptible and come
+>> first, I think.  (And the timing would have to start before the mutex,
+>> of course.)  This applies to both the read and write interface.
+> OK. I will look into fixing this problem first.
+>
+>> Another thing is that this is request-to-release time.  If a request takes
+>> a long time to process (say, a write to a flash device) the timeout would
+>> need to be decreased by the processing time.
+> Hmm, how would that fit with the "BT Interface Capabilities" which
+> defines :
+>
+>    BMC Request-to-Response time, in seconds, 1 based. 30 seconds, maximum.
+>
+> This is a fixed value. And the spec only say :
+>
+>    The BMC could age and expire the entries in the list by expiring
+>    the entries at an interval that is somewhat shorter than the
+>    specified Request-to-Response interval.
+>
+> May be I am misunderstanding.
+
+Yeah, as usual, the IPMI spec is kind of vague about this.  You have
+to think about the problem from the host driver's point of view to
+know what this means.
+
+ From a host driver point of view, it's going to send a request and wait
+for a response with the same sequence number.  It should time out the
+request in "BMC Request-to-Response time" seconds.  After that point,
+it's free to re-use the sequence number.  So what a BMC cannot do is
+send that response after the timeout.
+
+If the timeout is 5 seconds, and the BMC gets a flash write request that
+takes 3 seconds then sits waiting for 2 seconds, it should not send the
+response because the host driver may mistake it for a request it just
+sent.  So the timeout should be based on when the BMC got the request,
+not when the response was queued for write, and that's the reason that
+the BMC timer should be somewhat shorter than the host timer, as it
+says.
+
+I don't see an easy way to do this.  Some possibilities I can think of are:
+
+  * Switch to using an ioctl to do the read/write operation. That's
+    kind of ugly.  It's what the IPMI driver interface does, and it
+    has been somewhat of a pain.
+  * You could define a "header" that is put into the read message
+    and write message.  You could add an ioctl to query the header
+    size; if the ioctl fails then the driver doesn't have a header.
+    Add a jiffie to the header of the read message that the
+    BMC userland must put into the header of the write message.
+    You could even have the ioctl enable the header, to preserve
+    backwards compatibility.
+  * Define some sort of structure that you read/write.  This has all
+    sorts of issues.
+
+I think my preference is the second, it allows for backwards
+compatibility and lets the kernel do basically whatever it wants with
+the data.
+
+
+>> It's probably ok to not do that for the moment, but you may want to add
+>> a note.  Fixing that would require adding a timeout for each message.
+> Thanks,
+>
+> C.
+>
+>> -corey
+>>
+>>
+>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+>>> ---
+>>>    drivers/char/ipmi/bt-bmc.c | 132 +++++++++++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 132 insertions(+)
+>>>
+>>> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+>>> index fc9e8891eae3..e751e4a754b7 100644
+>>> --- a/drivers/char/ipmi/bt-bmc.c
+>>> +++ b/drivers/char/ipmi/bt-bmc.c
+>>> @@ -17,6 +17,7 @@
+>>>    #include <linux/platform_device.h>
+>>>    #include <linux/poll.h>
+>>>    #include <linux/sched.h>
+>>> +#include <linux/slab.h>
+>>>    #include <linux/timer.h>
+>>>      /*
+>>> @@ -57,6 +58,15 @@
+>>>      #define BT_BMC_BUFFER_SIZE 256
+>>>    +#define BT_BMC_RESPONSE_TIME    5 /* seconds */
+>>> +
+>>> +struct ipmi_request {
+>>> +    struct list_head list;
+>>> +
+>>> +    u8 seq;
+>>> +    unsigned long expires;
+>>> +};
+>>> +
+>>>    struct bt_bmc {
+>>>        struct device        dev;
+>>>        struct miscdevice    miscdev;
+>>> @@ -65,6 +75,11 @@ struct bt_bmc {
+>>>        wait_queue_head_t    queue;
+>>>        struct timer_list    poll_timer;
+>>>        struct mutex        mutex;
+>>> +
+>>> +    unsigned int        response_time;
+>>> +    struct timer_list    requests_timer;
+>>> +    spinlock_t              requests_lock;
+>>> +    struct list_head        requests;
+>>>    };
+>>>      static atomic_t open_count = ATOMIC_INIT(0);
+>>> @@ -163,6 +178,94 @@ static int bt_bmc_open(struct inode *inode, struct file *file)
+>>>    }
+>>>      /*
+>>> + * lock should be held
+>>> + */
+>>> +static void drop_expired_requests(struct bt_bmc *bt_bmc)
+>>> +{
+>>> +    unsigned long flags = 0;
+>>> +    struct ipmi_request *req, *next;
+>>> +    unsigned long next_expires = 0;
+>>> +    int start_timer = 0;
+>>> +
+>>> +    spin_lock_irqsave(&bt_bmc->requests_lock, flags);
+>>> +    list_for_each_entry_safe(req, next, &bt_bmc->requests, list) {
+>>> +        if (time_after_eq(jiffies, req->expires)) {
+>>> +            pr_warn("BT: request seq:%d has expired. dropping\n",
+>>> +                req->seq);
+>>> +            list_del(&req->list);
+>>> +            kfree(req);
+>>> +            continue;
+>>> +        }
+>>> +        if (!start_timer) {
+>>> +            start_timer = 1;
+>>> +            next_expires = req->expires;
+>>> +        } else {
+>>> +            next_expires = min(next_expires, req->expires);
+>>> +        }
+>>> +    }
+>>> +    spin_unlock_irqrestore(&bt_bmc->requests_lock, flags);
+>>> +
+>>> +    /* and possibly restart */
+>>> +    if (start_timer)
+>>> +        mod_timer(&bt_bmc->requests_timer, next_expires);
+>>> +}
+>>> +
+>>> +static void requests_timer(unsigned long data)
+>>> +{
+>>> +    struct bt_bmc *bt_bmc = (void *)data;
+>>> +
+>>> +    drop_expired_requests(bt_bmc);
+>>> +}
+>>> +
+>>> +static int bt_bmc_add_request(struct bt_bmc *bt_bmc, u8 seq)
+>>> +{
+>>> +    struct ipmi_request *req;
+>>> +
+>>> +    req = kmalloc(sizeof(*req), GFP_KERNEL);
+>>> +    if (!req)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    req->seq = seq;
+>>> +    req->expires = jiffies +
+>>> +        msecs_to_jiffies(bt_bmc->response_time * 1000);
+>>> +
+>>> +    spin_lock(&bt_bmc->requests_lock);
+>>> +    list_add(&req->list, &bt_bmc->requests);
+>>> +    spin_unlock(&bt_bmc->requests_lock);
+>>> +
+>>> +    drop_expired_requests(bt_bmc);
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static int bt_bmc_remove_request(struct bt_bmc *bt_bmc, u8 seq)
+>>> +{
+>>> +    struct ipmi_request *req, *next;
+>>> +    int ret = -EBADRQC; /* Invalid request code */
+>>> +
+>>> +    spin_lock(&bt_bmc->requests_lock);
+>>> +    list_for_each_entry_safe(req, next, &bt_bmc->requests, list) {
+>>> +        /*
+>>> +         * The sequence number should be unique, so remove the
+>>> +         * first matching request found. If there are others,
+>>> +         * they should expire
+>>> +         */
+>>> +        if (req->seq == seq) {
+>>> +            list_del(&req->list);
+>>> +            kfree(req);
+>>> +            ret = 0;
+>>> +            break;
+>>> +        }
+>>> +    }
+>>> +    spin_unlock(&bt_bmc->requests_lock);
+>>> +
+>>> +    if (ret)
+>>> +        pr_warn("BT: request seq:%d is invalid\n", seq);
+>>> +
+>>> +    drop_expired_requests(bt_bmc);
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +/*
+>>>     * The BT (Block Transfer) interface means that entire messages are
+>>>     * buffered by the host before a notification is sent to the BMC that
+>>>     * there is data to be read. The first byte is the length and the
+>>> @@ -231,6 +334,13 @@ static ssize_t bt_bmc_read(struct file *file, char __user *buf,
+>>>            len_byte = 0;
+>>>        }
+>>>    +    if (ret > 0) {
+>>> +        int ret2 = bt_bmc_add_request(bt_bmc, kbuffer[2]);
+>>> +
+>>> +        if (ret2)
+>>> +            ret = ret2;
+>>> +    }
+>>> +
+>>>        clr_b_busy(bt_bmc);
+>>>      out_unlock:
+>>> @@ -283,12 +393,20 @@ static ssize_t bt_bmc_write(struct file *file, const char __user *buf,
+>>>        clr_wr_ptr(bt_bmc);
+>>>          while (count) {
+>>> +        int ret2;
+>>> +
+>>>            nwritten = min_t(ssize_t, count, sizeof(kbuffer));
+>>>            if (copy_from_user(&kbuffer, buf, nwritten)) {
+>>>                ret = -EFAULT;
+>>>                break;
+>>>            }
+>>>    +        ret2 = bt_bmc_remove_request(bt_bmc, kbuffer[2]);
+>>> +        if (ret2) {
+>>> +            ret = ret2;
+>>> +            break;
+>>> +        }
+>>> +
+>>>            bt_writen(bt_bmc, kbuffer, nwritten);
+>>>              count -= nwritten;
+>>> @@ -438,6 +556,8 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>>>          mutex_init(&bt_bmc->mutex);
+>>>        init_waitqueue_head(&bt_bmc->queue);
+>>> +    INIT_LIST_HEAD(&bt_bmc->requests);
+>>> +    spin_lock_init(&bt_bmc->requests_lock);
+>>>          bt_bmc->miscdev.minor    = MISC_DYNAMIC_MINOR,
+>>>            bt_bmc->miscdev.name    = DEVICE_NAME,
+>>> @@ -451,6 +571,8 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>>>          bt_bmc_config_irq(bt_bmc, pdev);
+>>>    +    bt_bmc->response_time = BT_BMC_RESPONSE_TIME;
+>>> +
+>>>        if (bt_bmc->irq) {
+>>>            dev_info(dev, "Using IRQ %d\n", bt_bmc->irq);
+>>>        } else {
+>>> @@ -468,6 +590,9 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>>>              BT_CR0_ENABLE_IBT,
+>>>              bt_bmc->base + BT_CR0);
+>>>    +    setup_timer(&bt_bmc->requests_timer, requests_timer,
+>>> +            (unsigned long)bt_bmc);
+>>> +
+>>>        clr_b_busy(bt_bmc);
+>>>          return 0;
+>>> @@ -476,10 +601,17 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>>>    static int bt_bmc_remove(struct platform_device *pdev)
+>>>    {
+>>>        struct bt_bmc *bt_bmc = dev_get_drvdata(&pdev->dev);
+>>> +    struct ipmi_request *req, *next;
+>>>          misc_deregister(&bt_bmc->miscdev);
+>>>        if (!bt_bmc->irq)
+>>>            del_timer_sync(&bt_bmc->poll_timer);
+>>> +
+>>> +    del_timer_sync(&bt_bmc->requests_timer);
+>>> +    list_for_each_entry_safe(req, next, &bt_bmc->requests, list) {
+>>> +        list_del(&req->list);
+>>> +        kfree(req);
+>>> +    }
+>>>        return 0;
+>>>    }
+>>>    
+>>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
