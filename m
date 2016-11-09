@@ -1,62 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/3] clk: qcom: Add A53 PLL support
-Date: Wed, 9 Nov 2016 12:24:36 -0600
-Message-ID: <20161109182436.yd5d6kpwtl4miyqf@rob-hp-laptop>
-References: <20161031145526.5023-1-georgi.djakov@linaro.org>
- <20161031145526.5023-2-georgi.djakov@linaro.org>
+Subject: Re: [PATCH V3 3/9] Documentation: devicetree: thermal: da9062/61
+ TJUNC temperature binding
+Date: Wed, 9 Nov 2016 12:24:46 -0600
+Message-ID: <20161109182446.2hdgqlcphxrris2b@rob-hp-laptop>
+References: <cover.1477929725.git.stwiss.opensource@diasemi.com>
+ <318faafc8021e6adc683e62d57b8c031b9212e0f.1477929725.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161031145526.5023-2-georgi.djakov@linaro.org>
+In-Reply-To: <318faafc8021e6adc683e62d57b8c031b9212e0f.1477929725.git.stwiss.opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 04:55:24PM +0200, Georgi Djakov wrote:
-> Add support for the PLL, which generates the higher range of CPU
-> frequencies on MSM8916 platforms.
+On Mon, Oct 31, 2016 at 04:02:03PM +0000, Steve Twiss wrote:
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
 > 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  .../devicetree/bindings/clock/qcom,a53pll.txt      | 20 +++++
->  drivers/clk/qcom/Kconfig                           |  9 +++
->  drivers/clk/qcom/Makefile                          |  1 +
->  drivers/clk/qcom/a53-pll.c                         | 94 ++++++++++++++++++++++
->  4 files changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->  create mode 100644 drivers/clk/qcom/a53-pll.c
+> Device tree binding information for DA9062 and DA9061 thermal junction
+> temperature monitor.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-> new file mode 100644
-> index 000000000000..6a8c03bfbcb5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-> @@ -0,0 +1,20 @@
-> +MSM8916 A53 PLL Binding
-> +---------------
-> +The A53 PLL on MSM8916 platforms is the main CPU PLL used for frequencies
-> +above 1GHz.
-> +
-> +Required properties :
-> +- compatible : Shall contain only one of the following:
-> +
-> +		"qcom,a53pll-msm8916"
+> Binding descriptions for the DA9061 and DA9062 thermal TJUNC supervisor
+> device driver, using a single THERMAL_TRIP_HOT trip-wire and allowing for
+> a configurable polling period for over-temperature polling.
+> 
+> This patch also adds two examples, one for DA9062 and one for DA9061. The 
+> DA9061 example uses a fall-back compatible string for the DA9062.
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Generally, the ordering is <vendor>,<soc>-<block>.
-
-> +
-> +- reg : shall contain base register location and length
-> +- #clock-cells : must be set to <0>
-> +
-> +Example:
-> +
-> +	a53pll: a53pll@b016000 {
-
-clock@...
-
-> +		compatible = "qcom,a53pll-msm8916";
-> +		reg = <0x0b016000 0x40>;
-> +		#clock-cells = <0>;
-> +	};
+Acked-by: Rob Herring <robh@kernel.org>
