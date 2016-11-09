@@ -1,51 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/6] mfd: dt: Add bindings for the Aspeed SoC Display
- Controller (GFX)
-Date: Wed, 9 Nov 2016 12:26:30 -0600
-Message-ID: <20161109182630.tg3puvwurgx6iinw@rob-hp-laptop>
-References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
- <1478097481-14895-3-git-send-email-andrew@aj.id.au>
+Subject: Re: [PATCH v9 2/3] clk: qcom: Add support for RPM Clocks
+Date: Wed, 9 Nov 2016 12:26:34 -0600
+Message-ID: <20161109182634.4ugdtcn26qrjrbqt@rob-hp-laptop>
+References: <20161102155658.32203-1-georgi.djakov@linaro.org>
+ <20161102155658.32203-3-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478097481-14895-3-git-send-email-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20161102155658.32203-3-georgi.djakov@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 01:07:57AM +1030, Andrew Jeffery wrote:
-> The Aspeed SoC Display Controller is presented as a syscon device to
-> arbitrate access by display and pinmux drivers. Video pinmux
-> configuration on fifth generation SoCs depends on bits in both the
-> System Control Unit and the Display Controller.
+On Wed, Nov 02, 2016 at 05:56:57PM +0200, Georgi Djakov wrote:
+> This adds initial support for clocks controlled by the Resource
+> Power Manager (RPM) processor on some Qualcomm SoCs, which use
+> the qcom_rpm driver to communicate with RPM.
+> Such platforms are apq8064 and msm8960.
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt       |   1 +
 
-The register space can't be split to 2 nodes? 
+Acked-by: Rob Herring <robh@kernel.org>
 
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> new file mode 100644
-> index 000000000000..aea5370efd97
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> @@ -0,0 +1,17 @@
-> +* Device tree bindings for Aspeed SoC Display Controller (GFX)
-> +
-> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
-> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
-> +syscon device.
-> +
-> +Required properties:
-> +- compatible:		"aspeed,ast2500-gfx", "syscon"
-
-I think perhaps we should drop the syscon here and the driver should 
-just register as a syscon.
-
-Rob
+>  drivers/clk/qcom/Kconfig                           |  13 +
+>  drivers/clk/qcom/Makefile                          |   1 +
+>  drivers/clk/qcom/clk-rpm.c                         | 489 +++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h             |  24 +
+>  5 files changed, 528 insertions(+)
+>  create mode 100644 drivers/clk/qcom/clk-rpm.c
