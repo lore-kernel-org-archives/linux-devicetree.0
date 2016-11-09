@@ -1,49 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Wed, 09 Nov 2016 22:34:38 +0100
-Message-ID: <2825537.ADCNsGqGxn@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <1555494.4IFvGxvsfe@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F8F1A7A@lhreml507-mbx>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] Support TPS65217 PMIC interrupt in DT
+Date: Wed, 9 Nov 2016 14:38:06 -0700
+Message-ID: <20161109213805.GB2428@atomide.com>
+References: <20161028123702.21849-1-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F8F1A7A@lhreml507-mbx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, Yuanzhichang <yuanzhichang@hisilicon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "minyard@acm.org" <minyard@acm.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "olof@lixom.net" <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>"linux-serial@vger.kernel.org" <linux->
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161028123702.21849-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, November 9, 2016 12:10:43 PM CET Gabriele Paoloni wrote:
-> > On Tuesday, November 8, 2016 11:47:09 AM CET zhichang.yuan wrote:
-> > > +       /*
-> > > +        * The first PCIBIOS_MIN_IO is reserved specifically for
-> > indirectIO.
-> > > +        * It will separate indirectIO range from pci host bridge to
-> > > +        * avoid the possible PIO conflict.
-> > > +        * Set the indirectIO range directly here.
-> > > +        */
-> > > +       lpcdev->io_ops.start = 0;
-> > > +       lpcdev->io_ops.end = PCIBIOS_MIN_IO - 1;
-> > > +       lpcdev->io_ops.devpara = lpcdev;
-> > > +       lpcdev->io_ops.pfin = hisilpc_comm_in;
-> > > +       lpcdev->io_ops.pfout = hisilpc_comm_out;
-> > > +       lpcdev->io_ops.pfins = hisilpc_comm_ins;
-> > > +       lpcdev->io_ops.pfouts = hisilpc_comm_outs;
-> > 
-> > I have to look at patch 2 in more detail again, after missing a few
-> > review
-> > rounds. I'm still a bit skeptical about hardcoding a logical I/O port
-> > range here, and would hope that we can just go through the same
-> > assignment of logical port ranges that we have for PCI buses,
-> > decoupling
-> > the bus addresses from the linux-internal ones.
+* Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [161028 05:38]:
+> TPS65217 interrupt events include push button pressed/released, USB and AC 
+> voltage status change. AM335x bone based boards (like BB, BBB, BBG) have 
+> common PMIC interrupt pin (named NMI) of AM335x core.
 > 
-> The point here is that we want to avoid any conflict/overlap between
-> the LPC I/O space and the PCI I/O space. With the assignment above
-> we make sure that LPC never interfere with PCI I/O space.
+> This patchset support interrupts in device tree file.
 
-But we already abstract the PCI I/O space using dynamic registration.
-There is no need to hardcode the logical address for ISA, though
-I think we can hardcode the bus address to start at zero here.
+Applying into omap-for-v4.10/dt except the last patch I'll apply into
+omap-for-v4.10/fixes-not-urgent.
 
-	Arnd
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
