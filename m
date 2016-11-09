@@ -1,87 +1,89 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCHv2 2/2] gpio: xilinx: Add clock support
-Date: Wed, 9 Nov 2016 09:18:52 -0800
-Message-ID: <20161109171852.GC14444@xsjsorenbubuntu>
-References: <1478668191-26322-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1478668191-26322-2-git-send-email-shubhrajyoti.datta@xilinx.com>
- <20161109062734.GX14444@xsjsorenbubuntu>
- <CAKfKVtGxaWYEVPaU_G0Z7HJm4_ZAcTisZBj-BtSmAdL1+w+7xw@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v15 4/4] arm: dts: mt2701: Use real clock for UARTs
+Date: Wed, 9 Nov 2016 18:20:21 +0100
+Message-ID: <eece3eba-fd24-ad96-ca20-c08403894b00@gmail.com>
+References: <1478245388-1412-1-git-send-email-erin.lo@mediatek.com>
+ <1478245388-1412-5-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKfKVtGxaWYEVPaU_G0Z7HJm4_ZAcTisZBj-BtSmAdL1+w+7xw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478245388-1412-5-git-send-email-erin.lo@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Erin Lo <erin.lo@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, ms.chen@mediatek.com, robert.chou@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-11-09 at 12:16:58 +0530, Shubhrajyoti Datta wrote:
-> On Wed, Nov 9, 2016 at 11:57 AM, Sören Brinkmann
-> <soren.brinkmann@xilinx.com> wrote:
-> > On Wed, 2016-11-09 at 10:39:51 +0530, Shubhrajyoti Datta wrote:
-> >> Add basic clock support for xilinx gpio.
-> >>
-> >> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> >> ---
-> >> v2 :
-> >> no change
-> >>
-> >>  drivers/gpio/gpio-xilinx.c |   22 ++++++++++++++++++++++
-> >>  1 files changed, 22 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> >> index 14b2a62..923cab8 100644
-> >> --- a/drivers/gpio/gpio-xilinx.c
-> >> +++ b/drivers/gpio/gpio-xilinx.c
-> >> @@ -13,6 +13,7 @@
-> >>   */
-> >>
-> >>  #include <linux/bitops.h>
-> >> +#include <linux/clk.h>
-> >>  #include <linux/init.h>
-> >>  #include <linux/errno.h>
-> >>  #include <linux/module.h>
-> >> @@ -45,6 +46,7 @@
-> >>   * @gpio_state: GPIO state shadow register
-> >>   * @gpio_dir: GPIO direction shadow register
-> >>   * @gpio_lock: Lock used for synchronization
-> >> + * @clk: Clock resource for this controller
-> >>   */
-> >>  struct xgpio_instance {
-> >>       struct of_mm_gpio_chip mmchip;
-> >> @@ -52,6 +54,7 @@ struct xgpio_instance {
-> >>       u32 gpio_state[2];
-> >>       u32 gpio_dir[2];
-> >>       spinlock_t gpio_lock[2];
-> >> +     struct clk *clk;
-> >>  };
-> >>
-> >>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> >> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
-> >>       struct xgpio_instance *chip = platform_get_drvdata(pdev);
-> >>
-> >>       of_mm_gpiochip_remove(&chip->mmchip);
-> >> +     clk_disable_unprepare(chip->clk);
-> >>
-> >>       return 0;
-> >>  }
-> >> @@ -307,6 +311,23 @@ static int xgpio_probe(struct platform_device *pdev)
-> >>
-> >>       platform_set_drvdata(pdev, chip);
-> >>
-> >> +     /* Retrieve GPIO clock */
-> >> +     chip->clk = devm_clk_get(&pdev->dev, NULL);
-> >
-> > The driver should use the clock-name documented in the binding to do the
-> > clock lookup.
-> 
-> My idea was to keep the clk name optional since there is only one clock.
-> Or do you think we should mandate the name if clk is provided.
 
-I'd make 'clock-names' mandatory if 'clocks' is present. That way there
-won't be any trouble if this IP ever consumed additional clocks in the
-future.
 
-	Sören
+On 11/04/2016 08:43 AM, Erin Lo wrote:
+> We used to use a fixed rate clock for the UARTs. Now that we have clock
+> support we can associate the correct clocks to the UARTs and drop the
+> 26MHz fixed rate UART clock.
+>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+
+Applied, thanks.
+
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index c9a8dbf..7eab6f4 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -73,12 +73,6 @@
+>  		#clock-cells = <0>;
+>  	};
+>
+> -	uart_clk: dummy26m {
+> -		compatible = "fixed-clock";
+> -		clock-frequency = <26000000>;
+> -		#clock-cells = <0>;
+> -	};
+> -
+>  	clk26m: oscillator@0 {
+>  		compatible = "fixed-clock";
+>  		#clock-cells = <0>;
+> @@ -186,7 +180,8 @@
+>  			     "mediatek,mt6577-uart";
+>  		reg = <0 0x11002000 0 0x400>;
+>  		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&uart_clk>;
+> +		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
+> +		clock-names = "baud", "bus";
+>  		status = "disabled";
+>  	};
+>
+> @@ -195,7 +190,8 @@
+>  			     "mediatek,mt6577-uart";
+>  		reg = <0 0x11003000 0 0x400>;
+>  		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&uart_clk>;
+> +		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
+> +		clock-names = "baud", "bus";
+>  		status = "disabled";
+>  	};
+>
+> @@ -204,7 +200,8 @@
+>  			     "mediatek,mt6577-uart";
+>  		reg = <0 0x11004000 0 0x400>;
+>  		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&uart_clk>;
+> +		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
+> +		clock-names = "baud", "bus";
+>  		status = "disabled";
+>  	};
+>
+> @@ -213,7 +210,8 @@
+>  			     "mediatek,mt6577-uart";
+>  		reg = <0 0x11005000 0 0x400>;
+>  		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&uart_clk>;
+> +		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
+> +		clock-names = "baud", "bus";
+>  		status = "disabled";
+>  	};
+>  };
+>
