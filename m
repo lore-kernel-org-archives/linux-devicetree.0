@@ -1,43 +1,79 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 6/9] arm64: dts: rockchip: introduce pclk_vio_grf in eDP device node
-Date: Wed,  9 Nov 2016 21:21:58 +0800
-Message-ID: <1478697721-2323-7-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 9/9] arm64: dts: rockchip: add the usb3 pd for rk3399
+Date: Wed,  9 Nov 2016 21:22:01 +0800
+Message-ID: <1478697721-2323-10-git-send-email-wxt@rock-chips.com>
 References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: eddie.cai@rock-chips.com, tfiga@chromium.org, Yakir Yang <ykk@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, zhangqing <zhangqing@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: eddie.cai@rock-chips.com, tfiga@chromium.org, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, zhangqing <zhangqing@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yakir Yang <ykk@rock-chips.com>
+1. add pd node for RK3399 Soc
+2. create power domain tree
+3. add qos node for domain
+4. add the pd support for usb3
 
-The pclk_vio_grf supply power for VIO GRF IOs, if it is disabled, driver
-would failed to operate the VIO GRF registers.
-
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
-Changes in v2: None
+Changes in v2:
+- Reviewed-on: https://chromium-review.googlesource.com/384280
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6544910..74deb44 100644
+index 3659c56..7480fa7 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1356,8 +1356,8 @@
- 		compatible = "rockchip,rk3399-edp";
- 		reg = <0x0 0xff970000 0x0 0x8000>;
- 		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru PCLK_EDP>, <&cru PCLK_EDP_CTRL>;
--		clock-names = "dp", "pclk";
-+		clocks = <&cru PCLK_EDP>, <&cru PCLK_EDP_CTRL>, <&cru PCLK_VIO_GRF>;
-+		clock-names = "dp", "pclk", "grf";
- 		resets = <&cru SRST_P_EDP_CTRL>;
- 		reset-names = "dp";
- 		rockchip,grf = <&grf>;
+@@ -376,6 +376,7 @@
+ 			snps,dis_u2_susphy_quirk;
+ 			snps,dis-del-phy-power-chg-quirk;
+ 			snps,xhci-slow-suspend-quirk;
++			power-domains = <&power RK3399_PD_USB3>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -403,6 +404,7 @@
+ 			snps,dis_u2_susphy_quirk;
+ 			snps,dis-del-phy-power-chg-quirk;
+ 			snps,xhci-slow-suspend-quirk;
++			power-domains = <&power RK3399_PD_USB3>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -746,6 +748,16 @@
+ 		status = "disabled";
+ 	};
+ 
++	qos_usb_otg0: qos@ffa70000 {
++		compatible = "syscon";
++		reg = <0x0 0xffa70000 0x0 0x20>;
++	};
++
++	qos_usb_otg1: qos@ffa70080 {
++		compatible = "syscon";
++		reg = <0x0 0xffa70080 0x0 0x20>;
++	};
++
+ 	qos_sd: qos@ffa74000 {
+ 		compatible = "syscon";
+ 		reg = <0x0 0xffa74000 0x0 0x20>;
+@@ -909,6 +921,12 @@
+ 					 <&cru SCLK_SDMMC>;
+ 				pm_qos = <&qos_sd>;
+ 			};
++			pd_usb3@RK3399_PD_USB3 {
++				reg = <RK3399_PD_USB3>;
++				clocks = <&cru ACLK_USB3>;
++				pm_qos = <&qos_usb_otg0>,
++					 <&qos_usb_otg1>;
++			};
+ 			pd_vio@RK3399_PD_VIO {
+ 				reg = <RK3399_PD_VIO>;
+ 				#address-cells = <1>;
 -- 
 2.7.4
