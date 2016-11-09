@@ -1,36 +1,33 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v15 2/4] reset: mediatek: Add MT2701 reset driver
-Date: Tue, 8 Nov 2016 16:01:20 -0800
-Message-ID: <20161109000120.GQ16026@codeaurora.org>
-References: <1478245388-1412-1-git-send-email-erin.lo@mediatek.com>
- <1478245388-1412-3-git-send-email-erin.lo@mediatek.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 0/2] Add new resets for pcie-rockchip
+Date: Wed, 09 Nov 2016 01:05:15 +0100
+Message-ID: <3680897.9Plsy7nyC8@phil>
+References: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478245388-1412-3-git-send-email-erin.lo@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, ms.chen@mediatek.com, robert.chou@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1477017836-19317-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04, Erin Lo wrote:
-> From: Shunli Wang <shunli.wang@mediatek.com>
-> 
-> In infrasys and perifsys, there are many reset
-> control bits for kinds of modules. These bits are
-> used as actual reset controllers to be registered
-> into kernel's generic reset controller framework.
-> 
-> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> Tested-by: John Crispin <blogic@openwrt.org>
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
+Hi Björn,
 
-Applied to clk-next
+Am Freitag, 21. Oktober 2016, 10:43:54 CET schrieb Shawn Lin:
+> Hi Bjorn and Heiko,
+> 
+> Sorry for updating pcie-rockchip so frequently under this development
+> cycle. This patch is going to fix a urgent issue of missing control for
+> pm_rst, aclk_rst and pclk_rst. These three resets was controlled by rom code
+> but now the driver will take over it in order to solve some weird issues
+> found by MP test. Thanks to that it is still under MP test internally, so
+> the backward compatibility of dtb won't be a big deal.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+could you take a look at these patches and maybe think about including them 
+still for 4.9?
+
+
+Thanks
+Heiko
