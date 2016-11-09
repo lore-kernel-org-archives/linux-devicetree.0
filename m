@@ -1,45 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/3] clk: qcom: Add support for SMD-RPM Clocks
-Date: Wed, 9 Nov 2016 12:26:46 -0600
-Message-ID: <20161109182646.isqpfbiyxjrjqzdp@rob-hp-laptop>
-References: <20161102155658.32203-1-georgi.djakov@linaro.org>
- <20161102155658.32203-2-georgi.djakov@linaro.org>
+Subject: Re: [PATCH v2 2/6] mfd: dt: Add bindings for the Aspeed SoC Display
+ Controller (GFX)
+Date: Wed, 9 Nov 2016 12:26:30 -0600
+Message-ID: <20161109182630.tg3puvwurgx6iinw@rob-hp-laptop>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+ <1478097481-14895-3-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161102155658.32203-2-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1478097481-14895-3-git-send-email-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2016 at 05:56:56PM +0200, Georgi Djakov wrote:
-> This adds initial support for clocks controlled by the Resource
-> Power Manager (RPM) processor on some Qualcomm SoCs, which use
-> the qcom_smd_rpm driver to communicate with RPM.
-> Such platforms are msm8916, apq8084 and msm8974.
+On Thu, Nov 03, 2016 at 01:07:57AM +1030, Andrew Jeffery wrote:
+> The Aspeed SoC Display Controller is presented as a syscon device to
+> arbitrate access by display and pinmux drivers. Video pinmux
+> configuration on fifth generation SoCs depends on bits in both the
+> System Control Unit and the Display Controller.
 > 
-> The RPM is a dedicated hardware engine for managing the shared
-> SoC resources in order to keep the lowest power profile. It
-> communicates with other hardware subsystems via shared memory
-> and accepts clock requests, aggregates the requests and turns
-> the clocks on/off or scales them on demand.
-> 
-> This driver is based on the codeaurora.org driver:
-> https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/clk/qcom/clock-rpm.c
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  36 ++
+>  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
 
-Acked-by: Rob Herring <robh@kernel.org>
+The register space can't be split to 2 nodes? 
 
->  drivers/clk/qcom/Kconfig                           |  16 +
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/clk-smd-rpm.c                     | 571 +++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             |  45 ++
->  5 files changed, 669 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
->  create mode 100644 drivers/clk/qcom/clk-smd-rpm.c
->  create mode 100644 include/dt-bindings/clock/qcom,rpmcc.h
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> new file mode 100644
+> index 000000000000..aea5370efd97
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> @@ -0,0 +1,17 @@
+> +* Device tree bindings for Aspeed SoC Display Controller (GFX)
+> +
+> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
+> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
+> +syscon device.
+> +
+> +Required properties:
+> +- compatible:		"aspeed,ast2500-gfx", "syscon"
+
+I think perhaps we should drop the syscon here and the driver should 
+just register as a syscon.
+
+Rob
