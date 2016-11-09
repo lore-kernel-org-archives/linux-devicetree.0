@@ -1,57 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible
- node to 'aspeed, ast2400-ibt-bmc'
-Date: Wed, 9 Nov 2016 12:26:19 -0600
-Message-ID: <20161109182619.odl5f6hffiyfej4t@rob-hp-laptop>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
-	<1478073426-3714-2-git-send-email-clg@kaod.org>
+Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
+ ir-spi device driver
+Date: Wed, 9 Nov 2016 12:26:21 -0600
+Message-ID: <20161109182621.ttfxtdt32q3cqce7@rob-hp-laptop>
+References: <20161102104010.26959-1-andi.shyti@samsung.com>
+ <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
+ <20161102104010.26959-6-andi.shyti@samsung.com>
+ <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
+ <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
+ <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478073426-3714-2-git-send-email-clg@kaod.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
-Cc: devicetree@vger.kernel.org, Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2016 at 08:57:04AM +0100, C=E9dric Le Goater wrote:
-> The Aspeed SoCs have two BT interfaces : one is IPMI compliant and the
-> other is H8S/2168 compliant.
-> =
+On Thu, Nov 03, 2016 at 11:39:21AM +0100, Jacek Anaszewski wrote:
+> On 11/03/2016 11:10 AM, Andi Shyti wrote:
+> > Hi Jacek,
+> > 
+> > > Only DT bindings of LED class drivers should be placed in
+> > > Documentation/devicetree/bindings/leds. Please move it to the
+> > > media bindings.
+> > 
+> > that's where I placed it first, but Rob asked me to put it in the
+> > LED directory and Cc the LED mailining list.
+> > 
+> > That's the discussion of the version 2:
+> > 
+> > https://lkml.org/lkml/2016/9/12/380
+> > 
+> > Rob, Jacek, could you please agree where I can put the binding?
+> 
+> I'm not sure if this is a good approach. I've noticed also that
+> backlight bindings have been moved to leds, whereas they don't look
+> similarly.
+> 
+> We have common.txt LED bindings, that all LED class drivers' bindings
+> have to follow. Neither backlight bindings nor these ones do that,
+> which introduces some mess.
 
-> The current ipmi/bt-bmc driver implements the IPMI version and we
-> should reflect its nature in the compatible node name using
-> 'aspeed,ast2400-ibt-bmc' instead of 'aspeed,ast2400-bt-bmc'. The
-> latter should be used for a H8S interface driver if it is implemented
-> one day.
-> =
+And there are probably LED bindings that don't follow common.txt either. 
 
-> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
-> ---
->  .../ipmi/{aspeed,ast2400-bt-bmc.txt =3D> aspeed,ast2400-ibt-bmc.txt}    =
-| 4 ++--
+> Eventually adding a sub-directory, e.g. remote_control could make it
+> somehow logically justified, but still - shouldn't bindings be
+> placed in the documentation directory related to the subsystem of the
+> driver they are predestined to?
 
-Acked-by: Rob Herring <robh@kernel.org>
+No. While binding directories often mirror the driver directories, they 
+are not the same. Bindings are grouped by types of h/w and IR LEDs are a 
+type of LED.
 
->  drivers/char/ipmi/bt-bmc.c                                            | =
-4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/ipmi/{aspeed,ast2400-bt-bmc.txt=
- =3D> aspeed,ast2400-ibt-bmc.txt} (85%)
+If you prefer a sub-dir, that is fine with me.
 
----------------------------------------------------------------------------=
----
-Developer Access Program for Intel Xeon Phi Processors
-Access to Intel Xeon Phi processor-based developer platforms.
-With one year of Intel Parallel Studio XE.
-Training and support from Colfax.
-Order your platform today. http://sdm.link/xeonphi
+Rob
