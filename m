@@ -1,32 +1,32 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Support TPS65217 PMIC interrupt in DT
-Date: Wed, 9 Nov 2016 14:38:06 -0700
-Message-ID: <20161109213805.GB2428@atomide.com>
-References: <20161028123702.21849-1-woogyom.kim@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for special ISA
+Date: Wed, 09 Nov 2016 22:38:32 +0100
+Message-ID: <5900275.i4NZvtxTcC@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <2368890.jTbyGqYR0M@wuerfel> <20161109135453.2e5402bd@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161028123702.21849-1-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161109135453.2e5402bd@lxorguk.ukuu.org.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "zhichang.yuan" <yuanzhichang@hisilicon.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, benh@kernel.crashing.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-* Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [161028 05:38]:
-> TPS65217 interrupt events include push button pressed/released, USB and AC 
-> voltage status change. AM335x bone based boards (like BB, BBB, BBG) have 
-> common PMIC interrupt pin (named NMI) of AM335x core.
+On Wednesday, November 9, 2016 1:54:53 PM CET One Thousand Gnomes wrote:
+> > I think it is a relatively safe assumption that there is only one
+> > ISA bridge. A lot of old drivers hardcode PIO or memory addresses
 > 
-> This patchset support interrupts in device tree file.
+> It's not a safe assumption for x86 at least. There are a few systems with
+> multiple ISA busses particularly older laptops with a docking station.
 
-Applying into omap-for-v4.10/dt except the last patch I'll apply into
-omap-for-v4.10/fixes-not-urgent.
+But do they have multiple ISA domains? There is no real harm in supporting
+it, the (small) downsides I can think of are:
 
-Regards,
+- a few extra cycles for the lookup, from possibly walking a linked list
+  to find the correct set of helpers and MMIO addresses
+- making it too general could invite more people to design hardware
+  around the infrastructure when we really want them to stop adding
+  stuff like this.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
