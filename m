@@ -1,164 +1,152 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun4i-codec: Add support for A31 ADC capture path" to the asoc tree
-Date: Wed, 09 Nov 2016 14:59:14 +0000
-Message-ID: <E1c4ULK-0002e1-Qj@finisterre>
-References: <20161003110804.28235-10-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161003110804.28235-10-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC
+ and a comparator
+Date: Wed, 9 Nov 2016 16:01:33 +0100
+Message-ID: <ac908a97-77b8-046a-a0e9-74cc97f56c9b@axentia.se>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se>
+ <1478606339-31253-9-git-send-email-peda@axentia.se>
+ <alpine.DEB.2.20.1611081630450.3501@nanos>
+ <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
+ <alpine.DEB.2.20.1611081809320.3501@nanos>
+ <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
+ <alpine.DEB.2.20.1611082146560.3501@nanos>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1611082146560.3501@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2016-11-08 22:47, Thomas Gleixner wrote:
+> On Tue, 8 Nov 2016, Peter Rosin wrote:
+>> So, to sum up, in order for this to work with threaded oneshot
+>> interrupts, I still need to either keep the enable/sync/enable-dance
+>> or tweak the irq core to handle my case better. The only gain would
+>> be that I could fire the next step of the search from the threaded
+>> irq handler directly (but it needs some new race-killing code).
+>> Or am I missing something? If not, there's no pressing reason to
+>> switch to threaded oneshot interrupts, right?
+> 
+> There is no pressing reason, but that misfire prevention dance looks
+> fragile and overly complex to me.
 
-   ASoC: sun4i-codec: Add support for A31 ADC capture path
+I don't see any fragility? But I wouldn't complain if there was some
+simpler way to enable an irq in such a way that only new and fresh
+irqs are considered.
 
-has been applied to the asoc tree at
+> The completely untested patch below should block the replay for edge
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+[it is missing a ')', see inline comment below]
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> interrupts from the core code. It also makes sure that the edge interrupt
+> is masked until the thread handler returns. All you have to do is
+> requesting your threaded handler with IRQF_ONESHOT | IRQF_NO_REPLAY.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+It doesn't appear to work. I still get irqs that reasonably should
+only have happened *during* the handling of a previous irq. And I
+still need to dance when enabling the irq, otherwise I get spurious
+hits.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> I don't think you need extra race handling with that, but I might be wrong
+> as usual.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+There's obviously no way to determine which of the timeout or the
+interrupt that happens first without some race handling, so I don't
+know what you mean? If the timeout happens first, there is also a
+need to handle late hits from the irq that might come in during the
+preparation for the next step in the binary search. It gets messy
+quickly compared to the simplicity of the current implementation.
 
-Thanks,
-Mark
+Cheers,
+Peter
 
->From 24c99f843208df70ec7d1e04aa405f7e4c36f228 Mon Sep 17 00:00:00 2001
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Mon, 7 Nov 2016 18:06:59 +0800
-Subject: [PATCH] ASoC: sun4i-codec: Add support for A31 ADC capture path
+> 8<------------------
+> --- a/include/linux/interrupt.h
+> +++ b/include/linux/interrupt.h
+> @@ -74,6 +74,7 @@
+>  #define IRQF_NO_THREAD		0x00010000
+>  #define IRQF_EARLY_RESUME	0x00020000
+>  #define IRQF_COND_SUSPEND	0x00040000
+> +#define IRQF_NO_REPLAY		0x00080000
+>  
+>  #define IRQF_TIMER		(__IRQF_TIMER | IRQF_NO_SUSPEND | IRQF_NO_THREAD)
+>  
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -57,6 +57,7 @@ enum {
+>  	IRQS_WAITING		= 0x00000080,
+>  	IRQS_PENDING		= 0x00000200,
+>  	IRQS_SUSPENDED		= 0x00000800,
+> +	IRQS_NO_REPLAY		= 0x00001000,
+>  };
+>  
+>  #include "debug.h"
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -1212,7 +1212,8 @@ static int
+>  		 */
+>  		if (!((old->flags & new->flags) & IRQF_SHARED) ||
+>  		    ((old->flags ^ new->flags) & IRQF_TRIGGER_MASK) ||
+> -		    ((old->flags ^ new->flags) & IRQF_ONESHOT))
+> +		    ((old->flags ^ new->flags) & IRQF_ONESHOT) ||
+> +		    ((old->flags ^ new->flags) & IRQF_NO_REPLAY))
+>  			goto mismatch;
+>  
+>  		/* All handlers must agree on per-cpuness */
+> @@ -1324,6 +1325,9 @@ static int
+>  		if (new->flags & IRQF_ONESHOT)
+>  			desc->istate |= IRQS_ONESHOT;
+>  
+> +		if (new->flags & IRQF_NO_REPLAY)
+> +			desc->istate |= IRQS_NO_REPLAY;
+> +
+>  		if (irq_settings_can_autoenable(desc))
+>  			irq_startup(desc, true);
+>  		else
+> --- a/kernel/irq/resend.c
+> +++ b/kernel/irq/resend.c
+> @@ -56,12 +56,12 @@ static DECLARE_TASKLET(resend_tasklet, r
+>  void check_irq_resend(struct irq_desc *desc)
+>  {
+>  	/*
+> -	 * We do not resend level type interrupts. Level type
+> -	 * interrupts are resent by hardware when they are still
+> -	 * active. Clear the pending bit so suspend/resume does not
+> -	 * get confused.
+> +	 * We do not resend level type interrupts. Level type interrupts
+> +	 * are resent by hardware when they are still active. Also prevent
+> +	 * resend when the user requested so.  Clear the pending bit so
+> +	 * suspend/resume does not get confused.
+>  	 */
+> -	if (irq_settings_is_level(desc)) {
+> +	if (irq_settings_is_level(desc) || (desc->istate & IRQS_NO_REPLAY)) {
+>  		desc->istate &= ~IRQS_PENDING;
+>  		return;
+>  	}
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -643,7 +643,10 @@ void handle_edge_irq(struct irq_desc *de
+>  	kstat_incr_irqs_this_cpu(desc);
+>  
+>  	/* Start handling the irq */
+> -	desc->irq_data.chip->irq_ack(&desc->irq_data);
+> +	if (!(desc->istate & (IRQS_NO_REPLAY | IRQS_ONESHOT))
 
-The A31's internal codec capture path has a mixer in front of the ADC
-for each channel, capable of selecting various inputs, including
-microphones, line in, phone in, and the main output mixer.
+Missing ')' at the end.
 
-This patch adds the various controls, widgets and routes needed for
-audio capture from the already supported inputs on the A31.
+> +		desc->irq_data.chip->irq_ack(&desc->irq_data);
+> +	else
+> +		mask_ack_irq(desc);
+>  
+>  	do {
+>  		if (unlikely(!desc->action)) {
+> 
+> 
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun4i-codec.c | 65 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
-
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index 1934db29b2b5..735115244b17 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -786,6 +786,30 @@ static const struct snd_kcontrol_new sun6i_codec_mixer_controls[] = {
- 			SUN6I_CODEC_OM_DACA_CTRL_RMIX_MIC2, 1, 0),
- };
- 
-+/* ADC mixer controls */
-+static const struct snd_kcontrol_new sun6i_codec_adc_mixer_controls[] = {
-+	SOC_DAPM_DOUBLE("Mixer Capture Switch",
-+			SUN6I_CODEC_ADC_ACTL,
-+			SUN6I_CODEC_ADC_ACTL_LADCMIX_OMIXL,
-+			SUN6I_CODEC_ADC_ACTL_RADCMIX_OMIXR, 1, 0),
-+	SOC_DAPM_DOUBLE("Mixer Reversed Capture Switch",
-+			SUN6I_CODEC_ADC_ACTL,
-+			SUN6I_CODEC_ADC_ACTL_LADCMIX_OMIXR,
-+			SUN6I_CODEC_ADC_ACTL_RADCMIX_OMIXL, 1, 0),
-+	SOC_DAPM_DOUBLE("Line In Capture Switch",
-+			SUN6I_CODEC_ADC_ACTL,
-+			SUN6I_CODEC_ADC_ACTL_LADCMIX_LINEINL,
-+			SUN6I_CODEC_ADC_ACTL_RADCMIX_LINEINR, 1, 0),
-+	SOC_DAPM_DOUBLE("Mic1 Capture Switch",
-+			SUN6I_CODEC_ADC_ACTL,
-+			SUN6I_CODEC_ADC_ACTL_LADCMIX_MIC1,
-+			SUN6I_CODEC_ADC_ACTL_RADCMIX_MIC1, 1, 0),
-+	SOC_DAPM_DOUBLE("Mic2 Capture Switch",
-+			SUN6I_CODEC_ADC_ACTL,
-+			SUN6I_CODEC_ADC_ACTL_LADCMIX_MIC2,
-+			SUN6I_CODEC_ADC_ACTL_RADCMIX_MIC2, 1, 0),
-+};
-+
- /* headphone controls */
- static const char * const sun6i_codec_hp_src_enum_text[] = {
- 	"DAC", "Mixer",
-@@ -885,6 +909,10 @@ static const struct snd_kcontrol_new sun6i_codec_codec_widgets[] = {
- 	SOC_SINGLE_TLV("Mic2 Boost Volume", SUN6I_CODEC_MIC_CTRL,
- 		       SUN6I_CODEC_MIC_CTRL_MIC2BOOST, 0x7, 0,
- 		       sun6i_codec_mic_gain_scale),
-+	SOC_DOUBLE_TLV("ADC Capture Volume",
-+		       SUN6I_CODEC_ADC_ACTL, SUN6I_CODEC_ADC_ACTL_ADCLG,
-+		       SUN6I_CODEC_ADC_ACTL_ADCRG, 0x7, 0,
-+		       sun6i_codec_out_mixer_pregain_scale),
- };
- 
- static const struct snd_soc_dapm_widget sun6i_codec_codec_dapm_widgets[] = {
-@@ -910,6 +938,23 @@ static const struct snd_soc_dapm_widget sun6i_codec_codec_dapm_widgets[] = {
- 	/* Line In */
- 	SND_SOC_DAPM_INPUT("LINEIN"),
- 
-+	/* Digital parts of the ADCs */
-+	SND_SOC_DAPM_SUPPLY("ADC Enable", SUN6I_CODEC_ADC_FIFOC,
-+			    SUN6I_CODEC_ADC_FIFOC_EN_AD, 0,
-+			    NULL, 0),
-+
-+	/* Analog parts of the ADCs */
-+	SND_SOC_DAPM_ADC("Left ADC", "Codec Capture", SUN6I_CODEC_ADC_ACTL,
-+			 SUN6I_CODEC_ADC_ACTL_ADCLEN, 0),
-+	SND_SOC_DAPM_ADC("Right ADC", "Codec Capture", SUN6I_CODEC_ADC_ACTL,
-+			 SUN6I_CODEC_ADC_ACTL_ADCREN, 0),
-+
-+	/* ADC Mixers */
-+	SOC_MIXER_ARRAY("Left ADC Mixer", SND_SOC_NOPM, 0, 0,
-+			sun6i_codec_adc_mixer_controls),
-+	SOC_MIXER_ARRAY("Right ADC Mixer", SND_SOC_NOPM, 0, 0,
-+			sun6i_codec_adc_mixer_controls),
-+
- 	/* Digital parts of the DACs */
- 	SND_SOC_DAPM_SUPPLY("DAC Enable", SUN4I_CODEC_DAC_DPC,
- 			    SUN4I_CODEC_DAC_DPC_EN_DA, 0,
-@@ -973,6 +1018,20 @@ static const struct snd_soc_dapm_route sun6i_codec_codec_dapm_routes[] = {
- 	{ "Right Mixer", "Mic1 Playback Switch", "Mic1 Amplifier" },
- 	{ "Right Mixer", "Mic2 Playback Switch", "Mic2 Amplifier" },
- 
-+	/* Left ADC Mixer Routes */
-+	{ "Left ADC Mixer", "Mixer Capture Switch", "Left Mixer" },
-+	{ "Left ADC Mixer", "Mixer Reversed Capture Switch", "Right Mixer" },
-+	{ "Left ADC Mixer", "Line In Capture Switch", "LINEIN" },
-+	{ "Left ADC Mixer", "Mic1 Capture Switch", "Mic1 Amplifier" },
-+	{ "Left ADC Mixer", "Mic2 Capture Switch", "Mic2 Amplifier" },
-+
-+	/* Right ADC Mixer Routes */
-+	{ "Right ADC Mixer", "Mixer Capture Switch", "Right Mixer" },
-+	{ "Right ADC Mixer", "Mixer Reversed Capture Switch", "Left Mixer" },
-+	{ "Right ADC Mixer", "Line In Capture Switch", "LINEIN" },
-+	{ "Right ADC Mixer", "Mic1 Capture Switch", "Mic1 Amplifier" },
-+	{ "Right ADC Mixer", "Mic2 Capture Switch", "Mic2 Amplifier" },
-+
- 	/* Headphone Routes */
- 	{ "Headphone Source Playback Route", "DAC", "Left DAC" },
- 	{ "Headphone Source Playback Route", "DAC", "Right DAC" },
-@@ -987,6 +1046,12 @@ static const struct snd_soc_dapm_route sun6i_codec_codec_dapm_routes[] = {
- 	{ "Line Out Source Playback Route", "Stereo", "Right Mixer" },
- 	{ "Line Out Source Playback Route", "Mono Differential", "Left Mixer" },
- 	{ "LINEOUT", NULL, "Line Out Source Playback Route" },
-+
-+	/* ADC Routes */
-+	{ "Left ADC", NULL, "ADC Enable" },
-+	{ "Right ADC", NULL, "ADC Enable" },
-+	{ "Left ADC", NULL, "Left ADC Mixer" },
-+	{ "Right ADC", NULL, "Right ADC Mixer" },
- };
- 
- static struct snd_soc_codec_driver sun6i_codec_codec = {
--- 
-2.10.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
