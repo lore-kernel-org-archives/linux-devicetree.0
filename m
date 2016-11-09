@@ -1,1840 +1,1813 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
-Date: Wed,  9 Nov 2016 15:44:41 +0000
-Message-ID: <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH 5/5] media: platform: rcar_drif: Add DRIF support
+Date: Wed,  9 Nov 2016 15:44:44 +0000
+Message-ID: <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org
-Cc: chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds driver support for MAX2175 chip. This is Maxim
-Integrated's RF to Bits tuner front end chip designed for software-defined
-radio solutions. This driver exposes the tuner as a sub-device instance
-with standard and custom controls to configure the device.
+This patch adds Digital Radio Interface (DRIF) support to R-Car Gen3 SoCs.
+The driver exposes each instance of DRIF as a V4L2 SDR device. A DRIF
+device represents a channel and each channel can have one or two
+sub-channels respectively depending on the target board.
 
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+DRIF supports only Rx functionality. It receives samples from a RF
+frontend tuner chip it is interfaced with. The combination of DRIF and the
+tuner device, which is registered as a sub-device, determines the receive
+sample rate and format.
+
+In order to be compliant as a V4L2 SDR device, DRIF needs to bind with
+the tuner device, which can be provided by a third party vendor. DRIF acts
+as a slave device and the tuner device acts as a master transmitting the
+samples. The driver allows asynchronous binding of a tuner device that
+is registered as a v4l2 sub-device. The driver can learn about the tuner
+it is interfaced with based on port endpoint properties of the device in
+device tree. The V4L2 SDR device inherits the controls exposed by the
+tuner device.
+
+The device can also be configured to use either one or both of the data
+pins at runtime based on the master (tuner) configuration.
+
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
- .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
- drivers/media/i2c/Kconfig                          |    4 +
- drivers/media/i2c/Makefile                         |    2 +
- drivers/media/i2c/max2175/Kconfig                  |    8 +
- drivers/media/i2c/max2175/Makefile                 |    4 +
- drivers/media/i2c/max2175/max2175.c                | 1558 ++++++++++++++++++++
- drivers/media/i2c/max2175/max2175.h                |  108 ++
- 7 files changed, 1745 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
- create mode 100644 drivers/media/i2c/max2175/Kconfig
- create mode 100644 drivers/media/i2c/max2175/Makefile
- create mode 100644 drivers/media/i2c/max2175/max2175.c
- create mode 100644 drivers/media/i2c/max2175/max2175.h
+ .../devicetree/bindings/media/renesas,drif.txt     |  136 ++
+ drivers/media/platform/Kconfig                     |   25 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/rcar_drif.c                 | 1574 ++++++++++++++++++++
+ 4 files changed, 1736 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+ create mode 100644 drivers/media/platform/rcar_drif.c
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
 new file mode 100644
-index 0000000..69f0dad
+index 0000000..d65368a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-@@ -0,0 +1,61 @@
-+Maxim Integrated MAX2175 RF to Bits tuner
-+-----------------------------------------
++++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+@@ -0,0 +1,136 @@
++Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
++------------------------------------------------------------
 +
-+The MAX2175 IC is an advanced analog/digital hybrid-radio receiver with
-+RF to Bits® front-end designed for software-defined radio solutions.
++R-Car Gen3 DRIF is a serial slave device. It interfaces with a master
++device as shown below
 +
-+Required properties:
-+--------------------
-+- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
-+- clocks: phandle to the fixed xtal clock.
-+- clock-names: name of the fixed xtal clock.
-+- port: child port node of a tuner that defines the local and remote
-+  endpoints. The remote endpoint is assumed to be an SDR device
-+  that is capable of receiving the digital samples from the tuner.
+++---------------------+                +---------------------+
++|                     |-----SCK------->|CLK                  |
++|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
++|                     |-----SD0------->|D0                   |
++|                     |-----SD1------->|D1                   |
+++---------------------+                +---------------------+
 +
-+Optional properties:
-+--------------------
-+- maxim,slave	      : empty property indicates this is a slave of
-+			another master tuner. This is used to define two
-+			tuners in diversity mode (1 master, 1 slave). By
-+			default each tuner is an individual master.
-+- maxim,refout-load-pF: load capacitance value (in pF) on reference
-+			output drive level. The possible load values are
-+			 0pF (default - refout disabled)
-+			10pF
-+			20pF
-+			30pF
-+			40pF
-+			60pF
-+			70pF
-+- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path is
-+			selected for AM antenna input. By default this
-+			filter path is not used.
++Each DRIF channel (drifn) consists of two sub-channels (drifn0 & drifn1).
++The sub-channels are like two individual channels in itself that share the
++common CLK & SYNC. Each sub-channel has it's own dedicated resources like
++irq, dma channels, address space & clock.
 +
-+Example:
++The device tree model represents the channel and each of it's sub-channel
++as a separate node. The parent channel ties the sub-channels together with
++their phandles.
++
++Required properties of a sub-channel:
++-------------------------------------
++- compatible: "renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
++	      "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
++	      When compatible with the generic version, nodes must list the
++	      SoC-specific version corresponding to the platform first
++	      followed by the generic version.
++- reg: offset and length of that sub-channel.
++- interrupts: associated with that sub-channel.
++- clocks: phandle and clock specifier of that sub-channel.
++- clock-names: clock input name string: "fck".
++- dmas: phandles to the DMA channel of that sub-channel.
++- dma-names: names of the DMA channel: "rx".
++
++Optional properties of a sub-channel:
++-------------------------------------
++- power-domains: phandle to the respective power domain.
++
++Required properties of a channel:
++---------------------------------
++- pinctrl-0: pin control group to be used for this channel.
++- pinctrl-names: must be "default".
++- sub-channels : phandles to the two sub-channels.
++
++Optional properties of a channel:
++---------------------------------
++- port: child port node of a channel that defines the local and remote
++        endpoints. The remote endpoint is assumed to be a tuner subdevice
++	endpoint.
++- renesas,syncmd       : sync mode
++			 0 (Frame start sync pulse mode. 1-bit width pulse
++			    indicates start of a frame)
++			 1 (L/R sync or I2S mode) (default)
++- renesas,lsb-first    : empty property indicates lsb bit is received first.
++			 When not defined msb bit is received first (default)
++- renesas,syncac-pol-high  : empty property indicates sync signal polarity.
++			 When defined, active high or high->low sync signal.
++			 When not defined, active low or low->high sync signal
++			 (default)
++- renesas,dtdl         : delay between sync signal and start of reception.
++			 Must contain one of the following values:
++			 0   (no bit delay)
++			 50  (0.5-clock-cycle delay)
++			 100 (1-clock-cycle delay) (default)
++			 150 (1.5-clock-cycle delay)
++			 200 (2-clock-cycle delay)
++- renesas,syncdl       : delay between end of reception and sync signal edge.
++			 Must contain one of the following values:
++			 0   (no bit delay) (default)
++			 50  (0.5-clock-cycle delay)
++			 100 (1-clock-cycle delay)
++			 150 (1.5-clock-cycle delay)
++			 200 (2-clock-cycle delay)
++			 300 (3-clock-cycle delay)
++
++Example
 +--------
 +
-+Board specific DTS file
++SoC common dtsi file
 +
-+/* Fixed XTAL clock node */
-+maxim_xtal: maximextal {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <36864000>;
++		drif00: rif@e6f40000 {
++			compatible = "renesas,r8a7795-drif",
++				     "renesas,rcar-gen3-drif";
++			reg = <0 0xe6f40000 0 0x64>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 515>;
++			clock-names = "fck";
++			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
++			dma-names = "rx", "rx";
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		drif01: rif@e6f50000 {
++			compatible = "renesas,r8a7795-drif",
++				     "renesas,rcar-gen3-drif";
++			reg = <0 0xe6f50000 0 0x64>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 514>;
++			clock-names = "fck";
++			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
++			dma-names = "rx", "rx";
++			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		drif0: rif@0 {
++			compatible = "renesas,r8a7795-drif",
++				     "renesas,rcar-gen3-drif";
++			sub-channels = <&drif00>, <&drif01>;
++			status = "disabled";
++		};
++
++Board specific dts file
++
++&drif00 {
++	status = "okay";
 +};
 +
-+/* A tuner device instance under i2c bus */
-+max2175_0: tuner@60 {
-+	compatible = "maxim,max2175";
-+	reg = <0x60>;
-+	clocks = <&maxim_xtal>;
-+	clock-names = "xtal";
-+	maxim,refout-load-pF = <10>;
++&drif01 {
++	status = "okay";
++};
 +
++&drif0 {
++	pinctrl-0 = <&drif0_pins>;
++	pinctrl-names = "default";
++	renesas,syncac-pol-high;
++	status = "okay";
 +	port {
-+		max2175_0_ep: endpoint {
-+			remote-endpoint = <&slave_rx_v4l2_sdr_device>;
++		drif0_ep: endpoint {
++		     remote-endpoint = <&tuner_subdev_ep>;
 +		};
 +	};
-+
 +};
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 2669b4b..66c73b0 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -749,6 +749,10 @@ config VIDEO_SAA6752HS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called saa6752hs.
- 
-+comment "SDR tuner chips"
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 754edbf1..0ae83a8 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -393,3 +393,28 @@ menuconfig DVB_PLATFORM_DRIVERS
+ if DVB_PLATFORM_DRIVERS
+ source "drivers/media/platform/sti/c8sectpfe/Kconfig"
+ endif #DVB_PLATFORM_DRIVERS
 +
-+source "drivers/media/i2c/max2175/Kconfig"
-+
- comment "Miscellaneous helper chips"
- 
- config VIDEO_THS7303
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 92773b2..cfae721 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -6,6 +6,8 @@ obj-$(CONFIG_VIDEO_CX25840) += cx25840/
- obj-$(CONFIG_VIDEO_M5MOLS)	+= m5mols/
- obj-y				+= soc_camera/
- 
-+obj-$(CONFIG_SDR_MAX2175) 	+= max2175/
-+
- obj-$(CONFIG_VIDEO_APTINA_PLL) += aptina-pll.o
- obj-$(CONFIG_VIDEO_TVAUDIO) += tvaudio.o
- obj-$(CONFIG_VIDEO_TDA7432) += tda7432.o
-diff --git a/drivers/media/i2c/max2175/Kconfig b/drivers/media/i2c/max2175/Kconfig
-new file mode 100644
-index 0000000..93a8f83
---- /dev/null
-+++ b/drivers/media/i2c/max2175/Kconfig
-@@ -0,0 +1,8 @@
-+config SDR_MAX2175
-+	tristate "Maxim 2175 RF to Bits tuner"
-+	depends on VIDEO_V4L2 && MEDIA_SDR_SUPPORT && I2C
++menuconfig SDR_PLATFORM_DRIVERS
++	bool "SDR platform devices"
++	depends on MEDIA_SDR_SUPPORT
++	default n
 +	---help---
-+	  Support for Maxim 2175 tuner
++	  Say Y here to enable support for platform-specific SDR Drivers.
 +
-+	  To compile this driver as a module, choose M here; the
-+	  module will be called max2175.
-diff --git a/drivers/media/i2c/max2175/Makefile b/drivers/media/i2c/max2175/Makefile
++if SDR_PLATFORM_DRIVERS
++
++config VIDEO_RCAR_DRIF
++	tristate "Renesas Digitial Radio Interface (DRIF)"
++	depends on VIDEO_V4L2 && HAS_DMA
++	depends on ARCH_RENESAS
++	select VIDEOBUF2_VMALLOC
++	---help---
++	  Say Y if you want to enable R-Car Gen3 DRIF support. DRIF is Digital
++	  Radio Interface that interfaces with an RF front end chip. It is a
++	  receiver of digital data which uses DMA to transfer received data to
++	  a configured location for an application to use.
++
++	  To compile this driver as a module, choose M here; the module
++	  will be called rcar_drif.
++
++endif # SDR_PLATFORM_DRIVERS
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index f842933..49ce238 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -49,6 +49,7 @@ obj-$(CONFIG_SOC_CAMERA)		+= soc_camera/
+ 
+ obj-$(CONFIG_VIDEO_RENESAS_FCP) 	+= rcar-fcp.o
+ obj-$(CONFIG_VIDEO_RENESAS_JPU) 	+= rcar_jpu.o
++obj-$(CONFIG_VIDEO_RCAR_DRIF)		+= rcar_drif.o
+ obj-$(CONFIG_VIDEO_RENESAS_VSP1)	+= vsp1/
+ 
+ obj-y	+= omap/
+diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
 new file mode 100644
-index 0000000..9bb46ac
+index 0000000..34dc282
 --- /dev/null
-+++ b/drivers/media/i2c/max2175/Makefile
-@@ -0,0 +1,4 @@
-+#
-+# Makefile for Maxim RF to Bits tuner device
-+#
-+obj-$(CONFIG_SDR_MAX2175) += max2175.o
-diff --git a/drivers/media/i2c/max2175/max2175.c b/drivers/media/i2c/max2175/max2175.c
-new file mode 100644
-index 0000000..ec45b52
---- /dev/null
-+++ b/drivers/media/i2c/max2175/max2175.c
-@@ -0,0 +1,1558 @@
++++ b/drivers/media/platform/rcar_drif.c
+@@ -0,0 +1,1574 @@
 +/*
-+ * Maxim Integrated MAX2175 RF to Bits tuner driver
++ * R-Car Gen3 Digital Radio Interface (DRIF) driver
 + *
-+ * This driver & most of the hard coded values are based on the reference
-+ * application delivered by Maxim for this chip.
-+ *
-+ * Copyright (C) 2016 Maxim Integrated Products
 + * Copyright (C) 2016 Renesas Electronics Corporation
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
 + */
 +
++/*
++ * The R-Car DRIF is a receive only MSIOF like controller with an
++ * external master device driving the SCK. It receives data into a FIFO,
++ * then this driver uses the SYS-DMAC engine to move the data from
++ * the device to memory.
++ *
++ * Each DRIF channel supports two sub-channels with their own resources
++ * like module clk, register set and dma.
++ *
++ * Depending on the master device, a DRIF channel can use
++ *  (1) both sub-channels (D0 & D1 pins) to receive data in parallel (or)
++ *  (2) one sub-channel (D0 or D1) to receive data
++ *
++ * The primary design goal of this controller is to act as Digitial Radio
++ * Interface that receives digital samples from a tuner device. Hence the
++ * driver exposes the device as a V4L2 SDR device. In order to qualify as
++ * a V4L2 SDR device, it should possess tuner interface as mandated by the
++ * framework. This driver expects a tuner driver (sub-device) to bind
++ * asynchronously with this device and the combined drivers shall expose
++ * a V4L2 compliant SDR device. The DRIF driver is independent of the
++ * tuner vendor.
++ */
++#include <linux/bitops.h>
 +#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/math64.h>
++#include <linux/dma-mapping.h>
++#include <linux/dmaengine.h>
++#include <linux/ioctl.h>
++#include <linux/iopoll.h>
 +#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
++#include <linux/of_graph.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/sched.h>
++#include <media/v4l2-async.h>
 +#include <media/v4l2-ctrls.h>
 +#include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
++#include <media/v4l2-event.h>
++#include <media/v4l2-fh.h>
++#include <media/v4l2-ioctl.h>
++#include <media/videobuf2-v4l2.h>
++#include <media/videobuf2-vmalloc.h>
 +
-+#include "max2175.h"
++/* DRIF register offsets */
++#define RCAR_DRIF_SITMDR1			0x00
++#define RCAR_DRIF_SITMDR2			0x04
++#define RCAR_DRIF_SITMDR3			0x08
++#define RCAR_DRIF_SIRMDR1			0x10
++#define RCAR_DRIF_SIRMDR2			0x14
++#define RCAR_DRIF_SIRMDR3			0x18
++#define RCAR_DRIF_SICTR				0x28
++#define RCAR_DRIF_SIFCTR			0x30
++#define RCAR_DRIF_SISTR				0x40
++#define RCAR_DRIF_SIIER				0x44
++#define RCAR_DRIF_SIRFDR			0x60
 +
-+#define DRIVER_NAME "max2175"
++#define RCAR_DRIF_RFOVF			BIT(3)	/* Receive FIFO overflow */
++#define RCAR_DRIF_RFUDF			BIT(4)	/* Receive FIFO underflow */
++#define RCAR_DRIF_RFSERR		BIT(5)	/* Receive frame sync error */
++#define RCAR_DRIF_REOF			BIT(7)	/* Frame reception end */
++#define RCAR_DRIF_RDREQ			BIT(12) /* Receive data xfer req */
++#define RCAR_DRIF_RFFUL			BIT(13)	/* Receive FIFO full */
 +
++/* SIRMDR1 */
++#define RCAR_DRIF_SIRMDR1_SYNCMD_FRAME		(0 << 28)
++#define RCAR_DRIF_SIRMDR1_SYNCMD_LR		(3 << 28)
++
++#define RCAR_DRIF_SIRMDR1_SYNCAC_POL_HIGH	(0 << 25)
++#define RCAR_DRIF_SIRMDR1_SYNCAC_POL_LOW	(1 << 25)
++
++#define RCAR_DRIF_SIRMDR1_MSB_FIRST		(0 << 24)
++#define RCAR_DRIF_SIRMDR1_LSB_FIRST		(1 << 24)
++
++#define RCAR_DRIF_SIRMDR1_DTDL_0		(0 << 20)
++#define RCAR_DRIF_SIRMDR1_DTDL_1		(1 << 20)
++#define RCAR_DRIF_SIRMDR1_DTDL_2		(2 << 20)
++#define RCAR_DRIF_SIRMDR1_DTDL_0PT5		(5 << 20)
++#define RCAR_DRIF_SIRMDR1_DTDL_1PT5		(6 << 20)
++
++#define RCAR_DRIF_SIRMDR1_SYNCDL_0		(0 << 20)
++#define RCAR_DRIF_SIRMDR1_SYNCDL_1		(1 << 20)
++#define RCAR_DRIF_SIRMDR1_SYNCDL_2		(2 << 20)
++#define RCAR_DRIF_SIRMDR1_SYNCDL_3		(3 << 20)
++#define RCAR_DRIF_SIRMDR1_SYNCDL_0PT5		(5 << 20)
++#define RCAR_DRIF_SIRMDR1_SYNCDL_1PT5		(6 << 20)
++
++#define RCAR_DRIF_MDR_GRPCNT(n)			(((n) - 1) << 30)
++#define RCAR_DRIF_MDR_BITLEN(n)			(((n) - 1) << 24)
++#define RCAR_DRIF_MDR_WDCNT(n)			(((n) - 1) << 16)
++
++/* Hidden Transmit register that controls CLK & SYNC */
++#define RCAR_DRIF_SITMDR1_PCON			BIT(30)
++
++#define RCAR_DRIF_SICTR_RX_RISING_EDGE		BIT(26)
++#define RCAR_DRIF_SICTR_RX_EN			BIT(8)
++#define RCAR_DRIF_SICTR_RESET			BIT(0)
++
++/* Constants */
++#define RCAR_DRIF_MAX_NUM_HWBUFS		32
++#define RCAR_DRIF_MAX_DEVS			4
++#define RCAR_DRIF_DEFAULT_NUM_HWBUFS		16
++#define RCAR_DRIF_DEFAULT_HWBUF_SIZE		(4 * PAGE_SIZE)
++#define RCAR_DRIF_MAX_SUBCHANS			2
++#define RCAR_SDR_BUFFER_SIZE			SZ_64K
++
++/* Internal buffer status flags */
++#define RCAR_DRIF_BUF_DONE			BIT(0)	/* DMA completed */
++#define RCAR_DRIF_BUF_OVERFLOW			BIT(1)	/* Overflow detected */
++
++#define to_rcar_drif_buf_pair(p, ch, idx)	(p->sch[!(ch)]->buf[idx])
++
++#define for_each_rcar_drif_subchannel(sch, schans_mask)			\
++	for_each_set_bit(sch, schans_mask, RCAR_DRIF_MAX_SUBCHANS)
++
++#define for_each_rcar_drif_subdev(sd, tmp, ch)				\
++	list_for_each_entry_safe(sd, tmp, &ch->v4l2_dev.subdevs, list)
++
++/* Debug */
 +static unsigned int debug;
 +module_param(debug, uint, 0644);
 +MODULE_PARM_DESC(debug, "activate debug info");
 +
-+#define mxm_dbg(ctx, fmt, arg...) v4l2_dbg(1, debug, &ctx->sd, fmt, ## arg)
++#define rdrif_dbg(level, ch, fmt, arg...)				\
++	v4l2_dbg(level, debug, &ch->v4l2_dev, fmt, ## arg)
 +
-+/* Rx mode */
-+struct max2175_rxmode {
-+	enum max2175_band band;		/* Associated band */
-+	u32 freq;			/* Default freq in Hz */
-+	u8 i2s_word_size;		/* Bit value */
-+	u8 i2s_modes[4];		/* Supported modes */
++#define rdrif_err(ch, fmt, arg...)					\
++	v4l2_err(&ch->v4l2_dev, fmt, ## arg)
++
++/* Stream formats */
++struct rcar_drif_format {
++	char	*name;
++	u32	pixelformat;
++	u32	buffersize;
++	u32	wdlen;
++	u32	num_schans;
 +};
 +
-+/* Register map to define preset values */
-+struct max2175_reg_map {
-+	u8 idx;				/* Register index */
-+	u8 val;				/* Register value */
-+};
-+
-+static const struct max2175_rxmode eu_rx_modes[] = {
-+	/* EU modes */
-+	[MAX2175_EU_FM_1_2] = { MAX2175_BAND_FM,
-+				98256000, 1, { 0, 0, 0, 0 } },
-+	[MAX2175_DAB_1_2]   = { MAX2175_BAND_VHF,
-+				182640000, 0, { 0, 0, 0, 0 } },
-+};
-+
-+static const struct max2175_rxmode na_rx_modes[] = {
-+	/* NA modes */
-+	[MAX2175_NA_FM_1_0] = { MAX2175_BAND_FM,
-+				98255520, 1, { 0, 0, 0, 0 } },
-+	[MAX2175_NA_FM_2_0] = { MAX2175_BAND_FM,
-+				98255520, 6, { 0, 0, 0, 0 } },
-+};
-+
-+/*
-+ * Preset values:
-+ * Based on Maxim MAX2175 Register Table revision: 130p10
-+ */
-+static const u8 full_fm_eu_1p0[] = {
-+	0x15, 0x04, 0xb8, 0xe3, 0x35, 0x18, 0x7c, 0x00,
-+	0x00, 0x7d, 0x40, 0x08, 0x70, 0x7a, 0x88, 0x91,
-+	0x61, 0x61, 0x61, 0x61, 0x5a, 0x0f, 0x34, 0x1c,
-+	0x14, 0x88, 0x33, 0x02, 0x00, 0x09, 0x00, 0x65,
-+	0x9f, 0x2b, 0x80, 0x00, 0x95, 0x05, 0x2c, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
-+	0x4a, 0x08, 0xa8, 0x0e, 0x0e, 0x2f, 0x7e, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xab, 0x5e, 0xa9,
-+	0xae, 0xbb, 0x57, 0x18, 0x3b, 0x03, 0x3b, 0x64,
-+	0x40, 0x60, 0x00, 0x2a, 0xbf, 0x3f, 0xff, 0x9f,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x00,
-+	0xff, 0xfc, 0xef, 0x1c, 0x40, 0x00, 0x00, 0x02,
-+	0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xac, 0x40, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x75, 0x00, 0x00,
-+	0x00, 0x47, 0x00, 0x00, 0x11, 0x3f, 0x22, 0x00,
-+	0xf1, 0x00, 0x41, 0x03, 0xb0, 0x00, 0x00, 0x00,
-+	0x1b,
-+};
-+
-+static const u8 full_fm_na_1p0[] = {
-+	0x13, 0x08, 0x8d, 0xc0, 0x35, 0x18, 0x7d, 0x3f,
-+	0x7d, 0x75, 0x40, 0x08, 0x70, 0x7a, 0x88, 0x91,
-+	0x61, 0x61, 0x61, 0x61, 0x5c, 0x0f, 0x34, 0x1c,
-+	0x14, 0x88, 0x33, 0x02, 0x00, 0x01, 0x00, 0x65,
-+	0x9f, 0x2b, 0x80, 0x00, 0x95, 0x05, 0x2c, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
-+	0x4a, 0x08, 0xa8, 0x0e, 0x0e, 0xaf, 0x7e, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xab, 0x5e, 0xa9,
-+	0xae, 0xbb, 0x57, 0x18, 0x3b, 0x03, 0x3b, 0x64,
-+	0x40, 0x60, 0x00, 0x2a, 0xbf, 0x3f, 0xff, 0x9f,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x00,
-+	0xff, 0xfc, 0xef, 0x1c, 0x40, 0x00, 0x00, 0x02,
-+	0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xa6, 0x40, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x75, 0x00, 0x00,
-+	0x00, 0x35, 0x00, 0x00, 0x11, 0x3f, 0x22, 0x00,
-+	0xf1, 0x00, 0x41, 0x03, 0xb0, 0x00, 0x00, 0x00,
-+	0x1b,
-+};
-+
-+/* DAB1.2 settings */
-+static const struct max2175_reg_map dab12_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x0d }, { 0x03, 0x15 }, { 0x04, 0x55 },
-+	{ 0x05, 0x0a }, { 0x06, 0xa0 }, { 0x07, 0x40 }, { 0x08, 0x00 },
-+	{ 0x09, 0x00 }, { 0x0a, 0x7d }, { 0x0b, 0x4a }, { 0x0c, 0x28 },
-+	{ 0x0e, 0x43 }, { 0x0f, 0xb5 }, { 0x10, 0x31 }, { 0x11, 0x9e },
-+	{ 0x12, 0x68 }, { 0x13, 0x9e }, { 0x14, 0x68 }, { 0x15, 0x58 },
-+	{ 0x16, 0x2f }, { 0x17, 0x3f }, { 0x18, 0x40 }, { 0x1a, 0x88 },
-+	{ 0x1b, 0xaa }, { 0x1c, 0x9a }, { 0x1d, 0x00 }, { 0x1e, 0x00 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x00 }, { 0x26, 0x00 },
-+	{ 0x27, 0x00 }, { 0x32, 0x08 }, { 0x33, 0xf8 }, { 0x36, 0x2d },
-+	{ 0x37, 0x7e }, { 0x55, 0xaf }, { 0x56, 0x3f }, { 0x57, 0xf8 },
-+	{ 0x58, 0x99 }, { 0x76, 0x00 }, { 0x77, 0x00 }, { 0x78, 0x02 },
-+	{ 0x79, 0x40 }, { 0x82, 0x00 }, { 0x83, 0x00 }, { 0x85, 0x00 },
-+	{ 0x86, 0x20 },
-+};
-+
-+/* EU FM 1.2 settings */
-+static const struct max2175_reg_map fmeu1p2_map[] = {
-+	{ 0x01, 0x15 }, { 0x02, 0x04 }, { 0x03, 0xb8 }, { 0x04, 0xe3 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7c }, { 0x08, 0x00 },
-+	{ 0x09, 0x00 }, { 0x0a, 0x73 }, { 0x0b, 0x40 }, { 0x0c, 0x08 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5a },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0x2f },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xac }, { 0x77, 0x40 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x47 }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+/* FM NA 1.0 settings */
-+static const struct max2175_reg_map fmna1p0_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x08 }, { 0x03, 0x8d }, { 0x04, 0xc0 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7d }, { 0x08, 0x3f },
-+	{ 0x09, 0x7d }, { 0x0a, 0x75 }, { 0x0b, 0x40 }, { 0x0c, 0x08 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5c },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0xaf },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xa6 }, { 0x77, 0x40 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x35 }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+/* FM NA 2.0 settings */
-+static const struct max2175_reg_map fmna2p0_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x08 }, { 0x03, 0x8d }, { 0x04, 0xc0 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7c }, { 0x08, 0x54 },
-+	{ 0x09, 0xa7 }, { 0x0a, 0x55 }, { 0x0b, 0x42 }, { 0x0c, 0x48 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5c },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0xaf },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xac }, { 0x77, 0xc0 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x6b }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+static const u16 ch_coeff_dab1[] = {
-+	0x001c, 0x0007, 0xffcd, 0x0056, 0xffa4, 0x0033, 0x0027, 0xff61,
-+	0x010e, 0xfec0, 0x0106, 0xffb8, 0xff1c, 0x023c, 0xfcb2, 0x039b,
-+	0xfd4e, 0x0055, 0x036a, 0xf7de, 0x0d21, 0xee72, 0x1499, 0x6a51,
-+};
-+
-+static const u16 ch_coeff_fmeu[] = {
-+	0x0000, 0xffff, 0x0001, 0x0002, 0xfffa, 0xffff, 0x0015, 0xffec,
-+	0xffde, 0x0054, 0xfff9, 0xff52, 0x00b8, 0x00a2, 0xfe0a, 0x00af,
-+	0x02e3, 0xfc14, 0xfe89, 0x089d, 0xfa2e, 0xf30f, 0x25be, 0x4eb6,
-+};
-+
-+static const u16 eq_coeff_fmeu1_ra02_m6db[] = {
-+	0x0040, 0xffc6, 0xfffa, 0x002c, 0x000d, 0xff90, 0x0037, 0x006e,
-+	0xffc0, 0xff5b, 0x006a, 0x00f0, 0xff57, 0xfe94, 0x0112, 0x0252,
-+	0xfe0c, 0xfc6a, 0x0385, 0x0553, 0xfa49, 0xf789, 0x0b91, 0x1a10,
-+};
-+
-+static const u16 ch_coeff_fmna[] = {
-+	0x0001, 0x0003, 0xfffe, 0xfff4, 0x0000, 0x001f, 0x000c, 0xffbc,
-+	0xffd3, 0x007d, 0x0075, 0xff33, 0xff01, 0x0131, 0x01ef, 0xfe60,
-+	0xfc7a, 0x020e, 0x0656, 0xfd94, 0xf395, 0x02ab, 0x2857, 0x3d3f,
-+};
-+
-+static const u16 eq_coeff_fmna1_ra02_m6db[] = {
-+	0xfff1, 0xffe1, 0xffef, 0x000e, 0x0030, 0x002f, 0xfff6, 0xffa7,
-+	0xff9d, 0x000a, 0x00a2, 0x00b5, 0xffea, 0xfed9, 0xfec5, 0x003d,
-+	0x0217, 0x021b, 0xff5a, 0xfc2b, 0xfcbd, 0x02c4, 0x0ac3, 0x0e85,
-+};
-+
-+static const u8 adc_presets[2][23] = {
++/* Format descriptions for capture and preview */
++static const struct rcar_drif_format formats[] = {
 +	{
-+		0x83, 0x00, 0xcf, 0xb4, 0x0f, 0x2c, 0x0c, 0x49,
-+		0x00, 0x00, 0x00, 0x8c,	0x02, 0x02, 0x00, 0x04,
-+		0xec, 0x82, 0x4b, 0xcc, 0x01, 0x88, 0x0c,
++		.name		= "Sliced Complex U16BE",
++		.pixelformat	= V4L2_SDR_FMT_SCU16BE,
++		.buffersize	= RCAR_SDR_BUFFER_SIZE,
++		.wdlen		= 16,
++		.num_schans	= 2,
 +	},
 +	{
-+		0x83, 0x00, 0xcf, 0xb4,	0x0f, 0x2c, 0x0c, 0x49,
-+		0x00, 0x00, 0x00, 0x8c,	0x02, 0x20, 0x33, 0x8c,
-+		0x57, 0xd7, 0x59, 0xb7,	0x65, 0x0e, 0x0c,
++		.name		= "Sliced Complex U18BE",
++		.pixelformat	= V4L2_SDR_FMT_SCU18BE,
++		.buffersize	= RCAR_SDR_BUFFER_SIZE,
++		.wdlen		= 18,
++		.num_schans	= 2,
++	},
++	{
++		.name		= "Sliced Complex U20BE",
++		.pixelformat	= V4L2_SDR_FMT_SCU20BE,
++		.buffersize	= RCAR_SDR_BUFFER_SIZE,
++		.wdlen		= 20,
++		.num_schans	= 2,
 +	},
 +};
 +
-+/* Custom controls */
-+#define V4L2_CID_MAX2175_I2S_ENABLE	(V4L2_CID_USER_MAX217X_BASE + 0x01)
-+#define V4L2_CID_MAX2175_I2S_MODE	(V4L2_CID_USER_MAX217X_BASE + 0x02)
-+#define V4L2_CID_MAX2175_HSLS		(V4L2_CID_USER_MAX217X_BASE + 0x03)
-+#define V4L2_CID_MAX2175_RX_MODE	(V4L2_CID_USER_MAX217X_BASE + 0x04)
++static const unsigned int NUM_FORMATS = ARRAY_SIZE(formats);
 +
-+/* Tuner bands */
-+static const struct v4l2_frequency_band eu_bands_rf = {
-+	.tuner = 0,
-+	.type = V4L2_TUNER_RF,
-+	.index = 0,
-+	.capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS,
-+	.rangelow   = 65000000,
-+	.rangehigh  = 240000000,
++/* Buffer for a received frame from one or both sub-channels */
++struct rcar_drif_frame_buf {
++	/* Common v4l buffer stuff -- must be first */
++	struct vb2_v4l2_buffer vb;
++	struct list_head list;
 +};
 +
-+static const struct v4l2_frequency_band na_bands_rf = {
-+	.tuner = 0,
-+	.type = V4L2_TUNER_RF,
-+	.index = 0,
-+	.capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS,
-+	.rangelow   = 65000000,
-+	.rangehigh  = 108000000,
++struct rcar_drif_async_subdev {
++	struct v4l2_subdev *sd;
++	struct v4l2_async_subdev asd;
 +};
 +
-+/* Regmap settings */
-+static const struct regmap_range max2175_regmap_volatile_range[] = {
-+	regmap_reg_range(0x30, 0x35),
-+	regmap_reg_range(0x3a, 0x45),
-+	regmap_reg_range(0x59, 0x5e),
-+	regmap_reg_range(0x73, 0x75),
++/* DMA buffer */
++struct rcar_drif_hwbuf {
++	void *addr;			/* Cpu-side address */
++	unsigned int status;		/* Buffer status flags */
 +};
 +
-+static const struct regmap_access_table max2175_volatile_regs = {
-+	.yes_ranges = max2175_regmap_volatile_range,
-+	.n_yes_ranges = ARRAY_SIZE(max2175_regmap_volatile_range),
++/* Sub-channel */
++struct rcar_drif_subchan {
++	struct rcar_drif_chan *parent;	/* Parent channel */
++	struct platform_device *pdev;	/* Sub-channel's pdev */
++	void __iomem *base;		/* Base register address */
++	resource_size_t start;		/* I/O resource offset */
++	struct dma_chan *dmach;		/* Reserved DMA channel */
++	struct clk *clkp;		/* Module clock */
++	struct rcar_drif_hwbuf *buf[RCAR_DRIF_MAX_NUM_HWBUFS];
++	dma_addr_t dma_handle;		/* Handle for all bufs */
++	unsigned int num;		/* Sub-channel number */
 +};
 +
-+static const struct reg_default max2175_reg_defaults[] = {
-+	{ 0x00, 0x07},
++/* Channel */
++struct rcar_drif_chan {
++	struct device *dev;		/* Platform device */
++	struct video_device vdev;	/* SDR device */
++	struct v4l2_device v4l2_dev;	/* V4l2 device */
++
++	/* Videobuf2 queue and queued buffers list */
++	struct vb2_queue vb_queue;
++	struct list_head queued_bufs;
++	spinlock_t queued_bufs_lock;	/* Protects queued_bufs */
++
++	struct mutex v4l2_mutex;	/* To serialize ioctls */
++	struct mutex vb_queue_mutex;	/* To serialize streaming ioctls */
++	struct v4l2_ctrl_handler ctrl_hdl;	/* SDR control handler */
++	struct v4l2_async_notifier notifier;	/* For subdev (tuner) */
++
++	/* Current V4L2 SDR format array index */
++	unsigned int fmt_idx;
++
++	/* Device tree SYNC properties */
++	u32 mdr1;
++
++	/* Internals */
++	struct rcar_drif_subchan *sch[2]; /* DRIFx0 and DRIFx1 */
++	unsigned long hw_schans_mask;	/* Enabled sub-channels per DT */
++	unsigned long cur_schans_mask;	/* Used sub-channels for an SDR FMT */
++	u32 num_hw_schans;		/* Num of DT enabled sub-channels */
++	u32 num_cur_schans;		/* Num of used sub-channels */
++	u32 num_hwbufs;			/* Num of DMA buffers */
++	u32 hwbuf_size;			/* Each DMA buffer size */
++	u32 produced;			/* Buffers produced by dev */
 +};
 +
-+static const struct regmap_config max2175_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.reg_defaults = max2175_reg_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(max2175_reg_defaults),
-+	.volatile_table = &max2175_volatile_regs,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+struct max2175 {
-+	struct v4l2_subdev sd;		/* Sub-device */
-+	struct i2c_client *client;	/* I2C client */
-+
-+	/* Controls */
-+	struct v4l2_ctrl_handler ctrl_hdl;
-+	struct v4l2_ctrl *lna_gain;	/* LNA gain value */
-+	struct v4l2_ctrl *if_gain;	/* I/F gain value */
-+	struct v4l2_ctrl *pll_lock;	/* PLL lock */
-+	struct v4l2_ctrl *i2s_en;	/* I2S output enable */
-+	struct v4l2_ctrl *i2s_mode;	/* I2S mode value */
-+	struct v4l2_ctrl *hsls;		/* High-side/Low-side polarity */
-+	struct v4l2_ctrl *rx_mode;	/* Receive mode */
-+
-+	/* Regmap */
-+	struct regmap *regmap;
-+
-+	/* Cached configuration */
-+	u32 freq;			/* Tuned freq In Hz */
-+	const struct max2175_rxmode *rx_modes;		/* EU or NA modes */
-+	const struct v4l2_frequency_band *bands_rf;	/* EU or NA bands */
-+
-+	/* Device settings */
-+	unsigned long xtal_freq;	/* Ref Oscillator freq in Hz */
-+	u32 decim_ratio;
-+	bool master;			/* Master/Slave */
-+	bool am_hiz;			/* AM Hi-Z filter usage */
-+
-+	/* ROM values */
-+	u8 rom_bbf_bw_am;
-+	u8 rom_bbf_bw_fm;
-+	u8 rom_bbf_bw_dab;
-+
-+	/* Local copy of old setting */
-+	u8 i2s_test;
-+
-+	/* Driver private variables */
-+	bool mode_resolved;		/* Flag to sanity check settings */
-+};
-+
-+static inline struct max2175 *max2175_from_sd(struct v4l2_subdev *sd)
++/* Allocate buffer context */
++static int rcar_drif_alloc_bufctxt(struct rcar_drif_chan *ch)
 +{
-+	return container_of(sd, struct max2175, sd);
-+}
++	struct rcar_drif_hwbuf *bufctx;
++	unsigned int i, idx;
 +
-+static inline struct max2175 *max2175_from_ctrl_hdl(struct v4l2_ctrl_handler *h)
-+{
-+	return container_of(h, struct max2175, ctrl_hdl);
-+}
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		bufctx = kcalloc(ch->num_hwbufs, sizeof(*bufctx), GFP_KERNEL);
++		if (!bufctx)
++			return -ENOMEM;
 +
-+/* Get bitval of a given val */
-+static inline u8 max2175_get_bitval(u8 val, u8 msb, u8 lsb)
-+{
-+	return (val & GENMASK(msb, lsb)) >> lsb;
-+}
-+
-+/* Read/Write bit(s) on top of regmap */
-+static int max2175_read(struct max2175 *ctx, u8 idx, u8 *val)
-+{
-+	u32 regval;
-+	int ret = regmap_read(ctx->regmap, idx, &regval);
-+
-+	if (ret)
-+		v4l2_err(ctx->client, "read ret(%d): idx 0x%02x\n", ret, idx);
-+
-+	*val = regval;
-+	return ret;
-+}
-+
-+static int max2175_write(struct max2175 *ctx, u8 idx, u8 val)
-+{
-+	int ret = regmap_write(ctx->regmap, idx, val);
-+
-+	if (ret)
-+		v4l2_err(ctx->client, "write ret(%d): idx 0x%02x val 0x%02x\n",
-+			 ret, idx, val);
-+	return ret;
-+}
-+
-+static u8 max2175_read_bits(struct max2175 *ctx, u8 idx, u8 msb, u8 lsb)
-+{
-+	u8 val;
-+
-+	if (max2175_read(ctx, idx, &val))
-+		return 0;
-+
-+	return max2175_get_bitval(val, msb, lsb);
-+}
-+
-+static bool max2175_read_bit(struct max2175 *ctx, u8 idx, u8 bit)
-+{
-+	return !!max2175_read_bits(ctx, idx, bit, bit);
-+}
-+
-+static int max2175_write_bits(struct max2175 *ctx, u8 idx,
-+			     u8 msb, u8 lsb, u8 newval)
-+{
-+	int ret = regmap_update_bits(ctx->regmap, idx, GENMASK(msb, lsb),
-+				     newval << lsb);
-+
-+	if (ret)
-+		v4l2_err(ctx->client, "wbits ret(%d): idx 0x%02x\n", ret, idx);
-+
-+	return ret;
-+}
-+
-+static int max2175_write_bit(struct max2175 *ctx, u8 idx, u8 bit, u8 newval)
-+{
-+	return max2175_write_bits(ctx, idx, bit, bit, newval);
-+}
-+
-+/* Checks expected pattern every msec until timeout */
-+static int max2175_poll_timeout(struct max2175 *ctx, u8 idx, u8 msb, u8 lsb,
-+				u8 exp_bitval, u32 timeout_ms)
-+{
-+	unsigned int val;
-+
-+	return regmap_read_poll_timeout(ctx->regmap, idx, val,
-+			(max2175_get_bitval(val, msb, lsb) == exp_bitval),
-+			1000, timeout_ms * 1000);
-+}
-+
-+static int max2175_poll_csm_ready(struct max2175 *ctx)
-+{
-+	int ret;
-+
-+	ret = max2175_poll_timeout(ctx, 69, 1, 1, 0, 50);
-+	if (ret)
-+		v4l2_err(ctx->client, "csm not ready\n");
-+
-+	return ret;
-+}
-+
-+#define MAX2175_IS_BAND_AM(ctx)		\
-+	(max2175_read_bits(ctx, 5, 1, 0) == MAX2175_BAND_AM)
-+
-+#define MAX2175_IS_BAND_VHF(ctx)	\
-+	(max2175_read_bits(ctx, 5, 1, 0) == MAX2175_BAND_VHF)
-+
-+#define MAX2175_IS_FM_MODE(ctx)		\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 0)
-+
-+#define MAX2175_IS_FMHD_MODE(ctx)	\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 1)
-+
-+#define MAX2175_IS_DAB_MODE(ctx)	\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 2)
-+
-+static int max2175_band_from_freq(u32 freq)
-+{
-+	if (freq >= 144000 && freq <= 26100000)
-+		return MAX2175_BAND_AM;
-+	else if (freq >= 65000000 && freq <= 108000000)
-+		return MAX2175_BAND_FM;
-+	else
-+		return MAX2175_BAND_VHF;
-+}
-+
-+static int max2175_update_i2s_mode(struct max2175 *ctx, u32 rx_mode,
-+				   u32 i2s_mode)
-+{
-+	max2175_write_bits(ctx, 29, 2, 0, i2s_mode);
-+
-+	/* Based on I2S mode value I2S_WORD_CNT values change */
-+	switch (i2s_mode) {
-+	case MAX2175_I2S_MODE3:
-+		max2175_write_bits(ctx, 30, 6, 0, 1);
-+		break;
-+	case MAX2175_I2S_MODE2:
-+	case MAX2175_I2S_MODE4:
-+		max2175_write_bits(ctx, 30, 6, 0, 0);
-+		break;
-+	case MAX2175_I2S_MODE0:
-+		max2175_write_bits(ctx, 30, 6, 0,
-+			ctx->rx_modes[rx_mode].i2s_word_size);
-+		break;
++		for (idx = 0; idx < ch->num_hwbufs; idx++)
++			ch->sch[i]->buf[idx] = bufctx + idx;
 +	}
-+	mxm_dbg(ctx, "update_i2s_mode %u, rx_mode %u\n", i2s_mode, rx_mode);
 +	return 0;
 +}
 +
-+static void max2175_i2s_enable(struct max2175 *ctx, bool enable)
-+{
-+	if (enable) {
-+		/* Use old setting */
-+		max2175_write_bits(ctx, 104, 3, 0, ctx->i2s_test);
-+	} else {
-+		/* Cache old setting */
-+		ctx->i2s_test = max2175_read_bits(ctx, 104, 3, 0);
-+		max2175_write_bits(ctx, 104, 3, 0, 9);	/* Keep SCK alive */
-+	}
-+	mxm_dbg(ctx, "i2s %sabled: old val %u\n", enable ? "en" : "dis",
-+		ctx->i2s_test);
-+}
-+
-+static void max2175_set_filter_coeffs(struct max2175 *ctx, u8 m_sel,
-+				      u8 bank, const u16 *coeffs)
-+{
-+	unsigned int i;
-+	u8 coeff_addr, upper_address = 24;
-+
-+	mxm_dbg(ctx, "set_filter_coeffs: m_sel %d bank %d\n", m_sel, bank);
-+	max2175_write_bits(ctx, 114, 5, 4, m_sel);
-+
-+	if (m_sel == 2)
-+		upper_address = 12;
-+
-+	for (i = 0; i < upper_address; i++) {
-+		coeff_addr = i + bank * 24;
-+		max2175_write(ctx, 115, coeffs[i] >> 8);
-+		max2175_write(ctx, 116, coeffs[i]);
-+		max2175_write(ctx, 117, coeff_addr | 1 << 7);
-+	}
-+	max2175_write_bit(ctx, 117, 7, 0);
-+}
-+
-+static void max2175_load_fmeu_1p2(struct max2175 *ctx)
++/* Release buffer context */
++static void rcar_drif_release_bufctxt(struct rcar_drif_chan *ch)
 +{
 +	unsigned int i;
 +
-+	for (i = 0; i < ARRAY_SIZE(fmeu1p2_map); i++)
-+		max2175_write(ctx, fmeu1p2_map[i].idx, fmeu1p2_map[i].val);
-+
-+	ctx->decim_ratio = 36;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0, ch_coeff_fmeu);
-+	max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+				  eq_coeff_fmeu1_ra02_m6db);
-+}
-+
-+static void max2175_load_dab_1p2(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(dab12_map); i++)
-+		max2175_write(ctx, dab12_map[i].idx, dab12_map[i].val);
-+
-+	ctx->decim_ratio = 1;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 2, ch_coeff_dab1);
-+}
-+
-+static void max2175_load_fmna_1p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fmna1p0_map); i++)
-+		max2175_write(ctx, fmna1p0_map[i].idx, fmna1p0_map[i].val);
-+}
-+
-+static void max2175_load_fmna_2p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fmna2p0_map); i++)
-+		max2175_write(ctx, fmna2p0_map[i].idx, fmna2p0_map[i].val);
-+}
-+
-+static void max2175_set_bbfilter(struct max2175 *ctx)
-+{
-+	if (MAX2175_IS_BAND_AM(ctx)) {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_am);
-+		mxm_dbg(ctx, "set_bbfilter AM: rom %d\n", ctx->rom_bbf_bw_am);
-+	} else if (MAX2175_IS_DAB_MODE(ctx)) {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_dab);
-+		mxm_dbg(ctx, "set_bbfilter DAB: rom %d\n", ctx->rom_bbf_bw_dab);
-+	} else {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_fm);
-+		mxm_dbg(ctx, "set_bbfilter FM: rom %d\n", ctx->rom_bbf_bw_fm);
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		kfree(ch->sch[i]->buf[0]);
++		ch->sch[i]->buf[0] = NULL;
 +	}
 +}
 +
-+static bool max2175_set_csm_mode(struct max2175 *ctx,
-+			  enum max2175_csm_mode new_mode)
++/* Release DMA channel */
++static void rcar_drif_release_dmachannel(struct rcar_drif_chan *ch)
 +{
-+	int ret = max2175_poll_csm_ready(ctx);
++	unsigned int i;
 +
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask)
++		if (ch->sch[i]->dmach) {
++			dma_release_channel(ch->sch[i]->dmach);
++			ch->sch[i]->dmach = NULL;
++		}
++}
++
++/* Allocate DMA channel */
++static int rcar_drif_alloc_dmachannel(struct rcar_drif_chan *ch)
++{
++	struct dma_slave_config dma_cfg;
++	unsigned int i;
++	int ret = -ENODEV;
++
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		struct rcar_drif_subchan *sch = ch->sch[i];
++
++		sch->dmach = dma_request_slave_channel(&sch->pdev->dev, "rx");
++		if (!sch->dmach) {
++			rdrif_err(ch, "schan%u: dma channel req failed\n", i);
++			goto dmach_error;
++		}
++
++		/* Configure slave */
++		memset(&dma_cfg, 0, sizeof(dma_cfg));
++		dma_cfg.src_addr = (phys_addr_t)(sch->start + RCAR_DRIF_SIRFDR);
++		dma_cfg.dst_addr = 0;
++		dma_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++		ret = dmaengine_slave_config(sch->dmach, &dma_cfg);
++		if (ret) {
++			rdrif_err(ch, "schan%u: dma slave config failed\n", i);
++			goto dmach_error;
++		}
++	}
++	return 0;
++
++dmach_error:
++	rcar_drif_release_dmachannel(ch);
++	return ret;
++}
++
++/* Release queued vb2 buffers */
++static void rcar_drif_release_queued_bufs(struct rcar_drif_chan *ch,
++					  enum vb2_buffer_state state)
++{
++	struct rcar_drif_frame_buf *fbuf, *tmp;
++	unsigned long flags;
++
++	spin_lock_irqsave(&ch->queued_bufs_lock, flags);
++	list_for_each_entry_safe(fbuf, tmp, &ch->queued_bufs, list) {
++		list_del(&fbuf->list);
++		vb2_buffer_done(&fbuf->vb.vb2_buf, state);
++	}
++	spin_unlock_irqrestore(&ch->queued_bufs_lock, flags);
++}
++
++/* Set MDR defaults */
++static inline void rcar_drif_set_mdr1(struct rcar_drif_chan *ch)
++{
++	unsigned int i;
++
++	/* Set defaults for both sub-channels */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		/* Refer MSIOF section in manual for this register setting */
++		writel(RCAR_DRIF_SITMDR1_PCON,
++		       ch->sch[i]->base + RCAR_DRIF_SITMDR1);
++
++		/* Setup MDR1 value */
++		writel(ch->mdr1, ch->sch[i]->base + RCAR_DRIF_SIRMDR1);
++
++		rdrif_dbg(2, ch, "schan%u: mdr1 = 0x%08x",
++			  i, readl(ch->sch[i]->base + RCAR_DRIF_SIRMDR1));
++	}
++}
++
++/* Extract bitlen and wdcnt from given word length */
++static int rcar_drif_convert_wdlen(struct rcar_drif_chan *ch,
++				   u32 wdlen, u32 *bitlen, u32 *wdcnt)
++{
++	unsigned int i, nr_wds;
++
++	/* FIFO register size is 32 bits */
++	for (i = 0; i < 32; i++) {
++		nr_wds = wdlen % (32 - i);
++		if (nr_wds == 0) {
++			*bitlen = (32 - i);
++			*wdcnt = (wdlen / *bitlen);
++			break;
++		}
++	}
++
++	/* Sanity check range */
++	if ((i == 32) || !((*bitlen >= 8) && (*bitlen <= 32)) ||
++	    !((*wdcnt >= 1) && (*wdcnt <= 64))) {
++		rdrif_err(ch, "invalid wdlen %u configured\n", wdlen);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++/* Set DRIF receive format */
++static int rcar_drif_set_format(struct rcar_drif_chan *ch)
++{
++	u32 bitlen, wdcnt, wdlen;
++	unsigned int i;
++	int ret = -EINVAL;
++
++	wdlen = formats[ch->fmt_idx].wdlen;
++	rdrif_dbg(2, ch, "setfmt: idx %u, wdlen %u, num_schans %u\n",
++		  ch->fmt_idx, wdlen, formats[ch->fmt_idx].num_schans);
++
++	/* Sanity check */
++	if (formats[ch->fmt_idx].num_schans > ch->num_cur_schans) {
++		rdrif_err(ch, "fmt idx %u current schans %u mismatch\n",
++			  ch->fmt_idx, ch->num_cur_schans);
++		return ret;
++	}
++
++	/* Get bitlen & wdcnt from wdlen */
++	ret = rcar_drif_convert_wdlen(ch, wdlen, &bitlen, &wdcnt);
 +	if (ret)
 +		return ret;
 +
-+	max2175_write_bits(ctx, 0, 2, 0, new_mode);
-+	mxm_dbg(ctx, "set csm new mode %d\n", new_mode);
++	/* Setup group, bitlen & wdcnt */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		u32 mdr;
 +
-+	/* Wait for a fixed settle down time depending on new mode */
-+	switch (new_mode) {
-+	case MAX2175_PRESET_TUNE:
-+		usleep_range(51100, 51500);	/* 51.1ms */
-+		break;
++		/* Two groups */
++		mdr = RCAR_DRIF_MDR_GRPCNT(2) | RCAR_DRIF_MDR_BITLEN(bitlen) |
++		       RCAR_DRIF_MDR_WDCNT(wdcnt);
++		writel(mdr, ch->sch[i]->base + RCAR_DRIF_SIRMDR2);
++
++		mdr = RCAR_DRIF_MDR_BITLEN(bitlen) | RCAR_DRIF_MDR_WDCNT(wdcnt);
++		writel(mdr, ch->sch[i]->base + RCAR_DRIF_SIRMDR3);
++
++		rdrif_dbg(2, ch, "schan%u: new mdr[2,3] = 0x%08x, 0x%08x\n",
++			  i, readl(ch->sch[i]->base + RCAR_DRIF_SIRMDR2),
++			  readl(ch->sch[i]->base + RCAR_DRIF_SIRMDR3));
++	}
++	return ret;
++}
++
++/* Release DMA buffers */
++static void rcar_drif_release_buf(struct rcar_drif_chan *ch)
++{
++	unsigned int i;
++
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		struct rcar_drif_subchan *sch = ch->sch[i];
++
++		/* First entry of the sub-channel contains the dma buf ptr */
++		if (sch->buf[0] && sch->buf[0]->addr) {
++			dma_free_coherent(&sch->pdev->dev,
++					  ch->hwbuf_size * ch->num_hwbufs,
++					  sch->buf[0]->addr, sch->dma_handle);
++			sch->buf[0]->addr = NULL;
++		}
++	}
++}
++
++/* Request DMA buffers */
++static int rcar_drif_request_buf(struct rcar_drif_chan *ch)
++{
++	int ret = -ENOMEM;
++	unsigned int i, j;
++	void *addr;
++
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		struct rcar_drif_subchan *sch = ch->sch[i];
++
++		/* Allocate DMA buffers */
++		addr = dma_alloc_coherent(&sch->pdev->dev,
++					  ch->hwbuf_size * ch->num_hwbufs,
++					  &sch->dma_handle, GFP_KERNEL);
++		if (!addr) {
++			rdrif_err(ch,
++			"schan%u: dma alloc failed. num_hwbufs %u size %u\n",
++			i, ch->num_hwbufs, ch->hwbuf_size);
++			goto alloc_error;
++		}
++
++		/* Split the chunk and populate bufctxt */
++		for (j = 0; j < ch->num_hwbufs; j++) {
++			sch->buf[j]->addr = addr + (j * ch->hwbuf_size);
++			sch->buf[j]->status = 0;
++		}
++	}
++
++	return 0;
++
++alloc_error:
++	return ret;
++}
++
++/* Setup vb_queue minimum buffer requirements */
++static int rcar_drif_queue_setup(struct vb2_queue *vq,
++			unsigned int *num_buffers, unsigned int *num_planes,
++			unsigned int sizes[], struct device *alloc_devs[])
++{
++	struct rcar_drif_chan *ch = vb2_get_drv_priv(vq);
++
++	/* Need at least 16 buffers */
++	if (vq->num_buffers + *num_buffers < 16)
++		*num_buffers = 16 - vq->num_buffers;
++
++	*num_planes = 1;
++	sizes[0] = PAGE_ALIGN(formats[ch->fmt_idx].buffersize);
++
++	rdrif_dbg(2, ch, "num_bufs %d sizes[0] %d\n", *num_buffers, sizes[0]);
++	return 0;
++}
++
++/* Enqueue buffer */
++static void rcar_drif_buf_queue(struct vb2_buffer *vb)
++{
++	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
++	struct rcar_drif_chan *ch = vb2_get_drv_priv(vb->vb2_queue);
++	struct rcar_drif_frame_buf *fbuf =
++			container_of(vbuf, struct rcar_drif_frame_buf, vb);
++	unsigned long flags;
++
++	rdrif_dbg(2, ch, "buf_queue idx %u\n", vb->index);
++	spin_lock_irqsave(&ch->queued_bufs_lock, flags);
++	list_add_tail(&fbuf->list, &ch->queued_bufs);
++	spin_unlock_irqrestore(&ch->queued_bufs_lock, flags);
++}
++
++/* Deliver buffer to user space */
++static void rcar_drif_deliver_buf(struct rcar_drif_subchan *sch, u32 idx)
++{
++	struct rcar_drif_chan *ch = sch->parent;
++	struct rcar_drif_frame_buf *fbuf;
++	unsigned long flags;
++	bool overflow = false;
++
++	spin_lock_irqsave(&ch->queued_bufs_lock, flags);
++	fbuf = list_first_entry_or_null(&ch->queued_bufs, struct
++					rcar_drif_frame_buf, list);
++	if (!fbuf) {
++		/*
++		 * App is late in enqueing buffers. Samples lost & there will
++		 * be a gap in sequence number when app recovers
++		 */
++		rdrif_dbg(1, ch, "\napp late: schan%u: prod %u\n",
++			  sch->num, ch->produced);
++		ch->produced++;	/* Increment the produced count anyway */
++		spin_unlock_irqrestore(&ch->queued_bufs_lock, flags);
++		return;
++	}
++	list_del(&fbuf->list);
++	spin_unlock_irqrestore(&ch->queued_bufs_lock, flags);
++
++	if (ch->num_cur_schans == RCAR_DRIF_MAX_SUBCHANS) {
++		struct rcar_drif_hwbuf *buf_i, *buf_q;
++
++		if (sch->num) {
++			buf_i = to_rcar_drif_buf_pair(ch, sch->num, idx);
++			buf_q = sch->buf[idx];
++		} else {
++			buf_i = sch->buf[idx];
++			buf_q = to_rcar_drif_buf_pair(ch, sch->num, idx);
++		}
++		memcpy(vb2_plane_vaddr(&fbuf->vb.vb2_buf, 0),
++		       buf_i->addr, ch->hwbuf_size);
++		memcpy(vb2_plane_vaddr(&fbuf->vb.vb2_buf, 0) + ch->hwbuf_size,
++		       buf_q->addr, ch->hwbuf_size);
++
++		if ((buf_i->status | buf_q->status) & RCAR_DRIF_BUF_OVERFLOW) {
++			overflow = true;
++			/* Clear the flag in status */
++			buf_i->status &= ~RCAR_DRIF_BUF_OVERFLOW;
++			buf_q->status &= ~RCAR_DRIF_BUF_OVERFLOW;
++		}
++	} else {
++		struct rcar_drif_hwbuf *buf_iq = sch->buf[idx];
++
++		memcpy(vb2_plane_vaddr(&fbuf->vb.vb2_buf, 0),
++		       buf_iq->addr, ch->hwbuf_size);
++
++		if (buf_iq->status & RCAR_DRIF_BUF_OVERFLOW) {
++			overflow = true;
++			/* Clear the flag in status */
++			buf_iq->status &= ~RCAR_DRIF_BUF_OVERFLOW;
++		}
++	}
++
++	rdrif_dbg(2, ch, "schan%u: prod %u\n", sch->num, ch->produced);
++
++	fbuf->vb.field = V4L2_FIELD_NONE;
++	fbuf->vb.sequence = ch->produced++;
++	fbuf->vb.vb2_buf.timestamp = ktime_get_ns();
++	vb2_set_plane_payload(&fbuf->vb.vb2_buf, 0,
++			      formats[ch->fmt_idx].buffersize);
++
++	/* Set error state on overflow */
++	if (overflow)
++		vb2_buffer_done(&fbuf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
++	else
++		vb2_buffer_done(&fbuf->vb.vb2_buf, VB2_BUF_STATE_DONE);
++}
++
++static inline bool rcar_drif_buf_pairs_done(struct rcar_drif_hwbuf *buf1,
++					    struct rcar_drif_hwbuf *buf2)
++{
++	return (buf1->status & buf2->status & RCAR_DRIF_BUF_DONE);
++}
++
++/* Check if DMA of the paired sub-channel is also complete */
++static void rcar_drif_check_dmapair(struct rcar_drif_subchan *sch, u32 idx)
++{
++	struct rcar_drif_chan *ch = sch->parent;
++	struct rcar_drif_hwbuf *buf, *pair;
++
++	buf = sch->buf[idx];
++	pair = to_rcar_drif_buf_pair(ch, sch->num, idx);
++	buf->status |= RCAR_DRIF_BUF_DONE;
++
++	rdrif_dbg(2, ch, "schan%u: status: buf %u pair %u\n",
++		  sch->num, buf->status, pair->status);
++
++	/* Check if both DMA buffers are done */
++	if (rcar_drif_buf_pairs_done(buf, pair)) {
++		/* Clear status flag */
++		buf->status &= ~RCAR_DRIF_BUF_DONE;
++		pair->status &= ~RCAR_DRIF_BUF_DONE;
++
++		/* Deliver buffer to user */
++		rcar_drif_deliver_buf(sch, idx);
++	}
++}
++
++/* DMA callback for each stage */
++static void rcar_drif_dma_complete(void *dma_async_param)
++{
++	struct rcar_drif_subchan *sch =
++		(struct rcar_drif_subchan *)dma_async_param;
++	struct rcar_drif_chan *ch = sch->parent;
++	struct rcar_drif_hwbuf *buf;
++	u32 str, idx;
++
++	mutex_lock(&ch->vb_queue_mutex);
++
++	/* DMA can be terminated while the callback was waiting on lock */
++	if (!vb2_is_streaming(&ch->vb_queue)) {
++		mutex_unlock(&ch->vb_queue_mutex);
++		return;
++	}
++
++	idx = ch->produced % ch->num_hwbufs;
++	buf = sch->buf[idx];
++
++	/* Check for DRIF errors */
++	str = readl(sch->base + RCAR_DRIF_SISTR);
++	if (unlikely(str & RCAR_DRIF_RFOVF)) {
++		/* Writing the same clears it */
++		writel(str, sch->base + RCAR_DRIF_SISTR);
++
++		/* Overflow: some samples are lost */
++		buf->status |= RCAR_DRIF_BUF_OVERFLOW;
++		rdrif_dbg(1, ch, "\nfifo overflow: schan%u: prod %d\n",
++			  sch->num, ch->produced);
++	}
++
++	/* Check if the rx'ed data can be delivered to user */
++	if (ch->num_cur_schans == RCAR_DRIF_MAX_SUBCHANS)
++		rcar_drif_check_dmapair(sch, idx);
++	else
++		rcar_drif_deliver_buf(sch, idx);
++
++	mutex_unlock(&ch->vb_queue_mutex);
++}
++
++static int rcar_drif_qbuf(struct rcar_drif_subchan *sch)
++{
++	struct rcar_drif_chan *ch = sch->parent;
++	dma_addr_t addr = sch->dma_handle;
++	struct dma_async_tx_descriptor *rxd;
++	dma_cookie_t cookie;
++	int ret = -EIO;
++
++	/* Setup cyclic DMA with given buffers */
++	rxd = dmaengine_prep_dma_cyclic(sch->dmach, addr,
++					ch->hwbuf_size * ch->num_hwbufs,
++					ch->hwbuf_size, DMA_DEV_TO_MEM,
++					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	if (!rxd) {
++		rdrif_err(ch, "schan%u: prep dma cyclic failed\n", sch->num);
++		return ret;
++	}
++
++	/* Submit descriptor */
++	rxd->callback = rcar_drif_dma_complete;
++	rxd->callback_param = sch;
++	cookie = dmaengine_submit(rxd);
++	if (dma_submit_error(cookie)) {
++		rdrif_err(ch, "schan%u: dma submit failed\n", sch->num);
++		return ret;
++	}
++
++	dma_async_issue_pending(sch->dmach);
++	return 0;
++}
++
++/* Enable reception */
++static int rcar_drif_enable_rx(struct rcar_drif_chan *ch)
++{
++	unsigned int i;
++	u32 ctr;
++	int ret;
++
 +	/*
-+	 * Other mode switches need different sleep values depending on band &
-+	 * mode
++	 * When both sub-channels are enabled, they can be syncronized only by
++	 * the master
 +	 */
-+	default:
-+		break;
++
++	/* Enable receive */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ctr = readl(ch->sch[i]->base + RCAR_DRIF_SICTR);
++		ctr |= (RCAR_DRIF_SICTR_RX_RISING_EDGE |
++			 RCAR_DRIF_SICTR_RX_EN);
++		writel(ctr, ch->sch[i]->base + RCAR_DRIF_SICTR);
 +	}
 +
-+	return max2175_poll_csm_ready(ctx);
-+}
-+
-+static int max2175_csm_action(struct max2175 *ctx,
-+			      enum max2175_csm_mode action)
-+{
-+	int ret;
-+
-+	mxm_dbg(ctx, "csm_action: %d\n", action);
-+
-+	/* Other actions can be added in future when needed */
-+	ret = max2175_set_csm_mode(ctx, MAX2175_LOAD_TO_BUFFER);
-+	if (ret)
-+		return ret;
-+	return max2175_set_csm_mode(ctx, MAX2175_PRESET_TUNE);
-+}
-+
-+static int max2175_set_lo_freq(struct max2175 *ctx, u64 lo_freq)
-+{
-+	u64 scaled_lo_freq, scaled_npf, scaled_integer, scaled_fraction;
-+	u32 frac_desired, int_desired, lo_mult = 1;
-+	const u32 scale_factor = 1000000U;
-+	u8 loband_bits = 0, vcodiv_bits = 0;
-+	enum max2175_band band;
-+	int ret;
-+
-+	/* Scale to larger number for precision */
-+	scaled_lo_freq = lo_freq * scale_factor * 100;
-+	band = max2175_read_bits(ctx, 5, 1, 0);
-+
-+	mxm_dbg(ctx, "set_lo_freq: scaled lo_freq %llu lo_freq %llu band %d\n",
-+		scaled_lo_freq, lo_freq, band);
-+
-+	switch (band) {
-+	case MAX2175_BAND_AM:
-+		if (max2175_read_bit(ctx, 5, 7) == 0)
-+			lo_mult = 16;
-+		break;
-+	case MAX2175_BAND_FM:
-+		if (lo_freq <= 74700000) {
-+			lo_mult = 16;
-+		} else if (lo_freq > 74700000 && lo_freq <= 110000000) {
-+			loband_bits = 1;
-+		} else {
-+			loband_bits = 1;
-+			vcodiv_bits = 3;
++	/* Check receive enabled */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ret = readl_poll_timeout(ch->sch[i]->base + RCAR_DRIF_SICTR,
++					 ctr, ctr & RCAR_DRIF_SICTR_RX_EN,
++					 2, 500000);
++		if (ret) {
++			rdrif_err(ch, "schan%u: rx en failed. ctr 0x%08x\n",
++				  i, readl(ch->sch[i]->base + RCAR_DRIF_SICTR));
++			break;
 +		}
-+		lo_mult = 8;
-+		break;
-+	case MAX2175_BAND_VHF:
-+		if (lo_freq <= 210000000) {
-+			loband_bits = 2;
-+			vcodiv_bits = 2;
-+		} else {
-+			loband_bits = 2;
-+			vcodiv_bits = 1;
-+		}
-+		lo_mult = 4;
-+		break;
-+	default:
-+		loband_bits = 3;
-+		vcodiv_bits = 2;
-+		lo_mult = 2;
-+		break;
 +	}
-+
-+	if (band == MAX2175_BAND_L)
-+		scaled_npf = div_u64(div_u64(scaled_lo_freq, ctx->xtal_freq),
-+				     lo_mult);
-+	else
-+		scaled_npf = div_u64(scaled_lo_freq, ctx->xtal_freq) * lo_mult;
-+
-+	scaled_npf = div_u64(scaled_npf, 100);
-+	scaled_integer = div_u64(scaled_npf, scale_factor) * scale_factor;
-+	int_desired = div_u64(scaled_npf, scale_factor);
-+	scaled_fraction = scaled_npf - scaled_integer;
-+	frac_desired = div_u64(scaled_fraction << 20, scale_factor);
-+
-+	/* Check CSM is not busy */
-+	ret = max2175_poll_csm_ready(ctx);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "loband %u vcodiv %u lo_mult %u scaled_npf %llu\n",
-+		loband_bits, vcodiv_bits, lo_mult, scaled_npf);
-+	mxm_dbg(ctx, "scaled int %llu frac %llu desired int %u frac %u\n",
-+		scaled_integer, scaled_fraction, int_desired, frac_desired);
-+
-+	/* Write the calculated values to the appropriate registers */
-+	max2175_write(ctx, 1, int_desired);
-+	max2175_write_bits(ctx, 2, 3, 0, (frac_desired >> 16) & 0xf);
-+	max2175_write(ctx, 3, frac_desired >> 8);
-+	max2175_write(ctx, 4, frac_desired);
-+	max2175_write_bits(ctx, 5, 3, 2, loband_bits);
-+	max2175_write_bits(ctx, 6, 7, 6, vcodiv_bits);
 +	return ret;
 +}
 +
-+static int max2175_set_nco_freq(struct max2175 *ctx, s64 nco_freq_desired)
++/* Disable reception */
++static void rcar_drif_disable_rx(struct rcar_drif_chan *ch)
 +{
-+	s64  nco_freq, nco_val_desired;
-+	u64 abs_nco_freq;
-+	const u32 scale_factor = 1000000U;
-+	u32 clock_rate, nco_reg;
++	unsigned int i;
++	u32 ctr;
 +	int ret;
 +
-+	mxm_dbg(ctx, "set_nco_freq: freq %lld\n", nco_freq_desired);
-+	clock_rate = ctx->xtal_freq / ctx->decim_ratio;
-+	nco_freq = -nco_freq_desired;
-+
-+	if (nco_freq < 0)
-+		abs_nco_freq = -nco_freq;
-+	else
-+		abs_nco_freq = nco_freq;
-+
-+	/* Scale up the values for precision */
-+	if (abs_nco_freq < (clock_rate / 2)) {
-+		nco_val_desired = div_s64(2 * nco_freq * scale_factor,
-+					  clock_rate);
-+	} else {
-+		if (nco_freq < 0)
-+			nco_val_desired =
-+			div_s64(-2 * (clock_rate - abs_nco_freq) * scale_factor,
-+				clock_rate);
-+		else
-+			nco_val_desired =
-+			div_s64(2 * (clock_rate - abs_nco_freq) * scale_factor,
-+				clock_rate);
++	/* Disable receive */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ctr = readl(ch->sch[i]->base + RCAR_DRIF_SICTR);
++		ctr &= ~RCAR_DRIF_SICTR_RX_EN;
++		writel(ctr, ch->sch[i]->base + RCAR_DRIF_SICTR);
 +	}
 +
-+	/* Scale down to get the fraction */
-+	if (nco_freq < 0)
-+		nco_reg = 0x200000 + div_s64(nco_val_desired << 20,
-+						  scale_factor);
-+	else
-+		nco_reg = div_s64(nco_val_desired << 20, scale_factor);
++	/* Check receive disabled */
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ret = readl_poll_timeout(ch->sch[i]->base + RCAR_DRIF_SICTR,
++					 ctr, !(ctr & RCAR_DRIF_SICTR_RX_EN),
++					 2, 500000);
++		if (ret)
++			dev_warn(&ch->vdev.dev,
++			"schan%u: failed to disable rx. ctr 0x%08x\n",
++			i, readl(ch->sch[i]->base + RCAR_DRIF_SICTR));
++	}
++}
 +
-+	/* Check CSM is not busy */
-+	ret = max2175_poll_csm_ready(ctx);
++/* Start sub-channel */
++static int rcar_drif_start_subchan(struct rcar_drif_subchan *sch)
++{
++	struct rcar_drif_chan *ch = sch->parent;
++	u32 ctr, str;
++	int ret;
++
++	/* Reset receive */
++	writel(RCAR_DRIF_SICTR_RESET, sch->base + RCAR_DRIF_SICTR);
++	ret = readl_poll_timeout(sch->base + RCAR_DRIF_SICTR,
++					 ctr, !(ctr & RCAR_DRIF_SICTR_RESET),
++					 2, 500000);
++	if (ret) {
++		rdrif_err(ch, "schan%u: failed to reset rx. ctr 0x%08x\n",
++			  sch->num, readl(sch->base + RCAR_DRIF_SICTR));
++		return ret;
++	}
++
++	/* Queue buffers for DMA */
++	ret = rcar_drif_qbuf(sch);
 +	if (ret)
 +		return ret;
 +
-+	mxm_dbg(ctx, "clk %u decim %u abs %llu desired %lld reg %u\n",
-+		clock_rate, ctx->decim_ratio, abs_nco_freq,
-+		nco_val_desired, nco_reg);
++	/* Clear status register flags */
++	str = RCAR_DRIF_RFFUL | RCAR_DRIF_REOF | RCAR_DRIF_RFSERR |
++		RCAR_DRIF_RFUDF | RCAR_DRIF_RFOVF;
++	writel(str, sch->base + RCAR_DRIF_SISTR);
 +
-+	/* Write the calculated values to the appropriate registers */
-+	max2175_write_bits(ctx, 7, 4, 0, (nco_reg >> 16) & 0x1f);
-+	max2175_write(ctx, 8, nco_reg >> 8);
-+	max2175_write(ctx, 9, nco_reg);
++	/* Enable DMA receive interrupt */
++	writel(0x00009000, sch->base + RCAR_DRIF_SIIER);
++
 +	return ret;
 +}
 +
-+static int max2175_set_rf_freq_non_am_bands(struct max2175 *ctx, u64 freq,
-+					    u32 lo_pos)
++/* Start receive operation */
++static int rcar_drif_start(struct rcar_drif_chan *ch)
 +{
-+	s64 adj_freq;
-+	u64 low_if_freq;
++	unsigned int i;
 +	int ret;
 +
-+	mxm_dbg(ctx, "rf_freq: non AM bands\n");
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ret = rcar_drif_start_subchan(ch->sch[i]);
++		if (ret)
++			goto start_error;
++	}
 +
-+	if (MAX2175_IS_FM_MODE(ctx))
-+		low_if_freq = 128000;
-+	else if (MAX2175_IS_FMHD_MODE(ctx))
-+		low_if_freq = 228000;
-+	else
-+		return max2175_set_lo_freq(ctx, freq);
++	ch->produced = 0;
 +
-+	if (MAX2175_IS_BAND_VHF(ctx) == (lo_pos == MAX2175_LO_ABOVE_DESIRED))
-+		adj_freq = freq + low_if_freq;
-+	else
-+		adj_freq = freq - low_if_freq;
-+
-+	ret = max2175_set_lo_freq(ctx, adj_freq);
++	ret = rcar_drif_enable_rx(ch);
 +	if (ret)
-+		return ret;
++		goto start_error;
 +
-+	return max2175_set_nco_freq(ctx, low_if_freq);
-+}
++	rdrif_dbg(1, ch, "started\n");
 +
-+static int max2175_set_rf_freq(struct max2175 *ctx, u64 freq, u32 lo_pos)
-+{
-+	int ret;
-+
-+	if (MAX2175_IS_BAND_AM(ctx))
-+		ret = max2175_set_nco_freq(ctx, freq);
-+	else
-+		ret = max2175_set_rf_freq_non_am_bands(ctx, freq, lo_pos);
-+
-+	mxm_dbg(ctx, "set_rf_freq: ret %d freq %llu\n", ret, freq);
++start_error:
 +	return ret;
 +}
 +
-+static int max2175_tune_rf_freq(struct max2175 *ctx, u64 freq, u32 hsls)
++/* Stop sub-channel */
++static void rcar_drif_stop_subchan(struct rcar_drif_subchan *sch)
 +{
++	struct rcar_drif_chan *ch = sch->parent;
++	int ret, retries = 3;
++
++	/* Disable DMA receive interrupt */
++	writel(0x00000000, sch->base + RCAR_DRIF_SIIER);
++
++	do {
++		/* Terminate all DMA transfers */
++		ret = dmaengine_terminate_sync(sch->dmach);
++		if (!ret)
++			break;
++		rdrif_dbg(2, ch, "stop retry\n");
++	} while (--retries);
++
++	WARN_ON(!retries);
++}
++
++/* Stop receive operation */
++static void rcar_drif_stop(struct rcar_drif_chan *ch)
++{
++	unsigned int i;
++
++	/* Disable Rx */
++	rcar_drif_disable_rx(ch);
++
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask)
++		rcar_drif_stop_subchan(ch->sch[i]);
++
++	rdrif_dbg(1, ch, "stopped: prod %u\n", ch->produced);
++}
++
++/* Start streaming */
++static int rcar_drif_start_streaming(struct vb2_queue *vq, unsigned int count)
++{
++	struct rcar_drif_chan *ch = vb2_get_drv_priv(vq);
++	unsigned int i, j;
 +	int ret;
 +
-+	ret = max2175_set_rf_freq(ctx, freq, hsls);
-+	if (ret)
-+		return ret;
++	rdrif_dbg(1, ch, "start streaming\n");
++	mutex_lock(&ch->v4l2_mutex);
 +
-+	ret = max2175_csm_action(ctx, MAX2175_BUFFER_PLUS_PRESET_TUNE);
-+	if (ret)
-+		return ret;
++	for_each_rcar_drif_subchannel(i, &ch->cur_schans_mask) {
++		ret = clk_prepare_enable(ch->sch[i]->clkp);
++		if (ret)
++			goto start_error;
++	}
 +
-+	mxm_dbg(ctx, "tune_rf_freq: old %u new %llu\n", ctx->freq, freq);
-+	ctx->freq = freq;
++	/* Set default MDRx settings */
++	rcar_drif_set_mdr1(ch);
++
++	/* Set new format */
++	ret = rcar_drif_set_format(ch);
++	if (ret)
++		goto start_error;
++
++	if (ch->num_cur_schans == RCAR_DRIF_MAX_SUBCHANS)
++		ch->hwbuf_size = formats[ch->fmt_idx].buffersize/2;
++	else
++		ch->hwbuf_size = formats[ch->fmt_idx].buffersize;
++
++	rdrif_dbg(1, ch, "num_hwbufs %u, hwbuf_size %u\n",
++		ch->num_hwbufs, ch->hwbuf_size);
++
++	/* Alloc DMA channel */
++	ret = rcar_drif_alloc_dmachannel(ch);
++	if (ret)
++		goto start_error;
++
++	/* Alloc buf context */
++	ret = rcar_drif_alloc_bufctxt(ch);
++	if (ret)
++		goto start_error;
++
++	/* Request buffers */
++	ret = rcar_drif_request_buf(ch);
++	if (ret)
++		goto start_error;
++
++	/* Start Rx */
++	ret = rcar_drif_start(ch);
++	if (ret)
++		goto start_error;
++
++	mutex_unlock(&ch->v4l2_mutex);
++	return ret;
++
++start_error:
++	rcar_drif_release_queued_bufs(ch, VB2_BUF_STATE_QUEUED);
++	rcar_drif_release_buf(ch);
++	rcar_drif_release_bufctxt(ch);
++	rcar_drif_release_dmachannel(ch);
++	for (j = 0; j < i; j++)
++		clk_disable_unprepare(ch->sch[j]->clkp);
++
++	mutex_unlock(&ch->v4l2_mutex);
 +	return ret;
 +}
 +
-+static void max2175_set_hsls(struct max2175 *ctx, u32 lo_pos)
++/* Stop streaming */
++static void rcar_drif_stop_streaming(struct vb2_queue *vq)
 +{
-+	mxm_dbg(ctx, "set_hsls: lo_pos %u\n", lo_pos);
++	struct rcar_drif_chan *ch = vb2_get_drv_priv(vq);
++	unsigned int i;
 +
-+	if ((lo_pos == MAX2175_LO_BELOW_DESIRED) == MAX2175_IS_BAND_VHF(ctx))
-+		max2175_write_bit(ctx, 5, 4, 1);
-+	else
-+		max2175_write_bit(ctx, 5, 4, 0);
++	mutex_lock(&ch->v4l2_mutex);
++
++	/* Stop hardware streaming */
++	rcar_drif_stop(ch);
++
++	/* Return all queued buffers to vb2 */
++	rcar_drif_release_queued_bufs(ch, VB2_BUF_STATE_ERROR);
++
++	/* Release buf & buf context */
++	rcar_drif_release_buf(ch);
++	rcar_drif_release_bufctxt(ch);
++
++	/* Release DMA channel resources */
++	rcar_drif_release_dmachannel(ch);
++
++	for (i = 0; i < RCAR_DRIF_MAX_SUBCHANS; i++)
++		clk_disable_unprepare(ch->sch[i]->clkp);
++
++	mutex_unlock(&ch->v4l2_mutex);
++	rdrif_dbg(1, ch, "stopped streaming\n");
 +}
 +
-+static void max2175_set_eu_rx_mode(struct max2175 *ctx, u32 rx_mode)
++/* Vb2 ops */
++static struct vb2_ops rcar_drif_vb2_ops = {
++	.queue_setup            = rcar_drif_queue_setup,
++	.buf_queue              = rcar_drif_buf_queue,
++	.start_streaming        = rcar_drif_start_streaming,
++	.stop_streaming         = rcar_drif_stop_streaming,
++	.wait_prepare		= vb2_ops_wait_prepare,
++	.wait_finish		= vb2_ops_wait_finish,
++};
++
++static int rcar_drif_querycap(struct file *file, void *fh,
++			      struct v4l2_capability *cap)
 +{
-+	switch (rx_mode) {
-+	case MAX2175_EU_FM_1_2:
-+		max2175_load_fmeu_1p2(ctx);
-+		break;
++	struct rcar_drif_chan *ch = video_drvdata(file);
 +
-+	case MAX2175_DAB_1_2:
-+		max2175_load_dab_1p2(ctx);
-+		break;
-+	}
-+	/* Master is the default setting */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+
-+	/* Cache i2s_test value at this point */
-+	ctx->i2s_test = max2175_read_bits(ctx, 104, 3, 0);
-+}
-+
-+static void max2175_set_na_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	switch (rx_mode) {
-+	case MAX2175_NA_FM_1_0:
-+		max2175_load_fmna_1p0(ctx);
-+		break;
-+	case MAX2175_NA_FM_2_0:
-+		max2175_load_fmna_2p0(ctx);
-+		break;
-+	}
-+	/* Master is the default setting */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+
-+	/* Cache i2s_test value at this point */
-+	ctx->i2s_test = max2175_read_bits(ctx, 104, 3, 0);
-+	ctx->decim_ratio = 27;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0, ch_coeff_fmna);
-+	max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+				  eq_coeff_fmna1_ra02_m6db);
-+}
-+
-+static int max2175_set_rx_mode(struct max2175 *ctx, u32 rx_mode, u32 hsls)
-+{
-+	mxm_dbg(ctx, "set_rx_mode: %u am_hiz %u\n", rx_mode, ctx->am_hiz);
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ)
-+		max2175_set_eu_rx_mode(ctx, rx_mode);
-+	else
-+		max2175_set_na_rx_mode(ctx, rx_mode);
-+
-+	if (ctx->am_hiz) {
-+		mxm_dbg(ctx, "setting AM HiZ related config\n");
-+		max2175_write_bit(ctx, 50, 5, 1);
-+		max2175_write_bit(ctx, 90, 7, 1);
-+		max2175_write_bits(ctx, 73, 1, 0, 2);
-+		max2175_write_bits(ctx, 80, 5, 0, 33);
-+	}
-+
-+	/* Load BB filter trim values saved in ROM */
-+	max2175_set_bbfilter(ctx);
-+
-+	/* Set HSLS */
-+	max2175_set_hsls(ctx, hsls);
-+
-+	ctx->mode_resolved = true;
++	strlcpy(cap->driver, KBUILD_MODNAME, sizeof(cap->driver));
++	strlcpy(cap->card, ch->vdev.name, sizeof(cap->card));
++	cap->device_caps = V4L2_CAP_SDR_CAPTURE | V4L2_CAP_TUNER |
++				   V4L2_CAP_STREAMING | V4L2_CAP_READWRITE;
++	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
++	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
++		 ch->vdev.name);
 +	return 0;
 +}
 +
-+static bool max2175_i2s_rx_mode_valid(struct max2175 *ctx,
-+					 u32 mode, u32 i2s_mode)
++static int rcar_drif_set_default_format(struct rcar_drif_chan *ch)
 +{
 +	unsigned int i;
 +
-+	for (i = 0; i < ARRAY_SIZE(ctx->rx_modes[mode].i2s_modes); i++)
-+		if (ctx->rx_modes[mode].i2s_modes[i] == i2s_mode)
-+			return true;
-+
-+	v4l2_err(ctx->client, "i2s_mode %u not suitable for cur rx mode %u\n",
-+		 i2s_mode, mode);
-+	return false;
-+}
-+
-+static int max2175_rx_mode_from_freq(struct max2175 *ctx, u32 freq, u32 *mode)
-+{
-+	unsigned int i;
-+	int band = max2175_band_from_freq(freq);
-+
-+	/* Pick the first match always */
-+	for (i = 0; i <= ctx->rx_mode->maximum; i++) {
-+		if (ctx->rx_modes[i].band == band) {
-+			*mode = i;
-+			mxm_dbg(ctx, "rx_mode_from_freq: freq %u mode %d\n",
-+				freq, *mode);
++	for (i = 0; i < NUM_FORMATS; i++) {
++		/* Find any matching fmt and set it as default */
++		if (ch->num_hw_schans == formats[i].num_schans) {
++			ch->fmt_idx = i;
++			ch->cur_schans_mask = ch->hw_schans_mask;
++			ch->num_cur_schans = ch->num_hw_schans;
++			dev_dbg(ch->dev, "default fmt[%u]: mask %lu num %u\n",
++				i, ch->cur_schans_mask, ch->num_cur_schans);
 +			return 0;
 +		}
 +	}
++	dev_err(ch->dev, "no matching sdr fmt found\n");
 +	return -EINVAL;
 +}
 +
-+static bool max2175_freq_rx_mode_valid(struct max2175 *ctx,
-+					 u32 mode, u32 freq)
++static int rcar_drif_enum_fmt_sdr_cap(struct file *file, void *priv,
++				      struct v4l2_fmtdesc *f)
 +{
-+	int band = max2175_band_from_freq(freq);
++	if (f->index >= NUM_FORMATS)
++		return -EINVAL;
 +
-+	return (ctx->rx_modes[mode].band == band);
++	strlcpy(f->description, formats[f->index].name, sizeof(f->description));
++	f->pixelformat = formats[f->index].pixelformat;
++	return 0;
 +}
 +
-+static void max2175_load_adc_presets(struct max2175 *ctx)
++static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
++				   struct v4l2_format *f)
 +{
-+	unsigned int i, j;
++	struct rcar_drif_chan *ch = video_drvdata(file);
 +
-+	for (i = 0; i < 2; i++)
-+		for (j = 0; j < 23; j++)
-+			max2175_write(ctx, 146 + j + i * 55, adc_presets[i][j]);
++	f->fmt.sdr.pixelformat = formats[ch->fmt_idx].pixelformat;
++	f->fmt.sdr.buffersize = formats[ch->fmt_idx].buffersize;
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
++	return 0;
 +}
 +
-+static int max2175_init_power_manager(struct max2175 *ctx)
++static int rcar_drif_s_fmt_sdr_cap(struct file *file, void *priv,
++				   struct v4l2_format *f)
 +{
-+	int ret;
-+
-+	/* Execute on-chip power-up/calibration */
-+	max2175_write_bit(ctx, 99, 2, 0);
-+	usleep_range(1000, 1500);
-+	max2175_write_bit(ctx, 99, 2, 1);
-+
-+	/* Wait for the power manager to finish. */
-+	ret = max2175_poll_timeout(ctx, 69, 7, 7, 1, 50);
-+	if (ret)
-+		v4l2_err(ctx->client, "init pm failed\n");
-+	return ret;
-+}
-+
-+static int max2175_recalibrate_adc(struct max2175 *ctx)
-+{
-+	int ret;
-+
-+	/* ADC Re-calibration */
-+	max2175_write(ctx, 150, 0xff);
-+	max2175_write(ctx, 205, 0xff);
-+	max2175_write(ctx, 147, 0x20);
-+	max2175_write(ctx, 147, 0x00);
-+	max2175_write(ctx, 202, 0x20);
-+	max2175_write(ctx, 202, 0x00);
-+
-+	ret = max2175_poll_timeout(ctx, 69, 4, 3, 3, 50);
-+	if (ret)
-+		v4l2_err(ctx->client, "adc recalibration failed\n");
-+	return ret;
-+}
-+
-+static u8 max2175_read_rom(struct max2175 *ctx, u8 row)
-+{
-+	u8 data;
-+
-+	max2175_write_bit(ctx, 56, 4, 0);
-+	max2175_write_bits(ctx, 56, 3, 0, row);
-+
-+	usleep_range(2000, 2500);
-+	max2175_read(ctx, 58, &data);
-+
-+	max2175_write_bits(ctx, 56, 3, 0, 0);
-+
-+	mxm_dbg(ctx, "read_rom: row %d data 0x%02x\n", row, data);
-+	return data;
-+}
-+
-+static void max2175_load_from_rom(struct max2175 *ctx)
-+{
-+	u8 data = 0;
-+
-+	data = max2175_read_rom(ctx, 0);
-+	ctx->rom_bbf_bw_am = data & 0x0f;
-+	max2175_write_bits(ctx, 81, 3, 0, data >> 4);
-+
-+	data = max2175_read_rom(ctx, 1);
-+	ctx->rom_bbf_bw_fm = data & 0x0f;
-+	ctx->rom_bbf_bw_dab = data >> 4;
-+
-+	data = max2175_read_rom(ctx, 2);
-+	max2175_write_bits(ctx, 82, 4, 0, data & 0x1f);
-+	max2175_write_bits(ctx, 82, 7, 5, data >> 5);
-+
-+	data = max2175_read_rom(ctx, 3);
-+	if (ctx->am_hiz) {
-+		data &= 0x0f;
-+		data |= max2175_read_rom(ctx, 7) & 0x40 >> 2;
-+		if (!data)
-+			data |= 2;
-+	} else {
-+		data = data & 0xf0 >> 4;
-+		data |= max2175_read_rom(ctx, 7) & 0x80 >> 3;
-+		if (!data)
-+			data |= 30;
-+	}
-+	max2175_write_bits(ctx, 80, 5, 0, data + 31);
-+
-+	data = max2175_read_rom(ctx, 6);
-+	max2175_write_bits(ctx, 81, 7, 6, data >> 6);
-+}
-+
-+static void max2175_load_full_fm_eu_1p0(struct max2175 *ctx)
-+{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct vb2_queue *q = &ch->vb_queue;
 +	unsigned int i;
 +
-+	for (i = 0; i < ARRAY_SIZE(full_fm_eu_1p0); i++)
-+		max2175_write(ctx, i + 1, full_fm_eu_1p0[i]);
-+
-+	usleep_range(5000, 5500);
-+	ctx->decim_ratio = 36;
-+}
-+
-+static void max2175_load_full_fm_na_1p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(full_fm_na_1p0); i++)
-+		max2175_write(ctx, i + 1, full_fm_na_1p0[i]);
-+
-+	usleep_range(5000, 5500);
-+	ctx->decim_ratio = 27;
-+}
-+
-+static int max2175_core_init(struct max2175 *ctx, u32 refout_bits)
-+{
-+	int ret;
-+
-+	/* MAX2175 uses 36.864MHz clock for EU & 40.154MHz for NA region */
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ)
-+		max2175_load_full_fm_eu_1p0(ctx);
-+	else
-+		max2175_load_full_fm_na_1p0(ctx);
-+
-+	/* The default settings assume master */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+
-+	mxm_dbg(ctx, "refout_bits %u\n", refout_bits);
-+
-+	/* Set REFOUT */
-+	max2175_write_bits(ctx, 56, 7, 5, refout_bits);
-+
-+	/* ADC Reset */
-+	max2175_write_bit(ctx, 99, 1, 0);
-+	usleep_range(1000, 1500);
-+	max2175_write_bit(ctx, 99, 1, 1);
-+
-+	/* Load ADC preset values */
-+	max2175_load_adc_presets(ctx);
-+
-+	/* Initialize the power management state machine */
-+	ret = max2175_init_power_manager(ctx);
-+	if (ret)
-+		return ret;
-+
-+	/* Recalibrate ADC */
-+	ret = max2175_recalibrate_adc(ctx);
-+	if (ret)
-+		return ret;
-+
-+	/* Load ROM values to appropriate registers */
-+	max2175_load_from_rom(ctx);
-+
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ) {
-+		/* Load FIR coefficients into bank 0 */
-+		max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0,
-+					  ch_coeff_fmeu);
-+		max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+					  eq_coeff_fmeu1_ra02_m6db);
-+	} else {
-+		/* Load FIR coefficients into bank 0 */
-+		max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0,
-+					  ch_coeff_fmna);
-+		max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+					  eq_coeff_fmna1_ra02_m6db);
-+	}
-+	mxm_dbg(ctx, "core initialized\n");
-+	return 0;
-+}
-+
-+static void max2175_s_ctrl_i2s_mode(struct max2175 *ctx, u32 i2s_mode)
-+{
-+	mxm_dbg(ctx, "s_ctrl_i2s_mode: %u resolved %d\n", i2s_mode,
-+		ctx->mode_resolved);
-+
-+	/*
-+	 * Update i2s mode on device only when mode is resolved & it is valid
-+	 * for the configured mode
-+	 */
-+	if (ctx->mode_resolved &&
-+	    max2175_i2s_rx_mode_valid(ctx, ctx->rx_mode->val, i2s_mode))
-+		max2175_update_i2s_mode(ctx, ctx->rx_mode->val, i2s_mode);
-+}
-+
-+static void max2175_s_ctrl_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	/* Load mode. Range check already done */
-+	max2175_set_rx_mode(ctx, rx_mode, ctx->hsls->val);
-+
-+	/* Get current i2s_mode and update if needed for given rx_mode */
-+	if (max2175_i2s_rx_mode_valid(ctx, rx_mode, ctx->i2s_mode->val))
-+		max2175_update_i2s_mode(ctx, rx_mode, ctx->i2s_mode->val);
-+	else
-+		ctx->i2s_mode->val = max2175_read_bits(ctx, 29, 2, 0);
-+
-+	mxm_dbg(ctx, "s_ctrl_rx_mode: %u curr freq %u\n", rx_mode, ctx->freq);
-+
-+	/* Check if current freq valid for mode & update */
-+	if (max2175_freq_rx_mode_valid(ctx, rx_mode, ctx->freq))
-+		max2175_tune_rf_freq(ctx, ctx->freq, ctx->hsls->val);
-+	else
-+		/* Use default freq of mode if current freq is not valid */
-+		max2175_tune_rf_freq(ctx, ctx->rx_modes[rx_mode].freq,
-+				     ctx->hsls->val);
-+}
-+
-+static int max2175_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct max2175 *ctx = max2175_from_ctrl_hdl(ctrl->handler);
-+	int ret = 0;
-+
-+	mxm_dbg(ctx, "s_ctrl: id 0x%x, val %u\n", ctrl->id, ctrl->val);
-+	switch (ctrl->id) {
-+	case V4L2_CID_MAX2175_I2S_ENABLE:
-+		max2175_i2s_enable(ctx, ctrl->val == 1);
-+		break;
-+	case V4L2_CID_MAX2175_I2S_MODE:
-+		max2175_s_ctrl_i2s_mode(ctx, ctrl->val);
-+		break;
-+	case V4L2_CID_MAX2175_HSLS:
-+		max2175_set_hsls(ctx, ctx->hsls->val);
-+		break;
-+	case V4L2_CID_MAX2175_RX_MODE:
-+		max2175_s_ctrl_rx_mode(ctx, ctrl->val);
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int max2175_get_lna_gain(struct max2175 *ctx)
-+{
-+	int gain = 0;
-+	enum max2175_band band = max2175_read_bits(ctx, 5, 1, 0);
-+
-+	switch (band) {
-+	case MAX2175_BAND_AM:
-+		gain = max2175_read_bits(ctx, 51, 3, 1);
-+		break;
-+	case MAX2175_BAND_FM:
-+		gain = max2175_read_bits(ctx, 50, 3, 1);
-+		break;
-+	case MAX2175_BAND_VHF:
-+		gain = max2175_read_bits(ctx, 52, 3, 0);
-+		break;
-+	default:
-+		break;
-+	}
-+	return gain;
-+}
-+
-+static int max2175_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct max2175 *ctx = max2175_from_ctrl_hdl(ctrl->handler);
-+
-+	switch (ctrl->id) {
-+	case V4L2_CID_RF_TUNER_LNA_GAIN:
-+		ctrl->val = max2175_get_lna_gain(ctx);
-+		break;
-+	case V4L2_CID_RF_TUNER_IF_GAIN:
-+		ctrl->val = max2175_read_bits(ctx, 49, 4, 0);
-+		break;
-+	case V4L2_CID_RF_TUNER_PLL_LOCK:
-+		ctrl->val = (max2175_read_bits(ctx, 60, 7, 6) == 3);
-+		break;
-+	}
-+	mxm_dbg(ctx, "g_volatile_ctrl: id 0x%x val %d\n", ctrl->id, ctrl->val);
-+	return 0;
-+};
-+
-+static int max2175_set_freq_and_mode(struct max2175 *ctx, u32 freq)
-+{
-+	u32 rx_mode;
-+	int ret;
-+
-+	/* Get band from frequency */
-+	ret = max2175_rx_mode_from_freq(ctx, freq, &rx_mode);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "set_freq_and_mode: freq %u rx_mode %d\n", freq, rx_mode);
-+
-+	/* Load mode */
-+	max2175_set_rx_mode(ctx, rx_mode, ctx->hsls->val);
-+	ctx->rx_mode->val = rx_mode;
-+
-+	/* Get current i2s_mode and update if needed for given rx_mode */
-+	if (max2175_i2s_rx_mode_valid(ctx, rx_mode, ctx->i2s_mode->val))
-+		max2175_update_i2s_mode(ctx, rx_mode, ctx->i2s_mode->val);
-+	else
-+		ctx->i2s_mode->val = max2175_read_bits(ctx, 29, 2, 0);
-+
-+	/* Tune to the new freq given */
-+	return max2175_tune_rf_freq(ctx, freq, ctx->hsls->val);
-+}
-+
-+static int max2175_s_frequency(struct v4l2_subdev *sd,
-+			       const struct v4l2_frequency *vf)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+	u32 freq;
-+	int ret = 0;
-+
-+	mxm_dbg(ctx, "s_freq: new %u curr %u, mode_resolved %d\n",
-+		vf->frequency, ctx->freq, ctx->mode_resolved);
-+
-+	if (vf->tuner != 0)
-+		return -EINVAL;
-+
-+	freq = clamp(vf->frequency, ctx->bands_rf->rangelow,
-+		     ctx->bands_rf->rangehigh);
-+
-+	/* Check new freq valid for rx_mode if already resolved */
-+	if (ctx->mode_resolved &&
-+	    max2175_freq_rx_mode_valid(ctx, ctx->rx_mode->val, freq))
-+		ret = max2175_tune_rf_freq(ctx, freq, ctx->hsls->val);
-+	else
-+		/* Find default rx_mode for freq and tune to it */
-+		ret = max2175_set_freq_and_mode(ctx, freq);
-+
-+	mxm_dbg(ctx, "s_freq: ret %d curr %u mode_resolved %d mode %u\n",
-+		ret, ctx->freq, ctx->mode_resolved, ctx->rx_mode->val);
-+	return ret;
-+}
-+
-+static int max2175_g_frequency(struct v4l2_subdev *sd,
-+			       struct v4l2_frequency *vf)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+	int ret = 0;
-+
-+	if (vf->tuner != 0)
-+		return -EINVAL;
-+
-+	/* RF freq */
-+	vf->type = V4L2_TUNER_RF;
-+	vf->frequency = ctx->freq;
-+	return ret;
-+}
-+
-+static int max2175_enum_freq_bands(struct v4l2_subdev *sd,
-+			    struct v4l2_frequency_band *band)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+
-+	if (band->tuner == 0 && band->index == 0)
-+		*band = *ctx->bands_rf;
-+	else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int max2175_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+
-+	if (vt->index > 0)
-+		return -EINVAL;
-+
-+	strlcpy(vt->name, "RF", sizeof(vt->name));
-+	vt->type = V4L2_TUNER_RF;
-+	vt->capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS;
-+	vt->rangelow = ctx->bands_rf->rangelow;
-+	vt->rangehigh = ctx->bands_rf->rangehigh;
-+	return 0;
-+}
-+
-+static int max2175_s_tuner(struct v4l2_subdev *sd, const struct v4l2_tuner *vt)
-+{
-+	/* Check tuner index is valid */
-+	if (vt->index > 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_tuner_ops max2175_tuner_ops = {
-+	.s_frequency = max2175_s_frequency,
-+	.g_frequency = max2175_g_frequency,
-+	.enum_freq_bands = max2175_enum_freq_bands,
-+	.g_tuner = max2175_g_tuner,
-+	.s_tuner = max2175_s_tuner,
-+};
-+
-+static const struct v4l2_subdev_ops max2175_ops = {
-+	.tuner = &max2175_tuner_ops,
-+};
-+
-+static const struct v4l2_ctrl_ops max2175_ctrl_ops = {
-+	.s_ctrl = max2175_s_ctrl,
-+	.g_volatile_ctrl = max2175_g_volatile_ctrl,
-+};
-+
-+static const struct v4l2_ctrl_config max2175_i2s_en = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_I2S_ENABLE,
-+	.name = "I2S Enable",
-+	.type = V4L2_CTRL_TYPE_BOOLEAN,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+};
-+
-+static const char * const max2175_ctrl_i2s_modes[] = {
-+	[MAX2175_I2S_MODE0]	= "i2s mode 0",
-+	[MAX2175_I2S_MODE1]	= "i2s mode 1 (skipped)",
-+	[MAX2175_I2S_MODE2]	= "i2s mode 2",
-+	[MAX2175_I2S_MODE3]	= "i2s mode 3",
-+	[MAX2175_I2S_MODE4]	= "i2s mode 4",
-+};
-+
-+static const struct v4l2_ctrl_config max2175_i2s_mode = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_I2S_MODE,
-+	.name = "I2S MODE value",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(max2175_ctrl_i2s_modes) - 1,
-+	.def = 0,
-+	.menu_skip_mask = 0x02,
-+	.qmenu = max2175_ctrl_i2s_modes,
-+};
-+
-+static const struct v4l2_ctrl_config max2175_hsls = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_HSLS,
-+	.name = "HSLS above/below desired",
-+	.type = V4L2_CTRL_TYPE_INTEGER,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+};
-+
-+static const char * const max2175_ctrl_eu_rx_modes[] = {
-+	[MAX2175_EU_FM_1_2]	= "EU FM 1.2",
-+	[MAX2175_DAB_1_2]	= "DAB 1.2",
-+};
-+
-+static const char * const max2175_ctrl_na_rx_modes[] = {
-+	[MAX2175_NA_FM_1_0]	= "NA FM 1.0",
-+	[MAX2175_NA_FM_2_0]	= "NA FM 2.0",
-+};
-+
-+static const struct v4l2_ctrl_config max2175_eu_rx_mode = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_RX_MODE,
-+	.name = "RX MODE",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(max2175_ctrl_eu_rx_modes) - 1,
-+	.def = 0,
-+	.qmenu = max2175_ctrl_eu_rx_modes,
-+};
-+
-+static const struct v4l2_ctrl_config max2175_na_rx_mode = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_RX_MODE,
-+	.name = "RX MODE",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(max2175_ctrl_na_rx_modes) - 1,
-+	.def = 0,
-+	.qmenu = max2175_ctrl_na_rx_modes,
-+};
-+
-+static int max2175_refout_load_to_bits(struct i2c_client *client, u32 load,
-+				       u32 *bits)
-+{
-+	if (load >= 0 && load <= 40)
-+		*bits = load / 10;
-+	else if (load >= 60 && load <= 70)
-+		*bits = load / 10 - 1;
-+	else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int max2175_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct max2175 *ctx;
-+	struct v4l2_subdev *sd;
-+	struct v4l2_ctrl_handler *hdl;
-+	struct clk *clk;
-+	struct regmap *regmap;
-+	bool master = true, am_hiz = false;
-+	u32 refout_load, refout_bits = 0;	/* REFOUT disabled */
-+	int ret;
-+
-+	/* Parse DT properties */
-+	if (of_find_property(client->dev.of_node, "maxim,slave", NULL))
-+		master = false;
-+
-+	if (of_find_property(client->dev.of_node, "maxim,am-hiz", NULL))
-+		am_hiz = true;
-+
-+	if (!of_property_read_u32(client->dev.of_node, "maxim,refout-load-pF",
-+				  &refout_load)) {
-+		ret = max2175_refout_load_to_bits(client, refout_load,
-+						  &refout_bits);
-+		if (ret) {
-+			dev_err(&client->dev, "invalid refout_load %u\n",
-+				refout_load);
-+			return -EINVAL;
++	if (vb2_is_busy(q))
++		return -EBUSY;
++
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
++	for (i = 0; i < NUM_FORMATS; i++) {
++		if (formats[i].pixelformat == f->fmt.sdr.pixelformat) {
++			ch->fmt_idx  = i;
++			f->fmt.sdr.buffersize = formats[i].buffersize;
++
++			/*
++			 * If a format demands one sub-channel only out of two
++			 * enabled sub-channels then pick the 0th sub-channel
++			 */
++			if (formats[i].num_schans < ch->num_hw_schans) {
++				ch->cur_schans_mask = BIT(0);	/* Enable D0 */
++				ch->num_cur_schans = formats[i].num_schans;
++			} else {
++				ch->cur_schans_mask = ch->hw_schans_mask;
++				ch->num_cur_schans = ch->num_hw_schans;
++			}
++
++			rdrif_dbg(1, ch, "cur: idx %u mask %lu num %u\n",
++				  i, ch->cur_schans_mask, ch->num_cur_schans);
++			return 0;
 +		}
 +	}
 +
-+	clk = devm_clk_get(&client->dev, "xtal");
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		dev_err(&client->dev, "cannot get xtal clock %d\n", ret);
-+		return -ENODEV;
-+	}
++	if (rcar_drif_set_default_format(ch))
++		return -EINVAL;
 +
-+	regmap = devm_regmap_init_i2c(client, &max2175_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(&client->dev, "regmap init failed %d\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	/* Alloc tuner context */
-+	ctx = devm_kzalloc(&client->dev, sizeof(*ctx), GFP_KERNEL);
-+	if (ctx == NULL)
-+		return -ENOMEM;
-+
-+	sd = &ctx->sd;
-+	ctx->master = master;
-+	ctx->am_hiz = am_hiz;
-+	ctx->mode_resolved = false;
-+	ctx->regmap = regmap;
-+	ctx->xtal_freq = clk_get_rate(clk);
-+	dev_info(&client->dev, "xtal freq %luHz\n", ctx->xtal_freq);
-+
-+	v4l2_i2c_subdev_init(sd, client, &max2175_ops);
-+	ctx->client = client;
-+
-+	sd->flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+	/* Controls */
-+	hdl = &ctx->ctrl_hdl;
-+	ret = v4l2_ctrl_handler_init(hdl, 7);
-+	if (ret) {
-+		dev_err(&client->dev, "ctrl handler init failed\n");
-+		goto err;
-+	}
-+
-+	ctx->lna_gain = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					  V4L2_CID_RF_TUNER_LNA_GAIN,
-+					  0, 15, 1, 2);
-+	ctx->lna_gain->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				 V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->if_gain = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					 V4L2_CID_RF_TUNER_IF_GAIN,
-+					 0, 31, 1, 0);
-+	ctx->if_gain->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->pll_lock = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					  V4L2_CID_RF_TUNER_PLL_LOCK,
-+					  0, 1, 1, 0);
-+	ctx->pll_lock->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				 V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->i2s_en = v4l2_ctrl_new_custom(hdl, &max2175_i2s_en, NULL);
-+	ctx->i2s_mode = v4l2_ctrl_new_custom(hdl, &max2175_i2s_mode, NULL);
-+	ctx->hsls = v4l2_ctrl_new_custom(hdl, &max2175_hsls, NULL);
-+
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ) {
-+		ctx->rx_mode = v4l2_ctrl_new_custom(hdl,
-+						    &max2175_eu_rx_mode, NULL);
-+		ctx->rx_modes = eu_rx_modes;
-+		ctx->bands_rf = &eu_bands_rf;
-+	} else {
-+		ctx->rx_mode = v4l2_ctrl_new_custom(hdl,
-+						    &max2175_na_rx_mode, NULL);
-+		ctx->rx_modes = na_rx_modes;
-+		ctx->bands_rf = &na_bands_rf;
-+	}
-+	ctx->sd.ctrl_handler = &ctx->ctrl_hdl;
-+
-+	/* Set the defaults */
-+	ctx->freq = ctx->bands_rf->rangelow;
-+
-+	/* Register subdev */
-+	ret = v4l2_async_register_subdev(sd);
-+	if (ret) {
-+		dev_err(&client->dev, "register subdev failed\n");
-+		goto err_reg;
-+	}
-+
-+	/* Initialize device */
-+	ret = max2175_core_init(ctx, refout_bits);
-+	if (ret)
-+		goto err_init;
-+
-+	dev_info(&client->dev, "probed\n");
++	f->fmt.sdr.pixelformat = formats[ch->fmt_idx].pixelformat;
++	f->fmt.sdr.buffersize = formats[ch->fmt_idx].buffersize;
 +	return 0;
++}
 +
-+err_init:
-+	v4l2_async_unregister_subdev(sd);
-+err_reg:
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
-+err:
++static int rcar_drif_try_fmt_sdr_cap(struct file *file, void *priv,
++				     struct v4l2_format *f)
++{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	unsigned int i;
++
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
++	for (i = 0; i < NUM_FORMATS; i++) {
++		if (formats[i].pixelformat == f->fmt.sdr.pixelformat) {
++			f->fmt.sdr.buffersize = formats[i].buffersize;
++			return 0;
++		}
++	}
++
++	f->fmt.sdr.pixelformat = formats[ch->fmt_idx].pixelformat;
++	f->fmt.sdr.buffersize = formats[ch->fmt_idx].buffersize;
++	return 0;
++}
++
++/* Tuner subdev ioctls */
++static int rcar_drif_enum_freq_bands(struct file *file, void *priv,
++				     struct v4l2_frequency_band *band)
++{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct v4l2_subdev *sd, *tmp;
++	int ret = 0;
++
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_subdev_call(sd, tuner, enum_freq_bands, band);
++		if (ret)
++			break;
++	}
 +	return ret;
 +}
 +
-+static int max2175_remove(struct i2c_client *client)
++static int rcar_drif_g_frequency(struct file *file, void *priv,
++				 struct v4l2_frequency *f)
 +{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct max2175 *ctx = max2175_from_sd(sd);
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct v4l2_subdev *sd, *tmp;
++	int ret = 0;
 +
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
-+	v4l2_async_unregister_subdev(sd);
-+	dev_info(&client->dev, "removed\n");
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_subdev_call(sd, tuner, g_frequency, f);
++		if (ret)
++			break;
++	}
++	return ret;
++}
++
++static int rcar_drif_s_frequency(struct file *file, void *priv,
++				 const struct v4l2_frequency *f)
++{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct v4l2_subdev *sd, *tmp;
++	int ret = 0;
++
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_subdev_call(sd, tuner, s_frequency, f);
++		if (ret)
++			break;
++	}
++	return ret;
++}
++
++static int rcar_drif_g_tuner(struct file *file, void *priv,
++			     struct v4l2_tuner *vt)
++{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct v4l2_subdev *sd, *tmp;
++	int ret = 0;
++
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_subdev_call(sd, tuner, g_tuner, vt);
++		if (ret)
++			break;
++	}
++	return ret;
++}
++
++static int rcar_drif_s_tuner(struct file *file, void *priv,
++			     const struct v4l2_tuner *vt)
++{
++	struct rcar_drif_chan *ch = video_drvdata(file);
++	struct v4l2_subdev *sd, *tmp;
++	int ret = 0;
++
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_subdev_call(sd, tuner, s_tuner, vt);
++		if (ret)
++			break;
++	}
++	return ret;
++}
++
++static const struct v4l2_ioctl_ops rcar_drif_ioctl_ops = {
++	.vidioc_querycap          = rcar_drif_querycap,
++
++	.vidioc_enum_fmt_sdr_cap  = rcar_drif_enum_fmt_sdr_cap,
++	.vidioc_g_fmt_sdr_cap     = rcar_drif_g_fmt_sdr_cap,
++	.vidioc_s_fmt_sdr_cap     = rcar_drif_s_fmt_sdr_cap,
++	.vidioc_try_fmt_sdr_cap   = rcar_drif_try_fmt_sdr_cap,
++
++	.vidioc_reqbufs           = vb2_ioctl_reqbufs,
++	.vidioc_create_bufs       = vb2_ioctl_create_bufs,
++	.vidioc_prepare_buf       = vb2_ioctl_prepare_buf,
++	.vidioc_querybuf          = vb2_ioctl_querybuf,
++	.vidioc_qbuf              = vb2_ioctl_qbuf,
++	.vidioc_dqbuf             = vb2_ioctl_dqbuf,
++
++	.vidioc_streamon          = vb2_ioctl_streamon,
++	.vidioc_streamoff         = vb2_ioctl_streamoff,
++
++	.vidioc_s_frequency       = rcar_drif_s_frequency,
++	.vidioc_g_frequency       = rcar_drif_g_frequency,
++	.vidioc_s_tuner		  = rcar_drif_s_tuner,
++	.vidioc_g_tuner		  = rcar_drif_g_tuner,
++	.vidioc_enum_freq_bands   = rcar_drif_enum_freq_bands,
++	.vidioc_subscribe_event   = v4l2_ctrl_subscribe_event,
++	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
++	.vidioc_log_status        = v4l2_ctrl_log_status,
++};
++
++static const struct v4l2_file_operations rcar_drif_fops = {
++	.owner                    = THIS_MODULE,
++	.open                     = v4l2_fh_open,
++	.release                  = vb2_fop_release,
++	.read                     = vb2_fop_read,
++	.poll                     = vb2_fop_poll,
++	.mmap                     = vb2_fop_mmap,
++	.unlocked_ioctl           = video_ioctl2,
++};
++
++static struct video_device rcar_drif_vdev = {
++	.name                     = "R-Car DRIF",
++	.release                  = video_device_release_empty,
++	.fops                     = &rcar_drif_fops,
++	.ioctl_ops                = &rcar_drif_ioctl_ops,
++};
++
++static int rcar_drif_notify_bound(struct v4l2_async_notifier *notifier,
++				   struct v4l2_subdev *subdev,
++				   struct v4l2_async_subdev *asd)
++{
++	struct rcar_drif_chan *ch =
++		container_of(notifier, struct rcar_drif_chan, notifier);
++
++	/* Nothing to do at this point */
++	rdrif_dbg(2, ch, "bound asd: %s\n", asd->match.of.node->name);
 +	return 0;
 +}
 +
-+static const struct i2c_device_id max2175_id[] = {
-+	{ DRIVER_NAME, 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, max2175_id);
++/* Sub-device registered notification callback */
++static int rcar_drif_notify_complete(struct v4l2_async_notifier *notifier)
++{
++	struct rcar_drif_chan *ch =
++		container_of(notifier, struct rcar_drif_chan, notifier);
++	struct v4l2_subdev *sd, *tmp;
++	int ret;
 +
-+static const struct of_device_id max2175_of_ids[] = {
-+	{ .compatible = "maxim, max2175", },
++	v4l2_ctrl_handler_init(&ch->ctrl_hdl, 10);
++	ch->v4l2_dev.ctrl_handler = &ch->ctrl_hdl;
++
++	ret = v4l2_device_register_subdev_nodes(&ch->v4l2_dev);
++	if (ret) {
++		rdrif_err(ch, "failed register subdev nodes ret %d\n", ret);
++		return ret;
++	}
++
++	for_each_rcar_drif_subdev(sd, tmp, ch) {
++		ret = v4l2_ctrl_add_handler(ch->v4l2_dev.ctrl_handler,
++					    sd->ctrl_handler, NULL);
++		if (ret) {
++			rdrif_err(ch, "failed ctrl add hdlr ret %d\n", ret);
++			return ret;
++		}
++	}
++	rdrif_dbg(2, ch, "notify complete\n");
++	return 0;
++}
++
++/* Parse sub-devs (tuner) to find a matching device */
++static int rcar_drif_parse_subdevs(struct device *dev,
++				   struct v4l2_async_notifier *notifier)
++{
++	struct device_node *node = NULL;
++
++	notifier->subdevs = devm_kzalloc(dev, sizeof(*notifier->subdevs),
++					 GFP_KERNEL);
++	if (!notifier->subdevs)
++		return -ENOMEM;
++
++	node = of_graph_get_next_endpoint(dev->of_node, node);
++	if (node) {
++		struct rcar_drif_async_subdev *rsd;
++
++		rsd = devm_kzalloc(dev, sizeof(*rsd), GFP_KERNEL);
++		if (!rsd) {
++			of_node_put(node);
++			return -ENOMEM;
++		}
++
++		notifier->subdevs[notifier->num_subdevs] = &rsd->asd;
++		rsd->asd.match.of.node = of_graph_get_remote_port_parent(node);
++		of_node_put(node);
++		if (!rsd->asd.match.of.node) {
++			dev_warn(dev, "bad remote port parent\n");
++			return -EINVAL;
++		}
++
++		rsd->asd.match_type = V4L2_ASYNC_MATCH_OF;
++		notifier->num_subdevs++;
++	}
++	return 0;
++}
++
++/* SIRMDR1 configuration */
++static int rcar_drif_validate_syncmd(struct rcar_drif_chan *ch, u32 val)
++{
++	if (val > 1) {
++		dev_err(ch->dev, "invalid syncmd %u using L/R mode\n", val);
++		return -EINVAL;
++	}
++
++	ch->mdr1 &= ~(3 << 28);	/* Clear current settings */
++	if (val == 0)
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_SYNCMD_FRAME;
++	else
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_SYNCMD_LR;
++	return 0;
++}
++
++/* Get the dtdl or syncdl bits as in MSIOF */
++static u32 rcar_drif_get_dtdl_or_syncdl_bits(u32 dtdl_or_syncdl)
++{
++	/*
++	 * DTDL/SYNCDL bit	: dtdl/syncdl
++	 * b'000		: 0
++	 * b'001		: 100
++	 * b'010		: 200
++	 * b'011 (SYNCDL only)	: 300
++	 * b'101		: 50
++	 * b'110		: 150
++	 */
++	if (dtdl_or_syncdl % 100)
++		return dtdl_or_syncdl / 100 + 5;
++	else
++		return dtdl_or_syncdl / 100;
++}
++
++static int rcar_drif_validate_dtdl_syncdl(struct rcar_drif_chan *ch)
++{
++	struct device_node *np = ch->dev->of_node;
++	u32 dtdl = 100, syncdl = 0;
++
++	ch->mdr1 |= RCAR_DRIF_SIRMDR1_DTDL_1 | RCAR_DRIF_SIRMDR1_SYNCDL_0;
++	of_property_read_u32(np, "renesas,dtdl", &dtdl);
++	of_property_read_u32(np, "renesas,syncdl", &syncdl);
++
++	/* Sanity checks */
++	if (dtdl > 200 || syncdl > 300) {
++		dev_err(ch->dev, "invalid dtdl %u/syncdl %u\n", dtdl, syncdl);
++		return -EINVAL;
++	}
++	if ((dtdl + syncdl) % 100) {
++		dev_err(ch->dev, "sum of dtdl %u & syncdl %u not OK\n",
++			dtdl, syncdl);
++		return -EINVAL;
++	}
++	ch->mdr1 &= ~(7 << 20) & ~(7 << 16);	/* Clear current settings */
++	ch->mdr1 |= rcar_drif_get_dtdl_or_syncdl_bits(dtdl) << 20;
++	ch->mdr1 |= rcar_drif_get_dtdl_or_syncdl_bits(syncdl) << 16;
++	return 0;
++}
++
++static int rcar_drif_parse_properties(struct rcar_drif_chan *ch)
++{
++	struct device_node *np = ch->dev->of_node;
++	u32 syncmd;
++	int ret;
++
++	/* Set the defaults and check for overrides */
++	ch->mdr1 = RCAR_DRIF_SIRMDR1_SYNCMD_LR;
++	if (!of_property_read_u32(np, "renesas,syncmd", &syncmd)) {
++		ret = rcar_drif_validate_syncmd(ch, syncmd);
++		if (ret)
++			return ret;
++	}
++
++	if (of_find_property(np, "renesas,lsb-first", NULL))
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_LSB_FIRST;
++	else
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_MSB_FIRST;
++
++	if (of_find_property(np, "renesas,syncac-pol-high", NULL))
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_SYNCAC_POL_HIGH;
++	else
++		ch->mdr1 |= RCAR_DRIF_SIRMDR1_SYNCAC_POL_LOW;
++
++	return rcar_drif_validate_dtdl_syncdl(ch);
++}
++
++static u32 rcar_drif_enum_sub_channels(struct platform_device *pdev,
++					struct platform_device *s_pdev[])
++{
++	struct device_node *s_np;
++	u32 hw_schans_mask = 0;
++	unsigned int i;
++
++	for (i = 0; i < RCAR_DRIF_MAX_SUBCHANS; i++) {
++		s_np = of_parse_phandle(pdev->dev.of_node, "sub-channels", i);
++		if (s_np && of_device_is_available(s_np)) {
++			s_pdev[i] = of_find_device_by_node(s_np);
++			if (s_pdev[i]) {
++				hw_schans_mask |= BIT(i);
++				dev_dbg(&s_pdev[i]->dev, "schan%u ok\n", i);
++			}
++		}
++	}
++	return hw_schans_mask;
++}
++
++static int rcar_drif_probe(struct platform_device *pdev)
++{
++	struct platform_device *s_pdev[RCAR_DRIF_MAX_SUBCHANS];
++	unsigned long hw_schans_mask;
++	struct rcar_drif_chan *ch;
++	unsigned int i;
++	int ret;
++
++	/*
++	 * Sub-channel resources are managed by the parent channel instance.
++	 * The sub-channel instance helps only in registering with power domain
++	 * to aid in run-time pm support
++	 */
++	if (!of_find_property(pdev->dev.of_node, "sub-channels", NULL))
++		return 0;
++
++	/* Parent channel instance */
++	hw_schans_mask = rcar_drif_enum_sub_channels(pdev, s_pdev);
++	if (!hw_schans_mask) {
++		dev_err(&pdev->dev, "no sub-channels enabled\n");
++		return -ENODEV;
++	}
++
++
++	/* Reserve memory for driver structure */
++	ch = devm_kzalloc(&pdev->dev, sizeof(*ch), GFP_KERNEL);
++	if (!ch) {
++		ret = PTR_ERR(ch);
++		dev_err(&pdev->dev, "failed alloc drif context\n");
++		return ret;
++	}
++	ch->dev = &pdev->dev;
++
++	/* Parse device tree optional properties */
++	ret = rcar_drif_parse_properties(ch);
++	if (ret)
++		return ret;
++
++	dev_dbg(ch->dev, "parsed mdr1 0x%08x\n", ch->mdr1);
++
++	/* Setup enabled sub-channels */
++	for_each_rcar_drif_subchannel(i, &hw_schans_mask) {
++		struct clk *clkp;
++		struct resource	*res;
++		void __iomem *base;
++
++		/* Peripheral clock */
++		clkp = devm_clk_get(&s_pdev[i]->dev, "fck");
++		if (IS_ERR(clkp)) {
++			ret = PTR_ERR(clkp);
++			dev_err(&s_pdev[i]->dev, "clk get failed (%d)\n", ret);
++			return ret;
++		}
++
++		/* Register map */
++		res = platform_get_resource(s_pdev[i], IORESOURCE_MEM, 0);
++		base = devm_ioremap_resource(&s_pdev[i]->dev, res);
++		if (IS_ERR(base)) {
++			ret = PTR_ERR(base);
++			dev_err(&s_pdev[i]->dev, "ioremap failed (%d)\n", ret);
++			return ret;
++		}
++
++		/* Reserve memory for enabled sub-channel */
++		ch->sch[i] = devm_kzalloc(&pdev->dev, sizeof(*ch->sch[i]),
++					  GFP_KERNEL);
++		if (!ch->sch[i]) {
++			ret = PTR_ERR(ch);
++			dev_err(&s_pdev[i]->dev, "failed alloc sub-channel\n");
++			return ret;
++		}
++		ch->sch[i]->pdev = s_pdev[i];
++		ch->sch[i]->clkp = clkp;
++		ch->sch[i]->base = base;
++		ch->sch[i]->num = i;
++		ch->sch[i]->start = res->start;
++		ch->sch[i]->parent = ch;
++		ch->num_hw_schans++;
++	}
++	ch->hw_schans_mask = hw_schans_mask;
++
++	/* Validate any supported format for enabled sub-channels */
++	ret = rcar_drif_set_default_format(ch);
++	if (ret)
++		return ret;
++
++	/* Set defaults */
++	ch->num_hwbufs = RCAR_DRIF_DEFAULT_NUM_HWBUFS;
++	ch->hwbuf_size = RCAR_DRIF_DEFAULT_HWBUF_SIZE;
++
++	mutex_init(&ch->v4l2_mutex);
++	mutex_init(&ch->vb_queue_mutex);
++	spin_lock_init(&ch->queued_bufs_lock);
++	INIT_LIST_HEAD(&ch->queued_bufs);
++
++	/* Init videobuf2 queue structure */
++	ch->vb_queue.type = V4L2_BUF_TYPE_SDR_CAPTURE;
++	ch->vb_queue.io_modes = VB2_READ | VB2_MMAP | VB2_DMABUF;
++	ch->vb_queue.drv_priv = ch;
++	ch->vb_queue.buf_struct_size = sizeof(struct rcar_drif_frame_buf);
++	ch->vb_queue.ops = &rcar_drif_vb2_ops;
++	ch->vb_queue.mem_ops = &vb2_vmalloc_memops;
++	ch->vb_queue.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
++
++	/* Init videobuf2 queue */
++	ret = vb2_queue_init(&ch->vb_queue);
++	if (ret) {
++		dev_err(ch->dev, "could not initialize vb2 queue\n");
++		return ret;
++	}
++
++	/* Init video_device structure */
++	ch->vdev = rcar_drif_vdev;
++	ch->vdev.lock = &ch->v4l2_mutex;
++	ch->vdev.queue = &ch->vb_queue;
++	ch->vdev.queue->lock = &ch->vb_queue_mutex;
++	ch->vdev.ctrl_handler = &ch->ctrl_hdl;
++	video_set_drvdata(&ch->vdev, ch);
++
++	/* Register the v4l2_device */
++	ret = v4l2_device_register(&pdev->dev, &ch->v4l2_dev);
++	if (ret) {
++		dev_err(ch->dev, "failed v4l2_device_register. ret %d\n", ret);
++		return ret;
++	}
++
++	ch->vdev.v4l2_dev = &ch->v4l2_dev;
++
++	/*
++	 * Parse subdevs after v4l2_device_register because if the subdev
++	 * is already probed, bound and complete will be called immediately
++	 */
++	ret = rcar_drif_parse_subdevs(&pdev->dev, &ch->notifier);
++	if (ret)
++		goto err_unreg_v4l2;
++
++	ch->notifier.bound = rcar_drif_notify_bound;
++	ch->notifier.complete = rcar_drif_notify_complete;
++
++	/* Register notifier */
++	ret = v4l2_async_notifier_register(&ch->v4l2_dev, &ch->notifier);
++	if (ret < 0) {
++		dev_err(ch->dev, "notifier registration failed\n");
++		goto err_unreg_v4l2;
++	}
++
++	/* Register SDR device */
++	ret = video_register_device(&ch->vdev, VFL_TYPE_SDR, -1);
++	if (ret) {
++		dev_err(ch->dev, "failed video_register_device. ret %d\n", ret);
++		goto err_unreg_notif;
++	}
++
++	platform_set_drvdata(pdev, ch);
++	dev_notice(ch->dev, "probed\n");
++	return 0;
++
++err_unreg_notif:
++	v4l2_async_notifier_unregister(&ch->notifier);
++err_unreg_v4l2:
++	v4l2_device_unregister(&ch->v4l2_dev);
++	return ret;
++}
++
++static int rcar_drif_remove(struct platform_device *pdev)
++{
++	struct rcar_drif_chan *ch = platform_get_drvdata(pdev);
++
++	if (!ch)
++		return 0;
++
++	/* Parent channel instance */
++	ch = platform_get_drvdata(pdev);
++	v4l2_ctrl_handler_free(ch->v4l2_dev.ctrl_handler);
++	v4l2_async_notifier_unregister(&ch->notifier);
++	v4l2_device_unregister(&ch->v4l2_dev);
++	video_unregister_device(&ch->vdev);
++	dev_notice(ch->dev, "removed\n");
++	return 0;
++}
++
++static int __maybe_unused rcar_drif_suspend(struct device *dev)
++{
++	return 0;
++}
++
++static int __maybe_unused rcar_drif_resume(struct device *dev)
++{
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(rcar_drif_pm_ops, rcar_drif_suspend,
++			 rcar_drif_resume);
++
++static const struct of_device_id rcar_drif_of_table[] = {
++	{ .compatible = "renesas,rcar-gen3-drif" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, max2175_of_ids);
++MODULE_DEVICE_TABLE(of, rcar_drif_of_table);
 +
-+static struct i2c_driver max2175_driver = {
++#define RCAR_DRIF_DRV_NAME "rcar_drif"
++static struct platform_driver rcar_drif_driver = {
 +	.driver = {
-+		.name	= DRIVER_NAME,
-+		.of_match_table = max2175_of_ids,
-+	},
-+	.probe		= max2175_probe,
-+	.remove		= max2175_remove,
-+	.id_table	= max2175_id,
++		.name = RCAR_DRIF_DRV_NAME,
++		.of_match_table = of_match_ptr(rcar_drif_of_table),
++		.pm = &rcar_drif_pm_ops,
++		},
++	.probe = rcar_drif_probe,
++	.remove = rcar_drif_remove,
 +};
 +
-+module_i2c_driver(max2175_driver);
++module_platform_driver(rcar_drif_driver);
 +
-+MODULE_DESCRIPTION("Maxim MAX2175 RF to Bits tuner driver");
++MODULE_DESCRIPTION("Renesas R-Car Gen3 DRIF driver");
++MODULE_ALIAS("platform:" RCAR_DRIF_DRV_NAME);
 +MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>");
-diff --git a/drivers/media/i2c/max2175/max2175.h b/drivers/media/i2c/max2175/max2175.h
-new file mode 100644
-index 0000000..2d858aa
---- /dev/null
-+++ b/drivers/media/i2c/max2175/max2175.h
-@@ -0,0 +1,108 @@
-+/*
-+ * Maxim Integrated MAX2175 RF to Bits tuner driver
-+ *
-+ * This driver & most of the hard coded values are based on the reference
-+ * application delivered by Maxim for this chip.
-+ *
-+ * Copyright (C) 2016 Maxim Integrated Products
-+ * Copyright (C) 2016 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __MAX2175_H__
-+#define __MAX2175_H__
-+
-+#define MAX2175_EU_XTAL_FREQ	36864000	/* In Hz */
-+#define MAX2175_NA_XTAL_FREQ	40186125	/* In Hz */
-+
-+enum max2175_region {
-+	MAX2175_REGION_EU = 0,	/* Europe */
-+	MAX2175_REGION_NA,	/* North America */
-+};
-+
-+
-+enum max2175_band {
-+	MAX2175_BAND_AM = 0,
-+	MAX2175_BAND_FM,
-+	MAX2175_BAND_VHF,
-+	MAX2175_BAND_L,
-+};
-+
-+enum max2175_eu_mode {
-+	/* EU modes */
-+	MAX2175_EU_FM_1_2 = 0,
-+	MAX2175_DAB_1_2,
-+
-+	/* Other possible modes to add in future
-+	 * MAX2175_DAB_1_0,
-+	 * MAX2175_DAB_1_3,
-+	 * MAX2175_EU_FM_2_2,
-+	 * MAX2175_EU_FMHD_4_0,
-+	 * MAX2175_EU_AM_1_0,
-+	 * MAX2175_EU_AM_2_2,
-+	 */
-+};
-+
-+enum max2175_na_mode {
-+	/* NA modes */
-+	MAX2175_NA_FM_1_0 = 0,
-+	MAX2175_NA_FM_2_0,
-+
-+	/* Other possible modes to add in future
-+	 * MAX2175_NA_FMHD_1_0,
-+	 * MAX2175_NA_FMHD_1_2,
-+	 * MAX2175_NA_AM_1_0,
-+	 * MAX2175_NA_AM_1_2,
-+	 */
-+};
-+
-+/* Supported I2S modes */
-+enum {
-+	MAX2175_I2S_MODE0 = 0,
-+	MAX2175_I2S_MODE1,
-+	MAX2175_I2S_MODE2,
-+	MAX2175_I2S_MODE3,
-+	MAX2175_I2S_MODE4,
-+};
-+
-+/* Coefficient table groups */
-+enum {
-+	MAX2175_CH_MSEL = 0,
-+	MAX2175_EQ_MSEL,
-+	MAX2175_AA_MSEL,
-+};
-+
-+/* HSLS LO injection polarity */
-+enum {
-+	MAX2175_LO_BELOW_DESIRED = 0,
-+	MAX2175_LO_ABOVE_DESIRED,
-+};
-+
-+/* Channel FSM modes */
-+enum max2175_csm_mode {
-+	MAX2175_LOAD_TO_BUFFER = 0,
-+	MAX2175_PRESET_TUNE,
-+	MAX2175_SEARCH,
-+	MAX2175_AF_UPDATE,
-+	MAX2175_JUMP_FAST_TUNE,
-+	MAX2175_CHECK,
-+	MAX2175_LOAD_AND_SWAP,
-+	MAX2175_END,
-+	MAX2175_BUFFER_PLUS_PRESET_TUNE,
-+	MAX2175_BUFFER_PLUS_SEARCH,
-+	MAX2175_BUFFER_PLUS_AF_UPDATE,
-+	MAX2175_BUFFER_PLUS_JUMP_FAST_TUNE,
-+	MAX2175_BUFFER_PLUS_CHECK,
-+	MAX2175_BUFFER_PLUS_LOAD_AND_SWAP,
-+	MAX2175_NO_ACTION
-+};
-+
-+#endif /* __MAX2175_H__ */
++MODULE_AUTHOR("Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>");
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
