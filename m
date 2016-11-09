@@ -1,92 +1,50 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCHv2 2/2] gpio: xilinx: Add clock support
-Date: Wed, 9 Nov 2016 12:16:58 +0530
-Message-ID: <CAKfKVtGxaWYEVPaU_G0Z7HJm4_ZAcTisZBj-BtSmAdL1+w+7xw@mail.gmail.com>
-References: <1478668191-26322-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1478668191-26322-2-git-send-email-shubhrajyoti.datta@xilinx.com> <20161109062734.GX14444@xsjsorenbubuntu>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 6/9 v2] arm64: dts: m3ulcb: enable SDHI0
+Date: Wed, 9 Nov 2016 08:44:18 +0100
+Message-ID: <20161109074418.GC30093@verge.net.au>
+References: <1478196375-1131-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1478614461-9918-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161109062734.GX14444@xsjsorenbubuntu>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478614461-9918-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 9, 2016 at 11:57 AM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> On Wed, 2016-11-09 at 10:39:51 +0530, Shubhrajyoti Datta wrote:
->> Add basic clock support for xilinx gpio.
->>
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->> ---
->> v2 :
->> no change
->>
->>  drivers/gpio/gpio-xilinx.c |   22 ++++++++++++++++++++++
->>  1 files changed, 22 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
->> index 14b2a62..923cab8 100644
->> --- a/drivers/gpio/gpio-xilinx.c
->> +++ b/drivers/gpio/gpio-xilinx.c
->> @@ -13,6 +13,7 @@
->>   */
->>
->>  #include <linux/bitops.h>
->> +#include <linux/clk.h>
->>  #include <linux/init.h>
->>  #include <linux/errno.h>
->>  #include <linux/module.h>
->> @@ -45,6 +46,7 @@
->>   * @gpio_state: GPIO state shadow register
->>   * @gpio_dir: GPIO direction shadow register
->>   * @gpio_lock: Lock used for synchronization
->> + * @clk: Clock resource for this controller
->>   */
->>  struct xgpio_instance {
->>       struct of_mm_gpio_chip mmchip;
->> @@ -52,6 +54,7 @@ struct xgpio_instance {
->>       u32 gpio_state[2];
->>       u32 gpio_dir[2];
->>       spinlock_t gpio_lock[2];
->> +     struct clk *clk;
->>  };
->>
->>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
->> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev=
-)
->>       struct xgpio_instance *chip =3D platform_get_drvdata(pdev);
->>
->>       of_mm_gpiochip_remove(&chip->mmchip);
->> +     clk_disable_unprepare(chip->clk);
->>
->>       return 0;
->>  }
->> @@ -307,6 +311,23 @@ static int xgpio_probe(struct platform_device *pdev=
-)
->>
->>       platform_set_drvdata(pdev, chip);
->>
->> +     /* Retrieve GPIO clock */
->> +     chip->clk =3D devm_clk_get(&pdev->dev, NULL);
->
-> The driver should use the clock-name documented in the binding to do the
-> clock lookup.
+On Tue, Nov 08, 2016 at 05:14:21PM +0300, Vladimir Barinov wrote:
+> This supports SDHI0 on M3ULCB board SD card slot
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Reviewed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 
-My idea was to keep the clk name optional since there is only one clock.
-Or do you think we should mandate the name if clk is provided.
+Thanks Vladimir,
 
->
->> +     if (IS_ERR(chip->clk)) {
->> +             if (PTR_ERR(chip->clk) =3D=3D -ENOENT) {
->> +                     dev_info(&pdev->dev, "No clocks found for clk\n");
->
-> This is pretty much just noise. The clocks property is optional. No need
-> to be too verbose about that. It would be quite a lot of printing if
-> every driver would report absent optional DT properties.
-Ok will remove the print
+I have queued up the following patches:
 
->
->         S=C3=B6ren
+arm64: dts: h3ulcb: rename SDHI0 pins
+arm64: dts: h3ulcb: enable SDHI2
+arm64: dts: m3ulcb: enable SDHI2
+arm64: dts: m3ulcb: enable SDHI0
+
+For reference I would, however, like to make some comments regarding the
+way you have submitted these:
+
+1. I did not provide a Reviewed-off-by tag or any other tag as far as I
+   recall. So its not appropriate for you to add one when posting patches.
+   I have removed it.
+
+2. Not withstanding the above, Reviewed-off-by is an invalid tag.
+   Perhaps you mean Reviewed-by.
+
+3. When you repost patches I have a slight preference for you to repost
+   them in a fresh thread. And if the patchset has more than one patch then
+   with a fresh cover letter. This makes it a little easier for me
+   to see what is going on. And gives a more natural place for
+   me to respond to a patchset.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
