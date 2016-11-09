@@ -1,45 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 0/7] soc: renesas: Identify SoC and register with the
- SoC bus
-Date: Wed, 9 Nov 2016 18:19:06 +0100
-Message-ID: <CAMuHMdVrdjqWruY=dBjWP=jZuZkc=aTBTMijOyTDfZFcaD_jsA@mail.gmail.com>
-References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdV4HG0aOr4Qp_OZXU=3jLeOJ2QaMKp09a3v4489ABbRcA@mail.gmail.com>
- <CAMuHMdUmpMpizZpq1V-sLA8Cf2q5oOgOVxGOvKXqTHvn+Mj7Tg@mail.gmail.com> <1626072.dpWPnWgGl9@wuerfel>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCHv2 2/2] gpio: xilinx: Add clock support
+Date: Wed, 9 Nov 2016 09:18:52 -0800
+Message-ID: <20161109171852.GC14444@xsjsorenbubuntu>
+References: <1478668191-26322-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1478668191-26322-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <20161109062734.GX14444@xsjsorenbubuntu>
+ <CAKfKVtGxaWYEVPaU_G0Z7HJm4_ZAcTisZBj-BtSmAdL1+w+7xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1626072.dpWPnWgGl9@wuerfel>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfKVtGxaWYEVPaU_G0Z7HJm4_ZAcTisZBj-BtSmAdL1+w+7xw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Wed, 2016-11-09 at 12:16:58 +0530, Shubhrajyoti Datta wrote:
+> On Wed, Nov 9, 2016 at 11:57 AM, Sören Brinkmann
+> <soren.brinkmann@xilinx.com> wrote:
+> > On Wed, 2016-11-09 at 10:39:51 +0530, Shubhrajyoti Datta wrote:
+> >> Add basic clock support for xilinx gpio.
+> >>
+> >> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> >> ---
+> >> v2 :
+> >> no change
+> >>
+> >>  drivers/gpio/gpio-xilinx.c |   22 ++++++++++++++++++++++
+> >>  1 files changed, 22 insertions(+), 0 deletions(-)
+> >>
+> >> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> >> index 14b2a62..923cab8 100644
+> >> --- a/drivers/gpio/gpio-xilinx.c
+> >> +++ b/drivers/gpio/gpio-xilinx.c
+> >> @@ -13,6 +13,7 @@
+> >>   */
+> >>
+> >>  #include <linux/bitops.h>
+> >> +#include <linux/clk.h>
+> >>  #include <linux/init.h>
+> >>  #include <linux/errno.h>
+> >>  #include <linux/module.h>
+> >> @@ -45,6 +46,7 @@
+> >>   * @gpio_state: GPIO state shadow register
+> >>   * @gpio_dir: GPIO direction shadow register
+> >>   * @gpio_lock: Lock used for synchronization
+> >> + * @clk: Clock resource for this controller
+> >>   */
+> >>  struct xgpio_instance {
+> >>       struct of_mm_gpio_chip mmchip;
+> >> @@ -52,6 +54,7 @@ struct xgpio_instance {
+> >>       u32 gpio_state[2];
+> >>       u32 gpio_dir[2];
+> >>       spinlock_t gpio_lock[2];
+> >> +     struct clk *clk;
+> >>  };
+> >>
+> >>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+> >> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
+> >>       struct xgpio_instance *chip = platform_get_drvdata(pdev);
+> >>
+> >>       of_mm_gpiochip_remove(&chip->mmchip);
+> >> +     clk_disable_unprepare(chip->clk);
+> >>
+> >>       return 0;
+> >>  }
+> >> @@ -307,6 +311,23 @@ static int xgpio_probe(struct platform_device *pdev)
+> >>
+> >>       platform_set_drvdata(pdev, chip);
+> >>
+> >> +     /* Retrieve GPIO clock */
+> >> +     chip->clk = devm_clk_get(&pdev->dev, NULL);
+> >
+> > The driver should use the clock-name documented in the binding to do the
+> > clock lookup.
+> 
+> My idea was to keep the clk name optional since there is only one clock.
+> Or do you think we should mandate the name if clk is provided.
 
-On Wed, Nov 9, 2016 at 5:56 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday, November 9, 2016 2:34:33 PM CET Geert Uytterhoeven wrote:
->> > And Samsung.
->> > Shall I create the immutable branch now?
->>
->> Arnd: are you happy with the new patches and changes?
->
-> I still had some comments for patch 7, but that shouldn't stop
-> you from creating a branch for the first three so everyone can
-> build on top of that.
+I'd make 'clock-names' mandatory if 'clocks' is present. That way there
+won't be any trouble if this IP ever consumed additional clocks in the
+future.
 
-Thanks!
-
-What about patch [4/7]?
-Haven't you received it? Your address was in the To-line for all 7 patches.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Sören
