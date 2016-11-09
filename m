@@ -1,81 +1,85 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v6 5/8] DT:omap3+tsc2007: use new common touchscreen
- bindings
-Date: Wed, 9 Nov 2016 15:27:23 -0700
-Message-ID: <20161109222723.GI2428@atomide.com>
-References: <cover.1477557860.git.hns@goldelico.com>
- <72927a5b3d5b9f33dfd57a68ef1de9cb0a536407.1477557860.git.hns@goldelico.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2 0/3] ASoC driver for the TSE-850
+Date: Wed, 9 Nov 2016 23:40:55 +0100
+Message-ID: <1478731258-26084-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <72927a5b3d5b9f33dfd57a68ef1de9cb0a536407.1477557860.git.hns@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@op
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [161027 01:47]:
-> While we fix the GTA04 we add proper pinmux for the
-> penirq gpio.
-> 
-> Tested on: GTA04A4 and Pyra-Handheld
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Hi!
 
-This should be safe to merge along with the driver changes:
+v1 -> v2 changes:
+- new subject for the bindings patch to make it easier to find
+- move the driver to the sound/soc/atmel directory
+- add cached values for add/loop1/loop2 to avoid gets from output gpios
+- use _cansleep when updating gpios
+- add comment on how the regulator voltage is mapped to the ana enum
+- drop the .hw_params hook that did set the cpu dai divider and...
+- ...add a preparatory patch that does this in the cpu dai driver instead
+- drop .init and set the dapm routes directly in the card struct instead
 
-Acked-by: Tony Lindgren <tony@atomide.com>
 
-> ---
->  arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> index b3a8b1f..64d6ee3 100644
-> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> @@ -273,6 +273,13 @@
->  			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
->  		>;
->  	};
-> +
-> +	penirq_pins: pinmux_penirq_pins {
-> +		pinctrl-single,pins = <
-> +			/* here we could enable to wakeup the cpu from suspend by a pen touch */
-> +			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
-> +		>;
-> +	};
->  };
->  
->  &omap3_pmx_core2 {
-> @@ -410,10 +417,24 @@
->  	tsc2007@48 {
->  		compatible = "ti,tsc2007";
->  		reg = <0x48>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&penirq_pins>;
->  		interrupt-parent = <&gpio6>;
->  		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
-> -		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
-> -		ti,x-plate-ohms = <600>;
-> +		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
-> +		touchscreen-size-x = <480>;
-> +		touchscreen-size-y = <640>;
-> +		touchscreen-max-pressure = <1000>;
-> +		touchscreen-fuzz-x = <3>;
-> +		touchscreen-fuzz-y = <8>;
-> +		touchscreen-fuzz-pressure = <10>;
-> +		touchscreen-inverted-y;
-> +		ti,min-x = <0x100>;
-> +		ti,max-x = <0xf00>;
-> +		ti,min-y = <0x100>;
-> +		ti,max-y = <0xf00>;
-> +		ti,max-rt = <4096>;
-> +		ti,x-plate-ohms = <550>;
->  	};
->  
->  	/* RFID EEPROM */
-> -- 
-> 2.7.3
-> 
+The TSE-850 is an FM Transmitter Station Equipment, designed to generate
+baseband signals for FM, mainly the DARC subcarrier, but other signals
+are also possible.
+
+This adds a driver for the "sound" bits of the device (quoted since it
+is normally not used for normal sound output, but that works too of
+course). 
+
+I have not provided a patch to add axentia as a devicetree vendor prefix,
+since such a patch is already pending in an IIO series [1] that seems
+close to being accepted.
+
+However, there are a couple of points that I'm not 100% satisfied with
+for this driver.
+
+First, I do not know how to describe the relays that control if the
+IN1/IN2 signals are directly routed towards OUT1/OUT2 or if they are
+routed to the "add" switch. The dapm routing treats this as if the
+IN1/IN2 signals are always routed to both the "add" switch and to
+the muxes feeding OUT1/OUT2. This is fine with me since nothing is
+powered in those sections anyway, so what dapm thinks does not really
+matter. But it is a wart all the same.
+
+Second, there's my comment in tse850_put_mix() when the "add" switch
+is updated. I believe this update should really happen as a side
+effect of the call to snd_soc_dapm_mixer_update_power(), so that it
+happens at the right point compared to other stuff that is powered.
+But I do not know how to hook that up and instead I flip the switch
+before the call since it doesn't really matter. I.e., any noise
+resulting from this badness is negligeble in practice.
+
+Cheers,
+Peter
+
+[1] http://lwn.net/Articles/705931
+
+Peter Rosin (3):
+  ASoC: atmel_ssc_dai: if not provided, default to sensible TCMR/RCMR
+    periods
+  ASoC: tse850: document axentia,tse850-pcm5142 bindings
+  ASoC: atmel: tse850: add ASoC driver for the Axentia TSE-850
+
+ .../bindings/sound/axentia,tse850-pcm5142.txt      |  88 ++++
+ MAINTAINERS                                        |   7 +
+ sound/soc/atmel/Kconfig                            |  10 +
+ sound/soc/atmel/Makefile                           |   2 +
+ sound/soc/atmel/atmel_ssc_dai.c                    |  29 +-
+ sound/soc/atmel/atmel_ssc_dai.h                    |   1 +
+ sound/soc/atmel/tse850-pcm5142.c                   | 472 +++++++++++++++++++++
+ 7 files changed, 603 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
+ create mode 100644 sound/soc/atmel/tse850-pcm5142.c
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
