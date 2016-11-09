@@ -1,178 +1,75 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 1/2] pinctrl: tegra: Add DT binding for io pads control
-Date: Wed, 9 Nov 2016 18:36:21 +0530
-Message-ID: <1478696782-11657-2-git-send-email-ldewangan@nvidia.com>
-References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478696782-11657-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 2/9] arm64: dts: rockchip: add pd_sd power node for rk3399
+Date: Wed,  9 Nov 2016 21:21:54 +0800
+Message-ID: <1478697721-2323-3-git-send-email-wxt@rock-chips.com>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478697721-2323-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-low power state of some of its IO pads. The IO pads can work in
-the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
-sources. When IO interfaces are not used then IO pads can be
-configure in low power state to reduce the power consumption from
-that IO pads.
+From: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-On Tegra124, the voltage level of IO power rail source is auto
-detected by hardware(SoC) and hence it is only require to configure
-in low power mode if IO pads are not used.
+1.add pd node for RK3399 Soc
+2.create power domain tree
+3.add qos node for domain
+4.add the pd_sd consumers node
 
-On T210 onwards, the auto-detection of voltage level from IO power
-rail is removed from SoC and hence SW need to configure the PMC
-register explicitly to set proper voltage in IO pads based on
-IO rail power source voltage.
-
-Add DT binding document for detailing the DT properties for
-configuring IO pads voltage levels and its power state.
-
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
+Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
-Changes from V1:
- The DT binding document is modified to explain the regulator handle
- for different IOs and how can it be passed from the DT.
----
- .../bindings/pinctrl/nvidia,tegra-io-pad.txt       | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-new file mode 100644
-index 0000000..6ca961f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-@@ -0,0 +1,126 @@
-+NVIDIA Tegra PMC IO pad controller
-+
-+NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-+low power state of some of its IO pads. When IO interface are not
-+used then IO pads can be configure in low power state to reduce
-+the power from that IO pads. The IO pads can work in the voltage
-+of the 1.8V and 3.3V of IO voltage from power rail sources.
-+
-+On Tegra124, the voltage of IO power rail source is auto detected by
-+SoC and hence it is only require to configure in low power mode if
-+IO pads are not used.
-+
-+On T210 onwards, the HW based auto-detection for IO voltage is removed
-+and hence SW need to configure the PMC register explicitly, to set proper
-+voltage in IO pads, based on IO rail power source voltage.
-+
-+The voltage configurations and low power state of IO pads should be done
-+in boot if it is not going to change other wise dynamically based on IO
-+rail voltage on that IO pads and usage of IO pads
-+
-+The DT property of the io pads must be under the node of pmc i.e.
-+pmc@7000e400 for Tegra124 onwards.
-+
-+Please refer to <pinctrl-bindings.txt> in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+Tegra's pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for an
-+IO pads, or a list of IO pads. This configuration can include the voltage and
-+power enable/disable control
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content. Each subnode only affects those
-+parameters that are explicitly listed. Unspecified is represented as an absent
-+property,
-+
-+See the TRM to determine which properties and values apply to each IO pads.
-+
-+Required subnode-properties:
-+==========================
-+- pins : An array of strings. Each string contains the name of an IO pads. Valid
-+	 values for these names are listed below.
-+
-+Optional subnode-properties:
-+==========================
-+Following properties are supported from generic pin configuration explained
-+in <dt-bindings/pinctrl/pinctrl-binding.txt>.
-+low-power-enable:		enable low power mode.
-+low-power-disable:		disable low power mode.
-+
-+Valid values for pin for T124 are:
-+	audio, bb, cam, comp, csia, csib, csie, dsi, dsib, dsic, dsid, hdmi,
-+	hsic, hv, lvds, mipi-bias, nand, pex-bias, pex-clk1, pex-clk2,
-+	pex-ctrl, sdmmc1, sdmmc3, sdmmc4, sys-ddc, uart, usb0, usb1, usb2,
-+	usb-bias
-+
-+Valid values for pin for T210 are:
-+	audio, audio-hv, cam, csia, csib, csic, csid, csie, csif,
-+	dbg, debug-nonao, dmic, dp, dsi, dsib, dsic, dsid, emmc, emmc2,
-+	gpio, hdmi, hsic, lvds, mipi-bias, pex-bias, pex-clk1, pex-clk2,
-+	pex-ctrl, sdmmc1, sdmmc3, spi, spi-hv, uart, usb-bias, usb0,
-+	usb1, usb2, usb3.
-+
-+To find out the IO rail voltage for setting the voltage of IO pad by SW,
-+the regulator supply handle must provided from the DT and it is explained
-+in the regulator DT binding document
-+	<devicetree/bindings/regulator/regulator.txt>.
-+For example, for GPIO rail the supply name is vddio-gpio and regulator
-+handle is supplied from DT as
-+	vddio-gpio-supply = <&regulator_xyz>;
-+
-+For T210, following IO pads support the 1.8V/3.3V and the corresponding
-+io voltage pin names are as follows:
-+	audio -> vddio-audio
-+	audio-hv -> vddio-audio-hv
-+	cam ->vddio-cam
-+	dbg -> vddio-dbg
-+	dmic -> vddio-dmic
-+	gpio -> vddio-gpio
-+	pex-ctrl -> vddio-pex-ctrl
-+	sdmmc1 -> vddio-sdmmc1
-+	sdmmc3 -> vddio-sdmmc3
-+	spi -> vddio-spi
-+	spi-hv -> vddio-spi-hv
-+	uart -> vddio-uart
-+
-+Example:
-+	i2c@7000d000 {
-+		pmic@3c {
-+			regulators {
-+				vddio_sdmmc1: ldo2 {
-+					/* Regulator entries for LDO2 */
-+				};
-+
-+				vdd_cam: ldo3 {
-+					/* Regulator entries for LDO3 */
-+				};
-+			};
-+		};
+Changes in v2:
+- v1 on https://patchwork.kernel.org/patch/9322553/
+- Reviewed-on: https://chromium-review.googlesource.com/386483
+- Verified on ChromeOS kernel4.4
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index b401176..e5b5b3d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -253,6 +253,7 @@
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+ 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
++		power-domains = <&power RK3399_PD_SD>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -691,6 +692,11 @@
+ 		status = "disabled";
+ 	};
+ 
++	qos_sd: qos@ffa74000 {
++		compatible = "syscon";
++		reg = <0x0 0xffa74000 0x0 0x20>;
 +	};
 +
-+	pmc@7000e400 {
-+		vddio-cam = <&vdd_cam>;
-+		vddio-sdmmc1-supply = <&vddio_sdmmc1>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tegra_io_pad_volt_default>;
-+		tegra_io_pad_volt_default: common {
-+			audio-hv {
-+				pins = "audio-hv";
-+				low-power-disable;
+ 	qos_emmc: qos@ffa58000 {
+ 		compatible = "syscon";
+ 		reg = <0x0 0xffa58000 0x0 0x20>;
+@@ -839,6 +845,12 @@
+ 				clocks = <&cru ACLK_GMAC>;
+ 				pm_qos = <&qos_gmac>;
+ 			};
++			pd_sd@RK3399_PD_SD {
++				reg = <RK3399_PD_SD>;
++				clocks = <&cru HCLK_SDMMC>,
++					 <&cru SCLK_SDMMC>;
++				pm_qos = <&qos_sd>;
 +			};
-+
-+			gpio {
-+				pins = "gpio";
-+				low-power-disable;
-+			};
-+
-+			audio {
-+				pins = "audio", "dmic", "sdmmc3";
-+				low-power-enable;
-+			};
-+		};
-+
-+	};
+ 			pd_vio@RK3399_PD_VIO {
+ 				reg = <RK3399_PD_VIO>;
+ 				#address-cells = <1>;
 -- 
-2.1.4
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
