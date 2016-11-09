@@ -1,53 +1,38 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
-Date: Wed, 9 Nov 2016 12:12:55 -0600
-Message-ID: <CAL_JsqLmAv4Pueq9XveeWMD3Jn_o6mGUcyztx8OajBGTrEd0aQ@mail.gmail.com>
-References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com> <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Wed, 9 Nov 2016 13:01:56 +0100
+Message-ID: <f7917987-a4cb-2840-8128-07eebd242c17@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
+ <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+ <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
+ <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+ <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
+ <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+In-Reply-To: <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>"linux-kernel@vger.kernel.org" <linux->
+To: Joel Holdsworth <joel@airwebreathe.org.uk>, Moritz Fischer <moritz.fischer@ettus.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-spi@vger.kernel.org, Clifford Wolf <clifford@clifford.at>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 7, 2016 at 5:44 PM, Reza Arbab <arbab@linux.vnet.ibm.com> wrote:
-> When movable nodes are enabled, any node containing only hotpluggable
-> memory is made movable at boot time.
->
-> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
-> making corresponding calls to memblock_mark_hotplug().
->
-> If we introduce a dt property to describe memory as hotpluggable,
-> configs supporting early fdt may then also do this marking and use
-> movable nodes.
->
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  drivers/of/fdt.c | 6 ++++++
->  mm/Kconfig       | 2 +-
->  2 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index c89d5d2..2cf1d66 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -1015,6 +1015,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->         const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
->         const __be32 *reg, *endp;
->         int l;
-> +       bool hotpluggable;
->
->         /* We are scanning "memory" nodes only */
->         if (type == NULL) {
-> @@ -1034,6 +1035,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
->                 return 0;
->
->         endp = reg + (l / sizeof(__be32));
-> +       hotpluggable = of_get_flat_dt_prop(node, "linux,hotpluggable", NULL);
+On 11/08/2016 06:30 PM, Joel Holdsworth wrote:
+>>>> On the whole, I don't think the zero-length transfers are too
+>>>> egregiously bad, and all the alternatives seem worse to me.
+>>>
+>>> So why not turn the CS line into GPIO and just toggle the GPIO?
+>>
+>> Does that work with *all* SPI controllers?
+>>
+> 
+> It does not - no. See my other email.
 
-Memory being hotpluggable doesn't seem like a linux property to me.
-I'd drop the linux prefix. Also, this needs to be documented.
+And is that line an actual CS of that lattice chip or a generic input
+which almost works like CS?
 
-Rob
+-- 
+Best regards,
+Marek Vasut
