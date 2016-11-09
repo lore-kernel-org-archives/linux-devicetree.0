@@ -1,66 +1,60 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v6 05/14] mmc: sdhci-msm: Update DLL reset sequence
-Date: Wed, 9 Nov 2016 12:43:04 -0800
-Message-ID: <20161109204304.GT16026@codeaurora.org>
-References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
- <1478517877-23733-6-git-send-email-riteshh@codeaurora.org>
- <20161108230622.GN16026@codeaurora.org>
- <10d66d21-eebd-45a3-6fb7-72117d860142@codeaurora.org>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] phy: rockchip-inno-usb2: correct 480MHz output clock
+ stable time
+Date: Wed, 9 Nov 2016 12:54:18 -0800
+Message-ID: <CAD=FV=VC15_QAs7+DOoqCeWrU6-qqnUku2SSPFLOvLanu8xL3g@mail.gmail.com>
+References: <1478523658-9400-1-git-send-email-wulf@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10d66d21-eebd-45a3-6fb7-72117d860142@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478523658-9400-1-git-send-email-wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09, Ritesh Harjani wrote:
-> Hi Stephen,
-> 
-> On 11/9/2016 4:36 AM, Stephen Boyd wrote:
-> >On 11/07, Ritesh Harjani wrote:
-> >>
-> >>diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> >>index 42f42aa..32b0b79 100644
-> >>--- a/drivers/mmc/host/sdhci-msm.c
-> >>+++ b/drivers/mmc/host/sdhci-msm.c
-> >>@@ -58,11 +58,17 @@
-> >> #define CORE_DLL_CONFIG		0x100
-> >> #define CORE_DLL_STATUS		0x108
-> >>
-> >>+#define CORE_DLL_CONFIG_2	0x1b4
-> >>+#define CORE_FLL_CYCLE_CNT	BIT(18)
-> >>+#define CORE_DLL_CLOCK_DISABLE	BIT(21)
-> >>+
-> >> #define CORE_VENDOR_SPEC	0x10c
-> >> #define CORE_CLK_PWRSAVE	BIT(1)
-> >>
-> >> #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
-> >>
-> >>+#define TCXO_FREQ		19200000
-> >
-> >TCXO_FREQ could change based on the board. For example, IPQ has
-> >it as 25 MHz.
-> Actually not sure of the proper way on how to get this freq in driver
-> today. We may use xo_board clock but, it is not available for all boards
-> except 8996/8916 I guess.
-> 
-> Also, there is no sdhc for IPQ board and for all other boards
-> TCXO_FREQ is same where sdhci-msm driver is used. For that purpose
-> this was defined here for sdhci-msm driver.
-> 
-> Do you think in that case we should keep it this way for now and
-> later change if a need arise to change the TCXO_FREQ ?
+Hi,
 
-We've added xo_board (or cxo_board/pxo_board) to all the qcom
-platforms upstream, so there should always be something to
-reference in the dts and call clk_get_rate() on. So I would add
-it to the binding as another clock and then use that instead of
-hardcoding the value. That's much more flexible in case this
-changes in the future.
+On Mon, Nov 7, 2016 at 5:00 AM, William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> We found that the system crashed due to 480MHz output clock of
+> USB2 PHY was unstable after clock had been enabled by gpu module.
+>
+> Theoretically, 1 millisecond is a critical value for 480MHz
+> output clock stable time, so we try to change the delay time
+> to 1.2 millisecond to avoid this issue.
+>
+> Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+> index ecfd7d1..8f2d2b6 100644
+> --- a/drivers/phy/phy-rockchip-inno-usb2.c
+> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+> @@ -267,7 +267,7 @@ static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
+>                         return ret;
+>
+>                 /* waitting for the clk become stable */
+> -               mdelay(1);
+> +               udelay(1200);
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Several people who have seen this patch have expressed concern that a
+1.2 ms delay is pretty long for something that's supposed to be
+"atomic" like a clk_enable().  Consider that someone might call
+clk_enable() while interrupts are disabled and that a 1.2 ms interrupt
+latency is not so great.
+
+It seems like this clock should be moved to be enabled in "prepare"
+and the "enable" should be a no-op.  This is a functionality change,
+but I don't think there are any real users for this clock at the
+moment so it should be fine.
+
+(of course, the 1 ms latency that existed before this patch was still
+pretty bad, but ...)
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
