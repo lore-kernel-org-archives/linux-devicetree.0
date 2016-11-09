@@ -1,86 +1,125 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 1/3] i2c: pxa: Add support for the I2C units found in
- Armada 3700
-Date: Wed, 09 Nov 2016 11:21:06 +0100
-Message-ID: <87y40tkl7x.fsf@free-electrons.com>
-References: <20161109101349.18722-1-romain.perier@free-electrons.com>
- <20161109101349.18722-2-romain.perier@free-electrons.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v3 2/3] PCI: qcom: add support to msm8996 PCIE controller
+Date: Wed, 9 Nov 2016 16:07:21 +0530
+Message-ID: <CAFp+6iF7rspwXvANoz_3XgC33-CwSYzPvdpwsGK8UAfp064Jxg@mail.gmail.com>
+References: <1478264387-17914-1-git-send-email-srinivas.kandagatla@linaro.org> <1478264387-17914-3-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161109101349.18722-2-romain.perier@free-electrons.com> (Romain
- Perier's message of "Wed, 9 Nov 2016 11:13:47 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yahuda Yitschak <yehuday@marvell.com>, Omri Itach <omrii@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Igal Liberman <igall@marvell.com>, Hanna Hawa <hannah@marvell.com>, Wolfram Sang <wsa@the-dreams.de>, Neta Zur Hershkovits <neta@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-i2c@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478264387-17914-3-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: svarbanov@mm-sol.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
+Hi,
 
-
-You was too fast I didn't have time to commnent about Baruch suggestion.
-
- On mer., nov. 09 2016, Romain Perier <romain.perier@free-electrons.com> wrote:
-
-> The Armada 3700 has two I2C controllers that is compliant with the I2C
-> Bus Specificiation 2.1, supports multi-master and different bus speed:
-> Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
-> High speed mode (up to 3.4 Mhz).
+On Fri, Nov 4, 2016 at 6:29 PM, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
+> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
+> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
 >
-> This IP block has a lot of similarity with the PXA, except some register
-> offsets and bitfield. This commits adds a basic support for this I2C
-> unit.
+> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
+> pipe clocks are only setup after the phy is powered on.
+> It also adds ltssm_enable callback as it is very much different to other
+> supported SOCs in the driver.
 >
-> Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
-> Tested-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
+
+Few minor nits.
+
+>  .../devicetree/bindings/pci/qcom,pcie.txt          |  68 +++++++-
+>  drivers/pci/host/pcie-qcom.c                       | 177 ++++++++++++++++++++-
+>  2 files changed, 239 insertions(+), 6 deletions(-)
 >
-> Changes in v3:
->  - Replaced the type of hm_mask and fm_mask by unsigned int,
->    instead of unsigned long.
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 4059a6f..4a0538d 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -7,6 +7,7 @@
+>                         - "qcom,pcie-ipq8064" for ipq8064
+>                         - "qcom,pcie-apq8064" for apq8064
+>                         - "qcom,pcie-apq8084" for apq8084
+> +                       - "qcom,pcie-msm8996" for msm8996 or apq8096
 
-[...]
+Since this works for both apq8096 and msm8996, compatible -
+"qcom,pcie-apq8096" for uniformity ?
+[snip]
+
+> @@ -231,3 +242,58 @@
+>                 pinctrl-0 = <&pcie0_pins_default>;
+>                 pinctrl-names = "default";
+>         };
+> +
+> +* Example for apq8096:
+> +
+> +       pcie@00608000{
+> +               compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+
+this will change accordingly.
+
+> +               power-domains = <&gcc PCIE1_GDSC>;
+> +               bus-range = <0x00 0xff>;
+> +               num-lanes = <1>;
+> +
+
+[snip]
+
+> +
+> +static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
+> +{
+> +       struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +       struct device *dev = pcie->pp.dev;
+> +       u32 val;
+> +       int ret = 0;
+
+you don't need to initialize ret here.
+
+> +
+> +       ret = clk_prepare_enable(res->aux_clk);
+> +       if (ret) {
+> +               dev_err(dev, "cannot prepare/enable aux clock\n");
+> +               return ret;
+> +       }
+
+[snip]
+
+> @@ -429,6 +571,17 @@ static int qcom_pcie_link_up(struct pcie_port *pp)
+>         return !!(val & PCI_EXP_LNKSTA_DLLLA);
+>  }
+>
+> +static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
+> +{
+> +       struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +
+> +       clk_disable_unprepare(res->slave_clk);
+> +       clk_disable_unprepare(res->master_clk);
+> +       clk_disable_unprepare(res->cfg_clk);
+> +       clk_disable_unprepare(res->aux_clk);
+> +       clk_disable_unprepare(res->pipe_clk);
+
+i am sure, this is not affecting the functionality, but the pipe clock
+is enabled after all the clocks.
+so it makes sense to disable it in the first place. you can just move
+this above slave_clk.
+
+[snip]
+
+> @@ -572,6 +738,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>         { .compatible = "qcom,pcie-ipq8064", .data = &ops_v0 },
+>         { .compatible = "qcom,pcie-apq8064", .data = &ops_v0 },
+>         { .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
+> +       { .compatible = "qcom,pcie-msm8996", .data = &ops_v2 },
+
+this will change according to earlier comment in bindings.
 
 
->  #define ISR_RWM		(1 << 0)	   /* read/write mode */
-> @@ -193,6 +204,8 @@ struct pxa_i2c {
->  	unsigned char		master_code;
->  	unsigned long		rate;
->  	bool			highmode_enter;
-> +	unsigned int		fm_mask;
-> +	unsigned int		hs_mask;
-
-These masks are used with writel and readl which use an u32. So the
-better is to use this type.
-
-Gregory
-
->  };
->  
->  #define _IBMR(i2c)	((i2c)->reg_ibmr)
-> @@ -503,8 +516,8 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
->  		writel(i2c->slave_addr, _ISAR(i2c));
->  
->  	/* set control register values */
-> -	writel(I2C_ICR_INIT | (i2c->fast_mode ? ICR_FM : 0), _ICR(i2c));
-> -	writel(readl(_ICR(i2c)) | (i2c->high_mode ? ICR_HS : 0), _ICR(i2c));
-> +	writel(I2C_ICR_INIT | (i2c->fast_mode ? i2c->fm_mask : 0), _ICR(i2c));
-> +	writel(readl(_ICR(i2c)) | (i2c->high_mode ? i2c->hs_mask : 0), _ICR(i2c));
->  
-
+Thanks
+Vivek
 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
