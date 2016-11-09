@@ -1,196 +1,160 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH 2/3] ipmi/bt-bmc: maintain a request expiry list
-Date: Wed, 9 Nov 2016 20:08:31 +0100
-Message-ID: <4d3a2e7e-ac95-65ae-5427-a23ca04d3817@kaod.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
- <1478073426-3714-3-git-send-email-clg@kaod.org>
- <a7aea2a7-6cb4-655e-3c69-1a156945e27b@acm.org>
- <6117c1fd-b969-9394-0be5-d46f64269cac@kaod.org>
- <1e0187c4-d503-ce4a-3d4c-cf21f0bffb96@acm.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/2] ASoC: axentia: tse850: add ASoC driver for the
+ Axentia TSE-850
+Date: Wed, 9 Nov 2016 19:54:39 +0100
+Message-ID: <a9231718-c716-35a1-b704-0687518ded59@axentia.se>
+References: <1478622057-12426-1-git-send-email-peda@axentia.se>
+ <1478622057-12426-3-git-send-email-peda@axentia.se>
+ <20161109133852.nvlyiqow2xpbc6ga@sirena.org.uk>
+ <3d6b99e8-f19f-51fd-1676-c3a4549ec312@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1e0187c4-d503-ce4a-3d4c-cf21f0bffb96-HInyCGIudOg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: minyard-HInyCGIudOg@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3d6b99e8-f19f-51fd-1676-c3a4549ec312@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2016 04:52 PM, Corey Minyard wrote:
-> On 11/09/2016 08:30 AM, Cédric Le Goater wrote:
->> On 11/07/2016 08:04 PM, Corey Minyard wrote:
->>> On 11/02/2016 02:57 AM, Cédric Le Goater wrote:
->>>> Regarding the response expiration handling, the IPMI spec says :
->>>>
->>>>      The BMC must not return a given response once the corresponding
->>>>      Request-to-Response interval has passed. The BMC can ensure this
->>>>      by maintaining its own internal list of outstanding requests through
->>>>      the interface. The BMC could age and expire the entries in the list
->>>>      by expiring the entries at an interval that is somewhat shorter than
->>>>      the specified Request-to-Response interval....
->>>>
->>>> To handle such case, we maintain list of received requests using the
->>>> seq number of the BT message to identify them. The list is updated
->>>> each time a request is received and a response is sent. The expiration
->>>> of the reponses is handled at each updates but also with a timer.
->>> This looks correct, but it seems awfully complicated.
->>>
->>> Why can't you get the current time before the wait_event_interruptible()
->>> and then compare the time before you do the write?  That would seem to
->>> accomplish the same thing without any lists or extra locks.
->> Well, the expiry list needs a request identifier and it is currently using
->> the Seq byte for this purpose. So the BT message needs to be read to grab
->> that byte. The request is added to a list and that involves some locking.
+On 2016-11-09 17:27, Peter Rosin wrote:
+> On 2016-11-09 14:38, Mark Brown wrote:
+>> On Tue, Nov 08, 2016 at 05:20:57PM +0100, Peter Rosin wrote:
+>>> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>>> +	struct device *dev = rtd->dev;
+>>> +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+>>> +	int dir = substream->stream != SNDRV_PCM_STREAM_PLAYBACK;
+>>> +	int div_id = dir ? ATMEL_SSC_RCMR_PERIOD : ATMEL_SSC_TCMR_PERIOD;
+>>> +	int period = snd_soc_params_to_frame_size(params) / 2 - 1;
 >>
->> When the response is written, the first matching request is removed from
->> the list and a garbage collector loop is also run. Then, as we might not
->> get any responses to run that loop, we use a timer to empty the list from
->> any expired requests.
->>
->> The read/write ops of the driver are protected with a mutex, the list and
->> the timer add their share of locking. That could have been done with RCU
->> surely but we don't really need performance in this driver.
->>
->> Caveats :
->>
->> bt_bmc_remove_request() should not be done in the writing loop though.
->> It needs a fix.
->>
->> The request identifier is currently Seq but the spec say we should use
->> Seq, NetFn, and Command or an internal Seq value as a request identifier.
->> Google is also working on an OEM/Group extension (Brendan in CC: )
->> which has a different message format. I need to look closer at what
->> should be done in this case.
+>> Please write the logic out as normal if statements for legibility.  It's
+>> a bit concerning that we even need this function, it looks like pretty
+>> basic stuff that I'd expect the CPU DAI to just be doing - why can't
+>> this be the default behaviour of the CPU DAI?
 > 
-> I'm still not sure why the list is necessary.  You have a separate
-> thread of execution for each writer, why not just time it in that
-> thread?
+> I don't know and obviously don't have all the relevant HW to test
+> changes. Do you want me to attempt such a change anyway?
+> Adding Cc: Nicolas Ferre
 
-No, we don't in the current design. This is only a single process 
-acting as a proxy and dispatching commands on dbus to other
-processes doing whatever they need to do. So the request/responses 
-can interlace. 
+Something like this, perhaps?
 
-The current daemon already handles an expiry list but I thought it 
-would be better to move it in the kernel to have a better response
-time. The BMC can be quite slow when busy. It seems that keeping
-the logic in user space is better. So let's have it that way. Not
-a problem.
+Cheers,
+Peter
 
-> What about the following, not even compile-tested, patch?  I'm
-> sure my mailer will munge this up, I can send you a clean version
-> if you like.
 
-No it is ok. I will give your fix a try on our system and resend.
-
-Thanks,
-
-C.  
-
+diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
+index 16e459aedffe..059b0b63bd51 100644
+--- a/sound/soc/atmel/atmel_ssc_dai.c
++++ b/sound/soc/atmel/atmel_ssc_dai.c
+@@ -380,6 +380,7 @@ static void atmel_ssc_shutdown(struct snd_pcm_substream *substream,
+ 		ssc_writel(ssc_p->ssc->regs, CR, SSC_BIT(CR_SWRST));
+ 		/* Clear the SSC dividers */
+ 		ssc_p->cmr_div = ssc_p->tcmr_period = ssc_p->rcmr_period = 0;
++		ssc_p->forced_divider = 0;
+ 	}
+ 	spin_unlock_irq(&ssc_p->lock);
  
-> From 1a73585a9c1c74ac1d59d82f22e05b30447619a6 Mon Sep 17 00:00:00 2001
-> From: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-> Date: Wed, 9 Nov 2016 09:07:48 -0600
-> Subject: [PATCH] ipmi:bt-bmc: Fix a multi-user race, time out responses
-> 
-> The IPMI spec says to time out responses after a given amount of
-> time, so don't let a writer send something after an amount of time
-> has elapsed.
-> 
-> Also, fix a race condition in the same area where if you have two
-> writers at the same time, one can get a EIO return when it should
-> still be waiting its turn to send.  A mutex_lock_interruptible_timeout()
-> would be handy here, but it doesn't exist.
-> 
-> Signed-off-by: Corey Minyard <cminyard-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/char/ipmi/bt-bmc.c | 39 ++++++++++++++++++++++++---------------
->  1 file changed, 24 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
-> index b49e613..5be94cf 100644
-> --- a/drivers/char/ipmi/bt-bmc.c
-> +++ b/drivers/char/ipmi/bt-bmc.c
-> @@ -57,6 +57,8 @@
-> 
->  #define BT_BMC_BUFFER_SIZE 256
-> 
-> +#define BT_BMC_RESPONSE_JIFFIES    (5 * HZ)
-> +
->  struct bt_bmc {
->      struct device        dev;
->      struct miscdevice    miscdev;
-> @@ -190,14 +192,12 @@ static ssize_t bt_bmc_read(struct file *file, char __user *buf,
-> 
->      WARN_ON(*ppos);
-> 
-> -    if (wait_event_interruptible(bt_bmc->queue,
-> -                     bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN))
-> +    if (mutex_lock_interruptible(&bt_bmc->mutex))
->          return -ERESTARTSYS;
-> 
-> -    mutex_lock(&bt_bmc->mutex);
-> -
-> -    if (unlikely(!(bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN))) {
-> -        ret = -EIO;
-> +    if (wait_event_interruptible(bt_bmc->queue,
-> +                bt_inb(bt_bmc, BT_CTRL) & BT_CTRL_H2B_ATN)) {
-> +        ret = -ERESTARTSYS;
->          goto out_unlock;
->      }
-> 
-> @@ -251,6 +251,7 @@ static ssize_t bt_bmc_write(struct file *file, const char __user *buf,
->      u8 kbuffer[BT_BMC_BUFFER_SIZE];
->      ssize_t ret = 0;
->      ssize_t nwritten;
-> +    unsigned long start_jiffies = jiffies, wait_time;
-> 
->      /*
->       * send a minimum response size
-> @@ -263,23 +264,31 @@ static ssize_t bt_bmc_write(struct file *file, const char __user *buf,
-> 
->      WARN_ON(*ppos);
-> 
-> +    if (mutex_lock_interruptible(&bt_bmc->mutex))
-> +        return -ERESTARTSYS;
-> +
-> +    wait_time = jiffies - start_jiffies;
-> +    if (wait_time >= BT_BMC_RESPONSE_TIME_JIFFIES) {
-> +        ret = -ETIMEDOUT;
-> +        goto out_unlock;
-> +    }
-> +    wait_time = BT_BMC_RESPONSE_TIME_JIFFIES - wait_time;
-> +
->      /*
->       * There's no interrupt for clearing bmc busy so we have to
->       * poll
->       */
-> -    if (wait_event_interruptible(bt_bmc->queue,
-> +    ret = wait_event_interruptible_timeout(bt_bmc->queue,
->                       !(bt_inb(bt_bmc, BT_CTRL) &
-> -                       (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN))))
-> -        return -ERESTARTSYS;
-> -
-> -    mutex_lock(&bt_bmc->mutex);
-> -
-> -    if (unlikely(bt_inb(bt_bmc, BT_CTRL) &
-> -             (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN))) {
-> -        ret = -EIO;
-> +                       (BT_CTRL_H_BUSY | BT_CTRL_B2H_ATN)),
-> +                     wait_time);
-> +    if (ret <= 0) {
-> +        if (ret == 0)
-> +            ret = -ETIMEDOUT;
->          goto out_unlock;
->      }
-> 
-> +    ret = 0;
->      clr_wr_ptr(bt_bmc);
-> 
->      while (count) {
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@@ -429,10 +430,12 @@ static int atmel_ssc_set_dai_clkdiv(struct snd_soc_dai *cpu_dai,
+ 		break;
+ 
+ 	case ATMEL_SSC_TCMR_PERIOD:
++		ssc_p->forced_divider |= BIT(ATMEL_SSC_TCMR_PERIOD);
+ 		ssc_p->tcmr_period = div;
+ 		break;
+ 
+ 	case ATMEL_SSC_RCMR_PERIOD:
++		ssc_p->forced_divider |= BIT(ATMEL_SSC_RCMR_PERIOD);
+ 		ssc_p->rcmr_period = div;
+ 		break;
+ 
+@@ -459,6 +462,8 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 	u32 tfmr, rfmr, tcmr, rcmr;
+ 	int ret;
+ 	int fslen, fslen_ext;
++	u32 tcmr_period;
++	u32 rcmr_period;
+ 
+ 	/*
+ 	 * Currently, there is only one set of dma params for
+@@ -470,6 +475,13 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 	else
+ 		dir = 1;
+ 
++	tcmr_period = ssc_p->tcmr_period;
++	if (!(ssc_p->forced_divider & BIT(ATMEL_SSC_TCMR_PERIOD)))
++		tcmr_period = snd_soc_params_to_frame_size(params) / 2 - 1;
++	rcmr_period = ssc_p->rcmr_period;
++	if (!(ssc_p->forced_divider & BIT(ATMEL_SSC_RCMR_PERIOD)))
++		rcmr_period = snd_soc_params_to_frame_size(params) / 2 - 1;
++
+ 	dma_params = ssc_p->dma_params[dir];
+ 
+ 	channels = params_channels(params);
+@@ -524,7 +536,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 		fslen_ext = (bits - 1) / 16;
+ 		fslen = (bits - 1) % 16;
+ 
+-		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
++		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
+ 			| SSC_BF(RCMR_STTDLY, START_DELAY)
+ 			| SSC_BF(RCMR_START, SSC_START_FALLING_RF)
+ 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
+@@ -540,7 +552,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 			| SSC_BF(RFMR_LOOP, 0)
+ 			| SSC_BF(RFMR_DATLEN, (bits - 1));
+ 
+-		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
++		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
+ 			| SSC_BF(TCMR_STTDLY, START_DELAY)
+ 			| SSC_BF(TCMR_START, SSC_START_FALLING_RF)
+ 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
+@@ -606,7 +618,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 		fslen_ext = (bits - 1) / 16;
+ 		fslen = (bits - 1) % 16;
+ 
+-		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
++		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
+ 			| SSC_BF(RCMR_STTDLY, START_DELAY)
+ 			| SSC_BF(RCMR_START, SSC_START_FALLING_RF)
+ 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
+@@ -623,7 +635,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 			| SSC_BF(RFMR_LOOP, 0)
+ 			| SSC_BF(RFMR_DATLEN, (bits - 1));
+ 
+-		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
++		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
+ 			| SSC_BF(TCMR_STTDLY, START_DELAY)
+ 			| SSC_BF(TCMR_START, SSC_START_FALLING_RF)
+ 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
+@@ -650,7 +662,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 		 * MCK divider, and the BCLK signal is output
+ 		 * on the SSC TK line.
+ 		 */
+-		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
++		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
+ 			| SSC_BF(RCMR_STTDLY, 1)
+ 			| SSC_BF(RCMR_START, SSC_START_RISING_RF)
+ 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
+@@ -665,7 +677,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+ 			| SSC_BF(RFMR_LOOP, 0)
+ 			| SSC_BF(RFMR_DATLEN, (bits - 1));
+ 
+-		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
++		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
+ 			| SSC_BF(TCMR_STTDLY, 1)
+ 			| SSC_BF(TCMR_START, SSC_START_RISING_RF)
+ 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
+diff --git a/sound/soc/atmel/atmel_ssc_dai.h b/sound/soc/atmel/atmel_ssc_dai.h
+index 80b153857a88..75194f582131 100644
+--- a/sound/soc/atmel/atmel_ssc_dai.h
++++ b/sound/soc/atmel/atmel_ssc_dai.h
+@@ -113,6 +113,7 @@ struct atmel_ssc_info {
+ 	unsigned short cmr_div;
+ 	unsigned short tcmr_period;
+ 	unsigned short rcmr_period;
++	unsigned int forced_divider;
+ 	struct atmel_pcm_dma_params *dma_params[2];
+ 	struct atmel_ssc_state ssc_state;
+ 	unsigned long mck_rate;
+-- 
+2.1.4
