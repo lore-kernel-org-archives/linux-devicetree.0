@@ -1,55 +1,158 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Wed, 9 Nov 2016 14:58:28 +0000
-Message-ID: <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
-References: <cover.1477463128.git.viresh.kumar@linaro.org>
- <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: sun4i-codec: Add support for optional
+ reset control to quirks" to the asoc tree
+Date: Wed, 09 Nov 2016 14:59:08 +0000
+Message-ID: <E1c4ULE-0002cs-8n@finisterre>
+References: <20161103075556.29018-6-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nq5mj7svi2m7hpuy"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBZPTRTAQKGQENDQJHII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161103075556.29018-6-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---nq5mj7svi2m7hpuy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   ASoC: sun4i-codec: Add support for optional reset control to quirks
 
-On Wed, Oct 26, 2016 at 12:02:56PM +0530, Viresh Kumar wrote:
+has been applied to the asoc tree at
 
-> +  Entries for multiple regulators shall be provided in the same field separated
-> +  by angular brackets <>. The OPP binding doesn't provide any provisions to
-> +  relate the values to their power supplies or the order in which the supplies
-> +  need to be configured.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-I don't understand how this works.  If we have an unordered list of
-values to set for regulators how will we make sense of them?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> -			cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
-> +			vcc0-supply = <&cpu_supply0>;
-> +			vcc1-supply = <&cpu_supply1>;
-> +			vcc2-supply = <&cpu_supply2>;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This change doesn't seem to correspond to the documentation change.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---nq5mj7svi2m7hpuy
-Content-Type: application/pgp-signature; name="signature.asc"
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Mark
 
-iQEcBAABCAAGBQJYIzmUAAoJECTWi3JdVIfQhnoH/35XCH+XfJQZIj+eUgucnc6F
-xIj3sX9k+ZhnByX5bcT3pztmkKzn8RA65XfRzcaY5D0jtsZgx8GEwiaHStFalURG
-cvp5fw/F9UrAd8cby1e0zbglm/QtvWLfx3WKxMuY/F0ulma0kpD8vUskVV0R+AWK
-oEUyNhCcJlR5aLDRT2H/rjbpTNi6O2nGHb/SWfpneoMF9YLKjiTHOehrncdk0/Nh
-vguKBEaepD7xDzYftdYGI5ldn0xcT2FYXuIoLIzG8/mvb+DQo4PaNQTiEDR2jWN+
-Td1gGGX/iFz2/fI6teOyefTSKG4ya79LDmef5WDcPpyJ2tBNfeNbkDXaMd/p78Q=
-=ZVcX
------END PGP SIGNATURE-----
+>From 9aead156c0665a362c8b007b51fe3396fea4d346 Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Date: Mon, 7 Nov 2016 18:06:58 +0800
+Subject: [PATCH] ASoC: sun4i-codec: Add support for optional reset control to
+ quirks
 
---nq5mj7svi2m7hpuy--
+The later Allwinner SoCs have a dedicated reset controller, and
+peripherals have dedicated reset controls which need to be deasserted
+before the associated peripheral can be used.
+
+Add support for this to the quirks structure and probe/remove functions.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ sound/soc/sunxi/sun4i-codec.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 735115244b17..6379efd21f00 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -30,6 +30,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/clk.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
+ #include <linux/gpio/consumer.h>
+ 
+ #include <sound/core.h>
+@@ -217,6 +218,7 @@ struct sun4i_codec {
+ 	struct regmap	*regmap;
+ 	struct clk	*clk_apb;
+ 	struct clk	*clk_module;
++	struct reset_control *rst;
+ 	struct gpio_desc *gpio_pa;
+ 
+ 	/* ADC_FIFOC register is at different offset on different SoCs */
+@@ -1232,6 +1234,7 @@ struct sun4i_codec_quirks {
+ 	struct reg_field reg_adc_fifoc;	/* used for regmap_field */
+ 	unsigned int reg_dac_txdata;	/* TX FIFO offset for DMA config */
+ 	unsigned int reg_adc_rxdata;	/* RX FIFO offset for DMA config */
++	bool has_reset;
+ };
+ 
+ static const struct sun4i_codec_quirks sun4i_codec_quirks = {
+@@ -1327,6 +1330,14 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 		return PTR_ERR(scodec->clk_module);
+ 	}
+ 
++	if (quirks->has_reset) {
++		scodec->rst = devm_reset_control_get(&pdev->dev, NULL);
++		if (IS_ERR(scodec->rst)) {
++			dev_err(&pdev->dev, "Failed to get reset control\n");
++			return PTR_ERR(scodec->rst);
++		}
++	};
++
+ 	scodec->gpio_pa = devm_gpiod_get_optional(&pdev->dev, "allwinner,pa",
+ 						  GPIOD_OUT_LOW);
+ 	if (IS_ERR(scodec->gpio_pa)) {
+@@ -1353,6 +1364,16 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Deassert the reset control */
++	if (scodec->rst) {
++		ret = reset_control_deassert(scodec->rst);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Failed to deassert the reset control\n");
++			goto err_clk_disable;
++		}
++	}
++
+ 	/* DMA configuration for TX FIFO */
+ 	scodec->playback_dma_data.addr = res->start + quirks->reg_dac_txdata;
+ 	scodec->playback_dma_data.maxburst = 8;
+@@ -1367,7 +1388,7 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 				     &sun4i_codec_dai, 1);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to register our codec\n");
+-		goto err_clk_disable;
++		goto err_assert_reset;
+ 	}
+ 
+ 	ret = devm_snd_soc_register_component(&pdev->dev,
+@@ -1404,6 +1425,9 @@ static int sun4i_codec_probe(struct platform_device *pdev)
+ 
+ err_unregister_codec:
+ 	snd_soc_unregister_codec(&pdev->dev);
++err_assert_reset:
++	if (scodec->rst)
++		reset_control_assert(scodec->rst);
+ err_clk_disable:
+ 	clk_disable_unprepare(scodec->clk_apb);
+ 	return ret;
+@@ -1416,6 +1440,8 @@ static int sun4i_codec_remove(struct platform_device *pdev)
+ 
+ 	snd_soc_unregister_card(card);
+ 	snd_soc_unregister_codec(&pdev->dev);
++	if (scodec->rst)
++		reset_control_assert(scodec->rst);
+ 	clk_disable_unprepare(scodec->clk_apb);
+ 
+ 	return 0;
+-- 
+2.10.2
