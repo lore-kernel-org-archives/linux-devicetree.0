@@ -1,32 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for special ISA
-Date: Wed, 09 Nov 2016 22:38:32 +0100
-Message-ID: <5900275.i4NZvtxTcC@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <2368890.jTbyGqYR0M@wuerfel> <20161109135453.2e5402bd@lxorguk.ukuu.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] regulator: lp873x: Add support for populating
+ input supply
+Date: Wed, 9 Nov 2016 14:50:13 -0700
+Message-ID: <20161109215013.GF2428@atomide.com>
+References: <20161021103841.8044-1-lokeshvutla@ti.com>
+ <20161021103841.8044-5-lokeshvutla@ti.com>
+ <20161030204118.ojeetnxl5qsi6lp7@rob-hp-laptop>
+ <e5619d78-5752-c8fb-8a11-6629c4b7c3f6@ti.com>
+ <20161109182618.ajqhtffure76zfnf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161109135453.2e5402bd@lxorguk.ukuu.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "zhichang.yuan" <yuanzhichang@hisilicon.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, benh@kernel.crashing.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161109182618.ajqhtffure76zfnf@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, November 9, 2016 1:54:53 PM CET One Thousand Gnomes wrote:
-> > I think it is a relatively safe assumption that there is only one
-> > ISA bridge. A lot of old drivers hardcode PIO or memory addresses
-> 
-> It's not a safe assumption for x86 at least. There are a few systems with
-> multiple ISA busses particularly older laptops with a docking station.
+* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [161109 11:26]:
+> On Wed, Nov 02, 2016 at 10:58:40AM +0530, Lokesh Vutla wrote:
+> > On Monday 31 October 2016 02:11 AM, Rob Herring wrote:
+> > > On Fri, Oct 21, 2016 at 04:08:36PM +0530, Lokesh Vutla wrote:
+> > >> In order to have a proper topology of regulators for a platform, each
+> > >> registering regulator needs to populate supply_name field for identifying
+> > >> its supply's name. Add supply_name field for lp873x regulators.
+> > >>
+> > >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >> Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> > >> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> > >> ---
+> > >>  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
+> > >>  drivers/regulator/lp873x-regulator.c             | 1 +
+...
 
-But do they have multiple ISA domains? There is no real harm in supporting
-it, the (small) downsides I can think of are:
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-- a few extra cycles for the lookup, from possibly walking a linked list
-  to find the correct set of helpers and MMIO addresses
-- making it too general could invite more people to design hardware
-  around the infrastructure when we really want them to stop adding
-  stuff like this.
+Please send this patch separately to the regulator maintainer.
 
-	Arnd
+Thanks,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
