@@ -1,60 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Wed, 9 Nov 2016 12:26:21 -0600
-Message-ID: <20161109182621.ttfxtdt32q3cqce7@rob-hp-laptop>
-References: <20161102104010.26959-1-andi.shyti@samsung.com>
- <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
- <20161102104010.26959-6-andi.shyti@samsung.com>
- <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
- <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
- <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
+Subject: Re: [RFC PATCH v2 1/5] net: mdio-mux-mmioreg: Add support for 16bit
+ and 32bit register sizes
+Date: Wed, 9 Nov 2016 12:26:10 -0600
+Message-ID: <20161109182610.thzm5bxfwusi4kjk@rob-hp-laptop>
+References: <1477932987-27871-1-git-send-email-narmstrong@baylibre.com>
+ <1477932987-27871-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1477932987-27871-2-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: f.fainelli@gmail.com, khilman@baylibre.com, carlo@caione.org, andrew@lunn.ch, netdev@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 11:39:21AM +0100, Jacek Anaszewski wrote:
-> On 11/03/2016 11:10 AM, Andi Shyti wrote:
-> > Hi Jacek,
-> > 
-> > > Only DT bindings of LED class drivers should be placed in
-> > > Documentation/devicetree/bindings/leds. Please move it to the
-> > > media bindings.
-> > 
-> > that's where I placed it first, but Rob asked me to put it in the
-> > LED directory and Cc the LED mailining list.
-> > 
-> > That's the discussion of the version 2:
-> > 
-> > https://lkml.org/lkml/2016/9/12/380
-> > 
-> > Rob, Jacek, could you please agree where I can put the binding?
+On Mon, Oct 31, 2016 at 05:56:23PM +0100, Neil Armstrong wrote:
+> In order to support PHY switching on Amlogic GXL SoCs, add support for
+> 16bit and 32bit registers sizes.
 > 
-> I'm not sure if this is a good approach. I've noticed also that
-> backlight bindings have been moved to leds, whereas they don't look
-> similarly.
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/net/mdio-mux-mmioreg.txt   |  4 +-
+>  drivers/net/phy/mdio-mux-mmioreg.c                 | 60 +++++++++++++++++-----
+>  2 files changed, 49 insertions(+), 15 deletions(-)
 > 
-> We have common.txt LED bindings, that all LED class drivers' bindings
-> have to follow. Neither backlight bindings nor these ones do that,
-> which introduces some mess.
+> diff --git a/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+> index 8516929..065e8bd 100644
+> --- a/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+> +++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
+> @@ -3,7 +3,7 @@ Properties for an MDIO bus multiplexer controlled by a memory-mapped device
+>  This is a special case of a MDIO bus multiplexer.  A memory-mapped device,
+>  like an FPGA, is used to control which child bus is connected.  The mdio-mux
+>  node must be a child of the memory-mapped device.  The driver currently only
 
-And there are probably LED bindings that don't follow common.txt either. 
+As you're touching this sentence, this describes the binding, not a 
+driver. With that,
 
-> Eventually adding a sub-directory, e.g. remote_control could make it
-> somehow logically justified, but still - shouldn't bindings be
-> placed in the documentation directory related to the subsystem of the
-> driver they are predestined to?
+Acked-by: Rob Herring <robh@kernel.org>
 
-No. While binding directories often mirror the driver directories, they 
-are not the same. Bindings are grouped by types of h/w and IR LEDs are a 
-type of LED.
-
-If you prefer a sub-dir, that is fine with me.
-
-Rob
+> -supports devices with eight-bit registers.
+> +supports devices with 8, 16 or 32-bit registers.
+>  
+>  Required properties in addition to the generic multiplexer properties:
+>  
+> @@ -11,7 +11,7 @@ Required properties in addition to the generic multiplexer properties:
+>  
+>  - reg : integer, contains the offset of the register that controls the bus
+>  	multiplexer.  The size field in the 'reg' property is the size of
+> -	register, and must therefore be 1.
+> +	register, and must therefore be 1, 2, or 4.
+>  
+>  - mux-mask : integer, contains an eight-bit mask that specifies which
+>  	bits in the register control the actual bus multiplexer.  The
