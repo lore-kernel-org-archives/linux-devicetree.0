@@ -1,61 +1,111 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Wed, 9 Nov 2016 11:29:46 +0000
-Message-ID: <6dee9821-5145-2113-e391-6317e4533c06@huawei.com>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <8adfe182-4939-479d-6013-25ec40021b20@huawei.com>
- <20161108164948.GG20591@arm.com> <2479288.4UmF9SBrq1@wuerfel>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH] ata: xgene: Enable NCQ support for APM X-Gene SATA
+ controller hardware v1.1
+Date: Wed, 9 Nov 2016 17:09:14 +0530
+Message-ID: <CAFd313yibujm+yzeVUZFrLwT8vwbDYN+DJmsAQ7rWUNXUb2ixw@mail.gmail.com>
+References: <1476962064-8775-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2479288.4UmF9SBrq1@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1476962064-8775-1-git-send-email-rsahu@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, tj@kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Devicetree List <devicetree@vger.kernel.org>, mlangsdo@redhat.com, linux-scsi@vger.kernel.org, Jon Masters <jcm@redhat.com>, Rameshwar Prasad Sahu <rsahu@apm.com>, patches <patches@apm.com>, linux-ide@vger.kernel.org, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2016 22:35, Arnd Bergmann wrote:
-> On Tuesday, November 8, 2016 4:49:49 PM CET Will Deacon wrote:
->> On Tue, Nov 08, 2016 at 04:33:44PM +0000, John Garry wrote:
->>> On 08/11/2016 16:12, Will Deacon wrote:
->>>> On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
->
->>>> Is there no way to make this slightly more generic, so that it can be
->>>> re-used elsewhere? For example, if struct extio_ops was common, then
->>>> you could have the singleton (which maybe should be an interval tree?),
->>>> type definition, setter function and the BUILD_EXTIO invocations
->>>> somewhere generic, rather than squirelled away in the arch backend.
->>>>
->>> The concern would be that some architecture which uses generic higher-level
->>> ISA accessor ops, but have IO space, could be affected.
->>
->> You're already adding a Kconfig symbol for this stuff, so you can keep
->> that if you don't want it on other architectures. I'm just arguing that
->> plumbing drivers directly into arch code via arm64_set_extops is not
->> something I'm particularly fond of, especially when it looks like it
->> could be avoided with a small amount of effort.
->
-> Agreed, I initially suggested putting this into arch/arm64/, but there isn't
-> really a reason why it couldn't just live in lib/ with the header file
-> bits moved to include/asm-generic/io.h which we already use.
->
+Hi Olof/Tejun,
 
-Right, Zhichang will check the logistics of this. The generic io.h is 
-quite clean, so as long as you don't mind new build switches of this 
-nature being added, it should be ok; and we'll plan on moving extio.h 
-into include/asm-generic as well.
-
-Cheers,
-John
-
-> 	Arnd
+On Thu, Oct 20, 2016 at 4:44 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
 >
-> .
+> This patch enables NCQ support for APM X-Gene SATA controller
+> hardware v1.1 that was broken with hardware v1.0.
 >
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/ata/ahci_xgene.c |   14 ++++++++------
+>  1 files changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+> index 73b19b2..8b88be9 100644
+> --- a/drivers/ata/ahci_xgene.c
+> +++ b/drivers/ata/ahci_xgene.c
+> @@ -87,6 +87,7 @@
+>
+>  enum xgene_ahci_version {
+>         XGENE_AHCI_V1 = 1,
+> +       XGENE_AHCI_V1_1,
+>         XGENE_AHCI_V2,
+>  };
+>
+> @@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id xgene_ahci_acpi_match[] = {
+>         { "APMC0D0D", XGENE_AHCI_V1},
+> +       { "APMC0D67", XGENE_AHCI_V1_1},
+>         { "APMC0D32", XGENE_AHCI_V2},
+>         {},
+>  };
+> @@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
+>
+>  static const struct of_device_id xgene_ahci_of_match[] = {
+>         {.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
+> +       {.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
+>         {.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
+>         {},
+>  };
+> @@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>         struct resource *res;
+>         const struct of_device_id *of_devid;
+>         enum xgene_ahci_version version = XGENE_AHCI_V1;
+> -       const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+> -                                             &xgene_ahci_v2_port_info };
+> +       const struct ata_port_info *ppi;
+>         int rc;
+>
+>         hpriv = ahci_platform_get_resources(pdev);
+> @@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>                                 dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
+>                                         __func__);
+>                                 version = XGENE_AHCI_V1;
+> -                       } else if (info->valid & ACPI_VALID_CID) {
+> -                               version = XGENE_AHCI_V2;
+>                         }
+>                 }
+>         }
+> @@ -858,18 +858,20 @@ skip_clk_phy:
+>
+>         switch (version) {
+>         case XGENE_AHCI_V1:
+> +               ppi = &xgene_ahci_v1_port_info;
+>                 hpriv->flags = AHCI_HFLAG_NO_NCQ;
+>                 break;
+>         case XGENE_AHCI_V2:
+> +               ppi = &xgene_ahci_v2_port_info;
+>                 hpriv->flags |= AHCI_HFLAG_YES_FBS;
+>                 hpriv->irq_handler = xgene_ahci_irq_intr;
+>                 break;
+>         default:
+> +               ppi = &xgene_ahci_v1_port_info;
+>                 break;
+>         }
+>
+> -       rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
+> -                                    &ahci_platform_sht);
+> +       rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
+>         if (rc)
+>                 goto disable_resources;
+>
+> --
+> 1.7.1
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any comment on above patch ??
