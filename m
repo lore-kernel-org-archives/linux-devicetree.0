@@ -1,73 +1,75 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH 3/3] ipmi/bt-bmc: add a sysfs file to configure a maximum
- response time
-Date: Wed, 9 Nov 2016 15:42:40 +0100
-Message-ID: <aa4804b0-4084-6d34-c1db-68bdb5efb20a@kaod.org>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
- <1478073426-3714-4-git-send-email-clg@kaod.org>
- <3a1f8e6d-c935-3404-ffa0-81b19d170731@acm.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] soc: qcom: Add SoC info driver
+Date: Wed, 9 Nov 2016 15:44:29 +0100
+Message-ID: <CAMuHMdXJwjUzbK=Ry6x1dy0m-Ho7evteUz4c6igOaqWivYzqgA@mail.gmail.com>
+References: <1476972386-28655-1-git-send-email-kimran@codeaurora.org>
+ <3567809.JctLPjIDdk@wuerfel> <aec67ab3-8e89-fe06-b385-988f8eea5f46@codeaurora.org>
+ <3809309.oOnjdjqnN9@wuerfel> <20161102162811.GN25787@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3a1f8e6d-c935-3404-ffa0-81b19d170731@acm.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: minyard@acm.org, openipmi-developer@lists.sourceforge.net, Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161102162811.GN25787@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Imran Khan <kimran-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDcvMjAxNiAwNzozNyBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToKPiBTb3JyeSwgSSB3
-YXMgYXQgUGx1bWJlcnMgYW5kIGV4dHJhIGJ1c3kgd2l0aCBvdGhlciBzdHVmZi4gIEp1c3QgZ2V0
-dGluZyBhcm91bmQgdG8gcmV2aWV3aW5nIHRoaXMuCj4gCj4gT24gMTEvMDIvMjAxNiAwMjo1NyBB
-TSwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3JvdGU6Cj4+IFdlIGNvdWxkIGFsc28gdXNlIGFuIGlvY3Rs
-IGZvciB0aGF0IHB1cnBvc2UuIHN5c2ZzIHNlZW1zIGEgYmV0dGVyCj4+IGFwcHJvYWNoLgo+Pgo+
-PiBTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qub3JnPgo+PiAtLS0K
-Pj4gICBkcml2ZXJzL2NoYXIvaXBtaS9idC1ibWMuYyB8IDMxICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQo+Pgo+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMgYi9kcml2ZXJzL2NoYXIvaXBt
-aS9idC1ibWMuYwo+PiBpbmRleCBlNzUxZTRhNzU0YjcuLmQ3MTQ2ZjBlOTAwZSAxMDA2NDQKPj4g
-LS0tIGEvZHJpdmVycy9jaGFyL2lwbWkvYnQtYm1jLmMKPj4gKysrIGIvZHJpdmVycy9jaGFyL2lw
-bWkvYnQtYm1jLmMKPj4gQEAgLTg0LDYgKzg0LDMzIEBAIHN0cnVjdCBidF9ibWMgewo+PiAgICAg
-c3RhdGljIGF0b21pY190IG9wZW5fY291bnQgPSBBVE9NSUNfSU5JVCgwKTsKPj4gICArc3RhdGlj
-IHNzaXplX3QgYnRfYm1jX3Nob3dfcmVzcG9uc2VfdGltZShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+
-ICsgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwKPj4g
-KyAgICAgICAgICAgICAgICAgICAgIGNoYXIgKmJ1ZikKPj4gK3sKPj4gKyAgICBzdHJ1Y3QgYnRf
-Ym1jICpidF9ibWMgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4gKwo+PiArICAgIHJldHVybiBz
-bnByaW50ZihidWYsIFBBR0VfU0laRSAtIDEsICIlZFxuIiwgYnRfYm1jLT5yZXNwb25zZV90aW1l
-KTsKPj4gK30KPj4gKwo+PiArc3RhdGljIHNzaXplX3QgYnRfYm1jX3NldF9yZXNwb25zZV90aW1l
-KHN0cnVjdCBkZXZpY2UgKmRldiwKPj4gKyAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmlj
-ZV9hdHRyaWJ1dGUgKmF0dHIsCj4+ICsgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmJ1
-Ziwgc2l6ZV90IGNvdW50KQo+PiArewo+PiArICAgIHN0cnVjdCBidF9ibWMgKmJ0X2JtYyA9IGRl
-dl9nZXRfZHJ2ZGF0YShkZXYpOwo+PiArICAgIHVuc2lnbmVkIGxvbmcgdmFsOwo+PiArICAgIGlu
-dCBlcnI7Cj4+ICsKPj4gKyAgICBlcnIgPSBrc3RydG91bChidWYsIDAsICZ2YWwpOwo+PiArICAg
-IGlmIChlcnIpCj4+ICsgICAgICAgIHJldHVybiBlcnI7Cj4+ICsgICAgYnRfYm1jLT5yZXNwb25z
-ZV90aW1lID0gdmFsOwo+PiArICAgIHJldHVybiBjb3VudDsKPj4gK30KPj4gKwo+PiArc3RhdGlj
-IERFVklDRV9BVFRSKHJlc3BvbnNlX3RpbWUsIDA2NDQsCj4+ICsgICAgICAgICAgIGJ0X2JtY19z
-aG93X3Jlc3BvbnNlX3RpbWUsIGJ0X2JtY19zZXRfcmVzcG9uc2VfdGltZSk7Cj4+ICsKPj4gICBz
-dGF0aWMgdTggYnRfaW5iKHN0cnVjdCBidF9ibWMgKmJ0X2JtYywgaW50IHJlZykKPj4gICB7Cj4+
-ICAgICAgIHJldHVybiBpb3JlYWQ4KGJ0X2JtYy0+YmFzZSArIHJlZyk7Cj4+IEBAIC01NzIsNiAr
-NTk5LDEwIEBAIHN0YXRpYyBpbnQgYnRfYm1jX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCj4+ICAgICAgIGJ0X2JtY19jb25maWdfaXJxKGJ0X2JtYywgcGRldik7Cj4+ICAgICAg
-ICAgYnRfYm1jLT5yZXNwb25zZV90aW1lID0gQlRfQk1DX1JFU1BPTlNFX1RJTUU7Cj4+ICsgICAg
-cmMgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoJnBkZXYtPmRldiwgJmRldl9hdHRyX3Jlc3BvbnNlX3Rp
-bWUpOwo+PiArICAgIGlmIChyYykKPj4gKyAgICAgICAgZGV2X3dhcm4oJnBkZXYtPmRldiwgImNh
-bid0IGNyZWF0ZSByZXNwb25zZV90aW1lIGZpbGVcbiIpOwo+PiArCj4gCj4gWW91IGFkZGVkIGFu
-IGV4dHJhIHNwYWNlIGhlcmUuCgp5ZXMuIEkgd2lsbCByZW1vdmUgaXQgaW4gdGhlIG5leHQgdmVy
-c2lvbi4gCgpUaGUgcGF0Y2ggcmFpc2VzIGEgZmV3IHF1ZXN0aW9ucyBvbiB0aGUgIkJUIEludGVy
-ZmFjZSBDYXBhYmlsaXRpZXMiIDoKCiAtIHNob3VsZCB3ZSB1c2Ugc3lzZnMgb3IgYSBzcGVjaWZp
-YyBpb2N0bCB0byBjb25maWd1cmUgdGhlIGRyaXZlciA/IAogLSBzaG91bGQgdGhlIGRyaXZlciBo
-YW5kbGUgZGlyZWN0bHkgdGhlIHJlc3BvbnNlIHRvIHRoZSAiR2V0IEJUIAogICBJbnRlcmZhY2Ug
-Q2FwYWJpbGl0aWVzIiBjb21tYW5kID8gCgpXaGF0IGlzIHlvdXIgb3BpbmlvbiA/IAoKVGhhbmtz
-LAoKQy4KCj4+ICAgICAgICAgaWYgKGJ0X2JtYy0+aXJxKSB7Cj4+ICAgICAgICAgICBkZXZfaW5m
-byhkZXYsICJVc2luZyBJUlEgJWRcbiIsIGJ0X2JtYy0+aXJxKTsKPiAKPiAKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Bjorn,
+
+On Wed, Nov 2, 2016 at 5:28 PM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed 26 Oct 07:05 PDT 2016, Arnd Bergmann wrote:
+>> On Wednesday, October 26, 2016 7:20:42 PM CEST Imran Khan wrote:
+>> > On 10/26/2016 2:19 AM, Arnd Bergmann wrote:
+>> > > On Tuesday, October 25, 2016 3:23:34 PM CEST Imran Khan wrote:
+>> > >> On 10/21/2016 4:03 PM, Arnd Bergmann wrote:
+>> > >> Okay. I will go for human readable IDs. Can we add 2 more fields
+>> > >> in the generic structure.
+>> > >> These 2 fields would be:
+>> > >>
+>> > >> vendor: A string for vendor name
+>> > >> serial_number: A string containing serial number for the platform
+>> > >
+>> > >
+>> > > serial_number seems straightforward, adding this seems like a good
+>> > > idea. I don't understand yet what would go into the vendor field
+>> > > though. For this particular driver, is it always "Qualcomm", or
+>> > > would it be a third-party that makes a device based on that chip?
+>> >
+>> > As we are talking about generic soc_device_attribute fields, I was hoping that
+>> > having a vendor field would be helpful as along with family it would provide
+>> > a more thorough information. Also as more than one foundries may be used for
+>> > a soc, can we have a field say foundry_id to provide this information.
+>>
+>> My first feeling is that this 'vendor' information can should be
+>> derived from the family.
+>
+> In [1] Geert just put the vendor directly into "family", while Imran
+> uses "Snapdragon" (which I find reasonable in the Qualcomm case). But it
+> seems like Geert would like a "vendor" as well, rather than a "family".
+>
+> And if "family" really is supposed to contain the "SoC family name" and
+> we're trying to provide user space with some useful information (for
+> some reason), should we just rely on the unlikeliness of two vendors
+> using the same family name?
+>
+> [1] http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1261742.html
+
+I think vendor is slightly less volatile than family. Family may
+change overnight
+if marketing had a good dream. Well, vendor may change, too...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
