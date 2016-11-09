@@ -1,26 +1,47 @@
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: RE: [PATCH 1/2] gpio: xilinx: dt-binding: Add clock node
-Date: Wed, 9 Nov 2016 04:25:55 +0000
-Message-ID: <4EED9C67BE3EF440A606099F8E34C52826635513@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1478581990-28276-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <20161108144846.GQ14444@xsjsorenbubuntu>
+Subject: [PATCHv2 1/2] gpio: xilinx: dt-binding: Add clock node
+Date: Wed, 9 Nov 2016 10:39:50 +0530
+Message-ID: <1478668191-26322-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161108144846.GQ14444@xsjsorenbubuntu>
-Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
-To: Soren Brinkmann <sorenb@xilinx.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: soren.brinkmann@xilinx.com, michal.simek@xilinx.com, shubhrajyoti.datta@gmail.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpIaSBTb3JlbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTw7Zy
-ZW4gQnJpbmttYW5uIFttYWlsdG86c29yZW4uYnJpbmttYW5uQHhpbGlueC5jb21dDQo+IFNlbnQ6
-IFR1ZXNkYXksIE5vdmVtYmVyIDA4LCAyMDE2IDg6MTkgUE0NCjxzbmlwPg0KDQo+ID4gKy0gY2xv
-Y2stbmFtZXM6IElucHV0IGNsb2NrIG5hbWUNCj4gDQo+IENsb2NrIG5hbWVzIGFyZSBkcml2ZXIg
-c3BlY2lmaWMgYW5kIG11c3QgYmUgZG9jdW1lbnRlZCBoZXJlLg0KDQoNCldpbGwgZG8gdGhhbmtz
-Lg0KDQo+IA0KPiA+DQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gPiAgZ3BpbzogZ3Bpb0A0MDAwMDAw
-MCB7DQo+ID4gIAkjZ3Bpby1jZWxscyA9IDwyPjsNCj4gPiAgCWNvbXBhdGlibGUgPSAieGxueCx4
-cHMtZ3Bpby0xLjAwLmEiOw0KPiA+ICsJY2xvY2tzID0gPCZjbGtjIDE1PjsNCj4gDQo+IFdoZXJl
-IGFyZSB0aGUgY2xvY2stbmFtZXM/DQpXaWxsIGFkZC4gDQoNCj4gDQo+IAlTw7ZyZW4NCg==
+Add the clock node to the dt binding.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+v2: 
+Make clocks optional
+Add clock name
+
+ .../devicetree/bindings/gpio/gpio-xilinx.txt       |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+index 63bf4be..1372007 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+@@ -25,12 +25,16 @@ Optional properties:
+ - xlnx,dout-default-2 : as above but the second channel
+ - xlnx,gpio2-width : as above but for the second channel
+ - xlnx,tri-default-2 : as above but for the second channel
++- clocks: Input clock specifier. Refer to common clock bindings.
++- clock-names: Input clock name, should be s_axi_aclk.
+ 
+ 
+ Example:
+ gpio: gpio@40000000 {
+ 	#gpio-cells = <2>;
+ 	compatible = "xlnx,xps-gpio-1.00.a";
++	clocks = <&clkc 15>;
++	clock-names = "s_axi_aclk";
+ 	gpio-controller ;
+ 	interrupt-parent = <&microblaze_0_intc>;
+ 	interrupts = < 6 2 >;
+-- 
+1.7.1
+
