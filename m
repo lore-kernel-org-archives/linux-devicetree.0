@@ -1,119 +1,98 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: sunxi: Add support for interrupt debouncing
-Date: Wed, 9 Nov 2016 09:50:59 +0100
-Message-ID: <CACRpkdYmt=4xaQF4n6zxU-mF35VOhsBaeORaz90J1443EsXuLw@mail.gmail.com>
-References: <cover.61acad25a6fb233e39141b52acd217415281bd73.1478636546.git-series.maxime.ripard@free-electrons.com>
- <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard@free-electrons.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] i2c: pxa: Add support for the I2C units found in
+ Armada 3700
+Date: Wed, 9 Nov 2016 10:59:47 +0200
+Message-ID: <20161109085946.cmd4ltaxpiojq7il@tarshish>
+References: <20161109081431.10115-1-romain.perier@free-electrons.com>
+ <20161109081431.10115-2-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161109081431.10115-2-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 8, 2016 at 9:24 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Romain,
 
-> The pin controller found in the Allwinner SoCs has support for interrupts
-> debouncing.
->
-> However, this is not done per-pin, preventing us from using the generic
-> pinconf binding for that, but per irq bank, which, depending on the SoC,
-> ranges from one to five.
->
-> Introduce a device-wide property to deal with this using a microsecond
-> resolution. We can re-use the per-pin input-debounce property for that, so
-> let's do it!
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, Nov 09, 2016 at 09:14:29AM +0100, Romain Perier wrote:
+> The Armada 3700 has two I2C controllers that is compliant with the I2C
+> Bus Specificiation 2.1, supports multi-master and different bus speed:
+> Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
+> High speed mode (up to 3.4 Mhz).
+> 
+> This IP block has a lot of similarity with the PXA, except some register
+> offsets and bitfield. This commits adds a basic support for this I2C
+> unit.
+> 
+> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-I like this! Minor nits inline:
+[...]
 
-> +- clocks: phandle to the clocks feeding the pin controller:
-> +  - "apb": the gated APB parent clock
-> +  - "hosc": the high frequency oscillator in the system
-> +  - "losc": the low frequency oscillator in the system
-> +
-> +Note: For backward compatibility reasons, the hosc and losc clocks are only
-> +required if you need to use the optional input-debounce property. Any new
-> +device tree should set them.
-> +
-> +Optional properties:
-> +  - input-debounce: Array of debouncing periods in microseconds. One period per
-> +    irq bank found in the controller
+> @@ -122,7 +131,9 @@ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
+>  #define ICR_SADIE	(1 << 13)	   /* slave address detected int enable */
+>  #define ICR_UR		(1 << 14)	   /* unit reset */
+>  #define ICR_FM		(1 << 15)	   /* fast mode */
+> +#define ICR_BUSMODE_FM	(1 << 16)	   /* shifted fast mode for armada-3700 */
+>  #define ICR_HS		(1 << 16)	   /* High Speed mode */
+> +#define ICR_BUSMODE_HS	(1 << 17)	   /* shifted high speed mode for armada-3700 */
+>  #define ICR_GPIOEN	(1 << 19)	   /* enable GPIO mode for SCL in HS */
+>  
+>  #define ISR_RWM		(1 << 0)	   /* read/write mode */
+> @@ -193,6 +204,8 @@ struct pxa_i2c {
+>  	unsigned char		master_code;
+>  	unsigned long		rate;
+>  	bool			highmode_enter;
+> +	unsigned long		fm_mask;
+> +	unsigned long		hs_mask;
 
-Looks good to me. Cutting the DT people some slack to look at this
-before merging.
+Do you really need 64bit for that?
 
-> +static int sunxi_pinctrl_compute_debounce(struct clk *clk, int freq, int *diff)
-> +{
-> +       unsigned long clock = clk_get_rate(clk);
-> +       unsigned int best_diff = ~0, best_div;
-> +       int i;
-> +
-> +       for (i = 0; i < 8; i++) {
-> +               int cur_diff = abs(freq - (clock >> i));
-> +
-> +               if (cur_diff < best_diff) {
-> +                       best_diff = cur_diff;
-> +                       best_div = i;
-> +               }
-> +       }
-> +
-> +       *diff = best_diff;
-> +       return best_div;
-> +}
+baruch
 
-Kerneldoc or function name should reflect that what this function
-does is to find the best divisor.
+>  };
+>  
+>  #define _IBMR(i2c)	((i2c)->reg_ibmr)
+> @@ -503,8 +516,8 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
+>  		writel(i2c->slave_addr, _ISAR(i2c));
+>  
+>  	/* set control register values */
+> -	writel(I2C_ICR_INIT | (i2c->fast_mode ? ICR_FM : 0), _ICR(i2c));
+> -	writel(readl(_ICR(i2c)) | (i2c->high_mode ? ICR_HS : 0), _ICR(i2c));
+> +	writel(I2C_ICR_INIT | (i2c->fast_mode ? i2c->fm_mask : 0), _ICR(i2c));
+> +	writel(readl(_ICR(i2c)) | (i2c->high_mode ? i2c->hs_mask : 0), _ICR(i2c));
+>  
+>  #ifdef CONFIG_I2C_PXA_SLAVE
+>  	dev_info(&i2c->adap.dev, "Enabling slave mode\n");
+> @@ -1137,6 +1150,7 @@ static const struct of_device_id i2c_pxa_dt_ids[] = {
+>  	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
+>  	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
+>  	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
+> +	{ .compatible = "marvell,armada-3700-i2c", .data = (void *)REGS_A3700 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
+> @@ -1158,6 +1172,13 @@ static int i2c_pxa_probe_dt(struct platform_device *pdev, struct pxa_i2c *i2c,
+>  		i2c->use_pio = 1;
+>  	if (of_get_property(np, "mrvl,i2c-fast-mode", NULL))
+>  		i2c->fast_mode = 1;
+> +	if (of_device_is_compatible(np, "marvell,armada-3700-i2c")) {
+> +		i2c->fm_mask = ICR_BUSMODE_FM;
+> +		i2c->hs_mask = ICR_BUSMODE_HS;
+> +	} else {
+> +		i2c->fm_mask = ICR_FM;
+> +		i2c->hs_mask = ICR_HS;
+> +	}
+>  
+>  	*i2c_types = (enum pxa_i2c_types)(of_id->data);
 
-> +static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
-> +                                       struct device_node *node)
-> +{
-> +       unsigned int hosc_diff, losc_diff;
-> +       unsigned int hosc_div, losc_div;
-> +       struct clk *hosc, *losc;
-> +       u8 div, src;
-> +       int i, ret;
-> +
-> +       /* Deal with old DTs that didn't have the oscillators */
-> +       if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
-> +               return 0;
-
-Clever, nice.
-
-> +       /* If we don't have any setup, bail out */
-> +       if (!of_find_property(node, "input-debounce", NULL))
-> +               return 0;
-> +
-> +       losc = devm_clk_get(pctl->dev, "losc");
-> +       if (IS_ERR(losc))
-> +               return PTR_ERR(losc);
-> +
-> +       hosc = devm_clk_get(pctl->dev, "hosc");
-> +       if (IS_ERR(hosc))
-> +               return PTR_ERR(hosc);
-> +
-> +       for (i = 0; i < pctl->desc->irq_banks; i++) {
-> +               unsigned long debounce_freq;
-> +               u32 debounce;
-> +
-> +               ret = of_property_read_u32_index(node, "input-debounce",
-> +                                                i, &debounce);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               debounce_freq = USEC_PER_SEC / debounce;
-
-Arithmetics! Would you like to use
-DIV_ROUND_UP()? or DIV_ROUND_CLOSEST()?
-
-Apart from that I like this patch a lot.
-
-Yours,
-Linus Walleij
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
