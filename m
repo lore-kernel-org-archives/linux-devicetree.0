@@ -1,66 +1,56 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Wed,  9 Nov 2016 21:21:53 +0800
-Message-ID: <1478697721-2323-2-git-send-email-wxt@rock-chips.com>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 0/2] pinctrl: tegra: Add support for IO pad control
+Date: Wed, 9 Nov 2016 18:36:20 +0530
+Message-ID: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: eddie.cai@rock-chips.com, tfiga@chromium.org, Ziyuan Xu <xzy.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, swarren@wwwdotorg.org, thierry.reding@gmail.com
+Cc: gnurou@gmail.com, yamada.masahiro@socionext.com, jonathanh@nvidia.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ziyuan Xu <xzy.xu@rock-chips.com>
+NVIDIA Tegra124 and later SoCs support the multi-voltage level and
+low power state of some of its IO pads. The IO pads can work in
+the voltage of the 1.8V and 3.3V of IO power rail sources. When IO
+interface are not used then IO pads can be configure in low power
+state to reduce the power from that IO pads.
 
-Control power domain for eMMC via genpd to reduce power consumption.
+This series add the support of configuration of IO pad via pinctrl
+framework. The io pad driver uses the tegra PMC interface.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
+This driver was sent earlier for review along with soc/tegra pmc
+changes. During review, decided to first conclude in soc/tegra pmc
+patches and then review this.
+    
+Thierry applied the pmc patches in the private tree
+        https://github.com/thierryreding/linux/tree/tegra186
+and he wanted to have the patches for user of the new APIs so that
+it can be pushed to mainline.
+    
+Sending the pinctrl driver. This needs Ack/reviewed from pinctrl subsystem
+i.e. Linus Welleij to apply in the Thierry's T186 branch along with
+PMC patches.
 
-Changes in v2:
-- Reviewed-on: https://chromium-review.googlesource.com/376558
-- Verified on ChromeOS kernel4.4
+---
+Changes from V1:
+- use the regulator framework to get the IO voltage instead of table from
+  DT. The regulator handle is provided from DT.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Laxman Dewangan (2):
+  pinctrl: tegra: Add DT binding for io pads control
+  pinctrl: tegra: Add driver to configure voltage and power of io pads
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index cbb7f8b..b401176 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -269,6 +269,7 @@
- 		#clock-cells = <0>;
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
-+		power-domains = <&power RK3399_PD_EMMC>;
- 		status = "disabled";
- 	};
- 
-@@ -690,6 +691,11 @@
- 		status = "disabled";
- 	};
- 
-+	qos_emmc: qos@ffa58000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa58000 0x0 0x20>;
-+	};
-+
- 	qos_gmac: qos@ffa5c000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xffa5c000 0x0 0x20>;
-@@ -823,6 +829,11 @@
- 			};
- 
- 			/* These power domains are grouped by VD_LOGIC */
-+			pd_emmc@RK3399_PD_EMMC {
-+				reg = <RK3399_PD_EMMC>;
-+				clocks = <&cru ACLK_EMMC>;
-+				pm_qos = <&qos_emmc>;
-+			};
- 			pd_gmac@RK3399_PD_GMAC {
- 				reg = <RK3399_PD_GMAC>;
- 				clocks = <&cru ACLK_GMAC>;
+ .../bindings/pinctrl/nvidia,tegra-io-pad.txt       | 112 +++++++
+ drivers/pinctrl/tegra/Kconfig                      |  12 +
+ drivers/pinctrl/tegra/Makefile                     |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c       | 369 +++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  21 ++
+ 5 files changed, 515 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
+ create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+
 -- 
-2.7.4
+2.1.4
