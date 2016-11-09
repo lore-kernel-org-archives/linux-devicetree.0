@@ -1,48 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: synopsys-dw-mshc: add binding for
- reset-names
-Date: Wed, 9 Nov 2016 12:24:24 -0600
-Message-ID: <20161109182424.5eais27okcsdmdzx@rob-hp-laptop>
-References: <20161031024942.4415-1-jh80.chung@samsung.com>
- <20161031024942.4415-2-jh80.chung@samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] ARM: bus: da8xx-mstpri: new driver
+Date: Wed, 9 Nov 2016 12:24:33 -0600
+Message-ID: <20161109182433.vskk5rn7hfxshfy6@rob-hp-laptop>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161031024942.4415-2-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <1477925138-23457-3-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 11:49:41AM +0900, Jaehoon Chung wrote:
-> Add reset-names property for binding dw-mmc controller.
-> It might be used together with "reset" property.
-> -  Note: It must be "reset" as name.
-> 
-> Fixes: d6786fefe816 ("mmc: dw_mmc: add reset support to dwmmc host controller")
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> index 4e00e85..bfa461a 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -43,6 +43,9 @@ Optional properties:
->    reset signal present internally in some host controller IC designs.
->    See Documentation/devicetree/bindings/reset/reset.txt for details.
->  
-> +* reset-names: request name for using "resets" property. Must be "reset".
-> +	(It will be used together with "resets" property.)
-
-There is no point in having names for a single reset. This should be 
-fixed in the kernel only if this causes a problem.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBPY3QgMzEsIDIwMTYgYXQgMDM6NDU6MzVQTSArMDEwMCwgQmFydG9zeiBHb2xhc3pl
+d3NraSB3cm90ZToKPiBDcmVhdGUgdGhlIGRyaXZlciBmb3IgdGhlIGRhOHh4IG1hc3RlciBwZXJp
+cGhlcmFsIHByaW9yaXR5Cj4gY29uZmlndXJhdGlvbiBhbmQgaW1wbGVtZW50IHN1cHBvcnQgZm9y
+IHdyaXRpbmcgdG8gdGhlIHRocmVlCj4gTWFzdGVyIFByaW9yaXR5IHJlZ2lzdGVycyBvbiBkYTg1
+MCBTb0NzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pl
+d3NraUBiYXlsaWJyZS5jb20+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1cy90
+aSxkYTg1MC1tc3RwcmkudHh0ICAgIHwgIDIwICsrCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KCj4gIGRyaXZlcnMvYnVzL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICA5ICsKPiAgZHJpdmVycy9idXMvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ICBkcml2ZXJzL2J1cy9kYTh4eC1tc3RwcmkuYyAg
+ICAgICAgICAgICAgICAgICAgICAgICB8IDI2OSArKysrKysrKysrKysrKysrKysrKysKPiAgNCBm
+aWxlcyBjaGFuZ2VkLCAzMDAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2J1cy90aSxkYTg1MC1tc3RwcmkudHh0Cj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2J1cy9kYTh4eC1tc3RwcmkuYwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
