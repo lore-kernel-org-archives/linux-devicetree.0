@@ -1,94 +1,81 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH 1/6] dt-bindings: mdio-mux: Add documentation for mdio mux
- for NSP SoC
-Date: Wed, 9 Nov 2016 14:23:42 -0800
-Message-ID: <54363ca1-333a-52e6-911c-cc394256be97@broadcom.com>
-References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
- <1478683994-12008-2-git-send-email-yendapally.reddy@broadcom.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v6 5/8] DT:omap3+tsc2007: use new common touchscreen
+ bindings
+Date: Wed, 9 Nov 2016 15:27:23 -0700
+Message-ID: <20161109222723.GI2428@atomide.com>
+References: <cover.1477557860.git.hns@goldelico.com>
+ <72927a5b3d5b9f33dfd57a68ef1de9cb0a536407.1477557860.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478683994-12008-2-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <72927a5b3d5b9f33dfd57a68ef1de9cb0a536407.1477557860.git.hns@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@op
 List-Id: devicetree@vger.kernel.org
 
-One change
+* H. Nikolaus Schaller <hns@goldelico.com> [161027 01:47]:
+> While we fix the GTA04 we add proper pinmux for the
+> penirq gpio.
+> 
+> Tested on: GTA04A4 and Pyra-Handheld
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-On 16-11-09 01:33 AM, Yendapally Reddy Dhananjaya Reddy wrote:
-> Add documentation for mdio mux available in Broadcom NSP SoC
->
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+This should be safe to merge along with the driver changes:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
+
 > ---
->  .../devicetree/bindings/net/brcm,mdio-mux-nsp.txt  | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt b/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
-> new file mode 100644
-> index 0000000..b749a2b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
-> @@ -0,0 +1,57 @@
-> +Properties for an MDIO bus multiplexer available in Broadcom NSP SoC.
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index b3a8b1f..64d6ee3 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -273,6 +273,13 @@
+>  			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
+>  		>;
+>  	};
 > +
-> +This MDIO bus multiplexer defines buses that could access the internal
-> +phys as well as external to SoCs. When child bus is selected, one needs
-> +to select the below properties to generate desired MDIO transaction on
-> +appropriate bus.
-> +
-> +Required properties in addition to the generic multiplexer properties:
-> +
-> +MDIO multiplexer node:
-> +- compatible: brcm,mdio-mux-iproc.
-This should be brcm,mdio-mux-nsp
-
-> +- reg: Should contain registers location and length.
-> +- reg-names: Should contain the resource reg names.
-> +	- bus-ctrl: mdio bus control register address space required to
-> +	  select the bus master. This property is not required for SoC's
-> +	  that doesn't provide master selection.
-> +	- mgmt-ctrl: mdio management control register address space
-> +
-> +Sub-nodes:
-> +   Each bus master should be represented as a sub-node.
-> +
-> +Sub-nodes required properties:
-> +- reg: Bus master number. Should be 0x10 to access the external mdio devices.
-> +- address-cells: should be 1
-> +- size-cells: should be 0
-> +
-> +Every non-ethernet PHY requires a compatible property so that it could be
-> +probed based on this compatible string.
-> +
-> +Additional information regarding generic multiplexer properties can be found
-> +at- Documentation/devicetree/bindings/net/mdio-mux.txt
-> +
-> +example:
-> +
-> +	mdio_mux: mdio-mux@3f190 {
-> +		compatible = "brcm,mdio-mux-nsp";
-> +		reg = <0x3f190 0x4>,
-> +		      <0x32000 0x4>;
-> +		reg-names = "bus-ctrl", "mgmt-ctrl";
-> +		mdio-parent-bus = <&mdio>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		mdio@0 {
-> +			reg = <0x0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			usb3_phy: usb3-phy@10 {
-> +				compatible = "brcm,nsp-usb3-phy";
-> +				reg = <0x10>;
-> +				usb3-ctrl-syscon = <&usb3_ctrl>;
-> +				#phy-cells = <0>;
-> +				status = "disabled";
-> +			};
-> +		};
+> +	penirq_pins: pinmux_penirq_pins {
+> +		pinctrl-single,pins = <
+> +			/* here we could enable to wakeup the cpu from suspend by a pen touch */
+> +			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
+> +		>;
 > +	};
->
+>  };
+>  
+>  &omap3_pmx_core2 {
+> @@ -410,10 +417,24 @@
+>  	tsc2007@48 {
+>  		compatible = "ti,tsc2007";
+>  		reg = <0x48>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&penirq_pins>;
+>  		interrupt-parent = <&gpio6>;
+>  		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
+> -		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
+> -		ti,x-plate-ohms = <600>;
+> +		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <640>;
+> +		touchscreen-max-pressure = <1000>;
+> +		touchscreen-fuzz-x = <3>;
+> +		touchscreen-fuzz-y = <8>;
+> +		touchscreen-fuzz-pressure = <10>;
+> +		touchscreen-inverted-y;
+> +		ti,min-x = <0x100>;
+> +		ti,max-x = <0xf00>;
+> +		ti,min-y = <0x100>;
+> +		ti,max-y = <0xf00>;
+> +		ti,max-rt = <4096>;
+> +		ti,x-plate-ohms = <550>;
+>  	};
+>  
+>  	/* RFID EEPROM */
+> -- 
+> 2.7.3
+> 
