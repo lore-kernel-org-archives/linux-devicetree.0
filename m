@@ -1,36 +1,32 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: dts: am33xx: Add clock info to rtc nodes
-Date: Wed, 9 Nov 2016 15:47:03 -0700
-Message-ID: <20161109224702.GN2428@atomide.com>
-References: <1477547288-5041-1-git-send-email-j-keerthy@ti.com>
- <b5aa9c3b-e922-404d-3e0a-8a84dd3bce2a@ti.com>
+Subject: Re: [PATCH v2 0/9] ARM: DRA7: Add support for DRA718-evm
+Date: Wed, 9 Nov 2016 16:00:37 -0700
+Message-ID: <20161109230037.GP2428@atomide.com>
+References: <20161021103841.8044-1-lokeshvutla@ti.com>
+ <1b9c4d14-78d7-841f-776c-63a8c1ae1fb1@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b5aa9c3b-e922-404d-3e0a-8a84dd3bce2a-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1b9c4d14-78d7-841f-776c-63a8c1ae1fb1-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [161106 21:25]:
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [161106 20:50]:
+> Hi Tony,
 > 
+> On Friday 21 October 2016 04:08 PM, Lokesh Vutla wrote:
+> > This series does minor dts cleanup for dra72-evm and adds support for
+> > DRA718-evm.
 > 
-> On Thursday 27 October 2016 11:18 AM, Keerthy wrote:
-> > The series adds the clock info to rtc node.
-> > 
-> > Boot tested and checked for rtc ticking on am335x-boneblack, am335x-bone
-> > am437x-gp-evm.
-> 
-> Tony,
-> 
-> The relevant driver changes are already pulled by Alexandre Belloni.
-> https://patchwork.kernel.org/patch/9398903/.
-> 
-> Hope you call pull this set.
+> Do you have any comments on this series?
 
-Applying into omap-for-v4.10/dt thanks.
+Looks good to me except for the regulator patch that you need to repost.
+Applying the rest split into various topic branches for soc/dt/defconfig.
+
+Regards,
 
 Tony
 --
