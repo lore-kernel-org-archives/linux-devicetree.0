@@ -1,235 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD
- Host Controller
-Date: Wed, 9 Nov 2016 12:24:26 -0600
-Message-ID: <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 5/7] ARM: shmobile: Document DT bindings for CCCR and
+ PRR
+Date: Wed, 9 Nov 2016 12:24:28 -0600
+Message-ID: <20161109182428.lgwo4rqfxelibl3h@rob-hp-laptop>
+References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
+ <1477913455-5314-6-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ziji Hu <huziji@marvell.com>, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert
+In-Reply-To: <1477913455-5314-6-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yangbo Lu <yangbo.lu@nxp.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 12:09:54PM +0100, Gregory CLEMENT wrote:
-> From: Ziji Hu <huziji@marvell.com>
+On Mon, Oct 31, 2016 at 12:30:53PM +0100, Geert Uytterhoeven wrote:
+> Add device tree binding documentation for the Common Chip Code Register
+> and Product Register, which provide SoC product and revision
+> information.
 > 
-> Marvell Xenon SDHC can support eMMC/SD/SDIO.
-> Add Xenon-specific properties.
-> Also add properties for Xenon PHY setting.
-> 
-> Signed-off-by: Hu Ziji <huziji@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt | 161 +++++++-
->  MAINTAINERS                                                   |   1 +-
->  2 files changed, 162 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> new file mode 100644
-> index 000000000000..0d2d139494d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> @@ -0,0 +1,161 @@
-> +Marvell's Xenon SDHCI Controller device tree bindings
-> +This file documents differences between the core mmc properties
-> +described by mmc.txt and the properties used by the Xenon implementation.
-> +
-> +A single Xenon IP can support multiple slots.
-> +Each slot acts as an independent SDHC. It owns independent resources, such
-> +as register sets clock and PHY.
-> +Each slot should have an independent device tree node.
-> +
-> +Required Properties:
-> +- compatible: should be one of the following
-> +  - "marvell,armada-3700-sdhci": For controllers on Armada-3700 SOC.
-> +  Must provide a second register area and marvell,pad-type.
-> +  - "marvell,xenon-sdhci": For controllers on all the SOCs, other than
-> +  Armada-3700.
+> v2:
+>   - New.
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 
-Need SoC specific compatible strings.
-
-> +
-> +- clocks:
-> +  Array of clocks required for SDHCI.
-> +  Requires at least one for Xenon IP core.
-> +  Some SOCs require additional clock for AXI bus.
-> +
-> +- clock-names:
-> +  Array of names corresponding to clocks property.
-> +  The input clock for Xenon IP core should be named as "core".
-> +  The optional AXI clock should be named as "axi".
-
-When is AXI clock optional? This should be required for ?? compatible 
-strings.
-
-> +
-> +- reg:
-> +  * For "marvell,xenon-sdhci", one register area for Xenon IP.
-> +
-> +  * For "marvell,armada-3700-sdhci", two register areas.
-> +    The first one for Xenon IP register. The second one for the Armada 3700 SOC
-> +    PHY PAD Voltage Control register.
-> +    Please follow the examples with compatible "marvell,armada-3700-sdhci"
-> +    in below.
-> +    Please also check property marvell,pad-type in below.
-> +
-> +Optional Properties:
-> +- marvell,xenon-slotno:
-
-Multiple slots should be represented as child nodes IMO. I think some 
-other bindings already do this.
-
-> +  Indicate the corresponding bit index of current Xenon SDHC slot in
-> +  SDHC System Operation Control Register Bit[7:0].
-> +  Set/clear the corresponding bit to enable/disable current Xenon SDHC
-> +  slot.
-> +  If this property is not provided, Xenon IP should contain only one
-> +  slot.
-> +
-> +- marvell,xenon-phy-type:
-> +  Xenon support mutilple types of PHYs.
-> +  To select eMMC 5.1 PHY, set:
-> +  marvell,xenon-phy-type = "emmc 5.1 phy"
-> +  eMMC 5.1 PHY is the default choice if this property is not provided.
-> +  To select eMMC 5.0 PHY, set:
-> +  marvell,xenon-phy-type = "emmc 5.0 phy"
-> +  To select SDH PHY, set:
-> +  marvell,xenon-phy-type = "sdh phy"
-> +  Please note that eMMC PHY is a general PHY for eMMC/SD/SDIO, other than for
-> +  eMMC only.
-
-Does this vary per instance on a single SoC? If not, then an SoC 
-specific compatible should determine this.
-
-Also, the " phy" part is redundant.
-
-> +
-> +- marvell,xenon-phy-znr:
-> +  Set PHY ZNR value.
-> +  Only available for eMMC PHY 5.1 and eMMC PHY 5.0.
-> +  valid range = [0:0x1F].
-> +  ZNR is set as 0xF by default if this property is not provided.
-> +
-> +- marvell,xenon-phy-zpr:
-> +  Set PHY ZPR value.
-> +  Only available for eMMC PHY 5.1 and eMMC PHY 5.0.
-> +  valid range = [0:0x1F].
-> +  ZPR is set as 0xF by default if this property is not provided.
-> +
-> +- marvell,xenon-phy-nr-success-tun:
-> +  Set the number of required consecutive successful sampling points used to
-> +  identify a valid sampling window, in tuning process.
-> +  Valid range = [1:7]. Set as 0x4 by default if this property is not provided.
-> +
-> +- marvell,xenon-phy-tun-step-divider:
-> +  Set the divider for calculating TUN_STEP.
-> +  Set as 64 by default if this property is not provided.
-> +
-> +- marvell,xenon-phy-slow-mode:
-> +  Force PHY into slow mode.
-> +  Only available when bus frequency lower than 50MHz in SDR mde.
-> +  Disabled by default. Please do not enable it unless it is necessary.
-> +
-> +- marvell,xenon-mask-conflict-err:
-> +  Mask Conflict Error alert on some SOC. Disabled by default.
-> +
-> +- marvell,xenon-tun-count:
-> +  Xenon SDHC SOC usually doesn't provide re-tuning counter in
-> +  Capabilities Register 3 Bit[11:8].
-> +  This property provides the re-tuning counter.
-> +  If this property is not set, default re-tuning counter will
-> +  be set as 0x9 in driver.
-> +
-> +- marvell,pad-type:
-> +  Type of Armada 3700 SOC PHY PAD Voltiage Controller register.
-> +  Only valid when "marvell,armada-3700-sdhci" is selected.
-> +  Two types: "sd" and "fixed-1-8v".
-> +  If "sd" is slected, SOC PHY PAD is set as 3.3V at the beginning and is
-> +  switched to 1.8V when SD in UHS-I.
-> +  If "fixed-1-8v" is slected, SOC PHY PAD is fixed 1.8V, such as for eMMC.
-> +  Please follow the examples with compatible "marvell,armada-3700-sdhci"
-> +  in below.
-> +
-> +Example:
-> +- For eMMC slot:
-> +
-> +	sdhci@aa0000 {
-> +		compatible = "marvell,xenon-sdhci";
-> +		reg = <0xaa0000 0x1000>;
-> +		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
-> +		clocks = <&emmc_clk>, <&axi_clock>;
-> +		clock-names = "core", "axi";
-> +		bus-width = <8>;
-> +		marvell,xenon-emmc;
-
-Not documented. If we need to specify the type of slot/card, then we 
-need to come up with a standard property. This was either already done 
-or attempted IIRC.
-
-> +		marvell,xenon-slotno = <0>;
-> +		marvell,xenon-phy-type = "emmc 5.1 phy";
-> +		marvell,xenon-tun-count = <11>;
-> +	};
-> +
-> +- For SD/SDIO slot:
-> +
-> +	sdhci@ab0000 {
-> +		compatible = "marvell,xenon-sdhci";
-> +		reg = <0xab0000 0x1000>;
-> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
-> +		vqmmc-supply = <&sd_regulator>;
-> +		clocks = <&sdclk>;
-> +		clock-names = "core";
-> +		bus-width = <4>;
-> +		marvell,xenon-tun-count = <9>;
-> +	};
-> +
-> +- For eMMC slot with compatible "marvell,armada-3700-sdhci":
-> +
-> +	sdhci@aa0000 {
-> +		compatible = "marvell,armada-3700-sdhci";
-> +		reg = <0xaa0000 0x1000>,
-> +		      <phy_addr 0x4>;
-> +		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
-> +		clocks = <&emmcclk>;
-> +		clock-names = "core";
-> +		bus-width = <8>;
-> +		marvell,xenon-emmc;
-> +
-> +		marvell,pad-type = "fixed-1-8v";
-> +	};
-> +
-> +- For SD/SDIO slot with compatible "marvell,armada-3700-sdhci":
-> +
-> +	sdhci@ab0000 {
-> +		compatible = "marvell,armada-3700-sdhci";
-> +		reg = <0xab0000 0x1000>,
-> +		      <phy_addr 0x4>;
-> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
-> +		vqmmc-supply = <&sd_regulator>;
-> +		clocks = <&sdclk>;
-> +		clock-names = "core";
-> +		bus-width = <4>;
-> +
-> +		marvell,pad-type = "sd";
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1a5c4c30ea24..850a0afb0c8d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7608,6 +7608,7 @@ MARVELL XENON MMC/SD/SDIO HOST CONTROLLER DRIVER
->  M:	Ziji Hu <huziji@marvell.com>
->  L:	linux-mmc@vger.kernel.org
->  S:	Supported
-> +F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
->  
->  MATROX FRAMEBUFFER DRIVER
->  L:	linux-fbdev@vger.kernel.org
-> -- 
-> git-series 0.8.10
+Acked-by: Rob Herring <robh@kernel.org>
