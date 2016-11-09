@@ -1,70 +1,83 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: dts: imx7d-pinfunc: fix UART pinmux defines
-Date: Tue,  8 Nov 2016 18:44:56 -0800
-Message-ID: <20161109024456.1832-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, Frank.Li@nxp.com, aalonso@freescale.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: [v16, 0/7] Fix eSDHC host version register bug
+Date: Wed, 9 Nov 2016 11:14:05 +0800
+Message-ID: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The UART pinmux defines for the pins which are part of the LPSR
-pinmux controller are wrong: Output signals configure the input
-sel value and the pinmux defines allow not to distinguish between
-DCE/DTE mode. Follow the usual pattern using DTE/DCE as part of
-the define to denote the two UART configuration options.
+This patchset is used to fix a host version register bug in the T4240-R1.0-R2.0
+eSDHC controller. To match the SoC version and revision, 15 previous version
+patchsets had tried many methods but all of them were rejected by reviewers.
+Such as
+	- dts compatible method
+	- syscon method
+	- ifdef PPC method
+	- GUTS driver getting SVR method
+Anrd suggested a soc_device_match method in v10, and this is the only available
+method left now. This v11 patchset introduces the soc_device_match interface in
+soc driver.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+The first four patches of Yangbo are to add the GUTS driver. This is used to
+register a soc device which contain soc version and revision information.
+The other three patches introduce the soc_device_match method in soc driver
+and apply it on esdhc driver to fix this bug.
+
 ---
-There is a similar patch downstream named:
-"MLK-10662: arm: imx7d-pinfunc: fix uart input sel option value"
+Changes for v15:
+	- Dropped patch 'dt: bindings: update Freescale DCFG compatible'
+	  since the work had been done by below patch on ShawnGuo's linux tree.
+	  'dt-bindings: fsl: add LS1043A/LS1046A/LS2080A compatible for SCFG
+	   and DCFG'
+	- Fixed error code issue in guts driver
+Changes for v16:
+	- Dropped patch 'powerpc/fsl: move mpc85xx.h to include/linux/fsl'
+	- Added a bug-fix patch from Geert
+---
 
-Tested using UART5 on a Colibri iMX7.
+Arnd Bergmann (1):
+  base: soc: introduce soc_device_match() interface
 
---
-Stefan
+Geert Uytterhoeven (1):
+  base: soc: Check for NULL SoC device attributes
 
- arch/arm/boot/dts/imx7d-pinfunc.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Yangbo Lu (5):
+  ARM64: dts: ls2080a: add device configuration node
+  dt: bindings: move guts devicetree doc out of powerpc directory
+  soc: fsl: add GUTS driver for QorIQ platforms
+  MAINTAINERS: add entry for Freescale SoC drivers
+  mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
 
-diff --git a/arch/arm/boot/dts/imx7d-pinfunc.h b/arch/arm/boot/dts/imx7d-pinfunc.h
-index 3f9f0d9..7bc3c00 100644
---- a/arch/arm/boot/dts/imx7d-pinfunc.h
-+++ b/arch/arm/boot/dts/imx7d-pinfunc.h
-@@ -43,26 +43,30 @@
- #define MX7D_PAD_GPIO1_IO04__GPIO1_IO4                            0x0010 0x0040 0x0000 0x0 0x0
- #define MX7D_PAD_GPIO1_IO04__USB_OTG1_OC                          0x0010 0x0040 0x072C 0x1 0x1
- #define MX7D_PAD_GPIO1_IO04__FLEXTIMER1_CH4                       0x0010 0x0040 0x0594 0x2 0x1
--#define MX7D_PAD_GPIO1_IO04__UART5_CTS_B                          0x0010 0x0040 0x0710 0x3 0x4
-+#define MX7D_PAD_GPIO1_IO04__UART5_DCE_CTS                        0x0010 0x0040 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO04__UART5_DTE_RTS                        0x0010 0x0040 0x0710 0x3 0x4
- #define MX7D_PAD_GPIO1_IO04__I2C1_SCL                             0x0010 0x0040 0x05D4 0x4 0x2
- #define MX7D_PAD_GPIO1_IO04__OBSERVE3_OUT                         0x0010 0x0040 0x0000 0x6 0x0
- #define MX7D_PAD_GPIO1_IO05__GPIO1_IO5                            0x0014 0x0044 0x0000 0x0 0x0
- #define MX7D_PAD_GPIO1_IO05__USB_OTG1_PWR                         0x0014 0x0044 0x0000 0x1 0x0
- #define MX7D_PAD_GPIO1_IO05__FLEXTIMER1_CH5                       0x0014 0x0044 0x0598 0x2 0x1
--#define MX7D_PAD_GPIO1_IO05__UART5_RTS_B                          0x0014 0x0044 0x0710 0x3 0x5
-+#define MX7D_PAD_GPIO1_IO05__UART5_DCE_RTS                        0x0014 0x0044 0x0710 0x3 0x5
-+#define MX7D_PAD_GPIO1_IO05__UART5_DTE_CTS                        0x0014 0x0044 0x0000 0x3 0x0
- #define MX7D_PAD_GPIO1_IO05__I2C1_SDA                             0x0014 0x0044 0x05D8 0x4 0x2
- #define MX7D_PAD_GPIO1_IO05__OBSERVE4_OUT                         0x0014 0x0044 0x0000 0x6 0x0
- #define MX7D_PAD_GPIO1_IO06__GPIO1_IO6                            0x0018 0x0048 0x0000 0x0 0x0
- #define MX7D_PAD_GPIO1_IO06__USB_OTG2_OC                          0x0018 0x0048 0x0728 0x1 0x1
- #define MX7D_PAD_GPIO1_IO06__FLEXTIMER1_CH6                       0x0018 0x0048 0x059C 0x2 0x1
--#define MX7D_PAD_GPIO1_IO06__UART5_RX_DATA                        0x0018 0x0048 0x0714 0x3 0x4
-+#define MX7D_PAD_GPIO1_IO06__UART5_DCE_RX                         0x0018 0x0048 0x0714 0x3 0x4
-+#define MX7D_PAD_GPIO1_IO06__UART5_DTE_TX                         0x0018 0x0048 0x0000 0x3 0x0
- #define MX7D_PAD_GPIO1_IO06__I2C2_SCL                             0x0018 0x0048 0x05DC 0x4 0x2
- #define MX7D_PAD_GPIO1_IO06__CCM_WAIT                             0x0018 0x0048 0x0000 0x5 0x0
- #define MX7D_PAD_GPIO1_IO06__KPP_ROW4                             0x0018 0x0048 0x0624 0x6 0x1
- #define MX7D_PAD_GPIO1_IO07__GPIO1_IO7                            0x001C 0x004C 0x0000 0x0 0x0
- #define MX7D_PAD_GPIO1_IO07__USB_OTG2_PWR                         0x001C 0x004C 0x0000 0x1 0x0
- #define MX7D_PAD_GPIO1_IO07__FLEXTIMER1_CH7                       0x001C 0x004C 0x05A0 0x2 0x1
--#define MX7D_PAD_GPIO1_IO07__UART5_TX_DATA                        0x001C 0x004C 0x0714 0x3 0x5
-+#define MX7D_PAD_GPIO1_IO07__UART5_DCE_TX                         0x001C 0x004C 0x0000 0x3 0x0
-+#define MX7D_PAD_GPIO1_IO07__UART5_DTE_RX                         0x001C 0x004C 0x0714 0x3 0x5
- #define MX7D_PAD_GPIO1_IO07__I2C2_SDA                             0x001C 0x004C 0x05E0 0x4 0x2
- #define MX7D_PAD_GPIO1_IO07__CCM_STOP                             0x001C 0x004C 0x0000 0x5 0x0
- #define MX7D_PAD_GPIO1_IO07__KPP_COL4                             0x001C 0x004C 0x0604 0x6 0x1
+ .../bindings/{powerpc => soc}/fsl/guts.txt         |   3 +
+ MAINTAINERS                                        |  11 +-
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   6 +
+ drivers/base/Kconfig                               |   1 +
+ drivers/base/soc.c                                 |  70 ++++++
+ drivers/mmc/host/Kconfig                           |   1 +
+ drivers/mmc/host/sdhci-of-esdhc.c                  |  20 ++
+ drivers/soc/Kconfig                                |   3 +-
+ drivers/soc/fsl/Kconfig                            |  18 ++
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/guts.c                             | 236 +++++++++++++++++++++
+ include/linux/fsl/guts.h                           | 125 ++++++-----
+ include/linux/sys_soc.h                            |   3 +
+ 13 files changed, 447 insertions(+), 51 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt (91%)
+ create mode 100644 drivers/soc/fsl/Kconfig
+ create mode 100644 drivers/soc/fsl/guts.c
+
 -- 
-2.10.2
+2.1.0.27.g96db324
