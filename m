@@ -1,50 +1,74 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] dt-bindings: video: exynos7-decon: Remove obsolete samsung,power-domain property
-Date: Thu, 10 Nov 2016 18:50:49 +0200
-Message-ID: <1478796649-5159-1-git-send-email-krzk@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] fpga: Add support for Lattice iCE40 FPGAs
+Date: Thu, 10 Nov 2016 13:11:08 +0100
+Message-ID: <d2902132-2745-b9f6-5799-ffd3db96941d@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-3-git-send-email-joel@airwebreathe.org.uk>
+ <2255968d-b97c-2b9c-4e4d-7f3717a748e3@denx.de>
+ <01d1a97b-2f43-49a6-51fb-e223ef4dce9b@airwebreathe.org.uk>
+ <4bdba358-db18-48f1-3286-a7a7f4c30215@denx.de>
+ <CAAtXAHe_pz=oUpeP+t-Fy0z88LMmTeSffkD2Cbun3r+uTnmGYw@mail.gmail.com>
+ <feae0954-7e85-3946-defe-ce252869786d@airwebreathe.org.uk>
+ <f7917987-a4cb-2840-8128-07eebd242c17@denx.de>
+ <5828eb84-ab29-49e2-34f0-3cd7e527ca66@airwebreathe.org.uk>
+ <a580bfa4-7852-aaf8-3a44-24da717f3d51@denx.de>
+ <d3af549a-0f68-7511-ad38-b9ec8aab62ca@airwebreathe.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d3af549a-0f68-7511-ad38-b9ec8aab62ca-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Clifford Wolf <clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The samsung,power-domain property is obsolete since commit 0da658704136
-("ARM: dts: convert to generic power domain bindings for exynos DT").
-Replace it with generic one.
+On 11/09/2016 07:54 PM, Joel Holdsworth wrote:
+> On 09/11/16 11:39, Marek Vasut wrote:
+>> On 11/09/2016 07:37 PM, Joel Holdsworth wrote:
+>>> On 09/11/16 05:01, Marek Vasut wrote:
+>>>> On 11/08/2016 06:30 PM, Joel Holdsworth wrote:
+>>>>>>>> On the whole, I don't think the zero-length transfers are too
+>>>>>>>> egregiously bad, and all the alternatives seem worse to me.
+>>>>>>>
+>>>>>>> So why not turn the CS line into GPIO and just toggle the GPIO?
+>>>>>>
+>>>>>> Does that work with *all* SPI controllers?
+>>>>>>
+>>>>>
+>>>>> It does not - no. See my other email.
+>>>>
+>>>> And is that line an actual CS of that lattice chip or a generic input
+>>>> which almost works like CS?
+>>>>
+>>>
+>>> I mean a generic output vs. a special CS output built into the SPI
+>>> master of the application processor. Take a look at how spi_set_cs(..)
+>>> works:
+>>
+>> No. I am asking whether the signal which is INPUT on the iCE40 side is
+>> really a chipselect signal for the SPI bus OR something which mostly
+>> behaves/looks like a chipselect but is not really a chipselect.
+> 
+> Oh I see. The SS_B line is the SPI SlaveSelect for the configuration port.
+> 
+> This is the text from the datasheet:
+> 
+> "SPI Slave Select. Active Low. Includes an internal weak pull-up
+> resistor to VCC_SPI during configuration. During configuration, the
+> logic level sampled on this pin deter-mines the configuration mode used
+> by the iCE40 device. An input when sampled at the start of
+> configuration. An input when in SPI Peripheral configuration mode
+> (SPI_SS_B = Low). An output when in Master SPI Flash configuration mode."
+> 
+> So yes - it is a "real" SPI chip-select line.
 
-Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+OK, thanks for checking.
 
----
-
-Changes since v1:
-1. Just add the acks/reviews.
-
-I though it will be applied by Exynos DRM maintainer but there was no
-response.
-Dear Rob, could you pick it up?
----
- Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-index 3938caacf11c..8346fb18a358 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
-@@ -33,7 +33,7 @@ Required properties:
- - i80-if-timings: timing configuration for lcd i80 interface support.
- 
- Optional Properties:
--- samsung,power-domain: a phandle to DECON power domain node.
-+- power-domains: a phandle to DECON power domain node.
- - display-timings: timing settings for DECON, as described in document [1].
- 		Can be used in case timings cannot be provided otherwise
- 		or to override timings provided by the panel.
 -- 
-2.7.4
-
+Best regards,
+Marek Vasut
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
