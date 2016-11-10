@@ -1,53 +1,86 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH] ARM: dts: at91: sama5d3_uart: fix reg sizes to match documentation
-Date: Thu, 10 Nov 2016 08:46:40 +0100
-Message-ID: <1478764000-32233-1-git-send-email-peda@axentia.se>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] regulator: lp873x: Add support for populating input
+ supply
+Date: Thu, 10 Nov 2016 08:06:52 +0000
+Message-ID: <20161110080652.GM13127@dell>
+References: <20161110052915.4898-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161110052915.4898-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The new size (0x100) also matches the size given in sama5d3.dtsi
+On Thu, 10 Nov 2016, Lokesh Vutla wrote:
 
-Documentation reference: section 43.6 "Universal Asynchronous
-Receiver Transmitter (UART) User Interface", table 43-4 "Register
-Mapping" in [1].
+> In order to have a proper topology of regulators for a platform, each
+> registering regulator needs to populate supply_name field for identifying
+> its supply's name. Add supply_name field for lp873x regulators.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes since v3:
+> - Applied Rob's ack.
+> - Sending this patch separately so that this can be merged via Regulator tree.
+> - Link to v3: https://patchwork.kernel.org/patch/9408545/
+> 
+>  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
 
-[1] Atmel-11121F-ATARM-SAMA5D3-Series-Datasheet_02-Feb-16
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+  
+>  drivers/regulator/lp873x-regulator.c             | 1 +
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
+> index 52766c2..ae9cf39 100644
+> --- a/Documentation/devicetree/bindings/mfd/lp873x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
+> @@ -7,6 +7,9 @@ Required properties:
+>    - #gpio-cells:	Should be two.  The first cell is the pin number and
+>  			the second cell is used to specify flags.
+>  			See ../gpio/gpio.txt for more information.
+> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
+> +			populated under regulators node. xxx can be
+> +			buck0, buck1, ldo0 or ldo1.
+>    - regulators:	List of child nodes that specify the regulator
+>  			initialization data.
+>  Example:
+> @@ -17,6 +20,11 @@ pmic: lp8733@60 {
+>  	gpio-controller;
+>  	#gpio-cells = <2>;
+>  
+> +	buck0-in-supply = <&vsys_3v3>;
+> +	buck1-in-supply = <&vsys_3v3>;
+> +	ldo0-in-supply = <&vsys_3v3>;
+> +	ldo1-in-supply = <&vsys_3v3>;
+> +
+>  	regulators {
+>  		lp8733_buck0: buck0 {
+>  			regulator-name = "lp8733-buck0";
+> diff --git a/drivers/regulator/lp873x-regulator.c b/drivers/regulator/lp873x-regulator.c
+> index e504b91..70e3df6 100644
+> --- a/drivers/regulator/lp873x-regulator.c
+> +++ b/drivers/regulator/lp873x-regulator.c
+> @@ -24,6 +24,7 @@
+>  	[_id] = {							\
+>  		.desc = {						\
+>  			.name			= _name,		\
+> +			.supply_name		= _of "-in",		\
+>  			.id			= _id,			\
+>  			.of_match		= of_match_ptr(_of),	\
+>  			.regulators_node	= of_match_ptr("regulators"),\
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- arch/arm/boot/dts/sama5d3_uart.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-index 2511d748867b..186377d41c91 100644
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -55,7 +55,7 @@
- 
- 			uart0: serial@f0024000 {
- 				compatible = "atmel,at91sam9260-usart";
--				reg = <0xf0024000 0x200>;
-+				reg = <0xf0024000 0x100>;
- 				interrupts = <16 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart0>;
-@@ -66,7 +66,7 @@
- 
- 			uart1: serial@f8028000 {
- 				compatible = "atmel,at91sam9260-usart";
--				reg = <0xf8028000 0x200>;
-+				reg = <0xf8028000 0x100>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart1>;
 -- 
-2.1.4
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
