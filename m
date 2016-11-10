@@ -1,54 +1,44 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 1/2] mmc: sdhci-iproc: Add brcm,sdhci-iproc compat
- string in bindings document
-Date: Thu, 10 Nov 2016 23:21:17 +0100
-Message-ID: <CAPDyKFrGwqYEjfOBjbcDiLDsOatf_wZ7pc90CpCENtbTHdXkvw@mail.gmail.com>
-References: <1478018277-10097-1-git-send-email-scott.branden@broadcom.com> <1478018277-10097-2-git-send-email-scott.branden@broadcom.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V6 2/6] dt-bindings: qcom: clocks: Add msm8994 clock
+ bindings
+Date: Thu, 10 Nov 2016 14:31:33 -0800
+Message-ID: <20161110223133.GI16026@codeaurora.org>
+References: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
+ <1478292996-29559-3-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478018277-10097-2-git-send-email-scott.branden@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Anup Patel <anup.patel@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478292996-29559-3-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mail-LJ92rlH3Dns@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 November 2016 at 17:37, Scott Branden <scott.branden@broadcom.com> wrote:
-> Adds brcm,sdhci-iproc compat string to DT bindings document for
-> the iProc SDHCI driver.
->
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-
-Thanks, applied for next!
-
-Kind regards
-Uffe
-
+On 11/04, Jeremy McNicoll wrote:
+> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt b/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
-> index be56d2b..954561d 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt
-> @@ -7,6 +7,15 @@ Required properties:
->  - compatible : Should be one of the following
->                "brcm,bcm2835-sdhci"
->                "brcm,sdhci-iproc-cygnus"
-> +              "brcm,sdhci-iproc"
+
+Applied to clk-qcom-8994 in clk tree.
+
 > +
-> +Use brcm2835-sdhci for Rasperry PI.
+> +/* Indexes for GDSCs */
+> +#define BIMC_GDSC				0
+> +#define VENUS_GDSC				1
+> +#define MDSS_GDSC				2
+> +#define JPEG_GDSC				3
+> +#define VFE_GDSC				4
+> +#define OXILI_GDSC				5
 > +
-> +Use sdhci-iproc-cygnus for Broadcom SDHCI Controllers
-> +restricted to 32bit host accesses to SDHCI registers.
-> +
-> +Use sdhci-iproc for Broadcom SDHCI Controllers that allow standard
-> +8, 16, 32-bit host access to SDHCI register.
->
->  - clocks : The clock feeding the SDHCI controller.
->
-> --
-> 2.5.0
->
+
+But I removed these because it's copy/paste from 8916 and that is
+a different family of chips than 8994 so these GDSCs aren't in
+GCC on 8994.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
