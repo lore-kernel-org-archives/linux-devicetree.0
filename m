@@ -1,250 +1,82 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 5/5] media: platform: rcar_drif: Add DRIF support
-Date: Thu, 10 Nov 2016 11:22:20 +0200
-Message-ID: <2857106.83gIJRJqtY@avalon>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] phy: rockchip-inno-usb2: correct 480MHz output clock stable time
+Date: Thu, 10 Nov 2016 10:21:51 +0100
+Message-ID: <2283070.Hkeafucara@diego>
+References: <1478523658-9400-1-git-send-email-wulf@rock-chips.com> <CAD=FV=VC15_QAs7+DOoqCeWrU6-qqnUku2SSPFLOvLanu8xL3g@mail.gmail.com> <9eeb3d84-f850-4b76-ce6a-67cc92d6de3b@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9eeb3d84-f850-4b76-ce6a-67cc92d6de3b@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wlf <wulf@rock-chips.com>
+Cc: Doug Anderson <dianders@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Wang <frank.wang@rock-chips.com>, =?utf-8?B?6buE5rab?= <huangtao@rock-chips.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Matthias Kaehlcke <mka@chromium.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
-
-Thank you for the patch.
-
-On Wednesday 09 Nov 2016 15:44:44 Ramesh Shanmugasundaram wrote:
-> This patch adds Digital Radio Interface (DRIF) support to R-Car Gen3 SoCs.
-> The driver exposes each instance of DRIF as a V4L2 SDR device. A DRIF
-> device represents a channel and each channel can have one or two
-> sub-channels respectively depending on the target board.
+Am Donnerstag, 10. November 2016, 10:54:49 schrieb wlf:
+> Hi Doug,
 > 
-> DRIF supports only Rx functionality. It receives samples from a RF
-> frontend tuner chip it is interfaced with. The combination of DRIF and the
-> tuner device, which is registered as a sub-device, determines the receive
-> sample rate and format.
+> 在 2016年11月10日 04:54, Doug Anderson 写道:
+> > Hi,
+> > 
+> > On Mon, Nov 7, 2016 at 5:00 AM, William Wu <wulf@rock-chips.com> wrote:
+> >> We found that the system crashed due to 480MHz output clock of
+> >> USB2 PHY was unstable after clock had been enabled by gpu module.
+> >> 
+> >> Theoretically, 1 millisecond is a critical value for 480MHz
+> >> output clock stable time, so we try to change the delay time
+> >> to 1.2 millisecond to avoid this issue.
+> >> 
+> >> Signed-off-by: William Wu <wulf@rock-chips.com>
+> >> ---
+> >> 
+> >>   drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c
+> >> b/drivers/phy/phy-rockchip-inno-usb2.c index ecfd7d1..8f2d2b6 100644
+> >> --- a/drivers/phy/phy-rockchip-inno-usb2.c
+> >> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+> >> @@ -267,7 +267,7 @@ static int rockchip_usb2phy_clk480m_enable(struct
+> >> clk_hw *hw)>> 
+> >>                          return ret;
+> >>                  
+> >>                  /* waitting for the clk become stable */
+> >> 
+> >> -               mdelay(1);
+> >> +               udelay(1200);
+> > 
+> > Several people who have seen this patch have expressed concern that a
+> > 1.2 ms delay is pretty long for something that's supposed to be
+> > "atomic" like a clk_enable().  Consider that someone might call
+> > clk_enable() while interrupts are disabled and that a 1.2 ms interrupt
+> > latency is not so great.
+> > 
+> > It seems like this clock should be moved to be enabled in "prepare"
+> > and the "enable" should be a no-op.  This is a functionality change,
+> > but I don't think there are any real users for this clock at the
+> > moment so it should be fine.
+> > 
+> > (of course, the 1 ms latency that existed before this patch was still
+> > pretty bad, but ...)
 > 
-> In order to be compliant as a V4L2 SDR device, DRIF needs to bind with
-> the tuner device, which can be provided by a third party vendor. DRIF acts
-> as a slave device and the tuner device acts as a master transmitting the
-> samples. The driver allows asynchronous binding of a tuner device that
-> is registered as a v4l2 sub-device. The driver can learn about the tuner
-> it is interfaced with based on port endpoint properties of the device in
-> device tree. The V4L2 SDR device inherits the controls exposed by the
-> tuner device.
+> Thanks a lot for your suggestion.
+> I agree with you.  clk_enable() will call spin_lock_irqsave() to disable
+> interrupt, and we add
+> more than 1ms in clk_enable may cause big latency.
 > 
-> The device can also be configured to use either one or both of the data
-> pins at runtime based on the master (tuner) configuration.
+> And according to clk_prepare() description:
+>   In a simple case, clk_prepare can be used instead of clk_enable to
+> ungate a clk if the
+>   operation may sleep.  One example is a clk which is accessed over I2c.
 > 
-> Signed-off-by: Ramesh Shanmugasundaram
-> <ramesh.shanmugasundaram@bp.renesas.com> ---
->  .../devicetree/bindings/media/renesas,drif.txt     |  136 ++
->  drivers/media/platform/Kconfig                     |   25 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/rcar_drif.c                 | 1574
-> ++++++++++++++++++++ 4 files changed, 1736 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
-> create mode 100644 drivers/media/platform/rcar_drif.c
+> So maybe we can remove the clock to clk_prepare.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> b/Documentation/devicetree/bindings/media/renesas,drif.txt new file mode
-> 100644
-> index 0000000..d65368a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> @@ -0,0 +1,136 @@
-> +Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
-> +------------------------------------------------------------
-> +
-> +R-Car Gen3 DRIF is a serial slave device. It interfaces with a master
-> +device as shown below
-> +
-> ++---------------------+                +---------------------+
-> +|                     |-----SCK------->|CLK                  |
-> +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-> +|                     |-----SD0------->|D0                   |
-> +|                     |-----SD1------->|D1                   |
-> ++---------------------+                +---------------------+
-> +
-> +Each DRIF channel (drifn) consists of two sub-channels (drifn0 & drifn1).
-> +The sub-channels are like two individual channels in itself that share the
-> +common CLK & SYNC. Each sub-channel has it's own dedicated resources like
-> +irq, dma channels, address space & clock.
-> +
-> +The device tree model represents the channel and each of it's sub-channel
-> +as a separate node. The parent channel ties the sub-channels together with
-> +their phandles.
-> +
-> +Required properties of a sub-channel:
-> +-------------------------------------
-> +- compatible: "renesas,r8a7795-drif" if DRIF controller is a part of
-> R8A7795 SoC.
-> +	      "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible
-> device.
-> +	      When compatible with the generic version, nodes must list the
-> +	      SoC-specific version corresponding to the platform first
-> +	      followed by the generic version.
-> +- reg: offset and length of that sub-channel.
-> +- interrupts: associated with that sub-channel.
-> +- clocks: phandle and clock specifier of that sub-channel.
-> +- clock-names: clock input name string: "fck".
-> +- dmas: phandles to the DMA channel of that sub-channel.
-> +- dma-names: names of the DMA channel: "rx".
-> +
-> +Optional properties of a sub-channel:
-> +-------------------------------------
-> +- power-domains: phandle to the respective power domain.
-> +
-> +Required properties of a channel:
-> +---------------------------------
-> +- pinctrl-0: pin control group to be used for this channel.
-> +- pinctrl-names: must be "default".
-> +- sub-channels : phandles to the two sub-channels.
-> +
-> +Optional properties of a channel:
-> +---------------------------------
-> +- port: child port node of a channel that defines the local and remote
-> +        endpoints. The remote endpoint is assumed to be a tuner subdevice
-> +	endpoint.
-> +- renesas,syncmd       : sync mode
-> +			 0 (Frame start sync pulse mode. 1-bit width pulse
-> +			    indicates start of a frame)
-> +			 1 (L/R sync or I2S mode) (default)
-> +- renesas,lsb-first    : empty property indicates lsb bit is received
-> first.
-> +			 When not defined msb bit is received first (default)
+> Hi Heiko, Frank,
+>         What  do you think of it?
 
-Shouldn't those two properties be instead queried from the tuner at runtime 
-through the V4L2 subdev API ?
+moving to clk_prepare sounds sensible. That way you can switch from delay to 
+sleep functions as well.
 
-> +- renesas,syncac-pol-high  : empty property indicates sync signal polarity.
-> +			 When defined, active high or high->low sync signal.
-> +			 When not defined, active low or low->high sync signal
-> +			 (default)
 
-This could be queried too, except that an inverter could be present on the 
-board, so it has to be specified in DT. I would however try to standardize it 
-the same way that hsync-active and vsync-active are standardized in 
-Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-> +- renesas,dtdl         : delay between sync signal and start of reception.
-
-Are this and the next property meant to account for PCB traces delays ?
-
-> +			 Must contain one of the following values:
-> +			 0   (no bit delay)
-> +			 50  (0.5-clock-cycle delay)
-> +			 100 (1-clock-cycle delay) (default)
-> +			 150 (1.5-clock-cycle delay)
-> +			 200 (2-clock-cycle delay)
-
-How about specifying the property in half clock cycle units, from 0 to 4 ?
-
-> +- renesas,syncdl       : delay between end of reception and sync signal
-> edge.
-> +			 Must contain one of the following values:
-> +			 0   (no bit delay) (default)
-> +			 50  (0.5-clock-cycle delay)
-> +			 100 (1-clock-cycle delay)
-> +			 150 (1.5-clock-cycle delay)
-> +			 200 (2-clock-cycle delay)
-> +			 300 (3-clock-cycle delay)
-> +
-> +Example
-> +--------
-> +
-> +SoC common dtsi file
-> +
-> +		drif00: rif@e6f40000 {
-> +			compatible = "renesas,r8a7795-drif",
-> +				     "renesas,rcar-gen3-drif";
-> +			reg = <0 0xe6f40000 0 0x64>;
-> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 515>;
-> +			clock-names = "fck";
-> +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-> +			dma-names = "rx", "rx";
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			status = "disabled";
-> +		};
-> +
-> +		drif01: rif@e6f50000 {
-> +			compatible = "renesas,r8a7795-drif",
-> +				     "renesas,rcar-gen3-drif";
-> +			reg = <0 0xe6f50000 0 0x64>;
-> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 514>;
-> +			clock-names = "fck";
-> +			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
-> +			dma-names = "rx", "rx";
-> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-> +			status = "disabled";
-> +		};
-> +
-> +		drif0: rif@0 {
-> +			compatible = "renesas,r8a7795-drif",
-> +				     "renesas,rcar-gen3-drif";
-> +			sub-channels = <&drif00>, <&drif01>;
-> +			status = "disabled";
-> +		};
-
-I'm afraid this really hurts my eyes, especially using the same compatible 
-string for both the channel and sub-channel nodes.
-
-We need to decide how to model the hardware in DT. Given that the two channels 
-are mostly independent having separate DT nodes makes sense to me. However, as 
-they share the clock and sync signals, somehow grouping them makes sense. I 
-see three ways to do so, and there might be more.
-
-1. Adding an extra DT node for the channels group, with phandles to the two 
-channels. This is what you're proposing here.
-
-2. Adding an extra DT node for the channels group, as a parent of the two 
-channels.
-
-3. Adding phandles to the channels, pointing to each other, or possibly a 
-phandle from channel 0 pointing to channel 1.
-
-Neither of these options seem perfect to me. I don't like option 1 as the 
-group DT node really doesn't describe a hardware block. If we want to use a DT 
-node to convey group information, option 2 seems better to me. However, it 
-somehow abuses the DT parent-child model that is supposed to describe 
-relationships from a control bus point of view. Option 3 has the drawback of 
-not scaling properly, at least with phandles in both channels pointing to the 
-other one.
-
-Rob, Geert, tell me you have a fourth idea I haven't thought of that would 
-solve all those problems :-)
-
-> +Board specific dts file
-> +
-> +&drif00 {
-> +	status = "okay";
-> +};
-> +
-> +&drif01 {
-> +	status = "okay";
-> +};
-> +
-> +&drif0 {
-> +	pinctrl-0 = <&drif0_pins>;
-> +	pinctrl-names = "default";
-> +	renesas,syncac-pol-high;
-> +	status = "okay";
-> +	port {
-> +		drif0_ep: endpoint {
-> +		     remote-endpoint = <&tuner_subdev_ep>;
-> +		};
-> +	};
-> +};
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+Heiko
