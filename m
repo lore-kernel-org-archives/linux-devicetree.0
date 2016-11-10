@@ -1,32 +1,55 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/13] Documentation: synopsys-dw-mshc: remove the unused
- properties
-Date: Thu, 10 Nov 2016 12:47:17 -0600
-Message-ID: <20161110184717.vgkp2flyi26dmbfo@rob-hp-laptop>
-References: <20161103062135.10697-1-jh80.chung@samsung.com>
- <20161103062135.10697-14-jh80.chung@samsung.com>
+Subject: Re: [PATCH 2/2] Documentation: DT: Add bmi160 imu binding
+Date: Thu, 10 Nov 2016 12:55:52 -0600
+Message-ID: <20161110185552.ny5fdfmy24l2li2f@rob-hp-laptop>
+References: <20161103112527.29623-1-m.niestroj@grinn-global.com>
+ <20161103112527.29623-2-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161103062135.10697-14-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <20161103112527.29623-2-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 03:21:35PM +0900, Jaehoon Chung wrote:
-> "support-highspeed" was the obsoleted property.
-> And "broken-cd" is not synopsys specific property.
-> It can be referred to mmc.txt binding Documentation.
+On Thu, Nov 03, 2016 at 12:25:27PM +0100, Marcin Niestroj wrote:
+> This adds documentation for Bosch BMI160 Inertial Measurement Unit
+> device-tree bindings.
 > 
-> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 -----
->  1 file changed, 5 deletions(-)
+>  .../devicetree/bindings/iio/imu/bmi160.txt         | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> new file mode 100644
+> index 0000000..b02ef3e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> @@ -0,0 +1,34 @@
+> +Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
+> +and externally connectable Magnetometer
+> +
+> +https://www.bosch-sensortec.com/bst/products/all_products/bmi160
+> +
+> +Required properties:
+> + - compatible : should be "bosch,bmi160"
+> + - reg : the I2C address or SPI chip select number of the sensor
+> + - spi-max-frequency : set maximum clock frequency (only for SPI)
+> +
+> +Optional properties:
+> + - interrupt-parent : should be the phandle of the interrupt controller
+> + - interrupts : interrupt mapping for GPIO IRQ, must be IRQ_TYPE_LEVEL_LOW
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The fact that a GPIO is typically used is outside the scope of this doc.
+
+> + - interrupt-names : set to "INT2" if using INT2 pin
+
+Normally there's no point to have names property when there is a single 
+interrupt. However, it seems this could be either INT1 or INT2 or both 
+connected. You need to specify all the options.
+
+Rob
