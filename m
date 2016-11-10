@@ -1,48 +1,79 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [RESEND PATCH] regulator: pwm: fix syntax errors in the examples
-Date: Thu, 10 Nov 2016 18:05:59 +0100
-Message-ID: <cb8dbca0-1f7b-d336-4347-1e665d57f060@axentia.se>
-References: <1478773527-10936-1-git-send-email-peda@axentia.se>
- <20161110161801.7462udnohbaik5nr@sirena.org.uk>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: [PATCH] lm87: Allow LM87_REG_CHANNEL_MODE to be set via DT
+Date: Thu, 10 Nov 2016 10:19:36 -0700
+Message-ID: <20161110171936.GA29537@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110161801.7462udnohbaik5nr-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-10 17:18, Mark Brown wrote:
-> On Thu, Nov 10, 2016 at 11:25:27AM +0100, Peter Rosin wrote:
->> While at it, clean up some other things as well.
-> 
-> This isn't a useful changelog, it's just saying that there's some
-> random changes for no reason.  Please make proper patches with
-> changelogs that explain them.
+This compliments the existing scheme that lets it be set via
+platform_data.
 
-It's a very uninteresting patch, I guess I made a changelog to match.
-But I can't help myself from asking a few qustions...
+Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+---
+ Documentation/devicetree/bindings/hwmon/lm87.txt | 27 ++++++++++++++++++++++++
+ drivers/hwmon/lm87.c                             |  8 ++++++-
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
 
-Patch*es* and changelog*s*?
-
-Oh, you want me to split into a series of several patches? One for the
-quotes, one for the "../regultor/" removal, one for the empty
-comment removal and one for the s/pwm_reglator/pwm-regulator/ thing?
-
-Be careful what you ask for, you might get it...
-
-Or are you saying that patches that I make have poor descriptions
-in general?
-
-Anyway, I'm done with that file, if you want crappy docs, by all
-means throw the patch away.
-
-Cheers,
-Peter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
+new file mode 100644
+index 00000000000000..4ea2646ce8d2f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
+@@ -0,0 +1,27 @@
++* LM87 I2C Temperature and Fan sensor
++
++Required properties:
++- compatible: should contain one of
++		* "national,lm87"
++		* "ti,lm87"
++
++Optional properties:
++- channel-mode: Write the specified value to register 0x16. If not specified
++                the driver will read the value from the chip at startup.
++
++		The value controls how the driver operates certain multi-use
++		pins, eg bit 2 will select between temp_input3 or
++		in0&in5 operation.
++
++See Documentation/devicetree/bindings/i2c/i2c.txt for more required and
++optional properties.
++
++Example:
++
++i2c_master {
++	temperature-sensor@0 {
++		compatible = "ti,lm87";
++		channel-mode = <0x4>;
++		reg = <0>;
++	};
++};
+diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
+index 81cb898245a107..ccc0c913b4534e 100644
+--- a/drivers/hwmon/lm87.c
++++ b/drivers/hwmon/lm87.c
+@@ -853,9 +853,15 @@ static void lm87_restore_config(void *arg)
+ static int lm87_init_client(struct i2c_client *client)
+ {
+ 	struct lm87_data *data = i2c_get_clientdata(client);
++	u32 channel;
+ 	int rc;
+ 
+-	if (dev_get_platdata(&client->dev)) {
++	if (client->dev.of_node &&
++	    !of_property_read_u32(client->dev.of_node, "channel-mode",
++				  &channel)) {
++		data->channel = channel;
++		lm87_write_value(client, LM87_REG_CHANNEL_MODE, data->channel);
++	} else if (dev_get_platdata(&client->dev)) {
+ 		data->channel = *(u8 *)dev_get_platdata(&client->dev);
+ 		lm87_write_value(client,
+ 				 LM87_REG_CHANNEL_MODE, data->channel);
+-- 
+2.7.4
