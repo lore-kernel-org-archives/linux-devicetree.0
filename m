@@ -1,84 +1,30 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of, numa: Return NUMA_NO_NODE from disable
- of_node_to_nid() if nid not possible.
-Date: Thu, 10 Nov 2016 14:51:46 -0600
-Message-ID: <CAL_JsqKPffFem_+SYKzHC-NvWBtwomySxTQ6vtu8cQgsLGzcLA@mail.gmail.com>
-References: <1477689302-32671-1-git-send-email-ddaney.cavm@gmail.com>
- <CAL_JsqKnXk99SUa1cjC2QFA9rizjn4=JHZh3ua_gvcOtpGx8jg@mail.gmail.com> <93b7769a-4907-176e-9f18-0bf6bd72d15d@caviumnetworks.com>
+From: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
+Date: Thu, 10 Nov 2016 14:52:41 -0600
+Message-ID: <20161110205241.eajegnberfppuil7@arbab-laptop.austin.ibm.com>
+References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+ <aea94234-b3d8-1484-d3ab-39e562d7901d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <93b7769a-4907-176e-9f18-0bf6bd72d15d@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Robert Richter <rric@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Gilbert Netzer <noname@pdc.kth.se>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <aea94234-b3d8-1484-d3ab-39e562d7901d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 3, 2016 at 10:11 AM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 11/02/2016 08:37 PM, Rob Herring wrote:
->>
->> On Fri, Oct 28, 2016 at 4:15 PM, David Daney <ddaney.cavm@gmail.com>
->> wrote:
->>>
->>> From: David Daney <david.daney@cavium.com>
->>>
->>> On arm64 NUMA kernels we can pass "numa=off" on the command line to
->>> disable NUMA.  A side effect of this is that kmalloc_node() calls to
->>> non-zero nodes will crash the system with an OOPS:
->>>
->>> [    0.000000] ITS@0x0000901000020000: allocated 2097152 Devices
->>> @10002000000 (flat, esz 8, psz 64K, shr 1)
->>> [    0.000000] Unable to handle kernel NULL pointer dereference at
->>> virtual address 00001680
->>> [    0.000000] pgd = fffffc0009470000
->>> [    0.000000] [00001680] *pgd=0000010ffff90003, *pud=0000010ffff90003,
->>> *pmd=0000010ffff90003, *pte=0000000000000000
->>> [    0.000000] Internal error: Oops: 96000006 [#1] SMP
->>> .
->>> .
->>> .
->>> [    0.000000] [<fffffc00081c8950>] __alloc_pages_nodemask+0xa4/0xe68
->>> [    0.000000] [<fffffc000821fa70>] new_slab+0xd0/0x564
->>> [    0.000000] [<fffffc0008221e24>] ___slab_alloc+0x2e4/0x514
->>> [    0.000000] [<fffffc0008239498>] __slab_alloc+0x48/0x58
->>> [    0.000000] [<fffffc0008222c20>] __kmalloc_node+0xd0/0x2dc
->>> [    0.000000] [<fffffc0008115374>] __irq_domain_add+0x7c/0x164
->>> [    0.000000] [<fffffc0008b461dc>] its_probe+0x784/0x81c
->>> [    0.000000] [<fffffc0008b462bc>] its_init+0x48/0x1b0
->>> [    0.000000] [<fffffc0008b4543c>] gic_init_bases+0x228/0x360
->>> [    0.000000] [<fffffc0008b456bc>] gic_of_init+0x148/0x1cc
->>> [    0.000000] [<fffffc0008b5aec8>] of_irq_init+0x184/0x298
->>> [    0.000000] [<fffffc0008b43f9c>] irqchip_init+0x14/0x38
->>> [    0.000000] [<fffffc0008b12d60>] init_IRQ+0xc/0x30
->>> [    0.000000] [<fffffc0008b10a3c>] start_kernel+0x240/0x3b8
->>> [    0.000000] [<fffffc0008b101c4>] __primary_switched+0x30/0x6c
->>> [    0.000000] Code: 912ec2a0 b9403809 0a0902fb 37b007db (f9400300)
->>> .
->>> .
->>> .
->>>
->>> This is caused by code like this in kernel/irq/irqdomain.c
->>>
->>>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) *
->>> size),
->>>                   GFP_KERNEL, of_node_to_nid(of_node));
->>>
->>> When NUMA is disabled, the concept of a node is really undefined, so
->>> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
->>>
->>> Fix by returning NUMA_NO_NODE when the nid is not in the set of
->>> possible nodes.
->>>
->>> Reported-by: Gilbert Netzer <noname@pdc.kth.se>
->>> Signed-off-by: David Daney <david.daney@cavium.com>
->>
->>
->> Does this need to go in 4.9?
->
->
-> That would be my preference.
+On Thu, Nov 10, 2016 at 11:56:02AM +1100, Balbir Singh wrote:
+>Have you tested this across all combinations of skiboot/kexec/SLOF 
+>boots?
 
-Given how late this is now, my having nothing else for 4.9 and that
-his has never worked, I've applied for 4.10, but I did tag for stable.
+I've tested it under qemu/grub, simics/skiboot, and via kexec.
 
-Rob
+-- 
+Reza Arbab
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
