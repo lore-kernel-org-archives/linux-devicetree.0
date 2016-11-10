@@ -1,61 +1,32 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 08/14] ARM: dts: armada-375: Fixup pcie DT warnings
-Date: Thu, 10 Nov 2016 01:22:27 +0100
-Message-ID: <87twbgkwu4.fsf@free-electrons.com>
-References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
-        <20161110001000.10619-9-gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/11] dt-binding: remoteproc: wcnss: Allow describing
+ smd edge
+Date: Wed, 9 Nov 2016 18:45:27 -0600
+Message-ID: <20161110004527.6pl45olmh3jyckxi@rob-hp-laptop>
+References: <1476931212-1806-1-git-send-email-bjorn.andersson@linaro.org>
+ <1476931212-1806-5-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110001000.10619-9-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-        (Gregory CLEMENT's message of "Thu, 10 Nov 2016 01:09:54 +0100")
+Content-Disposition: inline
+In-Reply-To: <1476931212-1806-5-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
- 
- On jeu., nov. 10 2016, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> PCIe has a ranges property, so the unit name should contain an address.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, Oct 19, 2016 at 07:40:05PM -0700, Bjorn Andersson wrote:
+> Allow the associated smd edge to be described within the wcnss
+> remoteproc node. This creates a bond between the remoteproc and the
+> associated smd channels and devices, showing the interaction between the
+> two parts and provides both a natural reference to the other.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/armada-375.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-> index 700d80fe0d85..a157b62e810e 100644
-> --- a/arch/arm/boot/dts/armada-375.dtsi
-> +++ b/arch/arm/boot/dts/armada-375.dtsi
-> @@ -580,7 +580,7 @@
->  			};
->  		};
->  
-> -		pciec: pcie-controller@82000000@ {
-> +		pciec: pcie-controller@82000000 {
+>  .../bindings/remoteproc/qcom,wcnss-pil.txt         | 30 ++++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 
-I don't know what happened but this patch should have been squashed in
-the previous one.
-
-I will fix it before applying on the mvebu tree of course.
-
-Gregory
-
-
->  			compatible = "marvell,armada-370-pcie";
->  			status = "disabled";
->  			device_type = "pci";
-> -- 
-> 2.10.1
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
