@@ -1,80 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [v16, 0/7] Fix eSDHC host version register bug
-Date: Thu, 10 Nov 2016 10:26:04 +0100
-Message-ID: <CAMuHMdVH0-3qbZiOHnSY8BtWaFESC6poyD-Z6H-wfaSvyd4k+g@mail.gmail.com>
-References: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com> <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] ARM: dts: armada-375: Fixup bootrom DT warning
+Date: Thu, 10 Nov 2016 10:36:47 +0100
+Message-ID: <87wpgbekwg.fsf@free-electrons.com>
+References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
+        <20161110001000.10619-5-gregory.clement@free-electrons.com>
+        <20161110092221.0219490b@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>, linux-mmc <linux-mmc@vger.kernel.org>, Scott Wood <oss@buserror.net>, Arnd Bergmann <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, iommu@lists.linux-foundation.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161110092221.0219490b-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
+        message of "Thu, 10 Nov 2016 09:22:21 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Thomas,
+ 
+ On jeu., nov. 10 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On Wed, Nov 9, 2016 at 7:27 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 9 November 2016 at 04:14, Yangbo Lu <yangbo.lu@nxp.com> wrote:
->> This patchset is used to fix a host version register bug in the T4240-R1.0-R2.0
->> eSDHC controller. To match the SoC version and revision, 15 previous version
->> patchsets had tried many methods but all of them were rejected by reviewers.
->> Such as
->>         - dts compatible method
->>         - syscon method
->>         - ifdef PPC method
->>         - GUTS driver getting SVR method
->> Anrd suggested a soc_device_match method in v10, and this is the only available
->> method left now. This v11 patchset introduces the soc_device_match interface in
->> soc driver.
->>
->> The first four patches of Yangbo are to add the GUTS driver. This is used to
->> register a soc device which contain soc version and revision information.
->> The other three patches introduce the soc_device_match method in soc driver
->> and apply it on esdhc driver to fix this bug.
->>
->> ---
->> Changes for v15:
->>         - Dropped patch 'dt: bindings: update Freescale DCFG compatible'
->>           since the work had been done by below patch on ShawnGuo's linux tree.
->>           'dt-bindings: fsl: add LS1043A/LS1046A/LS2080A compatible for SCFG
->>            and DCFG'
->>         - Fixed error code issue in guts driver
->> Changes for v16:
->>         - Dropped patch 'powerpc/fsl: move mpc85xx.h to include/linux/fsl'
->>         - Added a bug-fix patch from Geert
->> ---
->>
->> Arnd Bergmann (1):
->>   base: soc: introduce soc_device_match() interface
->>
->> Geert Uytterhoeven (1):
->>   base: soc: Check for NULL SoC device attributes
+> Hello,
+>
+> On Thu, 10 Nov 2016 01:09:50 +0100, Gregory CLEMENT wrote:
+>
+>> -		bootrom {
+>> +		bootrom@0 {
+>>  			compatible = "marvell,bootrom";
+>>  			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
+>
+> I am still not sure whether this "0" unit address is correct compared
+> to the reg property being passed.
 
-> Thanks, applied on my mmc tree for next!
+I chose to use the adress register inside the window memory.
 
-Oops, the above two commits (plus two more enhancements) are also a dependency
-for Samsung and Renesas. Hence the plan was to use an immutable branch for
-that...
+>
+> A good example of why I'm worried is the sa-sram case:
+>
+> +		crypto_sram0: sa-sram0@0 {
+>  			compatible = "mmio-sram";
+>  			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
+>
+> +		crypto_sram1: sa-sram1@0 {
+>  			compatible = "mmio-sram";
+>  			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+>
+> The node names should be just "sram" without a number. Indeed for UARTs
+> for example, you use uart@XYZ, uart@ABC and not uart0@XYZ and
+> uart1@ABC. But then, if you do that, with your scheme, you end up with
+> both nodes named sa-sram@0.
+>
+> Which clearly shows that the way you set this unit-address is not
+> correct: those two devices are mapped at completely different
+> locations, but you end up with an identical unit address.
+>
+> I have no idea what is the rule for setting the unit address in this
+> case, but I'm pretty sure the rule you've chosen is not good.
 
-Ulf, would it still be possible to replace these two commits in mmc/next:
+I don't know if there is an existing rules for this case. But I see your
+concern. What I propose then is to expose the memory windows ID by
+adding the target and the attributes like this:
 
-    8b82c17a8ae533d6 base: soc: introduce soc_device_match() interface
-    6fa350172b098f0f base: soc: Check for NULL SoC device attributes
+		crypto_sram0: sa-sram@09_09_0 {
+ 			compatible = "mmio-sram";
+  			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
 
-by a merge of the immutable branch I've just created?
-Cfr, the other thread  "[PATCH v2 0/7] soc: renesas: Identify SoC and register
-with the SoC bus".
 
-Thanks!
+		crypto_sram1: sa-sram@09_05_0 {
+  			compatible = "mmio-sram";
+  			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
 
-Gr{oetje,eeting}s,
+Gregory
 
-                        Geert
+>
+> Best regards,
+>
+> Thomas
+> -- 
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
