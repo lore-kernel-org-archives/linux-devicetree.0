@@ -1,52 +1,80 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 1/3] ipmi/bt-bmc: change compatible
-	node to 'aspeed, ast2400-ibt-bmc'
-Date: Thu, 10 Nov 2016 13:19:51 +1030
-Message-ID: <CACPK8Xd+EcefOs7ZCNPSOUV67TQA0X8NQMZfjZvm3TWYiFqTdg@mail.gmail.com>
-References: <1478073426-3714-1-git-send-email-clg@kaod.org>
-	<a886778e-a85e-758e-3a61-c4909652e39d@kaod.org>
-	<c749ff0a-bc71-bc9f-0e8c-326db2cea0fb@acm.org>
-	<2278270.0oJqDfoDd9@wuerfel>
+From: wlf <wulf@rock-chips.com>
+Subject: Re: [PATCH] phy: rockchip-inno-usb2: correct 480MHz output clock
+ stable time
+Date: Thu, 10 Nov 2016 10:54:49 +0800
+Message-ID: <9eeb3d84-f850-4b76-ce6a-67cc92d6de3b@rock-chips.com>
+References: <1478523658-9400-1-git-send-email-wulf@rock-chips.com>
+ <CAD=FV=VC15_QAs7+DOoqCeWrU6-qqnUku2SSPFLOvLanu8xL3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openipmi-developer-bounces@lists.sourceforge.net>
-In-Reply-To: <2278270.0oJqDfoDd9@wuerfel>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=openipmi-developer>
-List-Post: <mailto:openipmi-developer@lists.sourceforge.net>
-List-Help: <mailto:openipmi-developer-request@lists.sourceforge.net?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/openipmi-developer>,
-	<mailto:openipmi-developer-request@lists.sourceforge.net?subject=subscribe>
-Errors-To: openipmi-developer-bounces@lists.sourceforge.net
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, arm <arm@kernel.org>, Corey Minyard <minyard@acm.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, openipmi-developer@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=VC15_QAs7+DOoqCeWrU6-qqnUku2SSPFLOvLanu8xL3g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@google.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Wang <frank.wang@rock-chips.com>, =?UTF-8?B?6buE5rab?= <huangtao@rock-chips.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Matthias Kaehlcke <mka@chromium.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMTAsIDIwMTYgYXQgMjozOSBBTSwgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
-Yi5kZT4gd3JvdGU6Cj4gT24gVHVlc2RheSwgTm92ZW1iZXIgOCwgMjAxNiAxMjoxNTo1NyBQTSBD
-RVQgQ29yZXkgTWlueWFyZCB3cm90ZToKPj4gT24gMTEvMDgvMjAxNiAwOTo1MiBBTSwgQ8OpZHJp
-YyBMZSBHb2F0ZXIgd3JvdGU6Cj4+ID4gTwo+PiBzbmlwCj4+Cj4+ID4+Pj4gV2hpbGUgd2UncmUg
-bW9kaWZ5aW5nIHRoZSBiaW5kaW5nLCBzaG91bGQgd2UgYWRkIGEgY29tcGF0IHN0cmluZyBmb3IK
-Pj4gPj4+PiB0aGUgYXN0MjUwMD8KPj4gPj4+IFdlbGwsIGlmIHRoZSBjaGFuZ2UgaW4gdGhpcyBw
-YXRjaCBpcyBmaW5lIGZvciBhbGwsIG1heSBiZSB3ZSBjYW4gYWRkCj4+ID4+PiB0aGUgYXN0MjUw
-MCBjb21wYXQgc3RyaW5nIGluIGEgZm9sbG93dXAgcGF0Y2ggPwo+PiA+PiBTb3VuZHMgZ29vZCB0
-byBtZS4KPj4gPiBPSy4gU28sIGhvdyBkbyB3ZSBwcm9jZWVkIHdpdGggdGhpcyBwYXRjaCA/IFdo
-byB3b3VsZCBpbmNsdWRlIGl0IGluIGl0cwo+PiA+IHRyZWUgPwo+Pgo+PiBJIGRvbid0IGhhdmUg
-YW55dGhpbmcgZm9yIDQuOSBhdCB0aGUgbW9tZW50LiAgQXJuZCwgaWYgeW91IGhhdmUKPj4gc29t
-ZXRoaW5nLCBjYW4KPj4geW91IHRha2UgdGhpcz8gIE90aGVyd2lzZSBJIHdpbGwuCj4+Cj4+IEFu
-ZCBJIGd1ZXNzIEkgc2hvdWxkIGFkZDoKPj4KPj4gQWNrZWQtYnk6IENvcmV5IE1pbnlhcmQgPGNt
-aW55YXJkQG12aXN0YS5jb20+Cj4KPiBUaGFua3MsIEkndmUgYWRkZWQgaXQgdG8gbXkgdG9kbyBm
-b2xkZXIuCj4KPiBPbG9mLCBpZiB5b3UgZG8gZml4ZXMgYmVmb3JlIEkgZG8sIHBsZWFzZSBwaWNr
-IHVwIHRoaXMgcGF0Y2ggd2l0aAo+IENvcmV5J3MgQWNrLgoKVGhhbmsgeW91IQoKQWNrZWQtYnk6
-IEpvZWwgU3RhbmxleSA8am9lbEBqbXMuaWQuYXU+CgpDaGVlcnMsCgpKb2VsCgotLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0KRGV2ZWxvcGVyIEFjY2VzcyBQcm9ncmFtIGZvciBJbnRlbCBYZW9uIFBoaSBQ
-cm9jZXNzb3JzCkFjY2VzcyB0byBJbnRlbCBYZW9uIFBoaSBwcm9jZXNzb3ItYmFzZWQgZGV2ZWxv
-cGVyIHBsYXRmb3Jtcy4KV2l0aCBvbmUgeWVhciBvZiBJbnRlbCBQYXJhbGxlbCBTdHVkaW8gWEUu
-ClRyYWluaW5nIGFuZCBzdXBwb3J0IGZyb20gQ29sZmF4LgpPcmRlciB5b3VyIHBsYXRmb3JtIHRv
-ZGF5LiBodHRwOi8vc2RtLmxpbmsveGVvbnBoaQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpPcGVuaXBtaS1kZXZlbG9wZXIgbWFpbGluZyBsaXN0Ck9wZW5p
-cG1pLWRldmVsb3BlckBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vm
-b3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vb3BlbmlwbWktZGV2ZWxvcGVyCg==
+Hi Doug,
+
+在 2016年11月10日 04:54, Doug Anderson 写道:
+> Hi,
+>
+> On Mon, Nov 7, 2016 at 5:00 AM, William Wu <wulf@rock-chips.com> wrote:
+>> We found that the system crashed due to 480MHz output clock of
+>> USB2 PHY was unstable after clock had been enabled by gpu module.
+>>
+>> Theoretically, 1 millisecond is a critical value for 480MHz
+>> output clock stable time, so we try to change the delay time
+>> to 1.2 millisecond to avoid this issue.
+>>
+>> Signed-off-by: William Wu <wulf@rock-chips.com>
+>> ---
+>>   drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+>> index ecfd7d1..8f2d2b6 100644
+>> --- a/drivers/phy/phy-rockchip-inno-usb2.c
+>> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+>> @@ -267,7 +267,7 @@ static int rockchip_usb2phy_clk480m_enable(struct clk_hw *hw)
+>>                          return ret;
+>>
+>>                  /* waitting for the clk become stable */
+>> -               mdelay(1);
+>> +               udelay(1200);
+> Several people who have seen this patch have expressed concern that a
+> 1.2 ms delay is pretty long for something that's supposed to be
+> "atomic" like a clk_enable().  Consider that someone might call
+> clk_enable() while interrupts are disabled and that a 1.2 ms interrupt
+> latency is not so great.
+>
+> It seems like this clock should be moved to be enabled in "prepare"
+> and the "enable" should be a no-op.  This is a functionality change,
+> but I don't think there are any real users for this clock at the
+> moment so it should be fine.
+>
+> (of course, the 1 ms latency that existed before this patch was still
+> pretty bad, but ...)
+Thanks a lot for your suggestion.
+I agree with you.  clk_enable() will call spin_lock_irqsave() to disable 
+interrupt, and we add
+more than 1ms in clk_enable may cause big latency.
+
+And according to clk_prepare() description:
+  In a simple case, clk_prepare can be used instead of clk_enable to 
+ungate a clk if the
+  operation may sleep.  One example is a clk which is accessed over I2c.
+
+So maybe we can remove the clock to clk_prepare.
+
+Hi Heiko, Frank,
+        What  do you think of it?
+
+Best regards,
+         wulf
+>
+> -Doug
+>
+>
+>
