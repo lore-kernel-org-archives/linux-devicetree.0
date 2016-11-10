@@ -1,68 +1,161 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] dt-binding: remoteproc: venus rproc dt binding
- document
-Date: Wed, 9 Nov 2016 17:54:02 -0800
-Message-ID: <20161110015402.GD16026@codeaurora.org>
-References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
- <1478539853-23218-3-git-send-email-stanimir.varbanov@linaro.org>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 4/4] dts: arm64: enable mmc3 for supporting sdio feature
+Date: Thu, 10 Nov 2016 10:08:10 +0800
+Message-ID: <1478743690.19253.4.camel@mtksdaap41>
+References: <1478585341-6749-1-git-send-email-yong.mao@mediatek.com>
+         <1478585341-6749-5-git-send-email-yong.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478539853-23218-3-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478585341-6749-5-git-send-email-yong.mao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Mao <yong.mao@mediatek.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, YH Huang <yh.huang@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mmc@vger.kernel.org, Eddie Huang <eddie.huang@mediat>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07, Stanimir Varbanov wrote:
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
-> new file mode 100644
-> index 000000000000..06a2db60fa38
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
-> @@ -0,0 +1,33 @@
-> +Qualcomm Venus Peripheral Image Loader
+On Tue, 2016-11-08 at 14:09 +0800, Yong Mao wrote:
+> From: yong mao <yong.mao@mediatek.com>
+> 
+> Add description of mmc3 for supporting sdio feature
+> 
+> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   82 +++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> index 2a7f731..4dbd299 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> @@ -43,6 +43,14 @@
+>  		enable-active-high;
+>  	};
+>  
+> +	sdio_fixed_3v3: fixedregulator@0 {
+
+This should be regulator@1 instead of fixedregulator.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&pio 85 GPIO_ACTIVE_HIGH>;
+> +	};
 > +
-> +This document defines the binding for a component that loads and boots firmware
-> +on the Qualcomm Venus remote processor core.
+>  	connector {
+>  		compatible = "hdmi-connector";
+>  		label = "hdmi";
+> @@ -139,6 +147,25 @@
+>  	vqmmc-supply = <&mt6397_vmc_reg>;
+>  };
+>  
+> +&mmc3 {
+> +	status = "okay";
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc3_pins_default>;
+> +	pinctrl-1 = <&mmc3_pins_uhs>;
+> +	bus-width = <4>;
+> +	max-frequency = <200000000>;
+> +	cap-sd-highspeed;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+> +	sdr104-clk-delay = <5>;
+> +	keep-power-in-suspend;
+> +	enable-sdio-wakeup;
+> +	cap-sdio-irq;
+> +	vmmc-supply = <&sdio_fixed_3v3>;
+> +	vqmmc-supply = <&mt6397_vgp3_reg>;
+> +	non-removable;
+> +};
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must contain "qcom,venus-pil"
+>  &pio {
+>  	disp_pwm0_pins: disp_pwm0_pins {
+>  		pins1 {
+> @@ -197,6 +224,36 @@
+>  		};
+>  	};
+>  
+> +	mmc3_pins_default: mmc3default {
+
+Please keep nodes in &pio sorted, move this one after mmc1_pins_uhs.
+
+> +		pins_dat {
+> +			pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
+> +				 <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
+> +				 <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
+> +				 <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
+> +			input-enable;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> +		};
 > +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: a phandle to a node describing reserved memory
+> +		pins_cmd {
+> +			pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
+> +			input-enable;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> +		};
 > +
-> +* An example
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
+> +		pins_clk {
+> +			pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
+> +			bias-pull-down;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +		};
 > +
-> +		venus_mem: venus@89900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x89900000 0x0 0x800000>;
-> +			alignment = <0x1000>;
-> +			no-map;
+> +		pins_pdn {
+> +			pinmux = <MT8173_PIN_85_AUD_DAT_MOSI__FUNC_GPIO85>;
+> +			output-low;
+> +		};
+
+This one is used in regulator, not really an mmc pin.
+Also, you don't need to add node for gpio usage, request_gpio will set
+mode for you.
+So please remove pins_pdn node.
+
+
+> +	};
+> +
+>  	mmc0_pins_uhs: mmc0 {
+>  		pins_cmd_dat {
+>  			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+> @@ -243,6 +300,31 @@
+>  			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+>  		};
+>  	};
+> +
+> +	mmc3_pins_uhs: mmc3 {
+
+
+Please keep nodes in &pio sorted, move this one after mmc1_pins_uhs.
+
+
+Joe.C
+
+> +		pins_dat {
+> +			pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
+> +				 <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
+> +				 <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
+> +				 <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
+> +			input-enable;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> +		};
+> +
+> +		pins_cmd {
+> +			pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
+> +			input-enable;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> +		};
+> +
+> +		pins_clk {
+> +			pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
+> +			drive-strength = <MTK_DRIVE_8mA>;
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
 > +		};
 > +	};
-> +
-> +	rproc_venus@0 {
-
-Not sure we need @0 here in the example if it doesn't have a reg
-property.
-
-> +		compatible = "qcom,venus-pil";
-> +		memory-region = <&venus_mem>;
-> +	};
-> -- 
-> 2.7.4
-> 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  };
+>  
+>  &pwm0 {
