@@ -1,53 +1,64 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: Re: [PATCH v3 00/10] Add DT support for ohci-da8xx
-Date: Thu, 10 Nov 2016 18:28:42 +0100
-Message-ID: <CAKXjFTMGPsZxSWmX0_+n=9dGX5J=QdxeWQDEXHzC70bOT_4uwA@mail.gmail.com>
-References: <20161107203948.28324-1-ahaslam@baylibre.com>
- <CAKXjFTN04Wz5jsaHsyvDD7G8QqXQvCE4D-YbHtGT=jUqELiS_w@mail.gmail.com>
- <20161110120253.GA5385@kroah.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] mfd: dt: Add bindings for the Aspeed SoC Display
+ Controller (GFX)
+Date: Thu, 10 Nov 2016 11:40:35 -0600
+Message-ID: <CAL_JsqLN5veD9QHMmEqX5mmX+iHM69O=o+KFauej1QdqEpyUhw@mail.gmail.com>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+ <1478097481-14895-3-git-send-email-andrew@aj.id.au> <20161109182630.tg3puvwurgx6iinw@rob-hp-laptop>
+ <CACPK8XeG2WnpNuHUf9VD+mZenWboq-4wei=LOkN4qVR72QbGXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161110120253.GA5385@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, linux-usb@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XeG2WnpNuHUf9VD+mZenWboq-4wei=LOkN4qVR72QbGXQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 1:02 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Tue, Nov 08, 2016 at 05:37:41PM +0100, Axel Haslam wrote:
->> Hi,
+On Wed, Nov 9, 2016 at 9:19 PM, Joel Stanley <joel@jms.id.au> wrote:
+> On Thu, Nov 10, 2016 at 4:56 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Nov 03, 2016 at 01:07:57AM +1030, Andrew Jeffery wrote:
+>>> The Aspeed SoC Display Controller is presented as a syscon device to
+>>> arbitrate access by display and pinmux drivers. Video pinmux
+>>> configuration on fifth generation SoCs depends on bits in both the
+>>> System Control Unit and the Display Controller.
+>>>
+>>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>>> ---
+>>>  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
 >>
->> On Mon, Nov 7, 2016 at 9:39 PM, Axel Haslam <ahaslam@baylibre.com> wrote:
->> > The purpose of this patch series is to add DT support for the davinci
->> > ohci driver.
->> >
+>> The register space can't be split to 2 nodes?
+>
+> Do you mean splitting the GFX IP and enable register into two nodes?
+>
+> We can't. Pinmux needs to check bit 6 and 7 in GFX064, which is in the
+> middle the IP block:
+>
+> GFX060: CRT Control Register I
+> GFX064: CRT Control Register II
+> GFX068: CRT Status Register
+> GFX06C: CRT Misc Setting Register
+
+Okay.
+
+>>> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
+>>> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
+>>> +syscon device.
+>>> +
+>>> +Required properties:
+>>> +- compatible:                "aspeed,ast2500-gfx", "syscon"
 >>
->> To make it easier to review. I will split the arch/arm and driver
->> patches into separate series.
+>> I think perhaps we should drop the syscon here and the driver should
+>> just register as a syscon.
 >
-> I don't think it's easier, as now I have no idea what order, or what
-> tree it should go through :(
+> We want the regmap to be present whenever the GFX driver or pinmux is
+> loaded. If we register it in pinmux but chose to not build in that
+> driver, we lack the regmap. Same for the case where a user builds in
+> the GFX driver and not pinmux. I think this means we want the syscon
+> compatible string, unless my understanding is wrong?
 
-Hi Greg,
+Right.
 
-i will resend the series one by one and wait for each to be merged
-before sending the next, so that there is no confusion on the ordering
-or on what tree they should apply.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Regards
-Axel.
-
->
-> I'm guessing not mine, so all are now deleted from my patch queue...
->
-> greg k-h
+Rob
