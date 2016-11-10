@@ -1,168 +1,281 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 7/7] soc: renesas: Identify SoC and register with the SoC bus
-Date: Thu, 10 Nov 2016 12:37:01 +0100
-Message-ID: <25057157.YlGi2v6RrE@wuerfel>
-References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be> <3693445.TSdZGaiT9S@wuerfel> <CAMuHMdX+T=Y--F6KXZwFmZwWFdfP5mL5Tar-wKwRM2p6Hh2-sg@mail.gmail.com>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host
+ Controller
+Date: Thu, 10 Nov 2016 19:44:19 +0800
+Message-ID: <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+ <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
+ <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX+T=Y--F6KXZwFmZwWFdfP5mL5Tar-wKwRM2p6Hh2-sg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Hilbert Zhang <zzhang@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Romain Perier <romain.perier@free-electrons.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, "Jack(SH) Zhu" <jmzhu@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Xueping Liu <xpliu@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Yu Cao <yucao@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, linux-arm-kernel@lists.infr
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, November 10, 2016 11:19:20 AM CET Geert Uytterhoeven wrote:
-> Hi Arnd,
+Hi Rob,
+
+On 2016/11/10 2:24, Rob Herring wrote:
+> On Mon, Oct 31, 2016 at 12:09:54PM +0100, Gregory CLEMENT wrote:
+>> From: Ziji Hu <huziji@marvell.com>
+>>
+>> Marvell Xenon SDHC can support eMMC/SD/SDIO.
+>> Add Xenon-specific properties.
+>> Also add properties for Xenon PHY setting.
+>>
+>> Signed-off-by: Hu Ziji <huziji@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt | 161 +++++++-
+>>  MAINTAINERS                                                   |   1 +-
+>>  2 files changed, 162 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+>> new file mode 100644
+>> index 000000000000..0d2d139494d3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+>> @@ -0,0 +1,161 @@
+>> +Marvell's Xenon SDHCI Controller device tree bindings
+>> +This file documents differences between the core mmc properties
+>> +described by mmc.txt and the properties used by the Xenon implementation.
+>> +
+>> +A single Xenon IP can support multiple slots.
+>> +Each slot acts as an independent SDHC. It owns independent resources, such
+>> +as register sets clock and PHY.
+>> +Each slot should have an independent device tree node.
+>> +
+>> +Required Properties:
+>> +- compatible: should be one of the following
+>> +  - "marvell,armada-3700-sdhci": For controllers on Armada-3700 SOC.
+>> +  Must provide a second register area and marvell,pad-type.
+>> +  - "marvell,xenon-sdhci": For controllers on all the SOCs, other than
+>> +  Armada-3700.
 > 
-> Thanks for your comments!
+> Need SoC specific compatible strings.
 > 
-> On Wed, Nov 9, 2016 at 5:55 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Monday, October 31, 2016 12:30:55 PM CET Geert Uytterhoeven wrote:
-> >> v2:
-> >>   - Drop SoC families and family names; use fixed "Renesas" instead,
-> >
-> > I think I'd rather have seen the family names left in there, but it's
-> > not important, so up to you.
+
+	Xenon SDHC is a common IP for all Marvell SOCs.
+	It is difficult to use a single SOC specific compatible to represent Xenon SDHC.
+	There will be so many SOC compatible strings in list if each specific SOC owns a compatible.
+	Actually only few SOCs require special properties.
+	Any suggestion please?
+
+>> +
+>> +- clocks:
+>> +  Array of clocks required for SDHCI.
+>> +  Requires at least one for Xenon IP core.
+>> +  Some SOCs require additional clock for AXI bus.
+>> +
+>> +- clock-names:
+>> +  Array of names corresponding to clocks property.
+>> +  The input clock for Xenon IP core should be named as "core".
+>> +  The optional AXI clock should be named as "axi".
 > 
-> They're not useful for matching, as family names may change anytime, and don't
-> always say much about the hardware capabilities.
-> E.g. SH-Mobile -> R-Mobile -> R-Car | RZ/A | RZ/G
-> Some SH-Mobile (even some R-Car) parts are SuperH only, others have ARM and
-> SuperH.
+> When is AXI clock optional? This should be required for ?? compatible 
+> strings.
 > 
-> At least the SoC part numbers are stable (hmm, sh73a0 == r8a73a0).
+	It is required on some SOCs.
+	I will double check if a suitable compatible string can be determined for those SOCs.
 
-I think the marketing names are much more useful for humans looking
-at the sysfs files than the kernel doing matching on, but both use
-cases are important.
-
-> >>   - Use "renesas,prr" and "renesas,cccr" device nodes in DT if
-> >>     available, else fall back to hardcoded addresses for compatibility
-> >>     with existing DTBs,
-> >
-> > I only see patches 2, 3, 5, and 7 in my inbox, so I'm lacking the DT
-> > binding for these, among other things.
+>> +
+>> +- reg:
+>> +  * For "marvell,xenon-sdhci", one register area for Xenon IP.
+>> +
+>> +  * For "marvell,armada-3700-sdhci", two register areas.
+>> +    The first one for Xenon IP register. The second one for the Armada 3700 SOC
+>> +    PHY PAD Voltage Control register.
+>> +    Please follow the examples with compatible "marvell,armada-3700-sdhci"
+>> +    in below.
+>> +    Please also check property marvell,pad-type in below.
+>> +
+>> +Optional Properties:
+>> +- marvell,xenon-slotno:
 > 
-> I understand you've received them in the mean time?
-
-Yes, I found them in my inbox later, not sure why I didn't see them
-at first.
-
-> > It does seem wrong to have a device node for a specific register though.
-> > Shouldn't the node be for the block of registers that these are inside
-> > of?
+> Multiple slots should be represented as child nodes IMO. I think some 
+> other bindings already do this.
 > 
-> On R-Mobile APE6, R-Car Gen2 and Gen3, PRR is a lone register.
-> On R-Car Gen1, it's not even documented (and doesn't exist on all parts).
 
-It just seems odd to have it at address 0xff000044 when all the other
-devices are at page-aligned addresses. Do you mean that accessing
-0xff000040 or 0xff000048 will result in a bus-level exception for a
-missing register and just 0xff000044 is actually valid for access,
-or is it just the only thing that is documented?
+	All the slots are entirely independent.
+	I prefer to consider it as multiple independent SDHCs placed in a single IP, instead of that a IP contains multiple child slots.
 
-> On SH-Mobile/R-Mobile, CCCR may be part of the HPB/APB register block, which
-> we further don't touch at all.
-> On R-Car Gen2, it's not documented, but does exist.
+	It is unlike the implementation which put multiple slots behind PCIe EP interface. sdhci-pci.c will handle each slot init one by one.
+	If Xenon SDHC slots are represented as child nodes, there should also be a main entry in Xenon driver to init each child node one by one.
+	In my very own opinion, it is inconvenient and unnecessary.
 
-This is where the family names would come in handy ;-) I now have
-no idea which chip(s) you are referring to.
-
-If you know the name of the register block, just put it into DT with
-that name. The driver can trivially add the right offset.
-
-> >>   - Don't register the SoC bus if the chip ID register is missing,
-> >
-> > Why? My objection was to hardcoding the register, not to registering
-> > the device? I think I'd rather see the device registered with an
-> > empty revision string.
+>> +  Indicate the corresponding bit index of current Xenon SDHC slot in
+>> +  SDHC System Operation Control Register Bit[7:0].
+>> +  Set/clear the corresponding bit to enable/disable current Xenon SDHC
+>> +  slot.
+>> +  If this property is not provided, Xenon IP should contain only one
+>> +  slot.
+>> +
+>> +- marvell,xenon-phy-type:
+>> +  Xenon support mutilple types of PHYs.
+>> +  To select eMMC 5.1 PHY, set:
+>> +  marvell,xenon-phy-type = "emmc 5.1 phy"
+>> +  eMMC 5.1 PHY is the default choice if this property is not provided.
+>> +  To select eMMC 5.0 PHY, set:
+>> +  marvell,xenon-phy-type = "emmc 5.0 phy"
+>> +  To select SDH PHY, set:
+>> +  marvell,xenon-phy-type = "sdh phy"
+>> +  Please note that eMMC PHY is a general PHY for eMMC/SD/SDIO, other than for
+>> +  eMMC only.
 > 
-> If there's no chip ID register, there's no reason to use soc_device_match(),
-> as we can always look at a compatible value. All SoCs listed in this driver
-> have a chip ID register.
-
-But you may still have user space tools looking into sysfs, e.g. to
-figure out how to install a kernel that the boot loader can find,
-or which hardware specific distro packages to install.
-
-> if you want me to register the soc_bus for  those SoCs regardless, I want to
-> re-add r7s72100 (RZ/A) and r8a7778 (R-Car M1A), who don't have chip ID
-> registers ;-)
-
-Right. Just don't encode too much knowledge about the SoCs into the
-driver, so we are prepared for adding new ones: We should still look
-for the registers in DT on all chips.
-
-> >> +#define CCCR   0xe600101c      /* Common Chip Code Register */
-> >> +#define PRR    0xff000044      /* Product Register */
-> >> +#define PRR3   0xfff00044      /* Product Register on R-Car Gen3 */
-> >> +
-> >> +static const struct of_device_id renesas_socs[] __initconst = {
-> >> +#ifdef CONFIG_ARCH_R8A73A4
-> >> +       { .compatible = "renesas,r8a73a4",      .data = (void *)PRR, },
-> >> +#endif
-> >> +#ifdef CONFIG_ARCH_R8A7740
-> >> +       { .compatible = "renesas,r8a7740",      .data = (void *)CCCR, },
-> >> +#endif
-> >
-> > My preference here would be to list the register address only for
-> > SoCs that are known to need them, while also having .dtb files that
-> > don't have the nodes.
+> Does this vary per instance on a single SoC? If not, then an SoC 
+> specific compatible should determine this.
 > 
-> Even if drivers don't have to handle differences, there's been a long
-> outstanding request to print SoC revision information during bootup
-> (E.g. "Does it still work on ES1.0?"). Hence that covers all SoCs.
-
-Ok, fair enough.
-
-> >> +static int __init renesas_soc_init(void)
-> >> +{
-> >> +       struct soc_device_attribute *soc_dev_attr;
-> >> +       const struct of_device_id *match;
-> >> +       void __iomem *chipid = NULL;
-> >> +       struct soc_device *soc_dev;
-> >> +       struct device_node *np;
-> >> +       unsigned int product;
-> >> +
-> >> +       np = of_find_matching_node_and_match(NULL, renesas_socs, &match);
-> >> +       if (!np)
-> >> +               return -ENODEV;
-> >> +
-> >> +       of_node_put(np);
-> >> +
-> >> +       /* Try PRR first, then CCCR, then hardcoded fallback */
-> >> +       np = of_find_compatible_node(NULL, NULL, "renesas,prr");
-> >> +       if (!np)
-> >> +               np = of_find_compatible_node(NULL, NULL, "renesas,cccr");
-> >> +       if (np) {
-> >> +               chipid = of_iomap(np, 0);
-> >> +               of_node_put(np);
-> >> +       } else if (match->data) {
-> >> +               chipid = ioremap((uintptr_t)match->data, 4);
-> >> +       }
-> >> +       if (!chipid)
-> >>
-> >
-> > Here, I'd turn the order around and look for the DT nodes of the
-> > devices first. Only if they are not found, look at the compatible
-> > string of the root node. No need to search for a node though,
-> > you know which one it is when you look for a compatible =
-> > "renesas,r8a73a4".
+> Also, the " phy" part is redundant.
 > 
-> "renesas,r8a73a4" is the root node, not the device, so it does not have the
-> "reg" property for reading the chip ID?
 
-I mean replace of_find_matching_node_and_match() with
-of_match_node(renesas_socs, of_root).
+	Yes. Some SOCs might have multiple Xenon PHY types.
 
-It does the same thing, just more efficiently.
- 
-> There is no SoC part number in the "renesas,prr" and "renesas,cccr" nodes.
-> Hence I always need to look at the root nodes.
+	This property is only the name/type of PHY. It doesn't stand for the entire SDHC property.
+	"emmc 5.1 PHY" doesn't mean that this Xenon SDHC only support eMMC 5.1.
+	Xenon SDHC with "sdh PHY" can also support eMMC. 
 
-Not sure what that would protect you from. Could you have a renesas,cccr
+>> +
+>> +- marvell,xenon-phy-znr:
+>> +  Set PHY ZNR value.
+>> +  Only available for eMMC PHY 5.1 and eMMC PHY 5.0.
+>> +  valid range = [0:0x1F].
+>> +  ZNR is set as 0xF by default if this property is not provided.
+>> +
+>> +- marvell,xenon-phy-zpr:
+>> +  Set PHY ZPR value.
+>> +  Only available for eMMC PHY 5.1 and eMMC PHY 5.0.
+>> +  valid range = [0:0x1F].
+>> +  ZPR is set as 0xF by default if this property is not provided.
+>> +
+>> +- marvell,xenon-phy-nr-success-tun:
+>> +  Set the number of required consecutive successful sampling points used to
+>> +  identify a valid sampling window, in tuning process.
+>> +  Valid range = [1:7]. Set as 0x4 by default if this property is not provided.
+>> +
+>> +- marvell,xenon-phy-tun-step-divider:
+>> +  Set the divider for calculating TUN_STEP.
+>> +  Set as 64 by default if this property is not provided.
+>> +
+>> +- marvell,xenon-phy-slow-mode:
+>> +  Force PHY into slow mode.
+>> +  Only available when bus frequency lower than 50MHz in SDR mde.
+>> +  Disabled by default. Please do not enable it unless it is necessary.
+>> +
+>> +- marvell,xenon-mask-conflict-err:
+>> +  Mask Conflict Error alert on some SOC. Disabled by default.
+>> +
+>> +- marvell,xenon-tun-count:
+>> +  Xenon SDHC SOC usually doesn't provide re-tuning counter in
+>> +  Capabilities Register 3 Bit[11:8].
+>> +  This property provides the re-tuning counter.
+>> +  If this property is not set, default re-tuning counter will
+>> +  be set as 0x9 in driver.
+>> +
+>> +- marvell,pad-type:
+>> +  Type of Armada 3700 SOC PHY PAD Voltiage Controller register.
+>> +  Only valid when "marvell,armada-3700-sdhci" is selected.
+>> +  Two types: "sd" and "fixed-1-8v".
+>> +  If "sd" is slected, SOC PHY PAD is set as 3.3V at the beginning and is
+>> +  switched to 1.8V when SD in UHS-I.
+>> +  If "fixed-1-8v" is slected, SOC PHY PAD is fixed 1.8V, such as for eMMC.
+>> +  Please follow the examples with compatible "marvell,armada-3700-sdhci"
+>> +  in below.
+>> +
+>> +Example:
+>> +- For eMMC slot:
+>> +
+>> +	sdhci@aa0000 {
+>> +		compatible = "marvell,xenon-sdhci";
+>> +		reg = <0xaa0000 0x1000>;
+>> +		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+>> +		clocks = <&emmc_clk>, <&axi_clock>;
+>> +		clock-names = "core", "axi";
+>> +		bus-width = <8>;
+>> +		marvell,xenon-emmc;
+> 
+> Not documented. If we need to specify the type of slot/card, then we 
+> need to come up with a standard property. This was either already done 
+> or attempted IIRC.
 
+	Sorry to lost this property in above.
+	I will add it in above.
 
-	Arnd
+	Thank you.
+
+Best regards,
+Hu Ziji
+
+> 
+>> +		marvell,xenon-slotno = <0>;
+>> +		marvell,xenon-phy-type = "emmc 5.1 phy";
+>> +		marvell,xenon-tun-count = <11>;
+>> +	};
+>> +
+>> +- For SD/SDIO slot:
+>> +
+>> +	sdhci@ab0000 {
+>> +		compatible = "marvell,xenon-sdhci";
+>> +		reg = <0xab0000 0x1000>;
+>> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+>> +		vqmmc-supply = <&sd_regulator>;
+>> +		clocks = <&sdclk>;
+>> +		clock-names = "core";
+>> +		bus-width = <4>;
+>> +		marvell,xenon-tun-count = <9>;
+>> +	};
+>> +
+>> +- For eMMC slot with compatible "marvell,armada-3700-sdhci":
+>> +
+>> +	sdhci@aa0000 {
+>> +		compatible = "marvell,armada-3700-sdhci";
+>> +		reg = <0xaa0000 0x1000>,
+>> +		      <phy_addr 0x4>;
+>> +		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+>> +		clocks = <&emmcclk>;
+>> +		clock-names = "core";
+>> +		bus-width = <8>;
+>> +		marvell,xenon-emmc;
+>> +
+>> +		marvell,pad-type = "fixed-1-8v";
+>> +	};
+>> +
+>> +- For SD/SDIO slot with compatible "marvell,armada-3700-sdhci":
+>> +
+>> +	sdhci@ab0000 {
+>> +		compatible = "marvell,armada-3700-sdhci";
+>> +		reg = <0xab0000 0x1000>,
+>> +		      <phy_addr 0x4>;
+>> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+>> +		vqmmc-supply = <&sd_regulator>;
+>> +		clocks = <&sdclk>;
+>> +		clock-names = "core";
+>> +		bus-width = <4>;
+>> +
+>> +		marvell,pad-type = "sd";
+>> +	};
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 1a5c4c30ea24..850a0afb0c8d 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -7608,6 +7608,7 @@ MARVELL XENON MMC/SD/SDIO HOST CONTROLLER DRIVER
+>>  M:	Ziji Hu <huziji@marvell.com>
+>>  L:	linux-mmc@vger.kernel.org
+>>  S:	Supported
+>> +F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+>>  
+>>  MATROX FRAMEBUFFER DRIVER
+>>  L:	linux-fbdev@vger.kernel.org
+>> -- 
+>> git-series 0.8.10
