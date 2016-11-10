@@ -1,66 +1,108 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Thu, 10 Nov 2016 11:34:16 +0100
-Message-ID: <1850b6f7-3901-1065-5f35-d738f76fb218@linaro.org>
-References: <1477224748-25223-1-git-send-email-noamca@mellanox.com>
- <1477224748-25223-4-git-send-email-noamca@mellanox.com>
- <20161031105251.GD1506@mai>
- <DB6PR0501MB2518720A0F95ACBBBCB1CB27AAAE0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
- <20161101200141.GF1506@mai>
- <DB6PR0501MB25184EFB9A5CFD3AA41CFDC1AAA60@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] ARM: dts: armada-375: Fixup bootrom DT warning
+Date: Thu, 10 Nov 2016 11:43:51 +0100
+Message-ID: <87fumzehso.fsf@free-electrons.com>
+References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
+        <20161110001000.10619-5-gregory.clement@free-electrons.com>
+        <20161110092221.0219490b@free-electrons.com>
+        <87wpgbekwg.fsf@free-electrons.com>
+        <20161110111506.02842cbd@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR0501MB25184EFB9A5CFD3AA41CFDC1AAA60@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Noam Camus <noamca@mellanox.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161110111506.02842cbd-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
+        message of "Thu, 10 Nov 2016 11:15:06 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2016 09:30, Noam Camus wrote:
->> From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org] 
->> Sent: Tuesday, November 1, 2016 10:02 PM
-> ...
->> Assuming cpu0 and cpu1 are sibling, does
-> 
->> taskset 0x1 time sleep 2 & taskset 0x2 time sleep 3
-> 
-> I will use 16,17 instead of 0,1
->> give a correct result without a dmesg log ?
-> [root@192.168.8.2 /]$ [root@192.168.8.2 /]$ taskset 65536 time sleep 2 & taskset 131072 time sleep 3
+Hi Thomas,
+ 
+ On jeu., nov. 10 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Thanks for providing the numbers.
+[...]
 
-So there is no weird messages in dmesg ?
+>> > A good example of why I'm worried is the sa-sram case:
+>> >
+>> > +		crypto_sram0: sa-sram0@0 {
+>> >  			compatible = "mmio-sram";
+>> >  			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
+>> >
+>> > +		crypto_sram1: sa-sram1@0 {
+>> >  			compatible = "mmio-sram";
+>> >  			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+>> >
+>> > The node names should be just "sram" without a number. Indeed for UARTs
+>> > for example, you use uart@XYZ, uart@ABC and not uart0@XYZ and
+>> > uart1@ABC. But then, if you do that, with your scheme, you end up with
+>> > both nodes named sa-sram@0.
+>> >
+>> > Which clearly shows that the way you set this unit-address is not
+>> > correct: those two devices are mapped at completely different
+>> > locations, but you end up with an identical unit address.
+>> >
+>> > I have no idea what is the rule for setting the unit address in this
+>> > case, but I'm pretty sure the rule you've chosen is not good.  
+>> 
+>> I don't know if there is an existing rules for this case. But I see your
+>> concern. What I propose then is to expose the memory windows ID by
+>> adding the target and the attributes like this:
+>> 
+>> 		crypto_sram0: sa-sram@09_09_0 {
+>>  			compatible = "mmio-sram";
+>>   			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
+>> 
+>> 
+>> 		crypto_sram1: sa-sram@09_05_0 {
+>>   			compatible = "mmio-sram";
+>>   			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+>
+> I have no idea if 09_05_0 is considered a valid unit address. Indeed
+> the _ character in an address looks a bit weird.
+>
+> I guess we need guidance from the DT binding maintainers on this, since
+> it's really a matter of interpreting what "unit address" means in
+> relation to the value of the "reg" property.
 
-> real    0m 2.54s
-> user    0m 0.04s
-> sys     0m 0.14s
-> real    0m 3.47s
-> user    0m 0.00s
-> sys     0m 0.15s
-> [1]+  Done                       taskset 65536 time sleep 2
-> 
-> Seem OK to me.
+So I looked for in the reference: Power_ePAPR_APPROVED_v1.0, and in
+paragraph "2.2.1.1 Node Name Requirements" we have:
 
-I'm not sure of that.
+"The unit-address component of the name is specific to the bus type on
+which the node sits. It consists of one or more ASCII characters from
+the set of characters in Table 2-1. The fundamental requirement is that
+at any level of the device tree the unit-address be unique in order to
+differentiate nodes with the same name at the same level in the
+tree. The binding for a particular bus may specify additional, more
+specific requirements for the format of a unit-address."
 
-2.54 instead of 2
-3.47 instead of 3
+In Table 2-1 we have the following characters:
+0-9
+a-z
+A-z
+,
+.
+_
++
+-
 
-0.02 time drift could be acceptable but 0.54 or 0.47 is too much.
+So the underscore is valid. And by adding information about the memory
+windows we match the fundamental requirement :"at any level of the
+device tree the unit-address be unique".
 
-And 0.15 in sys also a big number AFAICT.
+Gregory
 
-Is the system in NO_HZ ?
-
-
+> -- 
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
