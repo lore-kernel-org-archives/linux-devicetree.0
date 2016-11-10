@@ -1,38 +1,73 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V6 5/6] msm8994 clocks: global clock support for msm8994
- SOC.
-Date: Thu, 10 Nov 2016 14:31:50 -0800
-Message-ID: <20161110223150.GJ16026@codeaurora.org>
-References: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
- <1478292996-29559-6-git-send-email-jeremymc@redhat.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Thu, 10 Nov 2016 14:51:26 -0800
+Message-ID: <20161110225126.GK16026@codeaurora.org>
+References: <cover.1477463128.git.viresh.kumar@linaro.org>
+ <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+ <20161110040440.GA11670@vireshk-i7>
+ <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
+ <20161110180940.GD11670@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478292996-29559-6-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mail-LJ92rlH3Dns@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20161110180940.GD11670@vireshk-i7>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/04, Jeremy McNicoll wrote:
-> From: Bastian Köcher <mail-LJ92rlH3Dns@public.gmane.org>
+On 11/10, Viresh Kumar wrote:
+> On 10-11-16, 16:36, Mark Brown wrote:
+> > On Thu, Nov 10, 2016 at 09:34:40AM +0530, Viresh Kumar wrote:
+> > > On 09-11-16, 14:58, Mark Brown wrote:
+> > > > On Wed, Oct 26, 2016 at 12:02:56PM +0530, Viresh Kumar wrote:
+> > 
+> > > > > +  Entries for multiple regulators shall be provided in the same field separated
+> > > > > +  by angular brackets <>. The OPP binding doesn't provide any provisions to
+> > > > > +  relate the values to their power supplies or the order in which the supplies
+> > > > > +  need to be configured.
+> > 
+> > > > I don't understand how this works.  If we have an unordered list of
+> > > > values to set for regulators how will we make sense of them?
+> > 
+> > > The platform driver is responsible to identify the order and pass it on to the
+> > > OPP core. And the platform driver needs to have that hard coded.
+> > 
+> > That *really* should be in the binding.
 > 
-> The clock definition was ported from the Google 3.10 kernel tree to
-> work with the latest kernel.
+> Okay, how do you suggest doing that? Will a property like supply-names
+> in the OPP table be fine? Like this:
 > 
-> Signed-off-by: Bastian Köcher <mail-LJ92rlH3Dns@public.gmane.org>
-> [jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: created new commit of just dt-bindings]
-> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
+> @@ -369,13 +378,16 @@ Example 4: Handling multiple regulators
+>                         compatible = "arm,cortex-a7";
+>                         ...
+>  
+> -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+> +                       vcc0-supply = <&cpu_supply0>;
+> +                       vcc1-supply = <&cpu_supply1>;
+> +                       vcc2-supply = <&cpu_supply2>;
+>                         operating-points-v2 = <&cpu0_opp_table>;
+>                 };
+>         };
+>  
+>         cpu0_opp_table: opp_table0 {
+>                 compatible = "operating-points-v2";
+> +               supply-names = "vcc0", "vcc1", "vcc2";
+>                 opp-shared;
+> 
 
-Applied to clk-qcom-8994 in clk tree
+No. The supply names (and also clock names/index) should be left
+up to the consumer of the OPP table. We don't want to encode any
+sort of details like this between the OPP table and the consumer
+of it in DT because then it seriously couples the OPP table to
+the consumer device. "The binding" in this case that needs to be
+updated is the consumer binding, to indicate that it correlated
+foo-supply and bar-supply to index 0 and 1 of the OPP table
+voltages.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
