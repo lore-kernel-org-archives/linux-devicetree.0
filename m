@@ -1,91 +1,103 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
- uvent_modalias} to modules
-Date: Thu, 10 Nov 2016 15:42:12 -0600
-Message-ID: <CAL_Jsq+Bw4XVEJY6V4Hn+D_OmqEcp_nLLrVT0_i+jX_guCqzfA@mail.gmail.com>
-References: <20161018015636.11701-1-stephen.boyd@linaro.org>
- <20161018015636.11701-3-stephen.boyd@linaro.org> <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
- <147733850401.29612.2343965740004706258@sboyd-linaro> <20161025011632.GA23876@b29397-desktop>
- <147829269430.21688.2345895151880009021@sboyd-linaro> <20161107012920.GA10559@b29397-desktop>
- <CAGb2v66C15fU1b2+xNDV8Fv2kmmKXyUknA8=9wXztUcs8CNKLg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 2/2] mmc: sdhci-iproc: support standard byte register accesses
+Date: Thu, 10 Nov 2016 23:21:24 +0100
+Message-ID: <CAPDyKFrPwwXoAgJ7XGYSWDOiZiJqdjF3p6D0t5bUiPYEnn6ysg@mail.gmail.com>
+References: <1478018277-10097-1-git-send-email-scott.branden@broadcom.com> <1478018277-10097-3-git-send-email-scott.branden@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v66C15fU1b2+xNDV8Fv2kmmKXyUknA8=9wXztUcs8CNKLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478018277-10097-3-git-send-email-scott.branden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Branden <scott.branden@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Adrian Hunter <adrian.hunter@intel.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 6, 2016 at 7:56 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Mon, Nov 7, 2016 at 9:29 AM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Nov 04, 2016 at 01:51:34PM -0700, Stephen Boyd wrote:
->>> Quoting Peter Chen (2016-10-24 18:16:32)
->>> > On Mon, Oct 24, 2016 at 12:48:24PM -0700, Stephen Boyd wrote:
->>> > > Quoting Chen-Yu Tsai (2016-10-24 05:19:05)
->>> > > > Hi,
->>> > > >
->>> > > > On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> > > > > The ULPI bus can be built as a module, and it will soon be
->>> > > > > calling these functions when it supports probing devices from DT.
->>> > > > > Export them so they can be used by the ULPI module.
->>> > > > >
->>> > > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> > > > > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->>> > > > > Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> > > > > ---
->>> > > > >  drivers/of/device.c | 2 ++
->>> > > > >  1 file changed, 2 insertions(+)
->>> > > > >
->>> > > > > diff --git a/drivers/of/device.c b/drivers/of/device.c
->>> > > > > index 8a22a253a830..6719ab35b62e 100644
->>> > > > > --- a/drivers/of/device.c
->>> > > > > +++ b/drivers/of/device.c
->>> > > > > @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->>> > > > >
->>> > > > >         return tsize;
->>> > > > >  }
->>> > > > > +EXPORT_SYMBOL_GPL(of_device_get_modalias);
->>> > > > >
->>> > > > >  int of_device_request_module(struct device *dev)
->>> > > > >  {
->>> > > > > @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->>> > > > >         }
->>> > > > >         mutex_unlock(&of_mutex);
->>> > > > >  }
->>> > > > > +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
->>> > > >
->>> > > > This is trailing the wrong function.
->>> > > >
->>> > >
->>> > > Good catch. Must have been some bad rebase.
->>> > >
->>> > > Peter, can you fix it while applying or should I resend this patch?
->>> > >
->>> >
->>> > But, this is device tree patch. I can only get chipidea part and other
->>> > USB patches if Greg agrees.
->>> >
->>>
->>> Were you expecting Rob to take the drivers/of/* patches? Sorry I thought
->>> Rob acked them so they could go through usb with the other changes.
->>
->> I am just worried about possible merge error when linus pulls both OF
->> and USB tree. Greg, is it ok the OF patches through USB tree with OF
->> maintainer's ack?
+On 1 November 2016 at 17:37, Scott Branden <scott.branden@broadcom.com> wrote:
+> Add bytewise register accesses support for newer versions of IPROC
+> SDHCI controllers.
+> Previous sdhci-iproc versions of SDIO controllers
+> (such as Raspberry Pi and Cygnus) only allowed for 32-bit register
+> accesses.
 >
-> May I suggest putting the OF patches on an immutable branch so other
-> subsystems can pull them in without pulling in the USB patches? At
-> least I want to use them in the I2C subsystem, and in the sunxi-rsb
-> driver.
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
-Do you have patches using this already. If not, it is starting to get
-a bit late for v4.10.
+Thanks, applied for next!
 
-I can apply this, but then you'll just be pulling in other DT patches.
+Kind regards
+Uffe
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/mmc/host/sdhci-iproc.c | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
+> index 7262466..d7046d6 100644
+> --- a/drivers/mmc/host/sdhci-iproc.c
+> +++ b/drivers/mmc/host/sdhci-iproc.c
+> @@ -143,6 +143,14 @@ static void sdhci_iproc_writeb(struct sdhci_host *host, u8 val, int reg)
+>  }
+>
+>  static const struct sdhci_ops sdhci_iproc_ops = {
+> +       .set_clock = sdhci_set_clock,
+> +       .get_max_clock = sdhci_pltfm_clk_get_max_clock,
+> +       .set_bus_width = sdhci_set_bus_width,
+> +       .reset = sdhci_reset,
+> +       .set_uhs_signaling = sdhci_set_uhs_signaling,
+> +};
+> +
+> +static const struct sdhci_ops sdhci_iproc_32only_ops = {
+>         .read_l = sdhci_iproc_readl,
+>         .read_w = sdhci_iproc_readw,
+>         .read_b = sdhci_iproc_readb,
+> @@ -156,6 +164,28 @@ static const struct sdhci_ops sdhci_iproc_ops = {
+>         .set_uhs_signaling = sdhci_set_uhs_signaling,
+>  };
+>
+> +static const struct sdhci_pltfm_data sdhci_iproc_cygnus_pltfm_data = {
+> +       .quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
+> +       .quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
+> +       .ops = &sdhci_iproc_32only_ops,
+> +};
+> +
+> +static const struct sdhci_iproc_data iproc_cygnus_data = {
+> +       .pdata = &sdhci_iproc_cygnus_pltfm_data,
+> +       .caps = ((0x1 << SDHCI_MAX_BLOCK_SHIFT)
+> +                       & SDHCI_MAX_BLOCK_MASK) |
+> +               SDHCI_CAN_VDD_330 |
+> +               SDHCI_CAN_VDD_180 |
+> +               SDHCI_CAN_DO_SUSPEND |
+> +               SDHCI_CAN_DO_HISPD |
+> +               SDHCI_CAN_DO_ADMA2 |
+> +               SDHCI_CAN_DO_SDMA,
+> +       .caps1 = SDHCI_DRIVER_TYPE_C |
+> +                SDHCI_DRIVER_TYPE_D |
+> +                SDHCI_SUPPORT_DDR50,
+> +       .mmc_caps = MMC_CAP_1_8V_DDR,
+> +};
+> +
+>  static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
+>         .quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
+>         .quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
+> @@ -182,7 +212,7 @@ static const struct sdhci_pltfm_data sdhci_bcm2835_pltfm_data = {
+>         .quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
+>                   SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+>                   SDHCI_QUIRK_MISSING_CAPS,
+> -       .ops = &sdhci_iproc_ops,
+> +       .ops = &sdhci_iproc_32only_ops,
+>  };
+>
+>  static const struct sdhci_iproc_data bcm2835_data = {
+> @@ -194,7 +224,8 @@ static const struct sdhci_iproc_data bcm2835_data = {
+>
+>  static const struct of_device_id sdhci_iproc_of_match[] = {
+>         { .compatible = "brcm,bcm2835-sdhci", .data = &bcm2835_data },
+> -       { .compatible = "brcm,sdhci-iproc-cygnus", .data = &iproc_data },
+> +       { .compatible = "brcm,sdhci-iproc-cygnus", .data = &iproc_cygnus_data},
+> +       { .compatible = "brcm,sdhci-iproc", .data = &iproc_data },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(of, sdhci_iproc_of_match);
+> --
+> 2.5.0
+>
