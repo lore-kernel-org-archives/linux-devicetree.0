@@ -1,103 +1,113 @@
-From: John Youn <johnyoun@synopsys.com>
-Subject: [PATCH v2 00/30] usb: dwc2: Gadget descriptor DMA and IOT
-Date: Wed, 09 Nov 2016 19:27:36 -0800
-Message-ID: <cover.1478748145.git.johnyoun__38961.5387576216$1478748554$gmane$org@synopsys.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [v16, 0/7] Fix eSDHC host version register bug
+Date: Wed, 09 Nov 2016 21:55:14 -0600
+Message-ID: <1478750114.21746.4.camel@buserror.net>
+References: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com>
+         <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Caesar Wang <wxt@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Matthias Brugger <mbrugger@suse.com>, Wei Xu <xuwei5@hisilicon.com>, Eduardo Valentin <edubezval@gmail.com>, Andy Yan <andy.yan@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Vahram Aharonyan <vahrama@synopsys.com>, Vardan Mikayelyan <mvardan@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Yangbo Lu <yangbo.lu@nxp.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang
 List-Id: devicetree@vger.kernel.org
 
-This series implements gadget-side descriptor DMA for the DWC_hsotg
-controller.
+On Wed, 2016-11-09 at 19:27 +0100, Ulf Hansson wrote:
+> - i2c-list
+> 
+> On 9 November 2016 at 04:14, Yangbo Lu <yangbo.lu@nxp.com> wrote:
+> > 
+> > This patchset is used to fix a host version register bug in the T4240-
+> > R1.0-R2.0
+> > eSDHC controller. To match the SoC version and revision, 15 previous
+> > version
+> > patchsets had tried many methods but all of them were rejected by
+> > reviewers.
+> > Such as
+> >         - dts compatible method
+> >         - syscon method
+> >         - ifdef PPC method
+> >         - GUTS driver getting SVR method
+> > Anrd suggested a soc_device_match method in v10, and this is the only
+> > available
+> > method left now. This v11 patchset introduces the soc_device_match
+> > interface in
+> > soc driver.
+> > 
+> > The first four patches of Yangbo are to add the GUTS driver. This is used
+> > to
+> > register a soc device which contain soc version and revision information.
+> > The other three patches introduce the soc_device_match method in soc
+> > driver
+> > and apply it on esdhc driver to fix this bug.
+> > 
+> > ---
+> > Changes for v15:
+> >         - Dropped patch 'dt: bindings: update Freescale DCFG compatible'
+> >           since the work had been done by below patch on ShawnGuo's linux
+> > tree.
+> >           'dt-bindings: fsl: add LS1043A/LS1046A/LS2080A compatible for
+> > SCFG
+> >            and DCFG'
+> >         - Fixed error code issue in guts driver
+> > Changes for v16:
+> >         - Dropped patch 'powerpc/fsl: move mpc85xx.h to include/linux/fsl'
+> >         - Added a bug-fix patch from Geert
+> > ---
+> > 
+> > Arnd Bergmann (1):
+> >   base: soc: introduce soc_device_match() interface
+> > 
+> > Geert Uytterhoeven (1):
+> >   base: soc: Check for NULL SoC device attributes
+> > 
+> > Yangbo Lu (5):
+> >   ARM64: dts: ls2080a: add device configuration node
+> >   dt: bindings: move guts devicetree doc out of powerpc directory
+> >   soc: fsl: add GUTS driver for QorIQ platforms
+> >   MAINTAINERS: add entry for Freescale SoC drivers
+> >   mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
+> > 
+> >  .../bindings/{powerpc => soc}/fsl/guts.txt         |   3 +
+> >  MAINTAINERS                                        |  11 +-
+> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   6 +
+> >  drivers/base/Kconfig                               |   1 +
+> >  drivers/base/soc.c                                 |  70 ++++++
+> >  drivers/mmc/host/Kconfig                           |   1 +
+> >  drivers/mmc/host/sdhci-of-esdhc.c                  |  20 ++
+> >  drivers/soc/Kconfig                                |   3 +-
+> >  drivers/soc/fsl/Kconfig                            |  18 ++
+> >  drivers/soc/fsl/Makefile                           |   1 +
+> >  drivers/soc/fsl/guts.c                             | 236
+> > +++++++++++++++++++++
+> >  include/linux/fsl/guts.h                           | 125 ++++++-----
+> >  include/linux/sys_soc.h                            |   3 +
+> >  13 files changed, 447 insertions(+), 51 deletions(-)
+> >  rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt
+> > (91%)
+> >  create mode 100644 drivers/soc/fsl/Kconfig
+> >  create mode 100644 drivers/soc/fsl/guts.c
+> > 
+> > --
+> > 2.1.0.27.g96db324
+> > 
+> Thanks, applied on my mmc tree for next!
+> 
+> I noticed that some DT compatibles weren't documented, according to
+> checkpatch. Please fix that asap!
 
-It also includes support for DWC USB IOT controllers which use the
-descriptor DMA mode of operation exclusively. These are two new
-device-only USB controller IPs based on DWC_hsotg.
+They are documented, in fsl/guts.txt (the file moved in patch 2/7):
+>  - compatible : Should define the compatible device type for
+>    global-utilities.
+>    Possible compatibles:
+>         "fsl,qoriq-device-config-1.0"
+>         "fsl,qoriq-device-config-2.0"
+>         "fsl,<chip>-device-config"
+>         "fsl,<chip>-guts"
 
-Tested on HAPS platform with:
-* HSOTG IP version 3.30a
-* FS/LS IOT IP version 1.00a
-* HS IOT IP version 1.00a
+Checkpatch doesn't understand compatibles defined in such a way.
 
+-Scott
 
-v2:
-* Remove the DMA 'enable' bindings and make them autodetected.
-* Add DMA 'disable' bindings to override.
-* Separate out commit to add '__packed' attribute.
-* Don't print errors on -ENOMEM.
-* Remove unnecessary GFP_ATOMIC flags.
-* Remove unnecessary patch removing a WARN_ON.
-* Reorganize and clarify BNA interrupt.
-* Fix issue with enabling STSPHSERCVD interrupt.
-
-Regards,
-John
-
-
-John Youn (4):
-  usb: dwc2: Deprecate g-use-dma binding
-  usb: dwc2: Update DMA descriptor structure
-  usb: dwc2: Make the DMA descriptor structure packed
-  usb: dwc2: Add bindings to disable gadget DMA modes
-
-Vahram Aharonyan (23):
-  usb: dwc2: gadget: Add descriptor DMA parameter
-  usb: dwc2: gadget: Add DMA descriptor status quadlet fields
-  usb: dwc2: gadget: Add DMA descriptor chains for EP 0
-  usb: dwc2: host: Rename MAX_DMA_DESC_SIZE to HOST_DMA_NBYTES_LIMIT
-  usb: dwc2: gadget: Transfer length limit checking for DDMA
-  usb: dwc2: gadget: Add DDMA chain pointers to dwc2_hsotg_ep structure
-  usb: dwc2: gadget: Add DDMA chain fill and parse functions
-  usb: dwc2: gadget: EP 0 specific DDMA programming
-  usb: dwc2: gadget: DDMA transfer start and complete
-  usb: dwc2: gadget: Fixes for StsPhseRcvd interrupt
-  usb: dwc2: gadget: Start DDMA IN status phase in StsPhseRcvd handler
-  usb: dwc2: gadget: Enable descriptor DMA mode
-  usb: dwc2: gadget: Add DDMA isoc related fields to dwc2_hsotg_ep
-  usb: dwc2: gadget: Fill isoc descriptor and start transfer in DDMA
-  usb: dwc2: gadget: Add completions for DDMA isoc transfers
-  usb: dwc2: gadget: In DDMA keep incompISOOUT and incompISOIN masked
-  usb: dwc2: gadget: Add start and complete calls for DDMA ISOC
-  usb: dwc2: gadget: Enable the BNA interrupt
-  usb: dwc2: gadget: Adjust ISOC OUT request's actual len for DDMA
-  usb: dwc2: gadget: For DDMA parse setup only after SetUp interrupt
-  usb: dwc2: gadget: Correct dwc2_hsotg_ep_stop_xfr() function
-  usb: dwc2: gadget: Disable enabled HW endpoint in
-    dwc2_hsotg_ep_disable
-  usb: dwc2: Add support of dedicated full-speed PHY interface
-
-Vardan Mikayelyan (3):
-  usb: dwc2: gadget: Add IOT device IDs, configure core accordingly
-  usb: dwc2: gadget: Program ep0_mps for LS
-  usb: dwc2: gadget: Add new core parameter for low speed
-
- Documentation/devicetree/bindings/usb/dwc2.txt |   6 +-
- arch/arm/boot/dts/rk3036.dtsi                  |   1 -
- arch/arm/boot/dts/rk3288.dtsi                  |   1 -
- arch/arm/boot/dts/rk3xxx.dtsi                  |   1 -
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |   1 -
- arch/arm64/boot/dts/rockchip/rk3368.dtsi       |   1 -
- drivers/usb/dwc2/core.h                        |  50 +-
- drivers/usb/dwc2/gadget.c                      | 968 ++++++++++++++++++++++---
- drivers/usb/dwc2/hcd.c                         |  12 +-
- drivers/usb/dwc2/hcd.h                         |   2 +-
- drivers/usb/dwc2/hcd_ddma.c                    |  52 +-
- drivers/usb/dwc2/hw.h                          |  48 +-
- drivers/usb/dwc2/params.c                      |  45 +-
- drivers/usb/dwc2/pci.c                         |   1 -
- 14 files changed, 1023 insertions(+), 166 deletions(-)
-
--- 
-2.10.0
