@@ -1,172 +1,112 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-Date: Thu, 10 Nov 2016 14:16:44 +0200
-Message-ID: <cdc69812-84d0-39e4-1b4e-fef42c5b9059@ti.com>
-References: <cover.1478103726.git.jsarha@ti.com>
- <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
- <12424154.kJqhEf2pOz@avalon> <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
+Date: Thu, 10 Nov 2016 20:36:24 +0800
+Message-ID: <582469C8.9090609@hisilicon.com>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <2825537.ADCNsGqGxn@wuerfel> <5824165A.4040303@hisilicon.com>
+ <17821285.aIcTyCGn5n@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0841965486=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <17821285.aIcTyCGn5n@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kantyzc@163.com" <kantyzc@163.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, catalin.mar
 List-Id: devicetree@vger.kernel.org
 
---===============0841965486==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX"
+Hi, Arnd,
 
---ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX
-Content-Type: multipart/mixed; boundary="LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Jyri Sarha <jsarha@ti.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
- bgolaszewski@baylibre.com, khilman@baylibre.com, bcousson@baylibre.com
-Message-ID: <cdc69812-84d0-39e4-1b4e-fef42c5b9059@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-References: <cover.1478103726.git.jsarha@ti.com>
- <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
- <12424154.kJqhEf2pOz@avalon> <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
-In-Reply-To: <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
-
---LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 10/11/16 11:16, Jyri Sarha wrote:
-> On 11/03/16 19:46, Laurent Pinchart wrote:
->> Hi Jyri,
->>
->> Thank you for the patch.
->>
->> On Wednesday 02 Nov 2016 18:32:16 Jyri Sarha wrote:
->>> Add very basic ti-ftp410 HDMI transmitter driver. The only feature
->>> separating this from a completely dummy bridge is the DDC i2c
->>> support. However, other HW specific features may be added later when
->>> needed. For instance there is a set of registers behind i2c if it is
->>> connected. The implementations is tested against my new tilcdc bridge=
-
->>> support and works with BeagleBone DVI-D Cape Rev A3. A DT binding
->>> document is also added.
+On 2016/11/10 17:12, Arnd Bergmann wrote:
+> On Thursday, November 10, 2016 2:40:26 PM CET zhichang.yuan wrote:
+>> On 2016/11/10 5:34, Arnd Bergmann wrote:
+>>> On Wednesday, November 9, 2016 12:10:43 PM CET Gabriele Paoloni wrote:
+>>>>> On Tuesday, November 8, 2016 11:47:09 AM CET zhichang.yuan wrote:
+>>>>>> +       /*
+>>>>>> +        * The first PCIBIOS_MIN_IO is reserved specifically for
+>>>>> indirectIO.
+>>>>>> +        * It will separate indirectIO range from pci host bridge to
+>>>>>> +        * avoid the possible PIO conflict.
+>>>>>> +        * Set the indirectIO range directly here.
+>>>>>> +        */
+>>>>>> +       lpcdev->io_ops.start = 0;
+>>>>>> +       lpcdev->io_ops.end = PCIBIOS_MIN_IO - 1;
+>>>>>> +       lpcdev->io_ops.devpara = lpcdev;
+>>>>>> +       lpcdev->io_ops.pfin = hisilpc_comm_in;
+>>>>>> +       lpcdev->io_ops.pfout = hisilpc_comm_out;
+>>>>>> +       lpcdev->io_ops.pfins = hisilpc_comm_ins;
+>>>>>> +       lpcdev->io_ops.pfouts = hisilpc_comm_outs;
+>>>>>
+>>>>> I have to look at patch 2 in more detail again, after missing a few
+>>>>> review
+>>>>> rounds. I'm still a bit skeptical about hardcoding a logical I/O port
+>>>>> range here, and would hope that we can just go through the same
+>>>>> assignment of logical port ranges that we have for PCI buses,
+>>>>> decoupling
+>>>>> the bus addresses from the linux-internal ones.
+>>>>
+>>>> The point here is that we want to avoid any conflict/overlap between
+>>>> the LPC I/O space and the PCI I/O space. With the assignment above
+>>>> we make sure that LPC never interfere with PCI I/O space.
 >>>
->>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->>> ---
->>>  .../bindings/display/bridge/ti,tfp410.txt          |  30 ++++
->>>  drivers/gpu/drm/bridge/Kconfig                     |   7 +
->>>  drivers/gpu/drm/bridge/Makefile                    |   1 +
->>>  drivers/gpu/drm/bridge/ti-tfp410.c                 | 199 +++++++++++=
-+++++++
->>>  4 files changed, 237 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt create=
- mode
->>> 100644 drivers/gpu/drm/bridge/ti-tfp410.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp4=
-10.txt
->>> b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt new =
-file
->>> mode 100644
->>> index 0000000..dc93713
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
->>> @@ -0,0 +1,30 @@
->>> +TFP410 HDMI/DVI bridge bindings
+>>> But we already abstract the PCI I/O space using dynamic registration.
+>>> There is no need to hardcode the logical address for ISA, though
+>>> I think we can hardcode the bus address to start at zero here.
 >>
->> I'd name the document "TI TFP410 DVI Transmitter". DVI bridge doesn't =
-tell=20
->> whether the device is a receiver or transmitter.
->>
->>> +Required properties:
->>> +	- compatible: "ti,tfp410"
->>
->> The device is an I2C slave, it should have a reg property. Given that =
-the chip=20
->> can be used without being controlled through I2C, the reg property sho=
-uld be=20
->> optional. You should document this clearly, and explain how the DT nod=
-e can be=20
->> instantiated as a child of an I2C controller when the I2C interface is=
- used,=20
->> or in other parts of the device tree otherwise.
->>
->>> +Optional properties:
->>> +	- ddc-i2c: phandle of an I2C controller used for DDC EDID probing
->>
->> The TFP410 doesn't handle DDC, this property should be part of the con=
-nector=20
->> node.
->>
->>> +Optional subnodes:
->>> +	- video input: this subnode can contain a video input port node
->>> +	  to connect the bridge to a display controller output (See this
->>> +	  documentation [1]).
->>
->> You also need an output port for the DVI output. Those two ports shoul=
-d be=20
->> required, not optional.
->>
->=20
-> Ok. So I need another device node. Should I create some specific
-> compatible string for connectors behind tfp410, or a generic DVI/HDMI
-> connector with optional ddc-i2c phandle?
+>> Do you means that we can pick up the maximal I/O address from all children's
+>> device resources??
+> 
+> The driver should not look at the resources of its children, just
+> register a range of addresses dynamically, as I suggested in an
+> earlier review.
+>
+Sorry! I can't catch your idea yet:(
 
-omapdrm uses connector nodes. See, for example, pandaboard's dts files.
-It has TFP410 and a connector node. With omap specific drivers, for now,
-but that's another matter.
+When to register the I/O range? Is it done just after the successfully
+of_translate_address() during the children scanning?
 
- Tomi
+If yes, when a child is scanning, there is no range data in arm64_extio_ops. The
+addr_is_indirect_io() calling in of_get_isa_indirect_io() don't need. All we can
+check is just whether the address to be translated is IO and is under a parent
+device which has no 'ranges' property.
+
+> 
+> Your current version has
+> 
+>         if (arm64_extio_ops->pfout)                             \
+>                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
+>                        addr, value, sizeof(type));             \
+> 
+> Instead, just subtract the start of the range from the logical
+> port number to transform it back into a bus-local port number:
+> 
+>         if (arm64_extio_ops->pfout)                             \
+>                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
+>                        addr - arm64_extio_ops->start, value, sizeof(type)); \
+> 
+I think there is some information needed sync.
+In the old patch-set, we don't bypass the pci_address_to_pio() after
+successfully of_translate_address(). In this way, we don't need to reserve any
+PIO space for our LPC since the logical port are from the same mapping
+algorithm. Based on this way, the port number in the device resource is logical
+one, then we need to subtract the start of the resource to get back the
+bus-local port.
+
+>From V3, we don't apply the mapping based on pci_address_to_pio(), the
+of_translate_address() return the bus-local port directly and store into
+relevant device resource. So, in the current arm64_extio_ops->pfout(), the
+reverse translation don't need anymore. The input "addr" is bus-local port now.
 
 
---LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4--
+Thanks,
+Zhichang
 
---ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYJGUsAAoJEPo9qoy8lh71dmMP/2vD5NGtt9FZjU955Ao2I80c
-oajUXww7K3JMnX1NVbySLCuMUwDGyBZF6HlLQ2iiXdZCNfnbzPoNrxYBjAYzjfqK
-We9MIC1RkiO80lREBbIA2oFtVQthIySv1SKIpjmIEBYPdMUp8d1621kkg01atnAa
-mJ0cCESg0e7YO/oqUsdxgJfF4/wapAn3hih2F61CVnZW7+fDGZEEZJ5tta301uwQ
-bzaJqvuvAYiacq93N+tgU5MWq9cbG8KAFY13R2zm+8aM6KBJRNhAZhDwtIBkqxsk
-x5C8k6vuoGj5uSdlPSgnocilxCYCkM/7vF9slMsVgD5dDo+wdzatStH+EWvM2z/p
-TWxjGmxndy0+Q9Xn+no9YQwCAcVMytXlVDhYRUKVabBcKsVLkpafSzTs8nlPScZa
-dSb6dcs33dOPDkgXqmky6MJOI+h/i49mw1knJUtYlFnkJ5H0Y5jvA1R8Vx+qas0n
-MapGCrAB4G8eZQ4bKYlznGzRj5lc4gw2lMzF5oFzNsW7MAcQxDL68rkjJQowLMbU
-LTN3Q4QpxN1dzO9AbPgcxOrf3t7/FzXoki3sRpbkg1xker9sca4xDLCtlNNcVQ0W
-hpgvmzpD0xFmh/7itus188U6IXo8a/UlpdbtnYJmqAdJEDK/AebJAuF0dtz346aY
-I4zDJb1t6DB25L7PPRaG
-=g50h
------END PGP SIGNATURE-----
-
---ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX--
-
---===============0841965486==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0841965486==--
+> We know that the ISA/LPC bus can only have up to 65536 ports,
+> so you can register all of those, or possibly limit it further to
+> 1024 or 4096 ports, whichever matches the bus implementation.
+> 
+> 	Arnd
+> 
+> .
+> 
