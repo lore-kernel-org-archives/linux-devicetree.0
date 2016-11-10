@@ -1,60 +1,35 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 1/4] Documentation: pinctrl: palmas: Add
- ti,palmas-powerhold-override property definition
-Date: Thu, 10 Nov 2016 09:41:38 +0530
-Message-ID: <f6018c47-f599-b7d0-ae2f-a19facf77ec1@ti.com>
-References: <1477559414-12520-1-git-send-email-j-keerthy@ti.com>
- <1477559414-12520-2-git-send-email-j-keerthy@ti.com>
- <20161109161016.GI13127@dell>
+Subject: [PATCH v2 0/5] mfd: palmas: add powerhold overriding during power off
+Date: Thu, 10 Nov 2016 10:39:15 +0530
+Message-ID: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161109161016.GI13127@dell>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: tony@atomide.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+To: tony@atomide.com, lee.jones@linaro.org, robh+dt@kernel.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, j-keerthy@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
+The series lets one over powerhold for pmic.
+The powerhold is used to keep the pmic power on even
+after the DEV_CTRL On bit is set to off.
 
+Tested on am572x-idk board, dra72-evm, dra7-evm for poweroff. 
 
-On Wednesday 09 November 2016 09:40 PM, Lee Jones wrote:
-> On Thu, 27 Oct 2016, Keerthy wrote:
->
->> GPIO7 is configured in POWERHOLD mode which has higher priority
->> over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
->> bit is turned off. This property enables driver to over ride the
->> POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
->> scenarios.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->
-> This requires a DT Ack.
+Keerthy (5):
+  Documentation: pinctrl: palmas: Add ti,palmas-powerhold-override
+    property definition
+  mfd: palmas: Remove redundant check in palmas_power_off
+  mfd: palmas: Reset the POWERHOLD mux during power off
+  arm: dts: am57xx-beagle-x15-common: Add overide powerhold property
+  arm: dts: am57xx-idk-common: Add overide powerhold property
 
-Okay.
+ .../devicetree/bindings/pinctrl/pinctrl-palmas.txt        |  9 +++++++++
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi           |  1 +
+ arch/arm/boot/dts/am57xx-idk-common.dtsi                  |  1 +
+ drivers/mfd/palmas.c                                      | 15 +++++++++++++--
+ 4 files changed, 24 insertions(+), 2 deletions(-)
 
->
->> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
->> index caf297b..c28d4eb8 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
->> @@ -35,6 +35,15 @@ Optional properties:
->>  - ti,palmas-enable-dvfs2: Enable DVFS2. Configure pins for DVFS2 mode.
->>  	Selection primary or secondary function associated to GPADC_START
->>  	and SYSEN2 pin/pad for DVFS2 interface
->> +- ti,palmas-override-powerhold: This is applicable for PMICs for which
->> +	GPIO7 is configured in POWERHOLD mode which has higher priority
->> +	over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
->> +	bit is turned off. This property enables driver to over ride the
->> +	POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
->> +	scenarios. So for GPIO7 if ti,palmas-override-powerhold is set
->> +	then the GPIO_7 field should never be muxed to anything else.
->> +	It should be set to POWERHOLD by default and only in case of
->> +	power off scenarios the driver will over ride the mux value.
->>
->>  This binding uses the following generic properties as defined in
->>  pinctrl-bindings.txt:
->
+-- 
+1.9.1
+
