@@ -1,37 +1,68 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Subject: [PATCH v2 1/2] devicetree: Add vendor prefix for CZ.NIC
-Date: Thu, 10 Nov 2016 14:57:20 +0100
-Message-ID: <20161110135721.13098-1-uwe@kleine-koenig.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
+ to legacy SCPI protocol
+Date: Thu, 10 Nov 2016 08:12:15 -0600
+Message-ID: <CAL_JsqLW4JZHb0ncVUEefnKySA231EDgvCkY3xPdaJGf=uMJYg@mail.gmail.com>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <1478148731-11712-7-git-send-email-sudeep.holla@arm.com> <20161110012249.ed56ik6kdffoikym@rob-hp-laptop>
+ <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Martin=20Strba=C4=8Dka?= <martin.strbacka-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Nov 10, 2016 at 4:26 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 10/11/16 01:22, Rob Herring wrote:
+>>
+>> On Wed, Nov 02, 2016 at 10:52:09PM -0600, Sudeep Holla wrote:
+>>>
+>>> This patch adds specific compatible to support legacy SCPI protocol.
+>>>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>> b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>> index d1882c4540d0..ebd03fc93135 100644
+>>> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+>>> @@ -7,7 +7,9 @@ by Linux to initiate various system control and power
+>>> operations.
+>>>
+>>>  Required properties:
+>>>
+>>> -- compatible : should be "arm,scpi"
+>>> +- compatible : should be
+>>> +       * "arm,scpi" : For implementations complying to SCPI v1.0 or
+>>> above
+>>> +       * "arm,legacy-scpi" : For implementations complying pre SCPI v1.0
+>>
+>>
+>> I'd prefer that we explicitly enumerate the old versions. Are there
+>> many?
+>>
+>
+> I understand your concern, but this legacy SCPI protocol was not
+> officially released. It was just WIP which vendors picked up from very
+> early releases. Since they are not numbered, it's hard to have specific
+> compatibles with different versions until v1.0. That's one of the reason
+> to retain platform specific compatible so that we can add any quirks
+> based on them if needed.
+>
+> I will probably add these information in the commit log so that it's
+> clear why we can't do version based compatible.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index f0a48ea78659..ae9fce9fed03 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -67,6 +67,7 @@ creative	Creative Technology Ltd
- crystalfontz	Crystalfontz America, Inc.
- cubietech	Cubietech, Ltd.
- cypress	Cypress Semiconductor Corporation
-+cznic	CZ.NIC, z.s.p.o.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- delta	Delta Electronics, Inc.
--- 
-2.10.2
+This is exactly my point. By enumerate, I meant having platform
+specific compatibles. Having "arm,legacy-scpi" is pointless because
+who knows what version they followed and they may all be different.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
