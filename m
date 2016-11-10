@@ -1,56 +1,50 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH v2 0/3] increase TSCADC clock to 24MHz and fix ti,charge-delay to represent in nS
-Date: Thu, 10 Nov 2016 22:05:12 +0530
-Message-ID: <20161110163515.27598-1-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: video: exynos7-decon: Remove obsolete samsung,power-domain property
+Date: Thu, 10 Nov 2016 18:50:49 +0200
+Message-ID: <1478796649-5159-1-git-send-email-krzk@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series enables ADC to be clocked at 24MHz as the
-TI AM335x ADC driver has already adopted to use DMA to transfer
-ADC samples. Now ADC can generated upto 800K Samples per second
-with the patch [1] on AM335x BBB and AM437x GP EVM.
+The samsung,power-domain property is obsolete since commit 0da658704136
+("ARM: dts: convert to generic power domain bindings for exynos DT").
+Replace it with generic one.
 
-when ADC ref clock is set at 24MHz, I am seeing some issue with
-touch screen pointer as the pointer jumps to random locations
-with free draw application. The issue is due to increase in ADC
-clock and charge delay for the touchscreen ADC line duration
-reduced.
+Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-So the notation of ti,charge-delay in terms of ADC clock is
-wrong, it has to be represented in time and driver has to convert
-the charge delay time to ADC clocks based on what ADC clock
-frequency is set.
+---
 
-Measured the performance with the iio_generic_buffer with the
-patch [2] applied
+Changes since v1:
+1. Just add the acks/reviews.
 
-Verified the touch screen on AM335x GP EVM and AM335x BBB LCD7
-cape with [3] dts for display and touch screen to work.
+I though it will be applied by Exynos DRM maintainer but there was no
+response.
+Dear Rob, could you pick it up?
+---
+ Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes from initial version:
-* Removed modification to STEPCONFIG_OPENDLY defined as it
-  doesn't affect/improve touchscreen performance.
-* Changed ti,charge-delay to ti,charge-delay-ns
-
-[1] - http://pastebin.ubuntu.com/23357935/
-[2] - http://pastebin.ubuntu.com/23357939/
-[3] - http://pastebin.ubuntu.com/23456616/
-
-Mugunthan V N (3):
-  dt/binding: ti-tsc-adc: deprecate ti,charge-delay and add binding doc
-    for ti,charge-delay-ns
-  Input: ti_am335x_tsc: Add support for ti,charge-delay-ns
-  drivers: mfd: ti_am335x_tscadc: increase ADC ref clock to 24MHz
-
- .../bindings/input/touchscreen/ti-tsc-adc.txt      | 32 ++++++++++++++--------
- drivers/input/touchscreen/ti_am335x_tsc.c          | 31 +++++++++++++++------
- include/linux/mfd/ti_am335x_tscadc.h               |  2 +-
- 3 files changed, 45 insertions(+), 20 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+index 3938caacf11c..8346fb18a358 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+@@ -33,7 +33,7 @@ Required properties:
+ - i80-if-timings: timing configuration for lcd i80 interface support.
+ 
+ Optional Properties:
+-- samsung,power-domain: a phandle to DECON power domain node.
++- power-domains: a phandle to DECON power domain node.
+ - display-timings: timing settings for DECON, as described in document [1].
+ 		Can be used in case timings cannot be provided otherwise
+ 		or to override timings provided by the panel.
 -- 
-2.11.0.rc0.7.gbe5a750
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
