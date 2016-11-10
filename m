@@ -1,93 +1,50 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
- to legacy SCPI protocol
-Date: Thu, 10 Nov 2016 14:34:07 +0000
-Message-ID: <7ccc12bc-9a05-47e3-8ab8-d1b0ad31159e@arm.com>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
- <1478148731-11712-7-git-send-email-sudeep.holla@arm.com>
- <20161110012249.ed56ik6kdffoikym@rob-hp-laptop>
- <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com>
- <CAL_JsqLW4JZHb0ncVUEefnKySA231EDgvCkY3xPdaJGf=uMJYg@mail.gmail.com>
+From: Jesper Nilsson <jesper.nilsson@axis.com>
+Subject: [GIT PULL]: ARM ARTPEC changes for 4.10
+Date: Thu, 10 Nov 2016 16:09:31 +0100
+Message-ID: <20161110150930.GB19804@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLW4JZHb0ncVUEefnKySA231EDgvCkY3xPdaJGf=uMJYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:ARM/ARTPEC MACHINE SUPPORT" <linux-arm-kernel@axis.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
+Please pull the below signed tag for a trio of minor changes
+adding PCIe for the ARM ARTPEC SoC.
 
-On 10/11/16 14:12, Rob Herring wrote:
-> On Thu, Nov 10, 2016 at 4:26 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 10/11/16 01:22, Rob Herring wrote:
->>>
->>> On Wed, Nov 02, 2016 at 10:52:09PM -0600, Sudeep Holla wrote:
->>>>
->>>> This patch adds specific compatible to support legacy SCPI protocol.
->>>>
->>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 4 +++-
->>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>>> b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>>> index d1882c4540d0..ebd03fc93135 100644
->>>> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>>> @@ -7,7 +7,9 @@ by Linux to initiate various system control and power
->>>> operations.
->>>>
->>>>  Required properties:
->>>>
->>>> -- compatible : should be "arm,scpi"
->>>> +- compatible : should be
->>>> +       * "arm,scpi" : For implementations complying to SCPI v1.0 or
->>>> above
->>>> +       * "arm,legacy-scpi" : For implementations complying pre SCPI v1.0
->>>
->>>
->>> I'd prefer that we explicitly enumerate the old versions. Are there
->>> many?
->>>
->>
->> I understand your concern, but this legacy SCPI protocol was not
->> officially released. It was just WIP which vendors picked up from very
->> early releases. Since they are not numbered, it's hard to have specific
->> compatibles with different versions until v1.0. That's one of the reason
->> to retain platform specific compatible so that we can add any quirks
->> based on them if needed.
->>
->> I will probably add these information in the commit log so that it's
->> clear why we can't do version based compatible.
->
-> This is exactly my point. By enumerate, I meant having platform
-> specific compatibles. Having "arm,legacy-scpi" is pointless because
-> who knows what version they followed and they may all be different.
->
+Thanks!
 
-OK, but IIUC Olof's concern wanted a generic one along with the platform
-specific compatible which kind of makes sense as so far we have seen
-some commonality between Amlogic and Rockchip.
+/Jesper
 
-E.g. Amlogic follows most of the legacy protocol though it deviates in
-couple of things which we can handle with platform specific compatible
-(in the following patch in the series). When another user(Rockchip ?)
-make use of this legacy protocol, we can start using those platform
-specific compatible for deviations only.
+The following changes since commit bc33b0ca11e3df467777a4fa7639ba488c9d4911:
 
-Is that not acceptable ?
+  Linux 4.9-rc4 (2016-11-05 16:23:36 -0700)
 
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jesper/artpec.git tags/artpec-for-4.10
+
+for you to fetch changes up to fa5541fc806771a108cd2a48245a229f1ba539ea:
+
+  ARM: dts: artpec: add pcie support (2016-11-10 15:51:10 +0100)
+
+----------------------------------------------------------------
+ARTPEC changes for 4.10
+
+----------------------------------------------------------------
+Niklas Cassel (3):
+      ARM: ARTPEC-6: add select MFD_SYSCON to MACH_ARTPEC6
+      ARM: ARTPEC-6: add pcie related options
+      ARM: dts: artpec: add pcie support
+
+ arch/arm/boot/dts/artpec6-devboard.dts |  4 ++++
+ arch/arm/boot/dts/artpec6.dtsi         | 29 ++++++++++++++++++++++++++++-
+ arch/arm/mach-artpec/Kconfig           |  3 +++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
+
+/^JN - Jesper Nilsson
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+               Jesper Nilsson -- jesper.nilsson@axis.com
