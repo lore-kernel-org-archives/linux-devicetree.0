@@ -1,34 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 5/8] Documentation: bindings: decouple juno specific
- details from generic binding
-Date: Wed, 9 Nov 2016 19:18:27 -0600
-Message-ID: <20161110011827.pzbiiv47osty4pzf@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
+ to legacy SCPI protocol
+Date: Wed, 9 Nov 2016 19:22:49 -0600
+Message-ID: <20161110012249.ed56ik6kdffoikym@rob-hp-laptop>
 References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
- <1478148731-11712-6-git-send-email-sudeep.holla@arm.com>
+ <1478148731-11712-7-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478148731-11712-6-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+In-Reply-To: <1478148731-11712-7-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2016 at 10:52:08PM -0600, Sudeep Holla wrote:
-> Since SCPI is a generic protocol and the bindings are intended to be
-> generic, we need to decouple all the platform specific binding details
-> out of the generic bindings.
+On Wed, Nov 02, 2016 at 10:52:09PM -0600, Sudeep Holla wrote:
+> This patch adds specific compatible to support legacy SCPI protocol.
 > 
-> This patch moves are the Juno platform specific details into a separate
-> binding document.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/arm,scpi.txt | 20 ++++++-----------
->  .../devicetree/bindings/arm/juno,scpi.txt          | 26 ++++++++++++++++++++++
->  2 files changed, 33 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/juno,scpi.txt
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> index d1882c4540d0..ebd03fc93135 100644
+> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+> @@ -7,7 +7,9 @@ by Linux to initiate various system control and power operations.
+>  
+>  Required properties:
+>  
+> -- compatible : should be "arm,scpi"
+> +- compatible : should be
+> +	* "arm,scpi" : For implementations complying to SCPI v1.0 or above
+> +	* "arm,legacy-scpi" : For implementations complying pre SCPI v1.0
 
-Acked-by: Rob Herring <robh@kernel.org>
+I'd prefer that we explicitly enumerate the old versions. Are there 
+many?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
