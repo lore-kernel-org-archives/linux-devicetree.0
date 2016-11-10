@@ -1,78 +1,206 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/3] dt/binding: ti-tsc-adc: deprecate ti,charge-delay and add binding doc for ti,charge-delay-ns
-Date: Thu, 10 Nov 2016 22:05:13 +0530
-Message-ID: <20161110163515.27598-2-mugunthanvnm@ti.com>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq implement
+Date: Thu, 10 Nov 2016 18:24:07 +0000
+Message-ID: <1f8f7b9f-7788-18c4-19c5-3c9a7623c188@arm.com>
+References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
+ <1478001122-8664-3-git-send-email-youlin.pei@mediatek.com>
+ <86twbrj586.fsf@arm.com> <1478234577.7975.29.camel@mtksdaap41>
+ <867f8ilwcl.fsf@arm.com> <1478573833.32099.11.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110163515.27598-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1478573833.32099.11.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+To: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chieh-jay.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ti,charge-delay represents the duration that ADC should wait
-before sampling the ADC line to detect the touch location and pen
-up/downs. Currently the ADC clock is set at 3MHz. The device-tree
-entry for ti,charge-delay is based on assumption of ADC clock at
-3MHz, but it can be operated up to 24MHz clock. Representing the
-charge delay of touchscreen in terms of ADC clocks is incorrect.
-So change this representation to ti,charge-delay-ns, which driver
-can convert it to number clock cycles based on ref clock
-frequency.
+On 08/11/16 02:57, Youlin Pei wrote:
+> On Fri, 2016-11-04 at 22:21 +0000, Marc Zyngier wrote:
+>> On Fri, Nov 04 2016 at 04:42:57 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>> On Tue, 2016-11-01 at 20:49 +0000, Marc Zyngier wrote:
+>>>> On Tue, Nov 01 2016 at 11:52:01 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> In Mediatek SOCs, the CIRQ is a low power interrupt controller
+>>>>> designed to works outside MCUSYS which comprises with Cortex-Ax
+>>>>> cores,CCI and GIC.
+>>>>>
+>>>>> The CIRQ controller is integrated in between MCUSYS( include
+>>>>> Cortex-Ax, CCI and GIC ) and interrupt sources as the second
+>>>>> level interrupt controller. The external interrupts which outside
+>>>>> MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
+>>>>> all edge trigger interupts. When an edge interrupt is triggered,
+>>>>> CIRQ can record the status and generate a pulse signal to GIC when
+>>>>> flush command executed.
+>>>>>
+>>>>> When system enters sleep mode, MCUSYS will be turned off to improve
+>>>>> power consumption, also GIC is power down. The edge trigger interrupts
+>>>>> will be lost in this scenario without CIRQ.
+>>>>>
+>>>>> This commit provides the CIRQ irqchip implement.
+>>>>>
+>>>>> Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/irqchip/Makefile       |    2 +-
+>>>>>  drivers/irqchip/irq-mtk-cirq.c |  262 ++++++++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 263 insertions(+), 1 deletion(-)
+>>>>>  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
+>>>>>
+>>>>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>>>>> index e4dbfc8..8f33580 100644
+>>>>> --- a/drivers/irqchip/Makefile
+>>>>> +++ b/drivers/irqchip/Makefile
+>>>>> @@ -60,7 +60,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
+>>>>>  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
+>>>>>  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
+>>>>>  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
+>>>>> -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
+>>>>> +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
+>>>>>  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
+>>>>>  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
+>>>>>  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
+>>>>> diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
+>>>>> new file mode 100644
+>>>>> index 0000000..fc43ef3
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/irqchip/irq-mtk-cirq.c
+>>>>> @@ -0,0 +1,262 @@
+>>>>> +/*
+>>>>> + * Copyright (c) 2016 MediaTek Inc.
+>>>>> + * Author: Youlin.Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>>> + * published by the Free Software Foundation.
+>>>>> + *
+>>>>> + * This program is distributed in the hope that it will be useful,
+>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>> + * GNU General Public License for more details.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/irq.h>
+>>>>> +#include <linux/irqchip.h>
+>>>>> +#include <linux/irqdomain.h>
+>>>>> +#include <linux/of.h>
+>>>>> +#include <linux/of_irq.h>
+>>>>> +#include <linux/of_address.h>
+>>>>> +#include <linux/io.h>
+>>>>> +#include <linux/slab.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>> +
+>>>>> +#define CIRQ_ACK	0x40
+>>>>> +#define CIRQ_MASK_SET	0xc0
+>>>>> +#define CIRQ_MASK_CLR	0x100
+>>>>> +#define CIRQ_SENS_SET	0x180
+>>>>> +#define CIRQ_SENS_CLR	0x1c0
+>>>>> +#define CIRQ_POL_SET	0x240
+>>>>> +#define CIRQ_POL_CLR	0x280
+>>>>> +#define CIRQ_CONTROL	0x300
+>>>>> +
+>>>>> +#define CIRQ_EN	0x1
+>>>>> +#define CIRQ_EDGE	0x2
+>>>>> +#define CIRQ_FLUSH	0x4
+>>>>> +
+>>>>> +#define CIRQ_IRQ_NUM    0x200
+>>>>> +
+>>>>> +struct mtk_cirq_chip_data {
+>>>>> +	void __iomem *base;
+>>>>> +	unsigned int ext_irq_start;
+>>>>> +};
+>>>>> +
+>>>>> +static struct mtk_cirq_chip_data *cirq_data;
+>>>>
+>>>> Are you guaranteed that you'll only ever have a single CIRQ in any
+>>>> system?
+>>>
+>>> In Mediatek's SOC, only hace a single CIRQ.
+>>>
+>>>>
+>>>>> +
+>>>>> +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
+>>>>> +{
+>>>>> +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
+>>>>> +	unsigned int cirq_num = data->hwirq;
+>>>>> +	u32 mask = 1 << (cirq_num % 32);
+>>>>> +
+>>>>> +	writel(mask, chip_data->base + offset + (cirq_num / 32) * 4);
+>>>>
+>>>> Why can't you use the relaxed accessors?
+>>>
+>>> It seems that i use wrong function, i will change the writel to
+>>> writel_relaxed in next ve
+>>>
+>>>>
+>>>>> +}
+>>>>> +
+>>>>> +static void mtk_cirq_mask(struct irq_data *data)
+>>>>> +{
+>>>>> +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
+>>>>> +	irq_chip_mask_parent(data);
+>>>>> +}
+>>>>> +
+>>>>> +static void mtk_cirq_unmask(struct irq_data *data)
+>>>>> +{
+>>>>> +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
+>>>>> +	irq_chip_unmask_parent(data);
+>>>>> +}
+>>>>> +
+>>>>> +static void mtk_cirq_eoi(struct irq_data *data)
+>>>>> +{
+>>>>> +	mtk_cirq_write_mask(data, CIRQ_ACK);
+>>>>
+>>>> EOI and ACK have very different semantics. What is this write actually
+>>>> doing? Also, you're now doing an additional MMIO write on each interrupt
+>>>> EOI, doubling its cost. Do you really need to do actually signal the HW
+>>>> that we've EOIed an interrupt? I would have hoped that you'd be able to
+>>>> put it in "bypass" mode as long as you're not suspending...
+>>>>
+>>>
+>>> When external interrupt happened, CIRQ status register record the status
+>>> even CIRQ is not enabled. when execute the flush command, CIRQ will
+>>> resend the signals according to the status. So if don't clear the
+>>> status, CIRQ will resend the wrong signals. the ACK write operation will
+>>> clear the status.
+>>
+>> But at this time, we haven't suspended yet, and there is nothing to
+>> replay. Also, you only enable the edge capture when suspending. So what
+>> are you ACKing here? Can't you simply clear everything right when
+>> suspending and not do it at all on the fast path?
+> 
+> I had planned to ACK the status in cirq suspend callback, but
+> encountered a problem.
+> following is a piece of code from
+> http://lxr.free-electrons.com/source/kernel/power/suspend.c#L361
+> 
+> arch_suspend_disable_irqs(); ---step1
+> BUG_ON(!irqs_disabled());
+> 
+> error = syscore_suspend();
+>            |
+>            ---cirq suspend(); ---step2
+> 
+> if ack the status in cirq suspend, the interrupts will be lost which
+> happened during step1 to step2.
+> 
+> So would you mind give me some suggestions about this?
+> Thanks a lot!
 
-Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
----
- .../bindings/input/touchscreen/ti-tsc-adc.txt      | 32 ++++++++++++++--------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+Right. So maybe there is a way:
+- On suspend you can iterate over all the cirq interrupts that have been
+recorded
+- For each of those, you inspect if it is pending at the GIC level
+(using the irq_get_irqchip_state helper)
+- if not pending, you Ack it, because it cannot be delivered anymore
+- If it is pending, then you know it happened between step 1 and step 2.
+- You then have the choice of either going into suspend and waking up
+immediately, or failing the suspend.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-index b1163bf97146..83570776c804 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-@@ -30,17 +30,27 @@ Required properties:
- 
- Optional properties:
- - child "tsc"
--	ti,charge-delay: Length of touch screen charge delay step in terms of
--			 ADC clock cycles. Charge delay value should be large
--			 in order to avoid false pen-up events. This value
--			 effects the overall sampling speed, hence need to be
--			 kept as low as possible, while avoiding false pen-up
--			 event. Start from a lower value, say 0x400, and
--			 increase value until false pen-up events are avoided.
--			 The pen-up detection happens immediately after the
--			 charge step, so this does in fact function as a
--			 hardware knob for adjusting the amount of "settling
--			 time".
-+	ti,charge-delay-ns: Length of touch screen charge delay step in terms of
-+			    nano Seconds. Charge delay value should be large
-+			    in order to avoid false pen-up events. This value
-+			    effects the overall sampling speed, hence need to be
-+			    kept as low as possible, while avoiding false pen-up
-+			    event. Start from a lower value, say 41000nS, and
-+			    increase value until false pen-up events are avoided.
-+			    The pen-up detection happens immediately after the
-+			    charge step, so this does in fact function as a
-+			    hardware knob for adjusting the amount of "settling
-+			    time".
-+	ti,charge-delay: Deprecated as representing charge delay should be
-+			 represented in time as the ADC clock may be different.
-+			 Currently this value is calculated based on 3MHz ADC
-+			 ref clock, but ADC clock can operate upto 24MHz clock.
-+			 ADC clock will be changed to 24MHz to increase the
-+			 number of ADC samples. So to keep the backward
-+			 compatibility, driver will consider this value is
-+			 calculated for 3MHz clock so the value will be
-+			 multiplied by 8 to compensate the change in reference
-+			 clock.
- 
- - child "adc"
- 	ti,chan-step-opendelay: List of open delays for each channel of
+Thoughts?
+
+	M.
 -- 
-2.11.0.rc0.7.gbe5a750
-
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
