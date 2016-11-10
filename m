@@ -1,66 +1,87 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Thu, 10 Nov 2016 19:02:03 +0900
-Message-ID: <20161110100203.2qv6j6acywpjerfi@gangnam.samsung>
-References: <20161102104010.26959-1-andi.shyti@samsung.com>
- <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
- <20161102104010.26959-6-andi.shyti@samsung.com>
- <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
- <20161103101048.ofyoko4mkcypf44u@gangnam.samsung>
- <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
- <20161109182621.ttfxtdt32q3cqce7@rob-hp-laptop>
- <13210179-ea3f-6106-e3c0-fa30b83e23cc@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] ARM: dts: armada-375: Fixup bootrom DT warning
+Date: Thu, 10 Nov 2016 11:15:06 +0100
+Message-ID: <20161110111506.02842cbd@free-electrons.com>
+References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
+        <20161110001000.10619-5-gregory.clement@free-electrons.com>
+        <20161110092221.0219490b@free-electrons.com>
+        <87wpgbekwg.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <13210179-ea3f-6106-e3c0-fa30b83e23cc@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Rob Herring <robh@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87wpgbekwg.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+Hello,
 
-> > > > > Only DT bindings of LED class drivers should be placed in
-> > > > > Documentation/devicetree/bindings/leds. Please move it to the
-> > > > > media bindings.
-> > > > 
-> > > > that's where I placed it first, but Rob asked me to put it in the
-> > > > LED directory and Cc the LED mailining list.
-> > > > 
-> > > > That's the discussion of the version 2:
-> > > > 
-> > > > https://lkml.org/lkml/2016/9/12/380
-> > > > 
-> > > > Rob, Jacek, could you please agree where I can put the binding?
-> > > 
-> > > I'm not sure if this is a good approach. I've noticed also that
-> > > backlight bindings have been moved to leds, whereas they don't look
-> > > similarly.
-> > > 
-> > > We have common.txt LED bindings, that all LED class drivers' bindings
-> > > have to follow. Neither backlight bindings nor these ones do that,
-> > > which introduces some mess.
-> > 
-> > And there are probably LED bindings that don't follow common.txt either.
-> > 
-> > > Eventually adding a sub-directory, e.g. remote_control could make it
-> > > somehow logically justified, but still - shouldn't bindings be
-> > > placed in the documentation directory related to the subsystem of the
-> > > driver they are predestined to?
-> > 
-> > No. While binding directories often mirror the driver directories, they
-> > are not the same. Bindings are grouped by types of h/w and IR LEDs are a
-> > type of LED.
-> > 
-> > If you prefer a sub-dir, that is fine with me.
+On Thu, 10 Nov 2016 10:36:47 +0100, Gregory CLEMENT wrote:
+
+> >> -		bootrom {
+> >> +		bootrom@0 {
+> >>  			compatible = "marvell,bootrom";
+> >>  			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;  
+> >
+> > I am still not sure whether this "0" unit address is correct compared
+> > to the reg property being passed.  
 > 
-> Fine. So how about sub-dir "ir" ?
+> I chose to use the adress register inside the window memory.
 
-would we put here all the remote control bindings that currently
-are under media?
+Which I think is bogus, as my example below highlighted.
 
-Thanks,
-Andi
+> > A good example of why I'm worried is the sa-sram case:
+> >
+> > +		crypto_sram0: sa-sram0@0 {
+> >  			compatible = "mmio-sram";
+> >  			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
+> >
+> > +		crypto_sram1: sa-sram1@0 {
+> >  			compatible = "mmio-sram";
+> >  			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+> >
+> > The node names should be just "sram" without a number. Indeed for UARTs
+> > for example, you use uart@XYZ, uart@ABC and not uart0@XYZ and
+> > uart1@ABC. But then, if you do that, with your scheme, you end up with
+> > both nodes named sa-sram@0.
+> >
+> > Which clearly shows that the way you set this unit-address is not
+> > correct: those two devices are mapped at completely different
+> > locations, but you end up with an identical unit address.
+> >
+> > I have no idea what is the rule for setting the unit address in this
+> > case, but I'm pretty sure the rule you've chosen is not good.  
+> 
+> I don't know if there is an existing rules for this case. But I see your
+> concern. What I propose then is to expose the memory windows ID by
+> adding the target and the attributes like this:
+> 
+> 		crypto_sram0: sa-sram@09_09_0 {
+>  			compatible = "mmio-sram";
+>   			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
+> 
+> 
+> 		crypto_sram1: sa-sram@09_05_0 {
+>   			compatible = "mmio-sram";
+>   			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+
+I have no idea if 09_05_0 is considered a valid unit address. Indeed
+the _ character in an address looks a bit weird.
+
+I guess we need guidance from the DT binding maintainers on this, since
+it's really a matter of interpreting what "unit address" means in
+relation to the value of the "reg" property.
+
+Rob, Mark?
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
