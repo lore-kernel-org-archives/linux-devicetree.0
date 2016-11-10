@@ -1,42 +1,34 @@
-From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
-Date: Thu, 10 Nov 2016 11:56:02 +1100
-Message-ID: <aea94234-b3d8-1484-d3ab-39e562d7901d@gmail.com>
-References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 5/8] Documentation: bindings: decouple juno specific
+ details from generic binding
+Date: Wed, 9 Nov 2016 19:18:27 -0600
+Message-ID: <20161110011827.pzbiiv47osty4pzf@rob-hp-laptop>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <1478148731-11712-6-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478562276-25539-5-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478148731-11712-6-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/11/16 10:44, Reza Arbab wrote:
-> When movable nodes are enabled, any node containing only hotpluggable
-> memory is made movable at boot time.
+On Wed, Nov 02, 2016 at 10:52:08PM -0600, Sudeep Holla wrote:
+> Since SCPI is a generic protocol and the bindings are intended to be
+> generic, we need to decouple all the platform specific binding details
+> out of the generic bindings.
 > 
-> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
-> making corresponding calls to memblock_mark_hotplug().
+> This patch moves are the Juno platform specific details into a separate
+> binding document.
 > 
-> If we introduce a dt property to describe memory as hotpluggable,
-> configs supporting early fdt may then also do this marking and use
-> movable nodes.
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 20 ++++++-----------
+>  .../devicetree/bindings/arm/juno,scpi.txt          | 26 ++++++++++++++++++++++
+>  2 files changed, 33 insertions(+), 13 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/juno,scpi.txt
 
-This looks much better, like the other comments pointed out
-
-We need documentation around the changes. One quick question
-
-Have you tested this across all combinations of skiboot/kexec/SLOF boots?
-
-Balbir Singh.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
