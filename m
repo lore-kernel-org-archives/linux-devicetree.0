@@ -1,161 +1,58 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 4/4] dts: arm64: enable mmc3 for supporting sdio feature
-Date: Thu, 10 Nov 2016 10:08:10 +0800
-Message-ID: <1478743690.19253.4.camel@mtksdaap41>
-References: <1478585341-6749-1-git-send-email-yong.mao@mediatek.com>
-         <1478585341-6749-5-git-send-email-yong.mao@mediatek.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 3/3] ipmi/bt-bmc: add a sysfs file to configure a maximum
+ response time
+Date: Thu, 10 Nov 2016 13:16:13 +1030
+Message-ID: <CACPK8XdiBFvPo5toh0UcPtOzx2XhhXC-EMgpj4mitfo3Samw8w@mail.gmail.com>
+References: <1478073426-3714-1-git-send-email-clg@kaod.org>
+ <1478073426-3714-4-git-send-email-clg@kaod.org> <3a1f8e6d-c935-3404-ffa0-81b19d170731@acm.org>
+ <aa4804b0-4084-6d34-c1db-68bdb5efb20a@kaod.org> <7e7e5cde-341a-ecca-9c9c-b41695703b08@acm.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478585341-6749-5-git-send-email-yong.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Mao <yong.mao@mediatek.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, YH Huang <yh.huang@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, linux-mediatek@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mmc@vger.kernel.org, Eddie Huang <eddie.huang@mediat>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7e7e5cde-341a-ecca-9c9c-b41695703b08-HInyCGIudOg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
+Cc: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-11-08 at 14:09 +0800, Yong Mao wrote:
-> From: yong mao <yong.mao@mediatek.com>
-> 
-> Add description of mmc3 for supporting sdio feature
-> 
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |   82 +++++++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> index 2a7f731..4dbd299 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> @@ -43,6 +43,14 @@
->  		enable-active-high;
->  	};
->  
-> +	sdio_fixed_3v3: fixedregulator@0 {
+On Thu, Nov 10, 2016 at 2:34 AM, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org> wrote:
+> On 11/09/2016 08:42 AM, C=C3=A9dric Le Goater wrote:
+>> The patch raises a few questions on the "BT Interface Capabilities" :
+>>
+>>   - should we use sysfs or a specific ioctl to configure the driver ?
+>
+>
+> I should probably say sysfs, but really I don't care.  The hard part abou=
+t
+> ioctls is the compat, and there shouldn't be any compat issues with this
+> interface.  An ioctl is probably easier, especially if you add an ioctl f=
+or
+> the header size thing I talked about in the previous email.
+>
+> The only thing that matters to the driver is the timeout.  If you want to
+> make the timeout per fd, then it will have to be an ioctl.
 
-This should be regulator@1 instead of fixedregulator.
+I vote for an ioctl as it's simpler for userspace.
 
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&pio 85 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
->  	connector {
->  		compatible = "hdmi-connector";
->  		label = "hdmi";
-> @@ -139,6 +147,25 @@
->  	vqmmc-supply = <&mt6397_vmc_reg>;
->  };
->  
-> +&mmc3 {
-> +	status = "okay";
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&mmc3_pins_default>;
-> +	pinctrl-1 = <&mmc3_pins_uhs>;
-> +	bus-width = <4>;
-> +	max-frequency = <200000000>;
-> +	cap-sd-highspeed;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-> +	sdr104-clk-delay = <5>;
-> +	keep-power-in-suspend;
-> +	enable-sdio-wakeup;
-> +	cap-sdio-irq;
-> +	vmmc-supply = <&sdio_fixed_3v3>;
-> +	vqmmc-supply = <&mt6397_vgp3_reg>;
-> +	non-removable;
-> +};
-> +
->  &pio {
->  	disp_pwm0_pins: disp_pwm0_pins {
->  		pins1 {
-> @@ -197,6 +224,36 @@
->  		};
->  	};
->  
-> +	mmc3_pins_default: mmc3default {
+In another driver we use on the BMCs we have a character device and a
+few sysfs files for configuration. This means userspace needs to
+discover and open > 1 fd, which is annoying.
 
-Please keep nodes in &pio sorted, move this one after mmc1_pins_uhs.
+Cheers,
 
-> +		pins_dat {
-> +			pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
-> +				 <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
-> +				 <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
-> +				 <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
-> +			input-enable;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-> +		};
-> +
-> +		pins_cmd {
-> +			pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
-> +			input-enable;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-> +		};
-> +
-> +		pins_clk {
-> +			pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
-> +			bias-pull-down;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +		};
-> +
-> +		pins_pdn {
-> +			pinmux = <MT8173_PIN_85_AUD_DAT_MOSI__FUNC_GPIO85>;
-> +			output-low;
-> +		};
+Joel
 
-This one is used in regulator, not really an mmc pin.
-Also, you don't need to add node for gpio usage, request_gpio will set
-mode for you.
-So please remove pins_pdn node.
-
-
-> +	};
-> +
->  	mmc0_pins_uhs: mmc0 {
->  		pins_cmd_dat {
->  			pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-> @@ -243,6 +300,31 @@
->  			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
->  		};
->  	};
-> +
-> +	mmc3_pins_uhs: mmc3 {
-
-
-Please keep nodes in &pio sorted, move this one after mmc1_pins_uhs.
-
-
-Joe.C
-
-> +		pins_dat {
-> +			pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
-> +				 <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
-> +				 <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
-> +				 <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
-> +			input-enable;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-> +		};
-> +
-> +		pins_cmd {
-> +			pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
-> +			input-enable;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-> +		};
-> +
-> +		pins_clk {
-> +			pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
-> +			drive-strength = <MTK_DRIVE_8mA>;
-> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-> +		};
-> +	};
->  };
->  
->  &pwm0 {
+>>   - should the driver handle directly the response to the "Get BT
+>>     Interface Capabilities" command ?
+>
+>
+> That probably belongs in userspace.  The only reason I can think of
+> to have it in the driver would be so the host driver can fetch it if the
+> BMC userspace is down, but I can't see how that's a good idea.
+>
+> Hope my wishy-washy answer helps :-).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
