@@ -1,65 +1,73 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 04/14] ARM: dts: armada-375: Fixup bootrom DT warning
-Date: Thu, 10 Nov 2016 09:22:21 +0100
-Message-ID: <20161110092221.0219490b@free-electrons.com>
-References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
- <20161110001000.10619-5-gregory.clement@free-electrons.com>
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Thu, 10 Nov 2016 16:33:10 +0800
+Message-ID: <582430C6.60307@hisilicon.com>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
+ <20161108120323.GC15297@leverpostej>
+ <1478647002.7430.69.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161110001000.10619-5-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478647002.7430.69.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi, Ben,
 
-On Thu, 10 Nov 2016 01:09:50 +0100, Gregory CLEMENT wrote:
 
-> -		bootrom {
-> +		bootrom@0 {
->  			compatible = "marvell,bootrom";
->  			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
+On 2016/11/9 7:16, Benjamin Herrenschmidt wrote:
+> On Tue, 2016-11-08 at 12:03 +0000, Mark Rutland wrote:
+>> On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
+>>>
+>>> For arm64, there is no I/O space as other architectural platforms, such as
+>>> X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
+>>> such as Hip06, when accessing some legacy ISA devices connected to LPC, those
+>>> known port addresses are used to control the corresponding target devices, for
+>>> example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
+>>> normal MMIO mode in using.
+>>
+>> This has nothing to do with arm64. Hardware with this kind of indirect
+>> bus access could be integrated with a variety of CPU architectures. It
+>> simply hasn't been, yet.
+> 
+> On some ppc's we also use similar indirect access methods for IOs. We
+> have a generic infrastructure for re-routing some memory or IO regions
+> to hooks.
+> 
+I am interested on the generic infrastructure on PPC.
+Could you point out where those drivers are?
+want to take a look..
 
-I am still not sure whether this "0" unit address is correct compared
-to the reg property being passed.
+Thanks,
+Zhichang
 
-A good example of why I'm worried is the sa-sram case:
-
-+		crypto_sram0: sa-sram0@0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
-
-+		crypto_sram1: sa-sram1@0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
-
-The node names should be just "sram" without a number. Indeed for UARTs
-for example, you use uart@XYZ, uart@ABC and not uart0@XYZ and
-uart1@ABC. But then, if you do that, with your scheme, you end up with
-both nodes named sa-sram@0.
-
-Which clearly shows that the way you set this unit-address is not
-correct: those two devices are mapped at completely different
-locations, but you end up with an identical unit address.
-
-I have no idea what is the rule for setting the unit address in this
-case, but I'm pretty sure the rule you've chosen is not good.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> On POWER8, our PCIe doesn't do IO at all, but we have an LPC bus behind
+> firmware calls ;-) We use that infrastructure to plumb in the LPC bus.
+> 
+>>> To drive these devices, this patch introduces a method named indirect-IO.
+>>> In this method the in/out pair in arch/arm64/include/asm/io.h will be
+>>> redefined. When upper layer drivers call in/out with those known legacy port
+>>> addresses to access the peripherals, the hooking functions corrresponding to
+>>> those target peripherals will be called. Through this way, those upper layer
+>>> drivers which depend on in/out can run on Hip06 without any changes.
+>>
+>> As above, this has nothing to do with arm64, and as such, should live in
+>> generic code, exactly as we would do if we had higher-level ISA
+>> accessor ops.
+>>
+>> Regardless, given the multi-instance case, I don't think this is
+>> sufficient in general (and I think we need higher-level ISA accessors
+>> to handle the indirection).
+> 
+> Multi-instance with IO is tricky to do generically because archs already
+> have all sort of hacks to deal with the fact that inb/outb don't require
+> an explicit ioremap, so an IO resource can take all sort of shape depending
+> on the arch.
+> 
+> Overall it boils down to applying some kind of per-instance "offset" to
+> the IO port number though.
+> 
