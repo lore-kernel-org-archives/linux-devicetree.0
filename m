@@ -1,51 +1,168 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Thu, 10 Nov 2016 11:22:24 +0000
-Message-ID: <20161110112224.GB4418@leverpostej>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
- <20161108120323.GC15297@leverpostej>
- <1478647002.7430.69.camel@kernel.crashing.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 7/7] soc: renesas: Identify SoC and register with the SoC bus
+Date: Thu, 10 Nov 2016 12:37:01 +0100
+Message-ID: <25057157.YlGi2v6RrE@wuerfel>
+References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be> <3693445.TSdZGaiT9S@wuerfel> <CAMuHMdX+T=Y--F6KXZwFmZwWFdfP5mL5Tar-wKwRM2p6Hh2-sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478647002.7430.69.camel@kernel.crashing.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX+T=Y--F6KXZwFmZwWFdfP5mL5Tar-wKwRM2p6Hh2-sg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 10:16:42AM +1100, Benjamin Herrenschmidt wrote:
-> On Tue, 2016-11-08 at 12:03 +0000, Mark Rutland wrote:
-> > On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
-> > > 
-> > > For arm64, there is no I/O space as other architectural platforms, such as
-> > > X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
-> > > such as Hip06, when accessing some legacy ISA devices connected to LPC, those
-> > > known port addresses are used to control the corresponding target devices, for
-> > > example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
-> > > normal MMIO mode in using.
-> > 
-> > This has nothing to do with arm64. Hardware with this kind of indirect
-> > bus access could be integrated with a variety of CPU architectures. It
-> > simply hasn't been, yet.
+On Thursday, November 10, 2016 11:19:20 AM CET Geert Uytterhoeven wrote:
+> Hi Arnd,
 > 
-> On some ppc's we also use similar indirect access methods for IOs. We
-> have a generic infrastructure for re-routing some memory or IO regions
-> to hooks.
+> Thanks for your comments!
 > 
-> On POWER8, our PCIe doesn't do IO at all, but we have an LPC bus behind
-> firmware calls ;-) We use that infrastructure to plumb in the LPC bus.
+> On Wed, Nov 9, 2016 at 5:55 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Monday, October 31, 2016 12:30:55 PM CET Geert Uytterhoeven wrote:
+> >> v2:
+> >>   - Drop SoC families and family names; use fixed "Renesas" instead,
+> >
+> > I think I'd rather have seen the family names left in there, but it's
+> > not important, so up to you.
+> 
+> They're not useful for matching, as family names may change anytime, and don't
+> always say much about the hardware capabilities.
+> E.g. SH-Mobile -> R-Mobile -> R-Car | RZ/A | RZ/G
+> Some SH-Mobile (even some R-Car) parts are SuperH only, others have ARM and
+> SuperH.
+> 
+> At least the SoC part numbers are stable (hmm, sh73a0 == r8a73a0).
 
-Just to check, do you hook that in your inb/outb/etc?
+I think the marketing names are much more useful for humans looking
+at the sysfs files than the kernel doing matching on, but both use
+cases are important.
 
-Generally, it would seem nicer if we could have higher-level
-isa_{inb,outb,whatever} accessors that we could hook separately from
-other IO.
+> >>   - Use "renesas,prr" and "renesas,cccr" device nodes in DT if
+> >>     available, else fall back to hardcoded addresses for compatibility
+> >>     with existing DTBs,
+> >
+> > I only see patches 2, 3, 5, and 7 in my inbox, so I'm lacking the DT
+> > binding for these, among other things.
+> 
+> I understand you've received them in the mean time?
 
-We don't necessarily have to move all ISA drivers over to that if we had
-a separate symbol for that interface.
+Yes, I found them in my inbox later, not sure why I didn't see them
+at first.
 
-Thanks,
-Mark.
+> > It does seem wrong to have a device node for a specific register though.
+> > Shouldn't the node be for the block of registers that these are inside
+> > of?
+> 
+> On R-Mobile APE6, R-Car Gen2 and Gen3, PRR is a lone register.
+> On R-Car Gen1, it's not even documented (and doesn't exist on all parts).
+
+It just seems odd to have it at address 0xff000044 when all the other
+devices are at page-aligned addresses. Do you mean that accessing
+0xff000040 or 0xff000048 will result in a bus-level exception for a
+missing register and just 0xff000044 is actually valid for access,
+or is it just the only thing that is documented?
+
+> On SH-Mobile/R-Mobile, CCCR may be part of the HPB/APB register block, which
+> we further don't touch at all.
+> On R-Car Gen2, it's not documented, but does exist.
+
+This is where the family names would come in handy ;-) I now have
+no idea which chip(s) you are referring to.
+
+If you know the name of the register block, just put it into DT with
+that name. The driver can trivially add the right offset.
+
+> >>   - Don't register the SoC bus if the chip ID register is missing,
+> >
+> > Why? My objection was to hardcoding the register, not to registering
+> > the device? I think I'd rather see the device registered with an
+> > empty revision string.
+> 
+> If there's no chip ID register, there's no reason to use soc_device_match(),
+> as we can always look at a compatible value. All SoCs listed in this driver
+> have a chip ID register.
+
+But you may still have user space tools looking into sysfs, e.g. to
+figure out how to install a kernel that the boot loader can find,
+or which hardware specific distro packages to install.
+
+> if you want me to register the soc_bus for  those SoCs regardless, I want to
+> re-add r7s72100 (RZ/A) and r8a7778 (R-Car M1A), who don't have chip ID
+> registers ;-)
+
+Right. Just don't encode too much knowledge about the SoCs into the
+driver, so we are prepared for adding new ones: We should still look
+for the registers in DT on all chips.
+
+> >> +#define CCCR   0xe600101c      /* Common Chip Code Register */
+> >> +#define PRR    0xff000044      /* Product Register */
+> >> +#define PRR3   0xfff00044      /* Product Register on R-Car Gen3 */
+> >> +
+> >> +static const struct of_device_id renesas_socs[] __initconst = {
+> >> +#ifdef CONFIG_ARCH_R8A73A4
+> >> +       { .compatible = "renesas,r8a73a4",      .data = (void *)PRR, },
+> >> +#endif
+> >> +#ifdef CONFIG_ARCH_R8A7740
+> >> +       { .compatible = "renesas,r8a7740",      .data = (void *)CCCR, },
+> >> +#endif
+> >
+> > My preference here would be to list the register address only for
+> > SoCs that are known to need them, while also having .dtb files that
+> > don't have the nodes.
+> 
+> Even if drivers don't have to handle differences, there's been a long
+> outstanding request to print SoC revision information during bootup
+> (E.g. "Does it still work on ES1.0?"). Hence that covers all SoCs.
+
+Ok, fair enough.
+
+> >> +static int __init renesas_soc_init(void)
+> >> +{
+> >> +       struct soc_device_attribute *soc_dev_attr;
+> >> +       const struct of_device_id *match;
+> >> +       void __iomem *chipid = NULL;
+> >> +       struct soc_device *soc_dev;
+> >> +       struct device_node *np;
+> >> +       unsigned int product;
+> >> +
+> >> +       np = of_find_matching_node_and_match(NULL, renesas_socs, &match);
+> >> +       if (!np)
+> >> +               return -ENODEV;
+> >> +
+> >> +       of_node_put(np);
+> >> +
+> >> +       /* Try PRR first, then CCCR, then hardcoded fallback */
+> >> +       np = of_find_compatible_node(NULL, NULL, "renesas,prr");
+> >> +       if (!np)
+> >> +               np = of_find_compatible_node(NULL, NULL, "renesas,cccr");
+> >> +       if (np) {
+> >> +               chipid = of_iomap(np, 0);
+> >> +               of_node_put(np);
+> >> +       } else if (match->data) {
+> >> +               chipid = ioremap((uintptr_t)match->data, 4);
+> >> +       }
+> >> +       if (!chipid)
+> >>
+> >
+> > Here, I'd turn the order around and look for the DT nodes of the
+> > devices first. Only if they are not found, look at the compatible
+> > string of the root node. No need to search for a node though,
+> > you know which one it is when you look for a compatible =
+> > "renesas,r8a73a4".
+> 
+> "renesas,r8a73a4" is the root node, not the device, so it does not have the
+> "reg" property for reading the chip ID?
+
+I mean replace of_find_matching_node_and_match() with
+of_match_node(renesas_socs, of_root).
+
+It does the same thing, just more efficiently.
+ 
+> There is no SoC part number in the "renesas,prr" and "renesas,cccr" nodes.
+> Hence I always need to look at the root nodes.
+
+Not sure what that would protect you from. Could you have a renesas,cccr
+
+
+	Arnd
