@@ -1,153 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND PATCH v1 02/11] dt-bindings: hisi: Add Hisilicon
- HiP05/06/07 Sysctrl and Djtag dts bindings
-Date: Thu, 10 Nov 2016 17:23:21 +0000
-Message-ID: <20161110172320.GA10137@leverpostej>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
- <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
+From: Axel Haslam <ahaslam@baylibre.com>
+Subject: Re: [PATCH v3 00/10] Add DT support for ohci-da8xx
+Date: Thu, 10 Nov 2016 18:28:42 +0100
+Message-ID: <CAKXjFTMGPsZxSWmX0_+n=9dGX5J=QdxeWQDEXHzC70bOT_4uwA@mail.gmail.com>
+References: <20161107203948.28324-1-ahaslam@baylibre.com>
+ <CAKXjFTN04Wz5jsaHsyvDD7G8QqXQvCE4D-YbHtGT=jUqELiS_w@mail.gmail.com>
+ <20161110120253.GA5385@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Anurup M <anurupvasu@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161110120253.GA5385@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, linux-usb@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 10, 2016 at 1:02 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Tue, Nov 08, 2016 at 05:37:41PM +0100, Axel Haslam wrote:
+>> Hi,
+>>
+>> On Mon, Nov 7, 2016 at 9:39 PM, Axel Haslam <ahaslam@baylibre.com> wrote:
+>> > The purpose of this patch series is to add DT support for the davinci
+>> > ohci driver.
+>> >
+>>
+>> To make it easier to review. I will split the arch/arm and driver
+>> patches into separate series.
+>
+> I don't think it's easier, as now I have no idea what order, or what
+> tree it should go through :(
 
-On Thu, Nov 03, 2016 at 01:41:58AM -0400, Anurup M wrote:
-> From: Tan Xiaojun <tanxiaojun@huawei.com>
-> 
-> 	1) Add Hisilicon HiP05/06/07 CPU and ALGSUB system controller dts
-> 	   bindings.
-> 	2) Add Hisilicon Djtag dts binding.
-> 
-> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-> Signed-off-by: Anurup M <anurup.m@huawei.com>
-> ---
->  .../bindings/arm/hisilicon/hisilicon.txt           | 82 ++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> index 7df79a7..341cbb9 100644
-> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-> @@ -270,3 +270,85 @@ Required Properties:
->    [1]: bootwrapper size
->    [2]: relocation physical address
->    [3]: relocation size
+Hi Greg,
 
+i will resend the series one by one and wait for each to be merged
+before sending the next, so that there is no confusion on the ordering
+or on what tree they should apply.
 
-> +-----------------------------------------------------------------------
-> +The Hisilicon Djtag in CPU die is an independent component which connects with
-> +some other components in the SoC by Debug Bus. This driver can be configured
-> +to access the registers of connecting components (like L3 cache, l3 cache PMU
-> + etc.) during real time debugging by sysctrl. These components appear as child
-> +nodes of djtag.
+Regards
+Axel.
 
-Please put the djtag binding in a new file. 
-
-It's clearly unrelated to many other things in this file, which should
-also be split out.
-
-> +The Hip05/06/07 CPU system controller(sysctrl) support to manage some important
-> +components (such as clock, reset, soft reset, secure debugger, etc.).
-> +The CPU sysctrl registers in hip05/06/07 doesnot use syscon but will be mapped
-> +by djtag driver for use by connecting components.
-
-The djtag driver is irrelvant here.
-
-If there's a realtionship between the two, please define that in the
-binding rather than implicitly assuming it in the driver.
-
-> +
-> +Required properties:
-> +  - compatible : "hisilicon,hip05-cpu-djtag-v1"
-> +  - reg : Register address and size
-> +
-> +Hisilicon HiP06 djtag for CPU sysctrl
-> +Required properties:
-> +- compatible : "hisilicon,hip06-sysctrl", "syscon", "simple-mfd";
-
-This looks messy. Why is this syscon and a simple-mfd?
-
-We should kill off / deprecate the syscon binding. It's completely
-meaningless.
-
-> +- reg : Register address and size
-> +- djtag :
-> +  - compatible : "hisilicon,hip06-cpu-djtag-v1"
-> +  - reg : Register address and size
-> +
-> +Hisilicon HiP07 djtag for CPU sysctrl
-> +Required properties:
-> +  - compatible : "hisilicon,hip07-cpu-djtag-v2"
-> +  - reg : Register address and size
-> +
-> +Example:
-> +	/* for Hisilicon HiP05 djtag for CPU sysctrl */
-> +	djtag0: djtag@80010000 {
-> +		compatible = "hisilicon,hip05-cpu-djtag-v1";
-> +		reg = <0x0 0x80010000 0x0 0x10000>;
-> +
-> +		/* For L3 cache PMU */
-> +		pmul3c0 {
-> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
-> +			scl-id = <0x02>;
-> +			num-events = <0x16>;
-> +			num-counters = <0x08>;
-> +			module-id = <0x04>;
-> +			num-banks = <0x04>;
-> +			cfgen-map = <0x02 0x04 0x01 0x08>;
-> +			counter-reg = <0x170>;
-> +			evctrl-reg = <0x04>;
-> +			event-en = <0x1000000>;
-> +			evtype-reg = <0x140>;
-> +		};
-
-This sub-node needs a binding document.
-
-These properties are completely opaque
-
-> +	};
-> +
-> +-----------------------------------------------------------------------
-> +The Hisilicon HiP05/06/07 ALGSUB system controller(sysctrl) is in IO die
-> +of SoC. It has a similar function as the Hisilicon HiP05/06/07 CPU system
-> +controller in CPU die and it manage different components, like RSA, etc.
-> +The Hisilicon Djtag in IO die has a similar function as in CPU die and maps
-> +the sysctrl registers for use by connecting components.
-> +All connecting components shall appear as child nodes of djtag.
-
-I don't follow the above. This describes an ALGSUB system controllerm
-but the documentation below is all about djtag.
-
-Thanks,
-Mark.
-
-> +Hisilicon HiP05 djtag for ALGSUB sysctrl
-> +Required properties:
-> +  - compatible : "hisilicon,hip05-io-djtag-v1"
-> +  - reg : Register address and size
-> +
-> +Hisilicon HiP06 djtag for ALGSUB sysctrl
-> +Required properties:
-> +  - compatible : "hisilicon,hip06-io-djtag-v2"
-> +  - reg : Register address and size
-> +
-> +Hisilicon HiP07 djtag for ALGSUB sysctrl
-> +Required properties:
-> +  - compatible : "hisilicon,hip07-io-djtag-v2"
-> +  - reg : Register address and size
-> +
-> +Example:
-> +	/* for Hisilicon HiP05 djtag for alg sysctrl */
-> +	djtag0: djtag@d0000000 {
-> +	       compatible = "hisilicon,hip05-io-djtag-v1";
-> +		reg = <0x0 0xd0000000 0x0 0x10000>;
-> +	};
-> -- 
-> 2.1.4
-> 
+>
+> I'm guessing not mine, so all are now deleted from my patch queue...
+>
+> greg k-h
