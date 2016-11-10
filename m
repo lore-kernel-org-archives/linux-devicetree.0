@@ -1,12 +1,12 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-Date: Thu, 10 Nov 2016 14:15:08 +0200
-Message-ID: <2547571.2PUm4Ig9cB@avalon>
-References: <cover.1478103726.git.jsarha@ti.com> <12424154.kJqhEf2pOz@avalon>
- <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
+Date: Thu, 10 Nov 2016 14:16:44 +0200
+Message-ID: <cdc69812-84d0-39e4-1b4e-fef42c5b9059@ti.com>
+References: <cover.1478103726.git.jsarha@ti.com>
+ <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+ <12424154.kJqhEf2pOz@avalon> <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0841965486=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
@@ -18,76 +18,155 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com
+To: Jyri Sarha <jsarha@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKCk9uIFRodXJzZGF5IDEwIE5vdiAyMDE2IDExOjE2OjUzIEp5cmkgU2FyaGEgd3Jv
-dGU6Cj4gT24gMTEvMDMvMTYgMTk6NDYsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBPbiBX
-ZWRuZXNkYXkgMDIgTm92IDIwMTYgMTg6MzI6MTYgSnlyaSBTYXJoYSB3cm90ZToKPiA+PiBBZGQg
-dmVyeSBiYXNpYyB0aS1mdHA0MTAgSERNSSB0cmFuc21pdHRlciBkcml2ZXIuIFRoZSBvbmx5IGZl
-YXR1cmUKPiA+PiBzZXBhcmF0aW5nIHRoaXMgZnJvbSBhIGNvbXBsZXRlbHkgZHVtbXkgYnJpZGdl
-IGlzIHRoZSBEREMgaTJjCj4gPj4gc3VwcG9ydC4gSG93ZXZlciwgb3RoZXIgSFcgc3BlY2lmaWMg
-ZmVhdHVyZXMgbWF5IGJlIGFkZGVkIGxhdGVyIHdoZW4KPiA+PiBuZWVkZWQuIEZvciBpbnN0YW5j
-ZSB0aGVyZSBpcyBhIHNldCBvZiByZWdpc3RlcnMgYmVoaW5kIGkyYyBpZiBpdCBpcwo+ID4+IGNv
-bm5lY3RlZC4gVGhlIGltcGxlbWVudGF0aW9ucyBpcyB0ZXN0ZWQgYWdhaW5zdCBteSBuZXcgdGls
-Y2RjIGJyaWRnZQo+ID4+IHN1cHBvcnQgYW5kIHdvcmtzIHdpdGggQmVhZ2xlQm9uZSBEVkktRCBD
-YXBlIFJldiBBMy4gQSBEVCBiaW5kaW5nCj4gPj4gZG9jdW1lbnQgaXMgYWxzbyBhZGRlZC4KPiA+
-PiAKPiA+PiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+ID4+IC0t
-LQo+ID4+IAo+ID4+IC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0ICAg
-ICAgICAgIHwgIDMwICsrKysKPiA+PiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAg
-ICAgICAgICAgICAgICAgICB8ICAgNyArCj4gPj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ID4+IGRyaXZlcnMvZ3B1L2RybS9icmlk
-Z2UvdGktdGZwNDEwLmMgICAgICAgICAgICAgICAgIHwgMTk5ICsrKysrKysrKysrKysrKwo+ID4+
-IDQgZmlsZXMgY2hhbmdlZCwgMjM3IGluc2VydGlvbnMoKykKPiA+PiBjcmVhdGUgbW9kZSAxMDA2
-NDQKPiA+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-dGksdGZwNDEwLnR4dAo+ID4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3RpLXRmcDQxMC5jCj4gPj4gCj4gPj4gZGlmZiAtLWdpdAo+ID4+IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQKPiA+PiBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0
-MTAudHh0IG5ldyBmaWxlCj4gPj4gbW9kZSAxMDA2NDQKPiA+PiBpbmRleCAwMDAwMDAwLi5kYzkz
-NzEzCj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0Cj4gPj4gQEAgLTAsMCArMSwz
-MCBAQAo+ID4+ICtURlA0MTAgSERNSS9EVkkgYnJpZGdlIGJpbmRpbmdzCj4gPiAKPiA+IEknZCBu
-YW1lIHRoZSBkb2N1bWVudCAiVEkgVEZQNDEwIERWSSBUcmFuc21pdHRlciIuIERWSSBicmlkZ2Ug
-ZG9lc24ndCB0ZWxsCj4gPiB3aGV0aGVyIHRoZSBkZXZpY2UgaXMgYSByZWNlaXZlciBvciB0cmFu
-c21pdHRlci4KPiA+IAo+ID4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4+ICsJLSBjb21wYXRp
-YmxlOiAidGksdGZwNDEwIgo+ID4gCj4gPiBUaGUgZGV2aWNlIGlzIGFuIEkyQyBzbGF2ZSwgaXQg
-c2hvdWxkIGhhdmUgYSByZWcgcHJvcGVydHkuIEdpdmVuIHRoYXQgdGhlCj4gPiBjaGlwIGNhbiBi
-ZSB1c2VkIHdpdGhvdXQgYmVpbmcgY29udHJvbGxlZCB0aHJvdWdoIEkyQywgdGhlIHJlZyBwcm9w
-ZXJ0eQo+ID4gc2hvdWxkIGJlIG9wdGlvbmFsLiBZb3Ugc2hvdWxkIGRvY3VtZW50IHRoaXMgY2xl
-YXJseSwgYW5kIGV4cGxhaW4gaG93IHRoZQo+ID4gRFQgbm9kZSBjYW4gYmUgaW5zdGFudGlhdGVk
-IGFzIGEgY2hpbGQgb2YgYW4gSTJDIGNvbnRyb2xsZXIgd2hlbiB0aGUgSTJDCj4gPiBpbnRlcmZh
-Y2UgaXMgdXNlZCwgb3IgaW4gb3RoZXIgcGFydHMgb2YgdGhlIGRldmljZSB0cmVlIG90aGVyd2lz
-ZS4KPiA+IAo+ID4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4+ICsJLSBkZGMtaTJjOiBwaGFu
-ZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPiA+IAo+
-ID4gVGhlIFRGUDQxMCBkb2Vzbid0IGhhbmRsZSBEREMsIHRoaXMgcHJvcGVydHkgc2hvdWxkIGJl
-IHBhcnQgb2YgdGhlCj4gPiBjb25uZWN0b3Igbm9kZS4KPiA+IAo+ID4+ICtPcHRpb25hbCBzdWJu
-b2RlczoKPiA+PiArCS0gdmlkZW8gaW5wdXQ6IHRoaXMgc3Vibm9kZSBjYW4gY29udGFpbiBhIHZp
-ZGVvIGlucHV0IHBvcnQgbm9kZQo+ID4+ICsJICB0byBjb25uZWN0IHRoZSBicmlkZ2UgdG8gYSBk
-aXNwbGF5IGNvbnRyb2xsZXIgb3V0cHV0IChTZWUgdGhpcwo+ID4+ICsJICBkb2N1bWVudGF0aW9u
-IFsxXSkuCj4gPiAKPiA+IFlvdSBhbHNvIG5lZWQgYW4gb3V0cHV0IHBvcnQgZm9yIHRoZSBEVkkg
-b3V0cHV0LiBUaG9zZSB0d28gcG9ydHMgc2hvdWxkIGJlCj4gPiByZXF1aXJlZCwgbm90IG9wdGlv
-bmFsLgo+IAo+IE9rLiBTbyBJIG5lZWQgYW5vdGhlciBkZXZpY2Ugbm9kZS4gU2hvdWxkIEkgY3Jl
-YXRlIHNvbWUgc3BlY2lmaWMKPiBjb21wYXRpYmxlIHN0cmluZyBmb3IgY29ubmVjdG9ycyBiZWhp
-bmQgdGZwNDEwLCBvciBhIGdlbmVyaWMgRFZJL0hETUkKPiBjb25uZWN0b3Igd2l0aCBvcHRpb25h
-bCBkZGMtaTJjIHBoYW5kbGU/CgpUaGUgZ2VuZXJpYyBEVkkvSERNSSBjb25uZWN0b3IgYmluZGlu
-Z3Mgc2hvdWxkIHdvcmsgZmluZS4KCj4gVGhlIGltcGxlbWVudGF0aW9uIHNpZGUgaXMgbm90IHNv
-IGNyaXRpY2FsLCBiZWNhdXNlIGl0IG1vcmUgZWFzaWx5Cj4gY2hhbmdlZCwgYnV0IHNob3VsZCBJ
-IGNyZWF0ZSBhbiBpbmRlcGVuZGVudCBnZW5lcmljIHBsYXRmb3JtLWRldmljZQo+IGRyaXZlciBm
-b3Igc3VjaCBEVkkvSERNSSBjb25uZWN0b3Igb3IganVzdCBpbXBsZW1lbnQgdGhlIGNvbm5lY3Rv
-ciBzaWRlCj4gd2l0aGluIHRmcDQxMCBkcml2ZXI/CgpMb25nZXIgdGVybSBJJ2QgbGlrZSB0byBn
-byBmb3IgY29ubmVjdG9yIGRyaXZlcnMsIGJ1dCBpdCBtaWdodCB0YWtlIGEgYml0IG9mIAppbmZy
-YXN0cnVjdHVyZSB3b3JrLiBJZiB5b3UgY2FuIGdpdmUgaXQgYSB0cnkgaXQgd291bGQgYmUgZ3Jl
-YXQgISBPdGhlcndpc2UgCkknbSBmaW5lIHdpdGggaGFuZGxpbmcgdGhhdCBpbiB0aGUgdGZwNDEw
-IGRyaXZlciBmb3Igbm93LgoKPiA+PiArWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPiA+PiArCj4gPj4gK0V4YW1wbGU6Cj4g
-Pj4gKwloZG1pLWJyaWRnZSB7Cj4gPj4gKwkJY29tcGF0aWJsZSA9ICJ0aSx0ZnA0MTAiOwo+ID4+
-ICsJCXBvcnRzIHsKPiA+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gKwkJCSNzaXpl
-LWNlbGxzID0gPDA+Owo+ID4+ICsKPiA+PiArCQkJcG9ydEAwIHsKPiA+PiArCQkJCXJlZyA9IDww
-PjsKPiA+PiArCQkJCWJyaWRnZV9pbjogZW5kcG9pbnQgewo+ID4+ICsJCQkJCXJlbW90ZS1lbmRw
-b2ludCA9IDwmZGNfb3V0PjsKPiA+PiArCQkJCX07Cj4gPj4gKwkJCX07Cj4gPj4gKwkJfTsKPiA+
-PiArCX07CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+--===============0841965486==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX"
+
+--ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX
+Content-Type: multipart/mixed; boundary="LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Jyri Sarha <jsarha@ti.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
+ bgolaszewski@baylibre.com, khilman@baylibre.com, bcousson@baylibre.com
+Message-ID: <cdc69812-84d0-39e4-1b4e-fef42c5b9059@ti.com>
+Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
+References: <cover.1478103726.git.jsarha@ti.com>
+ <9b6a6a4405de344cb9fbea735fea37adee1d726e.1478103726.git.jsarha@ti.com>
+ <12424154.kJqhEf2pOz@avalon> <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
+In-Reply-To: <ad052b0f-0ece-4241-3e06-87905a9cf2c7@ti.com>
+
+--LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 10/11/16 11:16, Jyri Sarha wrote:
+> On 11/03/16 19:46, Laurent Pinchart wrote:
+>> Hi Jyri,
+>>
+>> Thank you for the patch.
+>>
+>> On Wednesday 02 Nov 2016 18:32:16 Jyri Sarha wrote:
+>>> Add very basic ti-ftp410 HDMI transmitter driver. The only feature
+>>> separating this from a completely dummy bridge is the DDC i2c
+>>> support. However, other HW specific features may be added later when
+>>> needed. For instance there is a set of registers behind i2c if it is
+>>> connected. The implementations is tested against my new tilcdc bridge=
+
+>>> support and works with BeagleBone DVI-D Cape Rev A3. A DT binding
+>>> document is also added.
+>>>
+>>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>>> ---
+>>>  .../bindings/display/bridge/ti,tfp410.txt          |  30 ++++
+>>>  drivers/gpu/drm/bridge/Kconfig                     |   7 +
+>>>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>>>  drivers/gpu/drm/bridge/ti-tfp410.c                 | 199 +++++++++++=
++++++++
+>>>  4 files changed, 237 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt create=
+ mode
+>>> 100644 drivers/gpu/drm/bridge/ti-tfp410.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,tfp4=
+10.txt
+>>> b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt new =
+file
+>>> mode 100644
+>>> index 0000000..dc93713
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+>>> @@ -0,0 +1,30 @@
+>>> +TFP410 HDMI/DVI bridge bindings
+>>
+>> I'd name the document "TI TFP410 DVI Transmitter". DVI bridge doesn't =
+tell=20
+>> whether the device is a receiver or transmitter.
+>>
+>>> +Required properties:
+>>> +	- compatible: "ti,tfp410"
+>>
+>> The device is an I2C slave, it should have a reg property. Given that =
+the chip=20
+>> can be used without being controlled through I2C, the reg property sho=
+uld be=20
+>> optional. You should document this clearly, and explain how the DT nod=
+e can be=20
+>> instantiated as a child of an I2C controller when the I2C interface is=
+ used,=20
+>> or in other parts of the device tree otherwise.
+>>
+>>> +Optional properties:
+>>> +	- ddc-i2c: phandle of an I2C controller used for DDC EDID probing
+>>
+>> The TFP410 doesn't handle DDC, this property should be part of the con=
+nector=20
+>> node.
+>>
+>>> +Optional subnodes:
+>>> +	- video input: this subnode can contain a video input port node
+>>> +	  to connect the bridge to a display controller output (See this
+>>> +	  documentation [1]).
+>>
+>> You also need an output port for the DVI output. Those two ports shoul=
+d be=20
+>> required, not optional.
+>>
+>=20
+> Ok. So I need another device node. Should I create some specific
+> compatible string for connectors behind tfp410, or a generic DVI/HDMI
+> connector with optional ddc-i2c phandle?
+
+omapdrm uses connector nodes. See, for example, pandaboard's dts files.
+It has TFP410 and a connector node. With omap specific drivers, for now,
+but that's another matter.
+
+ Tomi
+
+
+--LVAVNbtcosMeLR1NaP6sQHq2jomWgpMu4--
+
+--ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYJGUsAAoJEPo9qoy8lh71dmMP/2vD5NGtt9FZjU955Ao2I80c
+oajUXww7K3JMnX1NVbySLCuMUwDGyBZF6HlLQ2iiXdZCNfnbzPoNrxYBjAYzjfqK
+We9MIC1RkiO80lREBbIA2oFtVQthIySv1SKIpjmIEBYPdMUp8d1621kkg01atnAa
+mJ0cCESg0e7YO/oqUsdxgJfF4/wapAn3hih2F61CVnZW7+fDGZEEZJ5tta301uwQ
+bzaJqvuvAYiacq93N+tgU5MWq9cbG8KAFY13R2zm+8aM6KBJRNhAZhDwtIBkqxsk
+x5C8k6vuoGj5uSdlPSgnocilxCYCkM/7vF9slMsVgD5dDo+wdzatStH+EWvM2z/p
+TWxjGmxndy0+Q9Xn+no9YQwCAcVMytXlVDhYRUKVabBcKsVLkpafSzTs8nlPScZa
+dSb6dcs33dOPDkgXqmky6MJOI+h/i49mw1knJUtYlFnkJ5H0Y5jvA1R8Vx+qas0n
+MapGCrAB4G8eZQ4bKYlznGzRj5lc4gw2lMzF5oFzNsW7MAcQxDL68rkjJQowLMbU
+LTN3Q4QpxN1dzO9AbPgcxOrf3t7/FzXoki3sRpbkg1xker9sca4xDLCtlNNcVQ0W
+hpgvmzpD0xFmh/7itus188U6IXo8a/UlpdbtnYJmqAdJEDK/AebJAuF0dtz346aY
+I4zDJb1t6DB25L7PPRaG
+=g50h
+-----END PGP SIGNATURE-----
+
+--ftVcTmF8l25BgexJ4Lv1oCuBTI40nmKHX--
+
+--===============0841965486==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0841965486==--
