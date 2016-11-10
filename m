@@ -1,46 +1,84 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] remoteproc: qcom: Encapsulate pvt data structure
- for q6v56 hexagon.
-Date: Thu, 10 Nov 2016 14:30:13 -0600
-Message-ID: <20161110203013.fphvzd4df3zvjdfi@rob-hp-laptop>
-References: <1478268057-11847-1-git-send-email-akdwived@codeaurora.org>
- <1478268057-11847-2-git-send-email-akdwived@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] of, numa: Return NUMA_NO_NODE from disable
+ of_node_to_nid() if nid not possible.
+Date: Thu, 10 Nov 2016 14:51:46 -0600
+Message-ID: <CAL_JsqKPffFem_+SYKzHC-NvWBtwomySxTQ6vtu8cQgsLGzcLA@mail.gmail.com>
+References: <1477689302-32671-1-git-send-email-ddaney.cavm@gmail.com>
+ <CAL_JsqKnXk99SUa1cjC2QFA9rizjn4=JHZh3ua_gvcOtpGx8jg@mail.gmail.com> <93b7769a-4907-176e-9f18-0bf6bd72d15d@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478268057-11847-2-git-send-email-akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <93b7769a-4907-176e-9f18-0bf6bd72d15d@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Robert Richter <rric@kernel.org>, Hanjun Guo <hanjun.guo@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Gilbert Netzer <noname@pdc.kth.se>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2016 at 07:30:54PM +0530, Avaneesh Kumar Dwivedi wrote:
-> Encapsulate resources specific to each version of hexagon chip to
-> device node to avoid conditional check for manipulation of those
-> resources in driver code.
-> 
-> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
->  drivers/remoteproc/qcom_q6v5_pil.c                 | 137 ++++++++++++++++++---
->  2 files changed, 120 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 57cb49e..cbc165c 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -8,6 +8,7 @@ on the Qualcomm Hexagon core.
->  	Value type: <string>
->  	Definition: must be one of:
->  		    "qcom,q6v5-pil"
-> +		"qcom,q6v56-pil"
+On Thu, Nov 3, 2016 at 10:11 AM, David Daney <ddaney@caviumnetworks.com> wrote:
+> On 11/02/2016 08:37 PM, Rob Herring wrote:
+>>
+>> On Fri, Oct 28, 2016 at 4:15 PM, David Daney <ddaney.cavm@gmail.com>
+>> wrote:
+>>>
+>>> From: David Daney <david.daney@cavium.com>
+>>>
+>>> On arm64 NUMA kernels we can pass "numa=off" on the command line to
+>>> disable NUMA.  A side effect of this is that kmalloc_node() calls to
+>>> non-zero nodes will crash the system with an OOPS:
+>>>
+>>> [    0.000000] ITS@0x0000901000020000: allocated 2097152 Devices
+>>> @10002000000 (flat, esz 8, psz 64K, shr 1)
+>>> [    0.000000] Unable to handle kernel NULL pointer dereference at
+>>> virtual address 00001680
+>>> [    0.000000] pgd = fffffc0009470000
+>>> [    0.000000] [00001680] *pgd=0000010ffff90003, *pud=0000010ffff90003,
+>>> *pmd=0000010ffff90003, *pte=0000000000000000
+>>> [    0.000000] Internal error: Oops: 96000006 [#1] SMP
+>>> .
+>>> .
+>>> .
+>>> [    0.000000] [<fffffc00081c8950>] __alloc_pages_nodemask+0xa4/0xe68
+>>> [    0.000000] [<fffffc000821fa70>] new_slab+0xd0/0x564
+>>> [    0.000000] [<fffffc0008221e24>] ___slab_alloc+0x2e4/0x514
+>>> [    0.000000] [<fffffc0008239498>] __slab_alloc+0x48/0x58
+>>> [    0.000000] [<fffffc0008222c20>] __kmalloc_node+0xd0/0x2dc
+>>> [    0.000000] [<fffffc0008115374>] __irq_domain_add+0x7c/0x164
+>>> [    0.000000] [<fffffc0008b461dc>] its_probe+0x784/0x81c
+>>> [    0.000000] [<fffffc0008b462bc>] its_init+0x48/0x1b0
+>>> [    0.000000] [<fffffc0008b4543c>] gic_init_bases+0x228/0x360
+>>> [    0.000000] [<fffffc0008b456bc>] gic_of_init+0x148/0x1cc
+>>> [    0.000000] [<fffffc0008b5aec8>] of_irq_init+0x184/0x298
+>>> [    0.000000] [<fffffc0008b43f9c>] irqchip_init+0x14/0x38
+>>> [    0.000000] [<fffffc0008b12d60>] init_IRQ+0xc/0x30
+>>> [    0.000000] [<fffffc0008b10a3c>] start_kernel+0x240/0x3b8
+>>> [    0.000000] [<fffffc0008b101c4>] __primary_switched+0x30/0x6c
+>>> [    0.000000] Code: 912ec2a0 b9403809 0a0902fb 37b007db (f9400300)
+>>> .
+>>> .
+>>> .
+>>>
+>>> This is caused by code like this in kernel/irq/irqdomain.c
+>>>
+>>>     domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) *
+>>> size),
+>>>                   GFP_KERNEL, of_node_to_nid(of_node));
+>>>
+>>> When NUMA is disabled, the concept of a node is really undefined, so
+>>> of_node_to_nid() should unconditionally return NUMA_NO_NODE.
+>>>
+>>> Fix by returning NUMA_NO_NODE when the nid is not in the set of
+>>> possible nodes.
+>>>
+>>> Reported-by: Gilbert Netzer <noname@pdc.kth.se>
+>>> Signed-off-by: David Daney <david.daney@cavium.com>
+>>
+>>
+>> Does this need to go in 4.9?
+>
+>
+> That would be my preference.
 
-Perhaps some explanation in the commit message about what these magic 
-numbers mean?
+Given how late this is now, my having nothing else for 4.9 and that
+his has never worked, I've applied for 4.10, but I did tag for stable.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
