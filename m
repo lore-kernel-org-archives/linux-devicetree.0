@@ -1,42 +1,33 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6 1/4] powerpc/mm: allow memory hotplug into a memoryless node
-Date: Thu, 10 Nov 2016 12:37:10 +1100
-Message-ID: <87k2ccjet5.fsf@concordia.ellerman.id.au>
-References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com> <1478562276-25539-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: firmware: scm: Add MSM8996 DT
+ bindings
+Date: Wed, 9 Nov 2016 17:49:39 -0800
+Message-ID: <20161110014939.GA16026@codeaurora.org>
+References: <1478218237-1737-1-git-send-email-spjoshi@codeaurora.org>
+ <1478218237-1737-2-git-send-email-spjoshi@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1478562276-25539-2-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478218237-1737-2-git-send-email-spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Trilok Soni <tsoni-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
-
-> Remove the check which prevents us from hotplugging into an empty node.
->
-> The original commit b226e4621245 ("[PATCH] powerpc: don't add memory to
-> empty node/zone"), states that this was intended to be a temporary measure.
-> It is a workaround for an oops which no longer occurs.
->
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
-> Acked-by: Balbir Singh <bsingharora@gmail.com>
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Bharata B Rao <bharata@linux.vnet.ibm.com>
+On 11/03, Sarangdhar Joshi wrote:
+> Add SCM DT bindings for Qualcomm's MSM8996 platform.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  arch/powerpc/mm/numa.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
 
-This seems OK from a powerpc perspective.
+Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-cheers
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
