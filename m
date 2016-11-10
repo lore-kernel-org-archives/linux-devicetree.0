@@ -1,181 +1,32 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND PATCH v1 05/11] dt-bindings: perf: hisi: Add Devicetree
- bindings for Hisilicon SoC PMU
-Date: Thu, 10 Nov 2016 18:30:40 +0000
-Message-ID: <20161110183040.GD10137@leverpostej>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
- <1478151727-20250-6-git-send-email-anurup.m@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 13/13] Documentation: synopsys-dw-mshc: remove the unused
+ properties
+Date: Thu, 10 Nov 2016 12:47:17 -0600
+Message-ID: <20161110184717.vgkp2flyi26dmbfo@rob-hp-laptop>
+References: <20161103062135.10697-1-jh80.chung@samsung.com>
+ <20161103062135.10697-14-jh80.chung@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478151727-20250-6-git-send-email-anurup.m@huawei.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Anurup M <anurupvasu@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
+In-Reply-To: <20161103062135.10697-14-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Nov 03, 2016 at 01:42:01AM -0400, Anurup M wrote:
-> 	1) Device tree bindings for Hisilicon SoC PMU.
-> 	2) Add example for Hisilicon L3 cache, MN and DDRC PMU.
+On Thu, Nov 03, 2016 at 03:21:35PM +0900, Jaehoon Chung wrote:
+> "support-highspeed" was the obsoleted property.
+> And "broken-cd" is not synopsys specific property.
+> It can be referred to mmc.txt binding Documentation.
 > 
-> Signed-off-by: Anurup M <anurup.m@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/hisilicon/pmu.txt      | 127 +++++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> new file mode 100644
-> index 0000000..e7b35e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-> @@ -0,0 +1,127 @@
-> +Hisilicon SoC hip05/06/07 ARMv8 PMU
-> +===================================
-> +
-> +The Hisilicon SoC chips like hip05/06/07 etc. consist of varous independent
-> +system device PMU's such as L3 cache (L3C), Miscellaneous Nodes(MN) and DDR
+>  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 -----
+>  1 file changed, 5 deletions(-)
 
-s/PMU's/PMUs/
-
-> +comtroller. These PMU devices are independent and have hardware logic to
-
-s/comtroller/controller/
-
-> +gather statistics and performance information.
-> +
-> +HiSilicon SoC chip is encapsulated by multiple CPU and IO die's. The CPU die
-
-s/die's/dies/
-
-> +is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-> +is further grouped as CPU clusters (CCL) which includes 4 cpu-cores each.
-> +e.g. In the case of hip05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-> +
-> +The Hisilicon SoC PMU DT node bindigs for uncore PMU devices are as below.
-
-s/bindigs/bindings/
-
-> +For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-> +the parent node will be the djtag node of the corresponding CPU die(SCCL).
-> +
-> +For uncore PMU devices there are some common required properties as detailed
-> +below.
-> +
-> +Required properties:
-> +	- compatible : This field contain two values. The first value is
-> +		always "hisilicon" and second value is the Module type as shown
-> +		in below examples:
-
-Just say:
-
- - Compatible: should contain one of:
-
-> +		(a) "hisilicon,hisi-pmu-l3c-v1" for Hisilicon SoC L3C PMU
-> +			device (Version 1)
-> +		(b) "hisilicon,hisi-pmu-mn-v1" for Hisilicon SoC MN PMU
-> +			device (Version 1)
-> +		(c) "hisilicon,hisi-pmu-ddrc-v1" for Hisilicon SoC DDRC PMU
-> +			device (Version 1)
-> +		The hip05/06/07 chips have v1 hardware for L3C, MN and DDRC.
-> +
-> +	- scl-id : The Super Cluster ID. This can be the ID of the CPU die
-> +		   or IO die in the chip.
-
-What's this needed for?
-
-> +	- num-events : No of events supported by this PMU device.
-> +
-> +	- num-counters : No of hardware counters available for counting.
-
-This isn't probeable or well-known?
-
-> +
-> +L3 cache
-> +--------
-> +The L3 cache is dedicated for each SCCL and hence there are separate DT nodes
-> +for L3 cache for each SCCL. For L3 cache PMU the additional required properties
-> +are
-> +	- counter-reg : Counter register offset.
-> +
-> +	- evtype-reg : Event select register offset.
-> +
-> +	- evctrl-reg : Event counting control(LAUCTRL) register offset.
-
-Surely for a given revision of the chip these offsets are known? i.e.
-surely the compatible string implies specific offsets?
-
-> +	- event-en : Event enable value.
-
-Huh?
-
-> +	- module-id : Module ID to input for djtag. This property is an array of
-> +		      module_id for each L3 cache banks.
-> +
-> +	- num-banks : Number of banks or instances of the device.
-
-What's a bank? Surely they have separate instances of the PMU?
-
-What order are these in?
-
-> +	- cfgen-map : Config enable array to select the bank.
-
-Huh?
-
-> +Miscellaneous Node
-> +-------------------
-> +The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-> +for each SCCL. For MN PMU the additional required properties are
-> +	- counter-reg : Counter register offset.
-> +
-> +	- evtype-reg : Event select register offset.
-> +
-> +	- evctrl-reg : Event counting control register offset.
-
-Likewise, surely this is well-known for a given revision of the chip?
-
-> +
-> +	- module-id : Module ID to input for djtag. As MN doesnot have multiple banks
-> +		      this property is a single value.
-> +
-> +	- cfgen-map : Config enable to select the bank. For MN it is a single value
-> +
-> +	- event-en : Event enable value.
-
-Same comments as for the L3 cache nodes
-
-
-[...]
-
-> +DDR controller
-> +--------------
-> +Each SCCL in Hip05/06/07 chips have 2 DDR channels and hence 2 DDR controllers.
-> +There are separate DT nodes for each DDR channel.
-> +For DDRC PMU the additional required properties are
-> +
-> +	- ch-id : DDRC Channel ID.
-
-Why is this necessary?
-
-Thanks,
-Mark.
-
-> +	- reg : Register base address and range for the DDRC channel.
-> +
-> +Example:
-> +	/* DDRC for CPU die scl #2 Channel #1 for hip05 */
-> +	pmu_sccl0_ddrc1: pmu_ddrc1@80358000 {
-> +		 compatible = "hisilicon,hisi-pmu-ddrc-v1";
-> +		 scl-id = <0x02>;
-> +		 ch-id = <0x1>;
-> +		 num-events = <0x0D>;
-> +		 num-counters = <0x04>;
-> +		 reg = <0x80358000 0x10000>; /* TOTEMC DDRC1 */
-> +	 };
-> -- 
-> 2.1.4
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
