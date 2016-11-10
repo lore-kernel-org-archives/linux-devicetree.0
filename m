@@ -1,87 +1,45 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] regulator: lp873x: Add support for populating input
- supply
-Date: Thu, 10 Nov 2016 08:06:52 +0000
-Message-ID: <20161110080652.GM13127@dell>
-References: <20161110052915.4898-1-lokeshvutla@ti.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 1/3] firmware: qcom: scm: add a video command for state
+ setting
+Date: Thu, 10 Nov 2016 10:05:36 +0200
+Message-ID: <1c57a006-ddab-f44a-8ec8-24de62a6e02f@linaro.org>
+References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1478539853-23218-2-git-send-email-stanimir.varbanov@linaro.org>
+ <20161110015251.GC16026@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161110052915.4898-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161110015251.GC16026@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Nov 2016, Lokesh Vutla wrote:
+Hi,
 
-> In order to have a proper topology of regulators for a platform, each
-> registering regulator needs to populate supply_name field for identifying
-> its supply's name. Add supply_name field for lp873x regulators.
+On 11/10/2016 03:52 AM, Stephen Boyd wrote:
+> On 11/07, Stanimir Varbanov wrote:
+>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+>> index d95c70227c05..7e364691a87c 100644
+>> --- a/drivers/firmware/qcom_scm.c
+>> +++ b/drivers/firmware/qcom_scm.c
+>> @@ -320,6 +320,22 @@ bool qcom_scm_is_available(void)
+>>  }
+>>  EXPORT_SYMBOL(qcom_scm_is_available);
+>>  
+>> +int qcom_scm_video_set_state(u32 state, u32 spare)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = qcom_scm_clk_enable();
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes since v3:
-> - Applied Rob's ack.
-> - Sending this patch separately so that this can be merged via Regulator tree.
-> - Link to v3: https://patchwork.kernel.org/patch/9408545/
-> 
->  Documentation/devicetree/bindings/mfd/lp873x.txt | 8 ++++++++
+> Do we need clk control for this? Usually it's only required for
+> crypto engine things, and turning on video doesn't sound like it
+> uses crypto. I don't think downstream android kernel does this.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-  
->  drivers/regulator/lp873x-regulator.c             | 1 +
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> index 52766c2..ae9cf39 100644
-> --- a/Documentation/devicetree/bindings/mfd/lp873x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> @@ -7,6 +7,9 @@ Required properties:
->    - #gpio-cells:	Should be two.  The first cell is the pin number and
->  			the second cell is used to specify flags.
->  			See ../gpio/gpio.txt for more information.
-> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
-> +			populated under regulators node. xxx can be
-> +			buck0, buck1, ldo0 or ldo1.
->    - regulators:	List of child nodes that specify the regulator
->  			initialization data.
->  Example:
-> @@ -17,6 +20,11 @@ pmic: lp8733@60 {
->  	gpio-controller;
->  	#gpio-cells = <2>;
->  
-> +	buck0-in-supply = <&vsys_3v3>;
-> +	buck1-in-supply = <&vsys_3v3>;
-> +	ldo0-in-supply = <&vsys_3v3>;
-> +	ldo1-in-supply = <&vsys_3v3>;
-> +
->  	regulators {
->  		lp8733_buck0: buck0 {
->  			regulator-name = "lp8733-buck0";
-> diff --git a/drivers/regulator/lp873x-regulator.c b/drivers/regulator/lp873x-regulator.c
-> index e504b91..70e3df6 100644
-> --- a/drivers/regulator/lp873x-regulator.c
-> +++ b/drivers/regulator/lp873x-regulator.c
-> @@ -24,6 +24,7 @@
->  	[_id] = {							\
->  		.desc = {						\
->  			.name			= _name,		\
-> +			.supply_name		= _of "-in",		\
->  			.id			= _id,			\
->  			.of_match		= of_match_ptr(_of),	\
->  			.regulators_node	= of_match_ptr("regulators"),\
+Correct, the crypto clk is not needed.
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Stan
