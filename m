@@ -1,43 +1,90 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH V6 2/6] dt-bindings: qcom: clocks: Add msm8994 clock
- bindings
-Date: Thu, 10 Nov 2016 14:51:43 -0800
-Message-ID: <a0ac3a64-1cbe-b512-c5d9-40cf3544e58e@redhat.com>
-References: <1478292996-29559-1-git-send-email-jeremymc@redhat.com>
- <1478292996-29559-3-git-send-email-jeremymc@redhat.com>
- <20161110223133.GI16026@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] lm87: Allow LM87_REG_CHANNEL_MODE to be set via DT
+Date: Thu, 10 Nov 2016 15:47:07 -0800
+Message-ID: <20161110234707.GA14199@roeck-us.net>
+References: <20161110171936.GA29537@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161110223133.GI16026@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andy.gross@linaro.org, mail@kchr.de, arnd@arndb.de, bjorn.andersson@linaro.org, mark.rutland@arm.com, michael.scott@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161110171936.GA29537@obsidianresearch.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-10 2:31 PM, Stephen Boyd wrote:
-> On 11/04, Jeremy McNicoll wrote:
->> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
->> ---
->
-> Applied to clk-qcom-8994 in clk tree.
->
->> +
->> +/* Indexes for GDSCs */
->> +#define BIMC_GDSC				0
->> +#define VENUS_GDSC				1
->> +#define MDSS_GDSC				2
->> +#define JPEG_GDSC				3
->> +#define VFE_GDSC				4
->> +#define OXILI_GDSC				5
->> +
->
-> But I removed these because it's copy/paste from 8916 and that is
-> a different family of chips than 8994 so these GDSCs aren't in
-> GCC on 8994.
->
+On Thu, Nov 10, 2016 at 10:19:36AM -0700, Jason Gunthorpe wrote:
+> This compliments the existing scheme that lets it be set via
+> platform_data.
+> 
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 
-Thanks for taking care of this.
+I would prefer https://www.spinics.net/lists/devicetree/msg148819.html
+which appears to address the same problem and is less cryptic.
 
--jeremy
+NACK unless someone convinces me otherwise.
+
+Guenter
+
+> ---
+>  Documentation/devicetree/bindings/hwmon/lm87.txt | 27 ++++++++++++++++++++++++
+>  drivers/hwmon/lm87.c                             |  8 ++++++-
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
+> new file mode 100644
+> index 00000000000000..4ea2646ce8d2f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
+> @@ -0,0 +1,27 @@
+> +* LM87 I2C Temperature and Fan sensor
+> +
+> +Required properties:
+> +- compatible: should contain one of
+> +		* "national,lm87"
+> +		* "ti,lm87"
+> +
+> +Optional properties:
+> +- channel-mode: Write the specified value to register 0x16. If not specified
+> +                the driver will read the value from the chip at startup.
+> +
+> +		The value controls how the driver operates certain multi-use
+> +		pins, eg bit 2 will select between temp_input3 or
+> +		in0&in5 operation.
+> +
+> +See Documentation/devicetree/bindings/i2c/i2c.txt for more required and
+> +optional properties.
+> +
+> +Example:
+> +
+> +i2c_master {
+> +	temperature-sensor@0 {
+> +		compatible = "ti,lm87";
+> +		channel-mode = <0x4>;
+> +		reg = <0>;
+> +	};
+> +};
+> diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
+> index 81cb898245a107..ccc0c913b4534e 100644
+> --- a/drivers/hwmon/lm87.c
+> +++ b/drivers/hwmon/lm87.c
+> @@ -853,9 +853,15 @@ static void lm87_restore_config(void *arg)
+>  static int lm87_init_client(struct i2c_client *client)
+>  {
+>  	struct lm87_data *data = i2c_get_clientdata(client);
+> +	u32 channel;
+>  	int rc;
+>  
+> -	if (dev_get_platdata(&client->dev)) {
+> +	if (client->dev.of_node &&
+> +	    !of_property_read_u32(client->dev.of_node, "channel-mode",
+> +				  &channel)) {
+> +		data->channel = channel;
+> +		lm87_write_value(client, LM87_REG_CHANNEL_MODE, data->channel);
+> +	} else if (dev_get_platdata(&client->dev)) {
+>  		data->channel = *(u8 *)dev_get_platdata(&client->dev);
+>  		lm87_write_value(client,
+>  				 LM87_REG_CHANNEL_MODE, data->channel);
+> -- 
+> 2.7.4
