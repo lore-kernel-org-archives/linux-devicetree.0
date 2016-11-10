@@ -1,99 +1,78 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 5/6] ARM: dts: stm32f429: Add adc support
-Date: Thu, 10 Nov 2016 17:18:57 +0100
-Message-ID: <1478794738-28933-6-git-send-email-fabrice.gasnier@st.com>
-References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Thu, 10 Nov 2016 16:36:59 +0000
+Message-ID: <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
+References: <cover.1477463128.git.viresh.kumar@linaro.org>
+ <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+ <20161110040440.GA11670@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, pmeerw@pmeerw.net, linux@armlinux.org.uk, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, lee.jones@linaro.org, jic23@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3azoxlmqmb3xu2sa"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161110040440.GA11670@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add adc support & pinctrl analog phandle (adc3_in8) to stm32f429.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 49 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+--3azoxlmqmb3xu2sa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 336ee4f..f198132 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -172,6 +172,49 @@
- 			status = "disabled";
- 		};
- 
-+		adc: adc@40012000 {
-+			compatible = "st,stm32f4-adc-core";
-+			reg = <0x40012000 0x400>;
-+			interrupts = <18>;
-+			clocks = <&rcc 0 168>;
-+			clock-names = "adc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			adc1: adc@0 {
-+				compatible = "st,stm32f4-adc";
-+				#io-channel-cells = <1>;
-+				reg = <0x0>;
-+				clocks = <&rcc 0 168>;
-+				interrupt-parent = <&adc>;
-+				interrupts = <0>;
-+				status = "disabled";
-+			};
-+
-+			adc2: adc@100 {
-+				compatible = "st,stm32f4-adc";
-+				#io-channel-cells = <1>;
-+				reg = <0x100>;
-+				clocks = <&rcc 0 169>;
-+				interrupt-parent = <&adc>;
-+				interrupts = <1>;
-+				status = "disabled";
-+			};
-+
-+			adc3: adc@200 {
-+				compatible = "st,stm32f4-adc";
-+				#io-channel-cells = <1>;
-+				reg = <0x200>;
-+				clocks = <&rcc 0 170>;
-+				interrupt-parent = <&adc>;
-+				interrupts = <2>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		syscfg: system-config@40013800 {
- 			compatible = "syscon";
- 			reg = <0x40013800 0x400>;
-@@ -332,6 +375,12 @@
- 					slew-rate = <2>;
- 				};
- 			};
-+
-+			adc3_in8_pin: adc@200 {
-+				pins {
-+					pinmux = <STM32F429_PF10_FUNC_ANALOG>;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023810 {
--- 
-1.9.1
+On Thu, Nov 10, 2016 at 09:34:40AM +0530, Viresh Kumar wrote:
+> On 09-11-16, 14:58, Mark Brown wrote:
+> > On Wed, Oct 26, 2016 at 12:02:56PM +0530, Viresh Kumar wrote:
+
+> > > +  Entries for multiple regulators shall be provided in the same field separated
+> > > +  by angular brackets <>. The OPP binding doesn't provide any provisions to
+> > > +  relate the values to their power supplies or the order in which the supplies
+> > > +  need to be configured.
+
+> > I don't understand how this works.  If we have an unordered list of
+> > values to set for regulators how will we make sense of them?
+
+> The platform driver is responsible to identify the order and pass it on to the
+> OPP core. And the platform driver needs to have that hard coded.
+
+That *really* should be in the binding.  Honestly if the binding is this
+vague I'm not even clear that it's worth documenting these properties at
+this level, might be better to just put the documentation in the
+platform driver bindings.
+
+> > > -			cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+> > > +			vcc0-supply = <&cpu_supply0>;
+> > > +			vcc1-supply = <&cpu_supply1>;
+> > > +			vcc2-supply = <&cpu_supply2>;
+
+> > This change doesn't seem to correspond to the documentation change.
+
+> This rectifies the incorrect binding previously added to the example, which I
+> realized to be incorrect only while attempting to code for it. And so it brings
+> the example on the same state as the documentation now.
+
+Then that should be in a separate patch with a changelog explaining what
+the change is doing.
+
+--3azoxlmqmb3xu2sa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYJKIqAAoJECTWi3JdVIfQemQIAILA5rK1b7etybj9dj0YLuAb
+Yih9n3gBSy76yFuiWTrmQ8tLjPBq2Z9Ma5+NLPng/M5c09yBj3fQ5jAw6EzEg/6k
+omVxFFKKQ6ZkDGEbqOQKAiuHyh+0whJ+ZS70HQsNTm7R+clNHpO81EZJ1QcyTbCR
+cF8d6ANbPPoGMziqYvtOLYaXIjvbB67/Fr7ZSTvDytJ8He9qbs+8iQRmTYZdM/EX
+xgZyVOe/TS1aMlNLo0JEQ4mKbAndKn+V6YTIVpA8A/nRaFxAvJ/+YVLfzFbLYF1p
+KxdR27B16WfVqV9KAMc2d6bQBUHIkeo/Gbi9r6ALwwQo/uf/ImWxQM8+IewaoPE=
+=VJrz
+-----END PGP SIGNATURE-----
+
+--3azoxlmqmb3xu2sa--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
