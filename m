@@ -1,68 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
- to legacy SCPI protocol
-Date: Thu, 10 Nov 2016 08:12:15 -0600
-Message-ID: <CAL_JsqLW4JZHb0ncVUEefnKySA231EDgvCkY3xPdaJGf=uMJYg@mail.gmail.com>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
- <1478148731-11712-7-git-send-email-sudeep.holla@arm.com> <20161110012249.ed56ik6kdffoikym@rob-hp-laptop>
- <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] Revert "console: don't prefer first registered if DT
+ specifies stdout-path"
+Date: Thu, 10 Nov 2016 15:14:36 +0100
+Message-ID: <20161110141436.GA20323@kroah.com>
+References: <20161104121135.4780-1-hdegoede@redhat.com>
+ <20161104121135.4780-2-hdegoede@redhat.com>
+ <87h97ilrx0.fsf@concordia.ellerman.id.au>
+ <20161108070032.GB13866@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20161108070032.GB13866@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-amlogic@lists.infradead.org
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Hans de Goede <hdegoede@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Paul Burton <paul.burton@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 4:26 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 10/11/16 01:22, Rob Herring wrote:
->>
->> On Wed, Nov 02, 2016 at 10:52:09PM -0600, Sudeep Holla wrote:
->>>
->>> This patch adds specific compatible to support legacy SCPI protocol.
->>>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>> ---
->>>  Documentation/devicetree/bindings/arm/arm,scpi.txt | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>> b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>> index d1882c4540d0..ebd03fc93135 100644
->>> --- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>> +++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
->>> @@ -7,7 +7,9 @@ by Linux to initiate various system control and power
->>> operations.
->>>
->>>  Required properties:
->>>
->>> -- compatible : should be "arm,scpi"
->>> +- compatible : should be
->>> +       * "arm,scpi" : For implementations complying to SCPI v1.0 or
->>> above
->>> +       * "arm,legacy-scpi" : For implementations complying pre SCPI v1.0
->>
->>
->> I'd prefer that we explicitly enumerate the old versions. Are there
->> many?
->>
->
-> I understand your concern, but this legacy SCPI protocol was not
-> officially released. It was just WIP which vendors picked up from very
-> early releases. Since they are not numbered, it's hard to have specific
-> compatibles with different versions until v1.0. That's one of the reason
-> to retain platform specific compatible so that we can add any quirks
-> based on them if needed.
->
-> I will probably add these information in the commit log so that it's
-> clear why we can't do version based compatible.
+On Tue, Nov 08, 2016 at 08:00:32AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 08, 2016 at 11:46:35AM +1100, Michael Ellerman wrote:
+> > Hans de Goede <hdegoede@redhat.com> writes:
+> > 
+> > > This reverts commit 05fd007e4629 ("console: don't prefer first registered
+> > > if DT specifies stdout-path").
+> > >
+> > > The reverted commit changes existing behavior on which many ARM boards
+> > > rely. Many ARM small-board-computers, like e.g. the Raspberry Pi have
+> > > both a video output and a serial console. Depending on whether the user
+> > > is using the device as a more regular computer; or as a headless device
+> > > we need to have the console on either one or the other.
+> > >
+> > > Many users rely on the kernel behavior of the console being present on
+> > > both outputs, before the reverted commit the console setup with no
+> > > console= kernel arguments on an ARM board which sets stdout-path in dt
+> > > would look like this:
+> > >
+> > > [root@localhost ~]# cat /proc/consoles
+> > > ttyS0                -W- (EC p a)    4:64
+> > > tty0                 -WU (E  p  )    4:1
+> > >
+> > > Where as after the reverted commit, it looks like this:
+> > >
+> > > [root@localhost ~]# cat /proc/consoles
+> > > ttyS0                -W- (EC p a)    4:64
+> > >
+> > > This commit reverts commit 05fd007e4629 ("console: don't prefer first
+> > > registered if DT specifies stdout-path") restoring the original behavior.
+> > >
+> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > This is also breaking various powerpc systems.
+> > 
+> > Linus can you please merge this revert for 4.9 ?
+> 
+> I'll queue it up with other tty changes for 4.9-final.
 
-This is exactly my point. By enumerate, I meant having platform
-specific compatibles. Having "arm,legacy-scpi" is pointless because
-who knows what version they followed and they may all be different.
-
-Rob
+Oops, wait, it's going through Andrew's tree, nevermind...
