@@ -1,72 +1,51 @@
-From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v16 0/5] Mediatek MT8173 CMDQ support
-Date: Thu, 10 Nov 2016 19:15:58 +0800
-Message-ID: <1478776558.15447.2.camel@mtksdaap41>
-References: <1477999698-6288-1-git-send-email-hs.liao@mediatek.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Thu, 10 Nov 2016 11:22:24 +0000
+Message-ID: <20161110112224.GB4418@leverpostej>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
+ <20161108120323.GC15297@leverpostej>
+ <1478647002.7430.69.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477999698-6288-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh@media>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478647002.7430.69.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-11-01 at 19:28 +0800, HS Liao wrote:
-> Hi,
+On Wed, Nov 09, 2016 at 10:16:42AM +1100, Benjamin Herrenschmidt wrote:
+> On Tue, 2016-11-08 at 12:03 +0000, Mark Rutland wrote:
+> > On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
+> > > 
+> > > For arm64, there is no I/O space as other architectural platforms, such as
+> > > X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
+> > > such as Hip06, when accessing some legacy ISA devices connected to LPC, those
+> > > known port addresses are used to control the corresponding target devices, for
+> > > example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
+> > > normal MMIO mode in using.
+> > 
+> > This has nothing to do with arm64. Hardware with this kind of indirect
+> > bus access could be integrated with a variety of CPU architectures. It
+> > simply hasn't been, yet.
 > 
-> This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
-> to help write registers with critical time limitation, such as
-> updating display configuration during the vblank. It controls Global
-> Command Engine (GCE) hardware to achieve this requirement.
+> On some ppc's we also use similar indirect access methods for IOs. We
+> have a generic infrastructure for re-routing some memory or IO regions
+> to hooks.
 > 
-> These patches have a build dependency on top of v4.9-rc1.
-> 
-> Changes since v15:
->  - separate "suspend and resume" patch from "save energy" patch
->  - don't stop running tasks in cmdq_suspend()
->    (i.e. leave no running tasks guarantee to clients)
-> 
-> Best regards,
-> HS Liao
-> 
-> HS Liao (5):
->   dt-bindings: soc: Add documentation for the MediaTek GCE unit
->   CMDQ: Mediatek CMDQ driver
->   arm64: dts: mt8173: Add GCE node
->   CMDQ: suspend and resume
->   CMDQ: save energy
-> 
->  .../devicetree/bindings/mailbox/mtk-gce.txt        |  43 ++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
->  drivers/mailbox/Kconfig                            |  10 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/mtk-cmdq-mailbox.c                 | 632 +++++++++++++++++++++
->  drivers/soc/mediatek/Kconfig                       |  11 +
->  drivers/soc/mediatek/Makefile                      |   1 +
->  drivers/soc/mediatek/mtk-cmdq-helper.c             | 310 ++++++++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h           |  67 +++
->  include/linux/soc/mediatek/mtk-cmdq.h              | 182 ++++++
->  10 files changed, 1268 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
->  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
->  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
->  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> 
+> On POWER8, our PCIe doesn't do IO at all, but we have an LPC bus behind
+> firmware calls ;-) We use that infrastructure to plumb in the LPC bus.
 
+Just to check, do you hook that in your inb/outb/etc?
 
-Hi Jassi, Matthias,
+Generally, it would seem nicer if we could have higher-level
+isa_{inb,outb,whatever} accessors that we could hook separately from
+other IO.
 
-Sorry to disturb you.
-Do you have any further comment on CMDQ v16?
+We don't necessarily have to move all ISA drivers over to that if we had
+a separate symbol for that interface.
 
-Thanks.
-HS
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
