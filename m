@@ -1,63 +1,99 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 6/6] ARM: dts: stm32f429: enable adc on eval board
-Date: Thu, 10 Nov 2016 17:18:58 +0100
-Message-ID: <1478794738-28933-7-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 5/6] ARM: dts: stm32f429: Add adc support
+Date: Thu, 10 Nov 2016 17:18:57 +0100
+Message-ID: <1478794738-28933-6-git-send-email-fabrice.gasnier@st.com>
 References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478794738-28933-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, pmeerw@pmeerw.net, linux@armlinux.org.uk, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, lee.jones@linaro.org, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable analog to digital converter on stm32f429i-eval board.
+Add adc support & pinctrl analog phandle (adc3_in8) to stm32f429.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/stm32f429.dtsi | 49 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6bfc595..c144735 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -65,6 +65,20 @@
- 		serial0 = &usart1;
- 	};
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 336ee4f..f198132 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -172,6 +172,49 @@
+ 			status = "disabled";
+ 		};
  
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++		adc: adc@40012000 {
++			compatible = "st,stm32f4-adc-core";
++			reg = <0x40012000 0x400>;
++			interrupts = <18>;
++			clocks = <&rcc 0 168>;
++			clock-names = "adc";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
 +
-+		reg_vref: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "vref";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
++			adc1: adc@0 {
++				compatible = "st,stm32f4-adc";
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				clocks = <&rcc 0 168>;
++				interrupt-parent = <&adc>;
++				interrupts = <0>;
++				status = "disabled";
++			};
++
++			adc2: adc@100 {
++				compatible = "st,stm32f4-adc";
++				#io-channel-cells = <1>;
++				reg = <0x100>;
++				clocks = <&rcc 0 169>;
++				interrupt-parent = <&adc>;
++				interrupts = <1>;
++				status = "disabled";
++			};
++
++			adc3: adc@200 {
++				compatible = "st,stm32f4-adc";
++				#io-channel-cells = <1>;
++				reg = <0x200>;
++				clocks = <&rcc 0 170>;
++				interrupt-parent = <&adc>;
++				interrupts = <2>;
++				status = "disabled";
++			};
 +		};
-+	};
 +
- 	leds {
- 		compatible = "gpio-leds";
- 		green {
-@@ -123,3 +137,14 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
+ 		syscfg: system-config@40013800 {
+ 			compatible = "syscon";
+ 			reg = <0x40013800 0x400>;
+@@ -332,6 +375,12 @@
+ 					slew-rate = <2>;
+ 				};
+ 			};
 +
-+&adc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&adc3_in8_pin>;
-+	vref-supply = <&reg_vref>;
-+	status = "okay";
-+	adc3: adc@200 {
-+		st,adc-channels = <8>;
-+		status = "okay";
-+	};
-+};
++			adc3_in8_pin: adc@200 {
++				pins {
++					pinmux = <STM32F429_PF10_FUNC_ANALOG>;
++				};
++			};
+ 		};
+ 
+ 		rcc: rcc@40023810 {
 -- 
 1.9.1
