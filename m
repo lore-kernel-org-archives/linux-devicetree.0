@@ -1,113 +1,59 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [v16, 0/7] Fix eSDHC host version register bug
-Date: Wed, 09 Nov 2016 21:55:14 -0600
-Message-ID: <1478750114.21746.4.camel@buserror.net>
-References: <1478661252-42439-1-git-send-email-yangbo.lu@nxp.com>
-         <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Thu, 10 Nov 2016 09:34:40 +0530
+Message-ID: <20161110040440.GA11670@vireshk-i7>
+References: <cover.1477463128.git.viresh.kumar@linaro.org>
+ <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrcAN_pqgtGaUanfB2zh97zGcL23m5VDtJ3g==NJeRrfA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Yangbo Lu <yangbo.lu@nxp.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Qiang
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-11-09 at 19:27 +0100, Ulf Hansson wrote:
-> - i2c-list
+On 09-11-16, 14:58, Mark Brown wrote:
+> On Wed, Oct 26, 2016 at 12:02:56PM +0530, Viresh Kumar wrote:
 > 
-> On 9 November 2016 at 04:14, Yangbo Lu <yangbo.lu@nxp.com> wrote:
-> > 
-> > This patchset is used to fix a host version register bug in the T4240-
-> > R1.0-R2.0
-> > eSDHC controller. To match the SoC version and revision, 15 previous
-> > version
-> > patchsets had tried many methods but all of them were rejected by
-> > reviewers.
-> > Such as
-> >         - dts compatible method
-> >         - syscon method
-> >         - ifdef PPC method
-> >         - GUTS driver getting SVR method
-> > Anrd suggested a soc_device_match method in v10, and this is the only
-> > available
-> > method left now. This v11 patchset introduces the soc_device_match
-> > interface in
-> > soc driver.
-> > 
-> > The first four patches of Yangbo are to add the GUTS driver. This is used
-> > to
-> > register a soc device which contain soc version and revision information.
-> > The other three patches introduce the soc_device_match method in soc
-> > driver
-> > and apply it on esdhc driver to fix this bug.
-> > 
-> > ---
-> > Changes for v15:
-> >         - Dropped patch 'dt: bindings: update Freescale DCFG compatible'
-> >           since the work had been done by below patch on ShawnGuo's linux
-> > tree.
-> >           'dt-bindings: fsl: add LS1043A/LS1046A/LS2080A compatible for
-> > SCFG
-> >            and DCFG'
-> >         - Fixed error code issue in guts driver
-> > Changes for v16:
-> >         - Dropped patch 'powerpc/fsl: move mpc85xx.h to include/linux/fsl'
-> >         - Added a bug-fix patch from Geert
-> > ---
-> > 
-> > Arnd Bergmann (1):
-> >   base: soc: introduce soc_device_match() interface
-> > 
-> > Geert Uytterhoeven (1):
-> >   base: soc: Check for NULL SoC device attributes
-> > 
-> > Yangbo Lu (5):
-> >   ARM64: dts: ls2080a: add device configuration node
-> >   dt: bindings: move guts devicetree doc out of powerpc directory
-> >   soc: fsl: add GUTS driver for QorIQ platforms
-> >   MAINTAINERS: add entry for Freescale SoC drivers
-> >   mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
-> > 
-> >  .../bindings/{powerpc => soc}/fsl/guts.txt         |   3 +
-> >  MAINTAINERS                                        |  11 +-
-> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   6 +
-> >  drivers/base/Kconfig                               |   1 +
-> >  drivers/base/soc.c                                 |  70 ++++++
-> >  drivers/mmc/host/Kconfig                           |   1 +
-> >  drivers/mmc/host/sdhci-of-esdhc.c                  |  20 ++
-> >  drivers/soc/Kconfig                                |   3 +-
-> >  drivers/soc/fsl/Kconfig                            |  18 ++
-> >  drivers/soc/fsl/Makefile                           |   1 +
-> >  drivers/soc/fsl/guts.c                             | 236
-> > +++++++++++++++++++++
-> >  include/linux/fsl/guts.h                           | 125 ++++++-----
-> >  include/linux/sys_soc.h                            |   3 +
-> >  13 files changed, 447 insertions(+), 51 deletions(-)
-> >  rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt
-> > (91%)
-> >  create mode 100644 drivers/soc/fsl/Kconfig
-> >  create mode 100644 drivers/soc/fsl/guts.c
-> > 
-> > --
-> > 2.1.0.27.g96db324
-> > 
-> Thanks, applied on my mmc tree for next!
+> > +  Entries for multiple regulators shall be provided in the same field separated
+> > +  by angular brackets <>. The OPP binding doesn't provide any provisions to
+> > +  relate the values to their power supplies or the order in which the supplies
+> > +  need to be configured.
 > 
-> I noticed that some DT compatibles weren't documented, according to
-> checkpatch. Please fix that asap!
+> I don't understand how this works.  If we have an unordered list of
+> values to set for regulators how will we make sense of them?
 
-They are documented, in fsl/guts.txt (the file moved in patch 2/7):
->  - compatible : Should define the compatible device type for
->    global-utilities.
->    Possible compatibles:
->         "fsl,qoriq-device-config-1.0"
->         "fsl,qoriq-device-config-2.0"
->         "fsl,<chip>-device-config"
->         "fsl,<chip>-guts"
+The platform driver is responsible to identify the order and pass it on to the
+OPP core. And the platform driver needs to have that hard coded.
 
-Checkpatch doesn't understand compatibles defined in such a way.
+If we want to identify the entries for regulators just by parsing the DT then we
+would need another field in the OPP table which I added earlier.
 
--Scott
+Something like this:
 
+        cpu0_opp_table: opp_table0 {
+                compatible = "operating-points-v2";
++               supply-names = "vcc0", "vcc1", "vcc2";
+                opp-shared;
+ 
+                opp00 {
+
+Will that be acceptable ?
+
+> > -			cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+> > +			vcc0-supply = <&cpu_supply0>;
+> > +			vcc1-supply = <&cpu_supply1>;
+> > +			vcc2-supply = <&cpu_supply2>;
+> 
+> This change doesn't seem to correspond to the documentation change.
+
+This rectifies the incorrect binding previously added to the example, which I
+realized to be incorrect only while attempting to code for it. And so it brings
+the example on the same state as the documentation now.
+
+-- 
+viresh
