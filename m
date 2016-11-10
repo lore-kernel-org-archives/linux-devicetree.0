@@ -1,120 +1,63 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Thu, 10 Nov 2016 15:36:49 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F8F5D75@lhreml507-mbx>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <2825537.ADCNsGqGxn@wuerfel> <5824165A.4040303@hisilicon.com>
- <17821285.aIcTyCGn5n@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <17821285.aIcTyCGn5n@wuerfel>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Yuanzhichang <yuanzhichang@hisilicon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kantyzc@163.com" <kantyzc@163.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, catalin.marinas@
+From: Olimpiu Dejeu <olimpiu@arcticsand.com>
+Subject: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for ArticSand devices
+Date: Thu, 10 Nov 2016 10:44:25 -0500
+Message-ID: <1478792665-5859-1-git-send-email-olimpiu@arcticsand.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
+Resubmition of arcxcnn backlight driver addressing the naming convention
+ concerns raised by Rob H. Note that all the device tree properties are
+ determined by the board design or IC EPROM settings and are not intended
+ to be user adjustable.
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: 10 November 2016 09:12
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: Yuanzhichang; mark.rutland@arm.com; devicetree@vger.kernel.org;
-> lorenzo.pieralisi@arm.com; Gabriele Paoloni; minyard@acm.org; linux-
-> pci@vger.kernel.org; benh@kernel.crashing.org; John Garry;
-> will.deacon@arm.com; linux-kernel@vger.kernel.org; xuwei (O); Linuxarm;
-> zourongrong@gmail.com; robh+dt@kernel.org; kantyzc@163.com; linux-
-> serial@vger.kernel.org; catalin.marinas@arm.com; olof@lixom.net;
-> liviu.dudau@arm.com; bhelgaas@google.com; zhichang.yuan02@gmail.com
-> Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on
-> Hip06
-> 
-> On Thursday, November 10, 2016 2:40:26 PM CET zhichang.yuan wrote:
-> > On 2016/11/10 5:34, Arnd Bergmann wrote:
-> > > On Wednesday, November 9, 2016 12:10:43 PM CET Gabriele Paoloni
-> wrote:
-> > >>> On Tuesday, November 8, 2016 11:47:09 AM CET zhichang.yuan wrote:
-> > >>>> +       /*
-> > >>>> +        * The first PCIBIOS_MIN_IO is reserved specifically for
-> > >>> indirectIO.
-> > >>>> +        * It will separate indirectIO range from pci host
-> bridge to
-> > >>>> +        * avoid the possible PIO conflict.
-> > >>>> +        * Set the indirectIO range directly here.
-> > >>>> +        */
-> > >>>> +       lpcdev->io_ops.start = 0;
-> > >>>> +       lpcdev->io_ops.end = PCIBIOS_MIN_IO - 1;
-> > >>>> +       lpcdev->io_ops.devpara = lpcdev;
-> > >>>> +       lpcdev->io_ops.pfin = hisilpc_comm_in;
-> > >>>> +       lpcdev->io_ops.pfout = hisilpc_comm_out;
-> > >>>> +       lpcdev->io_ops.pfins = hisilpc_comm_ins;
-> > >>>> +       lpcdev->io_ops.pfouts = hisilpc_comm_outs;
-> > >>>
-> > >>> I have to look at patch 2 in more detail again, after missing a
-> few
-> > >>> review
-> > >>> rounds. I'm still a bit skeptical about hardcoding a logical I/O
-> port
-> > >>> range here, and would hope that we can just go through the same
-> > >>> assignment of logical port ranges that we have for PCI buses,
-> > >>> decoupling
-> > >>> the bus addresses from the linux-internal ones.
-> > >>
-> > >> The point here is that we want to avoid any conflict/overlap
-> between
-> > >> the LPC I/O space and the PCI I/O space. With the assignment above
-> > >> we make sure that LPC never interfere with PCI I/O space.
-> > >
-> > > But we already abstract the PCI I/O space using dynamic
-> registration.
-> > > There is no need to hardcode the logical address for ISA, though
-> > > I think we can hardcode the bus address to start at zero here.
-> >
-> > Do you means that we can pick up the maximal I/O address from all
-> children's
-> > device resources??
-> 
-> The driver should not look at the resources of its children, just
-> register a range of addresses dynamically, as I suggested in an
-> earlier review.
+Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
 
-Where should we get the range from? For LPC we know that it is going
-Work on anything that is not used by PCI I/O space, and this is 
-why we use [0, PCIBIOS_MIN_IO]
+---
+ .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 
-> 
-> 
-> Your current version has
-> 
->         if (arm64_extio_ops->pfout)                             \
->                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
->                        addr, value, sizeof(type));             \
-> 
-> Instead, just subtract the start of the range from the logical
-> port number to transform it back into a bus-local port number:
-
-These accessors do not operate on IO tokens:
-
-If (arm64_extio_ops->start > addr || arm64_extio_ops->end < addr)
-addr is not going to be an I/O token; in fact patch 2/3 imposes that
-the I/O tokens will start at PCIBIOS_MIN_IO. So from 0 to PCIBIOS_MIN_IO
-we have free physical addresses that the accessors can operate on.
-
-Thanks
-
-Gab 
-
-> 
->         if (arm64_extio_ops->pfout)                             \
->                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
->                        addr - arm64_extio_ops->start, value,
-> sizeof(type)); \
-> 
-> We know that the ISA/LPC bus can only have up to 65536 ports,
-> so you can register all of those, or possibly limit it further to
-> 1024 or 4096 ports, whichever matches the bus implementation.
-> 
-> 	Arnd
+diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+new file mode 100644
+index 0000000..a7b6ff2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+@@ -0,0 +1,33 @@
++Binding for ArcticSand arc2c0608 LED driver
++
++Required properties:
++- compatible: should be "arc,arc2c0608"
++- reg: slave address
++
++Optional properties:
++- default-brightness: brightness value on boot, value from: 0-4095
++- label: The name of the backlight device
++			See Documentation/devicetree/bindings/leds/common.txt
++- led-sources: List of enabled channels from 0 to 5.
++			See Documentation/devicetree/bindings/leds/common.txt
++
++- arc,led-config-0: setting for register ILED_CONFIG_0
++- arc,led-config-1: setting for register ILED_CONFIG_1
++- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
++- arc,comp-config: setting for register CONFIG_COMP
++- arc,filter-config: setting for register FILTER_CONFIG
++- arc,trim-config: setting for register IMAXTUNE
++
++Note: Optional properties not specified will default to values in IC EPROM
++
++Example:
++
++arc2c0608@30 {
++	compatible = "arc,arc2c0608";
++	reg = <0x30>;
++	default-brightness = <500>;
++	label = "lcd-backlight";
++	linux,default-trigger = "backlight";
++	led-sources = <0 1 2 5>;
++};
++
+-- 
+2.7.4
