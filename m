@@ -1,59 +1,91 @@
-From: Benjamin Herrenschmidt <benh@au1.ibm.com>
-Subject: Re: [PATCH] of/irq: improve error message on irq discovery process
- failure
-Date: Fri, 11 Nov 2016 08:30:43 +1100
-Message-ID: <1478813443.2592.2.camel@au1.ibm.com>
-References: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
-         <20161109190457.GC837@leverpostej>
-Reply-To: benh@au1.ibm.com
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
+ uvent_modalias} to modules
+Date: Thu, 10 Nov 2016 15:42:12 -0600
+Message-ID: <CAL_Jsq+Bw4XVEJY6V4Hn+D_OmqEcp_nLLrVT0_i+jX_guCqzfA@mail.gmail.com>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018015636.11701-3-stephen.boyd@linaro.org> <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
+ <147733850401.29612.2343965740004706258@sboyd-linaro> <20161025011632.GA23876@b29397-desktop>
+ <147829269430.21688.2345895151880009021@sboyd-linaro> <20161107012920.GA10559@b29397-desktop>
+ <CAGb2v66C15fU1b2+xNDV8Fv2kmmKXyUknA8=9wXztUcs8CNKLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161109190457.GC837@leverpostej>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>
-Cc: devicetree@vger.kernel.org, marc.zyngier@arm.com, frowand.list@gmail.com, robh+dt@kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v66C15fU1b2+xNDV8Fv2kmmKXyUknA8=9wXztUcs8CNKLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-11-09 at 19:04 +0000, Mark Rutland wrote:
-> 
-> 
-> If we don't have an interrupt-map on a PCI controller, why don't we
-> instead log a message regarding that being missing, and give up
-> early?
+On Sun, Nov 6, 2016 at 7:56 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On Mon, Nov 7, 2016 at 9:29 AM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Fri, Nov 04, 2016 at 01:51:34PM -0700, Stephen Boyd wrote:
+>>> Quoting Peter Chen (2016-10-24 18:16:32)
+>>> > On Mon, Oct 24, 2016 at 12:48:24PM -0700, Stephen Boyd wrote:
+>>> > > Quoting Chen-Yu Tsai (2016-10-24 05:19:05)
+>>> > > > Hi,
+>>> > > >
+>>> > > > On Tue, Oct 18, 2016 at 9:56 AM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> > > > > The ULPI bus can be built as a module, and it will soon be
+>>> > > > > calling these functions when it supports probing devices from DT.
+>>> > > > > Export them so they can be used by the ULPI module.
+>>> > > > >
+>>> > > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> > > > > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>>> > > > > Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> > > > > ---
+>>> > > > >  drivers/of/device.c | 2 ++
+>>> > > > >  1 file changed, 2 insertions(+)
+>>> > > > >
+>>> > > > > diff --git a/drivers/of/device.c b/drivers/of/device.c
+>>> > > > > index 8a22a253a830..6719ab35b62e 100644
+>>> > > > > --- a/drivers/of/device.c
+>>> > > > > +++ b/drivers/of/device.c
+>>> > > > > @@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+>>> > > > >
+>>> > > > >         return tsize;
+>>> > > > >  }
+>>> > > > > +EXPORT_SYMBOL_GPL(of_device_get_modalias);
+>>> > > > >
+>>> > > > >  int of_device_request_module(struct device *dev)
+>>> > > > >  {
+>>> > > > > @@ -290,6 +291,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>>> > > > >         }
+>>> > > > >         mutex_unlock(&of_mutex);
+>>> > > > >  }
+>>> > > > > +EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+>>> > > >
+>>> > > > This is trailing the wrong function.
+>>> > > >
+>>> > >
+>>> > > Good catch. Must have been some bad rebase.
+>>> > >
+>>> > > Peter, can you fix it while applying or should I resend this patch?
+>>> > >
+>>> >
+>>> > But, this is device tree patch. I can only get chipidea part and other
+>>> > USB patches if Greg agrees.
+>>> >
+>>>
+>>> Were you expecting Rob to take the drivers/of/* patches? Sorry I thought
+>>> Rob acked them so they could go through usb with the other changes.
+>>
+>> I am just worried about possible merge error when linus pulls both OF
+>> and USB tree. Greg, is it ok the OF patches through USB tree with OF
+>> maintainer's ack?
+>
+> May I suggest putting the OF patches on an immutable branch so other
+> subsystems can pull them in without pulling in the USB patches? At
+> least I want to use them in the I2C subsystem, and in the sunxi-rsb
+> driver.
 
-Why ? It's legit to not support LSIs.
+Do you have patches using this already. If not, it is starting to get
+a bit late for v4.10.
 
-> That sounds like a more generically useful error message; it's also
-> possible that a DT author simply forgot to add the map, and the
-> platform has suitable interrupts wired up.
+I can apply this, but then you'll just be pulling in other DT patches.
 
-But it's not necessarily an error...
-
-> > This patch introduces a different message for this specific case,
-> > and it also reduces the level of the message from error to warning.
-> > Before this patch, when an adapter was plugged in a slot without
-> Level
-> > interrupts capabilities, we saw generic error messages like this:
-> > 
-> >     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-
-> 22
-> > 
-> > Now, with this applied, we see the following specific message:
-> > 
-> >     [19.947] pci 0014:60:00.0: of_irq_parse_pci() gave up. The slot
-> of this
-> >     device has no Level-triggered Interrupts capability.
-> 
-> Following my above example, this has gone from opaque to potentially
-> misleading
-
-I'm not sure. At least for some of our platforms this is the correct
-message :-) Our Hypervisor doesn't allow LSIs on some slots.
-
-I think it's not that misleading. It's obvious something is wrong with
-LSIs, which you can easily figure out from there.
-
-Cheers,
-Ben.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
