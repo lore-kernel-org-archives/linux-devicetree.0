@@ -1,354 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH v1 03/11] drivers: soc: hisi: Add support for
- Hisilicon Djtag driver
-Date: Thu, 10 Nov 2016 17:55:10 +0000
-Message-ID: <20161110175510.GB10137@leverpostej>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
- <1478151727-20250-4-git-send-email-anurup.m@huawei.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH] regulator: pwm: fix syntax errors in the examples
+Date: Thu, 10 Nov 2016 18:02:14 +0000
+Message-ID: <20161110180214.qublcnhczfmg3wsg@sirena.org.uk>
+References: <1478773527-10936-1-git-send-email-peda@axentia.se>
+ <20161110161801.7462udnohbaik5nr@sirena.org.uk>
+ <cb8dbca0-1f7b-d336-4347-1e665d57f060@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l3weapaiptjom75j"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478151727-20250-4-git-send-email-anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <cb8dbca0-1f7b-d336-4347-1e665d57f060-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2016 at 01:41:59AM -0400, Anurup M wrote:
-> From: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> 
-> 	The Hisilicon Djtag is an independent component which connects
-> 	with some other components in the SoC by Debug Bus. This driver
-> 	can be configured to access the registers of connecting components
-> 	(like L3 cache) during real time debugging.
-> 
 
-Just to check, is this likely to be used in multi-socket hardware, and
-if so, are instances always-on?
+--l3weapaiptjom75j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Signed-off-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/soc/Kconfig                 |   1 +
->  drivers/soc/Makefile                |   1 +
->  drivers/soc/hisilicon/Kconfig       |  12 +
->  drivers/soc/hisilicon/Makefile      |   1 +
->  drivers/soc/hisilicon/djtag.c       | 639 ++++++++++++++++++++++++++++++++++++
->  include/linux/soc/hisilicon/djtag.h |  38 +++
->  6 files changed, 692 insertions(+)
->  create mode 100644 drivers/soc/hisilicon/Kconfig
->  create mode 100644 drivers/soc/hisilicon/Makefile
->  create mode 100644 drivers/soc/hisilicon/djtag.c
->  create mode 100644 include/linux/soc/hisilicon/djtag.h
+On Thu, Nov 10, 2016 at 06:05:59PM +0100, Peter Rosin wrote:
+> On 2016-11-10 17:18, Mark Brown wrote:
+> > On Thu, Nov 10, 2016 at 11:25:27AM +0100, Peter Rosin wrote:
 
-Other than the PMU driver(s), what is going to use this?
+> >> While at it, clean up some other things as well.
 
-If you don't have something in particular, please also place this under
-drivers/perf/hisilicon, along with the PMU driver(s).
+> > This isn't a useful changelog, it's just saying that there's some
+> > random changes for no reason.  Please make proper patches with
+> > changelogs that explain them.
 
-We can always move it later if necessary.
+> It's a very uninteresting patch, I guess I made a changelog to match.
+> But I can't help myself from asking a few qustions...
 
-[...]
+> Patch*es* and changelog*s*?
 
-> +#define SC_DJTAG_TIMEOUT		100000	/* 100ms */
+> Oh, you want me to split into a series of several patches? One for the
+> quotes, one for the "../regultor/" removal, one for the empty
+> comment removal and one for the s/pwm_reglator/pwm-regulator/ thing?
 
-This would be better as:
+> Be careful what you ask for, you might get it...
 
-#define SC_DJTAG_TIMEOUT_US	(100 * USEC_PER_MSEC)
+The above is not a problem for me, indeed it's actually good as it makes
+it *much* quicker and simpler for me to read the changes and figure out
+if they all make sense and do what was intended.  The less the changelog
+says about what the change is supposed to do and the more different
+things the change does the more effort is required to work out if it's
+sensible and the more chance there is of one of the changes blocking the
+other ones.
 
-(you'll need to include <linux/time64.h>)
+--l3weapaiptjom75j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
-> +static void djtag_read32_relaxed(void __iomem *regs_base, u32 off, u32 *value)
-> +{
-> +	void __iomem *reg_addr = regs_base + off;
-> +
-> +	*value = readl_relaxed(reg_addr);
-> +}
-> +
-> +static void djtag_write32(void __iomem *regs_base, u32 off, u32 val)
-> +{
-> +	void __iomem *reg_addr = regs_base + off;
-> +
-> +	writel(val, reg_addr);
-> +}
+iQEcBAABCAAGBQJYJLYlAAoJECTWi3JdVIfQzscH/3ZnMSIEc/U8ozQOTWQy4JEu
+fRcNFW/wSiqbVs84rLLABDzwMirGOW7aE+6kTIgpYE55aiuRbNCvh0qg6TpvMKez
+UpfEmY2aDtTVAlQPBStqdnv6coSfDcJXWwNSiCTqsUiXzuULrOPxLKCmHHp8M70G
+W3JyXOd4bu+GSF7UCGJ+Q6VvJ/gDDaXCJ1QXWUe5nFxQEz+IljUiomH6jzTSnhV7
+ZWZQTyLxOs4lab26tTtipIzcEa/Ai96EiIL+O4+VD4jw+L9L8+64ZgZfOKNSqBAt
+euQobXooQvsb816zGlmF8Q89r/EMszGG/H8HwdUGjG8njKmcOceejulrk3PGCws=
+=C2jR
+-----END PGP SIGNATURE-----
 
-I think these make the driver harder to read, especially given the read
-function is void and takes an output pointer.
-
-In either case you can call readl/writel directly with base + off for
-the __iomem ptr. Please do that.
-
-> +
-> +/*
-> + * djtag_readwrite_v1/v2: djtag read/write interface
-> + * @reg_base:	djtag register base address
-> + * @offset:	register's offset
-> + * @mod_sel:	module selection
-> + * @mod_mask:	mask to select specific modules for write
-> + * @is_w:	write -> true, read -> false
-> + * @wval:	value to register for write
-> + * @chain_id:	which sub module for read
-> + * @rval:	value in register for read
-> + *
-> + * Return non-zero if error, else return 0.
-> + */
-> +static int djtag_readwrite_v1(void __iomem *regs_base, u32 offset, u32 mod_sel,
-> +		u32 mod_mask, bool is_w, u32 wval, int chain_id, u32 *rval)
-> +{
-> +	u32 rd;
-> +	int timeout = SC_DJTAG_TIMEOUT;
-> +
-> +	if (!(mod_mask & CHAIN_UNIT_CFG_EN)) {
-> +		pr_warn("djtag: do nothing.\n");
-> +		return 0;
-> +	}
-> +
-> +	/* djtag mster enable & accelerate R,W */
-> +	djtag_write32(regs_base, SC_DJTAG_MSTR_EN,
-> +			DJTAG_NOR_CFG | DJTAG_MSTR_EN);
-> +
-> +	/* select module */
-> +	djtag_write32(regs_base, SC_DJTAG_DEBUG_MODULE_SEL, mod_sel);
-> +	djtag_write32(regs_base, SC_DJTAG_CHAIN_UNIT_CFG_EN,
-> +				mod_mask & CHAIN_UNIT_CFG_EN);
-> +
-> +	if (is_w) {
-> +		djtag_write32(regs_base, SC_DJTAG_MSTR_WR, DJTAG_MSTR_W);
-> +		djtag_write32(regs_base, SC_DJTAG_MSTR_DATA, wval);
-> +	} else
-> +		djtag_write32(regs_base, SC_DJTAG_MSTR_WR, DJTAG_MSTR_R);
-> +
-> +	/* address offset */
-> +	djtag_write32(regs_base, SC_DJTAG_MSTR_ADDR, offset);
-> +
-> +	/* start to write to djtag register */
-> +	djtag_write32(regs_base, SC_DJTAG_MSTR_START_EN, DJTAG_MSTR_START_EN);
-> +
-> +	/* ensure the djtag operation is done */
-> +	do {
-> +		djtag_read32_relaxed(regs_base, SC_DJTAG_MSTR_START_EN, &rd);
-> +		if (!(rd & DJTAG_MSTR_EN))
-> +			break;
-> +
-> +		udelay(1);
-> +	} while (timeout--);
-> +
-> +	if (timeout < 0) {
-> +		pr_err("djtag: %s timeout!\n", is_w ? "write" : "read");
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (!is_w)
-> +		djtag_read32_relaxed(regs_base,
-> +			SC_DJTAG_RD_DATA_BASE + chain_id * 0x4, rval);
-> +
-> +	return 0;
-> +}
-
-Please factor out the common bits into helpers and have separate
-read/write functions. It's incredibly difficult to follow the code with
-read/write hidden behind a boolean parameter.
-
-> +static const struct of_device_id djtag_of_match[] = {
-> +	/* for hip05(D02) cpu die */
-> +	{ .compatible = "hisilicon,hip05-cpu-djtag-v1",
-> +		.data = (void *)djtag_readwrite_v1 },
-> +	/* for hip05(D02) io die */
-> +	{ .compatible = "hisilicon,hip05-io-djtag-v1",
-> +		.data = (void *)djtag_readwrite_v1 },
-> +	/* for hip06(D03) cpu die */
-> +	{ .compatible = "hisilicon,hip06-cpu-djtag-v1",
-> +		.data = (void *)djtag_readwrite_v1 },
-> +	/* for hip06(D03) io die */
-> +	{ .compatible = "hisilicon,hip06-io-djtag-v2",
-> +		.data = (void *)djtag_readwrite_v2 },
-> +	/* for hip07(D05) cpu die */
-> +	{ .compatible = "hisilicon,hip07-cpu-djtag-v2",
-> +		.data = (void *)djtag_readwrite_v2 },
-> +	/* for hip07(D05) io die */
-> +	{ .compatible = "hisilicon,hip07-io-djtag-v2",
-> +		.data = (void *)djtag_readwrite_v2 },
-> +	{},
-> +};
-
-Binding documentation for all of these should be added *before* this
-patch, per Documentation/devicetree/bindings/submitting-patches.txt.
-Please move any relevant binding documentation earlier in the series.
-
-> +MODULE_DEVICE_TABLE(of, djtag_of_match);
-> +
-> +static ssize_t
-> +show_modalias(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct hisi_djtag_client *client = to_hisi_djtag_client(dev);
-> +
-> +	return sprintf(buf, "%s%s\n", MODULE_PREFIX, client->name);
-> +}
-> +static DEVICE_ATTR(modalias, 0444, show_modalias, NULL);
-> +
-> +static struct attribute *hisi_djtag_dev_attrs[] = {
-> +	NULL,
-> +	/* modalias helps coldplug:  modprobe $(cat .../modalias) */
-> +	&dev_attr_modalias.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(hisi_djtag_dev);
-
-Why do we need to expose this under sysfs?
-
-> +struct bus_type hisi_djtag_bus = {
-> +	.name		= "hisi-djtag",
-> +	.match		= hisi_djtag_device_match,
-> +	.probe		= hisi_djtag_device_probe,
-> +	.remove		= hisi_djtag_device_remove,
-> +};
-
-I take it the core bus code handles reference-counting users of the bus?
-
-> +struct hisi_djtag_client *hisi_djtag_new_device(struct hisi_djtag_host *host,
-> +						struct device_node *node)
-> +{
-> +	struct hisi_djtag_client *client;
-> +	int status;
-> +
-> +	client = kzalloc(sizeof(*client), GFP_KERNEL);
-> +	if (!client)
-> +		return NULL;
-> +
-> +	client->host = host;
-> +
-> +	client->dev.parent = &client->host->dev;
-> +	client->dev.bus = &hisi_djtag_bus;
-> +	client->dev.type = &hisi_djtag_client_type;
-> +	client->dev.of_node = node;
-
-I suspect that we should do:
-
-	client->dev.of_node = of_node_get(node);
-
-... so that it's guaranteed we retain a reference.
-
-> +	snprintf(client->name, DJTAG_CLIENT_NAME_LEN, "%s%s",
-> +					DJTAG_PREFIX, node->name);
-> +	dev_set_name(&client->dev, "%s", client->name);
-> +
-> +	status = device_register(&client->dev);
-> +	if (status < 0) {
-> +		pr_err("error adding new device, status=%d\n", status);
-> +		kfree(client);
-> +		return NULL;
-> +	}
-> +
-> +	return client;
-> +}
-> +
-> +static struct hisi_djtag_client *hisi_djtag_of_register_device(
-> +						struct hisi_djtag_host *host,
-> +						struct device_node *node)
-> +{
-> +	struct hisi_djtag_client *client;
-> +
-> +	client = hisi_djtag_new_device(host, node);
-> +	if (client == NULL) {
-> +		dev_err(&host->dev, "error registering device %s\n",
-> +			node->full_name);
-> +		of_node_put(node);
-
-I don't think this should be here, given what djtag_register_devices()
-does.
-
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return client;
-> +}
-> +
-> +static void djtag_register_devices(struct hisi_djtag_host *host)
-> +{
-> +	struct device_node *node;
-> +	struct hisi_djtag_client *client;
-> +
-> +	if (!host->of_node)
-> +		return;
-> +
-> +	for_each_available_child_of_node(host->of_node, node) {
-> +		if (of_node_test_and_set_flag(node, OF_POPULATED))
-> +			continue;
-> +		client = hisi_djtag_of_register_device(host, node);
-> +		list_add(&client->next, &host->client_list);
-> +	}
-> +}
-
-Given hisi_djtag_of_register_device() can return ERR_PTR(-EINVAL), the
-list_add is not safe.
-
-> +static int djtag_host_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct hisi_djtag_host *host;
-> +	const struct of_device_id *of_id;
-> +	struct resource *res;
-> +	int rc;
-> +
-> +	of_id = of_match_device(djtag_of_match, dev);
-> +	if (!of_id)
-> +		return -EINVAL;
-> +
-> +	host = kzalloc(sizeof(*host), GFP_KERNEL);
-> +	if (!host)
-> +		return -ENOMEM;
-> +
-> +	host->of_node = dev->of_node;
-
-	host->of_node = of_node_get(dev->of_node);
-
-> +	host->djtag_readwrite = of_id->data;
-> +	spin_lock_init(&host->lock);
-> +
-> +	INIT_LIST_HEAD(&host->client_list);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "No reg resorces!\n");
-> +		kfree(host);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!resource_size(res)) {
-> +		dev_err(&pdev->dev, "Zero reg entry!\n");
-> +		kfree(host);
-> +		return -EINVAL;
-> +	}
-> +
-> +	host->sysctl_reg_map = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(host->sysctl_reg_map)) {
-> +		dev_warn(dev, "Unable to map sysctl registers.\n");
-> +		kfree(host);
-> +		return -EINVAL;
-> +	}
-
-Please have a common error path rather than duplicating this free.
-
-e.g. at the end of the function have:
-
-	err_free:
-		kfree(host);
-		return err;
-
-... and in cases like this, have:
-
-	if (whatever()) {
-		dev_warn(dev, "this failed xxx\n");
-		err = -EINVAL;
-		goto err_free;
-	}
-
-Thanks,
-Mark.
+--l3weapaiptjom75j--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
