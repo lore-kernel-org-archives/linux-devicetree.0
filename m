@@ -1,108 +1,44 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/14] ARM: dts: armada-375: Fixup bootrom DT warning
-Date: Thu, 10 Nov 2016 11:43:51 +0100
-Message-ID: <87fumzehso.fsf@free-electrons.com>
-References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
-        <20161110001000.10619-5-gregory.clement@free-electrons.com>
-        <20161110092221.0219490b@free-electrons.com>
-        <87wpgbekwg.fsf@free-electrons.com>
-        <20161110111506.02842cbd@free-electrons.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/7] soc: renesas: Identify SoC and register with the
+ SoC bus
+Date: Thu, 10 Nov 2016 11:56:12 +0100
+Message-ID: <CAMuHMdWPk7zZKAHtxcYekS2Ot6j+M8dKJuFe87dxc7U6Z4Ti5w@mail.gmail.com>
+References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
+ <1626072.dpWPnWgGl9@wuerfel> <CAMuHMdVrdjqWruY=dBjWP=jZuZkc=aTBTMijOyTDfZFcaD_jsA@mail.gmail.com>
+ <6723536.97ljqcB8tS@wuerfel> <CAMuHMdWox5ksj1xhJ6_n0wNA9j6veX0AzAE0V9Gs26Kvw5C_sw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110111506.02842cbd-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
-        message of "Thu, 10 Nov 2016 11:15:06 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWox5ksj1xhJ6_n0wNA9j6veX0AzAE0V9Gs26Kvw5C_sw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Yangbo Lu <yangbo.lu@nxp.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On jeu., nov. 10 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-[...]
-
->> > A good example of why I'm worried is the sa-sram case:
->> >
->> > +		crypto_sram0: sa-sram0@0 {
->> >  			compatible = "mmio-sram";
->> >  			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
->> >
->> > +		crypto_sram1: sa-sram1@0 {
->> >  			compatible = "mmio-sram";
->> >  			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
->> >
->> > The node names should be just "sram" without a number. Indeed for UARTs
->> > for example, you use uart@XYZ, uart@ABC and not uart0@XYZ and
->> > uart1@ABC. But then, if you do that, with your scheme, you end up with
->> > both nodes named sa-sram@0.
->> >
->> > Which clearly shows that the way you set this unit-address is not
->> > correct: those two devices are mapped at completely different
->> > locations, but you end up with an identical unit address.
->> >
->> > I have no idea what is the rule for setting the unit address in this
->> > case, but I'm pretty sure the rule you've chosen is not good.  
->> 
->> I don't know if there is an existing rules for this case. But I see your
->> concern. What I propose then is to expose the memory windows ID by
->> adding the target and the attributes like this:
->> 
->> 		crypto_sram0: sa-sram@09_09_0 {
->>  			compatible = "mmio-sram";
->>   			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
->> 
->> 
->> 		crypto_sram1: sa-sram@09_05_0 {
->>   			compatible = "mmio-sram";
->>   			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
+On Thu, Nov 10, 2016 at 10:22 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Thanks, I've created the branch/tag :
 >
-> I have no idea if 09_05_0 is considered a valid unit address. Indeed
-> the _ character in an address looks a bit weird.
->
-> I guess we need guidance from the DT binding maintainers on this, since
-> it's really a matter of interpreting what "unit address" means in
-> relation to the value of the "reg" property.
+>     git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
+>     branch soc-device-match
+>     signed tag soc-device-match-tag1
 
-So I looked for in the reference: Power_ePAPR_APPROVED_v1.0, and in
-paragraph "2.2.1.1 Node Name Requirements" we have:
+Tested by kbuild test robot:
 
-"The unit-address component of the name is specific to the bus type on
-which the node sits. It consists of one or more ASCII characters from
-the set of characters in Table 2-1. The fundamental requirement is that
-at any level of the device tree the unit-address be unique in order to
-differentiate nodes with the same name at the same level in the
-tree. The binding for a particular bus may specify additional, more
-specific requirements for the format of a unit-address."
+    https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
+ soc-device-match
+    da65a1589dacc7ec44ea0557a14d70a39d991f32  base: soc: Provide a
+dummy implementation of soc_device_match()
+    elapsed time: 101m
+    configs tested: 85
 
-In Table 2-1 we have the following characters:
-0-9
-a-z
-A-z
-,
-.
-_
-+
--
+Gr{oetje,eeting}s,
 
-So the underscore is valid. And by adding information about the memory
-windows we match the fundamental requirement :"at any level of the
-device tree the unit-address be unique".
+                        Geert
 
-Gregory
-
-> -- 
-> Thomas Petazzoni, CTO, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
