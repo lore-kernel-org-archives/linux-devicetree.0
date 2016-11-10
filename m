@@ -1,79 +1,153 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: [PATCH] lm87: Allow LM87_REG_CHANNEL_MODE to be set via DT
-Date: Thu, 10 Nov 2016 10:19:36 -0700
-Message-ID: <20161110171936.GA29537@obsidianresearch.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v1 02/11] dt-bindings: hisi: Add Hisilicon
+ HiP05/06/07 Sysctrl and Djtag dts bindings
+Date: Thu, 10 Nov 2016 17:23:21 +0000
+Message-ID: <20161110172320.GA10137@leverpostej>
+References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
+ <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+In-Reply-To: <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-This compliments the existing scheme that lets it be set via
-platform_data.
+Hi,
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
----
- Documentation/devicetree/bindings/hwmon/lm87.txt | 27 ++++++++++++++++++++++++
- drivers/hwmon/lm87.c                             |  8 ++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/lm87.txt
+On Thu, Nov 03, 2016 at 01:41:58AM -0400, Anurup M wrote:
+> From: Tan Xiaojun <tanxiaojun@huawei.com>
+> 
+> 	1) Add Hisilicon HiP05/06/07 CPU and ALGSUB system controller dts
+> 	   bindings.
+> 	2) Add Hisilicon Djtag dts binding.
+> 
+> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+> Signed-off-by: Anurup M <anurup.m@huawei.com>
+> ---
+>  .../bindings/arm/hisilicon/hisilicon.txt           | 82 ++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 7df79a7..341cbb9 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -270,3 +270,85 @@ Required Properties:
+>    [1]: bootwrapper size
+>    [2]: relocation physical address
+>    [3]: relocation size
 
-diff --git a/Documentation/devicetree/bindings/hwmon/lm87.txt b/Documentation/devicetree/bindings/hwmon/lm87.txt
-new file mode 100644
-index 00000000000000..4ea2646ce8d2f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/lm87.txt
-@@ -0,0 +1,27 @@
-+* LM87 I2C Temperature and Fan sensor
-+
-+Required properties:
-+- compatible: should contain one of
-+		* "national,lm87"
-+		* "ti,lm87"
-+
-+Optional properties:
-+- channel-mode: Write the specified value to register 0x16. If not specified
-+                the driver will read the value from the chip at startup.
-+
-+		The value controls how the driver operates certain multi-use
-+		pins, eg bit 2 will select between temp_input3 or
-+		in0&in5 operation.
-+
-+See Documentation/devicetree/bindings/i2c/i2c.txt for more required and
-+optional properties.
-+
-+Example:
-+
-+i2c_master {
-+	temperature-sensor@0 {
-+		compatible = "ti,lm87";
-+		channel-mode = <0x4>;
-+		reg = <0>;
-+	};
-+};
-diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
-index 81cb898245a107..ccc0c913b4534e 100644
---- a/drivers/hwmon/lm87.c
-+++ b/drivers/hwmon/lm87.c
-@@ -853,9 +853,15 @@ static void lm87_restore_config(void *arg)
- static int lm87_init_client(struct i2c_client *client)
- {
- 	struct lm87_data *data = i2c_get_clientdata(client);
-+	u32 channel;
- 	int rc;
- 
--	if (dev_get_platdata(&client->dev)) {
-+	if (client->dev.of_node &&
-+	    !of_property_read_u32(client->dev.of_node, "channel-mode",
-+				  &channel)) {
-+		data->channel = channel;
-+		lm87_write_value(client, LM87_REG_CHANNEL_MODE, data->channel);
-+	} else if (dev_get_platdata(&client->dev)) {
- 		data->channel = *(u8 *)dev_get_platdata(&client->dev);
- 		lm87_write_value(client,
- 				 LM87_REG_CHANNEL_MODE, data->channel);
--- 
-2.7.4
+
+> +-----------------------------------------------------------------------
+> +The Hisilicon Djtag in CPU die is an independent component which connects with
+> +some other components in the SoC by Debug Bus. This driver can be configured
+> +to access the registers of connecting components (like L3 cache, l3 cache PMU
+> + etc.) during real time debugging by sysctrl. These components appear as child
+> +nodes of djtag.
+
+Please put the djtag binding in a new file. 
+
+It's clearly unrelated to many other things in this file, which should
+also be split out.
+
+> +The Hip05/06/07 CPU system controller(sysctrl) support to manage some important
+> +components (such as clock, reset, soft reset, secure debugger, etc.).
+> +The CPU sysctrl registers in hip05/06/07 doesnot use syscon but will be mapped
+> +by djtag driver for use by connecting components.
+
+The djtag driver is irrelvant here.
+
+If there's a realtionship between the two, please define that in the
+binding rather than implicitly assuming it in the driver.
+
+> +
+> +Required properties:
+> +  - compatible : "hisilicon,hip05-cpu-djtag-v1"
+> +  - reg : Register address and size
+> +
+> +Hisilicon HiP06 djtag for CPU sysctrl
+> +Required properties:
+> +- compatible : "hisilicon,hip06-sysctrl", "syscon", "simple-mfd";
+
+This looks messy. Why is this syscon and a simple-mfd?
+
+We should kill off / deprecate the syscon binding. It's completely
+meaningless.
+
+> +- reg : Register address and size
+> +- djtag :
+> +  - compatible : "hisilicon,hip06-cpu-djtag-v1"
+> +  - reg : Register address and size
+> +
+> +Hisilicon HiP07 djtag for CPU sysctrl
+> +Required properties:
+> +  - compatible : "hisilicon,hip07-cpu-djtag-v2"
+> +  - reg : Register address and size
+> +
+> +Example:
+> +	/* for Hisilicon HiP05 djtag for CPU sysctrl */
+> +	djtag0: djtag@80010000 {
+> +		compatible = "hisilicon,hip05-cpu-djtag-v1";
+> +		reg = <0x0 0x80010000 0x0 0x10000>;
+> +
+> +		/* For L3 cache PMU */
+> +		pmul3c0 {
+> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
+> +			scl-id = <0x02>;
+> +			num-events = <0x16>;
+> +			num-counters = <0x08>;
+> +			module-id = <0x04>;
+> +			num-banks = <0x04>;
+> +			cfgen-map = <0x02 0x04 0x01 0x08>;
+> +			counter-reg = <0x170>;
+> +			evctrl-reg = <0x04>;
+> +			event-en = <0x1000000>;
+> +			evtype-reg = <0x140>;
+> +		};
+
+This sub-node needs a binding document.
+
+These properties are completely opaque
+
+> +	};
+> +
+> +-----------------------------------------------------------------------
+> +The Hisilicon HiP05/06/07 ALGSUB system controller(sysctrl) is in IO die
+> +of SoC. It has a similar function as the Hisilicon HiP05/06/07 CPU system
+> +controller in CPU die and it manage different components, like RSA, etc.
+> +The Hisilicon Djtag in IO die has a similar function as in CPU die and maps
+> +the sysctrl registers for use by connecting components.
+> +All connecting components shall appear as child nodes of djtag.
+
+I don't follow the above. This describes an ALGSUB system controllerm
+but the documentation below is all about djtag.
+
+Thanks,
+Mark.
+
+> +Hisilicon HiP05 djtag for ALGSUB sysctrl
+> +Required properties:
+> +  - compatible : "hisilicon,hip05-io-djtag-v1"
+> +  - reg : Register address and size
+> +
+> +Hisilicon HiP06 djtag for ALGSUB sysctrl
+> +Required properties:
+> +  - compatible : "hisilicon,hip06-io-djtag-v2"
+> +  - reg : Register address and size
+> +
+> +Hisilicon HiP07 djtag for ALGSUB sysctrl
+> +Required properties:
+> +  - compatible : "hisilicon,hip07-io-djtag-v2"
+> +  - reg : Register address and size
+> +
+> +Example:
+> +	/* for Hisilicon HiP05 djtag for alg sysctrl */
+> +	djtag0: djtag@d0000000 {
+> +	       compatible = "hisilicon,hip05-io-djtag-v1";
+> +		reg = <0x0 0xd0000000 0x0 0x10000>;
+> +	};
+> -- 
+> 2.1.4
+> 
