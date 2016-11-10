@@ -1,142 +1,61 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v2 2/3] ASoC: tse850: document axentia,tse850-pcm5142 bindings
-Date: Wed, 9 Nov 2016 23:40:57 +0100
-Message-ID: <1478731258-26084-3-git-send-email-peda@axentia.se>
-References: <1478731258-26084-1-git-send-email-peda@axentia.se>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/14] ARM: dts: armada-375: Fixup pcie DT warnings
+Date: Thu, 10 Nov 2016 01:22:27 +0100
+Message-ID: <87twbgkwu4.fsf@free-electrons.com>
+References: <20161110001000.10619-1-gregory.clement@free-electrons.com>
+        <20161110001000.10619-9-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478731258-26084-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <20161110001000.10619-9-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+        (Gregory CLEMENT's message of "Thu, 10 Nov 2016 01:09:54 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The TSE-850 is an FM Transmitter Station Equipment, designed to generate
-baseband signals for FM, mainly the DARC subcarrier, but other signals
-are also possible.
-
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/sound/axentia,tse850-pcm5142.txt      | 88 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 ++
- 2 files changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-new file mode 100644
-index 000000000000..0c2d44fda17e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-@@ -0,0 +1,88 @@
-+ASoC driver for the Axentia TSE-850 with a PCM5142 codec
-+
-+Required properties:
-+  - compatible: "axentia,tse850-pcm5142"
-+  - axentia,ssc-controller: The phandle of the atmel SSC controller used as
-+    cpu dai.
-+  - axentia,audio-codec: The phandle of the PCM5142 codec.
-+  - axentia,add-gpios: gpio specifier that controls the mixer.
-+  - axentia,loop1-gpios: gpio specifier that controls loop relays on channel 1.
-+  - axentia,loop2-gpios: gpio specifier that controls loop relays on channel 2.
-+  - axentia,ana-supply: Regulator that supplies the output amplifier. Must
-+    support voltages in the 2V - 20V range, in 1V steps.
-+
-+The schematics explaining the gpios are as follows:
-+
-+               loop1 relays
-+   IN1 +---o  +------------+  o---+ OUT1
-+            \                /
-+             +              +
-+             |   /          |
-+             +--o  +--.     |
-+             |  add   |     |
-+             |        V     |
-+             |      .---.   |
-+   DAC +----------->|Sum|---+
-+             |      '---'   |
-+             |              |
-+             +              +
-+
-+   IN2 +---o--+------------+--o---+ OUT2
-+               loop2 relays
-+
-+The 'loop1' gpio pin controlls two relays, which are either in loop position,
-+meaning that input and output are directly connected, or they are in mixer
-+position, meaning that the signal is passed through the 'Sum' mixer. Similarly
-+for 'loop2'.
-+
-+In the above, the 'loop1' relays are inactive, thus feeding IN1 to the mixer
-+(if 'add' is active) and feeding the mixer output to OUT1. The 'loop2' relays
-+are active, short-cutting the TSE-850 from channel 2. IN1, IN2, OUT1 and OUT2
-+are TSE-850 connectors and DAC is the PCB name of the (filtered) output from
-+the PCM5142 codec.
-+
-+Example:
-+
-+	&i2c {
-+		codec: pcm5142@4c {
-+			compatible = "ti,pcm5142";
-+
-+			reg = <0x4c>;
-+
-+			AVDD-supply = <&reg_3v3>;
-+			DVDD-supply = <&reg_3v3>;
-+			CPVDD-supply = <&reg_3v3>;
-+
-+			clocks = <&sck>;
-+
-+			pll-in = <3>;
-+			pll-out = <6>;
-+		};
-+	};
-+
-+	ana: ana-reg {
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "ANA";
-+
-+		pwms = <&pwm0 2 1000 PWM_POLARITY_INVERTED>;
-+		pwm-dutycycle-unit = <1000>;
-+		pwm-dutycycle-range = <100 1000>;
-+
-+		regulator-min-microvolt = <2000000>;
-+		regulator-max-microvolt = <20000000>;
-+		regulator-ramp-delay = <1000>;
-+	};
-+
-+	sound {
-+		compatible = "axentia,tse850-pcm5142";
-+
-+		axentia,ssc-controller = <&ssc0>;
-+		axentia,audio-codec = <&codec>;
-+
-+		axentia,add-gpios = <&pioA 8 GPIO_ACTIVE_LOW>;
-+		axentia,loop1-gpios = <&pioA 10 GPIO_ACTIVE_LOW>;
-+		axentia,loop2-gpios = <&pioA 11 GPIO_ACTIVE_LOW>;
-+
-+		axentia,ana-supply = <&ana>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 539b20baf791..4f2ebf3ab51a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2318,6 +2318,12 @@ F:	include/uapi/linux/ax25.h
- F:	include/net/ax25.h
- F:	net/ax25/
+Hi
  
-+AXENTIA ASOC DRIVERS
-+M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-+L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/sound/axentia,*
-+
- AZ6007 DVB DRIVER
- M:	Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
- M:	Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
--- 
-2.1.4
+ On jeu., nov. 10 2016, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
+> PCIe has a ranges property, so the unit name should contain an address.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-375.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+> index 700d80fe0d85..a157b62e810e 100644
+> --- a/arch/arm/boot/dts/armada-375.dtsi
+> +++ b/arch/arm/boot/dts/armada-375.dtsi
+> @@ -580,7 +580,7 @@
+>  			};
+>  		};
+>  
+> -		pciec: pcie-controller@82000000@ {
+> +		pciec: pcie-controller@82000000 {
+
+I don't know what happened but this patch should have been squashed in
+the previous one.
+
+I will fix it before applying on the mvebu tree of course.
+
+Gregory
+
+
+>  			compatible = "marvell,armada-370-pcie";
+>  			status = "disabled";
+>  			device_type = "pci";
+> -- 
+> 2.10.1
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
