@@ -1,41 +1,33 @@
-From: Sanchayan Maity <maitysanchayan@gmail.com>
-Subject: [PATCH] ARM: dts: vfxxx: Enable DMA for DSPI2 and DSPI3
-Date: Thu, 10 Nov 2016 17:15:05 +0530
-Message-ID: <20161110114505.17618-1-maitysanchayan@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 00/10] Add DT support for ohci-da8xx
+Date: Thu, 10 Nov 2016 13:02:53 +0100
+Message-ID: <20161110120253.GA5385@kroah.com>
+References: <20161107203948.28324-1-ahaslam@baylibre.com>
+ <CAKXjFTN04Wz5jsaHsyvDD7G8QqXQvCE4D-YbHtGT=jUqELiS_w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKXjFTN04Wz5jsaHsyvDD7G8QqXQvCE4D-YbHtGT=jUqELiS_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: stefan@agner.ch, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>
+To: Axel Haslam <ahaslam@baylibre.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable DMA for DSPI2 and DSPI3 on Vybrid.
----
- arch/arm/boot/dts/vfxxx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Tue, Nov 08, 2016 at 05:37:41PM +0100, Axel Haslam wrote:
+> Hi,
+> 
+> On Mon, Nov 7, 2016 at 9:39 PM, Axel Haslam <ahaslam@baylibre.com> wrote:
+> > The purpose of this patch series is to add DT support for the davinci
+> > ohci driver.
+> >
+> 
+> To make it easier to review. I will split the arch/arm and driver
+> patches into separate series.
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 000550f..e9d2847 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -573,6 +573,9 @@
- 				clocks = <&clks VF610_CLK_DSPI2>;
- 				clock-names = "dspi";
- 				spi-num-chipselects = <2>;
-+				dmas = <&edma1 0 10>,
-+					<&edma1 0 11>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -585,6 +588,9 @@
- 				clocks = <&clks VF610_CLK_DSPI3>;
- 				clock-names = "dspi";
- 				spi-num-chipselects = <2>;
-+				dmas = <&edma1 0 12>,
-+					<&edma1 0 13>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
--- 
-2.10.2
+I don't think it's easier, as now I have no idea what order, or what
+tree it should go through :(
+
+I'm guessing not mine, so all are now deleted from my patch queue...
+
+greg k-h
