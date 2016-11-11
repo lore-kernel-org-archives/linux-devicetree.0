@@ -1,76 +1,87 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of/irq: improve error message on irq discovery process
- failure
-Date: Fri, 11 Nov 2016 16:32:41 +0000
-Message-ID: <20161111163241.GL11945@leverpostej>
-References: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
- <20161109190457.GC837@leverpostej>
- <1478813443.2592.2.camel@au1.ibm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
+Date: Fri, 11 Nov 2016 16:46:10 +0000
+Message-ID: <20161111164610.rocq76fopcxjkafa@sirena.org.uk>
+References: <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20160112143100.GA14628@rob-hp-laptop>
+ <20160115085734.GG4581@lukather>
+ <20160117000434.GB7774@rob-hp-laptop>
+ <20160118162538.GH6588@sirena.org.uk>
+ <20160121154649.GE3997@lukather>
+ <20160121162802.GL6588@sirena.org.uk>
+ <20160205143328.GD31506@lukather>
+ <20160205153258.GW4455@sirena.org.uk>
+ <20161107154738.ewliwzx5plams4ni@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k3zmxocbcm4bzw5v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478813443.2592.2.camel@au1.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@au1.ibm.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>, devicetree@vger.kernel.org, marc.zyngier@arm.com, frowand.list@gmail.com, robh+dt@kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <20161107154738.ewliwzx5plams4ni@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 11, 2016 at 08:30:43AM +1100, Benjamin Herrenschmidt wrote:
-> On Wed, 2016-11-09 at 19:04 +0000, Mark Rutland wrote:
-> > 
-> > If we don't have an interrupt-map on a PCI controller, why don't we
-> > instead log a message regarding that being missing, and give up
-> > early?
-> 
-> Why ? It's legit to not support LSIs.
 
-Sure; I had envisioned a message like:
+--k3zmxocbcm4bzw5v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	pr_info("%s: no interrupt-map, INTx interrupts not possible\n",
-		pci_controller_name);
+On Mon, Nov 07, 2016 at 04:47:38PM +0100, Maxime Ripard wrote:
 
-... Which tells the user exaclty what we know, and doesn't imply either
-an error or the actual absence of HW support.
+> Since regulator_get returns a struct regulator pointer, it felt
+> logical to try to add the list of parent regulators to it, especially
+> as this structure is per-consumer, and different consumers might have
+> different combinations of regulators.
 
-> > That sounds like a more generically useful error message; it's also
-> > possible that a DT author simply forgot to add the map, and the
-> > platform has suitable interrupts wired up.
-> 
-> But it's not necessarily an error...
+> However, this structure embeds a pointer to a struct regulator_dev,
+> which seems to model the regulator itself, but will also contain
+> pointer to the struct regulator, probably to model its parent? I guess
 
-Sure, "error" was a misnomer.
+It'd be a lot easier to follow this if you named the fields...  The rdev
+in the struct regulator is indeed the physical device.  The struct
+regulator called supply in struct regulator_dev is indeed the parent
+regulator.
 
-> > > This patch introduces a different message for this specific case,
-> > > and it also reduces the level of the message from error to warning.
-> > > Before this patch, when an adapter was plugged in a slot without
-> > Level
-> > > interrupts capabilities, we saw generic error messages like this:
-> > > 
-> > >     [54.239] pci 002d:70:00.0: of_irq_parse_pci() failed with rc=-
-> > 22
-> > > 
-> > > Now, with this applied, we see the following specific message:
-> > > 
-> > >     [19.947] pci 0014:60:00.0: of_irq_parse_pci() gave up. The slot
-> > of this
-> > >     device has no Level-triggered Interrupts capability.
-> > 
-> > Following my above example, this has gone from opaque to potentially
-> > misleading
-> 
-> I'm not sure. At least for some of our platforms this is the correct
-> message :-) Our Hypervisor doesn't allow LSIs on some slots.
-> 
-> I think it's not that misleading. It's obvious something is wrong with
-> LSIs, which you can easily figure out from there.
+> my first question would be do we care about nesting? or having a
+> regulator with multiple parents?
 
-As above, I think it's clearer to log that there's no interrupt-map for
-the controller. 
+Well, it seems that your use case here is multiple parents so I guess we
+do care about it.  :)
 
-Orthogonal to that, "INTx" is a more generally understood name for the
-legacy wired PCI interrupts, and is probably preferable in generic code.
+> It also contains the constraints on each regulator, which might or
+> might not be different for each of the coupled regulators, but I'm
+> guessing the couple might have contraints of its own too I guess. Is
+> it something that might happen? Should we care about it?
 
-Thanks,
-Mark.
+I can't see how one could physically have constraints that didn't apply
+to both parents.
+
+> And finally, my real question is, do we want to aggregate them in
+> struct regulator, at the consumer level, which might make the more
+> sense, or do we want to create an intermediate regulator internally?
+> What is your take on this?
+
+My initial thought without having tried to implement this is that doing
+things in an intermediate regulator might do a better job of
+encapsulating things it if it works out but I've got a feeling that it's
+not going to work out well and that therefore doing it in the consumer
+with multiple rdevs will be better.  But really either approach is fine
+if it doesn't look horrible.
+
+--k3zmxocbcm4bzw5v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYJfXRAAoJECTWi3JdVIfQEjcH/3G5MKL7k2kNFgr0PTOosQ0/
+9cEIonjTDyP3kRX3JbtnFHp19DR+U88v0nYtNF8Qjzll0ukrR5xUWNk07DFNcFhO
+v6EgXnSxh+Z9v4O20xqK7aM3R3V7ExpGeFo1zeX3CBbxDaJEXxWMLUyjzkc2azU2
+5KEcVFuX1EmMm3SMMjPHq4/uJ+TRGCBgWsBOg+tb6wL5NcrqxI6c5ZGSKOSS+mfd
+vbCJj3kPAYHCYqkNRh5BbSFIRObq+BrAFlgc5KWm658LPvvks1xzoo7lN5LtMPzl
+a7/3DmtoMlO7Giwm4ca20cpzcW7n23FlHP3XS6fb0ZSXiVwVYRZIi+eAbxu9mBo=
+=2oVb
+-----END PGP SIGNATURE-----
+
+--k3zmxocbcm4bzw5v--
