@@ -1,115 +1,88 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
-Date: Fri, 11 Nov 2016 15:48:04 +0200
-Message-ID: <1903855.3Xg5AI8ucK@avalon>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <46394837-c3f0-8487-750b-95dae7bcf859@xs4all.nl>
+Subject: Re: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
+Date: Fri, 11 Nov 2016 15:48:53 +0200
+Message-ID: <13090356.639SNvNHiR@avalon>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <46394837-c3f0-8487-750b-95dae7bcf859@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Hans,
 
-On Friday 11 Nov 2016 14:21:22 Hans Verkuil wrote:
+On Friday 11 Nov 2016 14:24:41 Hans Verkuil wrote:
 > On 11/09/2016 04:44 PM, Ramesh Shanmugasundaram wrote:
-> > This patch adds driver support for MAX2175 chip. This is Maxim
-> > Integrated's RF to Bits tuner front end chip designed for software-defined
-> > radio solutions. This driver exposes the tuner as a sub-device instance
-> > with standard and custom controls to configure the device.
+> > This patch adds support for the three new SDR formats. These formats
+> > were prefixed with "sliced" indicating I data constitutes the top half and
+> > Q data constitutes the bottom half of the received buffer.
+> 
+> The standard terminology for video formats is "planar". I am leaning towards
+> using that here as well.
+> 
+> Any opinions on this?
+
+I like that as well, but I'm obviously biased :-)
+
+> > V4L2_SDR_FMT_SCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
+> > inside 16-bit. V4L2 FourCC: SC16
+> > 
+> > V4L2_SDR_FMT_SCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
+> > inside 18-bit. V4L2 FourCC: SC18
+> > 
+> > V4L2_SDR_FMT_SCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
+> > inside 20-bit. V4L2 FourCC: SC20
 > > 
 > > Signed-off-by: Ramesh Shanmugasundaram
 > > <ramesh.shanmugasundaram@bp.renesas.com> ---
 > > 
-> >  .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
-> >  drivers/media/i2c/Kconfig                          |    4 +
-> >  drivers/media/i2c/Makefile                         |    2 +
-> >  drivers/media/i2c/max2175/Kconfig                  |    8 +
-> >  drivers/media/i2c/max2175/Makefile                 |    4 +
-> >  drivers/media/i2c/max2175/max2175.c                | 1558 +++++++++++++++
-> >  drivers/media/i2c/max2175/max2175.h                |  108 ++
-> >  7 files changed, 1745 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/media/i2c/max2175.txt
-> >  create mode 100644 drivers/media/i2c/max2175/Kconfig
-> >  create mode 100644 drivers/media/i2c/max2175/Makefile
-> >  create mode 100644 drivers/media/i2c/max2175/max2175.c
-> >  create mode 100644 drivers/media/i2c/max2175/max2175.h
-> 
-> <snip>
-> 
-> > diff --git a/drivers/media/i2c/max2175/max2175.c
-> > b/drivers/media/i2c/max2175/max2175.c new file mode 100644
-> > index 0000000..ec45b52
-> > --- /dev/null
-> > +++ b/drivers/media/i2c/max2175/max2175.c
-> > @@ -0,0 +1,1558 @@
-> 
-> <snip>
-> 
-> > +/* Read/Write bit(s) on top of regmap */
-> > +static int max2175_read(struct max2175 *ctx, u8 idx, u8 *val)
-> > +{
-> > +	u32 regval;
-> > +	int ret = regmap_read(ctx->regmap, idx, &regval);
-> > +
-> > +	if (ret)
-> > +		v4l2_err(ctx->client, "read ret(%d): idx 0x%02x\n", ret, idx);
-
-By the way, I think I've seen a proposal to get rid of v4l2_err() in favour of 
-dev_err(), was I dreaming or should this patch use dev_err() already ?
-
-> > +
-> > +	*val = regval;
-> 
-> Does regmap_read initialize regval even if it returns an error? If not,
-> then I would initialize regval to 0 to prevent *val being uninitialized.
-
-Better than that the error should be propagated to the caller and handled.
-
-> > +	return ret;
-> > +}
-
-[snip]
-
-> > +static int max2175_band_from_freq(u32 freq)
-> > +{
-> > +	if (freq >= 144000 && freq <= 26100000)
-> > +		return MAX2175_BAND_AM;
-> > +	else if (freq >= 65000000 && freq <= 108000000)
-> > +		return MAX2175_BAND_FM;
-> > +	else
-> 
-> No need for these 'else' keywords.
-
-Indeed by in my opinion they improve readability :-)
-
-> > +		return MAX2175_BAND_VHF;
-> > +}
-
-[snip]
-
-> > +static const struct v4l2_ctrl_config max2175_na_rx_mode = {
-> > +	.ops = &max2175_ctrl_ops,
-> > +	.id = V4L2_CID_MAX2175_RX_MODE,
-> > +	.name = "RX MODE",
-> > +	.type = V4L2_CTRL_TYPE_MENU,
-> > +	.max = ARRAY_SIZE(max2175_ctrl_na_rx_modes) - 1,
-> > +	.def = 0,
-> > +	.qmenu = max2175_ctrl_na_rx_modes,
-> > +};
-> 
-> Please document all these controls better. This is part of the public API,
-> so you need to give more information what this means exactly.
-
-Should that go to Documentation/media/v4l-drivers/ ? If so "[PATCH v4 3/4] 
-v4l: Add Renesas R-Car FDP1 Driver" can be used as an example.
-
-[snip]
+> >  drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
+> >  include/uapi/linux/videodev2.h       | 3 +++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > b/drivers/media/v4l2-core/v4l2-ioctl.c index 181381d..d36b386 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> > @@ -1207,6 +1207,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc
+> > *fmt)> 
+> >  	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+> >  	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
+> >  	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
+> > 
+> > +	case V4L2_SDR_FMT_SCU16BE:	descr = "Sliced Complex U16BE"; break;
+> > +	case V4L2_SDR_FMT_SCU18BE:	descr = "Sliced Complex U18BE"; break;
+> > +	case V4L2_SDR_FMT_SCU20BE:	descr = "Sliced Complex U20BE"; break;
+> > 
+> >  	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
+> >  	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
+> >  	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; 
+break;
+> > 
+> > diff --git a/include/uapi/linux/videodev2.h
+> > b/include/uapi/linux/videodev2.h index 4364ce6..34a9c30 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -666,6 +666,9 @@ struct v4l2_pix_format {
+> > 
+> >  #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /*
+> >  complex s8 */ #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S',
+> >  '1', '4') /* complex s14le */ #define V4L2_SDR_FMT_RU12LE      
+> >  v4l2_fourcc('R', 'U', '1', '2') /* real u12le */> 
+> > +#define V4L2_SDR_FMT_SCU16BE	  v4l2_fourcc('S', 'C', '1', '6') /* 
+sliced
+> > complex u16be */ +#define V4L2_SDR_FMT_SCU18BE	  v4l2_fourcc('S', 
+'C',
+> > '1', '8') /* sliced complex u18be */ +#define V4L2_SDR_FMT_SCU20BE	 
+> > v4l2_fourcc('S', 'C', '2', '0') /* sliced complex u20be */> 
+> >  /* Touch formats - used for Touch devices */
+> >  #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-
+bit
+> >  signed deltas */
 
 -- 
 Regards,
