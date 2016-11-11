@@ -1,73 +1,78 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/6] mfd: stm32-adc: Add support for stm32 ADC
-Date: Fri, 11 Nov 2016 08:42:31 +0000
-Message-ID: <20161111084231.GA13638@dell>
-References: <1478794738-28933-3-git-send-email-fabrice.gasnier@st.com>
- <201611110537.S7AVN9F6%fengguang.wu@intel.com>
+Subject: Re: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for
+ ArticSand devices
+Date: Fri, 11 Nov 2016 08:45:29 +0000
+Message-ID: <20161111084529.GB13638@dell>
+References: <1478792665-5859-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201611110537.S7AVN9F6%fengguang.wu@intel.com>
+In-Reply-To: <1478792665-5859-1-git-send-email-olimpiu@arcticsand.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, kbuild-all@01.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
+To: Olimpiu Dejeu <olimpiu@arcticsand.com>
+Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Nov 2016, kbuild test robot wrote:
+On Thu, 10 Nov 2016, Olimpiu Dejeu wrote:
 
-> Hi Fabrice,
->=20
-> [auto build test ERROR on ljones-mfd/for-mfd-next]
-> [also build test ERROR on v4.9-rc4 next-20161110]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help improve the system]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Fabrice-Gasnier/Add-supp=
-ort-for-STM32-ADC/20161111-011922
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-m=
-fd-next
-> config: s390-allmodconfig (attached as .config)
-> compiler: s390x-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.g=
-it/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=3Ds390=20
->=20
-> All errors (new ones prefixed by >>):
->=20
->    drivers/mfd/stm32-adc-core: struct of_device_id is 200 bytes.  The las=
-t of 1 is:
->    0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x73 0x74 0x2c 0x73 0x74 0x6d 0x33 0x32 0x66 0x34 =
-0x2d 0x61 0x64 0x63 0x2d 0x63 0x6f 0x72 0x65 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
-0x00 0x00 0x00 0x00 0x00 0x00=20
-> >> FATAL: drivers/mfd/stm32-adc-core: struct of_device_id is not terminat=
-ed with a NULL entry!
->=20
+> Resubmition of arcxcnn backlight driver addressing the naming convention
+>  concerns raised by Rob H. Note that all the device tree properties are
+>  determined by the board design or IC EPROM settings and are not intended
+>  to be user adjustable.
+> 
+> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+
+You've dropped Rob's Ack.
+
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Ce=
-nter
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
-tion
+>  .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> new file mode 100644
+> index 0000000..a7b6ff2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> @@ -0,0 +1,33 @@
+> +Binding for ArcticSand arc2c0608 LED driver
+> +
+> +Required properties:
+> +- compatible: should be "arc,arc2c0608"
+> +- reg: slave address
+> +
+> +Optional properties:
+> +- default-brightness: brightness value on boot, value from: 0-4095
+> +- label: The name of the backlight device
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +- led-sources: List of enabled channels from 0 to 5.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +- arc,led-config-0: setting for register ILED_CONFIG_0
+> +- arc,led-config-1: setting for register ILED_CONFIG_1
+> +- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
+> +- arc,comp-config: setting for register CONFIG_COMP
+> +- arc,filter-config: setting for register FILTER_CONFIG
+> +- arc,trim-config: setting for register IMAXTUNE
+> +
+> +Note: Optional properties not specified will default to values in IC EPROM
+> +
+> +Example:
+> +
+> +arc2c0608@30 {
+> +	compatible = "arc,arc2c0608";
+> +	reg = <0x30>;
+> +	default-brightness = <500>;
+> +	label = "lcd-backlight";
+> +	linux,default-trigger = "backlight";
+> +	led-sources = <0 1 2 5>;
+> +};
+> +
 
-Please fix this and re-submit.
-
---=20
+-- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
