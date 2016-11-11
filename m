@@ -1,47 +1,124 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC
- and a comparator
-Date: Fri, 11 Nov 2016 12:37:14 +0100
-Message-ID: <9fa01d3d-74ba-a048-52bf-4df959153354@axentia.se>
-References: <1478606339-31253-1-git-send-email-peda@axentia.se>
- <1478606339-31253-9-git-send-email-peda@axentia.se>
- <alpine.DEB.2.20.1611081630450.3501@nanos>
- <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
- <alpine.DEB.2.20.1611081809320.3501@nanos>
- <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
- <alpine.DEB.2.20.1611082146560.3501@nanos>
- <ac908a97-77b8-046a-a0e9-74cc97f56c9b@axentia.se>
- <alpine.DEB.2.20.1611091605090.3501@nanos>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v5] media: et8ek8: add device tree binding documentation
+Date: Fri, 11 Nov 2016 13:17:50 +0100
+Message-ID: <20161111121750.GA3022@amd>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+ <20161107104648.GB5326@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.20.1611091605090.3501@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161107104648.GB5326@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-09 16:06, Thomas Gleixner wrote:
-> On Wed, 9 Nov 2016, Peter Rosin wrote:
->> On 2016-11-08 22:47, Thomas Gleixner wrote:
->>> I don't think you need extra race handling with that, but I might be wrong
->>> as usual.
->>
->> There's obviously no way to determine which of the timeout or the
->> interrupt that happens first without some race handling, so I don't
->> know what you mean? If the timeout happens first, there is also a
->> need to handle late hits from the irq that might come in during the
->> preparation for the next step in the binary search. It gets messy
->> quickly compared to the simplicity of the current implementation.
-> 
-> Gah, forgot about that timeout thingy. Fair enough.
-> 
-> Feel free to add an 
-> 
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
-Thanks for looking!
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Peter
+On Mon 2016-11-07 11:46:48, Pavel Machek wrote:
+> Add device tree binding documentation for toshiba et8ek8 sensor.
+>=20
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+Rob, can we get an ack here?
+
+Thanks,
+							Pavel
+
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.t=
+xt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> new file mode 100644
+> index 0000000..b03b21d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> @@ -0,0 +1,53 @@
+> +Toshiba et8ek8 5MP sensor
+> +
+> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
+> +
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +
+> +
+> +Mandatory properties
+> +--------------------
+> +
+> +- compatible: "toshiba,et8ek8"
+> +- reg: I2C address (0x3e, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> +- clocks: External clock to the sensor
+> +- clock-frequency: Frequency of the external clock to the sensor. Camera
+> +  driver will set this frequency on the external clock. The clock freque=
+ncy is
+> +  a pre-determined frequency known to be suitable to the board.
+> +- reset-gpios: XSHUTDOWN GPIO. The XSHUTDOWN signal is active high. The =
+sensor
+> +  is in hardware standby mode when the signal is in low state.
+> +
+> +
+> +Endpoint node mandatory properties
+> +----------------------------------
+> +
+> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
+> +
+> +Endpoint node optional properties
+> +----------------------------------
+> +
+> +- clock-lanes: <0>
+> +- data-lanes: <1..n>
+> +
+> +Example
+> +-------
+> +
+> +&i2c3 {
+> +	clock-frequency =3D <400000>;
+> +
+> +	cam1: camera@3e {
+> +		compatible =3D "toshiba,et8ek8";
+> +		reg =3D <0x3e>;
+> +		vana-supply =3D <&vaux4>;
+> +		clocks =3D <&isp 0>;
+> +		clock-frequency =3D <9600000>;
+> +		reset-gpio =3D <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 */
+> +		port {
+> +			csi_cam1: endpoint {
+> +				remote-endpoint =3D <&csi_out1>;
+> +			};
+> +		};
+> +	};
+> +};
+>=20
+>=20
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgltu4ACgkQMOfwapXb+vIgWwCdHLmjWXC5LDGJnaG6/oOPYQpk
+8dQAn1dy30+Jujqczk0da+zyGtcXh+IJ
+=1I2P
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
