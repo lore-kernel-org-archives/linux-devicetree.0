@@ -1,67 +1,66 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] Documentation/devicetree: Add new property to
- specify the max link speed
-Date: Fri, 11 Nov 2016 16:24:16 -0600
-Message-ID: <20161111222416.GR9868@bhelgaas-glaptop.roam.corp.google.com>
-References: <1476755110-22647-1-git-send-email-shawn.lin@rock-chips.com>
+From: "Guilherme G. Piccoli" <gpiccoli-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] of/irq: improve error message on irq discovery process
+ failure
+Date: Fri, 11 Nov 2016 20:27:34 -0200
+Message-ID: <582645D6.3040102@linux.vnet.ibm.com>
+References: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
+ <20161109190457.GC837@leverpostej> <1478813443.2592.2.camel@au1.ibm.com>
+ <20161111163241.GL11945@leverpostej> <1478891547.2592.13.camel@au1.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1476755110-22647-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1478891547.2592.13.camel-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: benh-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2016 at 09:45:08AM +0800, Shawn Lin wrote:
-> Some of the host drivers have the requirement of knowing whether the
-> EP would never train at some link speed at all. For instance, on some
-> boards, the link won't train at 5 GT/s but the host driver still sacrifice
-> some cycle to wait for the resule of training at 5 GT/s as the host could
-> actually support 5 GT/s. So we could parse this new property and make the
-> host drivers be aware of these cases.
+On 11/11/2016 05:12 PM, Benjamin Herrenschmidt wrote:
+> On Fri, 2016-11-11 at 16:32 +0000, Mark Rutland wrote:
+>> On Fri, Nov 11, 2016 at 08:30:43AM +1100, Benjamin Herrenschmidt
+>> wrote:
+>>>
+>>> On Wed, 2016-11-09 at 19:04 +0000, Mark Rutland wrote:
+>>>>
+>>>>
+>>>> If we don't have an interrupt-map on a PCI controller, why don't
+>>>> we
+>>>> instead log a message regarding that being missing, and give up
+>>>> early?
+>>>
+>>> Why ? It's legit to not support LSIs.
+>>
+>> Sure; I had envisioned a message like:
+>>
+>> 	pr_info("%s: no interrupt-map, INTx interrupts not possible\n",
+>> 		pci_controller_name);
+>>
+>> ... Which tells the user exaclty what we know, and doesn't imply
+>> either
+>> an error or the actual absence of HW support.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Works for me.
+> 
+> Cheers,
+> Ben.
+> 
 
-Applied all three, with Rob's acks on the first two, to pci/host-rockchip
-for v4.10, thanks!
+Thanks very much Ben and Mark, for the good suggestions you gave me.
+I was talking on IRC today with Mark, about showing a message once per
+device (and not in all its functions) about LSI being not available in
+that slot, besides the simple/small messages per function, saying
+interrupt-map wasn't found.
 
-> ---
-> 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 08dcfad..e7d97a3 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -18,3 +18,9 @@ driver implementation may support the following properties:
->     host bridges in the system, otherwise potentially conflicting domain numbers
->     may be assigned to root buses behind different host bridges.  The domain
->     number for each host bridge in the system must be unique.
-> +- max-link-speed:
-> +   If present this property specifies PCI gen for link capability. The host drivers
-> +   could add this as a strategy to avoid unnecessary operation for unsupported
-> +   link speed, for instance, trying to do training for unsupported link speed, etc.
-> +   Must be '4' for gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other
-> +   values are invalid.
-> -- 
-> 2.3.7
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm working on V2, but will delay a bit to send - I'm out next 20 days.
+When I'm back, I'll send the improved version. Oh, I removed positive
+return value - never will use it again, noticed isn't that popular heheh
+
+Thanks,
+
+
+Guilherme
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
