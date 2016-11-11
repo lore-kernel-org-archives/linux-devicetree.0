@@ -1,46 +1,53 @@
-From: Benjamin Herrenschmidt <benh@au1.ibm.com>
-Subject: Re: [PATCH] of/irq: improve error message on irq discovery process
- failure
-Date: Sat, 12 Nov 2016 06:12:27 +1100
-Message-ID: <1478891547.2592.13.camel@au1.ibm.com>
-References: <1478700308-25481-1-git-send-email-gpiccoli@linux.vnet.ibm.com>
-         <20161109190457.GC837@leverpostej> <1478813443.2592.2.camel@au1.ibm.com>
-         <20161111163241.GL11945@leverpostej>
-Reply-To: benh@au1.ibm.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
+Date: Fri, 11 Nov 2016 21:17:42 +0100
+Message-ID: <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
+References: <20161025210221.9150-1-tony@atomide.com> <20161025210221.9150-2-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161111163241.GL11945@leverpostej>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, "Guilherme G. Piccoli" <gpiccoli@linux.vnet.ibm.com>, marc.zyngier@arm.com, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, robh+dt@kernel.org, frowand.list@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161025210221.9150-2-tony@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-11 at 16:32 +0000, Mark Rutland wrote:
-> On Fri, Nov 11, 2016 at 08:30:43AM +1100, Benjamin Herrenschmidt
-> wrote:
-> > 
-> > On Wed, 2016-11-09 at 19:04 +0000, Mark Rutland wrote:
-> > > 
-> > > 
-> > > If we don't have an interrupt-map on a PCI controller, why don't
-> > > we
-> > > instead log a message regarding that being missing, and give up
-> > > early?
-> > 
-> > Why ? It's legit to not support LSIs.
-> 
-> Sure; I had envisioned a message like:
-> 
-> 	pr_info("%s: no interrupt-map, INTx interrupts not possible\n",
-> 		pci_controller_name);
-> 
-> ... Which tells the user exaclty what we know, and doesn't imply
-> either
-> an error or the actual absence of HW support.
+On Tue, Oct 25, 2016 at 11:02 PM, Tony Lindgren <tony@atomide.com> wrote:
 
-Works for me.
+> Having the pin control framework call pin controller functions
+> before it's probe has finished is not nice as the pin controller
+> device driver does not yet have struct pinctrl_dev handle.
+>
+> Let's fix this issue by adding deferred work for hogs. This is
+> needed to be able to add pinctrl generic helper functions.
+>
+> Note that the pinctrl functions already take care of the necessary
+> locking.
+>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
-Cheers,
-Ben.
+I don't see why this is necessary?
+
+The hogging was placed inside pinctrl_register() so that any hogs
+would be taken before it returns, so nothing else can take it
+before the controller itself has the first chance. This semantic
+needs to be preserved I think.
+
+> +       schedule_delayed_work(&pctldev->hog_work,
+> +                                     msecs_to_jiffies(100));
+
+If we arbitrarily delay, something else can go in and take the
+pins used by the hogs before the pinctrl core? That is what
+we want to avoid.
+
+Hm, 100ms seems arbitrarily chosen BTW. Can it be 1 ms?
+1 ns?
+
+I'm pretty sure that whatever it is that needs to happen before
+the hog work runs can race with this delayed work under
+some circumstances (such as slow external expanders
+on i2c). It should be impossible for that to happen
+and I don't think it is?
+
+Yours,
+Linus Walleij
