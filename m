@@ -1,114 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: soc-core: adjust for graph on snd_soc_of_parse_audio_prefix" to the asoc tree
-Date: Fri, 11 Nov 2016 15:28:53 +0000
-Message-ID: <E1c5Dl7-00029Y-Md@finisterre>
-References: <87insr4c3i.wl%kuninori.morimoto.gx@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87insr4c3i.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [PATCH V2 05/10] mfd: da9061: MFD core support
+Date: Fri, 11 Nov 2016 15:50:12 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCE9AB0@SW-EX-MBX02.diasemi.com>
+References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
+ <bf02595c2fa32ba0c4311e2d480321b811fc9cf5.1477501000.git.stwiss.opensource@diasemi.com>
+ <20161111103734.GD13638@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161111103734.GD13638@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: soc-core: adjust for graph on snd_soc_of_parse_audio_prefix
-
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From b6defcca0a604129155ae472b116a2e1688d8995 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 11 Nov 2016 01:19:03 +0000
-Subject: [PATCH] ASoC: soc-core: adjust for graph on
- snd_soc_of_parse_audio_prefix
-
-It is assuming that the card related information is located on
-"card" node, but graph case doesn't have it.
-This patch adds node parameter to adjust for graph support
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- include/sound/soc.h  | 6 +++++-
- sound/soc/soc-core.c | 9 ++++++---
- 2 files changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 6dffa9540a30..346223b38e0d 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -1651,7 +1651,11 @@ int snd_soc_of_parse_tdm_slot(struct device_node *np,
- 			      unsigned int *rx_mask,
- 			      unsigned int *slots,
- 			      unsigned int *slot_width);
--void snd_soc_of_parse_audio_prefix(struct snd_soc_card *card,
-+#define snd_soc_of_parse_audio_prefix(card, codec_conf, of_node, propname) \
-+	snd_soc_of_parse_audio_prefix_from_node(card, NULL, codec_conf, \
-+						of_node, propname)
-+void snd_soc_of_parse_audio_prefix_from_node(struct snd_soc_card *card,
-+				   struct device_node *np,
- 				   struct snd_soc_codec_conf *codec_conf,
- 				   struct device_node *of_node,
- 				   const char *propname);
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 81b604151f26..e4c90806fa10 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -3595,15 +3595,18 @@ int snd_soc_of_parse_tdm_slot(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(snd_soc_of_parse_tdm_slot);
- 
--void snd_soc_of_parse_audio_prefix(struct snd_soc_card *card,
-+void snd_soc_of_parse_audio_prefix_from_node(struct snd_soc_card *card,
-+				   struct device_node *np,
- 				   struct snd_soc_codec_conf *codec_conf,
- 				   struct device_node *of_node,
- 				   const char *propname)
- {
--	struct device_node *np = card->dev->of_node;
- 	const char *str;
- 	int ret;
- 
-+	if (!np)
-+		np = card->dev->of_node;
-+
- 	ret = of_property_read_string(np, propname, &str);
- 	if (ret < 0) {
- 		/* no prefix is not error */
-@@ -3613,7 +3616,7 @@ void snd_soc_of_parse_audio_prefix(struct snd_soc_card *card,
- 	codec_conf->of_node	= of_node;
- 	codec_conf->name_prefix	= str;
- }
--EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_prefix);
-+EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_prefix_from_node);
- 
- int snd_soc_of_parse_audio_routing_from_node(struct snd_soc_card *card,
- 				   struct device_node *np,
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEgTm92ZW1iZXIgMjAxNiAxMDozOCwgTGVlIEpvbmVzIHdyb3RlOg0KPiANCj4gPiArc3Rh
+dGljIHN0cnVjdCByZXNvdXJjZSBkYTkwNjFfY29yZV9yZXNvdXJjZXNbXSA9IHsNCj4gPiArCURF
+RklORV9SRVNfTkFNRUQoREE5MDYxX0lSUV9WRERfV0FSTiwgMSwgIlZERF9XQVJOIiwgSU9SRVNP
+VVJDRV9JUlEpLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCByZXNvdXJjZSBk
+YTkwNjFfcmVndWxhdG9yc19yZXNvdXJjZXNbXSA9IHsNCj4gPiArCURFRklORV9SRVNfTkFNRUQo
+REE5MDYxX0lSUV9MRE9fTElNLCAxLCAiTERPX0xJTSIsIElPUkVTT1VSQ0VfSVJRKSwNCj4gPiAr
+fTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgcmVzb3VyY2UgZGE5MDYxX3RoZXJtYWxfcmVz
+b3VyY2VzW10gPSB7DQo+ID4gKwlERUZJTkVfUkVTX05BTUVEKERBOTA2MV9JUlFfVEVNUCwgMSwg
+IlRIRVJNQUwiLCBJT1JFU09VUkNFX0lSUSksDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMg
+c3RydWN0IHJlc291cmNlIGRhOTA2MV93ZHRfcmVzb3VyY2VzW10gPSB7DQo+ID4gKwlERUZJTkVf
+UkVTX05BTUVEKERBOTA2MV9JUlFfV0RHX1dBUk4sIDEsICJXRF9XQVJOIiwgSU9SRVNPVVJDRV9J
+UlEpLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCByZXNvdXJjZSBkYTkwNjFf
+b25rZXlfcmVzb3VyY2VzW10gPSB7DQo+ID4gKwlERUZJTkVfUkVTX05BTUVEKERBOTA2MV9JUlFf
+T05LRVksIDEsICJPTktFWSIsIElPUkVTT1VSQ0VfSVJRKSwNCj4gPiArfTsNCj4gDQo+IFRoZXNl
+IHNob3VsZCBhbCBiZTogREVGSU5FX1JFU19JT19OQU1FRCgpDQoNCkhhdmUgYWx0ZXJlZCB0aGVz
+ZSB0byBERUZJTkVfUkVTX0lSUV9OQU1FRCgpDQoNCj4gPiBAQCAtMTQyLDcgKzI1Nyw3IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDYyX2RldnNbXSA9IHsNCj4gPiAgCQkubmFt
+ZQkJPSAiZGE5MDYyLXdhdGNoZG9nIiwNCj4gPiAgCQkubnVtX3Jlc291cmNlcwk9IEFSUkFZX1NJ
+WkUoZGE5MDYyX3dkdF9yZXNvdXJjZXMpLA0KPiA+ICAJCS5yZXNvdXJjZXMJPSBkYTkwNjJfd2R0
+X3Jlc291cmNlcywNCj4gPiAtCQkub2ZfY29tcGF0aWJsZSAgPSAiZGxnLGRhOTA2Mi13ZHQiLA0K
+PiA+ICsJCS5vZl9jb21wYXRpYmxlICA9ICJkbGcsZGE5MDYyLXdhdGNoZG9nIiwNCj4gDQo+IFRo
+aXMgc2hvdWxkIGJlIGEgc2VwYXJhdGUgY2hhbmdlLg0KDQpPay4gcmV2ZXJ0ZWQuDQoNCj4gPiBA
+QCAtMjA4LDYgKzMyNCw3IEBAIHN0YXRpYyBpbnQgZGE5MDYyX2dldF9kZXZpY2VfdHlwZShzdHJ1
+Y3QgZGE5MDYyICpjaGlwKQ0KPiA+ICAJCWRldl9lcnIoY2hpcC0+ZGV2LCAiQ2Fubm90IHJlYWQg
+Y2hpcCBJRC5cbiIpOw0KPiA+ICAJCXJldHVybiAtRUlPOw0KPiA+ICAJfQ0KPiA+ICsNCj4gDQo+
+IFNuZWFreSENCg0KUmVtb3ZlZCB0aGUgd2hpdGVzcGFjZS4NCg==
