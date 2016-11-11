@@ -1,176 +1,159 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH 1/2] usb: dwc2: add amcc,dwc-otg support
-Date: Sat, 12 Nov 2016 00:12:31 +0100
-Message-ID: <3741942.Du5DzKuQeQ@debian64>
-References: <b1ec4a4425388cdee36be081971484db2a7d048a.1478897792.git.chunkeey@gmail.com> <1546251.ssrfyj8Loe@debian64> <caf17dcd-c7c5-e202-cde4-7c8702b5868b@synopsys.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] clocksource: update "fn" at
+ CLOCKSOURCE_OF_DECLARE() of nps400 timer
+Date: Sat, 12 Nov 2016 00:26:39 +0100
+Message-ID: <20161111232639.GA1619@mai>
+References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+ <1478454298-381-3-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <caf17dcd-c7c5-e202-cde4-7c8702b5868b@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Youn <John.Youn@synopsys.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478454298-381-3-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 11, 2016 2:20:42 PM CET John Youn wrote:
-> On 11/11/2016 2:05 PM, Christian Lamparter wrote:
-> > On Friday, November 11, 2016 1:22:16 PM CET John Youn wrote:
-> >> On 11/11/2016 12:59 PM, Christian Lamparter wrote:
-> >>> This patch adds support for the "amcc,usb-otg" device
-> >>> which is found in the PowerPC Canyonlands' dts.
-> >>>
-> >>> The device definition was added by:
-> >>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
-> >>> but without any driver support as the dwc2 driver wasn't
-> >>> available at that time.
-> >>>
-> >>> Note: The system can't use the generic "snps,dwc2" compatible
-> >>> because of the special ahbcfg configuration. The default
-> >>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
-> >>> when the USB and SATA is used concurrently.
-> >>
-> >> I don't want to add any more of these param structures to the driver
-> >> unless really necessary. We're trying to remove usage of them in favor
-> >> of using auto-detected defaults and device properties to override
-> >> them.
-> > Ok, thanks. I think that would work. I've attached an updated patch.
-> > Can it be applied/queued now? Or do you want me to resent it later?
-> > 
-> >> The AHB Burst is actually one of the ones we were going to do next
-> >> because our platform also doesn't work well with INCR4. In fact I'm
-> >> thinking of making the default INCR.
-> > Is that actually possible to change the default still? This would
-> > require to re-evaluate all existing archs/platforms that use 
-> > "snps,dwc2" for INCR16 compatibility. 
+On Sun, Nov 06, 2016 at 07:44:57PM +0200, Noam Camus wrote:
+> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 > 
-> INCR, not INCR16, but you're right, so we may not change it even
-> though though INCR is usually the right choice over INCR4.
-What about making a device-tree property?
-
-Recommended properties:
- - g-ahb-bursts : specifies the ahb bursts length, should be one of
-   "single", "INCRx", "INCR4", "INCR8", or "INCR16". If not specified
-   the safer but inefficient "INCR4" is used. The optimal setting is
-   "INCRx".
-
-Would this work? If so, I can make a patch over the weekend.
-> Anyways, with the binding, can't you just set the compatible string to
-> snps,dwc2?
-
-Ah, let me explain. I had a discussion with Mark Rutland and Rob Herring
-a while back about device-tree bindings.
-
-They made it very clear to me, that they don't want any generic "catch all
-compatible" strings:
-
-"Bindings should be for hardware (either specific device models, or for
-classes), and not for Linux drivers. The latter is subject to arbitrary
-changes while the former is not, as old hardware continues to exist and
-does not change while drivers get completely reworked." [0]
-
-Furthermore, this is an existing binding in kernel's canyonlands.dts [1]
-and this binding can't be easily changed. Rob Herring explained this in
-the context of the "basic-mmio-gpio" patch [2] when I was editing the dts
-to make them work with the changes I made:
-
-"You can't remove the old drivers as they are needed to work with 
-old dtbs, so there is no gain.
-
-You would need to match on existing compatibles such as
-moxa,moxart-gpio and provide a match data struct that has all the info
-you are adding here (e.g. data register offset). Then additionally you
-could add "basic-mmio-gpio" (I would drop "basic" part) and the
-additional data associated with it. But it has to be new properties,
-not changing properties. Changing the reg values doesn't work."
-
-So, for this to work with the existing canyonlands.dts, I need to have
-the "amcc,dwc-otg" compatible string.
-
-Of course, it would be great to hear from Rob Herring and/or Mark Rutland
-about this case.
-
-Regards,
-Christian
-
-[0] <https://patchwork.kernel.org/patch/8976221/>
-[1] <http://lxr.free-electrons.com/source/arch/powerpc/boot/dts/canyonlands.dts#L181>
-[2] <http://www.spinics.net/lists/devicetree/msg124538.html>
-
- 
-> > 
-> > From what I can tell based would be:
-> > bcm11351, bcm21664, bcm23550, exynos3250, stm32f429, rk3xxx,
-> > stratix10, meson-gxbb, rt3050 and some Altera FPGAs.
-> > 
-> >> If that's all you need then a devicetree binding should be enough
-> >> right?
-> > Yes. The device is working fine so far.
-> > 
-> > Regards,
-> > Christian
-> > 
-> > ---
-> > From 70dd4be016b89655a56bc8260f04683b50f07644 Mon Sep 17 00:00:00 2001
-> > From: Christian Lamparter <chunkeey@gmail.com>
-> > Date: Sun, 6 Nov 2016 00:39:24 +0100
-> > Subject: [PATCH] usb: dwc2: add amcc,dwc-otg support
-> > 
-> > This patch adds support for the "amcc,usb-otg" device
-> > which is found in the PowerPC Canyonlands' dts.
-> > 
-> > The device definition was added by:
-> > commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
-> > but without any driver support as the dwc2 driver wasn't
-> > available at that time.
-> > 
-> > Note: The system can't use the generic "snps,dwc2" compatible
-> > because of the special ahbcfg configuration. The default
-> > GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
-> > when the USB and SATA is used concurrently.
-> > 
-> > Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-> > Cc: John Youn <johnyoun@synopsys.com>
-> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> > ---
-> > v1->v2:
-> > 	- moved definitons to params.c
-> > 	- removed dma_enable / host_dma parameter
-> > 	- added dma_desc_fs_enable parameter
-> > v2->v3:
-> > 	- removed parameters
-> > 
-> > Please queue this patch until GAHBCFG_HBSTLEN_INCR16 is the default
-> > for ahbcfg.
-> > ---
-> >  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
-> >  drivers/usb/dwc2/params.c                      | 1 +
-> >  2 files changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > index 10a2a4b..6ccfe85 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > @@ -12,6 +12,7 @@ Required properties:
-> >    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
-> >    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
-> >    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
-> > +  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
-> >    - snps,dwc2: A generic DWC2 USB controller with default parameters.
-> >  - reg : Should contain 1 register range (address and length)
-> >  - interrupts : Should contain 1 interrupt
-> > diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> > index 64d5c66..9506ab0 100644
-> > --- a/drivers/usb/dwc2/params.c
-> > +++ b/drivers/usb/dwc2/params.c
-> > @@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
-> >  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
-> >  	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
-> >  	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
-> > +	{ .compatible = "amcc,dwc-otg", .data = NULL },
-> >  	{},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
-> > 
+> nps_setup_clocksource() should take node as only argument i.e.:
+> replace
+> int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
+> with
+> int __init nps_setup_clocksource(struct device_node *node)
 > 
+> This is also serve as preperation for next patch which adds support
+> for clockevents to nps400.
+> Specifically we add new function nps_get_timer_clk() to serve clocksource
+> and later clockevent registration.
 > 
+> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
+>  1 files changed, 37 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
+> index 70c149a..1533349 100644
+> --- a/drivers/clocksource/timer-nps.c
+> +++ b/drivers/clocksource/timer-nps.c
+> @@ -46,7 +46,33 @@
+>  /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
+>  static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
+>  
+> -static unsigned long nps_timer_rate;
+> +static int nps_get_timer_clk(struct device_node *node,
+> +			     unsigned long *timer_freq,
+> +			     struct clk **clk)
+
+	__init
+
+> +{
+> +	int ret;
+> +
+> +	*clk = of_clk_get(node, 0);
+> +	if (IS_ERR(*clk)) {
+> +		pr_err("timer missing clk");
+> +		return PTR_ERR(*clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(*clk);
+> +	if (ret) {
+> +		pr_err("Couldn't enable parent clk\n");
+> +		return ret;
+> +	}
+> +
+> +	*timer_freq = clk_get_rate(*clk);
+> +	if (!(*timer_freq)) {
+> +		pr_err("Couldn't clk get rate\n");
+> +		clk_disable_unprepare(*clk);
+> +		return *timer_freq;
+
+		^^^^^^^^^^^^^^^^^^
+return unsigned long and as zero.
+
+
+
+> +	}
+> +
+> +	return 0;
+> +}
+>  
+>  static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+>  {
+> @@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+>  	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
+>  }
+>  
+> -static int __init nps_setup_clocksource(struct device_node *node,
+> -					struct clk *clk)
+> +static int __init nps_setup_clocksource(struct device_node *node)
+>  {
+>  	int ret, cluster;
+> +	struct clk *clk;
+> +	unsigned long nps_timer1_freq;
+> +
+>  
+>  	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
+>  		nps_msu_reg_low_addr[cluster] =
+>  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
+> -				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
+> +				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
+>  
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret) {
+> -		pr_err("Couldn't enable parent clock\n");
+> +	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
+> +	if (ret)
+>  		return ret;
+> -	}
+>  
+> -	nps_timer_rate = clk_get_rate(clk);
+> -
+> -	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
+> -				    nps_timer_rate, 301, 32, nps_clksrc_read);
+> +	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
+> +				    nps_timer1_freq, 301, 32, nps_clksrc_read);
+
+301 ?
+
+>  	if (ret) {
+>  		pr_err("Couldn't register clock source.\n");
+>  		clk_disable_unprepare(clk);
+> @@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
+>  	return ret;
+>  }
+>  
+> -static int __init nps_timer_init(struct device_node *node)
+> -{
+> -	struct clk *clk;
+> -
+> -	clk = of_clk_get(node, 0);
+> -	if (IS_ERR(clk)) {
+> -		pr_err("Can't get timer clock.\n");
+> -		return PTR_ERR(clk);
+> -	}
+> -
+> -	return nps_setup_clocksource(node, clk);
+> -}
+> -
+>  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
+> -		       nps_timer_init);
+> +		       nps_setup_clocksource);
+> -- 
+> 1.7.1
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
