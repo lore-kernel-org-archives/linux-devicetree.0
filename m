@@ -1,73 +1,102 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C
- bus bitbang for HDMI
-Date: Thu, 10 Nov 2016 20:27:50 -0800
-Message-ID: <b68c1a07b6b5f027a6519c29b90217c1@agner.ch>
-References: <2263d508999ada9476268138b2922702eb50131f.1474260360.git.maitysanchayan@gmail.com>
- <20161022032559.GL30578@tiger>
- <3d2b6dfd-c03c-e635-8dc1-2dc9ac454f5a@mentor.com>
- <20161108173315.GA16082@Sanchayan-Arch.localdomain>
- <57268103e8fabf344723eae99b45ec7d@agner.ch>
- <7eb3df71-6d1a-006a-cc4c-83ff8df3c42c@mentor.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
+Date: Fri, 11 Nov 2016 15:12:57 +1030
+Message-ID: <CACPK8Xc=AcA=d+O++W07ki+KkCxA86EnXj7dqTRobTpb9WQbUw@mail.gmail.com>
+References: <1478688149-4554-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7eb3df71-6d1a-006a-cc4c-83ff8df3c42c@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, maitysanchayan@gmail.com, marcel.ziswiler@toradex.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478688149-4554-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-10 10:29, Vladimir Zapolskiy wrote:
-> Hi Stefan, Philipp,
-> 
-> On 11/09/2016 02:50 AM, Stefan Agner wrote:
->> On 2016-11-08 09:33, maitysanchayan@gmail.com wrote:
->>> Hello Shawn,
->>> 
->>> On 16-10-22 15:43:04, Vladimir Zapolskiy wrote:
->>>> Hi Shawn,
->>>> 
->>>> On 10/22/2016 06:25 AM, Shawn Guo wrote:
->>>>> On Mon, Sep 19, 2016 at 10:41:51AM +0530, Sanchayan Maity wrote:
->>>>>> Remove the use of DDC I2C bus bitbang to support reading of EDID
->>>>>> and rely on support from internal HDMI I2C master controller instead.
->>>>>> As a result remove the device tree property ddc-i2c-bus.
->>>>>> 
->>>>>> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
->>>>> 
->>>>> I think that the dw-hdmi i2c support [1] is a prerequisite of this
->>>>> patch.  I do not see it lands on v4.9-rc1.  Or am I missing something?
->>>>> 
->>>>> Shawn
->>>>> 
->>>>> [1] https://patchwork.kernel.org/patch/9296883/
->>>>> 
->>>> 
->>>> I'm adding Philipp to Cc, since he is the last one who tested the change
->>>> and helped me to push the change to the mainline:
->>>> 
->>>>   https://lists.freedesktop.org/archives/dri-devel/2016-September/118569.html
->>>> 
->>>> The problem is that there is no official DW HDMI bridge maintainer, may be
->>>> you can review the change, and if you find it satisfactory push it through
->>>> ARM/iMX tree.
->>> 
->>> Shawn, is it okay if that patch goes through your ARM/iMX tree?
->> 
->> I don't think it makes sense that the DRM bridge changes go through
->> Shawn's tree. Dave should merge Philipps pull request...
->> 
-> 
-> Philipp, do you mind to submit a rebased pull request one more time?
-> 
+On Wed, Nov 9, 2016 at 9:12 PM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
+> This driver adds mtd support for spi-nor attached to either or both of
+> the Firmware Memory Controller or the SPI Flash Controller (AST2400
+> only).
+>
+> The SMC controllers on the Aspeed AST2500 SoC are very similar to the
+> ones found on the AST2400. The differences are on the number of
+> supported flash modules and their default mappings in the SoC address
+> space.
+>
+> The Aspeed AST2500 has one SPI controller for the BMC firmware and two
+> for the host firmware. All controllers have now the same set of
+> registers compatible with the AST2400 FMC controller and the legacy
+> 'SMC' controller is fully gone.
+>
+> Each controller has a memory range on which it maps its flash module
+> slaves. Each slave is assigned a memory window for its mapping that
+> can be changed at bootime with the Segment Address Register.
+>
+> Each SPI flash slave can then be accessed in two modes: Command and
+> User. When in User mode, accesses to the memory segment of the slaves
+> are translated in SPI transfers. When in Command mode, the HW
+> generates the SPI commands automatically and the memory segment is
+> accessed as if doing a MMIO.
+>
+> Currently, only the User mode is supported. Command mode needs a
+> little more work to check that the memory window on the AHB bus fits
+> the module size.
+>
+> Based on previous work from Milton D. Miller II <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+>
+> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+>  Tested on:
+>
+>  * OpenPOWER Palmetto (AST2400) with
+>         FMC controller : n25q256a
+>         SPI controller : mx25l25635e and n25q512ax3
+>
+>  * Evaluation board (AST2500) with
+>         FMC controller : w25q256
+>         SPI controller : w25q256
+>
+>  * OpenPOWER Witherspoon (AST2500) with
+>         FMC controller : mx25l25635e * 2
+>         SPI controller : mx66l1g45g
 
-You probably saw it, Dave merged it today in his drm-next branch:
-https://cgit.freedesktop.org/~airlied/linux/?h=drm-next
+It's also in use on the Zaius and Barreleye OpenBMC systems.
 
-I guess with that Shawn can go ahead and merge this patchset for next
-too...?
+In that respect, I would like to see this merged once it's deemed
+ready by the mtd maintainers. We can follow up with the extra features
+in future patches.
 
+I've reviewed and tested this as Cedric and Milton have developed it,
+so please add:
+
+Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+
+Cheers,
+
+Joel
+
+>
+>  Changes since v2:
+>
+>  - added a set4b ops to handle difference in the controllers
+>  - simplified the IO routines
+>  - prepared for fast read using dummy cycles
+>
+>  Work in progress:
+>
+>  - read optimization using higher SPI clock frequencies
+>  - command mode to direct reads from AHB
+>  - DMA support
+>
+>  .../devicetree/bindings/mtd/aspeed-smc.txt         |  72 ++
+>  drivers/mtd/spi-nor/Kconfig                        |  12 +
+>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>  drivers/mtd/spi-nor/aspeed-smc.c                   | 783 +++++++++++++++=
+++++++
+>  4 files changed, 868 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/aspeed-smc.txt
+>  create mode 100644 drivers/mtd/spi-nor/aspeed-smc.c
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
