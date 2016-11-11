@@ -1,71 +1,48 @@
 From: Tony Lindgren <tony@atomide.com>
 Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
-Date: Fri, 11 Nov 2016 12:26:50 -0800
-Message-ID: <20161111202650.GI7138@atomide.com>
+Date: Fri, 11 Nov 2016 12:32:11 -0800
+Message-ID: <20161111203210.GJ7138@atomide.com>
 References: <20161025210221.9150-1-tony@atomide.com>
  <20161025210221.9150-2-tony@atomide.com>
  <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
+ <20161111202650.GI7138@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20161111202650.GI7138@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij@linaro.org> [161111 12:17]:
-> On Tue, Oct 25, 2016 at 11:02 PM, Tony Lindgren <tony@atomide.com> wrote:
+* Tony Lindgren <tony@atomide.com> [161111 12:27]:
+> * Linus Walleij <linus.walleij@linaro.org> [161111 12:17]:
+> > On Tue, Oct 25, 2016 at 11:02 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > 
+> > > Having the pin control framework call pin controller functions
+> > > before it's probe has finished is not nice as the pin controller
+> > > device driver does not yet have struct pinctrl_dev handle.
+> > >
+> > > Let's fix this issue by adding deferred work for hogs. This is
+> > > needed to be able to add pinctrl generic helper functions.
+> > >
+> > > Note that the pinctrl functions already take care of the necessary
+> > > locking.
+> > >
+> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > 
+> > I don't see why this is necessary?
 > 
-> > Having the pin control framework call pin controller functions
-> > before it's probe has finished is not nice as the pin controller
-> > device driver does not yet have struct pinctrl_dev handle.
-> >
-> > Let's fix this issue by adding deferred work for hogs. This is
-> > needed to be able to add pinctrl generic helper functions.
-> >
-> > Note that the pinctrl functions already take care of the necessary
-> > locking.
-> >
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> 
-> I don't see why this is necessary?
+> It's needed because the pin controller driver has not yet
+> finished it's probe at this point. We end up calling functions
+> in the device driver where no struct pinctrl_dev is yet known
+> to the driver. Asking a device driver to do something before
+> it's probe is done does not quite follow the Linux driver model :)
 
-It's needed because the pin controller driver has not yet
-finished it's probe at this point. We end up calling functions
-in the device driver where no struct pinctrl_dev is yet known
-to the driver. Asking a device driver to do something before
-it's probe is done does not quite follow the Linux driver model :)
-
-> The hogging was placed inside pinctrl_register() so that any hogs
-> would be taken before it returns, so nothing else can take it
-> before the controller itself has the first chance. This semantic
-> needs to be preserved I think.
-> 
-> > +       schedule_delayed_work(&pctldev->hog_work,
-> > +                                     msecs_to_jiffies(100));
-> 
-> If we arbitrarily delay, something else can go in and take the
-> pins used by the hogs before the pinctrl core? That is what
-> we want to avoid.
-> 
-> Hm, 100ms seems arbitrarily chosen BTW. Can it be 1 ms?
-> 1 ns?
-
-Yeah well seems like it should not matter but the race we need
-to remove somehow.
-
-> I'm pretty sure that whatever it is that needs to happen before
-> the hog work runs can race with this delayed work under
-> some circumstances (such as slow external expanders
-> on i2c). It should be impossible for that to happen
-> and I don't think it is?
-
-Yes it's totally possible even with delay set to 0.
-
-Maybe we could add some trigger on the first consumer request
-and if that does not happen use the timer?
+To clarify, that's an issue with multiple instances of the same
+driver probing as there's no static pointer to driver specific
+data.
 
 Regards,
 
