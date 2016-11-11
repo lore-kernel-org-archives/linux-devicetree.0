@@ -1,11 +1,13 @@
 From: <christopher.spinrath@rwth-aachen.de>
-Subject: [PATCH 1/2] ARM: dts: imx6q-cm-fx6: fix fec pinctrl
-Date: Fri, 11 Nov 2016 16:59:38 +0100
-Message-ID: <6cd823201b9f4cde8de8eddc910f39ce@rwthex-s1-b.rwth-ad.de>
+Subject: [PATCH 2/2] ARM: dts: imx6q-utilite-pro: i2c1 is muxed
+Date: Fri, 11 Nov 2016 16:59:39 +0100
+Message-ID: <9380efa7a5b749ee8b9c6433f925b20b@rwthex-s1-b.rwth-ad.de>
+References: <20161111155939.446-1-christopher.spinrath@rwth-aachen.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161111155939.446-1-christopher.spinrath@rwth-aachen.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,28 +23,91 @@ List-Id: devicetree@vger.kernel.org
 
 From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 
-According to the schematics of CompuLab's sbc-fx6 baseboard and the
-vendor devicetree GPIO_16 is *not* muxed to ENET_REF_CLK but to SPDIF_IN.
+It turns out that the i2c1 adapter is connected to a multiplexer
+controlled by a gpio line. The first (default) mux option connects
+i2c1 to a bus connected to the already known peripherals. The other
+one connects the adapter to the ddc pins of the DVI port.
 
-Remove the wrong pinctrl setting.
-
-Fixes: 682d055e6ac5 ("ARM: dts: Add initial support for cm-fx6.")
 Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 ---
- arch/arm/boot/dts/imx6q-cm-fx6.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/imx6q-utilite-pro.dts | 51 ++++++++++++++++++++++++++-------
+ 1 file changed, 40 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index 59bc5a4..a150bca 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -183,7 +183,6 @@
- 			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
- 			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
- 			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
--			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
+diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+index 6199063..246979a 100644
+--- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
++++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+@@ -71,6 +71,40 @@
+ 			gpio-key,wakeup;
+ 		};
+ 	};
++
++	i2cmux {
++		compatible = "i2c-mux-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c1mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mux-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++		i2c-parent = <&i2c1>;
++
++		i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "at24,24c02";
++				reg = <0x50>;
++				pagesize = <16>;
++			};
++
++			em3027: rtc@56 {
++				compatible = "emmicro,em3027";
++				reg = <0x56>;
++			};
++		};
++
++		i2c_dvi_ddc: i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
+ };
+ 
+ &hdmi {
+@@ -82,17 +116,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+-
+-	eeprom@50 {
+-		compatible = "at24,24c02";
+-		reg = <0x50>;
+-		pagesize = <16>;
+-	};
+-
+-	em3027: rtc@56 {
+-		compatible = "emmicro,em3027";
+-		reg = <0x56>;
+-	};
+ };
+ 
+ &i2c2 {
+@@ -115,6 +138,12 @@
  		>;
  	};
  
++	pinctrl_i2c1mux: i2c1muxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_i2c2: i2c2grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
 -- 
 2.10.2
