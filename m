@@ -1,185 +1,204 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
-Date: Fri, 11 Nov 2016 15:00:34 +0100
-Message-ID: <fb15b6f3-6c5c-0922-8655-aabd4799d158@xs4all.nl>
-References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1805711.Tm0TqcXx1h@avalon> <8438b944-216e-3237-c312-92a674fd4541@xs4all.nl>
- <1980094.XQVzRRgZQ8@avalon>
+From: Madalin Bucur <madalin.bucur@nxp.com>
+Subject: [PATCH 1/3] powerpc/fsl/dts: add QMan and BMan portal nodes on
+ t1023rdb
+Date: Fri, 11 Nov 2016 15:59:42 +0200
+Message-ID: <1478872784-630-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: madalin.bucur@nxp.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1980094.XQVzRRgZQ8@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Antti Palosaari <crope@iki.fi>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org
+Cc: oss@buserror.net, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2016 02:57 PM, Laurent Pinchart wrote:
-> Hi Hans,
-> 
-> On Friday 11 Nov 2016 14:53:58 Hans Verkuil wrote:
->> On 11/10/2016 09:08 AM, Laurent Pinchart wrote:
->>> Antti, Hans, ping ? Please see below.
->>>
->>> On Friday 04 Nov 2016 09:23:29 Ramesh Shanmugasundaram wrote:
->>>>> On 11/02/2016 10:58 PM, Laurent Pinchart wrote:
->>>>>> On Wednesday 02 Nov 2016 09:00:00 Ramesh Shanmugasundaram wrote:
->>>>>>>>> On Wednesday 12 Oct 2016 15:10:29 Ramesh Shanmugasundaram wrote:
->>>>>>>>>> This patch adds documentation for the three new SDR formats
->>>>>>>>>>
->>>>>>>>>> V4L2_SDR_FMT_SCU16BE
->>>>>>>>>> V4L2_SDR_FMT_SCU18BE
->>>>>>>>>> V4L2_SDR_FMT_SCU20BE
->>>>>>>
->>>>>>> [snip]
->>>>>>>
->>>>>>>>>> +
->>>>>>>>>> +       -  start + 0:
->>>>>>>>>> +
->>>>>>>>>> +       -  I'\ :sub:`0[D13:D6]`
->>>>>>>>>> +
->>>>>>>>>> +       -  I'\ :sub:`0[D5:D0]`
->>>>>>>>>> +
->>>>>>>>>> +    -  .. row 2
->>>>>>>>>> +
->>>>>>>>>> +       -  start + buffer_size/2:
->>>>>>>>>> +
->>>>>>>>>> +       -  Q'\ :sub:`0[D13:D6]`
->>>>>>>>>> +
->>>>>>>>>> +       -  Q'\ :sub:`0[D5:D0]`
->>>>>>>>>
->>>>>>>>> The format looks planar, does it use one V4L2 plane (as does NV12)
->>>>>>>>> or two V4L2 planes (as does NV12M) ? Same question for the other
->>>>>>>>> formats.
->>>>>>>>
->>>>>>>> Thank you for bringing up this topic. This is one of the key design
->>>>>>>> dilemma.
->>>>>>>>
->>>>>>>> The I & Q data for these three SDR formats comes from two different
->>>>>>>> DMA channels and hence two separate pointers -> we could say it is
->>>>>>>> v4l2 multi- planar. Right now, I am making it look like a single
->>>>>>>> plane by presenting the data in one single buffer ptr.
->>>>>>>>
->>>>>>>> For e.g. multi-planar SC16 format would look something like this
->>>>>>>>
->>>>>>>> <------------------------32bits---------------------->
->>>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 0
->>>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 4
->>>>>>>> ...
->>>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 0
->>>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 4
->>>>>>>>
->>>>>>>> My concerns are
->>>>>>>>
->>>>>>>> 1) These formats are not a standard as the video "Image Formats".
->>>>>>>> These formats are possible when we use DRIF + MAX2175 combination.
->>>>>>>> If we interface with a different tuner vendor, the above format(s)
->>>>>>>> MAY/MAY NOT be re-usable. We do not know at this point. This is the
->>>>>>>> main open item for discussion in the cover letter.
->>>>>>
->>>>>> If the formats are really device-specific then they should be
->>>>>> documented accordingly and not made generic.
->>>>>>
->>>>>>>> 2) MPLANE support within V4L2 seems specific to video. Please
->>>>>>>> correct me if this is wrong interpretation.
->>>>>>>>
->>>>>>>> - struct v4l2_format contains v4l2_sdr_format and
->>>>>>>> v4l2_pix_format_mplane as members of union. Should I create a new
->>>>>>>> v4l2_sdr_format_mplane? If I have to use v4l2_pix_format_mplane most
->>>>>>>> of the video specific members would be unused (it would be similar
->>>>>>>> to using v4l2_pix_format itself instead of v4l2_sdr_format)?
->>>>>>
->>>>>> I have no answer to that question as I'm not familiar with SDR. Antti,
->>>>>> you've added v4l2_sdr_format to the API, what's your opinion ? Hans,
->>>>>> as you've acked the patch, your input would be appreciated as well.
->>>>>
->>>>> If I understood correctly this hardware provides I and Q samples via
->>>>> different channels and driver now combines those channels as a
->>>>> sequential
->>>>> IQ sample pairs.
->>>>
->>>> The driver combines the two buffer ptrs and present as one single buffer.
->>>> For a buffer of size 200
->>>>
->>>> ptr + 0   : I I I I ... I
->>>> ptr + 100 : Q Q Q Q ... Q
->>>>
->>>>> I have never seen any other than hw which provides IQ IQ IQ IQ ... IQ.
->>>>
->>>> There are some modes where this h/w combo can also do IQ IQ IQ pattern.
->>>> Those modes are not added in the RFC patchset.
->>>>
->>>>> This is
->>>>> I I I I ... I
->>>>> Q Q Q Q ... Q
->>>>> I am not very familiar with planars, but it sounds like it is correct
->>>>> approach. So I think should be added rather than emulate packet
->>>>> sequential format.
->>>>
->>>> My understanding of V4L2 MPLANE constructs is limited to a quick code
->>>> read
->>>> only. At this point MPLANE support seems specific to video. SDR is
->>>> defined
->>>> as separate format like v4l2_pix_format. Questions would be - should we
->>>> define new SDR_MPLANE? or merge SDR format with pix format & reuse
->>>> existing
->>>> MPLANE with some SDR extensions (if possible)? These seem big design
->>>> decisions. Any suggestions please?
->>>>
->>>> For my use case, MPLANE support does not seem to add significant benefit
->>>> except it may be syntactically correct. I am doing cyclic DMA with a
->>>> small
->>>> set of h/w buffers and copying each stage to one mmapped vmalloc
->>>> vb2_buffer
->>>> at two offsets. If we add MPLANE support, it can be two non-contiguous
->>>> buffer pointers.
->>>>
->>>>>>>> - The above decision (accomodate SDR & MPLANE) needs to be
->>>>>>>> propagated across the framework. Is this the preferred approach?
->>>>>>>>
->>>>>>>> It goes back to point (1). As of today, the change set for this
->>>>>>>> combo (DRIF+MAX2175) introduces new SDR formats only. Should it add
->>>>>>>> further SDR+MPLANE support to the framework as well?
->>>>>>>>
->>>>>>>> I would appreciate your suggestions on this regard.
->>
->> Some terminology first:
->>
->> Planar formats separate the data into different memory areas: in this case
->> one part is all I and one part is all Q. This as opposed to interleaved
->> formats (IQIQIQIQ....).
->>
->> As long as both planes fit in the same buffer all is fine. Since that is
->> the case here there is no need to introduce a new MPLANE API.
->>
->> The MPLANE API was added for video to handle cases where the two planes
->> had to be in two different non-contiguous buffers.
-> 
-> Not only that, it can also be used for cases where storing the two planes in 
-> separate buffers can be beneficial, even if a single contiguous buffer could 
-> work.
-> 
->> So instead of passing one buffer pointer, you need to pass two or more
->> buffer pointers.
->>
->> In hindsight we should have called it the MBUFFER API.
-> 
-> The name was badly chosen, yes.
-> 
->> Oh well...
->>
->> Anyway, since there is no problem here apparently to keep both planes
->> in one buffer there is also no need to introduce a SDR_MPLANE.
-> 
-> The question here is whether there could be a benefit in separating I and Q 
-> data in two buffers compared to storing them in the same buffer.
-> 
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/t1023rdb.dts      |  27 ++++++++
+ arch/powerpc/boot/dts/fsl/t1023si-post.dtsi | 103 ++++++++++++++++++++++++++++
+ 2 files changed, 130 insertions(+)
 
-The MPLANE API is very messy and introducing something like SDR_MPLANE is not
-something I would promote. If we want that, then we should first make a new
-v4l2_buffer struct that simplifies MPLANE handling (we discussed that before).
-
-Regards,
-
-	Hans
+diff --git a/arch/powerpc/boot/dts/fsl/t1023rdb.dts b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
+index 2975762..24c9de3 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023rdb.dts
++++ b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
+@@ -41,6 +41,25 @@
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&mpic>;
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		bman_fbpr: bman-fbpr {
++			size = <0 0x1000000>;
++			alignment = <0 0x1000000>;
++		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
++		};
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
++	};
++
+ 	ifc: localbus@ffe124000 {
+ 		reg = <0xf 0xfe124000 0 0x2000>;
+ 		ranges = <0 0 0xf 0xe8000000 0x08000000
+@@ -72,6 +91,14 @@
+ 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
+ 	};
+ 
++	bportals: bman-portals@ff4000000 {
++		ranges = <0x0 0xf 0xf4000000 0x2000000>;
++	};
++
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
+ 		reg = <0xf 0xfe000000 0 0x00001000>;
+diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+index 6e0b489..da2894c 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+@@ -34,6 +34,21 @@
+ 
+ #include <dt-bindings/thermal/thermal.h>
+ 
++&bman_fbpr {
++	compatible = "fsl,bman-fbpr";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
+ &ifc {
+ 	#address-cells = <2>;
+ 	#size-cells = <1>;
+@@ -180,6 +195,92 @@
+ 	};
+ };
+ 
++&bportals {
++	#address-cells = <0x1>;
++	#size-cells = <0x1>;
++	compatible = "simple-bus";
++
++	bman-portal@0 {
++		cell-index = <0x0>;
++		compatible = "fsl,bman-portal";
++		reg = <0x0 0x4000>, <0x1000000 0x1000>;
++		interrupts = <105 2 0 0>;
++	};
++	bman-portal@4000 {
++		cell-index = <0x1>;
++		compatible = "fsl,bman-portal";
++		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
++		interrupts = <107 2 0 0>;
++	};
++	bman-portal@8000 {
++		cell-index = <2>;
++		compatible = "fsl,bman-portal";
++		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
++		interrupts = <109 2 0 0>;
++	};
++	bman-portal@c000 {
++		cell-index = <0x3>;
++		compatible = "fsl,bman-portal";
++		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
++		interrupts = <111 2 0 0>;
++	};
++	bman-portal@10000 {
++		cell-index = <0x4>;
++		compatible = "fsl,bman-portal";
++		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
++		interrupts = <113 2 0 0>;
++	};
++	bman-portal@14000 {
++		cell-index = <0x5>;
++		compatible = "fsl,bman-portal";
++		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
++		interrupts = <115 2 0 0>;
++	};
++};
++
++&qportals {
++	#address-cells = <0x1>;
++	#size-cells = <0x1>;
++	compatible = "simple-bus";
++
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
++		reg = <0x0 0x4000>, <0x1000000 0x1000>;
++		interrupts = <104 0x2 0 0>;
++		cell-index = <0x0>;
++	};
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
++		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
++		interrupts = <106 0x2 0 0>;
++		cell-index = <0x1>;
++	};
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
++		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
++		interrupts = <108 0x2 0 0>;
++		cell-index = <0x2>;
++	};
++	qportal3: qman-portal@c000 {
++		compatible = "fsl,qman-portal";
++		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
++		interrupts = <110 0x2 0 0>;
++		cell-index = <0x3>;
++	};
++	qportal4: qman-portal@10000 {
++		compatible = "fsl,qman-portal";
++		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
++		interrupts = <112 0x2 0 0>;
++		cell-index = <0x4>;
++	};
++	qportal5: qman-portal@14000 {
++		compatible = "fsl,qman-portal";
++		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
++		interrupts = <114 0x2 0 0>;
++		cell-index = <0x5>;
++	};
++};
++
+ &soc {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+@@ -413,6 +514,8 @@
+ 	};
+ 
+ /include/ "qoriq-sec5.0-0.dtsi"
++/include/ "qoriq-qman3.dtsi"
++/include/ "qoriq-bman1.dtsi"
+ 
+ /include/ "qoriq-fman3l-0.dtsi"
+ /include/ "qoriq-fman3-0-10g-0-best-effort.dtsi"
+-- 
+2.1.0
