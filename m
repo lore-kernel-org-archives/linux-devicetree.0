@@ -1,87 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Fri, 11 Nov 2016 16:46:10 +0000
-Message-ID: <20161111164610.rocq76fopcxjkafa@sirena.org.uk>
-References: <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
- <20160112143100.GA14628@rob-hp-laptop>
- <20160115085734.GG4581@lukather>
- <20160117000434.GB7774@rob-hp-laptop>
- <20160118162538.GH6588@sirena.org.uk>
- <20160121154649.GE3997@lukather>
- <20160121162802.GL6588@sirena.org.uk>
- <20160205143328.GD31506@lukather>
- <20160205153258.GW4455@sirena.org.uk>
- <20161107154738.ewliwzx5plams4ni@lukather>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 1/3] ARM: sunxi: add support for H2+ SoC
+Date: Sat, 12 Nov 2016 00:46:52 +0800
+Message-ID: <20161111164654.15273-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k3zmxocbcm4bzw5v"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161107154738.ewliwzx5plams4ni@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBGXMS7AQKGQEGZNFA5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Allwinner H2+ is a quad-core Cortex-A7 SoC.
 
---k3zmxocbcm4bzw5v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It is very like H3, that they share the same SoC ID (0x1680), and H3
+memory maps as well as drivers works well on the SoC.
 
-On Mon, Nov 07, 2016 at 04:47:38PM +0100, Maxime Ripard wrote:
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ Documentation/arm/sunxi/README                  | 4 ++++
+ Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+ arch/arm/mach-sunxi/sunxi.c                     | 1 +
+ 3 files changed, 6 insertions(+)
 
-> Since regulator_get returns a struct regulator pointer, it felt
-> logical to try to add the list of parent regulators to it, especially
-> as this structure is per-consumer, and different consumers might have
-> different combinations of regulators.
-
-> However, this structure embeds a pointer to a struct regulator_dev,
-> which seems to model the regulator itself, but will also contain
-> pointer to the struct regulator, probably to model its parent? I guess
-
-It'd be a lot easier to follow this if you named the fields...  The rdev
-in the struct regulator is indeed the physical device.  The struct
-regulator called supply in struct regulator_dev is indeed the parent
-regulator.
-
-> my first question would be do we care about nesting? or having a
-> regulator with multiple parents?
-
-Well, it seems that your use case here is multiple parents so I guess we
-do care about it.  :)
-
-> It also contains the constraints on each regulator, which might or
-> might not be different for each of the coupled regulators, but I'm
-> guessing the couple might have contraints of its own too I guess. Is
-> it something that might happen? Should we care about it?
-
-I can't see how one could physically have constraints that didn't apply
-to both parents.
-
-> And finally, my real question is, do we want to aggregate them in
-> struct regulator, at the consumer level, which might make the more
-> sense, or do we want to create an intermediate regulator internally?
-> What is your take on this?
-
-My initial thought without having tried to implement this is that doing
-things in an intermediate regulator might do a better job of
-encapsulating things it if it works out but I've got a feeling that it's
-not going to work out well and that therefore doing it in the consumer
-with multiple rdevs will be better.  But really either approach is fine
-if it doesn't look horrible.
-
---k3zmxocbcm4bzw5v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJYJfXRAAoJECTWi3JdVIfQEjcH/3G5MKL7k2kNFgr0PTOosQ0/
-9cEIonjTDyP3kRX3JbtnFHp19DR+U88v0nYtNF8Qjzll0ukrR5xUWNk07DFNcFhO
-v6EgXnSxh+Z9v4O20xqK7aM3R3V7ExpGeFo1zeX3CBbxDaJEXxWMLUyjzkc2azU2
-5KEcVFuX1EmMm3SMMjPHq4/uJ+TRGCBgWsBOg+tb6wL5NcrqxI6c5ZGSKOSS+mfd
-vbCJj3kPAYHCYqkNRh5BbSFIRObq+BrAFlgc5KWm658LPvvks1xzoo7lN5LtMPzl
-a7/3DmtoMlO7Giwm4ca20cpzcW7n23FlHP3XS6fb0ZSXiVwVYRZIi+eAbxu9mBo=
-=2oVb
------END PGP SIGNATURE-----
-
---k3zmxocbcm4bzw5v--
+diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+index cd02433..1fe4d99c 100644
+--- a/Documentation/arm/sunxi/README
++++ b/Documentation/arm/sunxi/README
+@@ -63,6 +63,10 @@ SunXi family
+         + User Manual
+           http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
+ 
++      - Allwinner H2+ (sun8i)
++        + No document available now, but is known to be working properly with
++          H3 drivers and memory map.
++
+       - Allwinner H3 (sun8i)
+         + Datasheet
+           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+index 3975d0a..0c0f277 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.txt
++++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+@@ -13,5 +13,6 @@ using one of the following compatible strings:
+   allwinner,sun8i-a33
+   allwinner,sun8i-a83t
+   allwinner,sun8i-h3
++  allwinner,sun8i-h2plus
+   allwinner,sun9i-a80
+   nextthing,gr8
+diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+index 2e2bde2..3647ad7 100644
+--- a/arch/arm/mach-sunxi/sunxi.c
++++ b/arch/arm/mach-sunxi/sunxi.c
+@@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] = {
+ 	"allwinner,sun8i-a23",
+ 	"allwinner,sun8i-a33",
+ 	"allwinner,sun8i-a83t",
++	"allwinner,sun8i-h2plus",
+ 	"allwinner,sun8i-h3",
+ 	NULL,
+ };
+-- 
+2.10.1
