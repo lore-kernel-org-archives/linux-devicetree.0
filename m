@@ -1,102 +1,161 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
-Date: Fri, 11 Nov 2016 15:12:57 +1030
-Message-ID: <CACPK8Xc=AcA=d+O++W07ki+KkCxA86EnXj7dqTRobTpb9WQbUw@mail.gmail.com>
-References: <1478688149-4554-1-git-send-email-clg@kaod.org>
+From: Antti Palosaari <crope@iki.fi>
+Subject: Re: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
+Date: Fri, 11 Nov 2016 06:54:43 +0200
+Message-ID: <64f34fa1-b2d3-cabf-41b7-9bad88acc972@iki.fi>
+References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <9ec35a3a-02a7-8067-8f7c-23243de8456a@iki.fi>
+ <SG2PR06MB103893781A3AC3FAB8389DB8C3A20@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <1805711.Tm0TqcXx1h@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478688149-4554-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1805711.Tm0TqcXx1h@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 9, 2016 at 9:12 PM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
-> This driver adds mtd support for spi-nor attached to either or both of
-> the Firmware Memory Controller or the SPI Flash Controller (AST2400
-> only).
->
-> The SMC controllers on the Aspeed AST2500 SoC are very similar to the
-> ones found on the AST2400. The differences are on the number of
-> supported flash modules and their default mappings in the SoC address
-> space.
->
-> The Aspeed AST2500 has one SPI controller for the BMC firmware and two
-> for the host firmware. All controllers have now the same set of
-> registers compatible with the AST2400 FMC controller and the legacy
-> 'SMC' controller is fully gone.
->
-> Each controller has a memory range on which it maps its flash module
-> slaves. Each slave is assigned a memory window for its mapping that
-> can be changed at bootime with the Segment Address Register.
->
-> Each SPI flash slave can then be accessed in two modes: Command and
-> User. When in User mode, accesses to the memory segment of the slaves
-> are translated in SPI transfers. When in Command mode, the HW
-> generates the SPI commands automatically and the memory segment is
-> accessed as if doing a MMIO.
->
-> Currently, only the User mode is supported. Command mode needs a
-> little more work to check that the memory window on the AHB bus fits
-> the module size.
->
-> Based on previous work from Milton D. Miller II <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->
-> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> ---
->  Tested on:
->
->  * OpenPOWER Palmetto (AST2400) with
->         FMC controller : n25q256a
->         SPI controller : mx25l25635e and n25q512ax3
->
->  * Evaluation board (AST2500) with
->         FMC controller : w25q256
->         SPI controller : w25q256
->
->  * OpenPOWER Witherspoon (AST2500) with
->         FMC controller : mx25l25635e * 2
->         SPI controller : mx66l1g45g
+Hello
 
-It's also in use on the Zaius and Barreleye OpenBMC systems.
-
-In that respect, I would like to see this merged once it's deemed
-ready by the mtd maintainers. We can follow up with the extra features
-in future patches.
-
-I've reviewed and tested this as Cedric and Milton have developed it,
-so please add:
-
-Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-
-Cheers,
-
-Joel
-
+On 11/10/2016 10:08 AM, Laurent Pinchart wrote:
+> Antti, Hans, ping ? Please see below.
 >
->  Changes since v2:
+> On Friday 04 Nov 2016 09:23:29 Ramesh Shanmugasundaram wrote:
+>>> On 11/02/2016 10:58 PM, Laurent Pinchart wrote:
+>>>> On Wednesday 02 Nov 2016 09:00:00 Ramesh Shanmugasundaram wrote:
+>>>>>>> On Wednesday 12 Oct 2016 15:10:29 Ramesh Shanmugasundaram wrote:
+>>>>>>>
+>>>>>>>> This patch adds documentation for the three new SDR formats
+>>>>>>>>
+>>>>>>>> V4L2_SDR_FMT_SCU16BE
+>>>>>>>> V4L2_SDR_FMT_SCU18BE
+>>>>>>>> V4L2_SDR_FMT_SCU20BE
+>>>>>
+>>>>> [snip]
+>>>>>
+>>>>>>>> +
+>>>>>>>> +       -  start + 0:
+>>>>>>>> +
+>>>>>>>> +       -  I'\ :sub:`0[D13:D6]`
+>>>>>>>> +
+>>>>>>>> +       -  I'\ :sub:`0[D5:D0]`
+>>>>>>>> +
+>>>>>>>> +    -  .. row 2
+>>>>>>>> +
+>>>>>>>> +       -  start + buffer_size/2:
+>>>>>>>> +
+>>>>>>>> +       -  Q'\ :sub:`0[D13:D6]`
+>>>>>>>> +
+>>>>>>>> +       -  Q'\ :sub:`0[D5:D0]`
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> The format looks planar, does it use one V4L2 plane (as does NV12)
+>>>>>>> or two V4L2 planes (as does NV12M) ? Same question for the other
+>>>>>>> formats.
+>>>>>>
+>>>>>> Thank you for bringing up this topic. This is one of the key design
+>>>>>> dilemma.
+>>>>>>
+>>>>>> The I & Q data for these three SDR formats comes from two different
+>>>>>> DMA channels and hence two separate pointers -> we could say it is
+>>>>>> v4l2 multi- planar. Right now, I am making it look like a single
+>>>>>> plane by presenting the data in one single buffer ptr.
+>>>>>>
+>>>>>> For e.g. multi-planar SC16 format would look something like this
+>>>>>>
+>>>>>> <------------------------32bits---------------------->
+>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 0
+>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0 + 4
+>>>>>> ...
+>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 0
+>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1 + 4
+>>>>>>
+>>>>>> My concerns are
+>>>>>>
+>>>>>> 1) These formats are not a standard as the video "Image Formats".
+>>>>>> These formats are possible when we use DRIF + MAX2175 combination.
+>>>>>> If we interface with a different tuner vendor, the above format(s)
+>>>>>> MAY/MAY NOT be re-usable. We do not know at this point. This is the
+>>>>>> main open item for discussion in the cover letter.
+>>>>
+>>>> If the formats are really device-specific then they should be
+>>>> documented accordingly and not made generic.
+>>>>
+>>>>>> 2) MPLANE support within V4L2 seems specific to video. Please
+>>>>>> correct me if this is wrong interpretation.
+>>>>>>
+>>>>>> - struct v4l2_format contains v4l2_sdr_format and
+>>>>>> v4l2_pix_format_mplane as members of union. Should I create a new
+>>>>>> v4l2_sdr_format_mplane? If I have to use v4l2_pix_format_mplane most
+>>>>>> of the video specific members would be unused (it would be similar
+>>>>>> to using v4l2_pix_format itself instead of v4l2_sdr_format)?
+>>>>
+>>>> I have no answer to that question as I'm not familiar with SDR. Antti,
+>>>> you've added v4l2_sdr_format to the API, what's your opinion ? Hans,
+>>>> as you've acked the patch, your input would be appreciated as well.
+>>>
+>>> If I understood correctly this hardware provides I and Q samples via
+>>> different channels and driver now combines those channels as a sequential
+>>> IQ sample pairs.
+>>
+>> The driver combines the two buffer ptrs and present as one single buffer.
+>> For a buffer of size 200
+>>
+>> ptr + 0   : I I I I ... I
+>> ptr + 100 : Q Q Q Q ... Q
+>>
+>>> I have never seen any other than hw which provides IQ IQ IQ IQ ... IQ.
+>>
+>> There are some modes where this h/w combo can also do IQ IQ IQ pattern.
+>> Those modes are not added in the RFC patchset.
+>>
+>>> This is
+>>> I I I I ... I
+>>> Q Q Q Q ... Q
+>>> I am not very familiar with planars, but it sounds like it is correct
+>>> approach. So I think should be added rather than emulate packet
+>>> sequential format.
+>>
+>> My understanding of V4L2 MPLANE constructs is limited to a quick code read
+>> only. At this point MPLANE support seems specific to video. SDR is defined
+>> as separate format like v4l2_pix_format. Questions would be - should we
+>> define new SDR_MPLANE? or merge SDR format with pix format & reuse existing
+>> MPLANE with some SDR extensions (if possible)? These seem big design
+>> decisions. Any suggestions please?
+
+struct v4l2_format contains union that has own format definition for 
+video, video mplane and sdr (+many others). Basically on api there is 
+own definitions for each type, so I think possible sdr mplane should be 
+similarly own types and definitions.
+
+>> For my use case, MPLANE support does not seem to add significant benefit
+>> except it may be syntactically correct. I am doing cyclic DMA with a small
+>> set of h/w buffers and copying each stage to one mmapped vmalloc vb2_buffer
+>> at two offsets. If we add MPLANE support, it can be two non-contiguous
+>> buffer pointers.
+
+If there is no clear idea about need of mplane then that's also fine for me.
+
+And whole mplane concept is new for me. I have never played with any 
+v4l2 video formats nor mplane video formats.
+
+I would still like to hear what Hans think about adding mplane.
+
+>>
+>>>>>> - The above decision (accomodate SDR & MPLANE) needs to be
+>>>>>> propagated across the framework. Is this the preferred approach?
+>>>>>>
+>>>>>> It goes back to point (1). As of today, the change set for this
+>>>>>> combo (DRIF+MAX2175) introduces new SDR formats only. Should it add
+>>>>>> further SDR+MPLANE support to the framework as well?
+>>>>>>
+>>>>>> I would appreciate your suggestions on this regard.
 >
->  - added a set4b ops to handle difference in the controllers
->  - simplified the IO routines
->  - prepared for fast read using dummy cycles
->
->  Work in progress:
->
->  - read optimization using higher SPI clock frequencies
->  - command mode to direct reads from AHB
->  - DMA support
->
->  .../devicetree/bindings/mtd/aspeed-smc.txt         |  72 ++
->  drivers/mtd/spi-nor/Kconfig                        |  12 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/aspeed-smc.c                   | 783 +++++++++++++++=
-++++++
->  4 files changed, 868 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/aspeed-smc.txt
->  create mode 100644 drivers/mtd/spi-nor/aspeed-smc.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+regards
+Antti
+
+-- 
+http://palosaari.fi/
