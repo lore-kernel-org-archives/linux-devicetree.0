@@ -1,101 +1,228 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: multipart/alternative; boundary="Apple-Mail=_7969BFBF-B929-4027-8547-E5488650C5F5"
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v6 2/8] drivers:input:tsc2007: send pendown and penup only once like ads7846(+tsc2046) driver does
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <20161119181229.GA20446@dtor-ws>
-Date: Tue, 22 Nov 2016 14:59:43 +0100
-Message-Id: <A71FCAEE-6757-42B4-9FDD-3D85316E9FC8@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com> <5e961a92f11b1509bd0effb96ef560f19839aa9d.1477557860.git.hns@goldelico.com> <20161119181229.GA20446@dtor-ws>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+Return-Path: <noamca@mellanox.com>
+From: Noam Camus <noamca@mellanox.com>
+Subject: Re: [PATCH v4 0/3] Add clockevet for timer-nps driver to NPS400 SoC
+Date: Fri, 11 Nov 2016 03:28:05 +0000
+Message-ID: <DB6PR0501MB251895F6D59CC9EB09CED516AABB0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+In-Reply-To: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_DB6PR0501MB251895F6D59CC9EB09CED516AABB0DB6PR0501MB2518_"
+MIME-Version: 1.0
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---Apple-Mail=_7969BFBF-B929-4027-8547-E5488650C5F5
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
-
-Hi Dmitry,
-
-> Am 19.11.2016 um 19:12 schrieb Dmitry Torokhov <dmitry.torokhov@gmail.com>:
-> 
-> On Thu, Oct 27, 2016 at 10:44:15AM +0200, H. Nikolaus Schaller wrote:
->> this should reduce unnecessary input events.
-> 
-> The duplicates will be filtered out by the input core anyway. I like to
-> keep the drivers simple.
-
-Well, the idea was copied from the ads7846 driver. But there it is used
-to provide a /sys status.
-
-I have tried to find the code location that really makes sure that the
-BTN_TOUCH is reported only once, but didn't find it.
-
-My thought is that having it here makes me more sure that it is really
-filtered because it does not to rely on functions deeply hidden in the
-input core.
-
-On the other hand we apparently also rely on ABS_X etc. to be filtered
-by core.
-
-In any case I have tested with and without and it does not make a difference.
-Maybe it was needed when we started to work on this driver some years ago
-before posting the patches here.
-
-So I drop it from v8 which will come in some minutes.
-
-> 
-> Thanks.
-
-BR and thanks,
-Nikolaus
-
-
---Apple-Mail=_7969BFBF-B929-4027-8547-E5488650C5F5
+--_000_DB6PR0501MB251895F6D59CC9EB09CED516AABB0DB6PR0501MB2518_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=us-ascii
 
-<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
-charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
--webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
-class=3D"">Hi Dmitry,<div class=3D""><br class=3D""><blockquote =
-type=3D"cite" class=3D"">Am 19.11.2016 um 19:12 schrieb Dmitry Torokhov =
-&lt;<a href=3D"mailto:dmitry.torokhov@gmail.com" =
-class=3D"">dmitry.torokhov@gmail.com</a>&gt;:<br class=3D""><br =
-class=3D"">On Thu, Oct 27, 2016 at 10:44:15AM +0200, H. Nikolaus =
-Schaller wrote:<br class=3D""><blockquote type=3D"cite" =
-style=3D"font-family: Menlo-Regular; font-size: 11px; font-style: =
-normal; font-variant-caps: normal; font-weight: normal; letter-spacing: =
-normal; orphans: auto; text-align: start; text-indent: 0px; =
-text-transform: none; white-space: normal; widows: auto; word-spacing: =
-0px; -webkit-text-stroke-width: 0px;" class=3D"">this should reduce =
-unnecessary input events.<br class=3D""></blockquote><br class=3D"">The =
-duplicates will be filtered out by the input core anyway. I like to<br =
-class=3D"">keep the drivers simple.<br class=3D""></blockquote><div =
-class=3D""><br class=3D""></div>Well, the idea was copied from the =
-ads7846 driver. But there it is used<div class=3D"">to provide a /sys =
-status.<br class=3D""><div class=3D""><br class=3D""></div><div =
-class=3D"">I have tried to find the code location that really makes sure =
-that the</div><div class=3D"">BTN_TOUCH is reported only once, but =
-didn't find it.</div><div class=3D""><br class=3D""></div><div =
-class=3D"">My thought is that having it here makes me more sure that it =
-is really</div><div class=3D"">filtered because it does not to rely on =
-functions deeply hidden in the</div><div class=3D"">input =
-core.</div><div class=3D""><br class=3D""></div><div class=3D"">On the =
-other hand we apparently also rely on ABS_X etc. to be =
-filtered</div><div class=3D"">by core.</div><div class=3D""><br =
-class=3D""></div><div class=3D"">In any case I have tested with and =
-without and it does not make a difference.<br class=3D"">Maybe it was =
-needed when we started to work on this driver some years ago</div><div =
-class=3D"">before posting the patches here.</div><div class=3D""><br =
-class=3D""></div><div class=3D"">So I drop it from v8 which will come in =
-some minutes.</div><div class=3D""><br class=3D""></div><blockquote =
-type=3D"cite" class=3D""><br class=3D"">Thanks.<br =
-class=3D""></blockquote><br class=3D""></div></div><div class=3D"">BR =
-and thanks,</div><div class=3D"">Nikolaus</div><div class=3D""><br =
-class=3D""></div></body></html>=
+Please comment on this series
 
---Apple-Mail=_7969BFBF-B929-4027-8547-E5488650C5F5--
+
+Noam
+
+________________________________
+From: Noam Camus <noamca@mellanox.com>
+Sent: Sunday, November 6, 2016 7:44:55 PM
+To: robh+dt@kernel.org; mark.rutland@arm.com; daniel.lezcano@linaro.org
+Cc: tglx@linutronix.de; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
+l.org; Noam Camus
+Subject: [PATCH v4 0/3] Add clockevet for timer-nps driver to NPS400 SoC
+
+From: Noam Camus <noamca@mellanox.com>
+
+Change log
+---
+V3 --> V4
+Main changes are [Thanks for the review]:
+Fix many typos at log [Daniel]
+Add handling for bad return values [Daniel and Thomas]
+Replace use of internal irqchip pointers with existing IRQ API [Thomas]
+Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
+Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+
+V2 --> V3
+Apply Rob Herring comment about backword compatibility
+
+V1 --> V2
+Apply Daniel Lezcano comments:
+        CLOCKSOURCE_OF_DECLARE return value
+        update hotplug callbacks usage
+        squash of 2 first commits.
+In this version I created new commit to serve as preperation for adding clo=
+ckevents.
+This way the last patch is more readable with clockevent content.
+---
+
+In first version of this driver we supported clocksource for the NPS400.
+The support for clockevent was taken from Synopsys ARC timer driver.
+This was good for working with our simulator of NPS400.
+However in NPS400 ASIC the timers behave differently than simulation.
+The timers in ASIC are shared between all threads whithin a core
+and hence need different driver to support this behaviour.
+
+The idea of this design is that we got 16 HW threads per core
+each represented at bimask in a shared register in this core.
+So when thread wants that next clockevent expiration will produce
+timer interrupt to itself the correspondance bit in this register
+should be set.
+So theoretically if all 16 bits are set then all HW threads will get
+timer interrupt on next expiration of timer 0.
+
+Note that we use Synopsys ARC design naming convention for the timers
+where:
+timer0 is used for clockevents
+timer1 is used for clocksource.
+
+Noam Camus (3):
+  soc: Support for NPS HW scheduling
+  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+  clocksource: Add clockevent support to NPS400 driver
+
+ .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+ .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+ .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+ arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
+ drivers/clocksource/timer-nps.c                    |  264 ++++++++++++++++=
+++--
+ include/soc/nps/mtm.h                              |   59 +++++
+ 6 files changed, 335 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-t=
+imer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-t=
+imer0.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-t=
+imer1.txt
+ create mode 100644 include/soc/nps/mtm.h
+
+
+--_000_DB6PR0501MB251895F6D59CC9EB09CED516AABB0DB6PR0501MB2518_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<meta name=3D"Generator" content=3D"Microsoft Exchange Server">
+<!-- converted from text --><style><!-- .EmailQuote { margin-left: 1pt; pad=
+ding-left: 4pt; border-left: #800000 2px solid; } --></style>
+</head>
+<body>
+<meta content=3D"text/html; charset=3DUTF-8">
+<style type=3D"text/css" style=3D"">
+<!--
+p
+	{margin-top:0;
+	margin-bottom:0}
+-->
+</style>
+<div dir=3D"ltr">
+<div id=3D"x_divtagdefaultwrapper" style=3D"font-size:12pt; color:#000000; =
+font-family:Calibri,Arial,Helvetica,sans-serif">
+<p>Please comment on this series</p>
+<p><br>
+</p>
+<p>Noam</p>
+</div>
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"x_divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" =
+color=3D"#000000" style=3D"font-size:11pt"><b>From:</b> Noam Camus &lt;noam=
+ca@mellanox.com&gt;<br>
+<b>Sent:</b> Sunday, November 6, 2016 7:44:55 PM<br>
+<b>To:</b> robh&#43;dt@kernel.org; mark.rutland@arm.com; daniel.lezcano@lin=
+aro.org<br>
+<b>Cc:</b> tglx@linutronix.de; devicetree@vger.kernel.org; linux-kernel@vge=
+r.kernel.org; Noam Camus<br>
+<b>Subject:</b> [PATCH v4 0/3] Add clockevet for timer-nps driver to NPS400=
+ SoC</font>
+<div>&nbsp;</div>
+</div>
+</div>
+<font size=3D"2"><span style=3D"font-size:10pt;">
+<div class=3D"PlainText">From: Noam Camus &lt;noamca@mellanox.com&gt;<br>
+<br>
+Change log<br>
+---<br>
+V3 --&gt; V4<br>
+Main changes are [Thanks for the review]:<br>
+Fix many typos at log [Daniel]<br>
+Add handling for bad return values [Daniel and Thomas]<br>
+Replace use of internal irqchip pointers with existing IRQ API [Thomas]<br>
+Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]<br>
+Fix passing *clk by reference to nps_get_timer_clk() [Daniel]<br>
+<br>
+V2 --&gt; V3<br>
+Apply Rob Herring comment about backword compatibility<br>
+<br>
+V1 --&gt; V2<br>
+Apply Daniel Lezcano comments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CLOCKSOURCE_OF_DECLARE return va=
+lue<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; update hotplug callbacks usage<b=
+r>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; squash of 2 first commits.<br>
+In this version I created new commit to serve as preperation for adding clo=
+ckevents.<br>
+This way the last patch is more readable with clockevent content.<br>
+---<br>
+<br>
+In first version of this driver we supported clocksource for the NPS400.<br=
+>
+The support for clockevent was taken from Synopsys ARC timer driver.<br>
+This was good for working with our simulator of NPS400.<br>
+However in NPS400 ASIC the timers behave differently than simulation.<br>
+The timers in ASIC are shared between all threads whithin a core<br>
+and hence need different driver to support this behaviour.<br>
+<br>
+The idea of this design is that we got 16 HW threads per core<br>
+each represented at bimask in a shared register in this core.<br>
+So when thread wants that next clockevent expiration will produce<br>
+timer interrupt to itself the correspondance bit in this register<br>
+should be set.<br>
+So theoretically if all 16 bits are set then all HW threads will get<br>
+timer interrupt on next expiration of timer 0.<br>
+<br>
+Note that we use Synopsys ARC design naming convention for the timers<br>
+where:<br>
+timer0 is used for clockevents<br>
+timer1 is used for clocksource.<br>
+<br>
+Noam Camus (3):<br>
+&nbsp; soc: Support for NPS HW scheduling<br>
+&nbsp; clocksource: update &quot;fn&quot; at CLOCKSOURCE_OF_DECLARE() of np=
+s400 timer<br>
+&nbsp; clocksource: Add clockevent support to NPS400 driver<br>
+<br>
+&nbsp;.../bindings/timer/ezchip,nps400-timer.txt&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; 15 --<br>
+&nbsp;.../bindings/timer/ezchip,nps400-timer0.txt&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp; |&nbsp;&nbsp; 17 &#43;&#43;<br>
+&nbsp;.../bindings/timer/ezchip,nps400-timer1.txt&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp; |&nbsp;&nbsp; 15 &#43;&#43;<br>
+&nbsp;arch/arc/plat-eznps/include/plat/ctop.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp; 2 -<br>
+&nbsp;drivers/clocksource/timer-nps.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+; |&nbsp; 264 &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&=
+#43;&#43;&#43;&#43;&#43;&#43;--<br>
+&nbsp;include/soc/nps/mtm.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp; 59 &#43;&=
+#43;&#43;&#43;&#43;<br>
+&nbsp;6 files changed, 335 insertions(&#43;), 37 deletions(-)<br>
+&nbsp;delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps=
+400-timer.txt<br>
+&nbsp;create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps=
+400-timer0.txt<br>
+&nbsp;create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps=
+400-timer1.txt<br>
+&nbsp;create mode 100644 include/soc/nps/mtm.h<br>
+<br>
+</div>
+</span></font>
+</body>
+</html>
+
+--_000_DB6PR0501MB251895F6D59CC9EB09CED516AABB0DB6PR0501MB2518_--
