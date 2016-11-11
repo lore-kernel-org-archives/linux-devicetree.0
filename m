@@ -1,47 +1,73 @@
-From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] ata: xgene: Enable NCQ support for APM X-Gene SATA
- controller hardware v1.1
-Date: Fri, 11 Nov 2016 13:36:28 +0530
-Message-ID: <CAFd313ycmpdp7wHCVRJrigJV31hLwBGOo=FNENwgFnNKyVkQBA@mail.gmail.com>
-References: <1469524857-3720-1-git-send-email-rsahu@apm.com>
- <CAFd313x-mXpy0N3aKx2rfoag1FNOrN-LzKb5UHkY2L+GGc0B-A@mail.gmail.com> <20161109164531.GA14630@htj.duckdns.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/6] mfd: stm32-adc: Add support for stm32 ADC
+Date: Fri, 11 Nov 2016 08:42:31 +0000
+Message-ID: <20161111084231.GA13638@dell>
+References: <1478794738-28933-3-git-send-email-fabrice.gasnier@st.com>
+ <201611110537.S7AVN9F6%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161109164531.GA14630-piEFEHQLUPpN0TnZuCh8vA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201611110537.S7AVN9F6%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, kbuild-all@01.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Tejun,
+On Fri, 11 Nov 2016, kbuild test robot wrote:
 
-On Wed, Nov 9, 2016 at 10:15 PM, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Hello,
->
-> On Wed, Sep 14, 2016 at 04:15:00PM +0530, Rameshwar Sahu wrote:
->> > @@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device
->> > *pdev)
->> >                                 dev_warn(&pdev->dev, "%s: Error reading
->> > device info. Assume version1\n",
->> >                                         __func__);
->> >                                 version = XGENE_AHCI_V1;
->> > -                       } else if (info->valid & ACPI_VALID_CID) {
->> > -                               version = XGENE_AHCI_V2;
->
-> Can you please explain this part a bit?  Everything else looks good to
-> me.
+> Hi Fabrice,
+>=20
+> [auto build test ERROR on ljones-mfd/for-mfd-next]
+> [also build test ERROR on v4.9-rc4 next-20161110]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help improve the system]
+>=20
+> url:    https://github.com/0day-ci/linux/commits/Fabrice-Gasnier/Add-supp=
+ort-for-STM32-ADC/20161111-011922
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-m=
+fd-next
+> config: s390-allmodconfig (attached as .config)
+> compiler: s390x-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.g=
+it/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=3Ds390=20
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+>    drivers/mfd/stm32-adc-core: struct of_device_id is 200 bytes.  The las=
+t of 1 is:
+>    0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x73 0x74 0x2c 0x73 0x74 0x6d 0x33 0x32 0x66 0x34 =
+0x2d 0x61 0x64 0x63 0x2d 0x63 0x6f 0x72 0x65 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 =
+0x00 0x00 0x00 0x00 0x00 0x00=20
+> >> FATAL: drivers/mfd/stm32-adc-core: struct of_device_id is not terminat=
+ed with a NULL entry!
+>=20
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Ce=
+nter
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corpora=
+tion
 
-Here we should not assume XGENE_AHCI_V2 always in case of having valid
-_CID in ACPI table.
-I need to remove this assumption because V1_1 has also valid _CID for
-backward compatibly with v1.
->
-> Thanks.
->
-> --
-> tejun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please fix this and re-submit.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
