@@ -1,199 +1,554 @@
-From: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v1 02/11] dt-bindings: hisi: Add Hisilicon
- HiP05/06/07 Sysctrl and Djtag dts bindings
-Date: Fri, 11 Nov 2016 16:49:03 +0530
-Message-ID: <5825A927.2000202@gmail.com>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
- <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
- <20161110172320.GA10137@leverpostej>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3 3/3] ASoC: atmel: tse850: add ASoC driver for the Axentia TSE-850
+Date: Fri, 11 Nov 2016 12:29:12 +0100
+Message-ID: <1478863752-10569-4-git-send-email-peda@axentia.se>
+References: <1478863752-10569-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110172320.GA10137@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478863752-10569-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The TSE-850 is an FM Transmitter Station Equipment, designed to generate
+baseband signals for FM, mainly the DARC subcarrier, but other signals
+are also possible.
 
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ MAINTAINERS                      |   1 +
+ sound/soc/atmel/Kconfig          |  10 +
+ sound/soc/atmel/Makefile         |   2 +
+ sound/soc/atmel/tse850-pcm5142.c | 472 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 485 insertions(+)
+ create mode 100644 sound/soc/atmel/tse850-pcm5142.c
 
-On Thursday 10 November 2016 10:53 PM, Mark Rutland wrote:
-> Hi,
->
-> On Thu, Nov 03, 2016 at 01:41:58AM -0400, Anurup M wrote:
->> From: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>
->> 	1) Add Hisilicon HiP05/06/07 CPU and ALGSUB system controller dts
->> 	   bindings.
->> 	2) Add Hisilicon Djtag dts binding.
->>
->> Signed-off-by: Tan Xiaojun <tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Anurup M <anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> ---
->>   .../bindings/arm/hisilicon/hisilicon.txt           | 82 ++++++++++++++++++++++
->>   1 file changed, 82 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> index 7df79a7..341cbb9 100644
->> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> @@ -270,3 +270,85 @@ Required Properties:
->>     [1]: bootwrapper size
->>     [2]: relocation physical address
->>     [3]: relocation size
->
->> +-----------------------------------------------------------------------
->> +The Hisilicon Djtag in CPU die is an independent component which connects with
->> +some other components in the SoC by Debug Bus. This driver can be configured
->> +to access the registers of connecting components (like L3 cache, l3 cache PMU
->> + etc.) during real time debugging by sysctrl. These components appear as child
->> +nodes of djtag.
-> Please put the djtag binding in a new file.
->
-> It's clearly unrelated to many other things in this file, which should
-> also be split out.
-Ok. Shall move the djtag bindings to hisilicon/djtag.txt.
-
->> +The Hip05/06/07 CPU system controller(sysctrl) support to manage some important
->> +components (such as clock, reset, soft reset, secure debugger, etc.).
->> +The CPU sysctrl registers in hip05/06/07 doesnot use syscon but will be mapped
->> +by djtag driver for use by connecting components.
-> The djtag driver is irrelvant here.
->
-> If there's a realtionship between the two, please define that in the
-> binding rather than implicitly assuming it in the driver.
-Ok. I shall remove "djtag driver" and shall modify as
-
-+The Hisilicon Djtag in CPU die is an independent component which connects with
-+some other components in the SoC by Debug Bus. The djtag will use the system controller
-+registers to access the connecting components in CPU die (like L3 cache, l3 cache PMU
-+etc.) during real time debugging. These components appear as child nodes of djtag.
-
->> +
->> +Required properties:
->> +  - compatible : "hisilicon,hip05-cpu-djtag-v1"
->> +  - reg : Register address and size
->> +
->> +Hisilicon HiP06 djtag for CPU sysctrl
->> +Required properties:
->> +- compatible : "hisilicon,hip06-sysctrl", "syscon", "simple-mfd";
-> This looks messy. Why is this syscon and a simple-mfd?
->
-> We should kill off / deprecate the syscon binding. It's completely
-> meaningless.
-My Apologies. The syscon is not used now. Mistake in file version used 
-for patch creation.
-The compatible filed will be "hisilicon,hisi-cpu-djtag-v1"
->> +- reg : Register address and size
->> +- djtag :
->> +  - compatible : "hisilicon,hip06-cpu-djtag-v1"
->> +  - reg : Register address and size
->> +
->> +Hisilicon HiP07 djtag for CPU sysctrl
->> +Required properties:
->> +  - compatible : "hisilicon,hip07-cpu-djtag-v2"
->> +  - reg : Register address and size
->> +
->> +Example:
->> +	/* for Hisilicon HiP05 djtag for CPU sysctrl */
->> +	djtag0: djtag@80010000 {
->> +		compatible = "hisilicon,hip05-cpu-djtag-v1";
->> +		reg = <0x0 0x80010000 0x0 0x10000>;
->> +
->> +		/* For L3 cache PMU */
->> +		pmul3c0 {
->> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
->> +			scl-id = <0x02>;
->> +			num-events = <0x16>;
->> +			num-counters = <0x08>;
->> +			module-id = <0x04>;
->> +			num-banks = <0x04>;
->> +			cfgen-map = <0x02 0x04 0x01 0x08>;
->> +			counter-reg = <0x170>;
->> +			evctrl-reg = <0x04>;
->> +			event-en = <0x1000000>;
->> +			evtype-reg = <0x140>;
->> +		};
-> This sub-node needs a binding document.
->
-> These properties are completely opaque
-The L3 cache PMU bindings are defined @bindings/arm/hisilicon/pmu.txt.
-Is it OK that I document here(hisilicon/djtag.txt), a reference to the 
-PMU bindings doc ?
-
->> +	};
->> +
->> +-----------------------------------------------------------------------
->> +The Hisilicon HiP05/06/07 ALGSUB system controller(sysctrl) is in IO die
->> +of SoC. It has a similar function as the Hisilicon HiP05/06/07 CPU system
->> +controller in CPU die and it manage different components, like RSA, etc.
->> +The Hisilicon Djtag in IO die has a similar function as in CPU die and maps
->> +the sysctrl registers for use by connecting components.
->> +All connecting components shall appear as child nodes of djtag.
-> I don't follow the above. This describes an ALGSUB system controllerm
-> but the documentation below is all about djtag.
-The ALGSUB is the name of the sysctrl of IO die. I shall remove ALGSUB 
-to avoid confusion.
-
-I would also add the below details in the introduction.
-
-The Hisilicon djtag will use the system controller registers to control 
-access to connecting modules
-of CPU and IO die in the chip. There are separate system controller 
-registers for CPU and IO die  in the chip.
-
-And the section will be modified as
-
-+Hisilicon HiP05 djtag for IO sysctrl
-+Required properties:
-+  - compatible : "hisilicon,hisi-io-djtag-v1"
-+  - reg : Register address and size
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4f2ebf3ab51a..4ce45f02d83f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2323,6 +2323,7 @@ M:	Peter Rosin <peda@axentia.se>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/sound/axentia,*
++F:	sound/soc/atmel/tse850-pcm5142.c
+ 
+ AZ6007 DVB DRIVER
+ M:	Mauro Carvalho Chehab <mchehab@s-opensource.com>
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index 22aec9a1e9a4..4a56f3dfba51 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -78,4 +78,14 @@ config SND_ATMEL_SOC_PDMIC
+ 	help
+ 	  Say Y if you want to add support for Atmel ASoC driver for boards using
+ 	  PDMIC.
 +
-+Hisilicon HiP06/07 djtag for IO sysctrl
-+Required properties:
-+  - compatible : "hisilicon,hip06-io-djtag-v2"
-+  - reg : Register address and size
++config SND_ATMEL_SOC_TSE850_PCM5142
++	tristate "ASoC driver for the Axentia TSE-850"
++	depends on ARCH_AT91 && OF
++	depends on ATMEL_SSC && I2C
++	select SND_ATMEL_SOC_SSC_DMA
++	select SND_SOC_PCM512x_I2C
++	help
++	  Say Y if you want to add support for the ASoC driver for the
++	  Axentia TSE-850 with a PCM5142 codec.
+ endif
+diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
+index a2b127bd9c87..67e10cbd4ed7 100644
+--- a/sound/soc/atmel/Makefile
++++ b/sound/soc/atmel/Makefile
+@@ -13,9 +13,11 @@ snd-atmel-soc-wm8904-objs := atmel_wm8904.o
+ snd-soc-sam9x5-wm8731-objs := sam9x5_wm8731.o
+ snd-atmel-soc-classd-objs := atmel-classd.o
+ snd-atmel-soc-pdmic-objs := atmel-pdmic.o
++snd-atmel-soc-tse850-pcm5142-objs := tse850-pcm5142.o
+ 
+ obj-$(CONFIG_SND_AT91_SOC_SAM9G20_WM8731) += snd-soc-sam9g20-wm8731.o
+ obj-$(CONFIG_SND_ATMEL_SOC_WM8904) += snd-atmel-soc-wm8904.o
+ obj-$(CONFIG_SND_AT91_SOC_SAM9X5_WM8731) += snd-soc-sam9x5-wm8731.o
+ obj-$(CONFIG_SND_ATMEL_SOC_CLASSD) += snd-atmel-soc-classd.o
+ obj-$(CONFIG_SND_ATMEL_SOC_PDMIC) += snd-atmel-soc-pdmic.o
++obj-$(CONFIG_SND_ATMEL_SOC_TSE850_PCM5142) += snd-atmel-soc-tse850-pcm5142.o
+diff --git a/sound/soc/atmel/tse850-pcm5142.c b/sound/soc/atmel/tse850-pcm5142.c
+new file mode 100644
+index 000000000000..ac6a814c8ecf
+--- /dev/null
++++ b/sound/soc/atmel/tse850-pcm5142.c
+@@ -0,0 +1,472 @@
++/*
++ * TSE-850 audio - ASoC driver for the Axentia TSE-850 with a PCM5142 codec
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+Example:
-+	/* for Hisilicon HiP05 djtag for IO sysctrl */
-+	djtag0: djtag@d0000000 {
-+	       compatible = "hisilicon,hisi-io-djtag-v1";
-+		reg = <0x0 0xd0000000 0x0 0x10000>;
-+	};
-
-Thanks,
-Anurup
-
-> Thanks,
-> Mark.
->
->> +Hisilicon HiP05 djtag for ALGSUB sysctrl
->> +Required properties:
->> +  - compatible : "hisilicon,hip05-io-djtag-v1"
->> +  - reg : Register address and size
->> +
->> +Hisilicon HiP06 djtag for ALGSUB sysctrl
->> +Required properties:
->> +  - compatible : "hisilicon,hip06-io-djtag-v2"
->> +  - reg : Register address and size
->> +
->> +Hisilicon HiP07 djtag for ALGSUB sysctrl
->> +Required properties:
->> +  - compatible : "hisilicon,hip07-io-djtag-v2"
->> +  - reg : Register address and size
->> +
->> +Example:
->> +	/* for Hisilicon HiP05 djtag for alg sysctrl */
->> +	djtag0: djtag@d0000000 {
->> +	       compatible = "hisilicon,hip05-io-djtag-v1";
->> +		reg = <0x0 0xd0000000 0x0 0x10000>;
->> +	};
->> -- 
->> 2.1.4
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++/*
++ *               loop1 relays
++ *   IN1 +---o  +------------+  o---+ OUT1
++ *            \                /
++ *             +              +
++ *             |   /          |
++ *             +--o  +--.     |
++ *             |  add   |     |
++ *             |        V     |
++ *             |      .---.   |
++ *   DAC +----------->|Sum|---+
++ *             |      '---'   |
++ *             |              |
++ *             +              +
++ *
++ *   IN2 +---o--+------------+--o---+ OUT2
++ *               loop2 relays
++ *
++ * The 'loop1' gpio pin controlls two relays, which are either in loop
++ * position, meaning that input and output are directly connected, or
++ * they are in mixer position, meaning that the signal is passed through
++ * the 'Sum' mixer. Similarly for 'loop2'.
++ *
++ * In the above, the 'loop1' relays are inactive, thus feeding IN1 to the
++ * mixer (if 'add' is active) and feeding the mixer output to OUT1. The
++ * 'loop2' relays are active, short-cutting the TSE-850 from channel 2.
++ * IN1, IN2, OUT1 and OUT2 are TSE-850 connectors and DAC is the PCB name
++ * of the (filtered) output from the PCM5142 codec.
++ */
++
++#include <linux/clk.h>
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/regulator/consumer.h>
++
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
++
++#include "atmel_ssc_dai.h"
++
++struct tse850_priv {
++	int ssc_id;
++
++	struct gpio_desc *add;
++	struct gpio_desc *loop1;
++	struct gpio_desc *loop2;
++
++	struct regulator *ana;
++
++	int add_cache;
++	int loop1_cache;
++	int loop2_cache;
++};
++
++static int tse850_get_mux1(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	ucontrol->value.enumerated.item[0] = tse850->loop1_cache;
++
++	return 0;
++}
++
++static int tse850_put_mux1(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int val = ucontrol->value.enumerated.item[0];
++
++	if (val >= e->items)
++		return -EINVAL;
++
++	gpiod_set_value_cansleep(tse850->loop1, val);
++	tse850->loop1_cache = val;
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++static int tse850_get_mux2(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	ucontrol->value.enumerated.item[0] = tse850->loop2_cache;
++
++	return 0;
++}
++
++static int tse850_put_mux2(struct snd_kcontrol *kctrl,
++			   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int val = ucontrol->value.enumerated.item[0];
++
++	if (val >= e->items)
++		return -EINVAL;
++
++	gpiod_set_value_cansleep(tse850->loop2, val);
++	tse850->loop2_cache = val;
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++int tse850_get_mix(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	ucontrol->value.enumerated.item[0] = tse850->add_cache;
++
++	return 0;
++}
++
++int tse850_put_mix(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int connect = !!ucontrol->value.integer.value[0];
++
++	if (tse850->add_cache == connect)
++		return 0;
++
++	/*
++	 * Hmmm, this gpiod_set_value_cansleep call should probably happen
++	 * inside snd_soc_dapm_mixer_update_power in the loop.
++	 */
++	gpiod_set_value_cansleep(tse850->add, connect);
++	tse850->add_cache = connect;
++
++	snd_soc_dapm_mixer_update_power(dapm, kctrl, connect, NULL);
++	return 1;
++}
++
++int tse850_get_ana(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	int ret;
++
++	ret = regulator_get_voltage(tse850->ana);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * Map regulator output values like so:
++	 *      -11.5V to "Low" (enum 0)
++	 * 11.5V-12.5V to "12V" (enum 1)
++	 * 12.5V-13.5V to "13V" (enum 2)
++	 *     ...
++	 * 18.5V-19.5V to "19V" (enum 8)
++	 * 19.5V-      to "20V" (enum 9)
++	 */
++	if (ret < 11000000)
++		ret = 11000000;
++	else if (ret > 20000000)
++		ret = 20000000;
++	ret -= 11000000;
++	ret = (ret + 500000) / 1000000;
++
++	ucontrol->value.enumerated.item[0] = ret;
++
++	return 0;
++}
++
++int tse850_put_ana(struct snd_kcontrol *kctrl,
++		   struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_dapm_kcontrol_dapm(kctrl);
++	struct snd_soc_card *card = dapm->card;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++	struct soc_enum *e = (struct soc_enum *)kctrl->private_value;
++	unsigned int uV = ucontrol->value.enumerated.item[0];
++	int ret;
++
++	if (uV >= e->items)
++		return -EINVAL;
++
++	/*
++	 * Map enum zero (Low) to 2 volts on the regulator, do this since
++	 * the ana regulator is supplied by the system 12V voltage and
++	 * requesting anything below the system voltage causes the system
++	 * voltage to be passed through the regulator. Also, the ana
++	 * regulator induces noise when requesting voltages near the
++	 * system voltage. So, by mapping Low to 2V, that noise is
++	 * eliminated when all that is needed is 12V (the system voltage).
++	 */
++	if (uV)
++		uV = 11000000 + (1000000 * uV);
++	else
++		uV = 2000000;
++
++	ret = regulator_set_voltage(tse850->ana, uV, uV);
++	if (ret < 0)
++		return ret;
++
++	return snd_soc_dapm_put_enum_double(kctrl, ucontrol);
++}
++
++static const char * const mux_text[] = { "Mixer", "Loop" };
++
++static const struct soc_enum mux_enum =
++	SOC_ENUM_SINGLE(SND_SOC_NOPM, 0, 2, mux_text);
++
++static const struct snd_kcontrol_new mux1 =
++	SOC_DAPM_ENUM_EXT("MUX1", mux_enum, tse850_get_mux1, tse850_put_mux1);
++
++static const struct snd_kcontrol_new mux2 =
++	SOC_DAPM_ENUM_EXT("MUX2", mux_enum, tse850_get_mux2, tse850_put_mux2);
++
++#define TSE850_DAPM_SINGLE_EXT(xname, reg, shift, max, invert, xget, xput) \
++{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
++	.info = snd_soc_info_volsw, \
++	.get = xget, \
++	.put = xput, \
++	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
++
++static const struct snd_kcontrol_new mix[] = {
++	TSE850_DAPM_SINGLE_EXT("IN Switch", SND_SOC_NOPM, 0, 1, 0,
++			       tse850_get_mix, tse850_put_mix),
++};
++
++static const char * const ana_text[] = {
++	"Low", "12V", "13V", "14V", "15V", "16V", "17V", "18V", "19V", "20V"
++};
++
++static const struct soc_enum ana_enum =
++	SOC_ENUM_SINGLE(SND_SOC_NOPM, 0, 9, ana_text);
++
++static const struct snd_kcontrol_new out =
++	SOC_DAPM_ENUM_EXT("ANA", ana_enum, tse850_get_ana, tse850_put_ana);
++
++static const struct snd_soc_dapm_widget tse850_dapm_widgets[] = {
++	SND_SOC_DAPM_LINE("OUT1", NULL),
++	SND_SOC_DAPM_LINE("OUT2", NULL),
++	SND_SOC_DAPM_LINE("IN1", NULL),
++	SND_SOC_DAPM_LINE("IN2", NULL),
++	SND_SOC_DAPM_INPUT("DAC"),
++	SND_SOC_DAPM_AIF_IN("AIFINL", "Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("AIFINR", "Playback", 1, SND_SOC_NOPM, 0, 0),
++	SOC_MIXER_ARRAY("MIX", SND_SOC_NOPM, 0, 0, mix),
++	SND_SOC_DAPM_MUX("MUX1", SND_SOC_NOPM, 0, 0, &mux1),
++	SND_SOC_DAPM_MUX("MUX2", SND_SOC_NOPM, 0, 0, &mux2),
++	SND_SOC_DAPM_OUT_DRV("OUT", SND_SOC_NOPM, 0, 0, &out, 1),
++};
++
++/*
++ * These connections are not entirely correct, since both IN1 and IN2
++ * are always fed to MIX (if the "IN switch" is set so), i.e. without
++ * regard to the loop1 and loop2 relays that according to this only
++ * control MUX1 and MUX2 but in fact also control how the input signals
++ * are routed.
++ * But, 1) I don't know how to do it right, and 2) it doesn't seem to
++ * matter in practice since nothing is powered in those sections anyway.
++ */
++static const struct snd_soc_dapm_route tse850_intercon[] = {
++	{ "OUT1", NULL, "MUX1" },
++	{ "OUT2", NULL, "MUX2" },
++
++	{ "MUX1", "Loop",  "IN1" },
++	{ "MUX1", "Mixer", "OUT" },
++
++	{ "MUX2", "Loop",  "IN2" },
++	{ "MUX2", "Mixer", "OUT" },
++
++	{ "OUT", NULL, "MIX" },
++
++	{ "MIX", NULL, "DAC" },
++	{ "MIX", "IN Switch", "IN1" },
++	{ "MIX", "IN Switch", "IN2" },
++
++	/* connect board input to the codec left channel output pin */
++	{ "DAC", NULL, "OUTL" },
++};
++
++static struct snd_soc_dai_link tse850_dailink = {
++	.name = "TSE-850",
++	.stream_name = "TSE-850-PCM",
++	.codec_dai_name = "pcm512x-hifi",
++	.dai_fmt = SND_SOC_DAIFMT_I2S
++		 | SND_SOC_DAIFMT_NB_NF
++		 | SND_SOC_DAIFMT_CBM_CFS,
++};
++
++static struct snd_soc_card tse850_card = {
++	.name = "TSE-850-ASoC",
++	.owner = THIS_MODULE,
++	.dai_link = &tse850_dailink,
++	.num_links = 1,
++	.dapm_widgets = tse850_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(tse850_dapm_widgets),
++	.dapm_routes = tse850_intercon,
++	.num_dapm_routes = ARRAY_SIZE(tse850_intercon),
++	.fully_routed = true,
++};
++
++static int tse850_dt_init(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *codec_np, *cpu_np;
++	struct snd_soc_card *card = &tse850_card;
++	struct snd_soc_dai_link *dailink = &tse850_dailink;
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	if (!np) {
++		dev_err(&pdev->dev, "only device tree supported\n");
++		return -EINVAL;
++	}
++
++	cpu_np = of_parse_phandle(np, "axentia,ssc-controller", 0);
++	if (!cpu_np) {
++		dev_err(&pdev->dev, "failed to get dai and pcm info\n");
++		return -EINVAL;
++	}
++	dailink->cpu_of_node = cpu_np;
++	dailink->platform_of_node = cpu_np;
++	tse850->ssc_id = of_alias_get_id(cpu_np, "ssc");
++	of_node_put(cpu_np);
++
++	codec_np = of_parse_phandle(np, "axentia,audio-codec", 0);
++	if (!codec_np) {
++		dev_err(&pdev->dev, "failed to get codec info\n");
++		return -EINVAL;
++	}
++	dailink->codec_of_node = codec_np;
++	of_node_put(codec_np);
++
++	return 0;
++}
++
++static int tse850_probe(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = &tse850_card;
++	struct device *dev = card->dev = &pdev->dev;
++	struct tse850_priv *tse850;
++	int ret;
++
++	tse850 = devm_kzalloc(dev, sizeof(*tse850), GFP_KERNEL);
++	if (!tse850)
++		return -ENOMEM;
++
++	snd_soc_card_set_drvdata(card, tse850);
++
++	ret = tse850_dt_init(pdev);
++	if (ret) {
++		dev_err(dev, "failed to init dt info\n");
++		return ret;
++	}
++
++	tse850->add = devm_gpiod_get(dev, "axentia,add", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->add)) {
++		if (PTR_ERR(tse850->add) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'add' gpio\n");
++		return PTR_ERR(tse850->add);
++	}
++	tse850->add_cache = 1;
++
++	tse850->loop1 = devm_gpiod_get(dev, "axentia,loop1", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->loop1)) {
++		if (PTR_ERR(tse850->loop1) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'loop1' gpio\n");
++		return PTR_ERR(tse850->loop1);
++	}
++	tse850->loop1_cache = 1;
++
++	tse850->loop2 = devm_gpiod_get(dev, "axentia,loop2", GPIOD_OUT_HIGH);
++	if (IS_ERR(tse850->loop2)) {
++		if (PTR_ERR(tse850->loop2) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'loop2' gpio\n");
++		return PTR_ERR(tse850->loop2);
++	}
++	tse850->loop2_cache = 1;
++
++	tse850->ana = devm_regulator_get(dev, "axentia,ana");
++	if (IS_ERR(tse850->ana)) {
++		if (PTR_ERR(tse850->ana) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get 'ana' regulator\n");
++		return PTR_ERR(tse850->ana);
++	}
++
++	ret = regulator_enable(tse850->ana);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable the 'ana' regulator\n");
++		return ret;
++	}
++
++	ret = atmel_ssc_set_audio(tse850->ssc_id);
++	if (ret != 0) {
++		dev_err(dev,
++			"failed to set SSC %d for audio\n", tse850->ssc_id);
++		goto err_disable_ana;
++	}
++
++	ret = snd_soc_register_card(card);
++	if (ret) {
++		dev_err(dev, "snd_soc_register_card failed\n");
++		goto err_put_audio;
++	}
++
++	return 0;
++
++err_put_audio:
++	atmel_ssc_put_audio(tse850->ssc_id);
++err_disable_ana:
++	regulator_disable(tse850->ana);
++	return ret;
++}
++
++static int tse850_remove(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = platform_get_drvdata(pdev);
++	struct tse850_priv *tse850 = snd_soc_card_get_drvdata(card);
++
++	snd_soc_unregister_card(card);
++	atmel_ssc_put_audio(tse850->ssc_id);
++	regulator_disable(tse850->ana);
++
++	return 0;
++}
++
++static const struct of_device_id tse850_dt_ids[] = {
++	{ .compatible = "axentia,tse850-pcm5142", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, tse850_dt_ids);
++
++static struct platform_driver tse850_driver = {
++	.driver = {
++		.name = "axentia-tse850-pcm5142",
++		.of_match_table = of_match_ptr(tse850_dt_ids),
++	},
++	.probe = tse850_probe,
++	.remove = tse850_remove,
++};
++
++module_platform_driver(tse850_driver);
++
++/* Module information */
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_DESCRIPTION("ALSA SoC driver for TSE-850 with PCM5142 codec");
++MODULE_LICENSE("GPL");
+-- 
+2.1.4
