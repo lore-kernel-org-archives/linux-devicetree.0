@@ -1,89 +1,48 @@
-From: Madalin Bucur <madalin.bucur@nxp.com>
-Subject: [PATCH 3/3] powerpc/fsl/dts: add FMan node for t1042d4rdb
-Date: Fri, 11 Nov 2016 17:53:18 +0200
-Message-ID: <1478879598-3362-3-git-send-email-madalin.bucur@nxp.com>
-References: <1478879598-3362-1-git-send-email-madalin.bucur@nxp.com>
-Reply-To: madalin.bucur@nxp.com
+From: <christopher.spinrath@rwth-aachen.de>
+Subject: [PATCH 1/2] ARM: dts: imx6q-cm-fx6: fix fec pinctrl
+Date: Fri, 11 Nov 2016 16:59:38 +0100
+Message-ID: <6cd823201b9f4cde8de8eddc910f39ce@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1478879598-3362-1-git-send-email-madalin.bucur@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org
-Cc: oss@buserror.net, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Christopher Spinrath <christopher.spinrath@rwth-aachen.de>, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
----
- arch/powerpc/boot/dts/fsl/t1042d4rdb.dts | 47 ++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-index 2a5a90d..8c0c318 100644
---- a/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1042d4rdb.dts
-@@ -48,6 +48,53 @@
- 					"fsl,deepsleep-cpld";
- 		};
+According to the schematics of CompuLab's sbc-fx6 baseboard and the
+vendor devicetree GPIO_16 is *not* muxed to ENET_REF_CLK but to SPDIF_IN.
+
+Remove the wrong pinctrl setting.
+
+Fixes: 682d055e6ac5 ("ARM: dts: Add initial support for cm-fx6.")
+Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+---
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index 59bc5a4..a150bca 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -183,7 +183,6 @@
+ 			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
+ 			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
+ 			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+-			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
+ 		>;
  	};
-+	soc: soc@ffe000000 {
-+		fman0: fman@400000 {
-+			ethernet@e0000 {
-+				phy-handle = <&phy_sgmii_0>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e2000 {
-+				phy-handle = <&phy_sgmii_1>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e4000 {
-+				phy-handle = <&phy_sgmii_2>;
-+				phy-connection-type = "sgmii";
-+			};
-+
-+			ethernet@e6000 {
-+				phy-handle = <&phy_rgmii_0>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			ethernet@e8000 {
-+				phy-handle = <&phy_rgmii_1>;
-+				phy-connection-type = "rgmii";
-+			};
-+
-+			mdio0: mdio@fc000 {
-+				phy_sgmii_0: ethernet-phy@02 {
-+					reg = <0x02>;
-+				};
-+				phy_sgmii_1: ethernet-phy@03 {
-+					reg = <0x03>;
-+				};
-+				phy_sgmii_2: ethernet-phy@01 {
-+					reg = <0x01>;
-+				};
-+				phy_rgmii_0: ethernet-phy@04 {
-+					reg = <0x04>;
-+				};
-+				phy_rgmii_1: ethernet-phy@05 {
-+					reg = <0x05>;
-+				};
-+			};
-+		};
-+	};
-+
- };
  
- #include "t1042si-post.dtsi"
 -- 
-2.1.0
+2.10.2
