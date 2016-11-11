@@ -1,44 +1,88 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH] lm87: Allow LM87_REG_CHANNEL_MODE to be set via DT
-Date: Thu, 10 Nov 2016 17:31:40 -0700
-Message-ID: <20161111003140.GA7575@obsidianresearch.com>
-References: <20161110171936.GA29537@obsidianresearch.com>
- <20161110234707.GA14199@roeck-us.net>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv3 2/2] gpio: xilinx: Add clock support
+Date: Thu, 10 Nov 2016 16:42:51 -0800
+Message-ID: <20161111004251.gfzlfsjdt3yi44qu@xsjsorenbubuntu>
+References: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <1478757365-3311-2-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161110234707.GA14199@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+In-Reply-To: <1478757365-3311-2-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 03:47:07PM -0800, Guenter Roeck wrote:
-> On Thu, Nov 10, 2016 at 10:19:36AM -0700, Jason Gunthorpe wrote:
-> > This compliments the existing scheme that lets it be set via
-> > platform_data.
-> > 
-> > Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+On Thu, 2016-11-10 at 11:26:05 +0530, Shubhrajyoti Datta wrote:
+> Add basic clock support for xilinx gpio.
 > 
-> I would prefer https://www.spinics.net/lists/devicetree/msg148819.html
-> which appears to address the same problem and is less cryptic.
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2 :
+> no change
+> v3:
+> Add clock name
+> Remove some debug messages
+> 
+>  drivers/gpio/gpio-xilinx.c |   20 ++++++++++++++++++++
+>  1 files changed, 20 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 14b2a62..3385a0a 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -13,6 +13,7 @@
+>   */
+>  
+>  #include <linux/bitops.h>
+> +#include <linux/clk.h>
+>  #include <linux/init.h>
+>  #include <linux/errno.h>
+>  #include <linux/module.h>
+> @@ -45,6 +46,7 @@
+>   * @gpio_state: GPIO state shadow register
+>   * @gpio_dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+> + * @clk: Clock resource for this controller
+>   */
+>  struct xgpio_instance {
+>  	struct of_mm_gpio_chip mmchip;
+> @@ -52,6 +54,7 @@ struct xgpio_instance {
+>  	u32 gpio_state[2];
+>  	u32 gpio_dir[2];
+>  	spinlock_t gpio_lock[2];
+> +	struct clk *clk;
+>  };
+>  
+>  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
+> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
+>  	struct xgpio_instance *chip = platform_get_drvdata(pdev);
+>  
+>  	of_mm_gpiochip_remove(&chip->mmchip);
+> +	clk_disable_unprepare(chip->clk);
+>  
+>  	return 0;
+>  }
+> @@ -307,6 +311,21 @@ static int xgpio_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, chip);
+>  
+> +	/* Retrieve GPIO clock */
+> +	chip->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
+> +	if (IS_ERR(chip->clk)) {
+> +		if (PTR_ERR(chip->clk) == -ENOENT)
+> +			chip->clk = NULL;
+> +		else
+> +			return PTR_ERR(chip->clk);
 
-Is there a patch someplace that implements that proposed DT binding? I
-couldn't find anything.
+I personally would have kept the error message to give users a hint
+why/what failed.
+Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-> NACK unless someone convinces me otherwise.
-
-*shrug* both styles of definition seem to be used in various device
-tree bindings.
-
-The downside with Mahoda's proposal is that it only covers 3 of the 8
-configuration bits, and will require alot of code for parsing. It
-seems really clunky, and why is a regulator involved to set the A/D
-sensitivity? Weird.
-
-But I only need has-temp3, so if a patch appears please cc me and I'll
-review it here..
-
-Regards,
-Jason
+	Sören
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
