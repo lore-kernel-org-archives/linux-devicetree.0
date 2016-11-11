@@ -1,222 +1,171 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v3 1/3] ASoC: atmel_ssc_dai: if not provided, default to sensible dividers
-Date: Fri, 11 Nov 2016 12:29:10 +0100
-Message-ID: <1478863752-10569-2-git-send-email-peda@axentia.se>
-References: <1478863752-10569-1-git-send-email-peda@axentia.se>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
+Date: Fri, 11 Nov 2016 13:50:03 +0200
+Message-ID: <46217523.VXi0bvqLS4@avalon>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <d9e9aac2-001c-491b-db34-a9eed6240722@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478863752-10569-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <d9e9aac2-001c-491b-db34-a9eed6240722-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When this driver masters BCLK and/or LRCLK, and noone has stated
-differently, assume that all the bits of a frame are used.
+Hi Antti,
 
-This relieves the cpu dai users from the duty to fill in the dividers for
-the common case.
+On Friday 11 Nov 2016 09:16:04 Antti Palosaari wrote:
+> Hello
+> 
+> On 11/09/2016 05:44 PM, Ramesh Shanmugasundaram wrote:
+> > +static int max2175_set_lo_freq(struct max2175 *ctx, u64 lo_freq)
+> > +{
+> > +	u64 scaled_lo_freq, scaled_npf, scaled_integer, scaled_fraction;
+> > +	u32 frac_desired, int_desired, lo_mult = 1;
+> > +	const u32 scale_factor = 1000000U;
+> > +	u8 loband_bits = 0, vcodiv_bits = 0;
+> > +	enum max2175_band band;
+> > +	int ret;
+> > +
+> > +	/* Scale to larger number for precision */
+> > +	scaled_lo_freq = lo_freq * scale_factor * 100;
+> > +	band = max2175_read_bits(ctx, 5, 1, 0);
+> > +
+> > +	mxm_dbg(ctx, "set_lo_freq: scaled lo_freq %llu lo_freq %llu band 
+%d\n",
+> > +		scaled_lo_freq, lo_freq, band);
+> > +
+> > +	switch (band) {
+> > +	case MAX2175_BAND_AM:
+> > +		if (max2175_read_bit(ctx, 5, 7) == 0)
+> > +			lo_mult = 16;
+> 
+> else is lo_mult = 1. No idea if it is correct, but sounds very small
+> output divider for low freq like am band. And on the other-hand local
+> oscillator output divider, which I expect this to be, is usually 2 or more.
+> 
+> > +		break;
+> > +	case MAX2175_BAND_FM:
+> > +		if (lo_freq <= 74700000) {
+> > +			lo_mult = 16;
+> 
+> No meaning as you set it later 8.
+> 
+> > +		} else if (lo_freq > 74700000 && lo_freq <= 110000000) {
+> > +			loband_bits = 1;
+> > +		} else {
+> > +			loband_bits = 1;
+> > +			vcodiv_bits = 3;
+> > +		}
+> > +		lo_mult = 8;
+> > +		break;
+> > +	case MAX2175_BAND_VHF:
+> > +		if (lo_freq <= 210000000) {
+> > +			loband_bits = 2;
+> > +			vcodiv_bits = 2;
+> > +		} else {
+> > +			loband_bits = 2;
+> > +			vcodiv_bits = 1;
+> > +		}
+> > +		lo_mult = 4;
+> > +		break;
+> > +	default:
+> > +		loband_bits = 3;
+> > +		vcodiv_bits = 2;
+> > +		lo_mult = 2;
+> > +		break;
+> > +	}
+> > +
+> > +	if (band == MAX2175_BAND_L)
+> > +		scaled_npf = div_u64(div_u64(scaled_lo_freq, ctx->xtal_freq),
+> > +				     lo_mult);
+> > +	else
+> > +		scaled_npf = div_u64(scaled_lo_freq, ctx->xtal_freq) * 
+lo_mult;
+> > +
+> > +	scaled_npf = div_u64(scaled_npf, 100);
+> > +	scaled_integer = div_u64(scaled_npf, scale_factor) * scale_factor;
+> > +	int_desired = div_u64(scaled_npf, scale_factor);
+> > +	scaled_fraction = scaled_npf - scaled_integer;
+> > +	frac_desired = div_u64(scaled_fraction << 20, scale_factor);
+> > +
+> > +	/* Check CSM is not busy */
+> > +	ret = max2175_poll_csm_ready(ctx);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mxm_dbg(ctx, "loband %u vcodiv %u lo_mult %u scaled_npf %llu\n",
+> > +		loband_bits, vcodiv_bits, lo_mult, scaled_npf);
+> > +	mxm_dbg(ctx, "scaled int %llu frac %llu desired int %u frac %u\n",
+> > +		scaled_integer, scaled_fraction, int_desired, frac_desired);
+> > +
+> > +	/* Write the calculated values to the appropriate registers */
+> > +	max2175_write(ctx, 1, int_desired);
+> > +	max2175_write_bits(ctx, 2, 3, 0, (frac_desired >> 16) & 0xf);
+> > +	max2175_write(ctx, 3, frac_desired >> 8);
+> > +	max2175_write(ctx, 4, frac_desired);
+> > +	max2175_write_bits(ctx, 5, 3, 2, loband_bits);
+> > +	max2175_write_bits(ctx, 6, 7, 6, vcodiv_bits);
+> > +	return ret;
+> > +}
+> 
+> That synthesizer config is hard to understand. It seems to be
+> fractional-N, with configurable N, K and output divider - like a school
+> book example.
+> 
+>                +----------------------------+
+>                v                            |
+>       Fref   +----+     +-------+         +------+
+>      ------> | PD | --> |  VCO  | ------> | /N.F |
+>              +----+     +-------+         +------+
+>                           |
+>                           |
+>                           v
+>                         +-------+  Fout
+>                         | /Rout | ------>
+>                         +-------+
+>
+> I made following look-up table in order to understand it:
+> 
+> band      lo freq band vcodiv div_out
+>    AM  <  50000000    0      0      16 // reg 5 bit 7 ?
+>    FM  <  74700000    0      0      16
+>    FM  < 110000000    1      0       8
+>    FM  < 160000000    1      3       8
+>   VHF  < 210000000    2      2       4
+>   VHF  < 600000000    2      1       4
+>     L  <2000000000    3      2       2
+> 
+> "vcodiv" looks unrelated to synth calculation, dunno what it is.
+> 
+> One which makes calculation very complex looking is that it is based of
+> floating point calculus. On integer mathematics you should replace
+> fractional part with fractional modulus (usually letter "K" is used for
+> fractional modulus on PLL calc).
+> 
+> So that ends up something like:
+> 1) select suitable lo output divider from desired output frequency
+> 2) calculate vco frequency
+> 3) convert vco frequency to N and K
+> * N = Fvco/Fref
+> * K = Fvco%Fref
+> 4) convert K to control word (looks like << 20)
+> 5) program values
+> 
+> Result should be calculus without scaling.
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- sound/soc/atmel/atmel_ssc_dai.c | 83 +++++++++++++++++++++++++++++++++++++----
- sound/soc/atmel/atmel_ssc_dai.h |  1 +
- 2 files changed, 77 insertions(+), 7 deletions(-)
+Thanks for reviewing this part.
 
-diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
-index 16e459aedffe..a1e2c5682dcd 100644
---- a/sound/soc/atmel/atmel_ssc_dai.c
-+++ b/sound/soc/atmel/atmel_ssc_dai.c
-@@ -380,6 +380,7 @@ static void atmel_ssc_shutdown(struct snd_pcm_substream *substream,
- 		ssc_writel(ssc_p->ssc->regs, CR, SSC_BIT(CR_SWRST));
- 		/* Clear the SSC dividers */
- 		ssc_p->cmr_div = ssc_p->tcmr_period = ssc_p->rcmr_period = 0;
-+		ssc_p->forced_divider = 0;
- 	}
- 	spin_unlock_irq(&ssc_p->lock);
- 
-@@ -426,14 +427,17 @@ static int atmel_ssc_set_dai_clkdiv(struct snd_soc_dai *cpu_dai,
- 		else
- 			if (div != ssc_p->cmr_div)
- 				return -EBUSY;
-+		ssc_p->forced_divider |= BIT(ATMEL_SSC_CMR_DIV);
- 		break;
- 
- 	case ATMEL_SSC_TCMR_PERIOD:
- 		ssc_p->tcmr_period = div;
-+		ssc_p->forced_divider |= BIT(ATMEL_SSC_TCMR_PERIOD);
- 		break;
- 
- 	case ATMEL_SSC_RCMR_PERIOD:
- 		ssc_p->rcmr_period = div;
-+		ssc_p->forced_divider |= BIT(ATMEL_SSC_RCMR_PERIOD);
- 		break;
- 
- 	default:
-@@ -443,6 +447,28 @@ static int atmel_ssc_set_dai_clkdiv(struct snd_soc_dai *cpu_dai,
- 	return 0;
- }
- 
-+/* Is the cpu-dai master of the frame clock? */
-+static int atmel_ssc_cfs(struct atmel_ssc_info *ssc_p)
-+{
-+	switch (ssc_p->daifmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+/* Is the cpu-dai master of the bit clock? */
-+static int atmel_ssc_cbs(struct atmel_ssc_info *ssc_p)
-+{
-+	switch (ssc_p->daifmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		return 1;
-+	}
-+	return 0;
-+}
-+
- /*
-  * Configure the SSC.
-  */
-@@ -459,6 +485,9 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 	u32 tfmr, rfmr, tcmr, rcmr;
- 	int ret;
- 	int fslen, fslen_ext;
-+	u32 cmr_div;
-+	u32 tcmr_period;
-+	u32 rcmr_period;
- 
- 	/*
- 	 * Currently, there is only one set of dma params for
-@@ -470,6 +499,46 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 	else
- 		dir = 1;
- 
-+	/*
-+	 * If the cpu dai should provide BCLK, but noone has provided the
-+	 * divider needed for that to work, fall back to something sensible.
-+	 */
-+	cmr_div = ssc_p->cmr_div;
-+	if (!(ssc_p->forced_divider & BIT(ATMEL_SSC_CMR_DIV)) &&
-+	    atmel_ssc_cbs(ssc_p)) {
-+		int bclk_rate = snd_soc_params_to_bclk(params);
-+
-+		if (bclk_rate < 0) {
-+			dev_err(dai->dev, "unable to calculate cmr_div: %d\n",
-+				bclk_rate);
-+			return bclk_rate;
-+		}
-+
-+		cmr_div = DIV_ROUND_CLOSEST(ssc_p->mck_rate, 2 * bclk_rate);
-+	}
-+
-+	/*
-+	 * If the cpu dai should provide LRCLK, but noone has provided the
-+	 * dividers needed for that to work, fall back to something sensible.
-+	 */
-+	tcmr_period = ssc_p->tcmr_period;
-+	rcmr_period = ssc_p->rcmr_period;
-+	if (atmel_ssc_cfs(ssc_p)) {
-+		int frame_size = snd_soc_params_to_frame_size(params);
-+
-+		if (frame_size < 0) {
-+			dev_err(dai->dev,
-+				"unable to calculate tx/rx cmr_period: %d\n",
-+				frame_size);
-+			return frame_size;
-+		}
-+
-+		if (!(ssc_p->forced_divider & BIT(ATMEL_SSC_TCMR_PERIOD)))
-+			tcmr_period = frame_size / 2 - 1;
-+		if (!(ssc_p->forced_divider & BIT(ATMEL_SSC_RCMR_PERIOD)))
-+			rcmr_period = frame_size / 2 - 1;
-+	}
-+
- 	dma_params = ssc_p->dma_params[dir];
- 
- 	channels = params_channels(params);
-@@ -524,7 +593,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 		fslen_ext = (bits - 1) / 16;
- 		fslen = (bits - 1) % 16;
- 
--		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
-+		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
- 			| SSC_BF(RCMR_STTDLY, START_DELAY)
- 			| SSC_BF(RCMR_START, SSC_START_FALLING_RF)
- 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
-@@ -540,7 +609,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 			| SSC_BF(RFMR_LOOP, 0)
- 			| SSC_BF(RFMR_DATLEN, (bits - 1));
- 
--		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
-+		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
- 			| SSC_BF(TCMR_STTDLY, START_DELAY)
- 			| SSC_BF(TCMR_START, SSC_START_FALLING_RF)
- 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
-@@ -606,7 +675,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 		fslen_ext = (bits - 1) / 16;
- 		fslen = (bits - 1) % 16;
- 
--		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
-+		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
- 			| SSC_BF(RCMR_STTDLY, START_DELAY)
- 			| SSC_BF(RCMR_START, SSC_START_FALLING_RF)
- 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
-@@ -623,7 +692,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 			| SSC_BF(RFMR_LOOP, 0)
- 			| SSC_BF(RFMR_DATLEN, (bits - 1));
- 
--		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
-+		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
- 			| SSC_BF(TCMR_STTDLY, START_DELAY)
- 			| SSC_BF(TCMR_START, SSC_START_FALLING_RF)
- 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
-@@ -650,7 +719,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 		 * MCK divider, and the BCLK signal is output
- 		 * on the SSC TK line.
- 		 */
--		rcmr =	  SSC_BF(RCMR_PERIOD, ssc_p->rcmr_period)
-+		rcmr =	  SSC_BF(RCMR_PERIOD, rcmr_period)
- 			| SSC_BF(RCMR_STTDLY, 1)
- 			| SSC_BF(RCMR_START, SSC_START_RISING_RF)
- 			| SSC_BF(RCMR_CKI, SSC_CKI_RISING)
-@@ -665,7 +734,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 			| SSC_BF(RFMR_LOOP, 0)
- 			| SSC_BF(RFMR_DATLEN, (bits - 1));
- 
--		tcmr =	  SSC_BF(TCMR_PERIOD, ssc_p->tcmr_period)
-+		tcmr =	  SSC_BF(TCMR_PERIOD, tcmr_period)
- 			| SSC_BF(TCMR_STTDLY, 1)
- 			| SSC_BF(TCMR_START, SSC_START_RISING_RF)
- 			| SSC_BF(TCMR_CKI, SSC_CKI_FALLING)
-@@ -760,7 +829,7 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
- 	}
- 
- 	/* set SSC clock mode register */
--	ssc_writel(ssc_p->ssc->regs, CMR, ssc_p->cmr_div);
-+	ssc_writel(ssc_p->ssc->regs, CMR, cmr_div);
- 
- 	/* set receive clock mode and format */
- 	ssc_writel(ssc_p->ssc->regs, RCMR, rcmr);
-diff --git a/sound/soc/atmel/atmel_ssc_dai.h b/sound/soc/atmel/atmel_ssc_dai.h
-index 80b153857a88..75194f582131 100644
---- a/sound/soc/atmel/atmel_ssc_dai.h
-+++ b/sound/soc/atmel/atmel_ssc_dai.h
-@@ -113,6 +113,7 @@ struct atmel_ssc_info {
- 	unsigned short cmr_div;
- 	unsigned short tcmr_period;
- 	unsigned short rcmr_period;
-+	unsigned int forced_divider;
- 	struct atmel_pcm_dma_params *dma_params[2];
- 	struct atmel_ssc_state ssc_state;
- 	unsigned long mck_rate;
+I'd like to add that we already have two PLL helpers in the media subsystem, 
+in drivers/media/i2c/aptina-pll.c and drivers/media/i2c/smiapp-pll.c. As the 
+PLL used here seems to be a classic one, it would make sense to also extract 
+the code in a helper function that could be shared between drivers.
+
 -- 
-2.1.4
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
