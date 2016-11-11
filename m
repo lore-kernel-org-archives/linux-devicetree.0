@@ -1,87 +1,33 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] gpio: xilinx: Add clock support
-Date: Thu, 10 Nov 2016 16:42:51 -0800
-Message-ID: <20161111004251.gfzlfsjdt3yi44qu@xsjsorenbubuntu>
-References: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1478757365-3311-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 3/3] clk: qcom: Always add factor clock for xo clocks
+Date: Thu, 10 Nov 2016 16:48:05 -0800
+Message-ID: <20161111004805.GA5177@codeaurora.org>
+References: <20161102155658.32203-1-georgi.djakov@linaro.org>
+ <20161102155658.32203-4-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478757365-3311-2-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20161102155658.32203-4-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-11-10 at 11:26:05 +0530, Shubhrajyoti Datta wrote:
-> Add basic clock support for xilinx gpio.
+On 11/02, Georgi Djakov wrote:
+> Currently the RPM/RPM-SMD clock drivers do not register the xo clocks,
+> so we should always add factor clock. When we later add xo clocks support
+> into the drivers, we should update this function to skip registration.
+> By doing so we avoid any DT dependencies.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> v2 :
-> no change
-> v3:
-> Add clock name
-> Remove some debug messages
-> 
->  drivers/gpio/gpio-xilinx.c |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 14b2a62..3385a0a 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -13,6 +13,7 @@
->   */
->  
->  #include <linux/bitops.h>
-> +#include <linux/clk.h>
->  #include <linux/init.h>
->  #include <linux/errno.h>
->  #include <linux/module.h>
-> @@ -45,6 +46,7 @@
->   * @gpio_state: GPIO state shadow register
->   * @gpio_dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
-> + * @clk: Clock resource for this controller
->   */
->  struct xgpio_instance {
->  	struct of_mm_gpio_chip mmchip;
-> @@ -52,6 +54,7 @@ struct xgpio_instance {
->  	u32 gpio_state[2];
->  	u32 gpio_dir[2];
->  	spinlock_t gpio_lock[2];
-> +	struct clk *clk;
->  };
->  
->  static inline int xgpio_index(struct xgpio_instance *chip, int gpio)
-> @@ -282,6 +285,7 @@ static int xgpio_remove(struct platform_device *pdev)
->  	struct xgpio_instance *chip = platform_get_drvdata(pdev);
->  
->  	of_mm_gpiochip_remove(&chip->mmchip);
-> +	clk_disable_unprepare(chip->clk);
->  
->  	return 0;
->  }
-> @@ -307,6 +311,21 @@ static int xgpio_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, chip);
->  
-> +	/* Retrieve GPIO clock */
-> +	chip->clk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-> +	if (IS_ERR(chip->clk)) {
-> +		if (PTR_ERR(chip->clk) == -ENOENT)
-> +			chip->clk = NULL;
-> +		else
-> +			return PTR_ERR(chip->clk);
 
-I personally would have kept the error message to give users a hint
-why/what failed.
-Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Applied to clk-qcom-rpm and merged into clk-next
 
-	Sören
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
