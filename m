@@ -1,65 +1,47 @@
-From: Anurup M <anurupvasu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v1 02/11] dt-bindings: hisi: Add Hisilicon
- HiP05/06/07 Sysctrl and Djtag dts bindings
-Date: Fri, 11 Nov 2016 17:29:05 +0530
-Message-ID: <5825B289.9020606@gmail.com>
-References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
- <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
- <20161110172320.GA10137@leverpostej> <5825A927.2000202@gmail.com>
- <20161111115346.GC11945@leverpostej>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 8/8] iio: envelope-detector: ADC driver based on a DAC
+ and a comparator
+Date: Fri, 11 Nov 2016 12:37:14 +0100
+Message-ID: <9fa01d3d-74ba-a048-52bf-4df959153354@axentia.se>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se>
+ <1478606339-31253-9-git-send-email-peda@axentia.se>
+ <alpine.DEB.2.20.1611081630450.3501@nanos>
+ <d8237286-d2ff-3146-d718-f54d05b0101d@axentia.se>
+ <alpine.DEB.2.20.1611081809320.3501@nanos>
+ <1c104a31-6c66-9537-9b90-ede58c8e1a92@axentia.se>
+ <alpine.DEB.2.20.1611082146560.3501@nanos>
+ <ac908a97-77b8-046a-a0e9-74cc97f56c9b@axentia.se>
+ <alpine.DEB.2.20.1611091605090.3501@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161111115346.GC11945@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, anurup.m-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangshaokun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, tanxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, sanil.kumar-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shiju.jose-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shyju.pv-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1611091605090.3501@nanos>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-11-09 16:06, Thomas Gleixner wrote:
+> On Wed, 9 Nov 2016, Peter Rosin wrote:
+>> On 2016-11-08 22:47, Thomas Gleixner wrote:
+>>> I don't think you need extra race handling with that, but I might be wrong
+>>> as usual.
+>>
+>> There's obviously no way to determine which of the timeout or the
+>> interrupt that happens first without some race handling, so I don't
+>> know what you mean? If the timeout happens first, there is also a
+>> need to handle late hits from the irq that might come in during the
+>> preparation for the next step in the binary search. It gets messy
+>> quickly compared to the simplicity of the current implementation.
+> 
+> Gah, forgot about that timeout thingy. Fair enough.
+> 
+> Feel free to add an 
+> 
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
+Thanks for looking!
 
-On Friday 11 November 2016 05:23 PM, Mark Rutland wrote:
-> On Fri, Nov 11, 2016 at 04:49:03PM +0530, Anurup M wrote:
->> On Thursday 10 November 2016 10:53 PM, Mark Rutland wrote:
->>> On Thu, Nov 03, 2016 at 01:41:58AM -0400, Anurup M wrote:
->>>> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->>>> +Example:
->>>> +	/* for Hisilicon HiP05 djtag for CPU sysctrl */
->>>> +	djtag0: djtag@80010000 {
->>>> +		compatible = "hisilicon,hip05-cpu-djtag-v1";
->>>> +		reg = <0x0 0x80010000 0x0 0x10000>;
->>>> +
->>>> +		/* For L3 cache PMU */
->>>> +		pmul3c0 {
->>>> +			compatible = "hisilicon,hisi-pmu-l3c-v1";
->>>> +			scl-id = <0x02>;
->>>> +			num-events = <0x16>;
->>>> +			num-counters = <0x08>;
->>>> +			module-id = <0x04>;
->>>> +			num-banks = <0x04>;
->>>> +			cfgen-map = <0x02 0x04 0x01 0x08>;
->>>> +			counter-reg = <0x170>;
->>>> +			evctrl-reg = <0x04>;
->>>> +			event-en = <0x1000000>;
->>>> +			evtype-reg = <0x140>;
->>>> +		};
->>> This sub-node needs a binding document.
->>>
->>> These properties are completely opaque
->> The L3 cache PMU bindings are defined @bindings/arm/hisilicon/pmu.txt.
->> Is it OK that I document here(hisilicon/djtag.txt), a reference to
->> the PMU bindings doc ?
-> At this point in the series, that file does not exist yet, and this is
-> an undocumented beinding.
->
-> Please introduce this sub-node long with the PMU bindings, later in the
-> series.
-Thanks, I got your suggestion. Will add this later in series.
-> Thanks,
-> Mark.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Peter
