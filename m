@@ -1,73 +1,65 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
-Date: Fri, 11 Nov 2016 14:24:41 +0100
-Message-ID: <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 6/8] Documentation: bindings: add compatible specific
+ to legacy SCPI protocol
+Date: Fri, 11 Nov 2016 07:34:20 -0600
+Message-ID: <CAL_JsqJ5PxzM_VMP55m+6snkqyWSMSsdCOiUzYWkMTb3LkD5Mw@mail.gmail.com>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <1478148731-11712-7-git-send-email-sudeep.holla@arm.com> <20161110012249.ed56ik6kdffoikym@rob-hp-laptop>
+ <14e563ae-36c5-4bf9-0d51-3b07830de3db@arm.com> <CAL_JsqLW4JZHb0ncVUEefnKySA231EDgvCkY3xPdaJGf=uMJYg@mail.gmail.com>
+ <7ccc12bc-9a05-47e3-8ab8-d1b0ad31159e@arm.com> <CAOesGMj3TYLkvfGbq6BKqr+9i6mjArjRPuqeAN1-rGO2OhoSyw@mail.gmail.com>
+ <ed58424e-e538-227a-37b5-b35fbe4f96ba@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, sakari.ailus@linux.intel.com, crope@iki.fi
-Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ed58424e-e538-227a-37b5-b35fbe4f96ba-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2016 04:44 PM, Ramesh Shanmugasundaram wrote:
-> This patch adds support for the three new SDR formats. These formats
-> were prefixed with "sliced" indicating I data constitutes the top half and
-> Q data constitutes the bottom half of the received buffer.
+On Fri, Nov 11, 2016 at 1:48 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 10/11/16 19:03, Olof Johansson wrote:
+>> On Thu, Nov 10, 2016 at 6:34 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> wrote:
 
-The standard terminology for video formats is "planar". I am leaning towards
-using that here as well.
+[...]
 
-Any opinions on this?
+>>> E.g. Amlogic follows most of the legacy protocol though it deviates in
+>>> couple of things which we can handle with platform specific compatible
+>>> (in the following patch in the series). When another user(Rockchip ?)
+>>> make use of this legacy protocol, we can start using those platform
+>>> specific compatible for deviations only.
+>>>
+>>> Is that not acceptable ?
+>>
+>>
+>> If there's no shared legacy feature set, then it's probably less
+>> useful to have a shared less precise compatible value.
+>>
+>
+> There is and will be some shared feature set for sure. At the least the
+> standard command set will be shared.
+>
+>> What the main point I was trying to get across was that we shouldn't
+>> expand the generic binding with per-vendor compatible fields, instead
+>> we should have those as extensions on the side.
+>>
+>
+> Yes I get the point. We will have per-vendor compatibles for handle the
+> deviations but generic one to handle the shared set.
+>
+>> I'm also a little apprehensive of using "legacy", it goes in the same
+>> bucket as "misc". At some point 1.0 will be legacy too, etc.
+>>
+>
+> True and I agree, how about "arm,scpi-pre-1.0" instead ?
 
-	Hans
+That's still meaningless. Convince me that multiple implementations
+are identical, then we can have a common property. For example, how
+many releases did ARM make before 1.0.
 
-> 
-> V4L2_SDR_FMT_SCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
-> inside 16-bit. V4L2 FourCC: SC16
-> 
-> V4L2_SDR_FMT_SCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
-> inside 18-bit. V4L2 FourCC: SC18
-> 
-> V4L2_SDR_FMT_SCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
-> inside 20-bit. V4L2 FourCC: SC20
-> 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> ---
->  drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
->  include/uapi/linux/videodev2.h       | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 181381d..d36b386 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1207,6 +1207,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->  	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
->  	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
->  	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
-> +	case V4L2_SDR_FMT_SCU16BE:	descr = "Sliced Complex U16BE"; break;
-> +	case V4L2_SDR_FMT_SCU18BE:	descr = "Sliced Complex U18BE"; break;
-> +	case V4L2_SDR_FMT_SCU20BE:	descr = "Sliced Complex U20BE"; break;
->  	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
->  	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
->  	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; break;
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 4364ce6..34a9c30 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -666,6 +666,9 @@ struct v4l2_pix_format {
->  #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /* complex s8 */
->  #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /* complex s14le */
->  #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /* real u12le */
-> +#define V4L2_SDR_FMT_SCU16BE	  v4l2_fourcc('S', 'C', '1', '6') /* sliced complex u16be */
-> +#define V4L2_SDR_FMT_SCU18BE	  v4l2_fourcc('S', 'C', '1', '8') /* sliced complex u18be */
-> +#define V4L2_SDR_FMT_SCU20BE	  v4l2_fourcc('S', 'C', '2', '0') /* sliced complex u20be */
->  
->  /* Touch formats - used for Touch devices */
->  #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-bit signed deltas */
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
