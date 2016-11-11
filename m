@@ -1,94 +1,101 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Fri, 11 Nov 2016 08:41:20 +0530
-Message-ID: <20161111031120.GE11670@vireshk-i7>
-References: <cover.1477463128.git.viresh.kumar@linaro.org>
- <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
- <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
- <20161110040440.GA11670@vireshk-i7>
- <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
- <20161110180940.GD11670@vireshk-i7>
- <20161110225126.GK16026@codeaurora.org>
+From: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] phy: rockchip-inno-usb2: correct 480MHz output clock
+ stable time
+Date: Fri, 11 Nov 2016 11:23:49 +0800
+Message-ID: <e6d038f6-c324-fc06-5cf1-e03d6ec6d4e3@rock-chips.com>
+References: <1478523658-9400-1-git-send-email-wulf@rock-chips.com>
+ <CAD=FV=VC15_QAs7+DOoqCeWrU6-qqnUku2SSPFLOvLanu8xL3g@mail.gmail.com>
+ <9eeb3d84-f850-4b76-ce6a-67cc92d6de3b@rock-chips.com>
+ <2283070.Hkeafucara@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161110225126.GK16026@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2283070.Hkeafucara@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10-11-16, 14:51, Stephen Boyd wrote:
-> On 11/10, Viresh Kumar wrote:
-> > On 10-11-16, 16:36, Mark Brown wrote:
-> > > On Thu, Nov 10, 2016 at 09:34:40AM +0530, Viresh Kumar wrote:
-> > > > On 09-11-16, 14:58, Mark Brown wrote:
-> > > > > On Wed, Oct 26, 2016 at 12:02:56PM +0530, Viresh Kumar wrote:
-> > > 
-> > > > > > +  Entries for multiple regulators shall be provided in the same field separated
-> > > > > > +  by angular brackets <>. The OPP binding doesn't provide any provisions to
-> > > > > > +  relate the values to their power supplies or the order in which the supplies
-> > > > > > +  need to be configured.
-> > > 
-> > > > > I don't understand how this works.  If we have an unordered list of
-> > > > > values to set for regulators how will we make sense of them?
-> > > 
-> > > > The platform driver is responsible to identify the order and pass it on to the
-> > > > OPP core. And the platform driver needs to have that hard coded.
-> > > 
-> > > That *really* should be in the binding.
-> > 
-> > Okay, how do you suggest doing that? Will a property like supply-names
-> > in the OPP table be fine? Like this:
-> > 
-> > @@ -369,13 +378,16 @@ Example 4: Handling multiple regulators
-> >                         compatible = "arm,cortex-a7";
-> >                         ...
-> >  
-> > -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
-> > +                       vcc0-supply = <&cpu_supply0>;
-> > +                       vcc1-supply = <&cpu_supply1>;
-> > +                       vcc2-supply = <&cpu_supply2>;
-> >                         operating-points-v2 = <&cpu0_opp_table>;
-> >                 };
-> >         };
-> >  
-> >         cpu0_opp_table: opp_table0 {
-> >                 compatible = "operating-points-v2";
-> > +               supply-names = "vcc0", "vcc1", "vcc2";
-> >                 opp-shared;
-> > 
-> 
-> No. The supply names (and also clock names/index) should be left
-> up to the consumer of the OPP table. We don't want to encode any
-> sort of details like this between the OPP table and the consumer
-> of it in DT because then it seriously couples the OPP table to
-> the consumer device. "The binding" in this case that needs to be
-> updated is the consumer binding, to indicate that it correlated
-> foo-supply and bar-supply to index 0 and 1 of the OPP table
-> voltages.
+Hi Heiko，
 
-Are you saying that we shall have a property like this then?
+在 2016年11月10日 17:21, Heiko Stübner 写道:
+> Am Donnerstag, 10. November 2016, 10:54:49 schrieb wlf:
+>> Hi Doug,
+>>
+>> 在 2016年11月10日 04:54, Doug Anderson 写道:
+>>> Hi,
+>>>
+>>> On Mon, Nov 7, 2016 at 5:00 AM, William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>>>> We found that the system crashed due to 480MHz output clock of
+>>>> USB2 PHY was unstable after clock had been enabled by gpu module.
+>>>>
+>>>> Theoretically, 1 millisecond is a critical value for 480MHz
+>>>> output clock stable time, so we try to change the delay time
+>>>> to 1.2 millisecond to avoid this issue.
+>>>>
+>>>> Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> ---
+>>>>
+>>>>    drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c
+>>>> b/drivers/phy/phy-rockchip-inno-usb2.c index ecfd7d1..8f2d2b6 100644
+>>>> --- a/drivers/phy/phy-rockchip-inno-usb2.c
+>>>> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
+>>>> @@ -267,7 +267,7 @@ static int rockchip_usb2phy_clk480m_enable(struct
+>>>> clk_hw *hw)>>
+>>>>                           return ret;
+>>>>                   
+>>>>                   /* waitting for the clk become stable */
+>>>>
+>>>> -               mdelay(1);
+>>>> +               udelay(1200);
+>>> Several people who have seen this patch have expressed concern that a
+>>> 1.2 ms delay is pretty long for something that's supposed to be
+>>> "atomic" like a clk_enable().  Consider that someone might call
+>>> clk_enable() while interrupts are disabled and that a 1.2 ms interrupt
+>>> latency is not so great.
+>>>
+>>> It seems like this clock should be moved to be enabled in "prepare"
+>>> and the "enable" should be a no-op.  This is a functionality change,
+>>> but I don't think there are any real users for this clock at the
+>>> moment so it should be fine.
+>>>
+>>> (of course, the 1 ms latency that existed before this patch was still
+>>> pretty bad, but ...)
+>> Thanks a lot for your suggestion.
+>> I agree with you.  clk_enable() will call spin_lock_irqsave() to disable
+>> interrupt, and we add
+>> more than 1ms in clk_enable may cause big latency.
+>>
+>> And according to clk_prepare() description:
+>>    In a simple case, clk_prepare can be used instead of clk_enable to
+>> ungate a clk if the
+>>    operation may sleep.  One example is a clk which is accessed over I2c.
+>>
+>> So maybe we can remove the clock to clk_prepare.
+>>
+>> Hi Heiko, Frank,
+>>          What  do you think of it?
+> moving to clk_prepare sounds sensible. That way you can switch from delay to
+> sleep functions as well.
+Thanks very much.
+I will try to update a new patch.
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index ee91cbdd95ee..733946df2fb8 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
-                        compatible = "arm,cortex-a7";
-                        ...
- 
--                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
-+                       vcc0-supply = <&cpu_supply0>;
-+                       vcc1-supply = <&cpu_supply1>;
-+                       vcc2-supply = <&cpu_supply2>;
-+                       opp-supply-names = "vcc0", "vcc1", "vcc2";
-                        operating-points-v2 = <&cpu0_opp_table>;
-                };
-        };
+Best regards,
+          Wulf
+
+>
+>
+> Heiko
+>
+>
+>
 
 
--- 
-viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
