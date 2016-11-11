@@ -1,126 +1,80 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD
- Host Controller
-Date: Fri, 11 Nov 2016 11:33:38 +0800
-Message-ID: <20161111113324.377b8841@xhacker>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
-        <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
-        <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
-        <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com>
-        <20161111112243.7431625d@xhacker>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v5 02/23] of: device: Export of_device_{get_modalias,
+ uvent_modalias} to modules
+Date: Fri, 11 Nov 2016 01:25:12 -0300
+Message-ID: <CABxcv==64RGB0U5dd_B8w6H0gpcscJ1Yr0i=iXrLDfN5W2K-tw@mail.gmail.com>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018015636.11701-3-stephen.boyd@linaro.org>
+ <CAGb2v66t8t3o0PxzaaBKnRvNP=CWG5nYud7Wjp27Q1x2baM4hg@mail.gmail.com>
+ <147733850401.29612.2343965740004706258@sboyd-linaro>
+ <20161025011632.GA23876@b29397-desktop>
+ <147829269430.21688.2345895151880009021@sboyd-linaro>
+ <20161107012920.GA10559@b29397-desktop>
+ <CAGb2v66C15fU1b2+xNDV8Fv2kmmKXyUknA8=9wXztUcs8CNKLg@mail.gmail.com>
+ <CAL_Jsq+Bw4XVEJY6V4Hn+D_OmqEcp_nLLrVT0_i+jX_guCqzfA@mail.gmail.com>
+ <CAGb2v66H1doBOdPPN9kz1vdNYx8gpgkF6s3UhTiXCCp0RZYKwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20161111112243.7431625d@xhacker>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ziji Hu <huziji@marvell.com>, Rob Herring <robh@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>, Hilbert
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v66H1doBOdPPN9kz1vdNYx8gpgkF6s3UhTiXCCp0RZYKwg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: linux-usb <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, Greg KH <gregkh@linuxfoundation.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Peter Chen <hzpeterchen@gmail.com>, Felipe Balbi <balbi@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Nov 2016 11:22:43 +0800 Jisheng Zhang wrote:
+Hello ChenYu
 
-> Hi Rob, Ziji,
-> 
-> On Thu, 10 Nov 2016 19:44:19 +0800 Ziji Hu wrote:
-> 
-> > Hi Rob,
-> > 
-> > On 2016/11/10 2:24, Rob Herring wrote:  
-> > > On Mon, Oct 31, 2016 at 12:09:54PM +0100, Gregory CLEMENT wrote:    
-> > >> From: Ziji Hu <huziji@marvell.com>
-> > >>
-> > >> Marvell Xenon SDHC can support eMMC/SD/SDIO.
-> > >> Add Xenon-specific properties.
-> > >> Also add properties for Xenon PHY setting.
-> > >>
-> > >> Signed-off-by: Hu Ziji <huziji@marvell.com>
-> > >> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> > >> ---
-> > >>  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt | 161 +++++++-
-> > >>  MAINTAINERS                                                   |   1 +-
-> > >>  2 files changed, 162 insertions(+), 0 deletions(-)
-> > >>  create mode 100644 Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> > >> new file mode 100644
-> > >> index 000000000000..0d2d139494d3
-> > >> --- /dev/null
-> > >> +++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-> > >> @@ -0,0 +1,161 @@
-> > >> +Marvell's Xenon SDHCI Controller device tree bindings
-> > >> +This file documents differences between the core mmc properties
-> > >> +described by mmc.txt and the properties used by the Xenon implementation.
-> > >> +
-> > >> +A single Xenon IP can support multiple slots.
-> > >> +Each slot acts as an independent SDHC. It owns independent resources, such
-> > >> +as register sets clock and PHY.
-> > >> +Each slot should have an independent device tree node.
-> > >> +
-> > >> +Required Properties:
-> > >> +- compatible: should be one of the following
-> > >> +  - "marvell,armada-3700-sdhci": For controllers on Armada-3700 SOC.
-> > >> +  Must provide a second register area and marvell,pad-type.
-> > >> +  - "marvell,xenon-sdhci": For controllers on all the SOCs, other than
-> > >> +  Armada-3700.    
-> > > 
-> > > Need SoC specific compatible strings.
-> > >     
-> > 
-> > 	Xenon SDHC is a common IP for all Marvell SOCs.
-> > 	It is difficult to use a single SOC specific compatible to represent Xenon SDHC.
-> > 	There will be so many SOC compatible strings in list if each specific SOC owns a compatible.
-> > 	Actually only few SOCs require special properties.
-> > 	Any suggestion please?
-> >   
-> > >> +
-> > >> +- clocks:
-> > >> +  Array of clocks required for SDHCI.
-> > >> +  Requires at least one for Xenon IP core.
-> > >> +  Some SOCs require additional clock for AXI bus.
-> > >> +
-> > >> +- clock-names:
-> > >> +  Array of names corresponding to clocks property.
-> > >> +  The input clock for Xenon IP core should be named as "core".
-> > >> +  The optional AXI clock should be named as "axi".    
-> > > 
-> > > When is AXI clock optional? This should be required for ?? compatible 
-> > > strings.
-> > >     
-> > 	It is required on some SOCs.
-> > 	I will double check if a suitable compatible string can be determined for those SOCs.  
-> 
-> Besides the core clk, berlin SoCs have one AXI clock. Usually, we have two
-> solutions:
-> 
-> solA: as current patch does, take "marvell,xenon-sdhci" as compatible string
-> and make the AXI clock property optional. Usually for berlin SoCs, we don't need
-> special properties.
+On Fri, Nov 11, 2016 at 12:01 AM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Fri, Nov 11, 2016 at 5:42 AM, Rob Herring <robh@kernel.org> wrote:
 
-Personally, I prefer solA: use the IP name as compatible string. This is IP
-specific rather than SoC specific. The HW itself supports two clks
+[snip]
 
-Thanks,
-Jisheng
+>>
+>> Do you have patches using this already. If not, it is starting to get
+>> a bit late for v4.10.
+>>
+>> I can apply this, but then you'll just be pulling in other DT patches.
+>
+> Not sure what you mean by "using" this...
+>
+> I have patches which use this to add DT-based modalias entries for
+> module auto-loading to i2c and sunxi-rsb that I haven't sent.
+>
 
-> 
-> PS: this solution is also what sdhci-pxav3.c takes
-> 
-> solB: As Rob said, add extra SoC compatible strings, so we'll have
-> something like:
-> 
-> static const struct of_device_id sdhci_xenon_of_match[] = {
-> 	{ .compatible = "marvell,armada-3700-sdhci", },
-> 	{ .compatible = "marvell,berlin4ct-sdhci", },
-> 	...
-> 	{ .compatible = "marvell,berlinxxx-mmc", },
-> }
-> 
-> then we take care the AXI clk for berlin SoCs in the code.
-> 
-> 
-> Which solution do you prefer?
-> 
-> Thanks,
-> Jisheng
+Unfortunately the I2C core can't be changed without breaking a lot of
+I2C drivers that are relying on the current behavior. I've already
+posted a RFC patch [0] for I2C that does this about a year ago and
+enumerated the issues that have to be addressed before the change can
+be made (and fixed some of the issues mentioned) on this series [1].
 
+Another issue is that an I2C device ID table is a requirement anyways
+since I2C drivers expect an i2c_device_id as an argument of their
+probe function. Kieran already have patches [2] to change that which
+should land soon.
+
+I plan to fix the remaining I2C drivers once his patches are merged
+and re-post the RFC patch as a proper one.
+
+> As far as DT usage goes, we already need this for the axp20x mfd driver.
+> There are 2 variants, i2c and sunxi-rsb. For the I2C variant a fix was
+> sent to fix module auto-loading by using the I2C client ID table:
+>
+>     mfd: axp20x-i2c: Add i2c-ids to fix module auto-loading
+>     https://git.kernel.org/cgit/linux/kernel/git/lee/mfd.git/commit/?h=for-mfd-next&id=b7142a19321484bd7681aa547c1d50148c8e2825
+>
+
+Yes, this is the workaround used by most DT-only I2C drivers. The only
+reason that these drivers have an I2C device ID is due the
+restrictions imposed by the I2C core.
+
+Best regards,
+Javier
