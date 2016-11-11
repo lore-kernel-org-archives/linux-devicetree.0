@@ -1,85 +1,60 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
-Date: Fri, 11 Nov 2016 12:52:02 +0100
-Message-ID: <CAPDyKFq+D0=esRp6J4bCErLUw+muuLWsXbQF+8M00z4iY-XMWw@mail.gmail.com>
-References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
- <1478210075-92045-2-git-send-email-lina.iyer@linaro.org> <CAPDyKFoCjf1qSBDWUY_wNx21_78fRrFqcqrFbsSmabzAZJxQAQ@mail.gmail.com>
- <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v1 02/11] dt-bindings: hisi: Add Hisilicon
+ HiP05/06/07 Sysctrl and Djtag dts bindings
+Date: Fri, 11 Nov 2016 11:53:47 +0000
+Message-ID: <20161111115346.GC11945@leverpostej>
+References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
+ <1478151727-20250-3-git-send-email-anurup.m@huawei.com>
+ <20161110172320.GA10137@leverpostej>
+ <5825A927.2000202@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5825A927.2000202@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 10 November 2016 at 20:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> On Mon, Nov 07, 2016 at 12:14:28PM +0100, Ulf Hansson wrote:
-> > On 3 November 2016 at 22:54, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > > Re-using idle state definition provided by arm,idle-state for domain
-> > > idle states creates a lot of confusion and limits further evolution of
-> > > the domain idle definition. To keep things clear and simple, define a
-> > > idle states for domain using a new compatible "domain-idle-state".
-> > >
-> > > Fix existing PM domains code to look for the newly defined compatible.
-> > >
-> > > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
-> > >  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
-> > >  drivers/base/power/domain.c                        |  2 +-
-> > >  3 files changed, 38 insertions(+), 5 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > > new file mode 100644
-> > > index 0000000..eefc7ed
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
-> > > @@ -0,0 +1,33 @@
-> > > +PM Domain Idle State Node:
-> > > +
-> > > +A domain idle state node represents the state parameters that will be used to
-> > > +select the state when there are no active components in the domain.
-> > > +
-> > > +The state node has the following parameters -
-> > > +
-> > > +- compatible:
-> > > +       Usage: Required
-> > > +       Value type: <string>
-> > > +       Definition: Must be "domain-idle-state".
-> > > +
-> > > +- entry-latency-us
-> > > +       Usage: Required
-> > > +       Value type: <prop-encoded-array>
-> > > +       Definition: u32 value representing worst case latency in
-> > > +                   microseconds required to enter the idle state.
-> > > +                   The exit-latency-us duration may be guaranteed
-> > > +                   only after entry-latency-us has passed.
+On Fri, Nov 11, 2016 at 04:49:03PM +0530, Anurup M wrote:
+> On Thursday 10 November 2016 10:53 PM, Mark Rutland wrote:
+> >On Thu, Nov 03, 2016 at 01:41:58AM -0400, Anurup M wrote:
+
+> >>diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+
+> >>+Example:
+> >>+	/* for Hisilicon HiP05 djtag for CPU sysctrl */
+> >>+	djtag0: djtag@80010000 {
+> >>+		compatible = "hisilicon,hip05-cpu-djtag-v1";
+> >>+		reg = <0x0 0x80010000 0x0 0x10000>;
+> >>+
+> >>+		/* For L3 cache PMU */
+> >>+		pmul3c0 {
+> >>+			compatible = "hisilicon,hisi-pmu-l3c-v1";
+> >>+			scl-id = <0x02>;
+> >>+			num-events = <0x16>;
+> >>+			num-counters = <0x08>;
+> >>+			module-id = <0x04>;
+> >>+			num-banks = <0x04>;
+> >>+			cfgen-map = <0x02 0x04 0x01 0x08>;
+> >>+			counter-reg = <0x170>;
+> >>+			evctrl-reg = <0x04>;
+> >>+			event-en = <0x1000000>;
+> >>+			evtype-reg = <0x140>;
+> >>+		};
+> >This sub-node needs a binding document.
 > >
-> > As we anyway are going to change this, why not use an u64 and have the
-> > value in ns instead of us?
->
-> I can't imagine that you would need more resolution or range. For times
-> less than 1us, s/w and register access times are going to dominate the
-> time.
+> >These properties are completely opaque
+> The L3 cache PMU bindings are defined @bindings/arm/hisilicon/pmu.txt.
+> Is it OK that I document here(hisilicon/djtag.txt), a reference to
+> the PMU bindings doc ?
 
-Yep.
+At this point in the series, that file does not exist yet, and this is
+an undocumented beinding.
 
->
->
-> Unless there is a real need, I'd keep alignment with the existing
-> binding.
+Please introduce this sub-node long with the PMU bindings, later in the
+series.
 
-Agree!
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
