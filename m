@@ -1,172 +1,84 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
-Date: Fri, 11 Nov 2016 13:50:03 +0200
-Message-ID: <46217523.VXi0bvqLS4@avalon>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com> <d9e9aac2-001c-491b-db34-a9eed6240722@iki.fi>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Fri, 11 Nov 2016 12:52:02 +0100
+Message-ID: <CAPDyKFq+D0=esRp6J4bCErLUw+muuLWsXbQF+8M00z4iY-XMWw@mail.gmail.com>
+References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
+ <1478210075-92045-2-git-send-email-lina.iyer@linaro.org> <CAPDyKFoCjf1qSBDWUY_wNx21_78fRrFqcqrFbsSmabzAZJxQAQ@mail.gmail.com>
+ <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d9e9aac2-001c-491b-db34-a9eed6240722-X3B1VOXEql0@public.gmane.org>
+In-Reply-To: <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
-Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Antti,
-
-On Friday 11 Nov 2016 09:16:04 Antti Palosaari wrote:
-> Hello
-> 
-> On 11/09/2016 05:44 PM, Ramesh Shanmugasundaram wrote:
-> > +static int max2175_set_lo_freq(struct max2175 *ctx, u64 lo_freq)
-> > +{
-> > +	u64 scaled_lo_freq, scaled_npf, scaled_integer, scaled_fraction;
-> > +	u32 frac_desired, int_desired, lo_mult = 1;
-> > +	const u32 scale_factor = 1000000U;
-> > +	u8 loband_bits = 0, vcodiv_bits = 0;
-> > +	enum max2175_band band;
-> > +	int ret;
-> > +
-> > +	/* Scale to larger number for precision */
-> > +	scaled_lo_freq = lo_freq * scale_factor * 100;
-> > +	band = max2175_read_bits(ctx, 5, 1, 0);
-> > +
-> > +	mxm_dbg(ctx, "set_lo_freq: scaled lo_freq %llu lo_freq %llu band 
-%d\n",
-> > +		scaled_lo_freq, lo_freq, band);
-> > +
-> > +	switch (band) {
-> > +	case MAX2175_BAND_AM:
-> > +		if (max2175_read_bit(ctx, 5, 7) == 0)
-> > +			lo_mult = 16;
-> 
-> else is lo_mult = 1. No idea if it is correct, but sounds very small
-> output divider for low freq like am band. And on the other-hand local
-> oscillator output divider, which I expect this to be, is usually 2 or more.
-> 
-> > +		break;
-> > +	case MAX2175_BAND_FM:
-> > +		if (lo_freq <= 74700000) {
-> > +			lo_mult = 16;
-> 
-> No meaning as you set it later 8.
-> 
-> > +		} else if (lo_freq > 74700000 && lo_freq <= 110000000) {
-> > +			loband_bits = 1;
-> > +		} else {
-> > +			loband_bits = 1;
-> > +			vcodiv_bits = 3;
-> > +		}
-> > +		lo_mult = 8;
-> > +		break;
-> > +	case MAX2175_BAND_VHF:
-> > +		if (lo_freq <= 210000000) {
-> > +			loband_bits = 2;
-> > +			vcodiv_bits = 2;
-> > +		} else {
-> > +			loband_bits = 2;
-> > +			vcodiv_bits = 1;
-> > +		}
-> > +		lo_mult = 4;
-> > +		break;
-> > +	default:
-> > +		loband_bits = 3;
-> > +		vcodiv_bits = 2;
-> > +		lo_mult = 2;
-> > +		break;
-> > +	}
-> > +
-> > +	if (band == MAX2175_BAND_L)
-> > +		scaled_npf = div_u64(div_u64(scaled_lo_freq, ctx->xtal_freq),
-> > +				     lo_mult);
-> > +	else
-> > +		scaled_npf = div_u64(scaled_lo_freq, ctx->xtal_freq) * 
-lo_mult;
-> > +
-> > +	scaled_npf = div_u64(scaled_npf, 100);
-> > +	scaled_integer = div_u64(scaled_npf, scale_factor) * scale_factor;
-> > +	int_desired = div_u64(scaled_npf, scale_factor);
-> > +	scaled_fraction = scaled_npf - scaled_integer;
-> > +	frac_desired = div_u64(scaled_fraction << 20, scale_factor);
-> > +
-> > +	/* Check CSM is not busy */
-> > +	ret = max2175_poll_csm_ready(ctx);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	mxm_dbg(ctx, "loband %u vcodiv %u lo_mult %u scaled_npf %llu\n",
-> > +		loband_bits, vcodiv_bits, lo_mult, scaled_npf);
-> > +	mxm_dbg(ctx, "scaled int %llu frac %llu desired int %u frac %u\n",
-> > +		scaled_integer, scaled_fraction, int_desired, frac_desired);
-> > +
-> > +	/* Write the calculated values to the appropriate registers */
-> > +	max2175_write(ctx, 1, int_desired);
-> > +	max2175_write_bits(ctx, 2, 3, 0, (frac_desired >> 16) & 0xf);
-> > +	max2175_write(ctx, 3, frac_desired >> 8);
-> > +	max2175_write(ctx, 4, frac_desired);
-> > +	max2175_write_bits(ctx, 5, 3, 2, loband_bits);
-> > +	max2175_write_bits(ctx, 6, 7, 6, vcodiv_bits);
-> > +	return ret;
-> > +}
-> 
-> That synthesizer config is hard to understand. It seems to be
-> fractional-N, with configurable N, K and output divider - like a school
-> book example.
-> 
->                +----------------------------+
->                v                            |
->       Fref   +----+     +-------+         +------+
->      ------> | PD | --> |  VCO  | ------> | /N.F |
->              +----+     +-------+         +------+
->                           |
->                           |
->                           v
->                         +-------+  Fout
->                         | /Rout | ------>
->                         +-------+
+On 10 November 2016 at 20:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 >
-> I made following look-up table in order to understand it:
-> 
-> band      lo freq band vcodiv div_out
->    AM  <  50000000    0      0      16 // reg 5 bit 7 ?
->    FM  <  74700000    0      0      16
->    FM  < 110000000    1      0       8
->    FM  < 160000000    1      3       8
->   VHF  < 210000000    2      2       4
->   VHF  < 600000000    2      1       4
->     L  <2000000000    3      2       2
-> 
-> "vcodiv" looks unrelated to synth calculation, dunno what it is.
-> 
-> One which makes calculation very complex looking is that it is based of
-> floating point calculus. On integer mathematics you should replace
-> fractional part with fractional modulus (usually letter "K" is used for
-> fractional modulus on PLL calc).
-> 
-> So that ends up something like:
-> 1) select suitable lo output divider from desired output frequency
-> 2) calculate vco frequency
-> 3) convert vco frequency to N and K
-> * N = Fvco/Fref
-> * K = Fvco%Fref
-> 4) convert K to control word (looks like << 20)
-> 5) program values
-> 
-> Result should be calculus without scaling.
+> On Mon, Nov 07, 2016 at 12:14:28PM +0100, Ulf Hansson wrote:
+> > On 3 November 2016 at 22:54, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > > Re-using idle state definition provided by arm,idle-state for domain
+> > > idle states creates a lot of confusion and limits further evolution of
+> > > the domain idle definition. To keep things clear and simple, define a
+> > > idle states for domain using a new compatible "domain-idle-state".
+> > >
+> > > Fix existing PM domains code to look for the newly defined compatible.
+> > >
+> > > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+> > >  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+> > >  drivers/base/power/domain.c                        |  2 +-
+> > >  3 files changed, 38 insertions(+), 5 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > > new file mode 100644
+> > > index 0000000..eefc7ed
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+> > > @@ -0,0 +1,33 @@
+> > > +PM Domain Idle State Node:
+> > > +
+> > > +A domain idle state node represents the state parameters that will be used to
+> > > +select the state when there are no active components in the domain.
+> > > +
+> > > +The state node has the following parameters -
+> > > +
+> > > +- compatible:
+> > > +       Usage: Required
+> > > +       Value type: <string>
+> > > +       Definition: Must be "domain-idle-state".
+> > > +
+> > > +- entry-latency-us
+> > > +       Usage: Required
+> > > +       Value type: <prop-encoded-array>
+> > > +       Definition: u32 value representing worst case latency in
+> > > +                   microseconds required to enter the idle state.
+> > > +                   The exit-latency-us duration may be guaranteed
+> > > +                   only after entry-latency-us has passed.
+> >
+> > As we anyway are going to change this, why not use an u64 and have the
+> > value in ns instead of us?
+>
+> I can't imagine that you would need more resolution or range. For times
+> less than 1us, s/w and register access times are going to dominate the
+> time.
 
-Thanks for reviewing this part.
+Yep.
 
-I'd like to add that we already have two PLL helpers in the media subsystem, 
-in drivers/media/i2c/aptina-pll.c and drivers/media/i2c/smiapp-pll.c. As the 
-PLL used here seems to be a classic one, it would make sense to also extract 
-the code in a helper function that could be shared between drivers.
+>
+>
+> Unless there is a real need, I'd keep alignment with the existing
+> binding.
 
--- 
-Regards,
+Agree!
 
-Laurent Pinchart
-
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
