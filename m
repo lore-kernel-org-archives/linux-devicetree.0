@@ -1,70 +1,99 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 0/3] enable reset_control_reset for shared reset lines
-Date: Sat, 12 Nov 2016 14:13:02 +0100
-Message-ID: <20161112131305.26088-1-martin.blumenstingl@googlemail.com>
-References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: bmi160: Support hardware fifo
+Date: Sat, 12 Nov 2016 13:13:52 +0000
+Message-ID: <0c4ef1f6-dcac-3025-3f54-dc1aae425ad6@kernel.org>
+References: <20161103112527.29623-1-m.niestroj@grinn-global.com>
+ <b7dd5694-b757-c0d1-3400-46e92b8deb58@kernel.org>
+ <1d50ebf1-2f14-2e3f-9b8e-b34a7ebca4c5@grinn-global.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161001152134.8168-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1d50ebf1-2f14-2e3f-9b8e-b34a7ebca4c5-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows using reset_control_reset on a shared reset line.
-There are some restrictions though (all of these only apply to shared
-resets):
-- reset_control_reset cannot be used after reset_control_assert
-- reset_control_assert cannot be used after reset_control_reset
-- only the first call to reset_control_reset will be passed to the
-  hardware. The only exception is when all consumers of the
-  reset_control are gone (reset_control_put)
+On 09/11/16 14:52, Marcin Niestroj wrote:
+> Hi,
+> Thanks for review. I agree with all of the comments and will fix these in next patch version. Below is just a comment on hwfifo_* sysfs access.
+> 
+> On 06.11.2016 13:35, Jonathan Cameron wrote:
+>> On 03/11/16 11:25, Marcin Niestroj wrote:
+>>> This patch was developed primarily based on bmc150_accel hardware fifo
+>>> implementation.
+>>>
+>>> IRQ handler was added, which for now is responsible only for handling
+>>> watermark interrupts. The BMI160 chip has two interrupt outputs. By
+>>> default INT is considered to be connected. If INT2 is used instead, the
+>>> interrupt-names device-tree property can be used to specify that.
+>>>
+>>> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+>> I agree with Peter that there should have been a few precursor patches
+>> to this one doing various cleanups and reworking bits that you have
+>> in here.  Would have made it easier to review (always a good thing :)
+>>
+>> In general the resulting code looks good to me.  A few little
+>> additional comments inline from me.  Mostly about small code ordering things
+>> and function rename suggestions that would make the code more 'obviously'
+>> correct.
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>> ---
+>>>  drivers/iio/imu/bmi160/bmi160.h      |   3 +-
+>>>  drivers/iio/imu/bmi160/bmi160_core.c | 633 +++++++++++++++++++++++++++++++++--
+>>>  drivers/iio/imu/bmi160/bmi160_i2c.c  |   7 +-
+>>>  drivers/iio/imu/bmi160/bmi160_spi.c  |   3 +-
+>>>  4 files changed, 618 insertions(+), 28 deletions(-)
+> 
+> <snip>
+> 
+>>> +
+>>> +static IIO_CONST_ATTR(hwfifo_watermark_min, "1");
+>>> +static IIO_CONST_ATTR(hwfifo_watermark_max,
+>>> +              __stringify(BMI160_FIFO_LENGTH));
+>>> +static IIO_DEVICE_ATTR(hwfifo_enabled, S_IRUGO,
+>>> +               bmi160_get_fifo_state, NULL, 0);
+>>> +static IIO_DEVICE_ATTR(hwfifo_watermark, S_IRUGO,
+>>> +               bmi160_get_fifo_watermark, NULL, 0);
+>>> +
+>>> +static const struct attribute *bmi160_fifo_attributes[] = {
+>>> +    &iio_const_attr_hwfifo_watermark_min.dev_attr.attr,
+>>> +    &iio_const_attr_hwfifo_watermark_max.dev_attr.attr,
+>>> +    &iio_dev_attr_hwfifo_watermark.dev_attr.attr,
+>>> +    &iio_dev_attr_hwfifo_enabled.dev_attr.attr,
+>> There are enough of these drivers now that sometimes soon we should
+>> revisit the question of pulling these into the core.  Can certainly
+>> concieve of downstream consumer devices (in particular the iio_input
+>> bridge when that finally resurfaces - my fault) wanting to be able to
+>> manipulate or at least have visibilty of these.
+> 
+> One more thing to consider is setting hwfifo_watermark to other value
+> than "userspace" watermark. It would be nice to set hwfifo_watermark
+> to a *safe* value to be able to get all data from hardware to kfifo.
+> By safe I mean that the chance of hardware fifo overflow will be
+> small. On the other hand there might be no reason to have such small
+> watermark for userspace application, so we can save scheduler
+> cycles.
+> 
+This may be worth doing, but I worry we'll end up with too many knobs
+around this feature.  Ultimately there is no point in setting the hardware
+fifo as smaller than the userspace one if the userspace one is small enough.
 
-The idea came up when discussing the reset logic in the
-phy-meson8b-usb2 PHY driver, see [0] and [1]
+What counts as a safe level is going to be very hardware / load dependant.
+We 'could' try and put this in the devicetree so that a particular setup
+could set it at a level that is 'reasonable'.  It's kind of a hardware
+feature, but will also depend on software constraints (like whether the
+bus controller driver can support dma for example).
 
-An example where this is needed is the Amlogic Meson8b and GXBB SoCs
-where two USB PHYs share one reset line. The reset controller only
-supports reset pulses (and thus only implements .reset).
-The only workaround so far is to make the reset optional in the
-driver and only add the reset to one of the two PHYs, to mimic the
-behavior implemented by patch 1.
+Non obvious unfortunately. 
 
-I also added the Meson USB2 PHY patch to this series to show that this
-new functionality can be used with only minimal changes. These patches
-can simply be dropped as they depend on the phy-meson8b-usb2 driver
-patch, and the dts patch has a runtime-dependency on patch 1 and 2
-(otherwise the phy-meson8b-usb2 driver would try to request the reset
-line exclusively, preventing the other PHY from initializing).
-
-
-Changes since RFC (thanks to Philipp Zabel for reviewing the RFC):
-- refined kernel documentation of triggered_count and fixed missing
-  struct member "@" prefix
-- refined reset_control_reset kernel documentation
-- added note that reset_control_(de)assert and reset_control_reset
-  can not be used together for shared resets) in the kernel documentation
-- fixed a potential race condition in reset_control_reset (the new
-  logic still has a potential race condition, but only in the error case,
-  which is pretty unlikely to happen in my opinion)
-- rebased to apply after reset/core.c changes ("reset: warn on invalid
-  input to reset_control_reset/assert/deassert/status")
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-September/001233.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2016-September/001197.html
-
-Martin Blumenstingl (3):
-  reset: allow using reset_control_reset with shared reset
-  phy: meson8b-usb2: request a shared reset line
-  ARM64: dts: meson-gxbb: add the USB reset also to the second USB PHY
-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  1 +
- drivers/phy/phy-meson8b-usb2.c              |  3 +-
- drivers/reset/core.c                        | 43 +++++++++++++++++++++++++----
- 3 files changed, 39 insertions(+), 8 deletions(-)
-
--- 
-2.10.2
+Jonathan
+> <snip>
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
