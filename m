@@ -1,35 +1,61 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH] ARM: dts: vfxxx: Enable DMA for DSPI2 and DSPI3
-Date: Sat, 12 Nov 2016 10:46:58 +0530
-Message-ID: <20161112051658.GA2198@Sanchayan-Arch.localdomain>
-References: <20161110114505.17618-1-maitysanchayan@gmail.com>
- <CAOMZO5BAE=6pE9DMGhXTMm5CeLh+DmhSqGtdSYHf8+yyZkfEVQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BAE=6pE9DMGhXTMm5CeLh+DmhSqGtdSYHf8+yyZkfEVQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 01/10] ASoC: sunxi: Add bindings for A23/A33/H3 codec's analog path controls
+Date: Sat, 12 Nov 2016 14:46:39 +0800
+Message-ID: <20161112064648.26779-2-wens@csie.org>
+References: <20161112064648.26779-1-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161112064648.26779-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mylene Josserand <mylene.josserand@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16-11-11 20:46:12, Fabio Estevam wrote:
-> On Thu, Nov 10, 2016 at 9:45 AM, Sanchayan Maity
-> <maitysanchayan@gmail.com> wrote:
-> > Enable DMA for DSPI2 and DSPI3 on Vybrid.
-> 
-> You missed your Signed-off-by line.
+The internal codec on A23/A33/H3 is split into 2 parts. The
+analog path controls are routed through an embedded custom register
+bus accessed through the PRCM block.
 
-Argh...Sorry about that...Will send a follow patch with this fixed.
+The SoCs share a common set of inputs, outputs, and audio paths.
+The following table lists the differences.
 
-- Sanchayan.
+    ----------------------------------------
+    | Feature \ SoC |  A23  |  A33  |  H3  |
+    ----------------------------------------
+    | Headphone     |   v   |   v   |      |
+    ----------------------------------------
+    | Line Out      |       |       |  v   |
+    ----------------------------------------
+    | Phone In/Out  |   v   |   v   |      |
+    ----------------------------------------
+
+Add a binding for this hardware.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ .../devicetree/bindings/sound/sun8i-codec-analog.txt     | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+new file mode 100644
+index 000000000000..779b735781ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+@@ -0,0 +1,16 @@
++* Allwinner Codec Analog Controls
++
++Required properties:
++- compatible: must be one of the following compatibles:
++		- "allwinner,sun8i-a23-codec-analog"
++		- "allwinner,sun8i-h3-codec-analog"
++
++Required properties if not a sub-node of the PRCM node:
++- reg: must contain the registers location and length
++
++Example:
++prcm: prcm@01f01400 {
++	codec_analog: codec-analog {
++		compatible = "allwinner,sun8i-a23-codec-analog";
++	};
++};
+-- 
+2.10.2
