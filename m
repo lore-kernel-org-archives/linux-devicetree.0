@@ -1,96 +1,111 @@
-Return-Path: <gaurav.minocha.os@gmail.com>
+Return-Path: <noamca@mellanox.com>
+From: Noam Camus <noamca@mellanox.com>
+Subject: Re: [PATCH v4 2/3] clocksource: update "fn" at
+ CLOCKSOURCE_OF_DECLARE() of nps400 timer
+Date: Sat, 12 Nov 2016 14:54:07 +0000
+Message-ID: <VI1PR0501MB25263747E76B1FAC1AA25C89AABA0@VI1PR0501MB2526.eurprd05.prod.outlook.com>
+References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
+ <1478454298-381-3-git-send-email-noamca@mellanox.com>,<20161111232639.GA1619@mai>
+In-Reply-To: <20161111232639.GA1619@mai>
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_VI1PR0501MB25263747E76B1FAC1AA25C89AABA0VI1PR0501MB2526_"
 MIME-Version: 1.0
-In-Reply-To: <CALeDE9NVuztzMe8iO+OhOrwg3YxCr9VbEwh24-3MLK+5U82fYg@mail.gmail.com>
-References: <CALeDE9NVuztzMe8iO+OhOrwg3YxCr9VbEwh24-3MLK+5U82fYg@mail.gmail.com>
-From: Gaurav Minocha <gaurav.minocha.os@gmail.com>
-Date: Sat, 5 Nov 2016 14:56:40 -0600
-Message-ID: <CA+rpMbK=T+Z=-pML4RHLJpLziy-UuANpUcgKNbq06tMNrdAPKw@mail.gmail.com>
-Subject: Re: Issue with dt_to_config with dts files that include headers from dt-bindings
-Content-Type: multipart/alternative; boundary=089e01227b5e08d63f0540940782
-To: Peter Robinson <pbrobinson@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---089e01227b5e08d63f0540940782
-Content-Type: text/plain; charset=UTF-8
-
-On Nov 4, 2016 1:19 PM, "Peter Robinson" <pbrobinson@gmail.com> wrote:
->
-> Hi Gaurav, Rob and Frank,
->
-> I've just discovered the dt_to_config script (awesome thanks!) but it
-> errors out when a dts(i) includes a header file from dt-bindings. EG
->
-> ./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts
-> In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:
-> arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which
-> to search for dt-bindings/gpio/gpio.h
->  #include <dt-bindings/gpio/gpio.h>
->                                    ^
-> arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which
-> to search for dt-bindings/pinctrl/am33xx.h
->  #include <dt-bindings/pinctrl/am33xx.h>
->                                         ^
-> arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path
-> in which to search for dt-bindings/display/tda998x.h
->  #include <dt-bindings/display/tda998x.h>
->                                          ^
-> Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error
-> FATAL ERROR: Unable to parse input tree
->
-
-In bash do, export ARCH=arm
-
-Works for me!
-
->
-> Regards,
-> Peter
-
---089e01227b5e08d63f0540940782
-Content-Type: text/html; charset=UTF-8
+--_000_VI1PR0501MB25263747E76B1FAC1AA25C89AABA0VI1PR0501MB2526_
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr"></p>
-<p dir=3D"ltr">On Nov 4, 2016 1:19 PM, &quot;Peter Robinson&quot; &lt;<a hr=
-ef=3D"mailto:pbrobinson@gmail.com">pbrobinson@gmail.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi Gaurav, Rob and Frank,<br>
-&gt;<br>
-&gt; I&#39;ve just discovered the dt_to_config script (awesome thanks!) but=
- it<br>
-&gt; errors out when a dts(i) includes a header file from dt-bindings. EG<b=
-r>
-&gt;<br>
-&gt; ./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts<br>
-&gt; In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:<br>
-&gt; arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which<b=
-r>
-&gt; to search for dt-bindings/gpio/gpio.h<br>
-&gt; =C2=A0#include &lt;dt-bindings/gpio/gpio.h&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0^<br>
-&gt; arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which<b=
-r>
-&gt; to search for dt-bindings/pinctrl/am33xx.h<br>
-&gt; =C2=A0#include &lt;dt-bindings/pinctrl/am33xx.h&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ^<br>
-&gt; arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path<b=
-r>
-&gt; in which to search for dt-bindings/display/tda998x.h<br>
-&gt; =C2=A0#include &lt;dt-bindings/display/tda998x.h&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0^<br>
-&gt; Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error=
-<br>
-&gt; FATAL ERROR: Unable to parse input tree<br>
-&gt;</p>
-<p dir=3D"ltr">In bash do, export ARCH=3Darm</p>
-<p dir=3D"ltr">Works for me!</p>
-<p dir=3D"ltr">&gt;<br>
-&gt; Regards,<br>
-&gt; Peter<br></p>
+> From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Sent: Saturday, November 12, 2016 1:26 AM
 
---089e01227b5e08d63f0540940782--
+>
+...
+
+>>
+>> -     nps_timer_rate =3D clk_get_rate(clk);
+>> -
+>> -     ret =3D clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
+>> -                                 nps_timer_rate, 301, 32, nps_clksrc_re=
+ad);
+>> +     ret =3D clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
+>> +                                 nps_timer1_freq, 301, 32, nps_clksrc_r=
+ead);
+
+>301 ?
+This is historically when this driver reside by ARC driver and I wish to ov=
+erride it.
+Now that we have DT control I will restore back the legacy 300 value.
+All your comments will be applied in V5
+
+-Noam
+
+
+
+--_000_VI1PR0501MB25263747E76B1FAC1AA25C89AABA0VI1PR0501MB2526_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style type=3D"text/css" style=3D"display:none;"><!-- P {margin-top:0;margi=
+n-bottom:0;} --></style>
+</head>
+<body dir=3D"ltr">
+<div id=3D"divtagdefaultwrapper" style=3D"font-size:12pt;color:#000000;font=
+-family:Calibri,Arial,Helvetica,sans-serif;">
+<p><font color=3D"#000000" face=3D"Calibri, sans-serif" style=3D"font-size:=
+11pt"><b>&gt; From:</b> Daniel Lezcano &lt;daniel.lezcano@linaro.org&gt;<br=
+>
+<b>&gt; Sent:</b> Saturday, November 12, 2016 1:26 AM<br>
+</font></p>
+<font size=3D"2"><span style=3D"font-size:10pt;">
+<div style=3D"color: rgb(0, 0, 0);">
+<div class=3D"PlainText">&gt;&nbsp; <br>
+...</div>
+<div class=3D"PlainText"><br>
+</div>
+<div class=3D"PlainText">&gt;&gt;&nbsp; <br>
+&gt;&gt; -&nbsp;&nbsp;&nbsp;&nbsp; nps_timer_rate =3D clk_get_rate(clk);<br=
+>
+&gt;&gt; -<br>
+&gt;&gt; -&nbsp;&nbsp;&nbsp;&nbsp; ret =3D clocksource_mmio_init(nps_msu_re=
+g_low_addr, &quot;EZnps-tick&quot;,<br>
+&gt;&gt; -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nps_timer_rate, 301, 3=
+2, nps_clksrc_read);<br>
+&gt;&gt; &#43;&nbsp;&nbsp;&nbsp;&nbsp; ret =3D clocksource_mmio_init(nps_ms=
+u_reg_low_addr, &quot;nps-tick&quot;,<br>
+&gt;&gt; &#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nps_timer1_freq, 3=
+01, 32, nps_clksrc_read);<br>
+<br>
+&gt;301 ?<br>
+</div>
+<div class=3D"PlainText">This is historically when this driver reside by AR=
+C driver and I wish to override it.</div>
+<div class=3D"PlainText">Now that we have DT control I will restore back th=
+e legacy 300 value.</div>
+<div class=3D"PlainText">All your comments will be applied in V5</div>
+<div class=3D"PlainText"><br>
+</div>
+<div class=3D"PlainText">-Noam<br>
+</div>
+<div class=3D"PlainText"><br>
+<br>
+</div>
+</div>
+</span></font>
+<div style=3D"color: rgb(0, 0, 0);"></div>
+</div>
+</body>
+</html>
+
+--_000_VI1PR0501MB25263747E76B1FAC1AA25C89AABA0VI1PR0501MB2526_--
