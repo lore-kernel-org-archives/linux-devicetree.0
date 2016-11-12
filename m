@@ -1,621 +1,192 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/6] iio: adc: Add support for STM32 ADC
-Date: Sat, 12 Nov 2016 17:08:50 +0000
-Message-ID: <4c5cd26d-97a5-f7a8-fdb6-9413975a3b10@kernel.org>
-References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
- <1478794738-28933-4-git-send-email-fabrice.gasnier@st.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] IIO wrapper drivers, dpot-dac and
+ envelope-detector
+Date: Sat, 12 Nov 2016 17:15:34 +0000
+Message-ID: <9d0ddee1-6f50-0fe9-2efa-a31f1e239aa6@kernel.org>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478794738-28933-4-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478606339-31253-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/16 16:18, Fabrice Gasnier wrote:
-> This patch adds support for STMicroelectronics STM32 MCU's analog to
-> digital converter.
+On 08/11/16 11:58, Peter Rosin wrote:
+> Hi!
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Nice and clean - few minor things inline.
+> This is a respin with a handful of nitpicks fixed from v3. No major
+> changes. And a couple of acks was added too, thanks! I also added
+> Thomas Gleixner as Cc, since Jonathan was hoping for some comments
+> on the somewhat odd interrupt handling in patch 8/8 (but perhaps
+> plumbers-week isn't the best week to hope for that).
+> 
+> 
+> These two drivers share the fact that they wrap another iio channel,
+> and I use the first in combination with the second, which is why I'm
+> submitting them as a pair.
+> 
+> The first driver is a simple wrapper converting an iio dpot into an
+> iio dac. It only changes the unit and scale. It also does not add any
+> fancy iio buffer support that I don't need. I suppose that can be
+> added. By someone else :-)
+I'll probably get to it sooner or later if no one else jumps on it.
+> 
+> The second driver (the envelope detector) is more involved. It also
+> explains why I need the dpot-dac driver. I wanted the envelope
+> detector to be generic and work with any dac, but I had a dpot...
+> 
+> But before those two new drivers, there is some infrastructure added
+> to provide available values for a channel.
+> 
+> One thing I still don't like is that the irq needs to be changed for cases
+> where it is only ever interesting with the 'invert' variant, and it may not
+> work to set up the irq the wrong way first. For the TSE-850, this does not
+> matter, since we have a mux on the envelope detector input and can make use
+> of both 'invert' and 'normal' for different signals (we could have gotten
+> by with only 'invert' since the only signals we are measuring that are
+> 'normal' are also DC signals and can thus be detected both from below and
+> from above), but it is nice to have it both ways. The only way out of this
+> is a devicetree thing. I suppose it will have to be added by whomever needs
+> it whenever that is...
+> 
+> I also wonder if the "new" *_available ABI should perhaps be documented
+> for all variants directly in sysfs-bus-iio instead of doing it in a driver
+> specific maner that I did? But that can be fixed later by someone more
+> capable than me :-)
+You doubt yourself too much ;)  Some one with fewer inhibitions you mean!
+
+Anyhow, just thought I'd add that I like this series very much.
+It's a nice interesting use of the infrastructures.  Good to see people
+are getting more adventurous all the time.
+
+Also always nice when someone else picks up a patch I dropped years ago
+and does the remaining hard work to get it in ;)
+
+There is a limited window left obviously if we want to adjust that ABI
+so shout soon or it'll be there for ever *muhahahaha*
 
 Jonathan
-> ---
->  drivers/iio/adc/Kconfig     |  10 +
->  drivers/iio/adc/Makefile    |   1 +
->  drivers/iio/adc/stm32-adc.c | 525 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 536 insertions(+)
->  create mode 100644 drivers/iio/adc/stm32-adc.c
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 7edcf32..61ba674 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -419,6 +419,16 @@ config ROCKCHIP_SARADC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called rockchip_saradc.
->  
-> +config STM32_ADC
-> +	tristate "STMicroelectronics STM32 adc"
-> +	depends on MFD_STM32_ADC
-> +	help
-> +	  Say yes here to build support for STMicroelectronics stm32 Analog
-> +	  to Digital Converter (ADC).
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called stm32-adc.
-> +
->  config STX104
->  	tristate "Apex Embedded Systems STX104 driver"
->  	depends on X86 && ISA_BUS_API
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 7a40c04..df7a221 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
->  obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
->  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
->  obj-$(CONFIG_STX104) += stx104.o
-> +obj-$(CONFIG_STM32_ADC) += stm32-adc.o
->  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
->  obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
->  obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> new file mode 100644
-> index 0000000..2be5fee
-> --- /dev/null
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -0,0 +1,525 @@
-> +/*
-> + * This file is part of STM32 ADC driver
-> + *
-> + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
-> + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
-> + *
-> + * License type: GPLv2
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-> + * or FITNESS FOR A PARTICULAR PURPOSE.
-> + * See the GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/stm32-adc-core.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +
-> +/* STM32F4 - Registers for each ADC instance */
-Not really sure the X adds anything in these, but doesn't do much harm
-I guess ;)
-> +#define STM32F4_ADCX_SR			0x00
-> +#define STM32F4_ADCX_CR1		0x04
-> +#define STM32F4_ADCX_CR2		0x08
-> +#define STM32F4_ADCX_SMPR1		0x0C
-> +#define STM32F4_ADCX_SMPR2		0x10
-> +#define STM32F4_ADCX_HTR		0x24
-> +#define STM32F4_ADCX_LTR		0x28
-> +#define STM32F4_ADCX_SQR1		0x2C
-> +#define STM32F4_ADCX_SQR2		0x30
-> +#define STM32F4_ADCX_SQR3		0x34
-> +#define STM32F4_ADCX_JSQR		0x38
-> +#define STM32F4_ADCX_JDR1		0x3C
-> +#define STM32F4_ADCX_JDR2		0x40
-> +#define STM32F4_ADCX_JDR3		0x44
-> +#define STM32F4_ADCX_JDR4		0x48
-> +#define STM32F4_ADCX_DR			0x4C
-> +
-> +/* STM32F4_ADCX_SR - bit fields */
-> +#define STM32F4_OVR			BIT(5)
-> +#define STM32F4_STRT			BIT(4)
-> +#define STM32F4_EOC			BIT(1)
-> +
-> +/* STM32F4_ADCX_CR1 - bit fields */
-> +#define STM32F4_OVRIE			BIT(26)
-> +#define STM32F4_SCAN			BIT(8)
-> +#define STM32F4_EOCIE			BIT(5)
-> +
-> +/* STM32F4_ADCX_CR2 - bit fields */
-> +#define STM32F4_SWSTART			BIT(30)
-> +#define STM32F4_EXTEN_MASK		GENMASK(29, 28)
-> +#define STM32F4_EOCS			BIT(10)
-> +#define STM32F4_ADON			BIT(0)
-> +
-> +/* STM32F4_ADCX_SQR1 - bit fields */
-> +#define STM32F4_L_SHIFT			20
-> +#define STM32F4_L_MASK			GENMASK(23, 20)
-> +
-> +/* STM32F4_ADCX_SQR3 - bit fields */
-> +#define STM32F4_SQ1_SHIFT		0
-> +#define STM32F4_SQ1_MASK		GENMASK(4, 0)
-> +
-> +#define STM32_ADC_MAX_SQ		16	/* SQ1..SQ16 */
-> +#define STM32_ADC_TIMEOUT_US		100000
-> +#define STM32_ADC_TIMEOUT	(msecs_to_jiffies(STM32_ADC_TIMEOUT_US / 1000))
-> +
-> +/**
-> + * struct stm32_adc - private data of each ADC IIO instance
-> + * @common:		reference to ADC block common data
-> + * @offset:		ADC instance register offset in ADC block
-> + * @completion:		end of single conversion completion
-> + * @buffer:		data buffer
-> + * @clk:		optional adc clock, for this adc instance
-> + * @irq:		interrupt for this adc instance
-> + * @lock:		spinlock
-> + */
-> +struct stm32_adc {
-> +	struct stm32_adc_common	*common;
-> +	u32			offset;
-> +	struct completion	completion;
-> +	u16			*buffer;
-> +	struct clk		*clk;
-> +	int			irq;
-> +	spinlock_t		lock;		/* interrupt lock */
-> +};
-> +
-> +/**
-> + * struct stm32_adc_chan_spec - specification of stm32 adc channel
-> + * @type:	IIO channel type
-> + * @channel:	channel number (single ended)
-> + * @name:	channel name (single ended)
-> + */
-> +struct stm32_adc_chan_spec {
-> +	enum iio_chan_type	type;
-> +	int			channel;
-> +	const char		*name;
-> +};
-> +
-> +/* Input definitions common for all STM32F4 instances */
-> +static const struct stm32_adc_chan_spec stm32f4_adc123_channels[] = {
-> +	{ IIO_VOLTAGE, 0, "in0" },
-> +	{ IIO_VOLTAGE, 1, "in1" },
-> +	{ IIO_VOLTAGE, 2, "in2" },
-> +	{ IIO_VOLTAGE, 3, "in3" },
-> +	{ IIO_VOLTAGE, 4, "in4" },
-> +	{ IIO_VOLTAGE, 5, "in5" },
-> +	{ IIO_VOLTAGE, 6, "in6" },
-> +	{ IIO_VOLTAGE, 7, "in7" },
-> +	{ IIO_VOLTAGE, 8, "in8" },
-> +	{ IIO_VOLTAGE, 9, "in9" },
-> +	{ IIO_VOLTAGE, 10, "in10" },
-> +	{ IIO_VOLTAGE, 11, "in11" },
-> +	{ IIO_VOLTAGE, 12, "in12" },
-> +	{ IIO_VOLTAGE, 13, "in13" },
-> +	{ IIO_VOLTAGE, 14, "in14" },
-> +	{ IIO_VOLTAGE, 15, "in15" },
-> +};
-> +
-> +/**
-> + * STM32 ADC registers access routines
-> + * @adc: stm32 adc instance
-> + * @reg: reg offset in adc instance
-> + *
-> + * Note: All instances share same base, with 0x0, 0x100 or 0x200 offset resp.
-> + * for adc1, adc2 and adc3.
-> + */
-> +static u32 stm32_adc_readl(struct stm32_adc *adc, u32 reg)
-> +{
-> +	return readl_relaxed(adc->common->base + adc->offset + reg);
-> +}
-> +
-> +static u32 stm32_adc_readw(struct stm32_adc *adc, u32 reg)
-> +{
-> +	return readw_relaxed(adc->common->base + adc->offset + reg);
-> +}
-> +
-> +static void stm32_adc_writel(struct stm32_adc *adc, u32 reg, u32 val)
-> +{
-> +	writel_relaxed(val, adc->common->base + adc->offset + reg);
-> +}
-> +
-> +static void stm32_adc_set_bits(struct stm32_adc *adc, u32 reg, u32 bits)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&adc->lock, flags);
-> +	stm32_adc_writel(adc, reg, stm32_adc_readl(adc, reg) | bits);
-> +	spin_unlock_irqrestore(&adc->lock, flags);
-> +}
-> +
-> +static void stm32_adc_clr_bits(struct stm32_adc *adc, u32 reg, u32 bits)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&adc->lock, flags);
-> +	stm32_adc_writel(adc, reg, stm32_adc_readl(adc, reg) & ~bits);
-> +	spin_unlock_irqrestore(&adc->lock, flags);
-> +}
-> +
-> +/**
-> + * stm32_adc_conv_irq_enable() - Enable end of conversion interrupt
-> + * @adc: stm32 adc instance
-> + */
-> +static void stm32_adc_conv_irq_enable(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_set_bits(adc, STM32F4_ADCX_CR1, STM32F4_EOCIE);
-> +};
-> +
-> +/**
-> + * stm32_adc_conv_irq_disable() - Disable end of conversion interrupt
-> + * @adc: stm32 adc instance
-> + */
-> +static void stm32_adc_conv_irq_disable(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_CR1, STM32F4_EOCIE);
-> +}
-> +
-> +/**
-> + * stm32_adc_start_conv() - Start conversions for regular channels.
-> + * @adc: stm32 adc instance
-> + */
-> +static void stm32_adc_start_conv(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_set_bits(adc, STM32F4_ADCX_CR1, STM32F4_SCAN);
-> +	stm32_adc_set_bits(adc, STM32F4_ADCX_CR2, STM32F4_EOCS | STM32F4_ADON);
-> +
-> +	/* Wait for Power-up time (tSTAB from datasheet) */
-> +	usleep_range(2, 3);
-> +
-> +	/* Software start ? (e.g. trigger detection disabled ?) */
-> +	if (!(stm32_adc_readl(adc, STM32F4_ADCX_CR2) & STM32F4_EXTEN_MASK))
-> +		stm32_adc_set_bits(adc, STM32F4_ADCX_CR2, STM32F4_SWSTART);
-> +}
-> +
-> +static void stm32_adc_stop_conv(struct stm32_adc *adc)
-> +{
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_CR2, STM32F4_EXTEN_MASK);
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_SR, STM32F4_STRT);
-> +
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_CR1, STM32F4_SCAN);
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_CR2, STM32F4_ADON);
-> +}
-> +
-> +/**
-> + * stm32_adc_single_conv() - Performs a single conversion
-> + * @indio_dev: IIO device
-> + * @chan: IIO channel
-> + * @res: conversion result
-> + *
-> + * The function performs a single conversion on a given channel:
-> + * - Program sequencer with one channel (e.g. in SQ1 with len = 1)
-> + * - Use SW trigger
-> + * - Start conversion, then wait for interrupt completion.
-> + */
-> +static int stm32_adc_single_conv(struct iio_dev *indio_dev,
-> +				 const struct iio_chan_spec *chan,
-> +				 int *res)
-> +{
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	long timeout;
-> +	u32 val;
-> +	u16 result;
-> +	int ret;
-> +
-> +	reinit_completion(&adc->completion);
-> +
-> +	adc->buffer = &result;
-> +
-> +	/* Program chan number in regular sequence */
-> +	val = stm32_adc_readl(adc, STM32F4_ADCX_SQR3);
-> +	val &= ~STM32F4_SQ1_MASK;
-> +	val |= chan->channel << STM32F4_SQ1_SHIFT;
-> +	stm32_adc_writel(adc, STM32F4_ADCX_SQR3, val);
-> +
-> +	/* Set regular sequence len (0 for 1 conversion) */
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_SQR1, STM32F4_L_MASK);
-> +
-> +	/* Trigger detection disabled (conversion can be launched in SW) */
-> +	stm32_adc_clr_bits(adc, STM32F4_ADCX_CR2, STM32F4_EXTEN_MASK);
-> +
-> +	stm32_adc_conv_irq_enable(adc);
-> +
-> +	stm32_adc_start_conv(adc);
-> +
-> +	timeout = wait_for_completion_interruptible_timeout(
-> +					&adc->completion, STM32_ADC_TIMEOUT);
-> +	if (timeout == 0) {
-> +		dev_warn(&indio_dev->dev, "Conversion timed out!\n");
-> +		ret = -ETIMEDOUT;
-> +	} else if (timeout < 0) {
-> +		dev_warn(&indio_dev->dev, "Interrupted conversion!\n");
-> +		ret = -EINTR;
-> +	} else {
-> +		*res = result;
-> +		ret = IIO_VAL_INT;
-> +	}
-> +
-> +	stm32_adc_stop_conv(adc);
-> +
-> +	stm32_adc_conv_irq_disable(adc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int stm32_adc_read_raw(struct iio_dev *indio_dev,
-> +			      struct iio_chan_spec const *chan,
-> +			      int *val, int *val2, long mask)
-> +{
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	int ret = -EINVAL;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +		if (chan->type == IIO_VOLTAGE)
-> +			ret = stm32_adc_single_conv(indio_dev, chan, val);
-> +		else
-> +			ret = -EINVAL;
-> +		iio_device_release_direct_mode(indio_dev);
-return directly here.  Basically always preferred to return directly if
-there is not cleanup to be done.
-> +		break;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = adc->common->vref_mv;
-> +		*val2 = chan->scan_type.realbits;
-> +		ret = IIO_VAL_FRACTIONAL_LOG2;
-return directly here.
-> +		break;
-> +	default:
-return -EINVAL here.
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static irqreturn_t stm32_adc_isr(int irq, void *data)
-> +{
-> +	struct stm32_adc *adc = data;
-> +	u32 status = stm32_adc_readl(adc, STM32F4_ADCX_SR);
-> +	irqreturn_t ret = IRQ_NONE;
-> +
-> +	if (status & STM32F4_EOC) {
-> +		*adc->buffer = stm32_adc_readw(adc, STM32F4_ADCX_DR);
-> +		complete(&adc->completion);
-> +		ret = IRQ_HANDLED;
-Slightly tidier to return IRQ_HANDLED here and directly return
-IRQ_NONE below.
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int stm32_adc_of_xlate(struct iio_dev *indio_dev,
-> +			      const struct of_phandle_args *iiospec)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < indio_dev->num_channels; i++)
-> +		if (indio_dev->channels[i].channel == iiospec->args[0])
-> +			return i;
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +/**
-> + * stm32_adc_debugfs_reg_access - read or write register value
-> + *
-> + * To read a value from an ADC register:
-> + *   echo [ADC reg offset] > direct_reg_access
-> + *   cat direct_reg_access
-> + *
-> + * To write a value in a ADC register:
-> + *   echo [ADC_reg_offset] [value] > direct_reg_access
-> + */
-> +static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
-> +					unsigned reg, unsigned writeval,
-> +					unsigned *readval)
-> +{
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +
-> +	if (!readval)
-> +		stm32_adc_writel(adc, reg, writeval);
-> +	else
-> +		*readval = stm32_adc_readl(adc, reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info stm32_adc_iio_info = {
-> +	.read_raw = stm32_adc_read_raw,
-> +	.debugfs_reg_access = stm32_adc_debugfs_reg_access,
-> +	.of_xlate = stm32_adc_of_xlate,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
-> +				    struct iio_chan_spec *chan,
-> +				    const struct stm32_adc_chan_spec *channel,
-> +				    int scan_index)
-> +{
-> +	chan->type = channel->type;
-> +	chan->channel = channel->channel;
-> +	chan->datasheet_name = channel->name;
-> +	chan->extend_name = channel->name;
-Don't set extend_name. That name doesn't add sufficient information to
-make it worth adding custom ABI to the userspace interface.
-
-
-> +	chan->scan_index = scan_index;
-> +	chan->indexed = 1;
-> +	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +	chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
-> +	chan->scan_type.sign = 'u';
-> +	chan->scan_type.realbits = 12;
-> +	chan->scan_type.storagebits = 16;
-> +}
-> +
-> +static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
-> +{
-> +	struct device_node *node = indio_dev->dev.of_node;
-> +	struct property *prop;
-> +	const __be32 *cur;
-> +	struct iio_chan_spec *channels;
-> +	int scan_index = 0, num_channels;
-> +	u32 val;
-> +
-> +	num_channels = of_property_count_u32_elems(node, "st,adc-channels");
-> +	if (num_channels < 0 ||
-> +	    num_channels >= ARRAY_SIZE(stm32f4_adc123_channels)) {
-> +		dev_err(&indio_dev->dev, "Bad st,adc-channels?\n");
-> +		return num_channels < 0 ? num_channels : -EINVAL;
-> +	}
-> +
-> +	channels = devm_kcalloc(&indio_dev->dev, num_channels,
-> +				sizeof(struct iio_chan_spec), GFP_KERNEL);
-> +	if (!channels)
-> +		return -ENOMEM;
-> +
-> +	of_property_for_each_u32(node, "st,adc-channels", prop, cur, val) {
-> +		if (val >= ARRAY_SIZE(stm32f4_adc123_channels)) {
-> +			dev_err(&indio_dev->dev, "Invalid channel %d\n", val);
-> +			return -EINVAL;
-> +		}
-> +		stm32_adc_chan_init_one(indio_dev, &channels[scan_index],
-> +					&stm32f4_adc123_channels[val],
-> +					scan_index);
-> +		scan_index++;
-> +	}
-> +
-> +	indio_dev->num_channels = scan_index;
-> +	indio_dev->channels = channels;
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct stm32_adc *adc;
-> +	int ret;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return -ENODEV;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	adc = iio_priv(indio_dev);
-> +	adc->common = dev_get_drvdata(pdev->dev.parent);
-> +	spin_lock_init(&adc->lock);
-> +	init_completion(&adc->completion);
-> +
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &stm32_adc_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	platform_set_drvdata(pdev, adc);
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "reg", &adc->offset);
-> +	if (ret != 0) {
-> +		dev_err(&pdev->dev, "missing reg property\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	adc->irq = platform_get_irq(pdev, 0);
-> +	if (adc->irq < 0) {
-> +		dev_err(&pdev->dev, "failed to get irq\n");
-> +		return adc->irq;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, adc->irq, stm32_adc_isr,
-> +			       0, pdev->name, adc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to request IRQ\n");
-> +		return ret;
-> +	}
-> +
-> +	adc->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(adc->clk)) {
-Could it concievably be deferred?  Would be happier if this explicitly
-checked for -ENODEV or whatever gets returned when not clock has
-been specified.
-> +		adc->clk = NULL;
-> +		dev_dbg(&pdev->dev, "No child clk found\n");
-> +	} else {
-> +		ret = clk_prepare_enable(adc->clk);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "clk enable failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = stm32_adc_chan_of_init(indio_dev);
-> +	if (ret < 0)
-> +		goto err_clk_disable;
-> +
-> +	ret = devm_iio_device_register(&pdev->dev, indio_dev);
-
-This use of devm registration is going to cause a race in the remove.
-The userspace interface will not be removed until after the remove
-function has run.  That disables the clock thus leaving us a window
-where we could try and access the device with no clock enabled.
-
-Basic rule of thumb is that use of devm must not effect the ordering
-of unrolling what you do in probe when it comes to remove.
-(which more or less means that you can't use devm_iio_device_register
-unless you have no remove at all).
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "iio dev register failed\n");
-> +		goto err_clk_disable;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_clk_disable:
-> +	if (adc->clk)
-> +		clk_disable_unprepare(adc->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int stm32_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct stm32_adc *adc = platform_get_drvdata(pdev);
-> +
-> +	if (adc->clk)
-> +		clk_disable_unprepare(adc->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id stm32_adc_of_match[] = {
-> +	{ .compatible = "st,stm32f4-adc" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_adc_of_match);
-> +
-> +static struct platform_driver stm32_adc_driver = {
-> +	.probe = stm32_adc_probe,
-> +	.remove = stm32_adc_remove,
-> +	.driver = {
-> +		.name = "stm32-adc",
-> +		.of_match_table = stm32_adc_of_match,
-> +	},
-> +};
-> +module_platform_driver(stm32_adc_driver);
-> +
-> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 ADC IIO driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:stm32-adc");
+> v3 -> v4
+> - gained acks from Rob for the three bindings patches
+> - gained ack from Daniel for the core _available patch (1/8)
+> - dropped the type argument from iio_read_avail_channel_raw(), since
+>   raw values are assumed to be of type IIO_VAL_INT anyway
+> - add some more words about what iio_read_avail_channel_raw() does
+> - rebased onto v4.9-rc4
 > 
+> dpot-dac:
+> - adjust to changed signature of iio_read_avail_channel_raw()
+> - one instance of s/the channels supports/the channel supports/
+> - drop surplus s64 cast in dpot_dac_channel_max_ohms()
+> 
+> envelope-detector
+> - the envelope-detector module is called envelope-detector
+> 
+> 
+> v2 -> v3
+> - add some missing @foo comments in iio.h in the initial forward ported patch
+> - killed some buffer overflow problems in the initial forward ported patch
+> - add inkern.c helpers for the new available attributes to avoid viral
+>   boilerplating in the future (also add support for finding max of
+>   IIO_AVAIL_LISTs of IIO_VAL_INTs)
+> - add ABI docs for new ABI of mcp4531 (out_resistance_raw_available)
+>   and an example in the commit message
+> 
+> dpot-dac:
+> - two more counts of s/assumed the that the/assumed that the/   *blush*
+> - add ABI docs for new ABI (out_voltageY_raw_available)
+> 
+> envelope detector:
+> - move device attributes 'compare_interval_ms' and 'invert' to extended
+>   channel attributes (out_altvoltage0_compare_interval and
+>   out_altvoltage0_invert) as they really are about the channel and not
+>   the device
+> - kill "dpot-dac,max-ohms = <100000>;" in the devicetree example
+> 
+> 
+> v1 -> v2
+> - provide out_resistanceX_raw_available channel attribute in mcp4531 dpot
+> 
+> dpot-dac:
+> - change Vref to vref
+> - the module will be called dpot-dac (in Kconfig help)
+> - removed a 'the'
+> - removed (s64) cast
+> - make the channel indexed, makes libiio find the channel (tested with 0.5)
+> - add a comment on how integer scale is converted to fractional scale
+>   and clarify the code a bit
+> - dig out max-ohms by looking at scale and maximum available raw value
+>   from the dpot channel and drop the 'dpot-dac,max-ohms' devicetree property
+> - provide out_voltageX_raw_available channel attribute
+> 
+> envelope-detector:
+> - change compatible from envelope-detector to axentia,tse850-envelope-detector
+> - remove envelope-detector,invert and envelope-detector,comp-interval-ms from
+>   devicetree and add them as iio device attributes instead
+> - make the channel indexed, makes libiio find the channel (tested with 0.5)
+> - reorder struct envelope to better indicate what is covered by read_lock
+> - add comment on interaction between envelope_detector_comp_latch (renamed
+>   from envelope_detector_latch) and envelope_detector_comp_isr (renamed
+>   from envelope_detector_isr)
+> - fixup a problem in envelope_detector_comp_latch where interrupts pending
+>   from when the interrupt has been disabled interferes with expected
+>   operation
+> - slight rewrite of the initial high/low assignments
+> - use a better name when requesting the interrupt
+> - dig out dac_max by looking at scale and maximum available raw value
+>   from the dac channel and drop the 'envelope-detector,dac-max' devicetree
+>   property
+> 
+> Cheers,
+> Peter
+> 
+> Jonathan Cameron (1):
+>   iio:core: add a callback to allow drivers to provide _available
+>     attributes
+> 
+> Peter Rosin (7):
+>   iio: inkern: add helpers to query available values from channels
+>   iio: mcp4531: provide range of available raw values
+>   dt-bindings: add axentia to vendor-prefixes
+>   dt-bindings: iio: document dpot-dac bindings
+>   iio: dpot-dac: DAC driver based on a digital potentiometer
+>   dt-bindings: iio: document envelope-detector bindings
+>   iio: envelope-detector: ADC driver based on a DAC and a comparator
+> 
+>  .../testing/sysfs-bus-iio-adc-envelope-detector    |  36 ++
+>  .../ABI/testing/sysfs-bus-iio-dac-dpot-dac         |   8 +
+>  .../testing/sysfs-bus-iio-potentiometer-mcp4531    |   8 +
+>  .../bindings/iio/adc/envelope-detector.txt         |  54 +++
+>  .../devicetree/bindings/iio/dac/dpot-dac.txt       |  41 ++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  MAINTAINERS                                        |  17 +
+>  drivers/iio/adc/Kconfig                            |  10 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/envelope-detector.c                | 422 +++++++++++++++++++++
+>  drivers/iio/dac/Kconfig                            |  10 +
+>  drivers/iio/dac/Makefile                           |   1 +
+>  drivers/iio/dac/dpot-dac.c                         | 266 +++++++++++++
+>  drivers/iio/industrialio-core.c                    | 259 +++++++++++--
+>  drivers/iio/inkern.c                               | 104 +++++
+>  drivers/iio/potentiometer/mcp4531.c                | 104 +++--
+>  include/linux/iio/consumer.h                       |  28 ++
+>  include/linux/iio/iio.h                            |  46 +++
+>  include/linux/iio/types.h                          |   5 +
+>  19 files changed, 1346 insertions(+), 75 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac-dpot-dac
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-potentiometer-mcp4531
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/dpot-dac.txt
+>  create mode 100644 drivers/iio/adc/envelope-detector.c
+>  create mode 100644 drivers/iio/dac/dpot-dac.c
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
