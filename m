@@ -1,68 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: sun8i: reference-design-tablet: ldo_io1 is vcc-touchscreen
-Date: Sun, 13 Nov 2016 20:22:03 +0100
-Message-ID: <20161113192203.7101-2-hdegoede@redhat.com>
-References: <20161113192203.7101-1-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161113192203.7101-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
+ mode
+Date: Sat, 12 Nov 2016 12:40:10 +0530
+Message-ID: <8ecc1325-365d-bdec-d435-729e0ea49d20@ti.com>
+References: <1476190715-16884-1-git-send-email-kishon@ti.com>
+ <1476190715-16884-4-git-send-email-kishon@ti.com>
+ <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On some Q8 and other tablets ldo_io1 is used as vcc-touchscreen,
-config at as such in sun8i-reference-design-tablet.dtsi.
+Hi,
 
-Note that it will only be enabled when it us actually referenced by
-a foo-supply property in the touchscreen node, so for tablets which
-do not use ldo_io1 as vcc-touchscreen, it will be disabled.
+On Saturday 12 November 2016 02:45 AM, Bjorn Helgaas wrote:
+> Hi Kishon,
+> 
+> On Tue, Oct 11, 2016 at 06:28:34PM +0530, Kishon Vijay Abraham I wrote:
+>> PCIe in AM57x/DRA7x devices is by default
+>> configured to work in GEN2 mode.  However there
+>> may be situations when working in GEN1 mode is
+>> desired. One example is limitation i925 (PCIe GEN2
+>> mode not supported at junction temperatures < 0C).
+>>
+>> Add support to force Root Complex to work in GEN1
+>> mode if so desired, but don't force GEN1 mode on
+>> any board just yet.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
+>>  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
+>>  2 files changed, 28 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> index 60e2516..a3d6ca3 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> @@ -25,6 +25,7 @@ PCIe Designware Controller
+>>  
+>>  Optional Property:
+>>   - gpios : Should be added if a gpio line is required to drive PERST# line
+>> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
+> 
+> Can we use "max-link-speed" so it's similar to imx6?
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts | 7 -------
- arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi  | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+yeah, maybe we should make it a generic PCI property?
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-index a86cbed..21bb291 100644
---- a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-+++ b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
-@@ -98,13 +98,6 @@
- 	};
- };
- 
--&reg_ldo_io1 {
--	regulator-min-microvolt = <3300000>;
--	regulator-max-microvolt = <3300000>;
--	regulator-name = "vcc-touchscreen";
--	status = "okay";
--};
--
- &touchscreen {
- 	reg = <0x40>;
- 	compatible = "silead,gsl1680";
-diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-index 08cd001..69bc0cd 100644
---- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-+++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-@@ -209,6 +209,13 @@
- 	status = "okay";
- };
- 
-+&reg_ldo_io1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-touchscreen";
-+	status = "okay";
-+};
-+
- &reg_rtc_ldo {
- 	regulator-name = "vcc-rtc";
- };
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
