@@ -1,605 +1,182 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v7 4/9] drivers:input:tsc2007: add iio interface to read
- external ADC input and temperature
-Date: Sat, 12 Nov 2016 14:19:30 +0000
-Message-ID: <b4d79a26-4353-9860-a884-49c751bbe617@kernel.org>
-References: <cover.1478890925.git.hns@goldelico.com>
- <6c64bb0331ad05840a2886bef6c3cfa64c866cb6.1478890925.git.hns@goldelico.com>
- <fc901399-0bde-d936-b9e2-4c591549eb55@kernel.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio: document bindings for mounting matrices
+Date: Sat, 12 Nov 2016 15:13:06 +0000
+Message-ID: <a6d866f2-ee20-282b-def0-f65de2177aee@kernel.org>
+References: <1478616340-13670-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fc901399-0bde-d936-b9e2-4c591549eb55@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478616340-13670-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/16 14:04, Jonathan Cameron wrote:
-> On 11/11/16 19:02, H. Nikolaus Schaller wrote:
->> The tsc2007 chip not only has a resistive touch screen controller but
->> also an external AUX adc imput which can be used for an ambient
->> light sensor, battery voltage monitoring or any general purpose.
->>
->> Additionally it can measure the chip temperature.
->>
->> This extension provides an iio interface for these adc channels.
->>
->> Since it is not wasting much resources and is very straightforward,
->> we simply provide all other adc channels as optional iio interfaces
->> as weel. This can be used for debugging or special applications.
->>
->> This patch also splits the tsc2007 driver in several source files:
->> tsc2007.h -- constants, structs and stubs
->> tsc2007_core.c -- functional parts of the original driver
->> tsc2007_iio.c -- the optional iio stuff
->>
->> Makefile magic allows to conditionally link the iio
->> stuff if CONFIG_IIO=y in a way that it works with
->> CONFIG_TOUCHSCREEN_TSC2007=m.
->>
+On 08/11/16 14:45, Linus Walleij wrote:
+> The mounting matrix for sensors was introduced in
+> commit dfc57732ad38 ("iio:core: mounting matrix support")
 > 
-> I ran a quick build test and it blows up in a number of ways related to
-> the #ifdef CONFIG_IIO.
+> However the device tree bindings are very terse and since this is
+> a widely applicable property, we need a proper binding for it
+> that the other bindings can reference. This will also be useful
+> for other operating systems and sensor engineering at large.
 > 
-> I'm not entirely sure why but
-> #if IS_ENABLED(CONFIG_IIO) works fine.
-Ah, I'm being sleepy today.  It's because I'm building IIO as a module
-and the symbol defined would therefore be CONFIG_IIO_MODULE.
+> I think all 3D sensors should support it, the current situation
+> is probably that the mounting information is confined in magic
+> userspace components rather than using the mounting matrix, which
+> is not good for portability and reuse.
+Getting there and much easier to follow than previous version.
 
-The IS_ENABLED macro takes care of both cases.
+Kind of need to avoid glossing over the world magnetic field frame of
+reference complexities though (that one is always a PITA to explain).
+
+Jonathan
 > 
-> Otherwise looks good to me
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Reviewed-by: Jonathan Cameron <jic23@kernel.org>
->> ---
->>  drivers/input/touchscreen/Makefile                 |   2 +
->>  drivers/input/touchscreen/tsc2007.h                | 118 ++++++++++++++++
->>  .../touchscreen/{tsc2007.c => tsc2007_core.c}      | 119 ++++++----------
->>  drivers/input/touchscreen/tsc2007_iio.c            | 152 +++++++++++++++++++++
->>  4 files changed, 310 insertions(+), 81 deletions(-)
->>  create mode 100644 drivers/input/touchscreen/tsc2007.h
->>  rename drivers/input/touchscreen/{tsc2007.c => tsc2007_core.c} (85%)
->>  create mode 100644 drivers/input/touchscreen/tsc2007_iio.c
->>
->> diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
->> index 81b8645..d932e2d 100644
->> --- a/drivers/input/touchscreen/Makefile
->> +++ b/drivers/input/touchscreen/Makefile
->> @@ -80,6 +80,8 @@ obj-$(CONFIG_TOUCHSCREEN_TSC_SERIO)	+= tsc40.o
->>  obj-$(CONFIG_TOUCHSCREEN_TSC200X_CORE)	+= tsc200x-core.o
->>  obj-$(CONFIG_TOUCHSCREEN_TSC2004)	+= tsc2004.o
->>  obj-$(CONFIG_TOUCHSCREEN_TSC2005)	+= tsc2005.o
->> +tsc2007-y				:= tsc2007_core.o
->> +tsc2007-$(CONFIG_IIO)			+= tsc2007_iio.o
->>  obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+= tsc2007.o
->>  obj-$(CONFIG_TOUCHSCREEN_UCB1400)	+= ucb1400_ts.o
->>  obj-$(CONFIG_TOUCHSCREEN_WACOM_W8001)	+= wacom_w8001.o
->> diff --git a/drivers/input/touchscreen/tsc2007.h b/drivers/input/touchscreen/tsc2007.h
->> new file mode 100644
->> index 0000000..5049bf8
->> --- /dev/null
->> +++ b/drivers/input/touchscreen/tsc2007.h
->> @@ -0,0 +1,118 @@
->> +/*
->> + * drivers/input/touchscreen/tsc2007.h
->> + *
->> + * Copyright (c) 2008 MtekVision Co., Ltd.
->> + *	Kwangwoo Lee <kwlee@mtekvision.com>
->> + *
->> + * Using code from:
->> + *  - ads7846.c
->> + *	Copyright (c) 2005 David Brownell
->> + *	Copyright (c) 2006 Nokia Corporation
->> + *  - corgi_ts.c
->> + *	Copyright (C) 2004-2005 Richard Purdie
->> + *  - omap_ts.[hc], ads7846.h, ts_osk.c
->> + *	Copyright (C) 2002 MontaVista Software
->> + *	Copyright (C) 2004 Texas Instruments
->> + *	Copyright (C) 2005 Dirk Behme
->> + *
->> + *  This program is free software; you can redistribute it and/or modify
->> + *  it under the terms of the GNU General Public License version 2 as
->> + *  published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/input/touchscreen.h>
->> +
->> +#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->> +#define TSC2007_MEASURE_AUX		(0x2 << 4)
->> +#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->> +#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->> +#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->> +#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->> +#define TSC2007_SETUP			(0xb << 4)
->> +#define TSC2007_MEASURE_X		(0xc << 4)
->> +#define TSC2007_MEASURE_Y		(0xd << 4)
->> +#define TSC2007_MEASURE_Z1		(0xe << 4)
->> +#define TSC2007_MEASURE_Z2		(0xf << 4)
->> +
->> +#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->> +#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->> +#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->> +#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->> +
->> +#define TSC2007_12BIT			(0x0 << 1)
->> +#define TSC2007_8BIT			(0x1 << 1)
->> +
->> +#define	MAX_12BIT			((1 << 12) - 1)
->> +
->> +#define ADC_ON_12BIT	(TSC2007_12BIT | TSC2007_ADC_ON_IRQ_DIS0)
->> +
->> +#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->> +#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->> +#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->> +#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->> +#define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
->> +
->> +struct ts_event {
->> +	u16	x;
->> +	u16	y;
->> +	u16	z1, z2;
->> +};
->> +
->> +struct tsc2007 {
->> +	struct input_dev	*input;
->> +	char			phys[32];
->> +
->> +	struct i2c_client	*client;
->> +
->> +	u16			model;
->> +	u16			x_plate_ohms;
->> +
->> +	struct touchscreen_properties prop;
->> +
->> +	bool			report_resistance;
->> +	u16			min_x;
->> +	u16			min_y;
->> +	u16			max_x;
->> +	u16			max_y;
->> +	u16			max_rt;
->> +	unsigned long		poll_period; /* in jiffies */
->> +	int			fuzzx;
->> +	int			fuzzy;
->> +	int			fuzzz;
->> +
->> +	unsigned int		gpio;
->> +	int			irq;
->> +
->> +	wait_queue_head_t	wait;
->> +	bool			stopped;
->> +	bool			pendown;
->> +
->> +	int			(*get_pendown_state)(struct device *);
->> +	void			(*clear_penirq)(void);
->> +
->> +	struct mutex		mlock;
->> +	struct iio_dev		*iio_dev;	/* optional */
->> +};
->> +
->> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd);
->> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->> +					struct ts_event *tc);
->> +bool tsc2007_is_pen_down(struct tsc2007 *ts);
->> +
->> +#ifdef CONFIG_IIO
->> +
->> +/* defined in tsc2007_iio.c */
->> +int tsc2007_iio_configure(struct tsc2007 *ts);
->> +void tsc2007_iio_unconfigure(struct tsc2007 *ts);
->> +
->> +#else /* CONFIG_IIO */
->> +
->> +static inline int tsc2007_iio_configure(struct tsc2007 *ts)
->> +{
->> +	return 0;
->> +}
->> +static inline void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->> +{
->> +}
->> +
->> +#endif /* CONFIG_IIO */
->> diff --git a/drivers/input/touchscreen/tsc2007.c b/drivers/input/touchscreen/tsc2007_core.c
->> similarity index 85%
->> rename from drivers/input/touchscreen/tsc2007.c
->> rename to drivers/input/touchscreen/tsc2007_core.c
->> index 5e3c4bf..72775ae 100644
->> --- a/drivers/input/touchscreen/tsc2007.c
->> +++ b/drivers/input/touchscreen/tsc2007_core.c
->> @@ -27,80 +27,10 @@
->>  #include <linux/i2c.h>
->>  #include <linux/i2c/tsc2007.h>
->>  #include <linux/of_device.h>
->> -#include <linux/of.h>
->>  #include <linux/of_gpio.h>
->> -#include <linux/input/touchscreen.h>
->> -
->> -#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->> -#define TSC2007_MEASURE_AUX		(0x2 << 4)
->> -#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->> -#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->> -#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->> -#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->> -#define TSC2007_SETUP			(0xb << 4)
->> -#define TSC2007_MEASURE_X		(0xc << 4)
->> -#define TSC2007_MEASURE_Y		(0xd << 4)
->> -#define TSC2007_MEASURE_Z1		(0xe << 4)
->> -#define TSC2007_MEASURE_Z2		(0xf << 4)
->> -
->> -#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->> -#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->> -#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->> -#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->> -
->> -#define TSC2007_12BIT			(0x0 << 1)
->> -#define TSC2007_8BIT			(0x1 << 1)
->> -
->> -#define	MAX_12BIT			((1 << 12) - 1)
->> -
->> -#define ADC_ON_12BIT	(TSC2007_12BIT | TSC2007_ADC_ON_IRQ_DIS0)
->> -
->> -#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->> -#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->> -#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->> -#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->> -#define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
->> -
->> -struct ts_event {
->> -	u16	x;
->> -	u16	y;
->> -	u16	z1, z2;
->> -};
->> -
->> -struct tsc2007 {
->> -	struct input_dev	*input;
->> -	char			phys[32];
->> -
->> -	struct i2c_client	*client;
->> -
->> -	u16			model;
->> -	u16			x_plate_ohms;
->> -
->> -	struct touchscreen_properties prop;
->> -
->> -	bool			report_resistance;
->> -	u16			min_x;
->> -	u16			min_y;
->> -	u16			max_x;
->> -	u16			max_y;
->> -	u16			max_rt;
->> -	unsigned long		poll_period; /* in jiffies */
->> -	int			fuzzx;
->> -	int			fuzzy;
->> -	int			fuzzz;
->> +#include "tsc2007.h"
->>  
->> -	unsigned		gpio;
->> -	int			irq;
->> -
->> -	wait_queue_head_t	wait;
->> -	bool			stopped;
->> -	bool			pendown;
->> -
->> -	int			(*get_pendown_state)(struct device *);
->> -	void			(*clear_penirq)(void);
->> -};
->> -
->> -static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->>  {
->>  	s32 data;
->>  	u16 val;
->> @@ -121,6 +51,7 @@ static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->>  
->>  	return val;
->>  }
->> +EXPORT_SYMBOL(tsc2007_xfer);
->>  
->>  static void tsc2007_read_values(struct tsc2007 *tsc, struct ts_event *tc)
->>  {
->> @@ -138,7 +69,7 @@ static void tsc2007_read_values(struct tsc2007 *tsc, struct ts_event *tc)
->>  	tsc2007_xfer(tsc, PWRDOWN);
->>  }
->>  
->> -static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->>  					struct ts_event *tc)
->>  {
->>  	u32 rt = 0;
->> @@ -158,8 +89,9 @@ static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->>  
->>  	return rt;
->>  }
->> +EXPORT_SYMBOL(tsc2007_calculate_resistance);
->>  
->> -static bool tsc2007_is_pen_down(struct tsc2007 *ts)
->> +bool tsc2007_is_pen_down(struct tsc2007 *ts)
->>  {
->>  	/*
->>  	 * NOTE: We can't rely on the pressure to determine the pen down
->> @@ -180,6 +112,7 @@ static bool tsc2007_is_pen_down(struct tsc2007 *ts)
->>  
->>  	return ts->get_pendown_state(&ts->client->dev);
->>  }
->> +EXPORT_SYMBOL(tsc2007_is_pen_down);
->>  
->>  static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
->>  {
->> @@ -192,7 +125,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
->>  	while (!ts->stopped && tsc2007_is_pen_down(ts)) {
->>  
->>  		/* pen is down, continue with the measurement */
->> +
->> +		mutex_lock(&ts->mlock);
->>  		tsc2007_read_values(ts, &tc);
->> +		mutex_unlock(&ts->mlock);
->>  
->>  		rt = tsc2007_calculate_resistance(ts, &tc);
->>  
->> @@ -450,7 +386,8 @@ static void tsc2007_call_exit_platform_hw(void *data)
->>  static int tsc2007_probe(struct i2c_client *client,
->>  			 const struct i2c_device_id *id)
->>  {
->> -	const struct tsc2007_platform_data *pdata = dev_get_platdata(&client->dev);
->> +	const struct tsc2007_platform_data *pdata =
->> +		dev_get_platdata(&client->dev);
->>  	struct tsc2007 *ts;
->>  	struct input_dev *input_dev;
->>  	int err;
->> @@ -472,7 +409,13 @@ static int tsc2007_probe(struct i2c_client *client,
->>  	ts->client = client;
->>  	ts->irq = client->irq;
->>  	ts->input = input_dev;
->> +
->> +	err = tsc2007_iio_configure(ts);
->> +	if (err < 0)
->> +		return err;
->> +
->>  	init_waitqueue_head(&ts->wait);
->> +	mutex_init(&ts->mlock);
->>  
->>  	snprintf(ts->phys, sizeof(ts->phys),
->>  		 "%s/input0", dev_name(&client->dev));
->> @@ -494,7 +437,7 @@ static int tsc2007_probe(struct i2c_client *client,
->>  	if (pdata) {
->>  		err = tsc2007_probe_pdev(client, ts, pdata, id);
->>  		if (err)
->> -			return err;
->> +			goto probe_err;
->>  		input_set_abs_params(input_dev, ABS_X, 0, ts->max_x-ts->min_x,
->>  							  ts->fuzzx, 0);
->>  		input_set_abs_params(input_dev, ABS_Y, 0, ts->max_y-ts->min_y,
->> @@ -504,7 +447,7 @@ static int tsc2007_probe(struct i2c_client *client,
->>  	} else {
->>  		err = tsc2007_probe_dt(client, ts);
->>  		if (err)
->> -			return err;
->> +			goto probe_err;
->>  	}
->>  
->>  	if (pdata) {
->> @@ -516,7 +459,7 @@ static int tsc2007_probe(struct i2c_client *client,
->>  				dev_err(&client->dev,
->>  					"Failed to register exit_platform_hw action, %d\n",
->>  					err);
->> -				return err;
->> +				goto probe_err;
->>  			}
->>  		}
->>  
->> @@ -533,7 +476,7 @@ static int tsc2007_probe(struct i2c_client *client,
->>  	if (err) {
->>  		dev_err(&client->dev, "Failed to request irq %d: %d\n",
->>  			ts->irq, err);
->> -		return err;
->> +		goto probe_err;
->>  	}
->>  
->>  	tsc2007_stop(ts);
->> @@ -543,17 +486,30 @@ static int tsc2007_probe(struct i2c_client *client,
->>  	if (err < 0) {
->>  		dev_err(&client->dev,
->>  			"Failed to setup chip: %d\n", err);
->> -		return err;	/* usually, chip does not respond */
->> +		goto probe_err;	/* chip does not respond */
->>  	}
->>  
->>  	err = input_register_device(input_dev);
->>  	if (err) {
->>  		dev_err(&client->dev,
->>  			"Failed to register input device: %d\n", err);
->> -		return err;
->> +		goto probe_err;
->>  	}
->>  
->>  	return 0;
->> +
->> +probe_err:
->> +	tsc2007_iio_unconfigure(ts);
->> +	return err;
->> +}
->> +
->> +static int tsc2007_remove(struct i2c_client *client)
->> +{
->> +	struct tsc2007 *ts = i2c_get_clientdata(client);
->> +
->> +	tsc2007_iio_unconfigure(ts);
->> +	input_unregister_device(ts->input);
->> +	return 0;
->>  }
->>  
->>  static const struct i2c_device_id tsc2007_idtable[] = {
->> @@ -578,6 +534,7 @@ static struct i2c_driver tsc2007_driver = {
->>  	},
->>  	.id_table	= tsc2007_idtable,
->>  	.probe		= tsc2007_probe,
->> +	.remove		= tsc2007_remove,
->>  };
->>  
->>  module_i2c_driver(tsc2007_driver);
->> diff --git a/drivers/input/touchscreen/tsc2007_iio.c b/drivers/input/touchscreen/tsc2007_iio.c
->> new file mode 100644
->> index 0000000..e492bba
->> --- /dev/null
->> +++ b/drivers/input/touchscreen/tsc2007_iio.c
->> @@ -0,0 +1,152 @@
->> +/*
->> + * drivers/input/touchscreen/tsc2007_iio.c
->> + *
->> + * Copyright (c) 2016 Golden Delicious Comp. GmbH&Co. KG
->> + *	Nikolaus Schaller <hns@goldelico.com>
->> + *
->> + *  This program is free software; you can redistribute it and/or modify
->> + *  it under the terms of the GNU General Public License version 2 as
->> + *  published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/iio/iio.h>
->> +#include "tsc2007.h"
->> +
->> +struct tsc2007_iio {
->> +	struct tsc2007 *ts;
->> +};
->> +
->> +#define TSC2007_CHAN_IIO(_chan, _name, _type, _chan_info) \
->> +{ \
->> +	.datasheet_name = _name, \
->> +	.type = _type, \
->> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
->> +			BIT(_chan_info), \
->> +	.indexed = 1, \
->> +	.channel = _chan, \
->> +}
->> +
->> +static const struct iio_chan_spec tsc2007_iio_channel[] = {
->> +	TSC2007_CHAN_IIO(0, "x", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(1, "y", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(2, "z1", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(3, "z2", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(4, "adc", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(5, "rt", IIO_VOLTAGE, IIO_CHAN_INFO_RAW), /* Ohms? */
->> +	TSC2007_CHAN_IIO(6, "pen", IIO_PRESSURE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(7, "temp0", IIO_TEMP, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(8, "temp1", IIO_TEMP, IIO_CHAN_INFO_RAW),
->> +};
->> +
->> +static int tsc2007_read_raw(struct iio_dev *indio_dev,
->> +	struct iio_chan_spec const *chan, int *val, int *val2, long mask)
->> +{
->> +	struct tsc2007_iio *iio = iio_priv(indio_dev);
->> +	struct tsc2007 *tsc = iio->ts;
->> +	int adc_chan = chan->channel;
->> +	int ret = 0;
->> +
->> +	if (adc_chan >= ARRAY_SIZE(tsc2007_iio_channel))
->> +		return -EINVAL;
->> +
->> +	if (mask != IIO_CHAN_INFO_RAW)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&tsc->mlock);
->> +
->> +	switch (chan->channel) {
->> +	case 0:
->> +		*val = tsc2007_xfer(tsc, READ_X);
->> +		break;
->> +	case 1:
->> +		*val = tsc2007_xfer(tsc, READ_Y);
->> +		break;
->> +	case 2:
->> +		*val = tsc2007_xfer(tsc, READ_Z1);
->> +		break;
->> +	case 3:
->> +		*val = tsc2007_xfer(tsc, READ_Z2);
->> +		break;
->> +	case 4:
->> +		*val = tsc2007_xfer(tsc, (ADC_ON_12BIT | TSC2007_MEASURE_AUX));
->> +		break;
->> +	case 5: {
->> +		struct ts_event tc;
->> +
->> +		tc.x = tsc2007_xfer(tsc, READ_X);
->> +		tc.z1 = tsc2007_xfer(tsc, READ_Z1);
->> +		tc.z2 = tsc2007_xfer(tsc, READ_Z2);
->> +		*val = tsc2007_calculate_resistance(tsc, &tc);
->> +		break;
->> +	}
->> +	case 6:
->> +		*val = tsc2007_is_pen_down(tsc);
->> +		break;
->> +	case 7:
->> +		*val = tsc2007_xfer(tsc,
->> +				    (ADC_ON_12BIT | TSC2007_MEASURE_TEMP0));
->> +		break;
->> +	case 8:
->> +		*val = tsc2007_xfer(tsc,
->> +				    (ADC_ON_12BIT | TSC2007_MEASURE_TEMP1));
->> +		break;
->> +	}
->> +
->> +	/* Prepare for next touch reading - power down ADC, enable PENIRQ */
->> +	tsc2007_xfer(tsc, PWRDOWN);
->> +
->> +	mutex_unlock(&tsc->mlock);
->> +
->> +	ret = IIO_VAL_INT;
->> +
->> +	return ret;
->> +}
->> +
->> +static const struct iio_info tsc2007_iio_info = {
->> +	.read_raw = tsc2007_read_raw,
->> +	.driver_module = THIS_MODULE,
->> +};
->> +
->> +int tsc2007_iio_configure(struct tsc2007 *ts)
->> +{
->> +	int err;
->> +	struct iio_dev *indio_dev;
->> +	struct tsc2007_iio *iio;
->> +
->> +	indio_dev = devm_iio_device_alloc(&ts->client->dev,
->> +		sizeof(struct tsc2007_iio));
->> +	if (!indio_dev) {
->> +		dev_err(&ts->client->dev, "iio_device_alloc failed\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	iio = iio_priv(indio_dev);
->> +	iio->ts = ts;
->> +	ts->iio_dev = (void *) indio_dev;
->> +
->> +	indio_dev->name = "tsc2007";
->> +	indio_dev->dev.parent = &ts->client->dev;
->> +	indio_dev->info = &tsc2007_iio_info;
->> +	indio_dev->modes = INDIO_DIRECT_MODE;
->> +	indio_dev->channels = tsc2007_iio_channel;
->> +	indio_dev->num_channels = ARRAY_SIZE(tsc2007_iio_channel);
->> +
->> +	err = iio_device_register(indio_dev);
->> +	if (err < 0) {
->> +		dev_err(&ts->client->dev, "iio_device_register() failed: %d\n",
->> +			err);
->> +		return err;
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(tsc2007_iio_configure);
->> +
->> +void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->> +{
->> +	struct iio_dev *indio_dev = ts->iio_dev;
->> +
->> +	iio_device_unregister(indio_dev);
->> +}
->> +EXPORT_SYMBOL(tsc2007_iio_unconfigure);
->>
+> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v1->v2:
+> - Repeat linear algebra and actually get the rotation matrix right.
+> - Reference the Wikipedia article on the subject.
+> - Fix up text.
+> ---
+>  .../devicetree/bindings/iio/mount-matrix.txt       | 108 +++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+> new file mode 100644
+> index 000000000000..a3714727f739
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+> @@ -0,0 +1,108 @@
+> +Mounting matrix
+> +
+> +The mounting matrix is a device tree property used to orient any IIO device
+> +that produce three-dimensional data in relation to the world where it is
+"devices that produce" or "device that produces"
+> +deployed.
+> +
+> +The purpose of the mounting matrix is to translate the sensor frame of
+> +reference into the device frame of reference using a translation matrix as
+> +defined in linear algebra.
+> +
+> +The typical usecase is that where a component has an internal representation
+> +of the (x,y,z) triplets, such as different registers to read these coordinates,
+> +and thus implying that the component should be mounted in a certain orientation
+> +relative to some specific device frame of reference.
+> +
+> +For example a device with some kind of screen, where the user is supposed to
+> +interact with the environment using an accelerometer, gyroscope or magnetometer
+> +mounted on the same chassis as this screen, will likely take the screen as
+> +reference to (x,y,z) orientation, with (x,y) corresponding to these axes on the
+> +screen and (z) being depth, the axis perpendicular to the screen.
+> +
+> +For a screen you probably want (x) coordinates to go from negative on the left
+> +to positive on the right and (z) depth to be negative under the screen and
+> +positive in front of it, toward the face of the user.
+> +
+> +A sensor can be mounted in any angle along the axes relative to the frame of
+> +reference. This means that the sensor may be flipped upside-down, left-right,
+> +or tilted at any angle relative to the frame of reference.
+> +
+> +Another frame of reference is how the device with its sensor relates to the
+> +external world, the environment where the device is deployed. Usually the data
+> +from the sensor is used to figure out how the device is oriented with respect
+> +to this world. When using the mounting matrix, the sensor and device orientation
+> +becomes identical and we can focus on the data as it relates to the surrounding
+> +world.
+I'm not sure this last sentence is as clear as it might be... Perhaps
+
+When the transformation represented by the mounting matrix has been applied to
+sensor data, it may be treated as if it were in the device frame of reference
+allowing us to focus on the data as it relates to the surrounding world.
+
+
+> +
+> +Device-to-world examples for some three-dimensional sensor types:
+> +
+> +- Accelerometers have their world frame of reference toward the center of
+Stationary accelerometers (in earth frame)
+> +  gravity, usually to the core of the planet. A reading of the (x,y,z) values
+> +  from the sensor will give a projection of the gravity vector through the
+> +  device relative to the center of the planet, i.e. relative to its surface at
+> +  this point. Up and down in the world relative to the device frame of
+> +  reference can thus be determined. and users would likely expect a value of
+> +  9.81 m/s^2 upwards along the (z) axis, i.e. out of the screen when the device
+> +  is held with its screen flat on the planets surface and 0 on the other axes,
+> +  as the gravity vector is projected 1:1 onto the sensors (z)-axis.
+> +
+> +- Magnetometers (compasses) have their world frame of reference relative to the
+> +  geomagnetic field. The system orientation vis-a-vis the world is defined with
+> +  respect to the local earth geomagnetic reference frame where (y) is in the
+> +  ground plane and positive towards magnetic North, (x) is in the ground plane,
+> +  perpendicular to the North axis and positive towards the East and (z) is
+> +  perpendicular to the ground plane and positive upwards.
+Sadly it's not that simple for magnetometers due to the inclination angle...
+
+Stand on the pole and the field points down making the concept of 'upwards'
+interesing to define ;)
+
+Some devices use an accelerometer to try and separate the two directions to
+get what I think you are describing.
+
+> +
+> +- Gyroscopes detects the movement relative the device itself. The angular
+> +  velocity is defined as orthogonal to the plane of rotation, so if you put the
+> +  device on a flat surface and spin it around the z axis (such as rotating a
+> +  device with a screen lying flat on a table), you should get a negative value
+> +  along the (z) axis if rotated clockwise, and a positive value if rotated
+> +  counter-clockwise according to the right-hand rule.
+> +
+> +So unless the sensor is ideally mounted, we need a means to indicate the
+> +relative orientation of any given sensor of this type with respect to the
+> +frame of reference.
+> +
+> +To achieve this, use the device tree property "mount-matrix" for the sensor.
+> +This supplies a 3x3 rotation matrix in the strict linear algebraic sense,
+> +to orient the senor axes relative to a desired point of reference. This means
+> +the resulting values from the sensor, after scaling to proper units, should be
+> +multiplied by this matrix to give the proper vectors values in three-dimensional
+> +space, relative to the device or world point of reference.
+> +
+> +For more information, consult:
+> +https://en.wikipedia.org/wiki/Rotation_matrix
+> +
+> +The mounting matrix has the layout:
+> +
+> + (x0, y0, z0)
+> + (x1, y1, z1)
+> + (x2, y2, z3)
+> +
+> +And it is represented as an array of strings containing the real values for
+> +producing the transformation matrix. The real values use a decimal point and
+> +a minus (-) to indicate a negative value.
+> +
+> +Examples:
+> +
+> +Identity matrix (nothing happens to the coordinates, which means the device was
+> +mechanically mounted in an ideal way and we need no transformation):
+> +
+> +mount-matrix = "1", "0", "0",
+> +               "0", "1", "0",
+> +               "0", "0", "1";
+> +
+> +The sensor is mounted 30 degrees (Pi/6 radians) tilted along the X axis, so we
+> +compensate by performing a -30 degrees rotation around the X axis:
+> +
+> +mount-matrix = "1", "0", "0",
+> +               "0", "0.866", "0.5",
+> +               "0", "-0.5", "0.866";
+> +
+> +The sensor is flipped 180 degrees (Pi radians) around the Z axis, i.e. mounted
+> +upside-down:
+> +
+> +mount-matrix = "0.998", "0.054", "0",
+> +               "-0.054", "0.998", "0",
+> +               "0", "0", "1";
 > 
