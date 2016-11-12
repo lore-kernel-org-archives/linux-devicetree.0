@@ -1,158 +1,35 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] clocksource: update "fn" at
- CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Sat, 12 Nov 2016 00:26:39 +0100
-Message-ID: <20161111232639.GA1619@mai>
-References: <1478454298-381-1-git-send-email-noamca@mellanox.com>
- <1478454298-381-3-git-send-email-noamca@mellanox.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
+Date: Fri, 11 Nov 2016 16:04:15 -0800
+Message-ID: <20161112000415.GE5177@codeaurora.org>
+References: <1477721618-10809-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1477721618-10809-3-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478454298-381-3-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1477721618-10809-3-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bin.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 06, 2016 at 07:44:57PM +0200, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On 10/29, Jiancheng Xue wrote:
+
+Should be a From: Pan Wen here?
+
+> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
+> Generator) module generates clock and reset signals used
+> by other module blocks on SoC.
 > 
-> nps_setup_clocksource() should take node as only argument i.e.:
-> replace
-> int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
-> with
-> int __init nps_setup_clocksource(struct device_node *node)
-> 
-> This is also serve as preperation for next patch which adds support
-> for clockevents to nps400.
-> Specifically we add new function nps_get_timer_clk() to serve clocksource
-> and later clockevent registration.
-> 
-> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
->  1 files changed, 37 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-> index 70c149a..1533349 100644
-> --- a/drivers/clocksource/timer-nps.c
-> +++ b/drivers/clocksource/timer-nps.c
-> @@ -46,7 +46,33 @@
->  /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
->  static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
->  
-> -static unsigned long nps_timer_rate;
-> +static int nps_get_timer_clk(struct device_node *node,
-> +			     unsigned long *timer_freq,
-> +			     struct clk **clk)
+> Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-	__init
-
-> +{
-> +	int ret;
-> +
-> +	*clk = of_clk_get(node, 0);
-> +	if (IS_ERR(*clk)) {
-> +		pr_err("timer missing clk");
-> +		return PTR_ERR(*clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(*clk);
-> +	if (ret) {
-> +		pr_err("Couldn't enable parent clk\n");
-> +		return ret;
-> +	}
-> +
-> +	*timer_freq = clk_get_rate(*clk);
-> +	if (!(*timer_freq)) {
-> +		pr_err("Couldn't clk get rate\n");
-> +		clk_disable_unprepare(*clk);
-> +		return *timer_freq;
-
-		^^^^^^^^^^^^^^^^^^
-return unsigned long and as zero.
-
-
-
-> +	}
-> +
-> +	return 0;
-> +}
->  
->  static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  {
-> @@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
->  }
->  
-> -static int __init nps_setup_clocksource(struct device_node *node,
-> -					struct clk *clk)
-> +static int __init nps_setup_clocksource(struct device_node *node)
->  {
->  	int ret, cluster;
-> +	struct clk *clk;
-> +	unsigned long nps_timer1_freq;
-> +
->  
->  	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
->  		nps_msu_reg_low_addr[cluster] =
->  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
-> -				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
-> +				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
->  
-> -	ret = clk_prepare_enable(clk);
-> -	if (ret) {
-> -		pr_err("Couldn't enable parent clock\n");
-> +	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
-> +	if (ret)
->  		return ret;
-> -	}
->  
-> -	nps_timer_rate = clk_get_rate(clk);
-> -
-> -	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
-> -				    nps_timer_rate, 301, 32, nps_clksrc_read);
-> +	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
-> +				    nps_timer1_freq, 301, 32, nps_clksrc_read);
-
-301 ?
-
->  	if (ret) {
->  		pr_err("Couldn't register clock source.\n");
->  		clk_disable_unprepare(clk);
-> @@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
->  	return ret;
->  }
->  
-> -static int __init nps_timer_init(struct device_node *node)
-> -{
-> -	struct clk *clk;
-> -
-> -	clk = of_clk_get(node, 0);
-> -	if (IS_ERR(clk)) {
-> -		pr_err("Can't get timer clock.\n");
-> -		return PTR_ERR(clk);
-> -	}
-> -
-> -	return nps_setup_clocksource(node, clk);
-> -}
-> -
->  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
-> -		       nps_timer_init);
-> +		       nps_setup_clocksource);
-> -- 
-> 1.7.1
-> 
+And you should have signed it off? Care to resend or state that
+this is incorrectly attributed to you instead of Pan Wen?
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
