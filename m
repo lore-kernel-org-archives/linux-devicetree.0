@@ -1,90 +1,146 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: sunxi: add support for H2+ SoC
-Date: Sun, 13 Nov 2016 19:59:15 +0100
-Message-ID: <8b57a230-d113-0a8d-e732-4115d0165910@redhat.com>
-References: <20161111164654.15273-1-icenowy@aosc.xyz>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCXQULAQKGQE4XWBKJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161111164654.15273-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to reference-design-tablet.dtsi
+Date: Sun, 13 Nov 2016 20:22:02 +0100
+Message-ID: <20161113192203.7101-1-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Just like on sun8i all sun5i tablets use the same interrupt and power
+gpios for their touchscreens. I've checked all known a13 fex files and
+only the UTOO P66 uses a different gpio for the interrupt.
 
-On 11-11-16 17:46, Icenowy Zheng wrote:
-> Allwinner H2+ is a quad-core Cortex-A7 SoC.
->
-> It is very like H3, that they share the same SoC ID (0x1680), and H3
-> memory maps as well as drivers works well on the SoC.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
+fills in the necessary gpios to avoid duplication in the tablet dts files,
+just like we do in sun8i-reference-design-tablet.dtsi.
 
-I agree that given that the chip-id is 1680 for both
-this does seem to be the same die as the H3, and given
-that we do not have any datasheets, I agree that just
-treating the H2+ as a H3 is best for now, we can always
-change h2.dtsi to actually differentiate things later.
+This will make future patches adding touchscreen nodes to a13 tablets
+simpler.
 
-This entire series LGTM and is:
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------------
+ .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
+ 2 files changed, 39 insertions(+), 24 deletions(-)
 
-Reviewed-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+index a8b0bcc..3d7ff10 100644
+--- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
++++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+@@ -83,22 +83,6 @@
+ 	allwinner,pins = "PG3";
+ };
+ 
+-&i2c1 {
+-	icn8318: touchscreen@40 {
+-		compatible = "chipone,icn8318";
+-		reg = <0x40>;
+-		interrupt-parent = <&pio>;
+-		interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&ts_wake_pin_p66>;
+-		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+-		touchscreen-size-x = <800>;
+-		touchscreen-size-y = <480>;
+-		touchscreen-inverted-x;
+-		touchscreen-swapped-x-y;
+-	};
+-};
+-
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins_a>;
+@@ -121,20 +105,26 @@
+ 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 	};
+-
+-	ts_wake_pin_p66: ts_wake_pin@0 {
+-		allwinner,pins = "PB3";
+-		allwinner,function = "gpio_out";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
+-
+ };
+ 
+ &reg_usb0_vbus {
+ 	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+ };
+ 
++&touchscreen {
++	compatible = "chipone,icn8318";
++	reg = <0x40>;
++	/* The P66 uses a different EINT then the reference design */
++	interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
++	/* The icn8318 binding expects wake-gpios instead of power-gpios */
++	wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
++	touchscreen-size-x = <800>;
++	touchscreen-size-y = <480>;
++	touchscreen-inverted-x;
++	touchscreen-swapped-x-y;
++	status = "okay";
++};
++
+ &uart1 {
+ 	/* The P66 uses the uart pins as gpios */
+ 	status = "disabled";
+diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+index 20cc940..7af488a 100644
+--- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+@@ -41,6 +41,7 @@
+  */
+ #include "sunxi-reference-design-tablet.dtsi"
+ 
++#include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+@@ -84,6 +85,23 @@
+ };
+ 
+ &i2c1 {
++	/*
++	 * The gsl1680 is rated at 400KHz and it will not work reliable at
++	 * 100KHz, this has been confirmed on multiple different q8 tablets.
++	 * All other devices on this bus are also rated for 400KHz.
++	 */
++	clock-frequency = <400000>;
++
++	touchscreen: touchscreen {
++		interrupt-parent = <&pio>;
++		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_power_pin>;
++		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
++		/* Tablet dts must provide reg and compatible */
++		status = "disabled";
++	};
++
+ 	pcf8563: rtc@51 {
+ 		compatible = "nxp,pcf8563";
+ 		reg = <0x51>;
+@@ -125,6 +143,13 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+ 	};
+ 
++	ts_power_pin: ts_power_pin {
++		allwinner,pins = "PB3";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
+ 	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
+ 		allwinner,pins = "PG1";
+ 		allwinner,function = "gpio_in";
+-- 
+2.9.3
 
-Regards,
-
-Hans
-
-> ---
->  Documentation/arm/sunxi/README                  | 4 ++++
->  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
->  arch/arm/mach-sunxi/sunxi.c                     | 1 +
->  3 files changed, 6 insertions(+)
->
-> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-> index cd02433..1fe4d99c 100644
-> --- a/Documentation/arm/sunxi/README
-> +++ b/Documentation/arm/sunxi/README
-> @@ -63,6 +63,10 @@ SunXi family
->          + User Manual
->            http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
->
-> +      - Allwinner H2+ (sun8i)
-> +        + No document available now, but is known to be working properly with
-> +          H3 drivers and memory map.
-> +
->        - Allwinner H3 (sun8i)
->          + Datasheet
->            http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-> index 3975d0a..0c0f277 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-> @@ -13,5 +13,6 @@ using one of the following compatible strings:
->    allwinner,sun8i-a33
->    allwinner,sun8i-a83t
->    allwinner,sun8i-h3
-> +  allwinner,sun8i-h2plus
->    allwinner,sun9i-a80
->    nextthing,gr8
-> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> index 2e2bde2..3647ad7 100644
-> --- a/arch/arm/mach-sunxi/sunxi.c
-> +++ b/arch/arm/mach-sunxi/sunxi.c
-> @@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] = {
->  	"allwinner,sun8i-a23",
->  	"allwinner,sun8i-a33",
->  	"allwinner,sun8i-a83t",
-> +	"allwinner,sun8i-h2plus",
->  	"allwinner,sun8i-h3",
->  	NULL,
->  };
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
