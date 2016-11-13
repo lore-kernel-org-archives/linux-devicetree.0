@@ -1,77 +1,79 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/3] Input: ti_am335x_tsc: Add support for ti,charge-delay-ns
-Date: Fri, 11 Nov 2016 13:28:19 +0530
-Message-ID: <20161111075819.5760-1-mugunthanvnm@ti.com>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+From: Noam Camus <noamca@mellanox.com>
+Subject: [PATCH v5 0/3] Add clockevet for timer-nps driver to NPS400 SoC
+Date: Sun, 13 Nov 2016 09:24:29 +0200
+Message-ID: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110163515.27598-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
+Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-ti,charge-delay will be deprecated as it represents number of
-clock cycles and the DT entries are done in assumption of 3MHz
-TSCADC clock, but clock can be set upto 24MHz. So driver add
-support for ti,charge-delay-ns and do not drop support for
-ti,charge-delay to support old dtbs and it will be assumed that
-it is for 3MHz TSCADC clock and will be calculated as per current
-clock speed.
+From: Noam Camus <noamca@mellanox.com>
 
-Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Change log
 ---
- drivers/input/touchscreen/ti_am335x_tsc.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+V4 --> V5
+Apply several comments made by Daneil Lezcano:
+1) Add __init attribute to nps_get_timer_clk()
+2) Fix return value of nps_get_timer_clk()
+ when failing to get clk rate
+3) Change clocksource rate from 301 -> 300
 
-diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
-index 7953381d939a..104b3640f728 100644
---- a/drivers/input/touchscreen/ti_am335x_tsc.c
-+++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-@@ -379,15 +379,30 @@ static int titsc_parse_dt(struct platform_device *pdev,
- 		ts_dev->coordinate_readouts = 5;
- 	}
- 
--	err = of_property_read_u32(node, "ti,charge-delay",
-+	err = of_property_read_u32(node, "ti,charge-delay-ns",
- 				   &ts_dev->charge_delay);
--	/*
--	 * If ti,charge-delay value is not specified, then use
--	 * CHARGEDLY_OPENDLY as the default value.
--	 */
--	if (err < 0) {
--		ts_dev->charge_delay = CHARGEDLY_OPENDLY;
--		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
-+	if (err >= 0) {
-+		u64 charge_delay = ts_dev->charge_delay;
-+
-+		charge_delay *= ADC_CLK;
-+		do_div(charge_delay, 1E9);
-+		ts_dev->charge_delay = (u32)charge_delay;
-+	} else {
-+		err = of_property_read_u32(node, "ti,charge-delay",
-+					   &ts_dev->charge_delay);
-+		/*
-+		 * If ti,charge-delay value is not specified, then use
-+		 * CHARGEDLY_OPENDLY as the default value.
-+		 */
-+		if (err < 0) {
-+			ts_dev->charge_delay = CHARGEDLY_OPENDLY;
-+			dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
-+		}
-+		/*
-+		 * ti,charge-delay is specified with referrence to 3MHz,
-+		 * so convert it to in referrence to current clock
-+		 */
-+		ts_dev->charge_delay *= ADC_CLK / 3000000;
- 	}
- 
- 	return of_property_read_u32_array(node, "ti,wire-config",
--- 
-2.11.0.rc0.7.gbe5a750
+V3 --> V4
+Main changes are [Thanks for the review]:
+Fix many typos at log [Daniel]
+Add handling for bad return values [Daniel and Thomas]
+Replace use of internal irqchip pointers with existing IRQ API [Thomas]
+Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
+Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+V2 --> V3
+Apply Rob Herring comment about backword compatibility
+
+V1 --> V2
+Apply Daniel Lezcano comments:
+	CLOCKSOURCE_OF_DECLARE return value
+	update hotplug callbacks usage
+	squash of 2 first commits.
+In this version I created new commit to serve as preperation for adding clockevents.
+This way the last patch is more readable with clockevent content.
+---
+
+In first version of this driver we supported clocksource for the NPS400.
+The support for clockevent was taken from Synopsys ARC timer driver.
+This was good for working with our simulator of NPS400.
+However in NPS400 ASIC the timers behave differently than simulation.
+The timers in ASIC are shared between all threads whithin a core
+and hence need different driver to support this behaviour.
+
+The idea of this design is that we got 16 HW threads per core
+each represented at bimask in a shared register in this core.
+So when thread wants that next clockevent expiration will produce
+timer interrupt to itself the correspondance bit in this register
+should be set.
+So theoretically if all 16 bits are set then all HW threads will get
+timer interrupt on next expiration of timer 0.
+
+Note that we use Synopsys ARC design naming convention for the timers
+where:
+timer0 is used for clockevents
+timer1 is used for clocksource.
+
+Noam Camus (3):
+  soc: Support for NPS HW scheduling
+  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+  clocksource: Add clockevent support to NPS400 driver
+
+ .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+ .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+ .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+ arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
+ drivers/clocksource/timer-nps.c                    |  264 ++++++++++++++++++--
+ include/soc/nps/mtm.h                              |   59 +++++
+ 6 files changed, 335 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+ create mode 100644 include/soc/nps/mtm.h
