@@ -1,59 +1,86 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 09/19] ARM: dts: armada-370-xp: Fixup sa-ram DT warning
-Date: Sun, 13 Nov 2016 22:23:52 +0100
-Message-ID: <20161113212402.3060-10-gregory.clement@free-electrons.com>
-References: <20161113212402.3060-1-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 00/19] Various Armada 370/XP DT warning fixup
+Date: Sun, 13 Nov 2016 22:23:43 +0100
+Message-ID: <20161113212402.3060-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161113212402.3060-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-sa-ram which is a mmio-sram has a reg property so the unit name should
-contain an address.
+As it was done a few months ago for kirkwood, this patchset fixes up
+various warning from the DT compiler when using the flag W=1 with
+make.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/armada-370.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp.dtsi  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+In this second version I used the target and attributes property of
+the memory windows when MBUS_ID. Indeed by adding this information to
+the unit-address is really uniq as required bu the epar as explained
+in this email:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/466941.html.
 
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 7598fb013355..26779b0ba79e 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -262,7 +262,7 @@
- 			};
- 		};
- 
--		crypto_sram: sa-sram {
-+		crypto_sram: sa-sram@09_01_0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x01) 0 0x800>;
- 			reg-names = "sram";
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index e4aa0018047c..611fbcb02ebb 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -230,7 +230,7 @@
- 			};
- 		};
- 
--		crypto_sram0: sa-sram0 {
-+		crypto_sram0: sa-sram@09_09_0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x09) 0 0x800>;
- 			clocks = <&gateclk 23>;
-@@ -239,7 +239,7 @@
- 			ranges = <0 MBUS_ID(0x09, 0x09) 0 0x800>;
- 		};
- 
--		crypto_sram1: sa-sram1 {
-+		crypto_sram1: sa-sram@09_05_0 {
- 			compatible = "mmio-sram";
- 			reg = <MBUS_ID(0x09, 0x05) 0 0x800>;
- 			clocks = <&gateclk 23>;
+As for the first version, the only remaining warnings are the following:
+  DTC     arch/arm/boot/dts/armada-370-db.dtb
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
+
+However it seems a false positive as here the '@' is part of the name
+of the node and is not a reference of an address. Moreover the node
+name is directly used by the driver so it must not be modified.
+
+Gregory
+
+Gregory CLEMENT (19):
+  ARM: dts: armada-xp-matrix: Fix the location of the pcie-controller
+    node
+  ARM: dts: armada-370-xp: move the cpurst node in the common file
+  ARM: dts: armada-370-xp: add node labels
+  ARM: dts: armada-370-xp: Use the node labels
+  ARM: dts: armada-370-xp: Fixup mdio DT warning
+  ARM: dts: armada-370-xp: Fixup bootrom DT warning
+  ARM: dts: armada-370-xp: Fixup devbus DT warning
+  ARM: dts: armada-370-xp: Fixup bm-bppi DT warning
+  ARM: dts: armada-370-xp: Fixup sa-ram DT warning
+  ARM: dts: armada-xp: Fixup pcie DT warnings
+  ARM: dts: armada-370: Fixup pcie DT warnings
+  ARM: dts: armada-370-xp: Remove skeleton.dtsi
+  ARM: dts: armada-370-xp: Fixup l2-cache DT warning
+  ARM: dts: armada-370-xp: Fixup internal-regs DT warning
+  ARM: dts: armada-370-xp: Fixup soc DT warning
+  ARM: dts: armada-370-xp: Fixup memory DT warning
+  ARM: dts: armada-370-xp: Remove address from dsa unit name
+  ARM: dts: armada-370-xp: Remove button address and fixup names
+  ARM: dts: armada-370-xp: Fixup regulator DT warning
+
+ arch/arm/boot/dts/armada-370-db.dts                |  67 ++++----
+ arch/arm/boot/dts/armada-370-dlink-dns327l.dts     |  34 ++---
+ arch/arm/boot/dts/armada-370-mirabox.dts           |  61 ++++----
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts     |  54 +++----
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts     |  62 ++++----
+ arch/arm/boot/dts/armada-370-rd.dts                |  61 ++++----
+ arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts  |  31 ++--
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi |  49 +++---
+ .../dts/armada-370-seagate-personal-cloud-2bay.dts |   4 +-
+ .../boot/dts/armada-370-seagate-personal-cloud.dts |   4 +-
+ .../dts/armada-370-seagate-personal-cloud.dtsi     |  48 +++---
+ arch/arm/boot/dts/armada-370-synology-ds213j.dts   |  22 +--
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  43 +++---
+ arch/arm/boot/dts/armada-370.dtsi                  | 144 +++++++++--------
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts          |  72 ++++-----
+ arch/arm/boot/dts/armada-xp-db.dts                 | 170 ++++++++++-----------
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 146 +++++++++---------
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    |  57 ++++---
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts      |  56 +++----
+ arch/arm/boot/dts/armada-xp-matrix.dts             |  24 +--
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           |  16 +-
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           |  24 +--
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           |  26 ++--
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |  71 ++++-----
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   | 124 +++++++--------
+ arch/arm/boot/dts/armada-xp-synology-ds414.dts     |  79 +++++-----
+ arch/arm/boot/dts/armada-xp.dtsi                   | 106 ++++++-------
+ 27 files changed, 832 insertions(+), 823 deletions(-)
+
 -- 
 2.10.2
 
