@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 12/19] ARM: dts: armada-370-xp: Remove skeleton.dtsi
-Date: Sun, 13 Nov 2016 22:23:55 +0100
-Message-ID: <20161113212402.3060-13-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 13/19] ARM: dts: armada-370-xp: Fixup l2-cache DT warning
+Date: Sun, 13 Nov 2016 22:23:56 +0100
+Message-ID: <20161113212402.3060-14-gregory.clement@free-electrons.com>
 References: <20161113212402.3060-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161113212402.3060-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,65 +10,41 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The skeleton.dtsi file was removed in ARM64 for different reasons as
-explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
-
-These also applies to ARM and it will also allow to get rid of the
-following DTC warnings in the future:
-
-"Node /memory has a reg or ranges property, but no unit name"
+l2-cache which is either an aurora-outer-cache or an aurora-system-cache
+has a reg property so the unit name should contain an address.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi | 2 --
- arch/arm/boot/dts/armada-370.dtsi    | 4 +++-
- arch/arm/boot/dts/armada-xp.dtsi     | 3 +++
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/armada-370.dtsi | 2 +-
+ arch/arm/boot/dts/armada-xp.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index c83c52d80b5b..728b7aa5e6fd 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -50,8 +50,6 @@
-  * 370 and Armada XP SoC.
-  */
- 
--/include/ "skeleton64.dtsi"
--
- #define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
- 
- / {
 diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 6b22c6d255c1..33d29d344caa 100644
+index 33d29d344caa..f7f7194c30c8 100644
 --- a/arch/arm/boot/dts/armada-370.dtsi
 +++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -50,9 +50,11 @@
-  */
+@@ -127,7 +127,7 @@
+ 		};
  
- #include "armada-370-xp.dtsi"
--/include/ "skeleton.dtsi"
- 
- / {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
- 	model = "Marvell Armada 370 family SoC";
- 	compatible = "marvell,armada370", "marvell,armada-370-xp";
- 
+ 		internal-regs {
+-			L2: l2-cache {
++			L2: l2-cache@8000 {
+ 				compatible = "marvell,aurora-outer-cache";
+ 				reg = <0x08000 0x1000>;
+ 				cache-id-part = <0x100>;
 diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 611fbcb02ebb..736a0b94da2b 100644
+index 736a0b94da2b..d67fafac495d 100644
 --- a/arch/arm/boot/dts/armada-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -53,6 +53,9 @@
- #include "armada-370-xp.dtsi"
+@@ -78,7 +78,7 @@
+ 				reg = <0x1400 0x500>;
+ 			};
  
- / {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
- 	model = "Marvell Armada XP family SoC";
- 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
- 
+-			L2: l2-cache {
++			L2: l2-cache@8000 {
+ 				compatible = "marvell,aurora-system-cache";
+ 				reg = <0x08000 0x1000>;
+ 				cache-id-part = <0x100>;
 -- 
 2.10.2
 
