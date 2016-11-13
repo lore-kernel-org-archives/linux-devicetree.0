@@ -1,84 +1,81 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Sat, 12 Nov 2016 18:15:31 -0800
-Message-ID: <5827CCC3.90003@gmail.com>
-References: <20161104144241.18002-1-hdegoede@redhat.com>
- <20161104144241.18002-2-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/2] PCI: rockchip: cleanup bit definition for PCIE_RC_CONFIG_LCS
+Date: Sun, 13 Nov 2016 11:06:13 +0800
+Message-ID: <1479006374-192306-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161104144241.18002-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/16 07:42, Hans de Goede wrote:
-> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> 
-> Changesets are very powerful, but the lack of a helper API
-> makes using them cumbersome. Introduce a simple copy based
-> API that makes things considerably easier.
-> 
-> To wit, adding a property using the raw API.
-> 
-> 	struct property *prop;
-> 	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
-> 	prop->name = kstrdup("compatible");
-> 	prop->value = kstrdup("foo,bar");
-> 	prop->length = strlen(prop->value) + 1;
-> 	of_changeset_add_property(ocs, np, prop);
-> 
-> while using the helper API
-> 
-> 	of_changeset_add_property_string(ocs, np, "compatible",
-> 			"foo,bar");
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
-> -Address review comments from:
->  https://www.spinics.net/lists/kernel/msg2252845.html
+PCIE_RC_CONFIG_LCS contains control and status bits specific
+to the PCIe link. The layout for this register looks the same
+as the existed PCI_EXP_LNKCTL and PCI_EXP_LNKSTA. So let's
+reuse them.
 
-That points to the May 9 version 1 patches from Pantelis (as expected),
-but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
-seems to have disappeared?
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Pantelis then sent a version 2 set of the patches on May 16.
+ drivers/pci/host/pcie-rockchip.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-Your version is a modification of the May 9 patches (as would be expected
-of a version 2).  It is confusing to have two different version 2 patch
-sets.  I don't have any brilliant ideas on how this patch set could have
-been named differently to avoid that confusion.
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index 7f238af..1dba698 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -141,12 +141,6 @@
+ #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+ #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+ #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+-#define   PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
+-#define   PCIE_RC_CONFIG_LCS_CCC		BIT(6)
+-#define   PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
+-#define   PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
+-#define   PCIE_RC_CONFIG_LCS_LBMS		BIT(30)
+-#define   PCIE_RC_CONFIG_LCS_LAMS		BIT(31)
+ #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+ #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+ #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
+@@ -229,7 +223,7 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
+ 	u32 status;
+ 
+ 	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+-	status |= (PCIE_RC_CONFIG_LCS_LBMIE | PCIE_RC_CONFIG_LCS_LABIE);
++	status |= (PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
+ 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+ }
+ 
+@@ -238,7 +232,7 @@ static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
+ 	u32 status;
+ 
+ 	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+-	status |= (PCIE_RC_CONFIG_LCS_LBMS | PCIE_RC_CONFIG_LCS_LAMS);
++	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
+ 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+ }
+ 
+@@ -540,7 +534,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 
+ 	/* Set RC's clock architecture as common clock */
+ 	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+-	status |= PCIE_RC_CONFIG_LCS_CCC;
++	status |= PCI_EXP_LNKCTL_CCC;
+ 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+ 
+ 	/* Enable Gen1 training */
+@@ -575,7 +569,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 		 * gen1 finished.
+ 		 */
+ 		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
+-		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
++		status |= PCI_EXP_LNKCTL_RL;
+ 		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
+ 
+ 		timeout = jiffies + msecs_to_jiffies(500);
+-- 
+1.9.1
 
-The point of this little side-track is simply to note the existence of two
-different version 2 series so I won't be confused when I revisit this
-thread in the future.
 
->  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
->  -Remove (by manual inlining) these 2 static helpers:
->   __of_changeset_add_update_property_u32
->   __of_changeset_add_update_property_bool
->  -Remove the following exported helper method:
->   of_changeset_node_move_to
-
-Not all comments were addressed.
-
-There are some other changes made that are not noted in the changelog.
-
-I am still reading through the patches. I will reply again either with
-a reviewed-by or specific comments when I finish.
-
--Frank
-
-> ---
->  drivers/of/dynamic.c | 428 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h   | 135 ++++++++++++++++
->  2 files changed, 563 insertions(+)
-
-< snip >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
