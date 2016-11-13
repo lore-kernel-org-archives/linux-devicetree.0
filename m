@@ -1,79 +1,106 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: [PATCH v5 0/3] Add clockevet for timer-nps driver to NPS400 SoC
-Date: Sun, 13 Nov 2016 09:24:29 +0200
-Message-ID: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
+Date: Sun, 13 Nov 2016 09:14:00 +0100
+Message-ID: <8c8e58ad-3218-ecea-a58f-f1583c86e1a8@redhat.com>
+References: <20161104144241.18002-1-hdegoede@redhat.com>
+ <20161104144241.18002-2-hdegoede@redhat.com> <5827CCC3.90003@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
-Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5827CCC3.90003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca@mellanox.com>
+Hi,
 
-Change log
----
-V4 --> V5
-Apply several comments made by Daneil Lezcano:
-1) Add __init attribute to nps_get_timer_clk()
-2) Fix return value of nps_get_timer_clk()
- when failing to get clk rate
-3) Change clocksource rate from 301 -> 300
+On 13-11-16 03:15, Frank Rowand wrote:
+> On 11/04/16 07:42, Hans de Goede wrote:
+>> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>
+>> Changesets are very powerful, but the lack of a helper API
+>> makes using them cumbersome. Introduce a simple copy based
+>> API that makes things considerably easier.
+>>
+>> To wit, adding a property using the raw API.
+>>
+>> 	struct property *prop;
+>> 	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
+>> 	prop->name = kstrdup("compatible");
+>> 	prop->value = kstrdup("foo,bar");
+>> 	prop->length = strlen(prop->value) + 1;
+>> 	of_changeset_add_property(ocs, np, prop);
+>>
+>> while using the helper API
+>>
+>> 	of_changeset_add_property_string(ocs, np, "compatible",
+>> 			"foo,bar");
+>>
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
+>> -Address review comments from:
+>>  https://www.spinics.net/lists/kernel/msg2252845.html
+>
+> That points to the May 9 version 1 patches from Pantelis (as expected),
+> but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
+> seems to have disappeared?
 
-V3 --> V4
-Main changes are [Thanks for the review]:
-Fix many typos at log [Daniel]
-Add handling for bad return values [Daniel and Thomas]
-Replace use of internal irqchip pointers with existing IRQ API [Thomas]
-Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
-Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+Ah, I cherry picked this into my tree a long time ago, hoping
+Pantelis himself would upstream them, so I only cherry picked
+the bare minimum and I did not pick-up the unit tests.
 
-V2 --> V3
-Apply Rob Herring comment about backword compatibility
+> Pantelis then sent a version 2 set of the patches on May 16.
 
-V1 --> V2
-Apply Daniel Lezcano comments:
-	CLOCKSOURCE_OF_DECLARE return value
-	update hotplug callbacks usage
-	squash of 2 first commits.
-In this version I created new commit to serve as preperation for adding clockevents.
-This way the last patch is more readable with clockevent content.
----
+Hmm, I never found this in google.
 
-In first version of this driver we supported clocksource for the NPS400.
-The support for clockevent was taken from Synopsys ARC timer driver.
-This was good for working with our simulator of NPS400.
-However in NPS400 ASIC the timers behave differently than simulation.
-The timers in ASIC are shared between all threads whithin a core
-and hence need different driver to support this behaviour.
+> Your version is a modification of the May 9 patches (as would be expected
+> of a version 2).  It is confusing to have two different version 2 patch
+> sets.  I don't have any brilliant ideas on how this patch set could have
+> been named differently to avoid that confusion.
 
-The idea of this design is that we got 16 HW threads per core
-each represented at bimask in a shared register in this core.
-So when thread wants that next clockevent expiration will produce
-timer interrupt to itself the correspondance bit in this register
-should be set.
-So theoretically if all 16 bits are set then all HW threads will get
-timer interrupt on next expiration of timer 0.
+Actually my patches were cherry picked from Pantelis' beaglebone
+capemanager tree, which I hope contained the last version.
 
-Note that we use Synopsys ARC design naming convention for the timers
-where:
-timer0 is used for clockevents
-timer1 is used for clocksource.
+> The point of this little side-track is simply to note the existence of two
+> different version 2 series so I won't be confused when I revisit this
+> thread in the future.
 
-Noam Camus (3):
-  soc: Support for NPS HW scheduling
-  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
-  clocksource: Add clockevent support to NPS400 driver
+Ack, sorry about that.
 
- .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
- .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
- .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
- arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
- drivers/clocksource/timer-nps.c                    |  264 ++++++++++++++++++--
- include/soc/nps/mtm.h                              |   59 +++++
- 6 files changed, 335 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
- create mode 100644 include/soc/nps/mtm.h
+Regards,
+
+Hans
+
+
+>
+>>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
+>>  -Remove (by manual inlining) these 2 static helpers:
+>>   __of_changeset_add_update_property_u32
+>>   __of_changeset_add_update_property_bool
+>>  -Remove the following exported helper method:
+>>   of_changeset_node_move_to
+>
+> Not all comments were addressed.
+>
+> There are some other changes made that are not noted in the changelog.
+>
+> I am still reading through the patches. I will reply again either with
+> a reviewed-by or specific comments when I finish.
+>
+> -Frank
+>
+>> ---
+>>  drivers/of/dynamic.c | 428 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h   | 135 ++++++++++++++++
+>>  2 files changed, 563 insertions(+)
+>
+> < snip >
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
