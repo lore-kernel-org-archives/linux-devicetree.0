@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 19/19] ARM: dts: armada-370-xp: Fixup regulator DT warning
-Date: Sun, 13 Nov 2016 22:24:02 +0100
-Message-ID: <20161113212402.3060-20-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 17/19] ARM: dts: armada-370-xp: Remove address from dsa unit name
+Date: Sun, 13 Nov 2016 22:24:00 +0100
+Message-ID: <20161113212402.3060-18-gregory.clement@free-electrons.com>
 References: <20161113212402.3060-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161113212402.3060-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,76 +10,41 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-regulator has a reg property so the unit name should contain an address.
+The dsa node does not have a reg property, so remove the address from the
+unit name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-synology-ds213j.dts | 4 ++--
- arch/arm/boot/dts/armada-xp-synology-ds414.dts   | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/armada-370-rd.dts           | 2 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-index 20ea2391da6e..9eb755534e70 100644
---- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-+++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-@@ -186,7 +186,7 @@
- 		pinctrl-0 = <&sata1_pwr_pin &sata2_pwr_pin>;
- 		pinctrl-names = "default";
- 
--		sata1_regulator: sata1-regulator {
-+		sata1_regulator: sata1-regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
- 			regulator-name = "SATA1 Power";
-@@ -199,7 +199,7 @@
- 			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 66974ab4d334..3247e456a219 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -172,7 +172,7 @@
  		};
+ 	};
  
--		sata2_regulator: sata2-regulator {
-+		sata2_regulator: sata2-regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <2>;
- 			regulator-name = "SATA2 Power";
-diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-index 45480d992e1e..ee3acb88ea8a 100644
---- a/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-+++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -154,7 +154,7 @@
- 			     &sata3_pwr_pin &sata4_pwr_pin>;
- 		pinctrl-names = "default";
+-	dsa@0 {
++	dsa {
+ 		compatible = "marvell,dsa";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+index c5ca7525389b..2eb0cc58cf50 100644
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -301,7 +301,7 @@
+ 				      4500 1>;
+ 	};
  
--		sata1_regulator: sata1-regulator {
-+		sata1_regulator: sata1-regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
- 			regulator-name = "SATA1 Power";
-@@ -167,7 +167,7 @@
- 			gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		sata2_regulator: sata2-regulator {
-+		sata2_regulator: sata2-regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <2>;
- 			regulator-name = "SATA2 Power";
-@@ -180,7 +180,7 @@
- 			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		sata3_regulator: sata3-regulator {
-+		sata3_regulator: sata3-regulator@3 {
- 			compatible = "regulator-fixed";
- 			reg = <3>;
- 			regulator-name = "SATA3 Power";
-@@ -193,7 +193,7 @@
- 			gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		sata4_regulator: sata4-regulator {
-+		sata4_regulator: sata4-regulator@4 {
- 			compatible = "regulator-fixed";
- 			reg = <4>;
- 			regulator-name = "SATA4 Power";
+-	dsa@0 {
++	dsa {
+ 		compatible = "marvell,dsa";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
 -- 
 2.10.2
 
