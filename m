@@ -1,57 +1,121 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
- mode
-Date: Sat, 12 Nov 2016 12:40:10 +0530
-Message-ID: <8ecc1325-365d-bdec-d435-729e0ea49d20@ti.com>
-References: <1476190715-16884-1-git-send-email-kishon@ti.com>
- <1476190715-16884-4-git-send-email-kishon@ti.com>
- <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 08/19] ARM: dts: armada-370-xp: Fixup bm-bppi DT warning
+Date: Sun, 13 Nov 2016 22:23:51 +0100
+Message-ID: <20161113212402.3060-9-gregory.clement@free-electrons.com>
+References: <20161113212402.3060-1-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161113212402.3060-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+bm-bppi has a reg property so the unit name should contain an address.
+Take the opportunity to use the node label instead of the full name.
 
-On Saturday 12 November 2016 02:45 AM, Bjorn Helgaas wrote:
-> Hi Kishon,
-> 
-> On Tue, Oct 11, 2016 at 06:28:34PM +0530, Kishon Vijay Abraham I wrote:
->> PCIe in AM57x/DRA7x devices is by default
->> configured to work in GEN2 mode.  However there
->> may be situations when working in GEN1 mode is
->> desired. One example is limitation i925 (PCIe GEN2
->> mode not supported at junction temperatures < 0C).
->>
->> Add support to force Root Complex to work in GEN1
->> mode if so desired, but don't force GEN1 mode on
->> any board just yet.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
->>  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
->>  2 files changed, 28 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> index 60e2516..a3d6ca3 100644
->> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> @@ -25,6 +25,7 @@ PCIe Designware Controller
->>  
->>  Optional Property:
->>   - gpios : Should be added if a gpio line is required to drive PERST# line
->> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
-> 
-> Can we use "max-link-speed" so it's similar to imx6?
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-xp-db.dts               | 8 ++++----
+ arch/arm/boot/dts/armada-xp-gp.dts               | 8 ++++----
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 8 ++++----
+ arch/arm/boot/dts/armada-xp.dtsi                 | 2 +-
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-yeah, maybe we should make it a generic PCI property?
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index 9e3bb3d7b4dc..486caf887da4 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -213,10 +213,6 @@
+ 				};
+ 			};
+ 		};
+-
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
+ 
+@@ -248,6 +244,10 @@
+ 	};
+ };
+ 
++&bm_bppi {
++	status = "okay";
++};
++
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 9918c7883a36..65d960defff3 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -198,10 +198,6 @@
+ 				nand-on-flash-bbt;
+ 			};
+ 		};
+-
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
+ 
+@@ -233,6 +229,10 @@
+ 	};
+ };
+ 
++&bm_bppi {
++	status = "okay";
++};
++
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <16>;
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index c8dd5a3bccb6..7cd2d74e0161 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -187,10 +187,6 @@
+ 				status = "okay";
+ 			};
+ 		};
+-
+-		bm-bppi {
+-			status = "okay";
+-		};
+ 	};
+ };
+ 
+@@ -222,6 +218,10 @@
+ 	};
+ };
+ 
++&bm_bppi {
++	status = "okay";
++};
++
+ &mdio {
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 5e596b64f48e..e4aa0018047c 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -248,7 +248,7 @@
+ 			ranges = <0 MBUS_ID(0x09, 0x05) 0 0x800>;
+ 		};
+ 
+-		bm_bppi: bm-bppi {
++		bm_bppi: bm-bppi@0c_04_0 {
+ 			compatible = "mmio-sram";
+ 			reg = <MBUS_ID(0x0c, 0x04) 0 0x100000>;
+ 			ranges = <0 MBUS_ID(0x0c, 0x04) 0 0x100000>;
+-- 
+2.10.2
 
-Thanks
-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
