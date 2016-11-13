@@ -1,105 +1,133 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Sun, 13 Nov 2016 09:14:00 +0100
-Message-ID: <8c8e58ad-3218-ecea-a58f-f1583c86e1a8@redhat.com>
-References: <20161104144241.18002-1-hdegoede@redhat.com>
- <20161104144241.18002-2-hdegoede@redhat.com> <5827CCC3.90003@gmail.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 2/3] clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+Date: Sun, 13 Nov 2016 09:24:31 +0200
+Message-ID: <1479021872-14237-3-git-send-email-noamca@mellanox.com>
+References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5827CCC3.90003-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1479021872-14237-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-On 13-11-16 03:15, Frank Rowand wrote:
-> On 11/04/16 07:42, Hans de Goede wrote:
->> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>
->> Changesets are very powerful, but the lack of a helper API
->> makes using them cumbersome. Introduce a simple copy based
->> API that makes things considerably easier.
->>
->> To wit, adding a property using the raw API.
->>
->> 	struct property *prop;
->> 	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
->> 	prop->name = kstrdup("compatible");
->> 	prop->value = kstrdup("foo,bar");
->> 	prop->length = strlen(prop->value) + 1;
->> 	of_changeset_add_property(ocs, np, prop);
->>
->> while using the helper API
->>
->> 	of_changeset_add_property_string(ocs, np, "compatible",
->> 			"foo,bar");
->>
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
->> -Address review comments from:
->>  https://www.spinics.net/lists/kernel/msg2252845.html
->
-> That points to the May 9 version 1 patches from Pantelis (as expected),
-> but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
-> seems to have disappeared?
+nps_setup_clocksource() should take node as only argument i.e.:
+replace
+int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
+with
+int __init nps_setup_clocksource(struct device_node *node)
 
-Ah, I cherry picked this into my tree a long time ago, hoping
-Pantelis himself would upstream them, so I only cherry picked
-the bare minimum and I did not pick-up the unit tests.
+This is also serve as preperation for next patch which adds support
+for clockevents to nps400.
+Specifically we add new function nps_get_timer_clk() to serve clocksource
+and later clockevent registration.
 
-> Pantelis then sent a version 2 set of the patches on May 16.
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
+ 1 files changed, 37 insertions(+), 26 deletions(-)
 
-Hmm, I never found this in google.
+diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
+index 70c149a..eeef9e9 100644
+--- a/drivers/clocksource/timer-nps.c
++++ b/drivers/clocksource/timer-nps.c
+@@ -46,7 +46,33 @@
+ /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
+ static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
+ 
+-static unsigned long nps_timer_rate;
++static int __init nps_get_timer_clk(struct device_node *node,
++			     unsigned long *timer_freq,
++			     struct clk **clk)
++{
++	int ret;
++
++	*clk = of_clk_get(node, 0);
++	if (IS_ERR(*clk)) {
++		pr_err("timer missing clk");
++		return PTR_ERR(*clk);
++	}
++
++	ret = clk_prepare_enable(*clk);
++	if (ret) {
++		pr_err("Couldn't enable parent clk\n");
++		return ret;
++	}
++
++	*timer_freq = clk_get_rate(*clk);
++	if (!(*timer_freq)) {
++		pr_err("Couldn't get clk rate\n");
++		clk_disable_unprepare(*clk);
++		return 1;
++	}
++
++	return 0;
++}
+ 
+ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ {
+@@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
+ 	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
+ }
+ 
+-static int __init nps_setup_clocksource(struct device_node *node,
+-					struct clk *clk)
++static int __init nps_setup_clocksource(struct device_node *node)
+ {
+ 	int ret, cluster;
++	struct clk *clk;
++	unsigned long nps_timer1_freq;
++
+ 
+ 	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
+ 		nps_msu_reg_low_addr[cluster] =
+ 			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
+-				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
++				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
+ 
+-	ret = clk_prepare_enable(clk);
+-	if (ret) {
+-		pr_err("Couldn't enable parent clock\n");
++	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
++	if (ret)
+ 		return ret;
+-	}
+ 
+-	nps_timer_rate = clk_get_rate(clk);
+-
+-	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
+-				    nps_timer_rate, 301, 32, nps_clksrc_read);
++	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
++				    nps_timer1_freq, 300, 32, nps_clksrc_read);
+ 	if (ret) {
+ 		pr_err("Couldn't register clock source.\n");
+ 		clk_disable_unprepare(clk);
+@@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
+ 	return ret;
+ }
+ 
+-static int __init nps_timer_init(struct device_node *node)
+-{
+-	struct clk *clk;
+-
+-	clk = of_clk_get(node, 0);
+-	if (IS_ERR(clk)) {
+-		pr_err("Can't get timer clock.\n");
+-		return PTR_ERR(clk);
+-	}
+-
+-	return nps_setup_clocksource(node, clk);
+-}
+-
+ CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
+-		       nps_timer_init);
++		       nps_setup_clocksource);
+-- 
+1.7.1
 
-> Your version is a modification of the May 9 patches (as would be expected
-> of a version 2).  It is confusing to have two different version 2 patch
-> sets.  I don't have any brilliant ideas on how this patch set could have
-> been named differently to avoid that confusion.
-
-Actually my patches were cherry picked from Pantelis' beaglebone
-capemanager tree, which I hope contained the last version.
-
-> The point of this little side-track is simply to note the existence of two
-> different version 2 series so I won't be confused when I revisit this
-> thread in the future.
-
-Ack, sorry about that.
-
-Regards,
-
-Hans
-
-
->
->>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
->>  -Remove (by manual inlining) these 2 static helpers:
->>   __of_changeset_add_update_property_u32
->>   __of_changeset_add_update_property_bool
->>  -Remove the following exported helper method:
->>   of_changeset_node_move_to
->
-> Not all comments were addressed.
->
-> There are some other changes made that are not noted in the changelog.
->
-> I am still reading through the patches. I will reply again either with
-> a reviewed-by or specific comments when I finish.
->
-> -Frank
->
->> ---
->>  drivers/of/dynamic.c | 428 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of.h   | 135 ++++++++++++++++
->>  2 files changed, 563 insertions(+)
->
-> < snip >
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
