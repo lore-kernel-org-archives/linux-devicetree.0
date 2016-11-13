@@ -1,162 +1,113 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH devicetree/next] ARM: BCM5301X: Add DT for TP-LINK Archer C9 V1
-Date: Sun, 13 Nov 2016 11:12:09 +0100
-Message-ID: <20161113101209.22185-1-zajec5@gmail.com>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/3] soc: Support for NPS HW scheduling
+Date: Sun, 13 Nov 2016 09:24:30 +0200
+Message-ID: <1479021872-14237-2-git-send-email-noamca@mellanox.com>
+References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479021872-14237-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-It's BCM4709A0 based device with 16 MiB flash, 128 MiB of RAM and two
-PCIe based on-PCB BCM4360 chipsets.
+This new header file is for NPS400 SoC (part of ARC architecture).
+The header file includes macros for save/restore of HW scheduling.
+The control of HW scheduling is achieved by writing core registers.
+This code was moved from arc/plat-eznps so it can be used
+from drivers/clocksource/, available only for CONFIG_EZNPS_MTM_EXT.
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                        |   1 +
- arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts | 114 ++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+ arch/arc/plat-eznps/include/plat/ctop.h |    2 -
+ include/soc/nps/mtm.h                   |   59 +++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+), 2 deletions(-)
+ create mode 100644 include/soc/nps/mtm.h
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 837703a..7a52a9f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -87,6 +87,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4709-buffalo-wxr-1900dhp.dtb \
- 	bcm4709-netgear-r7000.dtb \
- 	bcm4709-netgear-r8000.dtb \
-+	bcm4709-tplink-archer-c9-v1.dtb \
- 	bcm47094-dlink-dir-885l.dtb \
- 	bcm47094-luxul-xwr-3100.dtb \
- 	bcm47094-netgear-r8500.dtb \
-diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+index 9d6718c..ee2e32d 100644
+--- a/arch/arc/plat-eznps/include/plat/ctop.h
++++ b/arch/arc/plat-eznps/include/plat/ctop.h
+@@ -46,9 +46,7 @@
+ #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+ 
+ /* EZchip core instructions */
+-#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
+ #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
+-#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
+ #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
+ #define CTOP_INST_SCHD_RW			0x3E6F7004
+ #define CTOP_INST_SCHD_RD			0x3E6F7084
+diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
 new file mode 100644
-index 0000000..9a92c24
+index 0000000..d2f5e7e
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
-@@ -0,0 +1,114 @@
++++ b/include/soc/nps/mtm.h
+@@ -0,0 +1,59 @@
 +/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
 + *
-+ * Licensed under the ISC license.
++ * This software is available to you under a choice of one of two
++ * licenses.  You may choose to be licensed under the terms of the GNU
++ * General Public License (GPL) Version 2, available from the file
++ * COPYING in the main directory of this source tree, or the
++ * OpenIB.org BSD license below:
++ *
++ *     Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *      - Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *
++ *      - Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
++ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
++ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
 + */
 +
-+/dts-v1/;
++#ifndef SOC_NPS_MTM_H
++#define SOC_NPS_MTM_H
 +
-+#include "bcm4709.dtsi"
++#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
++#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
 +
-+/ {
-+	compatible = "tplink,archer-c9-v1", "brcm,bcm4709", "brcm,bcm4708";
-+	model = "TP-LINK Archer C9 V1";
++static inline void hw_schd_save(unsigned int *flags)
++{
++	__asm__ __volatile__(
++	"       .word %1\n"
++	"       st r3,[%0]\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
++	: "r3", "memory");
++}
 +
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlycon";
-+	};
++static inline void hw_schd_restore(unsigned int flags)
++{
++	__asm__ __volatile__(
++	"       mov r3, %0\n"
++	"       .word %1\n"
++	:
++	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
++	: "r3");
++}
 +
-+	memory {
-+		reg = <0x00000000 0x08000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		lan {
-+			label = "bcm53xx:blue:lan";
-+			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		wps {
-+			label = "bcm53xx:blue:wps";
-+			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		2ghz {
-+			label = "bcm53xx:blue:2ghz";
-+			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		5ghz {
-+			label = "bcm53xx:blue:5ghz";
-+			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		usb3 {
-+			label = "bcm53xx:blue:usb3";
-+			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		usb2 {
-+			label = "bcm53xx:blue:usb2";
-+			gpios = <&chipcommon 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		wan-blue {
-+			label = "bcm53xx:blue:wan";
-+			gpios = <&chipcommon 14 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		wan-amber {
-+			label = "bcm53xx:amber:wan";
-+			gpios = <&chipcommon 15 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		power {
-+			label = "bcm53xx:blue:power";
-+			gpios = <&chipcommon 18 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		wps {
-+			label = "WPS";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		restart {
-+			label = "Reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&usb2 {
-+	vcc-gpio = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&usb3 {
-+	vcc-gpio = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&spi_nor {
-+	status = "okay";
-+};
++#endif /* SOC_NPS_MTM_H */
 -- 
-2.10.1
+1.7.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
