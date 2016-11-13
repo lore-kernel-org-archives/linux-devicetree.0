@@ -1,42 +1,84 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 3/3] drivers: mfd: ti_am335x_tscadc: increase ADC ref clock to 24MHz
-Date: Fri, 11 Nov 2016 13:28:38 +0530
-Message-ID: <20161111075838.5815-1-mugunthanvnm@ti.com>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
+Date: Sat, 12 Nov 2016 18:15:31 -0800
+Message-ID: <5827CCC3.90003@gmail.com>
+References: <20161104144241.18002-1-hdegoede@redhat.com>
+ <20161104144241.18002-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110163515.27598-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20161104144241.18002-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Increase ADC reference clock from 3MHz to 24MHz so that the
-sampling rates goes up from 100K samples per second to 800K
-samples per second on AM335x and AM437x SoC.
+On 11/04/16 07:42, Hans de Goede wrote:
+> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> 
+> Changesets are very powerful, but the lack of a helper API
+> makes using them cumbersome. Introduce a simple copy based
+> API that makes things considerably easier.
+> 
+> To wit, adding a property using the raw API.
+> 
+> 	struct property *prop;
+> 	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
+> 	prop->name = kstrdup("compatible");
+> 	prop->value = kstrdup("foo,bar");
+> 	prop->length = strlen(prop->value) + 1;
+> 	of_changeset_add_property(ocs, np, prop);
+> 
+> while using the helper API
+> 
+> 	of_changeset_add_property_string(ocs, np, "compatible",
+> 			"foo,bar");
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
+> -Address review comments from:
+>  https://www.spinics.net/lists/kernel/msg2252845.html
 
-Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
----
- include/linux/mfd/ti_am335x_tscadc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That points to the May 9 version 1 patches from Pantelis (as expected),
+but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
+seems to have disappeared?
 
-diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
-index b9a53e013bff..f6c449b96ea5 100644
---- a/include/linux/mfd/ti_am335x_tscadc.h
-+++ b/include/linux/mfd/ti_am335x_tscadc.h
-@@ -137,7 +137,7 @@
- #define SEQ_STATUS BIT(5)
- #define CHARGE_STEP		0x11
- 
--#define ADC_CLK			3000000
-+#define ADC_CLK			24000000
- #define TOTAL_STEPS		16
- #define TOTAL_CHANNELS		8
- #define FIFO1_THRESHOLD		19
--- 
-2.11.0.rc0.7.gbe5a750
+Pantelis then sent a version 2 set of the patches on May 16.
 
+Your version is a modification of the May 9 patches (as would be expected
+of a version 2).  It is confusing to have two different version 2 patch
+sets.  I don't have any brilliant ideas on how this patch set could have
+been named differently to avoid that confusion.
+
+The point of this little side-track is simply to note the existence of two
+different version 2 series so I won't be confused when I revisit this
+thread in the future.
+
+>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
+>  -Remove (by manual inlining) these 2 static helpers:
+>   __of_changeset_add_update_property_u32
+>   __of_changeset_add_update_property_bool
+>  -Remove the following exported helper method:
+>   of_changeset_node_move_to
+
+Not all comments were addressed.
+
+There are some other changes made that are not noted in the changelog.
+
+I am still reading through the patches. I will reply again either with
+a reviewed-by or specific comments when I finish.
+
+-Frank
+
+> ---
+>  drivers/of/dynamic.c | 428 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h   | 135 ++++++++++++++++
+>  2 files changed, 563 insertions(+)
+
+< snip >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
