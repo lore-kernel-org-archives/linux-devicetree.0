@@ -1,132 +1,162 @@
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/3] clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Sun, 13 Nov 2016 09:24:31 +0200
-Message-ID: <1479021872-14237-3-git-send-email-noamca@mellanox.com>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH devicetree/next] ARM: BCM5301X: Add DT for TP-LINK Archer C9 V1
+Date: Sun, 13 Nov 2016 11:12:09 +0100
+Message-ID: <20161113101209.22185-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479021872-14237-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-nps_setup_clocksource() should take node as only argument i.e.:
-replace
-int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
-with
-int __init nps_setup_clocksource(struct device_node *node)
+It's BCM4709A0 based device with 16 MiB flash, 128 MiB of RAM and two
+PCIe based on-PCB BCM4360 chipsets.
 
-This is also serve as preperation for next patch which adds support
-for clockevents to nps400.
-Specifically we add new function nps_get_timer_clk() to serve clocksource
-and later clockevent registration.
-
-Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
- drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
- 1 files changed, 37 insertions(+), 26 deletions(-)
+ arch/arm/boot/dts/Makefile                        |   1 +
+ arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts | 114 ++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
 
-diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-index 70c149a..eeef9e9 100644
---- a/drivers/clocksource/timer-nps.c
-+++ b/drivers/clocksource/timer-nps.c
-@@ -46,7 +46,33 @@
- /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
- static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
- 
--static unsigned long nps_timer_rate;
-+static int __init nps_get_timer_clk(struct device_node *node,
-+			     unsigned long *timer_freq,
-+			     struct clk **clk)
-+{
-+	int ret;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 837703a..7a52a9f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -87,6 +87,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4709-buffalo-wxr-1900dhp.dtb \
+ 	bcm4709-netgear-r7000.dtb \
+ 	bcm4709-netgear-r8000.dtb \
++	bcm4709-tplink-archer-c9-v1.dtb \
+ 	bcm47094-dlink-dir-885l.dtb \
+ 	bcm47094-luxul-xwr-3100.dtb \
+ 	bcm47094-netgear-r8500.dtb \
+diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+new file mode 100644
+index 0000000..9a92c24
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+@@ -0,0 +1,114 @@
++/*
++ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ *
++ * Licensed under the ISC license.
++ */
 +
-+	*clk = of_clk_get(node, 0);
-+	if (IS_ERR(*clk)) {
-+		pr_err("timer missing clk");
-+		return PTR_ERR(*clk);
-+	}
++/dts-v1/;
 +
-+	ret = clk_prepare_enable(*clk);
-+	if (ret) {
-+		pr_err("Couldn't enable parent clk\n");
-+		return ret;
-+	}
++#include "bcm4709.dtsi"
 +
-+	*timer_freq = clk_get_rate(*clk);
-+	if (!(*timer_freq)) {
-+		pr_err("Couldn't get clk rate\n");
-+		clk_disable_unprepare(*clk);
-+		return 1;
-+	}
++/ {
++	compatible = "tplink,archer-c9-v1", "brcm,bcm4709", "brcm,bcm4708";
++	model = "TP-LINK Archer C9 V1";
 +
-+	return 0;
-+}
- 
- static cycle_t nps_clksrc_read(struct clocksource *clksrc)
- {
-@@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
- 	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
- }
- 
--static int __init nps_setup_clocksource(struct device_node *node,
--					struct clk *clk)
-+static int __init nps_setup_clocksource(struct device_node *node)
- {
- 	int ret, cluster;
-+	struct clk *clk;
-+	unsigned long nps_timer1_freq;
++	chosen {
++		bootargs = "console=ttyS0,115200 earlycon";
++	};
 +
- 
- 	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
- 		nps_msu_reg_low_addr[cluster] =
- 			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
--				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
-+				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
- 
--	ret = clk_prepare_enable(clk);
--	if (ret) {
--		pr_err("Couldn't enable parent clock\n");
-+	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
-+	if (ret)
- 		return ret;
--	}
- 
--	nps_timer_rate = clk_get_rate(clk);
--
--	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
--				    nps_timer_rate, 301, 32, nps_clksrc_read);
-+	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
-+				    nps_timer1_freq, 300, 32, nps_clksrc_read);
- 	if (ret) {
- 		pr_err("Couldn't register clock source.\n");
- 		clk_disable_unprepare(clk);
-@@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
- 	return ret;
- }
- 
--static int __init nps_timer_init(struct device_node *node)
--{
--	struct clk *clk;
--
--	clk = of_clk_get(node, 0);
--	if (IS_ERR(clk)) {
--		pr_err("Can't get timer clock.\n");
--		return PTR_ERR(clk);
--	}
--
--	return nps_setup_clocksource(node, clk);
--}
--
- CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
--		       nps_timer_init);
-+		       nps_setup_clocksource);
++	memory {
++		reg = <0x00000000 0x08000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		lan {
++			label = "bcm53xx:blue:lan";
++			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		wps {
++			label = "bcm53xx:blue:wps";
++			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		2ghz {
++			label = "bcm53xx:blue:2ghz";
++			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		5ghz {
++			label = "bcm53xx:blue:5ghz";
++			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		usb3 {
++			label = "bcm53xx:blue:usb3";
++			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		usb2 {
++			label = "bcm53xx:blue:usb2";
++			gpios = <&chipcommon 7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		wan-blue {
++			label = "bcm53xx:blue:wan";
++			gpios = <&chipcommon 14 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		wan-amber {
++			label = "bcm53xx:amber:wan";
++			gpios = <&chipcommon 15 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		power {
++			label = "bcm53xx:blue:power";
++			gpios = <&chipcommon 18 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "default-on";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		wps {
++			label = "WPS";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&chipcommon 0 GPIO_ACTIVE_LOW>;
++		};
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&usb2 {
++	vcc-gpio = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
++};
++
++&usb3 {
++	vcc-gpio = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
++};
++
++&spi_nor {
++	status = "okay";
++};
 -- 
-1.7.1
+2.10.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
