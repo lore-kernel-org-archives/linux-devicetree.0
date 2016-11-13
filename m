@@ -1,142 +1,64 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to reference-design-tablet.dtsi
-Date: Sun, 13 Nov 2016 20:22:02 +0100
-Message-ID: <20161113192203.7101-1-hdegoede@redhat.com>
+Subject: [PATCH 2/2] ARM: dts: sun8i: reference-design-tablet: ldo_io1 is vcc-touchscreen
+Date: Sun, 13 Nov 2016 20:22:03 +0100
+Message-ID: <20161113192203.7101-2-hdegoede@redhat.com>
+References: <20161113192203.7101-1-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161113192203.7101-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Just like on sun8i all sun5i tablets use the same interrupt and power
-gpios for their touchscreens. I've checked all known a13 fex files and
-only the UTOO P66 uses a different gpio for the interrupt.
+On some Q8 and other tablets ldo_io1 is used as vcc-touchscreen,
+config at as such in sun8i-reference-design-tablet.dtsi.
 
-Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
-fills in the necessary gpios to avoid duplication in the tablet dts files,
-just like we do in sun8i-reference-design-tablet.dtsi.
-
-This will make future patches adding touchscreen nodes to a13 tablets
-simpler.
+Note that it will only be enabled when it us actually referenced by
+a foo-supply property in the touchscreen node, so for tablets which
+do not use ldo_io1 as vcc-touchscreen, it will be disabled.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------------
- .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
- 2 files changed, 39 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts | 7 -------
+ arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi  | 7 +++++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-index a8b0bcc..3d7ff10 100644
---- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
-@@ -83,22 +83,6 @@
- 	allwinner,pins = "PG3";
+diff --git a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
+index a86cbed..21bb291 100644
+--- a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
++++ b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
+@@ -98,13 +98,6 @@
+ 	};
  };
  
--&i2c1 {
--	icn8318: touchscreen@40 {
--		compatible = "chipone,icn8318";
--		reg = <0x40>;
--		interrupt-parent = <&pio>;
--		interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
--		pinctrl-names = "default";
--		pinctrl-0 = <&ts_wake_pin_p66>;
--		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
--		touchscreen-size-x = <800>;
--		touchscreen-size-y = <480>;
--		touchscreen-inverted-x;
--		touchscreen-swapped-x-y;
--	};
+-&reg_ldo_io1 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-touchscreen";
+-	status = "okay";
 -};
 -
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins_a>;
-@@ -121,20 +105,26 @@
- 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
--
--	ts_wake_pin_p66: ts_wake_pin@0 {
--		allwinner,pins = "PB3";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--
+ &touchscreen {
+ 	reg = <0x40>;
+ 	compatible = "silead,gsl1680";
+diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+index 08cd001..69bc0cd 100644
+--- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
++++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
+@@ -209,6 +209,13 @@
+ 	status = "okay";
  };
  
- &reg_usb0_vbus {
- 	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
- };
- 
-+&touchscreen {
-+	compatible = "chipone,icn8318";
-+	reg = <0x40>;
-+	/* The P66 uses a different EINT then the reference design */
-+	interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
-+	/* The icn8318 binding expects wake-gpios instead of power-gpios */
-+	wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
-+	touchscreen-size-x = <800>;
-+	touchscreen-size-y = <480>;
-+	touchscreen-inverted-x;
-+	touchscreen-swapped-x-y;
++&reg_ldo_io1 {
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-touchscreen";
 +	status = "okay";
 +};
 +
- &uart1 {
- 	/* The P66 uses the uart pins as gpios */
- 	status = "disabled";
-diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-index 20cc940..7af488a 100644
---- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-+++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
-@@ -41,6 +41,7 @@
-  */
- #include "sunxi-reference-design-tablet.dtsi"
- 
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pwm/pwm.h>
- 
- / {
-@@ -84,6 +85,23 @@
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
  };
- 
- &i2c1 {
-+	/*
-+	 * The gsl1680 is rated at 400KHz and it will not work reliable at
-+	 * 100KHz, this has been confirmed on multiple different q8 tablets.
-+	 * All other devices on this bus are also rated for 400KHz.
-+	 */
-+	clock-frequency = <400000>;
-+
-+	touchscreen: touchscreen {
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ts_power_pin>;
-+		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
-+		/* Tablet dts must provide reg and compatible */
-+		status = "disabled";
-+	};
-+
- 	pcf8563: rtc@51 {
- 		compatible = "nxp,pcf8563";
- 		reg = <0x51>;
-@@ -125,6 +143,13 @@
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
- 
-+	ts_power_pin: ts_power_pin {
-+		allwinner,pins = "PB3";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
- 		allwinner,pins = "PG1";
- 		allwinner,function = "gpio_in";
 -- 
 2.9.3
 
