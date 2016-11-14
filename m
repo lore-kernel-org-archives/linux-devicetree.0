@@ -1,131 +1,122 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v7 08/14] mmc: sdhci-msm: Implement set_clock callback
- for sdhci-msm
-Date: Mon, 14 Nov 2016 11:37:22 -0800
-Message-ID: <20161114193004.GI5177@codeaurora.org>
-References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
- <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
+Date: Mon, 14 Nov 2016 13:41:10 -0600
+Message-ID: <20161114194110.fh6gyhfdciikj7kt@rob-hp-laptop>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
+In-Reply-To: <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/14, Ritesh Harjani wrote:
-> @@ -577,6 +578,90 @@ static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
->  	return SDHCI_MSM_MIN_CLOCK;
->  }
->  
-> +/**
-> + * __sdhci_msm_set_clock - sdhci_msm clock control.
-> + *
-> + * Description:
-> + * Implement MSM version of sdhci_set_clock.
-> + * This is required since MSM controller does not
-> + * use internal divider and instead directly control
-> + * the GCC clock as per HW recommendation.
-> + **/
-> +void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
-> +{
-> +	u16 clk;
-> +	unsigned long timeout;
-> +
-> +	/*
-> +	 * Keep actual_clock as zero -
-> +	 * - since there is no divider used so no need of having actual_clock.
-> +	 * - MSM controller uses SDCLK for data timeout calculation. If
-> +	 *   actual_clock is zero, host->clock is taken for calculation.
-> +	 */
-> +	host->mmc->actual_clock = 0;
-> +
-> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> +
-> +	if (clock == 0)
-> +		return;
-> +
-> +	/*
-> +	 * MSM controller do not use clock divider.
-> +	 * Thus read SDHCI_CLOCK_CONTROL and only enable
-> +	 * clock with no divider value programmed.
-> +	 */
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +
-> +	clk |= SDHCI_CLOCK_INT_EN;
-> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> +
-> +	/* Wait max 20 ms */
-> +	timeout = 20;
-> +	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
-> +		& SDHCI_CLOCK_INT_STABLE)) {
-> +		if (timeout == 0) {
-> +			pr_err("%s: Internal clock never stabilised\n",
-> +			       mmc_hostname(host->mmc));
-> +			return;
-> +		}
-> +		timeout--;
-> +		mdelay(1);
-> +	}
-> +
-> +	clk |= SDHCI_CLOCK_CARD_EN;
-> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+On Wed, Nov 09, 2016 at 03:44:41PM +0000, Ramesh Shanmugasundaram wrote:
+> This patch adds driver support for MAX2175 chip. This is Maxim
+> Integrated's RF to Bits tuner front end chip designed for software-defined
+> radio solutions. This driver exposes the tuner as a sub-device instance
+> with standard and custom controls to configure the device.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
 
-This is almost a copy/paste of sdhci_set_clock(). Can we make
-sdhci_set_clock() call a __sdhci_set_clock() function that takes
-unsigned int clock, and also a flag indicating if we want to set
-the internal clock divider or not? Then we can call
-__sdhci_set_clock() from sdhci_set_clock() with (clock, true) as
-arguments and (clock, false).
+It's preferred that bindings are a separate patch.
 
-> +}
+>  drivers/media/i2c/Kconfig                          |    4 +
+>  drivers/media/i2c/Makefile                         |    2 +
+>  drivers/media/i2c/max2175/Kconfig                  |    8 +
+>  drivers/media/i2c/max2175/Makefile                 |    4 +
+>  drivers/media/i2c/max2175/max2175.c                | 1558 ++++++++++++++++++++
+>  drivers/media/i2c/max2175/max2175.h                |  108 ++
+>  7 files changed, 1745 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+>  create mode 100644 drivers/media/i2c/max2175/Kconfig
+>  create mode 100644 drivers/media/i2c/max2175/Makefile
+>  create mode 100644 drivers/media/i2c/max2175/max2175.c
+>  create mode 100644 drivers/media/i2c/max2175/max2175.h
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+> new file mode 100644
+> index 0000000..69f0dad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+> @@ -0,0 +1,61 @@
+> +Maxim Integrated MAX2175 RF to Bits tuner
+> +-----------------------------------------
 > +
-> +/* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
-> +static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	int rc;
+> +The MAX2175 IC is an advanced analog/digital hybrid-radio receiver with
+> +RF to Bits® front-end designed for software-defined radio solutions.
 > +
-> +	if (!clock) {
-> +		msm_host->clk_rate = clock;
-> +		goto out;
-> +	}
+> +Required properties:
+> +--------------------
+> +- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
+> +- clocks: phandle to the fixed xtal clock.
+> +- clock-names: name of the fixed xtal clock.
+> +- port: child port node of a tuner that defines the local and remote
+> +  endpoints. The remote endpoint is assumed to be an SDR device
+> +  that is capable of receiving the digital samples from the tuner.
 > +
-> +	spin_unlock_irq(&host->lock);
-> +	if (clock != msm_host->clk_rate) {
+> +Optional properties:
+> +--------------------
+> +- maxim,slave	      : empty property indicates this is a slave of
+> +			another master tuner. This is used to define two
+> +			tuners in diversity mode (1 master, 1 slave). By
+> +			default each tuner is an individual master.
+> +- maxim,refout-load-pF: load capacitance value (in pF) on reference
 
-Why do we need to check here? Can't we call clk_set_rate()
-Unconditionally?
+Please add 'pF' to property-units.txt.
 
-> +		rc = clk_set_rate(msm_host->clk, clock);
-> +		if (rc) {
-> +			pr_err("%s: Failed to set clock at rate %u\n",
-> +			       mmc_hostname(host->mmc), clock);
-> +			spin_lock_irq(&host->lock);
-> +			goto out;
-
-Or replace the above two lines with goto err;
-
-> +		}
-> +		msm_host->clk_rate = clock;
-> +		pr_debug("%s: Setting clock at rate %lu\n",
-> +			 mmc_hostname(host->mmc), clk_get_rate(msm_host->clk));
-> +	}
-
-And put an err label here.
-
-> +	spin_lock_irq(&host->lock);
-> +out:
-> +	__sdhci_msm_set_clock(host, clock);
-> +}
+> +			output drive level. The possible load values are
+> +			 0pF (default - refout disabled)
+> +			10pF
+> +			20pF
+> +			30pF
+> +			40pF
+> +			60pF
+> +			70pF
+> +- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path is
+> +			selected for AM antenna input. By default this
+> +			filter path is not used.
 > +
->  static const struct of_device_id sdhci_msm_dt_match[] = {
->  	{ .compatible = "qcom,sdhci-msm-v4" },
->  	{},
+> +Example:
+> +--------
+> +
+> +Board specific DTS file
+> +
+> +/* Fixed XTAL clock node */
+> +maxim_xtal: maximextal {
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+clock {
+
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <36864000>;
+> +};
+> +
+> +/* A tuner device instance under i2c bus */
+> +max2175_0: tuner@60 {
+> +	compatible = "maxim,max2175";
+> +	reg = <0x60>;
+> +	clocks = <&maxim_xtal>;
+> +	clock-names = "xtal";
+> +	maxim,refout-load-pF = <10>;
+> +
+> +	port {
+> +		max2175_0_ep: endpoint {
+> +			remote-endpoint = <&slave_rx_v4l2_sdr_device>;
+
+'v4l2' is not something that should appear in a DT.
+
+> +		};
+> +	};
+> +
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
