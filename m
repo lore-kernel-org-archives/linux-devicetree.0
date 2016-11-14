@@ -1,196 +1,69 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [upstream-release] [PATCH 1/2] drivers: usb: phy: Add qoriq usb
- 3.0	phy driver support
-Date: Mon, 14 Nov 2016 16:07:55 +0000
-Message-ID: <DB5PR0401MB1928CA058CC01243457F124791BC0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1479101215-26954-1-git-send-email-sriram.dash@nxp.com>
- <1479101215-26954-2-git-send-email-sriram.dash@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] Documentation: bindings: add documentation for
+ ir-spi device driver
+Date: Mon, 14 Nov 2016 10:10:23 -0600
+Message-ID: <CAL_Jsq+c_HCFVu1MimrRM2amy1nPrA04Vxpa6D+0mLJG-0SXRA@mail.gmail.com>
+References: <20161102104010.26959-1-andi.shyti@samsung.com>
+ <CGME20161102104149epcas5p4da68197e232df7ad922f2f9cb0714a43@epcas5p4.samsung.com>
+ <20161102104010.26959-6-andi.shyti@samsung.com> <70f4426b-e2e6-1fb7-187a-65ed4bce0668@samsung.com>
+ <20161103101048.ofyoko4mkcypf44u@gangnam.samsung> <70e31ed5-e1ec-cac3-3c3d-02c75f1418bd@samsung.com>
+ <20161109182621.ttfxtdt32q3cqce7@rob-hp-laptop> <13210179-ea3f-6106-e3c0-fa30b83e23cc@samsung.com>
+ <20161110100203.2qv6j6acywpjerfi@gangnam.samsung>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sriram Dash <sriram.dash@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, Suresh Gupta <suresh.gupta@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "pku.leo@gmail.com" <pku.leo@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161110100203.2qv6j6acywpjerfi-8vUhnHFVuGn35fTxX1Dczw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2016 11:27 PM, Sriram Dash wrote:
-> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
-> new file mode 100644
-> index 0000000..d934c80
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
-> @@ -0,0 +1,36 @@
-> +Driver for Freescale USB 3.0 PHY
-> +
-> +Required properties:
-> +
-> +- compatible :	fsl,qoriq-usb3-phy
+On Thu, Nov 10, 2016 at 4:02 AM, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Jacek,
+>
+>> > > > > Only DT bindings of LED class drivers should be placed in
+>> > > > > Documentation/devicetree/bindings/leds. Please move it to the
+>> > > > > media bindings.
+>> > > >
+>> > > > that's where I placed it first, but Rob asked me to put it in the
+>> > > > LED directory and Cc the LED mailining list.
+>> > > >
+>> > > > That's the discussion of the version 2:
+>> > > >
+>> > > > https://lkml.org/lkml/2016/9/12/380
+>> > > >
+>> > > > Rob, Jacek, could you please agree where I can put the binding?
+>> > >
+>> > > I'm not sure if this is a good approach. I've noticed also that
+>> > > backlight bindings have been moved to leds, whereas they don't look
+>> > > similarly.
+>> > >
+>> > > We have common.txt LED bindings, that all LED class drivers' bindings
+>> > > have to follow. Neither backlight bindings nor these ones do that,
+>> > > which introduces some mess.
+>> >
+>> > And there are probably LED bindings that don't follow common.txt either.
+>> >
+>> > > Eventually adding a sub-directory, e.g. remote_control could make it
+>> > > somehow logically justified, but still - shouldn't bindings be
+>> > > placed in the documentation directory related to the subsystem of the
+>> > > driver they are predestined to?
+>> >
+>> > No. While binding directories often mirror the driver directories, they
+>> > are not the same. Bindings are grouped by types of h/w and IR LEDs are a
+>> > type of LED.
+>> >
+>> > If you prefer a sub-dir, that is fine with me.
+>>
+>> Fine. So how about sub-dir "ir" ?
+>
+> would we put here all the remote control bindings that currently
+> are under media?
 
-This is a very vague compatible.  Are there versioning registers within
-this register block?
+No. Only if they are just an LED that happens to be IR.
 
-> +/* Parameter control */
-> +#define USB3PRM1CR		0x000
-> +#define USB3PRM1CR_VAL		0x27672b2a
-> +
-> +/*
-> + * struct qoriq_usb3_phy - driver data for USB 3.0 PHY
-> + * @dev: pointer to device instance of this platform device
-> + * @param_ctrl: usb3 phy parameter control register base
-> + * @phy_base: usb3 phy register memory base
-> + * @has_erratum_flag: keeps track of erratum applicable on device
-> + */
-> +struct qoriq_usb3_phy {
-> +	struct device *dev;
-> +	void __iomem *param_ctrl;
-> +	void __iomem *phy_base;
-> +	u32 has_erratum_flag;
-> +};
-> +
-> +static inline u32 qoriq_usb3_phy_readl(void __iomem *addr, u32 offset)
-> +{
-> +	return __raw_readl(addr + offset);
-> +}
-> +
-> +static inline void qoriq_usb3_phy_writel(void __iomem *addr, u32 offset,
-> +	u32 data)
-> +{
-> +	__raw_writel(data, addr + offset);
-> +}
-
-Why raw?  Besides missing barriers, this will cause the accesses to be
-native-endian which is not correct.
-
-> +/*
-> + * Erratum A008751
-> + * SCFG USB3PRM1CR has incorrect default value
-> + * SCFG USB3PRM1CR reset value should be 32'h27672B2A instead of 32'h25E72B2A.
-
-When documenting C code, can you stick with C-style numeric constants?
-
-For that matter, just put the constant in the code instead of hiding it
-in an overly-generically-named USB3PRM1CR_VAL and then you won't need to
-redundantly state the value in a comment.  Normally putting magic
-numbers in symbolic constants is a good thing, but in this case it's not
-actually describing anything and the number is of no meaning outside of
-this one erratum workaround (it might even be a different value if
-another chip has a similar erratum).
-
-> + */
-> +static void erratum_a008751(struct qoriq_usb3_phy *phy)
-> +{
-> +	qoriq_usb3_phy_writel(phy->param_ctrl, USB3PRM1CR,
-> +				USB3PRM1CR_VAL);
-> +}
-> +
-> +/*
-> + * qoriq_usb3_phy_erratum - List of phy erratum
-> + * @qoriq_phy_erratum - erratum application
-> + * @compat - comapt string for erratum
-> + */
-> +
-> +struct qoriq_usb3_phy_erratum {
-> +	void (*qoriq_phy_erratum)(struct qoriq_usb3_phy *phy);
-> +	char *compat;
-> +};
-> +
-> +/* Erratum list */
-> +struct qoriq_usb3_phy_erratum  phy_erratum_tbl[] = {
-> +	{&erratum_a008751, "fsl,usb-erratum-a008751"},
-> +	/* Add init time erratum here */
-> +};
-
-This needs to be static.
-
-Unnecessary & on the function pointer.
-
-> +static int qoriq_usb3_phy_init(struct phy *x)
-> +{
-> +	struct qoriq_usb3_phy *phy = phy_get_drvdata(x);
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
-> +		if (phy->has_erratum_flag & 1 << i)
-> +			phy_erratum_tbl[i].qoriq_phy_erratum(phy);
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops ops = {
-> +	.init		= qoriq_usb3_phy_init,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int qoriq_usb3_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct qoriq_usb3_phy *phy;
-> +	struct phy *generic_phy;
-> +	struct phy_provider *phy_provider;
-> +	const struct of_device_id *of_id;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	int i, ret;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy)
-> +		return -ENOMEM;
-> +	phy->dev = dev;
-> +
-> +	of_id = of_match_device(dev->driver->of_match_table, dev);
-> +	if (!of_id) {
-> +		dev_err(dev, "failed to get device match\n");
-> +		ret = -EINVAL;
-> +		goto err_out;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "param_ctrl");
-> +	if (!res) {
-> +		dev_err(dev, "failed to get param_ctrl memory\n");
-> +		ret = -ENOENT;
-> +		goto err_out;
-> +	}
-> +
-> +	phy->param_ctrl = devm_ioremap_resource(dev, res);
-> +	if (!phy->param_ctrl) {
-> +		dev_err(dev, "failed to remap param_ctrl memory\n");
-> +		ret = -ENOMEM;
-> +		goto err_out;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_base");
-> +	if (!res) {
-> +		dev_err(dev, "failed to get phy_base memory\n");
-> +		ret = -ENOENT;
-> +		goto err_out;
-> +	}
-> +
-> +	phy->phy_base = devm_ioremap_resource(dev, res);
-> +	if (!phy->phy_base) {
-> +		dev_err(dev, "failed to remap phy_base memory\n");
-> +		ret = -ENOMEM;
-> +		goto err_out;
-> +	}
-> +
-> +	phy->has_erratum_flag = 0;
-> +	for (i = 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
-> +		phy->has_erratum_flag |= device_property_read_bool(dev,
-> +						phy_erratum_tbl[i].compat) << i;
-
-I don't see the erratum property in either the binding or the device
-tree.  Also, a property name is not a "compat".
-
-Is there a reason why this flag and array mechanism is needed, rather
-than just checking the erratum properties from the init function -- or,
-if you have a good reason to not want to do device tree accesses from
-init, just using a bool per erratum?  How many errata are you expecting?
-
--Scott
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
