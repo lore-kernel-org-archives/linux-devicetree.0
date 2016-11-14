@@ -1,129 +1,196 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] arm64: dts: rockchip: add VOP and VOP iommu node for rk3399
-Date: Mon, 14 Nov 2016 17:05:54 +0100
-Message-ID: <10151352.zSDKCnp23A@phil>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-4-git-send-email-wxt@rock-chips.com>
+From: Scott Wood <scott.wood@nxp.com>
+Subject: Re: [upstream-release] [PATCH 1/2] drivers: usb: phy: Add qoriq usb
+ 3.0	phy driver support
+Date: Mon, 14 Nov 2016 16:07:55 +0000
+Message-ID: <DB5PR0401MB1928CA058CC01243457F124791BC0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1479101215-26954-1-git-send-email-sriram.dash@nxp.com>
+ <1479101215-26954-2-git-send-email-sriram.dash@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478697721-2323-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sriram Dash <sriram.dash@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, Suresh Gupta <suresh.gupta@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "pku.leo@gmail.com" <pku.leo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. November 2016, 21:21:55 CET schrieb Caesar Wang:
-> From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Add the core display-subsystem node and the two display controllers
-> available on the rk3399.
-> 
-> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
-> Changes in v2: None
-> 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 58
-> ++++++++++++++++++++++++++++++++ 1 file changed, 58 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index e5b5b3d..f1d289a 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1290,6 +1290,64 @@
->  		status = "disabled";
->  	};
-> 
-> +	vopl: vop@ff8f0000 {
-> +		compatible = "rockchip,rk3399-vop-lit";
-> +		reg = <0x0 0xff8f0000 0x0 0x3efc>;
-> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-
-we're usig 4 irq elements nowadays to accomodate the pmus for separate
-clusters, see 
-
-https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=210bbd38bb88989ce19208f98e530ff0468f38bd
-
-Same for the edp node.
-
-Also, sadly the rockchip drm seems to need some tweaks still, as I wasn't
-able to get any display output yet.
-
-To make the vop at least compile I needed to forward-port
-https://github.com/mmind/linux-rockchip/commit/05ad856e54fc1aa1939ad1057897036cedc7fb0b
-https://github.com/mmind/linux-rockchip/commit/0edb1f7e1ac77437a17d7966121ee6e10ab5db67
-
-[full branch is https://github.com/mmind/linux-rockchip/commits/tmp/testing_20161109 ]
-
-but I'm not sure if I did that correctly yet and am also still seeing
-nothing on the display and get iommu errors when starting X11
-
-
-Heiko
-
-> +		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
-> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-> +		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
-> +		reset-names = "axi", "ahb", "dclk";
-> +		iommus = <&vopl_mmu>;
-> +		status = "disabled";
+On 11/13/2016 11:27 PM, Sriram Dash wrote:
+> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+> new file mode 100644
+> index 0000000..d934c80
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+> @@ -0,0 +1,36 @@
+> +Driver for Freescale USB 3.0 PHY
 > +
-> +		vopl_out: port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
+> +Required properties:
 > +
-> +	vopl_mmu: iommu@ff8f3f00 {
-> +		compatible = "rockchip,iommu";
-> +		reg = <0x0 0xff8f3f00 0x0 0x100>;
-> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopl_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	vopb: vop@ff900000 {
-> +		compatible = "rockchip,rk3399-vop-big";
-> +		reg = <0x0 0xff900000 0x0 0x3efc>;
-> +		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-> +		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
-> +		reset-names = "axi", "ahb", "dclk";
-> +		iommus = <&vopb_mmu>;
-> +		status = "disabled";
-> +
-> +		vopb_out: port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +
-> +	vopb_mmu: iommu@ff903f00 {
-> +		compatible = "rockchip,iommu";
-> +		reg = <0x0 0xff903f00 0x0 0x100>;
-> +		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "vopb_mmu";
-> +		#iommu-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	display_subsystem: display-subsystem {
-> +		compatible = "rockchip,display-subsystem";
-> +		ports = <&vopl_out>, <&vopb_out>;
-> +		status = "disabled";
-> +	};
-> +
->  	pinctrl: pinctrl {
->  		compatible = "rockchip,rk3399-pinctrl";
->  		rockchip,grf = <&grf>;
+> +- compatible :	fsl,qoriq-usb3-phy
 
+This is a very vague compatible.  Are there versioning registers within
+this register block?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/* Parameter control */
+> +#define USB3PRM1CR		0x000
+> +#define USB3PRM1CR_VAL		0x27672b2a
+> +
+> +/*
+> + * struct qoriq_usb3_phy - driver data for USB 3.0 PHY
+> + * @dev: pointer to device instance of this platform device
+> + * @param_ctrl: usb3 phy parameter control register base
+> + * @phy_base: usb3 phy register memory base
+> + * @has_erratum_flag: keeps track of erratum applicable on device
+> + */
+> +struct qoriq_usb3_phy {
+> +	struct device *dev;
+> +	void __iomem *param_ctrl;
+> +	void __iomem *phy_base;
+> +	u32 has_erratum_flag;
+> +};
+> +
+> +static inline u32 qoriq_usb3_phy_readl(void __iomem *addr, u32 offset)
+> +{
+> +	return __raw_readl(addr + offset);
+> +}
+> +
+> +static inline void qoriq_usb3_phy_writel(void __iomem *addr, u32 offset,
+> +	u32 data)
+> +{
+> +	__raw_writel(data, addr + offset);
+> +}
+
+Why raw?  Besides missing barriers, this will cause the accesses to be
+native-endian which is not correct.
+
+> +/*
+> + * Erratum A008751
+> + * SCFG USB3PRM1CR has incorrect default value
+> + * SCFG USB3PRM1CR reset value should be 32'h27672B2A instead of 32'h25E72B2A.
+
+When documenting C code, can you stick with C-style numeric constants?
+
+For that matter, just put the constant in the code instead of hiding it
+in an overly-generically-named USB3PRM1CR_VAL and then you won't need to
+redundantly state the value in a comment.  Normally putting magic
+numbers in symbolic constants is a good thing, but in this case it's not
+actually describing anything and the number is of no meaning outside of
+this one erratum workaround (it might even be a different value if
+another chip has a similar erratum).
+
+> + */
+> +static void erratum_a008751(struct qoriq_usb3_phy *phy)
+> +{
+> +	qoriq_usb3_phy_writel(phy->param_ctrl, USB3PRM1CR,
+> +				USB3PRM1CR_VAL);
+> +}
+> +
+> +/*
+> + * qoriq_usb3_phy_erratum - List of phy erratum
+> + * @qoriq_phy_erratum - erratum application
+> + * @compat - comapt string for erratum
+> + */
+> +
+> +struct qoriq_usb3_phy_erratum {
+> +	void (*qoriq_phy_erratum)(struct qoriq_usb3_phy *phy);
+> +	char *compat;
+> +};
+> +
+> +/* Erratum list */
+> +struct qoriq_usb3_phy_erratum  phy_erratum_tbl[] = {
+> +	{&erratum_a008751, "fsl,usb-erratum-a008751"},
+> +	/* Add init time erratum here */
+> +};
+
+This needs to be static.
+
+Unnecessary & on the function pointer.
+
+> +static int qoriq_usb3_phy_init(struct phy *x)
+> +{
+> +	struct qoriq_usb3_phy *phy = phy_get_drvdata(x);
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
+> +		if (phy->has_erratum_flag & 1 << i)
+> +			phy_erratum_tbl[i].qoriq_phy_erratum(phy);
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops ops = {
+> +	.init		= qoriq_usb3_phy_init,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int qoriq_usb3_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct qoriq_usb3_phy *phy;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +	const struct of_device_id *of_id;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	int i, ret;
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +	phy->dev = dev;
+> +
+> +	of_id = of_match_device(dev->driver->of_match_table, dev);
+> +	if (!of_id) {
+> +		dev_err(dev, "failed to get device match\n");
+> +		ret = -EINVAL;
+> +		goto err_out;
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "param_ctrl");
+> +	if (!res) {
+> +		dev_err(dev, "failed to get param_ctrl memory\n");
+> +		ret = -ENOENT;
+> +		goto err_out;
+> +	}
+> +
+> +	phy->param_ctrl = devm_ioremap_resource(dev, res);
+> +	if (!phy->param_ctrl) {
+> +		dev_err(dev, "failed to remap param_ctrl memory\n");
+> +		ret = -ENOMEM;
+> +		goto err_out;
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_base");
+> +	if (!res) {
+> +		dev_err(dev, "failed to get phy_base memory\n");
+> +		ret = -ENOENT;
+> +		goto err_out;
+> +	}
+> +
+> +	phy->phy_base = devm_ioremap_resource(dev, res);
+> +	if (!phy->phy_base) {
+> +		dev_err(dev, "failed to remap phy_base memory\n");
+> +		ret = -ENOMEM;
+> +		goto err_out;
+> +	}
+> +
+> +	phy->has_erratum_flag = 0;
+> +	for (i = 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
+> +		phy->has_erratum_flag |= device_property_read_bool(dev,
+> +						phy_erratum_tbl[i].compat) << i;
+
+I don't see the erratum property in either the binding or the device
+tree.  Also, a property name is not a "compat".
+
+Is there a reason why this flag and array mechanism is needed, rather
+than just checking the erratum properties from the init function -- or,
+if you have a good reason to not want to do device tree accesses from
+init, just using a bool per erratum?  How many errata are you expecting?
+
+-Scott
