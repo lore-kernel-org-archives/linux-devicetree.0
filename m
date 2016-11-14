@@ -1,67 +1,72 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v7 3/3] clk: qcom: Add A53 clock driver
-Date: Mon, 14 Nov 2016 18:15:46 +0200
-Message-ID: <13eb175c-0f1d-4cd6-4d1a-7b952be9a6b2@linaro.org>
-References: <20161031145526.5023-1-georgi.djakov@linaro.org>
- <20161031145526.5023-4-georgi.djakov@linaro.org>
- <20161109182440.hjiv725vpsh5dctd@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: clk: max8997: Add DT binding
+ documentation
+Date: Mon, 14 Nov 2016 10:15:46 -0600
+Message-ID: <20161114161546.oitvons6tvlazgsb@rob-hp-laptop>
+References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
+ <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161109182440.hjiv725vpsh5dctd@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2016 08:24 PM, Rob Herring wrote:
-> On Mon, Oct 31, 2016 at 04:55:26PM +0200, Georgi Djakov wrote:
->> Add a driver for the A53 Clock Controller. It is a hardware block that
->> implements a combined mux and half integer divider functionality. It can
->> choose between a fixed-rate clock or the dedicated A53 PLL. The source
->> and the divider can be set both at the same time.
->>
->> This is required for enabling CPU frequency scaling on platforms like
->> MSM8916.
->>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,a53cc.txt       |  23 ++++
->>  drivers/clk/qcom/Kconfig                           |   8 ++
->>  drivers/clk/qcom/Makefile                          |   1 +
->>  drivers/clk/qcom/a53cc.c                           | 152 +++++++++++++++++++++
->>  4 files changed, 184 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
->>  create mode 100644 drivers/clk/qcom/a53cc.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
->> new file mode 100644
->> index 000000000000..82d1634a2713
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
->> @@ -0,0 +1,23 @@
->> +Qualcomm A53 CPU Clock Controller Binding
->> +------------------------------------------------
->> +The A53 CPU Clock Controller is hardware, which provides a combined
->> +mux and divider functionality for the CPU clocks. It can choose between
->> +a fixed rate clock and the dedicated A53 PLL. This hardware block is used
->> +on platforms such as msm8916.
->> +
->> +Required properties :
->> +- compatible : shall contain:
->> +
->> +			"qcom,a53cc-msm8916"
->
-> Same comment on the ordering. With that, for the binding:
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
+On Mon, Nov 07, 2016 at 03:39:32PM +0530, Pankaj Dubey wrote:
+> Add Device Tree binding documentation for the clocks
+> outputs in the Maxim-8997 Power Management IC.
+> 
+> CC: Michael Turquette <mturquette@baylibre.com>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> CC: linux-clk@vger.kernel.org
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  .../devicetree/bindings/clock/maxim,max8997.txt    | 44 ++++++++++++++++++++++
+>  .../bindings/regulator/max8997-regulator.txt       |  3 ++
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max8997.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/maxim,max8997.txt b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
+> new file mode 100644
+> index 0000000..d2e2a74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
+> @@ -0,0 +1,44 @@
+> +Binding for Maxim MAX8997 32k clock generator block
+> +
+> +This is a part of device tree bindings of MAX8997 multi-function device.
+> +More information can be found in bindings/regulator/max8997-regulator.txt file.
+> +
+> +The MAX8997 contains two 32.768khz clock outputs that can be controlled
+> +(gated/ungated) over I2C.
+> +
+> +Following properties should be presend in main device node of the MFD chip.
+> +
+> +Required properties:
+> +
+> +- #clock-cells: from common clock binding; shall be set to 1.
+> +
+> +Optional properties:
+> +- clock-output-names: From common clock binding.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. Following indices are allowed:
+> +    - 0: 32khz_ap clock,
+> +    - 1: 32khz_cp clock,
+> +
+> +Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max8997.h
+> +header and can be used in device tree sources.
+> +
+> +Example: Node of the MFD chip
+> +
+> +	max8997: max8997_pmic@66 {
 
-Thanks for reviewing, Rob. I am also going to make this a child node
-as discussed here [1]. Please let me know if you have any comments.
+pmic@66 {
 
-[1]. https://lkml.org/lkml/2016/11/11/387
+With that:
 
-Thanks,
-Georgi
+Acked-by: Rob Herring <robh@kernel.org>
