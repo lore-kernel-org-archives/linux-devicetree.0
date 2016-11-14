@@ -1,62 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: phy: Add documentation for NSP USB3 PHY
-Date: Mon, 14 Nov 2016 11:23:08 -0600
-Message-ID: <20161114172308.j34mif6qakxlhhyq@rob-hp-laptop>
-References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
- <1478683994-12008-3-git-send-email-yendapally.reddy@broadcom.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: rockchip: add pd_edp node for rk3399
+Date: Mon, 14 Nov 2016 09:26:28 -0800
+Message-ID: <CAD=FV=WDsPF1dHgZePKq20tQjguHm7yyBEA9-+sNoDm7HdspXg@mail.gmail.com>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-8-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478683994-12008-3-git-send-email-yendapally.reddy@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478697721-2323-8-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Eddie Cai <eddie.cai@rock-chips.com>, Tomasz Figa <tfiga@chromium.org>, zhangqing <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 04:33:10AM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
-> Add documentation for USB3 PHY available in Northstar plus SoC
-> 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Caesar,
+
+On Wed, Nov 9, 2016 at 5:21 AM, Caesar Wang <wxt@rock-chips.com> wrote:
+> From: zhangqing <zhangqing@rock-chips.com>
+>
+> 1. add pd node for RK3399 Soc
+> 2. create power domain tree
+> 3. add qos node for domain
+
+No step #3 since there doesn't appear to be a qos node for eDP.  Your
+patch doesn't add one and I can't find one in the TRM.
+
+> 4. add the pd support for edp
+>
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 > ---
->  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-> new file mode 100644
-> index 0000000..30cf4b9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-> @@ -0,0 +1,39 @@
-> +Broadcom USB3 phy binding northstar plus SoC
-> +This is a child bus node of "brcm,mdio-mux-nsp" node.
-> +
-> +Required mdio bus properties:
-> +- reg: MDIO Bus number for the MDIO interface
-> +- #address-cells: must be 1
-> +- #size-cells: must be 0
-> +
-> +Required PHY properties:
-> +- compatible: should be "brcm,nsp-usb3-phy"
-> +- reg: Phy address in the MDIO interface
-> +- usb3-ctrl-syscon: handler of syscon node defining physical address
-> +  of usb3 control register.
-> +- #phy-cells: must be 0
-> +
-> +Required usb3 control properties:
-> +- compatible: should be "brcm,nsp-usb3-ctrl"
-> +- reg: offset and length of the control registers
-> +
-> +Example:
-> +
-> +	mdio@0 {
-> +		reg = <0x0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		usb3_phy: usb3-phy@10 {
+>
+> Changes in v2: None
+>
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 74deb44..09ebf4e 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -835,6 +835,10 @@
+>                         };
+>
+>                         /* These power domains are grouped by VD_LOGIC */
+> +                       pd_edp@RK3399_PD_EDP {
+> +                               reg = <RK3399_PD_EDP>;
+> +                               clocks = <&cru PCLK_EDP_CTRL>;
 
-Just 'usb-phy@10'. With that,
+Are you sure that PCLK_EDP isn't needed as well?  After the super
+hard-to-debug problems we just faced with the missing GMAC clock in
+the power domains, I figure it's at least worth a check.  ;)
 
-Acked-by: Rob Herring <robh@kernel.org>
+> +                       };
+>                         pd_emmc@RK3399_PD_EMMC {
+>                                 reg = <RK3399_PD_EMMC>;
+>                                 clocks = <&cru ACLK_EMMC>;
+> @@ -1364,6 +1368,7 @@
+>                 status = "disabled";
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&edp_hpd>;
+> +               power-domains = <&power RK3399_PD_EDP>;
+>
+>                 ports {
+>                         #address-cells = <1>;
+
+Other than the question about the clock and the nits about the commit
+message, this all looks fine to me.  Feel free to add my Reviewed-by
+if you fix those things.
+
+
+-Doug
