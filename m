@@ -1,103 +1,96 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/30] usb: dwc2: Deprecate g-use-dma binding
-Date: Mon, 14 Nov 2016 11:07:44 -0600
-Message-ID: <20161114170744.lq3bpg4nkgf35msb@rob-hp-laptop>
-References: <cover.1478558343.git.johnyoun@synopsys.com>
- <e99e9d8df77884671f94734109a1a8d76a0222c1.1478558343.git.johnyoun@synopsys.com>
- <87wpgeibdh.fsf@linux.intel.com>
- <6e90b835-73b1-3970-24a4-eab72381b469@synopsys.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
+ driver
+Date: Mon, 14 Nov 2016 18:10:10 +0100
+Message-ID: <20161114171010.GG2016@mai>
+References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
+ <1479021872-14237-4-git-send-email-noamca@mellanox.com>
+ <20161114112326.GC2016@mai>
+ <DB6PR0501MB25183C670A48F44DB916D7FEAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+ <20161114143454.GE2016@mai>
+ <DB6PR0501MB25183EEEC116B9E97CC01BCFAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+ <20161114154154.GF2016@mai>
+ <DB6PR0501MB251848D66EAA58589B550B41AABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6e90b835-73b1-3970-24a4-eab72381b469-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <DB6PR0501MB251848D66EAA58589B550B41AABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Noam Camus <noamca@mellanox.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 09:48:03AM -0800, John Youn wrote:
-> On 11/8/2016 1:12 AM, Felipe Balbi wrote:
-> > 
-> > Hi,
-> > 
-> > John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
-> >> Add a vendor prefix and make the name more consistent by renaming it to
-> >> "snps,gadget-dma-enable".
-> >>
-> >> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/usb/dwc2.txt | 5 ++++-
-> >>  arch/arm/boot/dts/rk3036.dtsi                  | 2 +-
-> >>  arch/arm/boot/dts/rk3288.dtsi                  | 2 +-
-> >>  arch/arm/boot/dts/rk3xxx.dtsi                  | 2 +-
-> >>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 2 +-
-> >>  arch/arm64/boot/dts/rockchip/rk3368.dtsi       | 2 +-
-> >>  drivers/usb/dwc2/params.c                      | 9 ++++++++-
-> >>  drivers/usb/dwc2/pci.c                         | 2 +-
-> >>  8 files changed, 18 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> index 9472111..389a461 100644
-> >> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> >> @@ -26,11 +26,14 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
-> >>  - dr_mode: shall be one of "host", "peripheral" and "otg"
-> >>    Refer to usb/generic.txt
-> >>  - snps,host-dma-disable: disable host DMA mode.
-> >> -- g-use-dma: enable dma usage in gadget driver.
-> >> +- snps,gadget-dma-enable: enable gadget DMA mode.
-> > 
-> > I don't see why you even have this binding. Looking through the code,
-> > you have:
-> > 
-> > #define GHWCFG2_SLAVE_ONLY_ARCH			0
-> > #define GHWCFG2_EXT_DMA_ARCH			1
-> > #define GHWCFG2_INT_DMA_ARCH			2
-> > 
-> > void dwc2_set_param_dma_enable(struct dwc2_hsotg *hsotg, int val)
-> > {
-> > 	int valid = 1;
-> > 
-> > 	if (val > 0 && hsotg->hw_params.arch == GHWCFG2_SLAVE_ONLY_ARCH)
-> > 		valid = 0;
-> > 	if (val < 0)
-> > 		valid = 0;
-> > 
-> > 	if (!valid) {
-> > 		if (val >= 0)
-> > 			dev_err(hsotg->dev,
-> > 				"%d invalid for dma_enable parameter. Check HW configuration.\n",
-> > 				val);
-> > 		val = hsotg->hw_params.arch != GHWCFG2_SLAVE_ONLY_ARCH;
-> > 		dev_dbg(hsotg->dev, "Setting dma_enable to %d\n", val);
-> > 	}
-> > 
-> > 	hsotg->core_params->dma_enable = val;
-> > }
-> > 
-> > which seems to hint that DMA support is discoverable. If there is DMA,
-> > why would disable it?
-> > 
+On Mon, Nov 14, 2016 at 04:45:44PM +0000, Noam Camus wrote:
+> > From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org] Sent: Monday,
+> > November 14, 2016 5:42 PM
 > 
-> Yes that's the case and I would prefer to make it discoverable and
-> enabled by default.
+> >> When you are saying "we have a framework" do you mean to some generic
+> >> framework in the kernel?
 > 
-> But the legacy behavior has always been like this because DMA was
-> never fully implemented in the gadget driver and it was an opt-in
-> feature. Periodic support was only added recently.
-> 
-> What do you think about enabling it by default now? I think most
-> platforms already use DMA.
-> 
-> We would still need a "disable" binding for IP validation purposes at
-> least.
+> > Yes, IIRC it is regmap but I'm not sure.
+> Indeed regmap is a generic framework and it primarily meant for registers
+> which can be mapped to our virtual/logical address space which is not the
+> case here. For our auxiliary registers access we use dedicated instructions
+> (lr/sr) and not LOAD/STORE like GCC produce.  It is possible to use such
+> regmap but this driver will be filled with all regmap handling just to hide
+> couple of lines. This will not serve this driver readability well.
 
-You can hack up your kernel for that. You may need a disable for broken 
-h/w perhaps.
+Indeed.
+ 
+> >I think there is something I am missing with this HW scheduling thing. Why
+> >are these hw_schd_save/hw_schd_restore functions needed to be called from
+> >the timer driver ? Regarding the explanation, the HW scheduling can happen
+> >everywhere at any time, not only in the timer code but this one is the only
+> >one which need the hw_schd_save/hw_schd_restore calls, why ?
+> I use them not just here they are also serve to protect our L1 cache and TLB
+> which are also shared within same core. You can't see this yet since patch
+> are not still push to arch/arc tree.
+> >Why,
+> 
+> >spin_lock(&lock); write_aux_reg(...) spin_unlock(&lock);
+> 
+> >can't work ?
+> Because I can't use spinlock in interrupt context (I call to
+> nps_clkevent_rm_thread() in irq_handler).
+> 
+> >IIUC, there can be more than 16 cpus/threads, so calling hw_schd_save /
+> >hw_schd_restore will disable the HW scheduling for the entire system while
+> >one cpu is processing something with these couple of registers, no ?
+> NO, HW scheduling will be disabled only for this specific core, all other
+> cores will not be affected since they got their own private registers.
+> 
+> ...
+> >> >And tick_resume. Perhaps, that is the reason why NO_HZ hangs.
+> >> What NO_HZ hang are you referring to in this case?  How calling
+> >> nps_clkevent_rm_thread() explain such hang?  Anyway I agree, and will add
+> >> nps_clkevent_rm_thread() to tick_resume.
+> 
+> >Actually I meant NOHZ_FULL.
+>  Still got no clue what hang we are talking about here!
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Never mind, I read in a previous email from v2 "hanging" instead of "handling".
+ 
+> Note: I looked at arch/tile timer driver again and noticed that I can work
+> without periodic mode. This is exactly what I need here (pure oneshot mode).
+> With this fact I can define Static void nps_clkevent_rm_thread(void) Static
+> void nps_clkevent_add_thread(void)
+> 
+> Also HW scheduling save/restore is only used in *rm_thread/*add_thread since
+> I can now remove nps_clkevent_set_periodic() and
+> nps_clkevent_timer_event_setup().  This way clockevent driver seem much
+> simpler and it is clearer to understanding.  I hope that this approach of not
+> having periodic mode is acceptable.
+
+AFAICT, oneshot mode is more accurate than periodic mode. The time framework
+will take care of emulating the periodic timer. There are several timers in
+drivers/clocksource which are oneshot more only.
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
