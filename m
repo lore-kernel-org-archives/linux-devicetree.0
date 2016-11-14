@@ -1,49 +1,61 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Mon, 14 Nov 2016 14:10:10 +0100
-Message-ID: <20161114131010.GC26710@lunn.ch>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <1479126185.15557.5@smtp.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 3/3] ARM: dts: sunxi: add support for
+ Orange Pi Zero board
+Date: Mon, 14 Nov 2016 14:10:46 +0100
+Message-ID: <20161114131046.t2iy3imx5ozcgrp6@lukather>
+References: <20161111164654.15273-1-icenowy@aosc.xyz>
+ <20161111164654.15273-3-icenowy@aosc.xyz>
+ <20161114085839.qzu7ebeghoqlqygn@lukather>
+ <CAGb2v677zQGihbz1o2izM-y5GJ4VDApf6-WDJAk3UyZdsK-vWQ@mail.gmail.com>
+ <cbbf8ae1-ff29-2a83-265b-a9ff5bacf97b@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rddduspccowvqz4q"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV7PU3AQKGQEYJZLLOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1479126185.15557.5-TAvD023jEQEN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomas.hlavacek-x+rMaJPWets@public.gmane.org
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Martin Strba??ka <martin.strbacka-x+rMaJPWets@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cbbf8ae1-ff29-2a83-265b-a9ff5bacf97b-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Actually SFP is connected to SGMII interface of eth1, which is
-> routed through SERDES 5.
 
-You say eth1 here. Yet lower down you say got eth0 and eth1 are
-connected to the switch?
+--rddduspccowvqz4q
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> We have our proprietary support hacked onto mvneta driver for
-> disconnecting PHY on the fly. It is a bit nasty, so I suggest to
-> ignore SFP in this DTS altogether and let's wait till "phylink based
-> SFP module support" or something alike hits upstream, so we can base
-> the SFP support on solid code;
+On Mon, Nov 14, 2016 at 11:00:32AM +0100, Hans de Goede wrote:
+> > > > +&usbphy {
+> > > > +     /* USB VBUS is always on */
+> > > 
+> > > You can put the always on regulators (I'm guessing reg_vcc5v0 ?) here.
+> > 
+> > AFAIK the regulator properties are optional the the USB PHY.
+> > So we probably don't need to add it. Hans (CC-ed) could explain
+> > his original intent?
+> 
+> I've made the regulators optional exactly for boards like these,
+> where there is no regulator. Likely the Vbus is simply wired
+> directly to the 5V DC-in jack. So IMHO adding something like
+> the fixed reg_vcc5v0 a supply here just makes the dt
+> harder to read.
 
-It would be great if you could work on getting the phylink patches
-into mainline. It is something i have wanted to do for a long time,
-but it is too low down on my priority list to get to. The code is high
-quality, so i don't think there will be too many issues. It probably
-just needs splitting up into smaller batches, submitting, and working
-on any comments.
+It also makes the regulator tree more complete and accurate because
+you'd list all the devices that are needing those regulators. That
+would also make it easier to deal with in the future.
 
-> Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176
-> switch. The problem is that from what I have read so far the switch
-> can not operate in DSA mode with two CPU ports.
+But fair enough.
+Maxime
 
-Again, this is something i wanted to do, and i did have a prototype at
-one point. But again, not enough time. If you have resources to work
-on this, i can find my code, explain my ideas, and let you complete
-it.
-
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--rddduspccowvqz4q--
