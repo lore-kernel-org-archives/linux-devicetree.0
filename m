@@ -1,29 +1,33 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND][PATCH 5/6] dt-bindings: gpio: Update gpio bindings for
- LS2088A
-Date: Mon, 14 Nov 2016 11:14:14 -0600
-Message-ID: <20161114171414.r564cptvgrteozv2@rob-hp-laptop>
-References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
- <1478597664-14799-6-git-send-email-abhimanyu.saini@nxp.com>
+Subject: Re: [PATCH 1/2] mfd: pm8921: add support to pm8821
+Date: Mon, 14 Nov 2016 11:18:04 -0600
+Message-ID: <20161114171804.qsad624oa3ms6epj@rob-hp-laptop>
+References: <1478622577-20699-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478597664-14799-6-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1478622577-20699-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 03:04:23PM +0530, Abhimanyu Saini wrote:
-> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+On Tue, Nov 08, 2016 at 04:29:36PM +0000, Srinivas Kandagatla wrote:
+> This patch adds support to PM8821 PMIC and interrupt support.
+> PM8821 is companion device that supplements primary PMIC PM8921 IC.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Tested this patch for MPP and IRQ functionality on IFC6410 and SD600 EVAL
+> board with mpps PM8821 and PM8921.
+> 
+>  .../devicetree/bindings/mfd/qcom-pm8xxx.txt        |   1 +
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/mfd/pm8921-core.c                          | 368 +++++++++++++++++++--
+>  2 files changed, 340 insertions(+), 29 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
