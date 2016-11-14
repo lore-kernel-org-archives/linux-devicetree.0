@@ -1,92 +1,35 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] arm64: dts: juno: fix cluster sleep state entry latency on
- all SoC versions
-Date: Mon, 14 Nov 2016 15:26:29 +0000
-Message-ID: <1479137189-15378-1-git-send-email-sudeep.holla@arm.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] arm64: dts: rockchip: add pd_sd power node for rk3399
+Date: Mon, 14 Nov 2016 16:27:36 +0100
+Message-ID: <2695010.6OLKZbY9jg@phil>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-3-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1478697721-2323-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The core and the cluster sleep state entry latencies can't be same as
-cluster sleep involves more work compared to core level e.g. shared
-cache maintenance.
+Am Mittwoch, 9. November 2016, 21:21:54 CET schrieb Caesar Wang:
+> From: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> 1.add pd node for RK3399 Soc
+> 2.create power domain tree
+> 3.add qos node for domain
+> 4.add the pd_sd consumers node
+> 
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Experiments have shown on an average about 100us more latency for the
-cluster sleep state compared to the core level sleep. This patch fixes
-the entry latency for the cluster sleep state.
+Applied to my dts64 branch after some tweaks to patch subject and commit 
+message.
 
-Fixes: 28e10a8f3a03 ("arm64: dts: juno: Add idle-states to device tree")
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm64/boot/dts/arm/juno-r1.dts | 2 +-
- arch/arm64/boot/dts/arm/juno-r2.dts | 2 +-
- arch/arm64/boot/dts/arm/juno.dts    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-Hi,
-
-This was found recently when I found that core sleep was chosen when
-entering suspend-to-idle state on Juno. Since the wakeup(entry+exit)
-latency matched for the both states, cpu sleep state was chosen to enter
-in suspend-to-idle.
-
-Regards,
-Sudeep
-
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-index 3be8a3ef671c..eec37feee8fc 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-@@ -76,7 +76,7 @@
- 				compatible = "arm,idle-state";
- 				arm,psci-suspend-param = <0x1010000>;
- 				local-timer-stop;
--				entry-latency-us = <300>;
-+				entry-latency-us = <400>;
- 				exit-latency-us = <1200>;
- 				min-residency-us = <2500>;
- 			};
-diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-index 614fc9227943..28f40ec44090 100644
---- a/arch/arm64/boot/dts/arm/juno-r2.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-@@ -76,7 +76,7 @@
- 				compatible = "arm,idle-state";
- 				arm,psci-suspend-param = <0x1010000>;
- 				local-timer-stop;
--				entry-latency-us = <300>;
-+				entry-latency-us = <400>;
- 				exit-latency-us = <1200>;
- 				min-residency-us = <2500>;
- 			};
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index 6b4135e9cfe5..ac5ceb73f45f 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -76,7 +76,7 @@
- 				compatible = "arm,idle-state";
- 				arm,psci-suspend-param = <0x1010000>;
- 				local-timer-stop;
--				entry-latency-us = <300>;
-+				entry-latency-us = <400>;
- 				exit-latency-us = <1200>;
- 				min-residency-us = <2500>;
- 			};
+Thanks
+Heiko
 --
-2.7.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
