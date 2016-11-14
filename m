@@ -1,37 +1,50 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: RE: [PATCH v5 0/3] Add clockevet for timer-nps driver to NPS400 SoC
-Date: Mon, 14 Nov 2016 09:35:59 +0000
-Message-ID: <DB6PR0501MB251893C085505B65DFFF7BFCAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <20161114082817.GA2016@mai>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
+Date: Mon, 14 Nov 2016 13:10:52 +0200
+Message-ID: <1740464.TP0bE1PYbC@avalon>
+References: <cover.1478103726.git.jsarha@ti.com> <12424154.kJqhEf2pOz@avalon>
+ <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161114082817.GA2016@mai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
->From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org]=20
->Sent: Monday, November 14, 2016 10:28 AM
-
->Noam,
-
->I know it is patch 0/3, but each time you send a change there are new typo=
-s.
-
->Sending new versions as fast as possible without double checking the chang=
-es won't make them merged sooner.
-
->Nobody is perfect but clearly you don't read your patch before sending and=
- that does not make me confident about the code changes.
-
->In the future, take some minutes to double-check and re-read your changes.
-
-Thank you Daniel,
-I will do an extra check next time.
-
-Regards,
-Noam
+SGkgSnlyaSwKCk9uIE1vbmRheSAxNCBOb3YgMjAxNiAxMDo0OTo0MyBKeXJpIFNhcmhhIHdyb3Rl
+Ogo+IE9uIDExLzAzLzE2IDE5OjQ2LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+ID4+ID4gKwktIGNvbXBhdGlibGU6ICJ0aSx0ZnA0MTAiCj4gPiAK
+PiA+IFRoZSBkZXZpY2UgaXMgYW4gSTJDIHNsYXZlLCBpdCBzaG91bGQgaGF2ZSBhIHJlZyBwcm9w
+ZXJ0eS4gR2l2ZW4gdGhhdCB0aGUKPiA+IGNoaXAgY2FuIGJlIHVzZWQgd2l0aG91dCBiZWluZyBj
+b250cm9sbGVkIHRocm91Z2ggSTJDLCB0aGUgcmVnIHByb3BlcnR5Cj4gPiBzaG91bGQgYmUgb3B0
+aW9uYWwuIFlvdSBzaG91bGQgZG9jdW1lbnQgdGhpcyBjbGVhcmx5LCBhbmQgZXhwbGFpbiBob3cg
+dGhlCj4gPiBEVCBub2RlIGNhbiBiZSBpbnN0YW50aWF0ZWQgYXMgYSBjaGlsZCBvZiBhbiBJMkMg
+Y29udHJvbGxlciB3aGVuIHRoZSBJMkMKPiA+IGludGVyZmFjZSBpcyB1c2VkLCBvciBpbiBvdGhl
+ciBwYXJ0cyBvZiB0aGUgZGV2aWNlIHRyZWUgb3RoZXJ3aXNlLgo+IAo+IFNob3VsZG4ndCBJIGhh
+dmUgdHdvIGRpZmZlcmVudCBjb21wYXRpYmxlIHN0cmluZ3MgaWYgd2FudCB0byBtYWtlIGJvdGgK
+PiBwbGF0Zm9ybSBkcml2ZXIgcHJvYmUgYW5kIGkyYyBjbGllbnQgcHJvYmUgdG8gd29yaz8KCkkg
+ZG9uJ3QgdGhpbmsgc28sIGl0J3Mgc3RpbGwgdGhlIHNhbWUgY2hpcC4KCj4gT3IgY2FuIGl0IGJl
+IGRvbmUgd2l0aCBzaW5nbGUgY29tcGF0aWJsZSBzdHJpbmc/IFdvdWxkIHlvdSBrbm93IG9mIGFu
+Cj4gZXhhbXBsZSBvZiBzdWNoIGEgZHJpdmVyPwoKWW91IHdpbGwgbmVlZCB0byByZWdpc3RlciBi
+b3RoIGEgaTJjX2RyaXZlciBhbmQgYSBwbGF0Zm9ybV9kcml2ZXIgaW4gdGhlIAp0ZnA0MTAgZHJp
+dmVyLiBCb3RoIHdpbGwgYWR2ZXJ0aXNlIHRoZSBzYW1lIGNvbXBhdGlibGUgc3RyaW5nLiBBcyB5
+b3UnbGwgaGF2ZSAKdHdvIHByb2JlIGZ1bmN0aW9ucywgaXQgc2hvdWxkIGJlIGVhc3kgdG8gaGFu
+ZGxlIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSAKdHdvIHNpdHVhdGlvbnMgdGhlcmUsIHdp
+dGggY29tbW9uIGNvZGUgc2hhcmVkIGluIGNvbW1vbiBmdW5jdGlvbnMuIEEgcXVpY2sgCmdyZXAg
+cG9pbnRzIHRvIGF0IGxlYXN0IGRyaXZlcnMvcG93ZXIvYnEyN3gwMF9iYXR0ZXJ5LmMgYXMgYW4g
+ZXhhbXBsZSAoYWxiZWl0IAp3aXRob3V0IERUIHN1cHBvcnQpLgoKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
