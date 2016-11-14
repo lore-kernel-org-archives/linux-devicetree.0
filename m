@@ -1,95 +1,70 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] PCI: rockchip: cleanup bit definition for
- PCIE_RC_CONFIG_LCS
-Date: Mon, 14 Nov 2016 16:50:19 -0600
-Message-ID: <20161114225019.GM9868@bhelgaas-glaptop.roam.corp.google.com>
-References: <1479096666-112668-1-git-send-email-shawn.lin@rock-chips.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] usb: dwc2: fixes host_dma logic
+Date: Mon, 14 Nov 2016 14:53:18 -0800
+Message-ID: <da778f8f-4038-17b5-6c9c-0585202aecff@synopsys.com>
+References: <b1ec4a4425388cdee36be081971484db2a7d048a.1478897792.git.chunkeey@gmail.com>
+ <4043f817106c8dffdc9a3f411d965465168b263d.1478897792.git.chunkeey@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479096666-112668-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <4043f817106c8dffdc9a3f411d965465168b263d.1478897792.git.chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 12:11:05PM +0800, Shawn Lin wrote:
-> PCIE_RC_CONFIG_LCS contains control and status bits specific
-> to the PCIe link. The layout for this register looks the same
-> as the existed PCI_EXP_LNKCTL and PCI_EXP_LNKSTA. So let's
-> reuse them.
+On 11/11/2016 12:59 PM, Christian Lamparter wrote:
+> This patch moves the the host_dma initialization
+> before dwc2_set_param_dma_desc_enable and
+> dwc2_set_param_dma_desc_fs_enable. The reason being
+> that both function need it.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Fixes: 1205489cee75bf39 ("usb: dwc2: Get host DMA device properties")
 
-I applied both to pci/host-rockchip, thanks!
+This should probably be omitted since it's only in Felipe's
+testing/next.
 
+Otherwise looks good.
+
+Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Regards,
+John
+
+
+> 
+> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
+>  drivers/usb/dwc2/params.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
->  drivers/pci/host/pcie-rockchip.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 5d822c5..222a83c 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -1157,9 +1157,6 @@ static void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+>  	bool dma_capable = !(hw->arch == GHWCFG2_SLAVE_ONLY_ARCH);
+>  
+>  	dwc2_set_param_otg_cap(hsotg, params->otg_cap);
+> -	dwc2_set_param_dma_desc_enable(hsotg, params->dma_desc_enable);
+> -	dwc2_set_param_dma_desc_fs_enable(hsotg, params->dma_desc_fs_enable);
+> -
+>  	if ((hsotg->dr_mode == USB_DR_MODE_HOST) ||
+>  	    (hsotg->dr_mode == USB_DR_MODE_OTG)) {
+>  		bool disable;
+> @@ -1174,6 +1171,8 @@ static void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+>  				    !disable, false,
+>  				    dma_capable);
+>  	}
+> +	dwc2_set_param_dma_desc_enable(hsotg, params->dma_desc_enable);
+> +	dwc2_set_param_dma_desc_fs_enable(hsotg, params->dma_desc_fs_enable);
+>  
+>  	dwc2_set_param_host_support_fs_ls_low_power(hsotg,
+>  			params->host_support_fs_ls_low_power);
 > 
-> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-> index 7f238af..1dba698 100644
-> --- a/drivers/pci/host/pcie-rockchip.c
-> +++ b/drivers/pci/host/pcie-rockchip.c
-> @@ -141,12 +141,6 @@
->  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
->  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
->  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
-> -#define   PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
-> -#define   PCIE_RC_CONFIG_LCS_CCC		BIT(6)
-> -#define   PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
-> -#define   PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
-> -#define   PCIE_RC_CONFIG_LCS_LBMS		BIT(30)
-> -#define   PCIE_RC_CONFIG_LCS_LAMS		BIT(31)
->  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
->  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
->  #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
-> @@ -229,7 +223,7 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
->  	u32 status;
->  
->  	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> -	status |= (PCIE_RC_CONFIG_LCS_LBMIE | PCIE_RC_CONFIG_LCS_LABIE);
-> +	status |= (PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
->  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
->  }
->  
-> @@ -238,7 +232,7 @@ static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
->  	u32 status;
->  
->  	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> -	status |= (PCIE_RC_CONFIG_LCS_LBMS | PCIE_RC_CONFIG_LCS_LAMS);
-> +	status |= (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_LABS) << 16;
->  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
->  }
->  
-> @@ -540,7 +534,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->  
->  	/* Set RC's clock architecture as common clock */
->  	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> -	status |= PCIE_RC_CONFIG_LCS_CCC;
-> +	status |= PCI_EXP_LNKCTL_CCC;
->  	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
->  
->  	/* Enable Gen1 training */
-> @@ -575,7 +569,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->  		 * gen1 finished.
->  		 */
->  		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-> -		status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
-> +		status |= PCI_EXP_LNKCTL_RL;
->  		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
->  
->  		timeout = jiffies + msecs_to_jiffies(500);
-> -- 
-> 1.9.1
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
