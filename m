@@ -1,45 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc2: add amcc,dwc-otg device tree definition
-Date: Mon, 14 Nov 2016 10:04:20 -0600
-Message-ID: <20161114160420.rmp3y6ypq2wqzjra@rob-hp-laptop>
-References: <20161106005608.26386-1-chunkeey@gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source for sam9260ek
+Date: Mon, 14 Nov 2016 17:04:56 +0100
+Message-ID: <20161114160456.xzp3sxwkvl6vmu7l@piout.net>
+References: <1479138250-17780-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161106005608.26386-1-chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1479138250-17780-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 06, 2016 at 01:56:08AM +0100, Christian Lamparter wrote:
-> This patch adds support for the "amcc,usb-otg" device
-> which is found in the PowerPC Canyonlands' dts.
+On 14/11/2016 at 15:44:08 +0000, Sudeep Holla wrote :
+> Though the keyboard driver for GPIO buttons(gpio-keys) will continue to
+> check for/support the legacy "gpio-key,wakeup" boolean property to
+> enable gpio buttons as wakeup source, "wakeup-source" is the new
+> standard binding.
 > 
-> The device definition was added by:
-> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'.
-> AMCC produced a standalone driver that was sent to the
-> linuxppc-dev at the time. However, it was never integrated.
+> This patch replaces the legacy "gpio-key,wakeup" with the unified
+> "wakeup-source" property in order to avoid any further copy-paste
+> duplication.
 > 
-> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 > ---
-> For anyone interested: the driver was sent to the ML multiple times back
-> in 2012 [0], [1].
+>  arch/arm/boot/dts/at91sam9260ek.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> [0] <https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-May/097847.html>
-> [1] <https://lists.ozlabs.org/pipermail/linuxppc-dev/2012-May/097938.html>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
+Applied, thanks.
 
-I would say this needs to be more specific, but given it has been there 
-for 6 years:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/usb/dwc2/platform.c                    | 33 ++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
