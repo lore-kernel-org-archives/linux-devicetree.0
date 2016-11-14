@@ -1,69 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: replace enable-sdio-wakeup with
- wakeup-source for BananaPi M1+
-Date: Mon, 14 Nov 2016 20:53:34 +0100
-Message-ID: <20161114195334.62rvyagvgeovhobq@lukather>
-References: <1479138250-17780-4-git-send-email-sudeep.holla@arm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v7 14/14] sdhci: sdhci-msm: update dll configuration
+Date: Mon, 14 Nov 2016 11:57:49 -0800
+Message-ID: <20161114195749.GJ5177@codeaurora.org>
+References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
+ <1479103248-9491-15-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yocea2akpn3qipco"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479138250-17780-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1479103248-9491-15-git-send-email-riteshh@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>
+Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, Krishna Konda <kkonda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/14, Ritesh Harjani wrote:
+> @@ -903,7 +998,33 @@ static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>  			config |= CORE_HC_SELECT_IN_EN;
+>  			writel_relaxed(config, host->ioaddr + CORE_VENDOR_SPEC);
+>  		}
+> +		if (!msm_host->clk_rate && !msm_host->use_cdclp533) {
+> +			/*
+> +			 * Poll on DLL_LOCK or DDR_DLL_LOCK bits in
+> +			 * CORE_DLL_STATUS to be set.  This should get set
+> +			 * within 15 us at 200 MHz.
+> +			 */
+> +			rc = readl_relaxed_poll_timeout(host->ioaddr +
+> +							CORE_DLL_STATUS,
+> +							dll_lock,
+> +							(dll_lock &
+> +							(CORE_DLL_LOCK |
+> +							CORE_DDR_DLL_LOCK)), 10,
+> +							1000);
+> +			if (rc == -ETIMEDOUT)
+> +				pr_err("%s: Unable to get DLL_LOCK/DDR_DLL_LOCK, dll_status: 0x%08x\n",
+> +				       mmc_hostname(host->mmc), dll_lock);
+> +		}
+>  	} else {
+> +		if (!msm_host->use_cdclp533) {
+> +			/* set CORE_PWRSAVE_DLL bit in CORE_VENDOR_SPEC3 */
 
---yocea2akpn3qipco
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These types of comments are totally useless. The code says
+exactly what is being done, and the comment is actually wrong in
+this case. Please remove all these "set/clear bit X in register
+Y" comments.
 
-On Mon, Nov 14, 2016 at 03:44:10PM +0000, Sudeep Holla wrote:
-> Though the mmc core driver will continue to support the legacy
-> "enable-sdio-wakeup" property to enable SDIO as the wakeup source,
-> "wakeup-source" is the new standard binding.
->=20
-> This patch replaces the legacy "enable-sdio-wakeup" with the unified
-> "wakeup-source" property in order to avoid any further copy-paste
-> duplication.
->=20
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> +			config = readl_relaxed(host->ioaddr +
+> +					CORE_VENDOR_SPEC3);
+> +			config &= ~CORE_PWRSAVE_DLL;
+> +			writel_relaxed(config, host->ioaddr +
+> +					CORE_VENDOR_SPEC3);
+> +		}
+> +
+>  		/* Select the default clock (free running MCLK) */
+>  		config = readl_relaxed(host->ioaddr + CORE_VENDOR_SPEC);
+>  		config &= ~CORE_HC_MCLK_SEL_MASK;
+> @@ -1100,6 +1221,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  		msm_host->use_14lpp_dll_reset = true;
+>  
+>  	/*
+> +	 * SDCC 5 controller with major version 1, minor version 0x34 and later
+> +	 * with HS 400 mode support will use CM DLL instead of CDC LP 533 DLL.
+> +	 */
+> +	if ((core_major == 1) && (core_minor < 0x34))
 
-Applied, thanks!
-Maxime
+Drop useless parenthesis please.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +		msm_host->use_cdclp533 = true;
+> +
+> +	/*
 
---yocea2akpn3qipco
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYKhY6AAoJEBx+YmzsjxAgxbcP/Am1CUmDbXtHT7K+hZkdxx0W
-nt1GTbzSATcFdB59O/QOVf6SegeHoXduOclJTdKVV7aWc9cWUR+fLsOcIkm2R6iK
-AupWtZDRj/wpd0P0S5ruVLklbcKgKOy8GAd8vchI6GeRMnmhAXQSHuc83k4XA6dX
-EUWu1MD6gBAjNPqjLpvBiKzqaOBB2SAn8ewXs7TA6fQwvwoiwKDjI+mee5I3AUkz
-n1L7kdhn+lS2GdLaSmHcxldQ8O5iEJnWoB6aYvfTj5UkrgfhTUln6ITbcAdWPd+e
-I6av1Vfz7IrALXsuzOuw3LeDKK5uzvv7Z2expBd6AOmahv/GopweQQl5HZgv/v1H
-KzTq6r7JwBnEY4FIZNRBJ49UZyTIVH2j5Dd3+dO3vkpBbHWW9VcgRJNOSjVtJ8Vf
-+6zT+8OI/toRYW/Olg4F2OqDSVsFM7AXvGGR2WEYr3CbFnlgO3XRwNgATbZ1OFl5
-e8SQ6nL30c8Bc/F3LRgMpJ3S7dXxVh1c1HBiQBd5pKnL2Yz/G08sdChlXDRftyEo
-7p188ULysAiNA39nH2axW4fJlhd2m6HjyGTpb6y8Wx2SfrltcXggfHdWVynX+aYH
-o2O3hiiECD45yyCYvgn0XshdZgrDh/I5mvOuBPFyL8HC3R+ZAtj4R1/zoOcFjG0V
-IO5Cmr3JlBDIEU0bqeWE
-=vBGL
------END PGP SIGNATURE-----
-
---yocea2akpn3qipco--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
