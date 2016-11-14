@@ -1,135 +1,406 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RESEND/PATCH v6 3/3] clk: qcom: Add A53 clock driver
-Date: Mon, 14 Nov 2016 14:21:22 -0800
-Message-ID: <20161114203426.GN5177@codeaurora.org>
-References: <20161019132816.31073-4-georgi.djakov@linaro.org>
- <20161028015438.GG16026@codeaurora.org>
- <20161102205910.GQ25787@tuxbot>
- <20161102225520.GW16026@codeaurora.org>
- <20161103182834.GR25787@tuxbot>
- <549f87fe-7be9-14b4-8e34-86f7f8dad94e@linaro.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] PCI: qcom: add support to msm8996 PCIE controller
+Date: Mon, 14 Nov 2016 16:23:24 -0600
+Message-ID: <20161114222324.GI9868@bhelgaas-glaptop.roam.corp.google.com>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-3-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <549f87fe-7be9-14b4-8e34-86f7f8dad94e-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1479122155-13393-3-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11, Georgi Djakov wrote:
-> On 11/03/2016 08:28 PM, Bjorn Andersson wrote:
-> >On Wed 02 Nov 15:55 PDT 2016, Stephen Boyd wrote:
-> >
-> >>On 11/02, Bjorn Andersson wrote:
-> >>>On Thu 27 Oct 18:54 PDT 2016, Stephen Boyd wrote:
-> >>>
-> >>>>On 10/19, Georgi Djakov wrote:
-> >>>>>Add a driver for the A53 Clock Controller. It is a hardware block that
-> >>>>>implements a combined mux and half integer divider functionality. It can
-> >>>>>choose between a fixed-rate clock or the dedicated A53 PLL. The source
-> >>>>>and the divider can be set both at the same time.
-> >>>>>
-> >>>>>This is required for enabling CPU frequency scaling on platforms like
-> >>>>>MSM8916.
-> >>>>>
-> >>>>
-> >>>>Please Cc DT reviewers.
-> >>>>
-> >>>>>Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>>>---
-> >>>>> .../devicetree/bindings/clock/qcom,a53cc.txt       |  22 +++
-> >>>>> drivers/clk/qcom/Kconfig                           |   8 ++
-> >>>>> drivers/clk/qcom/Makefile                          |   1 +
-> >>>>> drivers/clk/qcom/a53cc.c                           | 155 +++++++++++++++++++++
-> >>>>> 4 files changed, 186 insertions(+)
-> >>>>> create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> >>>>> create mode 100644 drivers/clk/qcom/a53cc.c
-> >>>>>
-> >>>>>diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> >>>>>new file mode 100644
-> >>>>>index 000000000000..a025f062f177
-> >>>>>--- /dev/null
-> >>>>>+++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
-> >>>>>@@ -0,0 +1,22 @@
-> >>>>>+Qualcomm A53 CPU Clock Controller Binding
-> >>>>>+------------------------------------------------
-> >>>>>+The A53 CPU Clock Controller is hardware, which provides a combined
-> >>>>>+mux and divider functionality for the CPU clocks. It can choose between
-> >>>>>+a fixed rate clock and the dedicated A53 PLL.
-> >>>>>+
-> >>>>>+Required properties :
-> >>>>>+- compatible : shall contain:
-> >>>>>+
-> >>>>>+			"qcom,a53cc"
-> >>>>>+
-> >>>>>+- reg : shall contain base register location and length
-> >>>>>+	of the APCS region
-> >>>>>+- #clock-cells : shall contain 1
-> >>>>>+
-> >>>>>+Example:
-> >>>>>+
-> >>>>>+	apcs: syscon@b011000 {
-> >>>>>+		compatible = "qcom,a53cc", "syscon";
-> >>>>
-> >>>>Why is it a syscon? Is that part used?
-> >>>>
-> >>>
-> >>>I use the register at offset 8 for interrupting the other subsystems, so
-> >>>this must be available as something I can poke.
-> >>>
-> >>>Which makes me think that this should be described as a "simple-mfd" and
-> >>>"syscon" with the a53cc node as a child - grabbing the regmap of the
-> >>>syscon parent, rather then ioremapping the same region again.
-> >>>
-> >>
-> >>That's sort of a question for DT reviewers. The register space
-> >>certainly seems like a free for all with a tilt toward power
-> >>management of the CPU, similar to how this was done on Krait
-> >>based designs.
-> >>
-> >
-> >Right. But this kind of mashup blocks was the reason why simple-mfd was
-> >put in place.
-> >
+On Mon, Nov 14, 2016 at 11:15:54AM +0000, Srinivas Kandagatla wrote:
+> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
+> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
+> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
 > 
-> Ok, thanks for the comments. Then i will make it look like this:
+> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
+> pipe clocks are only setup after the phy is powered on.
+> It also adds ltssm_enable callback as it is very much different to other
+> supported SOCs in the driver.
 > 
-> 	apcs: syscon@b011000 {
-> 		compatible = "syscon", "simple-mfd";
-> 		reg = <0x0b011000 0x1000>;
-> 
-> 		a53mux: clock {
-> 			compatible = "qcom,msm8916-a53cc";
-> 			#clock-cells = <1>;
-> 		};
-> 	};
-> 
-> Thanks,
-> Georgi
-> 
-> >>I wonder why we didn't make up some provider/consumer binding for
-> >>the "kicking" feature used by SMD/RPM code. Then this could be a
-> >>clock provider and a "kick" provider (haha #kick-cells) and the
-> >>usage of syscon/regmap wouldn't be mandatory.
-> >>
-> >
-> >I did consider doing that, but had enough dependencies to put in place
-> >as it was.
-> >
-> >I'm in favour of us inventing a kicker API and it's found outside out
-> >use cases as well (e.g. virtio/rpmsg).
-> >
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I'd rather we did this kicker API as well. That way we don't need
-to make a syscon and a simple-mfd to get software to work
-properly. Don't other silicon vendors need a kicker API as well?
-How are they kicking remote processors in other places? GPIOs?
+Will need ack from Stanimir before I can apply it.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt          |  67 +++++++-
+>  drivers/pci/host/pcie-qcom.c                       | 177 ++++++++++++++++++++-
+>  2 files changed, 238 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 4059a6f..141d8c3 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -7,6 +7,7 @@
+>  			- "qcom,pcie-ipq8064" for ipq8064
+>  			- "qcom,pcie-apq8064" for apq8064
+>  			- "qcom,pcie-apq8084" for apq8084
+> +			- "qcom,pcie-msm8996" for msm8996 or apq8096
+>  
+>  - reg:
+>  	Usage: required
+> @@ -92,6 +93,17 @@
+>  			- "aux"		Auxiliary (AUX) clock
+>  			- "bus_master"	Master AXI clock
+>  			- "bus_slave"	Slave AXI clock
+> +
+> +- clock-names:
+> +	Usage: required for msm8996/apq8096
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "pipe"	Pipe Clock driving internal logic.
+> +			- "aux"		Auxiliary (AUX) clock.
+> +			- "cfg"		Configuration clk.
+> +			- "bus_master"	Master AXI clock.
+> +			- "bus_slave"	Slave AXI clock.
+> +
+>  - resets:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> @@ -115,7 +127,7 @@
+>  			- "core" Core reset
+>  
+>  - power-domains:
+> -	Usage: required for apq8084
+> +	Usage: required for apq8084 and msm8996/apq8096
+>  	Value type: <prop-encoded-array>
+>  	Definition: A phandle and power domain specifier pair to the
+>  		    power domain which is responsible for collapsing
+> @@ -231,3 +243,56 @@
+>  		pinctrl-0 = <&pcie0_pins_default>;
+>  		pinctrl-names = "default";
+>  	};
+> +
+> +* Example for apq8096:
+> +
+> +	pcie@608000{
+> +		compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+> +		power-domains = <&gcc PCIE1_GDSC>;
+> +		bus-range = <0x00 0xff>;
+> +		num-lanes = <1>;
+> +
+> +		reg = <0x00608000 0x2000>,
+> +		      <0x0d000000 0xf1d>,
+> +		      <0x0d000f20 0xa8>,
+> +		      <0x0d100000 0x100000>;
+> +
+> +		reg-names = "parf", "dbi", "elbi", "config";
+> +
+> +		phys = <&pcie_phy 1>;
+> +		phy-names = "pciephy";
+> +
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
+> +			<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
+> +
+> +		interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
+> +		interrupt-names = "msi";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 0x7>;
+> +		interrupt-map = <0 0 0 1 &intc 0 272 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +				<0 0 0 2 &intc 0 273 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +				<0 0 0 3 &intc 0 274 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +				<0 0 0 4 &intc 0 275 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +		pinctrl-names = "default", "sleep";
+> +		pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
+> +		pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
+> +
+> +		vdda-1p8-supply = <&pm8994_l12>;
+> +		vdda-supply = <&pm8994_l28>;
+> +		linux,pci-domain = <1>;
+> +
+> +		clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+> +			<&gcc GCC_PCIE_1_AUX_CLK>,
+> +			<&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> +			<&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+> +			<&gcc GCC_PCIE_1_SLV_AXI_CLK>;
+> +
+> +		clock-names =  "pipe",
+> +				"aux",
+> +				"cfg",
+> +				"bus_master",
+> +				"bus_slave";
+> +	};
+> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
+> index 3593640..03ba6b1 100644
+> --- a/drivers/pci/host/pcie-qcom.c
+> +++ b/drivers/pci/host/pcie-qcom.c
+> @@ -36,11 +36,19 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> +#define PCIE20_PARF_DBI_BASE_ADDR	0x168
+> +
+> +#define PCIE20_PARF_SYS_CTRL			0x00
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+>  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16c
+> +#define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
+> +#define MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT   0x1A8
+> +#define PCIE20_PARF_LTSSM			0x1B0
+> +#define PCIE20_PARF_SID_OFFSET			0x234
+> +#define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
+>  
+>  #define PCIE20_ELBI_SYS_CTRL			0x04
+>  #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
+> @@ -72,9 +80,18 @@ struct qcom_pcie_resources_v1 {
+>  	struct regulator *vdda;
+>  };
+>  
+> +struct qcom_pcie_resources_v2 {
+> +	struct clk *aux_clk;
+> +	struct clk *master_clk;
+> +	struct clk *slave_clk;
+> +	struct clk *cfg_clk;
+> +	struct clk *pipe_clk;
+> +};
+> +
+>  union qcom_pcie_resources {
+>  	struct qcom_pcie_resources_v0 v0;
+>  	struct qcom_pcie_resources_v1 v1;
+> +	struct qcom_pcie_resources_v2 v2;
+>  };
+>  
+>  struct qcom_pcie;
+> @@ -82,7 +99,9 @@ struct qcom_pcie;
+>  struct qcom_pcie_ops {
+>  	int (*get_resources)(struct qcom_pcie *pcie);
+>  	int (*init)(struct qcom_pcie *pcie);
+> +	int (*post_init)(struct qcom_pcie *pcie);
+>  	void (*deinit)(struct qcom_pcie *pcie);
+> +	void (*ltssm_enable)(struct qcom_pcie *pcie);
+>  };
+>  
+>  struct qcom_pcie {
+> @@ -116,17 +135,33 @@ static irqreturn_t qcom_pcie_msi_irq_handler(int irq, void *arg)
+>  	return dw_handle_msi_irq(pp);
+>  }
+>  
+> -static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
+> +static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
+>  {
+>  	u32 val;
+> -
+> -	if (dw_pcie_link_up(&pcie->pp))
+> -		return 0;
+> -
+>  	/* enable link training */
+>  	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+>  	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
+>  	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+> +}
+> +
+> +static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
+> +{
+> +	u32 val;
+> +	/* enable link training */
+> +	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
+> +	val |= BIT(8);
+> +	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
+> +}
+> +
+> +static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
+> +{
+> +
+> +	if (dw_pcie_link_up(&pcie->pp))
+> +		return 0;
+> +
+> +	/* Enable Link Training state machine */
+> +	if (pcie->ops->ltssm_enable)
+> +		pcie->ops->ltssm_enable(pcie);
+>  
+>  	return dw_pcie_wait_for_link(&pcie->pp);
+>  }
+> @@ -421,6 +456,113 @@ static int qcom_pcie_init_v1(struct qcom_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> +static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +	struct device *dev = pcie->pp.dev;
+> +
+> +	res->aux_clk = devm_clk_get(dev, "aux");
+> +	if (IS_ERR(res->aux_clk))
+> +		return PTR_ERR(res->aux_clk);
+> +
+> +	res->cfg_clk = devm_clk_get(dev, "cfg");
+> +	if (IS_ERR(res->cfg_clk))
+> +		return PTR_ERR(res->cfg_clk);
+> +
+> +	res->master_clk = devm_clk_get(dev, "bus_master");
+> +	if (IS_ERR(res->master_clk))
+> +		return PTR_ERR(res->master_clk);
+> +
+> +	res->slave_clk = devm_clk_get(dev, "bus_slave");
+> +	if (IS_ERR(res->slave_clk))
+> +		return PTR_ERR(res->slave_clk);
+> +
+> +	res->pipe_clk = devm_clk_get(dev, "pipe");
+> +	if (IS_ERR(res->pipe_clk))
+> +		return PTR_ERR(res->pipe_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +	struct device *dev = pcie->pp.dev;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(res->aux_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable aux clock\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(res->cfg_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable cfg clock\n");
+> +		goto err_cfg_clk;
+> +	}
+> +
+> +	ret = clk_prepare_enable(res->master_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable master clock\n");
+> +		goto err_master_clk;
+> +	}
+> +
+> +	ret = clk_prepare_enable(res->slave_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable slave clock\n");
+> +		goto err_slave_clk;
+> +	}
+> +
+> +	/* enable PCIe clocks and resets */
+> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	val &= ~BIT(0);
+> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+> +	/* change DBI base address */
+> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> +
+> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
+> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +	val &= ~BIT(29);
+> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +
+> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +	val |= BIT(4);
+> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +
+> +	val = readl(pcie->parf + MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> +	val |= BIT(31);
+> +	writel(val, pcie->parf + MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> +
+> +	return 0;
+> +
+> +err_slave_clk:
+> +	clk_disable_unprepare(res->master_clk);
+> +err_master_clk:
+> +	clk_disable_unprepare(res->cfg_clk);
+> +err_cfg_clk:
+> +	clk_disable_unprepare(res->aux_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_pcie_post_init_v2(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +	struct device *dev = pcie->pp.dev;
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(res->pipe_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int qcom_pcie_link_up(struct pcie_port *pp)
+>  {
+>  	struct qcom_pcie *pcie = to_qcom_pcie(pp);
+> @@ -429,6 +571,17 @@ static int qcom_pcie_link_up(struct pcie_port *pp)
+>  	return !!(val & PCI_EXP_LNKSTA_DLLLA);
+>  }
+>  
+> +static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+> +
+> +	clk_disable_unprepare(res->pipe_clk);
+> +	clk_disable_unprepare(res->slave_clk);
+> +	clk_disable_unprepare(res->master_clk);
+> +	clk_disable_unprepare(res->cfg_clk);
+> +	clk_disable_unprepare(res->aux_clk);
+> +}
+> +
+>  static void qcom_pcie_host_init(struct pcie_port *pp)
+>  {
+>  	struct qcom_pcie *pcie = to_qcom_pcie(pp);
+> @@ -444,6 +597,9 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
+>  	if (ret)
+>  		goto err_deinit;
+>  
+> +	if (pcie->ops->post_init)
+> +		pcie->ops->post_init(pcie);
+> +
+>  	dw_pcie_setup_rc(pp);
+>  
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+> @@ -487,12 +643,22 @@ static const struct qcom_pcie_ops ops_v0 = {
+>  	.get_resources = qcom_pcie_get_resources_v0,
+>  	.init = qcom_pcie_init_v0,
+>  	.deinit = qcom_pcie_deinit_v0,
+> +	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
+>  };
+>  
+>  static const struct qcom_pcie_ops ops_v1 = {
+>  	.get_resources = qcom_pcie_get_resources_v1,
+>  	.init = qcom_pcie_init_v1,
+>  	.deinit = qcom_pcie_deinit_v1,
+> +	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
+> +};
+> +
+> +static const struct qcom_pcie_ops ops_v2 = {
+> +	.get_resources = qcom_pcie_get_resources_v2,
+> +	.init = qcom_pcie_init_v2,
+> +	.post_init = qcom_pcie_post_init_v2,
+> +	.deinit = qcom_pcie_deinit_v2,
+> +	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
+>  };
+>  
+>  static int qcom_pcie_probe(struct platform_device *pdev)
+> @@ -572,6 +738,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_v0 },
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_v0 },
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
+> +	{ .compatible = "qcom,pcie-msm8996", .data = &ops_v2 },
+>  	{ }
+>  };
+>  
+> -- 
+> 2.10.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
