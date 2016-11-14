@@ -1,72 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: clk: max8997: Add DT binding
- documentation
-Date: Mon, 14 Nov 2016 10:15:46 -0600
-Message-ID: <20161114161546.oitvons6tvlazgsb@rob-hp-laptop>
-References: <1478513376-14307-1-git-send-email-pankaj.dubey@samsung.com>
- <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v5] media: et8ek8: add device tree binding documentation
+Date: Mon, 14 Nov 2016 10:20:20 -0600
+Message-ID: <20161114162020.sxf6bew7vg7mkwnt@rob-hp-laptop>
+References: <20161023191706.GA25754@amd>
+ <20161030204134.hpmfrnqhd4mg563o@rob-hp-laptop>
+ <20161107104648.GB5326@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478513376-14307-3-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, thomas.ab@samsung.com, myungjoo.ham@samsung.com, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <20161107104648.GB5326@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: ivo.g.dimitrov.75@gmail.com, sakari.ailus@iki.fi, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mchehab@osg.samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 07, 2016 at 03:39:32PM +0530, Pankaj Dubey wrote:
-> Add Device Tree binding documentation for the clocks
-> outputs in the Maxim-8997 Power Management IC.
+On Mon, Nov 07, 2016 at 11:46:48AM +0100, Pavel Machek wrote:
+> Add device tree binding documentation for toshiba et8ek8 sensor.
 > 
-> CC: Michael Turquette <mturquette@baylibre.com>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: devicetree@vger.kernel.org
-> CC: linux-clk@vger.kernel.org
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->  .../devicetree/bindings/clock/maxim,max8997.txt    | 44 ++++++++++++++++++++++
->  .../bindings/regulator/max8997-regulator.txt       |  3 ++
->  2 files changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max8997.txt
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/maxim,max8997.txt b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
 > new file mode 100644
-> index 0000000..d2e2a74
+> index 0000000..b03b21d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/maxim,max8997.txt
-> @@ -0,0 +1,44 @@
-> +Binding for Maxim MAX8997 32k clock generator block
+> +++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+> @@ -0,0 +1,53 @@
+> +Toshiba et8ek8 5MP sensor
 > +
-> +This is a part of device tree bindings of MAX8997 multi-function device.
-> +More information can be found in bindings/regulator/max8997-regulator.txt file.
+> +Toshiba et8ek8 5MP sensor is an image sensor found in Nokia N900 device
 > +
-> +The MAX8997 contains two 32.768khz clock outputs that can be controlled
-> +(gated/ungated) over I2C.
+> +More detailed documentation can be found in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt .
 > +
-> +Following properties should be presend in main device node of the MFD chip.
 > +
-> +Required properties:
+> +Mandatory properties
+> +--------------------
 > +
-> +- #clock-cells: from common clock binding; shall be set to 1.
-> +
-> +Optional properties:
-> +- clock-output-names: From common clock binding.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. Following indices are allowed:
-> +    - 0: 32khz_ap clock,
-> +    - 1: 32khz_cp clock,
-> +
-> +Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max8997.h
-> +header and can be used in device tree sources.
-> +
-> +Example: Node of the MFD chip
-> +
-> +	max8997: max8997_pmic@66 {
+> +- compatible: "toshiba,et8ek8"
+> +- reg: I2C address (0x3e, or an alternative address)
+> +- vana-supply: Analogue voltage supply (VANA), 2.8 volts
+> +- clocks: External clock to the sensor
+> +- clock-frequency: Frequency of the external clock to the sensor. Camera
+> +  driver will set this frequency on the external clock. The clock frequency is
+> +  a pre-determined frequency known to be suitable to the board.
+> +- reset-gpios: XSHUTDOWN GPIO. The XSHUTDOWN signal is active high. The sensor
+> +  is in hardware standby mode when the signal is in low state.
 
-pmic@66 {
+Sounds like active low to me. "Active" means when is the defined 
+function of the pin enabled, not when is the chip active/enabled. So in 
+this case reset or shutdown is active when low.
 
-With that:
-
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
