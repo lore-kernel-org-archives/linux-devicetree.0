@@ -1,62 +1,526 @@
-From: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 2/2] phy: rockchip-inno-usb2: correct 480MHz output clock
- stable time
-Date: Mon, 14 Nov 2016 17:27:11 +0800
-Message-ID: <1479115631-20137-3-git-send-email-wulf@rock-chips.com>
-References: <1479115631-20137-1-git-send-email-wulf@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1479115631-20137-1-git-send-email-wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC PATCH] ARM64: dts: Add support for Meson GXM
+Date: Mon, 14 Nov 2016 10:44:11 +0100
+Message-ID: <20161114094411.30199-1-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We found that the system crashed due to 480MHz output clock of
-USB2 PHY was unstable after clock had been enabled by gpu module.
+Following the Amlogic Linux kernel, it seem the only differences
+between the GXL and GXM SoCs are the CPU Clusters.
 
-Theoretically, 1 millisecond is a critical value for 480MHz
-output clock stable time, so we try to change the delay time
-to 1.2 millisecond to avoid this issue.
+Simply add a meson-gxm dtsi and reproduce the P23x to Q20x boards
+dts files since the S905D and S912 SoCs shares the same pinout
+and the P23x and Q20x boards are identical.
 
-And the commit ed907fb1d7c3 ("phy: rockchip-inno-usb2: correct
-clk_ops callback") used prepare callbacks instead of enable
-callbacks to support gate a clk if the operation may sleep. So
-we can switch from delay to sleep functions.
-
-Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-Changes in v3:
-- fix kbuild test error: too few arguments to function 'usleep_range'
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   2 +
+ .../arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts |  76 +++++++++
+ .../arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts |  57 +++++++
+ .../boot/dts/amlogic/meson-gxm-s912-q20x.dtsi      | 188 +++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         | 114 +++++++++++++
+ 6 files changed, 443 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-s912-q20x.dtsi
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
 
-Changes in v2:
-- use usleep_range() function instead of mdelay()
-
- drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
-index 365e077..0e52b25 100644
---- a/drivers/phy/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/phy-rockchip-inno-usb2.c
-@@ -166,7 +166,7 @@ static int rockchip_usb2phy_clk480m_prepare(struct clk_hw *hw)
- 			return ret;
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index fffc179..1144214 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -25,6 +25,10 @@ Boards with the Amlogic Meson GXL S905D SoC shall have the following properties:
+   Required root node property:
+     compatible: "amlogic,s905d", "amlogic,meson-gxl";
  
- 		/* waitting for the clk become stable */
--		mdelay(1);
-+		usleep_range(1200, 1300);
- 	}
++Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
++  Required root node property:
++    compatible: "amlogic,s912", "amlogic,meson-gxm";
++
+ Board compatible values:
+   - "geniatech,atv1200" (Meson6)
+   - "minix,neo-x8" (Meson8)
+@@ -39,3 +43,5 @@ Board compatible values:
+   - "amlogic,p212" (Meson gxl s905x)
+   - "amlogic,p230" (Meson gxl s905d)
+   - "amlogic,p231" (Meson gxl s905d)
++  - "amlogic,q200" (Meson gxm s912)
++  - "amlogic,q201" (Meson gxm s912)
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 5a64050..7752a16 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -8,6 +8,8 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q200.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q201.dtb
  
- 	return 0;
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+new file mode 100644
+index 0000000..dfce929
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+@@ -0,0 +1,76 @@
++/*
++ * Copyright (c) 2016 Endless Computers, Inc.
++ * Author: Carlo Caione <carlo@endlessm.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "meson-gxm-s912-q20x.dtsi"
++
++/ {
++	compatible = "amlogic,q200", "amlogic,s912", "amlogic,meson-gxm";
++	model = "Amlogic Meson GXM (S912) Q200 Development Board";
++};
++
++/* Q200 has exclusive choice between internal or external PHY */
++&ethmac {
++	pinctrl-0 = <&eth_pins>;
++	pinctrl-names = "default";
++
++	/* Select external PHY by default */
++	phy-handle = <&external_phy>;
++
++	/* External PHY reset is shared with internal PHY Led signals */
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	/* External PHY is in RGMII */
++	phy-mode = "rgmii";
++};
++
++&external_mdio {
++	external_phy: ethernet-phy@0 {
++		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		max-speed = <1000>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+new file mode 100644
+index 0000000..28880c2
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+@@ -0,0 +1,57 @@
++/*
++ * Copyright (c) 2016 Endless Computers, Inc.
++ * Author: Carlo Caione <carlo@endlessm.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "meson-gxm-s912-q20x.dtsi"
++
++/ {
++	compatible = "amlogic,q201", "amlogic,s912", "amlogic,meson-gxm";
++	model = "Amlogic Meson GXM (S912) Q201 Development Board";
++};
++
++/* Q201 has only internal PHY port */
++&ethmac {
++	phy-mode = "rmii";
++	phy-handle = <&internal_phy>;
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q20x.dtsi
+new file mode 100644
+index 0000000..0621910
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q20x.dtsi
+@@ -0,0 +1,188 @@
++/*
++ * Copyright (c) 2016 Endless Computers, Inc.
++ * Author: Carlo Caione <carlo@endlessm.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "meson-gxm.dtsi"
++
++/ {
++	aliases {
++		serial0 = &uart_AO;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++};
++
++/* This UART is brought out to the DB9 connector */
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
++/* Wireless SDIO Module */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-names = "default";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++&ethmac {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+new file mode 100644
+index 0000000..9a90237
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+@@ -0,0 +1,114 @@
++/*
++ * Copyright (c) 2016 Endless Computers, Inc.
++ * Author: Carlo Caione <carlo@endlessm.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "meson-gxl.dtsi"
++
++/ {
++	compatible = "amlogic,meson-gxm";
++
++	cpus {
++		cpu-map {
++			cluster0 {
++				cpu0 {
++					cpu = <&cpu0>;
++				};
++				cpu1 {
++					cpu = <&cpu1>;
++				};
++				cpu2 {
++					cpu = <&cpu2>;
++				};
++				cpu3 {
++					cpu = <&cpu3>;
++				};
++			};
++
++			cluster1 {
++				cpu0 {
++					cpu = <&cpu4>;
++				};
++				cpu1 {
++					cpu = <&cpu5>;
++				};
++				cpu2 {
++					cpu = <&cpu6>;
++				};
++				cpu3 {
++					cpu = <&cpu7>;
++				};
++			};
++		};
++
++		cpu4: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu5: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu6: cpu@102 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x102>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu7: cpu@103 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x103>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++	};
++};
 -- 
-2.0.0
+2.7.0
