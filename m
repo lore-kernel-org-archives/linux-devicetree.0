@@ -1,43 +1,73 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
-Date: Mon, 14 Nov 2016 13:34:52 -0600
-Message-ID: <20161114193451.bzowsi6csesoxwap@arbab-laptop.austin.ibm.com>
-References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
- <87bmxii85s.fsf@concordia.ellerman.id.au>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v5 00/23] Support qcom's HSIC USB and rewrite USB2 HS
+ support
+Date: Mon, 14 Nov 2016 11:35:29 -0800
+Message-ID: <147915212935.7365.13445257183391192782@sboyd-linaro>
+References: <20161018015636.11701-1-stephen.boyd@linaro.org>
+ <20161018093139.GB6294@b29397-desktop>
+ <147682389932.20076.4186408979552866325@sboyd-linaro>
+ <20161111074017.GA21045@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <87bmxii85s.fsf@concordia.ellerman.id.au>
-Sender: owner-linux-mm@kvack.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161111074017.GA21045@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 10:59:43PM +1100, Michael Ellerman wrote:
->So I'm not opposed to this, but it is a little vague.
->
->What does the "hotpluggable" property really mean?
->
->Is it just a hint to the operating system? (which may or may not be
->Linux).
->
->Or is it a direction, "this memory must be able to be hotunplugged"?
->
->I think you're intending the former, ie. a hint, which is probably OK.
->But it needs to be documented clearly.
+Quoting Peter Chen (2016-11-10 23:40:17)
+> On Tue, Oct 18, 2016 at 01:51:39PM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-10-18 02:31:40)
+> > > On Mon, Oct 17, 2016 at 06:56:13PM -0700, Stephen Boyd wrote:
+> > > > I've also sent separate patches for other minor pieces to make this
+> > > > all work. The full tree can be found here[2], hacks and all to get
+> > > > things working. I've tested this on the db410c, apq8074 dragonboard,
+> > > > and ifc6410 with configfs gadgets and otg cables.
+> > > > 
+> > > > Patches based on v4.8-rc1
+> > 
+> > Oops should be v4.9-rc1 here.
+> > 
+> > > > 
+> > > > Changes from v4:
+> > > >  * Picked up Acks from Rob
+> > > >  * Updated HS phy init sequence DT property to restrict it to offsets
+> > > 
+> > > I remembered that you got all my acks for chipidea patches, right? I did
+> > > not check for this series.
+> > 
+> > Sorry I've added in one more patch
+> > 
+> >    usb: chipidea: Emulate OTGSC interrupt enable path
+> > 
+> > to fix extcon interrupt emulation even further.
+> > 
+> > > 
+> > > Besides, the patch "gpu: Remove depends on RESET_CONTROLLER when not a
+> > > provider" [1]  still not be accepted, I need this patch to be merged
+> > > first, then apply your chipidea part, otherwise, there is a building
+> > > warning.
+> > > 
+> > > [1] https://patchwork.kernel.org/patch/9322583/
+> > 
+> > Yes, I'm going to resend that patch now. I hope that David will apply it
+> > for -rc2.
+> 
+> Stephen, just a mind. I have rebased Greg's usb-next tree (v4.9-rc3 on
+> it), your GPU fix is still not there.
+> 
 
-Yes, you've got it right. It's just a hint, not a mandate.
-
-I'm about to send v7 which adds a description of "hotpluggable" in the 
-documentation. Hopefully I've explained it well enough there.
-
--- 
-Reza Arbab
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+It looks like the patch is in drm-misc. I think they're going to hold
+off on merging it until the next merge window though. fb80016af071 is
+the commit in drm-misc tree and in linux-next. I'm not sure anything can
+be done here besides a cross tree merge or ignore the warning?
