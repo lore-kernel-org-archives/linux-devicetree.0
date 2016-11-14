@@ -1,27 +1,27 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND][PATCH 4/6] dt-bindings: spi: Update dspi bindings for
+Subject: Re: [RESEND][PATCH 5/6] dt-bindings: gpio: Update gpio bindings for
  LS2088A
-Date: Mon, 14 Nov 2016 11:13:50 -0600
-Message-ID: <20161114171350.lllzopxkfsjkmyl2@rob-hp-laptop>
+Date: Mon, 14 Nov 2016 11:14:14 -0600
+Message-ID: <20161114171414.r564cptvgrteozv2@rob-hp-laptop>
 References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
- <1478597664-14799-5-git-send-email-abhimanyu.saini@nxp.com>
+ <1478597664-14799-6-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478597664-14799-5-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1478597664-14799-6-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 03:04:22PM +0530, Abhimanyu Saini wrote:
+On Tue, Nov 08, 2016 at 03:04:23PM +0530, Abhimanyu Saini wrote:
 > Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
 > Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 > Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
