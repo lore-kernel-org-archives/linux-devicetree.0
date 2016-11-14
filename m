@@ -1,55 +1,187 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 0/2] pinctrl: sunxi: Support the interrupt debouncing
-Date: Mon, 14 Nov 2016 21:53:02 +0100
-Message-ID: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 1/2] pinctrl: sunxi: Add support for interrupt debouncing
+Date: Mon, 14 Nov 2016 21:53:03 +0100
+Message-ID: <d7c3760d37046a4b390b1a7b30bb94b8e1af31a7.1479156725.git-series.maxime.ripard@free-electrons.com>
+References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
+References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The pin controller found in the Allwinner SoCs has support for interrupts
+debouncing.
 
-The Allwinner pin controllers can setup a different debouncing period based
-on two clocks and a prescaler.
+However, this is not done per-pin, preventing us from using the generic
+pinconf binding for that, but per irq bank, which, depending on the SoC,
+ranges from one to five.
 
-This debouncing is applied to the whole IRQ bank, which prevents us from
-using the per-pin property that is usually used.
+Introduce a device-wide property to deal with this using a microsecond
+resolution. We can re-use the per-pin input-debounce property for that, so
+let's do it!
 
-Let me know what you think,
-Maxime
-
-Changes from v2:
-  - Deal with a debounce set to 0
-  - Change debounce divider function name
-  - Used DIV_ROUND_CLOSEST instead of manual division
-  - Convert the R_PIO too
-  - Added the Acked-by
-
-Changes from v1:
-  - Changed the resolution of the debouncing property to microseconds, and
-    switched to the input-debounce instead of a custom one.
-
-Maxime Ripard (2):
-  pinctrl: sunxi: Add support for interrupt debouncing
-  ARM: sunxi: Add the missing clocks to the pinctrl nodes
-
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
  Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 14 ++++++++++++-
- arch/arm/boot/dts/sun4i-a10.dtsi                                      |  3 ++-
- arch/arm/boot/dts/sun5i.dtsi                                          |  3 ++-
- arch/arm/boot/dts/sun6i-a31.dtsi                                      |  6 +++--
- arch/arm/boot/dts/sun7i-a20.dtsi                                      |  3 ++-
- arch/arm/boot/dts/sun8i-a23-a33.dtsi                                  |  6 +++--
- arch/arm/boot/dts/sun8i-h3.dtsi                                       |  6 +++--
- arch/arm/boot/dts/sun9i-a80.dtsi                                      |  6 +++--
  drivers/pinctrl/sunxi/pinctrl-sunxi.c                                 | 84 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
  drivers/pinctrl/sunxi/pinctrl-sunxi.h                                 |  7 ++++++-
- 10 files changed, 127 insertions(+), 11 deletions(-)
+ 3 files changed, 105 insertions(+), 0 deletions(-)
 
-base-commit: bc5952be2d424b75ed11ff599b70bc9604e98d42
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index 1685821eea41..56debe1db4e8 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -28,6 +28,20 @@ Required properties:
+ - reg: Should contain the register physical address and length for the
+   pin controller.
+ 
++- clocks: phandle to the clocks feeding the pin controller:
++  - "apb": the gated APB parent clock
++  - "hosc": the high frequency oscillator in the system
++  - "losc": the low frequency oscillator in the system
++
++Note: For backward compatibility reasons, the hosc and losc clocks are only
++required if you need to use the optional input-debounce property. Any new
++device tree should set them.
++
++Optional properties:
++  - input-debounce: Array of debouncing periods in microseconds. One period per
++    irq bank found in the controller. 0 if no setup required.
++
++
+ Please refer to pinctrl-bindings.txt in this directory for details of the
+ common pinctrl bindings used by client devices.
+ 
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 0facbea5f465..b425be2875d4 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -870,6 +870,88 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int sunxi_pinctrl_get_debounce_div(struct clk *clk, int freq, int *diff)
++{
++	unsigned long clock = clk_get_rate(clk);
++	unsigned int best_diff = ~0, best_div;
++	int i;
++
++	for (i = 0; i < 8; i++) {
++		int cur_diff = abs(freq - (clock >> i));
++
++		if (cur_diff < best_diff) {
++			best_diff = cur_diff;
++			best_div = i;
++		}
++	}
++
++	*diff = best_diff;
++	return best_div;
++}
++
++static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
++					struct device_node *node)
++{
++	unsigned int hosc_diff, losc_diff;
++	unsigned int hosc_div, losc_div;
++	struct clk *hosc, *losc;
++	u8 div, src;
++	int i, ret;
++
++	/* Deal with old DTs that didn't have the oscillators */
++	if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
++		return 0;
++
++	/* If we don't have any setup, bail out */
++	if (!of_find_property(node, "input-debounce", NULL))
++		return 0;
++
++	losc = devm_clk_get(pctl->dev, "losc");
++	if (IS_ERR(losc))
++		return PTR_ERR(losc);
++
++	hosc = devm_clk_get(pctl->dev, "hosc");
++	if (IS_ERR(hosc))
++		return PTR_ERR(hosc);
++
++	for (i = 0; i < pctl->desc->irq_banks; i++) {
++		unsigned long debounce_freq;
++		u32 debounce;
++
++		ret = of_property_read_u32_index(node, "input-debounce",
++						 i, &debounce);
++		if (ret)
++			return ret;
++
++		if (!debounce)
++			continue;
++
++		debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
++		losc_div = sunxi_pinctrl_get_debounce_div(losc,
++							  debounce_freq,
++							  &losc_diff);
++
++		hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
++							  debounce_freq,
++							  &hosc_diff);
++
++		if (hosc_diff < losc_diff) {
++			div = hosc_div;
++			src = 1;
++		} else {
++			div = losc_div;
++			src = 0;
++		}
++
++		writel(src | div << 4,
++		       pctl->membase +
++		       sunxi_irq_debounce_reg_from_bank(i,
++							pctl->desc->irq_bank_base));
++	}
++
++	return 0;
++}
++
+ int sunxi_pinctrl_init(struct platform_device *pdev,
+ 		       const struct sunxi_pinctrl_desc *desc)
+ {
+@@ -1032,6 +1114,8 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
+ 						 pctl);
+ 	}
+ 
++	sunxi_pinctrl_setup_debounce(pctl, node);
++
+ 	dev_info(&pdev->dev, "initialized sunXi PIO driver\n");
+ 
+ 	return 0;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index 0afce1ab12d0..c0d97fe58e84 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -69,6 +69,8 @@
+ #define IRQ_STATUS_IRQ_BITS		1
+ #define IRQ_STATUS_IRQ_MASK		((1 << IRQ_STATUS_IRQ_BITS) - 1)
+ 
++#define IRQ_DEBOUNCE_REG	0x218
++
+ #define IRQ_MEM_SIZE		0x20
+ 
+ #define IRQ_EDGE_RISING		0x00
+@@ -266,6 +268,11 @@ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
+ 	return irq_num * IRQ_CTRL_IRQ_BITS;
+ }
+ 
++static inline u32 sunxi_irq_debounce_reg_from_bank(u8 bank, unsigned bank_base)
++{
++	return IRQ_DEBOUNCE_REG + (bank_base + bank) * IRQ_MEM_SIZE;
++}
++
+ static inline u32 sunxi_irq_status_reg_from_bank(u8 bank, unsigned bank_base)
+ {
+ 	return IRQ_STATUS_REG + (bank_base + bank) * IRQ_MEM_SIZE;
 -- 
 git-series 0.8.11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
