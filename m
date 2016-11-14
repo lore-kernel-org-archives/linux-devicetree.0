@@ -1,103 +1,39 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain
- support for rk3399
-Date: Mon, 14 Nov 2016 23:05:55 +0800
-Message-ID: <5829D2D3.2050808@rock-chips.com>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-2-git-send-email-wxt@rock-chips.com> <bce1a5eb-fbb3-9ed9-46b9-72a95eefed3e@rock-chips.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain support for rk3399
+Date: Mon, 14 Nov 2016 16:26:00 +0100
+Message-ID: <10661534.hlmFYCF6CI@phil>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <2342292.tK2jqRKrXH@phil> <5829D1C7.9020105@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bce1a5eb-fbb3-9ed9-46b9-72a95eefed3e-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5829D1C7.9020105@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, tfiga@chromium.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, eddie.cai@rock-chips.com, linux-arm-kernel@lists.infradead.org, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Montag, 14. November 2016, 23:01:27 CET schrieb Caesar Wang:
+> On 2016年11月14日 22:45, Heiko Stuebner wrote:
+> > Am Mittwoch, 9. November 2016, 21:21:53 CET schrieb Caesar Wang:
+> >> From: Ziyuan Xu <xzy.xu@rock-chips.com>
+> >> 
+> >> Control power domain for eMMC via genpd to reduce power consumption.
+> >> 
+> >> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> >> Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
+> >> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> > 
+> > Authorship / Signed-off mismatch. From above suggest Ziyuan is the author
+> > while first Signed-off-by indicates Elaine as author. Please clarify.
+> 
+> I believe the Elaine is the first author. Sorry for this kind of
+> question to brother you again. :(
 
-On 2016年11月12日 12:22, Shawn Lin wrote:
-> On 2016/11/9 21:21, Caesar Wang wrote:
->> From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Control power domain for eMMC via genpd to reduce power consumption.
->>
->> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> It was verified on my rk3399 evb with kernel4.4, so
-> free feel to add my tag,
->
-> Tested-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
+no problem :-) and thanks for the very fast reply.
 
-Thanks the tests.
-
-> BTW, it seems my reply is bounced form Yakir's address, so please
-> remove him from CC list if he changed his mail address.
-
-Right, Yakir's (ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org) address had left this world.;-)
-But the patman tool is auto sending with the Cc people.
-
--
-Caesar
->
->> ---
->>
->> Changes in v2:
->> - Reviewed-on: https://chromium-review.googlesource.com/376558
->> - Verified on ChromeOS kernel4.4
->>
->> arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
->> 1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi 
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index cbb7f8b..b401176 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -269,6 +269,7 @@
->> #clock-cells = <0>;
->> phys = <&emmc_phy>;
->> phy-names = "phy_arasan";
->> + power-domains = <&power RK3399_PD_EMMC>;
->> status = "disabled";
->> };
->>
->> @@ -690,6 +691,11 @@
->> status = "disabled";
->> };
->>
->> + qos_emmc: qos@ffa58000 {
->> + compatible = "syscon";
->> + reg = <0x0 0xffa58000 0x0 0x20>;
->> + };
->> +
->> qos_gmac: qos@ffa5c000 {
->> compatible = "syscon";
->> reg = <0x0 0xffa5c000 0x0 0x20>;
->> @@ -823,6 +829,11 @@
->> };
->>
->> /* These power domains are grouped by VD_LOGIC */
->> + pd_emmc@RK3399_PD_EMMC {
->> + reg = <RK3399_PD_EMMC>;
->> + clocks = <&cru ACLK_EMMC>;
->> + pm_qos = <&qos_emmc>;
->> + };
->> pd_gmac@RK3399_PD_GMAC {
->> reg = <RK3399_PD_GMAC>;
->> clocks = <&cru ACLK_GMAC>;
->>
->
->
+Applied to my dts64 branch.
 
 
--- 
-caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
