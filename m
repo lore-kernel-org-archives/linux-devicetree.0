@@ -1,25 +1,62 @@
-From: William Wu <wulf@rock-chips.com>
-Subject: [PATCH v3 0/2] phy: rockchip-inno-usb2: correct 480MHz clk_ops callbacks and stable time
-Date: Mon, 14 Nov 2016 17:27:09 +0800
-Message-ID: <1479115631-20137-1-git-send-email-wulf@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, frank.wang@rock-chips.com, huangtao@rock-chips.com, dianders@google.com, briannorris@google.com, groeck@google.com, wulf@rock-chips.com
+From: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 2/2] phy: rockchip-inno-usb2: correct 480MHz output clock
+ stable time
+Date: Mon, 14 Nov 2016 17:27:11 +0800
+Message-ID: <1479115631-20137-3-git-send-email-wulf@rock-chips.com>
+References: <1479115631-20137-1-git-send-email-wulf@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1479115631-20137-1-git-send-email-wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series try to correct the 480MHz output clock of USB2 PHY
-clk_ops callback and fix the delay time. It aims to make the
-480MHz clock gate more sensible and stable.
+We found that the system crashed due to 480MHz output clock of
+USB2 PHY was unstable after clock had been enabled by gpu module.
 
-Tested on rk3366/rk3399 EVB board.
+Theoretically, 1 millisecond is a critical value for 480MHz
+output clock stable time, so we try to change the delay time
+to 1.2 millisecond to avoid this issue.
 
-William Wu (2):
-  phy: rockchip-inno-usb2: correct clk_ops callback
-  phy: rockchip-inno-usb2: correct 480MHz output clock stable time
+And the commit ed907fb1d7c3 ("phy: rockchip-inno-usb2: correct
+clk_ops callback") used prepare callbacks instead of enable
+callbacks to support gate a clk if the operation may sleep. So
+we can switch from delay to sleep functions.
 
- drivers/phy/phy-rockchip-inno-usb2.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v3:
+- fix kbuild test error: too few arguments to function 'usleep_range'
 
+Changes in v2:
+- use usleep_range() function instead of mdelay()
+
+ drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+index 365e077..0e52b25 100644
+--- a/drivers/phy/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/phy-rockchip-inno-usb2.c
+@@ -166,7 +166,7 @@ static int rockchip_usb2phy_clk480m_prepare(struct clk_hw *hw)
+ 			return ret;
+ 
+ 		/* waitting for the clk become stable */
+-		mdelay(1);
++		usleep_range(1200, 1300);
+ 	}
+ 
+ 	return 0;
 -- 
 2.0.0
