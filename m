@@ -1,82 +1,99 @@
-From: tomas.hlavacek@nic.cz
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Mon, 14 Nov 2016 15:59:57 +0100
-Message-ID: <1479135597.27133.2@smtp.gmail.com>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <1479126185.15557.5@smtp.gmail.com> <20161114131010.GC26710@lunn.ch>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain
+ support for rk3399
+Date: Mon, 14 Nov 2016 23:01:27 +0800
+Message-ID: <5829D1C7.9020105@rock-chips.com>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-2-git-send-email-wxt@rock-chips.com> <2342292.tK2jqRKrXH@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161114131010.GC26710@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Martin Strba??ka <martin.strbacka@nic.cz>, Jason Cooper <jason@lakedaemon.net>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2342292.tK2jqRKrXH@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew!
 
-(Sorry for re-posting the previous e-mail, that most likely didn't get 
-through.)
+On 2016年11月14日 22:45, Heiko Stuebner wrote:
+> Am Mittwoch, 9. November 2016, 21:21:53 CET schrieb Caesar Wang:
+>> From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> Control power domain for eMMC via genpd to reduce power consumption.
+>>
+>> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Authorship / Signed-off mismatch. From above suggest Ziyuan is the author
+> while first Signed-off-by indicates Elaine as author. Please clarify.
 
-On Mon, Nov 14, 2016 at 2:10 PM, Andrew Lunn <andrew@lunn.ch> wrote:
->>  Actually SFP is connected to SGMII interface of eth1, which is
->>  routed through SERDES 5.
-> 
-> You say eth1 here. Yet lower down you say got eth0 and eth1 are
-> connected to the switch?
+I believe the Elaine is the first author. Sorry for this kind of 
+question to brother you again. :(
 
-Oh sorry, this was a NIC name based on probing order derived from base 
-address of NIC registers:
+-
+Caesar
+>
+> Thanks
+> Heiko
+>
+>> ---
+>>
+>> Changes in v2:
+>> - Reviewed-on: https://chromium-review.googlesource.com/376558
+>> - Verified on ChromeOS kernel4.4
+>>
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index cbb7f8b..b401176 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -269,6 +269,7 @@
+>>   		#clock-cells = <0>;
+>>   		phys = <&emmc_phy>;
+>>   		phy-names = "phy_arasan";
+>> +		power-domains = <&power RK3399_PD_EMMC>;
+>>   		status = "disabled";
+>>   	};
+>>
+>> @@ -690,6 +691,11 @@
+>>   		status = "disabled";
+>>   	};
+>>
+>> +	qos_emmc: qos@ffa58000 {
+>> +		compatible = "syscon";
+>> +		reg = <0x0 0xffa58000 0x0 0x20>;
+>> +	};
+>> +
+>>   	qos_gmac: qos@ffa5c000 {
+>>   		compatible = "syscon";
+>>   		reg = <0x0 0xffa5c000 0x0 0x20>;
+>> @@ -823,6 +829,11 @@
+>>   			};
+>>
+>>   			/* These power domains are grouped by VD_LOGIC */
+>> +			pd_emmc@RK3399_PD_EMMC {
+>> +				reg = <RK3399_PD_EMMC>;
+>> +				clocks = <&cru ACLK_EMMC>;
+>> +				pm_qos = <&qos_emmc>;
+>> +			};
+>>   			pd_gmac@RK3399_PD_GMAC {
+>>   				reg = <RK3399_PD_GMAC>;
+>>   				clocks = <&cru ACLK_GMAC>;
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-	eth1: ethernet@30000 - probes as eth0
-	eth2: ethernet@34000 - probes as eth1
-	eth0: ethernet@70000 - probes as eth2
 
-It is a bit confusing. I meant eth2 in DTS. Sorry.
+-- 
+caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
 
-> 
-> 
->>  We have our proprietary support hacked onto mvneta driver for
->>  disconnecting PHY on the fly. It is a bit nasty, so I suggest to
->>  ignore SFP in this DTS altogether and let's wait till "phylink based
->>  SFP module support" or something alike hits upstream, so we can base
->>  the SFP support on solid code;
-> 
-> It would be great if you could work on getting the phylink patches
-> into mainline. It is something i have wanted to do for a long time,
-> but it is too low down on my priority list to get to. The code is high
-> quality, so i don't think there will be too many issues. It probably
-> just needs splitting up into smaller batches, submitting, and working
-> on any comments.
 
-That is exactly what I thought when I saw the patches for the first 
-time. I will try to merge the patches to the current kernel and see 
-what happens. I still need to learn a lot about PHY subsystem.
-
-> 
-> 
->>  Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176
->>  switch. The problem is that from what I have read so far the switch
->>  can not operate in DSA mode with two CPU ports.
-> 
-> Again, this is something i wanted to do, and i did have a prototype at
-> one point. But again, not enough time. If you have resources to work
-> on this, i can find my code, explain my ideas, and let you complete
-> it.
-
-I am definitely interested, though I didn't have time to read and 
-absorb DSA yet, but I definitely want to try to hack 88E6176 support. I 
-would be really grateful if you can provide some pointers and/or code 
-to start from.
-
-Thanks,
-Tomas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
