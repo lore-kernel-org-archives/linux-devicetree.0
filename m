@@ -1,334 +1,131 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/2] mfd: pm8xxx: add support to pm8821
-Date: Mon, 14 Nov 2016 19:36:46 +0000
-Message-ID: <26a22b4a-261c-ef8b-8979-8e6628965c39@linaro.org>
-References: <1479145933-9849-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20161114185621.GC27931@tuxbot>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v7 08/14] mmc: sdhci-msm: Implement set_clock callback
+ for sdhci-msm
+Date: Mon, 14 Nov 2016 11:37:22 -0800
+Message-ID: <20161114193004.GI5177@codeaurora.org>
+References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
+ <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161114185621.GC27931@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>
+Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/14, Ritesh Harjani wrote:
+> @@ -577,6 +578,90 @@ static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
+>  	return SDHCI_MSM_MIN_CLOCK;
+>  }
+>  
+> +/**
+> + * __sdhci_msm_set_clock - sdhci_msm clock control.
+> + *
+> + * Description:
+> + * Implement MSM version of sdhci_set_clock.
+> + * This is required since MSM controller does not
+> + * use internal divider and instead directly control
+> + * the GCC clock as per HW recommendation.
+> + **/
+> +void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	u16 clk;
+> +	unsigned long timeout;
+> +
+> +	/*
+> +	 * Keep actual_clock as zero -
+> +	 * - since there is no divider used so no need of having actual_clock.
+> +	 * - MSM controller uses SDCLK for data timeout calculation. If
+> +	 *   actual_clock is zero, host->clock is taken for calculation.
+> +	 */
+> +	host->mmc->actual_clock = 0;
+> +
+> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +	if (clock == 0)
+> +		return;
+> +
+> +	/*
+> +	 * MSM controller do not use clock divider.
+> +	 * Thus read SDHCI_CLOCK_CONTROL and only enable
+> +	 * clock with no divider value programmed.
+> +	 */
+> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +
+> +	clk |= SDHCI_CLOCK_INT_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +	/* Wait max 20 ms */
+> +	timeout = 20;
+> +	while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
+> +		& SDHCI_CLOCK_INT_STABLE)) {
+> +		if (timeout == 0) {
+> +			pr_err("%s: Internal clock never stabilised\n",
+> +			       mmc_hostname(host->mmc));
+> +			return;
+> +		}
+> +		timeout--;
+> +		mdelay(1);
+> +	}
+> +
+> +	clk |= SDHCI_CLOCK_CARD_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
 
+This is almost a copy/paste of sdhci_set_clock(). Can we make
+sdhci_set_clock() call a __sdhci_set_clock() function that takes
+unsigned int clock, and also a flag indicating if we want to set
+the internal clock divider or not? Then we can call
+__sdhci_set_clock() from sdhci_set_clock() with (clock, true) as
+arguments and (clock, false).
 
-On 14/11/16 18:56, Bjorn Andersson wrote:
-> On Mon 14 Nov 09:52 PST 2016, Srinivas Kandagatla wrote:
->
->> This patch adds support to PM8821 PMIC and interrupt support.
->> PM8821 is companion device that supplements primary PMIC PM8921 IC.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->> Changes from v1:
->> 	- Removed unnessary locking spotted by Bjorn
->> 	- updated register naming to reflect PM8821
->> 	- lot of cleanups suggested by Bjorn
->> 	- rebased on top of Linus Walleij's pm8xxx namespace
->> 	 cleanup patch.
->
-> Looks good, just some minor style nits below.
-Thanks, I will address all the comments in next version.
->
->>
->>  .../devicetree/bindings/mfd/qcom-pm8xxx.txt        |   1 +
->>  drivers/mfd/qcom-pm8xxx.c                          | 247 ++++++++++++++++++++-
->>  2 files changed, 238 insertions(+), 10 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
->> index 37a088f..8f1b4ec 100644
->> --- a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
->> +++ b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
->> @@ -11,6 +11,7 @@ voltages and other various functionality to Qualcomm SoCs.
->>  	Definition: must be one of:
->>  		    "qcom,pm8058"
->>  		    "qcom,pm8921"
->> +		    "qcom,pm8821"
->
-> 8 < 9, so move it one step up please.
-sure.. makes sense.
->
->>
->>  - #address-cells:
->>  	Usage: required
->> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-> [..]
->> +#define	PM8821_SSBI_REG_ADDR_IRQ_BASE	0x100
->> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER0 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0x30)
->> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER1 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0xb0)
->> +#define	PM8821_SSBI_REG(m, b, offset) \
->> +			((m == 0) ? \
->> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER0 + b + offset) : \
->> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER1 + b + offset))
->> +#define	PM8821_SSBI_ADDR_IRQ_ROOT(m, b)		PM8821_SSBI_REG(m, b, 0x0)
->> +#define	PM8821_SSBI_ADDR_IRQ_CLEAR(m, b)	PM8821_SSBI_REG(m, b, 0x01)
->> +#define	PM8821_SSBI_ADDR_IRQ_MASK(m, b)		PM8821_SSBI_REG(m, b, 0x08)
->> +#define	PM8821_SSBI_ADDR_IRQ_RT_STATUS(m, b)	PM8821_SSBI_REG(m, b, 0x0f)
->
-> I like how this cleaned up the rest of the implementation.
->
-> [..]
->
->> +static void pm8821_irq_block_handler(struct pm_irq_chip *chip,
->> +				     int master, int block)
->> +{
->> +	int pmirq, irq, i, ret;
->> +	unsigned int bits;
->> +
->> +	ret = regmap_read(chip->regmap,
->> +			  PM8821_SSBI_ADDR_IRQ_ROOT(master, block), &bits);
->> +	if (ret) {
->> +		pr_err("Failed reading %d block ret=%d", block, ret);
->
-> "Reading block %d failed ret=%d"
-yep.
->
->> +		return;
->> +	}
->> +	if (!bits) {
->> +		pr_err("block bit set in master but no irqs: %d", block);
->
-> This seems more like a debug thing, either showing missbehaving hardware
-> or something odd in the driver. I think you should drop the print or
-> make it pr_debug().
-okay.
->
->> +		return;
->> +	}
->
-> I would prefer that you just drop the entire if statement, it's just an
-> corner case optimization with a info print.
->
-i will have a closer look at this part once again.
->> +
->> +	/* Convert block offset to global block number */
->> +	block += (master * PM8821_BLOCKS_PER_MASTER) - 1;
->> +
->> +	/* Check IRQ bits */
->> +	for (i = 0; i < 8; i++) {
->> +		if (bits & BIT(i)) {
->> +			pmirq = block * 8 + i;
->> +			irq = irq_find_mapping(chip->irqdomain, pmirq);
->> +			generic_handle_irq(irq);
->> +		}
->> +	}
->> +
->
-> Empty line
-will fix all the empty lines in next version.
->
->> +}
->> +
->> +static inline void pm8821_irq_master_handler(struct pm_irq_chip *chip,
->> +					     int master, u8 master_val)
->> +{
->> +	int block;
->> +
->> +	for (block = 1; block < 8; block++)
->> +		if (master_val & BIT(block))
->> +			pm8821_irq_block_handler(chip, master, block);
->> +
->
-> Empty line
->
->> +}
->> +
->> +static void pm8821_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct pm_irq_chip *chip = irq_desc_get_handler_data(desc);
->> +	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
->> +	unsigned int master;
->> +	int ret;
->> +
->> +	chained_irq_enter(irq_chip, desc);
->> +	ret = regmap_read(chip->regmap,
->> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER0, &master);
->> +	if (ret) {
->> +		pr_err("Failed to re:Qad master 0 ret=%d\n", ret);
->                                       ^
-> 				      |
-> 			  I see you're using vim :)
->
->> +		return;
->> +	}
->> +
->> +	 /* bits 1 through 7 marks the first 7 blocks in master 0*/
->
-> Indentation
->
->> +	if (master & GENMASK(7, 1))
->> +		pm8821_irq_master_handler(chip, 0, master);
->> +
->> +	 /* bit 0 marks if master 1 contains any bits */
->
-> Dito
-yep.
->
->> +	if (!(master & BIT(0)))
->> +		goto done;
->> +
->> +	ret = regmap_read(chip->regmap,
->> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER1, &master);
->> +	if (ret) {
->> +		pr_err("Failed to read master 1 ret=%d\n", ret);
->> +		return;
->
-> "goto done;" so that we pass chained_irq_exit()
-yes,
->
->> +	}
->> +
->> +	pm8821_irq_master_handler(chip, 1, master);
->> +
->> +done:
->> +	chained_irq_exit(irq_chip, desc);
->> +}
->> +
->
-> [..]
->
->> +static void pm8821_irq_mask_ack(struct irq_data *d)
->> +{
->> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
->> +	unsigned int pmirq = irqd_to_hwirq(d);
->> +	u8 block, master;
->> +	int irq_bit, rc;
->> +
->> +	block = pmirq / 8;
->> +	master = block / PM8821_BLOCKS_PER_MASTER;
->> +	irq_bit = pmirq % 8;
->> +	block %= PM8821_BLOCKS_PER_MASTER;
->> +
->> +	rc = regmap_update_bits(chip->regmap,
->> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
->> +				BIT(irq_bit), BIT(irq_bit));
->> +
->
-> Empty line
->
->> +	if (rc) {
->> +		pr_err("Failed to read/write mask IRQ:%d rc=%d\n", pmirq, rc);
->
-> "Failed to mask IRQ %d rc=%d\n"
->
->> +		return;
->> +	}
->> +
->> +	rc = regmap_update_bits(chip->regmap,
->> +				PM8821_SSBI_ADDR_IRQ_CLEAR(master, block),
->> +				BIT(irq_bit), BIT(irq_bit));
->> +
->
-> Empty line
->
->> +	if (rc) {
->> +		pr_err("Failed to read/write IT_CLEAR IRQ:%d rc=%d\n",
->> +								pmirq, rc);
->
-> "Failed to clear IRQ %d rc=%d\n"
->
->> +	}
->> +
->
-> Empty line
->
->> +}
->> +
->> +static void pm8821_irq_unmask(struct irq_data *d)
->> +{
->> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
->> +	unsigned int pmirq = irqd_to_hwirq(d);
->> +	int irq_bit, rc;
->> +	u8 block, master;
->> +
->> +	block = pmirq / 8;
->> +	master = block / PM8821_BLOCKS_PER_MASTER;
->> +	irq_bit = pmirq % 8;
->> +	block %= PM8821_BLOCKS_PER_MASTER;
->> +
->> +	rc = regmap_update_bits(chip->regmap,
->> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
->> +				BIT(irq_bit), ~BIT(irq_bit));
->> +
->
-> Empty line
->
->> +	if (rc)
->> +		pr_err("Failed to read/write unmask IRQ:%d rc=%d\n", pmirq, rc);
->
-> "Failed to unmask IRQ %d rc=%d\n"
-will update it in next version.
->
->> +
->
-> Empty line
->
->> +}
->> +
->> +static int pm8821_irq_get_irqchip_state(struct irq_data *d,
->> +					enum irqchip_irq_state which,
->> +					bool *state)
->> +{
->> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
->> +	int rc, pmirq = irqd_to_hwirq(d);
->> +	u8 block, irq_bit, master;
->> +	unsigned int bits;
->> +
->> +	block = pmirq / 8;
->> +	master = block / PM8821_BLOCKS_PER_MASTER;
->> +	irq_bit = pmirq % 8;
->> +	block %= PM8821_BLOCKS_PER_MASTER;
->> +
->> +	rc = regmap_read(chip->regmap,
->> +		PM8821_SSBI_ADDR_IRQ_RT_STATUS(master, block), &bits);
->> +	if (rc) {
->> +		pr_err("Failed Reading Status rc=%d\n", rc);
->
-> Odd capitalization, I suggest that you match it to the other functions
-> by:
->
-> "Reading status of IRQ %d failed rc=%d\n"
->
-Okay
->> +		return rc;
->> +	}
->> +
->> +	*state = !!(bits & BIT(irq_bit));
->> +
->> +	return rc;
->> +}
->> +
->
-> [..]
->
->>
->>  static int pm8xxx_probe(struct platform_device *pdev)
->>  {
->> +	const struct of_device_id *match;
->> +	const struct pm_irq_data *data;
->>  	struct regmap *regmap;
->>  	int irq, rc;
->>  	unsigned int val;
->>  	u32 rev;
->>  	struct pm_irq_chip *chip;
->> -	unsigned int nirqs = PM8XXX_NR_IRQS;
->> +
->> +	match = of_match_node(pm8xxx_id_table, pdev->dev.of_node);
->> +	if (!match) {
->> +		dev_err(&pdev->dev, "No matching driver data found\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	data = match->data;
->
-> data = of_device_get_match_data(&pdev->dev); (from of_device.h)
-This is good one.. I will use it in next version.
+> +}
+> +
+> +/* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
+> +static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	int rc;
+> +
+> +	if (!clock) {
+> +		msm_host->clk_rate = clock;
+> +		goto out;
+> +	}
+> +
+> +	spin_unlock_irq(&host->lock);
+> +	if (clock != msm_host->clk_rate) {
 
-> Regards,
-> Bjorn
->
+Why do we need to check here? Can't we call clk_set_rate()
+Unconditionally?
+
+> +		rc = clk_set_rate(msm_host->clk, clock);
+> +		if (rc) {
+> +			pr_err("%s: Failed to set clock at rate %u\n",
+> +			       mmc_hostname(host->mmc), clock);
+> +			spin_lock_irq(&host->lock);
+> +			goto out;
+
+Or replace the above two lines with goto err;
+
+> +		}
+> +		msm_host->clk_rate = clock;
+> +		pr_debug("%s: Setting clock at rate %lu\n",
+> +			 mmc_hostname(host->mmc), clk_get_rate(msm_host->clk));
+> +	}
+
+And put an err label here.
+
+> +	spin_lock_irq(&host->lock);
+> +out:
+> +	__sdhci_msm_set_clock(host, clock);
+> +}
+> +
+>  static const struct of_device_id sdhci_msm_dt_match[] = {
+>  	{ .compatible = "qcom,sdhci-msm-v4" },
+>  	{},
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
