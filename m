@@ -1,318 +1,93 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/2] mfd: pm8xxx: add support to pm8821
-Date: Mon, 14 Nov 2016 10:56:21 -0800
-Message-ID: <20161114185621.GC27931@tuxbot>
-References: <1479145933-9849-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Mon, 14 Nov 2016 19:08:40 +0000
+Message-ID: <20161114190839.GS1041@n2100.armlinux.org.uk>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej>
+ <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479145933-9849-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Nov 09:52 PST 2016, Srinivas Kandagatla wrote:
+So, someone merged a patch which makes mmcblk devices follow the
+host controller numbering.
 
-> This patch adds support to PM8821 PMIC and interrupt support.
-> PM8821 is companion device that supplements primary PMIC PM8921 IC.
+Now my cubox-i fails to boot correctly because the SD card in the
+_only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
+
+USDHC1 is wired to the on-microsom WiFi, and never has anything
+remotely near a SD card or eMMC present.  So, this change is
+confusing on these platforms.
+
+Moreover, this is _going_ to break SolidRun distros if people upgrade
+their kernels.
+
+It may be appropriate for eMMC, but it's not appropriate everywhere.
+
+This is a user visible _regression_ in 4.9-rc.  Whoever did this,
+please revert whatever change caused this, and next time limit it
+to only eMMC.
+
+Thanks.
+
+On Fri, Oct 28, 2016 at 09:45:00AM -0700, Tim Harvey wrote:
+> On Fri, Oct 28, 2016 at 8:37 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Fri, Oct 28, 2016 at 08:23:04AM -0700, Tim Harvey wrote:
+> >> Greetings,
+> >>
+> >> I have an IMX6 board that has the following:
+> >> sdhc1: mmc0: sdio radio
+> >> sdhc2: mmc1: /dev/mmcblk1: microSD connector
+> >> sdhc3: mmc2: /dev/mmcblk2: on-board eMMC
+> >>
+> >> I would like to have sdhc3 registered as /dev/mmcblk0 and sdhc2
+> >> registered as /dev/mmcblk1 so that permanent storage is the first
+> >> mmcblk device as I think this is more intuitive however currently
+> >> these get instanced in the order they appear in the imx6qdl.dtsi
+> >> device-tree configuration and are not able to be mapped the way I want
+> >> them in my dts file.
+> >>
+> >> Is there a way, or if not is there a desire for a way, to specify the
+> >> order of /dev/mmcblk devices via device-tree?
+> >
+> > As with many other devices, there is no standard way of controlling the
+> > Linux enumeration (and given the ID space is shared with other dynamic
+> > devices it's not something that could generally work).
+> >
+> > These should be refererd to by UUID if possible.
+> >
+> > If not, we could cosider adding a by-dt-path or something like that.
+> >
+> > Thanks,
+> > Mark.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes from v1:
-> 	- Removed unnessary locking spotted by Bjorn
-> 	- updated register naming to reflect PM8821
-> 	- lot of cleanups suggested by Bjorn
-> 	- rebased on top of Linus Walleij's pm8xxx namespace
-> 	 cleanup patch. 
-
-Looks good, just some minor style nits below.
-
+> Mark / Javier/ Fabio,
 > 
->  .../devicetree/bindings/mfd/qcom-pm8xxx.txt        |   1 +
->  drivers/mfd/qcom-pm8xxx.c                          | 247 ++++++++++++++++++++-
->  2 files changed, 238 insertions(+), 10 deletions(-)
+> Thanks - this is very useful.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
-> index 37a088f..8f1b4ec 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
-> @@ -11,6 +11,7 @@ voltages and other various functionality to Qualcomm SoCs.
->  	Definition: must be one of:
->  		    "qcom,pm8058"
->  		    "qcom,pm8921"
-> +		    "qcom,pm8821"
+> Yes, I agree that using UUID's is the way to go and now I see how that
+> can be easily accessed via uboot 'part' command.
+> 
+> Regards,
+> 
+> Tim
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-8 < 9, so move it one step up please.
-
->  
->  - #address-cells:
->  	Usage: required
-> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-[..]
-> +#define	PM8821_SSBI_REG_ADDR_IRQ_BASE	0x100
-> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER0 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0x30)
-> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER1 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0xb0)
-> +#define	PM8821_SSBI_REG(m, b, offset) \
-> +			((m == 0) ? \
-> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER0 + b + offset) : \
-> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER1 + b + offset))
-> +#define	PM8821_SSBI_ADDR_IRQ_ROOT(m, b)		PM8821_SSBI_REG(m, b, 0x0)
-> +#define	PM8821_SSBI_ADDR_IRQ_CLEAR(m, b)	PM8821_SSBI_REG(m, b, 0x01)
-> +#define	PM8821_SSBI_ADDR_IRQ_MASK(m, b)		PM8821_SSBI_REG(m, b, 0x08)
-> +#define	PM8821_SSBI_ADDR_IRQ_RT_STATUS(m, b)	PM8821_SSBI_REG(m, b, 0x0f)
-
-I like how this cleaned up the rest of the implementation.
-
-[..]
-
-> +static void pm8821_irq_block_handler(struct pm_irq_chip *chip,
-> +				     int master, int block)
-> +{
-> +	int pmirq, irq, i, ret;
-> +	unsigned int bits;
-> +
-> +	ret = regmap_read(chip->regmap,
-> +			  PM8821_SSBI_ADDR_IRQ_ROOT(master, block), &bits);
-> +	if (ret) {
-> +		pr_err("Failed reading %d block ret=%d", block, ret);
-
-"Reading block %d failed ret=%d"
-
-> +		return;
-> +	}
-> +	if (!bits) {
-> +		pr_err("block bit set in master but no irqs: %d", block);
-
-This seems more like a debug thing, either showing missbehaving hardware
-or something odd in the driver. I think you should drop the print or
-make it pr_debug().
-
-> +		return;
-> +	}
-
-I would prefer that you just drop the entire if statement, it's just an
-corner case optimization with a info print.
-
-> +
-> +	/* Convert block offset to global block number */
-> +	block += (master * PM8821_BLOCKS_PER_MASTER) - 1;
-> +
-> +	/* Check IRQ bits */
-> +	for (i = 0; i < 8; i++) {
-> +		if (bits & BIT(i)) {
-> +			pmirq = block * 8 + i;
-> +			irq = irq_find_mapping(chip->irqdomain, pmirq);
-> +			generic_handle_irq(irq);
-> +		}
-> +	}
-> +
-
-Empty line
-
-> +}
-> +
-> +static inline void pm8821_irq_master_handler(struct pm_irq_chip *chip,
-> +					     int master, u8 master_val)
-> +{
-> +	int block;
-> +
-> +	for (block = 1; block < 8; block++)
-> +		if (master_val & BIT(block))
-> +			pm8821_irq_block_handler(chip, master, block);
-> +
-
-Empty line
-
-> +}
-> +
-> +static void pm8821_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct pm_irq_chip *chip = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
-> +	unsigned int master;
-> +	int ret;
-> +
-> +	chained_irq_enter(irq_chip, desc);
-> +	ret = regmap_read(chip->regmap,
-> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER0, &master);
-> +	if (ret) {
-> +		pr_err("Failed to re:Qad master 0 ret=%d\n", ret);
-                                      ^
-				      |
-			  I see you're using vim :)
-
-> +		return;
-> +	}
-> +
-> +	 /* bits 1 through 7 marks the first 7 blocks in master 0*/
-
-Indentation
-
-> +	if (master & GENMASK(7, 1))
-> +		pm8821_irq_master_handler(chip, 0, master);
-> +
-> +	 /* bit 0 marks if master 1 contains any bits */
-
-Dito
-
-> +	if (!(master & BIT(0)))
-> +		goto done;
-> +
-> +	ret = regmap_read(chip->regmap,
-> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER1, &master);
-> +	if (ret) {
-> +		pr_err("Failed to read master 1 ret=%d\n", ret);
-> +		return;
-
-"goto done;" so that we pass chained_irq_exit()
-
-> +	}
-> +
-> +	pm8821_irq_master_handler(chip, 1, master);
-> +
-> +done:
-> +	chained_irq_exit(irq_chip, desc);
-> +}
-> +
-
-[..]
-
-> +static void pm8821_irq_mask_ack(struct irq_data *d)
-> +{
-> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
-> +	unsigned int pmirq = irqd_to_hwirq(d);
-> +	u8 block, master;
-> +	int irq_bit, rc;
-> +
-> +	block = pmirq / 8;
-> +	master = block / PM8821_BLOCKS_PER_MASTER;
-> +	irq_bit = pmirq % 8;
-> +	block %= PM8821_BLOCKS_PER_MASTER;
-> +
-> +	rc = regmap_update_bits(chip->regmap,
-> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
-> +				BIT(irq_bit), BIT(irq_bit));
-> +
-
-Empty line
-
-> +	if (rc) {
-> +		pr_err("Failed to read/write mask IRQ:%d rc=%d\n", pmirq, rc);
-
-"Failed to mask IRQ %d rc=%d\n"
-
-> +		return;
-> +	}
-> +
-> +	rc = regmap_update_bits(chip->regmap,
-> +				PM8821_SSBI_ADDR_IRQ_CLEAR(master, block),
-> +				BIT(irq_bit), BIT(irq_bit));
-> +
-
-Empty line
-
-> +	if (rc) {
-> +		pr_err("Failed to read/write IT_CLEAR IRQ:%d rc=%d\n",
-> +								pmirq, rc);
-
-"Failed to clear IRQ %d rc=%d\n"
-
-> +	}
-> +
-
-Empty line
-
-> +}
-> +
-> +static void pm8821_irq_unmask(struct irq_data *d)
-> +{
-> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
-> +	unsigned int pmirq = irqd_to_hwirq(d);
-> +	int irq_bit, rc;
-> +	u8 block, master;
-> +
-> +	block = pmirq / 8;
-> +	master = block / PM8821_BLOCKS_PER_MASTER;
-> +	irq_bit = pmirq % 8;
-> +	block %= PM8821_BLOCKS_PER_MASTER;
-> +
-> +	rc = regmap_update_bits(chip->regmap,
-> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
-> +				BIT(irq_bit), ~BIT(irq_bit));
-> +
-
-Empty line
-
-> +	if (rc)
-> +		pr_err("Failed to read/write unmask IRQ:%d rc=%d\n", pmirq, rc);
-
-"Failed to unmask IRQ %d rc=%d\n"
-
-> +
-
-Empty line
-
-> +}
-> +
-> +static int pm8821_irq_get_irqchip_state(struct irq_data *d,
-> +					enum irqchip_irq_state which,
-> +					bool *state)
-> +{
-> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
-> +	int rc, pmirq = irqd_to_hwirq(d);
-> +	u8 block, irq_bit, master;
-> +	unsigned int bits;
-> +
-> +	block = pmirq / 8;
-> +	master = block / PM8821_BLOCKS_PER_MASTER;
-> +	irq_bit = pmirq % 8;
-> +	block %= PM8821_BLOCKS_PER_MASTER;
-> +
-> +	rc = regmap_read(chip->regmap,
-> +		PM8821_SSBI_ADDR_IRQ_RT_STATUS(master, block), &bits);
-> +	if (rc) {
-> +		pr_err("Failed Reading Status rc=%d\n", rc);
-
-Odd capitalization, I suggest that you match it to the other functions
-by:
-
-"Reading status of IRQ %d failed rc=%d\n" 
-
-> +		return rc;
-> +	}
-> +
-> +	*state = !!(bits & BIT(irq_bit));
-> +
-> +	return rc;
-> +}
-> +
-
-[..]
-
->  
->  static int pm8xxx_probe(struct platform_device *pdev)
->  {
-> +	const struct of_device_id *match;
-> +	const struct pm_irq_data *data;
->  	struct regmap *regmap;
->  	int irq, rc;
->  	unsigned int val;
->  	u32 rev;
->  	struct pm_irq_chip *chip;
-> -	unsigned int nirqs = PM8XXX_NR_IRQS;
-> +
-> +	match = of_match_node(pm8xxx_id_table, pdev->dev.of_node);
-> +	if (!match) {
-> +		dev_err(&pdev->dev, "No matching driver data found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	data = match->data;
-
-data = of_device_get_match_data(&pdev->dev); (from of_device.h)
-
-Regards,
-Bjorn
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
