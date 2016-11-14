@@ -1,26 +1,41 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 0/4] PXA cpufreq conversion to clock API
-Date: Mon, 14 Nov 2016 01:37:34 +0100
-Message-ID: <1654700.yP1fyhXj2I@vostro.rjw.lan>
-References: <1477943696-23477-1-git-send-email-robert.jarzmik@free.fr> <87d1idzh56.fsf@belgarion.home> <20161103021624.GG10786@vireshk-i7>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH 2/2] clk: hisilicon: add CRG driver for Hi3516CV300 SoC
+Date: Mon, 14 Nov 2016 09:24:17 +0800
+Message-ID: <0c3b49a4-f58c-253a-fd87-ab52b0b26010@hisilicon.com>
+References: <1477721618-10809-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1477721618-10809-3-git-send-email-xuejiancheng@hisilicon.com>
+ <20161112000415.GE5177@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161103021624.GG10786@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20161112000415.GE5177@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, bin.chen@linaro.org, elder@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, wenpan@hisilicon.com, howell.yang@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, November 03, 2016 07:46:24 AM Viresh Kumar wrote:
-> On 02-11-16, 22:49, Robert Jarzmik wrote:
-> > Would you or Rafael take patch 1/4 "cpufreq: pxa: use generic platdev driver for
-> > device-tree" through your tree please ?
-> 
-> Rafael is the one who applies the patches.
+Hi Stephen,
 
-The [1/4] has been applied.
+On 2016/11/12 8:04, Stephen Boyd wrote:
+> On 10/29, Jiancheng Xue wrote:
+> 
+> Should be a From: Pan Wen here?
+> 
+>> Add CRG driver for Hi3516CV300 SoC. CRG(Clock and Reset
+>> Generator) module generates clock and reset signals used
+>> by other module blocks on SoC.
+>>
+>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+> 
+> And you should have signed it off? Care to resend or state that
+> this is incorrectly attributed to you instead of Pan Wen?
+> 
+
+Pan Wen is the main author of this patch. I just made some small modification
+with agreement from him. Do I need to resend this patch if it's better to add my
+signed-off?
 
 Thanks,
-Rafael
+Jiancheng
+
