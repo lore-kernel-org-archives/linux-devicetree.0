@@ -1,49 +1,58 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 08/11] ARM: dts: r8a7793: Add device node for PRR
-Date: Mon, 14 Nov 2016 19:37:14 +0100
-Message-ID: <1479148637-5399-9-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 01/11] ARM: shmobile: Document DT bindings for Product Register
+Date: Mon, 14 Nov 2016 19:37:07 +0100
+Message-ID: <1479148637-5399-2-git-send-email-geert+renesas@glider.be>
 References: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479148637-5399-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the Product Register, which provides SoC product
-and revision information.
+Add device tree binding documentation for the Product Register (PRR),
+which provides product and revision information on most Renesas ARM
+SoCs.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 v3:
-  - Add to posted series,
+  - Add Acked-by,
+  - Drop "renesas,cccr", as the CCCR is not a lone register, but part of
+    the HPB/APB block, which will need its own set of bindings,
 
 v2:
   - New.
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/arm/shmobile.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index 629d3d60d1cd7168..a377dda177241da0 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -1306,6 +1306,11 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index a1e94da0e322c8f4..1be9e8a7e2c43dfc 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -81,3 +81,21 @@ Boards:
+     compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
+   - Wheat
+     compatible = "renesas,wheat", "renesas,r8a7792"
++
++
++Most Renesas ARM SoCs have a Product Register that allows to retrieve SoC
++product and revision information.  If present, a device node for this register
++should be added.
++
++Required properties:
++  - compatible: Must be "renesas,prr".
++  - reg: Base address and length of the register block.
++
++
++Examples
++--------
++
 +	prr: chipid@ff000044 {
 +		compatible = "renesas,prr";
 +		reg = <0 0xff000044 0 4>;
 +	};
-+
- 	sysc: system-controller@e6180000 {
- 		compatible = "renesas,r8a7793-sysc";
- 		reg = <0 0xe6180000 0 0x0200>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
