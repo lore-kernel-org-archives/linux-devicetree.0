@@ -1,174 +1,121 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 7/7] soc: renesas: Identify SoC and register with the
- SoC bus
-Date: Mon, 14 Nov 2016 11:51:15 +0100
-Message-ID: <CAMuHMdWavRFnYFmiL2jy3KWZnHG_F8qaxK29zHx6fsLmqXEwiA@mail.gmail.com>
-References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be>
- <3693445.TSdZGaiT9S@wuerfel> <CAMuHMdX+T=Y--F6KXZwFmZwWFdfP5mL5Tar-wKwRM2p6Hh2-sg@mail.gmail.com>
- <25057157.YlGi2v6RrE@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
+Date: Mon, 14 Nov 2016 12:04:07 +0100
+Message-ID: <b2cef3fb-cbb4-f34b-cb9a-84578bb67751@redhat.com>
+References: <20161104144241.18002-1-hdegoede@redhat.com>
+ <20161104144241.18002-2-hdegoede@redhat.com> <5827CCC3.90003@gmail.com>
+ <582968FA.4020800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <25057157.YlGi2v6RrE@wuerfel>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <582968FA.4020800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi,
 
-On Thu, Nov 10, 2016 at 12:37 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday, November 10, 2016 11:19:20 AM CET Geert Uytterhoeven wrote:
->> On Wed, Nov 9, 2016 at 5:55 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Monday, October 31, 2016 12:30:55 PM CET Geert Uytterhoeven wrote:
->> >> v2:
->> >>   - Drop SoC families and family names; use fixed "Renesas" instead,
->> >
->> > I think I'd rather have seen the family names left in there, but it's
->> > not important, so up to you.
+On 14-11-16 08:34, Frank Rowand wrote:
+> Hi Hans, Pantelis,
+>
+> On 11/12/16 18:15, Frank Rowand wrote:
+>> On 11/04/16 07:42, Hans de Goede wrote:
+>>> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>
+>>> Changesets are very powerful, but the lack of a helper API
+>>> makes using them cumbersome. Introduce a simple copy based
+>>> API that makes things considerably easier.
+>>>
+>>> To wit, adding a property using the raw API.
+>>>
+>>> 	struct property *prop;
+>>> 	prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
+>>> 	prop->name = kstrdup("compatible");
+>>> 	prop->value = kstrdup("foo,bar");
+>>> 	prop->length = strlen(prop->value) + 1;
+>>> 	of_changeset_add_property(ocs, np, prop);
+>>>
+>>> while using the helper API
+>>>
+>>> 	of_changeset_add_property_string(ocs, np, "compatible",
+>>> 			"foo,bar");
+>>>
+>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
+>>> -Address review comments from:
+>>>  https://www.spinics.net/lists/kernel/msg2252845.html
 >>
->> They're not useful for matching, as family names may change anytime, and don't
->> always say much about the hardware capabilities.
->> E.g. SH-Mobile -> R-Mobile -> R-Car | RZ/A | RZ/G
->> Some SH-Mobile (even some R-Car) parts are SuperH only, others have ARM and
->> SuperH.
+>> That points to the May 9 version 1 patches from Pantelis (as expected),
+>> but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
+>> seems to have disappeared?
 >>
->> At least the SoC part numbers are stable (hmm, sh73a0 == r8a73a0).
->
-> I think the marketing names are much more useful for humans looking
-> at the sysfs files than the kernel doing matching on, but both use
-> cases are important.
-
-OK, I'll re-add the family names for humans reading sysfs.
-
->> >>   - Use "renesas,prr" and "renesas,cccr" device nodes in DT if
->> >>     available, else fall back to hardcoded addresses for compatibility
->> >>     with existing DTBs,
-
->> > It does seem wrong to have a device node for a specific register though.
->> > Shouldn't the node be for the block of registers that these are inside
->> > of?
+>> Pantelis then sent a version 2 set of the patches on May 16.
 >>
->> On R-Mobile APE6, R-Car Gen2 and Gen3, PRR is a lone register.
->> On R-Car Gen1, it's not even documented (and doesn't exist on all parts).
->
-> It just seems odd to have it at address 0xff000044 when all the other
-> devices are at page-aligned addresses. Do you mean that accessing
-> 0xff000040 or 0xff000048 will result in a bus-level exception for a
-> missing register and just 0xff000044 is actually valid for access,
-> or is it just the only thing that is documented?
-
-For PRR, all other registers in the page read as all zeroes on all SoCs that
-have it. So it really is a lone register.
-
->> On SH-Mobile/R-Mobile, CCCR may be part of the HPB/APB register block, which
->> we further don't touch at all.
->> On R-Car Gen2, it's not documented, but does exist.
->
-> This is where the family names would come in handy ;-) I now have
-> no idea which chip(s) you are referring to.
-
-SH/R-Mobile are r8a7740, r8a73a4, sh73a0.
-R-Car Gen2 are r8a779[0-4].
-
-> If you know the name of the register block, just put it into DT with
-> that name. The driver can trivially add the right offset.
-
-CCCR is different. The amount of registers that read as non-zero depends a lot
-on the actual SoC.
-
-HPB/APB is gonna need real DT bindings, which needs some more investigation.
-Hence if you don't mind, I'd like to postpone that part, which only affects
-the older SoCs. And I'll drop the "renesas,cccr" binding.
-
-For now, having revision detection for R-Car Gen3 (r8a779[56]) using PRR is
-most urgent, as several drivers (e.g. HDMI, Ethernet, clocks, pinctrl) are
-waiting for this support. So I'd like to have that dependency in v4.10.
-
->> >>   - Don't register the SoC bus if the chip ID register is missing,
->> >
->> > Why? My objection was to hardcoding the register, not to registering
->> > the device? I think I'd rather see the device registered with an
->> > empty revision string.
+>> Your version is a modification of the May 9 patches (as would be expected
+>> of a version 2).  It is confusing to have two different version 2 patch
+>> sets.  I don't have any brilliant ideas on how this patch set could have
+>> been named differently to avoid that confusion.
 >>
->> If there's no chip ID register, there's no reason to use soc_device_match(),
->> as we can always look at a compatible value. All SoCs listed in this driver
->> have a chip ID register.
->
-> But you may still have user space tools looking into sysfs, e.g. to
-> figure out how to install a kernel that the boot loader can find,
-> or which hardware specific distro packages to install.
->
->> if you want me to register the soc_bus for  those SoCs regardless, I want to
->> re-add r7s72100 (RZ/A) and r8a7778 (R-Car M1A), who don't have chip ID
->> registers ;-)
->
-> Right. Just don't encode too much knowledge about the SoCs into the
-> driver, so we are prepared for adding new ones: We should still look
-> for the registers in DT on all chips.
-
-OK, will re-add.
-
->> >> +static int __init renesas_soc_init(void)
->> >> +{
->> >> +       struct soc_device_attribute *soc_dev_attr;
->> >> +       const struct of_device_id *match;
->> >> +       void __iomem *chipid = NULL;
->> >> +       struct soc_device *soc_dev;
->> >> +       struct device_node *np;
->> >> +       unsigned int product;
->> >> +
->> >> +       np = of_find_matching_node_and_match(NULL, renesas_socs, &match);
->> >> +       if (!np)
->> >> +               return -ENODEV;
->> >> +
->> >> +       of_node_put(np);
->> >> +
->> >> +       /* Try PRR first, then CCCR, then hardcoded fallback */
->> >> +       np = of_find_compatible_node(NULL, NULL, "renesas,prr");
->> >> +       if (!np)
->> >> +               np = of_find_compatible_node(NULL, NULL, "renesas,cccr");
->> >> +       if (np) {
->> >> +               chipid = of_iomap(np, 0);
->> >> +               of_node_put(np);
->> >> +       } else if (match->data) {
->> >> +               chipid = ioremap((uintptr_t)match->data, 4);
->> >> +       }
->> >> +       if (!chipid)
->> >>
->> >
->> > Here, I'd turn the order around and look for the DT nodes of the
->> > devices first. Only if they are not found, look at the compatible
->> > string of the root node. No need to search for a node though,
->> > you know which one it is when you look for a compatible =
->> > "renesas,r8a73a4".
+>> The point of this little side-track is simply to note the existence of two
+>> different version 2 series so I won't be confused when I revisit this
+>> thread in the future.
 >>
->> "renesas,r8a73a4" is the root node, not the device, so it does not have the
->> "reg" property for reading the chip ID?
+>>>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
+>>>  -Remove (by manual inlining) these 2 static helpers:
+>>>   __of_changeset_add_update_property_u32
+>>>   __of_changeset_add_update_property_bool
+>>>  -Remove the following exported helper method:
+>>>   of_changeset_node_move_to
+>>
+>> Not all comments were addressed.
+>>
+>> There are some other changes made that are not noted in the changelog.
+>>
+>> I am still reading through the patches. I will reply again either with
+>> a reviewed-by or specific comments when I finish.
 >
-> I mean replace of_find_matching_node_and_match() with
-> of_match_node(renesas_socs, of_root).
+> Replying here for the entire patchset (there was no patch 0 to reply to).
 >
-> It does the same thing, just more efficiently.
-
-OK (didn't know "of_root" was available for public use ;-)
-
->> There is no SoC part number in the "renesas,prr" and "renesas,cccr" nodes.
->> Hence I always need to look at the root nodes.
+> After reading through the patches, my reply is meta instead of specific
+> comments about the code.
 >
-> Not sure what that would protect you from. Could you have a renesas,cccr
+> There are very few users of change sets in tree.  I do not see the need to
+> add these helpers until such users are likely to appear.
+>
+> I would expect change sets to be _mostly_ used internally by the device tree
+> overlay framework, not directly by drivers.  If change sets are an attractive
+> technology for drivers, I want to approach that usage very carefully to avoid
+> inappropriate use, which could be very difficult to reign in after the fact.
+>
+> Even if helpers should be added, this seems to be an overly complex approach.
+> If the need for these helpers becomes apparent I can provide review comments
+> with the specifics about how it appears to be overly complex.
+>
+> Can you please  provide some more insights into the needs driving the desire
+> to have change set helpers and the expected use cases of them?  Please put
+> your architect's hat on when replying to this question.
 
-Looks like you forgot to finish your sentence?
+My use case for this is discussed in this thread:
+https://www.spinics.net/lists/arm-kernel/msg536111.html
 
-Thanks!
+With the dt-bindings for the hardware-manager I want to add here:
+https://www.spinics.net/lists/arm-kernel/msg536109.html
 
-Gr{oetje,eeting}s,
+Note that there is a lot of discussion in this thread whether or
+not this belongs in the kernel. I strongly believe though that
+some functionality like this will be needed in the kernel for
+ARM+dt devices going forward, just like there is plenty of x86
+code which adjusts itself to specific hardware, because whether
+we like it or not hardware (revisions) will always have quirks.
 
-                        Geert
+Regards,
 
+Hans
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
