@@ -1,115 +1,204 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] Documentation: dt: reset: Add TI SCI reset binding
-Date: Mon, 14 Nov 2016 09:52:22 -0600
-Message-ID: <20161114155222.l3l6kb5qttlmuzfa@rob-hp-laptop>
-References: <20161104174240.9688-1-afd@ti.com>
- <20161104174240.9688-2-afd@ti.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
+Date: Mon, 14 Nov 2016 15:53:36 +0000
+Message-ID: <SG2PR06MB10387C64B0A332F362431304C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1476281429-27603-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1805711.Tm0TqcXx1h@avalon> <8438b944-216e-3237-c312-92a674fd4541@xs4all.nl>
+ <1980094.XQVzRRgZQ8@avalon> <fb15b6f3-6c5c-0922-8655-aabd4799d158@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161104174240.9688-2-afd-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <fb15b6f3-6c5c-0922-8655-aabd4799d158-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org" <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2016 at 12:42:39PM -0500, Andrew F. Davis wrote:
-> Add TI SCI reset controller binding. This describes the DT binding
-> details for a reset controller node providing reset management services
-> to hardware blocks (reset consumers) using the Texas Instrument's System
-> Control Interface (TI SCI) protocol to communicate to a system controller
-> block present on the SoC.
-> 
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> [s-anna-l0cyMroinI0@public.gmane.org: revise the binding format]
-> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/reset/ti,sci-reset.txt     | 65 ++++++++++++++++++++++
->  MAINTAINERS                                        |  2 +
->  include/dt-bindings/reset/k2g.h                    | 22 ++++++++
->  3 files changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/ti,sci-reset.txt
->  create mode 100644 include/dt-bindings/reset/k2g.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/ti,sci-reset.txt b/Documentation/devicetree/bindings/reset/ti,sci-reset.txt
-> new file mode 100644
-> index 0000000..cb00679
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/ti,sci-reset.txt
-> @@ -0,0 +1,65 @@
-> +Texas Instruments System Control Interface (TI-SCI) Reset Controller
-> +=====================================================================
-> +
-> +Some TI SoCs contain a system controller (like the Power Management Micro
-> +Controller (PMMC) on Keystone K2G SoC) that are responsible for controlling
-> +the state of the various hardware modules present on the SoC. Communication
-> +between the host processor running an OS and the system controller happens
-> +through a protocol called TI System Control Interface (TI-SCI protocol).
-> +For TI SCI details, please refer to the document,
-> +Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> +
-> +TI-SCI Reset Controller Node
-> +============================
-> +This reset controller node uses the TI SCI protocol to perform the reset
-> +management of various hardware modules present on the SoC.
+Hello Laurent, Antti, Hans,
 
-Needs to say must be a child of the SCI node somewhere in here.
+> Subject: Re: [RFC 5/5] doc_rst: media: New SDR formats SC16, SC18 & SC20
+>=20
+> On 11/11/2016 02:57 PM, Laurent Pinchart wrote:
+> > Hi Hans,
+> >
+> > On Friday 11 Nov 2016 14:53:58 Hans Verkuil wrote:
+> >> On 11/10/2016 09:08 AM, Laurent Pinchart wrote:
+> >>> Antti, Hans, ping ? Please see below.
+> >>>
+> >>> On Friday 04 Nov 2016 09:23:29 Ramesh Shanmugasundaram wrote:
+> >>>>> On 11/02/2016 10:58 PM, Laurent Pinchart wrote:
+> >>>>>> On Wednesday 02 Nov 2016 09:00:00 Ramesh Shanmugasundaram wrote:
+> >>>>>>>>> On Wednesday 12 Oct 2016 15:10:29 Ramesh Shanmugasundaram wrote=
+:
+> >>>>>>>>>> This patch adds documentation for the three new SDR formats
+> >>>>>>>>>>
+> >>>>>>>>>> V4L2_SDR_FMT_SCU16BE
+> >>>>>>>>>> V4L2_SDR_FMT_SCU18BE
+> >>>>>>>>>> V4L2_SDR_FMT_SCU20BE
+> >>>>>>>
+> >>>>>>> [snip]
+> >>>>>>>
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  start + 0:
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  I'\ :sub:`0[D13:D6]`
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  I'\ :sub:`0[D5:D0]`
+> >>>>>>>>>> +
+> >>>>>>>>>> +    -  .. row 2
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  start + buffer_size/2:
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  Q'\ :sub:`0[D13:D6]`
+> >>>>>>>>>> +
+> >>>>>>>>>> +       -  Q'\ :sub:`0[D5:D0]`
+> >>>>>>>>>
+> >>>>>>>>> The format looks planar, does it use one V4L2 plane (as does
+> >>>>>>>>> NV12) or two V4L2 planes (as does NV12M) ? Same question for
+> >>>>>>>>> the other formats.
+> >>>>>>>>
+> >>>>>>>> Thank you for bringing up this topic. This is one of the key
+> >>>>>>>> design dilemma.
+> >>>>>>>>
+> >>>>>>>> The I & Q data for these three SDR formats comes from two
+> >>>>>>>> different DMA channels and hence two separate pointers -> we
+> >>>>>>>> could say it is
+> >>>>>>>> v4l2 multi- planar. Right now, I am making it look like a
+> >>>>>>>> single plane by presenting the data in one single buffer ptr.
+> >>>>>>>>
+> >>>>>>>> For e.g. multi-planar SC16 format would look something like
+> >>>>>>>> this
+> >>>>>>>>
+> >>>>>>>> <------------------------32bits---------------------->
+> >>>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0
+> >>>>>>>> + 0
+> >>>>>>>> <--I(14 bit data) + 2bit status--16bit padded zeros--> : start0
+> >>>>>>>> + 4 ...
+> >>>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1
+> >>>>>>>> + 0
+> >>>>>>>> <--Q(14 bit data) + 2bit status--16bit padded zeros--> : start1
+> >>>>>>>> + 4
+> >>>>>>>>
+> >>>>>>>> My concerns are
+> >>>>>>>>
+> >>>>>>>> 1) These formats are not a standard as the video "Image Formats"=
+.
+> >>>>>>>> These formats are possible when we use DRIF + MAX2175
+> combination.
+> >>>>>>>> If we interface with a different tuner vendor, the above
+> >>>>>>>> format(s) MAY/MAY NOT be re-usable. We do not know at this
+> >>>>>>>> point. This is the main open item for discussion in the cover
+> letter.
+> >>>>>>
+> >>>>>> If the formats are really device-specific then they should be
+> >>>>>> documented accordingly and not made generic.
+> >>>>>>
+> >>>>>>>> 2) MPLANE support within V4L2 seems specific to video. Please
+> >>>>>>>> correct me if this is wrong interpretation.
+> >>>>>>>>
+> >>>>>>>> - struct v4l2_format contains v4l2_sdr_format and
+> >>>>>>>> v4l2_pix_format_mplane as members of union. Should I create a
+> >>>>>>>> new v4l2_sdr_format_mplane? If I have to use
+> >>>>>>>> v4l2_pix_format_mplane most of the video specific members would
+> >>>>>>>> be unused (it would be similar to using v4l2_pix_format itself
+> instead of v4l2_sdr_format)?
+> >>>>>>
+> >>>>>> I have no answer to that question as I'm not familiar with SDR.
+> >>>>>> Antti, you've added v4l2_sdr_format to the API, what's your
+> >>>>>> opinion ? Hans, as you've acked the patch, your input would be
+> appreciated as well.
+> >>>>>
+> >>>>> If I understood correctly this hardware provides I and Q samples
+> >>>>> via different channels and driver now combines those channels as a
+> >>>>> sequential IQ sample pairs.
+> >>>>
+> >>>> The driver combines the two buffer ptrs and present as one single
+> buffer.
+> >>>> For a buffer of size 200
+> >>>>
+> >>>> ptr + 0   : I I I I ... I
+> >>>> ptr + 100 : Q Q Q Q ... Q
+> >>>>
+> >>>>> I have never seen any other than hw which provides IQ IQ IQ IQ ...
+> IQ.
+> >>>>
+> >>>> There are some modes where this h/w combo can also do IQ IQ IQ
+> pattern.
+> >>>> Those modes are not added in the RFC patchset.
+> >>>>
+> >>>>> This is
+> >>>>> I I I I ... I
+> >>>>> Q Q Q Q ... Q
+> >>>>> I am not very familiar with planars, but it sounds like it is
+> >>>>> correct approach. So I think should be added rather than emulate
+> >>>>> packet sequential format.
+> >>>>
+> >>>> My understanding of V4L2 MPLANE constructs is limited to a quick
+> >>>> code read only. At this point MPLANE support seems specific to
+> >>>> video. SDR is defined as separate format like v4l2_pix_format.
+> >>>> Questions would be - should we define new SDR_MPLANE? or merge SDR
+> >>>> format with pix format & reuse existing MPLANE with some SDR
+> >>>> extensions (if possible)? These seem big design decisions. Any
+> >>>> suggestions please?
+> >>>>
+> >>>> For my use case, MPLANE support does not seem to add significant
+> >>>> benefit except it may be syntactically correct. I am doing cyclic
+> >>>> DMA with a small set of h/w buffers and copying each stage to one
+> >>>> mmapped vmalloc vb2_buffer at two offsets. If we add MPLANE
+> >>>> support, it can be two non-contiguous buffer pointers.
+> >>>>
+> >>>>>>>> - The above decision (accomodate SDR & MPLANE) needs to be
+> >>>>>>>> propagated across the framework. Is this the preferred approach?
+> >>>>>>>>
+> >>>>>>>> It goes back to point (1). As of today, the change set for this
+> >>>>>>>> combo (DRIF+MAX2175) introduces new SDR formats only. Should it
+> >>>>>>>> add further SDR+MPLANE support to the framework as well?
+> >>>>>>>>
+> >>>>>>>> I would appreciate your suggestions on this regard.
+> >>
+> >> Some terminology first:
+> >>
+> >> Planar formats separate the data into different memory areas: in this
+> >> case one part is all I and one part is all Q. This as opposed to
+> >> interleaved formats (IQIQIQIQ....).
+> >>
+> >> As long as both planes fit in the same buffer all is fine. Since that
+> >> is the case here there is no need to introduce a new MPLANE API.
+> >>
+> >> The MPLANE API was added for video to handle cases where the two
+> >> planes had to be in two different non-contiguous buffers.
+> >
+> > Not only that, it can also be used for cases where storing the two
+> > planes in separate buffers can be beneficial, even if a single
+> > contiguous buffer could work.
+> >
+> >> So instead of passing one buffer pointer, you need to pass two or
+> >> more buffer pointers.
+> >>
+> >> In hindsight we should have called it the MBUFFER API.
+> >
+> > The name was badly chosen, yes.
+> >
+> >> Oh well...
+> >>
+> >> Anyway, since there is no problem here apparently to keep both planes
+> >> in one buffer there is also no need to introduce a SDR_MPLANE.
+> >
+> > The question here is whether there could be a benefit in separating I
+> > and Q data in two buffers compared to storing them in the same buffer.
+> >
+>=20
+> The MPLANE API is very messy and introducing something like SDR_MPLANE is
+> not something I would promote. If we want that, then we should first make
+> a new v4l2_buffer struct that simplifies MPLANE handling (we discussed
+> that before).
 
-> +
-> +Required properties:
-> +--------------------
-> + - compatible	: Should be "ti,sci-reset"
-> + - #reset-cells	: Should be 2. Please see the reset consumer node below for
-> +		  usage details.
-> +
-> +TI-SCI Reset Consumer Nodes
-> +===========================
-> +Each of the reset consumer nodes should have the following properties,
-> +in addition to their own properties.
-> +
-> +Required properties:
-> +--------------------
-> + - resets	: A phandle and reset specifier pair, one pair for each reset
-> +		  signal that affects the device, or that the device manages.
-> +		  The phandle should point to the TI-SCI reset controller node,
-> +		  and the reset specifier should have 2 cell-values. The first
-> +		  cell should contain the device ID, the values of which are
-> +		  specified in the <dt-bindings/genpd/<soc>.h> include file.
-> +		  The second cell should contain the reset mask value used by
-> +		  system controller, the values of which are specified in the
-> +		  include file <dt-bindings/reset/<soc>.h>, where <soc> is the
-> +		  name of the SoC involved, for example 'k2g'.
-> +
-> +Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
-> +common reset controller usage by consumers.
-> +
-> +Example:
-> +--------
-> +The following example demonstrates both a TI-SCI reset controller node and a
-> +consumer (a DSP device) on the K2G SoC.
-> +
-> +#include <dt-bindings/genpd/k2g.h>
-> +#include <dt-bindings/reset/k2g.h>
-> +
-> +pmmc: pmmc {
-> +	compatible = "ti,k2g-sci";
-> +
-> +	k2g_reset: k2g_reset {
+Thank you for the comments and closure on this topic.
 
-...: reset-controller {
-
-> +		compatible = "ti,sci-reset";
-> +		#reset-cells = <2>;
-> +	};
-> +};
-> +
-> +dsp0: dsp0 {
-> +	...
-> +	resets = <&k2g_reset K2G_DEV_CGEM0 K2G_DEV_CGEM0_DSP0_RESET>;
-> +	...
-> +};
+Thanks,
+Ramesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
