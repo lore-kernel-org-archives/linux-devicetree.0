@@ -1,49 +1,74 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] Add clockevet for timer-nps driver to NPS400 SoC
-Date: Mon, 14 Nov 2016 09:28:17 +0100
-Message-ID: <20161114082817.GA2016@mai>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: [PATCH V4 0/8]  da9061: DA9061 driver submission
+Date: Mon, 14 Nov 2016 08:22:46 +0000
+Message-ID: <cover.1479111766.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+Cc: Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-s/clockevet/clockevent/
+From: Steve Twiss <stwiss.opensource@diasemi.com>
 
-Reply-To: 
-In-Reply-To: <1479021872-14237-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+This patch set adds support for the Dialog DA9061 Power Management IC.
+Support is made by altering the existing DA9062 device driver, where
+appropriate.
 
-On Sun, Nov 13, 2016 at 09:24:29AM +0200, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> 
-> Change log
-> ---
-> V4 --> V5
-> Apply several comments made by Daneil Lezcano:
+In this patch set the following is provided:
 
-s/Daneil/Daniel/
+[PATCH V4 1/8] Binding for watchdog
+[PATCH V4 2/8] Binding for thermal supervisor
+[PATCH V4 3/8] Binding for MFD and regulators
+[PATCH V4 4/8] MFD core support
+[PATCH V4 5/8] BUCKs and LDOs
+[PATCH V4 6/8] Watchdog
+[PATCH V4 7/8] PMIC temperature monitoring
+[PATCH V4 8/8] MAINTAINERS update
 
+Some previous patches from this set have been applied already:
 
+Onkey binding -- https://lkml.org/lkml/2016/11/8/958
+Onkey driver  -- https://lkml.org/lkml/2016/10/26/1169
 
-Noam,
+This patch applies against linux-next and v4.8 
 
-I know it is patch 0/3, but each time you send a change there are new typos.
+Thank you,
+Steve Twiss, Dialog Semiconductor Ltd.
 
-Sending new versions as fast as possible without double checking the changes
-won't make them merged sooner.
+Steve Twiss (8):
+  Documentation: devicetree: watchdog: da9062/61 watchdog timer binding
+  Documentation: devicetree: thermal: da9062/61 TJUNC temperature
+    binding
+  Documentation: devicetree: mfd: da9062/61 MFD binding
+  mfd: da9061: MFD core support
+  regulator: da9061: BUCK and LDO regulator driver
+  watchdog: da9062/61: watchdog driver
+  thermal: da9062/61: Thermal junction temperature monitoring driver
+  MAINTAINERS: da9062/61 updates to the Dialog Semiconductor search
+    terms
 
-Nobody is perfect but clearly you don't read your patch before sending and
-that does not make me confident about the code changes.
+ Documentation/devicetree/bindings/mfd/da9062.txt   |  49 ++-
+ .../devicetree/bindings/thermal/da9062-thermal.txt |  37 ++
+ .../devicetree/bindings/watchdog/da9062-wdt.txt    |  23 ++
+ MAINTAINERS                                        |   4 +
+ drivers/mfd/Kconfig                                |   5 +-
+ drivers/mfd/da9062-core.c                          | 424 ++++++++++++++++++++-
+ drivers/regulator/Kconfig                          |   4 +-
+ drivers/regulator/da9062-regulator.c               | 301 ++++++++++++++-
+ drivers/thermal/Kconfig                            |  10 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/da9062-thermal.c                   | 300 +++++++++++++++
+ drivers/watchdog/Kconfig                           |   4 +-
+ drivers/watchdog/da9062_wdt.c                      |  12 +-
+ include/linux/mfd/da9062/core.h                    |  27 +-
+ include/linux/mfd/da9062/registers.h               |   2 +
+ 15 files changed, 1154 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/da9062-thermal.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/da9062-wdt.txt
+ create mode 100644 drivers/thermal/da9062-thermal.c
 
-In the future, take some minutes to double-check and re-read your changes.
+-- 
+end-of-patch for PATCH V4
 
-Thanks.
-
-  -- Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
