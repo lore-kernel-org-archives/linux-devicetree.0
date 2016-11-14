@@ -1,49 +1,41 @@
-From: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] mm: remove x86-only restriction of movable_node
-Date: Tue, 15 Nov 2016 10:20:00 +1100
-Message-ID: <37a9339f-0ce9-261f-90de-be8463705bb5@gmail.com>
+From: Balbir Singh <bsingharora@gmail.com>
+Subject: Re: [PATCH v7 4/5] of/fdt: mark hotpluggable memory
+Date: Tue, 15 Nov 2016 10:20:39 +1100
+Message-ID: <1723a465-fdf6-c12c-afb3-b486fc3a05ae@gmail.com>
 References: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1479160961-25840-3-git-send-email-arbab@linux.vnet.ibm.com>
+ <1479160961-25840-5-git-send-email-arbab@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479160961-25840-3-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Alistair Popple <apopple-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, "Aneesh Kumar K.V" <aneesh.kumar-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1479160961-25840-5-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 15/11/16 09:02, Reza Arbab wrote:
-> In commit c5320926e370 ("mem-hotplug: introduce movable_node boot
-> option"), the memblock allocation direction is changed to bottom-up and
-> then back to top-down like this:
+> When movable nodes are enabled, any node containing only hotpluggable
+> memory is made movable at boot time.
 > 
-> 1. memblock_set_bottom_up(true), called by cmdline_parse_movable_node().
-> 2. memblock_set_bottom_up(false), called by x86's numa_init().
+> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
+> making corresponding calls to memblock_mark_hotplug().
 > 
-> Even though (1) occurs in generic mm code, it is wrapped by #ifdef
-> CONFIG_MOVABLE_NODE, which depends on X86_64.
+> If we introduce a dt property to describe memory as hotpluggable,
+> configs supporting early fdt may then also do this marking and use
+> movable nodes.
 > 
-> This means that when we extend CONFIG_MOVABLE_NODE to non-x86 arches,
-> things will be unbalanced. (1) will happen for them, but (2) will not.
-> 
-> This toggle was added in the first place because x86 has a delay between
-> adding memblocks and marking them as hotpluggable. Since other arches do
-> this marking either immediately or not at all, they do not require the
-> bottom-up toggle.
-> 
-> So, resolve things by moving (1) from cmdline_parse_movable_node() to
-> x86's setup_arch(), immediately after the movable_node parameter has
-> been parsed.
-> 
-> Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+> Tested-by: Balbir Singh <bsingharora@gmail.com>
 
+Also
 
-Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
