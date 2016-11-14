@@ -1,67 +1,127 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH -next] PCI: dra7xx: Add missing of_node_put() in
- dra7xx_pcie_init_irq_domain()
-Date: Mon, 14 Nov 2016 15:19:28 -0600
-Message-ID: <20161114211928.GD9868@bhelgaas-glaptop.roam.corp.google.com>
-References: <1476716077-30379-1-git-send-email-weiyj.lk@gmail.com>
- <20161111213806.GI9868@bhelgaas-glaptop.roam.corp.google.com>
- <1d95b915-ddc0-b48f-270b-fffb60ecfe5e@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 4/7] ASoC: sunxi: Add sun8i I2S driver
+Date: Mon, 14 Nov 2016 22:22:36 +0100
+Message-ID: <20161114212236.e6gnoqksjzimcsbm@lukather>
+References: <cover.1477142934.git.moinejf@free.fr>
+ <bee315efb909c1ee8b5fe7d3aeb9a33d713cb562.1477142934.git.moinejf@free.fr>
+ <CAGb2v67gDd650TJk_-oHOehnzdH2qor=36HXdPt339Ji=ToAMg@mail.gmail.com>
+ <20161106190248.48b59e166bcd9d6f0ebb4d04@free.fr>
+ <20161107200505.g76zz7adtfy4ltku@lukather>
+ <20161108115129.f315ca5feefd22614859bbe3@free.fr>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ephktjbejfljleqk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHOWVDAQKGQE3F73HUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1d95b915-ddc0-b48f-270b-fffb60ecfe5e-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Wei Yongjun <weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161108115129.f315ca5feefd22614859bbe3-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Shawn, Heiko, Michal, Soren, Bharat, Rob H, Frank, devicetree@vger]
 
-On Sat, Nov 12, 2016 at 12:39:01PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
+--ephktjbejfljleqk
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Tue, Nov 08, 2016 at 11:51:29AM +0100, Jean-Francois Moine wrote:
+> On Mon, 7 Nov 2016 21:05:05 +0100
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 > 
-> On Saturday 12 November 2016 03:08 AM, Bjorn Helgaas wrote:
-> > On Mon, Oct 17, 2016 at 02:54:37PM +0000, Wei Yongjun wrote:
-> >> From: Wei Yongjun <weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >>
-> >> This node pointer is returned by of_get_next_child() with refcount
-> >> incremented in this function. of_node_put() on it before exitting
-> >> this function on error.
-> >>
-> >> This is detected by Coccinelle semantic patch.
-> >>
-> >> Signed-off-by: Wei Yongjun <weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > Hi,
 > > 
-> > Kishon, this looks correct to me, so I applied it to pci/host-dra7xx for
-> > v4.10.  Let me know if you have any issue with it.
+> > On Sun, Nov 06, 2016 at 07:02:48PM +0100, Jean-Francois Moine wrote:
+> > > On Sun, 23 Oct 2016 09:33:16 +0800
+> > > Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > > 
+> > > > On Fri, Oct 21, 2016 at 4:36 PM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
+> > > > > This patch adds I2S support to sun8i SoCs as the A83T and H3.
+> > > > >
+> > > > > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> > > > > ---
+> > > > > Note: This driver is closed to the sun4i-i2s except that:
+> > > > > - it handles the H3
+> > > > 
+> > > > If it's close to sun4i-i2s, you should probably rework that one to support
+> > > > the newer SoCs.
+> > > 
+> > > I started to add the H3 into the sun4i-i2s, but I am blocked with
+> > > regmap.
+> > > Many H3 registers are common with the A10, but some of them have more
+> > > or less fields, the fields may be at different offsets. And, finally,
+> > > some registers are completely different.
+> > > This would not raise any problem, except with regmap which is really
+> > > painful.
 > > 
-> >> ---
-> >>  drivers/pci/host/pci-dra7xx.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-> >> index 9595fad..79297e9 100644
-> >> --- a/drivers/pci/host/pci-dra7xx.c
-> >> +++ b/drivers/pci/host/pci-dra7xx.c
-> >> @@ -177,6 +177,7 @@ static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
-> >>  					       &intx_domain_ops, pp);
-> >>  	if (!pp->irq_domain) {
-> >>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> >> +		of_node_put(pcie_intc_node);
+> > That's weird, because regmap's regmap_field should make that much
+> > easier.
 > 
-> I think of_node_put should be used for both the error case and non-error case.
+> #define field_relaxed(addr, mask, val) \
+> 	writel_relaxed((readl_relaxed(addr) & mask) | val, addr)
 
-Hmm, OK.  I don't know what the rules are.  Certainly if we made these
-drivers modular, I don't think we'd want to leak these references
-every time we unload/reload the module.  Should we do the put
-immediately here, or in the module remove path, or ...?
+I'm not sure what you mean here.
 
-Adding other driver and DT folks for comment.
+> > > As I may understood, regmap is used to simplify suspend/resume, but, is
+> > > it useful to save the I2S register on suspend?
+> > > Practically, I am streaming some tune on my device. I suspend it for
+> > > any reason. The next morning, I resume it. Are you sure I want to
+> > > continue to hear the end of the tune?
+> > > 
+> > > I better think that streaming should be simply stopped on suspend.
+> > 
+> > You're mistaken. The code in there is for *runtime* suspend, ie when
+> > the device is no longer used, so that case shouldn't even happen at
+> > all.
+> > 
+> > (And real suspend isn't supported anyway)
+> 
+> Is it time to remove this useless code?
 
-I dropped these patches for now (dra7xx, rockchip, xilinx-nwl,
-xilinx).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Which useless code?
+
+> > > Then, there is no need to save the playing registers, and, here I am,
+> > > there is no need to use regmap.
+> > > 
+> > > May I go this way?
+> > 
+> > No, please don't. regmap is also providing very useful features, such
+> > as access to all the registers through debugfs, or tracing. What
+> > exactly feels painful to you?
+> 
+> When the I/O registers are in memory (that's the case), you may access
+> them (read and write) thru /dev/mem.
+
+For all the registers if you want to dump all of them. It needs
+scripting, it needs root access, and it needs some tool (either devmem
+or a custom one) to dump the values. And this is if you have the right
+kernel configuration options (devmem enabled, with the protection
+against mapped devices disabled).
+
+It just works with debugfs.
+
+> Also, is a register access trace really needed in this driver?
+
+Yes.
+
+> The pain is to define the regmap_config (which registers can be
+> read/write/volatile and which can be the values the u-boot let us in
+> the registers at startup time), and the lot of code which is run instead
+> of simple load/store machine instructions.
+
+This is only needed if you want to use caching, and caching is
+optional.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--ephktjbejfljleqk--
