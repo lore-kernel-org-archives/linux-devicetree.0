@@ -1,169 +1,318 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH resend] input: touchscreen: silead: Add regulator support
-Date: Mon, 14 Nov 2016 10:50:57 -0800
-Message-ID: <20161114185057.GA7694@dtor-ws>
-References: <20161114144502.10595-1-hdegoede@redhat.com>
- <20161114144502.10595-2-hdegoede@redhat.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/2] mfd: pm8xxx: add support to pm8821
+Date: Mon, 14 Nov 2016 10:56:21 -0800
+Message-ID: <20161114185621.GC27931@tuxbot>
+References: <1479145933-9849-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161114144502.10595-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479145933-9849-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Mon 14 Nov 09:52 PST 2016, Srinivas Kandagatla wrote:
 
-On Mon, Nov 14, 2016 at 03:45:02PM +0100, Hans de Goede wrote:
-> On some tablets the touchscreen controller is powered by seperate
-> regulators, add support for this.
+> This patch adds support to PM8821 PMIC and interrupt support.
+> PM8821 is companion device that supplements primary PMIC PM8921 IC.
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 +
->  drivers/input/touchscreen/silead.c                 | 51 ++++++++++++++++++++--
->  2 files changed, 49 insertions(+), 4 deletions(-)
+> Changes from v1:
+> 	- Removed unnessary locking spotted by Bjorn
+> 	- updated register naming to reflect PM8821
+> 	- lot of cleanups suggested by Bjorn
+> 	- rebased on top of Linus Walleij's pm8xxx namespace
+> 	 cleanup patch. 
+
+Looks good, just some minor style nits below.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> index e844c3f..b726823 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> @@ -22,6 +22,8 @@ Optional properties:
->  - touchscreen-inverted-y  : See touchscreen.txt
->  - touchscreen-swapped-x-y : See touchscreen.txt
->  - silead,max-fingers	  : maximum number of fingers the touchscreen can detect
-> +- vddio-supply		  : regulator phandle for controller VDDIO
-> +- avdd-supply		  : regulator phandle for controller AVDD
->  
->  Example:
->  
-> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-> index f502c84..c6a1ae9 100644
-> --- a/drivers/input/touchscreen/silead.c
-> +++ b/drivers/input/touchscreen/silead.c
-> @@ -29,6 +29,7 @@
->  #include <linux/input/touchscreen.h>
->  #include <linux/pm.h>
->  #include <linux/irq.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <asm/unaligned.h>
->  
-> @@ -72,6 +73,8 @@ enum silead_ts_power {
->  struct silead_ts_data {
->  	struct i2c_client *client;
->  	struct gpio_desc *gpio_power;
-> +	struct regulator *vddio;
-> +	struct regulator *avdd;
->  	struct input_dev *input;
->  	char fw_name[64];
->  	struct touchscreen_properties prop;
-> @@ -465,21 +468,52 @@ static int silead_ts_probe(struct i2c_client *client,
->  	if (client->irq <= 0)
->  		return -ENODEV;
->  
-> +	data->vddio = devm_regulator_get_optional(dev, "vddio");
-> +	if (IS_ERR(data->vddio)) {
-> +		if (PTR_ERR(data->vddio) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		data->vddio = NULL;
-
-Why do we ignore other errors? If there is an issue reported by
-regulator framework we should net be ignoring it.
-
-Unless regulator is truly optional (i.e. chip can work with some
-functionality powered off) and not simply hidden (firmware takes care of
-powering up system), we should not be using regulator_get_optional():
-if regulator is absent from ACPI/DT/etc, regulator framework will supply
-dummy regulator that you can enable/disable and not bothering checking
-whether it is NULL or not.
-
-Also, please consider using devm_regulator_bulk_get().
-
-> +	}
-> +
-> +	data->avdd = devm_regulator_get_optional(dev, "avdd");
-> +	if (IS_ERR(data->avdd)) {
-> +		if (PTR_ERR(data->avdd) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		data->avdd = NULL;
-> +	}
-> +
-> +	/*
-> +	 * Enable regulators at probe and disable them at remove, we need
-> +	 * to keep the chip powered otherwise it forgets its firmware.
-> +	 */
-> +	if (data->vddio) {
-> +		error = regulator_enable(data->vddio);
-> +		if (error)
-> +			return error;
-> +	}
-> +
-> +	if (data->avdd) {
-> +		error = regulator_enable(data->avdd);
-> +		if (error)
-> +			goto disable_vddio;
-> +	}
-
-Use devm_add_action_or_reset() to work regulator_bulk_disable call into
-devm stream. As it is you are leaving regulators on on unbind/remove.
-
-> +
->  	/* Power GPIO pin */
->  	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
->  	if (IS_ERR(data->gpio_power)) {
->  		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
->  			dev_err(dev, "Shutdown GPIO request failed\n");
-> -		return PTR_ERR(data->gpio_power);
-> +		error = PTR_ERR(data->gpio_power);
-> +		goto disable_avdd;
->  	}
->  
->  	error = silead_ts_setup(client);
->  	if (error)
-> -		return error;
-> +		goto disable_avdd;
->  
->  	error = silead_ts_request_input_dev(data);
->  	if (error)
-> -		return error;
-> +		goto disable_avdd;
->  
->  	error = devm_request_threaded_irq(dev, client->irq,
->  					  NULL, silead_ts_threaded_irq_handler,
-> @@ -487,10 +521,19 @@ static int silead_ts_probe(struct i2c_client *client,
->  	if (error) {
->  		if (error != -EPROBE_DEFER)
->  			dev_err(dev, "IRQ request failed %d\n", error);
-> -		return error;
-> +		goto disable_avdd;
->  	}
->  
->  	return 0;
-> +
-> +disable_avdd:
-> +	if (data->avdd)
-> +		regulator_disable(data->avdd);
-> +disable_vddio:
-> +	if (data->vddio)
-> +		regulator_disable(data->vddio);
-> +
-> +	return error;
->  }
->  
->  static int __maybe_unused silead_ts_suspend(struct device *dev)
-> -- 
-> 2.9.3
+>  .../devicetree/bindings/mfd/qcom-pm8xxx.txt        |   1 +
+>  drivers/mfd/qcom-pm8xxx.c                          | 247 ++++++++++++++++++++-
+>  2 files changed, 238 insertions(+), 10 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
+> index 37a088f..8f1b4ec 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom-pm8xxx.txt
+> @@ -11,6 +11,7 @@ voltages and other various functionality to Qualcomm SoCs.
+>  	Definition: must be one of:
+>  		    "qcom,pm8058"
+>  		    "qcom,pm8921"
+> +		    "qcom,pm8821"
 
-Thanks.
+8 < 9, so move it one step up please.
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>  - #address-cells:
+>  	Usage: required
+> diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
+[..]
+> +#define	PM8821_SSBI_REG_ADDR_IRQ_BASE	0x100
+> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER0 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0x30)
+> +#define	PM8821_SSBI_REG_ADDR_IRQ_MASTER1 (PM8821_SSBI_REG_ADDR_IRQ_BASE + 0xb0)
+> +#define	PM8821_SSBI_REG(m, b, offset) \
+> +			((m == 0) ? \
+> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER0 + b + offset) : \
+> +			(PM8821_SSBI_REG_ADDR_IRQ_MASTER1 + b + offset))
+> +#define	PM8821_SSBI_ADDR_IRQ_ROOT(m, b)		PM8821_SSBI_REG(m, b, 0x0)
+> +#define	PM8821_SSBI_ADDR_IRQ_CLEAR(m, b)	PM8821_SSBI_REG(m, b, 0x01)
+> +#define	PM8821_SSBI_ADDR_IRQ_MASK(m, b)		PM8821_SSBI_REG(m, b, 0x08)
+> +#define	PM8821_SSBI_ADDR_IRQ_RT_STATUS(m, b)	PM8821_SSBI_REG(m, b, 0x0f)
+
+I like how this cleaned up the rest of the implementation.
+
+[..]
+
+> +static void pm8821_irq_block_handler(struct pm_irq_chip *chip,
+> +				     int master, int block)
+> +{
+> +	int pmirq, irq, i, ret;
+> +	unsigned int bits;
+> +
+> +	ret = regmap_read(chip->regmap,
+> +			  PM8821_SSBI_ADDR_IRQ_ROOT(master, block), &bits);
+> +	if (ret) {
+> +		pr_err("Failed reading %d block ret=%d", block, ret);
+
+"Reading block %d failed ret=%d"
+
+> +		return;
+> +	}
+> +	if (!bits) {
+> +		pr_err("block bit set in master but no irqs: %d", block);
+
+This seems more like a debug thing, either showing missbehaving hardware
+or something odd in the driver. I think you should drop the print or
+make it pr_debug().
+
+> +		return;
+> +	}
+
+I would prefer that you just drop the entire if statement, it's just an
+corner case optimization with a info print.
+
+> +
+> +	/* Convert block offset to global block number */
+> +	block += (master * PM8821_BLOCKS_PER_MASTER) - 1;
+> +
+> +	/* Check IRQ bits */
+> +	for (i = 0; i < 8; i++) {
+> +		if (bits & BIT(i)) {
+> +			pmirq = block * 8 + i;
+> +			irq = irq_find_mapping(chip->irqdomain, pmirq);
+> +			generic_handle_irq(irq);
+> +		}
+> +	}
+> +
+
+Empty line
+
+> +}
+> +
+> +static inline void pm8821_irq_master_handler(struct pm_irq_chip *chip,
+> +					     int master, u8 master_val)
+> +{
+> +	int block;
+> +
+> +	for (block = 1; block < 8; block++)
+> +		if (master_val & BIT(block))
+> +			pm8821_irq_block_handler(chip, master, block);
+> +
+
+Empty line
+
+> +}
+> +
+> +static void pm8821_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct pm_irq_chip *chip = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *irq_chip = irq_desc_get_chip(desc);
+> +	unsigned int master;
+> +	int ret;
+> +
+> +	chained_irq_enter(irq_chip, desc);
+> +	ret = regmap_read(chip->regmap,
+> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER0, &master);
+> +	if (ret) {
+> +		pr_err("Failed to re:Qad master 0 ret=%d\n", ret);
+                                      ^
+				      |
+			  I see you're using vim :)
+
+> +		return;
+> +	}
+> +
+> +	 /* bits 1 through 7 marks the first 7 blocks in master 0*/
+
+Indentation
+
+> +	if (master & GENMASK(7, 1))
+> +		pm8821_irq_master_handler(chip, 0, master);
+> +
+> +	 /* bit 0 marks if master 1 contains any bits */
+
+Dito
+
+> +	if (!(master & BIT(0)))
+> +		goto done;
+> +
+> +	ret = regmap_read(chip->regmap,
+> +			  PM8821_SSBI_REG_ADDR_IRQ_MASTER1, &master);
+> +	if (ret) {
+> +		pr_err("Failed to read master 1 ret=%d\n", ret);
+> +		return;
+
+"goto done;" so that we pass chained_irq_exit()
+
+> +	}
+> +
+> +	pm8821_irq_master_handler(chip, 1, master);
+> +
+> +done:
+> +	chained_irq_exit(irq_chip, desc);
+> +}
+> +
+
+[..]
+
+> +static void pm8821_irq_mask_ack(struct irq_data *d)
+> +{
+> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+> +	unsigned int pmirq = irqd_to_hwirq(d);
+> +	u8 block, master;
+> +	int irq_bit, rc;
+> +
+> +	block = pmirq / 8;
+> +	master = block / PM8821_BLOCKS_PER_MASTER;
+> +	irq_bit = pmirq % 8;
+> +	block %= PM8821_BLOCKS_PER_MASTER;
+> +
+> +	rc = regmap_update_bits(chip->regmap,
+> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
+> +				BIT(irq_bit), BIT(irq_bit));
+> +
+
+Empty line
+
+> +	if (rc) {
+> +		pr_err("Failed to read/write mask IRQ:%d rc=%d\n", pmirq, rc);
+
+"Failed to mask IRQ %d rc=%d\n"
+
+> +		return;
+> +	}
+> +
+> +	rc = regmap_update_bits(chip->regmap,
+> +				PM8821_SSBI_ADDR_IRQ_CLEAR(master, block),
+> +				BIT(irq_bit), BIT(irq_bit));
+> +
+
+Empty line
+
+> +	if (rc) {
+> +		pr_err("Failed to read/write IT_CLEAR IRQ:%d rc=%d\n",
+> +								pmirq, rc);
+
+"Failed to clear IRQ %d rc=%d\n"
+
+> +	}
+> +
+
+Empty line
+
+> +}
+> +
+> +static void pm8821_irq_unmask(struct irq_data *d)
+> +{
+> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+> +	unsigned int pmirq = irqd_to_hwirq(d);
+> +	int irq_bit, rc;
+> +	u8 block, master;
+> +
+> +	block = pmirq / 8;
+> +	master = block / PM8821_BLOCKS_PER_MASTER;
+> +	irq_bit = pmirq % 8;
+> +	block %= PM8821_BLOCKS_PER_MASTER;
+> +
+> +	rc = regmap_update_bits(chip->regmap,
+> +				PM8821_SSBI_ADDR_IRQ_MASK(master, block),
+> +				BIT(irq_bit), ~BIT(irq_bit));
+> +
+
+Empty line
+
+> +	if (rc)
+> +		pr_err("Failed to read/write unmask IRQ:%d rc=%d\n", pmirq, rc);
+
+"Failed to unmask IRQ %d rc=%d\n"
+
+> +
+
+Empty line
+
+> +}
+> +
+> +static int pm8821_irq_get_irqchip_state(struct irq_data *d,
+> +					enum irqchip_irq_state which,
+> +					bool *state)
+> +{
+> +	struct pm_irq_chip *chip = irq_data_get_irq_chip_data(d);
+> +	int rc, pmirq = irqd_to_hwirq(d);
+> +	u8 block, irq_bit, master;
+> +	unsigned int bits;
+> +
+> +	block = pmirq / 8;
+> +	master = block / PM8821_BLOCKS_PER_MASTER;
+> +	irq_bit = pmirq % 8;
+> +	block %= PM8821_BLOCKS_PER_MASTER;
+> +
+> +	rc = regmap_read(chip->regmap,
+> +		PM8821_SSBI_ADDR_IRQ_RT_STATUS(master, block), &bits);
+> +	if (rc) {
+> +		pr_err("Failed Reading Status rc=%d\n", rc);
+
+Odd capitalization, I suggest that you match it to the other functions
+by:
+
+"Reading status of IRQ %d failed rc=%d\n" 
+
+> +		return rc;
+> +	}
+> +
+> +	*state = !!(bits & BIT(irq_bit));
+> +
+> +	return rc;
+> +}
+> +
+
+[..]
+
+>  
+>  static int pm8xxx_probe(struct platform_device *pdev)
+>  {
+> +	const struct of_device_id *match;
+> +	const struct pm_irq_data *data;
+>  	struct regmap *regmap;
+>  	int irq, rc;
+>  	unsigned int val;
+>  	u32 rev;
+>  	struct pm_irq_chip *chip;
+> -	unsigned int nirqs = PM8XXX_NR_IRQS;
+> +
+> +	match = of_match_node(pm8xxx_id_table, pdev->dev.of_node);
+> +	if (!match) {
+> +		dev_err(&pdev->dev, "No matching driver data found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	data = match->data;
+
+data = of_device_get_match_data(&pdev->dev); (from of_device.h)
+
+Regards,
+Bjorn
