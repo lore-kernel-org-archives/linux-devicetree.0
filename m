@@ -1,121 +1,238 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
-Date: Mon, 14 Nov 2016 13:41:10 -0600
-Message-ID: <20161114194110.fh6gyhfdciikj7kt@rob-hp-laptop>
+Subject: Re: [PATCH 5/5] media: platform: rcar_drif: Add DRIF support
+Date: Mon, 14 Nov 2016 13:52:00 -0600
+Message-ID: <20161114195200.s62ga2bnutsrocyf@rob-hp-laptop>
 References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <2857106.83gIJRJqtY@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+In-Reply-To: <2857106.83gIJRJqtY@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 03:44:41PM +0000, Ramesh Shanmugasundaram wrote:
-> This patch adds driver support for MAX2175 chip. This is Maxim
-> Integrated's RF to Bits tuner front end chip designed for software-defined
-> radio solutions. This driver exposes the tuner as a sub-device instance
-> with standard and custom controls to configure the device.
+On Thu, Nov 10, 2016 at 11:22:20AM +0200, Laurent Pinchart wrote:
+> Hi Ramesh,
 > 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
-
-It's preferred that bindings are a separate patch.
-
->  drivers/media/i2c/Kconfig                          |    4 +
->  drivers/media/i2c/Makefile                         |    2 +
->  drivers/media/i2c/max2175/Kconfig                  |    8 +
->  drivers/media/i2c/max2175/Makefile                 |    4 +
->  drivers/media/i2c/max2175/max2175.c                | 1558 ++++++++++++++++++++
->  drivers/media/i2c/max2175/max2175.h                |  108 ++
->  7 files changed, 1745 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
->  create mode 100644 drivers/media/i2c/max2175/Kconfig
->  create mode 100644 drivers/media/i2c/max2175/Makefile
->  create mode 100644 drivers/media/i2c/max2175/max2175.c
->  create mode 100644 drivers/media/i2c/max2175/max2175.h
+> Thank you for the patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> new file mode 100644
-> index 0000000..69f0dad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> @@ -0,0 +1,61 @@
-> +Maxim Integrated MAX2175 RF to Bits tuner
-> +-----------------------------------------
-> +
-> +The MAX2175 IC is an advanced analog/digital hybrid-radio receiver with
-> +RF to Bits® front-end designed for software-defined radio solutions.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
-> +- clocks: phandle to the fixed xtal clock.
-> +- clock-names: name of the fixed xtal clock.
-> +- port: child port node of a tuner that defines the local and remote
-> +  endpoints. The remote endpoint is assumed to be an SDR device
-> +  that is capable of receiving the digital samples from the tuner.
-> +
-> +Optional properties:
-> +--------------------
-> +- maxim,slave	      : empty property indicates this is a slave of
-> +			another master tuner. This is used to define two
-> +			tuners in diversity mode (1 master, 1 slave). By
-> +			default each tuner is an individual master.
-> +- maxim,refout-load-pF: load capacitance value (in pF) on reference
+> On Wednesday 09 Nov 2016 15:44:44 Ramesh Shanmugasundaram wrote:
+> > This patch adds Digital Radio Interface (DRIF) support to R-Car Gen3 SoCs.
+> > The driver exposes each instance of DRIF as a V4L2 SDR device. A DRIF
+> > device represents a channel and each channel can have one or two
+> > sub-channels respectively depending on the target board.
+> > 
+> > DRIF supports only Rx functionality. It receives samples from a RF
+> > frontend tuner chip it is interfaced with. The combination of DRIF and the
+> > tuner device, which is registered as a sub-device, determines the receive
+> > sample rate and format.
+> > 
+> > In order to be compliant as a V4L2 SDR device, DRIF needs to bind with
+> > the tuner device, which can be provided by a third party vendor. DRIF acts
+> > as a slave device and the tuner device acts as a master transmitting the
+> > samples. The driver allows asynchronous binding of a tuner device that
+> > is registered as a v4l2 sub-device. The driver can learn about the tuner
+> > it is interfaced with based on port endpoint properties of the device in
+> > device tree. The V4L2 SDR device inherits the controls exposed by the
+> > tuner device.
+> > 
+> > The device can also be configured to use either one or both of the data
+> > pins at runtime based on the master (tuner) configuration.
+> > 
+> > Signed-off-by: Ramesh Shanmugasundaram
+> > <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
+> >  .../devicetree/bindings/media/renesas,drif.txt     |  136 ++
+> >  drivers/media/platform/Kconfig                     |   25 +
+> >  drivers/media/platform/Makefile                    |    1 +
+> >  drivers/media/platform/rcar_drif.c                 | 1574
+> > ++++++++++++++++++++ 4 files changed, 1736 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+> > create mode 100644 drivers/media/platform/rcar_drif.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > b/Documentation/devicetree/bindings/media/renesas,drif.txt new file mode
+> > 100644
+> > index 0000000..d65368a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > @@ -0,0 +1,136 @@
+> > +Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
+> > +------------------------------------------------------------
+> > +
+> > +R-Car Gen3 DRIF is a serial slave device. It interfaces with a master
+> > +device as shown below
+> > +
+> > ++---------------------+                +---------------------+
+> > +|                     |-----SCK------->|CLK                  |
+> > +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> > +|                     |-----SD0------->|D0                   |
+> > +|                     |-----SD1------->|D1                   |
+> > ++---------------------+                +---------------------+
+> > +
+> > +Each DRIF channel (drifn) consists of two sub-channels (drifn0 & drifn1).
+> > +The sub-channels are like two individual channels in itself that share the
+> > +common CLK & SYNC. Each sub-channel has it's own dedicated resources like
+> > +irq, dma channels, address space & clock.
+> > +
+> > +The device tree model represents the channel and each of it's sub-channel
+> > +as a separate node. The parent channel ties the sub-channels together with
+> > +their phandles.
+> > +
+> > +Required properties of a sub-channel:
+> > +-------------------------------------
+> > +- compatible: "renesas,r8a7795-drif" if DRIF controller is a part of
+> > R8A7795 SoC.
+> > +	      "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible
+> > device.
+> > +	      When compatible with the generic version, nodes must list the
+> > +	      SoC-specific version corresponding to the platform first
+> > +	      followed by the generic version.
+> > +- reg: offset and length of that sub-channel.
+> > +- interrupts: associated with that sub-channel.
+> > +- clocks: phandle and clock specifier of that sub-channel.
+> > +- clock-names: clock input name string: "fck".
+> > +- dmas: phandles to the DMA channel of that sub-channel.
+> > +- dma-names: names of the DMA channel: "rx".
+> > +
+> > +Optional properties of a sub-channel:
+> > +-------------------------------------
+> > +- power-domains: phandle to the respective power domain.
+> > +
+> > +Required properties of a channel:
+> > +---------------------------------
+> > +- pinctrl-0: pin control group to be used for this channel.
+> > +- pinctrl-names: must be "default".
+> > +- sub-channels : phandles to the two sub-channels.
+> > +
+> > +Optional properties of a channel:
+> > +---------------------------------
+> > +- port: child port node of a channel that defines the local and remote
+> > +        endpoints. The remote endpoint is assumed to be a tuner subdevice
+> > +	endpoint.
+> > +- renesas,syncmd       : sync mode
+> > +			 0 (Frame start sync pulse mode. 1-bit width pulse
+> > +			    indicates start of a frame)
+> > +			 1 (L/R sync or I2S mode) (default)
+> > +- renesas,lsb-first    : empty property indicates lsb bit is received
+> > first.
+> > +			 When not defined msb bit is received first (default)
+> 
+> Shouldn't those two properties be instead queried from the tuner at runtime 
+> through the V4L2 subdev API ?
+> 
+> > +- renesas,syncac-pol-high  : empty property indicates sync signal polarity.
+> > +			 When defined, active high or high->low sync signal.
+> > +			 When not defined, active low or low->high sync signal
+> > +			 (default)
+> 
+> This could be queried too, except that an inverter could be present on the 
+> board, so it has to be specified in DT. I would however try to standardize it 
+> the same way that hsync-active and vsync-active are standardized in 
+> Documentation/devicetree/bindings/media/video-interfaces.txt.
+> 
+> > +- renesas,dtdl         : delay between sync signal and start of reception.
+> 
+> Are this and the next property meant to account for PCB traces delays ?
+> 
+> > +			 Must contain one of the following values:
+> > +			 0   (no bit delay)
+> > +			 50  (0.5-clock-cycle delay)
+> > +			 100 (1-clock-cycle delay) (default)
+> > +			 150 (1.5-clock-cycle delay)
+> > +			 200 (2-clock-cycle delay)
+> 
+> How about specifying the property in half clock cycle units, from 0 to 4 ?
+> 
+> > +- renesas,syncdl       : delay between end of reception and sync signal
+> > edge.
+> > +			 Must contain one of the following values:
+> > +			 0   (no bit delay) (default)
+> > +			 50  (0.5-clock-cycle delay)
+> > +			 100 (1-clock-cycle delay)
+> > +			 150 (1.5-clock-cycle delay)
+> > +			 200 (2-clock-cycle delay)
+> > +			 300 (3-clock-cycle delay)
+> > +
+> > +Example
+> > +--------
+> > +
+> > +SoC common dtsi file
+> > +
+> > +		drif00: rif@e6f40000 {
+> > +			compatible = "renesas,r8a7795-drif",
+> > +				     "renesas,rcar-gen3-drif";
+> > +			reg = <0 0xe6f40000 0 0x64>;
+> > +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cpg CPG_MOD 515>;
+> > +			clock-names = "fck";
+> > +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
+> > +			dma-names = "rx", "rx";
 
-Please add 'pF' to property-units.txt.
+rx, rx? That doesn't make sense. While we don't explicitly disallow 
+this, I'm thinking we should. I wonder if there's any case this is 
+valid. If not, then a dtc check for this could be added.
 
-> +			output drive level. The possible load values are
-> +			 0pF (default - refout disabled)
-> +			10pF
-> +			20pF
-> +			30pF
-> +			40pF
-> +			60pF
-> +			70pF
-> +- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path is
-> +			selected for AM antenna input. By default this
-> +			filter path is not used.
-> +
-> +Example:
-> +--------
-> +
-> +Board specific DTS file
-> +
-> +/* Fixed XTAL clock node */
-> +maxim_xtal: maximextal {
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		drif01: rif@e6f50000 {
+> > +			compatible = "renesas,r8a7795-drif",
+> > +				     "renesas,rcar-gen3-drif";
+> > +			reg = <0 0xe6f50000 0 0x64>;
+> > +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks = <&cpg CPG_MOD 514>;
+> > +			clock-names = "fck";
+> > +			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
+> > +			dma-names = "rx", "rx";
+> > +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		drif0: rif@0 {
+> > +			compatible = "renesas,r8a7795-drif",
+> > +				     "renesas,rcar-gen3-drif";
+> > +			sub-channels = <&drif00>, <&drif01>;
+> > +			status = "disabled";
+> > +		};
+> 
+> I'm afraid this really hurts my eyes, especially using the same compatible 
+> string for both the channel and sub-channel nodes.
+> 
+> We need to decide how to model the hardware in DT. Given that the two channels 
+> are mostly independent having separate DT nodes makes sense to me. However, as 
+> they share the clock and sync signals, somehow grouping them makes sense. I 
+> see three ways to do so, and there might be more.
+> 
+> 1. Adding an extra DT node for the channels group, with phandles to the two 
+> channels. This is what you're proposing here.
+> 
+> 2. Adding an extra DT node for the channels group, as a parent of the two 
+> channels.
+> 
+> 3. Adding phandles to the channels, pointing to each other, or possibly a 
+> phandle from channel 0 pointing to channel 1.
+> 
+> Neither of these options seem perfect to me. I don't like option 1 as the 
+> group DT node really doesn't describe a hardware block. If we want to use a DT 
+> node to convey group information, option 2 seems better to me. However, it 
+> somehow abuses the DT parent-child model that is supposed to describe 
+> relationships from a control bus point of view. Option 3 has the drawback of 
+> not scaling properly, at least with phandles in both channels pointing to the 
+> other one.
+> 
+> Rob, Geert, tell me you have a fourth idea I haven't thought of that would 
+> solve all those problems :-)
 
-clock {
+What's the purpose/need for grouping them?
 
-> +	compatible = "fixed-clock";
-> +	#clock-cells = <0>;
-> +	clock-frequency = <36864000>;
-> +};
-> +
-> +/* A tuner device instance under i2c bus */
-> +max2175_0: tuner@60 {
-> +	compatible = "maxim,max2175";
-> +	reg = <0x60>;
-> +	clocks = <&maxim_xtal>;
-> +	clock-names = "xtal";
-> +	maxim,refout-load-pF = <10>;
-> +
-> +	port {
-> +		max2175_0_ep: endpoint {
-> +			remote-endpoint = <&slave_rx_v4l2_sdr_device>;
+I'm fine with Option 2, though I want to make sure it is really needed.
 
-'v4l2' is not something that should appear in a DT.
-
-> +		};
-> +	};
-> +
-> +};
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
