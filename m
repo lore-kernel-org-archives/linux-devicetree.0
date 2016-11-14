@@ -1,39 +1,92 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Mon, 14 Nov 2016 16:26:00 +0100
-Message-ID: <10661534.hlmFYCF6CI@phil>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <2342292.tK2jqRKrXH@phil> <5829D1C7.9020105@rock-chips.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH] arm64: dts: juno: fix cluster sleep state entry latency on
+ all SoC versions
+Date: Mon, 14 Nov 2016 15:26:29 +0000
+Message-ID: <1479137189-15378-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5829D1C7.9020105@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, tfiga@chromium.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, eddie.cai@rock-chips.com, linux-arm-kernel@lists.infradead.org, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. November 2016, 23:01:27 CET schrieb Caesar Wang:
-> On 2016年11月14日 22:45, Heiko Stuebner wrote:
-> > Am Mittwoch, 9. November 2016, 21:21:53 CET schrieb Caesar Wang:
-> >> From: Ziyuan Xu <xzy.xu@rock-chips.com>
-> >> 
-> >> Control power domain for eMMC via genpd to reduce power consumption.
-> >> 
-> >> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> >> Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
-> >> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> > 
-> > Authorship / Signed-off mismatch. From above suggest Ziyuan is the author
-> > while first Signed-off-by indicates Elaine as author. Please clarify.
-> 
-> I believe the Elaine is the first author. Sorry for this kind of
-> question to brother you again. :(
+The core and the cluster sleep state entry latencies can't be same as
+cluster sleep involves more work compared to core level e.g. shared
+cache maintenance.
 
-no problem :-) and thanks for the very fast reply.
+Experiments have shown on an average about 100us more latency for the
+cluster sleep state compared to the core level sleep. This patch fixes
+the entry latency for the cluster sleep state.
 
-Applied to my dts64 branch.
+Fixes: 28e10a8f3a03 ("arm64: dts: juno: Add idle-states to device tree")
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ arch/arm64/boot/dts/arm/juno-r1.dts | 2 +-
+ arch/arm64/boot/dts/arm/juno-r2.dts | 2 +-
+ arch/arm64/boot/dts/arm/juno.dts    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+Hi,
 
-Thanks
-Heiko
+This was found recently when I found that core sleep was chosen when
+entering suspend-to-idle state on Juno. Since the wakeup(entry+exit)
+latency matched for the both states, cpu sleep state was chosen to enter
+in suspend-to-idle.
+
+Regards,
+Sudeep
+
+diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+index 3be8a3ef671c..eec37feee8fc 100644
+--- a/arch/arm64/boot/dts/arm/juno-r1.dts
++++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+@@ -76,7 +76,7 @@
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x1010000>;
+ 				local-timer-stop;
+-				entry-latency-us = <300>;
++				entry-latency-us = <400>;
+ 				exit-latency-us = <1200>;
+ 				min-residency-us = <2500>;
+ 			};
+diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+index 614fc9227943..28f40ec44090 100644
+--- a/arch/arm64/boot/dts/arm/juno-r2.dts
++++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+@@ -76,7 +76,7 @@
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x1010000>;
+ 				local-timer-stop;
+-				entry-latency-us = <300>;
++				entry-latency-us = <400>;
+ 				exit-latency-us = <1200>;
+ 				min-residency-us = <2500>;
+ 			};
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index 6b4135e9cfe5..ac5ceb73f45f 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -76,7 +76,7 @@
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x1010000>;
+ 				local-timer-stop;
+-				entry-latency-us = <300>;
++				entry-latency-us = <400>;
+ 				exit-latency-us = <1200>;
+ 				min-residency-us = <2500>;
+ 			};
+--
+2.7.4
