@@ -1,66 +1,39 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 00/10] Add basic support for Rockchip RK1108 SOC
-Date: Mon, 14 Nov 2016 19:55:50 +0800
-Message-ID: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: shawn.lin@rock-chips.com, linus.walleij@linaro.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-gpio@vger.kernel.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
+Date: Mon, 14 Nov 2016 22:59:43 +1100
+Message-ID: <87bmxii85s.fsf@concordia.ellerman.id.au>
+References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com> <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Reza Arbab <arbab@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Reza Arbab <arbab@linux.vnet.ibm.com> writes:
 
-RK1108 is embedded with an ARM Cortex-A7 single core and a DSP core.
-It is designed for varies application scenario such as car DVR, sports
-DV, secure camera and UAV camera.
-This patch series add basic support for it, which can boot a board with
-initramfs into shell.
-More new feathers will come soon.
+> When movable nodes are enabled, any node containing only hotpluggable
+> memory is made movable at boot time.
+>
+> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
+> making corresponding calls to memblock_mark_hotplug().
+>
+> If we introduce a dt property to describe memory as hotpluggable,
+> configs supporting early fdt may then also do this marking and use
+> movable nodes.
 
-Changes in v2:
-- split dt-binding header from clk driver
-- fix some CodingStyle issues
-- add dt-binding documentation for pinctrl
-- add pull and drive-strength functionality for pinctrl
-- fix timer and gic dt description
-- ordering devices by register address
-- move the board in the rockchip.txt to the block of Rockchip boards
+So I'm not opposed to this, but it is a little vague.
 
-Andy Yan (6):
-  dt-bindings: add documentation for rk1108 pinctrl
-  pinctrl: rockchip: add support for rk1108
-  ARM: add low level debug uart for rk1108
-  ARM: dts: add basic support for Rockchip RK1108 SOC
-  ARM: rockchip: enable support for RK1108 SoC
-  ARM: dts: rockchip: add rockchip RK1108 Evaluation board
+What does the "hotpluggable" property really mean?
 
-Shawn Lin (4):
-  dt-bindings: rockchip-dw-mshc: add RK1108 dw-mshc description
-  dt-bindings: add documentation for rk1108 cru
-  clk: rockchip: add dt-binding header for rk1108
-  clk: rockchip: add clock controller for rk1108
+Is it just a hint to the operating system? (which may or may not be
+Linux).
 
- Documentation/devicetree/bindings/arm/rockchip.txt |   5 +-
- .../bindings/clock/rockchip,rk1108-cru.txt         |  60 +++
- .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   1 +
- .../bindings/pinctrl/rockchip,pinctrl.txt          |   9 +-
- arch/arm/Kconfig.debug                             |  30 ++
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/rk1108-evb.dts                   |  69 ++++
- arch/arm/boot/dts/rk1108.dtsi                      | 428 +++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c                  |   1 +
- drivers/clk/rockchip/Makefile                      |   1 +
- drivers/clk/rockchip/clk-rk1108.c                  | 451 +++++++++++++++++++++
- drivers/clk/rockchip/clk.h                         |  14 +
- drivers/pinctrl/pinctrl-rockchip.c                 |  87 +++-
- include/dt-bindings/clock/rk1108-cru.h             | 270 ++++++++++++
- 14 files changed, 1421 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
- create mode 100644 arch/arm/boot/dts/rk1108-evb.dts
- create mode 100644 arch/arm/boot/dts/rk1108.dtsi
- create mode 100644 drivers/clk/rockchip/clk-rk1108.c
- create mode 100644 include/dt-bindings/clock/rk1108-cru.h
+Or is it a direction, "this memory must be able to be hotunplugged"?
 
--- 
-2.7.4
+I think you're intending the former, ie. a hint, which is probably OK.
+But it needs to be documented clearly.
 
-
+cheers
