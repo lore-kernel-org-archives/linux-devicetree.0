@@ -1,129 +1,99 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-Date: Mon, 14 Nov 2016 13:16:49 +0200
-Message-ID: <ac8e0f72-fac2-45e5-0004-d6028ddeb221@ti.com>
-References: <cover.1478103726.git.jsarha@ti.com> <12424154.kJqhEf2pOz@avalon>
- <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com>
- <1740464.TP0bE1PYbC@avalon>
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] arm64: arch_timer: apci: Introduce a generic
+ aquirk framework for erratum
+Date: Mon, 14 Nov 2016 19:15:36 +0800
+Message-ID: <f796cd8f-1d96-ab3b-ca53-5d746c51eec2@huawei.com>
+References: <1478264794-14652-1-git-send-email-dingtianhong@huawei.com>
+ <1478264794-14652-5-git-send-email-dingtianhong@huawei.com>
+ <582971E0.4070403@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2066562112=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1740464.TP0bE1PYbC@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <582971E0.4070403-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============2066562112==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="W4H0DS1P243r1e1cOrGIlnR56go3sHR1e"
+OK, will wait more feedback and fix them together in the next version.
 
---W4H0DS1P243r1e1cOrGIlnR56go3sHR1e
-Content-Type: multipart/mixed; boundary="inABmvpK59qHnEiDpJ9VhN3ROgtTWAJpf";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Jyri Sarha <jsarha@ti.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- airlied@linux.ie, daniel@ffwll.ch, robdclark@gmail.com,
- bgolaszewski@baylibre.com, khilman@baylibre.com, bcousson@baylibre.com
-Message-ID: <ac8e0f72-fac2-45e5-0004-d6028ddeb221@ti.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-References: <cover.1478103726.git.jsarha@ti.com> <12424154.kJqhEf2pOz@avalon>
- <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com> <1740464.TP0bE1PYbC@avalon>
-In-Reply-To: <1740464.TP0bE1PYbC@avalon>
+Thanks.
+Ding
 
---inABmvpK59qHnEiDpJ9VhN3ROgtTWAJpf
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 14/11/16 13:10, Laurent Pinchart wrote:
-> Hi Jyri,
->=20
-> On Monday 14 Nov 2016 10:49:43 Jyri Sarha wrote:
->> On 11/03/16 19:46, Laurent Pinchart wrote:
->>>> +Required properties:
->>>>> +	- compatible: "ti,tfp410"
->>>
->>> The device is an I2C slave, it should have a reg property. Given that=
- the
->>> chip can be used without being controlled through I2C, the reg proper=
-ty
->>> should be optional. You should document this clearly, and explain how=
- the
->>> DT node can be instantiated as a child of an I2C controller when the =
-I2C
->>> interface is used, or in other parts of the device tree otherwise.
+On 2016/11/14 16:12, Hanjun Guo wrote:
+> On 2016/11/4 21:06, Ding Tianhong wrote:
+>> From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->> Shouldn't I have two different compatible strings if want to make both=
+>> Introduce a general quirk framework for each timer erratum in ACPI,
+>> which use the oem information in GTDT table for platform specific erratums.
+>> The struct gtdt_arch_timer_fixup is introduced to record the oem
+>> information to match the quirk and handle the erratum.
+>>
+>> v3: Introduce a generic aquick framework for erratum in ACPI mode.
+>>
+>> Signed-off-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  drivers/clocksource/arm_arch_timer.c | 37 ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+>> index 3d59af1..9bc93e5 100644
+>> --- a/drivers/clocksource/arm_arch_timer.c
+>> +++ b/drivers/clocksource/arm_arch_timer.c
+>> @@ -1068,6 +1068,40 @@ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer_mem, "arm,armv7-timer-mem",
+>>  		       arch_timer_mem_init);
+>>  
+>>  #ifdef CONFIG_ACPI
+>> +struct gtdt_arch_timer_fixup {
+>> +	char oem_id[ACPI_OEM_ID_SIZE];
+>> +	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE];
+>> +	u32 oem_revision;
+>> +
+>> +	/* quirk handler for arch timer erratum */
+>> +	void (*handler)(u32 erratum);
+>> +	u32 erratum;
+> 
+> Hmm, I think we just use
+> 
+> void *context;
+> 
+> and we convert it in the platform specific handler, then this struct
+> can be reused for other type of quirks.
+> 
+>> +};
+>> +
+>> +/* note: this needs to be updated according to the doc of OEM ID
+>> + * and TABLE ID for different board.
+>> + */
+>> +struct gtdt_arch_timer_fixup arch_timer_quirks[] __initdata = {
+>> +};
+>> +
+>> +void __init arch_timer_acpi_quirks_handler(char *oem_id,
+>> +						  char *oem_table_id,
+>> +						  u32 oem_revision)
+>> +{
+>> +	struct gtdt_arch_timer_fixup *quirks = arch_timer_quirks;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(arch_timer_quirks); i++, quirks++) {
+>> +		if (!memcmp(quirks->oem_id, oem_id, ACPI_OEM_ID_SIZE) &&
+>> +		    !memcmp(quirks->oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
+>> +		    quirks->oem_revision == oem_revision) {
+>> +			if (quirks->handler && quirks->erratum)
+>> +				quirks->handler(quirks->erratum);
+>> +			break;
+> 
+> we can't just break because we have multi quirks for different handlers.
+> 
+> Thanks
+> Hanjun
+> 
+> 
+> .
+> 
 
->> platform driver probe and i2c client probe to work?
->=20
-> I don't think so, it's still the same chip.
->=20
->> Or can it be done with single compatible string? Would you know of an
->> example of such a driver?
->=20
-> You will need to register both a i2c_driver and a platform_driver in th=
-e=20
-> tfp410 driver. Both will advertise the same compatible string. As you'l=
-l have=20
-> two probe functions, it should be easy to handle the differences betwee=
-n the=20
-
-If you have the same compatible string, won't both probes trigger? If
-so, how does, e.g., the platform driver know this is actually i2c case,
-and bail out? And if both probes don't trigger, why not? How does the
-device probing machinery know that this DT node is actually an i2c node,
-not a platform device node?
-
- Tomi
-
-
---inABmvpK59qHnEiDpJ9VhN3ROgtTWAJpf--
-
---W4H0DS1P243r1e1cOrGIlnR56go3sHR1e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYKZ0hAAoJEPo9qoy8lh71wwIP/AopMQ8AR0mXr+VZ2kWo0AC7
-TVT/PcLWy3+OTQuHgb9/VQYY1XWwB/3gThYX3THPIorJmBd6mCa4OHMdDrYyz/T6
-E58vxhoDm5jNNzOPA4KiK2pLM4aZGsaGzUabCrFm7btmSVFd/Uo6QkKsFsulzbsZ
-vNIArBmqti6cmNcvwBJjnAf9izDAspdeVIN2woZbesnlCabjUtcA4JurXsNEs3Zy
-nitv3r70q7gBRZRyUlRG1S52OFAwNzQESUu3t5pYyghhngo0u0NUp8X0bBE5LCx/
-0VpwS7PlbfNl9V+M2aJL9OKNMBw5wlfZygcvS0qZ7PUeb1i/48+bdYCgMrwVd7sf
-n0JCbpX3ldUq+RRnZvPxbho6FAX3ViDWIkJoquGI/EsSP4z8KFkjVCtCRl17oN8I
-125fXzesqX35K/fJrCcWCA9Z+xf2c7VuJ8DnjLKI269JBuH8al0HJQW9sa8CQHgQ
-lbcDrRyhmSp6UpCuvrOz+Q3IETPXaY/2lPwMzZRTp2asFKhe01mlzdDZyhCutrqU
-QCv/0oItxtIK/8JTt7iDTSOSunBNoVZUjSIuL+OntCMBEOe4McDkB9Sr5eGwsQts
-EZafJ5RauPHeOvCUf5jsTvFFPh3XwLCzhcJndEulcVsNazhTElrzpIKM/Ih1XBdQ
-KcSyaQzwpGTHqtM6/CW1
-=wRoN
------END PGP SIGNATURE-----
-
---W4H0DS1P243r1e1cOrGIlnR56go3sHR1e--
-
---===============2066562112==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2066562112==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
