@@ -1,39 +1,52 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6 4/4] of/fdt: mark hotpluggable memory
-Date: Mon, 14 Nov 2016 22:59:43 +1100
-Message-ID: <87bmxii85s.fsf@concordia.ellerman.id.au>
-References: <1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com> <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 01/10] dt-bindings: rockchip-dw-mshc: add RK1108 dw-mshc
+ description
+Date: Mon, 14 Nov 2016 20:01:05 +0800
+Message-ID: <1479124865-24109-1-git-send-email-andy.yan@rock-chips.com>
+References: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478562276-25539-5-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1479124550-24037-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-> When movable nodes are enabled, any node containing only hotpluggable
-> memory is made movable at boot time.
->
-> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
-> making corresponding calls to memblock_mark_hotplug().
->
-> If we introduce a dt property to describe memory as hotpluggable,
-> configs supporting early fdt may then also do this marking and use
-> movable nodes.
+Add "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc" for
+dwmmc on rk1108 platform.
 
-So I'm not opposed to this, but it is a little vague.
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-What does the "hotpluggable" property really mean?
+---
 
-Is it just a hint to the operating system? (which may or may not be
-Linux).
+Changes in v2: None
 
-Or is it a direction, "this memory must be able to be hotunplugged"?
+ Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think you're intending the former, ie. a hint, which is probably OK.
-But it needs to be documented clearly.
-
-cheers
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+index 07184e8..ea9c1c9 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+@@ -13,6 +13,7 @@ Required Properties:
+ 	- "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
+ 							before RK3288
+ 	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
++	- "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK1108
+ 	- "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
+ 	- "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
+ 	- "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
+-- 
+2.7.4
