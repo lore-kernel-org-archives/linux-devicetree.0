@@ -1,13 +1,11 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/2] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Mon, 14 Nov 2016 18:32:03 +0100
-Message-ID: <1479144724-14231-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1479144724-14231-1-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 0/2] ARM: da850: enable the MSTPRI and DDR2/mDDR drivers
+Date: Mon, 14 Nov 2016 18:32:02 +0100
+Message-ID: <1479144724-14231-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1479144724-14231-1-git-send-email-bgolaszewski@baylibre.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,21 +19,20 @@ To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.
 Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBub2RlcyBmb3IgdGhlIE1TVFBSSSBjb25maWd1cmF0aW9uIGFuZCBERFIyL21ERFIg
-bWVtb3J5CmNvbnRyb2xsZXIgZHJpdmVycyB0byBkYTg1MC5kdHNpLgoKU2lnbmVkLW9mZi1ieTog
-QmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9kYTg1MC5kdHNpIHwgOSArKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA5
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQppbmRleCAxYmIxZjZkLi4xNjM1MjE4IDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2RhODUwLmR0c2kKQEAgLTQ0MCw2ICs0NDAsMTEgQEAKIAkJCWludGVycnVwdHMgPSA8
-NTI+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKKworCQltc3Rwcmk6IG1zdHByaUAx
-NDExMCB7CisJCQljb21wYXRpYmxlID0gInRpLGRhODUwLW1zdHByaSI7CisJCQlyZWcgPSA8MHgx
-NDExMCAweDBjPjsKKwkJfTsKIAl9OwogCWFlbWlmOiBhZW1pZkA2ODAwMDAwMCB7CiAJCWNvbXBh
-dGlibGUgPSAidGksZGE4NTAtYWVtaWYiOwpAQCAtNDUxLDQgKzQ1Niw4IEBACiAJCQkgIDEgMCAw
-eDY4MDAwMDAwIDB4MDAwMDgwMDA+OwogCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCX07CisJZGRy
-Y3RsOiBkZHJjdGxAYjAwMDAwMDAgeworCQljb21wYXRpYmxlID0gInRpLGRhODUwLWRkci1jb250
-cm9sbGVyIjsKKwkJcmVnID0gPDB4YjAwMDAwMDAgMHhlOD47CisJfTsKIH07Ci0tIAoyLjkuMwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+VGhpcyBpcyBhIGZvbGxvdy11cCBmb3IgbXkgcHJldmlvdXMgc2VyaWVzOgoKICBBUk06IGRhODUw
+OiBuZXcgZHJpdmVycyBmb3IgYmV0dGVyIExDREMgc3VwcG9ydAoKZnJvbSB3aGljaCB0aGUgbmV3
+IGRyaXZlcnMgd2VyZSBtZXJnZWQsIHdoaWxlIHRoZSBwYXRjaCBhZGRpbmcgdGhlCnBhbmVsIG5v
+ZGUgd2FzIG5hY2tlZCBhbmQgaGFzIGJlZW4gZHJvcHBlZC4KClRoZSBmaXJzdCBwYXRjaCBpbiB0
+aGlzIHNlcmllcyBlbmFibGVzIHRoZSBuZXcgZHJpdmVycyBpbiBkYTg1MC5kdHNpLgpJdCBoYXMg
+YmVlbiBjaGFuZ2VkIHNpbmNlIHRoZSBsYXN0IGl0ZXJhdGlvbiB0byBub3QgZGlzYWJsZSB0aGUg
+YWRkZWQKbm9kZXMuIEFsc286IHRoZSBwYXRjaCBlbmFibGluZyB0aGUgbm9kZXMgaW4gZGE4NTAt
+bGNkay5kdHMgaGFzIGJlZW4KZHJvcHBlZCB0b28uCgpUaGUgc2Vjb25kIHBhdGNoIHVwZGF0ZXMg
+dGhlIGRhdmluY2kgZGVmY29uZmlnLgoKQmFydG9zeiBHb2xhc3pld3NraSAoMik6CiAgQVJNOiBk
+dHM6IGRhODUwOiBhZGQgdGhlIG1zdHByaSBhbmQgZGRyY3RsIG5vZGVzCiAgQVJNOiBkYXZpbmNp
+X2FsbF9kZWZjb25maWc6IGVuYWJsZSB0aGUgbXN0cHJpIGFuZCBkZHJjdGwgZHJpdmVycwoKIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgICAgICAgICAgIHwgOSArKysrKysrKysKIGFyY2gv
+YXJtL2NvbmZpZ3MvZGF2aW5jaV9hbGxfZGVmY29uZmlnIHwgMiArKwogMiBmaWxlcyBjaGFuZ2Vk
+LCAxMSBpbnNlcnRpb25zKCspCgotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
