@@ -1,85 +1,103 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: [PATCH v6 0/3] Add clockevent for timer-nps driver to NPS400 SoC
-Date: Mon, 14 Nov 2016 11:40:44 +0200
-Message-ID: <1479116447-29483-1-git-send-email-noamca@mellanox.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 2/3] PCI: qcom: add support to msm8996 PCIE controller
+Date: Mon, 14 Nov 2016 10:32:43 +0000
+Message-ID: <2eae2624-fd5e-df55-5261-a49b3fe56a18@linaro.org>
+References: <1478264387-17914-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1478264387-17914-3-git-send-email-srinivas.kandagatla@linaro.org>
+ <CAFp+6iF7rspwXvANoz_3XgC33-CwSYzPvdpwsGK8UAfp064Jxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
-Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iF7rspwXvANoz_3XgC33-CwSYzPvdpwsGK8UAfp064Jxg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: svarbanov@mm-sol.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca@mellanox.com>
 
-Change log
----
-V5 --> V6
-Apply several comments made by Daniel Lezcano:
-1) nps_get_timer_clk() - use clk_put() on error scenario
-2) nps_get_timer_clk() - return EINVAL and not plain 1
-3) Fix typos in log (double checked with spell checker)
 
-V4 --> V5
-Apply several comments made by Daniel Lezcano:
-1) Add __init attribute to nps_get_timer_clk()
-2) Fix return value of nps_get_timer_clk()
- when failing to get clk rate
-3) Change clocksource rate from 301 -> 300
+On 09/11/16 10:37, Vivek Gautam wrote:
+> Hi,
+>
+> On Fri, Nov 4, 2016 at 6:29 PM, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
+>> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
+>> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
+>>
+>> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
+>> pipe clocks are only setup after the phy is powered on.
+>> It also adds ltssm_enable callback as it is very much different to other
+>> supported SOCs in the driver.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>
+> Few minor nits.
+>
+>>  .../devicetree/bindings/pci/qcom,pcie.txt          |  68 +++++++-
+>>  drivers/pci/host/pcie-qcom.c                       | 177 ++++++++++++++++++++-
+>>  2 files changed, 239 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> index 4059a6f..4a0538d 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> @@ -7,6 +7,7 @@
+>>                         - "qcom,pcie-ipq8064" for ipq8064
+>>                         - "qcom,pcie-apq8064" for apq8064
+>>                         - "qcom,pcie-apq8084" for apq8084
+>> +                       - "qcom,pcie-msm8996" for msm8996 or apq8096
+>
+> Since this works for both apq8096 and msm8996, compatible -
+> "qcom,pcie-apq8096" for uniformity ?
 
-V3 --> V4
-Main changes are [Thanks for the review]:
-Fix many typos at log [Daniel]
-Add handling for bad return values [Daniel and Thomas]
-Replace use of internal irqchip pointers with existing IRQ API [Thomas]
-Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
-Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+AFAIK, compatible is selected based on SOC on which this IP is 
+integrated first, So msm8996 seems to be correct, in that way.
 
-V2 --> V3
-Apply Rob Herring comment about backword compatibility
+Also if we look at clk controller compatible strings, you would see them 
+as *msm8996* rather than *8096*.
+>> +
+>> +static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
+>> +{
+>> +       struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+>> +       struct device *dev = pcie->pp.dev;
+>> +       u32 val;
+>> +       int ret = 0;
+>
+> you don't need to initialize ret here.
+Yep, I will fix it.
+>
+>> +
+>> +       ret = clk_prepare_enable(res->aux_clk);
+>> +       if (ret) {
+>> +               dev_err(dev, "cannot prepare/enable aux clock\n");
+>> +               return ret;
+>> +       }
+>
+> [snip]
+>
+>> @@ -429,6 +571,17 @@ static int qcom_pcie_link_up(struct pcie_port *pp)
+>>         return !!(val & PCI_EXP_LNKSTA_DLLLA);
+>>  }
+>>
+>> +static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
+>> +{
+>> +       struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
+>> +
+>> +       clk_disable_unprepare(res->slave_clk);
+>> +       clk_disable_unprepare(res->master_clk);
+>> +       clk_disable_unprepare(res->cfg_clk);
+>> +       clk_disable_unprepare(res->aux_clk);
+>> +       clk_disable_unprepare(res->pipe_clk);
+>
+> i am sure, this is not affecting the functionality, but the pipe clock
+> is enabled after all the clocks.
+> so it makes sense to disable it in the first place. you can just move
+> this above slave_clk.
 
-V1 --> V2
-Apply Daniel Lezcano comments:
-	CLOCKSOURCE_OF_DECLARE return value
-	update hotplug callbacks usage
-	squash of 2 first commits.
-In this version I created new commit to serve as preperation for adding clockevents.
-This way the last patch is more readable with clockevent content.
----
-
-In first version of this driver we supported clocksource for the NPS400.
-The support for clockevent was taken from Synopsys ARC timer driver.
-This was good for working with our simulator of NPS400.
-However in NPS400 ASIC the timers behave differently than simulation.
-The timers in ASIC are shared between all threads whithin a core
-and hence need different driver to support this behaviour.
-
-The idea of this design is that we got 16 HW threads per core
-each represented at bimask in a shared register in this core.
-So when thread wants that next clockevent expiration will produce
-timer interrupt to itself the correspondance bit in this register
-should be set.
-So theoretically if all 16 bits are set then all HW threads will get
-timer interrupt on next expiration of timer 0.
-
-Note that we use Synopsys ARC design naming convention for the timers
-where:
-timer0 is used for clockevents
-timer1 is used for clocksource.
-
-Noam Camus (3):
-  soc: Support for NPS HW scheduling
-  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
-  clocksource: Add clockevent support to NPS400 driver
-
- .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
- .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
- .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
- arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
- drivers/clocksource/timer-nps.c                    |  266 ++++++++++++++++++--
- include/soc/nps/mtm.h                              |   59 +++++
- 6 files changed, 337 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
- create mode 100644 include/soc/nps/mtm.h
+Sure.. will fix it.
+>
+> [snip]
+>
