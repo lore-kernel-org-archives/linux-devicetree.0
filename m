@@ -1,56 +1,29 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v2 1/3] ARM: imx6ull: add imx6ull support
-Date: Mon, 14 Nov 2016 06:35:43 +0000
-Message-ID: <HE1PR04MB1450297765B98A84BB81AB428BBC0@HE1PR04MB1450.eurprd04.prod.outlook.com>
-References: <1478584614-12054-1-git-send-email-peter.chen@nxp.com>
- <1478584614-12054-2-git-send-email-peter.chen@nxp.com>
- <20161114054833.GG3310@dragon>
- <HE1PR04MB14509BFD0CBA838BC1EA7D598BBC0@HE1PR04MB1450.eurprd04.prod.outlook.com>
- <20161114061311.GA14956@dragon>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx7d-pinfunc: fix UART pinmux defines
+Date: Mon, 14 Nov 2016 14:38:29 +0800
+Message-ID: <20161114063827.GJ3310@dragon>
+References: <20161109024456.1832-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161114061311.GA14956@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161109024456.1832-1-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Frank.Li-3arQi8VN3Tc@public.gmane.org, aalonso-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- 
->On Mon, Nov 14, 2016 at 05:59:01AM +0000, Peter Chen wrote:
->> The main difference is compatible string, I can't include two
->> compatible strings in one dts file, the dts build will fail for that.
->>
->> imx6ull-14x14-evk.dts
->> / {
->>         model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
->>         compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull"; };
->>
->> imx6ul-14x14-evk.dts
->> / {
->>         model = "Freescale i.MX6 UltraLite 14x14 EVK Board";
->>         compatible = "fsl,imx6ul-14x14-evk", "fsl,imx6ul"; };
->
->I created imx6ull-14x14-evk.dts like below, and DTC seems happy with it.
->
->#include "imx6ul-14x14-evk.dts"
->
->/ {
->        model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
->        compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull"; };
->
+On Tue, Nov 08, 2016 at 06:44:56PM -0800, Stefan Agner wrote:
+> The UART pinmux defines for the pins which are part of the LPSR
+> pinmux controller are wrong: Output signals configure the input
+> sel value and the pinmux defines allow not to distinguish between
+> DCE/DTE mode. Follow the usual pattern using DTE/DCE as part of
+> the define to denote the two UART configuration options.
+> 
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Thanks for trying it, the problem why my dtc building fail is I have two
-" /dts-v1/;" at dts file (one is from imx6ul-14x14-evk.dts) . I will follow your suggestion.
-
-Peter
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
