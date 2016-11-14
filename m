@@ -1,131 +1,135 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
-Date: Mon, 14 Nov 2016 16:16:42 -0600
-Message-ID: <CAL_Jsq+zWiXOtb4hWrpB87z8T4WLfCbLeGNgST4tmAz61dgFHA@mail.gmail.com>
-References: <20161104144241.18002-1-hdegoede@redhat.com> <20161104144241.18002-2-hdegoede@redhat.com>
- <5827CCC3.90003@gmail.com> <582968FA.4020800@gmail.com> <b2cef3fb-cbb4-f34b-cb9a-84578bb67751@redhat.com>
- <582A060D.50800@gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RESEND/PATCH v6 3/3] clk: qcom: Add A53 clock driver
+Date: Mon, 14 Nov 2016 14:21:22 -0800
+Message-ID: <20161114203426.GN5177@codeaurora.org>
+References: <20161019132816.31073-4-georgi.djakov@linaro.org>
+ <20161028015438.GG16026@codeaurora.org>
+ <20161102205910.GQ25787@tuxbot>
+ <20161102225520.GW16026@codeaurora.org>
+ <20161103182834.GR25787@tuxbot>
+ <549f87fe-7be9-14b4-8e34-86f7f8dad94e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <582A060D.50800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <549f87fe-7be9-14b4-8e34-86f7f8dad94e-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 12:44 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/14/16 03:04, Hans de Goede wrote:
->> Hi,
->>
->> On 14-11-16 08:34, Frank Rowand wrote:
->>> Hi Hans, Pantelis,
->>>
->>> On 11/12/16 18:15, Frank Rowand wrote:
->>>> On 11/04/16 07:42, Hans de Goede wrote:
->>>>> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>>>
->>>>> Changesets are very powerful, but the lack of a helper API
->>>>> makes using them cumbersome. Introduce a simple copy based
->>>>> API that makes things considerably easier.
->>>>>
->>>>> To wit, adding a property using the raw API.
->>>>>
->>>>>     struct property *prop;
->>>>>     prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
->>>>>     prop->name = kstrdup("compatible");
->>>>>     prop->value = kstrdup("foo,bar");
->>>>>     prop->length = strlen(prop->value) + 1;
->>>>>     of_changeset_add_property(ocs, np, prop);
->>>>>
->>>>> while using the helper API
->>>>>
->>>>>     of_changeset_add_property_string(ocs, np, "compatible",
->>>>>             "foo,bar");
->>>>>
->>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
->>>>> -Address review comments from:
->>>>>  https://www.spinics.net/lists/kernel/msg2252845.html
->>>>
->>>> That points to the May 9 version 1 patches from Pantelis (as expected),
->>>> but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
->>>> seems to have disappeared?
->>>>
->>>> Pantelis then sent a version 2 set of the patches on May 16.
->>>>
->>>> Your version is a modification of the May 9 patches (as would be expected
->>>> of a version 2).  It is confusing to have two different version 2 patch
->>>> sets.  I don't have any brilliant ideas on how this patch set could have
->>>> been named differently to avoid that confusion.
->>>>
->>>> The point of this little side-track is simply to note the existence of two
->>>> different version 2 series so I won't be confused when I revisit this
->>>> thread in the future.
->>>>
->>>>>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
->>>>>  -Remove (by manual inlining) these 2 static helpers:
->>>>>   __of_changeset_add_update_property_u32
->>>>>   __of_changeset_add_update_property_bool
->>>>>  -Remove the following exported helper method:
->>>>>   of_changeset_node_move_to
->>>>
->>>> Not all comments were addressed.
->>>>
->>>> There are some other changes made that are not noted in the changelog.
->>>>
->>>> I am still reading through the patches. I will reply again either with
->>>> a reviewed-by or specific comments when I finish.
->>>
->>> Replying here for the entire patchset (there was no patch 0 to reply to).
->>>
->>> After reading through the patches, my reply is meta instead of specific
->>> comments about the code.
->>>
->>> There are very few users of change sets in tree.  I do not see the need to
->>> add these helpers until such users are likely to appear.
->>>
->>> I would expect change sets to be _mostly_ used internally by the device tree
->>> overlay framework, not directly by drivers.  If change sets are an attractive
->>> technology for drivers, I want to approach that usage very carefully to avoid
->>> inappropriate use, which could be very difficult to reign in after the fact.
->>>
->>> Even if helpers should be added, this seems to be an overly complex approach.
->>> If the need for these helpers becomes apparent I can provide review comments
->>> with the specifics about how it appears to be overly complex.
->>>
->>> Can you please  provide some more insights into the needs driving the desire
->>> to have change set helpers and the expected use cases of them?  Please put
->>> your architect's hat on when replying to this question.
->>
->> My use case for this is discussed in this thread:
->> https://www.spinics.net/lists/arm-kernel/msg536111.html
->>
->> With the dt-bindings for the hardware-manager I want to add here:
->> https://www.spinics.net/lists/arm-kernel/msg536109.html
->>
->> Note that there is a lot of discussion in this thread whether or
->> not this belongs in the kernel. I strongly believe though that
->> some functionality like this will be needed in the kernel for
->> ARM+dt devices going forward, just like there is plenty of x86
->> code which adjusts itself to specific hardware, because whether
->> we like it or not hardware (revisions) will always have quirks.
->
-> Thanks! That context should have been provided with the patches.
->
-> The use case discussion is important and I am paying a lot of
-> attention to that discussion and many other discussions about
-> dynamic device trees.  I don't think it makes sense to apply the
-> change set helper patches yet, given the unsettled state of the
-> various dynamic device tree discussions.
+On 11/11, Georgi Djakov wrote:
+> On 11/03/2016 08:28 PM, Bjorn Andersson wrote:
+> >On Wed 02 Nov 15:55 PDT 2016, Stephen Boyd wrote:
+> >
+> >>On 11/02, Bjorn Andersson wrote:
+> >>>On Thu 27 Oct 18:54 PDT 2016, Stephen Boyd wrote:
+> >>>
+> >>>>On 10/19, Georgi Djakov wrote:
+> >>>>>Add a driver for the A53 Clock Controller. It is a hardware block that
+> >>>>>implements a combined mux and half integer divider functionality. It can
+> >>>>>choose between a fixed-rate clock or the dedicated A53 PLL. The source
+> >>>>>and the divider can be set both at the same time.
+> >>>>>
+> >>>>>This is required for enabling CPU frequency scaling on platforms like
+> >>>>>MSM8916.
+> >>>>>
+> >>>>
+> >>>>Please Cc DT reviewers.
+> >>>>
+> >>>>>Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>>>---
+> >>>>> .../devicetree/bindings/clock/qcom,a53cc.txt       |  22 +++
+> >>>>> drivers/clk/qcom/Kconfig                           |   8 ++
+> >>>>> drivers/clk/qcom/Makefile                          |   1 +
+> >>>>> drivers/clk/qcom/a53cc.c                           | 155 +++++++++++++++++++++
+> >>>>> 4 files changed, 186 insertions(+)
+> >>>>> create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> >>>>> create mode 100644 drivers/clk/qcom/a53cc.c
+> >>>>>
+> >>>>>diff --git a/Documentation/devicetree/bindings/clock/qcom,a53cc.txt b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> >>>>>new file mode 100644
+> >>>>>index 000000000000..a025f062f177
+> >>>>>--- /dev/null
+> >>>>>+++ b/Documentation/devicetree/bindings/clock/qcom,a53cc.txt
+> >>>>>@@ -0,0 +1,22 @@
+> >>>>>+Qualcomm A53 CPU Clock Controller Binding
+> >>>>>+------------------------------------------------
+> >>>>>+The A53 CPU Clock Controller is hardware, which provides a combined
+> >>>>>+mux and divider functionality for the CPU clocks. It can choose between
+> >>>>>+a fixed rate clock and the dedicated A53 PLL.
+> >>>>>+
+> >>>>>+Required properties :
+> >>>>>+- compatible : shall contain:
+> >>>>>+
+> >>>>>+			"qcom,a53cc"
+> >>>>>+
+> >>>>>+- reg : shall contain base register location and length
+> >>>>>+	of the APCS region
+> >>>>>+- #clock-cells : shall contain 1
+> >>>>>+
+> >>>>>+Example:
+> >>>>>+
+> >>>>>+	apcs: syscon@b011000 {
+> >>>>>+		compatible = "qcom,a53cc", "syscon";
+> >>>>
+> >>>>Why is it a syscon? Is that part used?
+> >>>>
+> >>>
+> >>>I use the register at offset 8 for interrupting the other subsystems, so
+> >>>this must be available as something I can poke.
+> >>>
+> >>>Which makes me think that this should be described as a "simple-mfd" and
+> >>>"syscon" with the a53cc node as a child - grabbing the regmap of the
+> >>>syscon parent, rather then ioremapping the same region again.
+> >>>
+> >>
+> >>That's sort of a question for DT reviewers. The register space
+> >>certainly seems like a free for all with a tilt toward power
+> >>management of the CPU, similar to how this was done on Krait
+> >>based designs.
+> >>
+> >
+> >Right. But this kind of mashup blocks was the reason why simple-mfd was
+> >put in place.
+> >
+> 
+> Ok, thanks for the comments. Then i will make it look like this:
+> 
+> 	apcs: syscon@b011000 {
+> 		compatible = "syscon", "simple-mfd";
+> 		reg = <0x0b011000 0x1000>;
+> 
+> 		a53mux: clock {
+> 			compatible = "qcom,msm8916-a53cc";
+> 			#clock-cells = <1>;
+> 		};
+> 	};
+> 
+> Thanks,
+> Georgi
+> 
+> >>I wonder why we didn't make up some provider/consumer binding for
+> >>the "kicking" feature used by SMD/RPM code. Then this could be a
+> >>clock provider and a "kick" provider (haha #kick-cells) and the
+> >>usage of syscon/regmap wouldn't be mandatory.
+> >>
+> >
+> >I did consider doing that, but had enough dependencies to put in place
+> >as it was.
+> >
+> >I'm in favour of us inventing a kicker API and it's found outside out
+> >use cases as well (e.g. virtio/rpmsg).
+> >
 
-These helpers are useful and easier to use than the existing API
-independent of any issues to sort out with how we use overlays. So I
-plan to take them whether there's a user right away or not.
+I'd rather we did this kicker API as well. That way we don't need
+to make a syscon and a simple-mfd to get software to work
+properly. Don't other silicon vendors need a kicker API as well?
+How are they kicking remote processors in other places? GPIOs?
 
-Rob
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
