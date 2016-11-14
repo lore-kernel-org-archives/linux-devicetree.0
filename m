@@ -1,88 +1,40 @@
-From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v10 8/8] ARM: dts: imx6q-evi: Fix onboard hub reset line
-Date: Mon, 14 Nov 2016 09:35:59 +0800
-Message-ID: <1479087359-7547-9-git-send-email-peter.chen@nxp.com>
-References: <1479087359-7547-1-git-send-email-peter.chen@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C
+ bus bitbang for HDMI
+Date: Mon, 14 Nov 2016 09:55:51 +0800
+Message-ID: <20161114015549.GA3310@dragon>
+References: <2263d508999ada9476268138b2922702eb50131f.1474260360.git.maitysanchayan@gmail.com>
+ <20161022032559.GL30578@tiger>
+ <3d2b6dfd-c03c-e635-8dc1-2dc9ac454f5a@mentor.com>
+ <20161108173315.GA16082@Sanchayan-Arch.localdomain>
+ <57268103e8fabf344723eae99b45ec7d@agner.ch>
+ <7eb3df71-6d1a-006a-cc4c-83ff8df3c42c@mentor.com>
+ <b68c1a07b6b5f027a6519c29b90217c1@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479087359-7547-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b68c1a07b6b5f027a6519c29b90217c1-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Thu, Nov 10, 2016 at 08:27:50PM -0800, Stefan Agner wrote:
+> You probably saw it, Dave merged it today in his drm-next branch:
+> https://cgit.freedesktop.org/~airlied/linux/?h=drm-next
+> 
+> I guess with that Shawn can go ahead and merge this patchset for next
+> too...?
 
-Previously the onboard hub was made to work by treating its
-reset gpio as a regulator enable.
-Get rid of that kludge now that pwseq has added reset gpio support
-Move pin muxing the hub reset pin into the usbh1 group
+I merged #2 and #3 a couple of weeks ago.  But for the first one, I have
+to wait for the drm changes to appear on my tree, i.e. v4.10-rc1 likely.
+Otherwise, HDMI will stop working on my tree if I apply that patch right
+now.
 
-Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-evi.dts | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+So please ping me when drm changes are in place.
 
-diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-index 6de21ff..3277a06 100644
---- a/arch/arm/boot/dts/imx6q-evi.dts
-+++ b/arch/arm/boot/dts/imx6q-evi.dts
-@@ -54,18 +54,6 @@
- 		reg = <0x10000000 0x40000000>;
- 	};
- 
--	reg_usbh1_vbus: regulator-usbhubreset {
--		compatible = "regulator-fixed";
--		regulator-name = "usbh1_vbus";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		enable-active-high;
--		startup-delay-us = <2>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_usbh1_hubreset>;
--		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
--	};
--
- 	reg_usb_otg_vbus: regulator-usbotgvbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb_otg_vbus";
-@@ -207,12 +195,18 @@
- };
- 
- &usbh1 {
--	vbus-supply = <&reg_usbh1_vbus>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbh1>;
- 	dr_mode = "host";
- 	disable-over-current;
- 	status = "okay";
-+
-+	usb2415host: hub@1 {
-+		compatible = "usb424,2513";
-+		reg = <1>;
-+		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+		reset-duration-us = <3000>;
-+	};
- };
- 
- &usbotg {
-@@ -471,11 +465,6 @@
- 			MX6QDL_PAD_GPIO_3__USB_H1_OC 0x1b0b0
- 			/* usbh1_b OC */
- 			MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0
--		>;
--	};
--
--	pinctrl_usbh1_hubreset: usbh1hubresetgrp {
--		fsl,pins = <
- 			MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x1b0b0
- 		>;
- 	};
--- 
-2.7.4
-
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
