@@ -1,81 +1,93 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH -next] PCI: dra7xx: Add missing of_node_put() in dra7xx_pcie_init_irq_domain()
-Date: Mon, 14 Nov 2016 22:37:29 +0100
-Message-ID: <6132489.PMT7H6dWFM@phil>
-References: <1476716077-30379-1-git-send-email-weiyj.lk@gmail.com> <1d95b915-ddc0-b48f-270b-fffb60ecfe5e@ti.com> <20161114211928.GD9868@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20161114211928.GD9868@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Wei Yongjun <weiyj.lk@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Wei Yongjun <weiyongjun1@huawei.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, bharat.kumar.gogada@xilinx.com, robh@kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: [PATCH v7 0/5] enable movable nodes on non-x86 configs
+Date: Mon, 14 Nov 2016 16:02:36 -0600
+Message-ID: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. November 2016, 15:19:28 CET schrieb Bjorn Helgaas:
-> [+cc Shawn, Heiko, Michal, Soren, Bharat, Rob H, Frank, devicetree@vger]
-> 
-> On Sat, Nov 12, 2016 at 12:39:01PM +0530, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On Saturday 12 November 2016 03:08 AM, Bjorn Helgaas wrote:
-> > > On Mon, Oct 17, 2016 at 02:54:37PM +0000, Wei Yongjun wrote:
-> > >> From: Wei Yongjun <weiyongjun1@huawei.com>
-> > >> 
-> > >> This node pointer is returned by of_get_next_child() with refcount
-> > >> incremented in this function. of_node_put() on it before exitting
-> > >> this function on error.
-> > >> 
-> > >> This is detected by Coccinelle semantic patch.
-> > >> 
-> > >> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> > > 
-> > > Kishon, this looks correct to me, so I applied it to pci/host-dra7xx for
-> > > v4.10.  Let me know if you have any issue with it.
-> > > 
-> > >> ---
-> > >> 
-> > >>  drivers/pci/host/pci-dra7xx.c | 1 +
-> > >>  1 file changed, 1 insertion(+)
-> > >> 
-> > >> diff --git a/drivers/pci/host/pci-dra7xx.c
-> > >> b/drivers/pci/host/pci-dra7xx.c
-> > >> index 9595fad..79297e9 100644
-> > >> --- a/drivers/pci/host/pci-dra7xx.c
-> > >> +++ b/drivers/pci/host/pci-dra7xx.c
-> > >> @@ -177,6 +177,7 @@ static int dra7xx_pcie_init_irq_domain(struct
-> > >> pcie_port *pp)> >> 
-> > >>  					       &intx_domain_ops, pp);
-> > >>  	
-> > >>  	if (!pp->irq_domain) {
-> > >>  	
-> > >>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-> > >> 
-> > >> +		of_node_put(pcie_intc_node);
-> > 
-> > I think of_node_put should be used for both the error case and non-error
-> > case.
-> Hmm, OK.  I don't know what the rules are.  Certainly if we made these
-> drivers modular, I don't think we'd want to leak these references
-> every time we unload/reload the module.  Should we do the put
-> immediately here, or in the module remove path, or ...?
-> 
-> Adding other driver and DT folks for comment.
+This patchset allows more configs to make use of movable nodes. When
+CONFIG_MOVABLE_NODE is selected, there are two ways to introduce such
+nodes into the system:
 
-I think the function above (dra7xx_pcie_init_irq_domain) can do the 
-of_node_put at its end in all cases as suggested by Kishon.
+1. Discover movable nodes at boot. Currently this is only possible on
+   x86, but we will enable configs supporting fdt to do the same.
 
-of_get_next_child() will increment the refcount
-	irq_domain_add_linear()
-		__irq_domain_add() also increments the refcount
+2. Hotplug and online all of a node's memory using online_movable. This
+   is already possible on any config supporting memory hotplug, not
+   just x86, but the Kconfig doesn't say so. We will fix that.
 
+We'll also remove some cruft on power which would prevent (2).
 
-irq_domain_remove() will decrement the refcount
+/* changelog */
 
-So it should be safe to decrement the refcount in 
-dra7xx_pcie_init_irq_domain() in all cases as the irq-domain internals will 
-always keep it above 1 as long as the node is used.
+v7:
+* Fix error when !CONFIG_HAVE_MEMBLOCK, found by the kbuild test robot.
 
+* Remove the prefix of "linux,hotpluggable". Document the property's purpose.
 
-Heiko
+v6:
+* http://lkml.kernel.org/r/1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Add a patch enabling the fdt to describe hotpluggable memory.
+
+v5:
+* http://lkml.kernel.org/r/1477339089-5455-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Drop the patches which recognize the "status" property of dt memory
+  nodes. Firmware can set the size of "linux,usable-memory" to zero instead.
+
+v4:
+* http://lkml.kernel.org/r/1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Rename of_fdt_is_available() to of_fdt_device_is_available().
+  Rename of_flat_dt_is_available() to of_flat_dt_device_is_available().
+
+* Instead of restoring top-down allocation, ensure it never goes
+  bottom-up in the first place, by making movable_node arch-specific.
+
+* Use MEMORY_HOTPLUG instead of PPC64 in the mm/Kconfig patch.
+
+v3:
+* http://lkml.kernel.org/r/1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Use Rob Herring's suggestions to improve the node availability check.
+
+* More verbose commit log in the patch enabling CONFIG_MOVABLE_NODE.
+
+* Add a patch to restore top-down allocation the way x86 does.
+
+v2:
+* http://lkml.kernel.org/r/1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com
+
+* Use the "status" property of standard dt memory nodes instead of
+  introducing a new "ibm,hotplug-aperture" compatible id.
+
+* Remove the patch which explicitly creates a memoryless node. This set
+  no longer has any bearing on whether the pgdat is created at boot or
+  at the time of memory addition.
+
+v1:
+* http://lkml.kernel.org/r/1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com
+
+Reza Arbab (5):
+  powerpc/mm: allow memory hotplug into a memoryless node
+  mm: remove x86-only restriction of movable_node
+  mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
+  of/fdt: mark hotpluggable memory
+  dt: add documentation of "hotpluggable" memory property
+
+ Documentation/devicetree/booting-without-of.txt |  7 +++++++
+ Documentation/kernel-parameters.txt             |  2 +-
+ arch/powerpc/mm/numa.c                          | 13 +------------
+ arch/x86/kernel/setup.c                         | 24 ++++++++++++++++++++++++
+ drivers/of/fdt.c                                | 19 +++++++++++++++++++
+ include/linux/of_fdt.h                          |  1 +
+ mm/Kconfig                                      |  2 +-
+ mm/memory_hotplug.c                             | 20 --------------------
+ 8 files changed, 54 insertions(+), 34 deletions(-)
+
+-- 
+1.8.3.1
