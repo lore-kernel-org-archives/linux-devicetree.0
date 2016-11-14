@@ -1,141 +1,163 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 10/10] ARM: dts: rockchip: add rockchip RK1108 Evaluation board
-Date: Mon, 14 Nov 2016 20:17:43 +0800
-Message-ID: <1479125863-24646-1-git-send-email-andy.yan@rock-chips.com>
-References: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
+From: tomas.hlavacek-x+rMaJPWets@public.gmane.org
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Date: Mon, 14 Nov 2016 13:23:05 +0100
+Message-ID: <1479126185.15557.5@smtp.gmail.com>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161105203841.9661-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin =?UTF-8?b?U3RyYmHEjWth?= <martin.strbacka-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RK1108 EVB is designed by Rockchip for CVR field.
-This patch add basic support for it, which can boot with
-initramfs into shell.
+Hello Uwe and all!
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
+On Sat, Nov 5, 2016 at 9:38 PM, Uwe Kleine-K=F6nig=20
+<uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> wrote:
+> This machine is an open hardware router by cz.nic driven by a
+> Marvell Armada 385.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+> ---
+>=20
+> Hello,
+>=20
+> the following components are working:
+>=20
+>  - WAN port
+>  - eMMC
 
----
+But I not not sure about DDR50 mode. At least with kernel 4.4, that we=20
+use in production, we had to limit to SDR50 to overcome I/O errors and=20
+communication instability, if I can remember it correctly. So it might=20
+need more testing with the current kernel.
 
-Changes in v2:
-- move the board in the rockchip.txt to the block of Rockchip boards
+>=20
+>  - UART0
+>  - USB
 
- Documentation/devicetree/bindings/arm/rockchip.txt |  5 +-
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/rk1108-evb.dts                   | 69 ++++++++++++++++++++++
- 3 files changed, 74 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/rk1108-evb.dts
+It is worth noting that the USB 2.0 interface of Armada 385 is wired to=20
+USB pinout of the last (right-most) PCIe connector. The two USB3=20
+interfaces routed through SERDES 1 and 3 go directly to the external=20
+USB connectors.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 10b92b5..e658b62 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -1,6 +1,5 @@
- Rockchip platforms device tree bindings
- ---------------------------------------
--
- - Kylin RK3036 board:
-     Required root node properties:
-       - compatible = "rockchip,kylin-rk3036", "rockchip,rk3036";
-@@ -111,6 +110,10 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
- 
-+- Rockchip RK1108 Evaluation board
-+    Required root node properties:
-+      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+
- - Rockchip RK3368 evb:
-     Required root node properties:
-       - compatible = "rockchip,rk3368-evb-act8846", "rockchip,rk3368";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e49476a..249dca9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -635,6 +635,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pba8.dtb \
- 	arm-realview-pbx-a9.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
-+	rk1108-evb.dtb \
- 	rk3036-evb.dtb \
- 	rk3036-kylin.dtb \
- 	rk3066a-bqcurie2.dtb \
-diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rk1108-evb.dts
-new file mode 100644
-index 0000000..3956cff
---- /dev/null
-+++ b/arch/arm/boot/dts/rk1108-evb.dts
-@@ -0,0 +1,69 @@
-+/*
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *  Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "rk1108.dtsi"
-+
-+/ {
-+	model = "Rockchip RK1108 Evaluation board";
-+	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x08000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
--- 
-2.7.4
+>=20
+> Still missing is support for the switch. Wireless fails to probe,=20
+> didn't
+> debug this up to now. SFP is untested as is UART1.
+
+Actually SFP is connected to SGMII interface of eth1, which is routed=20
+through SERDES 5. The SGMII line is shared between the SFP and metallic=20
+PHY 88E1514. There is a autonomous high-speed switch connected to the=20
+SFPDET signal from SFP cage. It disconnects the metallic SFP and=20
+connects SGMII to SFP once the module is connected.
+
+The SFP is also connected to the I2C mux port 4 and to GPIO expander=20
+for reading/driving SFPDET, LOS, TXFLT, TXDIS signals:
+
+&i2c0 {
+        pinctrl-names =3D "default";
+        pinctrl-0 =3D <&i2c0_pins>;
+        status =3D "okay";
+        clock-frequency =3D <100000>;
+
+        i2cmux@70 {
+                compatible =3D "nxp,pca9547";
+                #address-cells =3D <1>;
+                #size-cells =3D <0>;
+                reg =3D <0x70>;
+                status =3D "okay";
+
+...
+
+                i2c@7 {
+                        /* SFP+ GPIO expander */
+                        #address-cells =3D <1>;
+                        #size-cells =3D <0>;
+                        reg =3D <7>;
+
+                        sfpgpio: gpio@71 {
+                                compatible =3D "nxp,pca9538";
+                                reg =3D <0x71>;
+                                interrupt-parent =3D <&gpio1>;
+                                interrupts =3D <14 IRQ_TYPE_LEVEL_LOW>;
+                                gpio-controller;
+                                #gpio-cells =3D <2>;
+                        };
+                };
+	};
+};
+
+We have our proprietary support hacked onto mvneta driver for=20
+disconnecting PHY on the fly. It is a bit nasty, so I suggest to ignore=20
+SFP in this DTS altogether and let's wait till "phylink based SFP=20
+module support" or something alike hits upstream, so we can base the=20
+SFP support on solid code; unless somebody has a better idea, of course.
+
+>=20
+>=20
+> diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts=20
+> b/arch/arm/boot/dts/armada-385-turris-omnia.dts
+> new file mode 100644
+> index 000000000000..d3cd8a4d713d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
+> @@ -0,0 +1,246 @@
+...
+> +
+> +			/* USB part of the eSATA/USB 2.0 port */
+
+This comment is perhaps some error inherited from my development DTS.=20
+We do not have any eSATA, perhaps PCIe/USB 2.0 slot.
+
+>=20
+> +			usb@58000 {
+> +				status =3D "okay";
+> +			};
+> +
+> +
+> +&eth0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&ge0_rgmii_pins>;
+> +	status =3D "okay";
+> +	phy-mode =3D "rgmii-id";
+> +
+> +	fixed-link {
+> +		speed =3D <1000>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+> +&eth1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&ge1_rgmii_pins>;
+> +	status =3D "okay";
+> +	phy-mode =3D "rgmii-id";
+> +
+> +	fixed-link {
+> +		speed =3D <1000>;
+> +		full-duplex;
+> +	};
+> +};
+> +
+
+Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176=20
+switch. The problem is that from what I have read so far the switch can=20
+not operate in DSA mode with two CPU ports. We currently operate the=20
+switch in "normal mode" with the eth0 and eth1 set to fixed-link=20
+1000/full and with proprietary driver (derived from OpenWRT switch=20
+drivers). I would say that these records for eth0 and eth1 are=20
+therefore redundant, because it does nothing without the switch support=20
+and it would most likely change once we have DSA driver (using only=20
+eth0).
+
+Tomas
+=
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
