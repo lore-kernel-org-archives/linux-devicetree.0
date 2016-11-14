@@ -1,159 +1,78 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] clocksource: update "fn" at
- CLOCKSOURCE_OF_DECLARE() of nps400 timer
-Date: Mon, 14 Nov 2016 09:43:10 +0100
-Message-ID: <20161114084310.GB2016@mai>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
- <1479021872-14237-3-git-send-email-noamca@mellanox.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: sunxi: add support for H2+ SoC
+Date: Mon, 14 Nov 2016 09:54:05 +0100
+Message-ID: <20161114085405.sa6f6pwvqdiubmkh@lukather>
+References: <20161111164654.15273-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="edsxz5mxh5wdtvq3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMHXUXAQKGQESIKZJMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1479021872-14237-3-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161111164654.15273-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 13, 2016 at 09:24:31AM +0200, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+
+--edsxz5mxh5wdtvq3
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Sat, Nov 12, 2016 at 12:46:52AM +0800, Icenowy Zheng wrote:
+> Allwinner H2+ is a quad-core Cortex-A7 SoC.
 > 
-> nps_setup_clocksource() should take node as only argument i.e.:
-> replace
-> int __init nps_setup_clocksource(struct device_node *node, struct clk *clk)
-> with
-> int __init nps_setup_clocksource(struct device_node *node)
-
-because ...
-
-> This is also serve as preperation for next patch which adds support
-
-s/This is also/This also/
-s/preperation/preparation/
-
-
-> for clockevents to nps400.
-> Specifically we add new function nps_get_timer_clk() to serve clocksource
-> and later clockevent registration.
+> It is very like H3, that they share the same SoC ID (0x1680), and H3
+> memory maps as well as drivers works well on the SoC.
 > 
-> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
->  drivers/clocksource/timer-nps.c |   63 +++++++++++++++++++++++----------------
->  1 files changed, 37 insertions(+), 26 deletions(-)
+>  Documentation/arm/sunxi/README                  | 4 ++++
+>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>  3 files changed, 6 insertions(+)
 > 
-> diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-> index 70c149a..eeef9e9 100644
-> --- a/drivers/clocksource/timer-nps.c
-> +++ b/drivers/clocksource/timer-nps.c
-> @@ -46,7 +46,33 @@
->  /* This array is per cluster of CPUs (Each NPS400 cluster got 256 CPUs) */
->  static void *nps_msu_reg_low_addr[NPS_CLUSTER_NUM] __read_mostly;
+> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+> index cd02433..1fe4d99c 100644
+> --- a/Documentation/arm/sunxi/README
+> +++ b/Documentation/arm/sunxi/README
+> @@ -63,6 +63,10 @@ SunXi family
+>          + User Manual
+>            http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
 >  
-> -static unsigned long nps_timer_rate;
-> +static int __init nps_get_timer_clk(struct device_node *node,
-> +			     unsigned long *timer_freq,
-> +			     struct clk **clk)
-> +{
-> +	int ret;
+> +      - Allwinner H2+ (sun8i)
+> +        + No document available now, but is known to be working properly with
+> +          H3 drivers and memory map.
 > +
-> +	*clk = of_clk_get(node, 0);
-> +	if (IS_ERR(*clk)) {
-> +		pr_err("timer missing clk");
-> +		return PTR_ERR(*clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(*clk);
-> +	if (ret) {
-> +		pr_err("Couldn't enable parent clk\n");
-> +		return ret;
-> +	}
-> +
-> +	*timer_freq = clk_get_rate(*clk);
-> +	if (!(*timer_freq)) {
-> +		pr_err("Couldn't get clk rate\n");
-> +		clk_disable_unprepare(*clk);
-> +		return 1;
+>        - Allwinner H3 (sun8i)
+>          + Datasheet
+>            http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index 3975d0a..0c0f277 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -13,5 +13,6 @@ using one of the following compatible strings:
+>    allwinner,sun8i-a33
+>    allwinner,sun8i-a83t
+>    allwinner,sun8i-h3
+> +  allwinner,sun8i-h2plus
 
-s/return 1/return -EINVAL/
+That's a nitpick, but I'd prefer to have sun8i-h2-plus.
 
-What about clk_put() ?
-
-> +	}
-> +
-> +	return 0;
-> +}
->  
->  static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  {
-> @@ -55,26 +81,24 @@ static cycle_t nps_clksrc_read(struct clocksource *clksrc)
->  	return (cycle_t)ioread32be(nps_msu_reg_low_addr[cluster]);
->  }
->  
-> -static int __init nps_setup_clocksource(struct device_node *node,
-> -					struct clk *clk)
-> +static int __init nps_setup_clocksource(struct device_node *node)
->  {
->  	int ret, cluster;
-> +	struct clk *clk;
-> +	unsigned long nps_timer1_freq;
-> +
->  
->  	for (cluster = 0; cluster < NPS_CLUSTER_NUM; cluster++)
->  		nps_msu_reg_low_addr[cluster] =
->  			nps_host_reg((cluster << NPS_CLUSTER_OFFSET),
-> -				 NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
-> +				     NPS_MSU_BLKID, NPS_MSU_TICK_LOW);
->  
-> -	ret = clk_prepare_enable(clk);
-> -	if (ret) {
-> -		pr_err("Couldn't enable parent clock\n");
-> +	ret = nps_get_timer_clk(node, &nps_timer1_freq, &clk);
-> +	if (ret)
->  		return ret;
-> -	}
->  
-> -	nps_timer_rate = clk_get_rate(clk);
-> -
-> -	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "EZnps-tick",
-> -				    nps_timer_rate, 301, 32, nps_clksrc_read);
-> +	ret = clocksource_mmio_init(nps_msu_reg_low_addr, "nps-tick",
-> +				    nps_timer1_freq, 300, 32, nps_clksrc_read);
->  	if (ret) {
->  		pr_err("Couldn't register clock source.\n");
->  		clk_disable_unprepare(clk);
-> @@ -83,18 +107,5 @@ static int __init nps_setup_clocksource(struct device_node *node,
->  	return ret;
->  }
->  
-> -static int __init nps_timer_init(struct device_node *node)
-> -{
-> -	struct clk *clk;
-> -
-> -	clk = of_clk_get(node, 0);
-> -	if (IS_ERR(clk)) {
-> -		pr_err("Can't get timer clock.\n");
-> -		return PTR_ERR(clk);
-> -	}
-> -
-> -	return nps_setup_clocksource(node, clk);
-> -}
-> -
->  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
-> -		       nps_timer_init);
-> +		       nps_setup_clocksource);
-> -- 
-> 1.7.1
-> 
+Thanks!
+Maxime
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--edsxz5mxh5wdtvq3--
