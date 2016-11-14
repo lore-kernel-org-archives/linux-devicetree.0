@@ -1,73 +1,48 @@
-From: Ritesh Harjani <riteshh@codeaurora.org>
-Subject: Re: [PATCH v6 05/14] mmc: sdhci-msm: Update DLL reset sequence
-Date: Mon, 14 Nov 2016 11:33:50 +0530
-Message-ID: <a2032294-640b-41fa-8e9a-5a4f759ca2eb@codeaurora.org>
-References: <1478517877-23733-1-git-send-email-riteshh@codeaurora.org>
- <1478517877-23733-6-git-send-email-riteshh@codeaurora.org>
- <20161108230622.GN16026@codeaurora.org>
- <10d66d21-eebd-45a3-6fb7-72117d860142@codeaurora.org>
- <20161109204304.GT16026@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: imx6ull: add imx6ull support
+Date: Mon, 14 Nov 2016 14:13:12 +0800
+Message-ID: <20161114061311.GA14956@dragon>
+References: <1478584614-12054-1-git-send-email-peter.chen@nxp.com>
+ <1478584614-12054-2-git-send-email-peter.chen@nxp.com>
+ <20161114054833.GG3310@dragon>
+ <HE1PR04MB14509BFD0CBA838BC1EA7D598BBC0@HE1PR04MB1450.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161109204304.GT16026@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <HE1PR04MB14509BFD0CBA838BC1EA7D598BBC0-6LN7OEpIatVC+P/YwrXEHc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Mon, Nov 14, 2016 at 05:59:01AM +0000, Peter Chen wrote:
+> The main difference is compatible string, I can't include two compatible strings in one dts file,
+> the dts build will fail for that.
+> 
+> imx6ull-14x14-evk.dts 
+> / {
+>         model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
+>         compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull";
+> };
+> 
+> imx6ul-14x14-evk.dts 
+> / {
+>         model = "Freescale i.MX6 UltraLite 14x14 EVK Board";
+>         compatible = "fsl,imx6ul-14x14-evk", "fsl,imx6ul";
+> };
 
-On 11/10/2016 2:13 AM, Stephen Boyd wrote:
-> On 11/09, Ritesh Harjani wrote:
->> Hi Stephen,
->>
->> On 11/9/2016 4:36 AM, Stephen Boyd wrote:
->>> On 11/07, Ritesh Harjani wrote:
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>>> index 42f42aa..32b0b79 100644
->>>> --- a/drivers/mmc/host/sdhci-msm.c
->>>> +++ b/drivers/mmc/host/sdhci-msm.c
->>>> @@ -58,11 +58,17 @@
->>>> #define CORE_DLL_CONFIG		0x100
->>>> #define CORE_DLL_STATUS		0x108
->>>>
->>>> +#define CORE_DLL_CONFIG_2	0x1b4
->>>> +#define CORE_FLL_CYCLE_CNT	BIT(18)
->>>> +#define CORE_DLL_CLOCK_DISABLE	BIT(21)
->>>> +
->>>> #define CORE_VENDOR_SPEC	0x10c
->>>> #define CORE_CLK_PWRSAVE	BIT(1)
->>>>
->>>> #define CORE_VENDOR_SPEC_CAPABILITIES0	0x11c
->>>>
->>>> +#define TCXO_FREQ		19200000
->>>
->>> TCXO_FREQ could change based on the board. For example, IPQ has
->>> it as 25 MHz.
->> Actually not sure of the proper way on how to get this freq in driver
->> today. We may use xo_board clock but, it is not available for all boards
->> except 8996/8916 I guess.
->>
->> Also, there is no sdhc for IPQ board and for all other boards
->> TCXO_FREQ is same where sdhci-msm driver is used. For that purpose
->> this was defined here for sdhci-msm driver.
->>
->> Do you think in that case we should keep it this way for now and
->> later change if a need arise to change the TCXO_FREQ ?
->
-> We've added xo_board (or cxo_board/pxo_board) to all the qcom
-> platforms upstream, so there should always be something to
-> reference in the dts and call clk_get_rate() on. So I would add
-> it to the binding as another clock and then use that instead of
-> hardcoding the value. That's much more flexible in case this
-> changes in the future.
->
-Sure, I have addressed this in v7 as per your above comment.
+I created imx6ull-14x14-evk.dts like below, and DTC seems happy with it.
 
+#include "imx6ul-14x14-evk.dts"
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+/ {
+        model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
+        compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull";
+};
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
