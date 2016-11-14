@@ -1,51 +1,56 @@
-From: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 2/2] phy: rockchip-inno-usb2: correct 480MHz output clock stable time
-Date: Mon, 14 Nov 2016 15:01:51 +0800
-Message-ID: <1479106911-16049-3-git-send-email-wulf@rock-chips.com>
-References: <1479106911-16049-1-git-send-email-wulf@rock-chips.com>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 0/3] imx: add imx6ull support
+Date: Mon, 14 Nov 2016 15:04:19 +0800
+Message-ID: <1479107062-15365-1-git-send-email-peter.chen@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479106911-16049-1-git-send-email-wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We found that the system crashed due to 480MHz output clock of
-USB2 PHY was unstable after clock had been enabled by gpu module.
+Hi Shawn,
 
-Theoretically, 1 millisecond is a critical value for 480MHz
-output clock stable time, so we try to change the delay time
-to 1.2 millisecond to avoid this issue.
+In this series, it adds support for imx6ull SoC which is a derived SoC
+from imx6ul, and imx6ull is pin-to-pin compatible with imx6ul, the
+basic functions are tested at imx6ull 14x14 evk, and imx6ul 14x14 evk
+is tested too to avoid regression.
 
-And the commit ed907fb1d7c3 ("phy: rockchip-inno-usb2: correct
-clk_ops callback") used prepare callbacks instead of enable
-callbacks to support gate a clk if the operation may sleep. So
-we can switch from delay to sleep functions.
+Changes for v3:
+- Keep imx6ul-14x14-evk.dts unchanging, and let imx6ull-14x14-evk.dts
+  include it. [Patch 1/3]
 
-Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v2:
-- use usleep_range() function instead of mdelay()
+Changes for v2:
+- Keep imx6ul.dtsi unchanging, and using GPL/X11 dual license
+  for new dts file. [Patch 1/3]
+- Using IMX6ULL prefix for both imx6ull dedicated pin and clock name.
+  [Patch 1/3, 3/3]
+- Delete useless changes for patch 2/3.
+- Delete blank line for patch 3/3.
+- Using assigned-clocks for imx6ull 14x14 evk. [Patch 1/3, 3/3]
 
- drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Bai Ping (1):
+  clk: imx: clk-imx6ul: add clk support for imx6ull
 
-diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
-index 365e077..578290b 100644
---- a/drivers/phy/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/phy-rockchip-inno-usb2.c
-@@ -166,7 +166,7 @@ static int rockchip_usb2phy_clk480m_prepare(struct clk_hw *hw)
- 			return ret;
- 
- 		/* waitting for the clk become stable */
--		mdelay(1);
-+		usleep_range(1200);
- 	}
- 
- 	return 0;
+Peter Chen (2):
+  ARM: imx6ull: add imx6ull support
+  ARM: imx: mach-imx6ul: add imx6ull support
+
+ arch/arm/boot/dts/Makefile               |  3 +-
+ arch/arm/boot/dts/imx6ull-14x14-evk.dts  | 52 +++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ull-pinfunc.h      | 56 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6ull.dtsi           | 43 +++++++++++++++++++
+ arch/arm/mach-imx/mach-imx6ul.c          |  1 +
+ drivers/clk/imx/clk-imx6ul.c             | 72 +++++++++++++++++++++++++++-----
+ include/dt-bindings/clock/imx6ul-clock.h | 15 ++++++-
+ 7 files changed, 229 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6ull-14x14-evk.dts
+ create mode 100644 arch/arm/boot/dts/imx6ull-pinfunc.h
+ create mode 100644 arch/arm/boot/dts/imx6ull.dtsi
+
 -- 
-2.0.0
-
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
