@@ -1,68 +1,50 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: pm8921: add support to pm8821
-Date: Mon, 14 Nov 2016 09:53:28 -0800
-Message-ID: <20161114175328.GB27931@tuxbot>
-References: <1478622577-20699-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20161108190751.GO25787@tuxbot>
- <852fbb95-852e-0612-77a8-b0b072a68c51@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <852fbb95-852e-0612-77a8-b0b072a68c51-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: [PATCH 1/2] can: holt_hi311x: document device tree bindings
+Date: Mon, 14 Nov 2016 12:55:43 -0500
+Message-ID: <1479146144-29143-1-git-send-email-akshay.bhat@timesys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Akshay Bhat <akshay.bhat@timesys.com>, Akshay Bhat <nodeax@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Nov 09:33 PST 2016, Srinivas Kandagatla wrote:
+Document the HOLT HI-311x CAN device tree bindings.
 
-[..]
-> >>+static int pm8821_irq_block_handler(struct pm_irq_chip *chip,
-> >>+				    int master_number, int block)
-> >>+{
-> >>+	int pmirq, irq, i, ret;
-> >>+	unsigned int bits;
-> >>+
-> >>+	ret = pm8821_read_block_irq(chip, master_number, block, &bits);
-> >>+	if (ret) {
-> >>+		pr_err("Failed reading %d block ret=%d", block, ret);
-> >>+		return ret;
-> >>+	}
-> >>+	if (!bits) {
-> >>+		pr_err("block bit set in master but no irqs: %d", block);
-> >>+		return 0;
-> >>+	}
-> >>+
-> >>+	/* Convert block offset to global block number */
-> >>+	block += (master_number * PM8821_BLOCKS_PER_MASTER) - 1;
-> >
-> >So this is block -= 1 for master 0 and block += 6 for master 1, is the
-> >latter correct?
-> >
-> Yes, both of them are correct.
-> 
-> for master 0 which has block numbers from 1-7 should translate to 0-6 in
-> linear space.
-> for master 1 which has block numbers from 1-7 should translate to 7-13 in
-> linear space.
-> 
-> so for master0 it is -=1 and and for master1 it is +=6 seems correct.
-> 
+Signed-off-by: Akshay Bhat <nodeax@gmail.com>
+---
+ .../devicetree/bindings/net/can/holt_hi311x.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/holt_hi311x.txt
 
-Ahh, because block is 1-indexed when we enter, so have to switch base
-and then calculate the global number, like:
-
-  block = block - 1 + (master * PER_MASTER) + 7
-
-but we cancel out the subtraction. I agree that this looks correct then.
-
-I would prefer less of a mixture between 0-indexing and 1-indexing, but
-I don't have any good ideas on how to restructure it to make it better.
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/can/holt_hi311x.txt b/Documentation/devicetree/bindings/net/can/holt_hi311x.txt
+new file mode 100644
+index 0000000..23aa94e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/holt_hi311x.txt
+@@ -0,0 +1,24 @@
++* Holt HI-311X stand-alone CAN controller device tree bindings
++
++Required properties:
++ - compatible: Should be one of the following:
++   - "holt,hi3110" for HI-3110
++ - reg: SPI chip select.
++ - clocks: The clock feeding the CAN controller.
++ - interrupt-parent: The parent interrupt controller.
++ - interrupts: Should contain IRQ line for the CAN controller.
++
++Optional properties:
++ - vdd-supply: Regulator that powers the CAN controller.
++ - xceiver-supply: Regulator that powers the CAN transceiver.
++
++Example:
++	can0: can@1 {
++		compatible = "holt,hi3110";
++		reg = <1>;
++		clocks = <&clk32m>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <13 IRQ_TYPE_EDGE_RISING>;
++		vdd-supply = <&reg5v0>;
++		xceiver-supply = <&reg5v0>;
++	};
+-- 
+2.8.1
