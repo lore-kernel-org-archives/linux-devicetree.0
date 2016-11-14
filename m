@@ -1,8 +1,8 @@
 From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [RESEND PATCH 1/2] PCI: rockchip: cleanup bit definition for
  PCIE_RC_CONFIG_LCS
-Date: Mon, 14 Nov 2016 16:26:05 -0600
-Message-ID: <20161114222604.GJ9868@bhelgaas-glaptop.roam.corp.google.com>
+Date: Mon, 14 Nov 2016 16:50:19 -0600
+Message-ID: <20161114225019.GM9868@bhelgaas-glaptop.roam.corp.google.com>
 References: <1479096666-112668-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -22,9 +22,7 @@ On Mon, Nov 14, 2016 at 12:11:05PM +0800, Shawn Lin wrote:
 > 
 > Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Did something change since the version you posted yesterday?
-Resending a patch with no changes or with no hint about what changed
-doesn't speed things up; in fact, it slows things down.
+I applied both to pci/host-rockchip, thanks!
 
 > ---
 > 
