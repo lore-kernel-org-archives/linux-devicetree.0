@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 04/11] ARM: dts: r8a7779: Add device node for PRR
-Date: Mon, 14 Nov 2016 19:37:10 +0100
-Message-ID: <1479148637-5399-5-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 05/11] ARM: dts: r8a7790: Add device node for PRR
+Date: Mon, 14 Nov 2016 19:37:11 +0100
+Message-ID: <1479148637-5399-6-git-send-email-geert+renesas@glider.be>
 References: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
@@ -21,24 +21,24 @@ v3:
 v2:
   - New.
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 5 +++++
+ arch/arm/boot/dts/r8a7790.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 3005308a1807ca43..9d3bb74bd3f684d5 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -590,6 +590,11 @@
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index a946474be9cf1e6b..f554ef3c8096726a 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1471,6 +1471,11 @@
  		};
  	};
  
 +	prr: chipid@ff000044 {
 +		compatible = "renesas,prr";
-+		reg = <0xff000044 4>;
++		reg = <0 0xff000044 0 4>;
 +	};
 +
- 	sysc: system-controller@ffd85000 {
- 		compatible = "renesas,r8a7779-sysc";
- 		reg = <0xffd85000 0x0200>;
+ 	sysc: system-controller@e6180000 {
+ 		compatible = "renesas,r8a7790-sysc";
+ 		reg = <0 0xe6180000 0 0x0200>;
 -- 
 1.9.1
