@@ -1,73 +1,66 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 01/14] dma: sun6i-dma: Add burst case of 4
-Date: Mon, 14 Nov 2016 10:24:48 +0530
-Message-ID: <20161114045448.GQ3000@localhost>
-References: <cover.1475569400.git.mylene.josserand@free-electrons.com>
- <3a2404510b5f8b16ae3bb193982d70f158700b2b.1475571575.git.mylene.josserand@free-electrons.com>
- <20161004124011.d7f5754a082d5f17d5185fc4@free.fr>
- <20161004165553.GS5228@lukather>
- <20161023183107.5b75b6aad62853378713299f@free.fr>
- <20161027175154.v4kuhyvm3r5n6tdo@lukather>
- <CAGb2v67SSZF6XL-HXv83nuwTKpJc53h8gsrb2r2V98LNZBzqEA@mail.gmail.com>
- <1477922460.2837.5.camel@intel.com>
- <CAGb2v65yR9NOff+VDA0cBj3UenGpdYUfnYfesnmzP8AN4uw4Tw@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 03/11] remoteproc: Update Kconfig setup to 'depends
+ on REMOTEPROC'
+Date: Mon, 14 Nov 2016 10:42:16 +0530
+Message-ID: <20161114051215.GV3000@localhost>
+References: <1475931154-1021-1-git-send-email-peter.griffin@linaro.org>
+ <1475931154-1021-4-git-send-email-peter.griffin@linaro.org>
+ <20161103212439.GS25787@tuxbot>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65yR9NOff+VDA0cBj3UenGpdYUfnYfesnmzP8AN4uw4Tw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "moinejf@free.fr" <moinejf@free.fr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "tiwai@suse.com" <tiwai@suse.com>
+In-Reply-To: <20161103212439.GS25787@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 01, 2016 at 10:55:13PM +0800, Chen-Yu Tsai wrote:
-
-> >>  * @src_maxburst: the maximum number of words (note: words, as in
-> >>  * units of the src_addr_width member, not bytes) that can be sent
-> >>  * in one burst to the device. Typically something like half the
-> >>  * FIFO depth on I/O peripherals so you don't overflow it. This
-> >>  * may or may not be applicable on memory sources.
-> >>  * @dst_maxburst: same as src_maxburst but for destination target
-> >>  * mutatis mutandis.
-> >>
-> >> The DMA engine driver should be free to select whatever burst size
-> >> that doesn't exceed this. So for max_burst = 4, the driver can select
-> >> burst = 4 for controllers that do support it, or burst = 1 for those
-> >> that don't, and do more bursts.
-> >
-> > Nope, the client configures these parameters and dmaengine driver
-> > validates and programs
+On Thu, Nov 03, 2016 at 02:24:39PM -0700, Bjorn Andersson wrote:
+> On Sat 08 Oct 05:52 PDT 2016, Peter Griffin wrote:
 > 
-> Shouldn't we just name it "burst_size" then if it's meant to be what
-> the client specifically asks for?
-
-Well if for some reason we program lesser than than max it would work
-technically. But a larger burst wont work at all, so thats why maxburst is
-significant.
-
-> My understanding is that the client configures its own parameters,
-> such as the trigger level for the DRQ, like raise DRQ when level < 1/4
-> FIFO depth, request maxburst = 1/4 or 1/2 FIFO depth, so as not to
-> overrun the FIFO. When the DRQ is raised, the DMA engine will do a
-> burst, and after the burst the DRQ would be low again, so the DMA
-> engine will wait. So the DMA engine driver should be free to
-> program the actual burst size to something less than maxburst, shouldn't
-> it?
-
-Yup but not more that max..
-
-> >> This also means we can increase max_burst for the audio codec, as
-> >> the FIFO is 64 samples deep for stereo, or 128 samples for mono.
-> >
-> > Beware that higher bursts means chance of underrun of FIFO. This value
-> > is selected with consideration of power and performance required. Lazy
-> > allocation would be half of FIFO size..
+> > Make REMOTEPROC core a selectable kconfig option, and update
+> > remoteproc client drivers to 'depends on' the core. This avoids
+> > some nasty Kconfig recursive dependency issues. Also when using
+> > menuconfig client drivers will be hidden until the core has been
+> > enabled.
+> > 
+> > Documentation/kbuild/kconfig-language.txt:
+> > 
+> >   Note:
+> >         select should be used with care. select will force
+> >         a symbol to a value without visiting the dependencies.
+> >         By abusing select you are able to select a symbol FOO even
+> >         if FOO depends on BAR that is not set.
+> >         In general use select only for non-visible symbols
+> >         (no prompts anywhere) and for symbols with no dependencies.
+> >         That will limit the usefulness but on the other hand avoid
+> >         the illegal configurations all over.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> You mean underrun if its the source right? So the client setting maxburst
-> should take the DRQ trigger level into account for this.
+> Sorry, I missed this patch in the set - but spotted it in linux-next.
+> 
+> I still don't like the change, but remoteproc has dependencies so I
+> guess I have to pick it until we fix that.
+> 
+> It's however not okay to take this patch through the DMA tree, as it
+> effectively stops me from introducing any changes in the rproc tree.
+> Further more, it's not based on v4.9, so it currently introduces another
+> Kconfig dependency problem - that I can't fix in my tree without
+> conflicting with Vinod's.
+> 
+> 
+> So, Vinod, can you please drop this patch from your tree? I'll pick it
+> up for now.
 
-Yes
+Sorry for the delay, b/w KS/LPC and travel, was slow on email.
+
+I have dropped this one now..
 
 -- 
 ~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
