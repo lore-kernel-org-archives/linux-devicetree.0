@@ -1,50 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/3] drm/bridge: Add ti-ftp410 HDMI transmitter driver
-Date: Mon, 14 Nov 2016 13:10:52 +0200
-Message-ID: <1740464.TP0bE1PYbC@avalon>
-References: <cover.1478103726.git.jsarha@ti.com> <12424154.kJqhEf2pOz@avalon>
- <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for
+ special ISA
+Date: Mon, 14 Nov 2016 11:11:11 +0000
+Message-ID: <20161114111111.1b753dc3@lxorguk.ukuu.org.uk>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+        <2368890.jTbyGqYR0M@wuerfel>
+        <20161109135453.2e5402bd@lxorguk.ukuu.org.uk>
+        <5900275.i4NZvtxTcC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <d035c76e-ca7f-0503-87da-7e93783d1cd0@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5900275.i4NZvtxTcC@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnlyaSwKCk9uIE1vbmRheSAxNCBOb3YgMjAxNiAxMDo0OTo0MyBKeXJpIFNhcmhhIHdyb3Rl
-Ogo+IE9uIDExLzAzLzE2IDE5OjQ2LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ID4+ID4gKwktIGNvbXBhdGlibGU6ICJ0aSx0ZnA0MTAiCj4gPiAK
-PiA+IFRoZSBkZXZpY2UgaXMgYW4gSTJDIHNsYXZlLCBpdCBzaG91bGQgaGF2ZSBhIHJlZyBwcm9w
-ZXJ0eS4gR2l2ZW4gdGhhdCB0aGUKPiA+IGNoaXAgY2FuIGJlIHVzZWQgd2l0aG91dCBiZWluZyBj
-b250cm9sbGVkIHRocm91Z2ggSTJDLCB0aGUgcmVnIHByb3BlcnR5Cj4gPiBzaG91bGQgYmUgb3B0
-aW9uYWwuIFlvdSBzaG91bGQgZG9jdW1lbnQgdGhpcyBjbGVhcmx5LCBhbmQgZXhwbGFpbiBob3cg
-dGhlCj4gPiBEVCBub2RlIGNhbiBiZSBpbnN0YW50aWF0ZWQgYXMgYSBjaGlsZCBvZiBhbiBJMkMg
-Y29udHJvbGxlciB3aGVuIHRoZSBJMkMKPiA+IGludGVyZmFjZSBpcyB1c2VkLCBvciBpbiBvdGhl
-ciBwYXJ0cyBvZiB0aGUgZGV2aWNlIHRyZWUgb3RoZXJ3aXNlLgo+IAo+IFNob3VsZG4ndCBJIGhh
-dmUgdHdvIGRpZmZlcmVudCBjb21wYXRpYmxlIHN0cmluZ3MgaWYgd2FudCB0byBtYWtlIGJvdGgK
-PiBwbGF0Zm9ybSBkcml2ZXIgcHJvYmUgYW5kIGkyYyBjbGllbnQgcHJvYmUgdG8gd29yaz8KCkkg
-ZG9uJ3QgdGhpbmsgc28sIGl0J3Mgc3RpbGwgdGhlIHNhbWUgY2hpcC4KCj4gT3IgY2FuIGl0IGJl
-IGRvbmUgd2l0aCBzaW5nbGUgY29tcGF0aWJsZSBzdHJpbmc/IFdvdWxkIHlvdSBrbm93IG9mIGFu
-Cj4gZXhhbXBsZSBvZiBzdWNoIGEgZHJpdmVyPwoKWW91IHdpbGwgbmVlZCB0byByZWdpc3RlciBi
-b3RoIGEgaTJjX2RyaXZlciBhbmQgYSBwbGF0Zm9ybV9kcml2ZXIgaW4gdGhlIAp0ZnA0MTAgZHJp
-dmVyLiBCb3RoIHdpbGwgYWR2ZXJ0aXNlIHRoZSBzYW1lIGNvbXBhdGlibGUgc3RyaW5nLiBBcyB5
-b3UnbGwgaGF2ZSAKdHdvIHByb2JlIGZ1bmN0aW9ucywgaXQgc2hvdWxkIGJlIGVhc3kgdG8gaGFu
-ZGxlIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSAKdHdvIHNpdHVhdGlvbnMgdGhlcmUsIHdp
-dGggY29tbW9uIGNvZGUgc2hhcmVkIGluIGNvbW1vbiBmdW5jdGlvbnMuIEEgcXVpY2sgCmdyZXAg
-cG9pbnRzIHRvIGF0IGxlYXN0IGRyaXZlcnMvcG93ZXIvYnEyN3gwMF9iYXR0ZXJ5LmMgYXMgYW4g
-ZXhhbXBsZSAoYWxiZWl0IAp3aXRob3V0IERUIHN1cHBvcnQpLgoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+> > It's not a safe assumption for x86 at least. There are a few systems with
+> > multiple ISA busses particularly older laptops with a docking station.  
+> 
+> But do they have multiple ISA domains? There is no real harm in supporting
+> it, the (small) downsides I can think of are:
+
+I don't believe they x86 class ones have multiple ISA domains. But as
+I've said I don't know how the electronics in the older ThinkPad worked
+when it used two PIIX4s with some LPC or ISA stuff on each.
+
+It works in DOS and unmodified Linux so I'm pretty sure there are no
+additional domains. Likewise the various x86 schemes that route some bits
+of ISA bus off into strange places work in DOS and don't have any
+overlaps.
+
+yenta_socket handles PCI/PCMCIA bridging and routes a range of that flat
+ISA space appropriately to the card.
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
