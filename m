@@ -1,60 +1,56 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND][PATCH 6/6] arm64: Add DTS support for FSL's LS2088A SoC
-Date: Mon, 14 Nov 2016 14:33:48 +0800
-Message-ID: <20161114063346.GH3310@dragon>
-References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
- <1478597664-14799-7-git-send-email-abhimanyu.saini@nxp.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v2 1/3] ARM: imx6ull: add imx6ull support
+Date: Mon, 14 Nov 2016 06:35:43 +0000
+Message-ID: <HE1PR04MB1450297765B98A84BB81AB428BBC0@HE1PR04MB1450.eurprd04.prod.outlook.com>
+References: <1478584614-12054-1-git-send-email-peter.chen@nxp.com>
+ <1478584614-12054-2-git-send-email-peter.chen@nxp.com>
+ <20161114054833.GG3310@dragon>
+ <HE1PR04MB14509BFD0CBA838BC1EA7D598BBC0@HE1PR04MB1450.eurprd04.prod.outlook.com>
+ <20161114061311.GA14956@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478597664-14799-7-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161114061311.GA14956@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 03:04:24PM +0530, Abhimanyu Saini wrote:
-> This patch adds the device tree support for FSL LS2088A SoC based on
-> ARMv8 architecture.
-> 
-> Following levels of DTSI/DTS files have been created for the LS2088A
-> SoC family:
-> 
->      - fsl-ls2088a.dtsi:
->             DTS-Include file for FSL LS2088A SoC.
-> 
->      - fsl-ls2088a-qds.dts:
->             DTS file for FSL LS2088A QDS board.
-> 
->      - fsl-ls2088a-rdb.dts:
->             DTS file for FSL LS2088A RDB board.
+ 
+>On Mon, Nov 14, 2016 at 05:59:01AM +0000, Peter Chen wrote:
+>> The main difference is compatible string, I can't include two
+>> compatible strings in one dts file, the dts build will fail for that.
+>>
+>> imx6ull-14x14-evk.dts
+>> / {
+>>         model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
+>>         compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull"; };
+>>
+>> imx6ul-14x14-evk.dts
+>> / {
+>>         model = "Freescale i.MX6 UltraLite 14x14 EVK Board";
+>>         compatible = "fsl,imx6ul-14x14-evk", "fsl,imx6ul"; };
+>
+>I created imx6ull-14x14-evk.dts like below, and DTC seems happy with it.
+>
+>#include "imx6ul-14x14-evk.dts"
+>
+>/ {
+>        model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
+>        compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull"; };
+>
 
-I compared the following files.
+Thanks for trying it, the problem why my dtc building fail is I have two
+" /dts-v1/;" at dts file (one is from imx6ul-14x14-evk.dts) . I will follow your suggestion.
 
- fsl-ls2088a.dtsi vs. fsl-ls2080a.dtsi
- fsl-ls2088a-qds.dtsi vs. fsl-ls2080a-qds.dtsi
- fsl-ls2088a-rdb.dtsi vs. fsl-ls2080a-rdb.dtsi
-
-They are basically identical except a couple of small changes.  Can we
-do something to have these SoCs share the dts files at some level to
-avoid maintaining duplicated files?
-
-Shawn 
-
-> Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile            |   2 +
->  arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts | 211 +++++++
->  arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts | 166 +++++
->  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi    | 703 ++++++++++++++++++++++
->  4 files changed, 1082 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter
