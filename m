@@ -1,96 +1,84 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 14 Nov 2016 18:10:10 +0100
-Message-ID: <20161114171010.GG2016@mai>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
- <1479021872-14237-4-git-send-email-noamca@mellanox.com>
- <20161114112326.GC2016@mai>
- <DB6PR0501MB25183C670A48F44DB916D7FEAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
- <20161114143454.GE2016@mai>
- <DB6PR0501MB25183EEEC116B9E97CC01BCFAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
- <20161114154154.GF2016@mai>
- <DB6PR0501MB251848D66EAA58589B550B41AABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: vf610-zii-dev: Add .dts file for rev. C
+Date: Mon, 14 Nov 2016 18:10:34 +0100
+Message-ID: <20161114171034.GC24546@lunn.ch>
+References: <1479141306-15141-1-git-send-email-andrew.smirnov@gmail.com>
+ <1479141306-15141-2-git-send-email-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DB6PR0501MB251848D66EAA58589B550B41AABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Noam Camus <noamca@mellanox.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1479141306-15141-2-git-send-email-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 04:45:44PM +0000, Noam Camus wrote:
-> > From: Daniel Lezcano [mailto:daniel.lezcano@linaro.org] Sent: Monday,
-> > November 14, 2016 5:42 PM
-> 
-> >> When you are saying "we have a framework" do you mean to some generic
-> >> framework in the kernel?
-> 
-> > Yes, IIRC it is regmap but I'm not sure.
-> Indeed regmap is a generic framework and it primarily meant for registers
-> which can be mapped to our virtual/logical address space which is not the
-> case here. For our auxiliary registers access we use dedicated instructions
-> (lr/sr) and not LOAD/STORE like GCC produce.  It is possible to use such
-> regmap but this driver will be filled with all regmap handling just to hide
-> couple of lines. This will not serve this driver readability well.
+> +		mdio_mux_1: mdio@1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			switch0: switch0@0 {
+> +				compatible = "marvell,mv88e6390";
 
-Indeed.
- 
-> >I think there is something I am missing with this HW scheduling thing. Why
-> >are these hw_schd_save/hw_schd_restore functions needed to be called from
-> >the timer driver ? Regarding the explanation, the HW scheduling can happen
-> >everywhere at any time, not only in the timer code but this one is the only
-> >one which need the hw_schd_save/hw_schd_restore calls, why ?
-> I use them not just here they are also serve to protect our L1 cache and TLB
-> which are also shared within same core. You can't see this yet since patch
-> are not still push to arch/arc tree.
-> >Why,
-> 
-> >spin_lock(&lock); write_aux_reg(...) spin_unlock(&lock);
-> 
-> >can't work ?
-> Because I can't use spinlock in interrupt context (I call to
-> nps_clkevent_rm_thread() in irq_handler).
-> 
-> >IIUC, there can be more than 16 cpus/threads, so calling hw_schd_save /
-> >hw_schd_restore will disable the HW scheduling for the entire system while
-> >one cpu is processing something with these couple of registers, no ?
-> NO, HW scheduling will be disabled only for this specific core, all other
-> cores will not be affected since they got their own private registers.
-> 
-> ...
-> >> >And tick_resume. Perhaps, that is the reason why NO_HZ hangs.
-> >> What NO_HZ hang are you referring to in this case?  How calling
-> >> nps_clkevent_rm_thread() explain such hang?  Anyway I agree, and will add
-> >> nps_clkevent_rm_thread() to tick_resume.
-> 
-> >Actually I meant NOHZ_FULL.
->  Still got no clue what hang we are talking about here!
+Hi Andrey
 
-Never mind, I read in a previous email from v2 "hanging" instead of "handling".
- 
-> Note: I looked at arch/tile timer driver again and noticed that I can work
-> without periodic mode. This is exactly what I need here (pure oneshot mode).
-> With this fact I can define Static void nps_clkevent_rm_thread(void) Static
-> void nps_clkevent_add_thread(void)
-> 
-> Also HW scheduling save/restore is only used in *rm_thread/*add_thread since
-> I can now remove nps_clkevent_set_periodic() and
-> nps_clkevent_timer_event_setup().  This way clockevent driver seem much
-> simpler and it is clearer to understanding.  I hope that this approach of not
-> having periodic mode is acceptable.
+The driver for this is not in net-next yet. And when it is, it will
+probably be called "marvell,mv88e6190", keeping to the pattern of the
+lowest product ID which supports these features.
 
-AFAICT, oneshot mode is more accurate than periodic mode. The time framework
-will take care of emulating the periodic timer. There are several timers in
-drivers/clocksource which are oneshot more only.
+> +					port@4 {
+> +						reg = <4>;
+> +						label = "lan4";
+> +					};
+> +
+> +					port@9 {
+> +						reg = <9>;
+> +						label = "lan4";
+> +						phy-handle = <&switch0phy0>;
+> +					};
+> +
 
--- 
+You have two "lan4". I would also suggest leaving port 9 out for the
+moment. It needs clause 45 MDIO to talk to the PHY, which we don't
+have yet. Hence it cannot find it, and so give an error.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> +
+> +					switch0port10: port@10 {
+> +						reg = <10>;
+> +						label = "dsa";
+> +						phy-mode = "xgmii";
+> +						link = <&switch1port10>;
+> +						fixed-link {
+> +							speed = <10000>;
+> +							full-duplex;
+> +						};
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+This fixed-link node is wrong, and invalid. 10000 is not supported by
+the fixed link driver, only 10, 100, and 1000. Also, it is not
+required. The DSA driver should configure the link to the fastest
+possible speed the port supports. You only need a fixed-link property
+when you need to configure it at a lower speed. Rev B also gets this
+wrong.
+
+> +					};
+> +				};
+> +
+> +				mdio {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					switch0phy0: switch0phy0@0 {
+> +						reg = <0>;
+> +					};
+
+I think the strapping for the PHY is such that it is at address 9.
+Also, it is on the external mdio bus, not the internal mdio bus. The
+6390 family has two MDIO busses. I have patches to support this, which
+will appear eventually.
+
+  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
