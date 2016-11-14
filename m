@@ -1,70 +1,31 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: RE: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 14 Nov 2016 13:58:15 +0000
-Message-ID: <DB6PR0501MB25183C670A48F44DB916D7FEAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
- <1479021872-14237-4-git-send-email-noamca@mellanox.com>
- <20161114112326.GC2016@mai>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: vfxxx: Enable DMA for DSPI2 and DSPI3
+Date: Mon, 14 Nov 2016 22:02:40 +0800
+Message-ID: <20161114140238.GO3310@dragon>
+References: <20161110114505.17618-1-maitysanchayan@gmail.com>
+ <20161114123701.4355-1-maitysanchayan@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161114112326.GC2016@mai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20161114123701.4355-1-maitysanchayan@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, stefan@agner.ch, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyBbbWFpbHRvOmRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmdd
-IA0KPiBTZW50OiBNb25kYXksIE5vdmVtYmVyIDE0LCAyMDE2IDE6MjMgUE0NCg0KDQo+PiArICov
-DQo+PiArc3RhdGljIHZvaWQgbnBzX2Nsa2V2ZW50X3JtX3RocmVhZChib29sIHJlbW92ZV90aHJl
-YWQpIHsNCj4+ICsJdW5zaWduZWQgaW50IGNmbGFnczsNCj4+ICsJdW5zaWduZWQgaW50IGVuYWJs
-ZWRfdGhyZWFkcyA9IDA7DQo+PiArCWludCB0aHJlYWQ7DQo+PiArDQo+PiArCWh3X3NjaGRfc2F2
-ZSgmY2ZsYWdzKTsNCg0KPkknbSBub3QgdXNlZCB3aXRoIGhhcmR3YXJlIHNjaGVkdWxpbmcuIENh
-biB5b3UgZXhwbGFpbiB3aHkgdGhpcyBpcyBuZWVkZWQgaGVyZSA/IFdoYXQgPndpbmRvdyByYWNl
-IHdlIHdhbnQgdG8gY2xvc2UgPw0KV2UgYXJlIHVzaW5nIEhXIHNjaGVkdWxpbmcgb2ZmL29uIGlu
-IG9yZGVyIHRvIGtlZXAgY29uc2lzdGVuY3kgb2YgYXV4aWxpYXJ5IHJlZ2lzdGVycyBzaGFyZWQg
-YW1vbmcgSFcgdGhyZWFkcyB3aXRoaW4gdGhlIHNhbWUgY29yZS4NCkV4YW1wbGUgdG8gc3VjaCBy
-ZWdpc3RlcnMgTlBTX1JFR19USU1FUjBfVFNJIGFuZCBOUFNfUkVHX1RJTUVSMF9DVFJMLg0KU2lu
-Y2UgdXBkYXRlIHByb2NlZHVyZSBvZiB0aGVzZSByZWdpc3RlcnMgaXMgbm90IGF0b21pYyB3ZSB1
-c2Ugc2F2ZS9yZXN0b3JlIG1hY3JvcyB0byB0dXJuIG9mZi9vbiB0aGUgSFcgc2NoZWR1bGluZy4g
-VGhpcyB3YXkgd2UgaW5zdXJlIHRoYXQgbm8gSFcgc2NoZWR1bGluZyBvY2N1cnMgYW5kIGFub3Ro
-ZXIgSFcgdGhyZWFkIChyZXByZXNlbnRlZCBhcyBhbm90aGVyIENQVSkgd2lsbCBleGVjdXRlIGlu
-IHRoaXMgc2FtZSBjcml0aWNhbCBjb2RlIHBhdGguDQpJZiB3ZSB0YWtlIGZvciBleGFtcGxlIG5w
-c19jbGtldmVudF9hZGRfdGhyZWFkKCkgd2UgY2FuIHNlZSB0aGF0IHdlIGFyZSBkb2luZyBzb21l
-IHJlYWQgbW9kaWZ5IHdyaXRlIHRvIE5QU19SRUdfVElNRVIwX1RTSSBhbmQgb3B0aW9uYWxseSB3
-cml0aW5nIHRvIE5QU19SRUdfVElNRVIwX0NUUkwuIFRoaXMgZmxvdyBzaG91bGQgYmUgYXRvbWlj
-IGFuZCBpcyBwcm90ZWN0ZWQgYnkgb3VyIHNhdmUvcmVzdG9yZSBtYWNyb3MuDQpEbyBub3RlIHRo
-YXQgaW50ZXJydXB0cyBhcmUgZGlzYWJsZWQgYXQgdGhpcyBwb2ludCBzbyB3ZSBhcmUgc2FmZSBm
-cm9tIGFsbCBhc3luY2hyb25vdXMgZXZlbnRzLiANCg0KLi4uDQo+PiArc3RhdGljIHZvaWQgbnBz
-X2Nsa2V2ZW50X2FkZF90aHJlYWQoYm9vbCBzZXRfZXZlbnQpIHsNCj4+ICsJaW50IHRocmVhZDsN
-Cj4+ICsJdW5zaWduZWQgaW50IGNmbGFncywgZW5hYmxlZF90aHJlYWRzOw0KPj4gKw0KPj4gKwlo
-d19zY2hkX3NhdmUoJmNmbGFncyk7DQo+PiArDQo+PiArCS8qIGFkZCB0aHJlYWQgdG8gVFNJMSAq
-Lw0KPj4gKwl0aHJlYWQgPSByZWFkX2F1eF9yZWcoQ1RPUF9BVVhfVEhSRUFEX0lEKTsNCj4+ICsJ
-ZW5hYmxlZF90aHJlYWRzID0gcmVhZF9hdXhfcmVnKE5QU19SRUdfVElNRVIwX1RTSSk7DQo+PiAr
-CWVuYWJsZWRfdGhyZWFkcyB8PSAoMSA8PCB0aHJlYWQpOw0KPj4gKwl3cml0ZV9hdXhfcmVnKE5Q
-U19SRUdfVElNRVIwX1RTSSwgZW5hYmxlZF90aHJlYWRzKTsNCj4+ICsNCj4+ICsJLyogc2V0IG5l
-eHQgdGltZXIgZXZlbnQgKi8NCj4+ICsJaWYgKHNldF9ldmVudCkNCj4+ICsJCXdyaXRlX2F1eF9y
-ZWcoTlBTX1JFR19USU1FUjBfQ1RSTCwNCj4+ICsJCQkgICAgICBUSU1FUjBfQ1RSTF9JRSB8IFRJ
-TUVSMF9DVFJMX05IKTsNCj4+ICsNCj4+ICsJaHdfc2NoZF9yZXN0b3JlKGNmbGFncyk7DQo+PiAr
-fQ0KDQo+Tm90IHN1cmUgdGhlIGJvb2xlYW4gcGFyYW1ldGVycyBmb3IgKl9ybV90aHJlYWQgYW5k
-ICpfYWRkX3RocmVhZCBoZWxwcyB0byBjbGFyaWZ5IHRoZSBjb2RlLiBEZXBlbmRpbmcgb24gdGhl
-IHJhY2Ugd2luZG93IHdpdGggaHdfc2NoZF9zYXZlL3Jlc3RvcmUgV2Ugc2hvdWxkIGJlIGFibGUg
-dG8gc2ltcGxpZnkgaXQuDQpJIGFtIG5vdCBzdXJlIEkgYW0gZm9sbG93aW5nIHlvdSBoZXJlLCBo
-b3cgcmFjZSB3aW5kb3cgbWF5IHNpbXBsaWZ5IHRoaXMgY29kZT8NCklmIHRob3NlIHJvdXRpbmVz
-IHdpbGwgZ2V0IG5vIHBhcmFtZXRlciBJIGNhbid0IGRldGVybWluZSB3aGVuIHRvIGFkZCBvciBu
-b3QgKHNhbWUgYXMgcmVtb3ZlKS4NCi4uLg0KPj4gKw0KPj4gK3N0YXRpYyBERUZJTkVfUEVSX0NQ
-VShzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlLCBucHNfY2xvY2tldmVudF9kZXZpY2UpID0gew0K
-Pj4gKwkubmFtZQkJCQk9CSJOUFMgVGltZXIwIiwNCj4+ICsJLmZlYXR1cmVzCQkJPQlDTE9DS19F
-VlRfRkVBVF9PTkVTSE9UIHwNCj4+ICsJCQkJCQlDTE9DS19FVlRfRkVBVF9QRVJJT0RJQywNCj4+
-ICsJLnJhdGluZwkJCQk9CTMwMCwNCj4+ICsJLnNldF9uZXh0X2V2ZW50CQkJPQlucHNfY2xrZXZl
-bnRfc2V0X25leHRfZXZlbnQsDQo+PiArCS5zZXRfc3RhdGVfcGVyaW9kaWMJCT0JbnBzX2Nsa2V2
-ZW50X3NldF9wZXJpb2RpYywNCj4+ICsJLnNldF9zdGF0ZV9vbmVzaG90CQk9CW5wc19jbGtldmVu
-dF9zZXRfb25lc2hvdCwNCj4+ICsJLnNldF9zdGF0ZV9vbmVzaG90X3N0b3BwZWQJPQlucHNfY2xr
-ZXZlbnRfdGltZXJfc2h1dGRvd24sDQo+PiArCS5zZXRfc3RhdGVfc2h1dGRvd24JCT0JbnBzX2Ns
-a2V2ZW50X3RpbWVyX3NodXRkb3duLA0KDQo+RG9lc24ndCBzZXRfc3RhdGVfc2h1dGRvd24gYW5k
-IHNldF9zdGF0ZV9vbmVzaG90X3N0b3BwZWQgbmVlZCB0byByZW1vdmUgdGhlIEhXIHRocmVhZCBm
-cm9tIHRoZSBUU0kgPw0KWW91IGFyZSBjb3JyZWN0LCBJIHdpbGwgZml4IHRoYXQuDQoNClRoYW5r
-cw0KLS1Ob2FtDQo=
+On Mon, Nov 14, 2016 at 06:07:01PM +0530, Sanchayan Maity wrote:
+> Enable DMA for DSPI2 and DSPI3 on Vybrid.
+> 
+> Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+
+Applied, thanks.
