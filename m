@@ -1,187 +1,174 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 1/2] pinctrl: sunxi: Add support for interrupt debouncing
-Date: Mon, 14 Nov 2016 21:53:03 +0100
-Message-ID: <d7c3760d37046a4b390b1a7b30bb94b8e1af31a7.1479156725.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM: sunxi: Add the missing clocks to the pinctrl nodes
+Date: Mon, 14 Nov 2016 21:53:04 +0100
+Message-ID: <8ee1716a6e61159f91e523fda060d366dac279d4.1479156725.git-series.maxime.ripard@free-electrons.com>
 References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
-References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pin controller found in the Allwinner SoCs has support for interrupts
-debouncing.
+The pin controllers also use the two oscillators for debouncing. Add them
+to the DTs.
 
-However, this is not done per-pin, preventing us from using the generic
-pinconf binding for that, but per irq bank, which, depending on the SoC,
-ranges from one to five.
-
-Introduce a device-wide property to deal with this using a microsecond
-resolution. We can re-use the per-pin input-debounce property for that, so
-let's do it!
-
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 14 ++++++++++++-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c                                 | 84 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h                                 |  7 ++++++-
- 3 files changed, 105 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/sun4i-a10.dtsi     | 3 ++-
+ arch/arm/boot/dts/sun5i.dtsi         | 3 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi     | 6 ++++--
+ arch/arm/boot/dts/sun7i-a20.dtsi     | 3 ++-
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 6 ++++--
+ arch/arm/boot/dts/sun8i-h3.dtsi      | 6 ++++--
+ arch/arm/boot/dts/sun9i-a80.dtsi     | 6 ++++--
+ 7 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index 1685821eea41..56debe1db4e8 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -28,6 +28,20 @@ Required properties:
- - reg: Should contain the register physical address and length for the
-   pin controller.
- 
-+- clocks: phandle to the clocks feeding the pin controller:
-+  - "apb": the gated APB parent clock
-+  - "hosc": the high frequency oscillator in the system
-+  - "losc": the low frequency oscillator in the system
-+
-+Note: For backward compatibility reasons, the hosc and losc clocks are only
-+required if you need to use the optional input-debounce property. Any new
-+device tree should set them.
-+
-+Optional properties:
-+  - input-debounce: Array of debouncing periods in microseconds. One period per
-+    irq bank found in the controller. 0 if no setup required.
-+
-+
- Please refer to pinctrl-bindings.txt in this directory for details of the
- common pinctrl bindings used by client devices.
- 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 0facbea5f465..b425be2875d4 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -870,6 +870,88 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int sunxi_pinctrl_get_debounce_div(struct clk *clk, int freq, int *diff)
-+{
-+	unsigned long clock = clk_get_rate(clk);
-+	unsigned int best_diff = ~0, best_div;
-+	int i;
-+
-+	for (i = 0; i < 8; i++) {
-+		int cur_diff = abs(freq - (clock >> i));
-+
-+		if (cur_diff < best_diff) {
-+			best_diff = cur_diff;
-+			best_div = i;
-+		}
-+	}
-+
-+	*diff = best_diff;
-+	return best_div;
-+}
-+
-+static int sunxi_pinctrl_setup_debounce(struct sunxi_pinctrl *pctl,
-+					struct device_node *node)
-+{
-+	unsigned int hosc_diff, losc_diff;
-+	unsigned int hosc_div, losc_div;
-+	struct clk *hosc, *losc;
-+	u8 div, src;
-+	int i, ret;
-+
-+	/* Deal with old DTs that didn't have the oscillators */
-+	if (of_count_phandle_with_args(node, "clocks", "#clock-cells") != 3)
-+		return 0;
-+
-+	/* If we don't have any setup, bail out */
-+	if (!of_find_property(node, "input-debounce", NULL))
-+		return 0;
-+
-+	losc = devm_clk_get(pctl->dev, "losc");
-+	if (IS_ERR(losc))
-+		return PTR_ERR(losc);
-+
-+	hosc = devm_clk_get(pctl->dev, "hosc");
-+	if (IS_ERR(hosc))
-+		return PTR_ERR(hosc);
-+
-+	for (i = 0; i < pctl->desc->irq_banks; i++) {
-+		unsigned long debounce_freq;
-+		u32 debounce;
-+
-+		ret = of_property_read_u32_index(node, "input-debounce",
-+						 i, &debounce);
-+		if (ret)
-+			return ret;
-+
-+		if (!debounce)
-+			continue;
-+
-+		debounce_freq = DIV_ROUND_CLOSEST(USEC_PER_SEC, debounce);
-+		losc_div = sunxi_pinctrl_get_debounce_div(losc,
-+							  debounce_freq,
-+							  &losc_diff);
-+
-+		hosc_div = sunxi_pinctrl_get_debounce_div(hosc,
-+							  debounce_freq,
-+							  &hosc_diff);
-+
-+		if (hosc_diff < losc_diff) {
-+			div = hosc_div;
-+			src = 1;
-+		} else {
-+			div = losc_div;
-+			src = 0;
-+		}
-+
-+		writel(src | div << 4,
-+		       pctl->membase +
-+		       sunxi_irq_debounce_reg_from_bank(i,
-+							pctl->desc->irq_bank_base));
-+	}
-+
-+	return 0;
-+}
-+
- int sunxi_pinctrl_init(struct platform_device *pdev,
- 		       const struct sunxi_pinctrl_desc *desc)
- {
-@@ -1032,6 +1114,8 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
- 						 pctl);
- 	}
- 
-+	sunxi_pinctrl_setup_debounce(pctl, node);
-+
- 	dev_info(&pdev->dev, "initialized sunXi PIO driver\n");
- 
- 	return 0;
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index 0afce1ab12d0..c0d97fe58e84 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -69,6 +69,8 @@
- #define IRQ_STATUS_IRQ_BITS		1
- #define IRQ_STATUS_IRQ_MASK		((1 << IRQ_STATUS_IRQ_BITS) - 1)
- 
-+#define IRQ_DEBOUNCE_REG	0x218
-+
- #define IRQ_MEM_SIZE		0x20
- 
- #define IRQ_EDGE_RISING		0x00
-@@ -266,6 +268,11 @@ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
- 	return irq_num * IRQ_CTRL_IRQ_BITS;
- }
- 
-+static inline u32 sunxi_irq_debounce_reg_from_bank(u8 bank, unsigned bank_base)
-+{
-+	return IRQ_DEBOUNCE_REG + (bank_base + bank) * IRQ_MEM_SIZE;
-+}
-+
- static inline u32 sunxi_irq_status_reg_from_bank(u8 bank, unsigned bank_base)
- {
- 	return IRQ_STATUS_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 7e7dfc2b43db..b14a4281058d 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -967,7 +967,8 @@
+ 			compatible = "allwinner,sun4i-a10-pinctrl";
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <28>;
+-			clocks = <&apb0_gates 5>;
++			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index b4ccee8cfb02..b0fca4ef4dae 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -547,7 +547,8 @@
+ 		pio: pinctrl@01c20800 {
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <28>;
+-			clocks = <&apb0_gates 5>;
++			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 2e8bf93dcfb2..c941662383ee 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -471,7 +471,8 @@
+ 				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_APB1_PIO>;
++			clocks = <&ccu CLK_APB1_PIO>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+@@ -1051,7 +1052,8 @@
+ 			reg = <0x01f02c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 0>;
++			clocks = <&apb0_gates 0>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			resets = <&apb0_rst 0>;
+ 			gpio-controller;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 94cf5a1c7172..f7db067b0de0 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1085,7 +1085,8 @@
+ 			compatible = "allwinner,sun7i-a20-pinctrl";
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 5>;
++			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 300a1bd5a6ec..e4991a78ad73 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -266,7 +266,8 @@
+ 			/* compatible gets set in SoC specific dtsi file */
+ 			reg = <0x01c20800 0x400>;
+ 			/* interrupts get set in SoC specific dtsi file */
+-			clocks = <&ccu CLK_BUS_PIO>;
++			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+@@ -575,7 +576,8 @@
+ 			compatible = "allwinner,sun8i-a23-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 0>;
++			clocks = <&apb0_gates 0>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			resets = <&apb0_rst 0>;
+ 			gpio-controller;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index c38b028cac83..3c6596f06ebc 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -321,7 +321,8 @@
+ 			reg = <0x01c20800 0x400>;
+ 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_PIO>;
++			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+ 			interrupt-controller;
+@@ -614,7 +615,8 @@
+ 			compatible = "allwinner,sun8i-h3-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 0>;
++			clocks = <&apb0_gates 0>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			resets = <&apb0_reset 0>;
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index ab6a221027ef..979ad1aacfb1 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -678,7 +678,8 @@
+ 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apb0_gates 5>;
++			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+@@ -902,7 +903,8 @@
+ 			reg = <0x08002c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&apbs_gates 0>;
++			clocks = <&apbs_gates 0>, <&osc24M>, <&osc32k>;
++			clock-names = "apb", "hosc", "losc";
+ 			resets = <&apbs_rst 0>;
+ 			gpio-controller;
+ 			interrupt-controller;
 -- 
 git-series 0.8.11
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
