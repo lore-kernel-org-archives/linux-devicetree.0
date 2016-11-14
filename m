@@ -1,376 +1,79 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 14 Nov 2016 12:23:26 +0100
-Message-ID: <20161114112326.GC2016@mai>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
- <1479021872-14237-4-git-send-email-noamca@mellanox.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 7/7] soc: renesas: Identify SoC and register with the SoC bus
+Date: Mon, 14 Nov 2016 12:22:52 +0100
+Message-ID: <3061300.3PHW8Uxca3@wuerfel>
+References: <1477913455-5314-1-git-send-email-geert+renesas@glider.be> <25057157.YlGi2v6RrE@wuerfel> <CAMuHMdWavRFnYFmiL2jy3KWZnHG_F8qaxK29zHx6fsLmqXEwiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479021872-14237-4-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWavRFnYFmiL2jy3KWZnHG_F8qaxK29zHx6fsLmqXEwiA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yangbo Lu <yangbo.lu@nxp.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 13, 2016 at 09:24:32AM +0200, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On Monday, November 14, 2016 11:51:15 AM CET Geert Uytterhoeven wrote:
+> On Thu, Nov 10, 2016 at 12:37 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thursday, November 10, 2016 11:19:20 AM CET Geert Uytterhoeven wrote:
+> >> On Wed, Nov 9, 2016 at 5:55 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> > On Monday, October 31, 2016 12:30:55 PM CET Geert Uytterhoeven wrote:
+> >> >>   - Use "renesas,prr" and "renesas,cccr" device nodes in DT if
+> >> >>     available, else fall back to hardcoded addresses for compatibility
+> >> >>     with existing DTBs,
 > 
-> Till now we used clockevent from generic ARC driver.
-> This was enough as long as we worked with simple multicore SoC.
-> When we are working with multithread SoC each HW thread can be
-> scheduled to receive timer interrupt using timer mask register.
-> This patch will provide a way to control clock events per HW thread.
+> >> > It does seem wrong to have a device node for a specific register though.
+> >> > Shouldn't the node be for the block of registers that these are inside
+> >> > of?
+> >>
+> >> On R-Mobile APE6, R-Car Gen2 and Gen3, PRR is a lone register.
+> >> On R-Car Gen1, it's not even documented (and doesn't exist on all parts).
+> >
+> > It just seems odd to have it at address 0xff000044 when all the other
+> > devices are at page-aligned addresses. Do you mean that accessing
+> > 0xff000040 or 0xff000048 will result in a bus-level exception for a
+> > missing register and just 0xff000044 is actually valid for access,
+> > or is it just the only thing that is documented?
 > 
-> The design idea is that for each core there is dedicated regirtser
+> For PRR, all other registers in the page read as all zeroes on all SoCs that
+> have it. So it really is a lone register.
 
-s/regirtser/register/ (already spotted in v2).
+Ok.
 
-> (TSI) serving all 16 HW threads.
-> The register is a bitmask with one bit for each HW thread.
-> When HW thread wants that next expiration of timer interrupt will
-> hit it then the proper bit should be set in this dedicated register.
-> When timer expires all HW threads within this core which their bit
-> is set at the TSI register will be interrupted.
+> >> On SH-Mobile/R-Mobile, CCCR may be part of the HPB/APB register block, which
+> >> we further don't touch at all.
+> >> On R-Car Gen2, it's not documented, but does exist.
+> >
+> > This is where the family names would come in handy ;-) I now have
+> > no idea which chip(s) you are referring to.
 > 
-> Driver can be used from device tree by:
-> compatible = "ezchip,nps400-timer0" <-- for clocksource
-> compatible = "ezchip,nps400-timer1" <-- for clockevent
+> SH/R-Mobile are r8a7740, r8a73a4, sh73a0.
+> R-Car Gen2 are r8a779[0-4].
 > 
-> Note that name convention for timer0/timer1 was taken from legacy
-> ARC design. This design is our base before adding HW threads.
-> For backward compatibility we keep "ezchip,nps400-timer" for clocksource
+> > If you know the name of the register block, just put it into DT with
+> > that name. The driver can trivially add the right offset.
 > 
-> Signed-off-by: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
->  .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
->  .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
->  drivers/clocksource/timer-nps.c                    |  213 ++++++++++++++++++++
->  4 files changed, 245 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+> CCCR is different. The amount of registers that read as non-zero depends a lot
+> on the actual SoC.
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
-> deleted file mode 100644
-> index c8c03d7..0000000
-> --- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -NPS Network Processor
-> -
-> -Required properties:
-> -
-> -- compatible :	should be "ezchip,nps400-timer"
-> -
-> -Clocks required for compatible = "ezchip,nps400-timer":
-> -- clocks : Must contain a single entry describing the clock input
-> -
-> -Example:
-> -
-> -timer {
-> -	compatible = "ezchip,nps400-timer";
-> -	clocks = <&sysclk>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
-> new file mode 100644
-> index 0000000..e3cfce8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
-> @@ -0,0 +1,17 @@
-> +NPS Network Processor
-> +
-> +Required properties:
-> +
-> +- compatible :	should be "ezchip,nps400-timer0"
-> +
-> +Clocks required for compatible = "ezchip,nps400-timer0":
-> +- interrupts : The interrupt of the first timer
-> +- clocks : Must contain a single entry describing the clock input
-> +
-> +Example:
-> +
-> +timer {
-> +	compatible = "ezchip,nps400-timer0";
-> +	interrupts = <3>;
-> +	clocks = <&sysclk>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
-> new file mode 100644
-> index 0000000..c0ab419
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
-> @@ -0,0 +1,15 @@
-> +NPS Network Processor
-> +
-> +Required properties:
-> +
-> +- compatible :	should be "ezchip,nps400-timer1"
-> +
-> +Clocks required for compatible = "ezchip,nps400-timer1":
-> +- clocks : Must contain a single entry describing the clock input
-> +
-> +Example:
-> +
-> +timer {
-> +	compatible = "ezchip,nps400-timer1";
-> +	clocks = <&sysclk>;
-> +};
-> diff --git a/drivers/clocksource/timer-nps.c b/drivers/clocksource/timer-nps.c
-> index eeef9e9..ed4bce4 100644
-> --- a/drivers/clocksource/timer-nps.c
-> +++ b/drivers/clocksource/timer-nps.c
-> @@ -109,3 +109,216 @@ static int __init nps_setup_clocksource(struct device_node *node)
->  
->  CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clksrc, "ezchip,nps400-timer",
->  		       nps_setup_clocksource);
-> +CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clk_src, "ezchip,nps400-timer1",
-> +		       nps_setup_clocksource);
-> +
-> +#ifdef CONFIG_EZNPS_MTM_EXT
-> +#include <soc/nps/mtm.h>
-> +
-> +/* Timer related Aux registers */
-> +#define NPS_REG_TIMER0_TSI	0xFFFFF850
-> +#define NPS_REG_TIMER0_LIMIT	0x23
-> +#define NPS_REG_TIMER0_CTRL	0x22
-> +#define NPS_REG_TIMER0_CNT	0x21
-> +
-> +/*
-> + * Interrupt Enabled (IE) - re-arm the timer
-> + * Not Halted (NH) - is cleared when working with JTAG (for debug)
-> + */
-> +#define TIMER0_CTRL_IE		BIT(0)
-> +#define TIMER0_CTRL_NH		BIT(1)
-> +
-> +static unsigned long nps_timer0_freq;
-> +static unsigned long nps_timer0_irq;
-> +
-> +/*
-> + * Arm the timer to interrupt after @cycles
-> + */
-> +static void nps_clkevent_timer_event_setup(unsigned int cycles)
-> +{
-> +	write_aux_reg(NPS_REG_TIMER0_LIMIT, cycles);
-> +	write_aux_reg(NPS_REG_TIMER0_CNT, 0);
-> +
-> +	write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +}
-> +
-> +/*
-> + * Clear from TSI the bit for this thread (if not in periodic mode)
-> + * If still there are pending HW treads set next timer event
-
-s/treads/threads/
-
-> + */
-> +static void nps_clkevent_rm_thread(bool remove_thread)
-> +{
-> +	unsigned int cflags;
-> +	unsigned int enabled_threads = 0;
-> +	int thread;
-> +
-> +	hw_schd_save(&cflags);
-
-I'm not used with hardware scheduling. Can you explain why this is needed
-here ? What window race we want to close ?
-
-> +
-> +	enabled_threads = read_aux_reg(NPS_REG_TIMER0_TSI);
-> +
-> +	/* remove thread from TSI1 */
-> +	if (remove_thread) {
-> +		thread = read_aux_reg(CTOP_AUX_THREAD_ID);
-> +		enabled_threads &= ~(1 << thread);
-> +		write_aux_reg(NPS_REG_TIMER0_TSI, enabled_threads);
-> +	}
-> +
-> +	/* Re-arm the timer if needed */
-> +	if (!enabled_threads)
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL, TIMER0_CTRL_NH);
-> +	else
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL,
-> +			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +
-> +	hw_schd_restore(cflags);
-> +}
-> +
-> +static void nps_clkevent_add_thread(bool set_event)
-> +{
-> +	int thread;
-> +	unsigned int cflags, enabled_threads;
-> +
-> +	hw_schd_save(&cflags);
-> +
-> +	/* add thread to TSI1 */
-> +	thread = read_aux_reg(CTOP_AUX_THREAD_ID);
-> +	enabled_threads = read_aux_reg(NPS_REG_TIMER0_TSI);
-> +	enabled_threads |= (1 << thread);
-> +	write_aux_reg(NPS_REG_TIMER0_TSI, enabled_threads);
-> +
-> +	/* set next timer event */
-> +	if (set_event)
-> +		write_aux_reg(NPS_REG_TIMER0_CTRL,
-> +			      TIMER0_CTRL_IE | TIMER0_CTRL_NH);
-> +
-> +	hw_schd_restore(cflags);
-> +}
-
-Not sure the boolean parameters for *_rm_thread and *_add_thread helps
-to clarify the code. Depending on the race window with hw_schd_save/restore
-We should be able to simplify it.
-
-> +static int nps_clkevent_set_next_event(unsigned long delta,
-> +				       struct clock_event_device *dev)
-> +{
-> +	nps_clkevent_add_thread(true);
-> +	enable_percpu_irq(nps_timer0_irq, IRQ_TYPE_NONE);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Whenever anyone tries to change modes, we just mask interrupts
-> + * and wait for the next event to get set.
-> + */
-> +static int nps_clkevent_timer_shutdown(struct clock_event_device *dev)
-> +{
-> +	disable_percpu_irq(nps_timer0_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * For each HW thread set its relevant bit at the TSI register
-> + * To arm the timer only thread 0 is needed since it is shared
-> + * by all HW threads within same core.
-> + */
-> +static int nps_clkevent_set_periodic(struct clock_event_device *dev)
-> +{
-> +	nps_clkevent_add_thread(false);
-> +	if (read_aux_reg(CTOP_AUX_THREAD_ID) == 0)
-> +		nps_clkevent_timer_event_setup(nps_timer0_freq / HZ);
-> +
-> +	return 0;
-> +}
-> +
-> +static int nps_clkevent_set_oneshot(struct clock_event_device *dev)
-> +{
-> +	nps_clkevent_rm_thread(true);
-> +	nps_clkevent_timer_shutdown(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct clock_event_device, nps_clockevent_device) = {
-> +	.name				=	"NPS Timer0",
-> +	.features			=	CLOCK_EVT_FEAT_ONESHOT |
-> +						CLOCK_EVT_FEAT_PERIODIC,
-> +	.rating				=	300,
-> +	.set_next_event			=	nps_clkevent_set_next_event,
-> +	.set_state_periodic		=	nps_clkevent_set_periodic,
-> +	.set_state_oneshot		=	nps_clkevent_set_oneshot,
-> +	.set_state_oneshot_stopped	=	nps_clkevent_timer_shutdown,
-> +	.set_state_shutdown		=	nps_clkevent_timer_shutdown,
-
-Doesn't set_state_shutdown and set_state_oneshot_stopped need to remove
-the HW thread from the TSI ?
-
-> +	.tick_resume			=	nps_clkevent_timer_shutdown,
-> +};
-> +
-> +static irqreturn_t timer_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *evt = dev_id;
-> +	int irq_reenable = clockevent_state_periodic(evt);
-> +
-> +	/* Remove HW thread from TSI only if NOT in periodic state */
-> +	nps_clkevent_rm_thread(!irq_reenable);
-> +
-> +	evt->event_handler(evt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int nps_timer_starting_cpu(unsigned int cpu)
-> +{
-> +	struct clock_event_device *evt = this_cpu_ptr(&nps_clockevent_device);
-> +
-> +	evt->cpumask = cpumask_of(smp_processor_id());
-> +
-> +	clockevents_config_and_register(evt, nps_timer0_freq, 0, ULONG_MAX);
-> +	enable_percpu_irq(nps_timer0_irq, IRQ_TYPE_NONE);
-> +
-> +	return 0;
-> +}
-> +
-> +static int nps_timer_dying_cpu(unsigned int cpu)
-> +{
-> +	disable_percpu_irq(nps_timer0_irq);
-> +	return 0;
-> +}
-> +
-> +static int __init nps_setup_clockevent(struct device_node *node)
-> +{
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	nps_timer0_irq = irq_of_parse_and_map(node, 0);
-> +	if (nps_timer0_irq <= 0) {
-> +		pr_err("clockevent: missing irq");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = nps_get_timer_clk(node, &nps_timer0_freq, &clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Needs apriori irq_set_percpu_devid() done in intc map function */
-> +	ret = request_percpu_irq(nps_timer0_irq, timer_irq_handler,
-> +				 "Timer0 (per-cpu-tick)",
-> +				 &nps_clockevent_device);
-> +	if (ret) {
-> +		pr_err("Couldn't request irq\n");
-> +		clk_disable_unprepare(clk);
-> +		return ret;
-> +	}
-> +
-> +	ret = cpuhp_setup_state(CPUHP_AP_ARC_TIMER_STARTING,
-> +				"clockevents/nps:starting",
-> +				nps_timer_starting_cpu,
-> +				nps_timer_dying_cpu);
-> +	if (ret) {
-> +		pr_err("Failed to setup hotplug state");
-> +		clk_disable_unprepare(clk);
-> +		free_percpu_irq(nps_timer0_irq, &nps_clockevent_device);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-
-
-
-> +}
-> +
-> +CLOCKSOURCE_OF_DECLARE(ezchip_nps400_clk_evt, "ezchip,nps400-timer0",
-> +		       nps_setup_clockevent);
-> +#endif /* CONFIG_EZNPS_MTM_EXT */
-> -- 
-> 1.7.1
+> HPB/APB is gonna need real DT bindings, which needs some more investigation.
+> Hence if you don't mind, I'd like to postpone that part, which only affects
+> the older SoCs. And I'll drop the "renesas,cccr" binding.
 > 
+> For now, having revision detection for R-Car Gen3 (r8a779[56]) using PRR is
+> most urgent, as several drivers (e.g. HDMI, Ethernet, clocks, pinctrl) are
+> waiting for this support. So I'd like to have that dependency in v4.10.
 
--- 
+Ok, sounds good.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> >> There is no SoC part number in the "renesas,prr" and "renesas,cccr" nodes.
+> >> Hence I always need to look at the root nodes.
+> >
+> > Not sure what that would protect you from. Could you have a renesas,cccr
+> 
+> Looks like you forgot to finish your sentence?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, and I forgot what I was going to say there now. It's probably covered
+by what we discussed above.
+
+	Arnd
