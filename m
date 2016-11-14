@@ -1,33 +1,41 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mfd: pm8921: add support to pm8821
-Date: Mon, 14 Nov 2016 11:18:04 -0600
-Message-ID: <20161114171804.qsad624oa3ms6epj@rob-hp-laptop>
-References: <1478622577-20699-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: sunxi: Add support for interrupt
+ debouncing
+Date: Mon, 14 Nov 2016 11:19:32 -0600
+Message-ID: <20161114171932.qvs2xiklh4h3vsss@rob-hp-laptop>
+References: <cover.61acad25a6fb233e39141b52acd217415281bd73.1478636546.git-series.maxime.ripard@free-electrons.com>
+ <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478622577-20699-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 04:29:36PM +0000, Srinivas Kandagatla wrote:
-> This patch adds support to PM8821 PMIC and interrupt support.
-> PM8821 is companion device that supplements primary PMIC PM8921 IC.
+On Tue, Nov 08, 2016 at 09:24:00PM +0100, Maxime Ripard wrote:
+> The pin controller found in the Allwinner SoCs has support for interrupts
+> debouncing.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> However, this is not done per-pin, preventing us from using the generic
+> pinconf binding for that, but per irq bank, which, depending on the SoC,
+> ranges from one to five.
+> 
+> Introduce a device-wide property to deal with this using a microsecond
+> resolution. We can re-use the per-pin input-debounce property for that, so
+> let's do it!
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
-> Tested this patch for MPP and IRQ functionality on IFC6410 and SD600 EVAL
-> board with mpps PM8821 and PM8921.
-> 
->  .../devicetree/bindings/mfd/qcom-pm8xxx.txt        |   1 +
+>  Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 14 ++++++++++++-
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->  drivers/mfd/pm8921-core.c                          | 368 +++++++++++++++++++--
->  2 files changed, 340 insertions(+), 29 deletions(-)
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c                                 | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h                                 |  7 ++++++-
+>  3 files changed, 102 insertions(+), 0 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
