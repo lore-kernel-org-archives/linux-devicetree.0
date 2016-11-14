@@ -1,55 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: pwm: DT: Add ramp delay for exponential
- voltage transition
-Date: Mon, 14 Nov 2016 09:48:07 -0600
-Message-ID: <20161114154807.j4oo4veslhknauxy@rob-hp-laptop>
-References: <1478281075-3498-1-git-send-email-ldewangan@nvidia.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source for sam9260ek
+Date: Mon, 14 Nov 2016 15:51:14 +0000
+Message-ID: <313991a8-f1e4-4e58-5b36-0dac3c0ad1cd@arm.com>
+References: <1479138250-17780-2-git-send-email-sudeep.holla@arm.com>
+ <55e95acc-d30f-432e-90d6-f96bad69ac3d@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478281075-3498-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: broonie@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Aleksandr Frid <afrid@nvidia.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55e95acc-d30f-432e-90d6-f96bad69ac3d-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2016 at 11:07:54PM +0530, Laxman Dewangan wrote:
-> Some PWM regulator has the exponential transition in voltage change as
-> opposite to fixed slew-rate linear transition on other regulators.
-> For such PWM regulators, add the property for providing the delay
-> from DT node.
-> 
-> Add DT binding details of the new property
-> "pwm-regulator-voltage-ramp-time-us" added for providing voltage
-> transition delay.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> CC: Douglas Anderson <dianders@chromium.org>
-> CC: Aleksandr Frid <afrid@nvidia.com>
-> 
-> ---
-> This patch is continuation of discussion on patch
-> 	regulator: pwm: Fix regulator ramp delay for continuous mode
-> https://patchwork.kernel.org/patch/9216857/
-> where is it discussed to have separate property for PWM which has
-> exponential voltage transition.
-> ---
->  Documentation/devicetree/bindings/regulator/pwm-regulator.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> index 3aeba9f..a163f42 100644
-> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> @@ -54,6 +54,16 @@ Optional properties:
->  --------------------
->  - enable-gpios:		GPIO to use to enable/disable the regulator
->  
-> +- pwm-regulator-voltage-ramp-time-us: Integer, voltage ramp time in
 
-This is a really long name. Drop the 'pwm-regulator-' part as it is 
-redundant. The fact that it is PWM reg specific is captured as it is 
-documented that way.
 
-Rob
+On 14/11/16 15:45, Nicolas Ferre wrote:
+> Le 14/11/2016 à 16:44, Sudeep Holla a écrit :
+>> Though the keyboard driver for GPIO buttons(gpio-keys) will continue to
+>> check for/support the legacy "gpio-key,wakeup" boolean property to
+>> enable gpio buttons as wakeup source, "wakeup-source" is the new
+>> standard binding.
+>>
+>> This patch replaces the legacy "gpio-key,wakeup" with the unified
+>> "wakeup-source" property in order to avoid any further copy-paste
+>> duplication.
+>>
+>> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+>> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/at91sam9260ek.dts | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> Hi,
+>>
+>> Inspite of getting rid of most of the legacy property almost a year ago,
+>> addition of new platforms have brought this back and over time it's
+>> now found again in few places. Just get rid of them *again*
+>>
+>> Regards,
+>> Sudeep
+>
+> Sorry for this Sudeep and thanks for the patch.
+>
+
+No problem, in fact you reminded me to post them :)
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
