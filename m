@@ -1,56 +1,59 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v4 0/3] PCI: qcom: Add support to msm8996 pcie controller.
-Date: Mon, 14 Nov 2016 11:15:52 +0000
-Message-ID: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: svarbanov@mm-sol.com, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, srinivas.kandagatla@linaro.org, devicetree@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 3/3] PCI: qcom: add runtime pm support to pcie_port
+Date: Mon, 14 Nov 2016 11:15:55 +0000
+Message-ID: <1479122155-13393-4-git-send-email-srinivas.kandagatla@linaro.org>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479122155-13393-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support to msm8996 pcie controller. I tested this patch on
-v4.9-rc2 along with phy driver patch [1] and
-"PCI: designware: check for iATU unroll support after initializing host"
-fix [2] on DB820c APQ8096 board on port B and port C using sata and
-ethernet controller.
+This patch is required when the pcie controller sits on a bus with
+its own power domain and clocks which are controlled via a bus driver
+like simple pm bus. As these bus driver have runtime pm enabled, it makes
+sense to update the usage counter so that the runtime pm does not suspend
+the clks or power domain associated with the bus driver.
 
-Changes since v3:
-	- remove unnesessary variable initialization spotted by vivek.
-	- moved pipe clk disable before other clocks suggested by vivek.
-	- fixed dt example suggested by Rob.
-Changes since v2:
-	- Removed regulators that belong to phy, spotted by Stephen
-	- Removed clocks in to simple pm bus driver, spotted by Stephen
-	- renamed msm8996 ops to v2 ops as suggested by Stephen.
-	- cleanups as suggested by Stephen.
-	- Add runtime pm support to driver.
-	- Added pm clk support to simple pm bus driver.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/pci/host/pcie-qcom.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes since v1:
-	- Fixed dt example as suggested by Rob
-	- added smmu bus clk dependency as smmu sits in between
-	  system NOC and PCIe.
-	- Removed smmu configuration from bindings and driver as
-	  the smmu Level2 translation on this SOC is controlled by
-	  the secure world, and level 1 translation is disabled,
-	  so there is one-to-one mapping of the address space.
-
-Thanks,
-srini
-
-[1] https://patchwork.kernel.org/patch/9384711/
-[2] https://patchwork.kernel.org/patch/9377557/
-
-
-Srinivas Kandagatla (3):
-  bus: simple-pm: add support to pm clocks
-  PCI: qcom: add support to msm8996 PCIE controller
-  PCI: qcom: add runtime pm support to pcie_port
-
- .../devicetree/bindings/pci/qcom,pcie.txt          |  67 +++++++-
- drivers/bus/simple-pm-bus.c                        |  13 +-
- drivers/pci/host/pcie-qcom.c                       | 181 ++++++++++++++++++++-
- 3 files changed, 254 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
+index 03ba6b1..c2ca848 100644
+--- a/drivers/pci/host/pcie-qcom.c
++++ b/drivers/pci/host/pcie-qcom.c
+@@ -587,6 +587,8 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
+ 	struct qcom_pcie *pcie = to_qcom_pcie(pp);
+ 	int ret;
+ 
++	pm_runtime_get_sync(pp->dev);
++
+ 	qcom_ep_reset_assert(pcie);
+ 
+ 	ret = pcie->ops->init(pcie);
+@@ -617,6 +619,7 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
+ 	phy_power_off(pcie->phy);
+ err_deinit:
+ 	pcie->ops->deinit(pcie);
++	pm_runtime_put_sync(pp->dev);
+ }
+ 
+ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+@@ -673,6 +676,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	if (!pcie)
+ 		return -ENOMEM;
+ 
++	pm_runtime_enable(dev);
+ 	pp = &pcie->pp;
+ 	pcie->ops = (struct qcom_pcie_ops *)of_device_get_match_data(dev);
+ 
 -- 
 2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
