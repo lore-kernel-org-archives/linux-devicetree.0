@@ -1,56 +1,110 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: RE: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
- driver
-Date: Mon, 14 Nov 2016 15:17:48 +0000
-Message-ID: <DB6PR0501MB25183EEEC116B9E97CC01BCFAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
-References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
- <1479021872-14237-4-git-send-email-noamca@mellanox.com>
- <20161114112326.GC2016@mai>
- <DB6PR0501MB25183C670A48F44DB916D7FEAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
- <20161114143454.GE2016@mai>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
+Date: Mon, 14 Nov 2016 17:52:34 +0100
+Message-ID: <5bcf8db2-2e7f-83a2-0fc1-3653e89ffe3e@xs4all.nl>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
+ <SG2PR06MB1038A5C7419F6EDE6B880A1BC3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161114143454.GE2016@mai>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1038A5C7419F6EDE6B880A1BC3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyBbbWFpbHRvOmRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmdd
-IA0KPiBTZW50OiBNb25kYXksIE5vdmVtYmVyIDE0LCAyMDE2IDQ6MzUgUE0NCg0KIA0KPlRoZSBm
-dW5jdGlvbiBucHNfY2xrZXZlbnRfdGltZXJfZXZlbnRfc2V0dXAoKSB3cml0ZXMgaW50byB0aGUg
-TlBTX1JFR19USU1FUjBfQ1RSTCByZWdpc3RlciBidXQgdGhlcmUgaXMgbm8gY3JpdGljYWwgc2Vj
-dGlvbiB0aGVyZS4gV2hhdCBwcmV2ZW50cyBhbm90aGVyIEhXIHRocmVhZCB0byB3cml0ZSB0aGlz
-IHJlZ2lzdGVyIGF0IHRoZSBzYW1lIHRpbWUgPw0KQ29ycmVjdCwgZHVyaW5nIG15IGxhc3QgZW1h
-aWwgdG8geW91IEkgbm90aWNlZCB0aGF0IGZhY3QgYW5kIGFscmVhZHkgc3RhcnRlZCBmaXhpbmcg
-aXQuDQoNCj5JIGRvIGJlbGlldmUgd2UgaGF2ZSBhIGZyYW1ld29yayB0byBhY2Nlc3Mgc2hhcmVk
-IHJlZ2lzdGVycywgb3RoZXJ3aXNlIGEgc2ltcGxlIHNwaW5sb2NrIHdvdWxkIGJlIHNpbXBsZXIg
-YW5kIHBlcmhhcHMgZmFzdGVyIHRoYW4gZGlzYWJsaW5nIHRoZSBlbnRpcmUgaGFyZHdhcmUgc2No
-ZWR1bGluZyBmb3IgdGhlIHN5c3RlbSwgbm8gPw0KV2hlbiB5b3UgYXJlIHNheWluZyAid2UgaGF2
-ZSBhIGZyYW1ld29yayIgZG8geW91IG1lYW4gdG8gc29tZSBnZW5lcmljIGZyYW1ld29yayBpbiB0
-aGUga2VybmVsPw0KQW55d2F5IHRvIG15IHVuZGVyc3RhbmRpbmcgSSBjYW5ub3QgZ3VhcmFudGVl
-IHRoaXMgYXRvbWljcyBkdXJpbmcgbXkgcm91dGluZXMgd2l0aG91dCBwcmV2ZW50aW5nIEhXIGZy
-b20gY2hhbmdpbmcgdGhlIEhXIHRocmVhZCB0aGlzIGNvcmUgZXhlY3V0ZXMuDQpBcyBTVyBJIGFt
-IG5vdCBhd2FyZSB0byBzdWNoIEhXIHNjaGVkdWxpbmcsIEl0IGlzIG11Y2ggc2FtZSBhcyB3aXRo
-IGludGVycnVwdHMgdGhhdCB3ZSBkaXNhYmxlIHRoZW0gd2hlbiB3ZSByZWFjaCBjb2RlIHRoYXQg
-bWlnaHQgYmUgc2hhcmVkIGJ5IHRoZSBpbnRlcnJ1cHQgaGFuZGxlci4NCg0KPlJlZ2FyZGluZyB0
-aGUgY29tbWVudCBJIGRpZCBhYm92ZSwgaXQgaXMgcG9zc2libGUgdGhlIGNyaXRpY2FsIHNlY3Rp
-b24gaXMgcmVkdWNlZCBhbmQgbW92ZWQgaW50byB0aGUgc2h1dGRvd24gZnVuY3Rpb24uIFRodXMs
-IHRoZSBib29sZWFuIHdvdWxkbid0IGJlIG5lZWRlZCBhbnltb3JlLCB3ZWxsIHRoYXQgaXMgY29u
-ZGl0aW9uYWwgdG8gdGhlIGFib3ZlIGNvbW1lbnQuIERpc2NhcmQgdGhlIGNvbW1lbnQgZm9yIHRo
-ZSBtb21lbnQsIHVudGlsIHRoZSBodyBzY2hlZCB2cyBzcGlubG9jayB2cyBOUFNfUkVHX1RJTUVS
-MF9DVFJMIGlzIHNvcnRlZCBvdXQuDQpPSywgSSB3aWxsIGRpc2NhcmQgdGhhdCBpbiB0aGUgbWVh
-bnRpbWUuDQoNCi4uLg0KPj4gPj4gKwkuc2V0X3N0YXRlX3NodXRkb3duCQk9CW5wc19jbGtldmVu
-dF90aW1lcl9zaHV0ZG93biwNCj4+IA0KPj4gPkRvZXNuJ3Qgc2V0X3N0YXRlX3NodXRkb3duIGFu
-ZCBzZXRfc3RhdGVfb25lc2hvdF9zdG9wcGVkIG5lZWQgdG8gcmVtb3ZlIHRoZSBIVyB0aHJlYWQg
-ZnJvbSB0aGUgVFNJID8NCj4+IFlvdSBhcmUgY29ycmVjdCwgSSB3aWxsIGZpeCB0aGF0Lg0KDQo+
-QW5kIHRpY2tfcmVzdW1lLiBQZXJoYXBzLCB0aGF0IGlzIHRoZSByZWFzb24gd2h5IE5PX0haIGhh
-bmdzLg0KV2hhdCBOT19IWiBoYW5nIGFyZSB5b3UgcmVmZXJyaW5nIHRvIGluIHRoaXMgY2FzZT8N
-CkhvdyBjYWxsaW5nIG5wc19jbGtldmVudF9ybV90aHJlYWQoKSBleHBsYWluIHN1Y2ggaGFuZz8N
-CkFueXdheSBJIGFncmVlLCBhbmQgd2lsbCBhZGQgbnBzX2Nsa2V2ZW50X3JtX3RocmVhZCgpIHRv
-IHRpY2tfcmVzdW1lLg0KDQpBcHByZWNpYXRpbmcgeW91ciBlZmZvcnQgYW5kIHdpbGwgZ2xhZGx5
-IHByb3ZpZGUgYW55IG1vcmUgaW5mb3JtYXRpb24gbmVlZGVkIGFib3V0IG91ciBTb0MuDQotTm9h
-bQ0K
+On 11/14/2016 05:20 PM, Ramesh Shanmugasundaram wrote:
+> Hi Hans,
+> 
+> Thanks for the review comments.
+> 
+>> Subject: Re: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
+>>
+>> On 11/09/2016 04:44 PM, Ramesh Shanmugasundaram wrote:
+>>> This patch adds support for the three new SDR formats. These formats
+>>> were prefixed with "sliced" indicating I data constitutes the top half
+>>> and Q data constitutes the bottom half of the received buffer.
+>>
+>> The standard terminology for video formats is "planar". I am leaning
+>> towards using that here as well.
+>>
+>> Any opinions on this?
+> 
+> Shall I rename the formats as "PC16", "PC18" & "PC20"?
+
+Sounds reasonable to me!
+
+	Hans
+
+> For formats that do IQ IQ IQ... I shall use the regular formats "CUXX" when I introduce them.
+> 
+> Thanks,
+> Ramesh
+> 
+>>
+>> 	Hans
+>>
+>>>
+>>> V4L2_SDR_FMT_SCU16BE - 14-bit complex (I & Q) unsigned big-endian
+>>> sample inside 16-bit. V4L2 FourCC: SC16
+>>>
+>>> V4L2_SDR_FMT_SCU18BE - 16-bit complex (I & Q) unsigned big-endian
+>>> sample inside 18-bit. V4L2 FourCC: SC18
+>>>
+>>> V4L2_SDR_FMT_SCU20BE - 18-bit complex (I & Q) unsigned big-endian
+>>> sample inside 20-bit. V4L2 FourCC: SC20
+>>>
+>>> Signed-off-by: Ramesh Shanmugasundaram
+>>> <ramesh.shanmugasundaram@bp.renesas.com>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
+>>>  include/uapi/linux/videodev2.h       | 3 +++
+>>>  2 files changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> index 181381d..d36b386 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+>>> @@ -1207,6 +1207,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc
+>> *fmt)
+>>>  	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+>>>  	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
+>>>  	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
+>>> +	case V4L2_SDR_FMT_SCU16BE:	descr = "Sliced Complex U16BE"; break;
+>>> +	case V4L2_SDR_FMT_SCU18BE:	descr = "Sliced Complex U18BE"; break;
+>>> +	case V4L2_SDR_FMT_SCU20BE:	descr = "Sliced Complex U20BE"; break;
+>>>  	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
+>>>  	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
+>>>  	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data";
+>> break;
+>>> diff --git a/include/uapi/linux/videodev2.h
+>>> b/include/uapi/linux/videodev2.h index 4364ce6..34a9c30 100644
+>>> --- a/include/uapi/linux/videodev2.h
+>>> +++ b/include/uapi/linux/videodev2.h
+>>> @@ -666,6 +666,9 @@ struct v4l2_pix_format {
+>>>  #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /*
+>> complex s8 */
+>>>  #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /*
+>> complex s14le */
+>>>  #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /*
+>> real u12le */
+>>> +#define V4L2_SDR_FMT_SCU16BE	  v4l2_fourcc('S', 'C', '1', '6') /*
+>> sliced complex u16be */
+>>> +#define V4L2_SDR_FMT_SCU18BE	  v4l2_fourcc('S', 'C', '1', '8') /*
+>> sliced complex u18be */
+>>> +#define V4L2_SDR_FMT_SCU20BE	  v4l2_fourcc('S', 'C', '2', '0') /*
+>> sliced complex u20be */
+>>>
+>>>  /* Touch formats - used for Touch devices */
+>>>  #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-
+>> bit signed deltas */
+>>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
