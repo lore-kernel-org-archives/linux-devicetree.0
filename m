@@ -1,458 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/6] mfd: stm32-adc: Add support for stm32 ADC
-Date: Mon, 14 Nov 2016 16:47:01 +0000
-Message-ID: <20161114164701.GA2668@dell>
-References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
- <1478794738-28933-3-git-send-email-fabrice.gasnier@st.com>
- <9ba617f4-fd3d-2b48-2607-9eec3cc4253a@kernel.org>
+From: Noam Camus <noamca@mellanox.com>
+Subject: RE: [PATCH v5 3/3] clocksource: Add clockevent support to NPS400
+ driver
+Date: Mon, 14 Nov 2016 16:45:44 +0000
+Message-ID: <DB6PR0501MB251848D66EAA58589B550B41AABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+References: <1479021872-14237-1-git-send-email-noamca@mellanox.com>
+ <1479021872-14237-4-git-send-email-noamca@mellanox.com>
+ <20161114112326.GC2016@mai>
+ <DB6PR0501MB25183C670A48F44DB916D7FEAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+ <20161114143454.GE2016@mai>
+ <DB6PR0501MB25183EEEC116B9E97CC01BCFAABC0@DB6PR0501MB2518.eurprd05.prod.outlook.com>
+ <20161114154154.GF2016@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9ba617f4-fd3d-2b48-2607-9eec3cc4253a@kernel.org>
+In-Reply-To: <20161114154154.GF2016@mai>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 12 Nov 2016, Jonathan Cameron wrote:
-
-> On 10/11/16 16:18, Fabrice Gasnier wrote:
-> > Add core driver for STMicroelectronics STM32 ADC (Analog to Digital
-> > Converter). STM32 ADC can be composed of up to 3 ADCs with shared
-> > resources like clock prescaler, common interrupt line and analog
-> > reference voltage.
-> > This core driver basically manages shared resources.
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Looks good to me (other than the build issue obviously ;)
-> 
-> The fun bit will be trying to keep the whole thing this clean as you
-> add the more 'interesting' functionality.  *fingers crossed*
-> 
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-
-There isn't anything MFD about this driver.
-
-Please move it into IIO.
-
-> > ---
-> >  drivers/mfd/Kconfig                |  14 ++
-> >  drivers/mfd/Makefile               |   1 +
-> >  drivers/mfd/stm32-adc-core.c       | 301 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/stm32-adc-core.h |  52 +++++++
-> >  4 files changed, 368 insertions(+)
-> >  create mode 100644 drivers/mfd/stm32-adc-core.c
-> >  create mode 100644 include/linux/mfd/stm32-adc-core.h
-> > 
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index c6df644..2580cee 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -1152,6 +1152,20 @@ config MFD_PALMAS
-> >  	  If you say yes here you get support for the Palmas
-> >  	  series of PMIC chips from Texas Instruments.
-> >  
-> > +config MFD_STM32_ADC
-> > +	tristate "STMicroelectronics STM32 adc"
-> > +	depends on ARCH_STM32 || COMPILE_TEST
-> > +	depends on OF
-> > +	select MFD_CORE
-> > +	select REGULATOR
-> > +	select REGULATOR_FIXED_VOLTAGE
-> > +	help
-> > +	  Select this option to enable the core driver for STMicroelectronics
-> > +	  STM32 analog-to-digital converter (ADC).
-> > +
-> > +	  This driver can also be built as a module.  If so, the module
-> > +	  will be called stm32-adc-core.
-> > +
-> >  config TPS6105X
-> >  	tristate "TI TPS61050/61052 Boost Converters"
-> >  	depends on I2C
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 9834e66..4571506 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -185,6 +185,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
-> >  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
-> >  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-> >  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> > +obj-$(CONFIG_MFD_STM32_ADC) 	+= stm32-adc-core.o
-> >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> >  obj-$(CONFIG_MFD_RK808)		+= rk808.o
-> > diff --git a/drivers/mfd/stm32-adc-core.c b/drivers/mfd/stm32-adc-core.c
-> > new file mode 100644
-> > index 0000000..bcf52fb
-> > --- /dev/null
-> > +++ b/drivers/mfd/stm32-adc-core.c
-> > @@ -0,0 +1,301 @@
-> > +/*
-> > + * This file is part of STM32 ADC driver
-> > + *
-> > + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
-> > + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
-> > + *
-> > + * Inspired from: fsl-imx25-tsadc
-> > + *
-> > + * License type: GPLv2
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms of the GNU General Public License version 2 as published by
-> > + * the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful, but
-> > + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-> > + * or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See the GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program. If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irqchip/chained_irq.h>
-> > +#include <linux/irqdesc.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/mfd/stm32-adc-core.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/regulator/consumer.h>
-> > +#include <linux/slab.h>
-> > +
-> > +/* STM32F4 - common registers for all ADC instances: 1, 2 & 3 */
-> > +#define STM32F4_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
-> > +#define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
-> > +
-> > +/* STM32F4_ADC_CSR - bit fields */
-> > +#define STM32F4_EOC3			BIT(17)
-> > +#define STM32F4_EOC2			BIT(9)
-> > +#define STM32F4_EOC1			BIT(1)
-> > +
-> > +/* STM32F4_ADC_CCR - bit fields */
-> > +#define STM32F4_ADC_ADCPRE_SHIFT	16
-> > +#define STM32F4_ADC_ADCPRE_MASK		GENMASK(17, 16)
-> > +
-> > +/* STM32 F4 maximum analog clock rate (from datasheet) */
-> > +#define STM32F4_ADC_MAX_CLK_RATE	36000000
-> > +
-> > +/**
-> > + * struct stm32_adc_priv - stm32 ADC core private data
-> > + * @irq:		irq for ADC block
-> > + * @domain:		irq domain reference
-> > + * @aclk:		clock reference for the analog circuitry
-> > + * @vref:		regulator reference
-> > + * @common:		common data for all ADC instances
-> > + */
-> > +struct stm32_adc_priv {
-> > +	int				irq;
-> > +	struct irq_domain		*domain;
-> > +	struct clk			*aclk;
-> > +	struct regulator		*vref;
-> > +	struct stm32_adc_common		common;
-> > +};
-> > +
-> > +static struct stm32_adc_priv *to_stm32_adc_priv(struct stm32_adc_common *com)
-> > +{
-> > +	return container_of(com, struct stm32_adc_priv, common);
-> > +}
-> > +
-> > +/* STM32F4 ADC internal common clock prescaler division ratios */
-> > +static int stm32f4_pclk_div[] = {2, 4, 6, 8};
-> > +
-> > +/**
-> > + * stm32f4_adc_clk_sel() - Select stm32f4 ADC common clock prescaler
-> > + * @priv: stm32 ADC core private data
-> > + * Select clock prescaler used for analog conversions, before using ADC.
-> > + */
-> > +static int stm32f4_adc_clk_sel(struct platform_device *pdev,
-> > +			       struct stm32_adc_priv *priv)
-> > +{
-> > +	unsigned long rate;
-> > +	u32 val;
-> > +	int i;
-> > +
-> > +	rate = clk_get_rate(priv->aclk);
-> > +	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
-> > +		if ((rate / stm32f4_pclk_div[i]) <= STM32F4_ADC_MAX_CLK_RATE)
-> > +			break;
-> > +	}
-> > +	if (i >= ARRAY_SIZE(stm32f4_pclk_div))
-> > +		return -EINVAL;
-> > +
-> > +	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
-> > +	val &= ~STM32F4_ADC_ADCPRE_MASK;
-> > +	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
-> > +	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
-> > +
-> > +	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
-> > +		rate / (stm32f4_pclk_div[i] * 1000));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/* ADC common interrupt for all instances */
-> > +static void stm32_adc_irq_handler(struct irq_desc *desc)
-> > +{
-> > +	struct stm32_adc_priv *priv = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +	u32 status;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +	status = readl_relaxed(priv->common.base + STM32F4_ADC_CSR);
-> > +
-> > +	if (status & STM32F4_EOC1)
-> > +		generic_handle_irq(irq_find_mapping(priv->domain, 0));
-> > +
-> > +	if (status & STM32F4_EOC2)
-> > +		generic_handle_irq(irq_find_mapping(priv->domain, 1));
-> > +
-> > +	if (status & STM32F4_EOC3)
-> > +		generic_handle_irq(irq_find_mapping(priv->domain, 2));
-> > +
-> > +	chained_irq_exit(chip, desc);
-> > +};
-> > +
-> > +static int stm32_adc_domain_map(struct irq_domain *d, unsigned int irq,
-> > +				irq_hw_number_t hwirq)
-> > +{
-> > +	irq_set_chip_data(irq, d->host_data);
-> > +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_level_irq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void stm32_adc_domain_unmap(struct irq_domain *d, unsigned int irq)
-> > +{
-> > +	irq_set_chip_and_handler(irq, NULL, NULL);
-> > +	irq_set_chip_data(irq, NULL);
-> > +}
-> > +
-> > +static const struct irq_domain_ops stm32_adc_domain_ops = {
-> > +	.map = stm32_adc_domain_map,
-> > +	.unmap  = stm32_adc_domain_unmap,
-> > +	.xlate = irq_domain_xlate_onecell,
-> > +};
-> > +
-> > +static int stm32_adc_irq_probe(struct platform_device *pdev,
-> > +			       struct stm32_adc_priv *priv)
-> > +{
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +
-> > +	priv->irq = platform_get_irq(pdev, 0);
-> > +	if (priv->irq < 0) {
-> > +		dev_err(&pdev->dev, "failed to get irq\n");
-> > +		return priv->irq;
-> > +	}
-> > +
-> > +	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
-> > +					     &stm32_adc_domain_ops,
-> > +					     priv);
-> > +	if (!priv->domain) {
-> > +		dev_err(&pdev->dev, "Failed to add irq domain\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	irq_set_chained_handler(priv->irq, stm32_adc_irq_handler);
-> > +	irq_set_handler_data(priv->irq, priv);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void stm32_adc_irq_remove(struct platform_device *pdev,
-> > +				 struct stm32_adc_priv *priv)
-> > +{
-> > +	int hwirq;
-> > +
-> > +	for (hwirq = 0; hwirq < STM32_ADC_MAX_ADCS; hwirq++)
-> > +		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
-> > +	irq_domain_remove(priv->domain);
-> > +	irq_set_chained_handler(priv->irq, NULL);
-> > +}
-> > +
-> > +static int stm32_adc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct stm32_adc_priv *priv;
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	struct resource *res;
-> > +	int ret;
-> > +
-> > +	if (!pdev->dev.of_node)
-> > +		return -ENODEV;
-> > +
-> > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	priv->common.base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(priv->common.base))
-> > +		return PTR_ERR(priv->common.base);
-> > +
-> > +	priv->vref = devm_regulator_get(&pdev->dev, "vref");
-> > +	if (IS_ERR(priv->vref)) {
-> > +		ret = PTR_ERR(priv->vref);
-> > +		dev_err(&pdev->dev, "vref get failed, %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = regulator_enable(priv->vref);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "vref enable failed\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = regulator_get_voltage(priv->vref);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "vref get voltage failed, %d\n", ret);
-> > +		goto err_regulator_disable;
-> > +	}
-> > +	priv->common.vref_mv = ret / 1000;
-> > +	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
-> > +
-> > +	priv->aclk = devm_clk_get(&pdev->dev, "adc");
-> > +	if (IS_ERR(priv->aclk)) {
-> > +		ret = PTR_ERR(priv->aclk);
-> > +		dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-> > +		goto err_regulator_disable;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(priv->aclk);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "adc clk enable failed\n");
-> > +		goto err_regulator_disable;
-> > +	}
-> > +
-> > +	ret = stm32f4_adc_clk_sel(pdev, priv);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "adc clk selection failed\n");
-> > +		goto err_clk_disable;
-> > +	}
-> > +
-> > +	ret = stm32_adc_irq_probe(pdev, priv);
-> > +	if (ret < 0)
-> > +		goto err_clk_disable;
-> > +
-> > +	platform_set_drvdata(pdev, &priv->common);
-> > +
-> > +	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "failed to populate DT children\n");
-> > +		goto err_irq_remove;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +err_irq_remove:
-> > +	stm32_adc_irq_remove(pdev, priv);
-> > +
-> > +err_clk_disable:
-> > +	clk_disable_unprepare(priv->aclk);
-> > +
-> > +err_regulator_disable:
-> > +	regulator_disable(priv->vref);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int stm32_adc_remove(struct platform_device *pdev)
-> > +{
-> > +	struct stm32_adc_common *common = platform_get_drvdata(pdev);
-> > +	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
-> > +
-> > +	of_platform_depopulate(&pdev->dev);
-> > +	stm32_adc_irq_remove(pdev, priv);
-> > +	clk_disable_unprepare(priv->aclk);
-> > +	regulator_disable(priv->vref);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id stm32_adc_of_match[] = {
-> > +	{ .compatible = "st,stm32f4-adc-core" },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, stm32_adc_of_match);
-> > +
-> > +static struct platform_driver stm32_adc_driver = {
-> > +	.probe = stm32_adc_probe,
-> > +	.remove = stm32_adc_remove,
-> > +	.driver = {
-> > +		.name = "stm32-adc-core",
-> > +		.of_match_table = stm32_adc_of_match,
-> > +	},
-> > +};
-> > +module_platform_driver(stm32_adc_driver);
-> > +
-> > +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-> > +MODULE_DESCRIPTION("STMicroelectronics STM32 ADC MFD driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:stm32-adc-core");
-> > diff --git a/include/linux/mfd/stm32-adc-core.h b/include/linux/mfd/stm32-adc-core.h
-> > new file mode 100644
-> > index 0000000..081fa5f
-> > --- /dev/null
-> > +++ b/include/linux/mfd/stm32-adc-core.h
-> > @@ -0,0 +1,52 @@
-> > +/*
-> > + * This file is part of STM32 ADC driver
-> > + *
-> > + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
-> > + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
-> > + *
-> > + * License type: GPLv2
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms of the GNU General Public License version 2 as published by
-> > + * the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful, but
-> > + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-> > + * or FITNESS FOR A PARTICULAR PURPOSE.
-> > + * See the GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program. If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#ifndef __STM32_ADC_H
-> > +#define __STM32_ADC_H
-> > +
-> > +/*
-> > + * STM32 - ADC global register map
-> > + * ________________________________________________________
-> > + * | Offset |                 Register                    |
-> > + * --------------------------------------------------------
-> > + * | 0x000  |                Master ADC1                  |
-> > + * --------------------------------------------------------
-> > + * | 0x100  |                Slave ADC2                   |
-> > + * --------------------------------------------------------
-> > + * | 0x200  |                Slave ADC3                   |
-> > + * --------------------------------------------------------
-> > + * | 0x300  |         Master & Slave common regs          |
-> > + * --------------------------------------------------------
-> > + */
-> > +#define STM32_ADC_MAX_ADCS		3
-> > +#define STM32_ADCX_COMN_OFFSET		0x300
-> > +
-> > +/**
-> > + * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
-> > + * @base:		control registers base cpu addr
-> > + * @vref_mv:		vref voltage (mv)
-> > + */
-> > +struct stm32_adc_common {
-> > +	void __iomem			*base;
-> > +	int				vref_mv;
-> > +};
-> > +
-> > +#endif
-> > 
-> 
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyBbbWFpbHRvOmRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmdd
+IA0KPiBTZW50OiBNb25kYXksIE5vdmVtYmVyIDE0LCAyMDE2IDU6NDIgUE0NCg0KPj4gV2hlbiB5
+b3UgYXJlIHNheWluZyAid2UgaGF2ZSBhIGZyYW1ld29yayIgZG8geW91IG1lYW4gdG8gc29tZSBn
+ZW5lcmljIA0KPj4gZnJhbWV3b3JrIGluIHRoZSBrZXJuZWw/DQoNCj4gWWVzLCBJSVJDIGl0IGlz
+IHJlZ21hcCBidXQgSSdtIG5vdCBzdXJlLg0KSW5kZWVkIHJlZ21hcCBpcyBhIGdlbmVyaWMgZnJh
+bWV3b3JrIGFuZCBpdCBwcmltYXJpbHkgbWVhbnQgZm9yIHJlZ2lzdGVycyB3aGljaCBjYW4gYmUg
+bWFwcGVkIHRvIG91ciB2aXJ0dWFsL2xvZ2ljYWwgYWRkcmVzcyBzcGFjZSB3aGljaCBpcyBub3Qg
+dGhlIGNhc2UgaGVyZS4gRm9yIG91ciBhdXhpbGlhcnkgcmVnaXN0ZXJzIGFjY2VzcyB3ZSB1c2Ug
+ZGVkaWNhdGVkIGluc3RydWN0aW9ucyAobHIvc3IpIGFuZCBub3QgTE9BRC9TVE9SRSBsaWtlIEdD
+QyBwcm9kdWNlLg0KSXQgaXMgcG9zc2libGUgdG8gdXNlIHN1Y2ggcmVnbWFwIGJ1dCB0aGlzIGRy
+aXZlciB3aWxsIGJlIGZpbGxlZCB3aXRoIGFsbCByZWdtYXAgaGFuZGxpbmcganVzdCB0byBoaWRl
+IGNvdXBsZSBvZiBsaW5lcy4gVGhpcyB3aWxsIG5vdCBzZXJ2ZSB0aGlzIGRyaXZlciByZWFkYWJp
+bGl0eSB3ZWxsLg0KDQo+SSB0aGluayB0aGVyZSBpcyBzb21ldGhpbmcgSSBhbSBtaXNzaW5nIHdp
+dGggdGhpcyBIVyBzY2hlZHVsaW5nIHRoaW5nLiBXaHkgYXJlIHRoZXNlIGh3X3NjaGRfc2F2ZS9o
+d19zY2hkX3Jlc3RvcmUgZnVuY3Rpb25zIG5lZWRlZCB0byBiZSBjYWxsZWQgZnJvbSB0aGUgdGlt
+ZXIgZHJpdmVyID8gUmVnYXJkaW5nIHRoZSBleHBsYW5hdGlvbiwgdGhlIEhXIHNjaGVkdWxpbmcg
+Y2FuIGhhcHBlbiBldmVyeXdoZXJlIGF0IGFueSB0aW1lLCBub3Qgb25seSBpbiB0aGUgdGltZXIg
+Y29kZSBidXQgdGhpcyBvbmUgaXMgdGhlIG9ubHkgb25lIHdoaWNoIG5lZWQgdGhlIGh3X3NjaGRf
+c2F2ZS9od19zY2hkX3Jlc3RvcmUgY2FsbHMsIHdoeSA/DQpJIHVzZSB0aGVtIG5vdCBqdXN0IGhl
+cmUgdGhleSBhcmUgYWxzbyBzZXJ2ZSB0byBwcm90ZWN0IG91ciBMMSBjYWNoZSBhbmQgVExCIHdo
+aWNoIGFyZSBhbHNvIHNoYXJlZCB3aXRoaW4gc2FtZSBjb3JlLiBZb3UgY2FuJ3Qgc2VlIHRoaXMg
+eWV0IHNpbmNlIHBhdGNoIGFyZSBub3Qgc3RpbGwgcHVzaCB0byBhcmNoL2FyYyB0cmVlLg0KPldo
+eSwNCg0KPnNwaW5fbG9jaygmbG9jayk7DQo+d3JpdGVfYXV4X3JlZyguLi4pDQo+c3Bpbl91bmxv
+Y2soJmxvY2spOw0KDQo+Y2FuJ3Qgd29yayA/DQpCZWNhdXNlIEkgY2FuJ3QgdXNlIHNwaW5sb2Nr
+IGluIGludGVycnVwdCBjb250ZXh0IChJIGNhbGwgdG8gbnBzX2Nsa2V2ZW50X3JtX3RocmVhZCgp
+IGluIGlycV9oYW5kbGVyKS4NCg0KPklJVUMsIHRoZXJlIGNhbiBiZSBtb3JlIHRoYW4gMTYgY3B1
+cy90aHJlYWRzLCBzbyBjYWxsaW5nIGh3X3NjaGRfc2F2ZSAvIGh3X3NjaGRfcmVzdG9yZSB3aWxs
+IGRpc2FibGUgdGhlIEhXIHNjaGVkdWxpbmcgZm9yIHRoZSBlbnRpcmUgc3lzdGVtIHdoaWxlIG9u
+ZSBjcHUgaXMgcHJvY2Vzc2luZyBzb21ldGhpbmcgd2l0aCB0aGVzZSBjb3VwbGUgb2YgcmVnaXN0
+ZXJzLCBubyA/DQpOTywgSFcgc2NoZWR1bGluZyB3aWxsIGJlIGRpc2FibGVkIG9ubHkgZm9yIHRo
+aXMgc3BlY2lmaWMgY29yZSwgYWxsIG90aGVyIGNvcmVzIHdpbGwgbm90IGJlIGFmZmVjdGVkIHNp
+bmNlIHRoZXkgZ290IHRoZWlyIG93biBwcml2YXRlIHJlZ2lzdGVycy4NCg0KLi4uDQo+PiA+QW5k
+IHRpY2tfcmVzdW1lLiBQZXJoYXBzLCB0aGF0IGlzIHRoZSByZWFzb24gd2h5IE5PX0haIGhhbmdz
+Lg0KPj4gV2hhdCBOT19IWiBoYW5nIGFyZSB5b3UgcmVmZXJyaW5nIHRvIGluIHRoaXMgY2FzZT8g
+IEhvdyBjYWxsaW5nDQo+PiBucHNfY2xrZXZlbnRfcm1fdGhyZWFkKCkgZXhwbGFpbiBzdWNoIGhh
+bmc/ICBBbnl3YXkgSSBhZ3JlZSwgYW5kIHdpbGwgDQo+PiBhZGQNCj4+IG5wc19jbGtldmVudF9y
+bV90aHJlYWQoKSB0byB0aWNrX3Jlc3VtZS4NCg0KPkFjdHVhbGx5IEkgbWVhbnQgTk9IWl9GVUxM
+Lg0KIFN0aWxsIGdvdCBubyBjbHVlIHdoYXQgaGFuZyB3ZSBhcmUgdGFsa2luZyBhYm91dCBoZXJl
+IQ0KDQpOb3RlOg0KSSBsb29rZWQgYXQgYXJjaC90aWxlIHRpbWVyIGRyaXZlciBhZ2FpbiBhbmQg
+bm90aWNlZCB0aGF0IEkgY2FuIHdvcmsgd2l0aG91dCBwZXJpb2RpYyBtb2RlLiBUaGlzIGlzIGV4
+YWN0bHkgd2hhdCBJIG5lZWQgaGVyZSAocHVyZSBvbmVzaG90IG1vZGUpLg0KV2l0aCB0aGlzIGZh
+Y3QgSSBjYW4gZGVmaW5lDQpTdGF0aWMgdm9pZCBucHNfY2xrZXZlbnRfcm1fdGhyZWFkKHZvaWQp
+DQpTdGF0aWMgdm9pZCBucHNfY2xrZXZlbnRfYWRkX3RocmVhZCh2b2lkKQ0KDQpBbHNvIEhXIHNj
+aGVkdWxpbmcgc2F2ZS9yZXN0b3JlIGlzIG9ubHkgdXNlZCBpbiAqcm1fdGhyZWFkLyphZGRfdGhy
+ZWFkIHNpbmNlIEkgY2FuIG5vdyByZW1vdmUgbnBzX2Nsa2V2ZW50X3NldF9wZXJpb2RpYygpIGFu
+ZCBucHNfY2xrZXZlbnRfdGltZXJfZXZlbnRfc2V0dXAoKS4NClRoaXMgd2F5IGNsb2NrZXZlbnQg
+ZHJpdmVyIHNlZW0gbXVjaCBzaW1wbGVyIGFuZCBpdCBpcyBjbGVhcmVyIHRvIHVuZGVyc3RhbmRp
+bmcuDQpJIGhvcGUgdGhhdCB0aGlzIGFwcHJvYWNoIG9mIG5vdCBoYXZpbmcgcGVyaW9kaWMgbW9k
+ZSBpcyBhY2NlcHRhYmxlLg0KDQotTm9hbQ0K
