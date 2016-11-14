@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 01/11] ARM: shmobile: Document DT bindings for Product Register
-Date: Mon, 14 Nov 2016 19:37:07 +0100
-Message-ID: <1479148637-5399-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 11/11] arm64: dts: r8a7796: Add device node for PRR
+Date: Mon, 14 Nov 2016 19:37:17 +0100
+Message-ID: <1479148637-5399-12-git-send-email-geert+renesas@glider.be>
 References: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
@@ -10,49 +10,35 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dirk Behme <dirk.behme@de.bosch.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the Product Register (PRR),
-which provides product and revision information on most Renesas ARM
-SoCs.
+Add a device node for the Product Register, which provides SoC product
+and revision information.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 v3:
-  - Add Acked-by,
-  - Drop "renesas,cccr", as the CCCR is not a lone register, but part of
-    the HPB/APB block, which will need its own set of bindings,
+  - Add to posted series,
 
 v2:
   - New.
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index a1e94da0e322c8f4..1be9e8a7e2c43dfc 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -81,3 +81,21 @@ Boards:
-     compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
-   - Wheat
-     compatible = "renesas,wheat", "renesas,r8a7792"
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 9599f5691099054b..41a050d2f1925552 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -243,6 +243,11 @@
+ 			#power-domain-cells = <0>;
+ 		};
+ 
++		prr: chipid@fff00044 {
++			compatible = "renesas,prr";
++			reg = <0 0xfff00044 0 4>;
++		};
 +
-+
-+Most Renesas ARM SoCs have a Product Register that allows to retrieve SoC
-+product and revision information.  If present, a device node for this register
-+should be added.
-+
-+Required properties:
-+  - compatible: Must be "renesas,prr".
-+  - reg: Base address and length of the register block.
-+
-+
-+Examples
-+--------
-+
-+	prr: chipid@ff000044 {
-+		compatible = "renesas,prr";
-+		reg = <0 0xff000044 0 4>;
-+	};
+ 		sysc: system-controller@e6180000 {
+ 			compatible = "renesas,r8a7796-sysc";
+ 			reg = <0 0xe6180000 0 0x0400>;
 -- 
 1.9.1
