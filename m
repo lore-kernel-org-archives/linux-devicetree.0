@@ -1,1214 +1,458 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: vf610-zii-dev: Add .dts file for rev. C
-Date: Mon, 14 Nov 2016 08:35:06 -0800
-Message-ID: <1479141306-15141-2-git-send-email-andrew.smirnov@gmail.com>
-References: <1479141306-15141-1-git-send-email-andrew.smirnov@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/6] mfd: stm32-adc: Add support for stm32 ADC
+Date: Mon, 14 Nov 2016 16:47:01 +0000
+Message-ID: <20161114164701.GA2668@dell>
+References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com>
+ <1478794738-28933-3-git-send-email-fabrice.gasnier@st.com>
+ <9ba617f4-fd3d-2b48-2607-9eec3cc4253a@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479141306-15141-1-git-send-email-andrew.smirnov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <9ba617f4-fd3d-2b48-2607-9eec3cc4253a@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, cphealy@gmail.com, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-Add .dts file for rev. C of the board by factoring out commonalities
-into a shared include file (vf610-zii-dev-rev-b-c.dtsi) and deriving
-revision specific file from it (vf610-zii-dev-rev-b.dts and
-vf610-zii-dev-reb-c.dts).
+On Sat, 12 Nov 2016, Jonathan Cameron wrote:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/Makefile                   |   3 +-
- arch/arm/boot/dts/vf610-zii-dev-rev-b-c.dtsi | 383 ++++++++++++++++++++++++
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts    | 300 +------------------
- arch/arm/boot/dts/vf610-zii-dev-rev-c.dts    | 418 +++++++++++++++++++++++++++
- 4 files changed, 804 insertions(+), 300 deletions(-)
- create mode 100644 arch/arm/boot/dts/vf610-zii-dev-rev-b-c.dtsi
- create mode 100644 arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
+> On 10/11/16 16:18, Fabrice Gasnier wrote:
+> > Add core driver for STMicroelectronics STM32 ADC (Analog to Digital
+> > Converter). STM32 ADC can be composed of up to 3 ADCs with shared
+> > resources like clock prescaler, common interrupt line and analog
+> > reference voltage.
+> > This core driver basically manages shared resources.
+> > 
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Looks good to me (other than the build issue obviously ;)
+> 
+> The fun bit will be trying to keep the whole thing this clean as you
+> add the more 'interesting' functionality.  *fingers crossed*
+> 
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index befcd26..9f0d2a1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -442,7 +442,8 @@ dtb-$(CONFIG_SOC_VF610) += \
- 	vf610-cosmic.dtb \
- 	vf610m4-cosmic.dtb \
- 	vf610-twr.dtb \
--	vf610-zii-dev-rev-b.dtb
-+	vf610-zii-dev-rev-b.dtb \
-+	vf610-zii-dev-rev-c.dtb
- dtb-$(CONFIG_ARCH_MXS) += \
- 	imx23-evk.dtb \
- 	imx23-olinuxino.dtb \
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b-c.dtsi b/arch/arm/boot/dts/vf610-zii-dev-rev-b-c.dtsi
-new file mode 100644
-index 0000000..9f5e2e7
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b-c.dtsi
-@@ -0,0 +1,383 @@
-+/*
-+ * Copyright (C) 2015, 2016 Zodiac Inflight Innovations
-+ *
-+ * Based on an original 'vf610-twr.dts' which is Copyright 2015,
-+ * Freescale Semiconductor, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+n *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "vf610.dtsi"
-+
-+/ {
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&pinctrl_leds_debug>;
-+		pinctrl-names = "default";
-+
-+		debug {
-+			label = "zii:green:debug1";
-+			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_mcu";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	usb0_vbus: regulator-usb0-vbus {
-+		compatible = "regulator-fixed";
-+		pinctrl-0 = <&pinctrl_usb_vbus>;
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		gpio = <&gpio0 6 0>;
-+	};
-+};
-+
-+&adc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_ad5>;
-+	vref-supply = <&reg_vcc_3v3_mcu>;
-+	status = "okay";
-+};
-+
-+&edma0 {
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&fec0 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec0>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	status = "okay";
-+
-+	fixed-link {
-+		   speed = <100>;
-+		   full-duplex;
-+	};
-+
-+	mdio1: mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+	};
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c0>;
-+	pinctrl-1 = <&pinctrl_i2c0_gpio>;
-+	scl-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-+	sda-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	lm75@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+
-+	at24c04@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+	};
-+
-+	at24c04@52 {
-+		compatible = "atmel,24c04";
-+		reg = <0x52>;
-+	};
-+
-+	ds1682@6b {
-+		compatible = "dallas,ds1682";
-+		reg = <0x6b>;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&usbdev0 {
-+	disable-over-current;
-+	vbus-supply = <&usb0_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usbmisc0 {
-+	status = "okay";
-+};
-+
-+&usbmisc1 {
-+	status = "okay";
-+};
-+
-+&usbphy0 {
-+	status = "okay";
-+};
-+
-+&usbphy1 {
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_adc0_ad5: adc0ad5grp {
-+		fsl,pins = <
-+			VF610_PAD_PTC30__ADC0_SE5	0x00a1
-+		>;
-+	};
-+
-+	pinctrl_dspi0: dspi0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB18__DSPI0_CS1	0x1182
-+			VF610_PAD_PTB19__DSPI0_CS0	0x1182
-+			VF610_PAD_PTB20__DSPI0_SIN	0x1181
-+			VF610_PAD_PTB21__DSPI0_SOUT	0x1182
-+			VF610_PAD_PTB22__DSPI0_SCK	0x1182
-+		>;
-+	};
-+
-+	pinctrl_dspi2: dspi2grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD31__DSPI2_CS1	0x1182
-+			VF610_PAD_PTD30__DSPI2_CS0	0x1182
-+			VF610_PAD_PTD29__DSPI2_SIN	0x1181
-+			VF610_PAD_PTD28__DSPI2_SOUT	0x1182
-+			VF610_PAD_PTD27__DSPI2_SCK	0x1182
-+		>;
-+	};
-+
-+	pinctrl_esdhc1: esdhc1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-+			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
-+			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
-+			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
-+			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
-+			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
-+			VF610_PAD_PTA7__GPIO_134	0x219d
-+		>;
-+	};
-+
-+	pinctrl_fec0: fec0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTC0__ENET_RMII0_MDC	0x30d2
-+			VF610_PAD_PTC1__ENET_RMII0_MDIO	0x30d3
-+			VF610_PAD_PTC2__ENET_RMII0_CRS	0x30d1
-+			VF610_PAD_PTC3__ENET_RMII0_RXD1	0x30d1
-+			VF610_PAD_PTC4__ENET_RMII0_RXD0	0x30d1
-+			VF610_PAD_PTC5__ENET_RMII0_RXER	0x30d1
-+			VF610_PAD_PTC6__ENET_RMII0_TXD1	0x30d2
-+			VF610_PAD_PTC7__ENET_RMII0_TXD0	0x30d2
-+			VF610_PAD_PTC8__ENET_RMII0_TXEN	0x30d2
-+		>;
-+	};
-+
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
-+			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
-+			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
-+			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
-+			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
-+			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
-+			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
-+			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
-+			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
-+			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
-+		>;
-+	};
-+
-+	pinctrl_gpio_spi0: pinctrl-gpio-spi0 {
-+		fsl,pins = <
-+			VF610_PAD_PTB22__GPIO_44	0x33e2
-+			VF610_PAD_PTB21__GPIO_43	0x33e2
-+			VF610_PAD_PTB20__GPIO_42	0x33e1
-+			VF610_PAD_PTB19__GPIO_41	0x33e2
-+			VF610_PAD_PTB18__GPIO_40	0x33e2
-+		>;
-+	};
-+
-+	pinctrl_i2c_mux_reset: pinctrl-i2c-mux-reset {
-+		fsl,pins = <
-+			 VF610_PAD_PTE14__GPIO_119	0x31c2
-+			 >;
-+	};
-+
-+	pinctrl_i2c0: i2c0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB14__I2C0_SCL	0x37ff
-+			VF610_PAD_PTB15__I2C0_SDA	0x37ff
-+		>;
-+	};
-+
-+	pinctrl_i2c0_gpio: i2c0grp-gpio {
-+		fsl,pins = <
-+			VF610_PAD_PTB14__GPIO_36	0x31c2
-+			VF610_PAD_PTB15__GPIO_37	0x31c2
-+		>;
-+	};
-+
-+	
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB16__I2C1_SCL	0x37ff
-+			VF610_PAD_PTB17__I2C1_SDA	0x37ff
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA22__I2C2_SCL	0x37ff
-+			VF610_PAD_PTA23__I2C2_SDA	0x37ff
-+		>;
-+	};
-+
-+	pinctrl_leds_debug: pinctrl-leds-debug {
-+		fsl,pins = <
-+			 VF610_PAD_PTD20__GPIO_74	0x31c2
-+			 >;
-+	};
-+
-+	pinctrl_qspi0: qspi0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
-+			VF610_PAD_PTD8__QSPI0_B_CS0	0x31ff
-+			VF610_PAD_PTD9__QSPI0_B_DATA3	0x31c3
-+			VF610_PAD_PTD10__QSPI0_B_DATA2	0x31c3
-+			VF610_PAD_PTD11__QSPI0_B_DATA1	0x31c3
-+			VF610_PAD_PTD12__QSPI0_B_DATA0	0x31c3
-+		>;
-+	};
-+
-+	pinctrl_uart0: uart0grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB10__UART0_TX	0x21a2
-+			VF610_PAD_PTB11__UART0_RX	0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			VF610_PAD_PTB23__UART1_TX	0x21a2
-+			VF610_PAD_PTB24__UART1_RX	0x21a1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD0__UART2_TX	0x21a2
-+			VF610_PAD_PTD1__UART2_RX	0x21a1
-+		>;
-+	};
-+
-+	pinctrl_usb_vbus: pinctrl-usb-vbus {
-+		fsl,pins = <
-+			VF610_PAD_PTA16__GPIO_6	0x31c2
-+		>;
-+	};
-+
-+	pinctrl_usb0_host: usb0-host-grp {
-+		fsl,pins = <
-+			VF610_PAD_PTD6__GPIO_85		0x0062
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index 2210811..dee79de 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -43,32 +43,12 @@
-  */
- 
- /dts-v1/;
--#include "vf610.dtsi"
-+#include "vf610-zii-dev-rev-b-c.dtsi"
- 
- / {
- 	model = "ZII VF610 Development Board, Rev B";
- 	compatible = "zii,vf610dev-b", "zii,vf610dev", "fsl,vf610";
- 
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
--	memory {
--		reg = <0x80000000 0x20000000>;
--	};
--
--	gpio-leds {
--		compatible = "gpio-leds";
--		pinctrl-0 = <&pinctrl_leds_debug>;
--		pinctrl-names = "default";
--
--		debug {
--			label = "zii:green:debug1";
--			gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "heartbeat";
--		};
--	};
--
- 	mdio-mux {
- 		compatible = "mdio-mux-gpio";
- 		pinctrl-0 = <&pinctrl_mdio_mux>;
-@@ -281,25 +261,6 @@
- 		};
- 	};
- 
--	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc_3v3_mcu";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--
--	usb0_vbus: regulator-usb0-vbus {
--		compatible = "regulator-fixed";
--		pinctrl-0 = <&pinctrl_usb_vbus>;
--		regulator-name = "usb_vbus";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		enable-active-high;
--		regulator-always-on;
--		regulator-boot-on;
--		gpio = <&gpio0 6 0>;
--	};
--
- 	spi0 {
- 		compatible = "spi-gpio";
- 		pinctrl-0 = <&pinctrl_gpio_spi0>;
-@@ -336,49 +297,6 @@
- 	};
- };
- 
--&adc0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_adc0_ad5>;
--	vref-supply = <&reg_vcc_3v3_mcu>;
--	status = "okay";
--};
--
--&edma0 {
--	status = "okay";
--};
--
--&esdhc1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_esdhc1>;
--	bus-width = <4>;
--	status = "okay";
--};
--
--&fec0 {
--	phy-mode = "rmii";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_fec0>;
--	status = "okay";
--};
--
--&fec1 {
--	phy-mode = "rmii";
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_fec1>;
--	status = "okay";
--
--	fixed-link {
--		   speed = <100>;
--		   full-duplex;
--	};
--
--	mdio1: mdio {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		status = "okay";
--	};
--};
--
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
-@@ -403,33 +321,6 @@
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
- 	};
--
--	lm75@48 {
--		compatible = "national,lm75";
--		reg = <0x48>;
--	};
--
--	at24c04@50 {
--		compatible = "atmel,24c04";
--		reg = <0x50>;
--	};
--
--	at24c04@52 {
--		compatible = "atmel,24c04";
--		reg = <0x52>;
--	};
--
--	ds1682@6b {
--		compatible = "dallas,ds1682";
--		reg = <0x6b>;
--	};
--};
--
--&i2c1 {
--	clock-frequency = <100000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c1>;
--	status = "okay";
- };
- 
- &i2c2 {
-@@ -499,120 +390,8 @@
- 	};
- };
- 
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart0>;
--	status = "okay";
--};
--
--&uart1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart1>;
--	status = "okay";
--};
--
--&uart2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_uart2>;
--	status = "okay";
--};
--
--&usbdev0 {
--	disable-over-current;
--	vbus-supply = <&usb0_vbus>;
--	dr_mode = "host";
--	status = "okay";
--};
--
--&usbh1 {
--	disable-over-current;
--	status = "okay";
--};
--
--&usbmisc0 {
--	status = "okay";
--};
--
--&usbmisc1 {
--	status = "okay";
--};
--
--&usbphy0 {
--	status = "okay";
--};
--
--&usbphy1 {
--	status = "okay";
--};
- 
- &iomuxc {
--	pinctrl_adc0_ad5: adc0ad5grp {
--		fsl,pins = <
--			VF610_PAD_PTC30__ADC0_SE5	0x00a1
--		>;
--	};
--
--	pinctrl_dspi0: dspi0grp {
--		fsl,pins = <
--			VF610_PAD_PTB18__DSPI0_CS1	0x1182
--			VF610_PAD_PTB19__DSPI0_CS0	0x1182
--			VF610_PAD_PTB20__DSPI0_SIN	0x1181
--			VF610_PAD_PTB21__DSPI0_SOUT	0x1182
--			VF610_PAD_PTB22__DSPI0_SCK	0x1182
--		>;
--	};
--
--	pinctrl_dspi2: dspi2grp {
--		fsl,pins = <
--			VF610_PAD_PTD31__DSPI2_CS1	0x1182
--			VF610_PAD_PTD30__DSPI2_CS0	0x1182
--			VF610_PAD_PTD29__DSPI2_SIN	0x1181
--			VF610_PAD_PTD28__DSPI2_SOUT	0x1182
--			VF610_PAD_PTD27__DSPI2_SCK	0x1182
--		>;
--	};
--
--	pinctrl_esdhc1: esdhc1grp {
--		fsl,pins = <
--			VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
--			VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
--			VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
--			VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
--			VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
--			VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
--			VF610_PAD_PTA7__GPIO_134	0x219d
--		>;
--	};
--
--	pinctrl_fec0: fec0grp {
--		fsl,pins = <
--			VF610_PAD_PTC0__ENET_RMII0_MDC	0x30d2
--			VF610_PAD_PTC1__ENET_RMII0_MDIO	0x30d3
--			VF610_PAD_PTC2__ENET_RMII0_CRS	0x30d1
--			VF610_PAD_PTC3__ENET_RMII0_RXD1	0x30d1
--			VF610_PAD_PTC4__ENET_RMII0_RXD0	0x30d1
--			VF610_PAD_PTC5__ENET_RMII0_RXER	0x30d1
--			VF610_PAD_PTC6__ENET_RMII0_TXD1	0x30d2
--			VF610_PAD_PTC7__ENET_RMII0_TXD0	0x30d2
--			VF610_PAD_PTC8__ENET_RMII0_TXEN	0x30d2
--		>;
--	};
--
--	pinctrl_fec1: fec1grp {
--		fsl,pins = <
--			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
--			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
--			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
--			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
--			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
--			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
--			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
--			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
--			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
--			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
--		>;
--	};
--
- 	pinctrl_gpio_e6185_eeprom_sel: pinctrl-gpio-e6185-eeprom-spi0 {
- 		fsl,pins = <
- 			VF610_PAD_PTE27__GPIO_132	0x33e2
-@@ -629,39 +408,6 @@
- 		>;
- 	};
- 
--	pinctrl_i2c_mux_reset: pinctrl-i2c-mux-reset {
--		fsl,pins = <
--			 VF610_PAD_PTE14__GPIO_119	0x31c2
--			 >;
--	};
--
--	pinctrl_i2c0: i2c0grp {
--		fsl,pins = <
--			VF610_PAD_PTB14__I2C0_SCL	0x37ff
--			VF610_PAD_PTB15__I2C0_SDA	0x37ff
--		>;
--	};
--
--	pinctrl_i2c1: i2c1grp {
--		fsl,pins = <
--			VF610_PAD_PTB16__I2C1_SCL	0x37ff
--			VF610_PAD_PTB17__I2C1_SDA	0x37ff
--		>;
--	};
--
--	pinctrl_i2c2: i2c2grp {
--		fsl,pins = <
--			VF610_PAD_PTA22__I2C2_SCL	0x37ff
--			VF610_PAD_PTA23__I2C2_SDA	0x37ff
--		>;
--	};
--
--	pinctrl_leds_debug: pinctrl-leds-debug {
--		fsl,pins = <
--			 VF610_PAD_PTD20__GPIO_74	0x31c2
--			 >;
--	};
--
- 	pinctrl_mdio_mux: pinctrl-mdio-mux {
- 		fsl,pins = <
- 			VF610_PAD_PTA18__GPIO_8		0x31c2
-@@ -676,48 +422,4 @@
- 			VF610_PAD_PTB28__GPIO_98	0x219d
- 		>;
- 	};
--
--	pinctrl_qspi0: qspi0grp {
--		fsl,pins = <
--			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
--			VF610_PAD_PTD8__QSPI0_B_CS0	0x31ff
--			VF610_PAD_PTD9__QSPI0_B_DATA3	0x31c3
--			VF610_PAD_PTD10__QSPI0_B_DATA2	0x31c3
--			VF610_PAD_PTD11__QSPI0_B_DATA1	0x31c3
--			VF610_PAD_PTD12__QSPI0_B_DATA0	0x31c3
--		>;
--	};
--
--	pinctrl_uart0: uart0grp {
--		fsl,pins = <
--			VF610_PAD_PTB10__UART0_TX	0x21a2
--			VF610_PAD_PTB11__UART0_RX	0x21a1
--		>;
--	};
--
--	pinctrl_uart1: uart1grp {
--		fsl,pins = <
--			VF610_PAD_PTB23__UART1_TX	0x21a2
--			VF610_PAD_PTB24__UART1_RX	0x21a1
--		>;
--	};
--
--	pinctrl_uart2: uart2grp {
--		fsl,pins = <
--			VF610_PAD_PTD0__UART2_TX	0x21a2
--			VF610_PAD_PTD1__UART2_RX	0x21a1
--		>;
--	};
--
--	pinctrl_usb_vbus: pinctrl-usb-vbus {
--		fsl,pins = <
--			VF610_PAD_PTA16__GPIO_6	0x31c2
--		>;
--	};
--
--	pinctrl_usb0_host: usb0-host-grp {
--		fsl,pins = <
--			VF610_PAD_PTD6__GPIO_85		0x0062
--		>;
--	};
- };
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-new file mode 100644
-index 0000000..b508bbf
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-@@ -0,0 +1,418 @@
-+/*
-+ * Copyright (C) 2015, 2016 Zodiac Inflight Innovations
-+ *
-+ * Based on an original 'vf610-twr.dts' which is Copyright 2015,
-+ * Freescale Semiconductor, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "vf610-zii-dev-rev-b-c.dtsi"
-+
-+/ {
-+	model = "ZII VF610 Development Board, Rev C";
-+	compatible = "zii,vf610dev-c", "zii,vf610dev", "fsl,vf610";
-+
-+	mdio-mux {
-+		compatible = "mdio-mux-gpio";
-+		pinctrl-0 = <&pinctrl_mdio_mux>;
-+		pinctrl-names = "default";
-+		gpios = <&gpio0 8  GPIO_ACTIVE_HIGH
-+			 &gpio0 9  GPIO_ACTIVE_HIGH
-+			 &gpio0 25 GPIO_ACTIVE_HIGH>;
-+		mdio-parent-bus = <&mdio1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mdio_mux_1: mdio@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch0: switch0@0 {
-+				compatible = "marvell,mv88e6390";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				dsa,member = <0 0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						label = "cpu";
-+						ethernet = <&fec1>;
-+						fixed-link {
-+							speed = <100>;
-+							full-duplex;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						label = "lan1";
-+					};
-+
-+					port@2 {
-+						reg = <2>;
-+						label = "lan2";
-+					};
-+
-+					port@3 {
-+						reg = <3>;
-+						label = "lan3";
-+					};
-+
-+					port@4 {
-+						reg = <4>;
-+						label = "lan4";
-+					};
-+
-+					port@9 {
-+						reg = <9>;
-+						label = "lan4";
-+						phy-handle = <&switch0phy0>;
-+					};
-+
-+
-+					switch0port10: port@10 {
-+						reg = <10>;
-+						label = "dsa";
-+						phy-mode = "xgmii";
-+						link = <&switch1port10>;
-+						fixed-link {
-+							speed = <10000>;
-+							full-duplex;
-+						};
-+					};
-+				};
-+
-+				mdio {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					switch0phy0: switch0phy0@0 {
-+						reg = <0>;
-+					};
-+				};
-+
-+			};
-+		};
-+
-+		mdio_mux_2: mdio@2 {
-+			reg = <2>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch1: switch1@0 {
-+				compatible = "marvell,mv88e6390";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				dsa,member = <0 1>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@1 {
-+						reg = <1>;
-+						label = "lan5";
-+					};
-+
-+					port@2 {
-+						reg = <2>;
-+						label = "lan6";
-+					};
-+
-+					port@3 {
-+						reg = <3>;
-+						label = "lan7";
-+					};
-+
-+					port@4 {
-+						reg = <4>;
-+						label = "lan8";
-+					};
-+
-+
-+					switch1port10: port@10 {
-+						reg = <10>;
-+						label = "dsa";
-+						phy-mode = "xgmii";
-+						link = <&switch0port10>;
-+						fixed-link {
-+							speed = <10000>;
-+							full-duplex;
-+						};
-+					};
-+				};
-+			};
-+		};
-+
-+		mdio_mux_4: mdio@4 {
-+			reg = <4>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+};
-+
-+&dspi0 {
-+	bus-num = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_dspi0>;
-+	status = "okay";
-+	spi-num-chipselects = <2>;
-+
-+	m25p128@0 {
-+		compatible = "m25p128", "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+	};
-+};
-+
-+&i2c0 {
-+	/*
-+	 * U712
-+	 *
-+	 * Exposed signals:
-+	 *    P1 - WE2_CMD
-+	 *    P2 - WE2_CLK
-+	 */
-+	gpio5: pca9557@18 {
-+		compatible = "nxp,pca9557";
-+		reg = <0x18>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	/*
-+	 * U121
-+	 *
-+	 * Exposed signals:
-+	 *    I/O0  - ENET_SWR_EN
-+	 *    I/O1  - ESW1_RESETn
-+	 *    I/O2  - ARINC_RESET
-+	 *    I/O3  - DD1_IO_RESET
-+	 *    I/O4  - ESW2_RESETn
-+	 *    I/O5  - ESW3_RESETn
-+	 *    I/O6  - ESW4_RESETn
-+	 *    I/O8  - TP909
-+	 *    I/O9  - FEM_SEL
-+	 *    I/O10 - WIFI_RESETn
-+	 *    I/O11 - PHY_RSTn
-+	 *    I/O12 - OPT1_SD
-+	 *    I/O13 - OPT2_SD
-+	 *    I/O14 - OPT1_TX_DIS
-+	 *    I/O15 - OPT2_TX_DIS
-+	 */
-+	gpio6: sx1503@20 {
-+		compatible = "semtech,sx1503q";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_sx1503_20>;
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
-+		reg = <0x20>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-+		gpio-controller;
-+		interrupt-controller;
-+
-+		enet_swr_en {
-+			gpio-hog;
-+			gpios = <0 GPIO_ACTIVE_HIGH>;
-+			output-high;
-+			line-name = "enet-swr-en";
-+		};
-+	};
-+
-+	/*
-+	 * U715
-+	 *
-+	 * Exposed signals:
-+	 *     IO0 - WE1_CLK
-+	 *     IO1 - WE1_CMD
-+	 */
-+	gpio7: pca9554@22 {
-+		compatible = "nxp,pca9554";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+	};
-+};
-+
-+&i2c1 {
-+	at24mac602@00 {
-+		compatible = "atmel,24c02";
-+		reg = <0x50>;
-+		read-only;
-+	};
-+};
-+
-+&i2c2 {
-+	tca9548@70 {
-+		compatible = "nxp,pca9548";
-+		pinctrl-0 = <&pinctrl_i2c_mux_reset>;
-+		pinctrl-names = "default";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x70>;
-+		reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			sfp2: at24c04@50 {
-+				compatible = "atmel,24c02";
-+				reg = <0x50>;
-+			};
-+		};
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+
-+			sfp3: at24c04@50 {
-+				compatible = "atmel,24c02";
-+				reg = <0x50>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	status = "okay";
-+};
-+
-+&gpio0 {
-+	eth0_intrp {
-+		gpio-hog;
-+		gpios = <23 GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "sx1503-irq";
-+	};
-+};
-+
-+&gpio3 {
-+	eth0_intrp {
-+		gpio-hog;
-+		gpios = <2 GPIO_ACTIVE_HIGH>;
-+		input;
-+		line-name = "eth0-intrp";
-+	};
-+};
-+
-+&fec0 {
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		ethernet-phy@0 {
-+			compatible = "ethernet-phy-id0022.1550", "ethernet-phy-ieee802.3-c22";
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_fec0_phy_int>;
-+
-+			interrupt-parent = <&gpio3>;
-+			interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctr_atzb_rf_233: pinctrl-atzb-rf-233 {
-+		fsl,pins = <
-+			VF610_PAD_PTB2__GPIO_24		0x31c2
-+			VF610_PAD_PTE27__GPIO_132	0x33e2
-+		>;
-+	};
-+
-+
-+	pinctrl_sx1503_20: pinctrl-sx1503-20 {
-+		fsl,pins = <
-+			VF610_PAD_PTB1__GPIO_23		0x219d
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			VF610_PAD_PTA20__UART3_TX	0x21a2
-+			VF610_PAD_PTA21__UART3_RX	0x21a1
-+		>;
-+	};
-+
-+	pinctrl_mdio_mux: pinctrl-mdio-mux {
-+		fsl,pins = <
-+			VF610_PAD_PTA18__GPIO_8		0x31c2
-+			VF610_PAD_PTA19__GPIO_9		0x31c2
-+			VF610_PAD_PTB3__GPIO_25		0x31c2
-+		>;
-+	};
-+
-+	pinctrl_fec0_phy_int: pinctrl-fec0-phy-int {
-+		fsl,pins = <
-+			VF610_PAD_PTB28__GPIO_98	0x2181
-+		>;
-+	};
-+};
+There isn't anything MFD about this driver.
+
+Please move it into IIO.
+
+> > ---
+> >  drivers/mfd/Kconfig                |  14 ++
+> >  drivers/mfd/Makefile               |   1 +
+> >  drivers/mfd/stm32-adc-core.c       | 301 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/stm32-adc-core.h |  52 +++++++
+> >  4 files changed, 368 insertions(+)
+> >  create mode 100644 drivers/mfd/stm32-adc-core.c
+> >  create mode 100644 include/linux/mfd/stm32-adc-core.h
+> > 
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index c6df644..2580cee 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -1152,6 +1152,20 @@ config MFD_PALMAS
+> >  	  If you say yes here you get support for the Palmas
+> >  	  series of PMIC chips from Texas Instruments.
+> >  
+> > +config MFD_STM32_ADC
+> > +	tristate "STMicroelectronics STM32 adc"
+> > +	depends on ARCH_STM32 || COMPILE_TEST
+> > +	depends on OF
+> > +	select MFD_CORE
+> > +	select REGULATOR
+> > +	select REGULATOR_FIXED_VOLTAGE
+> > +	help
+> > +	  Select this option to enable the core driver for STMicroelectronics
+> > +	  STM32 analog-to-digital converter (ADC).
+> > +
+> > +	  This driver can also be built as a module.  If so, the module
+> > +	  will be called stm32-adc-core.
+> > +
+> >  config TPS6105X
+> >  	tristate "TI TPS61050/61052 Boost Converters"
+> >  	depends on I2C
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 9834e66..4571506 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -185,6 +185,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+> >  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+> >  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+> >  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+> > +obj-$(CONFIG_MFD_STM32_ADC) 	+= stm32-adc-core.o
+> >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+> >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+> >  obj-$(CONFIG_MFD_RK808)		+= rk808.o
+> > diff --git a/drivers/mfd/stm32-adc-core.c b/drivers/mfd/stm32-adc-core.c
+> > new file mode 100644
+> > index 0000000..bcf52fb
+> > --- /dev/null
+> > +++ b/drivers/mfd/stm32-adc-core.c
+> > @@ -0,0 +1,301 @@
+> > +/*
+> > + * This file is part of STM32 ADC driver
+> > + *
+> > + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
+> > + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
+> > + *
+> > + * Inspired from: fsl-imx25-tsadc
+> > + *
+> > + * License type: GPLv2
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms of the GNU General Public License version 2 as published by
+> > + * the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful, but
+> > + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+> > + * or FITNESS FOR A PARTICULAR PURPOSE.
+> > + * See the GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program. If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +#include <linux/irqdesc.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/mfd/stm32-adc-core.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/slab.h>
+> > +
+> > +/* STM32F4 - common registers for all ADC instances: 1, 2 & 3 */
+> > +#define STM32F4_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
+> > +#define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
+> > +
+> > +/* STM32F4_ADC_CSR - bit fields */
+> > +#define STM32F4_EOC3			BIT(17)
+> > +#define STM32F4_EOC2			BIT(9)
+> > +#define STM32F4_EOC1			BIT(1)
+> > +
+> > +/* STM32F4_ADC_CCR - bit fields */
+> > +#define STM32F4_ADC_ADCPRE_SHIFT	16
+> > +#define STM32F4_ADC_ADCPRE_MASK		GENMASK(17, 16)
+> > +
+> > +/* STM32 F4 maximum analog clock rate (from datasheet) */
+> > +#define STM32F4_ADC_MAX_CLK_RATE	36000000
+> > +
+> > +/**
+> > + * struct stm32_adc_priv - stm32 ADC core private data
+> > + * @irq:		irq for ADC block
+> > + * @domain:		irq domain reference
+> > + * @aclk:		clock reference for the analog circuitry
+> > + * @vref:		regulator reference
+> > + * @common:		common data for all ADC instances
+> > + */
+> > +struct stm32_adc_priv {
+> > +	int				irq;
+> > +	struct irq_domain		*domain;
+> > +	struct clk			*aclk;
+> > +	struct regulator		*vref;
+> > +	struct stm32_adc_common		common;
+> > +};
+> > +
+> > +static struct stm32_adc_priv *to_stm32_adc_priv(struct stm32_adc_common *com)
+> > +{
+> > +	return container_of(com, struct stm32_adc_priv, common);
+> > +}
+> > +
+> > +/* STM32F4 ADC internal common clock prescaler division ratios */
+> > +static int stm32f4_pclk_div[] = {2, 4, 6, 8};
+> > +
+> > +/**
+> > + * stm32f4_adc_clk_sel() - Select stm32f4 ADC common clock prescaler
+> > + * @priv: stm32 ADC core private data
+> > + * Select clock prescaler used for analog conversions, before using ADC.
+> > + */
+> > +static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+> > +			       struct stm32_adc_priv *priv)
+> > +{
+> > +	unsigned long rate;
+> > +	u32 val;
+> > +	int i;
+> > +
+> > +	rate = clk_get_rate(priv->aclk);
+> > +	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+> > +		if ((rate / stm32f4_pclk_div[i]) <= STM32F4_ADC_MAX_CLK_RATE)
+> > +			break;
+> > +	}
+> > +	if (i >= ARRAY_SIZE(stm32f4_pclk_div))
+> > +		return -EINVAL;
+> > +
+> > +	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
+> > +	val &= ~STM32F4_ADC_ADCPRE_MASK;
+> > +	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
+> > +	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
+> > +
+> > +	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
+> > +		rate / (stm32f4_pclk_div[i] * 1000));
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/* ADC common interrupt for all instances */
+> > +static void stm32_adc_irq_handler(struct irq_desc *desc)
+> > +{
+> > +	struct stm32_adc_priv *priv = irq_desc_get_handler_data(desc);
+> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +	u32 status;
+> > +
+> > +	chained_irq_enter(chip, desc);
+> > +	status = readl_relaxed(priv->common.base + STM32F4_ADC_CSR);
+> > +
+> > +	if (status & STM32F4_EOC1)
+> > +		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+> > +
+> > +	if (status & STM32F4_EOC2)
+> > +		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+> > +
+> > +	if (status & STM32F4_EOC3)
+> > +		generic_handle_irq(irq_find_mapping(priv->domain, 2));
+> > +
+> > +	chained_irq_exit(chip, desc);
+> > +};
+> > +
+> > +static int stm32_adc_domain_map(struct irq_domain *d, unsigned int irq,
+> > +				irq_hw_number_t hwirq)
+> > +{
+> > +	irq_set_chip_data(irq, d->host_data);
+> > +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_level_irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void stm32_adc_domain_unmap(struct irq_domain *d, unsigned int irq)
+> > +{
+> > +	irq_set_chip_and_handler(irq, NULL, NULL);
+> > +	irq_set_chip_data(irq, NULL);
+> > +}
+> > +
+> > +static const struct irq_domain_ops stm32_adc_domain_ops = {
+> > +	.map = stm32_adc_domain_map,
+> > +	.unmap  = stm32_adc_domain_unmap,
+> > +	.xlate = irq_domain_xlate_onecell,
+> > +};
+> > +
+> > +static int stm32_adc_irq_probe(struct platform_device *pdev,
+> > +			       struct stm32_adc_priv *priv)
+> > +{
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +
+> > +	priv->irq = platform_get_irq(pdev, 0);
+> > +	if (priv->irq < 0) {
+> > +		dev_err(&pdev->dev, "failed to get irq\n");
+> > +		return priv->irq;
+> > +	}
+> > +
+> > +	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
+> > +					     &stm32_adc_domain_ops,
+> > +					     priv);
+> > +	if (!priv->domain) {
+> > +		dev_err(&pdev->dev, "Failed to add irq domain\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	irq_set_chained_handler(priv->irq, stm32_adc_irq_handler);
+> > +	irq_set_handler_data(priv->irq, priv);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void stm32_adc_irq_remove(struct platform_device *pdev,
+> > +				 struct stm32_adc_priv *priv)
+> > +{
+> > +	int hwirq;
+> > +
+> > +	for (hwirq = 0; hwirq < STM32_ADC_MAX_ADCS; hwirq++)
+> > +		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
+> > +	irq_domain_remove(priv->domain);
+> > +	irq_set_chained_handler(priv->irq, NULL);
+> > +}
+> > +
+> > +static int stm32_adc_probe(struct platform_device *pdev)
+> > +{
+> > +	struct stm32_adc_priv *priv;
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	if (!pdev->dev.of_node)
+> > +		return -ENODEV;
+> > +
+> > +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	priv->common.base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(priv->common.base))
+> > +		return PTR_ERR(priv->common.base);
+> > +
+> > +	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+> > +	if (IS_ERR(priv->vref)) {
+> > +		ret = PTR_ERR(priv->vref);
+> > +		dev_err(&pdev->dev, "vref get failed, %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = regulator_enable(priv->vref);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "vref enable failed\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = regulator_get_voltage(priv->vref);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "vref get voltage failed, %d\n", ret);
+> > +		goto err_regulator_disable;
+> > +	}
+> > +	priv->common.vref_mv = ret / 1000;
+> > +	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+> > +
+> > +	priv->aclk = devm_clk_get(&pdev->dev, "adc");
+> > +	if (IS_ERR(priv->aclk)) {
+> > +		ret = PTR_ERR(priv->aclk);
+> > +		dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+> > +		goto err_regulator_disable;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(priv->aclk);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "adc clk enable failed\n");
+> > +		goto err_regulator_disable;
+> > +	}
+> > +
+> > +	ret = stm32f4_adc_clk_sel(pdev, priv);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "adc clk selection failed\n");
+> > +		goto err_clk_disable;
+> > +	}
+> > +
+> > +	ret = stm32_adc_irq_probe(pdev, priv);
+> > +	if (ret < 0)
+> > +		goto err_clk_disable;
+> > +
+> > +	platform_set_drvdata(pdev, &priv->common);
+> > +
+> > +	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "failed to populate DT children\n");
+> > +		goto err_irq_remove;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_irq_remove:
+> > +	stm32_adc_irq_remove(pdev, priv);
+> > +
+> > +err_clk_disable:
+> > +	clk_disable_unprepare(priv->aclk);
+> > +
+> > +err_regulator_disable:
+> > +	regulator_disable(priv->vref);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int stm32_adc_remove(struct platform_device *pdev)
+> > +{
+> > +	struct stm32_adc_common *common = platform_get_drvdata(pdev);
+> > +	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
+> > +
+> > +	of_platform_depopulate(&pdev->dev);
+> > +	stm32_adc_irq_remove(pdev, priv);
+> > +	clk_disable_unprepare(priv->aclk);
+> > +	regulator_disable(priv->vref);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id stm32_adc_of_match[] = {
+> > +	{ .compatible = "st,stm32f4-adc-core" },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, stm32_adc_of_match);
+> > +
+> > +static struct platform_driver stm32_adc_driver = {
+> > +	.probe = stm32_adc_probe,
+> > +	.remove = stm32_adc_remove,
+> > +	.driver = {
+> > +		.name = "stm32-adc-core",
+> > +		.of_match_table = stm32_adc_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(stm32_adc_driver);
+> > +
+> > +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
+> > +MODULE_DESCRIPTION("STMicroelectronics STM32 ADC MFD driver");
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_ALIAS("platform:stm32-adc-core");
+> > diff --git a/include/linux/mfd/stm32-adc-core.h b/include/linux/mfd/stm32-adc-core.h
+> > new file mode 100644
+> > index 0000000..081fa5f
+> > --- /dev/null
+> > +++ b/include/linux/mfd/stm32-adc-core.h
+> > @@ -0,0 +1,52 @@
+> > +/*
+> > + * This file is part of STM32 ADC driver
+> > + *
+> > + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
+> > + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
+> > + *
+> > + * License type: GPLv2
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms of the GNU General Public License version 2 as published by
+> > + * the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful, but
+> > + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+> > + * or FITNESS FOR A PARTICULAR PURPOSE.
+> > + * See the GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program. If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +#ifndef __STM32_ADC_H
+> > +#define __STM32_ADC_H
+> > +
+> > +/*
+> > + * STM32 - ADC global register map
+> > + * ________________________________________________________
+> > + * | Offset |                 Register                    |
+> > + * --------------------------------------------------------
+> > + * | 0x000  |                Master ADC1                  |
+> > + * --------------------------------------------------------
+> > + * | 0x100  |                Slave ADC2                   |
+> > + * --------------------------------------------------------
+> > + * | 0x200  |                Slave ADC3                   |
+> > + * --------------------------------------------------------
+> > + * | 0x300  |         Master & Slave common regs          |
+> > + * --------------------------------------------------------
+> > + */
+> > +#define STM32_ADC_MAX_ADCS		3
+> > +#define STM32_ADCX_COMN_OFFSET		0x300
+> > +
+> > +/**
+> > + * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
+> > + * @base:		control registers base cpu addr
+> > + * @vref_mv:		vref voltage (mv)
+> > + */
+> > +struct stm32_adc_common {
+> > +	void __iomem			*base;
+> > +	int				vref_mv;
+> > +};
+> > +
+> > +#endif
+> > 
+> 
+
 -- 
-2.5.5
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
