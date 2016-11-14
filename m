@@ -1,93 +1,45 @@
 From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH v7 0/5] enable movable nodes on non-x86 configs
-Date: Mon, 14 Nov 2016 16:02:36 -0600
-Message-ID: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v7 5/5] dt: add documentation of "hotpluggable" memory property
+Date: Mon, 14 Nov 2016 16:02:41 -0600
+Message-ID: <1479160961-25840-6-git-send-email-arbab@linux.vnet.ibm.com>
+References: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
 To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
 Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset allows more configs to make use of movable nodes. When
-CONFIG_MOVABLE_NODE is selected, there are two ways to introduce such
-nodes into the system:
+Summarize the "hotpluggable" property of dt memory nodes.
 
-1. Discover movable nodes at boot. Currently this is only possible on
-   x86, but we will enable configs supporting fdt to do the same.
+Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
+---
+ Documentation/devicetree/booting-without-of.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-2. Hotplug and online all of a node's memory using online_movable. This
-   is already possible on any config supporting memory hotplug, not
-   just x86, but the Kconfig doesn't say so. We will fix that.
-
-We'll also remove some cruft on power which would prevent (2).
-
-/* changelog */
-
-v7:
-* Fix error when !CONFIG_HAVE_MEMBLOCK, found by the kbuild test robot.
-
-* Remove the prefix of "linux,hotpluggable". Document the property's purpose.
-
-v6:
-* http://lkml.kernel.org/r/1478562276-25539-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Add a patch enabling the fdt to describe hotpluggable memory.
-
-v5:
-* http://lkml.kernel.org/r/1477339089-5455-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Drop the patches which recognize the "status" property of dt memory
-  nodes. Firmware can set the size of "linux,usable-memory" to zero instead.
-
-v4:
-* http://lkml.kernel.org/r/1475778995-1420-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Rename of_fdt_is_available() to of_fdt_device_is_available().
-  Rename of_flat_dt_is_available() to of_flat_dt_device_is_available().
-
-* Instead of restoring top-down allocation, ensure it never goes
-  bottom-up in the first place, by making movable_node arch-specific.
-
-* Use MEMORY_HOTPLUG instead of PPC64 in the mm/Kconfig patch.
-
-v3:
-* http://lkml.kernel.org/r/1474828616-16608-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Use Rob Herring's suggestions to improve the node availability check.
-
-* More verbose commit log in the patch enabling CONFIG_MOVABLE_NODE.
-
-* Add a patch to restore top-down allocation the way x86 does.
-
-v2:
-* http://lkml.kernel.org/r/1473883618-14998-1-git-send-email-arbab@linux.vnet.ibm.com
-
-* Use the "status" property of standard dt memory nodes instead of
-  introducing a new "ibm,hotplug-aperture" compatible id.
-
-* Remove the patch which explicitly creates a memoryless node. This set
-  no longer has any bearing on whether the pgdat is created at boot or
-  at the time of memory addition.
-
-v1:
-* http://lkml.kernel.org/r/1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com
-
-Reza Arbab (5):
-  powerpc/mm: allow memory hotplug into a memoryless node
-  mm: remove x86-only restriction of movable_node
-  mm: enable CONFIG_MOVABLE_NODE on non-x86 arches
-  of/fdt: mark hotpluggable memory
-  dt: add documentation of "hotpluggable" memory property
-
- Documentation/devicetree/booting-without-of.txt |  7 +++++++
- Documentation/kernel-parameters.txt             |  2 +-
- arch/powerpc/mm/numa.c                          | 13 +------------
- arch/x86/kernel/setup.c                         | 24 ++++++++++++++++++++++++
- drivers/of/fdt.c                                | 19 +++++++++++++++++++
- include/linux/of_fdt.h                          |  1 +
- mm/Kconfig                                      |  2 +-
- mm/memory_hotplug.c                             | 20 --------------------
- 8 files changed, 54 insertions(+), 34 deletions(-)
-
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 3f1437f..280d283 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -974,6 +974,13 @@ compatibility.
+       4Gb. Some vendors prefer splitting those ranges into smaller
+       segments, but the kernel doesn't care.
+ 
++  Additional properties:
++
++    - hotpluggable : The presence of this property provides an explicit
++      hint to the operating system that this memory may potentially be
++      removed later. The kernel can take this into consideration when
++      doing nonmovable allocations and when laying out memory zones.
++
+   e) The /chosen node
+ 
+   This node is a bit "special". Normally, that's where Open Firmware
 -- 
 1.8.3.1
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
