@@ -1,82 +1,139 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Mon, 14 Nov 2016 15:45:20 +0100
-Message-ID: <2342292.tK2jqRKrXH@phil>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com> <1478697721-2323-2-git-send-email-wxt@rock-chips.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] Add Documentation for Media Device, Video Device, and Synopsys DW MIPI CSI-2 Host
+Date: Mon, 14 Nov 2016 16:49:45 +0200
+Message-ID: <9132828.vOiOHSy7z0@avalon>
+References: <cover.1479132355.git.roliveir@synopsys.com> <160acd0770e0685330ba8e7445423c1d6f34658e.1479132355.git.roliveir@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478697721-2323-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <160acd0770e0685330ba8e7445423c1d6f34658e.1479132355.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, linux@roeck-us.net, hverkuil@xs4all.nl, laurent.pinchart+renesas@ideasonboard.com, arnd@arndb.de, sudipm.mukherjee@gmail.com, tiffany.lin@mediatek.com, minghsiu.tsai@mediatek.com, jean-christophe.trotin@st.com, andrew-ct.chen@mediatek.com, simon.horman@netronome.com, songjun.wu@microchip.com, bparrot@ti.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. November 2016, 21:21:53 CET schrieb Caesar Wang:
-> From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Ramiro,
+
+Thank you for the patch.
+
+On Monday 14 Nov 2016 14:20:22 Ramiro Oliveira wrote:
+> Add documentation for Media and Video Device, as well as the DW MIPI CSI-2
+> Host.
 > 
-> Control power domain for eMMC via genpd to reduce power consumption.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-Authorship / Signed-off mismatch. From above suggest Ziyuan is the author 
-while first Signed-off-by indicates Elaine as author. Please clarify.
-
-
-Thanks
-Heiko
-
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
 > ---
+>  .../devicetree/bindings/media/snps,dw-mipi-csi.txt | 27 +++++++++++++++++++
+>  .../devicetree/bindings/media/snps,plat-ipk.txt    |  9 ++++++++
+>  .../bindings/media/snps,video-device.txt           | 12 ++++++++++
+>  3 files changed, 48 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt create mode
+> 100644 Documentation/devicetree/bindings/media/snps,plat-ipk.txt create
+> mode 100644 Documentation/devicetree/bindings/media/snps,video-device.txt
 > 
-> Changes in v2:
-> - Reviewed-on: https://chromium-review.googlesource.com/376558
-> - Verified on ChromeOS kernel4.4
-> 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index cbb7f8b..b401176 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -269,6 +269,7 @@
->  		#clock-cells = <0>;
->  		phys = <&emmc_phy>;
->  		phy-names = "phy_arasan";
-> +		power-domains = <&power RK3399_PD_EMMC>;
->  		status = "disabled";
->  	};
-> 
-> @@ -690,6 +691,11 @@
->  		status = "disabled";
->  	};
-> 
-> +	qos_emmc: qos@ffa58000 {
-> +		compatible = "syscon";
-> +		reg = <0x0 0xffa58000 0x0 0x20>;
-> +	};
+> diff --git a/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
+> b/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt new file
+> mode 100644
+> index 0000000..bec7441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
+> @@ -0,0 +1,27 @@
+> +Synopsys DesignWare CSI-2 Host controller
 > +
->  	qos_gmac: qos@ffa5c000 {
->  		compatible = "syscon";
->  		reg = <0x0 0xffa5c000 0x0 0x20>;
-> @@ -823,6 +829,11 @@
->  			};
-> 
->  			/* These power domains are grouped by VD_LOGIC */
-> +			pd_emmc@RK3399_PD_EMMC {
-> +				reg = <RK3399_PD_EMMC>;
-> +				clocks = <&cru ACLK_EMMC>;
-> +				pm_qos = <&qos_emmc>;
-> +			};
->  			pd_gmac@RK3399_PD_GMAC {
->  				reg = <RK3399_PD_GMAC>;
->  				clocks = <&cru ACLK_GMAC>;
+> +Description
+> +-----------
+> +
+> +This HW block is used to receive image coming from an MIPI CSI-2 compatible
+> +camera.
 
+And what does it do after receiving the stream ? A more detailed description 
+would be useful. Is there any public documentation for this IP core ?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Required properties:
+> +- compatible: shall be "snps,dw-mipi-csi"
+> +- reg		: physical base address and size of the device memory 
+mapped
+> +		  registers;
+> +- interrupts	: CSI-2 Host interrupt
+> +- data-lanes    : Number of lanes to be used
+
+Is that fixed at synthesis time or configurable at runtime ?
+
+> +- output-type   : Core output to be used (IPI-> 0 or IDI->1 or BOTH->2)
+
+What are IPI and IDI ?
+
+> +- phys, phy-names: List of one PHY specifier and identifier string (as
+> defined
+> +  in Documentation/devicetree/bindings/phy/phy-bindings.txt).
+
+A PHY for what ?
+
+> +Optional properties(if in IPI mode):
+> +- ipi-mode 	: Mode to be used when in IPI(Camera -> 0 or Automatic -> 1)
+> +- ipi-color-mode: Color depth to be used in IPI (48 bits -> 0 or 16 bits ->
+> 1)
+> +- ipi-auto-flush: Data auto-flush (1 -> Yes or 0 -> No)
+> +- virtual-channel: Virtual channel where data is present when in IPI
+
+We need more details than that, this is impossible to review, sorry.
+
+> +The per-board settings:
+> + - port sub-node describing a single endpoint connected to the dw-mipi-csi
+> +   as described in video-interfaces.txt[1].
+
+An example would be nice.
+
+> diff --git a/Documentation/devicetree/bindings/media/snps,plat-ipk.txt
+> b/Documentation/devicetree/bindings/media/snps,plat-ipk.txt new file mode
+> 100644
+> index 0000000..2d51541
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,plat-ipk.txt
+> @@ -0,0 +1,9 @@
+> +Synopsys DesignWare CSI-2 Host IPK Media Device
+> +
+> +This Media Device at the moment is not totally functional, however it is a
+> base
+> +for the future.
+
+Then let's add it later :-) We don't want to design incomplete transient DT 
+bindings.
+
+> +Required properties:
+> +
+> +- compatible: Must be "snps,plat-ipk".
+> +
+> diff --git a/Documentation/devicetree/bindings/media/snps,video-device.txt
+> b/Documentation/devicetree/bindings/media/snps,video-device.txt new file
+> mode 100644
+> index 0000000..d467092
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,video-device.txt
+> @@ -0,0 +1,12 @@
+> +Synopsys DesignWare CSI-2 Host video device
+> +
+> +This driver handles all the video handling part of this platform.
+
+This is a DT binding documentation, drivers are irrelevant. You should 
+describe the hardware only.
+
+More information is needed, based on this document I can't tell what the 
+"CSI-2 host video device" is.
+
+> +Required properties:
+> +
+> +- compatible: Must be "snps,video-device".
+> +
+> +- dmas, dma-names: List of one DMA specifier and identifier string (as
+> defined
+> +  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
+> +  requires a DMA channel with the identifier string set to "port" followed
+> by
+> +  the port index.
+
+-- 
+Regards,
+
+Laurent Pinchart
