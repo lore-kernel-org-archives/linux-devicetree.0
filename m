@@ -1,75 +1,90 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
-Date: Mon, 14 Nov 2016 14:08:25 -0800
-Message-ID: <20161114220824.GC4082@atomide.com>
-References: <20161025210221.9150-1-tony@atomide.com>
- <20161025210221.9150-2-tony@atomide.com>
- <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
- <20161111202650.GI7138@atomide.com>
- <20161114205243.GU7138@atomide.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
+Date: Mon, 14 Nov 2016 16:14:47 -0600
+Message-ID: <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161114205243.GU7138-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: svarbanov@mm-sol.com, linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161114 12:54]:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161111 12:27]:
-> > * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161111 12:17]:
-> > > On Tue, Oct 25, 2016 at 11:02 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > > 
-> > > I don't see why this is necessary?
-> > 
-> > It's needed because the pin controller driver has not yet
-> > finished it's probe at this point. We end up calling functions
-> > in the device driver where no struct pinctrl_dev is yet known
-> > to the driver. Asking a device driver to do something before
-> > it's probe is done does not quite follow the Linux driver model :)
-> > 
-> > > The hogging was placed inside pinctrl_register() so that any hogs
-> > > would be taken before it returns, so nothing else can take it
-> > > before the controller itself has the first chance. This semantic
-> > > needs to be preserved I think.
-> > > 
-> > > > +       schedule_delayed_work(&pctldev->hog_work,
-> > > > +                                     msecs_to_jiffies(100));
-> > > 
-> > > If we arbitrarily delay, something else can go in and take the
-> > > pins used by the hogs before the pinctrl core? That is what
-> > > we want to avoid.
-> > > 
-> > > Hm, 100ms seems arbitrarily chosen BTW. Can it be 1 ms?
-> > > 1 ns?
-> > 
-> > Yeah well seems like it should not matter but the race we need
-> > to remove somehow.
-> > 
-> > > I'm pretty sure that whatever it is that needs to happen before
-> > > the hog work runs can race with this delayed work under
-> > > some circumstances (such as slow external expanders
-> > > on i2c). It should be impossible for that to happen
-> > > and I don't think it is?
-> > 
-> > Yes it's totally possible even with delay set to 0.
-> > 
-> > Maybe we could add some trigger on the first consumer request
-> > and if that does not happen use the timer?
+[+cc Geert, Kevin, Simon]
+
+On Mon, Nov 14, 2016 at 11:15:53AM +0000, Srinivas Kandagatla wrote:
+> This patch adds support to pm clocks via device tree, so that the clocks
+> can be turned on and off during runtime pm. This patch is required for
+> Qualcomm msm8996 pcie controller which sits on a bus with its own
+> power-domain and clocks.
 > 
-> Below is what I came up with for removing the race for hogs. We
-> can do it by not registering the pctldev until in the deferred
-> work, does that seem OK to you?
+> Without this patch the clock associated with the bus are never turned on.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Oops, that does not yet work, will have to look into it more.
+I don't see a formal maintainer for drivers/bus/simple-pm-bus.c, but I'd
+like an ack or at least a review from Geert or Simon.
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> index c5eb46c..63b7e8c 100644
+> --- a/drivers/bus/simple-pm-bus.c
+> +++ b/drivers/bus/simple-pm-bus.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_clock.h>
+>  #include <linux/pm_runtime.h>
+>  
+>  
+> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
+>  
+>  	pm_runtime_enable(&pdev->dev);
+>  
+> -	if (np)
+> +	if (np) {
+> +		of_pm_clk_add_clks(&pdev->dev);
+>  		of_platform_populate(np, NULL, NULL, &pdev->dev);
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+> +static const struct dev_pm_ops simple_pm_bus_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(pm_clk_suspend,
+> +			   pm_clk_resume, NULL)
+> +};
+> +
+>  static int simple_pm_bus_remove(struct platform_device *pdev)
+>  {
+>  	dev_dbg(&pdev->dev, "%s\n", __func__);
+>  
+>  	pm_runtime_disable(&pdev->dev);
+> +	pm_clk_destroy(&pdev->dev);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -48,6 +58,7 @@ static struct platform_driver simple_pm_bus_driver = {
+>  	.driver = {
+>  		.name = "simple-pm-bus",
+>  		.of_match_table = simple_pm_bus_of_match,
+> +		.pm = &simple_pm_bus_pm_ops,
+>  	},
+>  };
+>  
+> -- 
+> 2.10.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
