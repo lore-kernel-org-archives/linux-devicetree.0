@@ -1,41 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: sunxi: Add support for interrupt
- debouncing
-Date: Mon, 14 Nov 2016 11:19:32 -0600
-Message-ID: <20161114171932.qvs2xiklh4h3vsss@rob-hp-laptop>
-References: <cover.61acad25a6fb233e39141b52acd217415281bd73.1478636546.git-series.maxime.ripard@free-electrons.com>
- <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/6] dt-bindings: mdio-mux: Add documentation for mdio
+ mux for NSP SoC
+Date: Mon, 14 Nov 2016 11:22:01 -0600
+Message-ID: <20161114172201.eitumdrusrb466vq@rob-hp-laptop>
+References: <1478683994-12008-1-git-send-email-yendapally.reddy@broadcom.com>
+ <1478683994-12008-2-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7dbb47b16d83b843705aa05d4a5f1f7dfdc4e9a3.1478636546.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1478683994-12008-2-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2016 at 09:24:00PM +0100, Maxime Ripard wrote:
-> The pin controller found in the Allwinner SoCs has support for interrupts
-> debouncing.
+On Wed, Nov 09, 2016 at 04:33:09AM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
+> Add documentation for mdio mux available in Broadcom NSP SoC
 > 
-> However, this is not done per-pin, preventing us from using the generic
-> pinconf binding for that, but per irq bank, which, depending on the SoC,
-> ranges from one to five.
-> 
-> Introduce a device-wide property to deal with this using a microsecond
-> resolution. We can re-use the per-pin input-debounce property for that, so
-> let's do it!
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 14 ++++++++++++-
+>  .../devicetree/bindings/net/brcm,mdio-mux-nsp.txt  | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/brcm,mdio-mux-nsp.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.c                                 | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h                                 |  7 ++++++-
->  3 files changed, 102 insertions(+), 0 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
