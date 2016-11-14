@@ -1,40 +1,88 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: imx6qdl-apalis: Do not rely on DDC I2C
- bus bitbang for HDMI
-Date: Mon, 14 Nov 2016 09:55:51 +0800
-Message-ID: <20161114015549.GA3310@dragon>
-References: <2263d508999ada9476268138b2922702eb50131f.1474260360.git.maitysanchayan@gmail.com>
- <20161022032559.GL30578@tiger>
- <3d2b6dfd-c03c-e635-8dc1-2dc9ac454f5a@mentor.com>
- <20161108173315.GA16082@Sanchayan-Arch.localdomain>
- <57268103e8fabf344723eae99b45ec7d@agner.ch>
- <7eb3df71-6d1a-006a-cc4c-83ff8df3c42c@mentor.com>
- <b68c1a07b6b5f027a6519c29b90217c1@agner.ch>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v16 0/5] Mediatek MT8173 CMDQ support
+Date: Mon, 14 Nov 2016 09:40:55 +0530
+Message-ID: <CAJe_ZheLf94zGBDGj=NBzb8Cx_+PuEkXhE6PxmKObu=O+49YFQ@mail.gmail.com>
+References: <1477999698-6288-1-git-send-email-hs.liao@mediatek.com>
+ <1478776558.15447.2.camel@mtksdaap41> <CABb+yY3mi3M0xqNao=DRYN6Np0LOBfS669iUa_hWo2w1MmM1sw@mail.gmail.com>
+ <1478856898.8781.6.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b68c1a07b6b5f027a6519c29b90217c1-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <1478856898.8781.6.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 08:27:50PM -0800, Stefan Agner wrote:
-> You probably saw it, Dave merged it today in his drm-next branch:
-> https://cgit.freedesktop.org/~airlied/linux/?h=drm-next
-> 
-> I guess with that Shawn can go ahead and merge this patchset for next
-> too...?
-
-I merged #2 and #3 a couple of weeks ago.  But for the first one, I have
-to wait for the drm changes to appear on my tree, i.e. v4.10-rc1 likely.
-Otherwise, HDMI will stop working on my tree if I apply that patch right
-now.
-
-So please ping me when drm changes are in place.
-
-Shawn
+On 11 November 2016 at 15:04, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Fri, 2016-11-11 at 11:15 +0530, Jassi Brar wrote:
+>> On Thu, Nov 10, 2016 at 4:45 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Tue, 2016-11-01 at 19:28 +0800, HS Liao wrote:
+>> >> Hi,
+>> >>
+>> >> This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+>> >> to help write registers with critical time limitation, such as
+>> >> updating display configuration during the vblank. It controls Global
+>> >> Command Engine (GCE) hardware to achieve this requirement.
+>> >>
+>> >> These patches have a build dependency on top of v4.9-rc1.
+>> >>
+>> >> Changes since v15:
+>> >>  - separate "suspend and resume" patch from "save energy" patch
+>> >>  - don't stop running tasks in cmdq_suspend()
+>> >>    (i.e. leave no running tasks guarantee to clients)
+>> >>
+>> >> Best regards,
+>> >> HS Liao
+>> >>
+>> >> HS Liao (5):
+>> >>   dt-bindings: soc: Add documentation for the MediaTek GCE unit
+>> >>   CMDQ: Mediatek CMDQ driver
+>> >>   arm64: dts: mt8173: Add GCE node
+>> >>   CMDQ: suspend and resume
+>> >>   CMDQ: save energy
+>> >>
+>> >>  .../devicetree/bindings/mailbox/mtk-gce.txt        |  43 ++
+>> >>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+>> >>  drivers/mailbox/Kconfig                            |  10 +
+>> >>  drivers/mailbox/Makefile                           |   2 +
+>> >>  drivers/mailbox/mtk-cmdq-mailbox.c                 | 632 +++++++++++++++++++++
+>> >>  drivers/soc/mediatek/Kconfig                       |  11 +
+>> >>  drivers/soc/mediatek/Makefile                      |   1 +
+>> >>  drivers/soc/mediatek/mtk-cmdq-helper.c             | 310 ++++++++++
+>> >>  include/linux/mailbox/mtk-cmdq-mailbox.h           |  67 +++
+>> >>  include/linux/soc/mediatek/mtk-cmdq.h              | 182 ++++++
+>> >>  10 files changed, 1268 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+>> >>  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
+>> >>  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+>> >>  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
+>> >>  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+>> >>
+>> >
+>> >
+>> > Hi Jassi, Matthias,
+>> >
+>> > Sorry to disturb you.
+>> >
+>> No, you don't disturb, but the controller driver and protocol driver,
+>> introduced in the same patch, does :)   So does the suspend/resume
+>> support (patch 4&5) added  separately as a patch on top. Please
+>> reorganise the patchset.
+>>
+>> Thanks.
+>
+> Hi Jassi,
+>
+> Do you mean
+> 1. split controller driver and protocol driver as two patches,
+> 2. merge patch 4&5 into one patch, and
+> 3. reorganize the patchset as "(1) binding doc (2) controller driver
+>    (3) protocol driver (4) devicetree (5) energy patch" ?
+>
+Merge any patch to controller driver, in the patch that adds the
+controller driver. Protocol driver patch should be the last in the
+series.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
