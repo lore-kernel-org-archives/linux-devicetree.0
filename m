@@ -1,101 +1,45 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
-Date: Mon, 14 Nov 2016 16:20:11 +0000
-Message-ID: <SG2PR06MB1038A5C7419F6EDE6B880A1BC3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1478706284-59134-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <502a606c-2d66-4257-af17-7b7f35f2c839@xs4all.nl>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: vf610-zii-dev-rev-b: Remove leftover PWM pingroup
+Date: Mon, 14 Nov 2016 08:35:05 -0800
+Message-ID: <1479141306-15141-1-git-send-email-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, cphealy@gmail.com, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Remove pwm0grp since it is:
 
-Thanks for the review comments.
+	a) Not referenced anywhere in the DTS file (unlike Tower board it
+	is based on, this board does not use/expose FTM0)
 
-> Subject: Re: [PATCH 3/5] media: Add new SDR formats SC16, SC18 & SC20
->=20
-> On 11/09/2016 04:44 PM, Ramesh Shanmugasundaram wrote:
-> > This patch adds support for the three new SDR formats. These formats
-> > were prefixed with "sliced" indicating I data constitutes the top half
-> > and Q data constitutes the bottom half of the received buffer.
->=20
-> The standard terminology for video formats is "planar". I am leaning
-> towards using that here as well.
->=20
-> Any opinions on this?
+	b) Configures PTB2 and PTB3 in a way that contradicts
+	pinctrl-mdio-mux
 
-Shall I rename the formats as "PC16", "PC18" & "PC20"?
-For formats that do IQ IQ IQ... I shall use the regular formats "CUXX" when=
- I introduce them.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Thanks,
-Ramesh
-
->=20
-> 	Hans
->=20
-> >
-> > V4L2_SDR_FMT_SCU16BE - 14-bit complex (I & Q) unsigned big-endian
-> > sample inside 16-bit. V4L2 FourCC: SC16
-> >
-> > V4L2_SDR_FMT_SCU18BE - 16-bit complex (I & Q) unsigned big-endian
-> > sample inside 18-bit. V4L2 FourCC: SC18
-> >
-> > V4L2_SDR_FMT_SCU20BE - 18-bit complex (I & Q) unsigned big-endian
-> > sample inside 20-bit. V4L2 FourCC: SC20
-> >
-> > Signed-off-by: Ramesh Shanmugasundaram
-> > <ramesh.shanmugasundaram@bp.renesas.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
-> >  include/uapi/linux/videodev2.h       | 3 +++
-> >  2 files changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > index 181381d..d36b386 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > @@ -1207,6 +1207,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc
-> *fmt)
-> >  	case V4L2_SDR_FMT_CS8:		descr =3D "Complex S8"; break;
-> >  	case V4L2_SDR_FMT_CS14LE:	descr =3D "Complex S14LE"; break;
-> >  	case V4L2_SDR_FMT_RU12LE:	descr =3D "Real U12LE"; break;
-> > +	case V4L2_SDR_FMT_SCU16BE:	descr =3D "Sliced Complex U16BE"; break;
-> > +	case V4L2_SDR_FMT_SCU18BE:	descr =3D "Sliced Complex U18BE"; break;
-> > +	case V4L2_SDR_FMT_SCU20BE:	descr =3D "Sliced Complex U20BE"; break;
-> >  	case V4L2_TCH_FMT_DELTA_TD16:	descr =3D "16-bit signed deltas"; break=
-;
-> >  	case V4L2_TCH_FMT_DELTA_TD08:	descr =3D "8-bit signed deltas"; break;
-> >  	case V4L2_TCH_FMT_TU16:		descr =3D "16-bit unsigned touch data";
-> break;
-> > diff --git a/include/uapi/linux/videodev2.h
-> > b/include/uapi/linux/videodev2.h index 4364ce6..34a9c30 100644
-> > --- a/include/uapi/linux/videodev2.h
-> > +++ b/include/uapi/linux/videodev2.h
-> > @@ -666,6 +666,9 @@ struct v4l2_pix_format {
-> >  #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /*
-> complex s8 */
-> >  #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /*
-> complex s14le */
-> >  #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /*
-> real u12le */
-> > +#define V4L2_SDR_FMT_SCU16BE	  v4l2_fourcc('S', 'C', '1', '6') /*
-> sliced complex u16be */
-> > +#define V4L2_SDR_FMT_SCU18BE	  v4l2_fourcc('S', 'C', '1', '8') /*
-> sliced complex u18be */
-> > +#define V4L2_SDR_FMT_SCU20BE	  v4l2_fourcc('S', 'C', '2', '0') /*
-> sliced complex u20be */
-> >
-> >  /* Touch formats - used for Touch devices */
-> >  #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-
-> bit signed deltas */
-> >
+diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+index fa19cfd..2210811 100644
+--- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
++++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
+@@ -677,15 +677,6 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_pwm0: pwm0grp {
+-		fsl,pins = <
+-			VF610_PAD_PTB0__FTM0_CH0	0x1582
+-			VF610_PAD_PTB1__FTM0_CH1	0x1582
+-			VF610_PAD_PTB2__FTM0_CH2	0x1582
+-			VF610_PAD_PTB3__FTM0_CH3	0x1582
+-		>;
+-	};
+-
+ 	pinctrl_qspi0: qspi0grp {
+ 		fsl,pins = <
+ 			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
+-- 
+2.5.5
