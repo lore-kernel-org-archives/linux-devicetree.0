@@ -1,41 +1,28 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v7 4/5] of/fdt: mark hotpluggable memory
-Date: Tue, 15 Nov 2016 10:20:39 +1100
-Message-ID: <1723a465-fdf6-c12c-afb3-b486fc3a05ae@gmail.com>
-References: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1479160961-25840-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: DT: Add entry for FSL LS1012A RDB,
+ FRDM, QDS boards
+Date: Mon, 14 Nov 2016 17:35:39 -0600
+Message-ID: <20161114233539.g7ngrztnramssvpl@rob-hp-laptop>
+References: <1478714651-12679-1-git-send-email-harninder.rai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1479160961-25840-5-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478714651-12679-1-git-send-email-harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 09, 2016 at 11:34:11PM +0530, Harninder Rai wrote:
+> Signed-off-by: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
-
-On 15/11/16 09:02, Reza Arbab wrote:
-> When movable nodes are enabled, any node containing only hotpluggable
-> memory is made movable at boot time.
-> 
-> On x86, hotpluggable memory is discovered by parsing the ACPI SRAT,
-> making corresponding calls to memblock_mark_hotplug().
-> 
-> If we introduce a dt property to describe memory as hotpluggable,
-> configs supporting early fdt may then also do this marking and use
-> movable nodes.
-> 
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> Tested-by: Balbir Singh <bsingharora@gmail.com>
-
-Also
-
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
