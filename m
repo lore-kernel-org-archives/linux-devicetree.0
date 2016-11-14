@@ -1,51 +1,41 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/19] ARM: dts: armada-370-xp: Fixup bootrom DT warning
-Date: Sun, 13 Nov 2016 18:07:59 -0600
-Message-ID: <CAL_JsqKDrbGOhbNqQT5Wq-MQOOuAbq1Z0JzzSGgCfrx5Ex8K0g@mail.gmail.com>
-References: <20161113212402.3060-1-gregory.clement@free-electrons.com> <20161113212402.3060-7-gregory.clement@free-electrons.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 0/3] Broadcom STB AVS CPUfreq driver
+Date: Mon, 14 Nov 2016 01:32:44 +0100
+Message-ID: <5500544.cjuLUPfCfM@vostro.rjw.lan>
+References: <20161027210536.98988-1-code@mmayer.net> <CAGt4E5siDGgE=s1gZc80RSjDTptAhCm6ecrrw_4NpJwmrnU-CA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161113212402.3060-7-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGt4E5siDGgE=s1gZc80RSjDTptAhCm6ecrrw_4NpJwmrnU-CA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Markus Mayer <markus.mayer@broadcom.com>
+Cc: Markus Mayer <code@mmayer.net>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 13, 2016 at 3:23 PM, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> bootrom has a reg property so the unit name should contain an address.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370.dtsi | 2 +-
->  arch/arm/boot/dts/armada-xp.dtsi  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-> index 079494e52554..7598fb013355 100644
-> --- a/arch/arm/boot/dts/armada-370.dtsi
-> +++ b/arch/arm/boot/dts/armada-370.dtsi
-> @@ -65,7 +65,7 @@
->         soc {
->                 compatible = "marvell,armada370-mbus", "simple-bus";
->
-> -               bootrom {
-> +               bootrom@01_e0_0 {
+On Friday, November 04, 2016 10:00:19 AM Markus Mayer wrote:
+> On 27 October 2016 at 14:05, Markus Mayer <code@mmayer.net> wrote:
+> > From: Markus Mayer <mmayer@broadcom.com>
+> >
+> > This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
+> > Firmware" for voltage and frequency scaling. All voltage and frequency
+> > transitions are performed by the firmware and are therefore hidden from
+> > Linux.
+> >
+> > The driver provides a standard CPUfreq interface to other kernel
+> > components and to userland on the one hand and communicates with the
+> > AVS co-processor on the other.
+> >
+> > Communication between the two processors is via shared mailbox
+> > registers and interrupts (ARM -> AVS to tell the firmware that there is
+> > a command to process and AVS -> ARM to tell the driver that a command
+> > finished executing).
+> 
+> Viresh, Rafael, are you ready to take this series? Rob gave his Ack
+> for the DT binding.
 
-Please add documentation as to what the unit address format is.
-Really, since you claim compatibility with simple-bus, you should not
-deviate from the simple-bus format.
+Applied.
 
-Drop the leading zero and use ',' not '_'. I know the DT spec / ePAPR
-allows more, but convention is more restricted.
+Thanks,
+Rafael
 
-Rob
-
->                         compatible = "marvell,bootrom";
->                         reg = <MBUS_ID(0x01, 0xe0) 0 0x100000>;
->                 };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
