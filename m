@@ -1,60 +1,108 @@
+Return-Path: <tmshlvck@gmail.com>
+Sender: Tomas Hlavacek <tmshlvck@gmail.com>
+Date: Mon, 14 Nov 2016 15:51:05 +0100
+From: tomas.hlavacek@nic.cz
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Message-Id: <1479135065.27133.1@smtp.gmail.com>
+In-Reply-To: <20161114131010.GC26710@lunn.ch>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+	<1479126185.15557.5@smtp.gmail.com> <20161114131010.GC26710@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20161124102529.20212-4-stephen.boyd@linaro.org>
-References: <20161124102529.20212-1-stephen.boyd@linaro.org>
-	<20161124102529.20212-4-stephen.boyd@linaro.org>
-Date: Wed, 30 Nov 2016 16:48:26 -0600
-Message-ID: <CAL_JsqLXUYWnhdW=vdpdGmzyH_xNrn=ckxhK4rTyO8wBisAGCg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: Support gpio nexus dt bindings
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
+Content-Type: multipart/alternative; boundary="=-8XfGv+rNhH9hdw/AGQqk"
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Martin Strba??ka <martin.strbacka@nic.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
+--=-8XfGv+rNhH9hdw/AGQqk
+Content-Type: text/plain; charset=us-ascii; format=flowed
+
+Hi Andrew!
+
+On Mon, Nov 14, 2016 at 2:10 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>>  Actually SFP is connected to SGMII interface of eth1, which is
+>>  routed through SERDES 5.
+> 
+> You say eth1 here. Yet lower down you say got eth0 and eth1 are
+> connected to the switch?
+
+Oh sorry, this was a NIC name based on probing order derived from base 
+address of NIC registers:
+
+	eth1: ethernet@30000 - probes as eth0
+	eth2: ethernet@34000 - probes as eth1
+	eth0: ethernet@70000 - probes as eth2
+
+It is a bit confusing. I meant eth2 in DTS. Sorry.
+
+> 
+> 
+>>  We have our proprietary support hacked onto mvneta driver for
+>>  disconnecting PHY on the fly. It is a bit nasty, so I suggest to
+>>  ignore SFP in this DTS altogether and let's wait till "phylink based
+>>  SFP module support" or something alike hits upstream, so we can base
+>>  the SFP support on solid code;
+> 
+> It would be great if you could work on getting the phylink patches
+> into mainline. It is something i have wanted to do for a long time,
+> but it is too low down on my priority list to get to. The code is high
+> quality, so i don't think there will be too many issues. It probably
+> just needs splitting up into smaller batches, submitting, and working
+> on any comments.
+
+That is exactly what I thought when I saw the patches for the first 
+time. I will try to merge the patches to the current kernel and see 
+what happens. I still need to learn a lot about PHY subsystem.
+
+> 
+> 
+>>  Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176
+>>  switch. The problem is that from what I have read so far the switch
+>>  can not operate in DSA mode with two CPU ports.
+> 
+> Again, this is something i wanted to do, and i did have a prototype at
+> one point. But again, not enough time. If you have resources to work
+> on this, i can find my code, explain my ideas, and let you complete
+> it.
+
+I am definitely interested, though I didn't have time to read and 
+absorb DSA yet, but I definitely want to try to hack 88E6176 support. I 
+would be really grateful if you can provide some pointers and/or code 
+to start from.
+
+Thanks,
+Tomas
 
 
-On Thu, Nov 24, 2016 at 4:25 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> Platforms like 96boards have a standardized connector/expansion
-> slot that exposes signals like GPIOs to expansion boards in an
-> SoC agnostic way. We'd like the DT overlays for the expansion
-> boards to be written once without knowledge of the SoC on the
-> other side of the connector. This avoids the unscalable
-> combinatorial explosion of a different DT overlay for each
-> expansion board and SoC pair.
->
-> Now that we have nexus support in the OF core let's change the
-> function call here that parses the phandle lists of gpios to use
-> the nexus variant. This allows us to remap phandles and their
-> arguments through any number of nexus nodes and end up with the
-> actual gpio provider being used.
->
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->
-> TODO: Document gpio-map and gpio-map-mask in GPIO devicetree binding
->
->  drivers/gpio/gpiolib-of.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index ecad3f0e3b77..3117397c4c41 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -71,8 +71,9 @@ struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
->         struct gpio_desc *desc;
->         int ret;
->
-> -       ret = of_parse_phandle_with_args(np, propname, "#gpio-cells", index,
-> -                                        &gpiospec);
-> +       ret = of_parse_phandle_with_args_map(np, propname, "#gpio-cells",
-> +                                            "gpio-map", "gpio-map-mask",
-> +                                            index, &gpiospec);
->         if (ret) {
->                 pr_debug("%s: can't parse '%s' property of node '%s[%d]'\n",
->                         __func__, propname, np->full_name, index);
-> --
-> 2.10.0.297.gf6727b0
->
+
+--=-8XfGv+rNhH9hdw/AGQqk
+Content-Type: text/html; charset=us-ascii
+
+Hi Andrew!<br><br>On Mon, Nov 14, 2016 at 2:10 PM, Andrew Lunn &lt;andrew@lunn.ch&gt; wrote:<br>
+<blockquote type="cite"><div class="plaintext" style="white-space: pre-wrap;"><blockquote> Actually SFP is connected to SGMII interface of eth1, which is
+ routed through SERDES 5.
+</blockquote>
+You say eth1 here. Yet lower down you say got eth0 and eth1 are
+connected to the switch?</div></blockquote><div><br></div><div>Oh sorry, this was a NIC name based on probing order derived from base address of NIC registers:</div><div><br></div><div><div><span style="white-space: pre-wrap;">	</span>eth1: ethernet@30000 - probes as eth0</div><div><div><span style="white-space: pre-wrap;">	</span>eth2: ethernet@34000 -&nbsp;probes as eth1</div><div><span class="Apple-tab-span" style="white-space:pre">	</span>eth0: ethernet@70000&nbsp;- probes as eth2</div></div></div><div><br></div><div>It is a bit confusing. I meant eth2 in DTS. Sorry.</div><br><blockquote type="cite"><div class="plaintext" style="white-space: pre-wrap;">
+
+<blockquote> We have our proprietary support hacked onto mvneta driver for
+ disconnecting PHY on the fly. It is a bit nasty, so I suggest to
+ ignore SFP in this DTS altogether and let's wait till "phylink based
+ SFP module support" or something alike hits upstream, so we can base
+ the SFP support on solid code;
+</blockquote>
+It would be great if you could work on getting the phylink patches
+into mainline. It is something i have wanted to do for a long time,
+but it is too low down on my priority list to get to. The code is high
+quality, so i don't think there will be too many issues. It probably
+just needs splitting up into smaller batches, submitting, and working
+on any comments.</div></blockquote><div><br></div><div>That is exactly what I thought when I saw the patches for the first time. I will try to merge the patches to the current kernel and see what happens. I still need to learn a lot about PHY subsystem.</div><br><blockquote type="cite"><div class="plaintext" style="white-space: pre-wrap;">
+
+<blockquote> Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176
+ switch. The problem is that from what I have read so far the switch
+ can not operate in DSA mode with two CPU ports.
+</blockquote>
+Again, this is something i wanted to do, and i did have a prototype at
+one point. But again, not enough time. If you have resources to work
+on this, i can find my code, explain my ideas, and let you complete
+it.</div></blockquote><br><div>I am definitely interested, though I didn't have time to read and absorb DSA yet, but I definitely want to try to hack&nbsp;88E6176 support. I would be really grateful if you can provide some pointers and/or code to start from.</div><div><br></div><div>Thanks,</div><div>Tomas</div><div><br></div>
+--=-8XfGv+rNhH9hdw/AGQqk--
