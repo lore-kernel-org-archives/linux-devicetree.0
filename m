@@ -1,38 +1,82 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] arm64: dts: rockchip: add backlight support for
- rk3399 evb board
-Date: Mon, 14 Nov 2016 15:53:04 +0100
-Message-ID: <2465111.XJ2bemDf07@phil>
-References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
- <1478697721-2323-6-git-send-email-wxt@rock-chips.com>
+From: tomas.hlavacek@nic.cz
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Date: Mon, 14 Nov 2016 15:59:57 +0100
+Message-ID: <1479135597.27133.2@smtp.gmail.com>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+ <1479126185.15557.5@smtp.gmail.com> <20161114131010.GC26710@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1478697721-2323-6-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161114131010.GC26710@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Martin Strba??ka <martin.strbacka@nic.cz>, Jason Cooper <jason@lakedaemon.net>, Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. November 2016, 21:21:57 CET schrieb Caesar Wang:
-> From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Andrew!
+
+(Sorry for re-posting the previous e-mail, that most likely didn't get 
+through.)
+
+On Mon, Nov 14, 2016 at 2:10 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+>>  Actually SFP is connected to SGMII interface of eth1, which is
+>>  routed through SERDES 5.
 > 
-> Add backlight node for evb board, perpare for panel device node.
+> You say eth1 here. Yet lower down you say got eth0 and eth1 are
+> connected to the switch?
+
+Oh sorry, this was a NIC name based on probing order derived from base 
+address of NIC registers:
+
+	eth1: ethernet@30000 - probes as eth0
+	eth2: ethernet@34000 - probes as eth1
+	eth0: ethernet@70000 - probes as eth2
+
+It is a bit confusing. I meant eth2 in DTS. Sorry.
+
 > 
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+>>  We have our proprietary support hacked onto mvneta driver for
+>>  disconnecting PHY on the fly. It is a bit nasty, so I suggest to
+>>  ignore SFP in this DTS altogether and let's wait till "phylink based
+>>  SFP module support" or something alike hits upstream, so we can base
+>>  the SFP support on solid code;
+> 
+> It would be great if you could work on getting the phylink patches
+> into mainline. It is something i have wanted to do for a long time,
+> but it is too low down on my priority list to get to. The code is high
+> quality, so i don't think there will be too many issues. It probably
+> just needs splitting up into smaller batches, submitting, and working
+> on any comments.
 
-applied to my dts64 branch
+That is exactly what I thought when I saw the patches for the first 
+time. I will try to merge the patches to the current kernel and see 
+what happens. I still need to learn a lot about PHY subsystem.
 
+> 
+> 
+>>  Actually eth0 and eth1 (both are RGMII) are connected to the 88E6176
+>>  switch. The problem is that from what I have read so far the switch
+>>  can not operate in DSA mode with two CPU ports.
+> 
+> Again, this is something i wanted to do, and i did have a prototype at
+> one point. But again, not enough time. If you have resources to work
+> on this, i can find my code, explain my ideas, and let you complete
+> it.
 
-Thanks
-Heiko
+I am definitely interested, though I didn't have time to read and 
+absorb DSA yet, but I definitely want to try to hack 88E6176 support. I 
+would be really grateful if you can provide some pointers and/or code 
+to start from.
+
+Thanks,
+Tomas
