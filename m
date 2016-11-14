@@ -1,63 +1,72 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 0/3] drm/tilcdc: Add bridge support and sync-lost flood recovery
-Date: Mon, 14 Nov 2016 18:54:15 +0200
-Message-ID: <cover.1479142062.git.jsarha@ti.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v2 1/3] drm/tilcdc: Recover from sync lost error flood by
+ resetting the LCDC
+Date: Mon, 14 Nov 2016 18:54:16 +0200
+Message-ID: <0d30108f5bdb815c29d573a055544b6667a95bb6.1479142062.git.jsarha@ti.com>
+References: <cover.1479142062.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1479142062.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: bcousson@baylibre.com, khilman@baylibre.com, Jyri Sarha <jsarha@ti.com>, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Changes since first version of the series:
-- "drm/tilcdc: Recover from sync lost error flood by resetting the LCDC"
-  - no change
-- "drm/bridge: Add ti-tfp410 DVI transmitter driver"
-  - HDMI -> DVI
-  - DT Binding document
-    - Prepare for tfp410 connected trough i2c by optional reg property
-    - Require two port nodes
-  - Implementation
-    - Implement connector node functionality with in tfp410 bridge
-      drive, but follow generic connector binding by pulling the
-      ddc-i2c-bus property from the connector node.
-- "drm/tilcdc: Add drm bridge support for attaching drm bridge drivers"
-  - Remove earlier change in TD binding document. There is no need to
-    mention DRM implementation details, like bridge support, in DT
-    binding.
-
-The first patch is an independent on and I've been testing it for
-quite a while now.
-
-The tfp410 bridge driver and the tilcdc bridge support are tested with
-BeagleBone DVI-D Cape Rev A3. The tfp410 bridge driver is missing a
-lot of features, because the DVI-D cape does not have too many wires
-connected. The missing features can be added later when they are
-needed.
-
-Jyri Sarha (3):
-  drm/tilcdc: Recover from sync lost error flood by resetting the LCDC
-  drm/bridge: Add ti-tfp410 DVI transmitter driver
-  drm/tilcdc: Add drm bridge support for attaching drm bridge drivers
-
- .../bindings/display/bridge/ti,tfp410.txt          |  41 ++++
- drivers/gpu/drm/bridge/Kconfig                     |   7 +
- drivers/gpu/drm/bridge/Makefile                    |   1 +
- drivers/gpu/drm/bridge/ti-tfp410.c                 | 223 +++++++++++++++++++++
- drivers/gpu/drm/tilcdc/tilcdc_crtc.c               |  26 ++-
- drivers/gpu/drm/tilcdc/tilcdc_drv.c                |   7 +-
- drivers/gpu/drm/tilcdc/tilcdc_drv.h                |   2 +
- drivers/gpu/drm/tilcdc/tilcdc_external.c           | 140 +++++++++++--
- drivers/gpu/drm/tilcdc/tilcdc_external.h           |   1 +
- 9 files changed, 428 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
- create mode 100644 drivers/gpu/drm/bridge/ti-tfp410.c
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UmVjb3ZlciBmcm9tIHN5bmMgbG9zdCBlcnJvciBmbG9vZCBieSByZXNldHRpbmcgdGhlIExDREMg
+aW5zdGVhZCBvZgp0dXJuaW5nIG9mZiB0aGUgU1lOQ19MT1NUIGVycm9yIElSUS4gV2hlbiBMQ0RD
+IHN0YXJ2ZXMgb24gbGltaXRlZAptZW1vcnkgYmFuZHdpZHRoIGl0IG1heSBzb21ldGltZXMgcmVz
+dWx0IGFuIGVycm9yIHNpdHVhdGlvbiB3aGVuIHRoZQpwaWN0dXJlIG1heSBoYXZlIHNoaWZ0ZWQg
+Y291cGxlIG9mIHBpeGVscyB0byByaWdodCBhbmQgU1lOQ19MT1NUCmludGVycnVwdCBpcyBnZW5l
+cmF0ZWQgb24gZXZlcnkgZnJhbWUuIExDREMgbWFpbiByZXNldCByZWNvdmVycyBmcm9tCnRoaXMg
+c2l0dWF0aW9uIGFuZCBjYXVzZXMgYSBicmllZiBibGFua2luZyBvbiB0aGUgc2NyZWVuLgoKU2ln
+bmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9k
+cm0vdGlsY2RjL3RpbGNkY19jcnRjLmMgfCAyNiArKysrKysrKysrKysrKysrKysrKysrKysrLQog
+MSBmaWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19jcnRjLmMgYi9kcml2ZXJzL2dwdS9k
+cm0vdGlsY2RjL3RpbGNkY19jcnRjLmMKaW5kZXggMGQwOWFjYy4uYzc4NzM0OSAxMDA2NDQKLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfY3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1
+L2RybS90aWxjZGMvdGlsY2RjX2NydGMuYwpAQCAtNTUsNiArNTUsNyBAQCBzdHJ1Y3QgdGlsY2Rj
+X2NydGMgewogCiAJaW50IHN5bmNfbG9zdF9jb3VudDsKIAlib29sIGZyYW1lX2ludGFjdDsKKwlz
+dHJ1Y3Qgd29ya19zdHJ1Y3QgcmVjb3Zlcl93b3JrOwogfTsKICNkZWZpbmUgdG9fdGlsY2RjX2Ny
+dGMoeCkgY29udGFpbmVyX29mKHgsIHN0cnVjdCB0aWxjZGNfY3J0YywgYmFzZSkKIApAQCAtMjUy
+LDYgKzI1MywyNSBAQCBzdGF0aWMgYm9vbCB0aWxjZGNfY3J0Y19pc19vbihzdHJ1Y3QgZHJtX2Ny
+dGMgKmNydGMpCiAJcmV0dXJuIGNydGMtPnN0YXRlICYmIGNydGMtPnN0YXRlLT5lbmFibGUgJiYg
+Y3J0Yy0+c3RhdGUtPmFjdGl2ZTsKIH0KIAorc3RhdGljIHZvaWQgdGlsY2RjX2NydGNfcmVjb3Zl
+cl93b3JrKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykKK3sKKwlzdHJ1Y3QgdGlsY2RjX2NydGMg
+KnRpbGNkY19jcnRjID0KKwkJY29udGFpbmVyX29mKHdvcmssIHN0cnVjdCB0aWxjZGNfY3J0Yywg
+cmVjb3Zlcl93b3JrKTsKKwlzdHJ1Y3QgZHJtX2NydGMgKmNydGMgPSAmdGlsY2RjX2NydGMtPmJh
+c2U7CisKKwlkZXZfaW5mbyhjcnRjLT5kZXYtPmRldiwgIiVzOiBSZXNldCBDUlRDIiwgX19mdW5j
+X18pOworCisJZHJtX21vZGVzZXRfbG9ja19jcnRjKGNydGMsIE5VTEwpOworCisJaWYgKCF0aWxj
+ZGNfY3J0Y19pc19vbihjcnRjKSkKKwkJZ290byBvdXQ7CisKKwl0aWxjZGNfY3J0Y19kaXNhYmxl
+KGNydGMpOworCXRpbGNkY19jcnRjX2VuYWJsZShjcnRjKTsKK291dDoKKwlkcm1fbW9kZXNldF91
+bmxvY2tfY3J0YyhjcnRjKTsKK30KKwogc3RhdGljIHZvaWQgdGlsY2RjX2NydGNfZGVzdHJveShz
+dHJ1Y3QgZHJtX2NydGMgKmNydGMpCiB7CiAJc3RydWN0IHRpbGNkY19jcnRjICp0aWxjZGNfY3J0
+YyA9IHRvX3RpbGNkY19jcnRjKGNydGMpOwpAQCAtODM4LDkgKzg1OCwxMiBAQCBpcnFyZXR1cm5f
+dCB0aWxjZGNfY3J0Y19pcnEoc3RydWN0IGRybV9jcnRjICpjcnRjKQogCQkJdGlsY2RjX2NydGMt
+PmZyYW1lX2ludGFjdCA9IGZhbHNlOwogCQkJaWYgKHRpbGNkY19jcnRjLT5zeW5jX2xvc3RfY291
+bnQrKyA+CiAJCQkgICAgU1lOQ19MT1NUX0NPVU5UX0xJTUlUKSB7Ci0JCQkJZGV2X2VycihkZXYt
+PmRldiwgIiVzKDB4JTA4eCk6IFN5bmMgbG9zdCBmbG9vZCBkZXRlY3RlZCwgZGlzYWJsaW5nIHRo
+ZSBpbnRlcnJ1cHQiLCBfX2Z1bmNfXywgc3RhdCk7CisJCQkJZGV2X2VycihkZXYtPmRldiwgIiVz
+KDB4JTA4eCk6IFN5bmMgbG9zdCBmbG9vZCBkZXRlY3RlZCwgcmVjb3ZlcmluZyIsIF9fZnVuY19f
+LCBzdGF0KTsKKwkJCQlxdWV1ZV93b3JrKHN5c3RlbV93cSwKKwkJCQkJICAgJnRpbGNkY19jcnRj
+LT5yZWNvdmVyX3dvcmspOwogCQkJCXRpbGNkY193cml0ZShkZXYsIExDRENfSU5UX0VOQUJMRV9D
+TFJfUkVHLAogCQkJCQkgICAgIExDRENfU1lOQ19MT1NUKTsKKwkJCQl0aWxjZGNfY3J0Yy0+c3lu
+Y19sb3N0X2NvdW50ID0gMDsKIAkJCX0KIAkJfQogCkBAIC04ODAsNiArOTAzLDcgQEAgc3RydWN0
+IGRybV9jcnRjICp0aWxjZGNfY3J0Y19jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRldikKIAkJ
+CSJ1bnJlZiIsIHVucmVmX3dvcmtlcik7CiAKIAlzcGluX2xvY2tfaW5pdCgmdGlsY2RjX2NydGMt
+PmlycV9sb2NrKTsKKwlJTklUX1dPUksoJnRpbGNkY19jcnRjLT5yZWNvdmVyX3dvcmssIHRpbGNk
+Y19jcnRjX3JlY292ZXJfd29yayk7CiAKIAlyZXQgPSBkcm1fY3J0Y19pbml0X3dpdGhfcGxhbmVz
+KGRldiwgY3J0YywKIAkJCQkJJnRpbGNkY19jcnRjLT5wcmltYXJ5LAotLSAKMS45LjEKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
