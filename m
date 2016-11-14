@@ -1,124 +1,194 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 5/5] media: platform: rcar_drif: Add DRIF support
-Date: Mon, 14 Nov 2016 21:04:39 +0100
-Message-ID: <CAMuHMdW5t4irT+2kHDo8TyLcW_eE7yyDa_SYG9Y-Wj99zRN5mQ@mail.gmail.com>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <2857106.83gIJRJqtY@avalon> <20161114195200.s62ga2bnutsrocyf@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to
+ reference-design-tablet.dtsi
+Date: Mon, 14 Nov 2016 21:08:02 +0100
+Message-ID: <20161114200802.vdduhyxnkgmpsyd5@lukather>
+References: <20161113192203.7101-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eoypaxrcm7nlrypm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114195200.s62ga2bnutsrocyf@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20161113192203.7101-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Mon, Nov 14, 2016 at 8:52 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Nov 10, 2016 at 11:22:20AM +0200, Laurent Pinchart wrote:
->> On Wednesday 09 Nov 2016 15:44:44 Ramesh Shanmugasundaram wrote:
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
->> > @@ -0,0 +1,136 @@
+--eoypaxrcm7nlrypm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> > +Example
->> > +--------
->> > +
->> > +SoC common dtsi file
->> > +
->> > +           drif00: rif@e6f40000 {
->> > +                   compatible = "renesas,r8a7795-drif",
->> > +                                "renesas,rcar-gen3-drif";
->> > +                   reg = <0 0xe6f40000 0 0x64>;
->> > +                   interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->> > +                   clocks = <&cpg CPG_MOD 515>;
->> > +                   clock-names = "fck";
->> > +                   dmas = <&dmac1 0x20>, <&dmac2 0x20>;
->> > +                   dma-names = "rx", "rx";
->
-> rx, rx? That doesn't make sense. While we don't explicitly disallow
-> this, I'm thinking we should. I wonder if there's any case this is
-> valid. If not, then a dtc check for this could be added.
+Hi,
 
-The device can be used with either dmac1 or dmac2.
-Which one is used is decided at run time, based on the availability of
-DMA channels per DMAC, which is a limited resource.
+On Sun, Nov 13, 2016 at 08:22:02PM +0100, Hans de Goede wrote:
+> Just like on sun8i all sun5i tablets use the same interrupt and power
+> gpios for their touchscreens. I've checked all known a13 fex files and
+> only the UTOO P66 uses a different gpio for the interrupt.
+>=20
+> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
+> fills in the necessary gpios to avoid duplication in the tablet dts files,
+> just like we do in sun8i-reference-design-tablet.dtsi.
+>=20
+> This will make future patches adding touchscreen nodes to a13 tablets
+> simpler.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------=
+------
+>  .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
+>  2 files changed, 39 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts=
+/sun5i-a13-utoo-p66.dts
+> index a8b0bcc..3d7ff10 100644
+> --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> @@ -83,22 +83,6 @@
+>  	allwinner,pins =3D "PG3";
+>  };
+> =20
+> -&i2c1 {
+> -	icn8318: touchscreen@40 {
+> -		compatible =3D "chipone,icn8318";
+> -		reg =3D <0x40>;
+> -		interrupt-parent =3D <&pio>;
+> -		interrupts =3D <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+> -		pinctrl-names =3D "default";
+> -		pinctrl-0 =3D <&ts_wake_pin_p66>;
+> -		wake-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> -		touchscreen-size-x =3D <800>;
+> -		touchscreen-size-y =3D <480>;
+> -		touchscreen-inverted-x;
+> -		touchscreen-swapped-x-y;
+> -	};
+> -};
+> -
+>  &mmc2 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&mmc2_pins_a>;
+> @@ -121,20 +105,26 @@
+>  		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+>  		allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+>  	};
+> -
+> -	ts_wake_pin_p66: ts_wake_pin@0 {
+> -		allwinner,pins =3D "PB3";
+> -		allwinner,function =3D "gpio_out";
+> -		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> -		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> -	};
+> -
+>  };
+> =20
+>  &reg_usb0_vbus {
+>  	gpio =3D <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+>  };
+> =20
+> +&touchscreen {
+> +	compatible =3D "chipone,icn8318";
+> +	reg =3D <0x40>;
+> +	/* The P66 uses a different EINT then the reference design */
+> +	interrupts =3D <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+> +	/* The icn8318 binding expects wake-gpios instead of power-gpios */
+> +	wake-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> +	touchscreen-size-x =3D <800>;
+> +	touchscreen-size-y =3D <480>;
+> +	touchscreen-inverted-x;
+> +	touchscreen-swapped-x-y;
+> +	status =3D "okay";
+> +};
+> +
+>  &uart1 {
+>  	/* The P66 uses the uart pins as gpios */
+>  	status =3D "disabled";
+> diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/=
+arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> index 20cc940..7af488a 100644
+> --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> @@ -41,6 +41,7 @@
+>   */
+>  #include "sunxi-reference-design-tablet.dtsi"
+> =20
+> +#include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/pwm/pwm.h>
+> =20
+>  / {
+> @@ -84,6 +85,23 @@
+>  };
+> =20
+>  &i2c1 {
+> +	/*
+> +	 * The gsl1680 is rated at 400KHz and it will not work reliable at
+> +	 * 100KHz, this has been confirmed on multiple different q8 tablets.
+> +	 * All other devices on this bus are also rated for 400KHz.
+> +	 */
+> +	clock-frequency =3D <400000>;
+> +
+> +	touchscreen: touchscreen {
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&ts_power_pin>;
+> +		power-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> +		/* Tablet dts must provide reg and compatible */
+> +		status =3D "disabled";
+> +	};
+> +
+>  	pcf8563: rtc@51 {
+>  		compatible =3D "nxp,pcf8563";
+>  		reg =3D <0x51>;
+> @@ -125,6 +143,13 @@
+>  		allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+>  	};
+> =20
+> +	ts_power_pin: ts_power_pin {
+> +		allwinner,pins =3D "PB3";
+> +		allwinner,function =3D "gpio_out";
+> +		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +	};
+> +
 
->> > +                   power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
->> > +                   status = "disabled";
->> > +           };
->> > +
->> > +           drif01: rif@e6f50000 {
->> > +                   compatible = "renesas,r8a7795-drif",
->> > +                                "renesas,rcar-gen3-drif";
->> > +                   reg = <0 0xe6f50000 0 0x64>;
->> > +                   interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->> > +                   clocks = <&cpg CPG_MOD 514>;
->> > +                   clock-names = "fck";
->> > +                   dmas = <&dmac1 0x22>, <&dmac2 0x22>;
->> > +                   dma-names = "rx", "rx";
->> > +                   power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
->> > +                   status = "disabled";
->> > +           };
->> > +
->> > +           drif0: rif@0 {
->> > +                   compatible = "renesas,r8a7795-drif",
->> > +                                "renesas,rcar-gen3-drif";
->> > +                   sub-channels = <&drif00>, <&drif01>;
->> > +                   status = "disabled";
->> > +           };
->>
->> I'm afraid this really hurts my eyes, especially using the same compatible
->> string for both the channel and sub-channel nodes.
->>
->> We need to decide how to model the hardware in DT. Given that the two channels
->> are mostly independent having separate DT nodes makes sense to me. However, as
->> they share the clock and sync signals, somehow grouping them makes sense. I
->> see three ways to do so, and there might be more.
->>
->> 1. Adding an extra DT node for the channels group, with phandles to the two
->> channels. This is what you're proposing here.
->>
->> 2. Adding an extra DT node for the channels group, as a parent of the two
->> channels.
->>
->> 3. Adding phandles to the channels, pointing to each other, or possibly a
->> phandle from channel 0 pointing to channel 1.
->>
->> Neither of these options seem perfect to me. I don't like option 1 as the
->> group DT node really doesn't describe a hardware block. If we want to use a DT
->> node to convey group information, option 2 seems better to me. However, it
->> somehow abuses the DT parent-child model that is supposed to describe
->> relationships from a control bus point of view. Option 3 has the drawback of
->> not scaling properly, at least with phandles in both channels pointing to the
->> other one.
->>
->> Rob, Geert, tell me you have a fourth idea I haven't thought of that would
->> solve all those problems :-)
->
-> What's the purpose/need for grouping them?
->
-> I'm fine with Option 2, though I want to make sure it is really needed.
+For the next release, we'll switch to the generic pin mux properties
+("pins" and "function"), and we actually implemented the fact that the
+drive and pull properties are optional, so you can drop them both.
 
-Each half of a DRIF pair is basically an SPI slave controller without TX
-capability, sharing clock and chip-select between the two halves.
-Hence you can use either one half to receive 1 bit per clock pulse,
-or both halves to receive 2 bits per clock pulse.
-You cannot use both halves for independent operation due to the signal
-sharing.
+You'll need next + http://lists.infradead.org/pipermail/linux-arm-kernel/20=
+16-November/467123.html
 
-Gr{oetje,eeting}s,
+Maxime
 
-                        Geert
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+--eoypaxrcm7nlrypm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYKhmfAAoJEBx+YmzsjxAgx7MP/2nOm1P7cwlsffH/U/BE1dCo
+Nza1hzamUp0ve08hIaBwAuxRDljIp+82ls03eRlW8UlX5fe068WgcPSY2kwJca6e
+mbF6nbQWpXTBKGpLZ/NljCJzSeK1K5VcR9Z40kJpkJnLx9YUiLG0Y8fpHoZVLWr6
+uMsYXsAbcsMyjCe+r1QDFpXtaX0YuX37irngI8eI6ifA9xDya6xQpNypToOmXMpy
+GtVyAT04JqBDRc5NBBqxejpwyr7v1679sSj6bto0uNLWuSnbZ7y0ifFeu44hV/uo
+1Foxk42SG4xl5LiOQjbxElDOISau+sug4eUVrIklNOJtU0KtPAY66r1kGokvg8cl
+JgnGkzgHECnKEVmf+KtRST6TCXYiGslt2jlnl1Hr2+WnGAjtp04m8aagHU5H73M/
+8X2M5/AMMQyHMRrhnr3/MSb6xpucRNLANVA/QtW+2/YFbPBfdDEioirUvkhT9H3i
+yRrjOL1R3vzB92dBoF+2fEdmi66YaeR/S15d+SlYOonH/kdqNT9YWYjKoPAYYenH
+D1mOZ1NC0vJUz7qPCr1OMPShAUi3pOBMbed57oDcx86c61eJ2NKsz56ZhYrkV/6l
+w4I4vjyWtMXFEnVjHgdrh/VefkAQpjRfiQIUeR93e++WhyLZDpc14ifk/ZaGUTc0
+VNJ1e44p/Rr8auGnNGtI
+=w0V8
+-----END PGP SIGNATURE-----
+
+--eoypaxrcm7nlrypm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
