@@ -1,89 +1,85 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH V2 2/3] dt-bindings: mxsfb: Add new bindings for the MXSFB driver
-Date: Mon, 14 Nov 2016 11:10:35 +0100
-Message-ID: <20161114101036.3505-2-marex@denx.de>
-References: <20161114101036.3505-1-marex@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114101036.3505-1-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Noam Camus <noamca@mellanox.com>
+Subject: [PATCH v6 0/3] Add clockevent for timer-nps driver to NPS400 SoC
+Date: Mon, 14 Nov 2016 11:40:44 +0200
+Message-ID: <1479116447-29483-1-git-send-email-noamca@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
+Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-Add new DT bindings for new MXSFB driver that is using the
-OF graph to parse the video output structure instead of
-hard-coding the display properties into the MXSFB node.
-The old MXSFB fbdev driver bindings are preserved in the
-same file in the "Old bindings" section.
+From: Noam Camus <noamca@mellanox.com>
 
-Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
---
-V2: - Merge the new bindings into mxsfb.txt file instead of keeping
-      them in separate mxsfb-drm.txt file.
-    - Add dedicated compatible for i.MX6SX
-    - Drop all references to DRM/KMS
-    - Repair the required bits in clock node
+Change log
 ---
- .../devicetree/bindings/display/mxsfb.txt          | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+V5 --> V6
+Apply several comments made by Daniel Lezcano:
+1) nps_get_timer_clk() - use clk_put() on error scenario
+2) nps_get_timer_clk() - return EINVAL and not plain 1
+3) Fix typos in log (double checked with spell checker)
 
-diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-index a4431f2..6e92593 100644
---- a/Documentation/devicetree/bindings/display/mxsfb.txt
-+++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-@@ -1,5 +1,42 @@
- * Freescale MXS LCD Interface (LCDIF)
- 
-+New bindings:
-+=============
-+Required properties:
-+- compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
-+		Should be "fsl,imx28-lcdif" for i.MX28.
-+		Should be "fsl,imx6sx-lcdif" for i.MX6SX.
-+- reg:		Address and length of the register set for lcdif
-+- interrupts:	Should contain lcdif interrupts
-+- clocks:	A list of phandle + clock-specifier pairs, one for each
-+		entry in 'clock-names'.
-+- clock-names:	A list of clock names. For MXSFB it should contain:
-+    - "pix" for the MXSFB block clock
-+    - (MX6SX-only) "axi", "disp_axi" for the bus interface clock
-+
-+Required sub-nodes:
-+  - port: The connection to an encoder chip.
-+
-+Example:
-+
-+	lcdif1: lcdif@02220000 {
-+		compatible = "fsl,imx6sx-lcdif", "fsl,imx28-lcdif";
-+		reg = <0x02220000 0x4000>;
-+		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clks IMX6SX_CLK_LCDIF1_PIX>,
-+			 <&clks IMX6SX_CLK_LCDIF_APB>,
-+			 <&clks IMX6SX_CLK_DISPLAY_AXI>;
-+		clock-names = "pix", "axi", "disp_axi";
-+
-+		port {
-+			parallel_out: endpoint {
-+				remote-endpoint = <&panel_in_parallel>;
-+			};
-+		};
-+	};
-+
-+Old bindings:
-+=============
- Required properties:
- - compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
- 		Should be "fsl,imx28-lcdif" for i.MX28.
--- 
-2.10.2
+V4 --> V5
+Apply several comments made by Daniel Lezcano:
+1) Add __init attribute to nps_get_timer_clk()
+2) Fix return value of nps_get_timer_clk()
+ when failing to get clk rate
+3) Change clocksource rate from 301 -> 300
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+V3 --> V4
+Main changes are [Thanks for the review]:
+Fix many typos at log [Daniel]
+Add handling for bad return values [Daniel and Thomas]
+Replace use of internal irqchip pointers with existing IRQ API [Thomas]
+Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
+Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+
+V2 --> V3
+Apply Rob Herring comment about backword compatibility
+
+V1 --> V2
+Apply Daniel Lezcano comments:
+	CLOCKSOURCE_OF_DECLARE return value
+	update hotplug callbacks usage
+	squash of 2 first commits.
+In this version I created new commit to serve as preperation for adding clockevents.
+This way the last patch is more readable with clockevent content.
+---
+
+In first version of this driver we supported clocksource for the NPS400.
+The support for clockevent was taken from Synopsys ARC timer driver.
+This was good for working with our simulator of NPS400.
+However in NPS400 ASIC the timers behave differently than simulation.
+The timers in ASIC are shared between all threads whithin a core
+and hence need different driver to support this behaviour.
+
+The idea of this design is that we got 16 HW threads per core
+each represented at bimask in a shared register in this core.
+So when thread wants that next clockevent expiration will produce
+timer interrupt to itself the correspondance bit in this register
+should be set.
+So theoretically if all 16 bits are set then all HW threads will get
+timer interrupt on next expiration of timer 0.
+
+Note that we use Synopsys ARC design naming convention for the timers
+where:
+timer0 is used for clockevents
+timer1 is used for clocksource.
+
+Noam Camus (3):
+  soc: Support for NPS HW scheduling
+  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+  clocksource: Add clockevent support to NPS400 driver
+
+ .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+ .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+ .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+ arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
+ drivers/clocksource/timer-nps.c                    |  266 ++++++++++++++++++--
+ include/soc/nps/mtm.h                              |   59 +++++
+ 6 files changed, 337 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+ create mode 100644 include/soc/nps/mtm.h
