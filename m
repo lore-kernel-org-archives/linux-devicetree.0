@@ -1,85 +1,128 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed
- SoCs
-Date: Mon, 14 Nov 2016 19:42:07 +0100
-Message-ID: <6be81da8-84e2-4208-94d7-c0517920b5c4@gmail.com>
-References: <1478688149-4554-1-git-send-email-clg@kaod.org>
- <CACPK8Xc=AcA=d+O++W07ki+KkCxA86EnXj7dqTRobTpb9WQbUw@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
+Date: Mon, 14 Nov 2016 10:44:29 -0800
+Message-ID: <582A060D.50800@gmail.com>
+References: <20161104144241.18002-1-hdegoede@redhat.com>
+ <20161104144241.18002-2-hdegoede@redhat.com> <5827CCC3.90003@gmail.com>
+ <582968FA.4020800@gmail.com>
+ <b2cef3fb-cbb4-f34b-cb9a-84578bb67751@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8Xc=AcA=d+O++W07ki+KkCxA86EnXj7dqTRobTpb9WQbUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <b2cef3fb-cbb4-f34b-cb9a-84578bb67751-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2016 05:42 AM, Joel Stanley wrote:
-> On Wed, Nov 9, 2016 at 9:12 PM, Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
->> This driver adds mtd support for spi-nor attached to either or both of
->> the Firmware Memory Controller or the SPI Flash Controller (AST2400
->> only).
->>
->> The SMC controllers on the Aspeed AST2500 SoC are very similar to the
->> ones found on the AST2400. The differences are on the number of
->> supported flash modules and their default mappings in the SoC address
->> space.
->>
->> The Aspeed AST2500 has one SPI controller for the BMC firmware and two
->> for the host firmware. All controllers have now the same set of
->> registers compatible with the AST2400 FMC controller and the legacy
->> 'SMC' controller is fully gone.
->>
->> Each controller has a memory range on which it maps its flash module
->> slaves. Each slave is assigned a memory window for its mapping that
->> can be changed at bootime with the Segment Address Register.
->>
->> Each SPI flash slave can then be accessed in two modes: Command and
->> User. When in User mode, accesses to the memory segment of the slaves
->> are translated in SPI transfers. When in Command mode, the HW
->> generates the SPI commands automatically and the memory segment is
->> accessed as if doing a MMIO.
->>
->> Currently, only the User mode is supported. Command mode needs a
->> little more work to check that the memory window on the AHB bus fits
->> the module size.
->>
->> Based on previous work from Milton D. Miller II <miltonm-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->>
->> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->> ---
->>  Tested on:
->>
->>  * OpenPOWER Palmetto (AST2400) with
->>         FMC controller : n25q256a
->>         SPI controller : mx25l25635e and n25q512ax3
->>
->>  * Evaluation board (AST2500) with
->>         FMC controller : w25q256
->>         SPI controller : w25q256
->>
->>  * OpenPOWER Witherspoon (AST2500) with
->>         FMC controller : mx25l25635e * 2
->>         SPI controller : mx66l1g45g
+On 11/14/16 03:04, Hans de Goede wrote:
+> Hi,
 > 
-> It's also in use on the Zaius and Barreleye OpenBMC systems.
+> On 14-11-16 08:34, Frank Rowand wrote:
+>> Hi Hans, Pantelis,
+>>
+>> On 11/12/16 18:15, Frank Rowand wrote:
+>>> On 11/04/16 07:42, Hans de Goede wrote:
+>>>> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>>
+>>>> Changesets are very powerful, but the lack of a helper API
+>>>> makes using them cumbersome. Introduce a simple copy based
+>>>> API that makes things considerably easier.
+>>>>
+>>>> To wit, adding a property using the raw API.
+>>>>
+>>>>     struct property *prop;
+>>>>     prop = kzalloc(sizeof(*prop)), GFP_KERNEL);
+>>>>     prop->name = kstrdup("compatible");
+>>>>     prop->value = kstrdup("foo,bar");
+>>>>     prop->length = strlen(prop->value) + 1;
+>>>>     of_changeset_add_property(ocs, np, prop);
+>>>>
+>>>> while using the helper API
+>>>>
+>>>>     of_changeset_add_property_string(ocs, np, "compatible",
+>>>>             "foo,bar");
+>>>>
+>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> Changes in v2 (hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org):
+>>>> -Address review comments from:
+>>>>  https://www.spinics.net/lists/kernel/msg2252845.html
+>>>
+>>> That points to the May 9 version 1 patches from Pantelis (as expected),
+>>> but containing 4, not 2, patches.  Patch 1/4 was applied.  Patch 4/4
+>>> seems to have disappeared?
+>>>
+>>> Pantelis then sent a version 2 set of the patches on May 16.
+>>>
+>>> Your version is a modification of the May 9 patches (as would be expected
+>>> of a version 2).  It is confusing to have two different version 2 patch
+>>> sets.  I don't have any brilliant ideas on how this patch set could have
+>>> been named differently to avoid that confusion.
+>>>
+>>> The point of this little side-track is simply to note the existence of two
+>>> different version 2 series so I won't be confused when I revisit this
+>>> thread in the future.
+>>>
+>>>>  -Simplify (and fix) __of_changeset_add_update_property_copy OOM handling
+>>>>  -Remove (by manual inlining) these 2 static helpers:
+>>>>   __of_changeset_add_update_property_u32
+>>>>   __of_changeset_add_update_property_bool
+>>>>  -Remove the following exported helper method:
+>>>>   of_changeset_node_move_to
+>>>
+>>> Not all comments were addressed.
+>>>
+>>> There are some other changes made that are not noted in the changelog.
+>>>
+>>> I am still reading through the patches. I will reply again either with
+>>> a reviewed-by or specific comments when I finish.
+>>
+>> Replying here for the entire patchset (there was no patch 0 to reply to).
+>>
+>> After reading through the patches, my reply is meta instead of specific
+>> comments about the code.
+>>
+>> There are very few users of change sets in tree.  I do not see the need to
+>> add these helpers until such users are likely to appear.
+>>
+>> I would expect change sets to be _mostly_ used internally by the device tree
+>> overlay framework, not directly by drivers.  If change sets are an attractive
+>> technology for drivers, I want to approach that usage very carefully to avoid
+>> inappropriate use, which could be very difficult to reign in after the fact.
+>>
+>> Even if helpers should be added, this seems to be an overly complex approach.
+>> If the need for these helpers becomes apparent I can provide review comments
+>> with the specifics about how it appears to be overly complex.
+>>
+>> Can you please  provide some more insights into the needs driving the desire
+>> to have change set helpers and the expected use cases of them?  Please put
+>> your architect's hat on when replying to this question.
 > 
-> In that respect, I would like to see this merged once it's deemed
-> ready by the mtd maintainers. We can follow up with the extra features
-> in future patches.
+> My use case for this is discussed in this thread:
+> https://www.spinics.net/lists/arm-kernel/msg536111.html
 > 
-> I've reviewed and tested this as Cedric and Milton have developed it,
-> so please add:
+> With the dt-bindings for the hardware-manager I want to add here:
+> https://www.spinics.net/lists/arm-kernel/msg536109.html
 > 
-> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> 
+> Note that there is a lot of discussion in this thread whether or
+> not this belongs in the kernel. I strongly believe though that
+> some functionality like this will be needed in the kernel for
+> ARM+dt devices going forward, just like there is plenty of x86
+> code which adjusts itself to specific hardware, because whether
+> we like it or not hardware (revisions) will always have quirks.
 
-Thanks! I'll review the patch ASAP (this week).
+Thanks! That context should have been provided with the patches.
 
--- 
-Best regards,
-Marek Vasut
+The use case discussion is important and I am paying a lot of
+attention to that discussion and many other discussions about
+dynamic device trees.  I don't think it makes sense to apply the
+change set helper patches yet, given the unsettled state of the
+various dynamic device tree discussions.
+
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
