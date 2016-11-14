@@ -1,100 +1,35 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH 2/2] PCI: rockchip: Add quirk to disable RC's ASPM L0s
-Date: Mon, 14 Nov 2016 12:11:06 +0800
-Message-ID: <1479096666-112668-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1479096666-112668-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479096666-112668-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dmaengine: nbpfaxi: add optional max-burst property for
+ memory reads/writes
+Date: Mon, 14 Nov 2016 10:08:34 +0530
+Message-ID: <20161114043834.GP3000@localhost>
+References: <1477315755-4783-1-git-send-email-niklass@axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1477315755-4783-1-git-send-email-niklass@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@axis.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Niklas Cassel <niklass@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Rockchip's RC outputs 100MHz reference clock but there are
-two methods for PHY to generate it.
+On Mon, Oct 24, 2016 at 03:29:15PM +0200, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel@axis.com>
+> 
+> Due to a hardware bug, reading memory (from the Accelerator Coherency Port)
+> with a burst size equal to the maximum burst size allowed by the DMA
+> hardware's buffer size will cause a hardware hang on the ARTPEC-6 SoC,
+> where the only solution is a manual power cycle.
+> On ARTPEC-6, this hardware bug does not trigger when writing memory (to the
+> Accelerator Coherency Port) with a burst size equal to the maximum burst
+> size allowed by the DMA hardware's buffer size.
+> 
+> To avoid this hardware hang, introduce a new optional max-burst property
+> for memory reads. For completeness, also introduce a max-burst property for
+> memory writes.
 
-(1)One of them is to use system PLL to generate 100MHz clock and
-the PHY will relock it and filter signal noise then outputs the
-reference clock.
+Applied, thanks
 
-(2)Another way is to share Soc's 24MHZ crystal oscillator with
-PHY and force PHY's DLL to generate 100MHz internally.
-
-When using case(2), the exit from L0s doesn't work fine occasionally
-due to the broken design of RC receiver's logical circuit. So even if
-we use extended-synch, it still fails for PHY to relock the bits from
-FTS sometimes. This will hang the system.
-
-Maybe we could argue that why not use case(1) to avoid it? The reason
-is that as we could see the reference clock is derived from system PLL
-and the path from it to PHY isn't so clean which means there are some
-noise introduced by power-domain and other buses can't be filterd out
-by PHY and we could see noise from the frequency spectrum by oscilloscope.
-This makes the TX compatibility test a little difficult to pass the spec.
-So case(1) and case(2) are both used indeed now. If using case(2), we
-should disable RC's L0s support, and that is why we need this property to
-indicate this quirk.
-
-Also after checking quirk.c, I noticed there is already a quirk for
-disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
-shouldn't do that as mentioned above that case(1) could still works fine
-with L0s.
-
-Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
- Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
- drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-index ba67b39..cfa44a7 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-@@ -42,6 +42,8 @@ Required properties:
- Optional Property:
- - ep-gpios: contain the entry for pre-reset gpio
- - num-lanes: number of lanes to use
-+- quirk,aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
-+	using 24MHz OSC for RC's PHY.
- - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
- - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
- - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index 1dba698..9b7d921 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -140,6 +140,8 @@
- #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
- #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
- #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
-+#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
-+#define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
- #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
- #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
- #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
-@@ -607,6 +609,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	status &= ~PCIE_RC_CONFIG_THP_CAP_NEXT_MASK;
- 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_THP_CAP);
- 
-+	/* Clear L0s from RC's link cap */
-+	if (of_property_read_bool(dev->of_node, "quirk,apsm-no-l0s")) {
-+		status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LINK_CAP);
-+		status &= ~PCIE_RC_CONFIG_LINK_CAP_L0S;
-+		rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LINK_CAP);
-+	}
-+
- 	rockchip_pcie_write(rockchip, 0x0, PCIE_RC_BAR_CONF);
- 
- 	rockchip_pcie_write(rockchip,
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
