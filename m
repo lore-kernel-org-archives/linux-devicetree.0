@@ -1,83 +1,202 @@
-From: John Youn <johnyoun@synopsys.com>
-Subject: [PATCH v3] usb: dwc2: add amcc,dwc-otg support
-Date: Tue, 15 Nov 2016 15:03:40 -0800
-Message-ID: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun__11672.3522697159$1479251147$gmane$org@synopsys.com>
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: Felipe Balbi <balbi@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, John Youn <johnyoun@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Christian Lamparter <chunkeey@googlemail.com>, linuxppc-dev@lists.ozlabs.org
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Tue, 15 Nov 2016 23:55:04 +0000
+Message-ID: <20161115235503.GC1041@n2100.armlinux.org.uk>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej>
+ <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
+ <20161114190839.GS1041@n2100.armlinux.org.uk>
+ <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
+ <20161115213510.GY1041@n2100.armlinux.org.uk>
+ <CAJ+vNU2t5f=HQ94_GW-cry7DV3FsR9Vx-ck_E-eNuDk5vd-eaw@mail.gmail.com>
+ <20161115221002.GA1041@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161115221002.GA1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@googlemail.com>
+On Tue, Nov 15, 2016 at 10:10:02PM +0000, Russell King - ARM Linux wrote:
+> On Tue, Nov 15, 2016 at 01:39:42PM -0800, Tim Harvey wrote:
+> > On Tue, Nov 15, 2016 at 1:35 PM, Russell King - ARM Linux
+> > <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > > On Tue, Nov 15, 2016 at 12:27:53PM -0800, Tim Harvey wrote:
+> > >> On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
+> > >> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > >> > So, someone merged a patch which makes mmcblk devices follow the
+> > >> > host controller numbering.
+> > >> >
+> > >> > Now my cubox-i fails to boot correctly because the SD card in the
+> > >> > _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
+> > >> >
+> > >> > USDHC1 is wired to the on-microsom WiFi, and never has anything
+> > >> > remotely near a SD card or eMMC present.  So, this change is
+> > >> > confusing on these platforms.
+> > >> >
+> > >> > Moreover, this is _going_ to break SolidRun distros if people upgrade
+> > >> > their kernels.
+> > >> >
+> > >> > It may be appropriate for eMMC, but it's not appropriate everywhere.
+> > >> >
+> > >> > This is a user visible _regression_ in 4.9-rc.  Whoever did this,
+> > >> > please revert whatever change caused this, and next time limit it
+> > >> > to only eMMC.
+> > >> >
+> > >> > Thanks.
+> > >>
+> > >> I see the same thing on newer kernels, which is why I asked the
+> > >> question. I didn't expect (or even want honestly) a non mmcblk0 boot
+> > >> device and was looking for a way to control that via dt. Now I'm
+> > >> understanding that to avoid this kind of bootloader/kernel dependence
+> > >> issue I should be using UUID's to identify the boot device.
+> > >>
+> > >> >From my testing it looks like the change your looking for occurred
+> > >> some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
+> > >> regression specifically.
+> > >
+> > > That depends how you look at it.  Yes, there's a change in 4.5 to 4.6
+> > > which ties the block device number to the host device index, but that's
+> > > really only part of the story here.
+> > >
+> > > 4.8 definitely identifies the SD card in iMX6 usdhc2 as "mmcblk0".
+> > > 4.9-rc identifies the SD card as "mmcblk1".  This makes it a 4.9 change
+> > > of behaviour - there can be no argument about that.
+> > >
+> > > Now, digging further into this today, it appears that:
+> > >
+> > > v4.8: usdhc2 was probed first, and is given mmc0.
+> > >       usdhc1 is probed second, and is given mmc1.
+> > >
+> > > v4.9-rc: usdhc1 is probed first, and is given mmc0.
+> > >          usdhc2 is probed second, and is given mmc1.
+> > >
+> > > I haven't yet been able to figure out why there's been this change
+> > > of probe order.  There's no change that I can see in the iMX6 DT
+> > > files that would account for this.
+> > >
+> > 
+> > I bisected it and the commit your looking for is
+> > 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d
+> 
+> No it's not.
+> 
+> Let me try and put it plainer:
+> 
+> * Commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d ties the mmc block
+>   device number (mmcblkN) to the mmc host interface number (mmcN).
+>   This change happened between 4.5 and 4.6.
+> 
+> * The change I'm seeing happened between 4.8 and 4.9-rc.  I'm not
+>   seeing a change of behaviour between 4.5 and 4.6.
+> 
+> * The change I'm seeing changes the order of the physical device
+>   associated with the hosts named mmc0 and mmc1 in the kernel.
+> 
+> * Because physical devices associated with the mmc0 and mmc1 hosts
+>   swap over, the mmcblkN number changes due to the commit you point
+>   out.
+> 
+> * So, the change that I'm seeing between 4.8 and 4.9-rc is not caused
+>   by commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d, but by something
+>   else changing the order in which the two usdhc physical hardware
+>   blocks get probed.
+> 
+> Does this make it clearer?
 
-This patch adds support for the "amcc,usb-otg" device
-which is found in the PowerPC Canyonlands' dts.
+It turns out to be this commit:
 
-The device definition was added by:
+commit 6eb1c9496b81680f2cd2e0eda06c531317e2e28d
+Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Date:   Mon Sep 19 01:16:44 2016 +0900
 
-commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands
-board")
+    clk: probe common clock drivers earlier
 
-but without any driver support as the dwc2 driver wasn't available at
-that time.
+    Several SoCs implement platform drivers for clocks rather than
+    CLK_OF_DECLARE().  Clocks should come earlier because they are
+    prerequisites for many of other drivers.  It will help to mitigate
+    EPROBE_DEFER issues.
 
-Note: The system can't use the generic "snps,dwc2" compatible
-because of the special ahbcfg configuration. The default
-GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
-when the USB and SATA is used concurrently.
+    Also, drop the comment since it does not carry much value.
 
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: John Youn <johnyoun@synopsys.com>
----
+    Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+    Acked-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+    Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 
-Sorry, the previous one broke compilation. This fixes it.
+which changes the init order.  In 4.8, we get:
 
-Regards,
-John
+calling  mmc_pwrseq_simple_driver_init+0x0/0x20 @ 1
+bus: 'platform': driver_probe_device: matched device usdhc1_pwrseq with driver pwrseq_simple
+bus: 'platform': really_probe: probing driver pwrseq_simple with device usdhc1_pwrseq
+platform usdhc1_pwrseq: Driver pwrseq_simple requests probe deferral
+platform usdhc1_pwrseq: Added to deferred list
+initcall mmc_pwrseq_simple_driver_init+0x0/0x20 returned 0 after 737 usecs
 
-v3 [johnyoun]:
-* Fixed compilation issue
+which then goes on to cause:
 
-v2 [johnyoun]:
-* Removed params struct
-* Minor commit message formatting
+calling  sdhci_esdhc_imx_driver_init+0x0/0x20 @ 1
+bus: 'platform': driver_probe_device: matched device 2190000.usdhc with driver sdhci-esdhc-imx
+bus: 'platform': really_probe: probing driver sdhci-esdhc-imx with device 2190000.usdhc
+platform 2190000.usdhc: Driver sdhci-esdhc-imx requests probe deferral
+platform 2190000.usdhc: Added to deferred list
 
- Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
- drivers/usb/dwc2/params.c                      | 1 +
- 2 files changed, 2 insertions(+)
+followed by:
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index ad8f7ff..6c7c2bce 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -12,6 +12,7 @@ Required properties:
-   - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
-   - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
-   - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
-+  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index 513556a..a786256 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
- 	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
- 	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
- 	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
-+	{ .compatible = "amcc,dwc-otg", .data = NULL },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+bus: 'platform': driver_probe_device: matched device 2194000.usdhc with driver sdhci-esdhc-imx
+bus: 'platform': really_probe: probing driver sdhci-esdhc-imx with device 2194000.usdhc
+sdhci-esdhc-imx 2194000.usdhc: Got CD GPIO
+driver: 'sdhci-esdhc-imx': driver_bound: bound to device '2194000.usdhc'
+bus: 'platform': really_probe: bound device 2194000.usdhc to driver sdhci-esdhc-imx
+initcall sdhci_esdhc_imx_driver_init+0x0/0x20 returned 0 after 58205 usecs
+
+and eventually:
+
+mmc0: host does not support reading read-only switch, assuming write-enable
+mmc0: new ultra high speed SDR104 SDHC card at address 0001
+mmcblk0: mmc0:0001 00000 14.9 GiB
+ mmcblk0: p1 p2
+
+In 4.9-rc5, we instead get:
+
+calling  gpio_clk_driver_init+0x0/0x20 @ 1
+bus: 'platform': driver_probe_device: matched device sdio-clock with driver gpio-clk
+bus: 'platform': really_probe: probing driver gpio-clk with device sdio-clock
+driver: 'gpio-clk': driver_bound: bound to device 'sdio-clock'
+bus: 'platform': really_probe: bound device sdio-clock to driver gpio-clk
+...
+calling  mmc_pwrseq_simple_driver_init+0x0/0x20 @ 1
+bus: 'platform': driver_probe_device: matched device usdhc1_pwrseq with driver pwrseq_simple
+bus: 'platform': really_probe: probing driver pwrseq_simple with device usdhc1_pwrseq
+driver: 'pwrseq_simple': driver_bound: bound to device 'usdhc1_pwrseq'
+bus: 'platform': really_probe: bound device usdhc1_pwrseq to driver pwrseq_simple
+initcall mmc_pwrseq_simple_driver_init+0x0/0x20 returned 0 after 876 usecs
+...
+calling  sdhci_esdhc_imx_driver_init+0x0/0x20 @ 1
+bus: 'platform': driver_probe_device: matched device 2190000.usdhc with driver sdhci-esdhc-imx
+bus: 'platform': really_probe: probing driver sdhci-esdhc-imx with device 2190000.usdhc
+sdhci-esdhc-imx 2190000.usdhc: allocated mmc-pwrseq
+driver: 'sdhci-esdhc-imx': driver_bound: bound to device '2190000.usdhc'
+bus: 'platform': really_probe: bound device 2190000.usdhc to driver sdhci-esdhc-imx
+bus: 'platform': driver_probe_device: matched device 2194000.usdhc with driver sdhci-esdhc-imx
+bus: 'platform': really_probe: probing driver sdhci-esdhc-imx with device 2194000.usdhc
+driver: 'sdhci-esdhc-imx': driver_bound: bound to device '2194000.usdhc'
+bus: 'platform': really_probe: bound device 2194000.usdhc to driver sdhci-esdhc-imx
+initcall sdhci_esdhc_imx_driver_init+0x0/0x20 returned 0 after 384864 usecs
+...
+mmc1: host does not support reading read-only switch, assuming write-enable
+mmc1: new ultra high speed SDR104 SDHC card at address 0001
+mmcblk1: mmc1:0001 00000 14.9 GiB
+ mmcblk1: p1 p2
+
+
 -- 
-2.10.0
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
