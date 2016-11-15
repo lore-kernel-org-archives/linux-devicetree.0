@@ -1,30 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] Documentation: pinctrl: palmas: Add
- ti,palmas-powerhold-override property definition
-Date: Mon, 14 Nov 2016 19:43:52 -0600
-Message-ID: <20161115014352.5d3qwoonlo63mp5p@rob-hp-laptop>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-2-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCHv3 1/2] gpio: xilinx: dt-binding: Add clock node
+Date: Mon, 14 Nov 2016 19:44:41 -0600
+Message-ID: <20161115014441.ne5ru2lhz3rz57b4@rob-hp-laptop>
+References: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478754560-27923-2-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: tony@atomide.com, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+In-Reply-To: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, soren.brinkmann@xilinx.com, michal.simek@xilinx.com, shubhrajyoti.datta@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 10:39:16AM +0530, Keerthy wrote:
-> GPIO7 is configured in POWERHOLD mode which has higher priority
-> over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
-> bit is turned off. This property enables driver to over ride the
-> POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
-> scenarios.
+On Thu, Nov 10, 2016 at 11:26:04AM +0530, Shubhrajyoti Datta wrote:
+> Add the clock node to the dt binding.
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> v2: 
+> Make clocks optional
+> Add clock name
+> v3:
+> No change
+> 
+>  .../devicetree/bindings/gpio/gpio-xilinx.txt       |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
