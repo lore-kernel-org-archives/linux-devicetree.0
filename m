@@ -1,30 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv3 1/2] gpio: xilinx: dt-binding: Add clock node
-Date: Mon, 14 Nov 2016 19:44:41 -0600
-Message-ID: <20161115014441.ne5ru2lhz3rz57b4@rob-hp-laptop>
-References: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Subject: Re: [RESEND PATCH] regulator: pwm: fix syntax errors in the examples
+Date: Mon, 14 Nov 2016 19:47:02 -0600
+Message-ID: <20161115014702.3p5d4bxhwcibovnf@rob-hp-laptop>
+References: <1478773527-10936-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1478757365-3311-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, soren.brinkmann@xilinx.com, michal.simek@xilinx.com, shubhrajyoti.datta@gmail.com
+In-Reply-To: <1478773527-10936-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 11:26:04AM +0530, Shubhrajyoti Datta wrote:
-> Add the clock node to the dt binding.
+qOn Thu, Nov 10, 2016 at 11:25:27AM +0100, Peter Rosin wrote:
+> While at it, clean up some other things as well.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
-> v2: 
-> Make clocks optional
-> Add clock name
-> v3:
-> No change
-> 
->  .../devicetree/bindings/gpio/gpio-xilinx.txt       |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
+>  .../devicetree/bindings/regulator/pwm-regulator.txt          | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+As this is just DT docs, I've applied.
+
+Rob
