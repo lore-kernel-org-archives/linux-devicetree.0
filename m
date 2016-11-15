@@ -1,48 +1,74 @@
-From: Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: [PATCH V4 7/8] thermal: da9062/61: Thermal junction temperature
- monitoring driver
-Date: Tue, 15 Nov 2016 09:46:51 +0000
-Message-ID: <b2d2809e-b71e-5db0-2aeb-4773dc58960d@arm.com>
-References: <cover.1479111766.git.stwiss.opensource@diasemi.com>
- <5d6cf6b51d71d2069db20ee427a92271015c337a.1479111766.git.stwiss.opensource@diasemi.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v1 05/11] dt-bindings: perf: hisi: Add Devicetree
+ bindings for Hisilicon SoC PMU
+Date: Tue, 15 Nov 2016 09:51:49 +0000
+Message-ID: <20161115095148.GA29104@leverpostej>
+References: <1478151727-20250-1-git-send-email-anurup.m@huawei.com>
+ <1478151727-20250-6-git-send-email-anurup.m@huawei.com>
+ <20161110183040.GD10137@leverpostej>
+ <58290014.2020401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d6cf6b51d71d2069db20ee427a92271015c337a.1479111766.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>, Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <58290014.2020401@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, will.deacon@arm.com, corbet@lwn.net, catalin.marinas@arm.com, robh+dt@kernel.org, arnd@arndb.de, f.fainelli@gmail.com, rmk+kernel@arm.linux.org.uk, krzk@kernel.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, wangkefeng.wang@huawei.com, guohanjun@huawei.com, shyju.pv@huawei.com, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/11/16 08:22, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
->
-> Add junction temperature monitoring supervisor device driver, compatible
-> with the DA9062 and DA9061 PMICs. A MODULE_DEVICE_TABLE() macro is added.
->
-> If the PMIC's internal junction temperature rises above TEMP_WARN (125
-> degC) an interrupt is issued. This TEMP_WARN level is defined as the
-> THERMAL_TRIP_HOT trip-wire inside the device driver.
->
-> The thermal triggering mechanism is interrupt based and happens when the
-> temperature rises above a given threshold level. The component cannot
-> return an exact temperature, it only has knowledge if the temperature is
-> above or below a given threshold value. A status bit must be polled to
-> detect when the temperature falls below that threshold level again. A
-> kernel work queue is configured to repeatedly poll and detect when the
-> temperature falls below this trip-wire, between 1 and 10 second intervals
-> (defaulting at 3 seconds).
->
-> This first level of temperature supervision is intended for non-invasive
-> temperature control, where the necessary measures for cooling the system
-> down are left to the host software.
->
-> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
->
-Looks good to me.
+On Mon, Nov 14, 2016 at 05:36:44AM +0530, Anurup M wrote:
+> On Friday 11 November 2016 12:00 AM, Mark Rutland wrote:
+> >On Thu, Nov 03, 2016 at 01:42:01AM -0400, Anurup M wrote:
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> >>+	- scl-id : The Super Cluster ID. This can be the ID of the CPU die
+> >>+		   or IO die in the chip.
+> >What's this needed for?
+> This is used as suffix to the PMU name. hisi_l3c<scl-id>. (hisi_l3c2
+> - for scl-id = 2).
+> This is to identify the pmu correspond to which CPU die in the socket.
+> >>+	- num-events : No of events supported by this PMU device.
+> >>+
+> >>+	- num-counters : No of hardware counters available for counting.
+> >This isn't probeable or well-known?
+> My idea is to have the common properties of SoC PMU added here.
+> The num-events, num-counters etc. So that handling can be made
+> common in the driver.
+> Is it not recommended? Please share your comments.
 
-Regards,
-Lukasz
+This feels like something that should be well-known for the programming
+model of the device. If the number of events and/or counters shange, I'd
+expect other things to also change such that the device is no longer
+compatible with previous versions.
+
+[...]
+
+> The below two properties (module-id, cfgen-map) differs between
+> chips hip05/06 and hip07.
+
+The module-id property sounds like a HW description, but it's not
+entirely clear to me what cfgen-map is; more comments on that below.
+
+> Please suggest.
+> >>+	- module-id : Module ID to input for djtag. This property is an array of
+> >>+		      module_id for each L3 cache banks.
+> >>+
+> >>+	- num-banks : Number of banks or instances of the device.
+> >What's a bank? Surely they have separate instances of the PMU?
+> Yes each bank is a separate instance of PMU.
+> If it is recommended to have each L3 cache bank registered as
+> separate PMU with perf, then this property will be removed.
+
+Generally, I think that separate instances are preferable. 
+
+> >What order are these in?
+> The bank number will start from "1" till "4" for L3 cache as there
+> are four banks in hip05/06/07 chips.
+> >>+	- cfgen-map : Config enable array to select the bank.
+> >Huh?
+
+As above, it's not clear to me what this property represents. Could you
+please clarify?
+
+Thanks,
+Mark.
