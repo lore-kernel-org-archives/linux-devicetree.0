@@ -1,36 +1,91 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] pinctrl: sunxi: Add support for interrupt debouncing
-Date: Tue, 15 Nov 2016 10:23:30 +0100
-Message-ID: <CACRpkdYdfEYfmF34mW2kFYFfZtjDQuHSvyUkcZztgUqG9j=jAQ@mail.gmail.com>
-References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
- <d7c3760d37046a4b390b1a7b30bb94b8e1af31a7.1479156725.git-series.maxime.ripard@free-electrons.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] dt-bindings: add documentation for rk1108 cru
+Date: Tue, 15 Nov 2016 10:35:39 +0100
+Message-ID: <2131710.LesyKkLYAr@phil>
+References: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com> <1479124981-24181-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <d7c3760d37046a4b390b1a7b30bb94b8e1af31a7.1479156725.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479124981-24181-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 9:53 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
+Hi Andy,
 
-> The pin controller found in the Allwinner SoCs has support for interrupts
-> debouncing.
->
-> However, this is not done per-pin, preventing us from using the generic
-> pinconf binding for that, but per irq bank, which, depending on the SoC,
-> ranges from one to five.
->
-> Introduce a device-wide property to deal with this using a microsecond
-> resolution. We can re-use the per-pin input-debounce property for that, so
-> let's do it!
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+Am Montag, 14. November 2016, 20:03:01 CET schrieb Andy Yan:
+> From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> This adds the dt-binding documentation for the clock and reset unit
+> found on Rockchip rk1108 SoCs.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v2: None
+> 
+>  .../bindings/clock/rockchip,rk1108-cru.txt         | 60
+> ++++++++++++++++++++++ 1 file changed, 60 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt new file
+> mode 100644
+> index 0000000..4d2356b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> @@ -0,0 +1,60 @@
+> +* Rockchip RK1108 Clock and Reset Unit
+> +
+> +The RK1108 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk1108-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changeable, due to the missing pll lock
+> status. +
+> +Each clock is assigned an identifier and client nodes can use this
+> identifier +to specify the clock which they consume. All available clocks
+> are defined as +preprocessor macros in the dt-bindings/clock/rk1108-cru.h
+> headers and can be +used in device tree sources. Similar macros exist for
+> the reset sources in +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "cif_clkout" - output clock for the cif - optional
+> + - "mipi_csi_clkout" - output clock for the mipi csi - optional
+> + - "pclkin_vip" - external VIP clock - optional
+> + - "ext_i2s" - external I2S clock - optional
+> + - "ext_gmac" - external GMAC clock - optional
+> + - "mac_ref_clkout" - output clock of the pll in the mac phy
 
-Patch applied.
+we really only want to list the actual input clocks here, not outputs.
 
-Yours,
-Linus Walleij
+Also, the list of actual input clocks seems incomplete (hdmiphy, usbphy) and 
+some clocks listed here do not match the clock controller 2 patches later 
+(pclkin_vip, ext_gmac [rk1108 only has 10/100], ext_i2s, ...)
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
