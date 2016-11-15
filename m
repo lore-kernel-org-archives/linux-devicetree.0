@@ -1,52 +1,57 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] ata: xgene: Enable NCQ support for APM X-Gene SATA
- controller hardware v1.1
-Date: Tue, 15 Nov 2016 11:21:18 -0500
-Message-ID: <20161115162118.GA30547@htj.duckdns.org>
-References: <1469524857-3720-1-git-send-email-rsahu@apm.com>
- <CAFd313x-mXpy0N3aKx2rfoag1FNOrN-LzKb5UHkY2L+GGc0B-A@mail.gmail.com>
- <20161109164531.GA14630@htj.duckdns.org>
- <CAFd313ycmpdp7wHCVRJrigJV31hLwBGOo=FNENwgFnNKyVkQBA@mail.gmail.com>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] PCI: qcom: add support to msm8996 PCIE controller
+Date: Tue, 15 Nov 2016 18:30:10 +0200
+Message-ID: <3fc1b0b1-5f48-ebce-e7f1-d4c06e9ee28d@mm-sol.com>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-3-git-send-email-srinivas.kandagatla@linaro.org>
+ <aa135735-4ff4-06e3-7899-1255a21edfb4@mm-sol.com>
+ <f0d9884c-b5f6-e9a8-e814-6dfd632466fc@linaro.org>
+ <ea5858f3-19d6-c746-2e95-a64d6a436b38@mm-sol.com>
+ <8d0e9b19-5d6f-8be5-84be-d102817a6b21@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFd313ycmpdp7wHCVRJrigJV31hLwBGOo=FNENwgFnNKyVkQBA@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Rameshwar Sahu <rsahu@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8d0e9b19-5d6f-8be5-84be-d102817a6b21-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello, Rameshwar.
 
-On Fri, Nov 11, 2016 at 01:36:28PM +0530, Rameshwar Sahu wrote:
-> Hi Tejun,
+On 11/15/2016 06:10 PM, Srinivas Kandagatla wrote:
 > 
-> On Wed, Nov 9, 2016 at 10:15 PM, Tejun Heo <tj@kernel.org> wrote:
-> > Hello,
-> >
-> > On Wed, Sep 14, 2016 at 04:15:00PM +0530, Rameshwar Sahu wrote:
-> >> > @@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device
-> >> > *pdev)
-> >> >                                 dev_warn(&pdev->dev, "%s: Error reading
-> >> > device info. Assume version1\n",
-> >> >                                         __func__);
-> >> >                                 version = XGENE_AHCI_V1;
-> >> > -                       } else if (info->valid & ACPI_VALID_CID) {
-> >> > -                               version = XGENE_AHCI_V2;
-> >
-> > Can you please explain this part a bit?  Everything else looks good to
-> > me.
 > 
-> Here we should not assume XGENE_AHCI_V2 always in case of having valid
-> _CID in ACPI table.
-> I need to remove this assumption because V1_1 has also valid _CID for
-> backward compatibly with v1.
+> On 15/11/16 15:08, Stanimir Varbanov wrote:
+>>>> I don't like MSM8996_ prefix. Could you invent a macro which depending
+>>>> >> on controller selects proper offset?
+>>> >
+>>> > maybe some like this ??
+>>> >
+>>> > #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2    0x1A8
+>> No, I wanted to preserve the name of the register offset. By that way in
+>> the next pcie controller version we do not need to have
+>> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V3.
+>>
+>> I was thinking for something like
+>>
+>> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT(ver)    \
+>>         ((ver) == VERSION_1 ? 0x178 : 0x1A8)
+>>
+>> But you will need to extend qcom_pcie_ops with new member to store the
+>> version.
+>>
+>> It's up to you ... or we can fix it when new version of the controller
+>> appear.
+> TBH, I don't want to add this just for this one case, looks bit over do.
+> So I skipped to using V2 Suffix.
+> We can fix later if required.
 
-Can you please repost with the above explanation added to the commit
-message?
+OK, sounds good.
 
-Thanks!
-
--- 
-tejun
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
