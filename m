@@ -1,134 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] devicetree/bindings: display: Add bindings for LVDS
- panels
-Date: Tue, 15 Nov 2016 14:10:29 -0600
-Message-ID: <CAL_Jsq+GZC6HwdnRm7QmyUN5GAbuvYo94ykgS3qkN2qWvAh1ag@mail.gmail.com>
-References: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1488637.i0jADhlNmg@avalon>
- <CAL_JsqL_41VGf8ZFEzQyqPU_EeK=Ms+jdt_N9cvRyLFkXF2MTg@mail.gmail.com>
- <4350940.43ZWQivOUU@avalon>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Tue, 15 Nov 2016 12:27:53 -0800
+Message-ID: <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej> <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
+ <20161114190839.GS1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4350940.43ZWQivOUU@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161114190839.GS1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBOb3YgMTQsIDIwMTYgYXQgODoxMSBQTSwgTGF1cmVudCBQaW5jaGFydAo8bGF1cmVu
-dC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBIaSBSb2IsCj4KPiBPbiBNb25k
-YXkgMTQgTm92IDIwMTYgMTk6NDA6MjYgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+IE9uIE1vbiwgT2N0
-IDE3LCAyMDE2IGF0IDc6NDIgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+ID4gT24gRnJp
-ZGF5IDE0IE9jdCAyMDE2IDA3OjQwOjE0IFJvYiBIZXJyaW5nIHdyb3RlOgo+PiA+PiBPbiBTdW4s
-IE9jdCA5LCAyMDE2IGF0IDExOjMzIEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+PiA+Pj4g
-T24gU2F0dXJkYXkgMDggT2N0IDIwMTYgMjA6Mjk6MzkgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+ID4+
-Pj4gT24gVHVlLCBPY3QgMDQsIDIwMTYgYXQgMDc6MjM6MjlQTSArMDMwMCwgTGF1cmVudCBQaW5j
-aGFydCB3cm90ZToKPj4gPj4+Pj4gTFZEUyBpcyBhIHBoeXNpY2FsIGxheWVyIHNwZWNpZmljYXRp
-b24gZGVmaW5lZCBpbiBBTlNJL1RJQS9FSUEtNjQ0LUEuCj4+ID4+Pj4+IE11bHRpcGxlIGluY29t
-cGF0aWJsZSBkYXRhIGxpbmsgbGF5ZXJzIGhhdmUgYmVlbiB1c2VkIG92ZXIgdGltZSB0bwo+PiA+
-Pj4+PiB0cmFuc21pdCBpbWFnZSBkYXRhIHRvIExWRFMgcGFuZWxzLiBUaGlzIGJpbmRpbmcgc3Vw
-cG9ydHMgZGlzcGxheQo+PiA+Pj4+PiBwYW5lbHMgY29tcGF0aWJsZSB3aXRoIHRoZSBKRUlEQS01
-OS0xOTk5LCBPcGVuLUxESSBhbmQgVkVTQSBTV1BHCj4+ID4+Pj4+IHNwZWNpZmljYXRpb25zLgoK
-Wy4uLl0KCj4+ID4+PiBGdXJ0aGVybW9yZSwgTFZEUyBkYXRhIG9yZ2FuaXphdGlvbiBpcyBjb250
-cm9sbGVkIGJ5IHRoZSBjb21iaW5hdGlvbiBvZgo+PiA+Pj4gYm90aCBkYXRhLW1hcHBpbmcgYW5k
-IGRhdGEtbWlycm9yLiBJdCBtYWtlcyBsaXR0bGUgc2Vuc2UgZnJvbSBteSBwb2ludAo+PiA+Pj4g
-b2YgdmlldyB0byBoYW5kbGUgb25lIGFzIHBhcnQgb2YgdGhlIGNvbXBhdGlibGUgc3RyaW5nIGFu
-ZCB0aGUgb3RoZXIgb25lCj4+ID4+PiBhcyBhIHNlcGFyYXRlIHByb3BlcnR5Lgo+PiA+Pj4KPj4g
-Pj4+PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiA+Pj4+ID4gKy0gbGFiZWw6IGEgc3ltYm9s
-aWMgbmFtZSBmb3IgdGhlIHBhbmVsCj4+ID4+Pj4KPj4gPj4+PiBDb3VsZCBiZSBmb3IgYW55IHBh
-bmVsIG9yIGRpc3BsYXkgY29ubmVjdG9yLgo+PiA+Pj4KPj4gPj4+IFllcywgYnV0IEknbSBub3Qg
-c3VyZSB0byB1bmRlcnN0YW5kIGhvdyB0aGF0J3MgcmVsZXZhbnQgOi0pCj4+ID4+Cj4+ID4+IE1l
-YW5pbmcgaXQgc2hvdWxkIGJlIGEgY29tbW9uIHByb3BlcnR5Lgo+PiA+Cj4+ID4gU3VyZS4gU28g
-eW91IGV4cGVjdCBtZSB0byByZW9yZ2FuaXplIGFsbCB0aGUgcGFuZWxzIGFuZCBjb25uZWN0b3Jz
-IERUCj4+ID4gYmluZGluZ3MgaW4gb3JkZXIgdG8gZ2V0IHRoaXMgb25lIG1lcmdlZCA/IDotKQo+
-Pgo+PiBObywgYmVjYXVzZSBJIGRvbid0IHRoaW5rIGxhYmVsIGlzIHdpZGVseSBkZWZpbmVkLiBK
-dXN0IHB1dCBpdCBpbiBhCj4+IGNvbW1vbiBwbGFjZSBhbmQgcmVmZXJlbmNlIGl0LiBBbnkgb3Ro
-ZXIgcGFuZWxzIGNhbiBiZSBmaXhlZCBsYXRlci4KPj4gUmVhbGx5LCB0aGUgInNpbXBsZSBwYW5l
-bCIgYmluZGluZyBzaG91bGQgcHJvYmFibHkgbW9ycGggaW50byB0aGUKPj4gY29tbW9uIGJpbmRp
-bmcuCj4KPiBUaGUgImxhYmVsIiBwcm9wZXJ0eSBpcyBhY3R1YWxseSBkZWZpbmVkIGluIHRoZSAi
-RGV2aWNldHJlZSBTcGVjaWZpY2F0aW9uLAoKWWVzLCBzbyBpcyByZWcsIGludGVycnVwdHMsIGV0
-Yy4gYnV0IHdlIHN0aWxsIGxpc3Qgd2hlbiB0aG9zZSBhcmUgdXNlZC4KCj4gUmVsZWFzZSAwLjEi
-IGFzIHJlY2VudGx5IHB1Ymxpc2hlZCBvbiBkZXZpY2V0cmVlLm9yZy4gV2hlcmUgd291bGQgeW91
-IGxpa2UgbWUKPiB0byBkZWZpbmUgaXQgaW4gdGhlIGJpbmRpbmdzID8KCkp1c3Qgc3BsaXQgdGhp
-bmdzIGludG8gMiBmaWxlcy4gTW92ZSBldmVyeXRoaW5nIHRoYXQncyB1c2VkIGluIG90aGVyCnBh
-bmVsIGJpbmRpbmdzIChsYWJlbCwgd2lkdGgtbW0sIHBvcnRzLCBldGMuKSB0byBhIHBhbmVsL2Nv
-bW1vbi50eHQuClRoZW4gaW4gbHZkcy1wYW5lbC50eHQsIGl0IGp1c3QgcmVmZXJzIHRvIGNvbW1v
-bi50eHQgYW5kIGlzIGp1c3QgdGhlCkxWRFMgc3BlY2lmaWMgdGhpbmdzLiBCb251cyBwb2ludHMg
-aWYgc2ltcGxlLXBhbmVsIChzaG91bGQganVzdCBnbwphd2F5KSwgcGFuZWwtZHBpLCBwYW5lbC1k
-c2ktY20gYXJlIGNvbnZlcnRlZC4KCj4+ID4+Pj4+ICstIGF2ZGQtc3VwcGx5OiByZWZlcmVuY2Ug
-dG8gdGhlIHJlZ3VsYXRvciB0aGF0IHBvd2VycyB0aGUgcGFuZWwKPj4gPj4+Pj4gYW5hbG9nIHN1
-cHBseQo+PiA+Pj4+PiArLSBkdmRkLXN1cHBseTogcmVmZXJlbmNlIHRvIHRoZSByZWd1bGF0b3Ig
-dGhhdCBwb3dlcnMgdGhlIHBhbmVsCj4+ID4+Pj4+IGRpZ2l0YWwgc3VwcGx5CgpJIHdvdWxkIG5v
-dCBiZSBhZ2FpbnN0IHRoZXNlIGJlaW5nIGNvbW1vbiBlaXRoZXIuIEl0J3Mgc29tZXdoYXQgYmV0
-dGVyCnRoYW4gc2ltcGxlLXBhbmVsJ3MgInBvd2VyLXN1cHBseSIgcHJvcGVydHkuCgo+PiA+Pj4+
-Cj4+ID4+Pj4gV2hpY2ggb25lIGhhcyB0byBiZSBwb3dlcmVkIG9uIGZpcnN0LCB3aGF0IHZvbHRh
-Z2UsIGFuZCB3aXRoIHdoYXQgdGltZQo+PiA+Pj4+IGluIGJldHdlZW4/IFRoaXMgaXMgd2h5ICJn
-ZW5lcmljIiBvciAic2ltcGxlIiBiaW5kaW5ncyBkb24ndCB3b3JrLgo+PiA+Pj4KPj4gPj4+IFRo
-ZSBhYm92ZS1tZW50aW9uZWQgc3BlY2lmaWNhdGlvbnMgYWxzbyBkZWZpbmUgY29ubmVjdG9ycywg
-cGlub3V0cyBhbmQKPj4gPj4+IHBvd2VyIHN1cHBsaWVzLCBidXQgbWFueSBMVkRTIHBhbmVscyBj
-b21wYXRpYmxlIHdpdGggdGhlIExWRFMgcGh5c2ljYWwKPj4gPj4+IGFuZCBkYXRhIGxheWVycyB1
-c2UgYSBkaWZmZXJlbnQgY29ubmVjdG9yIHdpdGggc21hbGwgZGlmZmVyZW5jZXMgaW4KPj4gPj4+
-IHBvd2VyIHN1cHBsaWVzLgo+PiA+Pj4KPj4gPj4+IEkgYmVsaWV2ZSB0aGUgdm9sdGFnZSBpcyBp
-cnJlbGV2YW50IGhlcmUsIGl0IGRvZXNuJ3QgbmVlZCB0byBiZQo+PiA+Pj4gY29udHJvbGxlZCBi
-eSB0aGUgb3BlcmF0aW5nIHN5c3RlbS4gUG93ZXIgc3VwcGxpZXMgb3JkZXIgYW5kIHRpbWluZyBp
-cwo+PiA+Pj4gcmVsZXZhbnQsIEknbGwgaW52ZXN0aWdhdGUgdGhlIGxldmVsIG9mIGRpZmZlcmVu
-Y2VzIGJldHdlZW4gcGFuZWxzLiBJJ20KPj4gPj4+IGFsc28gZmluZSB3aXRoIGRyb3BwaW5nIHRo
-b3NlIHByb3BlcnRpZXMgZm9yIG5vdy4KPj4gPj4KPj4gPj4gV2hldGhlciB5b3UgaGF2ZSBjb250
-cm9sIG9mIHRoZSBzdXBwbGllcyBpcyBkZXBlbmRlbnQgb24gdGhlIGJvYXJkLgo+PiA+PiBEcm9w
-cGluZyB0aGVtIGlzIGp1c3QgcHV0cyB1cyBpbiB0aGUgc2ltcGxlIGJpbmRpbmcgdHJhcC4gVGhl
-IHNpbXBsZQo+PiA+PiBiaW5kaW5ncyBzdGFydCBvdXQgdGhhdCB3YXkgYW5kIHRoZW4gcGVvcGxl
-IGtlZXAgYWRkaW5nIHRvIHRoZW0uCj4+ID4KPj4gPiBEYW1uLCB5b3UgY2FuJ3QgYmUgZm9vbGVk
-IGVhc2lseSA7LSkKPj4KPj4gSSBndWVzcyB5b3UgY2FuIGNvdW50IGFsbCB0aGUgc2ltcGxlIGJp
-bmRpbmdzIHRvIHNlZSBob3cgbWFueSB0aW1lcyBJCj4+IGNhbiBiZSBmb29sZWQuIDopCj4+Cj4+
-ID4gT24gYSBtb3JlIHNlcmlvdXMgbm90ZSwgSSdkIGxpa2UgdG8gZGVzaWduIHRoZSBiaW5kaW5n
-cyBpbiBhIHdheSB0aGF0Cj4+ID4gd291bGRuJ3QgcmVxdWlyZSBhZGRpbmcgZGV2aWNlLXNwZWNp
-ZmljIGNvZGUgaW4gdGhlIGRyaXZlciBmb3IgZWFjaCBwYW5lbAo+PiA+IG1vZGVsLCBnaXZlbiB0
-aGF0IGluIG1vc3QgY2FzZXMgcG93ZXIgc3VwcGx5IGhhbmRsaW5nIHdpbGwgYmUgZ2VuZXJpYy4K
-Pj4gPiBXaGF0J3MgeW91ciBvcGluaW9uIGFib3V0IGEgZ2VuZXJpYyBwb3dlciBzdXBwbHkgbW9k
-ZWwgdGhhdCB3b3VsZCBiZSB1c2VkCj4+ID4gaW4gdGhlIGRlZmF1bHQgY2FzZSwgd2l0aCB0aGUg
-b3B0aW9uIHRvIG92ZXJyaWRlIGl0IHdpdGggZGV2aWNlLXNwZWNpZmljCj4+ID4gY29kZSB3aGVu
-IG5lZWRlZCA/Cj4+Cj4+IEkgZG9uJ3QgYWdyZWUuIFJlYWQgVGhpZXJyeSdzIHBvc3Qgb24gdGhl
-IHN1YmplY3RbMV0uCj4KPiBJJ20gbm90IHN1cmUgeW91IHVuZGVyc3Rvb2QgbWUgY29ycmVjdGx5
-IChhbmQgd3JpdGluZyBhIGNsYXJpZmljYXRpb24gYXQKPiA0OjAwYW0gbWlnaHQgbm90IGhlbHAg
-Oi0pKS4gTXkgcG9pbnQgaGVyZSBpcyB0aGF0IGEgZmFpciBudW1iZXIgb2YgcGFuZWxzCj4gZG9u
-J3QgY2FyZSBhYm91dCBwb3dlciBzZXF1ZW5jaW5nIGFuZCBoYXZlIG5vIGNvbnRyb2wgR1BJT3Mg
-KHRoYXQncyBjZXJ0YWlubHkKPiB0aGUgY2FzZSBvZiB0aGUgdHdvIE1pdHN1YmlzaGkgcGFuZWxz
-IEkgdXNlIGhlcmUgdGhhdCBoYXZlIGEgc2luZ2xlIHBvd2VyCj4gc3VwcGx5IC0gZ29vZCBsdWNr
-IHRyeWluZyB0byBjb252aW5jZSBtZSB0aGF0IHRoaXMgbmVlZHMgdG8gYmUgc2VxdWVuY2VkIDot
-KSAtCj4gYW5kIG5vIGVuYWJsZSBvciByZXNldCBjb250cm9sIHBpbikuIFRoaXMga2luZCBvZiBw
-YW5lbCBzaG91bGQgb2J2aW91c2x5IGJlCj4gbW9kZWxsZWQgaW4gRFQgd2l0aCBib3RoIGEgc3Bl
-Y2lmaWMgYW5kIGEgZ2VuZXJpYyAoInBhbmVsLWx2ZHMiKSBjb21wYXRpYmxlCj4gc3RyaW5nLCB0
-byBlbnN1cmUgdGhhdCB3ZSdsbCBoYXZlIGVub3VnaCBpbmZvcm1hdGlvbiBhdmFpbGFibGUgb24g
-dGhlCj4gb3BlcmF0aW5nIHN5c3RlbSBzaWRlIHRvIGNvbnRyb2wgdGhlIHBhbmVsIHByb3Blcmx5
-LiBUaGUgcG93ZXIgc3VwcGx5KGllcykKPiBzaG91bGQgYmUgZG9jdW1lbnRlZCBpbiByZWxhdGlv
-biB0byB0aGUgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcgYW5kIG5vdAo+IG1lbnRpb25lZCBi
-eSB0aGUgZ2VuZXJpYyBiaW5kaW5ncyAod2hldGhlciB0aGF0IHNob3VsZCBnbyBpbiBvbmUgb3Ig
-bXVsdGlwbGUKPiB0ZXh0IGZpbGVzIGlzIGJpa2VzaGVkZGluZykuCgpMZXQgbWUgcmVwaHJhc2Us
-IEkgZG9uJ3QgYWdyZWUgd2l0aCBnZW5lcmljIGJpbmRpbmdzLCBidXQgSSBmdWxseQpzdXBwb3J0
-IGhhdmluZyBhIGdlbmVyaWMgZHJpdmVyLiBTbyB5b3UgY2FuIGhhdmUgYSBnZW5lcmljIGRyaXZl
-cgpmdW5jdGlvbiB0aGF0IGNhbiBoYW5kbGUgeW91ciBjYXNlLiBFdmVuIHNsaWdodGx5IG1vcmUg
-Y29tcGxpY2F0ZWQgY2FuCmJlIGhhbmRsZWQ6IHR1cm4gb24gYWxsIHRoZSBzdXBwbGllcyBsaXN0
-ZWQsIGRlLWFzc2VydCBhbnkgcmVzZXQKZ3Bpb3MsIGFzc2VydCBhbnkgZW5hYmxlIGdwaW9zICh0
-aGlzIGlzIHdoeSBJIHB1c2ggZm9yIGNvbW1vbiBuYW1pbmcKb2YgImVuYWJsZS1ncGlvcyIpLiBJ
-ZiB0aGlzIGlzIGVub3VnaCBmb3IgYSBwYW5lbCwgdGhlbiB0aGUgZ2VuZXJpYwpjb21wYXRpYmxl
-IHdpbGwgd29yay4gSWYgbm90LCBzb3JyeSwgcHJvdmlkZSB5b3VyIG93biBwb3dlciBzZXF1ZW5j
-aW5nCmNvZGUgYW5kIG1hdGNoIG9uIHRoZSBtb3JlIHNwZWNpZmljIGNvbXBhdGlibGUuCgo+IFRo
-aXMgYmVpbmcgc2FpZCwgb24gdGhlIGRyaXZlciBzaWRlLCBJIGRvbid0IHNlZSBhIHJlYXNvbiB0
-byBsaXN0IHRoZSBzcGVjaWZpYwo+IGNvbXBhdGlibGUgc3RyaW5ncyBleHBsaWNpdGx5IGZvciB0
-aG9zZSBwYW5lbHMgd2hlbiBhIGdlbmVyaWMgaW1wbGVtZW50YXRpb24KPiBtYXRjaGluZyB0aGUg
-Z2VuZXJpYyBjb21wYXRpYmxlIHN0cmluZyBjYW4gaGFuZGxlIHRoZW0gZmluZS4gVGhpcyBoYXMg
-bm8KPiBpbXBhY3Qgb24gdGhlIGJpbmRpbmdzIGFuZCBpcyBhbiBMaW51eCBpbXBsZW1lbnRhdGlv
-biBkZWNpc2lvbi4KCkkgdGhpbmsgd2UncmUgaW4gYWdyZWVtZW50LgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> So, someone merged a patch which makes mmcblk devices follow the
+> host controller numbering.
+>
+> Now my cubox-i fails to boot correctly because the SD card in the
+> _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
+>
+> USDHC1 is wired to the on-microsom WiFi, and never has anything
+> remotely near a SD card or eMMC present.  So, this change is
+> confusing on these platforms.
+>
+> Moreover, this is _going_ to break SolidRun distros if people upgrade
+> their kernels.
+>
+> It may be appropriate for eMMC, but it's not appropriate everywhere.
+>
+> This is a user visible _regression_ in 4.9-rc.  Whoever did this,
+> please revert whatever change caused this, and next time limit it
+> to only eMMC.
+>
+> Thanks.
+
+I see the same thing on newer kernels, which is why I asked the
+question. I didn't expect (or even want honestly) a non mmcblk0 boot
+device and was looking for a way to control that via dt. Now I'm
+understanding that to avoid this kind of bootloader/kernel dependence
+issue I should be using UUID's to identify the boot device.
+
+>From my testing it looks like the change your looking for occurred
+some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
+regression specifically.
+
+Regards,
+
+Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
