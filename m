@@ -1,54 +1,99 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 4/6] arm64: arch timer: Add timer erratum property for Hip05-d02 and Hip06-d03
-Date: Tue, 15 Nov 2016 20:16:05 +0800
-Message-ID: <1479212167-5812-4-git-send-email-dingtianhong@huawei.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH v4 5/6] arm64: arch_timer: apci: Introduce a generic aquirk
+ framework for erratum
+Date: Tue, 15 Nov 2016 20:16:06 +0800
+Message-ID: <1479212167-5812-5-git-send-email-dingtianhong@huawei.com>
 References: <1479212167-5812-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479212167-5812-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1479212167-5812-1-git-send-email-dingtianhong@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, hanjun.guo@linaro.org
+Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable workaround for hisilicon erratum 161601 on Hip05-d02 and Hip06-d03 board.
+From: Hanjun Guo <hanjun.guo@linaro.org>
 
-Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Introduce a general quirk framework for each timer erratum in ACPI,
+which use the oem information in GTDT table for platform specific erratums.
+The struct gtdt_arch_timer_fixup is introduced to record the oem
+information to match the quirk and handle the erratum.
+
+v3: Introduce a generic aquick framework for erratum in ACPI mode.
+
+v4: rename the quirk handler parameter to make it more generic, and
+    avoid break loop when handling the quirk becasue it need to
+    support multi quirks handler.
+
+Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
 ---
- arch/arm64/boot/dts/hisilicon/hip05.dtsi | 1 +
- arch/arm64/boot/dts/hisilicon/hip06.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/clocksource/arm_arch_timer.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-index bf322ed..f815d94 100644
---- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
-@@ -281,6 +281,7 @@
- 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
- 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
- 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+		hisilicon,erratum-161601;
- 	};
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 3d59af1..d4f4a0d 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -1068,6 +1068,39 @@ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer_mem, "arm,armv7-timer-mem",
+ 		       arch_timer_mem_init);
  
- 	pmu {
-diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-index 5927bc4..d63990b 100644
---- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-@@ -260,6 +260,7 @@
- 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
- 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
- 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+		hisilicon,erratum-161601;
- 	};
+ #ifdef CONFIG_ACPI
++struct gtdt_arch_timer_fixup {
++	char oem_id[ACPI_OEM_ID_SIZE];
++	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE];
++	u32 oem_revision;
++
++	/* quirk handler for arch timer erratum */
++	void (*handler)(void *context);
++	void *context;
++};
++
++/* note: this needs to be updated according to the doc of OEM ID
++ * and TABLE ID for different board.
++ */
++struct gtdt_arch_timer_fixup arch_timer_quirks[] __initdata = {
++};
++
++void __init arch_timer_acpi_quirks_handler(char *oem_id,
++					   char *oem_table_id,
++					   u32 oem_revision)
++{
++	struct gtdt_arch_timer_fixup *quirks = arch_timer_quirks;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(arch_timer_quirks); i++, quirks++) {
++		if (!memcmp(quirks->oem_id, oem_id, ACPI_OEM_ID_SIZE) &&
++		    !memcmp(quirks->oem_table_id, oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
++		    quirks->oem_revision == oem_revision) {
++			if (quirks->handler && quirks->context)
++				quirks->handler(quirks->context);
++		}
++	}
++}
++
+ static int __init map_generic_timer_interrupt(u32 interrupt, u32 flags)
+ {
+ 	int trigger, polarity;
+@@ -1094,6 +1127,9 @@ static int __init arch_timer_acpi_init(struct acpi_table_header *table)
+ 		return -EINVAL;
+ 	}
  
- 	pmu {
++	arch_timer_acpi_quirks_handler(table->oem_id, table->oem_table_id,
++				       table->oem_revision);
++
+ 	gtdt = container_of(table, struct acpi_table_gtdt, header);
+ 
+ 	arch_timers_present |= ARCH_CP15_TIMER;
 -- 
 1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
