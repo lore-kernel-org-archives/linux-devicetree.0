@@ -1,50 +1,39 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] PCI: qcom: add support to msm8996 PCIE controller
-Date: Tue, 15 Nov 2016 16:10:28 +0000
-Message-ID: <8d0e9b19-5d6f-8be5-84be-d102817a6b21@linaro.org>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-3-git-send-email-srinivas.kandagatla@linaro.org>
- <aa135735-4ff4-06e3-7899-1255a21edfb4@mm-sol.com>
- <f0d9884c-b5f6-e9a8-e814-6dfd632466fc@linaro.org>
- <ea5858f3-19d6-c746-2e95-a64d6a436b38@mm-sol.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64: dts: hisi: hip06 SAS device tree fixes
+Date: Tue, 15 Nov 2016 16:12:35 +0000
+Message-ID: <582B33F3.2040700@hisilicon.com>
+References: <1478537065-169286-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ea5858f3-19d6-c746-2e95-a64d6a436b38-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1478537065-169286-1-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi John,
 
+On 2016/11/7 16:44, John Garry wrote:
+> This patchset resolves some hip06 SAS device tree issues.
+>
 
-On 15/11/16 15:08, Stanimir Varbanov wrote:
->>> I don't like MSM8996_ prefix. Could you invent a macro which depending
->>> >> on controller selects proper offset?
->> >
->> > maybe some like this ??
->> >
->> > #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2    0x1A8
-> No, I wanted to preserve the name of the register offset. By that way in
-> the next pcie controller version we do not need to have
-> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V3.
->
-> I was thinking for something like
->
-> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT(ver)	\
-> 		((ver) == VERSION_1 ? 0x178 : 0x1A8)
->
-> But you will need to extend qcom_pcie_ops with new member to store the
-> version.
->
-> It's up to you ... or we can fix it when new version of the controller
-> appear.
-TBH, I don't want to add this just for this one case, looks bit over do.
-So I skipped to using V2 Suffix.
-We can fix later if required.
+Series applied to the hisilicon soc tree.
+Thanks!
 
---srini
+Best Regards,
+Wei
+
+> John Garry (3):
+>   arm64: dts: hisi: fix hip06 sas am-max-trans quirk
+>   arm64: dts: hisi: disable sas0 and sas2 for d03
+>   arm64: dts: hisi: add refclk node to hip06 dts files for SAS
+> 
+>  arch/arm64/boot/dts/hisilicon/hip06-d03.dts |  8 --------
+>  arch/arm64/boot/dts/hisilicon/hip06.dtsi    | 11 ++++++++++-
+>  2 files changed, 10 insertions(+), 9 deletions(-)
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
