@@ -1,453 +1,256 @@
-From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
- soc
-Date: Tue, 15 Nov 2016 20:29:33 +0800
-Message-ID: <1479212973.2224.13.camel@intel.com>
-References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
-         <1478081906-12009-3-git-send-email-kernel@martin.sperl.org>
+From: Sriram Dash <sriram.dash-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [upstream-release] [PATCH 1/2] drivers: usb: phy: Add qoriq usb
+ 3.0    phy driver support
+Date: Tue, 15 Nov 2016 12:39:26 +0000
+Message-ID: <DB5PR0401MB1925FB1FE45C15B0671E46D1F5BF0@DB5PR0401MB1925.eurprd04.prod.outlook.com>
+References: <1479101215-26954-1-git-send-email-sriram.dash@nxp.com>
+ <1479101215-26954-2-git-send-email-sriram.dash@nxp.com>
+ <DB5PR0401MB1928CA058CC01243457F124791BC0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478081906-12009-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DB5PR0401MB1928CA058CC01243457F124791BC0-GXldUsIPo7Z/SeJcUcAJq43W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-11-02 at 10:18 +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Add basic thermal driver for bcm2835 SOC.
-> 
-> This driver currently relies on the firmware setting up the
-> tsense HW block and does not set it up itself.
-> 
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> 
-Acked-by: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>From: Scott Wood
+>On 11/13/2016 11:27 PM, Sriram Dash wrote:
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+>> b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+>> new file mode 100644
+>> index 0000000..d934c80
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+>> @@ -0,0 +1,36 @@
+>> +Driver for Freescale USB 3.0 PHY
+>> +
+>> +Required properties:
+>> +
+>> +- compatible :	fsl,qoriq-usb3-phy
+>
 
-thanks,
-rui
-> ChangeLog:
->  V1 -> V2: added specific settings depending on compatiblity
-> 	   added trip point based on register
-> 	   setting up ctrl-register if HW is not enabled by firmware
-> 	     as per recommendation of Eric (untested)
-> 	   check that clock frequency is in range
-> 	     (1.9 - 5MHz - as per comment in clk-bcm2835.c)
->  V2 -> V4: moved back to thermal (not using bcm sub-directory)
->        	   set polling interval to 1second (was 0ms, so
-> interrupt driven)
->  V5 -> V6: added correct depends in KConfig
-> 	   removed defined default for RESET_DELAY
-> 	   removed obvious comments
-> 	   clarify HW setup comments if not set up by FW already
-> 	   move clk_prepare_enable to an earlier stage and add error
-> handling
-> 	   clarify warning when TS-clock runs out of recommended range
-> 	   clk_disable_unprepare added in bcm2835_thermal_remove
-> 	   added comment on recommended temperature ranges for SOC
->  V6 -> V7: removed depends on ARCH_BCM2836 || ARCH_BCM2837 in Kconfig
->  V7 -> V8: rebased
-> ---
->  drivers/thermal/Kconfig           |   8 +
->  drivers/thermal/Makefile          |   1 +
->  drivers/thermal/bcm2835_thermal.c | 340
-> ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 349 insertions(+)
->  create mode 100644 drivers/thermal/bcm2835_thermal.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index a13541b..ab946ff 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -434,4 +434,12 @@ depends on (ARCH_QCOM && OF) || COMPILE_TEST
->  source "drivers/thermal/qcom/Kconfig"
->  endmenu
-> 
-> +config BCM2835_THERMAL
-> +	tristate "Thermal sensors on bcm2835 SoC"
-> +	depends on ARCH_BCM2835 || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	depends on OF
-> +	help
-> +	  Support for thermal sensors on Broadcom bcm2835 SoCs.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index c92eb22..a10ebe0 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -55,3 +55,4 @@ obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra/
->  obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
->  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
->  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
-> +obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
-> diff --git a/drivers/thermal/bcm2835_thermal.c
-> b/drivers/thermal/bcm2835_thermal.c
-> new file mode 100644
-> index 0000000..3468c7b
-> --- /dev/null
-> +++ b/drivers/thermal/bcm2835_thermal.c
-> @@ -0,0 +1,340 @@
-> +/*
-> + * Driver for Broadcom BCM2835 soc temperature sensor
-> + *
-> + * Copyright (C) 2016 Martin Sperl
-> + *
-> + * This program is free software; you can redistribute it and/or
-> modify
-> + * it under the terms of the GNU General Public License as published
-> by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +
-> +#define BCM2835_TS_TSENSCTL			0x00
-> +#define BCM2835_TS_TSENSSTAT			0x04
-> +
-> +#define BCM2835_TS_TSENSCTL_PRWDW		BIT(0)
-> +#define BCM2835_TS_TSENSCTL_RSTB		BIT(1)
-> +#define BCM2835_TS_TSENSCTL_CTRL_BITS		3
-> +#define BCM2835_TS_TSENSCTL_CTRL_SHIFT		2
-> +#define BCM2835_TS_TSENSCTL_CTRL_MASK		    \
-> +	GENMASK(BCM2835_TS_TSENSCTL_CTRL_BITS +     \
-> +		BCM2835_TS_TSENSCTL_CTRL_SHIFT - 1, \
-> +		BCM2835_TS_TSENSCTL_CTRL_SHIFT)
-> +#define BCM2835_TS_TSENSCTL_CTRL_DEFAULT	1
-> +#define BCM2835_TS_TSENSCTL_EN_INT		BIT(5)
-> +#define BCM2835_TS_TSENSCTL_DIRECT		BIT(6)
-> +#define BCM2835_TS_TSENSCTL_CLR_INT		BIT(7)
-> +#define BCM2835_TS_TSENSCTL_THOLD_SHIFT		8
-> +#define BCM2835_TS_TSENSCTL_THOLD_BITS		10
-> +#define BCM2835_TS_TSENSCTL_THOLD_MASK		     \
-> +	GENMASK(BCM2835_TS_TSENSCTL_THOLD_BITS +     \
-> +		BCM2835_TS_TSENSCTL_THOLD_SHIFT - 1, \
-> +		BCM2835_TS_TSENSCTL_THOLD_SHIFT)
-> +#define BCM2835_TS_TSENSCTL_RSTDELAY_SHIFT	18
-> +#define BCM2835_TS_TSENSCTL_RSTDELAY_BITS	8
-> +#define BCM2835_TS_TSENSCTL_REGULEN		BIT(26)
-> +
-> +#define BCM2835_TS_TSENSSTAT_DATA_BITS		10
-> +#define BCM2835_TS_TSENSSTAT_DATA_SHIFT		0
-> +#define BCM2835_TS_TSENSSTAT_DATA_MASK		     \
-> +	GENMASK(BCM2835_TS_TSENSSTAT_DATA_BITS +     \
-> +		BCM2835_TS_TSENSSTAT_DATA_SHIFT - 1, \
-> +		BCM2835_TS_TSENSSTAT_DATA_SHIFT)
-> +#define BCM2835_TS_TSENSSTAT_VALID		BIT(10)
-> +#define BCM2835_TS_TSENSSTAT_INTERRUPT		BIT(11)
-> +
-> +struct bcm2835_thermal_info {
-> +	int offset;
-> +	int slope;
-> +	int trip_temp;
-> +};
-> +
-> +struct bcm2835_thermal_data {
-> +	const struct bcm2835_thermal_info *info;
-> +	void __iomem *regs;
-> +	struct clk *clk;
-> +	struct dentry *debugfsdir;
-> +};
-> +
-> +static int bcm2835_thermal_adc2temp(
-> +	const struct bcm2835_thermal_info *info, u32 adc)
-> +{
-> +	return info->offset + (adc * info->slope);
-> +}
-> +
-> +static int bcm2835_thermal_temp2adc(
-> +	const struct bcm2835_thermal_info *info, int temp)
-> +{
-> +	temp -= info->offset;
-> +	temp /= info->slope;
-> +
-> +	if (temp < 0)
-> +		temp = 0;
-> +	if (temp >= BIT(BCM2835_TS_TSENSSTAT_DATA_BITS))
-> +		temp = BIT(BCM2835_TS_TSENSSTAT_DATA_BITS) - 1;
-> +
-> +	return temp;
-> +}
-> +
-> +static int bcm2835_thermal_get_trip_type(
-> +	struct thermal_zone_device *tz, int trip,
-> +	enum thermal_trip_type *type)
-> +{
-> +	*type = THERMAL_TRIP_CRITICAL;
-> +	return 0;
-> +}
-> +
-> +static int bcm2835_thermal_get_trip_temp(
-> +	struct thermal_zone_device *tz, int trip, int *temp)
-> +{
-> +	struct bcm2835_thermal_data *data = tz->devdata;
-> +	u32 val = readl(data->regs + BCM2835_TS_TSENSCTL);
-> +
-> +	/* get the THOLD bits */
-> +	val &= BCM2835_TS_TSENSCTL_THOLD_MASK;
-> +	val >>= BCM2835_TS_TSENSCTL_THOLD_SHIFT;
-> +
-> +	/* if it is zero then use the info value */
-> +	if (val)
-> +		*temp = bcm2835_thermal_adc2temp(data->info, val);
-> +	else
-> +		*temp = data->info->trip_temp;
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm2835_thermal_get_temp(struct thermal_zone_device *tz,
-> +				    int *temp)
-> +{
-> +	struct bcm2835_thermal_data *data = tz->devdata;
-> +	u32 val = readl(data->regs + BCM2835_TS_TSENSSTAT);
-> +
-> +	if (!(val & BCM2835_TS_TSENSSTAT_VALID))
-> +		return -EIO;
-> +
-> +	val &= BCM2835_TS_TSENSSTAT_DATA_MASK;
-> +
-> +	*temp = bcm2835_thermal_adc2temp(data->info, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct debugfs_reg32 bcm2835_thermal_regs[] = {
-> +	{
-> +		.name = "ctl",
-> +		.offset = 0
-> +	},
-> +	{
-> +		.name = "stat",
-> +		.offset = 4
-> +	}
-> +};
-> +
-> +static void bcm2835_thermal_debugfs(struct platform_device *pdev)
-> +{
-> +	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
-> +	struct bcm2835_thermal_data *data = tz->devdata;
-> +	struct debugfs_regset32 *regset;
-> +
-> +	data->debugfsdir = debugfs_create_dir("bcm2835_thermal",
-> NULL);
-> +	if (!data->debugfsdir)
-> +		return;
-> +
-> +	regset = devm_kzalloc(&pdev->dev, sizeof(*regset),
-> GFP_KERNEL);
-> +	if (!regset)
-> +		return;
-> +
-> +	regset->regs = bcm2835_thermal_regs;
-> +	regset->nregs = ARRAY_SIZE(bcm2835_thermal_regs);
-> +	regset->base = data->regs;
-> +
-> +	debugfs_create_regset32("regset", S_IRUGO,
-> +				data->debugfsdir, regset);
-> +}
-> +
-> +static struct thermal_zone_device_ops bcm2835_thermal_ops  = {
-> +	.get_temp = bcm2835_thermal_get_temp,
-> +	.get_trip_temp = bcm2835_thermal_get_trip_temp,
-> +	.get_trip_type = bcm2835_thermal_get_trip_type,
-> +};
-> +
-> +static const struct of_device_id bcm2835_thermal_of_match_table[];
-> +static int bcm2835_thermal_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct thermal_zone_device *tz;
-> +	struct bcm2835_thermal_data *data;
-> +	struct resource *res;
-> +	int err;
-> +	u32 val;
-> +	unsigned long rate;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	match = of_match_device(bcm2835_thermal_of_match_table,
-> +				&pdev->dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +	data->info = match->data;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->regs)) {
-> +		err = PTR_ERR(data->regs);
-> +		dev_err(&pdev->dev, "Could not get registers: %d\n",
-> err);
-> +		return err;
-> +	}
-> +
-> +	data->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(data->clk)) {
-> +		err = PTR_ERR(data->clk);
-> +		if (err != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Could not get clk:
-> %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = clk_prepare_enable(data->clk);
-> +	if (err)
-> +		return err;
-> +
-> +	rate = clk_get_rate(data->clk);
-> +	if ((rate < 1920000) || (rate > 5000000))
-> +		dev_warn(&pdev->dev,
-> +			 "Clock %pCn running at %pCr Hz is outside
-> of the recommended range: 1.92 to 5MHz\n",
-> +			 data->clk, data->clk);
-> +
-> +	/*
-> +	 * right now the FW does set up the HW-block, so we are not
-> +	 * touching the configuration registers.
-> +	 * But if the HW is not enabled, then set it up
-> +	 * using "sane" values used by the firmware right now.
-> +	 */
-> +	val = readl(data->regs + BCM2835_TS_TSENSCTL);
-> +	if (!(val & BCM2835_TS_TSENSCTL_RSTB)) {
-> +		/* the basic required flags */
-> +		val = (BCM2835_TS_TSENSCTL_CTRL_DEFAULT <<
-> +		       BCM2835_TS_TSENSCTL_CTRL_SHIFT) |
-> +		      BCM2835_TS_TSENSCTL_REGULEN;
-> +
-> +		/*
-> +		 * reset delay using the current firmware value of
-> 14
-> +		 * - units of time are unknown.
-> +		 */
-> +		val |= (14 << BCM2835_TS_TSENSCTL_RSTDELAY_SHIFT);
-> +
-> +		/*  trip_adc value from info */
-> +		val |= bcm2835_thermal_temp2adc(data->info,
-> +						data->info-
-> >trip_temp) <<
-> +			BCM2835_TS_TSENSCTL_THOLD_SHIFT;
-> +
-> +		/* write the value back to the register as 2 steps
-> */
-> +		writel(val, data->regs + BCM2835_TS_TSENSCTL);
-> +		val |= BCM2835_TS_TSENSCTL_RSTB;
-> +		writel(val, data->regs + BCM2835_TS_TSENSCTL);
-> +	}
-> +
-> +	/* register thermal zone with 1 trip point an 1s polling */
-> +	tz = thermal_zone_device_register("bcm2835_thermal",
-> +					  1, 0, data,
-> +					  &bcm2835_thermal_ops,
-> +					  NULL,
-> +					  0, 1000);
-> +	if (IS_ERR(tz)) {
-> +		clk_disable_unprepare(data->clk);
-> +		err = PTR_ERR(tz);
-> +		dev_err(&pdev->dev,
-> +			"Failed to register the thermal device:
-> %d\n",
-> +			err);
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, tz);
-> +
-> +	bcm2835_thermal_debugfs(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int bcm2835_thermal_remove(struct platform_device *pdev)
-> +{
-> +	struct thermal_zone_device *tz = platform_get_drvdata(pdev);
-> +	struct bcm2835_thermal_data *data = tz->devdata;
-> +
-> +	debugfs_remove_recursive(data->debugfsdir);
-> +	thermal_zone_device_unregister(tz);
-> +	clk_disable_unprepare(data->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Note: as per Raspberry Foundation FAQ
-> + * (https://www.raspberrypi.org/help/faqs/#performanceOperatingTempe
-> rature)
-> + * the recommended temperature range for the SOC -40C to +85C
-> + * so the trip limit is set to 80C.
-> + * this applies to all the BCM283X SOC
-> + */
-> +
-> +static const struct of_device_id bcm2835_thermal_of_match_table[] =
-> {
-> +	{
-> +		.compatible = "brcm,bcm2835-thermal",
-> +		.data = &(struct bcm2835_thermal_info) {
-> +			.offset = 407000,
-> +			.slope = -538,
-> +			.trip_temp = 80000
-> +		}
-> +	},
-> +	{
-> +		.compatible = "brcm,bcm2836-thermal",
-> +		.data = &(struct bcm2835_thermal_info) {
-> +			.offset = 407000,
-> +			.slope = -538,
-> +			.trip_temp = 80000
-> +		}
-> +	},
-> +	{
-> +		.compatible = "brcm,bcm2837-thermal",
-> +		.data = &(struct bcm2835_thermal_info) {
-> +			/* the bcm2837 needs adjustment of +5C */
-> +			.offset = 407000 + 5000,
-> +			.slope = -538,
-> +			.trip_temp = 80000
-> +		}
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm2835_thermal_of_match_table);
-> +
-> +static struct platform_driver bcm2835_thermal_driver = {
-> +	.probe = bcm2835_thermal_probe,
-> +	.remove = bcm2835_thermal_remove,
-> +	.driver = {
-> +		.name = "bcm2835_thermal",
-> +		.of_match_table = bcm2835_thermal_of_match_table,
-> +	},
-> +};
-> +module_platform_driver(bcm2835_thermal_driver);
-> +
-> +MODULE_AUTHOR("Martin Sperl");
-> +MODULE_DESCRIPTION("Thermal driver for bcm2835 chip");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.1.4
+Hi Scott,
+
+>This is a very vague compatible.  Are there versioning registers within th=
+is register
+>block?
+>
+
+There are versioning registers for the phy (1.0 and 1.1). But the current e=
+rratum
+A008751 does not require the mentioning of the version numbers. Was plannin=
+g
+to take care of the versioning when there is code diversity on the basis of=
+ the
+version number.
+Shall I include the versioning in the documentation now for 1.0 and 1.1?
+
+>> +/* Parameter control */
+>> +#define USB3PRM1CR		0x000
+>> +#define USB3PRM1CR_VAL		0x27672b2a
+>> +
+>> +/*
+>> + * struct qoriq_usb3_phy - driver data for USB 3.0 PHY
+>> + * @dev: pointer to device instance of this platform device
+>> + * @param_ctrl: usb3 phy parameter control register base
+>> + * @phy_base: usb3 phy register memory base
+>> + * @has_erratum_flag: keeps track of erratum applicable on device  */
+>> +struct qoriq_usb3_phy {
+>> +	struct device *dev;
+>> +	void __iomem *param_ctrl;
+>> +	void __iomem *phy_base;
+>> +	u32 has_erratum_flag;
+>> +};
+>> +
+>> +static inline u32 qoriq_usb3_phy_readl(void __iomem *addr, u32
+>> +offset) {
+>> +	return __raw_readl(addr + offset);
+>> +}
+>> +
+>> +static inline void qoriq_usb3_phy_writel(void __iomem *addr, u32 offset=
+,
+>> +	u32 data)
+>> +{
+>> +	__raw_writel(data, addr + offset);
+>> +}
+>
+>Why raw?  Besides missing barriers, this will cause the accesses to be nat=
+ive-endian
+>which is not correct.
+>
+
+The only reason for __raw_writel is to make the code faster. However, shall=
+ I use
+writel(with both barriers and byte swap) instead and then make appropriate =
+changes
+in the value 32'h27672B2A?
+
+>> +/*
+>> + * Erratum A008751
+>> + * SCFG USB3PRM1CR has incorrect default value
+>> + * SCFG USB3PRM1CR reset value should be 32'h27672B2A instead of
+>32'h25E72B2A.
+>
+>When documenting C code, can you stick with C-style numeric constants?
+>
+>For that matter, just put the constant in the code instead of hiding it in=
+ an overly-
+>generically-named USB3PRM1CR_VAL and then you won't need to redundantly
+>state the value in a comment.  Normally putting magic numbers in symbolic
+>constants is a good thing, but in this case it's not actually describing a=
+nything and
+>the number is of no meaning outside of this one erratum workaround (it mig=
+ht even
+>be a different value if another chip has a similar erratum).
+>
+
+The POR value of the USB3PRM1CR  should be 32'h27672B2A. So, I had named it=
+ as
+such. Thanks for the info. Will remove the USB3PRM1CR_VAL and during writel=
+,
+will use 0x27672b2a directly. I will take care the next time.
+
+>> + */
+>> +static void erratum_a008751(struct qoriq_usb3_phy *phy) {
+>> +	qoriq_usb3_phy_writel(phy->param_ctrl, USB3PRM1CR,
+>> +				USB3PRM1CR_VAL);
+>> +}
+>> +
+>> +/*
+>> + * qoriq_usb3_phy_erratum - List of phy erratum
+>> + * @qoriq_phy_erratum - erratum application
+>> + * @compat - comapt string for erratum  */
+>> +
+>> +struct qoriq_usb3_phy_erratum {
+>> +	void (*qoriq_phy_erratum)(struct qoriq_usb3_phy *phy);
+>> +	char *compat;
+>> +};
+>> +
+>> +/* Erratum list */
+>> +struct qoriq_usb3_phy_erratum  phy_erratum_tbl[] =3D {
+>> +	{&erratum_a008751, "fsl,usb-erratum-a008751"},
+>> +	/* Add init time erratum here */
+>> +};
+>
+>This needs to be static.
+>
+
+Ok. Will take care next time.
+
+>Unnecessary & on the function pointer.
+>
+
+Ok. Will change in next version.
+
+>> +static int qoriq_usb3_phy_init(struct phy *x) {
+>> +	struct qoriq_usb3_phy *phy =3D phy_get_drvdata(x);
+>> +	int i;
+>> +
+>> +	for (i =3D 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
+>> +		if (phy->has_erratum_flag & 1 << i)
+>> +			phy_erratum_tbl[i].qoriq_phy_erratum(phy);
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct phy_ops ops =3D {
+>> +	.init		=3D qoriq_usb3_phy_init,
+>> +	.owner		=3D THIS_MODULE,
+>> +};
+>> +
+>> +static int qoriq_usb3_phy_probe(struct platform_device *pdev) {
+>> +	struct qoriq_usb3_phy *phy;
+>> +	struct phy *generic_phy;
+>> +	struct phy_provider *phy_provider;
+>> +	const struct of_device_id *of_id;
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct resource *res;
+>> +	int i, ret;
+>> +
+>> +	phy =3D devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+>> +	if (!phy)
+>> +		return -ENOMEM;
+>> +	phy->dev =3D dev;
+>> +
+>> +	of_id =3D of_match_device(dev->driver->of_match_table, dev);
+>> +	if (!of_id) {
+>> +		dev_err(dev, "failed to get device match\n");
+>> +		ret =3D -EINVAL;
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>"param_ctrl");
+>> +	if (!res) {
+>> +		dev_err(dev, "failed to get param_ctrl memory\n");
+>> +		ret =3D -ENOENT;
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	phy->param_ctrl =3D devm_ioremap_resource(dev, res);
+>> +	if (!phy->param_ctrl) {
+>> +		dev_err(dev, "failed to remap param_ctrl memory\n");
+>> +		ret =3D -ENOMEM;
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>"phy_base");
+>> +	if (!res) {
+>> +		dev_err(dev, "failed to get phy_base memory\n");
+>> +		ret =3D -ENOENT;
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	phy->phy_base =3D devm_ioremap_resource(dev, res);
+>> +	if (!phy->phy_base) {
+>> +		dev_err(dev, "failed to remap phy_base memory\n");
+>> +		ret =3D -ENOMEM;
+>> +		goto err_out;
+>> +	}
+>> +
+>> +	phy->has_erratum_flag =3D 0;
+>> +	for (i =3D 0; i < ARRAY_SIZE(phy_erratum_tbl); i++)
+>> +		phy->has_erratum_flag |=3D device_property_read_bool(dev,
+>> +						phy_erratum_tbl[i].compat) << i;
+>
+>I don't see the erratum property in either the binding or the device tree.=
+  Also, a
+>property name is not a "compat".
+>
+
+Ok. Will rename "char *compat" into "char *prop".
+
+>Is there a reason why this flag and array mechanism is needed, rather than=
+ just
+>checking the erratum properties from the init function -- or, if you have =
+a good
+>reason to not want to do device tree accesses from init, just using a bool=
+ per
+>erratum?  How many errata are you expecting?
+>
+
+The erratum prop will be specified via the dt and parsed in the init. The i=
+dea
+behind the table is that it will accommodate more errata and every time we
+are adding a new erratum, and the code changes would be minimal(with this
+approach, we don't have to add new variable in qoriq_usb3_phy struct
+corresponding to every new erratum being added).
+
+In my knowledge, there are more than 5 errata in pipeline, and all of them
+have to be applied in the init time. So, this table will make the code more
+readable and less cumbersome.=20
+
+However, in future, if any other erratum comes up, and it has to be applied
+at any point other than during init, then the variable has to be added in
+qoriq_usb3_phy struct and the property has to be read separately.
+
+>-Scott
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
