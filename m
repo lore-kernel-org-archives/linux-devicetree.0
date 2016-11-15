@@ -1,69 +1,63 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: add Tegra186 BPMP I2C binding
-Date: Tue, 15 Nov 2016 16:46:07 +0100
-Message-ID: <20161115154607.GC22611@ulmo.ba.sec>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
- <20160719191442.15439-3-swarren@wwwdotorg.org>
+From: Julia Cartwright <julia@ni.com>
+Subject: Re: [PATCH 2/2] ARM: zynq: Fix W=1 dtc 1.4 warnings
+Date: Tue, 15 Nov 2016 09:46:08 -0600
+Message-ID: <20161115154608.GH30999@jcartwri.amer.corp.natinst.com>
+References: <2d42e25d7dd03e562e12e71fd037837737115940.1479218844.git.michal.simek@xilinx.com>
+ <90eca8dfcdcef68ce5fe39f2329c4b61d2662598.1479218844.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160719191442.15439-3-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <90eca8dfcdcef68ce5fe39f2329c4b61d2662598.1479218844.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, S?ren Brinkmann <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 15, 2016 at 03:07:27PM +0100, Michal Simek wrote:
+> The patch removes these warnings reported by dtc 1.4:
+> Warning (unit_address_vs_reg): Node /pmu has a reg or ranges property,
+> but no unit name
+> Warning (unit_address_vs_reg): Node /fixedregulator@0 has a unit name,
+> but no reg property
+> Warning (unit_address_vs_reg): Node /memory has a reg or ranges
+> property, but no unit name
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
---NU0Ex4SbNnrxsi6C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 19, 2016 at 01:14:42PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> In Tegra186, the BPMP (Boot and Power Management Processor) owns certain
-> HW devices, such as the I2C controller for the power management I2C bus.
-> Software running on other CPUs must perform IPC to the BPMP in order to
-> execute transactions on that I2C bus. This binding describes an I2C bus
-> that is accessed in such a fashion.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Julia Cartwright <julia@ni.com>
+>
 > ---
->  .../bindings/i2c/nvidia,tegra186-bpmp-i2c.txt      | 42 ++++++++++++++++=
-++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra186=
--bpmp-i2c.txt
+> 
+>  arch/arm/boot/dts/zynq-7000.dtsi      | 4 ++--
+>  arch/arm/boot/dts/zynq-parallella.dts | 2 +-
+>  arch/arm/boot/dts/zynq-zc702.dts      | 2 +-
+>  arch/arm/boot/dts/zynq-zc706.dts      | 2 +-
+>  arch/arm/boot/dts/zynq-zed.dts        | 2 +-
+>  arch/arm/boot/dts/zynq-zybo.dts       | 2 +-
+>  6 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index f47a6c1cc752..402b5bbe3b5b 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -42,14 +42,14 @@
+>  		};
+>  	};
+>  
+> -	pmu {
+> +	pmu@f8891000 {
+>  		compatible = "arm,cortex-a9-pmu";
+>  		interrupts = <0 5 4>, <0 6 4>;
+>  		interrupt-parent = <&intc>;
+>  		reg = < 0xf8891000 0x1000 0xf8893000 0x1000 >;
 
-I ended up cherry-picking this commit from U-Boot, which already had
-both of the comments addressed that were discussed here. I also took the
-liberty of adding Jon's Acked-by from this thread since it's effectively
-the same commit.
+Style nit: we should drop the space before/after '<' and '>'; and,
+perhaps separate the entries to be a bit more readable:
+
+   reg = <0xf8891000 0x1000>,
+         <0xf8893000 0x1000>;
 
 Thanks,
-Thierry
 
---NU0Ex4SbNnrxsi6C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYKy2/AAoJEN0jrNd/PrOhRpwQAKTEh5SXxktFKiIFhLrswjwi
-rzNJBWPtlxf1NpZRkUclHT6DbseM68YyX2JSPTkd0zyK6qO9NwfF7uB6/GGVIK3A
-ZRAiXfqIkn8degNxaDBm4OoG6fta5TE0VcjY5t7W7tKjVsvABtphpxcg633dOet4
-MxCANrSMllpB+LV6w2rwCWJB23ProiiE9LGK3+bIbRgJKn1Ec52fosIX3llpYvtI
-GFAXqeHL/iUpq6sUBIR6iO/c32BOSqVafSeVQYP6MDfgd/A2/Bw1cUwOmCFgGdx0
-NitHUfTMUCTjVvMl1T3dodcxdIHh/LA8FxDSDg9V+tjUX/k1LkHZiuJEpi1nbw37
-Qh6ZX0WpmgxlYQte4i1J7xDyx3avZuqYIoZK2lM86vd04STyrqOWYieKe/j60rHl
-Ya7nRJhqvHixVJYp0VU5qIklwJApX8H/EZHG3j/NCPqTrb9d0geXjL7Obsa5ujBW
-MgWtrn4TFTW9IuWy7kVQ9EV1+N62YG0FVVMZhdW2c26RJMQ5NNDe/rE6qb/xNYOm
-vs3BNwrKkUPxIWJSoTzP19R0LiKgsXmuXXY0l+7Cnnud3sQ1rk5/2yJY0N5qYDxC
-BklzwSkvfpd3vRloEa4NFF1L5QvRaIRMQQQinqA4NdFn8fmmAQ0CHqieT7ZFXTmw
-FyHzEZVkQqSf5+snj65z
-=bE4o
------END PGP SIGNATURE-----
-
---NU0Ex4SbNnrxsi6C--
+   Julia
