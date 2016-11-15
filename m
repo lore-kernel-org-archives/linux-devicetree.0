@@ -1,135 +1,62 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
-Date: Tue, 15 Nov 2016 11:25:31 +0000
-Message-ID: <d61f62d1-7a7e-6d91-d278-0fd922cd77b5@linaro.org>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
- <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] usb: dwc2: params revert and rework
+Date: Tue, 15 Nov 2016 13:32:27 +0200
+Message-ID: <87polxugfo.fsf@linux.intel.com>
+References: <cover.1479176826.git.johnyoun@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: svarbanov@mm-sol.com, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Linux PM list <linux-pm@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "Nayak, Rajendra" <rjendra@qti.qualcomm.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1479176826.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Rajendra (qcom,gdsc author)
-
-On 15/11/16 08:23, Geert Uytterhoeven wrote:
-> +cc linux-pm
->
-> On Mon, Nov 14, 2016 at 11:14 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> [+cc Geert, Kevin, Simon]
->>
->> On Mon, Nov 14, 2016 at 11:15:53AM +0000, Srinivas Kandagatla wrote:
->>> This patch adds support to pm clocks via device tree, so that the clocks
->>> can be turned on and off during runtime pm. This patch is required for
->>> Qualcomm msm8996 pcie controller which sits on a bus with its own
->>> power-domain and clocks.
->>>
->>> Without this patch the clock associated with the bus are never turned on.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> I don't see a formal maintainer for drivers/bus/simple-pm-bus.c, but I'd
->> like an ack or at least a review from Geert or Simon.
->
-> Thanks for letting me know!
->
->>> ---
->>>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
->>>  1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
->>> index c5eb46c..63b7e8c 100644
->>> --- a/drivers/bus/simple-pm-bus.c
->>> +++ b/drivers/bus/simple-pm-bus.c
->>> @@ -11,6 +11,7 @@
->>>  #include <linux/module.h>
->>>  #include <linux/of_platform.h>
->>>  #include <linux/platform_device.h>
->>> +#include <linux/pm_clock.h>
->>>  #include <linux/pm_runtime.h>
->>>
->>>
->>> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
->>>
->>>       pm_runtime_enable(&pdev->dev);
->>>
->>> -     if (np)
->>> +     if (np) {
->>> +             of_pm_clk_add_clks(&pdev->dev);
->
-> This should work out-of-the-box (that's the actual purpose of this driver),
-> if the platform code that registers your PM Domain would take care
-> of registering the clocks needed for PM management of the bus.
-
-Yep, if the pm domain provider takes care of the bus clks, then it would 
-work.
-
-Am guessing that the clocks property in the DT node would be read by the 
-PM domain provider and enable/disable during attach/detach callbacks.
-If that is true, then any device tree nodes which are not children of 
-"simple-pm-bus" and consumers of power-domain provider would enable all 
-(including non-bus clks) clks twice. Once in the power-domain provider 
-and once in the actual driver. Is this expected behavior from 
-power-domains in general?
-
->
-> Adding of_pm_clk_add_clks() here will start managing all clocks of the bus,
-> which may not be wanted on all platforms.
->
-That was the purpose.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Rajendra,
-Looks like qcom gdsc pm domain provider driver does not handle bus clks 
-along with power-domain, Is this something we should do? Or the bus 
-driver take care of it?
+Hi,
 
+John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+> Hi Felipe,
+>
+> This reverts and fixes a few commits that are queued on your
+> testing/next, removing the previously added DT bindings, and the code
+> that reads them in.
+>
+> The feedback was that IP validation is not reason enough to add these.
+> So we'll leave them out for now.
 
-Thanks,
-srini
->>>               of_platform_populate(np, NULL, NULL, &pdev->dev);
->>> +     }
->>>
->>>       return 0;
->>>  }
->>>
->>> +static const struct dev_pm_ops simple_pm_bus_pm_ops = {
->>> +     SET_RUNTIME_PM_OPS(pm_clk_suspend,
->>> +                        pm_clk_resume, NULL)
->>> +};
->>> +
->>>  static int simple_pm_bus_remove(struct platform_device *pdev)
->>>  {
->>>       dev_dbg(&pdev->dev, "%s\n", __func__);
->>>
->>>       pm_runtime_disable(&pdev->dev);
->>> +     pm_clk_destroy(&pdev->dev);
->>> +
->>>       return 0;
->>>  }
->>>
->>> @@ -48,6 +58,7 @@ static struct platform_driver simple_pm_bus_driver = {
->>>       .driver = {
->>>               .name = "simple-pm-bus",
->>>               .of_match_table = simple_pm_bus_of_match,
->>> +             .pm = &simple_pm_bus_pm_ops,
->>>       },
->>>  };
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
->
+these are still in testing/next, so I can actually still drop
+them. I'm applying only patch 3/3, please make sure it all looks good on
+testing/next.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlgq8ksACgkQzL64meEa
+mQYWchAAqQotXWKK/il8woXLT+U41rPAyqziVCcGYfLYYjLZCx9YUHH0/gjotRUP
++St5kPwJP2BaITywMdaHFJIvflaYLCUr5H8HKiErpOq7DG9tfPxCsCdvhgOIwkkk
+bnyu1aSA96DR2MM7k4LepklV9BF4dxP4qAyKSr50Gpo07B29igqK6dbZlbMgKeNd
+pu4boSCKhdEFPBzp+g7k4lsrIrtnk1eQINviqxYmscRq3oEDdNV7+T9Oddbp1WT0
+mF+3qAweOYBSQfcZkW2Kd7V4DxIhzoVaFVwzNYyDUv1vO7tBDq1fAYVE0dn+Rblo
+rNoej9FhfrLcoYodjGm65avqcHT6gCDlfaknFt64KJEEMMH7snaR7+mDI6X0xtre
+pDbFk1xuyN6usqv2wThC4kj8YRtXDqZ0QQtUJvpu6N5Wxcjy73HGR3SvaT+zBU2k
+WfVku2YvTanyf64jef4o2xojShH43XrwTqz36LFmWY9FCHdmBZTRGi4p+Z/qwyTq
+bB/Kv1ILaWoarwuThLj1MER9f7qhf23tbDzPus5Ya29DCjHxn+2EtEa9rBPGZAOB
+Xm9229S9uVOIreiy1kx/PK2o9dsockSa2VBXs3tg1CH/cs2YsE+RxqI1/QjAMsDs
+WKFRR/F9zYXrHPhllKWkGVywQs1grIM+I7Z5ZRLW1rGgc9SglBs=
+=fhJX
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
