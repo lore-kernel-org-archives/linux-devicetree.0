@@ -1,42 +1,40 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: dts: sun7i: BPI-M1+ USB support
-Date: Tue, 15 Nov 2016 18:42:37 +0100
-Message-ID: <20161115174237.ootkbvtfumt6mqy7@lukather>
-References: <20161115135106.438-1-wens@csie.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 0/2] pinctrl: sunxi: Support the interrupt debouncing
+Date: Tue, 15 Nov 2016 18:50:16 +0100
+Message-ID: <20161115175016.yf4yrju235j5xs5d@lukather>
+References: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f4s3yow4m6tpairx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="7qdc5zonu7xyd7kn"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161115135106.438-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <cover.fa554eb1146d18ec75bf44863543fec4fa4fd3ae.1479156725.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
 
---f4s3yow4m6tpairx
+--7qdc5zonu7xyd7kn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 15, 2016 at 09:51:03PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
+On Mon, Nov 14, 2016 at 09:53:02PM +0100, Maxime Ripard wrote:
+> Hi,
 >=20
-> These are the remaining patches of my BPI-M1+ fixes series from July.
+> The Allwinner pin controllers can setup a different debouncing period bas=
+ed
+> on two clocks and a prescaler.
 >=20
-> Changes since v1:
+> This debouncing is applied to the whole IRQ bank, which prevents us from
+> using the per-pin property that is usually used.
 >=20
->   - Split out USB PHY enable patch.
->=20
->   - Dropped custom OPP table. Tested the A20 default one with
->     cpufreq-ljt-stress-test and it seemed stable.
->=20
->   - Dropped voltage range for cpu supply regulator to normal 1.0V ~ 1.4V.
->=20
->   - Dropped pinmux setting for OTG ID pin.
+> Let me know what you think,
+> Maxime
 
-Applied all three, thanks!
+Applied the second patch.
+
 Maxime
 
 --=20
@@ -44,28 +42,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---f4s3yow4m6tpairx
+--7qdc5zonu7xyd7kn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYK0kFAAoJEBx+YmzsjxAgXc4P/RDxqzxdyMmWv0yv33HVOR4d
-QSZinHeZwbE1e1iEPQvUxSANufOvkGg9Vs38jXzG0Po8XhgTiVNxKv9sEKZzoujw
-yoSlAjFnRR6oxG2BmOv9War+fpbg2k9jQTYCNI+aHTlMK2AjKAoGQXaQY11/lBcW
-RC/JnGRMFzlMjTGvNeajnuUpUBRsqtBwGzIOekVCJ1evviijOwrM2c94wasOGu59
-uVSTIWOXRtGsaY8TUZqakTRjg7C1xruwR+V6uOMS6cVsK/6BrLEryFQhGsxi63KU
-7MlOh50IuTp8/SCgMyLRbv2TNA4h91YVsBWWRvHWBUKaeZZ3n5Ynyw/IAnyVOo8y
-QnHlCIS4p4EvZsYpP4Z6vzCuXd32r/jmZjCgWPZ3XjQdp6pijPeaoal3ZYZOhcsZ
-NkI1fLbnl4/Qknxgcd06ggavocXMCs0WHqnW203r0cUA8BSTPEGN9Mbk0VumnNJn
-xH4KJGCDuJ1rJc99K0HSwUHkTxLpKrRG6n6xZrpM2pLCIW0vVfegAQYEViDUosAr
-dAhNyzsROWTdNdV6Yvy1SGquNXr9p3j+D4dzFa6ofRHgYPVU/M3HUSYbUUkPgDl/
-0czfc+r+KwpeU1JodKYqlMLb5r3n7RZr9vPm+jU+cCFykf2TeBpz2J0apfd8+P0A
-aBvoXOwc1Bv2QjgkryTP
-=gtQV
+iQIcBAEBCAAGBQJYK0rYAAoJEBx+YmzsjxAgiaEP/jMNkM6VB1CnkCUw5/uk++h8
++CyA1sF6UUCnIFCMKPaiuf07vPeO0AT70KfPfy2a4K+KyeCHIGYevPz9XHRQVphK
+pK3n42rTGJ4j25cKzFZu6SjXxTJYju41OlDihTe46nHIJVBIAxpaoACaRdmvlaNd
+u7sWph7m7ODmYvk3lpJkDMYM2PiclrmKbVO4TQtQQ9qWu+dtCbgty1JVvRLEH6dL
+Z8IXBaxD4RGDWdSQFbiCMqOKbyWf14OJT2UkTD5FnXgR+jHhIYb2kAjHIqrTM1zS
+rMayRuhFHLZId1hbnlqukFVCRK0MFQeE2Qlf5EpUOzyImcNtOWEeeA6M+KKGpuKX
+OD6NeAji1Xk53O1EHEupy4Ahp0rowXQBN4T7XMxcjwOOd3uoseG9/M/Pz/loGtbU
+9UGq1kR8orwDg+PpTgVkwXpZ8HTRPb6tT7CMeamcgdI11Bw6sRAKPTSubMf1uBMj
+sBTOhuhjlnf6fHYPd6sYaWYRhSIbDCwZfHukBm8LtnaKVLUDdIFn0bMsRGU9SPbY
+bzvcrgvNi8j0YgEIlLLOvKUZ9E2aIF0BnhY+fEaDJwe6/ApsIeDhaczJUf6Mipmc
+4I7CdI7TiNxe5g3SwttIXHL4X/mfffdNL7hLtiwprQCmZOPcwPS7+UvHb2yxMBL6
+qzVhqbtqeDjmWh+H1Y46
+=LHkQ
 -----END PGP SIGNATURE-----
 
---f4s3yow4m6tpairx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7qdc5zonu7xyd7kn--
