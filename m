@@ -1,133 +1,226 @@
-From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] [media] mtk-mdp: allocate video_device dynamically
-Date: Tue, 15 Nov 2016 09:37:36 +0800
-Message-ID: <1479173856.932.1.camel@mtksdaap41>
-References: <1478522529-57129-1-git-send-email-minghsiu.tsai@mediatek.com>
-         <1478522529-57129-2-git-send-email-minghsiu.tsai@mediatek.com>
-         <d21cd419-e1fc-4d2e-a2a9-74c535865762@xs4all.nl>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree/bindings: display: Add bindings for LVDS panels
+Date: Mon, 14 Nov 2016 19:40:26 -0600
+Message-ID: <CAL_JsqL_41VGf8ZFEzQyqPU_EeK=Ms+jdt_N9cvRyLFkXF2MTg@mail.gmail.com>
+References: <1475598210-26857-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1645400.RKG9rcP36z@avalon> <CAL_JsqKPWifCvwSxOa-m7WB-f13Y4n96Q895fDMx78YhBxWo_g@mail.gmail.com>
+ <1488637.i0jADhlNmg@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d21cd419-e1fc-4d2e-a2a9-74c535865762-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <1488637.i0jADhlNmg@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-11 at 11:51 +0100, Hans Verkuil wrote:
-> Almost correct:
-> 
-> On 11/07/2016 01:42 PM, Minghsiu Tsai wrote:
-> > It can fix known problems with embedded video_device structs.
-> > 
-> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.h |  2 +-
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c  | 33 ++++++++++++++++-----------
-> >  2 files changed, 21 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.h b/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
-> > index 848569d..ad1cff3 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.h
-> > @@ -167,7 +167,7 @@ struct mtk_mdp_dev {
-> >  	struct mtk_mdp_comp		*comp[MTK_MDP_COMP_ID_MAX];
-> >  	struct v4l2_m2m_dev		*m2m_dev;
-> >  	struct list_head		ctx_list;
-> > -	struct video_device		vdev;
-> > +	struct video_device		*vdev;
-> >  	struct v4l2_device		v4l2_dev;
-> >  	struct workqueue_struct		*job_wq;
-> >  	struct platform_device		*vpu_dev;
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > index 9a747e7..b8dee1c 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-> > @@ -1236,16 +1236,22 @@ int mtk_mdp_register_m2m_device(struct mtk_mdp_dev *mdp)
-> >  	int ret;
-> >  
-> >  	mdp->variant = &mtk_mdp_default_variant;
-> > -	mdp->vdev.device_caps = V4L2_CAP_VIDEO_M2M_MPLANE | V4L2_CAP_STREAMING;
-> > -	mdp->vdev.fops = &mtk_mdp_m2m_fops;
-> > -	mdp->vdev.ioctl_ops = &mtk_mdp_m2m_ioctl_ops;
-> > -	mdp->vdev.release = video_device_release_empty;
-> > -	mdp->vdev.lock = &mdp->lock;
-> > -	mdp->vdev.vfl_dir = VFL_DIR_M2M;
-> > -	mdp->vdev.v4l2_dev = &mdp->v4l2_dev;
-> > -	snprintf(mdp->vdev.name, sizeof(mdp->vdev.name), "%s:m2m",
-> > +	mdp->vdev = video_device_alloc();
-> > +	if (!mdp->vdev) {
-> > +		dev_err(dev, "failed to allocate video device\n");
-> > +		ret = -ENOMEM;
-> > +		goto err_video_alloc;
-> > +	}
-> > +	mdp->vdev->device_caps = V4L2_CAP_VIDEO_M2M_MPLANE | V4L2_CAP_STREAMING;
-> > +	mdp->vdev->fops = &mtk_mdp_m2m_fops;
-> > +	mdp->vdev->ioctl_ops = &mtk_mdp_m2m_ioctl_ops;
-> > +	mdp->vdev->release = video_device_release;
-> > +	mdp->vdev->lock = &mdp->lock;
-> > +	mdp->vdev->vfl_dir = VFL_DIR_M2M;
-> > +	mdp->vdev->v4l2_dev = &mdp->v4l2_dev;
-> > +	snprintf(mdp->vdev->name, sizeof(mdp->vdev->name), "%s:m2m",
-> >  		 MTK_MDP_MODULE_NAME);
-> > -	video_set_drvdata(&mdp->vdev, mdp);
-> > +	video_set_drvdata(mdp->vdev, mdp);
-> >  
-> >  	mdp->m2m_dev = v4l2_m2m_init(&mtk_mdp_m2m_ops);
-> >  	if (IS_ERR(mdp->m2m_dev)) {
-> > @@ -1254,26 +1260,27 @@ int mtk_mdp_register_m2m_device(struct mtk_mdp_dev *mdp)
-> >  		goto err_m2m_init;
-> >  	}
-> >  
-> > -	ret = video_register_device(&mdp->vdev, VFL_TYPE_GRABBER, 2);
-> > +	ret = video_register_device(mdp->vdev, VFL_TYPE_GRABBER, 2);
-> >  	if (ret) {
-> >  		dev_err(dev, "failed to register video device\n");
-> >  		goto err_vdev_register;
-> >  	}
-> >  
-> >  	v4l2_info(&mdp->v4l2_dev, "driver registered as /dev/video%d",
-> > -		  mdp->vdev.num);
-> > +		  mdp->vdev->num);
-> >  	return 0;
-> >  
-> >  err_vdev_register:
-> >  	v4l2_m2m_release(mdp->m2m_dev);
-> >  err_m2m_init:
-> > -	video_device_release(&mdp->vdev);
-> > +	video_unregister_device(mdp->vdev);
-> 
-> This should remain video_device_release: the video_register_device call failed, so
-> the device hasn't been registered. In that case just release the device (i.e.
-> free the allocated memory).
-> 
-Hi Hans,
+On Mon, Oct 17, 2016 at 7:42 AM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Friday 14 Oct 2016 07:40:14 Rob Herring wrote:
+>> On Sun, Oct 9, 2016 at 11:33 AM, Laurent Pinchart wrote:
+>> > On Saturday 08 Oct 2016 20:29:39 Rob Herring wrote:
+>> >> On Tue, Oct 04, 2016 at 07:23:29PM +0300, Laurent Pinchart wrote:
+>> >>> LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
+>> >>> Multiple incompatible data link layers have been used over time to
+>> >>> transmit image data to LVDS panels. This binding supports display
+>> >>> panels compatible with the JEIDA-59-1999, Open-LDI and VESA SWPG
+>> >>> specifications.
+>> >>>
+>> >>> Signed-off-by: Laurent Pinchart
+>> >>> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> >>> ---
+>> >>>
+>> >>>  .../bindings/display/panel/panel-lvds.txt          | 119 ++++++++++++++
+>> >>>  1 file changed, 119 insertions(+)
+>> >>>  create mode 100644
+>> >>>  Documentation/devicetree/bindings/display/panel/panel-lvds.txt>
+>> >>>
+>> >>> diff --git
+>> >>> a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+>> >>> b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+>> >>> new file mode 100644
+>> >>> index 000000000000..250861f2673e
+>> >>> --- /dev/null
+>> >>> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+>> >>> @@ -0,0 +1,119 @@
+>> >>> +Generic LVDS Panel
+>> >>> +==================
+>> >>> +
+>> >>> +LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
+>> >>> Multiple
+>> >>> +incompatible data link layers have been used over time to transmit
+>> >>> image data
+>> >>> +to LVDS panels. This bindings supports display panels compatible with
+>> >>> the
+>> >>> +following specifications.
+>> >>> +
+>> >>> +[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999,
+>> >>> February
+>> >>> +1999 (Version 1.0), Japan Electronic Industry Development Association
+>> >>> (JEIDA)
+>> >>> +[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
+>> >>> +Semiconductor
+>> >>> +[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0),
+>> >>> Video
+>> >>> +Electronics Standards Association (VESA)
+>> >>> +
+>> >>> +Device compatible with those specifications have been marketed under
+>> >>> the
+>> >>> +FPD-Link and FlatLink brands.
+>> >>> +
+>> >>> +
+>> >>> +Required properties:
+>> >>> +- compatible: shall contain "panel-lvds"
+>> >>
+>> >> Maybe as a fallback, but on its own, no way.
+>> >
+>> > Which brings an interesting question: when designing generic DT bindings,
+>> > what's the rule regarding
+>
+> Looks like I forgot part of the question. I meant to ask what is the rule
+> regarding usage of more precise compatible strings ?
 
-I have uploaded patch v2 for this. Thanks for your review.
+When in doubt, always have one. If there's any chance at all that s/w
+will need to know or care, then we should have one.
 
+> For instance (but perhaps not the best example), the input/rotary-encoder.txt
+> bindings define a "rotary-encoder" compatible string, with no other bindings
+> defining more precise compatible strings for the exact rotary encoder model.
+> When it comes to panels I believe it makes sense to define model-specific
+> compatible strings even if they're unused by drivers. I'm however wondering
+> what the rule is there, and where those device-specific compatible strings
+> should be defined. I'd like to avoid using one file per panel model as done
+> today for the simple-panel bindings.
 
-Best regards,
-Ming Hsiu
+There's a few exceptions like this where there is not any sort of
+model to base a compatible on. For example, a GPIO connected LED is
+truly generic. The only way to have a more specific compatible would
+be something with the board name in it.
 
-> > +err_video_alloc:
-> >  
-> >  	return ret;
-> >  }
-> >  
-> >  void mtk_mdp_unregister_m2m_device(struct mtk_mdp_dev *mdp)
-> >  {
-> > -	video_device_release(&mdp->vdev);
-> > +	video_unregister_device(mdp->vdev);
-> >  	v4l2_m2m_release(mdp->m2m_dev);
-> >  }
-> > 
-> 
-> Regards,
-> 
-> 	Hans
+Your case here is in the middle. It seems like it's generic and
+passive, but perhaps power control is not. Rather than trying to
+decide, we can just cover our ass and put both a generic and specific
+compatible in.
 
+>> Call it "simple" so I can easily NAK it. :)
+>>
+>> Define a generic structure, not a single binding trying to serve all.
+>>
+>> >> > +- width-mm: panel display width in millimeters
+>> >> > +- height-mm: panel display height in millimeters
+>> >>
+>> >> This is already documented for all panels IIRC.
+>> >
+>> > Note that this DT binding has nothing to do with the simple-panel binding.
+>> > It is instead similar to the panel-dpi and panel-dsi-cm bindings (which
+>> > currently don't but should specify the panel size in DT). The LVDS panel
+>> > driver will *not* include any panel-specific information such as size or
+>> > timings, these are specified in DT.
+>>
+>> The panel bindings aren't really different. The biggest difference was
+>> location in the tree, but we now generally allow panels to be either a
+>> child of the LCD controller or connected with OF graph. We probably
+>> need to work on restructuring the panel bindings a bit. We should have
+>> an inheritance with a base panel binding of things like size, label,
+>> graph, backlight, etc, then perhaps an interface specific bindings for
+>> LVDS, DSI, and parallel, then a panel specific binding. With this the
+>> panel specific binding is typically just a compatible string and which
+>> inherited properties apply to it.
+>
+> That sounds good to me, but we have multiple models for panel bindings.
+>
+> As you mentioned panels can be referenced through an LCD controller node
+> property containing a phandle to the panel node, or through OF graph. That's a
+> situation we have today, and we need to keep supporting both (at least for
+> existing panels, perhaps not for the new ones).
+>
+> Another difference is how to express panel data such as size and timings. The
+> simple-panel DT bindings don't contain such data and expects the drivers to
+> contain a table of panel data for all models supported, while the DPI, DSI and
+> now the proposed LVDS panel bindings contain properties for panel data.
+>
+> How would you like to reconcile all that ?
 
+Thierry has outlined the position[1] that simple-panel follows many
+times and I generally agree. I could be convinced that perhaps panel
+timings could go into DT. However, you can't really describe
+*everything*, so we're not going to get away from panel specific
+compatible strings and panel specifics in the kernel.
+
+>> >>> +- data-mapping: the color signals mapping order, "jeida-18",
+>> >>> "jeida-24"
+>> >>> +  or "vesa-24"
+>> >>
+>> >> Maybe this should be part of the compatible.
+>> >
+>> > I've thought about it, but given that some panels support selecting
+>> > between multiple modes (through a mode pin that is usually hardwired), I
+>> > believe a separate DT property makes sense.
+>>
+>> Okay.
+>>
+>> > Furthermore, LVDS data organization is controlled by the combination of
+>> > both data-mapping and data-mirror. It makes little sense from my point of
+>> > view to handle one as part of the compatible string and the other one as
+>> > a separate property.
+>> >
+>> >> > +Optional properties:
+>> >> > +- label: a symbolic name for the panel
+>> >>
+>> >> Could be for any panel or display connector.
+>> >
+>> > Yes, but I'm not sure to understand how that's relevant :-)
+>>
+>> Meaning it should be a common property.
+>
+> Sure. So you expect me to reorganize all the panels and connectors DT bindings
+> in order to get this one merged ? :-)
+
+No, because I don't think label is widely defined. Just put it in a
+common place and reference it. Any other panels can be fixed later.
+Really, the "simple panel" binding should probably morph into the
+common binding.
+
+>> >>> +- avdd-supply: reference to the regulator that powers the panel
+>> >>> analog supply
+>> >>> +- dvdd-supply: reference to the regulator that powers the panel
+>> >>> digital supply
+>> >>
+>> >> Which one has to be powered on first, what voltage, and with what time
+>> >> in between? This is why "generic" or "simple" bindings don't work.
+>> >
+>> > The above-mentioned specifications also define connectors, pinouts and
+>> > power supplies, but many LVDS panels compatible with the LVDS physical
+>> > and data layers use a different connector with small differences in power
+>> > supplies.
+>> >
+>> > I believe the voltage is irrelevant here, it doesn't need to be controlled
+>> > by the operating system. Power supplies order and timing is relevant,
+>> > I'll investigate the level of differences between panels. I'm also fine
+>> > with dropping those properties for now.
+>>
+>> Whether you have control of the supplies is dependent on the board.
+>> Dropping them is just puts us in the simple binding trap. The simple
+>> bindings start out that way and then people keep adding to them.
+>
+> Damn, you can't be fooled easily ;-)
+
+I guess you can count all the simple bindings to see how many times I
+can be fooled. :)
+
+> On a more serious note, I'd like to design the bindings in a way that wouldn't
+> require adding device-specific code in the driver for each panel model, given
+> that in most cases power supply handling will be generic. What's your opinion
+> about a generic power supply model that would be used in the default case,
+> with the option to override it with device-specific code when needed ?
+
+I don't agree. Read Thierry's post on the subject[1].
+
+Rob
+
+[1] http://sietch-tagr.blogspot.com/2016/04/display-panels-are-not-special.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
