@@ -1,33 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 08/10] ASoC: sun4i-codec: Add support for H3 codec
-Date: Tue, 15 Nov 2016 16:23:45 -0600
-Message-ID: <20161115222345.44b25usz2i6qeact@rob-hp-laptop>
-References: <20161112064648.26779-1-wens@csie.org>
- <20161112064648.26779-9-wens@csie.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH 2/2] PCI: rockchip: Add quirk to disable RC's ASPM
+ L0s
+Date: Tue, 15 Nov 2016 16:26:49 -0600
+Message-ID: <20161115222649.uymslcg2fyfwtxpd@rob-hp-laptop>
+References: <1479096666-112668-1-git-send-email-shawn.lin@rock-chips.com>
+ <1479096666-112668-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161112064648.26779-9-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mylene Josserand <mylene.josserand@free-electrons.com>
+In-Reply-To: <1479096666-112668-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 12, 2016 at 02:46:46PM +0800, Chen-Yu Tsai wrote:
-> The codec on the H3 is similar to the one found on the A31. One key
-> difference is the analog path controls are routed through the PRCM
-> block. This is supported by the sun8i-codec-analog driver, and tied
-> into this codec driver with the audio card's aux_dev.
+On Mon, Nov 14, 2016 at 12:11:06PM +0800, Shawn Lin wrote:
+> Rockchip's RC outputs 100MHz reference clock but there are
+> two methods for PHY to generate it.
 > 
-> In addition, the H3 has no HP (headphone) and HBIAS support, and no
-> MIC3 input. The FIFO related registers are slightly rearranged.
+> (1)One of them is to use system PLL to generate 100MHz clock and
+> the PHY will relock it and filter signal noise then outputs the
+> reference clock.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  .../devicetree/bindings/sound/sun4i-codec.txt      |  3 +
+> (2)Another way is to share Soc's 24MHZ crystal oscillator with
+> PHY and force PHY's DLL to generate 100MHz internally.
+> 
+> When using case(2), the exit from L0s doesn't work fine occasionally
+> due to the broken design of RC receiver's logical circuit. So even if
+> we use extended-synch, it still fails for PHY to relock the bits from
+> FTS sometimes. This will hang the system.
+> 
+> Maybe we could argue that why not use case(1) to avoid it? The reason
+> is that as we could see the reference clock is derived from system PLL
+> and the path from it to PHY isn't so clean which means there are some
+> noise introduced by power-domain and other buses can't be filterd out
+> by PHY and we could see noise from the frequency spectrum by oscilloscope.
+> This makes the TX compatibility test a little difficult to pass the spec.
+> So case(1) and case(2) are both used indeed now. If using case(2), we
+> should disable RC's L0s support, and that is why we need this property to
+> indicate this quirk.
 
-Acked-by: Rob Herring <robh@kernel.org> 
-
->  sound/soc/sunxi/sun4i-codec.c                      | 71 ++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
+Doesn't the driver know which case it is using? I don't see why you need 
+the quirk property.
+> 
+> Also after checking quirk.c, I noticed there is already a quirk for
+> disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
+> shouldn't do that as mentioned above that case(1) could still works fine
+> with L0s.
