@@ -1,36 +1,64 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q: replace gpio-key,wakeup with
- wakeup-source for Utilite Pro
-Date: Tue, 15 Nov 2016 08:13:18 +0800
-Message-ID: <20161115001317.GQ3310@dragon>
-References: <1479138250-17780-3-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479138250-17780-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH] ARM: shmobile: dts: Switch to panel-lvds bindings for Mitsubishi panels
+Date: Tue, 15 Nov 2016 02:27:29 +0200
+Message-ID: <1479169649-11315-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 03:44:09PM +0000, Sudeep Holla wrote:
-> Though the keyboard driver for GPIO buttons(gpio-keys) will continue to
-> check for/support the legacy "gpio-key,wakeup" boolean property to
-> enable gpio buttons as wakeup source, "wakeup-source" is the new
-> standard binding.
-> 
-> This patch replaces the legacy "gpio-key,wakeup" with the unified
-> "wakeup-source" property in order to avoid any further copy-paste
-> duplication.
-> 
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+The aa104xd12 and aa121td01 panels are LVDS panels, not DPI panels.
+Use the correct DT bindings.
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi | 3 ++-
+ arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+Hello,
+
+This patch is an example of how the panel-lvds bindings should be used for
+display panels. It isn't meant to be merged upstream at the moment as the
+bindings haven't been accepted yet but can already be used as both an example
+and a test base for LVDS mode selection.
+
+diff --git a/arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi b/arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi
+index 65cb50f0c29f..238d14bb0ebe 100644
+--- a/arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi
++++ b/arch/arm/boot/dts/r8a77xx-aa104xd12-panel.dtsi
+@@ -10,10 +10,11 @@
+ 
+ / {
+ 	panel {
+-		compatible = "mitsubishi,aa104xd12", "panel-dpi";
++		compatible = "mitsubishi,aa104xd12", "panel-lvds";
+ 
+ 		width-mm = <210>;
+ 		height-mm = <158>;
++		data-mapping = "jeida-18";
+ 
+ 		panel-timing {
+ 			/* 1024x768 @65Hz */
+diff --git a/arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi b/arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi
+index a07ebf8f6938..04aafd479775 100644
+--- a/arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi
++++ b/arch/arm/boot/dts/r8a77xx-aa121td01-panel.dtsi
+@@ -10,10 +10,11 @@
+ 
+ / {
+ 	panel {
+-		compatible = "mitsubishi,aa121td01", "panel-dpi";
++		compatible = "mitsubishi,aa121td01", "panel-lvds";
+ 
+ 		width-mm = <261>;
+ 		height-mm = <163>;
++		data-mapping = "jeida-18";
+ 
+ 		panel-timing {
+ 			/* 1280x800 @60Hz */
+-- 
+Regards,
+
+Laurent Pinchart
