@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun7i: bananapi-m1-plus: Enable USB OTG
-Date: Tue, 15 Nov 2016 21:51:06 +0800
-Message-ID: <20161115135106.438-4-wens@csie.org>
+Subject: [PATCH v2 1/3] ARM: dts: sun7i: bananapi-m1-plus: Enable USB PHY for USB host support
+Date: Tue, 15 Nov 2016 21:51:04 +0800
+Message-ID: <20161115135106.438-2-wens@csie.org>
 References: <20161115135106.438-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20161115135106.438-1-wens@csie.org>
@@ -10,58 +10,31 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M1+ supports USB OTG, with the PMIC doing VBUS sensing.
-Enable the USB OTG related functions.
+The 2 USB host ports are directly tied to the 2 USB hosts in the SoC.
+The 2 host pairs were already enabled, but the USB PHY wasn't.
+VBUS on the 2 ports are always on.
 
+Enable the USB PHY.
+
+Fixes: 04c85ecad32a ("ARM: dts: sun7i: Add dts file for Bananapi M1 Plus
+		      board")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index ac19630c1c23..5f7114e13850 100644
+index ba5bca0fe997..44377a98cc89 100644
 --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
 +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -194,6 +194,10 @@
- 	status = "okay";
- };
- 
-+&otg_sram {
-+	status = "okay";
-+};
-+
- &pio {
- 	gmac_power_pin_bpi_m1p: gmac_power_pin@0 {
- 		allwinner,pins = "PH23";
-@@ -249,13 +253,29 @@
- 	regulator-name = "avcc";
- };
- 
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
+@@ -227,3 +227,8 @@
  	pinctrl-0 = <&uart0_pins_a>;
  	status = "okay";
  };
- 
-+&usb_otg {
-+	dr_mode = "otg";
++
++&usbphy {
++	/* VBUS on usb host ports are tied to DC5V and therefore always on */
 +	status = "okay";
 +};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
- &usbphy {
-+	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	/* VBUS on usb host ports are tied to DC5V and therefore always on */
- 	status = "okay";
- };
 -- 
 2.10.2
