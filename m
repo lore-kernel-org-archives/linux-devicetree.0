@@ -1,45 +1,66 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/3] usb: dwc2: params revert and rework
-Date: Tue, 15 Nov 2016 11:37:39 -0800
-Message-ID: <038597b5-2d49-3b62-493b-72588683c1fe@synopsys.com>
-References: <cover.1479176826.git.johnyoun@synopsys.com>
- <87polxugfo.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87polxugfo.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: John Youn <johnyoun@synopsys.com>
+Subject: [PATCH v2] usb: dwc2: add amcc,dwc-otg support
+Date: Tue, 15 Nov 2016 11:59:05 -0800
+Message-ID: <750311e03ddba7f7cf01855d8c0a48612df81ae8.1479239744.git.johnyoun@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Christian Lamparter <chunkeey@googlemail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, John Youn <johnyoun@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2016 3:33 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
->> Hi Felipe,
->>
->> This reverts and fixes a few commits that are queued on your
->> testing/next, removing the previously added DT bindings, and the code
->> that reads them in.
->>
->> The feedback was that IP validation is not reason enough to add these.
->> So we'll leave them out for now.
-> 
-> these are still in testing/next, so I can actually still drop
-> them. I'm applying only patch 3/3, please make sure it all looks good on
-> testing/next.
-> 
+From: Christian Lamparter <chunkeey@googlemail.com>
 
-Ok thanks. There were merge issues when I did that locally so I
-figured I'd give you the reverts.
+This patch adds support for the "amcc,usb-otg" device
+which is found in the PowerPC Canyonlands' dts.
 
-Checked and looks good.
+The device definition was added by:
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands
+board")
+
+but without any driver support as the dwc2 driver wasn't available at
+that time.
+
+Note: The system can't use the generic "snps,dwc2" compatible
+because of the special ahbcfg configuration. The default
+GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
+when the USB and SATA is used concurrently.
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Youn <johnyoun@synopsys.com>
+---
+
+v2 [johnyoun]:
+* Removed params struct
+* Minor commit message formatting
+
+ Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+ drivers/usb/dwc2/params.c                      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index ad8f7ff..6c7c2bce 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -12,6 +12,7 @@ Required properties:
+   - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+   - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+   - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
++  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+   - snps,dwc2: A generic DWC2 USB controller with default parameters.
+ - reg : Should contain 1 register range (address and length)
+ - interrupts : Should contain 1 interrupt
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index 513556a..7991c21 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
+ 	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+ 	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
+ 	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
++	{ .compatible = "amcc,dwc-otg", .data = &params_amcc_dwc_otg },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+-- 
+2.10.0
