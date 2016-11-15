@@ -1,214 +1,152 @@
-From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] irqchip: mtk-cirq: Add mediatek mtk-cirq
- implement
-Date: Tue, 15 Nov 2016 10:49:39 +0800
-Message-ID: <1479178179.10566.0.camel@mtksdaap41>
-References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
-         <1478001122-8664-3-git-send-email-youlin.pei@mediatek.com>
-         <86twbrj586.fsf@arm.com> <1478234577.7975.29.camel@mtksdaap41>
-         <867f8ilwcl.fsf@arm.com> <1478573833.32099.11.camel@mtksdaap41>
-         <1f8f7b9f-7788-18c4-19c5-3c9a7623c188@arm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v3 1/2] drm/bridge: dumb-vga-dac:
+ Support a VDD regulator supply
+Date: Tue, 15 Nov 2016 10:59:49 +0800
+Message-ID: <CAGb2v67LR4KEb0tfGkT8+TqTauNyCMq1n6mRdXsa6TUJV0xncA@mail.gmail.com>
+References: <20161029110611.28951-1-wens@csie.org> <20161029110611.28951-2-wens@csie.org>
+ <20161031062836.mnzdprqfezrfkx4g@rob-hp-laptop> <CAGb2v64tTacSAG1vvO28h8MN9JC9w+OzSrP+j2eTzqAiQKgaSA@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1f8f7b9f-7788-18c4-19c5-3c9a7623c188-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chieh-jay.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQPUVHAQKGQENN7LBXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v64tTacSAG1vvO28h8MN9JC9w+OzSrP+j2eTzqAiQKgaSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-11-10 at 18:24 +0000, Marc Zyngier wrote:
-> On 08/11/16 02:57, Youlin Pei wrote:
-> > On Fri, 2016-11-04 at 22:21 +0000, Marc Zyngier wrote:
-> >> On Fri, Nov 04 2016 at 04:42:57 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>> On Tue, 2016-11-01 at 20:49 +0000, Marc Zyngier wrote:
-> >>>> On Tue, Nov 01 2016 at 11:52:01 AM, Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >>>>> In Mediatek SOCs, the CIRQ is a low power interrupt controller
-> >>>>> designed to works outside MCUSYS which comprises with Cortex-Ax
-> >>>>> cores,CCI and GIC.
-> >>>>>
-> >>>>> The CIRQ controller is integrated in between MCUSYS( include
-> >>>>> Cortex-Ax, CCI and GIC ) and interrupt sources as the second
-> >>>>> level interrupt controller. The external interrupts which outside
-> >>>>> MCUSYS will feed through CIRQ then bypass to GIC. CIRQ can monitors
-> >>>>> all edge trigger interupts. When an edge interrupt is triggered,
-> >>>>> CIRQ can record the status and generate a pulse signal to GIC when
-> >>>>> flush command executed.
-> >>>>>
-> >>>>> When system enters sleep mode, MCUSYS will be turned off to improve
-> >>>>> power consumption, also GIC is power down. The edge trigger interrupts
-> >>>>> will be lost in this scenario without CIRQ.
-> >>>>>
-> >>>>> This commit provides the CIRQ irqchip implement.
-> >>>>>
-> >>>>> Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>> ---
-> >>>>>  drivers/irqchip/Makefile       |    2 +-
-> >>>>>  drivers/irqchip/irq-mtk-cirq.c |  262 ++++++++++++++++++++++++++++++++++++++++
-> >>>>>  2 files changed, 263 insertions(+), 1 deletion(-)
-> >>>>>  create mode 100644 drivers/irqchip/irq-mtk-cirq.c
-> >>>>>
-> >>>>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> >>>>> index e4dbfc8..8f33580 100644
-> >>>>> --- a/drivers/irqchip/Makefile
-> >>>>> +++ b/drivers/irqchip/Makefile
-> >>>>> @@ -60,7 +60,7 @@ obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-> >>>>>  obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-> >>>>>  obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-> >>>>>  obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
-> >>>>> -obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
-> >>>>> +obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o irq-mtk-cirq.o
-> >>>>>  obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
-> >>>>>  obj-$(CONFIG_RENESAS_H8300H_INTC)	+= irq-renesas-h8300h.o
-> >>>>>  obj-$(CONFIG_RENESAS_H8S_INTC)		+= irq-renesas-h8s.o
-> >>>>> diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-> >>>>> new file mode 100644
-> >>>>> index 0000000..fc43ef3
-> >>>>> --- /dev/null
-> >>>>> +++ b/drivers/irqchip/irq-mtk-cirq.c
-> >>>>> @@ -0,0 +1,262 @@
-> >>>>> +/*
-> >>>>> + * Copyright (c) 2016 MediaTek Inc.
-> >>>>> + * Author: Youlin.Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>> + *
-> >>>>> + * This program is free software; you can redistribute it and/or modify
-> >>>>> + * it under the terms of the GNU General Public License version 2 as
-> >>>>> + * published by the Free Software Foundation.
-> >>>>> + *
-> >>>>> + * This program is distributed in the hope that it will be useful,
-> >>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >>>>> + * GNU General Public License for more details.
-> >>>>> + */
-> >>>>> +
-> >>>>> +#include <linux/irq.h>
-> >>>>> +#include <linux/irqchip.h>
-> >>>>> +#include <linux/irqdomain.h>
-> >>>>> +#include <linux/of.h>
-> >>>>> +#include <linux/of_irq.h>
-> >>>>> +#include <linux/of_address.h>
-> >>>>> +#include <linux/io.h>
-> >>>>> +#include <linux/slab.h>
-> >>>>> +#include <linux/syscore_ops.h>
-> >>>>> +
-> >>>>> +#define CIRQ_ACK	0x40
-> >>>>> +#define CIRQ_MASK_SET	0xc0
-> >>>>> +#define CIRQ_MASK_CLR	0x100
-> >>>>> +#define CIRQ_SENS_SET	0x180
-> >>>>> +#define CIRQ_SENS_CLR	0x1c0
-> >>>>> +#define CIRQ_POL_SET	0x240
-> >>>>> +#define CIRQ_POL_CLR	0x280
-> >>>>> +#define CIRQ_CONTROL	0x300
-> >>>>> +
-> >>>>> +#define CIRQ_EN	0x1
-> >>>>> +#define CIRQ_EDGE	0x2
-> >>>>> +#define CIRQ_FLUSH	0x4
-> >>>>> +
-> >>>>> +#define CIRQ_IRQ_NUM    0x200
-> >>>>> +
-> >>>>> +struct mtk_cirq_chip_data {
-> >>>>> +	void __iomem *base;
-> >>>>> +	unsigned int ext_irq_start;
-> >>>>> +};
-> >>>>> +
-> >>>>> +static struct mtk_cirq_chip_data *cirq_data;
-> >>>>
-> >>>> Are you guaranteed that you'll only ever have a single CIRQ in any
-> >>>> system?
-> >>>
-> >>> In Mediatek's SOC, only hace a single CIRQ.
-> >>>
-> >>>>
-> >>>>> +
-> >>>>> +static void mtk_cirq_write_mask(struct irq_data *data, unsigned int offset)
-> >>>>> +{
-> >>>>> +	struct mtk_cirq_chip_data *chip_data = data->chip_data;
-> >>>>> +	unsigned int cirq_num = data->hwirq;
-> >>>>> +	u32 mask = 1 << (cirq_num % 32);
-> >>>>> +
-> >>>>> +	writel(mask, chip_data->base + offset + (cirq_num / 32) * 4);
-> >>>>
-> >>>> Why can't you use the relaxed accessors?
-> >>>
-> >>> It seems that i use wrong function, i will change the writel to
-> >>> writel_relaxed in next ve
-> >>>
-> >>>>
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void mtk_cirq_mask(struct irq_data *data)
-> >>>>> +{
-> >>>>> +	mtk_cirq_write_mask(data, CIRQ_MASK_SET);
-> >>>>> +	irq_chip_mask_parent(data);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void mtk_cirq_unmask(struct irq_data *data)
-> >>>>> +{
-> >>>>> +	mtk_cirq_write_mask(data, CIRQ_MASK_CLR);
-> >>>>> +	irq_chip_unmask_parent(data);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void mtk_cirq_eoi(struct irq_data *data)
-> >>>>> +{
-> >>>>> +	mtk_cirq_write_mask(data, CIRQ_ACK);
-> >>>>
-> >>>> EOI and ACK have very different semantics. What is this write actually
-> >>>> doing? Also, you're now doing an additional MMIO write on each interrupt
-> >>>> EOI, doubling its cost. Do you really need to do actually signal the HW
-> >>>> that we've EOIed an interrupt? I would have hoped that you'd be able to
-> >>>> put it in "bypass" mode as long as you're not suspending...
-> >>>>
-> >>>
-> >>> When external interrupt happened, CIRQ status register record the status
-> >>> even CIRQ is not enabled. when execute the flush command, CIRQ will
-> >>> resend the signals according to the status. So if don't clear the
-> >>> status, CIRQ will resend the wrong signals. the ACK write operation will
-> >>> clear the status.
-> >>
-> >> But at this time, we haven't suspended yet, and there is nothing to
-> >> replay. Also, you only enable the edge capture when suspending. So what
-> >> are you ACKing here? Can't you simply clear everything right when
-> >> suspending and not do it at all on the fast path?
-> > 
-> > I had planned to ACK the status in cirq suspend callback, but
-> > encountered a problem.
-> > following is a piece of code from
-> > http://lxr.free-electrons.com/source/kernel/power/suspend.c#L361
-> > 
-> > arch_suspend_disable_irqs(); ---step1
-> > BUG_ON(!irqs_disabled());
-> > 
-> > error = syscore_suspend();
-> >            |
-> >            ---cirq suspend(); ---step2
-> > 
-> > if ack the status in cirq suspend, the interrupts will be lost which
-> > happened during step1 to step2.
-> > 
-> > So would you mind give me some suggestions about this?
-> > Thanks a lot!
-> 
-> Right. So maybe there is a way:
-> - On suspend you can iterate over all the cirq interrupts that have been
-> recorded
-> - For each of those, you inspect if it is pending at the GIC level
-> (using the irq_get_irqchip_state helper)
-> - if not pending, you Ack it, because it cannot be delivered anymore
-> - If it is pending, then you know it happened between step 1 and step 2.
-> - You then have the choice of either going into suspend and waking up
-> immediately, or failing the suspend.
-> 
-> Thoughts?
+Hi,
 
-Will use this solution in next version.
-Thanks a lot!
+On Wed, Nov 2, 2016 at 9:33 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On Mon, Oct 31, 2016 at 2:28 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Sat, Oct 29, 2016 at 07:06:10PM +0800, Chen-Yu Tsai wrote:
+>>> Some dumb VGA DACs are active components which require external power.
+>>> Add support for specifying a regulator as its power supply.
+>>>
+>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>> ---
+>>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
+>>
+>> For the binding,
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> 
-> 	M.
+Any comments on this patch from the DRM people?
 
+ChenYu
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> One code comment below...
+>>
+>>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 35 ++++++++++++++++++++++
+>>>  2 files changed, 37 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> index 003bc246a270..164cbb15f04c 100644
+>>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>> @@ -16,6 +16,8 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+>>>  - Video port 0 for RGB input
+>>>  - Video port 1 for VGA output
+>>>
+>>> +Optional properties:
+>>> +- vdd-supply: Power supply for DAC
+>>>
+>>>  Example
+>>>  -------
+>>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> index afec232185a7..59781e031220 100644
+>>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>> @@ -12,6 +12,7 @@
+>>>
+>>>  #include <linux/module.h>
+>>>  #include <linux/of_graph.h>
+>>> +#include <linux/regulator/consumer.h>
+>>>
+>>>  #include <drm/drmP.h>
+>>>  #include <drm/drm_atomic_helper.h>
+>>> @@ -23,6 +24,7 @@ struct dumb_vga {
+>>>       struct drm_connector    connector;
+>>>
+>>>       struct i2c_adapter      *ddc;
+>>> +     struct regulator        *vdd;
+>>>  };
+>>>
+>>>  static inline struct dumb_vga *
+>>> @@ -124,8 +126,33 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
+>>>       return 0;
+>>>  }
+>>>
+>>> +static void dumb_vga_enable(struct drm_bridge *bridge)
+>>> +{
+>>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>> +     int ret;
+>>> +
+>>> +     if (!IS_ERR(vga->vdd)) {
+>>
+>> if (IS_ERR())
+>>         return;
+>>
+>> ...will save some intentation.
+>
+> I thought about that, though if someone were to add more stuff to
+> this, such as an enable GPIO, they might have to rework it. A standalone
+> block of code would be easier to work with. I'm OK either way though.
+>
+> ChenYu
+>
+>>
+>>> +             ret = regulator_enable(vga->vdd);
+>>> +
+>>> +             if (ret) {
+>>> +                     DRM_ERROR("Failed to enable vdd regulator: %d\n", ret);
+>>> +                     return;
+>>> +             }
+>>> +     }
+>>> +}
+>>> +
+>>> +static void dumb_vga_disable(struct drm_bridge *bridge)
+>>> +{
+>>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>> +
+>>> +     if (!IS_ERR(vga->vdd))
+>>> +             regulator_disable(vga->vdd);
+>>> +}
+>>> +
+>>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
+>>>       .attach         = dumb_vga_attach,
+>>> +     .enable         = dumb_vga_enable,
+>>> +     .disable        = dumb_vga_disable,
+>>>  };
+>>>
+>>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
+>>> @@ -169,6 +196,14 @@ static int dumb_vga_probe(struct platform_device *pdev)
+>>>               return -ENOMEM;
+>>>       platform_set_drvdata(pdev, vga);
+>>>
+>>> +     vga->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
+>>> +     if (IS_ERR(vga->vdd)) {
+>>> +             ret = PTR_ERR(vga->vdd);
+>>> +             if (ret == -EPROBE_DEFER)
+>>> +                     return -EPROBE_DEFER;
+>>> +             dev_dbg(&pdev->dev, "No vdd regulator found: %d\n", ret);
+>>> +     }
+>>> +
+>>>       vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
+>>>       if (IS_ERR(vga->ddc)) {
+>>>               if (PTR_ERR(vga->ddc) == -ENODEV) {
+>>> --
+>>> 2.9.3
+>>>
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>> For more options, visit https://groups.google.com/d/optout.
