@@ -1,26 +1,48 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/11] Add R8A7745/SK-RZG1E board support
-Date: Tue, 15 Nov 2016 18:55:23 +0100
-Message-ID: <20161115175522.GC3979@verge.net.au>
-References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 09/11] ARM: shmobile: document SK-RZG1M board
+Date: Tue, 15 Nov 2016 18:55:47 +0100
+Message-ID: <20161115175546.GE3979@verge.net.au>
+References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com>
+ <3956722.6l6VXXKMOL@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <3956722.6l6VXXKMOL-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 05, 2016 at 12:42:33AM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Sat, Oct 29, 2016 at 01:23:59AM +0300, Sergei Shtylyov wrote:
+> Document the SK-RZG1E device tree bindings, listing it as a supported board.
 > 
->    Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-201611104-v4.9-rc3' tag plus the R8A7743/SK-RZG1M patch series
-> posted earlier. I'm adding the device tree support for the R8A7745-based
-> SK-RZG1E board. The SoC is close to R8A7794 and the board seems identical to the
-> R8A7794/SILK board. The device tree patches depend on the R8A7745 CPG/MSSR
-> driver series in order to compile and work.
+> This allows to use checkpatch.pl to validate .dts files referring to the
+> SK-RZG1E board.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Thanks, I have queued this up.
+I have queued this up after with s/SK-RZG1M/SK-RZG1E/
+
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+> ===================================================================
+> --- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -77,6 +77,8 @@ Boards:
+>      compatible = "renesas,salvator-x", "renesas,r8a7796";
+>    - SILK (RTP0RC7794LCB00011S)
+>      compatible = "renesas,silk", "renesas,r8a7794"
+> +  - SK-RZG1E (YR8A77450S000BE)
+> +    compatible = "renesas,sk-rzg1e", "renesas,r8a7745"
+>    - SK-RZG1M (YR8A77430S000BE)
+>      compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
+>    - Wheat
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
