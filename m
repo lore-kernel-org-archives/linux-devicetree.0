@@ -1,76 +1,143 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] pinctrl: tegra: Add DT binding for io pads control
-Date: Tue, 15 Nov 2016 18:48:44 +0000
-Message-ID: <4be6f5f3-6884-7e4e-049c-29a1f8ca1fcb@nvidia.com>
-References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com>
- <1478696782-11657-2-git-send-email-ldewangan@nvidia.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Tue, 15 Nov 2016 10:56:45 -0800
+Message-ID: <20161115185645.GA25626@codeaurora.org>
+References: <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+ <20161110040440.GA11670@vireshk-i7>
+ <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
+ <20161110180940.GD11670@vireshk-i7>
+ <20161110225126.GK16026@codeaurora.org>
+ <20161111031120.GE11670@vireshk-i7>
+ <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
+ <20161115021302.GR5177@codeaurora.org>
+ <20161115033151.GG4178@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478696782-11657-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161115033151.GG4178@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, d-gerlach@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/15, Viresh Kumar wrote:
+> On 14-11-16, 18:13, Stephen Boyd wrote:
+> > On 11/14, Rob Herring wrote:
+> > > On Fri, Nov 11, 2016 at 08:41:20AM +0530, Viresh Kumar wrote:
+> > > > On 10-11-16, 14:51, Stephen Boyd wrote:
+> > > > > 
+> > > > > No. The supply names (and also clock names/index) should be left
+> > > > > up to the consumer of the OPP table. We don't want to encode any
+> > > > > sort of details like this between the OPP table and the consumer
+> > > > > of it in DT because then it seriously couples the OPP table to
+> > > > > the consumer device. "The binding" in this case that needs to be
+> > > > > updated is the consumer binding, to indicate that it correlated
+> > > > > foo-supply and bar-supply to index 0 and 1 of the OPP table
+> > > > > voltages.
+> > > > 
+> > > > Are you saying that we shall have a property like this then?
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > > > index ee91cbdd95ee..733946df2fb8 100644
+> > > > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > > > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > > > @@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
+> > > >                         compatible = "arm,cortex-a7";
+> > > >                         ...
+> > > >  
+> > > > -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+> > > > +                       vcc0-supply = <&cpu_supply0>;
+> > > > +                       vcc1-supply = <&cpu_supply1>;
+> > > > +                       vcc2-supply = <&cpu_supply2>;
+> > > > +                       opp-supply-names = "vcc0", "vcc1", "vcc2";
+> > > 
+> > > Uh, no. You already have the names in the *-supply properties. Yes, they 
+> > > are a PIA to retrieve compared to a *-names property, but that is the 
+> > > nature of this style of binding.
+> 
+> Its not just PIA, but impossible AFAICT.
+> 
+> There are two important pieces of information we need for multiple
+> regulator support:
+> - Which regulator in the consumer node corresponds to which entry in
+>   the OPP table. As Mark mentioned earlier, DT should be able to get
+>   us this.
 
-On 09/11/16 13:06, Laxman Dewangan wrote:
-> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-> low power state of some of its IO pads. The IO pads can work in
-> the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
-> sources. When IO interfaces are not used then IO pads can be
-> configure in low power state to reduce the power consumption from
-> that IO pads.
-> 
-> On Tegra124, the voltage level of IO power rail source is auto
-> detected by hardware(SoC) and hence it is only require to configure
-> in low power mode if IO pads are not used.
-> 
-> On T210 onwards, the auto-detection of voltage level from IO power
-> rail is removed from SoC and hence SW need to configure the PMC
-> register explicitly to set proper voltage in IO pads based on
-> IO rail power source voltage.
-> 
-> Add DT binding document for detailing the DT properties for
-> configuring IO pads voltage levels and its power state.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> ---
-> Changes from V1:
->  The DT binding document is modified to explain the regulator handle
->  for different IOs and how can it be passed from the DT.
-> ---
->  .../bindings/pinctrl/nvidia,tegra-io-pad.txt       | 126 +++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-> new file mode 100644
-> index 0000000..6ca961f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-> @@ -0,0 +1,126 @@
-> +NVIDIA Tegra PMC IO pad controller
-> +
-> +NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-> +low power state of some of its IO pads. When IO interface are not
-> +used then IO pads can be configure in low power state to reduce
-> +the power from that IO pads. The IO pads can work in the voltage
-> +of the 1.8V and 3.3V of IO voltage from power rail sources.
+This is also possible from C code though. Or is there some case
+where it isn't possible if we're sharing the same table with two
+devices? I'm lost on when this would ever happen.
 
-The last sentence is a bit unclear and does not sound correct. I am not
-sure if you are missing the word 'range' somewhere or if you are trying
-to say it must be either 1.8V or 3.3V. Looks like you have the same
-sentence on the changelog too.
+It feels like trying to keep the OPP table agnostic of the
+consuming device and the device's binding is more trouble than
+it's worth. Especially considering we have opp-shared and *-name
+now.
 
-Cheers
-Jon
+> - The order in which the supplies need to be programmed. We have all
+>   agreed to do this in code instead of inferring it from DT and this
+>   patch series already does that.
+
+Agreed. Encoding a sequence into DT doesn't sound very feasible.
+How is this going to be handled though? I don't see any users of
+the code we're reviewing here, so it's hard to grasp how things
+will work. It would be really useful if we had some user of the
+code included in the patch series to get the big picture.
+
+> 
+> I want to solve the first problem here and I don't see how it can be
+> solved using such entries:
+> 
+> 	cpus {
+> 		cpu@0 {
+> 			compatible = "arm,cortex-a7";
+> 			...
+> 
+>                         vcc0-supply = <&cpu_supply0>;
+>                         vcc1-supply = <&cpu_supply1>;
+>                         vcc2-supply = <&cpu_supply2>;
+> 			operating-points-v2 = <&cpu0_opp_table>;
+>                 };
+>         };
+> 
+> 	cpu0_opp_table: opp_table0 {
+> 		compatible = "operating-points-v2";
+> 		opp-shared;
+> 
+> 		opp@1000000000 {
+> 			opp-hz = /bits/ 64 <1000000000>;
+> 			opp-microvolt = <970000>, /* Supply 0 */
+> 					<960000>, /* Supply 1 */
+> 					<960000>; /* Supply 2 */
+> 		};
+>         };
+> 
+> The code can't figure out which of vcc0, vcc1, vcc2 is added first in
+> the CPU node and so we need to get the order somehow. A separate
+> binding as I mentioned earlier is a probably (ugly) solution.
+> 
+> > I think the problem is that Viresh wants the binding to be "self
+> > describing" so that the OPP can be used without a driver knowing
+> > that a supply corresponds to a particular column in the voltage
+> > table.
+> 
+> Right, and that's what Mark suggested as well.
+> 
+> > I don't understand that though. Can't we set the supply
+> > names from C code somewhere based on the consumer of the OPPs?
+> 
+> That's what this patch series is doing right now.
+> 
+> So, are you saying that the way this patchset does it is fine with you
+> ?
+
+That's just to handle the ordering of operations? I need to take
+a minute and understand what's changing. You may have spent
+plenty of time developing/updating, but I haven't spent near
+enough time understanding what's going on in these patches to
+give a thorough review.
 
 -- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
