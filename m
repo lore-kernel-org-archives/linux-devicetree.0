@@ -1,62 +1,130 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] usb: dwc2: params revert and rework
-Date: Tue, 15 Nov 2016 13:32:27 +0200
-Message-ID: <87polxugfo.fsf@linux.intel.com>
-References: <cover.1479176826.git.johnyoun@synopsys.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 08/10] ARM: dts: add basic support for Rockchip RK1108 SOC
+Date: Tue, 15 Nov 2016 12:45:16 +0100
+Message-ID: <2204596.BeWafPDT3k@phil>
+References: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com> <1479125688-24528-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1479176826.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479125688-24528-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Am Montag, 14. November 2016, 20:14:48 CET schrieb Andy Yan:
+> RK1108 is embedded with an ARM Cortex-A7 single core and a DSP core.
+> It is designed for varies application scenario such as car DVR, sports
+> DV, secure camera and UAV camera.
+> 
+> This patch add basic support for it with DMAC / UART / CRU / pinctrl / MMC
+> enabled.
+> 
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Tested-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v2:
+> - fix timer and gic dt description
+> - ordering devices by register address
+> 
+>  arch/arm/boot/dts/rk1108.dtsi | 428
+> ++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 428
+> insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk1108.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
+> new file mode 100644
+> index 0000000..636c294
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk1108.dtsi
+> @@ -0,0 +1,428 @@
+> +/*
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/rk1108-cru.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	compatible = "rockchip,rk1108";
+> +
+> +	interrupt-parent = <&gic>;
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@f00 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0xf00>;
+> +		};
+> +	};
+> +
+> +	arm-pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +
+
+unnecessary empty line (only 1 please)
+
+otherwise looks fine now, just needs to wait for fixed clock ids now.
 
 
-Hi,
-
-John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
-> Hi Felipe,
->
-> This reverts and fixes a few commits that are queued on your
-> testing/next, removing the previously added DT bindings, and the code
-> that reads them in.
->
-> The feedback was that IP validation is not reason enough to add these.
-> So we'll leave them out for now.
-
-these are still in testing/next, so I can actually still drop
-them. I'm applying only patch 3/3, please make sure it all looks good on
-testing/next.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlgq8ksACgkQzL64meEa
-mQYWchAAqQotXWKK/il8woXLT+U41rPAyqziVCcGYfLYYjLZCx9YUHH0/gjotRUP
-+St5kPwJP2BaITywMdaHFJIvflaYLCUr5H8HKiErpOq7DG9tfPxCsCdvhgOIwkkk
-bnyu1aSA96DR2MM7k4LepklV9BF4dxP4qAyKSr50Gpo07B29igqK6dbZlbMgKeNd
-pu4boSCKhdEFPBzp+g7k4lsrIrtnk1eQINviqxYmscRq3oEDdNV7+T9Oddbp1WT0
-mF+3qAweOYBSQfcZkW2Kd7V4DxIhzoVaFVwzNYyDUv1vO7tBDq1fAYVE0dn+Rblo
-rNoej9FhfrLcoYodjGm65avqcHT6gCDlfaknFt64KJEEMMH7snaR7+mDI6X0xtre
-pDbFk1xuyN6usqv2wThC4kj8YRtXDqZ0QQtUJvpu6N5Wxcjy73HGR3SvaT+zBU2k
-WfVku2YvTanyf64jef4o2xojShH43XrwTqz36LFmWY9FCHdmBZTRGi4p+Z/qwyTq
-bB/Kv1ILaWoarwuThLj1MER9f7qhf23tbDzPus5Ya29DCjHxn+2EtEa9rBPGZAOB
-Xm9229S9uVOIreiy1kx/PK2o9dsockSa2VBXs3tg1CH/cs2YsE+RxqI1/QjAMsDs
-WKFRR/F9zYXrHPhllKWkGVywQs1grIM+I7Z5ZRLW1rGgc9SglBs=
-=fhJX
------END PGP SIGNATURE-----
---=-=-=--
+Heiko
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
