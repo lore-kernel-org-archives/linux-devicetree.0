@@ -1,33 +1,34 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/11] soc: renesas: Identify SoC and register with
- the SoC bus
-Date: Tue, 15 Nov 2016 18:53:37 +0100
-Message-ID: <20161115175336.GA4065@verge.net.au>
-References: <1479148637-5399-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6 0/7] Add R8A7743/SK-RZG1M board support
+Date: Tue, 15 Nov 2016 18:54:33 +0100
+Message-ID: <20161115175433.GB4065@verge.net.au>
+References: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479148637-5399-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 07:37:06PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
+On Mon, Oct 31, 2016 at 10:52:25PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Some Renesas SoCs may exist in different revisions, providing slightly
-> different functionalities (e.g. R-Car H3 ES1.x and ES2.0), and behavior
-> (errate and quirks).  This needs to be catered for by drivers and/or
-> platform code.  The recently proposed soc_device_match() API is a good
-> fit to handle this.
+>    Here's the set of 7 patches against Simon Horman's 'renesas.git' repo's
+> 'renesas-devel-20161031-v4.9-rc3' tag. I'm adding the device tree support for
+> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
+> seems identical to the R8A7791/Porter board. The device tree patches depend on
+> the R8A7743 CPG/MSSR driver series in order to compile and work. Already merged
+> patches from this series won't be re-posted.
 > 
-> This patch series implements the core infrastructure to provide SoC and
-> revision information through the SoC bus for Renesas ARM SoCs.
+> [1/7] ARM: dts: r8a7743: initial SoC device tree
+> [2/7] ARM: dts: r8a7743: add SYS-DMAC support
+> [3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
+> [4/7] ARM: dts: r8a7743: add Ether support
+> [5/7] ARM: dts: r8a7743: add IRQC support
+> [6/7] ARM: dts: sk-rzg1m: initial device tree
+> [7/7] ARM: dts: sk-rzg1m: add Ether support
 
-For the record I have queued this up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have queued this up.
