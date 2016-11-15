@@ -1,183 +1,45 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to
- reference-design-tablet.dtsi
-Date: Tue, 15 Nov 2016 11:12:35 +0100
-Message-ID: <0c3a9e9c-d310-c6c3-ae10-1ae9e520963e@redhat.com>
-References: <20161113192203.7101-1-hdegoede@redhat.com>
- <20161114200802.vdduhyxnkgmpsyd5@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161114200802.vdduhyxnkgmpsyd5@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv2 00/10] mmc: dw_mmc: clean the codes for dwmmc controller
+Date: Tue, 15 Nov 2016 19:12:22 +0900
+Message-ID: <20161115101232.3854-1-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, heiko@sntech.de, shawn.lin@rock-chips.com, robh+dt@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patchset is modified the some minor fixing and cleaning codes.
 
-On 14-11-16 21:08, Maxime Ripard wrote:
-> Hi,
->
-> On Sun, Nov 13, 2016 at 08:22:02PM +0100, Hans de Goede wrote:
->> Just like on sun8i all sun5i tablets use the same interrupt and power
->> gpios for their touchscreens. I've checked all known a13 fex files and
->> only the UTOO P66 uses a different gpio for the interrupt.
->>
->> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
->> fills in the necessary gpios to avoid duplication in the tablet dts files,
->> just like we do in sun8i-reference-design-tablet.dtsi.
->>
->> This will make future patches adding touchscreen nodes to a13 tablets
->> simpler.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------------
->>  .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
->>  2 files changed, 39 insertions(+), 24 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->> index a8b0bcc..3d7ff10 100644
->> --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->> +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->> @@ -83,22 +83,6 @@
->>  	allwinner,pins = "PG3";
->>  };
->>
->> -&i2c1 {
->> -	icn8318: touchscreen@40 {
->> -		compatible = "chipone,icn8318";
->> -		reg = <0x40>;
->> -		interrupt-parent = <&pio>;
->> -		interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
->> -		pinctrl-names = "default";
->> -		pinctrl-0 = <&ts_wake_pin_p66>;
->> -		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->> -		touchscreen-size-x = <800>;
->> -		touchscreen-size-y = <480>;
->> -		touchscreen-inverted-x;
->> -		touchscreen-swapped-x-y;
->> -	};
->> -};
->> -
->>  &mmc2 {
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&mmc2_pins_a>;
->> @@ -121,20 +105,26 @@
->>  		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>  	};
->> -
->> -	ts_wake_pin_p66: ts_wake_pin@0 {
->> -		allwinner,pins = "PB3";
->> -		allwinner,function = "gpio_out";
->> -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> -		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> -	};
->> -
->>  };
->>
->>  &reg_usb0_vbus {
->>  	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
->>  };
->>
->> +&touchscreen {
->> +	compatible = "chipone,icn8318";
->> +	reg = <0x40>;
->> +	/* The P66 uses a different EINT then the reference design */
->> +	interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
->> +	/* The icn8318 binding expects wake-gpios instead of power-gpios */
->> +	wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->> +	touchscreen-size-x = <800>;
->> +	touchscreen-size-y = <480>;
->> +	touchscreen-inverted-x;
->> +	touchscreen-swapped-x-y;
->> +	status = "okay";
->> +};
->> +
->>  &uart1 {
->>  	/* The P66 uses the uart pins as gpios */
->>  	status = "disabled";
->> diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->> index 20cc940..7af488a 100644
->> --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->> +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->> @@ -41,6 +41,7 @@
->>   */
->>  #include "sunxi-reference-design-tablet.dtsi"
->>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->>  #include <dt-bindings/pwm/pwm.h>
->>
->>  / {
->> @@ -84,6 +85,23 @@
->>  };
->>
->>  &i2c1 {
->> +	/*
->> +	 * The gsl1680 is rated at 400KHz and it will not work reliable at
->> +	 * 100KHz, this has been confirmed on multiple different q8 tablets.
->> +	 * All other devices on this bus are also rated for 400KHz.
->> +	 */
->> +	clock-frequency = <400000>;
->> +
->> +	touchscreen: touchscreen {
->> +		interrupt-parent = <&pio>;
->> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&ts_power_pin>;
->> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->> +		/* Tablet dts must provide reg and compatible */
->> +		status = "disabled";
->> +	};
->> +
->>  	pcf8563: rtc@51 {
->>  		compatible = "nxp,pcf8563";
->>  		reg = <0x51>;
->> @@ -125,6 +143,13 @@
->>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>  	};
->>
->> +	ts_power_pin: ts_power_pin {
->> +		allwinner,pins = "PB3";
->> +		allwinner,function = "gpio_out";
->> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +	};
->> +
->
-> For the next release, we'll switch to the generic pin mux properties
-> ("pins" and "function"), and we actually implemented the fact that the
-> drive and pull properties are optional, so you can drop them both.
->
-> You'll need next + http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/467123.html
+* Major changes
+- Use the cookie enum values like sdhci controller.
+- Remove the unnecessary codes and use_stop_abort() by default.
+- Remove the obsoleted property "supports-highspeed"
+- Deprecated the "clock-freq-min-max" property. Instead, use "max-frequency"
+- Minimum clock value is set to 100K by default.
 
-Ok, before I send a v2 first a question about this, for the touchscreen
-case I actually need:
+Change in v2:
+- Applied patches relevant to dt files
+- Use "deperecated" instead of removing about "clock-freq-min-max"
+- Added Heiko's Tested-by tag
 
-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+Jaehoon Chung (10):
+  mmc: dw_mmc: display the real register value on debugfs
+  mmc: dw_mmc: fix the debug message for checking card's present
+  mmc: dw_mmc: change the DW_MCI_FREQ_MIN from 400K to 100K
+  mmc: dw_mmc: use the hold register when send stop command
+  mmc: dw_mmc: call the dw_mci_prep_stop_abort() by default
+  mmc: core: move the cookie's enum values from sdhci.h to mmc.h
+  mmc: dw_mmc: use the cookie's enum values for post/pre_req()
+  mmc: dw_mmc: remove the unnecessary mmc_data structure
+  mmc: dw_mmc: The "clock-freq-min-max" property was deprecated
+  Documentation: synopsys-dw-mshc: remove the unused properties
 
-Because otherwise when the touchscreen controller is powered by a separate
-regulator and that regulator is off, then it may draw just enough current
-from its enable pin to be sort-of listening to the i2c bus and mess up
-that bus.
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  8 +-
+ drivers/mmc/host/dw_mmc.c                          | 88 +++++++++++-----------
+ drivers/mmc/host/sdhci.h                           |  6 --
+ include/linux/mmc/core.h                           |  6 ++
+ 4 files changed, 50 insertions(+), 58 deletions(-)
 
-So is this the default, or do we get the power-on default when not
-specifying these? If it is the power-on default then we do need to
-specify these, because AFAICT the power-on drive strength typically
-is 20 mA.
+-- 
+2.10.1
 
-Regards,
-
-Hans
