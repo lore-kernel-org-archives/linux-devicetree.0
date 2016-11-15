@@ -1,42 +1,33 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH v7 02/14] clk: qcom: Move all sdcc rcgs to use
- clk_rcg2_floor_ops
-Date: Mon, 14 Nov 2016 16:06:35 -0800
-Message-ID: <c17ee2b7-0f4a-c310-f8b8-ec48daf57da0@redhat.com>
-References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
- <1479103248-9491-3-git-send-email-riteshh@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
+ powerhold property
+Date: Mon, 14 Nov 2016 16:08:49 -0800
+Message-ID: <20161115000849.GD4082@atomide.com>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1479103248-9491-3-git-send-email-riteshh@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, sboyd@codeaurora.org, andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-13 10:00 PM, Ritesh Harjani wrote:
-> From: Rajendra Nayak <rnayak@codeaurora.org>
->
-> The sdcc driver for msm8996/msm8916/msm8974 and apq8084
-> expects a clk_set_rate() on the sdcc rcg clk to set
-> a floor value of supported clk rate closest to the requested
-> rate, by looking up the frequency table.
-> So move all the sdcc rcgs on all these platforms to use the
-> newly introduced clk_rcg2_floor_ops
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> ---
->  drivers/clk/qcom/gcc-apq8084.c | 8 ++++----
->  drivers/clk/qcom/gcc-msm8916.c | 4 ++--
->  drivers/clk/qcom/gcc-msm8974.c | 8 ++++----
->  drivers/clk/qcom/gcc-msm8996.c | 8 ++++----
+* Keerthy <j-keerthy@ti.com> [161109 21:10]:
+> The PMICs have POWERHOLD set by default which prevents PMIC shutdown
+> even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
+> So to enable pmic power off this property lets one over ride the default
+> value and enable pmic power off.
 
-Can you please include the same changes for gcc-msm8994.c as it should 
-be in sboyd's tree?
+This should not cause merge conflicts so probably best to merge along
+with the driver changes:
 
-If not I will send a patch directly, either way works for me.
+Acked-by: Tony Lindgren <tony@atomide.com>
 
+If you guys want me to pick up this separately let me know.
 
--jeremy
+Regards,
+
+Tony
