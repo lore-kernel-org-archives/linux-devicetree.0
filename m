@@ -1,90 +1,51 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 2/3] ARM: dts: sun7i: bananapi-m1-plus: Add PMIC regulators
-Date: Tue, 15 Nov 2016 21:51:05 +0800
-Message-ID: <20161115135106.438-3-wens@csie.org>
-References: <20161115135106.438-1-wens@csie.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM64: zynqmp: Fix W=1 dtc 1.4 warnings
+Date: Tue, 15 Nov 2016 15:04:42 +0100
+Message-ID: <1e8f8f0f369b6838bf995e7369bb364c3020a411.1479218678.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161115135106.438-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, monstr@monstr.eu, Alexander Graf <agraf@suse.de>, Carlo Caione <carlo@endlessm.com>, devicetree@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M1+, like other Allwinner A20 based boards, uses the
-AXP209 PMIC to supply its power.
+The patch removes these warnings reported by dtc 1.4:
+Warning (unit_address_vs_reg): Node /amba_apu has a reg or ranges
+property, but no unit name
+Warning (unit_address_vs_reg): Node /memory has a reg or ranges
+property, but no unit name
 
-Add the AXP209 regulators.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 35 +++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index 44377a98cc89..ac19630c1c23 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -105,6 +105,10 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -132,16 +136,14 @@
- 	status = "okay";
- 
- 	axp209: pmic@34 {
--		compatible = "x-powers,axp209";
- 		reg = <0x34>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--
--		interrupt-controller;
--		#interrupt-cells = <1>;
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 2 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index 358089687a69..ef1b9e573af0 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -27,7 +27,7 @@
+ 		stdout-path = "serial0:115200n8";
  	};
- };
  
-+#include "axp209.dtsi"
-+
- &ir0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir0_rx_pins_a>;
-@@ -222,6 +224,31 @@
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
  	};
- };
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 68a908334c7b..83791eadff41 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -72,7 +72,7 @@
+ 			     <1 10 0xf08>;
+ 	};
  
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+-	amba_apu {
++	amba_apu: amba_apu@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
 -- 
-2.10.2
+1.9.1
