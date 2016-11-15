@@ -1,73 +1,113 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 0/6] Add support for STM32 ADC
-Date: Tue, 15 Nov 2016 16:30:55 +0100
-Message-ID: <1479223861-21747-1-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v3 1/6] Documentation: dt-bindings: Document STM32 ADC DT bindings
+Date: Tue, 15 Nov 2016 16:30:56 +0100
+Message-ID: <1479223861-21747-2-git-send-email-fabrice.gasnier@st.com>
+References: <1479223861-21747-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, pmeerw@pmeerw.net, linux@armlinux.org.uk, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, jic23@kernel.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479223861-21747-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for STM32F4 ADC into IIO framework.
-STM32F4 ADC is a 12-bit successive approximation analog-to-digital
-converter with multiplexed input channels. Conversions can
-be performed in single, continuous, scan or discontinuous mode.
-Conversions can be launched in software or using hardware triggers.
+This patch adds documentation of device tree bindings for the STM32 ADC.
 
-This driver has been developed and tested on STM32F429 eval board.
-It consist of a core driver, to manage common resources shared
-between up to 3 ADC instances and an ADC driver to manage each adc
-instance.
-
-Changes in v3:
-- Core driver moved to iio/adc.
-- Build fix.
-- Updates following Jonathan's and Lars's remarks.
-- Binding: adc child clock is mandatory.
-
-Changes in v2:
-- Replace single driver model by MFD approach, to handle up to 3 ADCs
-  as separate devices. Each ADC device then registers a unique IIO
-  device.
-- Make driver as simple as possible for the first instance, to ease
-  review. For now, I dropped complexity by removing injected support,
-  triggered buffer mode, dmas.
-- Removed abstraction layer (indirection routines, ops) as only stm32f4
-  is supported.
-
-Fabrice Gasnier (6):
-  Documentation: dt-bindings: Document STM32 ADC DT bindings
-  iio: adc: Add support for STM32 ADC core
-  iio: adc: Add support for STM32 ADC
-  ARM: configs: stm32: enable ADC driver
-  ARM: dts: stm32f429: Add adc support
-  ARM: dts: stm32f429: enable adc on eval board
-
- .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  83 ++++
- arch/arm/boot/dts/stm32429i-eval.dts               |  25 +
- arch/arm/boot/dts/stm32f429.dtsi                   |  49 ++
- arch/arm/configs/stm32_defconfig                   |   3 +
- drivers/iio/adc/Kconfig                            |  23 +
- drivers/iio/adc/Makefile                           |   2 +
- drivers/iio/adc/stm32-adc-core.c                   | 303 ++++++++++++
- drivers/iio/adc/stm32-adc-core.h                   |  52 +++
- drivers/iio/adc/stm32-adc.c                        | 518 +++++++++++++++++++++
- 9 files changed, 1058 insertions(+)
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 83 ++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
- create mode 100644 drivers/iio/adc/stm32-adc-core.c
- create mode 100644 drivers/iio/adc/stm32-adc-core.h
- create mode 100644 drivers/iio/adc/stm32-adc.c
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+new file mode 100644
+index 0000000..49ed82e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -0,0 +1,83 @@
++STMicroelectronics STM32 ADC device driver
++
++STM32 ADC is a successive approximation analog-to-digital converter.
++It has several multiplexed input channels. Conversions can be performed
++in single, continuous, scan or discontinuous mode. Result of the ADC is
++stored in a left-aligned or right-aligned 32-bit data register.
++Conversions can be launched in software or using hardware triggers.
++
++The analog watchdog feature allows the application to detect if the input
++voltage goes beyond the user-defined, higher or lower thresholds.
++
++Each STM32 ADC block can have up to 3 ADC instances.
++
++Each instance supports two contexts to manage conversions, each one has its
++own configurable sequence and trigger:
++- regular conversion can be done in sequence, running in background
++- injected conversions have higher priority, and so have the ability to
++  interrupt regular conversion sequence (either triggered in SW or HW).
++  Regular sequence is resumed, in case it has been interrupted.
++
++Contents of a stm32 adc root node:
++-----------------------------------
++Required properties:
++- compatible: Should be "st,stm32f4-adc-core".
++- reg: Offset and length of the ADC block register set.
++- interrupts: Must contain the interrupt for ADC block.
++- clocks: Clock for the analog circuitry (common to all ADCs).
++- clock-names: Must be "adc".
++- interrupt-controller: Identifies the controller node as interrupt-parent
++- vref-supply: Phandle to the vref input analog reference voltage.
++- #interrupt-cells = <1>;
++- #address-cells = <1>;
++- #size-cells = <0>;
++
++Optional properties:
++- A pinctrl state named "default" for each ADC channel may be defined to set
++  inX ADC pins in mode of operation for analog input on external pin.
++
++Contents of a stm32 adc child node:
++-----------------------------------
++An ADC block node should contain at least one subnode, representing an
++ADC instance available on the machine.
++
++Required properties:
++- compatible: Should be "st,stm32f4-adc".
++- reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
++- clocks: Input clock private to this ADC instance.
++- interrupt-parent: Phandle to the parent interrupt controller.
++- interrupts: IRQ Line for the ADC (e.g. may be 0 for adc@0, 1 for adc@100 or
++  2 for adc@200).
++- st,adc-channels: List of single-ended channels muxed for this ADC.
++  It can have up to 16 channels, numbered from 0 to 15 (resp. for in0..in15).
++- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
++  Documentation/devicetree/bindings/iio/iio-bindings.txt
++
++Example:
++	adc: adc@40012000 {
++		compatible = "st,stm32f4-adc-core";
++		reg = <0x40012000 0x400>;
++		interrupts = <18>;
++		clocks = <&rcc 0 168>;
++		clock-names = "adc";
++		vref-supply = <&reg_vref>;
++		interrupt-controller;
++		pinctrl-names = "default";
++		pinctrl-0 = <&adc3_in8_pin>;
++
++		#interrupt-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		adc@0 {
++			compatible = "st,stm32f4-adc";
++			#io-channel-cells = <1>;
++			reg = <0x0>;
++			clocks = <&rcc 0 168>;
++			interrupt-parent = <&adc>;
++			interrupts = <0>;
++			st,adc-channels = <8>;
++		};
++		...
++		other adc child nodes follow...
++	};
 -- 
 1.9.1
