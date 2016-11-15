@@ -1,47 +1,29 @@
 From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 09/11] ARM: shmobile: document SK-RZG1M board
-Date: Tue, 15 Nov 2016 18:55:47 +0100
-Message-ID: <20161115175546.GE3979@verge.net.au>
+Subject: Re: [PATCH 06/11] ARM: dts: r8a7745: add [H]SCIF{A|B} support
+Date: Tue, 15 Nov 2016 18:55:28 +0100
+Message-ID: <20161115175527.GD3979@verge.net.au>
 References: <4121805.SRTmqJtRfv@wasted.cogentembedded.com>
- <3956722.6l6VXXKMOL@wasted.cogentembedded.com>
+ <2366203.iKt2DUneo7@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3956722.6l6VXXKMOL-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <2366203.iKt2DUneo7-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 29, 2016 at 01:23:59AM +0300, Sergei Shtylyov wrote:
-> Document the SK-RZG1E device tree bindings, listing it as a supported board.
+On Sat, Oct 29, 2016 at 01:19:40AM +0300, Sergei Shtylyov wrote:
+> Describe [H]SCIF{|A|B} ports in the R8A7745 device tree.
 > 
-> This allows to use checkpatch.pl to validate .dts files referring to the
-> SK-RZG1E board.
+> Based on the original (and large) patch by Dmitry Shifrin
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 > 
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-I have queued this up after with s/SK-RZG1M/SK-RZG1E/
-
-> ---
->  Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> Index: renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-> ===================================================================
-> --- renesas.orig/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ renesas/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -77,6 +77,8 @@ Boards:
->      compatible = "renesas,salvator-x", "renesas,r8a7796";
->    - SILK (RTP0RC7794LCB00011S)
->      compatible = "renesas,silk", "renesas,r8a7794"
-> +  - SK-RZG1E (YR8A77450S000BE)
-> +    compatible = "renesas,sk-rzg1e", "renesas,r8a7745"
->    - SK-RZG1M (YR8A77430S000BE)
->      compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
->    - Wheat
-> 
+I have queued this up after updating the indentation to use
+tabs where possible.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
