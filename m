@@ -1,35 +1,32 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [v8,
- 1/3] Documentation: dt: net: add ath9k wireless device binding
-Date: Tue, 15 Nov 2016 15:56:47 +0100
-Message-ID: <cfd35a091551410cb69f2444109d3193@euamsexm01a.eu.qualcomm.com>
-References: <20161016205907.19927-2-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] mtd: spi-nor: Bindings for Rockchip serial flash
+ controller
+Date: Tue, 15 Nov 2016 09:05:05 -0600
+Message-ID: <20161115150505.7zcepiqbdp7oxlgd@rob-hp-laptop>
+References: <1478855766-151673-1-git-send-email-shawn.lin@rock-chips.com>
+ <1478855766-151673-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161016205907.19927-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478855766-151673-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Add documentation how devicetree can be used to configure ath9k based
-> devices.
+On Fri, Nov 11, 2016 at 05:16:05PM +0800, Shawn Lin wrote:
+> Add binding document for the Rockchip serial flash controller.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  .../devicetree/bindings/mtd/rockchip-sfc.txt       | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
 
-3 patches applied to ath-next branch of ath.git, thanks.
-
-fc383ffdb91a Documentation: dt: net: add ath9k wireless device binding
-b40ded2ad75c ath9k: add a helper to get the string representation of ath_bus_type
-138b41253d9c ath9k: parse the device configuration from an OF node
-
--- 
-https://patchwork.kernel.org/patch/9378317/
-
-Documentation about submitting wireless patches and checking status
-from patchwork:
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
