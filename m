@@ -1,143 +1,208 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Tue, 15 Nov 2016 10:56:45 -0800
-Message-ID: <20161115185645.GA25626@codeaurora.org>
-References: <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
- <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
- <20161110040440.GA11670@vireshk-i7>
- <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
- <20161110180940.GD11670@vireshk-i7>
- <20161110225126.GK16026@codeaurora.org>
- <20161111031120.GE11670@vireshk-i7>
- <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
- <20161115021302.GR5177@codeaurora.org>
- <20161115033151.GG4178@vireshk-i7>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: dwc2: add amcc,dwc-otg support
+Date: Tue, 15 Nov 2016 11:08:23 -0800
+Message-ID: <8235c9d5-891b-6f75-49a0-c8820c3b139f@synopsys.com>
+References: <b1ec4a4425388cdee36be081971484db2a7d048a.1478897792.git.chunkeey@gmail.com>
+ <1546251.ssrfyj8Loe@debian64>
+ <caf17dcd-c7c5-e202-cde4-7c8702b5868b@synopsys.com>
+ <3741942.Du5DzKuQeQ@debian64>
+ <f9be1906-3d94-e9c6-841a-d7baa2572f75@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161115033151.GG4178@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, d-gerlach@ti.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f9be1906-3d94-e9c6-841a-d7baa2572f75-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/15, Viresh Kumar wrote:
-> On 14-11-16, 18:13, Stephen Boyd wrote:
-> > On 11/14, Rob Herring wrote:
-> > > On Fri, Nov 11, 2016 at 08:41:20AM +0530, Viresh Kumar wrote:
-> > > > On 10-11-16, 14:51, Stephen Boyd wrote:
-> > > > > 
-> > > > > No. The supply names (and also clock names/index) should be left
-> > > > > up to the consumer of the OPP table. We don't want to encode any
-> > > > > sort of details like this between the OPP table and the consumer
-> > > > > of it in DT because then it seriously couples the OPP table to
-> > > > > the consumer device. "The binding" in this case that needs to be
-> > > > > updated is the consumer binding, to indicate that it correlated
-> > > > > foo-supply and bar-supply to index 0 and 1 of the OPP table
-> > > > > voltages.
-> > > > 
-> > > > Are you saying that we shall have a property like this then?
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > > > index ee91cbdd95ee..733946df2fb8 100644
-> > > > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > > > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > > > @@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
-> > > >                         compatible = "arm,cortex-a7";
-> > > >                         ...
-> > > >  
-> > > > -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
-> > > > +                       vcc0-supply = <&cpu_supply0>;
-> > > > +                       vcc1-supply = <&cpu_supply1>;
-> > > > +                       vcc2-supply = <&cpu_supply2>;
-> > > > +                       opp-supply-names = "vcc0", "vcc1", "vcc2";
-> > > 
-> > > Uh, no. You already have the names in the *-supply properties. Yes, they 
-> > > are a PIA to retrieve compared to a *-names property, but that is the 
-> > > nature of this style of binding.
+On 11/14/2016 3:00 PM, John Youn wrote:
+> On 11/11/2016 3:12 PM, Christian Lamparter wrote:
+>> On Friday, November 11, 2016 2:20:42 PM CET John Youn wrote:
+>>> On 11/11/2016 2:05 PM, Christian Lamparter wrote:
+>>>> On Friday, November 11, 2016 1:22:16 PM CET John Youn wrote:
+>>>>> On 11/11/2016 12:59 PM, Christian Lamparter wrote:
+>>>>>> This patch adds support for the "amcc,usb-otg" device
+>>>>>> which is found in the PowerPC Canyonlands' dts.
+>>>>>>
+>>>>>> The device definition was added by:
+>>>>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
+>>>>>> but without any driver support as the dwc2 driver wasn't
+>>>>>> available at that time.
+>>>>>>
+>>>>>> Note: The system can't use the generic "snps,dwc2" compatible
+>>>>>> because of the special ahbcfg configuration. The default
+>>>>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
+>>>>>> when the USB and SATA is used concurrently.
+>>>>>
+>>>>> I don't want to add any more of these param structures to the driver
+>>>>> unless really necessary. We're trying to remove usage of them in favor
+>>>>> of using auto-detected defaults and device properties to override
+>>>>> them.
+>>>> Ok, thanks. I think that would work. I've attached an updated patch.
+>>>> Can it be applied/queued now? Or do you want me to resent it later?
+>>>>
+>>>>> The AHB Burst is actually one of the ones we were going to do next
+>>>>> because our platform also doesn't work well with INCR4. In fact I'm
+>>>>> thinking of making the default INCR.
+>>>> Is that actually possible to change the default still? This would
+>>>> require to re-evaluate all existing archs/platforms that use 
+>>>> "snps,dwc2" for INCR16 compatibility. 
+>>>
+>>> INCR, not INCR16, but you're right, so we may not change it even
+>>> though though INCR is usually the right choice over INCR4.
+>> What about making a device-tree property?
 > 
-> Its not just PIA, but impossible AFAICT.
+> Yes, that's what I meant. I'll send a change for this shortly.
 > 
-> There are two important pieces of information we need for multiple
-> regulator support:
-> - Which regulator in the consumer node corresponds to which entry in
->   the OPP table. As Mark mentioned earlier, DT should be able to get
->   us this.
+>>
+>> Recommended properties:
+>>  - g-ahb-bursts : specifies the ahb bursts length, should be one of
+>>    "single", "INCRx", "INCR4", "INCR8", or "INCR16". If not specified
+>>    the safer but inefficient "INCR4" is used. The optimal setting is
+>>    "INCRx".
+>>
+>> Would this work? If so, I can make a patch over the weekend.
+>>> Anyways, with the binding, can't you just set the compatible string to
+>>> snps,dwc2?
+>>
+>> Ah, let me explain. I had a discussion with Mark Rutland and Rob Herring
+>> a while back about device-tree bindings.
+>>
+>> They made it very clear to me, that they don't want any generic "catch all
+>> compatible" strings:
+>>
+>> "Bindings should be for hardware (either specific device models, or for
+>> classes), and not for Linux drivers. The latter is subject to arbitrary
+>> changes while the former is not, as old hardware continues to exist and
+>> does not change while drivers get completely reworked." [0]
+>>
+>> Furthermore, this is an existing binding in kernel's canyonlands.dts [1]
+>> and this binding can't be easily changed. Rob Herring explained this in
+>> the context of the "basic-mmio-gpio" patch [2] when I was editing the dts
+>> to make them work with the changes I made:
+>>
+>> "You can't remove the old drivers as they are needed to work with 
+>> old dtbs, so there is no gain.
+>>
+>> You would need to match on existing compatibles such as
+>> moxa,moxart-gpio and provide a match data struct that has all the info
+>> you are adding here (e.g. data register offset). Then additionally you
+>> could add "basic-mmio-gpio" (I would drop "basic" part) and the
+>> additional data associated with it. But it has to be new properties,
+>> not changing properties. Changing the reg values doesn't work."
+>>
+>> So, for this to work with the existing canyonlands.dts, I need to have
+>> the "amcc,dwc-otg" compatible string.
+> 
+> Ok, if that's the case. But still a bit confused as to what driver was
+> working with it before since the binding was not defined for dwc2.
+> 
+>>
+>> Of course, it would be great to hear from Rob Herring and/or Mark Rutland
+>> about this case.
+>>
+>> Regards,
+>> Christian
+>>
+>> [0] <https://patchwork.kernel.org/patch/8976221/>
+>> [1] <http://lxr.free-electrons.com/source/arch/powerpc/boot/dts/canyonlands.dts#L181>
+>> [2] <http://www.spinics.net/lists/devicetree/msg124538.html>
+>>
+>>  
+>>>>
+>>>> From what I can tell based would be:
+>>>> bcm11351, bcm21664, bcm23550, exynos3250, stm32f429, rk3xxx,
+>>>> stratix10, meson-gxbb, rt3050 and some Altera FPGAs.
+>>>>
+>>>>> If that's all you need then a devicetree binding should be enough
+>>>>> right?
+>>>> Yes. The device is working fine so far.
+>>>>
+>>>> Regards,
+>>>> Christian
+>>>>
+>>>> ---
+>>>> From 70dd4be016b89655a56bc8260f04683b50f07644 Mon Sep 17 00:00:00 2001
+>>>> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Date: Sun, 6 Nov 2016 00:39:24 +0100
+>>>> Subject: [PATCH] usb: dwc2: add amcc,dwc-otg support
+>>>>
+>>>> This patch adds support for the "amcc,usb-otg" device
+>>>> which is found in the PowerPC Canyonlands' dts.
+>>>>
+>>>> The device definition was added by:
+>>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
+>>>> but without any driver support as the dwc2 driver wasn't
+>>>> available at that time.
+>>>>
+>>>> Note: The system can't use the generic "snps,dwc2" compatible
+>>>> because of the special ahbcfg configuration. The default
+>>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
+>>>> when the USB and SATA is used concurrently.
+>>>>
+>>>> Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>>> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> ---
+>>>> v1->v2:
+>>>> 	- moved definitons to params.c
+>>>> 	- removed dma_enable / host_dma parameter
+>>>> 	- added dma_desc_fs_enable parameter
+>>>> v2->v3:
+>>>> 	- removed parameters
+>>>>
+>>>> Please queue this patch until GAHBCFG_HBSTLEN_INCR16 is the default
+>>>> for ahbcfg.
+>>>> ---
+>>>>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>>>>  drivers/usb/dwc2/params.c                      | 1 +
+>>>>  2 files changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>> index 10a2a4b..6ccfe85 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>> @@ -12,6 +12,7 @@ Required properties:
+>>>>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+>>>>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+>>>>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
+>>>> +  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+>>>>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>>>>  - reg : Should contain 1 register range (address and length)
+>>>>  - interrupts : Should contain 1 interrupt
+>>>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+>>>> index 64d5c66..9506ab0 100644
+>>>> --- a/drivers/usb/dwc2/params.c
+>>>> +++ b/drivers/usb/dwc2/params.c
+>>>> @@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
+>>>>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+>>>>  	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
+>>>>  	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
+>>>> +	{ .compatible = "amcc,dwc-otg", .data = NULL },
+>>>>  	{},
+>>>>  };
+>>>>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+>>>>
+> 
+> For dwc2 part:
+> 
+> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> 
 
-This is also possible from C code though. Or is there some case
-where it isn't possible if we're sharing the same table with two
-devices? I'm lost on when this would ever happen.
+Hi Felipe,
 
-It feels like trying to keep the OPP table agnostic of the
-consuming device and the device's binding is more trouble than
-it's worth. Especially considering we have opp-shared and *-name
-now.
+Can you drop this from your testing/next?
 
-> - The order in which the supplies need to be programmed. We have all
->   agreed to do this in code instead of inferring it from DT and this
->   patch series already does that.
+I meant for the 2nd version to be applied, without the params
+structure.
 
-Agreed. Encoding a sequence into DT doesn't sound very feasible.
-How is this going to be handled though? I don't see any users of
-the code we're reviewing here, so it's hard to grasp how things
-will work. It would be really useful if we had some user of the
-code included in the patch series to get the big picture.
+I can send you a clean version to apply later today.
 
-> 
-> I want to solve the first problem here and I don't see how it can be
-> solved using such entries:
-> 
-> 	cpus {
-> 		cpu@0 {
-> 			compatible = "arm,cortex-a7";
-> 			...
-> 
->                         vcc0-supply = <&cpu_supply0>;
->                         vcc1-supply = <&cpu_supply1>;
->                         vcc2-supply = <&cpu_supply2>;
-> 			operating-points-v2 = <&cpu0_opp_table>;
->                 };
->         };
-> 
-> 	cpu0_opp_table: opp_table0 {
-> 		compatible = "operating-points-v2";
-> 		opp-shared;
-> 
-> 		opp@1000000000 {
-> 			opp-hz = /bits/ 64 <1000000000>;
-> 			opp-microvolt = <970000>, /* Supply 0 */
-> 					<960000>, /* Supply 1 */
-> 					<960000>; /* Supply 2 */
-> 		};
->         };
-> 
-> The code can't figure out which of vcc0, vcc1, vcc2 is added first in
-> the CPU node and so we need to get the order somehow. A separate
-> binding as I mentioned earlier is a probably (ugly) solution.
-> 
-> > I think the problem is that Viresh wants the binding to be "self
-> > describing" so that the OPP can be used without a driver knowing
-> > that a supply corresponds to a particular column in the voltage
-> > table.
-> 
-> Right, and that's what Mark suggested as well.
-> 
-> > I don't understand that though. Can't we set the supply
-> > names from C code somewhere based on the consumer of the OPPs?
-> 
-> That's what this patch series is doing right now.
-> 
-> So, are you saying that the way this patchset does it is fine with you
-> ?
-
-That's just to handle the ordering of operations? I need to take
-a minute and understand what's changing. You may have spent
-plenty of time developing/updating, but I haven't spent near
-enough time understanding what's going on in these patches to
-give a thorough review.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+John
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
