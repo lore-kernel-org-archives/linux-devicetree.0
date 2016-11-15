@@ -1,302 +1,506 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 02/19] phy: stih41x-usb: Remove usb phy driver and dt
- binding documentation.
-Date: Tue, 15 Nov 2016 18:37:15 +0530
-Message-ID: <582B0883.2020102@ti.com>
-References: <1473859677-9231-1-git-send-email-peter.griffin@linaro.org>
- <1473859677-9231-3-git-send-email-peter.griffin@linaro.org>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v2 2/6] mfd: stm32-adc: Add support for stm32 ADC
+Date: Tue, 15 Nov 2016 13:17:06 +0000
+Message-ID: <BCC00D81-A139-4C23-8A04-1A3A48419A53@jic23.retrosnub.co.uk>
+References: <1478794738-28933-1-git-send-email-fabrice.gasnier@st.com> <1478794738-28933-3-git-send-email-fabrice.gasnier@st.com> <9ba617f4-fd3d-2b48-2607-9eec3cc4253a@kernel.org> <20161114164701.GA2668@dell> <687b2001-c658-d0fb-a205-e5b6743fa9bc@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473859677-9231-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <687b2001-c658-d0fb-a205-e5b6743fa9bc@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Wednesday 14 September 2016 06:57 PM, Peter Griffin wrote:
-> This phy is only used on STiH415/6 based silicon, and support for
-> these SoC's is being removed from the kernel.
-> 
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: <kishon-l0cyMroinI0@public.gmane.org>
 
-I've merged the 1st 2 patches of this series. Since Patrice has already
-mentioned that he's merged the MAINTAINERS patch, I'm not merging it.
-Please let me know if you know of any problems.
+On 15 November 2016 10:47:52 GMT+00:00, Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>On 11/14/2016 05:47 PM, Lee Jones wrote:
+>> On Sat, 12 Nov 2016, Jonathan Cameron wrote:
+>>
+>>> On 10/11/16 16:18, Fabrice Gasnier wrote:
+>>>> Add core driver for STMicroelectronics STM32 ADC (Analog to Digital
+>>>> Converter). STM32 ADC can be composed of up to 3 ADCs with shared
+>>>> resources like clock prescaler, common interrupt line and analog
+>>>> reference voltage.
+>>>> This core driver basically manages shared resources.
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>> Looks good to me (other than the build issue obviously ;)
+>
+>Hi Jonathan,
+>Thanks for your review.
+>I'll fix build issue, sure ;-)
+>
+>>>
+>>> The fun bit will be trying to keep the whole thing this clean as you
+>>> add the more 'interesting' functionality.  *fingers crossed*
+>Yes... But in the end, splitting shared resources in core driver makes 
+>it more simple.
+>Not sure there will be more complexity here.
+>
+>>>
+>>> Acked-by: Jonathan Cameron <jic23@kernel.org>
+>> There isn't anything MFD about this driver.
+>>
+>> Please move it into IIO.
+>
+>Hmm, there is no other sub sysbtem that may be used here, ADC driver 
+>belongs to IIO.
+>Also, of_platform_populate() is being used here. This can perfectly be 
+>called from within IIO.
+>
+>Jonathan, can this "stm32-adc-core" driver be moved to, and live in 
+>drivers/iio/adc ?
+>(e.g. in addition to stm32-adc iio driver)
+>Is it ok for you ?
+Yes. That's ideal. 
+>
+>Please advise,
+>Best Regards,
+>Fabrice
+>
+>>
+>>>> ---
+>>>>   drivers/mfd/Kconfig                |  14 ++
+>>>>   drivers/mfd/Makefile               |   1 +
+>>>>   drivers/mfd/stm32-adc-core.c       | 301
+>+++++++++++++++++++++++++++++++++++++
+>>>>   include/linux/mfd/stm32-adc-core.h |  52 +++++++
+>>>>   4 files changed, 368 insertions(+)
+>>>>   create mode 100644 drivers/mfd/stm32-adc-core.c
+>>>>   create mode 100644 include/linux/mfd/stm32-adc-core.h
+>>>>
+>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>> index c6df644..2580cee 100644
+>>>> --- a/drivers/mfd/Kconfig
+>>>> +++ b/drivers/mfd/Kconfig
+>>>> @@ -1152,6 +1152,20 @@ config MFD_PALMAS
+>>>>   	  If you say yes here you get support for the Palmas
+>>>>   	  series of PMIC chips from Texas Instruments.
+>>>>   
+>>>> +config MFD_STM32_ADC
+>>>> +	tristate "STMicroelectronics STM32 adc"
+>>>> +	depends on ARCH_STM32 || COMPILE_TEST
+>>>> +	depends on OF
+>>>> +	select MFD_CORE
+>>>> +	select REGULATOR
+>>>> +	select REGULATOR_FIXED_VOLTAGE
+>>>> +	help
+>>>> +	  Select this option to enable the core driver for
+>STMicroelectronics
+>>>> +	  STM32 analog-to-digital converter (ADC).
+>>>> +
+>>>> +	  This driver can also be built as a module.  If so, the module
+>>>> +	  will be called stm32-adc-core.
+>>>> +
+>>>>   config TPS6105X
+>>>>   	tristate "TI TPS61050/61052 Boost Converters"
+>>>>   	depends on I2C
+>>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>>>> index 9834e66..4571506 100644
+>>>> --- a/drivers/mfd/Makefile
+>>>> +++ b/drivers/mfd/Makefile
+>>>> @@ -185,6 +185,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+=
+>intel-lpss-pci.o
+>>>>   obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+>>>>   obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+>>>>   obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>>>> +obj-$(CONFIG_MFD_STM32_ADC) 	+= stm32-adc-core.o
+>>>>   obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>>>>   obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+>>>>   obj-$(CONFIG_MFD_RK808)		+= rk808.o
+>>>> diff --git a/drivers/mfd/stm32-adc-core.c
+>b/drivers/mfd/stm32-adc-core.c
+>>>> new file mode 100644
+>>>> index 0000000..bcf52fb
+>>>> --- /dev/null
+>>>> +++ b/drivers/mfd/stm32-adc-core.c
+>>>> @@ -0,0 +1,301 @@
+>>>> +/*
+>>>> + * This file is part of STM32 ADC driver
+>>>> + *
+>>>> + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
+>>>> + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
+>>>> + *
+>>>> + * Inspired from: fsl-imx25-tsadc
+>>>> + *
+>>>> + * License type: GPLv2
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>modify it
+>>>> + * under the terms of the GNU General Public License version 2 as
+>published by
+>>>> + * the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful,
+>but
+>>>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+>MERCHANTABILITY
+>>>> + * or FITNESS FOR A PARTICULAR PURPOSE.
+>>>> + * See the GNU General Public License for more details.
+>>>> + *
+>>>> + * You should have received a copy of the GNU General Public
+>License along with
+>>>> + * this program. If not, see <http://www.gnu.org/licenses/>.
+>>>> + */
+>>>> +
+>>>> +#include <linux/clk.h>
+>>>> +#include <linux/interrupt.h>
+>>>> +#include <linux/irqchip/chained_irq.h>
+>>>> +#include <linux/irqdesc.h>
+>>>> +#include <linux/irqdomain.h>
+>>>> +#include <linux/mfd/stm32-adc-core.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/of_device.h>
+>>>> +#include <linux/regulator/consumer.h>
+>>>> +#include <linux/slab.h>
+>>>> +
+>>>> +/* STM32F4 - common registers for all ADC instances: 1, 2 & 3 */
+>>>> +#define STM32F4_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
+>>>> +#define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
+>>>> +
+>>>> +/* STM32F4_ADC_CSR - bit fields */
+>>>> +#define STM32F4_EOC3			BIT(17)
+>>>> +#define STM32F4_EOC2			BIT(9)
+>>>> +#define STM32F4_EOC1			BIT(1)
+>>>> +
+>>>> +/* STM32F4_ADC_CCR - bit fields */
+>>>> +#define STM32F4_ADC_ADCPRE_SHIFT	16
+>>>> +#define STM32F4_ADC_ADCPRE_MASK		GENMASK(17, 16)
+>>>> +
+>>>> +/* STM32 F4 maximum analog clock rate (from datasheet) */
+>>>> +#define STM32F4_ADC_MAX_CLK_RATE	36000000
+>>>> +
+>>>> +/**
+>>>> + * struct stm32_adc_priv - stm32 ADC core private data
+>>>> + * @irq:		irq for ADC block
+>>>> + * @domain:		irq domain reference
+>>>> + * @aclk:		clock reference for the analog circuitry
+>>>> + * @vref:		regulator reference
+>>>> + * @common:		common data for all ADC instances
+>>>> + */
+>>>> +struct stm32_adc_priv {
+>>>> +	int				irq;
+>>>> +	struct irq_domain		*domain;
+>>>> +	struct clk			*aclk;
+>>>> +	struct regulator		*vref;
+>>>> +	struct stm32_adc_common		common;
+>>>> +};
+>>>> +
+>>>> +static struct stm32_adc_priv *to_stm32_adc_priv(struct
+>stm32_adc_common *com)
+>>>> +{
+>>>> +	return container_of(com, struct stm32_adc_priv, common);
+>>>> +}
+>>>> +
+>>>> +/* STM32F4 ADC internal common clock prescaler division ratios */
+>>>> +static int stm32f4_pclk_div[] = {2, 4, 6, 8};
+>>>> +
+>>>> +/**
+>>>> + * stm32f4_adc_clk_sel() - Select stm32f4 ADC common clock
+>prescaler
+>>>> + * @priv: stm32 ADC core private data
+>>>> + * Select clock prescaler used for analog conversions, before
+>using ADC.
+>>>> + */
+>>>> +static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+>>>> +			       struct stm32_adc_priv *priv)
+>>>> +{
+>>>> +	unsigned long rate;
+>>>> +	u32 val;
+>>>> +	int i;
+>>>> +
+>>>> +	rate = clk_get_rate(priv->aclk);
+>>>> +	for (i = 0; i < ARRAY_SIZE(stm32f4_pclk_div); i++) {
+>>>> +		if ((rate / stm32f4_pclk_div[i]) <= STM32F4_ADC_MAX_CLK_RATE)
+>>>> +			break;
+>>>> +	}
+>>>> +	if (i >= ARRAY_SIZE(stm32f4_pclk_div))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
+>>>> +	val &= ~STM32F4_ADC_ADCPRE_MASK;
+>>>> +	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
+>>>> +	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
+>>>> +
+>>>> +	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
+>>>> +		rate / (stm32f4_pclk_div[i] * 1000));
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +/* ADC common interrupt for all instances */
+>>>> +static void stm32_adc_irq_handler(struct irq_desc *desc)
+>>>> +{
+>>>> +	struct stm32_adc_priv *priv = irq_desc_get_handler_data(desc);
+>>>> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>> +	u32 status;
+>>>> +
+>>>> +	chained_irq_enter(chip, desc);
+>>>> +	status = readl_relaxed(priv->common.base + STM32F4_ADC_CSR);
+>>>> +
+>>>> +	if (status & STM32F4_EOC1)
+>>>> +		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+>>>> +
+>>>> +	if (status & STM32F4_EOC2)
+>>>> +		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+>>>> +
+>>>> +	if (status & STM32F4_EOC3)
+>>>> +		generic_handle_irq(irq_find_mapping(priv->domain, 2));
+>>>> +
+>>>> +	chained_irq_exit(chip, desc);
+>>>> +};
+>>>> +
+>>>> +static int stm32_adc_domain_map(struct irq_domain *d, unsigned int
+>irq,
+>>>> +				irq_hw_number_t hwirq)
+>>>> +{
+>>>> +	irq_set_chip_data(irq, d->host_data);
+>>>> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_level_irq);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void stm32_adc_domain_unmap(struct irq_domain *d, unsigned
+>int irq)
+>>>> +{
+>>>> +	irq_set_chip_and_handler(irq, NULL, NULL);
+>>>> +	irq_set_chip_data(irq, NULL);
+>>>> +}
+>>>> +
+>>>> +static const struct irq_domain_ops stm32_adc_domain_ops = {
+>>>> +	.map = stm32_adc_domain_map,
+>>>> +	.unmap  = stm32_adc_domain_unmap,
+>>>> +	.xlate = irq_domain_xlate_onecell,
+>>>> +};
+>>>> +
+>>>> +static int stm32_adc_irq_probe(struct platform_device *pdev,
+>>>> +			       struct stm32_adc_priv *priv)
+>>>> +{
+>>>> +	struct device_node *np = pdev->dev.of_node;
+>>>> +
+>>>> +	priv->irq = platform_get_irq(pdev, 0);
+>>>> +	if (priv->irq < 0) {
+>>>> +		dev_err(&pdev->dev, "failed to get irq\n");
+>>>> +		return priv->irq;
+>>>> +	}
+>>>> +
+>>>> +	priv->domain = irq_domain_add_simple(np, STM32_ADC_MAX_ADCS, 0,
+>>>> +					     &stm32_adc_domain_ops,
+>>>> +					     priv);
+>>>> +	if (!priv->domain) {
+>>>> +		dev_err(&pdev->dev, "Failed to add irq domain\n");
+>>>> +		return -ENOMEM;
+>>>> +	}
+>>>> +
+>>>> +	irq_set_chained_handler(priv->irq, stm32_adc_irq_handler);
+>>>> +	irq_set_handler_data(priv->irq, priv);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void stm32_adc_irq_remove(struct platform_device *pdev,
+>>>> +				 struct stm32_adc_priv *priv)
+>>>> +{
+>>>> +	int hwirq;
+>>>> +
+>>>> +	for (hwirq = 0; hwirq < STM32_ADC_MAX_ADCS; hwirq++)
+>>>> +		irq_dispose_mapping(irq_find_mapping(priv->domain, hwirq));
+>>>> +	irq_domain_remove(priv->domain);
+>>>> +	irq_set_chained_handler(priv->irq, NULL);
+>>>> +}
+>>>> +
+>>>> +static int stm32_adc_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct stm32_adc_priv *priv;
+>>>> +	struct device_node *np = pdev->dev.of_node;
+>>>> +	struct resource *res;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (!pdev->dev.of_node)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>>> +	if (!priv)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +	priv->common.base = devm_ioremap_resource(&pdev->dev, res);
+>>>> +	if (IS_ERR(priv->common.base))
+>>>> +		return PTR_ERR(priv->common.base);
+>>>> +
+>>>> +	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+>>>> +	if (IS_ERR(priv->vref)) {
+>>>> +		ret = PTR_ERR(priv->vref);
+>>>> +		dev_err(&pdev->dev, "vref get failed, %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	ret = regulator_enable(priv->vref);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "vref enable failed\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	ret = regulator_get_voltage(priv->vref);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "vref get voltage failed, %d\n", ret);
+>>>> +		goto err_regulator_disable;
+>>>> +	}
+>>>> +	priv->common.vref_mv = ret / 1000;
+>>>> +	dev_dbg(&pdev->dev, "vref+=%dmV\n", priv->common.vref_mv);
+>>>> +
+>>>> +	priv->aclk = devm_clk_get(&pdev->dev, "adc");
+>>>> +	if (IS_ERR(priv->aclk)) {
+>>>> +		ret = PTR_ERR(priv->aclk);
+>>>> +		dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+>>>> +		goto err_regulator_disable;
+>>>> +	}
+>>>> +
+>>>> +	ret = clk_prepare_enable(priv->aclk);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "adc clk enable failed\n");
+>>>> +		goto err_regulator_disable;
+>>>> +	}
+>>>> +
+>>>> +	ret = stm32f4_adc_clk_sel(pdev, priv);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "adc clk selection failed\n");
+>>>> +		goto err_clk_disable;
+>>>> +	}
+>>>> +
+>>>> +	ret = stm32_adc_irq_probe(pdev, priv);
+>>>> +	if (ret < 0)
+>>>> +		goto err_clk_disable;
+>>>> +
+>>>> +	platform_set_drvdata(pdev, &priv->common);
+>>>> +
+>>>> +	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&pdev->dev, "failed to populate DT children\n");
+>>>> +		goto err_irq_remove;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +err_irq_remove:
+>>>> +	stm32_adc_irq_remove(pdev, priv);
+>>>> +
+>>>> +err_clk_disable:
+>>>> +	clk_disable_unprepare(priv->aclk);
+>>>> +
+>>>> +err_regulator_disable:
+>>>> +	regulator_disable(priv->vref);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +static int stm32_adc_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct stm32_adc_common *common = platform_get_drvdata(pdev);
+>>>> +	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
+>>>> +
+>>>> +	of_platform_depopulate(&pdev->dev);
+>>>> +	stm32_adc_irq_remove(pdev, priv);
+>>>> +	clk_disable_unprepare(priv->aclk);
+>>>> +	regulator_disable(priv->vref);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id stm32_adc_of_match[] = {
+>>>> +	{ .compatible = "st,stm32f4-adc-core" },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, stm32_adc_of_match);
+>>>> +
+>>>> +static struct platform_driver stm32_adc_driver = {
+>>>> +	.probe = stm32_adc_probe,
+>>>> +	.remove = stm32_adc_remove,
+>>>> +	.driver = {
+>>>> +		.name = "stm32-adc-core",
+>>>> +		.of_match_table = stm32_adc_of_match,
+>>>> +	},
+>>>> +};
+>>>> +module_platform_driver(stm32_adc_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
+>>>> +MODULE_DESCRIPTION("STMicroelectronics STM32 ADC MFD driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>>> +MODULE_ALIAS("platform:stm32-adc-core");
+>>>> diff --git a/include/linux/mfd/stm32-adc-core.h
+>b/include/linux/mfd/stm32-adc-core.h
+>>>> new file mode 100644
+>>>> index 0000000..081fa5f
+>>>> --- /dev/null
+>>>> +++ b/include/linux/mfd/stm32-adc-core.h
+>>>> @@ -0,0 +1,52 @@
+>>>> +/*
+>>>> + * This file is part of STM32 ADC driver
+>>>> + *
+>>>> + * Copyright (C) 2016, STMicroelectronics - All Rights Reserved
+>>>> + * Author: Fabrice Gasnier <fabrice.gasnier@st.com>.
+>>>> + *
+>>>> + * License type: GPLv2
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or
+>modify it
+>>>> + * under the terms of the GNU General Public License version 2 as
+>published by
+>>>> + * the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope that it will be useful,
+>but
+>>>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+>MERCHANTABILITY
+>>>> + * or FITNESS FOR A PARTICULAR PURPOSE.
+>>>> + * See the GNU General Public License for more details.
+>>>> + *
+>>>> + * You should have received a copy of the GNU General Public
+>License along with
+>>>> + * this program. If not, see <http://www.gnu.org/licenses/>.
+>>>> + */
+>>>> +
+>>>> +#ifndef __STM32_ADC_H
+>>>> +#define __STM32_ADC_H
+>>>> +
+>>>> +/*
+>>>> + * STM32 - ADC global register map
+>>>> + * ________________________________________________________
+>>>> + * | Offset |                 Register                    |
+>>>> + * --------------------------------------------------------
+>>>> + * | 0x000  |                Master ADC1                  |
+>>>> + * --------------------------------------------------------
+>>>> + * | 0x100  |                Slave ADC2                   |
+>>>> + * --------------------------------------------------------
+>>>> + * | 0x200  |                Slave ADC3                   |
+>>>> + * --------------------------------------------------------
+>>>> + * | 0x300  |         Master & Slave common regs          |
+>>>> + * --------------------------------------------------------
+>>>> + */
+>>>> +#define STM32_ADC_MAX_ADCS		3
+>>>> +#define STM32_ADCX_COMN_OFFSET		0x300
+>>>> +
+>>>> +/**
+>>>> + * struct stm32_adc_common - stm32 ADC driver common data (for all
+>instances)
+>>>> + * @base:		control registers base cpu addr
+>>>> + * @vref_mv:		vref voltage (mv)
+>>>> + */
+>>>> +struct stm32_adc_common {
+>>>> +	void __iomem			*base;
+>>>> +	int				vref_mv;
+>>>> +};
+>>>> +
+>>>> +#endif
+>>>>
+>
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo@vger.kernel.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Thanks
-Kishon
-
-> ---
->  .../devicetree/bindings/phy/phy-stih41x-usb.txt    |  24 ---
->  drivers/phy/Kconfig                                |   8 -
->  drivers/phy/Makefile                               |   1 -
->  drivers/phy/phy-stih41x-usb.c                      | 188 ---------------------
->  4 files changed, 221 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
->  delete mode 100644 drivers/phy/phy-stih41x-usb.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
-> deleted file mode 100644
-> index 744b480..0000000
-> --- a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -STMicroelectronics STiH41x USB PHY binding
-> -------------------------------------------
-> -
-> -This file contains documentation for the usb phy found in STiH415/6 SoCs from
-> -STMicroelectronics.
-> -
-> -Required properties:
-> -- compatible	: should be "st,stih416-usb-phy" or "st,stih415-usb-phy"
-> -- st,syscfg	: should be a phandle of the syscfg node
-> -- clock-names	: must contain "osc_phy"
-> -- clocks	: must contain an entry for each name in clock-names.
-> -See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -- #phy-cells	: must be 0 for this phy
-> -See: Documentation/devicetree/bindings/phy/phy-bindings.txt
-> -
-> -Example:
-> -
-> -usb2_phy: usb2phy@0 {
-> -	compatible	= "st,stih416-usb-phy";
-> -	#phy-cells	= <0>;
-> -	st,syscfg	= <&syscfg_rear>;
-> -	clocks		= <&clk_sysin>;
-> -	clock-names	= "osc_phy";
-> -};
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index d1f22ac..b4aa039 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -392,14 +392,6 @@ config PHY_STIH407_USB
->  	  Enable this support to enable the picoPHY device used by USB2
->  	  and USB3 controllers on STMicroelectronics STiH407 SoC families.
->  
-> -config PHY_STIH41X_USB
-> -	tristate "STMicroelectronics USB2 PHY driver for STiH41x series"
-> -	depends on ARCH_STI
-> -	select GENERIC_PHY
-> -	help
-> -	  Enable this to support the USB transceiver that is part of
-> -	  STMicroelectronics STiH41x SoC series.
-> -
->  config PHY_QCOM_UFS
->  	tristate "Qualcomm UFS PHY driver"
->  	depends on OF && ARCH_QCOM
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index d169d80..5e48741 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -45,7 +45,6 @@ obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
->  obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
->  obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
-> -obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
->  obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-> diff --git a/drivers/phy/phy-stih41x-usb.c b/drivers/phy/phy-stih41x-usb.c
-> deleted file mode 100644
-> index 0ac7463..0000000
-> --- a/drivers/phy/phy-stih41x-usb.c
-> +++ /dev/null
-> @@ -1,188 +0,0 @@
-> -/*
-> - * Copyright (C) 2014 STMicroelectronics
-> - *
-> - * STMicroelectronics PHY driver for STiH41x USB.
-> - *
-> - * Author: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License version 2, as
-> - * published by the Free Software Foundation.
-> - *
-> - */
-> -
-> -#include <linux/platform_device.h>
-> -#include <linux/io.h>
-> -#include <linux/kernel.h>
-> -#include <linux/module.h>
-> -#include <linux/of.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/clk.h>
-> -#include <linux/phy/phy.h>
-> -#include <linux/regmap.h>
-> -#include <linux/mfd/syscon.h>
-> -
-> -#define SYSCFG332  0x80
-> -#define SYSCFG2520 0x820
-> -
-> -/**
-> - * struct stih41x_usb_cfg - SoC specific PHY register mapping
-> - * @syscfg: Offset in syscfg registers bank
-> - * @cfg_mask: Bits mask for PHY configuration
-> - * @cfg: Static configuration value for PHY
-> - * @oscok: Notify the PHY oscillator clock is ready
-> - *	   Setting this bit enable the PHY
-> - */
-> -struct stih41x_usb_cfg {
-> -	u32 syscfg;
-> -	u32 cfg_mask;
-> -	u32 cfg;
-> -	u32 oscok;
-> -};
-> -
-> -/**
-> - * struct stih41x_usb_phy - Private data for the PHY
-> - * @dev: device for this controller
-> - * @regmap: Syscfg registers bank in which PHY is configured
-> - * @cfg: SoC specific PHY register mapping
-> - * @clk: Oscillator used by the PHY
-> - */
-> -struct stih41x_usb_phy {
-> -	struct device *dev;
-> -	struct regmap *regmap;
-> -	const struct stih41x_usb_cfg *cfg;
-> -	struct clk *clk;
-> -};
-> -
-> -static struct stih41x_usb_cfg stih415_usb_phy_cfg = {
-> -	.syscfg = SYSCFG332,
-> -	.cfg_mask = 0x3f,
-> -	.cfg = 0x38,
-> -	.oscok = BIT(6),
-> -};
-> -
-> -static struct stih41x_usb_cfg stih416_usb_phy_cfg = {
-> -	.syscfg = SYSCFG2520,
-> -	.cfg_mask = 0x33f,
-> -	.cfg = 0x238,
-> -	.oscok = BIT(6),
-> -};
-> -
-> -static int stih41x_usb_phy_init(struct phy *phy)
-> -{
-> -	struct stih41x_usb_phy *phy_dev = phy_get_drvdata(phy);
-> -
-> -	return regmap_update_bits(phy_dev->regmap, phy_dev->cfg->syscfg,
-> -			   phy_dev->cfg->cfg_mask, phy_dev->cfg->cfg);
-> -}
-> -
-> -static int stih41x_usb_phy_power_on(struct phy *phy)
-> -{
-> -	struct stih41x_usb_phy *phy_dev = phy_get_drvdata(phy);
-> -	int ret;
-> -
-> -	ret = clk_prepare_enable(phy_dev->clk);
-> -	if (ret) {
-> -		dev_err(phy_dev->dev, "Failed to enable osc_phy clock\n");
-> -		return ret;
-> -	}
-> -
-> -	ret = regmap_update_bits(phy_dev->regmap, phy_dev->cfg->syscfg,
-> -				 phy_dev->cfg->oscok, phy_dev->cfg->oscok);
-> -	if (ret)
-> -		clk_disable_unprepare(phy_dev->clk);
-> -
-> -	return ret;
-> -}
-> -
-> -static int stih41x_usb_phy_power_off(struct phy *phy)
-> -{
-> -	struct stih41x_usb_phy *phy_dev = phy_get_drvdata(phy);
-> -	int ret;
-> -
-> -	ret = regmap_update_bits(phy_dev->regmap, phy_dev->cfg->syscfg,
-> -			phy_dev->cfg->oscok, 0);
-> -	if (ret) {
-> -		dev_err(phy_dev->dev, "Failed to clear oscok bit\n");
-> -		return ret;
-> -	}
-> -
-> -	clk_disable_unprepare(phy_dev->clk);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct phy_ops stih41x_usb_phy_ops = {
-> -	.init		= stih41x_usb_phy_init,
-> -	.power_on	= stih41x_usb_phy_power_on,
-> -	.power_off	= stih41x_usb_phy_power_off,
-> -	.owner		= THIS_MODULE,
-> -};
-> -
-> -static const struct of_device_id stih41x_usb_phy_of_match[];
-> -
-> -static int stih41x_usb_phy_probe(struct platform_device *pdev)
-> -{
-> -	struct device_node *np = pdev->dev.of_node;
-> -	const struct of_device_id *match;
-> -	struct stih41x_usb_phy *phy_dev;
-> -	struct device *dev = &pdev->dev;
-> -	struct phy_provider *phy_provider;
-> -	struct phy *phy;
-> -
-> -	phy_dev = devm_kzalloc(dev, sizeof(*phy_dev), GFP_KERNEL);
-> -	if (!phy_dev)
-> -		return -ENOMEM;
-> -
-> -	match = of_match_device(stih41x_usb_phy_of_match, &pdev->dev);
-> -	if (!match)
-> -		return -ENODEV;
-> -
-> -	phy_dev->cfg = match->data;
-> -
-> -	phy_dev->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
-> -	if (IS_ERR(phy_dev->regmap)) {
-> -		dev_err(dev, "No syscfg phandle specified\n");
-> -		return PTR_ERR(phy_dev->regmap);
-> -	}
-> -
-> -	phy_dev->clk = devm_clk_get(dev, "osc_phy");
-> -	if (IS_ERR(phy_dev->clk)) {
-> -		dev_err(dev, "osc_phy clk not found\n");
-> -		return PTR_ERR(phy_dev->clk);
-> -	}
-> -
-> -	phy = devm_phy_create(dev, NULL, &stih41x_usb_phy_ops);
-> -
-> -	if (IS_ERR(phy)) {
-> -		dev_err(dev, "failed to create phy\n");
-> -		return PTR_ERR(phy);
-> -	}
-> -
-> -	phy_dev->dev = dev;
-> -
-> -	phy_set_drvdata(phy, phy_dev);
-> -
-> -	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> -	return PTR_ERR_OR_ZERO(phy_provider);
-> -}
-> -
-> -static const struct of_device_id stih41x_usb_phy_of_match[] = {
-> -	{ .compatible = "st,stih415-usb-phy", .data = &stih415_usb_phy_cfg },
-> -	{ .compatible = "st,stih416-usb-phy", .data = &stih416_usb_phy_cfg },
-> -	{ /* sentinel */ },
-> -};
-> -MODULE_DEVICE_TABLE(of, stih41x_usb_phy_of_match);
-> -
-> -static struct platform_driver stih41x_usb_phy_driver = {
-> -	.probe	= stih41x_usb_phy_probe,
-> -	.driver = {
-> -		.name	= "stih41x-usb-phy",
-> -		.of_match_table	= stih41x_usb_phy_of_match,
-> -	}
-> -};
-> -module_platform_driver(stih41x_usb_phy_driver);
-> -
-> -MODULE_AUTHOR("Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>");
-> -MODULE_DESCRIPTION("STMicroelectronics USB PHY driver for STiH41x series");
-> -MODULE_LICENSE("GPL v2");
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
