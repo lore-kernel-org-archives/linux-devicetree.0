@@ -1,34 +1,52 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 2/5] mm: remove x86-only restriction of movable_node
-Date: Tue, 15 Nov 2016 09:57:07 -0600
-Message-ID: <20161115155706.zft7iaw2fjtwu7yp@arbab-laptop.austin.ibm.com>
-References: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1479160961-25840-3-git-send-email-arbab@linux.vnet.ibm.com>
- <87lgwlb4u1.fsf@linux.vnet.ibm.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] PCI: qcom: add support to msm8996 PCIE controller
+Date: Tue, 15 Nov 2016 16:10:28 +0000
+Message-ID: <8d0e9b19-5d6f-8be5-84be-d102817a6b21@linaro.org>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-3-git-send-email-srinivas.kandagatla@linaro.org>
+ <aa135735-4ff4-06e3-7899-1255a21edfb4@mm-sol.com>
+ <f0d9884c-b5f6-e9a8-e814-6dfd632466fc@linaro.org>
+ <ea5858f3-19d6-c746-2e95-a64d6a436b38@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <87lgwlb4u1.fsf@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ea5858f3-19d6-c746-2e95-a64d6a436b38-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 15, 2016 at 12:35:42PM +0530, Aneesh Kumar K.V wrote:
->Considering that we now can mark memblock hotpluggable, do we need to
->enable the bottom up allocation for ppc64 also ?
 
-No, we don't, because early_init_dt_scan_memory() marks the memblocks 
-hotpluggable immediately when they are added. There is no gap between 
-the addition and the marking, as there is on x86, during which an 
-allocation might accidentally occur in a movable node.
 
--- 
-Reza Arbab
+On 15/11/16 15:08, Stanimir Varbanov wrote:
+>>> I don't like MSM8996_ prefix. Could you invent a macro which depending
+>>> >> on controller selects proper offset?
+>> >
+>> > maybe some like this ??
+>> >
+>> > #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2    0x1A8
+> No, I wanted to preserve the name of the register offset. By that way in
+> the next pcie controller version we do not need to have
+> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V3.
+>
+> I was thinking for something like
+>
+> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT(ver)	\
+> 		((ver) == VERSION_1 ? 0x178 : 0x1A8)
+>
+> But you will need to extend qcom_pcie_ops with new member to store the
+> version.
+>
+> It's up to you ... or we can fix it when new version of the controller
+> appear.
+TBH, I don't want to add this just for this one case, looks bit over do.
+So I skipped to using V2 Suffix.
+We can fix later if required.
+
+--srini
 
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
