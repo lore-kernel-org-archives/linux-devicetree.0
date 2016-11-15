@@ -1,124 +1,72 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: add power domains to Tegra BPMP firmware
-Date: Tue, 15 Nov 2016 16:39:14 +0100
-Message-ID: <20161115153914.GA22611@ulmo.ba.sec>
-References: <20160719191442.15439-1-swarren@wwwdotorg.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
+Date: Tue, 15 Nov 2016 07:41:24 -0800
+Message-ID: <20161115154124.GI4082@atomide.com>
+References: <20161025210221.9150-1-tony@atomide.com>
+ <20161025210221.9150-2-tony@atomide.com>
+ <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
+ <20161111202650.GI7138@atomide.com>
+ <20161114205243.GU7138@atomide.com>
+ <20161114220824.GC4082@atomide.com>
+ <20161115004703.GG4082@atomide.com>
+ <CACRpkdZ=pifhHrH_-466f2x3Ev4GKW0CCnTj1hL5Hfpdj5p-1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160719191442.15439-1-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CACRpkdZ=pifhHrH_-466f2x3Ev4GKW0CCnTj1hL5Hfpdj5p-1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161114 22:53]:
+> On Tue, Nov 15, 2016 at 1:47 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> 
+> > 8< --------------------------------
+> > From tony Mon Sep 17 00:00:00 2001
+> > From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > Date: Tue, 25 Oct 2016 08:33:35 -0700
+> > Subject: [PATCH] pinctrl: core: Use delayed work for hogs
+> >
+> > Having the pin control framework call pin controller functions
+> > before it's probe has finished is not nice as the pin controller
+> > device driver does not yet have struct pinctrl_dev handle.
+> >
+> > Let's fix this issue by adding deferred work for late init. This is
+> > needed to be able to add pinctrl generic helper functions that expect
+> > to know struct pinctrl_dev handle. Note that we now need to call
+> > create_pinctrl() directly as we don't want to add the pin controller
+> > to the list of controllers until the hogs are claimed. We also need
+> > to pass the pinctrl_dev to the device tree parser functions as they
+> > otherwise won't find the right controller at this point.
+> >
+> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> 
+> This looks a lot better!
+> 
+> So if I understand correctly, we can guarantee that the delayed
+> work will not execute until the device driver probe() has finished,
+> and it *will* execute immediately after that?
+> 
+> So:
+> - Device driver probes
+> - Delayed work is called
+> - Next initcall
+> 
+> I'm not 100% familiar with how delayed work works... :/
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah well the delayed work gets scheduled for next jiffy but may
+be pre-empted as it runs in process context.
 
-On Tue, Jul 19, 2016 at 01:14:40PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> The Tegra186 BPMP is also a provider of power domains. Enhance the device
-> tree binding to describe this.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> These patches all build on top of Joseph Lo's baseline BPMP binding patch=
-es[1]
-> and enhance them to represent a few more features of the firmware.
->=20
-> [1] https://lkml.org/lkml/2016/7/19/280
-> "[PATCH V3 01/10] Documentation: dt-bindings: mailbox: tegra: Add binding=
- for HSP mailbox"
->=20
->  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 10 ++++--
->  include/dt-bindings/power/tegra186-powergate.h     | 39 ++++++++++++++++=
-++++++
->  2 files changed, 46 insertions(+), 3 deletions(-)
->  create mode 100644 include/dt-bindings/power/tegra186-powergate.h
+So in the worst case it could that we still may need to fix few
+drivers to support -EPROBE_DEFER. I wonder if we should check for
+hogs in probe already and only defer if hogs are defined?
 
-Applied, thanks.
+Regards,
 
-One small comment below...
-
-> diff --git a/include/dt-bindings/power/tegra186-powergate.h b/include/dt-=
-bindings/power/tegra186-powergate.h
-> new file mode 100644
-> index 000000000000..388d6e228dc8
-> --- /dev/null
-> +++ b/include/dt-bindings/power/tegra186-powergate.h
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Copyright (c) 2015-2016, NVIDIA CORPORATION.  All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify =
-it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License=
- for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
-> +#define _DT_BINDINGS_POWER_TEGRA186_POWERGATE_H
-> +
-> +#define TEGRA186_POWER_DOMAIN_AUD	0
-> +#define TEGRA186_POWER_DOMAIN_DFD	1
-> +#define TEGRA186_POWER_DOMAIN_DISP	2
-> +#define TEGRA186_POWER_DOMAIN_DISPB	3
-> +#define TEGRA186_POWER_DOMAIN_DISPC	4
-> +#define TEGRA186_POWER_DOMAIN_ISPA	5
-> +#define TEGRA186_POWER_DOMAIN_NVDEC	6
-> +#define TEGRA186_POWER_DOMAIN_NVJPG	7
-> +#define TEGRA186_POWER_DOMAIN_MPE	8
-> +#define TEGRA186_POWER_DOMAIN_PCX	9
-> +#define TEGRA186_POWER_DOMAIN_SAX	10
-> +#define TEGRA186_POWER_DOMAIN_VE	11
-> +#define TEGRA186_POWER_DOMAIN_VIC	12
-> +#define TEGRA186_POWER_DOMAIN_XUSBA	13
-> +#define TEGRA186_POWER_DOMAIN_XUSBB	14
-> +#define TEGRA186_POWER_DOMAIN_XUSBC	15
-> +#define TEGRA186_POWER_DOMAIN_GPU	43
-> +#define TEGRA186_POWER_DOMAIN_MAX	44
-
-It's slightly odd that these are named TEGRA186_POWER_DOMAIN_* since
-power domain is a Linuxism. All documentation that I've seen calls these
-powergates.
-
-I guess since this is now ABI there is not much we can do to rectify it.
-
-Thierry
-
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYKywgAAoJEN0jrNd/PrOhLEEP/1qn92gVNetuKfsaiDr/yWDO
-EuVIFS/gVuwTV7xLe+Bi8Bfxw4oiNRWQw5pQhqJB7EgzDAVys6MrW/O15C98nHDX
-WddrEGJhWAlsjNNrqLgHz1OGLA9yciBwxcC64DAKlp62DQ+Q1vVhrIfbIrsApfY3
-nLSMVVuTe2iCTUfmhv8tl8hLqe6JC4aYVq47QR2e340oB/Zb1R65btQzezmjkjHf
-TCTuZf6YECNxBMsXlUJmVs8sotU/gETvAARRHcwyYKaZMtaPuAeKaFYv23HCfUAC
-V8od5pHuTUmimMSJJQSE2LyctK/X+koa8VmQwJfeBLUa83XEdUmq8k7CkZf6yc6O
-2jS6JahjUwXLAOztTovXqbG+TSYEv+5kiy1t2x1JX0VGhxI6uLS2/ssS4kBDMaBV
-A9xhhXqF6XVlyhfjOi3G+HWaR+fMpx4Yx6v9R/4CQpTMIP/9Mvc2pvveGtreG/3U
-aaRuQYFE9o6R5ASFhlHoKcasDVUgnwYbvGCopdLhOpRXl9nJL74XwiSt4Am/y+W5
-PRo94ht02WXJtwNox2TX6EJqHakhdLCEjFUemKdIcdf2SE6s9BMpp0AoDy7UVAxI
-qDYM16G4sKC5LC0I6akd5rGxGVtFJ2T2O7OfhSsoYMo58GADqoMCNmOfruY5V6TO
-FeyW5p127JCkb2S+SdZo
-=lGVm
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
