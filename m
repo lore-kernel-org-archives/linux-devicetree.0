@@ -1,208 +1,59 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: add amcc,dwc-otg support
-Date: Tue, 15 Nov 2016 11:08:23 -0800
-Message-ID: <8235c9d5-891b-6f75-49a0-c8820c3b139f@synopsys.com>
-References: <b1ec4a4425388cdee36be081971484db2a7d048a.1478897792.git.chunkeey@gmail.com>
- <1546251.ssrfyj8Loe@debian64>
- <caf17dcd-c7c5-e202-cde4-7c8702b5868b@synopsys.com>
- <3741942.Du5DzKuQeQ@debian64>
- <f9be1906-3d94-e9c6-841a-d7baa2572f75@synopsys.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v7 08/14] mmc: sdhci-msm: Implement set_clock callback
+ for sdhci-msm
+Date: Tue, 15 Nov 2016 11:27:27 -0800
+Message-ID: <20161115192727.GD25626@codeaurora.org>
+References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
+ <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
+ <20161114193004.GI5177@codeaurora.org>
+ <3c1a7c72-0ac1-8ed0-87fc-238331f0645b@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f9be1906-3d94-e9c6-841a-d7baa2572f75-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3c1a7c72-0ac1-8ed0-87fc-238331f0645b@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2016 3:00 PM, John Youn wrote:
-> On 11/11/2016 3:12 PM, Christian Lamparter wrote:
->> On Friday, November 11, 2016 2:20:42 PM CET John Youn wrote:
->>> On 11/11/2016 2:05 PM, Christian Lamparter wrote:
->>>> On Friday, November 11, 2016 1:22:16 PM CET John Youn wrote:
->>>>> On 11/11/2016 12:59 PM, Christian Lamparter wrote:
->>>>>> This patch adds support for the "amcc,usb-otg" device
->>>>>> which is found in the PowerPC Canyonlands' dts.
->>>>>>
->>>>>> The device definition was added by:
->>>>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
->>>>>> but without any driver support as the dwc2 driver wasn't
->>>>>> available at that time.
->>>>>>
->>>>>> Note: The system can't use the generic "snps,dwc2" compatible
->>>>>> because of the special ahbcfg configuration. The default
->>>>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
->>>>>> when the USB and SATA is used concurrently.
->>>>>
->>>>> I don't want to add any more of these param structures to the driver
->>>>> unless really necessary. We're trying to remove usage of them in favor
->>>>> of using auto-detected defaults and device properties to override
->>>>> them.
->>>> Ok, thanks. I think that would work. I've attached an updated patch.
->>>> Can it be applied/queued now? Or do you want me to resent it later?
->>>>
->>>>> The AHB Burst is actually one of the ones we were going to do next
->>>>> because our platform also doesn't work well with INCR4. In fact I'm
->>>>> thinking of making the default INCR.
->>>> Is that actually possible to change the default still? This would
->>>> require to re-evaluate all existing archs/platforms that use 
->>>> "snps,dwc2" for INCR16 compatibility. 
->>>
->>> INCR, not INCR16, but you're right, so we may not change it even
->>> though though INCR is usually the right choice over INCR4.
->> What about making a device-tree property?
-> 
-> Yes, that's what I meant. I'll send a change for this shortly.
-> 
->>
->> Recommended properties:
->>  - g-ahb-bursts : specifies the ahb bursts length, should be one of
->>    "single", "INCRx", "INCR4", "INCR8", or "INCR16". If not specified
->>    the safer but inefficient "INCR4" is used. The optimal setting is
->>    "INCRx".
->>
->> Would this work? If so, I can make a patch over the weekend.
->>> Anyways, with the binding, can't you just set the compatible string to
->>> snps,dwc2?
->>
->> Ah, let me explain. I had a discussion with Mark Rutland and Rob Herring
->> a while back about device-tree bindings.
->>
->> They made it very clear to me, that they don't want any generic "catch all
->> compatible" strings:
->>
->> "Bindings should be for hardware (either specific device models, or for
->> classes), and not for Linux drivers. The latter is subject to arbitrary
->> changes while the former is not, as old hardware continues to exist and
->> does not change while drivers get completely reworked." [0]
->>
->> Furthermore, this is an existing binding in kernel's canyonlands.dts [1]
->> and this binding can't be easily changed. Rob Herring explained this in
->> the context of the "basic-mmio-gpio" patch [2] when I was editing the dts
->> to make them work with the changes I made:
->>
->> "You can't remove the old drivers as they are needed to work with 
->> old dtbs, so there is no gain.
->>
->> You would need to match on existing compatibles such as
->> moxa,moxart-gpio and provide a match data struct that has all the info
->> you are adding here (e.g. data register offset). Then additionally you
->> could add "basic-mmio-gpio" (I would drop "basic" part) and the
->> additional data associated with it. But it has to be new properties,
->> not changing properties. Changing the reg values doesn't work."
->>
->> So, for this to work with the existing canyonlands.dts, I need to have
->> the "amcc,dwc-otg" compatible string.
-> 
-> Ok, if that's the case. But still a bit confused as to what driver was
-> working with it before since the binding was not defined for dwc2.
-> 
->>
->> Of course, it would be great to hear from Rob Herring and/or Mark Rutland
->> about this case.
->>
->> Regards,
->> Christian
->>
->> [0] <https://patchwork.kernel.org/patch/8976221/>
->> [1] <http://lxr.free-electrons.com/source/arch/powerpc/boot/dts/canyonlands.dts#L181>
->> [2] <http://www.spinics.net/lists/devicetree/msg124538.html>
->>
->>  
->>>>
->>>> From what I can tell based would be:
->>>> bcm11351, bcm21664, bcm23550, exynos3250, stm32f429, rk3xxx,
->>>> stratix10, meson-gxbb, rt3050 and some Altera FPGAs.
->>>>
->>>>> If that's all you need then a devicetree binding should be enough
->>>>> right?
->>>> Yes. The device is working fine so far.
->>>>
->>>> Regards,
->>>> Christian
->>>>
->>>> ---
->>>> From 70dd4be016b89655a56bc8260f04683b50f07644 Mon Sep 17 00:00:00 2001
->>>> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Date: Sun, 6 Nov 2016 00:39:24 +0100
->>>> Subject: [PATCH] usb: dwc2: add amcc,dwc-otg support
->>>>
->>>> This patch adds support for the "amcc,usb-otg" device
->>>> which is found in the PowerPC Canyonlands' dts.
->>>>
->>>> The device definition was added by:
->>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands board")'
->>>> but without any driver support as the dwc2 driver wasn't
->>>> available at that time.
->>>>
->>>> Note: The system can't use the generic "snps,dwc2" compatible
->>>> because of the special ahbcfg configuration. The default
->>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
->>>> when the USB and SATA is used concurrently.
->>>>
->>>> Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>> v1->v2:
->>>> 	- moved definitons to params.c
->>>> 	- removed dma_enable / host_dma parameter
->>>> 	- added dma_desc_fs_enable parameter
->>>> v2->v3:
->>>> 	- removed parameters
->>>>
->>>> Please queue this patch until GAHBCFG_HBSTLEN_INCR16 is the default
->>>> for ahbcfg.
->>>> ---
->>>>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->>>>  drivers/usb/dwc2/params.c                      | 1 +
->>>>  2 files changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> index 10a2a4b..6ccfe85 100644
->>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>> @@ -12,6 +12,7 @@ Required properties:
->>>>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
->>>>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
->>>>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
->>>> +  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
->>>>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
->>>>  - reg : Should contain 1 register range (address and length)
->>>>  - interrupts : Should contain 1 interrupt
->>>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
->>>> index 64d5c66..9506ab0 100644
->>>> --- a/drivers/usb/dwc2/params.c
->>>> +++ b/drivers/usb/dwc2/params.c
->>>> @@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
->>>>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
->>>>  	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
->>>>  	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
->>>> +	{ .compatible = "amcc,dwc-otg", .data = NULL },
->>>>  	{},
->>>>  };
->>>>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
->>>>
-> 
-> For dwc2 part:
-> 
-> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> 
+On 11/15, Ritesh Harjani wrote:
+> On 11/15/2016 1:07 AM, Stephen Boyd wrote:
+> >On 11/14, Ritesh Harjani wrote:
+> >
+> >>+}
+> >>+
+> >>+/* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
+> >>+static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+> >>+{
+> >>+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> >>+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> >>+	int rc;
+> >>+
+> >>+	if (!clock) {
+> >>+		msm_host->clk_rate = clock;
+> >>+		goto out;
+> >>+	}
+> >>+
+> >>+	spin_unlock_irq(&host->lock);
+> >>+	if (clock != msm_host->clk_rate) {
+> >
+> >Why do we need to check here? Can't we call clk_set_rate()
+> >Unconditionally?
+> Since it may so happen that above layers may call for ->set_clock
+> function with same requested clock more than once, hence we cache
+> the host->clock here.
+> Also, since requested clock (host->clock) can be say 400Mhz but the
+> actual pltfm supported clock would be say 384MHz.
 
-Hi Felipe,
+clk_set_rate() detects the same rate being set even after it
+internally rounds the rate. We're not going to touch the clk
+hardware if 400 is requested once but 384 is what's set and then
+400 is requested again. Caching the rate here in the driver can
+lead to problems too if the driver is out of sync with the clk
+hardware state, so it's best to avoid doing anything fancy here
+and just let the framework handle duplicates.
 
-Can you drop this from your testing/next?
-
-I meant for the 2nd version to be applied, without the params
-structure.
-
-I can send you a clean version to apply later today.
-
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
