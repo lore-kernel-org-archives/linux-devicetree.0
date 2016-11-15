@@ -1,56 +1,74 @@
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
-Subject: Re: [PATCH v7 2/5] mm: remove x86-only restriction of movable_node
-Date: Tue, 15 Nov 2016 12:35:42 +0530
-Message-ID: <87lgwlb4u1.fsf@linux.vnet.ibm.com>
-References: <1479160961-25840-1-git-send-email-arbab@linux.vnet.ibm.com> <1479160961-25840-3-git-send-email-arbab@linux.vnet.ibm.com>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH 2/3] devicetree: bindings: nvmem: Add compatible string
+ for imx6ul
+Date: Tue, 15 Nov 2016 07:25:01 +0000
+Message-ID: <AM3PR04MB53067E1D93D062C8357920587BF0@AM3PR04MB530.eurprd04.prod.outlook.com>
+References: <1478497281-5477-1-git-send-email-ping.bai@nxp.com>
+ <1478497281-5477-2-git-send-email-ping.bai@nxp.com>
+ <20161114161423.fs7dlt5firmj4q3s@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1479160961-25840-3-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Alistair Popple <apopple@au1.ibm.com>, Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161114161423.fs7dlt5firmj4q3s@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+> > Add new compatible string for i.MX6UL SOC.
+> >
+> > Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> > b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> > index 383d588..a7ff65d 100644
+> > --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> > +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> > @@ -1,13 +1,14 @@
+> >  Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+> >
+> >  This binding represents the on-chip eFuse OTP controller found on
+> > -i.MX6Q/D, i.MX6DL/S, i.MX6SL, and i.MX6SX SoCs.
+> > +i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX and i.MX6UL SoCs.
+> >
+> >  Required properties:
+> >  - compatible: should be one of
+> >  	"fsl,imx6q-ocotp" (i.MX6Q/D/DL/S),
+> > -	"fsl,imx6sl-ocotp" (i.MX6SL), or
+> > -	"fsl,imx6sx-ocotp" (i.MX6SX), followed by "syscon".
+> > +	"fsl,imx6sl-ocotp" (i.MX6SL),
+> > +	"fsl,imx6sx-ocotp" (i.MX6SX), or
+> > +	"fsl,imx6ul-ocotp" (i.MX6UL), followed by "syscon".
+> 
+> This should be reformatted such that it's not a 5 line change to add a
+> compatible. "one of" defines this is an OR relationship, so drop that.
+> Move 'followed by "syscon"' to below the list of compatibles.
+> 
 
-> In commit c5320926e370 ("mem-hotplug: introduce movable_node boot
-> option"), the memblock allocation direction is changed to bottom-up and
-> then back to top-down like this:
->
-> 1. memblock_set_bottom_up(true), called by cmdline_parse_movable_node().
-> 2. memblock_set_bottom_up(false), called by x86's numa_init().
->
-> Even though (1) occurs in generic mm code, it is wrapped by #ifdef
-> CONFIG_MOVABLE_NODE, which depends on X86_64.
->
-> This means that when we extend CONFIG_MOVABLE_NODE to non-x86 arches,
-> things will be unbalanced. (1) will happen for them, but (2) will not.
->
-> This toggle was added in the first place because x86 has a delay between
-> adding memblocks and marking them as hotpluggable. Since other arches do
-> this marking either immediately or not at all, they do not require the
-> bottom-up toggle.
->
-> So, resolve things by moving (1) from cmdline_parse_movable_node() to
-> x86's setup_arch(), immediately after the movable_node parameter has
-> been parsed.
+Thanks for review, I will adopt in V2.
 
-
-Considering that we now can mark memblock hotpluggable, do we need to
-enable the bottom up allocation for ppc64 also ?
-
-
->
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  Documentation/kernel-parameters.txt |  2 +-
->  arch/x86/kernel/setup.c             | 24 ++++++++++++++++++++++++
-
--aneesh
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Jacky Bai
+> >  - reg: Should contain the register base and length.
+> >  - clocks: Should contain a phandle pointing to the gated peripheral clock.
+> >
+> > --
+> > 2.8.2
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
