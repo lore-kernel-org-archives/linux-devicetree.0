@@ -1,8 +1,8 @@
 From: John Youn <johnyoun@synopsys.com>
 Subject: [PATCH v3] usb: dwc2: add amcc,dwc-otg support
 Date: Tue, 15 Nov 2016 15:03:40 -0800
-Message-ID: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun__33116.4007577629$1479251140$gmane$org@synopsys.com>
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Message-ID: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun__11672.3522697159$1479251147$gmane$org@synopsys.com>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
  <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
@@ -10,9 +10,9 @@ List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
 List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
  <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
 Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
 To: Felipe Balbi <balbi@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, John Youn <johnyoun@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Christian Lamparter <chunkeey@googlemail.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
