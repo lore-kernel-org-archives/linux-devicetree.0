@@ -1,11 +1,11 @@
 From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Subject: [PATCH 1/3] Revert "usb: dwc2: Add bindings to disable gadget DMA modes"
 Date: Mon, 14 Nov 2016 18:29:52 -0800
-Message-ID: <1e2c31bb1cff21edc45dcda045138b032ecd6bb9.1479176826.git.johnyoun@synopsys.com>
+Message-ID: <1e2c31bb1cff21edc45dcda045138b032ecd6bb9.1479176826.git.johnyoun__8748.12872284583$1479177043$gmane$org@synopsys.com>
 References: <cover.1479176826.git.johnyoun@synopsys.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1479176826.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
@@ -67,6 +67,6 @@ index 64d5c66..2f18a7b 100644
 2.10.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
