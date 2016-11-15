@@ -1,72 +1,63 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
-Date: Tue, 15 Nov 2016 07:41:24 -0800
-Message-ID: <20161115154124.GI4082@atomide.com>
-References: <20161025210221.9150-1-tony@atomide.com>
- <20161025210221.9150-2-tony@atomide.com>
- <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
- <20161111202650.GI7138@atomide.com>
- <20161114205243.GU7138@atomide.com>
- <20161114220824.GC4082@atomide.com>
- <20161115004703.GG4082@atomide.com>
- <CACRpkdZ=pifhHrH_-466f2x3Ev4GKW0CCnTj1hL5Hfpdj5p-1A@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: allow child nodes inside the Tegra BPMP
+Date: Tue, 15 Nov 2016 16:42:39 +0100
+Message-ID: <20161115154239.GB22611@ulmo.ba.sec>
+References: <20160719191442.15439-1-swarren@wwwdotorg.org>
+ <20160719191442.15439-2-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1UWUbFP1cBYEclgG"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZ=pifhHrH_-466f2x3Ev4GKW0CCnTj1hL5Hfpdj5p-1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160719191442.15439-2-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [161114 22:53]:
-> On Tue, Nov 15, 2016 at 1:47 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> > 8< --------------------------------
-> > From tony Mon Sep 17 00:00:00 2001
-> > From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > Date: Tue, 25 Oct 2016 08:33:35 -0700
-> > Subject: [PATCH] pinctrl: core: Use delayed work for hogs
-> >
-> > Having the pin control framework call pin controller functions
-> > before it's probe has finished is not nice as the pin controller
-> > device driver does not yet have struct pinctrl_dev handle.
-> >
-> > Let's fix this issue by adding deferred work for late init. This is
-> > needed to be able to add pinctrl generic helper functions that expect
-> > to know struct pinctrl_dev handle. Note that we now need to call
-> > create_pinctrl() directly as we don't want to add the pin controller
-> > to the list of controllers until the hogs are claimed. We also need
-> > to pass the pinctrl_dev to the device tree parser functions as they
-> > otherwise won't find the right controller at this point.
-> >
-> > Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> 
-> This looks a lot better!
-> 
-> So if I understand correctly, we can guarantee that the delayed
-> work will not execute until the device driver probe() has finished,
-> and it *will* execute immediately after that?
-> 
-> So:
-> - Device driver probes
-> - Delayed work is called
-> - Next initcall
-> 
-> I'm not 100% familiar with how delayed work works... :/
 
-Yeah well the delayed work gets scheduled for next jiffy but may
-be pre-empted as it runs in process context.
+--1UWUbFP1cBYEclgG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So in the worst case it could that we still may need to fix few
-drivers to support -EPROBE_DEFER. I wonder if we should check for
-hogs in probe already and only defer if hogs are defined?
+On Tue, Jul 19, 2016 at 01:14:41PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> The BPMP implements some services which must be represented by separate
+> nodes. For example, it can provide access to certain I2C controllers, and
+> the I2C bindings represent each I2C controller as a device tree node.
+> Update the binding to describe how the BPMP supports this.
+>=20
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/firmware/nvidia,tegra186-bpmp.txt     | 23 ++++++++++++++++=
+++++++
+>  1 file changed, 23 insertions(+)
 
-Regards,
+Applied, with bpmp-i2c changed to i2c as per Rob's comment.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Thierry
+
+--1UWUbFP1cBYEclgG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJYKyzvAAoJEN0jrNd/PrOhXygP/j8CWxl10fYVymc2cgNvBHJL
+aoQXF5YUQr27jVO33uJsfwZNkNYB9C79keBuec5GsFRxyxgePcF+FHlCHNr+nMSt
+iIoKSbOy5pFeM3Yk0b7XRhWemTmvExVuDLQpAz1K5eOew57yDaTj8nN+4aXcSZ7v
+QzgtN9sgERm1F3Zn+Beae8u2IXedtHlX3cPeDcqsGC2yjxkv2nLGeaTK0mf64PKo
+NLKJI2FYP14Np0f9V/fzcO6Cz5kwKnvISJ9dpr6WPb4ihUV75q33zlB7b2O+LVNE
+RVVQMUrx8TN9pd5NBiPDltMxmvm20t+z+fqBC9ciD75pVYw3XUsX9SWJiT5BfOXw
+ACbZ+RVIzz/GXFgoCUMT1W1Ybc4ORNSgGhSjpJDgXLvoSxgQIh7HydtZN4s0mcpZ
+ZnPsVjwGON8uX1DTA1qy4jOht+H84fX4xxnpvGf41D/DmldwUR1h80gqGAg5hiXN
+xzUc0vYmB6t88fyMXeHXAAJYGOJfu8S0COy493mTm4RPRy5pA8PNIKDTf7y3SlLc
+pNi9w9iKn4F59JQFqeJxZoQWxuKYLXXkc/GGaK/ej9dl8n8lxAO4qaN6qqKpXWNy
+TLiKuvKGj3WLHteZmv6WuhFigBl40blKT4Ajiw354Cy/Mo1sFDoJUhnGaRllpGum
+e8SOUi4ERR+d/hvpbA0O
+=+846
+-----END PGP SIGNATURE-----
+
+--1UWUbFP1cBYEclgG--
