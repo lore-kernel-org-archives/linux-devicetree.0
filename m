@@ -1,152 +1,106 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v3 1/2] drm/bridge: dumb-vga-dac:
- Support a VDD regulator supply
-Date: Tue, 15 Nov 2016 10:59:49 +0800
-Message-ID: <CAGb2v67LR4KEb0tfGkT8+TqTauNyCMq1n6mRdXsa6TUJV0xncA@mail.gmail.com>
-References: <20161029110611.28951-1-wens@csie.org> <20161029110611.28951-2-wens@csie.org>
- <20161031062836.mnzdprqfezrfkx4g@rob-hp-laptop> <CAGb2v64tTacSAG1vvO28h8MN9JC9w+OzSrP+j2eTzqAiQKgaSA@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] binding: irqchip: mtk-cirq: Add binding document
+Date: Tue, 15 Nov 2016 11:09:49 +0800
+Message-ID: <1479179389.10566.11.camel@mtksdaap41>
+References: <1478001122-8664-1-git-send-email-youlin.pei@mediatek.com>
+         <1478001122-8664-2-git-send-email-youlin.pei@mediatek.com>
+         <20161109182613.7tvzewua6ewxdvjc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQPUVHAQKGQENN7LBXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64tTacSAG1vvO28h8MN9JC9w+OzSrP+j2eTzqAiQKgaSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161109182613.7tvzewua6ewxdvjc@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chieh-jay.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2016-11-09 at 12:26 -0600, Rob Herring wrote:
+> On Tue, Nov 01, 2016 at 07:52:00PM +0800, Youlin Pei wrote:
+> > This commit adds the device tree binding document for
+> > the mediatek cirq.
+> > 
+> > Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../interrupt-controller/mediatek,cirq.txt         |   30 ++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+> > new file mode 100644
+> > index 0000000..84e8123
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+> > @@ -0,0 +1,30 @@
+> > +* Mediatek 27xx cirq
+> > +
+> > +In Mediatek SOCs, the CIRQ is a low power interrupt controller designed to
+> > +works outside MCUSYS which comprises with Cortex-Ax cores,CCI and GIC.
+> 
+> s/works/work/
 
-On Wed, Nov 2, 2016 at 9:33 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Mon, Oct 31, 2016 at 2:28 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Sat, Oct 29, 2016 at 07:06:10PM +0800, Chen-Yu Tsai wrote:
->>> Some dumb VGA DACs are active components which require external power.
->>> Add support for specifying a regulator as its power supply.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>> ---
->>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
->>
->> For the binding,
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+will fix in next version.
 
-Any comments on this patch from the DRM people?
+> 
+> > +The external interrupts (outside MCUSYS) will feed through CIRQ and connect
+> > +to GIC in MCUSYS. When CIRQ is enabled, it will record the edge-sensitive
+> > +interrupts and generated a pulse signal to parent interrupt controller when
+> 
+> s/generated/generate/
 
-ChenYu
+will fix in next version.
 
->>
->> One code comment below...
->>
->>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 35 ++++++++++++++++++++++
->>>  2 files changed, 37 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>> index 003bc246a270..164cbb15f04c 100644
->>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
->>> @@ -16,6 +16,8 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
->>>  - Video port 0 for RGB input
->>>  - Video port 1 for VGA output
->>>
->>> +Optional properties:
->>> +- vdd-supply: Power supply for DAC
->>>
->>>  Example
->>>  -------
->>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>> index afec232185a7..59781e031220 100644
->>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
->>> @@ -12,6 +12,7 @@
->>>
->>>  #include <linux/module.h>
->>>  #include <linux/of_graph.h>
->>> +#include <linux/regulator/consumer.h>
->>>
->>>  #include <drm/drmP.h>
->>>  #include <drm/drm_atomic_helper.h>
->>> @@ -23,6 +24,7 @@ struct dumb_vga {
->>>       struct drm_connector    connector;
->>>
->>>       struct i2c_adapter      *ddc;
->>> +     struct regulator        *vdd;
->>>  };
->>>
->>>  static inline struct dumb_vga *
->>> @@ -124,8 +126,33 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
->>>       return 0;
->>>  }
->>>
->>> +static void dumb_vga_enable(struct drm_bridge *bridge)
->>> +{
->>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
->>> +     int ret;
->>> +
->>> +     if (!IS_ERR(vga->vdd)) {
->>
->> if (IS_ERR())
->>         return;
->>
->> ...will save some intentation.
->
-> I thought about that, though if someone were to add more stuff to
-> this, such as an enable GPIO, they might have to rework it. A standalone
-> block of code would be easier to work with. I'm OK either way though.
->
-> ChenYu
->
->>
->>> +             ret = regulator_enable(vga->vdd);
->>> +
->>> +             if (ret) {
->>> +                     DRM_ERROR("Failed to enable vdd regulator: %d\n", ret);
->>> +                     return;
->>> +             }
->>> +     }
->>> +}
->>> +
->>> +static void dumb_vga_disable(struct drm_bridge *bridge)
->>> +{
->>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
->>> +
->>> +     if (!IS_ERR(vga->vdd))
->>> +             regulator_disable(vga->vdd);
->>> +}
->>> +
->>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
->>>       .attach         = dumb_vga_attach,
->>> +     .enable         = dumb_vga_enable,
->>> +     .disable        = dumb_vga_disable,
->>>  };
->>>
->>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
->>> @@ -169,6 +196,14 @@ static int dumb_vga_probe(struct platform_device *pdev)
->>>               return -ENOMEM;
->>>       platform_set_drvdata(pdev, vga);
->>>
->>> +     vga->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
->>> +     if (IS_ERR(vga->vdd)) {
->>> +             ret = PTR_ERR(vga->vdd);
->>> +             if (ret == -EPROBE_DEFER)
->>> +                     return -EPROBE_DEFER;
->>> +             dev_dbg(&pdev->dev, "No vdd regulator found: %d\n", ret);
->>> +     }
->>> +
->>>       vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
->>>       if (IS_ERR(vga->ddc)) {
->>>               if (PTR_ERR(vga->ddc) == -ENODEV) {
->>> --
->>> 2.9.3
->>>
->>
->> --
->> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
+> 
+> > +flush command is executed. With CIRQ, MCUSYS can be completely turned off
+> > +to improve the system power consumption without losing interrupts.
+> > +
+> > +Required properties:
+> > +- compatible: should be: "mediatek,mtk-cirq".
+> 
+> This should be SoC specific. This is fine as a fallback if the same 
+> block is in many SoCs, but mediatek and mtk is a bit redundant.
+> 
+
+In next version, i will improve as following:
+- compatible: Should be one of 
+  - "mediatek,mt2701-cirq" for mt2701 CIRQ
+  - "mediatek,mt8173-cirq" for mt8173 CIRQ
+  - "mediatek,mt8135-cirq" for mt8135 CIRQ
+  and "mediatek,cirq" as a fallback.
+
+> > +- interrupt-controller : Identifies the node as an interrupt controller.
+> > +- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+> > +- interrupt-parent: phandle of irq parent for cirq. The parent must
+> > +  use the same interrupt-cells format as GIC.
+> > +- reg: Physical base address of the cirq registers and length of memory
+> > +  mapped region.
+> > +- mediatek,ext-irq-start: Identifies external irq start number in different
+> > +  SOCs.
+> 
+> Wouldn't this always be 32 if the GIC is the parent? If 32 is the common 
+> case, then use the SoC compatible to determine this value.
+> 
+
+ext-irq-start is not always 32. In different Socs, this value is
+different.
+Thanks a lot!
+
+> > +
+> > +Example:
+> > +	cirq: interrupt-controller@10204000 {
+> > +		compatible = "mediatek,mtk-cirq";
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&sysirq>;
+> > +		reg = <0 0x10204000 0 0x4000>;
+> > +		mediatek,ext-irq-start = <32>;
+> > +	};
+> > -- 
+> > 1.7.9.5
+> > 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
