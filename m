@@ -1,109 +1,96 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
-Date: Tue, 15 Nov 2016 09:23:13 +0100
-Message-ID: <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org> <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
+From: Noam Camus <noamca@mellanox.com>
+Subject: [PATCH v7 0/3] Add clockevent for timer-nps driver to NPS400 SoC
+Date: Tue, 15 Nov 2016 10:50:56 +0200
+Message-ID: <1479199859-980-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114221447.GH9868-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
+Cc: tglx@linutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Noam Camus <noamca@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-+cc linux-pm
+From: Noam Camus <noamca@mellanox.com>
 
-On Mon, Nov 14, 2016 at 11:14 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> [+cc Geert, Kevin, Simon]
->
-> On Mon, Nov 14, 2016 at 11:15:53AM +0000, Srinivas Kandagatla wrote:
->> This patch adds support to pm clocks via device tree, so that the clocks
->> can be turned on and off during runtime pm. This patch is required for
->> Qualcomm msm8996 pcie controller which sits on a bus with its own
->> power-domain and clocks.
->>
->> Without this patch the clock associated with the bus are never turned on.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> I don't see a formal maintainer for drivers/bus/simple-pm-bus.c, but I'd
-> like an ack or at least a review from Geert or Simon.
+Change log
+---
+V6 --> V7
+Apply several comments made by Daniel Lezcano:
+1) Remove CLOCK_EVT_FEAT_PERIODIC support. This way it is
+ pure oneshot driver. This simplifies driver so that:
+ nps_clkevent_add_thread()
+ nps_clkevent_rm_thread()
+ are more clearer without any vague logic if to change
+ TSI bit of current HW thread or not.
+2) tick_resume is also calls nps_clkevent_rm_thread()
+3) Few (hopefully last) typo fixes. 
 
-Thanks for letting me know!
+V5 --> V6
+Apply several comments made by Daniel Lezcano:
+1) nps_get_timer_clk() - use clk_put() on error scenario
+2) nps_get_timer_clk() - return EINVAL and not plain 1
+3) Fix typos in log (double checked with spell checker)
 
->> ---
->>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
->> index c5eb46c..63b7e8c 100644
->> --- a/drivers/bus/simple-pm-bus.c
->> +++ b/drivers/bus/simple-pm-bus.c
->> @@ -11,6 +11,7 @@
->>  #include <linux/module.h>
->>  #include <linux/of_platform.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/pm_clock.h>
->>  #include <linux/pm_runtime.h>
->>
->>
->> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
->>
->>       pm_runtime_enable(&pdev->dev);
->>
->> -     if (np)
->> +     if (np) {
->> +             of_pm_clk_add_clks(&pdev->dev);
+V4 --> V5
+Apply several comments made by Daniel Lezcano:
+1) Add __init attribute to nps_get_timer_clk()
+2) Fix return value of nps_get_timer_clk()
+ when failing to get clk rate
+3) Change clocksource rate from 301 -> 300
 
-This should work out-of-the-box (that's the actual purpose of this driver),
-if the platform code that registers your PM Domain would take care
-of registering the clocks needed for PM management of the bus.
+V3 --> V4
+Main changes are [Thanks for the review]:
+Fix many typos at log [Daniel]
+Add handling for bad return values [Daniel and Thomas]
+Replace use of internal irqchip pointers with existing IRQ API [Thomas]
+Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
+Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
 
-Adding of_pm_clk_add_clks() here will start managing all clocks of the bus,
-which may not be wanted on all platforms.
+V2 --> V3
+Apply Rob Herring comment about backword compatibility
 
->>               of_platform_populate(np, NULL, NULL, &pdev->dev);
->> +     }
->>
->>       return 0;
->>  }
->>
->> +static const struct dev_pm_ops simple_pm_bus_pm_ops = {
->> +     SET_RUNTIME_PM_OPS(pm_clk_suspend,
->> +                        pm_clk_resume, NULL)
->> +};
->> +
->>  static int simple_pm_bus_remove(struct platform_device *pdev)
->>  {
->>       dev_dbg(&pdev->dev, "%s\n", __func__);
->>
->>       pm_runtime_disable(&pdev->dev);
->> +     pm_clk_destroy(&pdev->dev);
->> +
->>       return 0;
->>  }
->>
->> @@ -48,6 +58,7 @@ static struct platform_driver simple_pm_bus_driver = {
->>       .driver = {
->>               .name = "simple-pm-bus",
->>               .of_match_table = simple_pm_bus_of_match,
->> +             .pm = &simple_pm_bus_pm_ops,
->>       },
->>  };
+V1 --> V2
+Apply Daniel Lezcano comments:
+	CLOCKSOURCE_OF_DECLARE return value
+	update hotplug callbacks usage
+	squash of 2 first commits.
+In this version I created new commit to serve as preperation for adding clockevents.
+This way the last patch is more readable with clockevent content.
+---
 
-Gr{oetje,eeting}s,
+In first version of this driver we supported clocksource for the NPS400.
+The support for clockevent was taken from Synopsys ARC timer driver.
+This was good for working with our simulator of NPS400.
+However in NPS400 ASIC the timers behave differently than simulation.
+The timers in ASIC are shared between all threads whithin a core
+and hence need different driver to support this behaviour.
 
-                        Geert
+The idea of this design is that we got 16 HW threads per core
+each represented at bimask in a shared register in this core.
+So when thread wants that next clockevent expiration will produce
+timer interrupt to itself the correspondance bit in this register
+should be set.
+So theoretically if all 16 bits are set then all HW threads will get
+timer interrupt on next expiration of timer 0.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Note that we use Synopsys ARC design naming convention for the timers
+where:
+timer0 is used for clockevents
+timer1 is used for clocksource.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Noam Camus (3):
+  soc: Support for NPS HW scheduling
+  clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+  clocksource: Add clockevent support to NPS400 driver
+
+ .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+ .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+ .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+ arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
+ drivers/clocksource/timer-nps.c                    |  223 ++++++++++++++++++--
+ include/soc/nps/mtm.h                              |   59 +++++
+ 6 files changed, 294 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+ create mode 100644 include/soc/nps/mtm.h
