@@ -1,43 +1,129 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ASoC: tse850: document axentia,tse850-pcm5142
- bindings
-Date: Tue, 15 Nov 2016 09:08:58 -0600
-Message-ID: <20161115150858.hist2uhdi4vvg6pg@rob-hp-laptop>
-References: <1478863752-10569-1-git-send-email-peda@axentia.se>
- <1478863752-10569-3-git-send-email-peda@axentia.se>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 5/5] media: platform: rcar_drif: Add DRIF support
+Date: Tue, 15 Nov 2016 15:09:27 +0000
+Message-ID: <KL1PR06MB103142E3832678425896473BC3BF0@KL1PR06MB1031.apcprd06.prod.outlook.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1478706284-59134-6-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <2857106.83gIJRJqtY@avalon> <20161114195200.s62ga2bnutsrocyf@rob-hp-laptop>
+ <CAMuHMdW5t4irT+2kHDo8TyLcW_eE7yyDa_SYG9Y-Wj99zRN5mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478863752-10569-3-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <CAMuHMdW5t4irT+2kHDo8TyLcW_eE7yyDa_SYG9Y-Wj99zRN5mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 11, 2016 at 12:29:11PM +0100, Peter Rosin wrote:
-> The TSE-850 is an FM Transmitter Station Equipment, designed to generate
-> baseband signals for FM, mainly the DARC subcarrier, but other signals
-> are also possible.
-> 
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
->  .../bindings/sound/axentia,tse850-pcm5142.txt      | 88 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 ++
->  2 files changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-> new file mode 100644
-> index 000000000000..0c2d44fda17e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/axentia,tse850-pcm5142.txt
-> @@ -0,0 +1,88 @@
-> +ASoC driver for the Axentia TSE-850 with a PCM5142 codec
-
-Bindings don't describe drivers nor ASoC. Otherwise,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+SGkgUm9iLCBHZWVydCwgTGF1cmVudCwNCg0KVGhhbmsgeW91IGZvciB0aGUgcmV2aWV3IGNvbW1l
+bnRzLg0KDQo+IE9uIE1vbiwgTm92IDE0LCAyMDE2IGF0IDg6NTIgUE0sIFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+IE9uIFRodSwgTm92IDEwLCAyMDE2IGF0IDExOjIy
+OjIwQU0gKzAyMDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6DQo+ID4+IE9uIFdlZG5lc2RheSAw
+OSBOb3YgMjAxNiAxNTo0NDo0NCBSYW1lc2ggU2hhbm11Z2FzdW5kYXJhbSB3cm90ZToNCj4gPj4g
+PiAtLS0gL2Rldi9udWxsDQo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL3JlbmVzYXMsZHJpZi50eHQNCj4gPj4gPiBAQCAtMCwwICsxLDEzNiBAQA0K
+PiANCj4gPj4gPiArRXhhbXBsZQ0KPiA+PiA+ICstLS0tLS0tLQ0KPiA+PiA+ICsNCj4gPj4gPiAr
+U29DIGNvbW1vbiBkdHNpIGZpbGUNCj4gPj4gPiArDQo+ID4+ID4gKyAgICAgICAgICAgZHJpZjAw
+OiByaWZAZTZmNDAwMDAgew0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJyZW5lc2FzLHI4YTc3OTUtZHJpZiIsDQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgInJlbmVzYXMscmNhci1nZW4zLWRyaWYiOw0KPiA+PiA+ICsgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDAgMHhlNmY0MDAwMCAwIDB4NjQ+Ow0KPiA+PiA+ICsgICAgICAgICAgICAg
+ICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEyIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+
+PiA+ICsgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcGcgQ1BHX01PRCA1MTU+Ow0KPiA+
+PiA+ICsgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiZmNrIjsNCj4gPj4gPiArICAg
+ICAgICAgICAgICAgICAgIGRtYXMgPSA8JmRtYWMxIDB4MjA+LCA8JmRtYWMyIDB4MjA+Ow0KPiA+
+PiA+ICsgICAgICAgICAgICAgICAgICAgZG1hLW5hbWVzID0gInJ4IiwgInJ4IjsNCj4gPg0KPiA+
+IHJ4LCByeD8gVGhhdCBkb2Vzbid0IG1ha2Ugc2Vuc2UuIFdoaWxlIHdlIGRvbid0IGV4cGxpY2l0
+bHkgZGlzYWxsb3cNCj4gPiB0aGlzLCBJJ20gdGhpbmtpbmcgd2Ugc2hvdWxkLiBJIHdvbmRlciBp
+ZiB0aGVyZSdzIGFueSBjYXNlIHRoaXMgaXMNCj4gPiB2YWxpZC4gSWYgbm90LCB0aGVuIGEgZHRj
+IGNoZWNrIGZvciB0aGlzIGNvdWxkIGJlIGFkZGVkLg0KPiANCj4gVGhlIGRldmljZSBjYW4gYmUg
+dXNlZCB3aXRoIGVpdGhlciBkbWFjMSBvciBkbWFjMi4NCj4gV2hpY2ggb25lIGlzIHVzZWQgaXMg
+ZGVjaWRlZCBhdCBydW4gdGltZSwgYmFzZWQgb24gdGhlIGF2YWlsYWJpbGl0eSBvZiBETUENCj4g
+Y2hhbm5lbHMgcGVyIERNQUMsIHdoaWNoIGlzIGEgbGltaXRlZCByZXNvdXJjZS4NCj4gDQoNClll
+cC4gDQoNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JnN5c2Mg
+UjhBNzc5NV9QRF9BTFdBWVNfT04+Ow0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgc3RhdHVz
+ID0gImRpc2FibGVkIjsNCj4gPj4gPiArICAgICAgICAgICB9Ow0KPiA+PiA+ICsNCj4gPj4gPiAr
+ICAgICAgICAgICBkcmlmMDE6IHJpZkBlNmY1MDAwMCB7DQo+ID4+ID4gKyAgICAgICAgICAgICAg
+ICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMscjhhNzc5NS1kcmlmIiwNCj4gPj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjMtZHJpZiI7DQo+ID4+
+ID4gKyAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGU2ZjUwMDAwIDAgMHg2ND47DQo+ID4+
+ID4gKyAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTMgSVJRX1RZUEVf
+TEVWRUxfSElHSD47DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNwZyBD
+UEdfTU9EIDUxND47DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJm
+Y2siOw0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgZG1hcyA9IDwmZG1hYzEgMHgyMj4sIDwm
+ZG1hYzIgMHgyMj47DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICBkbWEtbmFtZXMgPSAicngi
+LCAicngiOw0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgcG93ZXItZG9tYWlucyA9IDwmc3lz
+YyBSOEE3Nzk1X1BEX0FMV0FZU19PTj47DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICBzdGF0
+dXMgPSAiZGlzYWJsZWQiOw0KPiA+PiA+ICsgICAgICAgICAgIH07DQo+ID4+ID4gKw0KPiA+PiA+
+ICsgICAgICAgICAgIGRyaWYwOiByaWZAMCB7DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gInJlbmVzYXMscjhhNzc5NS1kcmlmIiwNCj4gPj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjMtZHJpZiI7DQo+ID4+ID4gKyAg
+ICAgICAgICAgICAgICAgICBzdWItY2hhbm5lbHMgPSA8JmRyaWYwMD4sIDwmZHJpZjAxPjsNCj4g
+Pj4gPiArICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4+ID4gKyAg
+ICAgICAgICAgfTsNCj4gPj4NCj4gPj4gSSdtIGFmcmFpZCB0aGlzIHJlYWxseSBodXJ0cyBteSBl
+eWVzLCBlc3BlY2lhbGx5IHVzaW5nIHRoZSBzYW1lDQo+ID4+IGNvbXBhdGlibGUgc3RyaW5nIGZv
+ciBib3RoIHRoZSBjaGFubmVsIGFuZCBzdWItY2hhbm5lbCBub2Rlcy4NCj4gPj4NCj4gPj4gV2Ug
+bmVlZCB0byBkZWNpZGUgaG93IHRvIG1vZGVsIHRoZSBoYXJkd2FyZSBpbiBEVC4gR2l2ZW4gdGhh
+dCB0aGUgdHdvDQo+ID4+IGNoYW5uZWxzIGFyZSBtb3N0bHkgaW5kZXBlbmRlbnQgaGF2aW5nIHNl
+cGFyYXRlIERUIG5vZGVzIG1ha2VzIHNlbnNlDQo+ID4+IHRvIG1lLiBIb3dldmVyLCBhcyB0aGV5
+IHNoYXJlIHRoZSBjbG9jayBhbmQgc3luYyBzaWduYWxzLCBzb21laG93DQo+ID4+IGdyb3VwaW5n
+IHRoZW0gbWFrZXMgc2Vuc2UuIEkgc2VlIHRocmVlIHdheXMgdG8gZG8gc28sIGFuZCB0aGVyZSBt
+aWdodA0KPiBiZSBtb3JlLg0KPiA+Pg0KPiA+PiAxLiBBZGRpbmcgYW4gZXh0cmEgRFQgbm9kZSBm
+b3IgdGhlIGNoYW5uZWxzIGdyb3VwLCB3aXRoIHBoYW5kbGVzIHRvDQo+ID4+IHRoZSB0d28gY2hh
+bm5lbHMuIFRoaXMgaXMgd2hhdCB5b3UncmUgcHJvcG9zaW5nIGhlcmUuDQo+ID4+DQo+ID4+IDIu
+IEFkZGluZyBhbiBleHRyYSBEVCBub2RlIGZvciB0aGUgY2hhbm5lbHMgZ3JvdXAsIGFzIGEgcGFy
+ZW50IG9mIHRoZQ0KPiA+PiB0d28gY2hhbm5lbHMuDQo+ID4+DQo+ID4+IDMuIEFkZGluZyBwaGFu
+ZGxlcyB0byB0aGUgY2hhbm5lbHMsIHBvaW50aW5nIHRvIGVhY2ggb3RoZXIsIG9yDQo+ID4+IHBv
+c3NpYmx5IGEgcGhhbmRsZSBmcm9tIGNoYW5uZWwgMCBwb2ludGluZyB0byBjaGFubmVsIDEuDQo+
+ID4+DQo+ID4+IE5laXRoZXIgb2YgdGhlc2Ugb3B0aW9ucyBzZWVtIHBlcmZlY3QgdG8gbWUuIEkg
+ZG9uJ3QgbGlrZSBvcHRpb24gMSBhcw0KPiA+PiB0aGUgZ3JvdXAgRFQgbm9kZSByZWFsbHkgZG9l
+c24ndCBkZXNjcmliZSBhIGhhcmR3YXJlIGJsb2NrLiBJZiB3ZQ0KPiA+PiB3YW50IHRvIHVzZSBh
+IERUIG5vZGUgdG8gY29udmV5IGdyb3VwIGluZm9ybWF0aW9uLCBvcHRpb24gMiBzZWVtcw0KPiA+
+PiBiZXR0ZXIgdG8gbWUuIEhvd2V2ZXIsIGl0IHNvbWVob3cgYWJ1c2VzIHRoZSBEVCBwYXJlbnQt
+Y2hpbGQgbW9kZWwNCj4gPj4gdGhhdCBpcyBzdXBwb3NlZCB0byBkZXNjcmliZSByZWxhdGlvbnNo
+aXBzIGZyb20gYSBjb250cm9sIGJ1cyBwb2ludA0KPiA+PiBvZiB2aWV3LiBPcHRpb24gMyBoYXMg
+dGhlIGRyYXdiYWNrIG9mIG5vdCBzY2FsaW5nIHByb3Blcmx5LCBhdCBsZWFzdA0KPiA+PiB3aXRo
+IHBoYW5kbGVzIGluIGJvdGggY2hhbm5lbHMgcG9pbnRpbmcgdG8gdGhlIG90aGVyIG9uZS4NCj4g
+Pj4NCj4gPj4gUm9iLCBHZWVydCwgdGVsbCBtZSB5b3UgaGF2ZSBhIGZvdXJ0aCBpZGVhIEkgaGF2
+ZW4ndCB0aG91Z2h0IG9mIHRoYXQNCj4gPj4gd291bGQgc29sdmUgYWxsIHRob3NlIHByb2JsZW1z
+IDotKQ0KPiA+DQo+ID4gV2hhdCdzIHRoZSBwdXJwb3NlL25lZWQgZm9yIGdyb3VwaW5nIHRoZW0/
+DQo+ID4NCj4gPiBJJ20gZmluZSB3aXRoIE9wdGlvbiAyLCB0aG91Z2ggSSB3YW50IHRvIG1ha2Ug
+c3VyZSBpdCBpcyByZWFsbHkgbmVlZGVkLg0KPiANCj4gRWFjaCBoYWxmIG9mIGEgRFJJRiBwYWly
+IGlzIGJhc2ljYWxseSBhbiBTUEkgc2xhdmUgY29udHJvbGxlciB3aXRob3V0IFRYDQo+IGNhcGFi
+aWxpdHksIHNoYXJpbmcgY2xvY2sgYW5kIGNoaXAtc2VsZWN0IGJldHdlZW4gdGhlIHR3byBoYWx2
+ZXMuDQo+IEhlbmNlIHlvdSBjYW4gdXNlIGVpdGhlciBvbmUgaGFsZiB0byByZWNlaXZlIDEgYml0
+IHBlciBjbG9jayBwdWxzZSwgb3INCj4gYm90aCBoYWx2ZXMgdG8gcmVjZWl2ZSAyIGJpdHMgcGVy
+IGNsb2NrIHB1bHNlLg0KPiBZb3UgY2Fubm90IHVzZSBib3RoIGhhbHZlcyBmb3IgaW5kZXBlbmRl
+bnQgb3BlcmF0aW9uIGR1ZSB0byB0aGUgc2lnbmFsDQo+IHNoYXJpbmcuDQoNCklzIHRoZSBiZWxv
+dyBtb2RlbCBsb29rcyBPSz8gSSBhc3N1bWUgdGhpcyBpcyBPcHRpb24gMi4gQW55IHByZWZlcmVu
+Y2VzIG9uIHRoZSAicGFyZW50IiBjb21wYXRpYmxlIHN0cmluZyBwbGVhc2U/DQoNCi0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KZHJpZjA6
+IHJpZkAwIHsNCiAgICAgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJjYXItZ2VuMy1kcmlmIiwg
+InNpbXBsZS1idXMiOyANCiAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQogICAgICAgICNz
+aXplLWNlbGxzID0gPDI+Ow0KICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KDQogICAgICAg
+IGRyaWYwMDogcmlmQGU2ZjQwMDAwIHsNCiAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJl
+bmVzYXMscjhhNzc5NS1kcmlmIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInJlbmVz
+YXMscmNhci1nZW4zLWRyaWYiOw0KICAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZTZmNDAwMDAg
+MCAweDY0PjsNCiAgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTIgSVJRX1RZ
+UEVfTEVWRUxfSElHSD47DQogICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjcGcgQ1BHX01PRCA1
+MTU+Ow0KICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImZjayI7DQogICAgICAgICAgICAg
+ICAgZG1hcyA9IDwmZG1hYzEgMHgyMD4sIDwmZG1hYzIgMHgyMD47DQogICAgICAgICAgICAgICAg
+ZG1hLW5hbWVzID0gInJ4IiwgInJ4IjsNCiAgICAgICAgICAgICAgICBwb3dlci1kb21haW5zID0g
+PCZzeXNjIFI4QTc3OTVfUERfQUxXQVlTX09OPjsNCiAgICAgICAgICAgICAgICBzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KICAgICAgICB9OyAgDQoNCiAgICAgICAgZHJpZjAxOiByaWZAZTZmNTAwMDAg
+ew0KICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3Nzk1LWRyaWYiLA0K
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjMtZHJpZiI7DQog
+ICAgICAgICAgICAgICAgcmVnID0gPDAgMHhlNmY1MDAwMCAwIDB4NjQ+Ow0KICAgICAgICAgICAg
+ICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxMyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCiAgICAg
+ICAgICAgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDUxND47DQogICAgICAgICAgICAgICAg
+Y2xvY2stbmFtZXMgPSAiZmNrIjsNCiAgICAgICAgICAgICAgICBkbWFzID0gPCZkbWFjMSAweDIy
+PiwgPCZkbWFjMiAweDIyPjsNCiAgICAgICAgICAgICAgICBkbWEtbmFtZXMgPSAicngiLCAicngi
+Ow0KICAgICAgICAgICAgICAgIHBvd2VyLWRvbWFpbnMgPSA8JnN5c2MgUjhBNzc5NV9QRF9BTFdB
+WVNfT04+Ow0KICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgICAgIH07
+ICANCn07DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NCg0KVGhhbmtzIGluIGFkdmFuY2UsDQpSYW1lc2gNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
