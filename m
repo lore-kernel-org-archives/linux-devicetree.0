@@ -1,49 +1,37 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH] regulator: pwm: fix syntax errors in the examples
-Date: Tue, 15 Nov 2016 14:34:07 +0000
-Message-ID: <20161115143407.tjhq6adjprr6gpwl@sirena.org.uk>
-References: <1478773527-10936-1-git-send-email-peda@axentia.se>
- <20161115014702.3p5d4bxhwcibovnf@rob-hp-laptop>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v4 0/8] IIO wrapper drivers, dpot-dac and
+ envelope-detector
+Date: Tue, 15 Nov 2016 15:03:17 +0100
+Message-ID: <1794590b-73ab-5cc8-e03e-4474b88c3472@axentia.se>
+References: <1478606339-31253-1-git-send-email-peda@axentia.se>
+ <9d0ddee1-6f50-0fe9-2efa-a31f1e239aa6@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6i6hpyeothgpjvsa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161115014702.3p5d4bxhwcibovnf@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9d0ddee1-6f50-0fe9-2efa-a31f1e239aa6@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Baluta <daniel.baluta@intel.com>, Slawomir Stepien <sst@poczta.fm>, Thomas Gleixner <tglx@linutronix.de>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-11-12 18:15, Jonathan Cameron wrote:
+> On 08/11/16 11:58, Peter Rosin wrote:
+>> I also wonder if the "new" *_available ABI should perhaps be documented
+>> for all variants directly in sysfs-bus-iio instead of doing it in a driver
+>> specific maner that I did? But that can be fixed later by someone more
+>> capable than me :-)
+> You doubt yourself too much ;)  Some one with fewer inhibitions you mean!
 
---6i6hpyeothgpjvsa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Maybe so, I just find that file long and confusing. I do not have a mental
+picture of what fits where...
 
-On Mon, Nov 14, 2016 at 07:47:02PM -0600, Rob Herring wrote:
-> qOn Thu, Nov 10, 2016 at 11:25:27AM +0100, Peter Rosin wrote:
-> > While at it, clean up some other things as well.
+> Anyhow, just thought I'd add that I like this series very much.
+> It's a nice interesting use of the infrastructures.  Good to see people
+> are getting more adventurous all the time.
 
-> As this is just DT docs, I've applied.
+Thanks for the confidence boost! And also thanks for taking care of the
+bot fallout...
 
-That's now going to conflict with some updates I've got...
-
---6i6hpyeothgpjvsa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJYKxzaAAoJECTWi3JdVIfQtoAH+QEFXU3LUeRE345g27usfVOY
-mWzRFfOwxREVP2yihR1H+KpbT8cDaIok7G+sryxlpPxf2ydlcfwL3yhgp0xBwJwV
-VtWd9rygEtAVwM40jjo5tqVu3ICGB9R0dpATuSLTlSsBfaZj23Z+jFJmHVNa6U+d
-cXtSsv+R+PqmOmyKgnGmq+ShMoF+FvyWnSl3v7+BZgc1y5VkdMfUGsILVNeBjZ+1
-LgH1rAJ9bpKA2HxKk/4+Cv2sBBiRl/7qawNnaWDiYv//jDvQD7IQuaOt03nd6DsK
-9W4EaPN4f0XJx6M7Cq3VVE7L1BLzKFlI1oRvV9DrETajiE3/rX3wATjy28ecDck=
-=OhkG
------END PGP SIGNATURE-----
-
---6i6hpyeothgpjvsa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Peter
