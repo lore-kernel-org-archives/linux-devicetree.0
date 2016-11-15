@@ -1,57 +1,34 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] PCI: qcom: add support to msm8996 PCIE controller
-Date: Tue, 15 Nov 2016 18:30:10 +0200
-Message-ID: <3fc1b0b1-5f48-ebce-e7f1-d4c06e9ee28d@mm-sol.com>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-3-git-send-email-srinivas.kandagatla@linaro.org>
- <aa135735-4ff4-06e3-7899-1255a21edfb4@mm-sol.com>
- <f0d9884c-b5f6-e9a8-e814-6dfd632466fc@linaro.org>
- <ea5858f3-19d6-c746-2e95-a64d6a436b38@mm-sol.com>
- <8d0e9b19-5d6f-8be5-84be-d102817a6b21@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net 1/3] net: phy: realtek: add eee advertisement disable
+ options
+Date: Tue, 15 Nov 2016 17:30:36 +0100
+Message-ID: <20161115163036.GB23231@lunn.ch>
+References: <1479220154-25851-1-git-send-email-jbrunet@baylibre.com>
+ <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8d0e9b19-5d6f-8be5-84be-d102817a6b21-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Andre Roth <neolynx@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 11/15/2016 06:10 PM, Srinivas Kandagatla wrote:
+On Tue, Nov 15, 2016 at 03:29:12PM +0100, Jerome Brunet wrote:
+> On some platforms, energy efficient ethernet with rtl8211 devices is
+> causing issue, like throughput drop or broken link.
 > 
+> This was reported on the OdroidC2 (DWMAC + RTL8211F). While the issue root
+> cause is not fully understood yet, disabling EEE advertisement prevent auto
+> negotiation from enabling EEE.
 > 
-> On 15/11/16 15:08, Stanimir Varbanov wrote:
->>>> I don't like MSM8996_ prefix. Could you invent a macro which depending
->>>> >> on controller selects proper offset?
->>> >
->>> > maybe some like this ??
->>> >
->>> > #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2    0x1A8
->> No, I wanted to preserve the name of the register offset. By that way in
->> the next pcie controller version we do not need to have
->> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V3.
->>
->> I was thinking for something like
->>
->> PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT(ver)    \
->>         ((ver) == VERSION_1 ? 0x178 : 0x1A8)
->>
->> But you will need to extend qcom_pcie_ops with new member to store the
->> version.
->>
->> It's up to you ... or we can fix it when new version of the controller
->> appear.
-> TBH, I don't want to add this just for this one case, looks bit over do.
-> So I skipped to using V2 Suffix.
-> We can fix later if required.
+> This patch provides options to disable 1000T and 100TX EEE advertisement
+> individually for the realtek phys supporting this feature.
 
-OK, sounds good.
+Looking at the code, i don't see anything specific to RealTek
+here. This all seems generic. So should it be in phy.c and made a
+generic OF property which can be applied to any PHY which supports
+EEE.
 
-regards,
-Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+      Andrew
