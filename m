@@ -1,72 +1,122 @@
-From: wlf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] phy: rockchip-inno-usb2: correct 480MHz output
- clock stable time
-Date: Tue, 15 Nov 2016 11:23:26 +0800
-Message-ID: <4919785a-2460-145d-e2e4-944ae7940633@rock-chips.com>
-References: <1479115631-20137-1-git-send-email-wulf@rock-chips.com>
- <1479115631-20137-3-git-send-email-wulf@rock-chips.com>
- <CAD=FV=VJsuiXV3NS0uroF2OWJEDn5eiCpX-jP3BOYgLZ8gy6Hw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Tue, 15 Nov 2016 09:01:51 +0530
+Message-ID: <20161115033151.GG4178@vireshk-i7>
+References: <cover.1477463128.git.viresh.kumar@linaro.org>
+ <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+ <20161110040440.GA11670@vireshk-i7>
+ <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
+ <20161110180940.GD11670@vireshk-i7>
+ <20161110225126.GK16026@codeaurora.org>
+ <20161111031120.GE11670@vireshk-i7>
+ <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
+ <20161115021302.GR5177@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=VJsuiXV3NS0uroF2OWJEDn5eiCpX-jP3BOYgLZ8gy6Hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161115021302.GR5177@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, d-gerlach@ti.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+First of all, thanks to all of you for commenting here. Please
+continue doing so as I want to finish this stuff quickly, it has
+already killed a lot of time :)
 
-在 2016年11月15日 02:17, Doug Anderson 写道:
-> William,
->
-> On Mon, Nov 14, 2016 at 1:27 AM, William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> We found that the system crashed due to 480MHz output clock of
->> USB2 PHY was unstable after clock had been enabled by gpu module.
->>
->> Theoretically, 1 millisecond is a critical value for 480MHz
->> output clock stable time, so we try to change the delay time
->> to 1.2 millisecond to avoid this issue.
->>
->> And the commit ed907fb1d7c3 ("phy: rockchip-inno-usb2: correct
->> clk_ops callback") used prepare callbacks instead of enable
->> callbacks to support gate a clk if the operation may sleep. So
->> we can switch from delay to sleep functions.
->>
->> Signed-off-by: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->> Changes in v3:
->> - fix kbuild test error: too few arguments to function 'usleep_range'
->>
->> Changes in v2:
->> - use usleep_range() function instead of mdelay()
->>
->>   drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
->> index 365e077..0e52b25 100644
->> --- a/drivers/phy/phy-rockchip-inno-usb2.c
->> +++ b/drivers/phy/phy-rockchip-inno-usb2.c
->> @@ -166,7 +166,7 @@ static int rockchip_usb2phy_clk480m_prepare(struct clk_hw *hw)
->>                          return ret;
->>
->>                  /* waitting for the clk become stable */
->> -               mdelay(1);
->> +               usleep_range(1200, 1300);
-> Sight nit that you could also fix the spelling from "waitting" to "waiting".
->
-> ...but that's pre-existing, so:
->
-> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Thanks! I'll add  Reviewed-by and fix the spelling issue.
->
->
->
+On 14-11-16, 18:13, Stephen Boyd wrote:
+> On 11/14, Rob Herring wrote:
+> > On Fri, Nov 11, 2016 at 08:41:20AM +0530, Viresh Kumar wrote:
+> > > On 10-11-16, 14:51, Stephen Boyd wrote:
+> > > > 
+> > > > No. The supply names (and also clock names/index) should be left
+> > > > up to the consumer of the OPP table. We don't want to encode any
+> > > > sort of details like this between the OPP table and the consumer
+> > > > of it in DT because then it seriously couples the OPP table to
+> > > > the consumer device. "The binding" in this case that needs to be
+> > > > updated is the consumer binding, to indicate that it correlated
+> > > > foo-supply and bar-supply to index 0 and 1 of the OPP table
+> > > > voltages.
+> > > 
+> > > Are you saying that we shall have a property like this then?
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> > > index ee91cbdd95ee..733946df2fb8 100644
+> > > --- a/Documentation/devicetree/bindings/opp/opp.txt
+> > > +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> > > @@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
+> > >                         compatible = "arm,cortex-a7";
+> > >                         ...
+> > >  
+> > > -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+> > > +                       vcc0-supply = <&cpu_supply0>;
+> > > +                       vcc1-supply = <&cpu_supply1>;
+> > > +                       vcc2-supply = <&cpu_supply2>;
+> > > +                       opp-supply-names = "vcc0", "vcc1", "vcc2";
+> > 
+> > Uh, no. You already have the names in the *-supply properties. Yes, they 
+> > are a PIA to retrieve compared to a *-names property, but that is the 
+> > nature of this style of binding.
 
+Its not just PIA, but impossible AFAICT.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There are two important pieces of information we need for multiple
+regulator support:
+- Which regulator in the consumer node corresponds to which entry in
+  the OPP table. As Mark mentioned earlier, DT should be able to get
+  us this.
+- The order in which the supplies need to be programmed. We have all
+  agreed to do this in code instead of inferring it from DT and this
+  patch series already does that.
+
+I want to solve the first problem here and I don't see how it can be
+solved using such entries:
+
+	cpus {
+		cpu@0 {
+			compatible = "arm,cortex-a7";
+			...
+
+                        vcc0-supply = <&cpu_supply0>;
+                        vcc1-supply = <&cpu_supply1>;
+                        vcc2-supply = <&cpu_supply2>;
+			operating-points-v2 = <&cpu0_opp_table>;
+                };
+        };
+
+	cpu0_opp_table: opp_table0 {
+		compatible = "operating-points-v2";
+		opp-shared;
+
+		opp@1000000000 {
+			opp-hz = /bits/ 64 <1000000000>;
+			opp-microvolt = <970000>, /* Supply 0 */
+					<960000>, /* Supply 1 */
+					<960000>; /* Supply 2 */
+		};
+        };
+
+The code can't figure out which of vcc0, vcc1, vcc2 is added first in
+the CPU node and so we need to get the order somehow. A separate
+binding as I mentioned earlier is a probably (ugly) solution.
+
+> I think the problem is that Viresh wants the binding to be "self
+> describing" so that the OPP can be used without a driver knowing
+> that a supply corresponds to a particular column in the voltage
+> table.
+
+Right, and that's what Mark suggested as well.
+
+> I don't understand that though. Can't we set the supply
+> names from C code somewhere based on the consumer of the OPPs?
+
+That's what this patch series is doing right now.
+
+So, are you saying that the way this patchset does it is fine with you
+?
+
+-- 
+viresh
