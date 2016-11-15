@@ -1,115 +1,168 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
-Date: Tue, 15 Nov 2016 22:10:02 +0000
-Message-ID: <20161115221002.GA1041@n2100.armlinux.org.uk>
-References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
- <20161028153755.GL5806@leverpostej>
- <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
- <20161114190839.GS1041@n2100.armlinux.org.uk>
- <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
- <20161115213510.GY1041@n2100.armlinux.org.uk>
- <CAJ+vNU2t5f=HQ94_GW-cry7DV3FsR9Vx-ck_E-eNuDk5vd-eaw@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
+ regulators per device
+Date: Tue, 15 Nov 2016 16:11:24 -0600
+Message-ID: <032e1bb4-c9e9-c588-a8c0-dd019bb64254@ti.com>
+References: <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
+ <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
+ <20161110040440.GA11670@vireshk-i7>
+ <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
+ <20161110180940.GD11670@vireshk-i7> <20161110225126.GK16026@codeaurora.org>
+ <20161111031120.GE11670@vireshk-i7>
+ <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
+ <20161115021302.GR5177@codeaurora.org> <20161115033151.GG4178@vireshk-i7>
+ <20161115185645.GA25626@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU2t5f=HQ94_GW-cry7DV3FsR9Vx-ck_E-eNuDk5vd-eaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161115185645.GA25626@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 15, 2016 at 01:39:42PM -0800, Tim Harvey wrote:
-> On Tue, Nov 15, 2016 at 1:35 PM, Russell King - ARM Linux
-> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> > On Tue, Nov 15, 2016 at 12:27:53PM -0800, Tim Harvey wrote:
-> >> On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
-> >> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> >> > So, someone merged a patch which makes mmcblk devices follow the
-> >> > host controller numbering.
-> >> >
-> >> > Now my cubox-i fails to boot correctly because the SD card in the
-> >> > _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
-> >> >
-> >> > USDHC1 is wired to the on-microsom WiFi, and never has anything
-> >> > remotely near a SD card or eMMC present.  So, this change is
-> >> > confusing on these platforms.
-> >> >
-> >> > Moreover, this is _going_ to break SolidRun distros if people upgrade
-> >> > their kernels.
-> >> >
-> >> > It may be appropriate for eMMC, but it's not appropriate everywhere.
-> >> >
-> >> > This is a user visible _regression_ in 4.9-rc.  Whoever did this,
-> >> > please revert whatever change caused this, and next time limit it
-> >> > to only eMMC.
-> >> >
-> >> > Thanks.
-> >>
-> >> I see the same thing on newer kernels, which is why I asked the
-> >> question. I didn't expect (or even want honestly) a non mmcblk0 boot
-> >> device and was looking for a way to control that via dt. Now I'm
-> >> understanding that to avoid this kind of bootloader/kernel dependence
-> >> issue I should be using UUID's to identify the boot device.
-> >>
-> >> >From my testing it looks like the change your looking for occurred
-> >> some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
-> >> regression specifically.
-> >
-> > That depends how you look at it.  Yes, there's a change in 4.5 to 4.6
-> > which ties the block device number to the host device index, but that's
-> > really only part of the story here.
-> >
-> > 4.8 definitely identifies the SD card in iMX6 usdhc2 as "mmcblk0".
-> > 4.9-rc identifies the SD card as "mmcblk1".  This makes it a 4.9 change
-> > of behaviour - there can be no argument about that.
-> >
-> > Now, digging further into this today, it appears that:
-> >
-> > v4.8: usdhc2 was probed first, and is given mmc0.
-> >       usdhc1 is probed second, and is given mmc1.
-> >
-> > v4.9-rc: usdhc1 is probed first, and is given mmc0.
-> >          usdhc2 is probed second, and is given mmc1.
-> >
-> > I haven't yet been able to figure out why there's been this change
-> > of probe order.  There's no change that I can see in the iMX6 DT
-> > files that would account for this.
-> >
-> 
-> I bisected it and the commit your looking for is
-> 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d
+Hi,
+On 11/15/2016 12:56 PM, Stephen Boyd wrote:
+> On 11/15, Viresh Kumar wrote:
+>> On 14-11-16, 18:13, Stephen Boyd wrote:
+>>> On 11/14, Rob Herring wrote:
+>>>> On Fri, Nov 11, 2016 at 08:41:20AM +0530, Viresh Kumar wrote:
+>>>>> On 10-11-16, 14:51, Stephen Boyd wrote:
+>>>>>>
+>>>>>> No. The supply names (and also clock names/index) should be left
+>>>>>> up to the consumer of the OPP table. We don't want to encode any
+>>>>>> sort of details like this between the OPP table and the consumer
+>>>>>> of it in DT because then it seriously couples the OPP table to
+>>>>>> the consumer device. "The binding" in this case that needs to be
+>>>>>> updated is the consumer binding, to indicate that it correlated
+>>>>>> foo-supply and bar-supply to index 0 and 1 of the OPP table
+>>>>>> voltages.
+>>>>>
+>>>>> Are you saying that we shall have a property like this then?
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+>>>>> index ee91cbdd95ee..733946df2fb8 100644
+>>>>> --- a/Documentation/devicetree/bindings/opp/opp.txt
+>>>>> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+>>>>> @@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
+>>>>>                         compatible = "arm,cortex-a7";
+>>>>>                         ...
+>>>>>
+>>>>> -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
+>>>>> +                       vcc0-supply = <&cpu_supply0>;
+>>>>> +                       vcc1-supply = <&cpu_supply1>;
+>>>>> +                       vcc2-supply = <&cpu_supply2>;
+>>>>> +                       opp-supply-names = "vcc0", "vcc1", "vcc2";
+>>>>
+>>>> Uh, no. You already have the names in the *-supply properties. Yes, they
+>>>> are a PIA to retrieve compared to a *-names property, but that is the
+>>>> nature of this style of binding.
+>>
+>> Its not just PIA, but impossible AFAICT.
+>>
+>> There are two important pieces of information we need for multiple
+>> regulator support:
+>> - Which regulator in the consumer node corresponds to which entry in
+>>   the OPP table. As Mark mentioned earlier, DT should be able to get
+>>   us this.
+>
+> This is also possible from C code though. Or is there some case
+> where it isn't possible if we're sharing the same table with two
+> devices? I'm lost on when this would ever happen.
+>
+> It feels like trying to keep the OPP table agnostic of the
+> consuming device and the device's binding is more trouble than
+> it's worth. Especially considering we have opp-shared and *-name
+> now.
 
-No it's not.
+I agree with this, I do not like having to pass a list of regulator 
+names to the opp core that I *hope* the device I am controlling has 
+provided. The intent seems to be to use the cpufreq-dt driver as is and 
+not pass any cpu-supply anymore so the cpufreq-dt driver has no 
+knowledge of what regulators are present (it operates as it would today 
+on a system with no regulator required). But as is it will move forward 
+regardless of whether or not we actually intended to provide a multi 
+regulator set up or platform set_opp helper, and this probably isn't 
+ideal. I would think cpufreq-dt/opp core should be have knowledge of 
+what regulators are needed to achieve these opp transitions and make 
+sure everything is in place before moving ahead.
 
-Let me try and put it plainer:
+>
+>> - The order in which the supplies need to be programmed. We have all
+>>   agreed to do this in code instead of inferring it from DT and this
+>>   patch series already does that.
+>
+> Agreed. Encoding a sequence into DT doesn't sound very feasible.
+> How is this going to be handled though? I don't see any users of
+> the code we're reviewing here, so it's hard to grasp how things
+> will work. It would be really useful if we had some user of the
+> code included in the patch series to get the big picture.
 
-* Commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d ties the mmc block
-  device number (mmcblkN) to the mmc host interface number (mmcN).
-  This change happened between 4.5 and 4.6.
+I have sent a patch in reply to the cover letter of this series showing 
+the driver that I used to test multi regulator on TI am57x platform and 
+wrote as much detail as I could on how I used what Viresh has provided. 
+Perhaps that will show how this can be used and help to see what's 
+missing from the core implementation here.
 
-* The change I'm seeing happened between 4.8 and 4.9-rc.  I'm not
-  seeing a change of behaviour between 4.5 and 4.6.
+Previous discussions drove me to pass regulators and necessary values in 
+the DT but do all sequencing from the driver from fixed code without 
+inferring anything from the device tree.
 
-* The change I'm seeing changes the order of the physical device
-  associated with the hosts named mmc0 and mmc1 in the kernel.
+Regards,
+Dave
 
-* Because physical devices associated with the mmc0 and mmc1 hosts
-  swap over, the mmcblkN number changes due to the commit you point
-  out.
-
-* So, the change that I'm seeing between 4.8 and 4.9-rc is not caused
-  by commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d, but by something
-  else changing the order in which the two usdhc physical hardware
-  blocks get probed.
-
-Does this make it clearer?
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>>
+>> I want to solve the first problem here and I don't see how it can be
+>> solved using such entries:
+>>
+>> 	cpus {
+>> 		cpu@0 {
+>> 			compatible = "arm,cortex-a7";
+>> 			...
+>>
+>>                         vcc0-supply = <&cpu_supply0>;
+>>                         vcc1-supply = <&cpu_supply1>;
+>>                         vcc2-supply = <&cpu_supply2>;
+>> 			operating-points-v2 = <&cpu0_opp_table>;
+>>                 };
+>>         };
+>>
+>> 	cpu0_opp_table: opp_table0 {
+>> 		compatible = "operating-points-v2";
+>> 		opp-shared;
+>>
+>> 		opp@1000000000 {
+>> 			opp-hz = /bits/ 64 <1000000000>;
+>> 			opp-microvolt = <970000>, /* Supply 0 */
+>> 					<960000>, /* Supply 1 */
+>> 					<960000>; /* Supply 2 */
+>> 		};
+>>         };
+>>
+>> The code can't figure out which of vcc0, vcc1, vcc2 is added first in
+>> the CPU node and so we need to get the order somehow. A separate
+>> binding as I mentioned earlier is a probably (ugly) solution.
+>>
+>>> I think the problem is that Viresh wants the binding to be "self
+>>> describing" so that the OPP can be used without a driver knowing
+>>> that a supply corresponds to a particular column in the voltage
+>>> table.
+>>
+>> Right, and that's what Mark suggested as well.
+>>
+>>> I don't understand that though. Can't we set the supply
+>>> names from C code somewhere based on the consumer of the OPPs?
+>>
+>> That's what this patch series is doing right now.
+>>
+>> So, are you saying that the way this patchset does it is fine with you
+>> ?
+>
+> That's just to handle the ordering of operations? I need to take
+> a minute and understand what's changing. You may have spent
+> plenty of time developing/updating, but I haven't spent near
+> enough time understanding what's going on in these patches to
+> give a thorough review.
+>
