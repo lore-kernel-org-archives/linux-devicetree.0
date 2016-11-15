@@ -1,14 +1,23 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: John Youn <johnyoun@synopsys.com>
 Subject: [PATCH v3] usb: dwc2: add amcc,dwc-otg support
 Date: Tue, 15 Nov 2016 15:03:40 -0800
-Message-ID: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun__7136.66293672777$1479251074$gmane$org@synopsys.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Message-ID: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun__33116.4007577629$1479251140$gmane$org@synopsys.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, John Youn <johnyoun@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Christian Lamparter <chunkeey@googlemail.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Christian Lamparter <chunkeey@googlemail.com>
 
 This patch adds support for the "amcc,usb-otg" device
 which is found in the PowerPC Canyonlands' dts.
@@ -26,8 +35,8 @@ because of the special ahbcfg configuration. The default
 GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
 when the USB and SATA is used concurrently.
 
-Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: John Youn <johnyoun@synopsys.com>
 ---
 
 Sorry, the previous one broke compilation. This fixes it.
@@ -72,8 +81,3 @@ index 513556a..a786256 100644
  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
 -- 
 2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
