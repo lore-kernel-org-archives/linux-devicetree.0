@@ -1,122 +1,151 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Tue, 15 Nov 2016 09:01:51 +0530
-Message-ID: <20161115033151.GG4178@vireshk-i7>
-References: <cover.1477463128.git.viresh.kumar@linaro.org>
- <28119b44689921f3c3cc00be49bff2bb99b32162.1477463128.git.viresh.kumar@linaro.org>
- <20161109145828.p6vvsd5bygkzjcmh@sirena.org.uk>
- <20161110040440.GA11670@vireshk-i7>
- <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
- <20161110180940.GD11670@vireshk-i7>
- <20161110225126.GK16026@codeaurora.org>
- <20161111031120.GE11670@vireshk-i7>
- <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
- <20161115021302.GR5177@codeaurora.org>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 15 Nov 2016 09:05:29 +0530
+Message-ID: <533189c2-ccff-ed68-eb03-c56ad7e020bf@codeaurora.org>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
+ <737415023.GKbfqYIf4s@avalon> <57E8C2CB.9000806@codeaurora.org>
+ <1527982.jPo8JkVTxZ@avalon>
+ <e3d74745-fd14-63f1-e93f-f57e886e26ed@codeaurora.org>
+ <CAL_Jsq+KMPoyWvh1U3OKL6pX8D4QByqVFgcMks8myDfZEYeFCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161115021302.GR5177@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, d-gerlach@ti.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+KMPoyWvh1U3OKL6pX8D4QByqVFgcMks8myDfZEYeFCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-First of all, thanks to all of you for commenting here. Please
-continue doing so as I want to finish this stuff quickly, it has
-already killed a lot of time :)
 
-On 14-11-16, 18:13, Stephen Boyd wrote:
-> On 11/14, Rob Herring wrote:
-> > On Fri, Nov 11, 2016 at 08:41:20AM +0530, Viresh Kumar wrote:
-> > > On 10-11-16, 14:51, Stephen Boyd wrote:
-> > > > 
-> > > > No. The supply names (and also clock names/index) should be left
-> > > > up to the consumer of the OPP table. We don't want to encode any
-> > > > sort of details like this between the OPP table and the consumer
-> > > > of it in DT because then it seriously couples the OPP table to
-> > > > the consumer device. "The binding" in this case that needs to be
-> > > > updated is the consumer binding, to indicate that it correlated
-> > > > foo-supply and bar-supply to index 0 and 1 of the OPP table
-> > > > voltages.
-> > > 
-> > > Are you saying that we shall have a property like this then?
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > > index ee91cbdd95ee..733946df2fb8 100644
-> > > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > > @@ -389,7 +389,10 @@ Example 4: Handling multiple regulators
-> > >                         compatible = "arm,cortex-a7";
-> > >                         ...
-> > >  
-> > > -                       cpu-supply = <&cpu_supply0>, <&cpu_supply1>, <&cpu_supply2>;
-> > > +                       vcc0-supply = <&cpu_supply0>;
-> > > +                       vcc1-supply = <&cpu_supply1>;
-> > > +                       vcc2-supply = <&cpu_supply2>;
-> > > +                       opp-supply-names = "vcc0", "vcc1", "vcc2";
-> > 
-> > Uh, no. You already have the names in the *-supply properties. Yes, they 
-> > are a PIA to retrieve compared to a *-names property, but that is the 
-> > nature of this style of binding.
 
-Its not just PIA, but impossible AFAICT.
+On 11/10/2016 07:04 AM, Rob Herring wrote:
+> On Fri, Oct 14, 2016 at 12:40 AM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> Hi Rob,
+>>
+>>
+>> On 09/26/2016 01:42 PM, Laurent Pinchart wrote:
+>>>
+>>> Hi Archit,
+>>>
+>>> On Monday 26 Sep 2016 12:10:11 Archit Taneja wrote:
+>>>>
+>>>> On 9/25/2016 10:58 PM, Laurent Pinchart wrote:
+>>>>>
+>>>>> On Friday 23 Sep 2016 14:50:27 Archit Taneja wrote:
+>>>>>>
+>>>>>> Add the regulator supply properties needed by ADV7511 and ADV7533. The
+>>>>>> regulator names are named after the pin names, except for DVDD_3V on
+>>>>>> ADV7511, which is left v3p3 to have the same name as it's on ADV7533.
+>>>>>>
+>>>>>> ADV7511 has a BGVDD pin for which the voltage to be configured isn't
+>>>>>> clear. This needs to be updated in the document later.
+>>>>>>
+>>>>>> The regulators are specified as optional properties since there can
+>>>>>> be boards which have a fixed supply directly routed to the pins, and
+>>>>>> these may not be modelled as regulator supplies.
+>>>>>>
+>>>>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>> ---
+>>>>>> v2:
+>>>>>> - Specify regulator supplies for ADV7511 too.
+>>>>>> - Have separate supply entries for AVDD, DVDD, PVDD, A2VDD pins.
+>>>>>> - Add additional BGVDD supply for ADV7511.
+>>>>>>
+>>>>>>   .../devicetree/bindings/display/bridge/adi,adv7511.txt     | 14
+>>>>>> +++++++
+>>>>>>   1 file changed, 14 insertions(+)
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>> index
+>>>>>> 6532a59..66e6bae 100644
+>>>>>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>>>>>>
+>>>>>> @@ -56,6 +56,20 @@ Optional properties:
+>>>>>>   - adi,disable-timing-generator: Only for ADV7533. Disables the
+>>>>>> internal
+>>>>>>
+>>>>>> timing generator. The chip will rely on the sync signals in the DSI
+>>>>>> data
+>>>>>> lanes, rather than generate its own timings for HDMI output.
+>>>>>> +- avdd-supply: A 1.8V supply that powers up the AVDD pin on the chip.
+>>>>>> +- dvdd-supply: A 1.8V supply that powers up the DVDD pin on the chip.
+>>>>>> +- pvdd-supply: A 1.8V supply that powers up the PVDD pin on the chip.
+>>>>>> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
+>>>>>> +  ADV7511 and V3P3 on ADV7533.
+>>>>>> +
+>>>>>> +ADV7511 specific supplies:
+>>>>>> +- bgvdd-supply: Powers the BGVDD pin. The voltage isn't clear from
+>>>>>> +  available datasheets.
+>>>>>
+>>>>>
+>>>>> It's a 1.8V supply. The ADV7511 hardware user's guide recommends tying
+>>>>> it
+>>>>> to the PVDD supply, so I'm not sure we need a separate supply in DT.
+>>>>
+>>>>
+>>>> Thanks for providing the info. I'll update it in the doc.
+>>>>
+>>>>> Similarly, the user's guide recommends supplying the AVDD, DVDD and PVDD
+>>>>> pins with a single 1.8V LDO and three independent filters. We could thus
+>>>>> possibly combine them into a single 1.8V supply.
+>>>>
+>>>>
+>>>> I'd originally specified only one AVDD supply for all the 1.8 V
+>>>> supplies, but Rob had recommended using separate supplies for each pin.
+>>>>
+>>>> I guess it doesn't do much harm specifying separate supplies, a
+>>>> board can just provide avdd-supply, and the rest would be assumed dummy.
+>>>
+>>>
+>>> DT should use the same regulator phandle for all power supplies in that
+>>> case,
+>>> not specify a single one.
+>>>
+>>>> It could also help describe boards which may not have followed the
+>>>> user guide's recommendation, but I agree that's probably a rare
+>>>> scenario.
+>>>>
+>>>> Is it okay if we stick with multiple supplies as it is in this version?
+>>>
+>>>
+>>> It seems overkill to me but I can live with that. I'd remove the bgvdd
+>>> supply
+>>> though.
+>>>
+>>> Rob, what's your opinion on this ? Is there a specific reason why you
+>>> prefer
+>>> splitting the 1.8V supply in one supply per pin, when the hardware user's
+>>> guide recommend powering them from the same LDO ?
+>>
+>>
+>> Could you suggest us which way to go?
+>
+> If they are really intended to be the same supply, then combining them
+> is fine with me.
 
-There are two important pieces of information we need for multiple
-regulator support:
-- Which regulator in the consumer node corresponds to which entry in
-  the OPP table. As Mark mentioned earlier, DT should be able to get
-  us this.
-- The order in which the supplies need to be programmed. We have all
-  agreed to do this in code instead of inferring it from DT and this
-  patch series already does that.
+Thanks, I'll change my patchset accordingly.
 
-I want to solve the first problem here and I don't see how it can be
-solved using such entries:
+Archit
 
-	cpus {
-		cpu@0 {
-			compatible = "arm,cortex-a7";
-			...
-
-                        vcc0-supply = <&cpu_supply0>;
-                        vcc1-supply = <&cpu_supply1>;
-                        vcc2-supply = <&cpu_supply2>;
-			operating-points-v2 = <&cpu0_opp_table>;
-                };
-        };
-
-	cpu0_opp_table: opp_table0 {
-		compatible = "operating-points-v2";
-		opp-shared;
-
-		opp@1000000000 {
-			opp-hz = /bits/ 64 <1000000000>;
-			opp-microvolt = <970000>, /* Supply 0 */
-					<960000>, /* Supply 1 */
-					<960000>; /* Supply 2 */
-		};
-        };
-
-The code can't figure out which of vcc0, vcc1, vcc2 is added first in
-the CPU node and so we need to get the order somehow. A separate
-binding as I mentioned earlier is a probably (ugly) solution.
-
-> I think the problem is that Viresh wants the binding to be "self
-> describing" so that the OPP can be used without a driver knowing
-> that a supply corresponds to a particular column in the voltage
-> table.
-
-Right, and that's what Mark suggested as well.
-
-> I don't understand that though. Can't we set the supply
-> names from C code somewhere based on the consumer of the OPPs?
-
-That's what this patch series is doing right now.
-
-So, are you saying that the way this patchset does it is fine with you
-?
+>
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
 -- 
-viresh
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
