@@ -1,44 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 2/2] Add support for OV5647 sensor
-Date: Tue, 15 Nov 2016 05:50:32 -0800
-Message-ID: <3b6863c4-e239-7b66-1d96-7f0326f507c5@roeck-us.net>
-References: <cover.1479129004.git.roliveir@synopsys.com>
- <36447f1f102f648057eb9038a693941794a6c344.1479129004.git.roliveir@synopsys.com>
- <20161115121032.GB7018@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 0/3] ARM: dts: sun7i: BPI-M1+ USB support
+Date: Tue, 15 Nov 2016 21:51:03 +0800
+Message-ID: <20161115135106.438-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161115121032.GB7018@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: mchehab@kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, geert+renesas@glider.be, akpm@linux-foundation.org, hverkuil@xs4all.nl, dheitmueller@kernellabs.com, slongerbeam@gmail.com, lars@metafoo.de, robert.jarzmik@free.fr, pali.rohar@gmail.com, sakari.ailus@linux.intel.com, mark.rutland@arm.com, CARLOS.PALMINHA@synopsys.com
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2016 04:10 AM, Pavel Machek wrote:
-> Hi!
->
->> Add support for OV5647 sensor.
->>
->
->> +static int ov5647_write(struct v4l2_subdev *sd, u16 reg, u8 val)
->> +{
->> +	int ret;
->> +	unsigned char data[3] = { reg >> 8, reg & 0xff, val};
->> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->> +
->> +	ret = i2c_master_send(client, data, 3);
->> +	if (ret != 3) {
->> +		dev_dbg(&client->dev, "%s: i2c write error, reg: %x\n",
->> +				__func__, reg);
->> +		return ret < 0 ? ret : -EIO;
->> +	}
->> +	return 0;
->> +}
->
-> Sorry, this is wrong. It should something <0 any time error is detected.
->
+Hi Maxime,
 
-It seems to me that it does return a value < 0 each time an error is detected.
+These are the remaining patches of my BPI-M1+ fixes series from July.
 
-Guenter
+Changes since v1:
+
+  - Split out USB PHY enable patch.
+
+  - Dropped custom OPP table. Tested the A20 default one with
+    cpufreq-ljt-stress-test and it seemed stable.
+
+  - Dropped voltage range for cpu supply regulator to normal 1.0V ~ 1.4V.
+
+  - Dropped pinmux setting for OTG ID pin.
+
+
+Please have a look.
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (3):
+  ARM: dts: sun7i: bananapi-m1-plus: Enable USB PHY for USB host support
+  ARM: dts: sun7i: bananapi-m1-plus: Add PMIC regulators
+  ARM: dts: sun7i: bananapi-m1-plus: Enable USB OTG
+
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 60 ++++++++++++++++++++++--
+ 1 file changed, 56 insertions(+), 4 deletions(-)
+
+-- 
+2.10.2
