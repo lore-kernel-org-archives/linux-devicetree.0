@@ -1,93 +1,80 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: da850: Add the usb otg device nodeg
-Date: Tue, 15 Nov 2016 15:19:51 -0600
-Message-ID: <20161115211951.GH11011@uda0271908>
-References: <1478188752-22447-1-git-send-email-abailon@baylibre.com>
- <1478188752-22447-5-git-send-email-abailon@baylibre.com>
- <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0@ti.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Tue, 15 Nov 2016 21:35:11 +0000
+Message-ID: <20161115213510.GY1041@n2100.armlinux.org.uk>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej>
+ <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
+ <20161114190839.GS1041@n2100.armlinux.org.uk>
+ <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 15, 2016 at 04:16:02PM +0530, Sekhar Nori wrote:
-> On Thursday 03 November 2016 09:29 PM, Alexandre Bailon wrote:
-> > This adds the device tree node for the usb otg
-> > controller present in the da850 family of SoC's.
-> > This also enables the otg usb controller for the lcdk board.
-> > 
-> > Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
-> >  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-> > index 7b8ab21..9f5040c 100644
-> > --- a/arch/arm/boot/dts/da850-lcdk.dts
-> > +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> > @@ -158,6 +158,14 @@
-> >  	rx-num-evt = <32>;
-> >  };
-> >  
-> > +&usb_phy {
-> > +	status = "okay";
-> > +	};
+On Tue, Nov 15, 2016 at 12:27:53PM -0800, Tim Harvey wrote:
+> On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
+> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > So, someone merged a patch which makes mmcblk devices follow the
+> > host controller numbering.
+> >
+> > Now my cubox-i fails to boot correctly because the SD card in the
+> > _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
+> >
+> > USDHC1 is wired to the on-microsom WiFi, and never has anything
+> > remotely near a SD card or eMMC present.  So, this change is
+> > confusing on these platforms.
+> >
+> > Moreover, this is _going_ to break SolidRun distros if people upgrade
+> > their kernels.
+> >
+> > It may be appropriate for eMMC, but it's not appropriate everywhere.
+> >
+> > This is a user visible _regression_ in 4.9-rc.  Whoever did this,
+> > please revert whatever change caused this, and next time limit it
+> > to only eMMC.
+> >
+> > Thanks.
 > 
-> As mentioned by David already, this node needs to be removed. Please
-> rebase this on top of latest linux-davinci/master when ready for merging
-> (driver changes accepted).
+> I see the same thing on newer kernels, which is why I asked the
+> question. I didn't expect (or even want honestly) a non mmcblk0 boot
+> device and was looking for a way to control that via dt. Now I'm
+> understanding that to avoid this kind of bootloader/kernel dependence
+> issue I should be using UUID's to identify the boot device.
+> 
+> >From my testing it looks like the change your looking for occurred
+> some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
+> regression specifically.
 
-Dropped this patch due to this comment.
+That depends how you look at it.  Yes, there's a change in 4.5 to 4.6
+which ties the block device number to the host device index, but that's
+really only part of the story here.
 
-Regards,
--Bin.
+4.8 definitely identifies the SD card in iMX6 usdhc2 as "mmcblk0".
+4.9-rc identifies the SD card as "mmcblk1".  This makes it a 4.9 change
+of behaviour - there can be no argument about that.
 
-> 
-> > +
-> > +&usb0 {
-> > +	status = "okay";
-> > +};
-> > +
-> >  &aemif {
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&nand_pins>;
-> > diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> > index f79e1b9..322a31a 100644
-> > --- a/arch/arm/boot/dts/da850.dtsi
-> > +++ b/arch/arm/boot/dts/da850.dtsi
-> > @@ -372,6 +372,21 @@
-> >  					>;
-> >  			status = "disabled";
-> >  		};
-> > +		usb_phy: usb-phy {
-> > +			compatible = "ti,da830-usb-phy";
-> > +			#phy-cells = <1>;
-> > +			status = "disabled";
-> > +		};
-> > +		usb0: usb@200000 {
-> > +			compatible = "ti,da830-musb";
-> > +			reg = <0x200000 0x10000>;
-> > +			interrupts = <58>;
-> > +			interrupt-names = "mc";
-> > +			dr_mode = "otg";
-> > +			phys = <&usb_phy 0>;
-> > +			phy-names = "usb-phy";
-> > +			status = "disabled";
-> > +		};
-> 
-> Can you separate out the soc specific changes from board changes? Please
-> place the usb0 node above the mdio node. I am trying to get to a rough
-> ordering based on reg property.
-> 
-> Thanks,
-> Sekhar
-> 
+Now, digging further into this today, it appears that:
+
+v4.8: usdhc2 was probed first, and is given mmc0.
+      usdhc1 is probed second, and is given mmc1.
+
+v4.9-rc: usdhc1 is probed first, and is given mmc0.
+         usdhc2 is probed second, and is given mmc1.
+
+I haven't yet been able to figure out why there's been this change
+of probe order.  There's no change that I can see in the iMX6 DT
+files that would account for this.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
