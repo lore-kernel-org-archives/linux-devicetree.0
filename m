@@ -1,57 +1,45 @@
 From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] phy: meson8b-usb2: request a shared reset line
-Date: Tue, 15 Nov 2016 18:24:46 +0530
-Message-ID: <582B0596.4060903@ti.com>
-References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-3-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v4 0/2] phy: rockchip-inno-usb2: correct 480MHz clk_ops
+ callbacks and stable time
+Date: Tue, 15 Nov 2016 18:30:27 +0530
+Message-ID: <582B06EB.1050700@ti.com>
+References: <1479182047-3399-1-git-send-email-wulf@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161112131305.26088-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1479182047-3399-1-git-send-email-wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: William Wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Saturday 12 November 2016 06:43 PM, Martin Blumenstingl wrote:
-> Both PHYs are sharing one reset line. With recent improvements to the
-> reset framework we can now also use reset_control_reset with shared
-> resets.
-> This allows us to drop some workarounds where the reset was only
-> specified for one PHY but not the other, to make sure that the reset it
-> only executed once (as the reset framework was not able to use
-> reset_control_reset with shared reset lines).
+On Tuesday 15 November 2016 09:24 AM, William Wu wrote:
+> This series try to correct the 480MHz output clock of USB2 PHY
+> clk_ops callback and fix the delay time. It aims to make the
+> 480MHz clock gate more sensible and stable.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Tested on rk3366/rk3399 EVB board.
 
-merged $patch to -next.
+merged to phy -next.
 
 Thanks
 Kishon
-> ---
->  drivers/phy/phy-meson8b-usb2.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/phy/phy-meson8b-usb2.c b/drivers/phy/phy-meson8b-usb2.c
-> index 73bf632..f1ee96a 100644
-> --- a/drivers/phy/phy-meson8b-usb2.c
-> +++ b/drivers/phy/phy-meson8b-usb2.c
-> @@ -237,8 +237,7 @@ static int phy_meson8b_usb2_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->clk_usb))
->  		return PTR_ERR(priv->clk_usb);
->  
-> -	priv->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-> -								NULL);
-> +	priv->reset = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
->  	if (PTR_ERR(priv->reset) == -EPROBE_DEFER)
->  		return PTR_ERR(priv->reset);
->  
+> William Wu (2):
+>   phy: rockchip-inno-usb2: correct clk_ops callback
+>   phy: rockchip-inno-usb2: correct 480MHz output clock stable time
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/phy/phy-rockchip-inno-usb2.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
