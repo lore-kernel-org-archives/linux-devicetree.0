@@ -1,69 +1,67 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] Add clockevent for timer-nps driver to NPS400 SoC
-Date: Tue, 15 Nov 2016 10:57:54 +0100
-Message-ID: <20161115095754.GA1835@mai>
-References: <1479199859-980-1-git-send-email-noamca@mellanox.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: da850: add the mstpri and ddrctl nodes
+Date: Tue, 15 Nov 2016 15:35:52 +0530
+Message-ID: <de22c568-22b8-7809-5506-cac23fad252d@ti.com>
+References: <1479144724-14231-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479144724-14231-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479199859-980-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1479144724-14231-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 15, 2016 at 10:50:56AM +0200, Noam Camus wrote:
-> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On Monday 14 November 2016 11:02 PM, Bartosz Golaszewski wrote:
+> Add the nodes for the MSTPRI configuration and DDR2/mDDR memory
+> controller drivers to da850.dtsi.
 > 
-> Change log
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
-> V6 --> V7
-> Apply several comments made by Daniel Lezcano:
-> 1) Remove CLOCK_EVT_FEAT_PERIODIC support. This way it is
->  pure oneshot driver. This simplifies driver so that:
->  nps_clkevent_add_thread()
->  nps_clkevent_rm_thread()
->  are more clearer without any vague logic if to change
->  TSI bit of current HW thread or not.
-> 2) tick_resume is also calls nps_clkevent_rm_thread()
-> 3) Few (hopefully last) typo fixes. 
+>  arch/arm/boot/dts/da850.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> V5 --> V6
-> Apply several comments made by Daniel Lezcano:
-> 1) nps_get_timer_clk() - use clk_put() on error scenario
-> 2) nps_get_timer_clk() - return EINVAL and not plain 1
-> 3) Fix typos in log (double checked with spell checker)
-> 
-> V4 --> V5
-> Apply several comments made by Daniel Lezcano:
-> 1) Add __init attribute to nps_get_timer_clk()
-> 2) Fix return value of nps_get_timer_clk()
->  when failing to get clk rate
-> 3) Change clocksource rate from 301 -> 300
-> 
-> V3 --> V4
-> Main changes are [Thanks for the review]:
-> Fix many typos at log [Daniel]
-> Add handling for bad return values [Daniel and Thomas]
-> Replace use of internal irqchip pointers with existing IRQ API [Thomas]
-> Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
-> Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
-> 
-> V2 --> V3
-> Apply Rob Herring comment about backword compatibility
-> 
-> V1 --> V2
-> Apply Daniel Lezcano comments:
-> 	CLOCKSOURCE_OF_DECLARE return value
-> 	update hotplug callbacks usage
-> 	squash of 2 first commits.
-> In this version I created new commit to serve as preperation for adding clockevents.
-> This way the last patch is more readable with clockevent content.
-> ---
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 1bb1f6d..1635218 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -440,6 +440,11 @@
+>  			interrupts = <52>;
+>  			status = "disabled";
+>  		};
+> +
+> +		mstpri: mstpri@14110 {
+> +			compatible = "ti,da850-mstpri";
+> +			reg = <0x14110 0x0c>;
+> +		};
 
-Do you want me to take the entire series in my tree, or do you want my acked-by
-to push them in your tree ?
+Instead of adding the node to the end, can you place it above the
+cfgchip node to keep it sorted by reg. We have not really followed that
+in this file. May be we should have. But lets start with this.
+
+>  	};
+>  	aemif: aemif@68000000 {
+>  		compatible = "ti,da850-aemif";
+> @@ -451,4 +456,8 @@
+>  			  1 0 0x68000000 0x00008000>;
+>  		status = "disabled";
+>  	};
+> +	ddrctl: ddrctl@b0000000 {
+> +		compatible = "ti,da850-ddr-controller";
+> +		reg = <0xb0000000 0xe8>;
+> +	};
+
+Can you name the node memory-controller@b0000000? Thats the generic name
+suggested by ePAPR 1.1 for memory controllers.
+
+I could not find any naming suggestions for the bus master priority
+controller above, but based on the pattern used for other controllers,
+may be it should be called priority-controller@14110 instead of mstpri@14110
+
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
