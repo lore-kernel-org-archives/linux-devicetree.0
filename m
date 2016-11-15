@@ -1,53 +1,28 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv2 01/10] mmc: dw_mmc: display the real register value on debugfs
-Date: Tue, 15 Nov 2016 19:12:23 +0900
-Message-ID: <20161115101232.3854-2-jh80.chung@samsung.com>
-References: <20161115101232.3854-1-jh80.chung@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20161115101232.3854-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/2] ARM: davinci_all_defconfig: enable the mstpri and
+ ddrctl drivers
+Date: Tue, 15 Nov 2016 15:42:23 +0530
+Message-ID: <cbcc1774-3590-7fd7-1414-4560b7996891@ti.com>
+References: <1479144724-14231-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479144724-14231-3-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479144724-14231-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Developer wants to see the real register value, not register offset.
-This patch fixed to display the real value of register.
+On Monday 14 November 2016 11:02 PM, Bartosz Golaszewski wrote:
+> With the da8xx memory controller and master peripheral priority
+> drivers merged and corresponding device tree changes in place we can
+> now enable appropriate options by default.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/mmc/host/dw_mmc.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Applied to v4.10/defconfig
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index a16c537..e53899e 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -165,12 +165,14 @@ static const struct file_operations dw_mci_req_fops = {
- 
- static int dw_mci_regs_show(struct seq_file *s, void *v)
- {
--	seq_printf(s, "STATUS:\t0x%08x\n", SDMMC_STATUS);
--	seq_printf(s, "RINTSTS:\t0x%08x\n", SDMMC_RINTSTS);
--	seq_printf(s, "CMD:\t0x%08x\n", SDMMC_CMD);
--	seq_printf(s, "CTRL:\t0x%08x\n", SDMMC_CTRL);
--	seq_printf(s, "INTMASK:\t0x%08x\n", SDMMC_INTMASK);
--	seq_printf(s, "CLKENA:\t0x%08x\n", SDMMC_CLKENA);
-+	struct dw_mci *host = s->private;
-+
-+	seq_printf(s, "STATUS:\t0x%08x\n", mci_readl(host, STATUS));
-+	seq_printf(s, "RINTSTS:\t0x%08x\n", mci_readl(host, RINTSTS));
-+	seq_printf(s, "CMD:\t0x%08x\n", mci_readl(host, CMD));
-+	seq_printf(s, "CTRL:\t0x%08x\n", mci_readl(host, CTRL));
-+	seq_printf(s, "INTMASK:\t0x%08x\n", mci_readl(host, INTMASK));
-+	seq_printf(s, "CLKENA:\t0x%08x\n", mci_readl(host, CLKENA));
- 
- 	return 0;
- }
--- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
