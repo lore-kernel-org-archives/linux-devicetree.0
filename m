@@ -1,43 +1,70 @@
-From: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7 04/14] ARM: dts: Add xo_clock to sdhc nodes on qcom
- platforms
-Date: Tue, 15 Nov 2016 10:40:49 +0530
-Message-ID: <fb846f30-1f23-4470-eb4f-6add4e02d5b2@codeaurora.org>
-References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
- <1479103248-9491-5-git-send-email-riteshh@codeaurora.org>
- <20161114200115.GL5177@codeaurora.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: changesets: Introduce changeset helper methods
+Date: Mon, 14 Nov 2016 21:17:07 -0800
+Message-ID: <582A9A53.6070304@gmail.com>
+References: <20161104144241.18002-1-hdegoede@redhat.com>
+ <20161104144241.18002-2-hdegoede@redhat.com> <5827CCC3.90003@gmail.com>
+ <582968FA.4020800@gmail.com>
+ <b2cef3fb-cbb4-f34b-cb9a-84578bb67751@redhat.com> <582A060D.50800@gmail.com>
+ <CAL_Jsq+zWiXOtb4hWrpB87z8T4WLfCbLeGNgST4tmAz61dgFHA@mail.gmail.com>
+ <582A6B69.4070704@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114200115.GL5177-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <582A6B69.4070704-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kdorfman-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Rob, Hans, Pantelis,
 
-On 11/15/2016 1:31 AM, Stephen Boyd wrote:
-> On 11/14, Ritesh Harjani wrote:
->> Add xo_clock to sdhc clock node on all qcom platforms.
->>
->> Signed-off-by: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/qcom-apq8084.dtsi   | 14 ++++++++------
->>  arch/arm/boot/dts/qcom-msm8974.dtsi   | 14 ++++++++------
->>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 10 ++++++----
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi |  9 +++++----
->>  4 files changed, 27 insertions(+), 20 deletions(-)
->>
->
-> Is there an update to
-> Documentation/devicetree/bindings/mmc/sdhci-msm.txt as well?
-Sure, I will update.
->
+On 11/14/16 17:56, Frank Rowand wrote:
+> On 11/14/16 14:16, Rob Herring wrote:
+>> On Mon, Nov 14, 2016 at 12:44 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+< snip >
+
+>>
+>> These helpers are useful and easier to use than the existing API
+>> independent of any issues to sort out with how we use overlays. So I
+>> plan to take them whether there's a user right away or not.
+>>
+>> Rob
+> 
+> OK, expect a more detailed review from me this week.
+> 
+> -Frank
+
+Part of my issues with these patches is related to using a format
+string and the variables required by that format string as arguments
+to several of the proposed helper functions.  That construct is driven
+by the helper functions calling  __of_node_dup() which has that same
+pattern of arguments.  Blindly accepting a format string as an argument
+to populate a buffer is not good from a security or robustness standpoint.
+
+The only callers of __of_node_dup() are one site in drivers/of/overlay.c
+and three sites in drivers/of/unittest.c.
+
+I would like to see if I can find a good alternate to the format
+string approach in __of_node_dup(), which would remove that issue
+in the helper functions.
+
+I do not expect Hans to fix the existing __of_node_dup(), I am
+willing to do that myself.
+
+Rob, are you in a hurry to accept the helper functions or are you
+willing to give me some time to resolve the __of_node_dup() issue
+and come up with a new version of the helper function patches?
+
+Caveat, I have a hard deadline late Monday Nov 21 so I can't
+start on this until Nov 22.  Then that is Thanksgiving week and
+I have some other work commitments that will demand much of my
+time the next two weeks.  I can commit to starting Nov 22, then
+making it my top priority starting Dec 12.
+
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
