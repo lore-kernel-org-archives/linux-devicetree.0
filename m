@@ -1,34 +1,31 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v6 0/7] Add R8A7743/SK-RZG1M board support
-Date: Tue, 15 Nov 2016 18:54:33 +0100
-Message-ID: <20161115175433.GB4065@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v6 3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
+Date: Tue, 15 Nov 2016 18:54:56 +0100
+Message-ID: <20161115175456.GB3979@verge.net.au>
 References: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
+ <29562553.JmvzVUkhx3@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1746536.qobnGdHRfV@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <29562553.JmvzVUkhx3-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 10:52:25PM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Mon, Oct 31, 2016 at 10:55:39PM +0300, Sergei Shtylyov wrote:
+> Describe [H]SCIF{|A|B} ports in the R8A7743 device tree.
 > 
->    Here's the set of 7 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20161031-v4.9-rc3' tag. I'm adding the device tree support for
-> the R8A7743-based SK-RZG1M board. The SoC is close to R8A7791 and the board
-> seems identical to the R8A7791/Porter board. The device tree patches depend on
-> the R8A7743 CPG/MSSR driver series in order to compile and work. Already merged
-> patches from this series won't be re-posted.
+> Based on the original (and large) patch by Dmitry Shifrin
+> <dmitry.shifrin-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 > 
-> [1/7] ARM: dts: r8a7743: initial SoC device tree
-> [2/7] ARM: dts: r8a7743: add SYS-DMAC support
-> [3/7] ARM: dts: r8a7743: add [H]SCIF{A|B} support
-> [4/7] ARM: dts: r8a7743: add Ether support
-> [5/7] ARM: dts: r8a7743: add IRQC support
-> [6/7] ARM: dts: sk-rzg1m: initial device tree
-> [7/7] ARM: dts: sk-rzg1m: add Ether support
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Thanks, I have queued this up.
+I have queued this up after updating the indentation to use
+tabs where possible.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
