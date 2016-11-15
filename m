@@ -1,56 +1,69 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
-Date: Tue, 15 Nov 2016 12:27:53 -0800
-Message-ID: <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
-References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
- <20161028153755.GL5806@leverpostej> <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
- <20161114190839.GS1041@n2100.armlinux.org.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v2 3/3] drm/tilcdc: Add drm bridge support for attaching
+ drm bridge drivers
+Date: Tue, 15 Nov 2016 22:46:08 +0200
+Message-ID: <36c37a00-0684-a758-219b-6dc71b3131ef@ti.com>
+References: <cover.1479142062.git.jsarha@ti.com>
+ <12cd62cc9ea0f79d0f399c76bfa715125a0816ce.1479142062.git.jsarha@ti.com>
+ <CAMpxmJVcMa-wfXf1BUXvkZ78v_yWorEka1mkGd3wZ88oyL58Kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114190839.GS1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMpxmJVcMa-wfXf1BUXvkZ78v_yWorEka1mkGd3wZ88oyL58Kw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-drm <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
-<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> So, someone merged a patch which makes mmcblk devices follow the
-> host controller numbering.
->
-> Now my cubox-i fails to boot correctly because the SD card in the
-> _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
->
-> USDHC1 is wired to the on-microsom WiFi, and never has anything
-> remotely near a SD card or eMMC present.  So, this change is
-> confusing on these platforms.
->
-> Moreover, this is _going_ to break SolidRun distros if people upgrade
-> their kernels.
->
-> It may be appropriate for eMMC, but it's not appropriate everywhere.
->
-> This is a user visible _regression_ in 4.9-rc.  Whoever did this,
-> please revert whatever change caused this, and next time limit it
-> to only eMMC.
->
-> Thanks.
-
-I see the same thing on newer kernels, which is why I asked the
-question. I didn't expect (or even want honestly) a non mmcblk0 boot
-device and was looking for a way to control that via dt. Now I'm
-understanding that to avoid this kind of bootloader/kernel dependence
-issue I should be using UUID's to identify the boot device.
-
->From my testing it looks like the change your looking for occurred
-some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
-regression specifically.
-
-Regards,
-
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMTUvMTYgMTk6MzYsIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4gMjAxNi0xMS0x
+NCAxNzo1NCBHTVQrMDE6MDAgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT46Cj4+IEFkZHMgZHJt
+IGJyaWRlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZlcnMgdG8gdGlsY2Rj
+LiBUaGUKPj4gZGVjaXNpb24gd2hldGhlciBhIHZpZGVvIHBvcnQgbGVhZHMgdG8gYW4gZXh0ZXJu
+YWwgZW5jb2RlciBvciBicmlkZ2UKPj4gaXMgbWFkZSBzaW1wbHkgYmFzZWQgb24gcmVtb3RlIGRl
+dmljZSdzIGNvbXBhdGlibGUgc3RyaW5nLiBUaGUgY29kZQo+PiBoYXMgYmVlbiB0ZXN0ZWQgd2l0
+aCBCZWFnbGVCb25lLUJsYWNrIHdpdGggYW5kIHdpdGhvdXQgQmVhZ2xlQm9uZQo+PiBEVkktRCBD
+YXBlIFJldiBBMyB1c2luZyB0aS10ZnA0MTAgZHJpdmVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBK
+eXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+PiAtLS0KPiAKPiBIaSBKeXJpLAo+IAo+IHRoYW5r
+cyBhIGxvdCBmb3IgZG9pbmcgdGhpcy4KPiAKPiBPbmUgaXNzdWUgSSBzZWUgd2l0aCB0aGlzIHBh
+dGNoIGlzIHRoYXQgdGlsY2RjIGRvZXNuJ3Qgc2VlbSB0byBzdXBwb3J0Cj4gZGVmZXJyZWQgcHJv
+YmUgY29ycmVjdGx5IChpZiBtb2R1bGVzIGFyZSBidWlsdC1pbikuIFRoZSBmb2xsb3dpbmcKPiBo
+YXBwZW5zIG9uIG15IHNldHVwOgo+IAo+IFRoZSBkdW1wLXZnYS1kYWMgbW9kdWxlIGlzIGxvYWRl
+ZCBmaXJzdCwgYnV0IHRoZSBpMmMwIGlzIG5vdCByZWFkeSB5ZXQKPiAtIHByb2JlIHJldHVybnMg
+RVBST0JFX0RFRkVSIGFuZCBpdCdzIHByb3BhZ2F0ZWQgdG8gdGlsY2RjIHByb2JlLgo+IAo+ICAg
+ICBbZHJtXSBJbml0aWFsaXplZAo+ICAgICBkdW1iLXZnYS1kYWMgdmdhX2JyaWRnZTogQ291bGRu
+J3QgcmV0cmlldmUgaTJjIGJ1cwo+IAo+IFRoZW4gdGhlIGkyYyBidXMgaXMgaW5pdGlhbGl6ZWQg
+YW5kIGR1bXAtdmdhLWRhYyBwcm9iZSBzdWNjZWVkcywgYnV0Cj4gdGhlIHNlY29uZCBwcm9iZSBv
+ZiB0aWxjZGMgZ2l2ZXMgbWU6Cj4gCj4gICAgIFtkcm06ZHJtX2RlYnVnZnNfaW5pdF0gKkVSUk9S
+KiBDYW5ub3QgY3JlYXRlIC9zeXMva2VybmVsL2RlYnVnL2RyaS82NAo+ICAgICBbZHJtOmRybV9t
+aW5vcl9yZWdpc3Rlcl0gKkVSUk9SKiBEUk06IEZhaWxlZCB0byBpbml0aWFsaXplCj4gL3N5cy9r
+ZXJuZWwvZGVidWcvZHJpLgo+ICAgICB0aWxjZGM6IHByb2JlIG9mIGRhOHh4X2xjZGMuMCBmYWls
+ZWQgd2l0aCBlcnJvciAtMQo+IAo+IEkgd2FzIGFibGUgdG8gd29yayBhcm91bmQgdGhpcyBpc3N1
+ZSBieSBsb2FkaW5nIG1vZHVsZXMgaW4gY29ycmVjdCBvcmRlci4KPiAKCkRpZCB5b3UgaGF2ZSBh
+bnkgY29uZmxpY3RzIHdoZW4gYXBwbHlpbmcgbXkgcGF0Y2g/IEkgaGF2ZSBkb25lIHF1aXRlIGEK
+ZmV3IGNoYW5nZXMgbGF0ZWx5IGFuZCBlc3BlY2lhbGx5IHRoZSBpbml0aWFsaXphdGlvbiBzZXF1
+ZW5jZSBhbmQgYmFjawpvZmYgZnJvbSBkZWZlcnJlZCBwcm9iZSBtYXkgZ2V0IGJyb2tlbiBlYXNp
+bHkgYnJva2VuIGlmIHRoZSBzb3VyY2UgYmFzZQppcyBub3QgY29ycmVjdC4gSSB0cnkgdG8gY29t
+ZSB1cCB3aXRoIGEgcHVsbC1yZXF1ZXN0IGNhbmRpZGF0ZSBicmFuY2gKc29vbiAoaG9wZWZ1bGx5
+IHRvbW9ycm93KSBmb3IgeW91IHRvIHRlc3QuCgo+IEkgdGhlbiB0cmllZCB0ZXN0aW5nIHRoZSBw
+YXRjaCB3aXRoIGEgZGE4NTAtbGNkaywgYnV0IEkgZG9uJ3QgZ2V0Cj4gYW55dGhpbmcgb24gdGhl
+IGRpc3BsYXkgKG5vIHNpZ25hbCksIGV2ZW4gdGhvdWdoIHRoZSBMQ0RDIHNlZW1zIHRvCj4gd29y
+ayBmaW5lIChtb2RldGVzdCBhbmQgZG1lc2cgbWVzc2FnZXMgd29yayBqdXN0IGxpa2Ugd2hlbiB1
+c2luZyB0aGUKPiB0aWxjZGMgcGFuZWwpLiBBbHNvOiBJIHNlZSB0aGUgRURJRCBpbmZvIGlzIGNv
+cnJlY3RseSByZXRyaWV2ZWQgZnJvbQo+IHRoZSBkaXNwbGF5Lgo+IAo+IENvdWxkIHlvdSB0YWtl
+IGEgbG9vayBhdCBteSBEVFsxXSBhbmQgc2VlIGlmIHlvdSBmaW5kIGl0IGNvcnJlY3Q/Cj4gCgpJ
+dCBpcyBoYXJkIHRvIGZvbGxvdyB0aGUgZHRzIGRpZmYsIGJ1dCBpZiBpdCBwcm9iZXMgYW5kIHRp
+bGNkYyBpcyBhYmxlCnRvIHJlYWQgRURJRCBtb2RlcywgdGhlcmUgc2hvdWxkIG5vdCBiZSBhbnl0
+aGluZyBtb3JlIHRvIGl0LgoKQ2hlZXJzLApKeXJpCgo+IEJlc3QgcmVnYXJkcywKPiBCYXJ0b3N6
+IEdvbGFzemV3c2tpCj4gCj4gWzFdIGh0dHA6Ly9wYXN0ZWJpbi5jb20vZGZVWDdQeUwKPiAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
