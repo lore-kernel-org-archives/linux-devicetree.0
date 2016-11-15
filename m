@@ -1,58 +1,191 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 2/2] ARM: dts: apq8064: add support to pm8821
-Date: Tue, 15 Nov 2016 12:01:52 +0000
-Message-ID: <1479211312-1431-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1479211312-1431-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1479211312-1431-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: bjorn.andersson@linaro.org, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] Add support for OV5647 sensor
+Date: Tue, 15 Nov 2016 13:10:32 +0100
+Message-ID: <20161115121032.GB7018@amd>
+References: <cover.1479129004.git.roliveir@synopsys.com>
+ <36447f1f102f648057eb9038a693941794a6c344.1479129004.git.roliveir@synopsys.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <36447f1f102f648057eb9038a693941794a6c344.1479129004.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, dheitmueller-eb9eJ82Ua7k9XoPSrs7Ehg@public.gmane.org, slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 268bd47..f725e31 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -627,6 +627,33 @@
- 			clock-names = "core";
- 		};
- 
-+		ssbi@c00000 {
-+			compatible = "qcom,ssbi";
-+			reg = <0x00c00000 0x1000>;
-+			qcom,controller-type = "pmic-arbiter";
-+
-+			pm8821: pmic@1 {
-+				compatible = "qcom,pm8821";
-+				interrupt-parent = <&tlmm_pinmux>;
-+				interrupts = <76 IRQ_TYPE_LEVEL_LOW>;
-+				#interrupt-cells = <2>;
-+				interrupt-controller;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pm8821_mpps: mpps@50 {
-+					compatible = "qcom,pm8821-mpp", "qcom,ssbi-mpp";
-+					reg = <0x50>;
-+					interrupts = <24 IRQ_TYPE_NONE>,
-+						     <25 IRQ_TYPE_NONE>,
-+						     <26 IRQ_TYPE_NONE>,
-+						     <27 IRQ_TYPE_NONE>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+			};
-+		};
-+
- 		qcom,ssbi@500000 {
- 			compatible = "qcom,ssbi";
- 			reg = <0x00500000 0x1000>;
--- 
-2.10.1
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Add support for OV5647 sensor.
+>=20
+
+> +static int ov5647_write(struct v4l2_subdev *sd, u16 reg, u8 val)
+> +{
+> +	int ret;
+> +	unsigned char data[3] =3D { reg >> 8, reg & 0xff, val};
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(sd);
+> +
+> +	ret =3D i2c_master_send(client, data, 3);
+> +	if (ret !=3D 3) {
+> +		dev_dbg(&client->dev, "%s: i2c write error, reg: %x\n",
+> +				__func__, reg);
+> +		return ret < 0 ? ret : -EIO;
+> +	}
+> +	return 0;
+> +}
+
+Sorry, this is wrong. It should something <0 any time error is detected.
+
+> +static int ov5647_write_array(struct v4l2_subdev *sd,
+> +				struct regval_list *regs, int array_size)
+> +{
+> +	int i =3D 0;
+> +	int ret =3D 0;
+> +
+> +	if (!regs)
+> +		return -EINVAL;
+> +
+> +	while (i < array_size) {
+> +		ret =3D ov5647_write(sd, regs->addr, regs->data);
+> +		if (ret < 0)
+> +			return ret;
+> +		i++;
+> +		regs++;
+> +	}
+> +	return 0;
+> +}
+
+For example this expects <0 on error.
+
+> +static int set_sw_standby(struct v4l2_subdev *sd, bool standby)
+> +{
+> +	int ret;
+> +	unsigned char rdval;
+> +
+> +	ret =3D ov5647_read(sd, 0x0100, &rdval);
+> +	if (ret !=3D 0)
+> +		return ret;
+> +
+> +	if (standby)
+> +		ret =3D ov5647_write(sd, 0x0100, rdval&0xfe);
+> +	else
+> +		ret =3D ov5647_write(sd, 0x0100, rdval|0x01);
+> +
+> +	return ret;
+
+if (standby)
+     rdval &=3D 0xfe;
+else
+     rdval |=3D 0x01;
+
+ret =3D ov5647_write(sd, 0x0100, rdval);
+
+?
+
+
+> +/**
+> + * @short Store information about the video data format.
+> + */
+> +static struct sensor_format_struct {
+> +	__u8 *desc;
+> +	u32 mbus_code;
+
+u8 is suitable here.
+
+
+> +	ov5647_read(sd, 0x0100, &resetval);
+> +		if (!resetval&0x01) {
+
+add ()s here.
+
+> +static int sensor_power(struct v4l2_subdev *sd, int on)
+> +{
+> +	int ret;
+> +	struct ov5647 *ov5647 =3D to_state(sd);
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(sd);
+> +
+> +	ret =3D 0;
+> +	mutex_lock(&ov5647->lock);
+> +
+> +	if (on)	{
+> +		dev_dbg(&client->dev, "OV5647 power on!\n");
+> +
+> +		ret =3D ov5647_write_array(sd, sensor_oe_enable_regs,
+> +				ARRAY_SIZE(sensor_oe_enable_regs));
+> +
+> +		ret =3D __sensor_init(sd);
+> +
+> +		if (ret < 0)
+> +			dev_err(&client->dev,
+> +				"Camera not available! Check Power!\n");
+> +	} else {
+> +		dev_dbg(&client->dev, "OV5647 power off!\n");
+> +
+> +		dev_dbg(&client->dev, "disable oe\n");
+> +		ret =3D ov5647_write_array(sd, sensor_oe_disable_regs,
+> +				ARRAY_SIZE(sensor_oe_disable_regs));
+> +
+> +		if (ret < 0)
+> +			dev_dbg(&client->dev, "disable oe failed!\n");
+> +
+> +		ret =3D set_sw_standby(sd, true);
+> +
+> +		if (ret < 0)
+> +			dev_dbg(&client->dev, "soft stby failed!\n");
+
+dev_err for errors? Little less "!"s in the output?
+
+> +static int sensor_get_register(struct v4l2_subdev *sd,
+> +				struct v4l2_dbg_register *reg)
+> +{
+> +	unsigned char val =3D 0;
+> +	int ret;
+> +
+> +	ret =3D ov5647_read(sd, reg->reg & 0xff, &val);
+> +	reg->val =3D val;
+> +	reg->size =3D 1;
+> +	return ret;
+> +}
+
+Filling reg->* when read failed is strange.
+
+> +static int sensor_set_register(struct v4l2_subdev *sd,
+> +				const struct v4l2_dbg_register *reg)
+> +{
+> +	ov5647_write(sd, reg->reg & 0xff, reg->val & 0xff);
+> +	return 0;
+> +}
+
+error handling?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--8GpibOaaTibBMecb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlgq+zgACgkQMOfwapXb+vLZ1wCgwsYhTurSIGKt8I7oQN3EOX+k
+PvUAnjVPtIyFUqz/Z7iBCJ6jbt/8wKNF
+=dGlJ
+-----END PGP SIGNATURE-----
+
+--8GpibOaaTibBMecb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
