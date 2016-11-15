@@ -1,39 +1,114 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: remoteproc: Introduce ADSP loader binding
-Date: Tue, 15 Nov 2016 16:08:43 -0600
-Message-ID: <20161115220843.d4oxylbodzrrknq3@rob-hp-laptop>
-References: <1478757009-11522-1-git-send-email-bjorn.andersson@linaro.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: specifying order of /dev/mmcblk devices via device-tree?
+Date: Tue, 15 Nov 2016 22:10:02 +0000
+Message-ID: <20161115221002.GA1041@n2100.armlinux.org.uk>
+References: <CAJ+vNU1g8nQedd06LeaD10YWUQ_UmdRToUMFKaTNT1aNY56b0g@mail.gmail.com>
+ <20161028153755.GL5806@leverpostej>
+ <CAJ+vNU26tx-1bLKNpzYJ0UCeFJ-SczZOca1dYdt5mCGDxAuKTQ@mail.gmail.com>
+ <20161114190839.GS1041@n2100.armlinux.org.uk>
+ <CAJ+vNU38XQBHt709S_z6Quvce6wcqLzRHFuN_bVZ_0eARa3=fw@mail.gmail.com>
+ <20161115213510.GY1041@n2100.armlinux.org.uk>
+ <CAJ+vNU2t5f=HQ94_GW-cry7DV3FsR9Vx-ck_E-eNuDk5vd-eaw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1478757009-11522-1-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAJ+vNU2t5f=HQ94_GW-cry7DV3FsR9Vx-ck_E-eNuDk5vd-eaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 09:50:09PM -0800, Bjorn Andersson wrote:
-> This document defines the binding for a component that loads firmware
-> and control the life cycle of the Qualcomm ADSP Hexagon core.
+On Tue, Nov 15, 2016 at 01:39:42PM -0800, Tim Harvey wrote:
+> On Tue, Nov 15, 2016 at 1:35 PM, Russell King - ARM Linux
+> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > On Tue, Nov 15, 2016 at 12:27:53PM -0800, Tim Harvey wrote:
+> >> On Mon, Nov 14, 2016 at 11:08 AM, Russell King - ARM Linux
+> >> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> >> > So, someone merged a patch which makes mmcblk devices follow the
+> >> > host controller numbering.
+> >> >
+> >> > Now my cubox-i fails to boot correctly because the SD card in the
+> >> > _only_ SD card slot now gets called "mmcblk1" and not "mmcblk0".
+> >> >
+> >> > USDHC1 is wired to the on-microsom WiFi, and never has anything
+> >> > remotely near a SD card or eMMC present.  So, this change is
+> >> > confusing on these platforms.
+> >> >
+> >> > Moreover, this is _going_ to break SolidRun distros if people upgrade
+> >> > their kernels.
+> >> >
+> >> > It may be appropriate for eMMC, but it's not appropriate everywhere.
+> >> >
+> >> > This is a user visible _regression_ in 4.9-rc.  Whoever did this,
+> >> > please revert whatever change caused this, and next time limit it
+> >> > to only eMMC.
+> >> >
+> >> > Thanks.
+> >>
+> >> I see the same thing on newer kernels, which is why I asked the
+> >> question. I didn't expect (or even want honestly) a non mmcblk0 boot
+> >> device and was looking for a way to control that via dt. Now I'm
+> >> understanding that to avoid this kind of bootloader/kernel dependence
+> >> issue I should be using UUID's to identify the boot device.
+> >>
+> >> >From my testing it looks like the change your looking for occurred
+> >> some time ago and is somewhere between 4.5 and 4.6 and not a 4.9
+> >> regression specifically.
+> >
+> > That depends how you look at it.  Yes, there's a change in 4.5 to 4.6
+> > which ties the block device number to the host device index, but that's
+> > really only part of the story here.
+> >
+> > 4.8 definitely identifies the SD card in iMX6 usdhc2 as "mmcblk0".
+> > 4.9-rc identifies the SD card as "mmcblk1".  This makes it a 4.9 change
+> > of behaviour - there can be no argument about that.
+> >
+> > Now, digging further into this today, it appears that:
+> >
+> > v4.8: usdhc2 was probed first, and is given mmc0.
+> >       usdhc1 is probed second, and is given mmc1.
+> >
+> > v4.9-rc: usdhc1 is probed first, and is given mmc0.
+> >          usdhc2 is probed second, and is given mmc1.
+> >
+> > I haven't yet been able to figure out why there's been this change
+> > of probe order.  There's no change that I can see in the iMX6 DT
+> > files that would account for this.
+> >
 > 
-> Cc: Sarangdhar Joshi <spjoshi-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> Changes since v2:
-> - Added the required "xo" clock, from Sarangdhar
-> - Added smd-edge node
-> - Corrected example
-> 
-> Changes since v1:
-> - Added platform names to compatible
-> 
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt   | 98 ++++++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> I bisected it and the commit your looking for is
+> 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No it's not.
+
+Let me try and put it plainer:
+
+* Commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d ties the mmc block
+  device number (mmcblkN) to the mmc host interface number (mmcN).
+  This change happened between 4.5 and 4.6.
+
+* The change I'm seeing happened between 4.8 and 4.9-rc.  I'm not
+  seeing a change of behaviour between 4.5 and 4.6.
+
+* The change I'm seeing changes the order of the physical device
+  associated with the hosts named mmc0 and mmc1 in the kernel.
+
+* Because physical devices associated with the mmc0 and mmc1 hosts
+  swap over, the mmcblkN number changes due to the commit you point
+  out.
+
+* So, the change that I'm seeing between 4.8 and 4.9-rc is not caused
+  by commit 9aaf3437aa72ed5370bf32c99580a3fa2c330e3d, but by something
+  else changing the order in which the two usdhc physical hardware
+  blocks get probed.
+
+Does this make it clearer?
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
