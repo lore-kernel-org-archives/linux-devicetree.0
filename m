@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 1/3] ARM: dts: sun7i: bananapi-m1-plus: Enable USB PHY for USB host support
-Date: Tue, 15 Nov 2016 21:51:04 +0800
-Message-ID: <20161115135106.438-2-wens@csie.org>
+Subject: [PATCH v2 2/3] ARM: dts: sun7i: bananapi-m1-plus: Add PMIC regulators
+Date: Tue, 15 Nov 2016 21:51:05 +0800
+Message-ID: <20161115135106.438-3-wens@csie.org>
 References: <20161115135106.438-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20161115135106.438-1-wens@csie.org>
@@ -10,31 +10,81 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 2 USB host ports are directly tied to the 2 USB hosts in the SoC.
-The 2 host pairs were already enabled, but the USB PHY wasn't.
-VBUS on the 2 ports are always on.
+The Bananapi M1+, like other Allwinner A20 based boards, uses the
+AXP209 PMIC to supply its power.
 
-Enable the USB PHY.
+Add the AXP209 regulators.
 
-Fixes: 04c85ecad32a ("ARM: dts: sun7i: Add dts file for Bananapi M1 Plus
-		      board")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 35 +++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-index ba5bca0fe997..44377a98cc89 100644
+index 44377a98cc89..ac19630c1c23 100644
 --- a/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
 +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
-@@ -227,3 +227,8 @@
- 	pinctrl-0 = <&uart0_pins_a>;
+@@ -105,6 +105,10 @@
  	status = "okay";
  };
-+
-+&usbphy {
-+	/* VBUS on usb host ports are tied to DC5V and therefore always on */
-+	status = "okay";
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
 +};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -132,16 +136,14 @@
+ 	status = "okay";
+ 
+ 	axp209: pmic@34 {
+-		compatible = "x-powers,axp209";
+ 		reg = <0x34>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+ 	};
+ };
+ 
++#include "axp209.dtsi"
++
+ &ir0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ir0_rx_pins_a>;
+@@ -222,6 +224,31 @@
+ 	};
+ };
+ 
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.10.2
