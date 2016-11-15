@@ -1,64 +1,70 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] drm/tilcdc: Add drm bridge support for attaching
- drm bridge drivers
-Date: Tue, 15 Nov 2016 18:36:34 +0100
-Message-ID: <CAMpxmJVcMa-wfXf1BUXvkZ78v_yWorEka1mkGd3wZ88oyL58Kw@mail.gmail.com>
-References: <cover.1479142062.git.jsarha@ti.com> <12cd62cc9ea0f79d0f399c76bfa715125a0816ce.1479142062.git.jsarha@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: dts: sun7i: BPI-M1+ USB support
+Date: Tue, 15 Nov 2016 18:42:37 +0100
+Message-ID: <20161115174237.ootkbvtfumt6mqy7@lukather>
+References: <20161115135106.438-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f4s3yow4m6tpairx"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12cd62cc9ea0f79d0f399c76bfa715125a0816ce.1479142062.git.jsarha-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161115135106.438-1-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, daniel-/w4YWyX8dFk@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-11-14 17:54 GMT+01:00 Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>:
-> Adds drm bride support for attaching drm bridge drivers to tilcdc. The
-> decision whether a video port leads to an external encoder or bridge
-> is made simply based on remote device's compatible string. The code
-> has been tested with BeagleBone-Black with and without BeagleBone
-> DVI-D Cape Rev A3 using ti-tfp410 driver.
->
-> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-> ---
 
-Hi Jyri,
+--f4s3yow4m6tpairx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks a lot for doing this.
+On Tue, Nov 15, 2016 at 09:51:03PM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime,
+>=20
+> These are the remaining patches of my BPI-M1+ fixes series from July.
+>=20
+> Changes since v1:
+>=20
+>   - Split out USB PHY enable patch.
+>=20
+>   - Dropped custom OPP table. Tested the A20 default one with
+>     cpufreq-ljt-stress-test and it seemed stable.
+>=20
+>   - Dropped voltage range for cpu supply regulator to normal 1.0V ~ 1.4V.
+>=20
+>   - Dropped pinmux setting for OTG ID pin.
 
-One issue I see with this patch is that tilcdc doesn't seem to support
-deferred probe correctly (if modules are built-in). The following
-happens on my setup:
+Applied all three, thanks!
+Maxime
 
-The dump-vga-dac module is loaded first, but the i2c0 is not ready yet
-- probe returns EPROBE_DEFER and it's propagated to tilcdc probe.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-    [drm] Initialized
-    dumb-vga-dac vga_bridge: Couldn't retrieve i2c bus
+--f4s3yow4m6tpairx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Then the i2c bus is initialized and dump-vga-dac probe succeeds, but
-the second probe of tilcdc gives me:
+-----BEGIN PGP SIGNATURE-----
 
-    [drm:drm_debugfs_init] *ERROR* Cannot create /sys/kernel/debug/dri/64
-    [drm:drm_minor_register] *ERROR* DRM: Failed to initialize
-/sys/kernel/debug/dri.
-    tilcdc: probe of da8xx_lcdc.0 failed with error -1
+iQIcBAEBCAAGBQJYK0kFAAoJEBx+YmzsjxAgXc4P/RDxqzxdyMmWv0yv33HVOR4d
+QSZinHeZwbE1e1iEPQvUxSANufOvkGg9Vs38jXzG0Po8XhgTiVNxKv9sEKZzoujw
+yoSlAjFnRR6oxG2BmOv9War+fpbg2k9jQTYCNI+aHTlMK2AjKAoGQXaQY11/lBcW
+RC/JnGRMFzlMjTGvNeajnuUpUBRsqtBwGzIOekVCJ1evviijOwrM2c94wasOGu59
+uVSTIWOXRtGsaY8TUZqakTRjg7C1xruwR+V6uOMS6cVsK/6BrLEryFQhGsxi63KU
+7MlOh50IuTp8/SCgMyLRbv2TNA4h91YVsBWWRvHWBUKaeZZ3n5Ynyw/IAnyVOo8y
+QnHlCIS4p4EvZsYpP4Z6vzCuXd32r/jmZjCgWPZ3XjQdp6pijPeaoal3ZYZOhcsZ
+NkI1fLbnl4/Qknxgcd06ggavocXMCs0WHqnW203r0cUA8BSTPEGN9Mbk0VumnNJn
+xH4KJGCDuJ1rJc99K0HSwUHkTxLpKrRG6n6xZrpM2pLCIW0vVfegAQYEViDUosAr
+dAhNyzsROWTdNdV6Yvy1SGquNXr9p3j+D4dzFa6ofRHgYPVU/M3HUSYbUUkPgDl/
+0czfc+r+KwpeU1JodKYqlMLb5r3n7RZr9vPm+jU+cCFykf2TeBpz2J0apfd8+P0A
+aBvoXOwc1Bv2QjgkryTP
+=gtQV
+-----END PGP SIGNATURE-----
 
-I was able to work around this issue by loading modules in correct order.
-
-I then tried testing the patch with a da850-lcdk, but I don't get
-anything on the display (no signal), even though the LCDC seems to
-work fine (modetest and dmesg messages work just like when using the
-tilcdc panel). Also: I see the EDID info is correctly retrieved from
-the display.
-
-Could you take a look at my DT[1] and see if you find it correct?
-
-Best regards,
-Bartosz Golaszewski
-
-[1] http://pastebin.com/dfUX7PyL
+--f4s3yow4m6tpairx--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
