@@ -1,27 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: Add vendor prefix for CZ.NIC
-Date: Mon, 14 Nov 2016 19:49:06 -0600
-Message-ID: <20161115014906.4u7hk6gxxdk2zcwu@rob-hp-laptop>
-References: <20161110135721.13098-1-uwe@kleine-koenig.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt/binding: ti-tsc-adc: deprecate ti,charge-delay
+ and add binding doc for ti,charge-delay-ns
+Date: Mon, 14 Nov 2016 19:54:42 -0600
+Message-ID: <20161115015442.pexycr4adco3hnug@rob-hp-laptop>
+References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+ <20161110163515.27598-2-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161110135721.13098-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin =?utf-8?B?U3RyYmHEjWth?= <martin.strbacka-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20161110163515.27598-2-mugunthanvnm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2016 at 02:57:20PM +0100, Uwe Kleine-König wrote:
-> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+On Thu, Nov 10, 2016 at 10:05:13PM +0530, Mugunthan V N wrote:
+> ti,charge-delay represents the duration that ADC should wait
+> before sampling the ADC line to detect the touch location and pen
+> up/downs. Currently the ADC clock is set at 3MHz. The device-tree
+> entry for ti,charge-delay is based on assumption of ADC clock at
+> 3MHz, but it can be operated up to 24MHz clock. Representing the
+> charge delay of touchscreen in terms of ADC clocks is incorrect.
+> So change this representation to ti,charge-delay-ns, which driver
+> can convert it to number clock cycles based on ref clock
+> frequency.
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/input/touchscreen/ti-tsc-adc.txt      | 32 ++++++++++++++--------
+>  1 file changed, 21 insertions(+), 11 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
