@@ -1,87 +1,54 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] drm/tilcdc: Add drm bridge support for attaching
- drm bridge drivers
-Date: Wed, 16 Nov 2016 10:27:34 +0100
-Message-ID: <CAMpxmJUqL-6tw90iqi-k95O_PAqinKM_4wfy_OTDLv+rjDF1Ag@mail.gmail.com>
-References: <cover.1479142062.git.jsarha@ti.com> <12cd62cc9ea0f79d0f399c76bfa715125a0816ce.1479142062.git.jsarha@ti.com>
- <CAMpxmJVcMa-wfXf1BUXvkZ78v_yWorEka1mkGd3wZ88oyL58Kw@mail.gmail.com> <36c37a00-0684-a758-219b-6dc71b3131ef@ti.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
+Date: Wed, 16 Nov 2016 09:31:49 +0000
+Message-ID: <582C2785.2010804@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-2-wenpan@hisilicon.com> <5893354.6MrIxqzRoI@wuerfel>
+ <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <36c37a00-0684-a758-219b-6dc71b3131ef-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: wenpan <wenpan@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Marty Plummer <netz.kernel@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com, qinxiaojun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-2016-11-15 21:46 GMT+01:00 Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>:
-> On 11/15/16 19:36, Bartosz Golaszewski wrote:
->> 2016-11-14 17:54 GMT+01:00 Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>:
->>> Adds drm bride support for attaching drm bridge drivers to tilcdc. The
->>> decision whether a video port leads to an external encoder or bridge
->>> is made simply based on remote device's compatible string. The code
->>> has been tested with BeagleBone-Black with and without BeagleBone
->>> DVI-D Cape Rev A3 using ti-tfp410 driver.
+Hi Pan,
+
+On 2016/11/16 8:56, wenpan wrote:
+> Hi Marty，
+> Does this confict with your patch？ If not，I hope this could be merged first.  Besides could you tell me the link to your related patch?
+
+This is the link: https://patchwork.kernel.org/patch/9334743/
+
+BR,
+Wei
+
+> 
+> Thanks,
+> Pan
+> 
+> On 2016/10/17 21:48, Arnd Bergmann wrote:
+>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
+>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
 >>>
->>> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
->>> ---
+>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+>>>
 >>
->> Hi Jyri,
+>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
+>> patches for Hi3520, which I think is closely related to this one.
+>> Please try to work together so the patches don't conflict. It should
+>> be fairly straightforward since you are basically doing the same
+>> change here.
 >>
->> thanks a lot for doing this.
+>> 	Arnd
 >>
->> One issue I see with this patch is that tilcdc doesn't seem to support
->> deferred probe correctly (if modules are built-in). The following
->> happens on my setup:
+>> .
 >>
->> The dump-vga-dac module is loaded first, but the i2c0 is not ready yet
->> - probe returns EPROBE_DEFER and it's propagated to tilcdc probe.
->>
->>     [drm] Initialized
->>     dumb-vga-dac vga_bridge: Couldn't retrieve i2c bus
->>
->> Then the i2c bus is initialized and dump-vga-dac probe succeeds, but
->> the second probe of tilcdc gives me:
->>
->>     [drm:drm_debugfs_init] *ERROR* Cannot create /sys/kernel/debug/dri/64
->>     [drm:drm_minor_register] *ERROR* DRM: Failed to initialize
->> /sys/kernel/debug/dri.
->>     tilcdc: probe of da8xx_lcdc.0 failed with error -1
->>
->> I was able to work around this issue by loading modules in correct order.
->>
->
-> Did you have any conflicts when applying my patch? I have done quite a
-> few changes lately and especially the initialization sequence and back
-> off from deferred probe may get broken easily broken if the source base
-> is not correct. I try to come up with a pull-request candidate branch
-> soon (hopefully tomorrow) for you to test.
->
+> 
+> 
+> .
+> 
 
-I only had some trivial conflicts, but you're right, maybe I'm missing
-some parts. It would be great to have a branch for testing - I could
-then rebase my follow-up work on tilcdc against it.
-
->> I then tried testing the patch with a da850-lcdk, but I don't get
->> anything on the display (no signal), even though the LCDC seems to
->> work fine (modetest and dmesg messages work just like when using the
->> tilcdc panel). Also: I see the EDID info is correctly retrieved from
->> the display.
->>
->> Could you take a look at my DT[1] and see if you find it correct?
->>
->
-> It is hard to follow the dts diff, but if it probes and tilcdc is able
-> to read EDID modes, there should not be anything more to it.
->
-
-Yes, this is what I thought too.
-
-Let me know when you'll have the testing branch ready.
-
-Best regards,
-Bartosz Golaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
