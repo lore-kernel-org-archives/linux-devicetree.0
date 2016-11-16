@@ -1,79 +1,195 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 06/10] mmc: core: move the cookie's enum values from
- sdhci.h to mmc.h
-Date: Wed, 16 Nov 2016 10:09:01 +0200
-Message-ID: <ecb4b5d0-4cbf-bf44-3287-f1580b2e990a@intel.com>
-References: <20161115101232.3854-1-jh80.chung@samsung.com>
- <CGME20161115101332epcas2p2c10c90b955b427a510ed8f9631b3fdfe@epcas2p2.samsung.com>
- <20161115101232.3854-7-jh80.chung@samsung.com>
- <12405f58-695d-03d8-407f-d7471e93a6de@samsung.com>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/2] drm/bridge: dumb-vga-dac:
+ Support a VDD regulator supply
+Date: Wed, 16 Nov 2016 13:47:03 +0530
+Message-ID: <8cda4dc8-8804-c34c-3a64-53c0ee01f2e8@codeaurora.org>
+References: <20161029110611.28951-1-wens@csie.org>
+ <20161029110611.28951-2-wens@csie.org>
+ <20161031062836.mnzdprqfezrfkx4g@rob-hp-laptop>
+ <CAGb2v64tTacSAG1vvO28h8MN9JC9w+OzSrP+j2eTzqAiQKgaSA@mail.gmail.com>
+ <CAGb2v67LR4KEb0tfGkT8+TqTauNyCMq1n6mRdXsa6TUJV0xncA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12405f58-695d-03d8-407f-d7471e93a6de-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAGb2v67LR4KEb0tfGkT8+TqTauNyCMq1n6mRdXsa6TUJV0xncA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/11/16 09:53, Jaehoon Chung wrote:
-> Added Adrian for sdhci.h
-> 
-> On 11/15/2016 07:12 PM, Jaehoon Chung wrote:
->> It's not for only sdhci controller.
->> So it can be moved from sdhci.h to mmc.h. And renamed from sdhci_cookie
->> to mmc_cookie.
+Hi,
 
-The cookie is currently host private data, so I don't understand the
-motivation behind this.
+On 11/15/2016 08:29 AM, Chen-Yu Tsai wrote:
+> Hi,
+>
+> On Wed, Nov 2, 2016 at 9:33 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> On Mon, Oct 31, 2016 at 2:28 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Sat, Oct 29, 2016 at 07:06:10PM +0800, Chen-Yu Tsai wrote:
+>>>> Some dumb VGA DACs are active components which require external power.
+>>>> Add support for specifying a regulator as its power supply.
+>>>>
+>>>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>>> ---
+>>>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
+>>>
+>>> For the binding,
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Any comments on this patch from the DRM people?
 
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> ---
->>  drivers/mmc/host/sdhci.h | 6 ------
->>  include/linux/mmc/core.h | 6 ++++++
->>  2 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index 766df17..325663b 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -321,12 +321,6 @@ struct sdhci_adma2_64_desc {
->>  /* Allow for a a command request and a data request at the same time */
->>  #define SDHCI_MAX_MRQS		2
->>  
->> -enum sdhci_cookie {
->> -	COOKIE_UNMAPPED,
->> -	COOKIE_PRE_MAPPED,	/* mapped by sdhci_pre_req() */
->> -	COOKIE_MAPPED,		/* mapped by sdhci_prepare_data() */
->> -};
->> -
->>  struct sdhci_host {
->>  	/* Data set by hardware interface driver */
->>  	const char *hw_name;	/* Hardware bus name */
->> diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
->> index 0ce928b..82d707f 100644
->> --- a/include/linux/mmc/core.h
->> +++ b/include/linux/mmc/core.h
->> @@ -118,6 +118,12 @@ struct mmc_command {
->>  	struct mmc_request	*mrq;		/* associated request */
->>  };
->>  
->> +enum mmc_cookie {
->> +	COOKIE_UNMAPPED,
->> +	COOKIE_PRE_MAPPED,	/* mapped by pre_req() of controller */
->> +	COOKIE_MAPPED,		/* mapped by prepare_data() of controller */
->> +};
->> +
->>  struct mmc_data {
->>  	unsigned int		timeout_ns;	/* data timeout (in ns, max 80ms) */
->>  	unsigned int		timeout_clks;	/* data timeout (in clocks) */
->>
-> 
-> 
+A comment below.
 
+>
+> ChenYu
+>
+>>>
+>>> One code comment below...
+>>>
+>>>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 35 ++++++++++++++++++++++
+>>>>  2 files changed, 37 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>>> index 003bc246a270..164cbb15f04c 100644
+>>>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>>>> @@ -16,6 +16,8 @@ graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+>>>>  - Video port 0 for RGB input
+>>>>  - Video port 1 for VGA output
+>>>>
+>>>> +Optional properties:
+>>>> +- vdd-supply: Power supply for DAC
+>>>>
+>>>>  Example
+>>>>  -------
+>>>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>>> index afec232185a7..59781e031220 100644
+>>>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>>>> @@ -12,6 +12,7 @@
+>>>>
+>>>>  #include <linux/module.h>
+>>>>  #include <linux/of_graph.h>
+>>>> +#include <linux/regulator/consumer.h>
+>>>>
+>>>>  #include <drm/drmP.h>
+>>>>  #include <drm/drm_atomic_helper.h>
+>>>> @@ -23,6 +24,7 @@ struct dumb_vga {
+>>>>       struct drm_connector    connector;
+>>>>
+>>>>       struct i2c_adapter      *ddc;
+>>>> +     struct regulator        *vdd;
+>>>>  };
+>>>>
+>>>>  static inline struct dumb_vga *
+>>>> @@ -124,8 +126,33 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
+>>>>       return 0;
+>>>>  }
+>>>>
+>>>> +static void dumb_vga_enable(struct drm_bridge *bridge)
+>>>> +{
+>>>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>>> +     int ret;
+>>>> +
+>>>> +     if (!IS_ERR(vga->vdd)) {
+>>>
+>>> if (IS_ERR())
+>>>         return;
+>>>
+>>> ...will save some intentation.
+>>
+>> I thought about that, though if someone were to add more stuff to
+>> this, such as an enable GPIO, they might have to rework it. A standalone
+>> block of code would be easier to work with. I'm OK either way though.
+>>
+>> ChenYu
+>>
+>>>
+>>>> +             ret = regulator_enable(vga->vdd);
+>>>> +
+>>>> +             if (ret) {
+>>>> +                     DRM_ERROR("Failed to enable vdd regulator: %d\n", ret);
+>>>> +                     return;
+>>>> +             }
+>>>> +     }
+>>>> +}
+>>>> +
+>>>> +static void dumb_vga_disable(struct drm_bridge *bridge)
+>>>> +{
+>>>> +     struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>>>> +
+>>>> +     if (!IS_ERR(vga->vdd))
+>>>> +             regulator_disable(vga->vdd);
+>>>> +}
+>>>> +
+>>>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
+>>>>       .attach         = dumb_vga_attach,
+>>>> +     .enable         = dumb_vga_enable,
+>>>> +     .disable        = dumb_vga_disable,
+>>>>  };
+>>>>
+>>>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
+>>>> @@ -169,6 +196,14 @@ static int dumb_vga_probe(struct platform_device *pdev)
+>>>>               return -ENOMEM;
+>>>>       platform_set_drvdata(pdev, vga);
+>>>>
+>>>> +     vga->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
+>>>> +     if (IS_ERR(vga->vdd)) {
+>>>> +             ret = PTR_ERR(vga->vdd);
+>>>> +             if (ret == -EPROBE_DEFER)
+>>>> +                     return -EPROBE_DEFER;
+>>>> +             dev_dbg(&pdev->dev, "No vdd regulator found: %d\n", ret);
+
+A cleaner way would be to set vga->vdd to NULL here, and do:
+
+	int ret = 0;
+
+	if (vga->vdd)
+		ret = regulator_enable(vga->vdd);
+
+	if (ret) {
+		...
+		return;
+	}
+
+	/* if a gpio is added later */
+	if (vga->gpio)
+		ret = gpiod_set_value_cansleep(vga->gpio, 1);
+
+	if (ret) {
+		...
+		return;
+	}
+	...
+
+We don't really care what error code is contained in vga->vdd once we have
+identified whether we got a regulator or not.
+
+The same thing can be done for ddc too, but that can done left for later.
+
+If you're okay with the suggestion, can you re-spin a patch?
+
+Thanks,
+Archit
+
+>>>> +     }
+>>>> +
+>>>>       vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
+>>>>       if (IS_ERR(vga->ddc)) {
+>>>>               if (PTR_ERR(vga->ddc) == -ENODEV) {
+>>>> --
+>>>> 2.9.3
+>>>>
+>>>
+>>> --
+>>> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+>>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>>> For more options, visit https://groups.google.com/d/optout.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
