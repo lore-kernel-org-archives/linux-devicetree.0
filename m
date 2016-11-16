@@ -1,75 +1,116 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] ARM: dts: da850: Add the usb otg device nodeg
-Date: Wed, 16 Nov 2016 11:24:24 -0600
-Message-ID: <20161116172424.GA9487@uda0271908>
-References: <1478188752-22447-1-git-send-email-abailon@baylibre.com>
- <1478188752-22447-5-git-send-email-abailon@baylibre.com>
- <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0@ti.com>
- <20161115211951.GH11011@uda0271908>
- <9a73c416-fe4c-57c3-af53-87146dae2206@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] input: touchscreen: silead: Add regulator support
+Date: Wed, 16 Nov 2016 09:51:59 -0800
+Message-ID: <20161116175159.GB335@dtor-ws>
+References: <20161116115507.24220-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9a73c416-fe4c-57c3-af53-87146dae2206-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20161116115507.24220-1-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 12:06:51PM +0530, Sekhar Nori wrote:
-> On Wednesday 16 November 2016 02:49 AM, Bin Liu wrote:
-> > On Tue, Nov 15, 2016 at 04:16:02PM +0530, Sekhar Nori wrote:
-> >> On Thursday 03 November 2016 09:29 PM, Alexandre Bailon wrote:
-> >>> This adds the device tree node for the usb otg
-> >>> controller present in the da850 family of SoC's.
-> >>> This also enables the otg usb controller for the lcdk board.
-> >>>
-> >>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
-> >>>  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
-> >>>  2 files changed, 23 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-> >>> index 7b8ab21..9f5040c 100644
-> >>> --- a/arch/arm/boot/dts/da850-lcdk.dts
-> >>> +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> >>> @@ -158,6 +158,14 @@
-> >>>  	rx-num-evt = <32>;
-> >>>  };
-> >>>  
-> >>> +&usb_phy {
-> >>> +	status = "okay";
-> >>> +	};
-> >>
-> >> As mentioned by David already, this node needs to be removed. Please
-> >> rebase this on top of latest linux-davinci/master when ready for merging
-> >> (driver changes accepted).
-> > 
-> > Dropped this patch due to this comment.
+On Wed, Nov 16, 2016 at 12:55:07PM +0100, Hans de Goede wrote:
+> On some tablets the touchscreen controller is powered by separate
+> regulators, add support for this.
 > 
-> Bin, Please do not apply dts or arch/arm/mach-davinci patches. I have a
-> bunch queued through my tree and more in pipeline and it will cause
-> unnecessary merge conflicts in linux-next or at Linus.
-
-Sure, I will drop this whole set, and only apply the musb patches in the
-new v5.
-
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes in v2:
+> -Use devm_regulator_bulk_get() and friends
+> -Use devm_add_action_or_reset() to disable the regulator
+> ---
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 ++
+>  drivers/input/touchscreen/silead.c                 | 29 ++++++++++++++++++++++
+>  2 files changed, 31 insertions(+)
 > 
-> For future, I have asked Alexandre to send driver and dts patches as
-> separate series so there is no confusion on who should apply.
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> index e844c3f..b726823 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+> @@ -22,6 +22,8 @@ Optional properties:
+>  - touchscreen-inverted-y  : See touchscreen.txt
+>  - touchscreen-swapped-x-y : See touchscreen.txt
+>  - silead,max-fingers	  : maximum number of fingers the touchscreen can detect
+> +- vddio-supply		  : regulator phandle for controller VDDIO
+> +- avdd-supply		  : regulator phandle for controller AVDD
+>  
+>  Example:
+>  
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index f502c84..404830a 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/input/touchscreen.h>
+>  #include <linux/pm.h>
+>  #include <linux/irq.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #include <asm/unaligned.h>
+>  
+> @@ -73,6 +74,7 @@ struct silead_ts_data {
+>  	struct i2c_client *client;
+>  	struct gpio_desc *gpio_power;
+>  	struct input_dev *input;
+> +	struct regulator_bulk_data regulators[2];
+>  	char fw_name[64];
+>  	struct touchscreen_properties prop;
+>  	u32 max_fingers;
+> @@ -433,6 +435,13 @@ static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
+>  }
+>  #endif
+>  
+> +static void silead_disable_regulator(void *arg)
+> +{
+> +	struct silead_ts_data *data = arg;
+> +
+> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
+> +}
+> +
+>  static int silead_ts_probe(struct i2c_client *client,
+>  			   const struct i2c_device_id *id)
+>  {
+> @@ -465,6 +474,26 @@ static int silead_ts_probe(struct i2c_client *client,
+>  	if (client->irq <= 0)
+>  		return -ENODEV;
+>  
+> +	data->regulators[0].supply = "vddio";
+> +	data->regulators[1].supply = "avdd";
+> +	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->regulators),
+> +					data->regulators);
+> +	if (error)
+> +		return error;
+> +
+> +	/*
+> +	 * Enable regulators at probe and disable them at remove, we need
+> +	 * to keep the chip powered otherwise it forgets its firmware.
+> +	 */
 
-I will keep in mind to ping other domain maintainers before applying
-non-musb patches in future.
+Hmm, this burns power though. Why can't we reload firmware on resume (it
+should be already cached)? Does it take too long?
 
+Thanks.
+
+> +	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
+> +				      data->regulators);
+> +	if (error)
+> +		return error;
+> +
+> +	error = devm_add_action_or_reset(dev, silead_disable_regulator, data);
+> +	if (error)
+> +		return error;
+> +
+>  	/* Power GPIO pin */
+>  	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+>  	if (IS_ERR(data->gpio_power)) {
+> -- 
+> 2.9.3
 > 
-> Thanks,
-> Sekhar
 
-Regards,
--Bin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
