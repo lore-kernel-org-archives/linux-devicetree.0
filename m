@@ -1,47 +1,76 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
-Date: Wed, 16 Nov 2016 16:33:06 +0000
-Message-ID: <5c02f6bc-59dc-2c5e-d8e5-0d2e2d1d0fce@linaro.org>
-References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
- <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
- <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
- <d61f62d1-7a7e-6d91-d278-0fd922cd77b5@linaro.org>
- <d1bc3663-5824-32f8-a20f-1c5e28466a15@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
+ mode
+Date: Wed, 16 Nov 2016 22:14:00 +0530
+Message-ID: <dda43649-0afd-2bd0-33ba-c95067104244@ti.com>
+References: <1476190715-16884-1-git-send-email-kishon@ti.com>
+ <1476190715-16884-4-git-send-email-kishon@ti.com>
+ <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
+ <8ecc1325-365d-bdec-d435-729e0ea49d20@ti.com>
+ <20161114212400.GA19092@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <d1bc3663-5824-32f8-a20f-1c5e28466a15@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Nayak, Rajendra" <rnayak@codeaurora.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: svarbanov@mm-sol.com, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Linux PM list <linux-pm@vger.kernel.org>, "Nayak, Rajendra" <rjendra@qti.qualcomm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161114212400.GA19092-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rajendra for pointing to the patch
+Hi Bjorn,
 
-On 16/11/16 15:50, Nayak, Rajendra wrote:
+On Tuesday 15 November 2016 02:54 AM, Bjorn Helgaas wrote:
+> [+cc Shawn]
+> 
+> On Sat, Nov 12, 2016 at 12:40:10PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
 >>
+>> On Saturday 12 November 2016 02:45 AM, Bjorn Helgaas wrote:
+>>> Hi Kishon,
+>>>
+>>> On Tue, Oct 11, 2016 at 06:28:34PM +0530, Kishon Vijay Abraham I wrote:
+>>>> PCIe in AM57x/DRA7x devices is by default
+>>>> configured to work in GEN2 mode.  However there
+>>>> may be situations when working in GEN1 mode is
+>>>> desired. One example is limitation i925 (PCIe GEN2
+>>>> mode not supported at junction temperatures < 0C).
+>>>>
+>>>> Add support to force Root Complex to work in GEN1
+>>>> mode if so desired, but don't force GEN1 mode on
+>>>> any board just yet.
+>>>>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>>>> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
+>>>>  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
+>>>>  2 files changed, 28 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>>>> index 60e2516..a3d6ca3 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+>>>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>>>> @@ -25,6 +25,7 @@ PCIe Designware Controller
+>>>>  
+>>>>  Optional Property:
+>>>>   - gpios : Should be added if a gpio line is required to drive PERST# line
+>>>> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
+>>>
+>>> Can we use "max-link-speed" so it's similar to imx6?
 >>
->> Rajendra,
->> Looks like qcom gdsc pm domain provider driver does not handle bus clks
->> along with power-domain, Is this something we should do? Or the bus
->> driver take care of it?
->
-> I did post some patches to support handling of clocks associated with
-> gdscs [1], but it got dropped at that point since there wasn't a
-> real user, besides there were some open issues wrt the handling of
-> !CONFIG_PM cases etc.
-> I will revive and repost those patches again now based on the
-> discussions last time around.
->
-> [1]
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/362492.html
+>> yeah, maybe we should make it a generic PCI property?
+> 
+> I forgot that Shawn has already done this!  I had already merged those
+> patches on pci/host-rockchip, but I moved them to pci/host since
+> they're not Rockchip-specific.  Can you take a look at that and see if
+> you can do what you need based on that pci/host branch?
 
-This patch looks exactly like the one useful in pcie case, i would be 
-interesting to see the final patch on how we handle clocks which are 
-both related and not related to power domain.
+Sure, I'll look at that on Monday when I'm back from vacation.
 
-thanks,
-srini
->
+Cheers
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
