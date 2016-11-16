@@ -1,40 +1,48 @@
-From: Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH v5 2/2] ARM: dts: da850-lcdk: Enable the usb otg device node
-Date: Wed, 16 Nov 2016 12:07:36 +0100
-Message-ID: <1479294456-7942-3-git-send-email-abailon@baylibre.com>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/2] ARM: dts: da850: Add the usb otg device node
+Date: Wed, 16 Nov 2016 12:07:35 +0100
+Message-ID: <1479294456-7942-2-git-send-email-abailon@baylibre.com>
 References: <1479294456-7942-1-git-send-email-abailon@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479294456-7942-1-git-send-email-abailon@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, Alexandre Bailon <abailon@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479294456-7942-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the usb otg controller for the lcdk board.
+This adds the device tree node for the usb otg
+controller present in the da850 family of SoC's.
 
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/da850-lcdk.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/da850.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 7b8ab21..03f9bfd 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -158,6 +158,14 @@
- 	rx-num-evt = <32>;
- };
- 
-+&usb_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
- &aemif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&nand_pins>;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 2534aab..ddf4c6e 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -383,6 +383,16 @@
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
++		usb0: usb@200000 {
++			compatible = "ti,da830-musb";
++			reg = <0x200000 0x10000>;
++			interrupts = <58>;
++			interrupt-names = "mc";
++			dr_mode = "otg";
++			phys = <&usb_phy 0>;
++			phy-names = "usb-phy";
++			status = "disabled";
++		};
+ 		mdio: mdio@224000 {
+ 			compatible = "ti,davinci_mdio";
+ 			#address-cells = <1>;
 -- 
 2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
