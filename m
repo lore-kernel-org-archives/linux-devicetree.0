@@ -1,34 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mxsfb: Indentation cleanup
-Date: Tue, 15 Nov 2016 18:16:14 -0600
-Message-ID: <20161116001614.orpnhnlqrjhbvrwd@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 2/3] dt-bindings: mxsfb: Add new bindings for the
+ MXSFB driver
+Date: Tue, 15 Nov 2016 18:24:07 -0600
+Message-ID: <20161116002407.i4hnexjqzrxmn52g@rob-hp-laptop>
 References: <20161114101036.3505-1-marex@denx.de>
+ <20161114101036.3505-2-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161114101036.3505-1-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20161114101036.3505-2-marex@denx.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marek Vasut <marex@denx.de>
+Cc: devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 11:10:34AM +0100, Marek Vasut wrote:
-> Clean up the ad-hoc indentation in the documentation, no functional change.
-> 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/display/mxsfb.txt | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBOb3YgMTQsIDIwMTYgYXQgMTE6MTA6MzVBTSArMDEwMCwgTWFyZWsgVmFzdXQgd3Jv
+dGU6Cj4gQWRkIG5ldyBEVCBiaW5kaW5ncyBmb3IgbmV3IE1YU0ZCIGRyaXZlciB0aGF0IGlzIHVz
+aW5nIHRoZQo+IE9GIGdyYXBoIHRvIHBhcnNlIHRoZSB2aWRlbyBvdXRwdXQgc3RydWN0dXJlIGlu
+c3RlYWQgb2YKPiBoYXJkLWNvZGluZyB0aGUgZGlzcGxheSBwcm9wZXJ0aWVzIGludG8gdGhlIE1Y
+U0ZCIG5vZGUuCj4gVGhlIG9sZCBNWFNGQiBmYmRldiBkcml2ZXIgYmluZGluZ3MgYXJlIHByZXNl
+cnZlZCBpbiB0aGUKPiBzYW1lIGZpbGUgaW4gdGhlICJPbGQgYmluZGluZ3MiIHNlY3Rpb24uCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgVmFzdXQgPG1hcmV4QGRlbnguZGU+Cj4gQ2M6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gQ2M6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1
+dHJvbml4LmRlPgo+IENjOiBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Cj4g
+Q2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4KPiBDYzogRGFuaWVsIFZldHRlciA8
+ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
+PiAtLQo+IFYyOiAtIE1lcmdlIHRoZSBuZXcgYmluZGluZ3MgaW50byBteHNmYi50eHQgZmlsZSBp
+bnN0ZWFkIG9mIGtlZXBpbmcKPiAgICAgICB0aGVtIGluIHNlcGFyYXRlIG14c2ZiLWRybS50eHQg
+ZmlsZS4KPiAgICAgLSBBZGQgZGVkaWNhdGVkIGNvbXBhdGlibGUgZm9yIGkuTVg2U1gKPiAgICAg
+LSBEcm9wIGFsbCByZWZlcmVuY2VzIHRvIERSTS9LTVMKPiAgICAgLSBSZXBhaXIgdGhlIHJlcXVp
+cmVkIGJpdHMgaW4gY2xvY2sgbm9kZQo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L214c2ZiLnR4dCAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysKPiAg
+MSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXhzZmIudHh0Cj4gaW5kZXggYTQ0MzFm
+Mi4uNmU5MjU5MyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9teHNmYi50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9teHNmYi50eHQKPiBAQCAtMSw1ICsxLDQyIEBACj4gICogRnJlZXNjYWxl
+IE1YUyBMQ0QgSW50ZXJmYWNlIChMQ0RJRikKPiAgCj4gK05ldyBiaW5kaW5nczoKPiArPT09PT09
+PT09PT09PQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6CVNob3VsZCBi
+ZSAiZnNsLGlteDIzLWxjZGlmIiBmb3IgaS5NWDIzLgo+ICsJCVNob3VsZCBiZSAiZnNsLGlteDI4
+LWxjZGlmIiBmb3IgaS5NWDI4Lgo+ICsJCVNob3VsZCBiZSAiZnNsLGlteDZzeC1sY2RpZiIgZm9y
+IGkuTVg2U1guCj4gKy0gcmVnOgkJQWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBz
+ZXQgZm9yIGxjZGlmCgpzL2xjZGlmL0xDRElGLwoKPiArLSBpbnRlcnJ1cHRzOglTaG91bGQgY29u
+dGFpbiBsY2RpZiBpbnRlcnJ1cHRzCgpIb3cgbWFueT8gCgo+ICstIGNsb2NrczoJQSBsaXN0IG9m
+IHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaAo+ICsJCWVudHJ5
+IGluICdjbG9jay1uYW1lcycuCj4gKy0gY2xvY2stbmFtZXM6CUEgbGlzdCBvZiBjbG9jayBuYW1l
+cy4gRm9yIE1YU0ZCIGl0IHNob3VsZCBjb250YWluOgo+ICsgICAgLSAicGl4IiBmb3IgdGhlIE1Y
+U0ZCIGJsb2NrIGNsb2NrCgpNWFNGQiBpcyBub3QgYSBoL3cgYmxvY2suIExDRElGIGlzIHRoZSBu
+YW1lLgoKPiArICAgIC0gKE1YNlNYLW9ubHkpICJheGkiLCAiZGlzcF9heGkiIGZvciB0aGUgYnVz
+IGludGVyZmFjZSBjbG9jawo+ICsKPiArUmVxdWlyZWQgc3ViLW5vZGVzOgo+ICsgIC0gcG9ydDog
+VGhlIGNvbm5lY3Rpb24gdG8gYW4gZW5jb2RlciBjaGlwLgo+ICsKPiArRXhhbXBsZToKPiArCj4g
+KwlsY2RpZjE6IGxjZGlmQDAyMjIwMDAwIHsKCmRpc3BsYXktY29udHJvbGxlckAuLi4KCkRyb3Ag
+dGhlIGxlYWRpbmcgMCB0b28uCgo+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZzeC1sY2RpZiIs
+ICJmc2wsaW14MjgtbGNkaWYiOwoKSSdtIG5vdCBzdXJlIGNvbXBhdGliaWxpdHkgd2l0aCBteDI4
+IGlzIGFwcHJvcHJpYXRlIHNpbmNlIHlvdSBoYXZlIHRoZSAKZXh0cmEgY2xvY2tzLiBJIGd1ZXNz
+IGlmIHRoZXkgZG9uJ3QgbmVlZCB0byBiZSBtYW5hZ2VkIHRoZW4gaXQncyBva2F5LgoKPiArCQly
+ZWcgPSA8MHgwMjIyMDAwMCAweDQwMDA+Owo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSA1IElS
+UV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCWNsb2NrcyA9IDwmY2xrcyBJTVg2U1hfQ0xLX0xDRElG
+MV9QSVg+LAo+ICsJCQkgPCZjbGtzIElNWDZTWF9DTEtfTENESUZfQVBCPiwKPiArCQkJIDwmY2xr
+cyBJTVg2U1hfQ0xLX0RJU1BMQVlfQVhJPjsKPiArCQljbG9jay1uYW1lcyA9ICJwaXgiLCAiYXhp
+IiwgImRpc3BfYXhpIjsKPiArCj4gKwkJcG9ydCB7Cj4gKwkJCXBhcmFsbGVsX291dDogZW5kcG9p
+bnQgewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbl9wYXJhbGxlbD47Cj4gKwkJ
+CX07Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICtPbGQgYmluZGluZ3M6CgpzL09sZC9EZXByZWNhdGVk
+LwoKPiArPT09PT09PT09PT09PQo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAtIGNvbXBhdGli
+bGU6CVNob3VsZCBiZSAiZnNsLGlteDIzLWxjZGlmIiBmb3IgaS5NWDIzLgo+ICAJCVNob3VsZCBi
+ZSAiZnNsLGlteDI4LWxjZGlmIiBmb3IgaS5NWDI4Lgo+IC0tIAo+IDIuMTAuMgo+IApfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
