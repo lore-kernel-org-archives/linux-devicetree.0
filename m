@@ -1,36 +1,49 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] ARM: zynq: Fix pmu register description coding style
-Date: Wed, 16 Nov 2016 09:32:42 +0100
-Message-ID: <995966ccde55b52646b929a98180d68322cb6bea.1479285154.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: julia@ni.com, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 06/10] mmc: core: move the cookie's enum values from
+ sdhci.h to mmc.h
+Date: Wed, 16 Nov 2016 10:28:45 +0200
+Message-ID: <d5321daf-b449-e556-ccf1-cd82d497ea85@intel.com>
+References: <20161115101232.3854-1-jh80.chung@samsung.com>
+ <CGME20161115101332epcas2p2c10c90b955b427a510ed8f9631b3fdfe@epcas2p2.samsung.com>
+ <20161115101232.3854-7-jh80.chung@samsung.com>
+ <12405f58-695d-03d8-407f-d7471e93a6de@samsung.com>
+ <ecb4b5d0-4cbf-bf44-3287-f1580b2e990a@intel.com>
+ <89535076-4a77-64a5-68d9-ce15e03b8fb3@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <89535076-4a77-64a5-68d9-ce15e03b8fb3-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Drop the space before/after '<' and '>'; and
-separate the entries to be a bit more readable.
+On 16/11/16 10:25, Jaehoon Chung wrote:
+> On 11/16/2016 05:09 PM, Adrian Hunter wrote:
+>> On 16/11/16 09:53, Jaehoon Chung wrote:
+>>> Added Adrian for sdhci.h
+>>>
+>>> On 11/15/2016 07:12 PM, Jaehoon Chung wrote:
+>>>> It's not for only sdhci controller.
+>>>> So it can be moved from sdhci.h to mmc.h. And renamed from sdhci_cookie
+>>>> to mmc_cookie.
+>>
+>> The cookie is currently host private data, so I don't understand the
+>> motivation behind this.
+> 
+> dwmmc controller can also use the data->host_cookie. because it's working with post/pre_req().
+> 
+> So i think it can be used about both sdhci and dwmmc.
+> Is there no reason that add the private dwmmc data?
+> 
+> With these cookie value, update the dwmmc controller for post/pre_req().
+> 
+> https://patchwork.kernel.org/patch/9429287/
 
-Reported-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+So why not define dwmmc cookies in dw_mmc.c ?
 
- arch/arm/boot/dts/zynq-7000.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index 402b5bbe3b5b..f3ac9bfe580e 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -46,7 +46,8 @@
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupts = <0 5 4>, <0 6 4>;
- 		interrupt-parent = <&intc>;
--		reg = < 0xf8891000 0x1000 0xf8893000 0x1000 >;
-+		reg = <0xf8891000 0x1000>,
-+		      <0xf8893000 0x1000>;
- 	};
- 
- 	regulator_vccpint: fixedregulator {
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
