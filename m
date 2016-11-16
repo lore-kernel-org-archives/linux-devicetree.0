@@ -1,250 +1,87 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: add amcc,dwc-otg support
-Date: Wed, 16 Nov 2016 11:24:54 +0200
-Message-ID: <8737irvkt5.fsf@linux.intel.com>
-References: <b1ec4a4425388cdee36be081971484db2a7d048a.1478897792.git.chunkeey@gmail.com> <1546251.ssrfyj8Loe@debian64> <caf17dcd-c7c5-e202-cde4-7c8702b5868b@synopsys.com> <3741942.Du5DzKuQeQ@debian64> <f9be1906-3d94-e9c6-841a-d7baa2572f75@synopsys.com> <8235c9d5-891b-6f75-49a0-c8820c3b139f@synopsys.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] drm/tilcdc: Add drm bridge support for attaching
+ drm bridge drivers
+Date: Wed, 16 Nov 2016 10:27:34 +0100
+Message-ID: <CAMpxmJUqL-6tw90iqi-k95O_PAqinKM_4wfy_OTDLv+rjDF1Ag@mail.gmail.com>
+References: <cover.1479142062.git.jsarha@ti.com> <12cd62cc9ea0f79d0f399c76bfa715125a0816ce.1479142062.git.jsarha@ti.com>
+ <CAMpxmJVcMa-wfXf1BUXvkZ78v_yWorEka1mkGd3wZ88oyL58Kw@mail.gmail.com> <36c37a00-0684-a758-219b-6dc71b3131ef@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8235c9d5-891b-6f75-49a0-c8820c3b139f-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <36c37a00-0684-a758-219b-6dc71b3131ef-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,=20
-
-John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
-> On 11/14/2016 3:00 PM, John Youn wrote:
->> On 11/11/2016 3:12 PM, Christian Lamparter wrote:
->>> On Friday, November 11, 2016 2:20:42 PM CET John Youn wrote:
->>>> On 11/11/2016 2:05 PM, Christian Lamparter wrote:
->>>>> On Friday, November 11, 2016 1:22:16 PM CET John Youn wrote:
->>>>>> On 11/11/2016 12:59 PM, Christian Lamparter wrote:
->>>>>>> This patch adds support for the "amcc,usb-otg" device
->>>>>>> which is found in the PowerPC Canyonlands' dts.
->>>>>>>
->>>>>>> The device definition was added by:
->>>>>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonl=
-ands board")'
->>>>>>> but without any driver support as the dwc2 driver wasn't
->>>>>>> available at that time.
->>>>>>>
->>>>>>> Note: The system can't use the generic "snps,dwc2" compatible
->>>>>>> because of the special ahbcfg configuration. The default
->>>>>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
->>>>>>> when the USB and SATA is used concurrently.
->>>>>>
->>>>>> I don't want to add any more of these param structures to the driver
->>>>>> unless really necessary. We're trying to remove usage of them in fav=
-or
->>>>>> of using auto-detected defaults and device properties to override
->>>>>> them.
->>>>> Ok, thanks. I think that would work. I've attached an updated patch.
->>>>> Can it be applied/queued now? Or do you want me to resent it later?
->>>>>
->>>>>> The AHB Burst is actually one of the ones we were going to do next
->>>>>> because our platform also doesn't work well with INCR4. In fact I'm
->>>>>> thinking of making the default INCR.
->>>>> Is that actually possible to change the default still? This would
->>>>> require to re-evaluate all existing archs/platforms that use=20
->>>>> "snps,dwc2" for INCR16 compatibility.=20
->>>>
->>>> INCR, not INCR16, but you're right, so we may not change it even
->>>> though though INCR is usually the right choice over INCR4.
->>> What about making a device-tree property?
->>=20
->> Yes, that's what I meant. I'll send a change for this shortly.
->>=20
+2016-11-15 21:46 GMT+01:00 Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>:
+> On 11/15/16 19:36, Bartosz Golaszewski wrote:
+>> 2016-11-14 17:54 GMT+01:00 Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>:
+>>> Adds drm bride support for attaching drm bridge drivers to tilcdc. The
+>>> decision whether a video port leads to an external encoder or bridge
+>>> is made simply based on remote device's compatible string. The code
+>>> has been tested with BeagleBone-Black with and without BeagleBone
+>>> DVI-D Cape Rev A3 using ti-tfp410 driver.
 >>>
->>> Recommended properties:
->>>  - g-ahb-bursts : specifies the ahb bursts length, should be one of
->>>    "single", "INCRx", "INCR4", "INCR8", or "INCR16". If not specified
->>>    the safer but inefficient "INCR4" is used. The optimal setting is
->>>    "INCRx".
->>>
->>> Would this work? If so, I can make a patch over the weekend.
->>>> Anyways, with the binding, can't you just set the compatible string to
->>>> snps,dwc2?
->>>
->>> Ah, let me explain. I had a discussion with Mark Rutland and Rob Herring
->>> a while back about device-tree bindings.
->>>
->>> They made it very clear to me, that they don't want any generic "catch =
-all
->>> compatible" strings:
->>>
->>> "Bindings should be for hardware (either specific device models, or for
->>> classes), and not for Linux drivers. The latter is subject to arbitrary
->>> changes while the former is not, as old hardware continues to exist and
->>> does not change while drivers get completely reworked." [0]
->>>
->>> Furthermore, this is an existing binding in kernel's canyonlands.dts [1]
->>> and this binding can't be easily changed. Rob Herring explained this in
->>> the context of the "basic-mmio-gpio" patch [2] when I was editing the d=
-ts
->>> to make them work with the changes I made:
->>>
->>> "You can't remove the old drivers as they are needed to work with=20
->>> old dtbs, so there is no gain.
->>>
->>> You would need to match on existing compatibles such as
->>> moxa,moxart-gpio and provide a match data struct that has all the info
->>> you are adding here (e.g. data register offset). Then additionally you
->>> could add "basic-mmio-gpio" (I would drop "basic" part) and the
->>> additional data associated with it. But it has to be new properties,
->>> not changing properties. Changing the reg values doesn't work."
->>>
->>> So, for this to work with the existing canyonlands.dts, I need to have
->>> the "amcc,dwc-otg" compatible string.
->>=20
->> Ok, if that's the case. But still a bit confused as to what driver was
->> working with it before since the binding was not defined for dwc2.
->>=20
->>>
->>> Of course, it would be great to hear from Rob Herring and/or Mark Rutla=
-nd
->>> about this case.
->>>
->>> Regards,
->>> Christian
->>>
->>> [0] <https://patchwork.kernel.org/patch/8976221/>
->>> [1] <http://lxr.free-electrons.com/source/arch/powerpc/boot/dts/canyonl=
-ands.dts#L181>
->>> [2] <http://www.spinics.net/lists/devicetree/msg124538.html>
->>>
->>>=20=20
->>>>>
->>>>> From what I can tell based would be:
->>>>> bcm11351, bcm21664, bcm23550, exynos3250, stm32f429, rk3xxx,
->>>>> stratix10, meson-gxbb, rt3050 and some Altera FPGAs.
->>>>>
->>>>>> If that's all you need then a devicetree binding should be enough
->>>>>> right?
->>>>> Yes. The device is working fine so far.
->>>>>
->>>>> Regards,
->>>>> Christian
->>>>>
->>>>> ---
->>>>> From 70dd4be016b89655a56bc8260f04683b50f07644 Mon Sep 17 00:00:00 2001
->>>>> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>> Date: Sun, 6 Nov 2016 00:39:24 +0100
->>>>> Subject: [PATCH] usb: dwc2: add amcc,dwc-otg support
->>>>>
->>>>> This patch adds support for the "amcc,usb-otg" device
->>>>> which is found in the PowerPC Canyonlands' dts.
->>>>>
->>>>> The device definition was added by:
->>>>> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlan=
-ds board")'
->>>>> but without any driver support as the dwc2 driver wasn't
->>>>> available at that time.
->>>>>
->>>>> Note: The system can't use the generic "snps,dwc2" compatible
->>>>> because of the special ahbcfg configuration. The default
->>>>> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
->>>>> when the USB and SATA is used concurrently.
->>>>>
->>>>> Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>>> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>> ---
->>>>> v1->v2:
->>>>> 	- moved definitons to params.c
->>>>> 	- removed dma_enable / host_dma parameter
->>>>> 	- added dma_desc_fs_enable parameter
->>>>> v2->v3:
->>>>> 	- removed parameters
->>>>>
->>>>> Please queue this patch until GAHBCFG_HBSTLEN_INCR16 is the default
->>>>> for ahbcfg.
->>>>> ---
->>>>>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->>>>>  drivers/usb/dwc2/params.c                      | 1 +
->>>>>  2 files changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documen=
-tation/devicetree/bindings/usb/dwc2.txt
->>>>> index 10a2a4b..6ccfe85 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>>> @@ -12,6 +12,7 @@ Required properties:
->>>>>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq =
-XRX SoCs;
->>>>>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlog=
-ic Meson8b SoCs;
->>>>>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Am=
-logic S905 SoCs;
->>>>> +  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonl=
-ands 460EX SoCs;
->>>>>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
->>>>>  - reg : Should contain 1 register range (address and length)
->>>>>  - interrupts : Should contain 1 interrupt
->>>>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
->>>>> index 64d5c66..9506ab0 100644
->>>>> --- a/drivers/usb/dwc2/params.c
->>>>> +++ b/drivers/usb/dwc2/params.c
->>>>> @@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] =
-=3D {
->>>>>  	{ .compatible =3D "samsung,s3c6400-hsotg", .data =3D NULL},
->>>>>  	{ .compatible =3D "amlogic,meson8b-usb", .data =3D &params_amlogic =
-},
->>>>>  	{ .compatible =3D "amlogic,meson-gxbb-usb", .data =3D &params_amlog=
-ic },
->>>>> +	{ .compatible =3D "amcc,dwc-otg", .data =3D NULL },
->>>>>  	{},
->>>>>  };
->>>>>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
->>>>>
->>=20
->> For dwc2 part:
->>=20
->> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>=20
+>>> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>
+>> Hi Jyri,
+>>
+>> thanks a lot for doing this.
+>>
+>> One issue I see with this patch is that tilcdc doesn't seem to support
+>> deferred probe correctly (if modules are built-in). The following
+>> happens on my setup:
+>>
+>> The dump-vga-dac module is loaded first, but the i2c0 is not ready yet
+>> - probe returns EPROBE_DEFER and it's propagated to tilcdc probe.
+>>
+>>     [drm] Initialized
+>>     dumb-vga-dac vga_bridge: Couldn't retrieve i2c bus
+>>
+>> Then the i2c bus is initialized and dump-vga-dac probe succeeds, but
+>> the second probe of tilcdc gives me:
+>>
+>>     [drm:drm_debugfs_init] *ERROR* Cannot create /sys/kernel/debug/dri/64
+>>     [drm:drm_minor_register] *ERROR* DRM: Failed to initialize
+>> /sys/kernel/debug/dri.
+>>     tilcdc: probe of da8xx_lcdc.0 failed with error -1
+>>
+>> I was able to work around this issue by loading modules in correct order.
+>>
 >
-> Hi Felipe,
+> Did you have any conflicts when applying my patch? I have done quite a
+> few changes lately and especially the initialization sequence and back
+> off from deferred probe may get broken easily broken if the source base
+> is not correct. I try to come up with a pull-request candidate branch
+> soon (hopefully tomorrow) for you to test.
 >
-> Can you drop this from your testing/next?
+
+I only had some trivial conflicts, but you're right, maybe I'm missing
+some parts. It would be great to have a branch for testing - I could
+then rebase my follow-up work on tilcdc against it.
+
+>> I then tried testing the patch with a da850-lcdk, but I don't get
+>> anything on the display (no signal), even though the LCDC seems to
+>> work fine (modetest and dmesg messages work just like when using the
+>> tilcdc panel). Also: I see the EDID info is correctly retrieved from
+>> the display.
+>>
+>> Could you take a look at my DT[1] and see if you find it correct?
+>>
 >
-> I meant for the 2nd version to be applied, without the params
-> structure.
+> It is hard to follow the dts diff, but if it probes and tilcdc is able
+> to read EDID modes, there should not be anything more to it.
 >
-> I can send you a clean version to apply later today.
 
-done
+Yes, this is what I thought too.
 
-=2D-=20
-balbi
+Let me know when you'll have the testing branch ready.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlgsJeYACgkQzL64meEa
-mQavAQ//VAVPIuKVeRtFEVyKsF3gfM5Ar+67Qbk7HXYH9LBWNXkKx91/lIlISWMV
-MHs7J+xyVeiQ4ioPXTwdzIaX+w2yO3WjrGRHmHDAwHgA3HDCvtnUlLYaOyRAv4PD
-XwPrUnodM/k+07BtAYYAssqnJJL8VXxD3GJYMKbHmf4LAHu0q+TtyrjJyMAdhFKE
-PLqjQUx3rk5J8ubuzxbWGjVUaFqiPqcYTaql4ydIac1nQcrSmR2+xM+1RE105Vn3
-FPhbGJKkld46seMn7kiKCU1s8Zz4r+BttJPO7LBR7Qomk6GaKV81/FcCphfY3Wpf
-iZj1el556aMejkGlWpFUczY0dBvFavhZeLa7oLu5SQDlBOv/81EGiA77fZ/Z3qxG
-0DwupQnkTmE9B491/qe8vUTFV2Kdip+tRzL7TiXgbih97yHns5SIClMFmI1+qo6R
-CQBqcYm75+2qEZMut9liPlOHHwwZsW8j3lNjkWx8jBQL1nGB1f/pEJD1VwOgbdDW
-QFBZiRZQoRZXI1cJwtOb7Sye3Pbgk/UjqYoyiNe2UgBXpq4UFr4CMnI2h/pvU+ba
-7kV7XJQ+jXuDe9xRNB8uJW5/LeaRF/72IkotcZFlTiBGZR8T/+3q2v/TbFGZ4zrA
-sEZCaXQN6yE+CBRRsrDh0e87YF/RmVsIY4WWE5dBGLmw5W80wz4=
-=ecvz
------END PGP SIGNATURE-----
---=-=-=--
+Best regards,
+Bartosz Golaszewski
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
