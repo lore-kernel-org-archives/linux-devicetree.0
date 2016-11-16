@@ -1,79 +1,153 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 1/9] PM / OPP: Reword binding supporting multiple
- regulators per device
-Date: Wed, 16 Nov 2016 08:48:44 +0530
-Message-ID: <20161116031844.GD17245@vireshk-i7>
-References: <20161110040440.GA11670@vireshk-i7>
- <20161110163659.rk67qrmnrovq2ktf@sirena.org.uk>
- <20161110180940.GD11670@vireshk-i7>
- <20161110225126.GK16026@codeaurora.org>
- <20161111031120.GE11670@vireshk-i7>
- <20161115015952.steomn4azdl5iv6z@rob-hp-laptop>
- <20161115021302.GR5177@codeaurora.org>
- <20161115033151.GG4178@vireshk-i7>
- <20161115185645.GA25626@codeaurora.org>
- <032e1bb4-c9e9-c588-a8c0-dd019bb64254@ti.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v5] drm/mediatek: fixed the calc method of data rate per lane
+Date: Wed, 16 Nov 2016 11:20:54 +0800
+Message-ID: <1479266454-31892-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <032e1bb4-c9e9-c588-a8c0-dd019bb64254@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, Viresh Kumar <vireshk@kernel.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, ck.hu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jitao Shi <jitao.shi@mediatek.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@medi
 List-Id: devicetree@vger.kernel.org
 
-On 15-11-16, 16:11, Dave Gerlach wrote:
-> On 11/15/2016 12:56 PM, Stephen Boyd wrote:
-> >On 11/15, Viresh Kumar wrote:
-> >>There are two important pieces of information we need for multiple
-> >>regulator support:
-> >>- Which regulator in the consumer node corresponds to which entry in
-> >>  the OPP table. As Mark mentioned earlier, DT should be able to get
-> >>  us this.
-> >
-> >This is also possible from C code though. Or is there some case
-> >where it isn't possible if we're sharing the same table with two
-> >devices? I'm lost on when this would ever happen.
-> >
-> >It feels like trying to keep the OPP table agnostic of the
-> >consuming device and the device's binding is more trouble than
-> >it's worth. Especially considering we have opp-shared and *-name
-> >now.
-> 
-> I agree with this, I do not like having to pass a list of regulator names to
-> the opp core that I *hope* the device I am controlling has provided.
+Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e.
+Tlpx, Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP
+mode, those signals will cause h-time larger than normal and reduce FPS.
+So need to multiply a coefficient to offset the extra signal's effect.
+  coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+
+		 Ths_trail+Ths_exit)/(htotal*bpp/lane_number)
 
-What do you mean by that? Are you saying this from DT's point of view
-or of the code? i.e. Are you saying that you don't like the
-dev_pm_opp_set_regulators() API ?
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+Change since v4:
+ - tune the calc comment more clear.
+ - define the phy timings as constants.
 
-> The
-> intent seems to be to use the cpufreq-dt driver as is and not pass any
+Chnage since v3:
+ - wrapp the commit msg.
+ - fix alignment of some lines. 
 
-I would like to kill all regulators code from cpufreq-dt sometime
-soon. All that is left there is making sure we have a regulator in
-place, but I strongly feel OPP core is the right place for doing that
-now.
+Change since v2:
+ - move phy timing back to dsi_phy_timconfig.
 
-> cpu-supply anymore so the cpufreq-dt driver has no knowledge of what
-> regulators are present (it operates as it would today on a system with no
-> regulator required). But as is it will move forward regardless of whether or
-> not we actually intended to provide a multi regulator set up or platform
-> set_opp helper, and this probably isn't ideal.
+Change since v1:
+ - phy_timing2 and phy_timing3 refer clock cycle time.
+ - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT.
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c |   64 +++++++++++++++++++++++++++---------
+ 1 file changed, 48 insertions(+), 16 deletions(-)
 
-Yes and that's why I am more inclined towards my above comment. We
-shall make it consistent.
-
-> I would think cpufreq-dt/opp
-> core should be have knowledge of what regulators are needed to achieve these
-> opp transitions and make sure everything is in place before moving ahead.
-
-The last patch in my series does what you are looking for:
-
-PM / OPP: Don't assume platform doesn't have regulators
-
-Isn't it ?
-
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 28b2044..eaa5a22 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -86,7 +86,7 @@
+ 
+ #define DSI_PHY_TIMECON0	0x110
+ #define LPX				(0xff << 0)
+-#define HS_PRPR				(0xff << 8)
++#define HS_PREP				(0xff << 8)
+ #define HS_ZERO				(0xff << 16)
+ #define HS_TRAIL			(0xff << 24)
+ 
+@@ -102,10 +102,16 @@
+ #define CLK_TRAIL			(0xff << 24)
+ 
+ #define DSI_PHY_TIMECON3	0x11c
+-#define CLK_HS_PRPR			(0xff << 0)
++#define CLK_HS_PREP			(0xff << 0)
+ #define CLK_HS_POST			(0xff << 8)
+ #define CLK_HS_EXIT			(0xff << 16)
+ 
++#define T_LPX		5
++#define T_HS_PREP	6
++#define T_HS_TRAIL	8
++#define T_HS_EXIT	7
++#define T_HS_ZERO	10
++
+ #define NS_TO_CYCLE(n, c)    ((n) / (c) + (((n) % (c)) ? 1 : 0))
+ 
+ struct phy;
+@@ -161,20 +167,18 @@ static void mtk_dsi_mask(struct mtk_dsi *dsi, u32 offset, u32 mask, u32 data)
+ static void dsi_phy_timconfig(struct mtk_dsi *dsi)
+ {
+ 	u32 timcon0, timcon1, timcon2, timcon3;
+-	unsigned int ui, cycle_time;
+-	unsigned int lpx;
++	u32 ui, cycle_time;
+ 
+ 	ui = 1000 / dsi->data_rate + 0x01;
+ 	cycle_time = 8000 / dsi->data_rate + 0x01;
+-	lpx = 5;
+ 
+-	timcon0 = (8 << 24) | (0xa << 16) | (0x6 << 8) | lpx;
+-	timcon1 = (7 << 24) | (5 * lpx << 16) | ((3 * lpx) / 2) << 8 |
+-		  (4 * lpx);
++	timcon0 = T_LPX | T_HS_PREP << 8 | T_HS_ZERO << 16 | T_HS_TRAIL << 24;
++	timcon1 = 4 * T_LPX | (3 * T_LPX / 2) << 8 | 5 * T_LPX << 16 |
++		  T_HS_EXIT << 24;
+ 	timcon2 = ((NS_TO_CYCLE(0x64, cycle_time) + 0xa) << 24) |
+ 		  (NS_TO_CYCLE(0x150, cycle_time) << 16);
+-	timcon3 = (2 * lpx) << 16 | NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8 |
+-		   NS_TO_CYCLE(0x40, cycle_time);
++	timcon3 = NS_TO_CYCLE(0x40, cycle_time) | (2 * T_LPX) << 16 |
++		  NS_TO_CYCLE(80 + 52 * ui, cycle_time) << 8;
+ 
+ 	writel(timcon0, dsi->regs + DSI_PHY_TIMECON0);
+ 	writel(timcon1, dsi->regs + DSI_PHY_TIMECON1);
+@@ -202,19 +206,47 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ {
+ 	struct device *dev = dsi->dev;
+ 	int ret;
++	u64 pixel_clock, total_bits;
++	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+ 
+ 	if (++dsi->refcount != 1)
+ 		return 0;
+ 
++	switch (dsi->format) {
++	case MIPI_DSI_FMT_RGB565:
++		bit_per_pixel = 16;
++		break;
++	case MIPI_DSI_FMT_RGB666_PACKED:
++		bit_per_pixel = 18;
++		break;
++	case MIPI_DSI_FMT_RGB666:
++	case MIPI_DSI_FMT_RGB888:
++	default:
++		bit_per_pixel = 24;
++		break;
++	}
++
+ 	/**
+-	 * data_rate = (pixel_clock / 1000) * pixel_dipth * mipi_ratio;
+-	 * pixel_clock unit is Khz, data_rata unit is MHz, so need divide 1000.
+-	 * mipi_ratio is mipi clk coefficient for balance the pixel clk in mipi.
+-	 * we set mipi_ratio is 1.05.
++	 * vm.pixelclock is in kHz, pixel_clock unit is Hz, so multiply by 1000
++	 * htotal_time = htotal * byte_per_pixel / num_lanes
++	 * overhead_time = lpx + hs_prepare + hs_zero + hs_trail + hs_exit
++	 * mipi_ratio = (htotal_time + overhead_time) / htotal_time
++	 * data_rate = pixel_clock * bit_per_pixel * mipi_ratio / num_lanes;
+ 	 */
+-	dsi->data_rate = dsi->vm.pixelclock * 3 * 21 / (1 * 1000 * 10);
++	pixel_clock = dsi->vm.pixelclock * 1000;
++	htotal = dsi->vm.hactive + dsi->vm.hback_porch + dsi->vm.hfront_porch +
++			dsi->vm.hsync_len;
++	htotal_bits = htotal * bit_per_pixel;
++
++	overhead_cycles = T_LPX + T_HS_PREP + T_HS_ZERO + T_HS_TRAIL +
++			T_HS_EXIT;
++	overhead_bits = overhead_cycles * dsi->lanes * 8;
++	total_bits = htotal_bits + overhead_bits;
++
++	dsi->data_rate = DIV_ROUND_UP_ULL(pixel_clock * total_bits,
++					  htotal * dsi->lanes);
+ 
+-	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate * 1000000);
++	ret = clk_set_rate(dsi->hs_clk, dsi->data_rate);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to set data rate: %d\n", ret);
+ 		goto err_refcount;
 -- 
-viresh
+1.7.9.5
