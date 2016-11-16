@@ -1,36 +1,38 @@
 From: Sarangdhar Joshi <spjoshi@codeaurora.org>
-Subject: [PATCH v3 0/3] Remove clocks dependency from SCM driver
-Date: Tue, 15 Nov 2016 17:19:22 -0800
-Message-ID: <1479259165-1601-1-git-send-email-spjoshi@codeaurora.org>
+Subject: [PATCH v3 1/3] dt-bindings: firmware: scm: Add MSM8996 DT bindings
+Date: Tue, 15 Nov 2016 17:19:23 -0800
+Message-ID: <1479259165-1601-2-git-send-email-spjoshi@codeaurora.org>
+References: <1479259165-1601-1-git-send-email-spjoshi@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479259165-1601-1-git-send-email-spjoshi@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Sarangdhar Joshi <spjoshi@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Sarangdhar Joshi <spjoshi@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Jordan Crouse <jcrouse@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On earlier chiptsets (APQ8064, MSM8660, MSM8690, MSM8916,
-APQ8084, MSM8974) crypto operations of TZ were depends on crypto
-clocks controlled by users/clients. However on MSM8996 crypto clocks
-control is handled internally in TZ itself. The current series of
-patches handle this clock dependency in SCM driver.
+Add SCM DT bindings for Qualcomm's MSM8996 platform.
 
-Changes since v2:
-- Use typecast of 'unsigned long' for pointer (Stephen)
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+---
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes since v1:
-- Added Rob's Acked-by
-- Removed of_device_is_compatible check from probe (Stephen)
-- Modified typecast to take care of 32-bit pointer
-
-Sarangdhar Joshi (3):
-  dt-bindings: firmware: scm: Add MSM8996 DT bindings
-  firmware: qcom: scm: Remove core, iface and bus clocks dependency
-  firmware: qcom: scm: Return PTR_ERR when devm_clk_get fails
-
- .../devicetree/bindings/firmware/qcom,scm.txt      |  2 +
- drivers/firmware/qcom_scm.c                        | 49 ++++++++++++++++------
- 2 files changed, 39 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index 3b4436e..20f26fb 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -10,8 +10,10 @@ Required properties:
+  * "qcom,scm-apq8064" for APQ8064 platforms
+  * "qcom,scm-msm8660" for MSM8660 platforms
+  * "qcom,scm-msm8690" for MSM8690 platforms
++ * "qcom,scm-msm8996" for MSM8996 platforms
+  * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+ - clocks: One to three clocks may be required based on compatible.
++ * No clock required for "qcom,scm-msm8996"
+  * Only core clock required for "qcom,scm-apq8064", "qcom,scm-msm8660", and "qcom,scm-msm8960"
+  * Core, iface, and bus clocks required for "qcom,scm"
+ - clock-names: Must contain "core" for the core clock, "iface" for the interface
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
