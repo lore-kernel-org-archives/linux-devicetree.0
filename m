@@ -1,154 +1,525 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
-Date: Wed, 16 Nov 2016 15:47:18 -0800
-Message-ID: <7fa1c1c4d703c435d698cdf140c9d43163347f1d.1479339900.git.johnyoun@synopsys.com>
-References: <cover.1479339900.git.johnyoun@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1479339900.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [RFC PATCH 2/7] misc: minimal mux subsystem and gpio-based mux controller
+Date: Thu, 17 Nov 2016 00:48:26 +0100
+Message-ID: <1479340111-1259-3-git-send-email-peda@axentia.se>
+References: <1479340111-1259-1-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479340111-1259-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the "snps,ahb-burst" binding and read it in.
+When both the iio subsystem and the i2c subsystem wants to update
+the same mux, there needs to be some coordination. Invent a new
+minimal "mux" subsystem that handles this.
 
-This property controls which burst type to perform on the AHB bus as a
-master in internal DMA mode. This overrides the legacy param value,
-which we need to keep around for now since several platforms use it.
-
-Some platforms may see better or worse performance based on this
-value. The HAPS platform is one example where all INCRx have worse
-performance than INCR.
-
-Other platforms (such as the Canyonlands board) report that the default
-value causes system hangs.
-
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Add a single backend driver for this new subsystem that can
+control gpio based multiplexers.
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt |  2 +
- drivers/usb/dwc2/core.h                        |  9 +++++
- drivers/usb/dwc2/params.c                      | 56 ++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
+ drivers/misc/Kconfig    |   6 +
+ drivers/misc/Makefile   |   2 +
+ drivers/misc/mux-core.c | 285 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/misc/mux-gpio.c | 105 ++++++++++++++++++
+ include/linux/mux.h     |  54 +++++++++
+ 5 files changed, 452 insertions(+)
+ create mode 100644 drivers/misc/mux-core.c
+ create mode 100644 drivers/misc/mux-gpio.c
+ create mode 100644 include/linux/mux.h
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 6c7c2bce..9e7b4b4 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -26,6 +26,8 @@ Optional properties:
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
-+- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
-+  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
- - g-rx-fifo-size: size of rx fifo size in gadget mode.
- - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
- - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index 9548d3e..75c238c 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -430,6 +430,12 @@ enum dwc2_ep0_state {
-  *			needed.
-  *			0 - No (default)
-  *			1 - Yes
-+ * @ahb_burst:          Specifies the AHB burst.
-+ *                       0 - Single
-+ *                       1 - INCR
-+ *                       3 - INCR4 (default)
-+ *                       5 - INCR8
-+ *                       7 - INCR16
-  * @g_dma:              Enables gadget dma usage (default: autodetect).
-  * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
-  * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-@@ -507,6 +513,9 @@ struct dwc2_core_params {
- 	 * properties and cannot be set directly in this structure.
- 	 */
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 64971baf11fa..9e119bb78d82 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -766,6 +766,12 @@ config PANEL_BOOT_MESSAGE
+ 	  An empty message will only clear the display at driver init time. Any other
+ 	  printf()-formatted message is valid with newline and escape codes.
  
-+	/* Global parameters */
-+	u8 ahb_burst;
++config MUX_GPIO
++	tristate "GPIO-controlled MUX controller"
++	depends on OF
++	help
++	  GPIO-controlled MUX controller
 +
- 	/* Host parameters */
- 	bool host_dma;
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index 31983366090a..92b547bcbac1 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -53,6 +53,8 @@ obj-$(CONFIG_ECHO)		+= echo/
+ obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
+ obj-$(CONFIG_CXL_BASE)		+= cxl/
+ obj-$(CONFIG_PANEL)             += panel.o
++obj-$(CONFIG_MUX_GPIO)          += mux-core.o
++obj-$(CONFIG_MUX_GPIO)          += mux-gpio.o
  
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index d44b31c..8bc2745 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -1098,6 +1098,60 @@ static void dwc2_set_param_tx_fifo_sizes(struct dwc2_hsotg *hsotg)
- 	}
- }
- 
-+static const char *const ahb_bursts[] = {
-+	[GAHBCFG_HBSTLEN_SINGLE]	= "SINGLE",
-+	[GAHBCFG_HBSTLEN_INCR]		= "INCR",
-+	[GAHBCFG_HBSTLEN_INCR4]		= "INCR4",
-+	[GAHBCFG_HBSTLEN_INCR8]		= "INCR8",
-+	[GAHBCFG_HBSTLEN_INCR16]	= "INCR16",
+ lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
+ lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
+diff --git a/drivers/misc/mux-core.c b/drivers/misc/mux-core.c
+new file mode 100644
+index 000000000000..d7c7b667d1a4
+--- /dev/null
++++ b/drivers/misc/mux-core.c
+@@ -0,0 +1,285 @@
++/*
++ * Multiplexer subsystem
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#define pr_fmt(fmt) "mux-core: " fmt
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/idr.h>
++#include <linux/module.h>
++#include <linux/mux.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++
++static struct bus_type mux_bus_type = {
++	.name = "mux",
 +};
 +
-+static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
++static int __init mux_init(void)
 +{
-+	const char *str = NULL;
-+	int burst;
++	return bus_register(&mux_bus_type);
++}
++
++static void __exit mux_exit(void)
++{
++	bus_unregister(&mux_bus_type);
++}
++
++static DEFINE_IDA(mux_ida);
++
++static void mux_control_release(struct device *dev)
++{
++	struct mux_control *mux = to_mux_control(dev);
++
++	ida_simple_remove(&mux_ida, mux->id);
++	kfree(mux);
++}
++
++static struct device_type mux_control_type = {
++	.name = "mux-control",
++	.release = mux_control_release,
++};
++
++/*
++ * Allocate a mux-control, plus an extra memory area for private use
++ * by the caller.
++ */
++struct mux_control *mux_control_alloc(size_t sizeof_priv)
++{
++	struct mux_control *mux;
++
++	mux = kzalloc(sizeof(*mux) + sizeof_priv, GFP_KERNEL);
++	if (!mux)
++		return NULL;
++
++	mux->dev.bus = &mux_bus_type;
++	mux->dev.type = &mux_control_type;
++	device_initialize(&mux->dev);
++	dev_set_drvdata(&mux->dev, mux);
++
++	init_rwsem(&mux->lock);
++	mux->priv = mux + 1;
++
++	mux->id = ida_simple_get(&mux_ida, 0, 0, GFP_KERNEL);
++	if (mux->id < 0) {
++		pr_err("mux-controlX failed to get device id\n");
++		kfree(mux);
++		return NULL;
++	}
++	dev_set_name(&mux->dev, "mux:control%d", mux->id);
++
++	return mux;
++}
++EXPORT_SYMBOL_GPL(mux_control_alloc);
++
++/*
++ * Register the mux-control, thus readying it for use.
++ */
++int mux_control_register(struct mux_control *mux)
++{
++	/* If the calling driver did not initialize of_node, do it here */
++	if (!mux->dev.of_node && mux->dev.parent)
++		mux->dev.of_node = mux->dev.parent->of_node;
++
++	return device_add(&mux->dev);
++}
++EXPORT_SYMBOL_GPL(mux_control_register);
++
++/*
++ * Take the mux-control off-line.
++ */
++void mux_control_unregister(struct mux_control *mux)
++{
++	device_del(&mux->dev);
++}
++EXPORT_SYMBOL_GPL(mux_control_unregister);
++
++/*
++ * Put away the mux-control for good.
++ */
++void mux_control_put(struct mux_control *mux)
++{
++	if (!mux)
++		return;
++	put_device(&mux->dev);
++}
++EXPORT_SYMBOL_GPL(mux_control_free);
++
++/*
++ * Select the given multiplexer channel. Call mux_control_deselect()
++ * when the operation is complete on the multiplexer channel, and the
++ * multiplexer is free for others to use.
++ */
++int mux_control_select(struct mux_control *mux, int reg)
++{
 +	int ret;
 +
-+	ret = device_property_read_string(hsotg->dev,
-+					  "snps,ahb-burst", &str);
-+	if (ret < 0)
++	if (down_read_trylock(&mux->lock)) {
++		if (mux->cache == reg)
++			return 0;
++
++		/* Sigh, the mux needs updating... */
++		up_read(&mux->lock);
++	}
++
++	/* ...or it's just contended. */
++	down_write(&mux->lock);
++
++	if (mux->cache == reg) {
++		/*
++		 * Hmmm, someone else changed the mux to my liking.
++		 * That makes me wonder how long I waited for nothing...
++		 */
++		downgrade_write(&mux->lock);
++		return 0;
++	}
++
++	ret = mux->ops->set(mux, reg);
++	if (ret < 0) {
++		up_write(&mux->lock);
 +		return ret;
-+
-+	burst = match_string(ahb_bursts,
-+			     ARRAY_SIZE(ahb_bursts), str);
-+	if (burst < 0) {
-+		dev_err(hsotg->dev,
-+			"Invalid parameter '%s' for ahb-burst\n", str);
 +	}
 +
-+	return burst;
++	mux->cache = reg;
++	downgrade_write(&mux->lock);
++
++	return 1;
++}
++EXPORT_SYMBOL_GPL(mux_control_select);
++
++/*
++ * Deselect the previously selected multiplexer channel.
++ */
++int mux_control_deselect(struct mux_control *mux)
++{
++	if (mux->do_idle && mux->cache != mux->idle_state) {
++		mux->ops->set(mux, mux->idle_state);
++		mux->cache = mux->idle_state;
++	}
++
++	up_read(&mux->lock);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(mux_control_deselect);
++
++static int of_dev_node_match(struct device *dev, void *data)
++{
++	return dev->of_node == data;
 +}
 +
-+static void dwc2_set_ahb_burst(struct dwc2_hsotg *hsotg)
++static struct mux_control *of_find_mux_by_node(struct device_node *np)
 +{
-+	struct dwc2_core_params *p = &hsotg->params;
-+	int burst;
++	struct device *dev;
++
++	dev = bus_find_device(&mux_bus_type, NULL, np, of_dev_node_match);
++
++	return dev ? to_mux_control(dev) : NULL;
++}
++
++static struct mux_control *of_mux_control_get(struct device_node *np, int index)
++{
++	struct device_node *mux_np;
++	struct mux_control *mux;
++
++	mux_np = of_parse_phandle(np, "control-muxes", index);
++	if (!mux_np)
++		return NULL;
++
++	mux = of_find_mux_by_node(mux_np);
++	of_node_put(mux_np);
++
++	return mux;
++}
++
++/*
++ * Get a named mux.
++ */
++struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
++{
++	struct device_node *np = dev->of_node;
++	struct mux_control *mux;
++	int index;
++
++	index = of_property_match_string(np, "control-mux-names", mux_name);
++	if (index < 0) {
++		dev_err(dev, "failed to get control-mux %s:%s(%i)\n",
++			np->full_name, mux_name ?: "", index);
++		return ERR_PTR(index);
++	}
++
++	mux = of_mux_control_get(np, index);
++	if (!mux)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return mux;
++}
++EXPORT_SYMBOL_GPL(mux_control_get);
++
++static void devm_mux_control_free(struct device *dev, void *res)
++{
++	struct mux_control *mux = *(struct mux_control **)res;
++
++	mux_control_put(mux);
++}
++
++/*
++ * Get a named mux, with resource management.
++ */
++struct mux_control *devm_mux_control_get(struct device *dev,
++					 const char *mux_name)
++{
++	struct mux_control **ptr, *mux;
++
++	ptr = devres_alloc(devm_mux_control_free, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	mux = mux_control_get(dev, mux_name);
++	if (IS_ERR(mux)) {
++		devres_free(ptr);
++		return mux;
++	}
++
++	*ptr = mux;
++	devres_add(dev, ptr);
++
++	return mux;
++}
++EXPORT_SYMBOL_GPL(devm_mux_control_get);
++
++static int devm_mux_control_match(struct device *dev, void *res, void *data)
++{
++	struct mux_control **r = res;
++
++	if (!r || !*r) {
++		WARN_ON(!r || !*r);
++		return 0;
++	}
++
++	return *r == data;
++}
++
++/*
++ * Resource-managed version mux_control_put.
++ */
++void devm_mux_control_put(struct device *dev, struct mux_control *mux)
++{
++	WARN_ON(devres_release(dev, devm_mux_control_free,
++			       devm_mux_control_match, mux));
++}
++EXPORT_SYMBOL_GPL(devm_mux_control_put);
++
++subsys_initcall(mux_init);
++module_exit(mux_exit);
++
++MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org");
++MODULE_DESCRIPTION("MUX subsystem");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/misc/mux-gpio.c b/drivers/misc/mux-gpio.c
+new file mode 100644
+index 000000000000..5fa59a0c49cf
+--- /dev/null
++++ b/drivers/misc/mux-gpio.c
+@@ -0,0 +1,105 @@
++/*
++ * GPIO-controlled multiplexer driver
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/mux.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
++struct mux_gpio {
++	struct gpio_descs *gpios;
++};
++
++static int mux_gpio_set(struct mux_control *mux, int val)
++{
++	struct mux_gpio *mux_gpio = mux->priv;
++	int i;
++
++	for (i = 0; i < mux_gpio->gpios->ndescs; i++)
++		gpiod_set_value_cansleep(mux_gpio->gpios->desc[i],
++					 val & (1 << i));
++
++	return 0;
++}
++
++static const struct mux_control_ops mux_gpio_ops = {
++	.set = mux_gpio_set,
++};
++
++static const struct of_device_id mux_gpio_dt_ids[] = {
++	{ .compatible = "mux-gpio", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mux_gpio_dt_ids);
++
++static int mux_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = pdev->dev.of_node;
++	struct mux_control *mux;
++	struct mux_gpio *mux_gpio;
 +	int ret;
 +
-+	/* Default burst value */
-+	burst = GAHBCFG_HBSTLEN_INCR4;
++	if (!np)
++		return -ENODEV;
 +
-+	/* Get the legacy param value, if set. */
-+	if (p->ahbcfg != -1) {
-+		burst = (p->ahbcfg & GAHBCFG_HBSTLEN_MASK) >>
-+			GAHBCFG_HBSTLEN_SHIFT;
++	mux = mux_control_alloc(sizeof(*mux_gpio));
++	if (!mux)
++		return -ENOMEM;
++	mux_gpio = mux->priv;
++	mux->dev.parent = dev;
++	mux->ops = &mux_gpio_ops;
++
++	platform_set_drvdata(pdev, mux);
++
++	mux_gpio->gpios = devm_gpiod_get_array(dev, "mux", GPIOD_OUT_LOW);
++	if (IS_ERR(mux_gpio->gpios)) {
++		if (PTR_ERR(mux_gpio->gpios) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get gpios\n");
++		mux_control_put(mux);
++		return PTR_ERR(mux_gpio->gpios);
 +	}
 +
-+	/* Override it from devicetree, if set. */
-+	ret = dwc2_get_property_ahb_burst(hsotg);
-+	if (ret >= 0)
-+		burst = ret;
++	ret = mux_control_register(mux);
++	if (ret < 0) {
++		dev_err(dev, "failed to register mux_control\n");
++		mux_control_put(mux);
++		return ret;
++	}
 +
-+	/* Set the parameter */
-+	p->ahb_burst = (u8)burst;
-+	dev_dbg(hsotg->dev, "Setting ahb-burst to %d\n", burst);
++	return ret;
 +}
 +
- static void dwc2_set_gadget_dma(struct dwc2_hsotg *hsotg)
- {
- 	struct dwc2_hw_params *hw = &hsotg->hw_params;
-@@ -1178,6 +1232,8 @@ static void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
- 	dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
- 	dwc2_set_param_hibernation(hsotg, params->hibernation);
- 
-+	dwc2_set_ahb_burst(hsotg);
++static int mux_gpio_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct mux_control *mux = to_mux_control(dev);
 +
- 	/*
- 	 * Set devicetree-only parameters. These parameters do not
- 	 * take any values from @params.
++	mux_control_unregister(mux);
++	mux_control_put(mux);
++	return 0;
++}
++
++static struct platform_driver mux_gpio_driver = {
++	.driver = {
++		.name = "mux-gpio",
++		.of_match_table	= of_match_ptr(mux_gpio_dt_ids),
++	},
++	.probe = mux_gpio_probe,
++	.remove = mux_gpio_remove,
++};
++module_platform_driver(mux_gpio_driver);
++
++MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org");
++MODULE_DESCRIPTION("GPIO-controlled multiplexer driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mux.h b/include/linux/mux.h
+new file mode 100644
+index 000000000000..6513ffe749bb
+--- /dev/null
++++ b/include/linux/mux.h
+@@ -0,0 +1,54 @@
++/*
++ * mux.h - definitions for the multiplexer interface
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _LINUX_MUX_H
++#define _LINUX_MUX_H
++
++#include <linux/device.h>
++#include <linux/rwsem.h>
++
++struct mux_control;
++
++struct mux_control_ops {
++	int (*set)(struct mux_control *mux, int reg);
++};
++
++struct mux_control {
++	struct rw_semaphore lock; /* protects the state of the mux */
++
++	struct device dev;
++	int id;
++
++	int cache;
++	bool do_idle;
++	int idle_state;
++
++	const struct mux_control_ops *ops;
++
++	void *priv;
++};
++
++#define to_mux_control(x) container_of((x), struct mux_control, dev)
++
++struct mux_control *mux_control_alloc(size_t sizeof_priv);
++int mux_control_register(struct mux_control *mux);
++void mux_control_unregister(struct mux_control *mux);
++void mux_control_put(struct mux_control *mux);
++
++int mux_control_select(struct mux_control *mux, int reg);
++int mux_control_deselect(struct mux_control *mux);
++
++struct mux_control *mux_control_get(struct device *dev,
++				    const char *mux_name);
++struct mux_control *devm_mux_control_get(struct device *dev,
++					 const char *mux_name);
++void devm_mux_control_put(struct device *dev, struct mux_control *mux);
++
++#endif /* _LINUX_MUX_H */
 -- 
-2.10.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
