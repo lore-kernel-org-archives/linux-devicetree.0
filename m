@@ -1,120 +1,410 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [RFC PATCH] mfd: dt: Add Aspeed LPC binding
-Date: Thu, 17 Nov 2016 16:36:33 +1030
-Message-ID: <20161117060633.3837-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [RFC PATCH 5/7] iio: multiplexer: new iio category and iio-mux driver
+Date: Thu, 17 Nov 2016 00:48:29 +0100
+Message-ID: <1479340111-1259-6-git-send-email-peda@axentia.se>
+References: <1479340111-1259-1-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1479340111-1259-1-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+When a multiplexer changes how an iio device behaves (for example
+by feeding different signals to an ADC), this driver can be used
+create one virtual iio channel for each multiplexer state.
+
+Depends on the generic multiplexer driver.
 ---
+ drivers/iio/Kconfig               |   1 +
+ drivers/iio/Makefile              |   1 +
+ drivers/iio/multiplexer/Kconfig   |  17 +++
+ drivers/iio/multiplexer/Makefile  |   6 +
+ drivers/iio/multiplexer/iio-mux.c | 313 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 338 insertions(+)
+ create mode 100644 drivers/iio/multiplexer/Kconfig
+ create mode 100644 drivers/iio/multiplexer/Makefile
+ create mode 100644 drivers/iio/multiplexer/iio-mux.c
 
-I'd like to start a discussion about how to handle the LPC register space in
-the Aspeed SoC. There are a number of issues, largely concerned with the layout
-of the registers but also with the fact that LPC register state is used by the
-pinmux to determine some pin functionality.
-
-So the register layout is problematic. Registers for what I think are coherent
-pieces of functionality functionality are littered through the layout: Post
-Code Control registers (PCCR) are interleaved with LPC Host Controller
-registers (LHCR) which are interleaved with Host Interface Controller registers
-(HICR) which are segmented by LPC Snoop registers. It seems appropriate that
-the whole thing is represented as an MFD syscon, with the alternative being
-writing several distinct drivers that map some number of resources to access
-all of their registers.
-
-The disadvantage of not representing the LPC space as a syscon is the LPC Host
-Controller driver will need to provide accessor functions for the pinmux
-driver. Pinmux also depends on bits in the Display Controller, and would need
-similar accessors provided there. The idea of using syscon regmaps removes the
-need to write these accessors. If the changes between the AST2400 and AST2500
-are anything to go by, the pinmux complexity of the SoCs will only increase
-which will likely lead to the spread of these accessor functions.
-
-Yet another option would be to only expose the LPC Host Controller as a syscon
-instead of the whole LPC register space. I feel this is a little distasteful
-as the LHCRs are not in contiguous memory space; as mentioned above they are
-separated (seemingly randomly) by a PCCR. We could specify the LPC Host
-Controller as a syscon and provide multiple resources: The syscon
-implementation consumes the first resource which is what we desire here for use
-with pinmux, but the driver would be left to map any subsequent resources. That
-feels odd to me, but I'm interested in arguments for it.
-
-We could also map the LPC Host Controller syscon across the offending PCCR, but
-then any driver developed for the Post Code Controller would have to take a
-reference to the LPC Host Controller regmap. I feel like we might wind up with
-a syscon phandle spaghetti across the LPC controller if we use that approach.
-
-Finally, the LPC registers can be divided in two: one set for H8S/2168
-compatible LPC functionality, and the rest for Aspeed-specific registers.
-Division in two is required if we are going to throw a regmap over the LPC
-space as the H8S/2168 registers are 1-byte wide, whilst the Aspeed LPC
-registers are 4-bytes. As far as I can tell we can treat them as separate
-functionality without any loss; if there is a cross-over in configuration we
-can have each phandle the other in the devicetree.
-
-The final complication is the iBT device sits in the Aspeed-specific part of
-the LPC controller and has an upstream driver that isn't regmap-capable.
-Describing the LPC controller as a syscon will require some changes there, but
-I think we can make it work without too much trouble.
-
-What is the recommended approach to managing such hardware?
-
-Cheers,
-
-Andrew
-
-PS: I sent a devicetree binding document out for the LPC Host Controller as
-part of a recent pinmux series[1]. As it stands the example in the document
-doesn't cover the all the registers relevant to the LPC Host Controller, which
-was a motivation for trying to sort the problem out properly.
-
-[1] https://www.spinics.net/lists/arm-kernel/msg540084.html
-
- .../devicetree/bindings/mfd/aspeed-lpc.txt         | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+index 6743b18194fb..dcb541d0d70e 100644
+--- a/drivers/iio/Kconfig
++++ b/drivers/iio/Kconfig
+@@ -82,6 +82,7 @@ source "drivers/iio/humidity/Kconfig"
+ source "drivers/iio/imu/Kconfig"
+ source "drivers/iio/light/Kconfig"
+ source "drivers/iio/magnetometer/Kconfig"
++source "drivers/iio/multiplexer/Kconfig"
+ source "drivers/iio/orientation/Kconfig"
+ if IIO_TRIGGER
+    source "drivers/iio/trigger/Kconfig"
+diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+index 87e4c4369e2f..f9879c29cf6f 100644
+--- a/drivers/iio/Makefile
++++ b/drivers/iio/Makefile
+@@ -27,6 +27,7 @@ obj-y += humidity/
+ obj-y += imu/
+ obj-y += light/
+ obj-y += magnetometer/
++obj-y += multiplexer/
+ obj-y += orientation/
+ obj-y += potentiometer/
+ obj-y += pressure/
+diff --git a/drivers/iio/multiplexer/Kconfig b/drivers/iio/multiplexer/Kconfig
 new file mode 100644
-index 000000000000..36c8a9e08dc6
+index 000000000000..31cbe4509366
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -0,0 +1,28 @@
-+* Device tree bindings for the Aspeed LPC Controller
++++ b/drivers/iio/multiplexer/Kconfig
+@@ -0,0 +1,17 @@
++#
++# Multiplexer drivers
++#
++# When adding new entries keep the list in alphabetical order
 +
-+The Aspeed LPC controller contains registers for a variety of functions. Not
-+all registers for a function are contiguous, and some registers are referenced
-+by functions outside the LPC controller.
++menu "Multiplexers"
 +
-+Note that this is separate from the H8S/2168 compatible register set occupying
-+the start of the LPC controller address space.
++config IIO_MUX
++	tristate "IIO multiplexer driver"
++	depends on OF && MUX_GPIO
++	help
++	  Say yes here to build support for the IIO multiplexer.
 +
-+Some significant functions in the LPC controller:
++	  To compile this driver as a module, choose M here: the
++	  module will be called iio-mux.
 +
-+* LPC Host Controller
-+* Host Interface Controller
-+* iBT Controller
-+* SuperIO Scratch registers
++endmenu
+diff --git a/drivers/iio/multiplexer/Makefile b/drivers/iio/multiplexer/Makefile
+new file mode 100644
+index 000000000000..68be3c4abd07
+--- /dev/null
++++ b/drivers/iio/multiplexer/Makefile
+@@ -0,0 +1,6 @@
++#
++# Makefile for industrial I/O multiplexer drivers
++#
 +
-+Required properties:
-+- compatible:		"aspeed,ast2500-lpc", "syscon"
-+- reg:			contains offset/length value of the Aspeed-specific LPC
-+			memory region.
++# When adding new entries keep the list in alphabetical order
++obj-$(CONFIG_IIO_MUX) += iio-mux.o
+diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
+new file mode 100644
+index 000000000000..6f6644fb9342
+--- /dev/null
++++ b/drivers/iio/multiplexer/iio-mux.c
+@@ -0,0 +1,313 @@
++/*
++ * IIO multiplexer driver
++ *
++ * Copyright (C) 2016 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+Example:
++#include <linux/err.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/iio.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/mux.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
 +
-+lpc: lpc@1e7890a0 {
-+	compatible = "aspeed,ast2500-lpc", "syscon";
-+	reg = <0x1e789080 0x1e0>;
++struct mux_child {
++	u32 reg;
++
++	const char **ext_info;
++	int num_ext_info;
 +};
 +
++struct mux {
++	u32 cache;
++	struct mux_control *control;
++	struct iio_channel *parent;
++	struct iio_dev *indio_dev;
++	struct iio_chan_spec *c;
++	struct mux_child *child;
++};
++
++static int iio_mux_select(struct mux *mux, int idx)
++{
++	struct mux_child *child = &mux->child[idx];
++	int ret;
++	int i;
++
++	ret = mux_control_select(mux->control, child->reg);
++	if (ret < 0)
++		return ret;
++
++	if (mux->cache == child->reg)
++		return 0;
++
++	for (i = 0; i < child->num_ext_info - 1; i += 2) {
++		const char *value = child->ext_info[i + 1];
++
++		ret = iio_write_channel_ext_info(mux->parent,
++						 child->ext_info[i],
++						 value, strlen(value));
++		if (ret < 0) {
++			mux_control_deselect(mux->control);
++			return ret;
++		}
++	}
++	mux->cache = child->reg;
++
++	return 0;
++}
++
++static void iio_mux_deselect(struct mux *mux)
++{
++	mux_control_deselect(mux->control);
++}
++
++static int mux_read_raw(struct iio_dev *indio_dev,
++			struct iio_chan_spec const *chan,
++			int *val, int *val2, long mask)
++{
++	struct mux *mux = iio_priv(indio_dev);
++	int idx = chan - mux->c;
++	int ret;
++
++	ret = iio_mux_select(mux, idx);
++	if (ret < 0)
++		return ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		ret = iio_read_channel_raw(mux->parent, val);
++		break;
++
++	case IIO_CHAN_INFO_SCALE:
++		ret = iio_read_channel_scale(mux->parent, val, val2);
++		break;
++
++	default:
++		ret = -EINVAL;
++	}
++
++	iio_mux_deselect(mux);
++
++	return ret;
++}
++
++static int mux_read_avail(struct iio_dev *indio_dev,
++			  struct iio_chan_spec const *chan,
++			  const int **vals, int *type, int *length,
++			  long mask)
++{
++	struct mux *mux = iio_priv(indio_dev);
++	int idx = chan - mux->c;
++	int ret;
++
++	ret = iio_mux_select(mux, idx);
++	if (ret < 0)
++		return ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		*type = IIO_VAL_INT;
++		ret = iio_read_avail_channel_raw(mux->parent, vals, length);
++		break;
++
++	default:
++		ret = -EINVAL;
++	}
++
++	iio_mux_deselect(mux);
++
++	return ret;
++}
++
++static int mux_write_raw(struct iio_dev *indio_dev,
++			 struct iio_chan_spec const *chan,
++			 int val, int val2, long mask)
++{
++	struct mux *mux = iio_priv(indio_dev);
++	int idx = chan - mux->c;
++	int ret;
++
++	ret = iio_mux_select(mux, idx);
++	if (ret < 0)
++		return ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		ret = iio_write_channel_raw(mux->parent, val);
++		break;
++
++	default:
++		ret = -EINVAL;
++	}
++
++	iio_mux_deselect(mux);
++
++	return ret;
++}
++
++static const struct iio_info mux_info = {
++	.read_raw = mux_read_raw,
++	.read_avail = mux_read_avail,
++	.write_raw = mux_write_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static int mux_configure_channel(struct device *dev, struct mux *mux,
++				 struct device_node *child_np, int idx)
++{
++	struct mux_child *child = &mux->child[idx];
++	struct iio_chan_spec *c = &mux->c[idx];
++	const struct iio_chan_spec *pc = mux->parent->channel;
++	int i;
++	int ret;
++
++	c->indexed = 1;
++	c->channel = idx;
++	c->output = pc->output;
++	c->datasheet_name = child_np->name;
++
++	ret = iio_get_channel_type(mux->parent, &c->type);
++	if (ret < 0) {
++		dev_err(dev, "failed to get parent channel type\n");
++		return ret;
++	}
++
++	if (iio_channel_has_info(pc, IIO_CHAN_INFO_RAW))
++		c->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
++	if (iio_channel_has_info(pc, IIO_CHAN_INFO_SCALE))
++		c->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
++
++	if (iio_channel_has_available(pc, IIO_CHAN_INFO_RAW))
++		c->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
++
++	ret = of_property_read_u32(child_np, "reg", &child->reg);
++	if (ret < 0) {
++		dev_err(dev, "no reg property for node '%s'\n", child_np->name);
++		return ret;
++	}
++
++	for (i = 0; i < idx; ++i) {
++		if (mux->child[i].reg == child->reg) {
++			dev_err(dev, "double use of reg %d\n", child->reg);
++			return -EINVAL;
++		}
++	}
++
++	ret = of_property_read_string_array(child_np, "iio-ext-info", NULL, 0);
++	if (ret <= 0)
++		return 0;
++
++	child->ext_info = devm_kzalloc(dev, sizeof(*child->ext_info) * ret,
++				       GFP_KERNEL);
++	if (!child->ext_info)
++		return -ENOMEM;
++
++	child->num_ext_info = ret;
++	ret = of_property_read_string_array(child_np, "iio-ext-info",
++					    child->ext_info,
++					    child->num_ext_info);
++	if (ret != child->num_ext_info)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int mux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *child_np;
++	struct iio_dev *indio_dev;
++	struct mux *mux;
++	int children;
++	int sizeof_priv;
++	int idx;
++	int ret;
++
++	if (!np)
++		return -ENODEV;
++
++	children = of_get_child_count(np);
++	if (children <= 0) {
++		dev_err(dev, "not even a single child\n");
++		return -EINVAL;
++	}
++
++	sizeof_priv = sizeof(*mux);
++	sizeof_priv += sizeof(*mux->child) * children;
++	sizeof_priv += sizeof(*mux->c) * children;
++
++	indio_dev = devm_iio_device_alloc(dev, sizeof_priv);
++	if (!indio_dev)
++		return -ENOMEM;
++
++	mux = iio_priv(indio_dev);
++	mux->child = (struct mux_child *)(mux + 1);
++	mux->c = (struct iio_chan_spec *)(mux->child + children);
++
++	platform_set_drvdata(pdev, indio_dev);
++
++	mux->parent = devm_iio_channel_get(dev, "parent");
++	if (IS_ERR(mux->parent)) {
++		if (PTR_ERR(mux->parent) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get parent channel\n");
++		return PTR_ERR(mux->parent);
++	}
++
++	indio_dev->name = dev_name(dev);
++	indio_dev->dev.parent = dev;
++	indio_dev->info = &mux_info;
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->channels = mux->c;
++	indio_dev->num_channels = children;
++
++	idx = 0;
++	for_each_child_of_node(np, child_np) {
++		ret = mux_configure_channel(dev, mux, child_np, idx);
++		if (ret < 0)
++			return ret;
++		idx++;
++	}
++
++	mux->control = devm_mux_control_get(dev, "mux");
++	if (IS_ERR(mux->control)) {
++		if (PTR_ERR(mux->control) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get control-mux\n");
++		return PTR_ERR(mux->control);
++	}
++
++	ret = devm_iio_device_register(dev, indio_dev);
++	if (ret) {
++		dev_err(dev, "failed to register iio device\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id mux_match[] = {
++	{ .compatible = "iio-mux" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, mux_match);
++
++static struct platform_driver mux_driver = {
++	.probe = mux_probe,
++	.driver = {
++		.name = "iio-mux",
++		.of_match_table = mux_match,
++	},
++};
++module_platform_driver(mux_driver);
++
++MODULE_DESCRIPTION("IIO multiplexer driver");
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_LICENSE("GPL v2");
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
