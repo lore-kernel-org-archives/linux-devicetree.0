@@ -1,75 +1,94 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/4] PCI: dra7xx: Add support to force RC to work in GEN1
- mode
-Date: Wed, 16 Nov 2016 22:14:00 +0530
-Message-ID: <dda43649-0afd-2bd0-33ba-c95067104244@ti.com>
-References: <1476190715-16884-1-git-send-email-kishon@ti.com>
- <1476190715-16884-4-git-send-email-kishon@ti.com>
- <20161111211528.GF9868@bhelgaas-glaptop.roam.corp.google.com>
- <8ecc1325-365d-bdec-d435-729e0ea49d20@ti.com>
- <20161114212400.GA19092@bhelgaas-glaptop.roam.corp.google.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net 1/3] net: phy: realtek: add eee advertisement disable
+ options
+Date: Wed, 16 Nov 2016 09:01:13 -0800
+Message-ID: <d4e04f8a-77c5-f43e-5c24-d1238925543a@gmail.com>
+References: <1479220154-25851-1-git-send-email-jbrunet@baylibre.com>
+ <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
+ <20161115163036.GB23231@lunn.ch>
+ <476b72f3-5efe-3551-6c24-0e378d655a0f@gmail.com>
+ <1479290189.17538.25.camel@baylibre.com> <20161116132337.GD19962@lunn.ch>
+ <1479307890.17538.40.camel@baylibre.com> <20161116150628.GI23231@lunn.ch>
+ <1479310731.17538.53.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114212400.GA19092-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1479310731.17538.53.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On Tuesday 15 November 2016 02:54 AM, Bjorn Helgaas wrote:
-> [+cc Shawn]
-> 
-> On Sat, Nov 12, 2016 at 12:40:10PM +0530, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Saturday 12 November 2016 02:45 AM, Bjorn Helgaas wrote:
->>> Hi Kishon,
+On 11/16/2016 07:38 AM, Jerome Brunet wrote:
+> On Wed, 2016-11-16 at 16:06 +0100, Andrew Lunn wrote:
+>> On Wed, Nov 16, 2016 at 03:51:30PM +0100, Jerome Brunet wrote:
 >>>
->>> On Tue, Oct 11, 2016 at 06:28:34PM +0530, Kishon Vijay Abraham I wrote:
->>>> PCIe in AM57x/DRA7x devices is by default
->>>> configured to work in GEN2 mode.  However there
->>>> may be situations when working in GEN1 mode is
->>>> desired. One example is limitation i925 (PCIe GEN2
->>>> mode not supported at junction temperatures < 0C).
+>>> On Wed, 2016-11-16 at 14:23 +0100, Andrew Lunn wrote:
 >>>>
->>>> Add support to force Root Complex to work in GEN1
->>>> mode if so desired, but don't force GEN1 mode on
->>>> any board just yet.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/pci/ti-pci.txt |    1 +
->>>>  drivers/pci/host/pci-dra7xx.c                    |   27 ++++++++++++++++++++++
->>>>  2 files changed, 28 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>> index 60e2516..a3d6ca3 100644
->>>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->>>> @@ -25,6 +25,7 @@ PCIe Designware Controller
->>>>  
->>>>  Optional Property:
->>>>   - gpios : Should be added if a gpio line is required to drive PERST# line
->>>> + - ti,pcie-is-gen1 : Force the PCIe controller to work in GEN1 (2.5 GT/s).
+>>>>>
+>>>>>
+>>>>> There two kind of PHYs supporting eee, the one advertising eee
+>>>>> by
+>>>>> default (like realtek) and the one not advertising it (like
+>>>>> micrel).
 >>>
->>> Can we use "max-link-speed" so it's similar to imx6?
+>>> This is just the default register value.
+>>>
+>>>>
+>>>>
+>>>> I don't know too much about EEE. So maybe a dumb question. Does
+>>>> the
+>>>> MAC need to be involved? Or is it just the PHY?
+>>>>
+>>>> If the MAC needs to be involved, the PHY should not be
+>>>> advertising
+>>>> EEE
+>>>> unless the MAC asks for it by calling phy_init_eee(). If this is
+>>>> true,
+>>>> maybe we need to change the realtek driver, and others in that
+>>>> class.
+>>>
+>>> As far I understand, the advertised capabilities are exchanged
+>>> during
+>>> the auto-negotiation.
+>>>
+>>> At this stage, if the advertisement is disabled (regarless of the
+>>> actual support) on either side of the link, there will be no low
+>>> power
+>>> idle state on the Tx nor the Rx path.
+>>>
+>>> If the advertisement is enabled on both side but we don't call
+>>> phy_init_eee, I suppose Tx won't enter LPI, but Rx could.
 >>
->> yeah, maybe we should make it a generic PCI property?
+>> What i was trying to find out is, if the MAC needs to support EEE as
+>> well as the PHY, what happens when the MAC does not support EEE, but
+>> the PHYs do negotiate EEE? Does it break?
 > 
-> I forgot that Shawn has already done this!  I had already merged those
-> patches on pci/host-rockchip, but I moved them to pci/host since
-> they're not Rockchip-specific.  Can you take a look at that and see if
-> you can do what you need based on that pci/host branch?
+> Interesting question. In a regular case, I suppose it should be fine.
+> As you would have LPI only on the Rx path this should be transparent to
+> the MAC. That's my understanding. Maybe people knowing EEE better than
+> me could confirm (or not) ? Peppe? Alexandre?
 
-Sure, I'll look at that on Monday when I'm back from vacation.
+EEE is a MAC and PHY feature, and both need to agree on what is enabled,
+especially in the transmit path because the way packets may be
+transmitted with or without EEE can be done differently at the HW level
+(faster/slower return to idle, different clock source).
 
-Cheers
-Kishon
+> 
+> I just checked with the OdroidC2, I disabled eee support by forcing
+> "dma_cap.eee = 0" in stmmac_get_hw_features. As expected, no tx_LPI
+> interrupts but plenty of rx_LPI interrupts.
+> 
+> What was not expected is test failing like before.
+> So in our case, having LPI on the Rx path is fine for receiving data,
+> but not for sending.
+
+OK, which really sounds like a potential interoperability problem, or
+just the Realtek PHY with EEE enabled acting funky (irrespective of
+being attached to stmmac).
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
