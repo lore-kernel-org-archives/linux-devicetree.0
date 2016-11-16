@@ -1,120 +1,94 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 2/2] ARM: dts: sun6i: hummingbird-a31: Enable
- display output through VGA bridge
-Date: Wed, 16 Nov 2016 23:42:32 +0800
-Message-ID: <20161116154232.872-3-wens@csie.org>
-References: <20161116154232.872-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "Nayak, Rajendra" <rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 1/3] bus: simple-pm: add support to pm clocks
+Date: Wed, 16 Nov 2016 21:20:15 +0530
+Message-ID: <d1bc3663-5824-32f8-a20f-1c5e28466a15@codeaurora.org>
+References: <1479122155-13393-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1479122155-13393-2-git-send-email-srinivas.kandagatla@linaro.org>
+ <20161114221447.GH9868@bhelgaas-glaptop.roam.corp.google.com>
+ <CAMuHMdUJ8Qn=dR_OMob4BO_4RmY5XemTf_UGM_oJ2VYtBa7Jiw@mail.gmail.com>
+ <d61f62d1-7a7e-6d91-d278-0fd922cd77b5@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3H4WHAQKGQEMY2VWYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161116154232.872-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <d61f62d1-7a7e-6d91-d278-0fd922cd77b5@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: svarbanov@mm-sol.com, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Simon Horman <horms+renesas@verge.net.au>, Linux PM list <linux-pm@vger.kernel.org>, "Nayak, Rajendra" <rjendra@qti.qualcomm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Hummingbird A31 board has a VGA DAC which converts RGB output
-from the LCD interface to VGA analog signals.
+Hey Srini,
 
-Add nodes for the VGA DAC, its power supply, and enable this part
-of the display pipeline.
+On 11/15/2016 4:55 PM, Srinivas Kandagatla wrote:
+> + Rajendra (qcom,gdsc author)
+[]..
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 67 +++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+>>
+>>>> ---
+>>>>  drivers/bus/simple-pm-bus.c | 13 ++++++++++++-
+>>>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+>>>> index c5eb46c..63b7e8c 100644
+>>>> --- a/drivers/bus/simple-pm-bus.c
+>>>> +++ b/drivers/bus/simple-pm-bus.c
+>>>> @@ -11,6 +11,7 @@
+>>>>  #include <linux/module.h>
+>>>>  #include <linux/of_platform.h>
+>>>>  #include <linux/platform_device.h>
+>>>> +#include <linux/pm_clock.h>
+>>>>  #include <linux/pm_runtime.h>
+>>>>
+>>>>
+>>>> @@ -22,17 +23,26 @@ static int simple_pm_bus_probe(struct
+>>>> platform_device *pdev)
+>>>>
+>>>>       pm_runtime_enable(&pdev->dev);
+>>>>
+>>>> -     if (np)
+>>>> +     if (np) {
+>>>> +             of_pm_clk_add_clks(&pdev->dev);
+>>
+>> This should work out-of-the-box (that's the actual purpose of this
+>> driver),
+>> if the platform code that registers your PM Domain would take care
+>> of registering the clocks needed for PM management of the bus.
+>
+> Yep, if the pm domain provider takes care of the bus clks, then it would
+> work.
+>
+> Am guessing that the clocks property in the DT node would be read by the
+> PM domain provider and enable/disable during attach/detach callbacks.
+> If that is true, then any device tree nodes which are not children of
+> "simple-pm-bus" and consumers of power-domain provider would enable all
+> (including non-bus clks) clks twice. Once in the power-domain provider
+> and once in the actual driver. Is this expected behavior from
+> power-domains in general?
+>
+>>
+>> Adding of_pm_clk_add_clks() here will start managing all clocks of the
+>> bus,
+>> which may not be wanted on all platforms.
+>>
+> That was the purpose.
+>
+>
+> Rajendra,
+> Looks like qcom gdsc pm domain provider driver does not handle bus clks
+> along with power-domain, Is this something we should do? Or the bus
+> driver take care of it?
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 62287bd2aeb5..b168d6df2b30 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -63,6 +63,60 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	vga-connector {
-+		compatible = "vga-connector";
-+
-+		port {
-+			vga_con_in: endpoint {
-+				remote-endpoint = <&vga_dac_out>;
-+			};
-+		};
-+	};
-+
-+	vga-dac {
-+		compatible = "dumb-vga-dac";
-+		vdd-supply = <&reg_vga_3v3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+
-+				vga_dac_in: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&tcon0_out_vga>;
-+				};
-+			};
-+
-+			port@1 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <1>;
-+
-+				vga_dac_out: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vga_con_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	reg_vga_3v3: vga_3v3_regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vga-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		enable-active-high;
-+		gpio = <&pio 7 25 GPIO_ACTIVE_HIGH>; /* PH25 */
-+	};
-+
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 */
-@@ -253,6 +307,19 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd0_rgb888_pins>;
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_vga: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&vga_dac_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.10.2
+I did post some patches to support handling of clocks associated with
+gdscs [1], but it got dropped at that point since there wasn't a
+real user, besides there were some open issues wrt the handling of
+!CONFIG_PM cases etc.
+I will revive and repost those patches again now based on the
+discussions last time around.
+
+[1] 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/362492.html
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
