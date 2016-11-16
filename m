@@ -1,110 +1,240 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [upstream-release] [PATCH 1/2] drivers: usb: phy: Add qoriq usb
- 3.0	phy driver support
-Date: Wed, 16 Nov 2016 07:22:09 +0000
-Message-ID: <HE1PR0401MB1931C92287A8E92BC6B52B1991BE0@HE1PR0401MB1931.eurprd04.prod.outlook.com>
-References: <1479101215-26954-1-git-send-email-sriram.dash@nxp.com>
- <1479101215-26954-2-git-send-email-sriram.dash@nxp.com>
- <DB5PR0401MB1928CA058CC01243457F124791BC0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
- <DB5PR0401MB1925FB1FE45C15B0671E46D1F5BF0@DB5PR0401MB1925.eurprd04.prod.outlook.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v7 08/14] mmc: sdhci-msm: Implement set_clock callback for
+ sdhci-msm
+Date: Wed, 16 Nov 2016 09:42:45 +0200
+Message-ID: <875c9051-bd8b-60cf-82e4-3e26612a8623@intel.com>
+References: <1479103248-9491-1-git-send-email-riteshh@codeaurora.org>
+ <1479103248-9491-9-git-send-email-riteshh@codeaurora.org>
+ <20161114193004.GI5177@codeaurora.org>
+ <3c1a7c72-0ac1-8ed0-87fc-238331f0645b@codeaurora.org>
+ <d723b9fb-0cfc-e72b-ad78-36c8b996b012@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sriram Dash <sriram.dash@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, Suresh Gupta <suresh.gupta@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "pku.leo@gmail.com" <pku.leo@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <d723b9fb-0cfc-e72b-ad78-36c8b996b012@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, ulf.hansson@linaro.org
+Cc: linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com, andy.gross@linaro.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, kdorfman@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2016 06:39 AM, Sriram Dash wrote:
->> From: Scott Wood
->> On 11/13/2016 11:27 PM, Sriram Dash wrote:
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
->>> b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
->>> new file mode 100644
->>> index 0000000..d934c80
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
->>> @@ -0,0 +1,36 @@
->>> +Driver for Freescale USB 3.0 PHY
->>> +
->>> +Required properties:
->>> +
->>> +- compatible :	fsl,qoriq-usb3-phy
+On 16/11/16 06:42, Ritesh Harjani wrote:
+> Hi,
+> 
+> On 11/15/2016 10:40 AM, Ritesh Harjani wrote:
+>> Hi Stephen/Adrian,
+>>
+>> On 11/15/2016 1:07 AM, Stephen Boyd wrote:
+>>> On 11/14, Ritesh Harjani wrote:
+>>>> @@ -577,6 +578,90 @@ static unsigned int
+>>>> sdhci_msm_get_min_clock(struct sdhci_host *host)
+>>>>      return SDHCI_MSM_MIN_CLOCK;
+>>>>  }
+>>>>
+>>>> +/**
+>>>> + * __sdhci_msm_set_clock - sdhci_msm clock control.
+>>>> + *
+>>>> + * Description:
+>>>> + * Implement MSM version of sdhci_set_clock.
+>>>> + * This is required since MSM controller does not
+>>>> + * use internal divider and instead directly control
+>>>> + * the GCC clock as per HW recommendation.
+>>>> + **/
+>>>> +void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
+>>>> +{
+>>>> +    u16 clk;
+>>>> +    unsigned long timeout;
+>>>> +
+>>>> +    /*
+>>>> +     * Keep actual_clock as zero -
+>>>> +     * - since there is no divider used so no need of having
+>>>> actual_clock.
+>>>> +     * - MSM controller uses SDCLK for data timeout calculation. If
+>>>> +     *   actual_clock is zero, host->clock is taken for calculation.
+>>>> +     */
+>>>> +    host->mmc->actual_clock = 0;
+>>>> +
+>>>> +    sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+>>>> +
+>>>> +    if (clock == 0)
+>>>> +        return;
+>>>> +
+>>>> +    /*
+>>>> +     * MSM controller do not use clock divider.
+>>>> +     * Thus read SDHCI_CLOCK_CONTROL and only enable
+>>>> +     * clock with no divider value programmed.
+>>>> +     */
+>>>> +    clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+>>>> +
+>>>> +    clk |= SDHCI_CLOCK_INT_EN;
+>>>> +    sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>>>> +
+>>>> +    /* Wait max 20 ms */
+>>>> +    timeout = 20;
+>>>> +    while (!((clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL))
+>>>> +        & SDHCI_CLOCK_INT_STABLE)) {
+>>>> +        if (timeout == 0) {
+>>>> +            pr_err("%s: Internal clock never stabilised\n",
+>>>> +                   mmc_hostname(host->mmc));
+>>>> +            return;
+>>>> +        }
+>>>> +        timeout--;
+>>>> +        mdelay(1);
+>>>> +    }
+>>>> +
+>>>> +    clk |= SDHCI_CLOCK_CARD_EN;
+>>>> +    sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>>>
+>>> This is almost a copy/paste of sdhci_set_clock(). Can we make
+>>> sdhci_set_clock() call a __sdhci_set_clock() function that takes
+>>> unsigned int clock, and also a flag indicating if we want to set
+>>> the internal clock divider or not? Then we can call
+>>> __sdhci_set_clock() from sdhci_set_clock() with (clock, true) as
+>>> arguments and (clock, false).
+> Actually what you may be referring here is some sort of quirks which is not
+> entertained any more for sdhci driver.
+> sdhci is tending towards becoming a library and hence such changes are
+> restricted.
+> 
+> But I think we may do below changes to avoid duplication of code which
+> enables the sdhci internal clock and waits for internal clock to be stable.
+> 
+> Adrian, could you please tell if this should be ok?
+
+That seems fine, but the name seems too long - how about changing
+sdhci_set_clock_enable to sdhci_enable_clk.
+
+> Then we may be able to call for sdhci_set_clock_enable function from
+> sdhci_msm_set_clock.
+> 
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 42ef3eb..28e605c 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1343,19 +1343,8 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned
+> int clock,
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_calc_clk);
+> 
+> -void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> +void sdhci_set_clock_enable(struct sdhci_host *host, unsigned short clk)
+>  {
+> -       u16 clk;
+> -       unsigned long timeout;
+> -
+> -       host->mmc->actual_clock = 0;
+> -
+> -       sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> -
+> -       if (clock == 0)
+> -               return;
+> -
+> -       clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+> 
+>         clk |= SDHCI_CLOCK_INT_EN;
+>         sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> @@ -1377,6 +1366,24 @@ void sdhci_set_clock(struct sdhci_host *host,
+> unsigned int clock)
+>         clk |= SDHCI_CLOCK_CARD_EN;
+>         sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_set_clock_enable);
+> +
+> +void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +       u16 clk;
+> +       unsigned long timeout;
+> +
+> +       host->mmc->actual_clock = 0;
+> +
+> +       sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +       if (clock == 0)
+> +               return;
+> +
+> +       clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+> +
+> +       sdhci_set_clock_enable(host, clk);
+> +}
+>  EXPORT_SYMBOL_GPL(sdhci_set_clock);
+> 
+>  static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 766df17..43382e1 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -681,6 +681,7 @@ static inline bool sdhci_sdio_irq_enabled(struct
+> sdhci_host *host)
+>  u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>                    unsigned int *actual_clock);
+>  void sdhci_set_clock(struct sdhci_host *host, unsigned int clock);
+> +void sdhci_set_clock_enable(struct sdhci_host *host, unsigned short clk);
+>  void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>                      unsigned short vdd);
+>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+> 
+> 
+> 
+>> Adrian,
+>> Could you please comment here ?
+>>
+>>>
+>>>> +}
+>>>> +
+>>>> +/* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
+>>>> +static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned
+>>>> int clock)
+>>>> +{
+>>>> +    struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>>> +    struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>>>> +    int rc;
+>>>> +
+>>>> +    if (!clock) {
+>>>> +        msm_host->clk_rate = clock;
+>>>> +        goto out;
+>>>> +    }
+>>>> +
+>>>> +    spin_unlock_irq(&host->lock);
+>>>> +    if (clock != msm_host->clk_rate) {
+>>>
+>>> Why do we need to check here? Can't we call clk_set_rate()
+>>> Unconditionally?
+>> Since it may so happen that above layers may call for ->set_clock
+>> function with same requested clock more than once, hence we cache the
+>> host->clock here.
+>> Also, since requested clock (host->clock) can be say 400Mhz but the
+>> actual pltfm supported clock would be say 384MHz.
+>>
+>>
+>>>
+>>>> +        rc = clk_set_rate(msm_host->clk, clock);
+>>>> +        if (rc) {
+>>>> +            pr_err("%s: Failed to set clock at rate %u\n",
+>>>> +                   mmc_hostname(host->mmc), clock);
+>>>> +            spin_lock_irq(&host->lock);
+>>>> +            goto out;
+>>>
+>>> Or replace the above two lines with goto err;
+>> Ok, I will have another label out_lock instead of err.
+>>>
+>>>> +        }
+>>>> +        msm_host->clk_rate = clock;
+>>>> +        pr_debug("%s: Setting clock at rate %lu\n",
+>>>> +             mmc_hostname(host->mmc), clk_get_rate(msm_host->clk));
+>>>> +    }
+>>>
+>>> And put an err label here.
+>> will put the label here as out_lock;
+>>>
+>>>> +    spin_lock_irq(&host->lock);
+>>>> +out:
+>>>> +    __sdhci_msm_set_clock(host, clock);
+>>>> +}
+>>>> +
+>>>>  static const struct of_device_id sdhci_msm_dt_match[] = {
+>>>>      { .compatible = "qcom,sdhci-msm-v4" },
+>>>>      {},
+>>>
 >>
 > 
-> Hi Scott,
-> 
->> This is a very vague compatible.  Are there versioning registers within this register
->> block?
->>
-> 
-> There are versioning registers for the phy (1.0 and 1.1). But the current erratum
-> A008751 does not require the mentioning of the version numbers. Was planning
-> to take care of the versioning when there is code diversity on the basis of the
-> version number.
-
-That is not how device tree bindings work.  The describe the hardware,
-not the driver.
-
-That said, is the block version sufficient to tell whether a given chip
-has this erratum?  If so, you don't need a special property for the
-erratum.  If not, what is different about the PHY that is not described
-by the versioning?
-
-In any case, it would be nice to mention the version register and its
-offset in the binding, just so that it becomes part of the definition of
-this compatible string, and if we come out with some QorIQ chip with a
-USB3 PHY that is totally different and doesn't have that version
-register, it'll be clear that it needs a different compatible.
-
->>> +static inline u32 qoriq_usb3_phy_readl(void __iomem *addr, u32
->>> +offset) {
->>> +	return __raw_readl(addr + offset);
->>> +}
->>> +
->>> +static inline void qoriq_usb3_phy_writel(void __iomem *addr, u32 offset,
->>> +	u32 data)
->>> +{
->>> +	__raw_writel(data, addr + offset);
->>> +}
->>
->> Why raw?  Besides missing barriers, this will cause the accesses to be native-endian
->> which is not correct.
->>
-> 
-> The only reason for __raw_writel is to make the code faster.
-
-Does that really matter here?
-
-> However, shall I use writel(with both barriers and byte swap) instead 
-
-Yes, if the registers are little-endian on all chips.
-
-> and then make appropriate changes in the value 32'h27672B2A?
-
-Not sure what you mean here.
-
-> In my knowledge, there are more than 5 errata in pipeline,
-
-Then please get all of these errata described in the device tree ASAP
-(unless their presence can be reliably inferred from the block version,
-as discussed above).
-
-> However, in future, if any other erratum comes up, and it has to be applied
-> at any point other than during init, then the variable has to be added in
-> qoriq_usb3_phy struct and the property has to be read separately.
-
-Or if the erratum is detected by some means other than a device tree
-property...
-
--Scott
