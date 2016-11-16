@@ -1,55 +1,45 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: ethernet: faraday: To support device tree usage.
-Date: Wed, 16 Nov 2016 15:37:15 +0100
-Message-ID: <20161116143715.GH19962@lunn.ch>
-References: <1479285795-3105-1-git-send-email-green.hu@gmail.com>
- <20161116134715.GE19962@lunn.ch>
- <CAEbi=3esyRi4cnUNf4uPKCQtyRekBRo81Frd=BSJy8qf=3uc+A@mail.gmail.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
+Date: Wed, 16 Nov 2016 16:39:28 +0200
+Message-ID: <506ba969-d753-d026-5357-3329a750ceaf@ti.com>
+References: <cover.1479142062.git.jsarha@ti.com>
+ <b4589c6a3275c0c7c8e3c379faedba3ce1423c5a.1479142062.git.jsarha@ti.com>
+ <20161116133331.miem6us563uu62t7@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEbi=3esyRi4cnUNf4uPKCQtyRekBRo81Frd=BSJy8qf=3uc+A@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161116133331.miem6us563uu62t7@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 10:26:52PM +0800, Greentime Hu wrote:
-> On Wed, Nov 16, 2016 at 9:47 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Wed, Nov 16, 2016 at 04:43:15PM +0800, Greentime Hu wrote:
-> >> To support device tree usage for ftmac100.
-> >>
-> >> Signed-off-by: Greentime Hu <green.hu@gmail.com>
-> >> ---
-> >>  drivers/net/ethernet/faraday/ftmac100.c |    7 +++++++
-> >>  1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-> >> index dce5f7b..81dd9e1 100644
-> >> --- a/drivers/net/ethernet/faraday/ftmac100.c
-> >> +++ b/drivers/net/ethernet/faraday/ftmac100.c
-> >> @@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
-> >>       return 0;
-> >>  }
-> >>
-> >> +static const struct of_device_id mac_of_ids[] = {
-> >> +     { .compatible = "andestech,atmac100" },
-> >> +     { }
-> >
-> > andestech is not in
-> > Documentation/devicetree/bindings/vendor-prefixes.txt Please provide a
-> > separate patch adding it.
-> OK. I will provide another patch to add andestech.
+On 11/16/16 15:33, Rob Herring wrote:
+>> +Optional properties
+>> > +	- reg: I2C address. If and only if present the driver node
+>> > +	  should be placed into the i2c controller node where the
+>> > +	  tfp410 i2c is connected to (the current implementation does
+>> > +	  not yet support this).
+> So this chip can work without programming I guess?
 > 
-> > Humm, why andestech? Why not something based around faraday
-> > technology?
-> It is because we use the same ftmac100 IP provided from faraday
-> technology but I am now using it in andestech SoC.
 
-Please make sure you get an acked-by: from the device tree
-maintainers. They might want you to use faraday, since that is the
-original IP provider. For example, all Synopsys licensed IP uses
-"snps,XXX", not the SoC vendor with the license.
+Yes. Just powering it up is enough for most application.
 
-	    Andrew
+> reg should only be not present if I2C is not connected in the design. It 
+> can't be a function of what the driver supports. In otherwords, you 
+> can't be moving this node around based on when you add I2C control.
+> 
+
+Ok, I'll try to implement a dummy i2c driver at the same time too. I can
+not test anything related to it because I do not have a piece of HW with
+tfp410 i2c wires connected, but it should not matter as long as I am
+able to probe it as a i2c client.
+
+Thanks,
+Jyri
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
