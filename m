@@ -1,90 +1,58 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 3/4] DW DMAC: add hw-llp property to device tree
-Date: Wed, 16 Nov 2016 16:56:54 +0300
-Message-ID: <1479304615-11360-4-git-send-email-Eugeniy.Paltsev@synopsys.com>
-References: <1479304615-11360-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479304615-11360-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com, vireshk@kernel.org, dan.j.williams@intel.com, vinod.koul@intel.com, dmaengine@vger.kernel.org, linux-snps-arc@lists.infradead.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] remoteproc: qcom: Encapsulate pvt data structure
+ for q6v56 hexagon.
+Date: Wed, 16 Nov 2016 19:32:44 +0530
+Message-ID: <a29bce91-1300-0728-51dd-7d009d9e056b@codeaurora.org>
+References: <1478268057-11847-1-git-send-email-akdwived@codeaurora.org>
+ <1478268057-11847-2-git-send-email-akdwived@codeaurora.org>
+ <20161110203013.fphvzd4df3zvjdfi@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161110203013.fphvzd4df3zvjdfi@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Several versions of DW DMAC have multi block transfers hardware
-support. Hardware support of multi block transfers is disabled
-by default if we use DT to configure DMAC and software emulation
-of multi block transfers used instead.
-Add hw-llp property, so it is possible to enable hardware
-multi block transfers (if present) via DT.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- drivers/dma/dw/core.c                | 2 +-
- drivers/dma/dw/platform.c            | 5 +++++
- include/linux/platform_data/dma-dw.h | 4 ++--
- 3 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index c2c0a61..e3ff4ea 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1569,7 +1569,7 @@ int dw_dma_probe(struct dw_dma_chip *chip)
- 				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
- 		} else {
- 			dwc->block_size = pdata->block_size;
--			dwc->nollp = pdata->is_nollp;
-+			dwc->nollp = pdata->hw_llp[i];
- 		}
- 	}
- 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index daeceac..2722e60 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -151,6 +151,11 @@ dw_dma_parse_dt(struct platform_device *pdev)
- 			pdata->data_width[tmp] = BIT(arr[tmp] & 0x07);
- 	}
- 
-+	if (!of_property_read_u32_array(np, "hw-llp", arr, nr_masters)) {
-+		for (tmp = 0; tmp < nr_masters; tmp++)
-+			pdata->hw_llp[tmp] = arr[tmp];
-+	}
-+
- 	return pdata;
- }
- #else
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index 5f0e11e..5bc8124 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -40,19 +40,18 @@ struct dw_dma_slave {
-  * @is_private: The device channels should be marked as private and not for
-  *	by the general purpose DMA channel allocator.
-  * @is_memcpy: The device channels do support memory-to-memory transfers.
-- * @is_nollp: The device channels does not support multi block transfers.
-  * @chan_allocation_order: Allocate channels starting from 0 or 7
-  * @chan_priority: Set channel priority increasing from 0 to 7 or 7 to 0.
-  * @block_size: Maximum block size supported by the controller
-  * @nr_masters: Number of AHB masters supported by the controller
-  * @data_width: Maximum data width supported by hardware per AHB master
-  *		(in bytes, power of 2)
-+ * @hw_llp: Multi block transfers supported by hardware per AHB master.
-  */
- struct dw_dma_platform_data {
- 	unsigned int	nr_channels;
- 	bool		is_private;
- 	bool		is_memcpy;
--	bool		is_nollp;
- #define CHAN_ALLOCATION_ASCENDING	0	/* zero to seven */
- #define CHAN_ALLOCATION_DESCENDING	1	/* seven to zero */
- 	unsigned char	chan_allocation_order;
-@@ -62,6 +61,7 @@ struct dw_dma_platform_data {
- 	unsigned int	block_size;
- 	unsigned char	nr_masters;
- 	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
-+	unsigned char	hw_llp[DW_DMA_MAX_NR_MASTERS];
- };
- 
- #endif /* _PLATFORM_DATA_DMA_DW_H */
--- 
-2.5.5
+On 11/11/2016 2:00 AM, Rob Herring wrote:
+> On Fri, Nov 04, 2016 at 07:30:54PM +0530, Avaneesh Kumar Dwivedi wrote:
+>> Encapsulate resources specific to each version of hexagon chip to
+>> device node to avoid conditional check for manipulation of those
+>> resources in driver code.
+>>
+>> Signed-off-by: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
+>>   drivers/remoteproc/qcom_q6v5_pil.c                 | 137 ++++++++++++++++++---
+>>   2 files changed, 120 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> index 57cb49e..cbc165c 100644
+>> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> @@ -8,6 +8,7 @@ on the Qualcomm Hexagon core.
+>>   	Value type: <string>
+>>   	Definition: must be one of:
+>>   		    "qcom,q6v5-pil"
+>> +		"qcom,q6v56-pil"
+> Perhaps some explanation in the commit message about what these magic
+> numbers mean?
+
+     "v56" represent class of hexagon chip, which again is 
+differentiated based on version number. Two
+     different MSM SOC may use same class of hexagon chip. example is as 
+below.
+
+     msm8974  q6v5 version  5.0.0
+     msm8916  q6v5 version  5.1.1
+>
+> Rob
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
