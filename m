@@ -1,77 +1,80 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net 2/3] dt-bindings: net: add DT bindings for realtek
- phys
-Date: Wed, 16 Nov 2016 16:20:11 +0100
-Message-ID: <1479309611.17538.41.camel@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH net 1/3] net: phy: realtek: add eee advertisement
+ disable options
+Date: Wed, 16 Nov 2016 16:38:51 +0100
+Message-ID: <1479310731.17538.53.camel@baylibre.com>
 References: <1479220154-25851-1-git-send-email-jbrunet@baylibre.com>
-         <1479220154-25851-3-git-send-email-jbrunet@baylibre.com>
-         <20161116151104.5sfcqjyvrzre5pkn@rob-hp-laptop>
+         <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
+         <20161115163036.GB23231@lunn.ch>
+         <476b72f3-5efe-3551-6c24-0e378d655a0f@gmail.com>
+         <1479290189.17538.25.camel@baylibre.com> <20161116132337.GD19962@lunn.ch>
+         <1479307890.17538.40.camel@baylibre.com> <20161116150628.GI23231@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161116151104.5sfcqjyvrzre5pkn@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161116150628.GI23231@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Andre Roth <neolynx@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-11-16 at 09:11 -0600, Rob Herring wrote:
-> On Tue, Nov 15, 2016 at 03:29:13PM +0100, Jerome Brunet wrote:
+On Wed, 2016-11-16 at 16:06 +0100, Andrew Lunn wrote:
+> On Wed, Nov 16, 2016 at 03:51:30PM +0100, Jerome Brunet wrote:
 > > 
-> > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/net/realtek-phy.txt          | 20
-> > ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/realtek-
-> > phy.txt
+> > On Wed, 2016-11-16 at 14:23 +0100, Andrew Lunn wrote:
+> > > 
+> > > > 
+> > > > 
+> > > > There two kind of PHYs supporting eee, the one advertising eee
+> > > > by
+> > > > default (like realtek) and the one not advertising it (like
+> > > > micrel).
 > > 
-> > diff --git a/Documentation/devicetree/bindings/net/realtek-phy.txt
-> > b/Documentation/devicetree/bindings/net/realtek-phy.txt
-> > new file mode 100644
-> > index 000000000000..dc2845a6b387
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/realtek-phy.txt
-> > @@ -0,0 +1,20 @@
-> > +Realtek Ethernet PHY
-> > +
-> > +Some boards require special tuning values of the phy.
-> > +
-> > +Optional properties:
-> > +
-> > +realtek,disable-eee-1000t:
-> > +realtek,disable-eee-100tx:
+> > This is just the default register value.
+> > 
+> > > 
+> > > 
+> > > I don't know too much about EEE. So maybe a dumb question. Does
+> > > the
+> > > MAC need to be involved? Or is it just the PHY?
+> > > 
+> > > If the MAC needs to be involved, the PHY should not be
+> > > advertising
+> > > EEE
+> > > unless the MAC asks for it by calling phy_init_eee(). If this is
+> > > true,
+> > > maybe we need to change the realtek driver, and others in that
+> > > class.
+> > 
+> > As far I understand, the advertised capabilities are exchanged
+> > during
+> > the auto-negotiation.
+> > 
+> > At this stage, if the advertisement is disabled (regarless of the
+> > actual support) on either side of the link, there will be no low
+> > power
+> > idle state on the Tx nor the Rx path.
+> > 
+> > If the advertisement is enabled on both side but we don't call
+> > phy_init_eee, I suppose Tx won't enter LPI, but Rx could.
 > 
-> Make these generic/common.
-Same feedback from the net folks. Will do.
-Thx Rob
+> What i was trying to find out is, if the MAC needs to support EEE as
+> well as the PHY, what happens when the MAC does not support EEE, but
+> the PHYs do negotiate EEE? Does it break?
+
+Interesting question. In a regular case, I suppose it should be fine.
+As you would have LPI only on the Rx path this should be transparent to
+the MAC. That's my understanding. Maybe people knowing EEE better than
+me could confirm (or not) ? Peppe? Alexandre?
+
+I just checked with the OdroidC2, I disabled eee support by forcing
+"dma_cap.eee = 0" in stmmac_get_hw_features. As expected, no tx_LPI
+interrupts but plenty of rx_LPI interrupts.
+
+What was not expected is test failing like before.
+So in our case, having LPI on the Rx path is fine for receiving data,
+but not for sending.
+
 > 
-> > 
-> > +  If set, respectively disable 1000-BaseT and 100-BaseTx energy
-> > efficient
-> > +  ethernet capabilty advertisement
-> > +  default: Leave the phy default settings unchanged (capabilities
-> > advertised)
-> > +
-> > +Example:
-> > +
-> > +&mdio0 {
-> > +	ethernetphy0: ethernet-phy@0 {
-> > +		reg = <0>;
-> > +		realtek,disable-eee-1000t;
-> > +	};
-> > +};
-> > -- 
-> > 2.7.4
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe
-> > devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>     Andrew
