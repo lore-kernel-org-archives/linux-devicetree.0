@@ -1,25 +1,68 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Wed, 16 Nov 2016 14:47:22 +0530
-Message-ID: <67bcfc1a-90fb-a387-c2dc-df7dac8c1c90@ti.com>
-References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCHv2 08/10] mmc: dw_mmc: remove the unnecessary mmc_data
+ structure
+Date: Wed, 16 Nov 2016 17:18:28 +0800
+Message-ID: <4a64ed2f-6e8a-5329-0083-b023aa5433d0@rock-chips.com>
+References: <20161115101232.3854-1-jh80.chung@samsung.com>
+ <20161115101232.3854-9-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161115101232.3854-9-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 November 2016 04:30 PM, Bartosz Golaszewski wrote:
-> Add the nodes for the MSTPRI configuration and DDR2/mDDR memory
-> controller drivers to da850.dtsi.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ÔÚ 2016/11/15 18:12, Jaehoon Chung Ð´µÀ:
+> Remove the unnecessary mmc_data structure.
+> Instead, cmd->data can be used.
+>
 
-Applied to v4.10/dt
+Looks good to me,
 
-Thanks,
-Sekhar
+Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index e912de6..ec0ba79 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -236,7 +236,6 @@ static void mci_send_cmd(struct dw_mci_slot *slot, u32 cmd, u32 arg);
+>
+>  static u32 dw_mci_prepare_command(struct mmc_host *mmc, struct mmc_command *cmd)
+>  {
+> -	struct mmc_data	*data;
+>  	struct dw_mci_slot *slot = mmc_priv(mmc);
+>  	struct dw_mci *host = slot->host;
+>  	u32 cmdr;
+> @@ -291,10 +290,9 @@ static u32 dw_mci_prepare_command(struct mmc_host *mmc, struct mmc_command *cmd)
+>  	if (cmd->flags & MMC_RSP_CRC)
+>  		cmdr |= SDMMC_CMD_RESP_CRC;
+>
+> -	data = cmd->data;
+> -	if (data) {
+> +	if (cmd->data) {
+>  		cmdr |= SDMMC_CMD_DAT_EXP;
+> -		if (data->flags & MMC_DATA_WRITE)
+> +		if (cmd->data->flags & MMC_DATA_WRITE)
+>  			cmdr |= SDMMC_CMD_DAT_WR;
+>  	}
+>
+>
+
+
+-- 
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
