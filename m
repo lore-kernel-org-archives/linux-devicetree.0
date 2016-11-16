@@ -1,174 +1,74 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net 1/3] net: phy: realtek: add eee advertisement disable options
-Date: Wed, 16 Nov 2016 22:36:09 +0530
-Message-ID: <CANAwSgTjG8G0U+A1p7hOKND9rjY4BzZfPgyWWHAEryYkHj_UOw@mail.gmail.com>
-References: <1479220154-25851-1-git-send-email-jbrunet@baylibre.com> <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
+From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: da850: Add the usb otg device nodeg
+Date: Wed, 16 Nov 2016 11:24:24 -0600
+Message-ID: <20161116172424.GA9487@uda0271908>
+References: <1478188752-22447-1-git-send-email-abailon@baylibre.com>
+ <1478188752-22447-5-git-send-email-abailon@baylibre.com>
+ <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0@ti.com>
+ <20161115211951.GH11011@uda0271908>
+ <9a73c416-fe4c-57c3-af53-87146dae2206@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479220154-25851-2-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9a73c416-fe4c-57c3-af53-87146dae2206-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
- Hi Jerome.
+On Wed, Nov 16, 2016 at 12:06:51PM +0530, Sekhar Nori wrote:
+> On Wednesday 16 November 2016 02:49 AM, Bin Liu wrote:
+> > On Tue, Nov 15, 2016 at 04:16:02PM +0530, Sekhar Nori wrote:
+> >> On Thursday 03 November 2016 09:29 PM, Alexandre Bailon wrote:
+> >>> This adds the device tree node for the usb otg
+> >>> controller present in the da850 family of SoC's.
+> >>> This also enables the otg usb controller for the lcdk board.
+> >>>
+> >>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >>> ---
+> >>>  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
+> >>>  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
+> >>>  2 files changed, 23 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+> >>> index 7b8ab21..9f5040c 100644
+> >>> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> >>> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> >>> @@ -158,6 +158,14 @@
+> >>>  	rx-num-evt = <32>;
+> >>>  };
+> >>>  
+> >>> +&usb_phy {
+> >>> +	status = "okay";
+> >>> +	};
+> >>
+> >> As mentioned by David already, this node needs to be removed. Please
+> >> rebase this on top of latest linux-davinci/master when ready for merging
+> >> (driver changes accepted).
+> > 
+> > Dropped this patch due to this comment.
+> 
+> Bin, Please do not apply dts or arch/arm/mach-davinci patches. I have a
+> bunch queued through my tree and more in pipeline and it will cause
+> unnecessary merge conflicts in linux-next or at Linus.
 
-On 15 November 2016 at 19:59, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> On some platforms, energy efficient ethernet with rtl8211 devices is
-> causing issue, like throughput drop or broken link.
->
-> This was reported on the OdroidC2 (DWMAC + RTL8211F). While the issue root
-> cause is not fully understood yet, disabling EEE advertisement prevent auto
-> negotiation from enabling EEE.
->
-> This patch provides options to disable 1000T and 100TX EEE advertisement
-> individually for the realtek phys supporting this feature.
->
-> Reported-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> Cc: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Tested-by: Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/net/phy/realtek.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 64 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index aadd6e9f54ad..77235fd5faaf 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -15,6 +15,12 @@
->   */
->  #include <linux/phy.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +
-> +struct rtl8211x_phy_priv {
-> +       bool eee_1000t_disable;
-> +       bool eee_100tx_disable;
-> +};
->
->  #define RTL821x_PHYSR          0x11
->  #define RTL821x_PHYSR_DUPLEX   0x2000
-> @@ -93,12 +99,44 @@ static int rtl8211f_config_intr(struct phy_device *phydev)
->         return err;
->  }
->
-> +static void rtl8211x_clear_eee_adv(struct phy_device *phydev)
-> +{
-> +       struct rtl8211x_phy_priv *priv = phydev->priv;
-> +       u16 val;
-> +
-> +       if (priv->eee_1000t_disable || priv->eee_100tx_disable) {
-> +               val = phy_read_mmd_indirect(phydev, MDIO_AN_EEE_ADV,
-> +                                           MDIO_MMD_AN);
-> +
-> +               if (priv->eee_1000t_disable)
-> +                       val &= ~MDIO_AN_EEE_ADV_1000T;
-> +               if (priv->eee_100tx_disable)
-> +                       val &= ~MDIO_AN_EEE_ADV_100TX;
-> +
-> +               phy_write_mmd_indirect(phydev, MDIO_AN_EEE_ADV,
-> +                                      MDIO_MMD_AN, val);
-> +       }
-> +}
-> +
-> +static int rtl8211x_config_init(struct phy_device *phydev)
-> +{
-> +       int ret;
-> +
-> +       ret = genphy_config_init(phydev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       rtl8211x_clear_eee_adv(phydev);
-> +
-> +       return 0;
-> +}
-> +
->  static int rtl8211f_config_init(struct phy_device *phydev)
->  {
->         int ret;
->         u16 reg;
->
-> -       ret = genphy_config_init(phydev);
-> +       ret = rtl8211x_config_init(phydev);
->         if (ret < 0)
->                 return ret;
->
-> @@ -115,6 +153,26 @@ static int rtl8211f_config_init(struct phy_device *phydev)
->         return 0;
->  }
->
-> +static int rtl8211x_phy_probe(struct phy_device *phydev)
-> +{
-> +       struct device *dev = &phydev->mdio.dev;
-> +       struct device_node *of_node = dev->of_node;
-> +       struct rtl8211x_phy_priv *priv;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       priv->eee_1000t_disable =
-> +               of_property_read_bool(of_node, "realtek,disable-eee-1000t");
-> +       priv->eee_100tx_disable =
-> +               of_property_read_bool(of_node, "realtek,disable-eee-100tx");
-> +
-> +       phydev->priv = priv;
-> +
-> +       return 0;
-> +}
-> +
->  static struct phy_driver realtek_drvs[] = {
->         {
->                 .phy_id         = 0x00008201,
-> @@ -140,7 +198,9 @@ static struct phy_driver realtek_drvs[] = {
->                 .phy_id_mask    = 0x001fffff,
->                 .features       = PHY_GBIT_FEATURES,
->                 .flags          = PHY_HAS_INTERRUPT,
-> +               .probe          = &rtl8211x_phy_probe,
->                 .config_aneg    = genphy_config_aneg,
-> +               .config_init    = &rtl8211x_config_init,
->                 .read_status    = genphy_read_status,
->                 .ack_interrupt  = rtl821x_ack_interrupt,
->                 .config_intr    = rtl8211e_config_intr,
-> @@ -152,7 +212,9 @@ static struct phy_driver realtek_drvs[] = {
->                 .phy_id_mask    = 0x001fffff,
->                 .features       = PHY_GBIT_FEATURES,
->                 .flags          = PHY_HAS_INTERRUPT,
-> +               .probe          = &rtl8211x_phy_probe,
->                 .config_aneg    = &genphy_config_aneg,
-> +               .config_init    = &rtl8211x_config_init,
->                 .read_status    = &genphy_read_status,
->                 .ack_interrupt  = &rtl821x_ack_interrupt,
->                 .config_intr    = &rtl8211e_config_intr,
-> @@ -164,6 +226,7 @@ static struct phy_driver realtek_drvs[] = {
->                 .phy_id_mask    = 0x001fffff,
->                 .features       = PHY_GBIT_FEATURES,
->                 .flags          = PHY_HAS_INTERRUPT,
-> +               .probe          = &rtl8211x_phy_probe,
->                 .config_aneg    = &genphy_config_aneg,
->                 .config_init    = &rtl8211f_config_init,
->                 .read_status    = &genphy_read_status,
-> --
-> 2.7.4
->
+Sure, I will drop this whole set, and only apply the musb patches in the
+new v5.
 
-How about adding callback functionality for .soft_reset to handle BMCR
-where we update the Auto-Negotiation for the phy,
-as per the datasheet of the rtl8211f.
+> 
+> For future, I have asked Alexandre to send driver and dts patches as
+> separate series so there is no confusion on who should apply.
 
--Best Regard
-Anand Moon
+I will keep in mind to ping other domain maintainers before applying
+non-musb patches in future.
 
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+> Thanks,
+> Sekhar
+
+Regards,
+-Bin.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
