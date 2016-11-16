@@ -1,120 +1,57 @@
-From: Noam Camus <noamca@mellanox.com>
-Subject: [RESEND PATCH v7 1/3] soc: Support for NPS HW scheduling
-Date: Wed, 16 Nov 2016 08:31:11 +0200
-Message-ID: <1479277873-18994-2-git-send-email-noamca@mellanox.com>
-References: <1479277873-18994-1-git-send-email-noamca@mellanox.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v4 4/4] ARM: dts: da850: Add the usb otg device nodeg
+Date: Wed, 16 Nov 2016 12:06:51 +0530
+Message-ID: <9a73c416-fe4c-57c3-af53-87146dae2206@ti.com>
+References: <1478188752-22447-1-git-send-email-abailon@baylibre.com>
+ <1478188752-22447-5-git-send-email-abailon@baylibre.com>
+ <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0@ti.com>
+ <20161115211951.GH11011@uda0271908>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1479277873-18994-1-git-send-email-noamca@mellanox.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org
-Cc: devicetree@vger.kernel.org, Noam Camus <noamca@mellanox.com>, Vineet.Gupta1@synopsys.com, Alexey.Brodkin@synopsys.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, linux-snps-arc@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161115211951.GH11011@uda0271908>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bin Liu <b-liu@ti.com>, Alexandre Bailon <abailon@baylibre.com>, khilman@baylibre.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Noam Camus <noamca@mellanox.com>
+On Wednesday 16 November 2016 02:49 AM, Bin Liu wrote:
+> On Tue, Nov 15, 2016 at 04:16:02PM +0530, Sekhar Nori wrote:
+>> On Thursday 03 November 2016 09:29 PM, Alexandre Bailon wrote:
+>>> This adds the device tree node for the usb otg
+>>> controller present in the da850 family of SoC's.
+>>> This also enables the otg usb controller for the lcdk board.
+>>>
+>>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
+>>> ---
+>>>  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
+>>>  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
+>>>  2 files changed, 23 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+>>> index 7b8ab21..9f5040c 100644
+>>> --- a/arch/arm/boot/dts/da850-lcdk.dts
+>>> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+>>> @@ -158,6 +158,14 @@
+>>>  	rx-num-evt = <32>;
+>>>  };
+>>>  
+>>> +&usb_phy {
+>>> +	status = "okay";
+>>> +	};
+>>
+>> As mentioned by David already, this node needs to be removed. Please
+>> rebase this on top of latest linux-davinci/master when ready for merging
+>> (driver changes accepted).
+> 
+> Dropped this patch due to this comment.
 
-This new header file is for NPS400 SoC (part of ARC architecture).
-The header file includes macros for save/restore of HW scheduling.
-The control of HW scheduling is achieved by writing core registers.
-This code was moved from arc/plat-eznps so it can be used
-from drivers/clocksource/, available only for CONFIG_EZNPS_MTM_EXT.
+Bin, Please do not apply dts or arch/arm/mach-davinci patches. I have a
+bunch queued through my tree and more in pipeline and it will cause
+unnecessary merge conflicts in linux-next or at Linus.
 
-Signed-off-by: Noam Camus <noamca@mellanox.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- arch/arc/plat-eznps/include/plat/ctop.h |    2 -
- include/soc/nps/mtm.h                   |   59 +++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+), 2 deletions(-)
- create mode 100644 include/soc/nps/mtm.h
+For future, I have asked Alexandre to send driver and dts patches as
+separate series so there is no confusion on who should apply.
 
-diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
-index 9d6718c..ee2e32d 100644
---- a/arch/arc/plat-eznps/include/plat/ctop.h
-+++ b/arch/arc/plat-eznps/include/plat/ctop.h
-@@ -46,9 +46,7 @@
- #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
- 
- /* EZchip core instructions */
--#define CTOP_INST_HWSCHD_OFF_R3			0x3B6F00BF
- #define CTOP_INST_HWSCHD_OFF_R4			0x3C6F00BF
--#define CTOP_INST_HWSCHD_RESTORE_R3		0x3E6F70C3
- #define CTOP_INST_HWSCHD_RESTORE_R4		0x3E6F7103
- #define CTOP_INST_SCHD_RW			0x3E6F7004
- #define CTOP_INST_SCHD_RD			0x3E6F7084
-diff --git a/include/soc/nps/mtm.h b/include/soc/nps/mtm.h
-new file mode 100644
-index 0000000..d2f5e7e
---- /dev/null
-+++ b/include/soc/nps/mtm.h
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (c) 2016, Mellanox Technologies. All rights reserved.
-+ *
-+ * This software is available to you under a choice of one of two
-+ * licenses.  You may choose to be licensed under the terms of the GNU
-+ * General Public License (GPL) Version 2, available from the file
-+ * COPYING in the main directory of this source tree, or the
-+ * OpenIB.org BSD license below:
-+ *
-+ *     Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *      - Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *
-+ *      - Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-+ * SOFTWARE.
-+ */
-+
-+#ifndef SOC_NPS_MTM_H
-+#define SOC_NPS_MTM_H
-+
-+#define CTOP_INST_HWSCHD_OFF_R3                 0x3B6F00BF
-+#define CTOP_INST_HWSCHD_RESTORE_R3             0x3E6F70C3
-+
-+static inline void hw_schd_save(unsigned int *flags)
-+{
-+	__asm__ __volatile__(
-+	"       .word %1\n"
-+	"       st r3,[%0]\n"
-+	:
-+	: "r"(flags), "i"(CTOP_INST_HWSCHD_OFF_R3)
-+	: "r3", "memory");
-+}
-+
-+static inline void hw_schd_restore(unsigned int flags)
-+{
-+	__asm__ __volatile__(
-+	"       mov r3, %0\n"
-+	"       .word %1\n"
-+	:
-+	: "r"(flags), "i"(CTOP_INST_HWSCHD_RESTORE_R3)
-+	: "r3");
-+}
-+
-+#endif /* SOC_NPS_MTM_H */
--- 
-1.7.1
+Thanks,
+Sekhar
