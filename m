@@ -1,34 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] USB: ohci: da8xx: Add devicetree bindings
-Date: Wed, 16 Nov 2016 07:26:30 -0600
-Message-ID: <20161116132630.ndafntbygmqoemrx@rob-hp-laptop>
-References: <20161114144103.12120-1-ahaslam@baylibre.com>
- <20161114144103.12120-5-ahaslam@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
+Date: Wed, 16 Nov 2016 07:33:31 -0600
+Message-ID: <20161116133331.miem6us563uu62t7@rob-hp-laptop>
+References: <cover.1479142062.git.jsarha@ti.com>
+ <b4589c6a3275c0c7c8e3c379faedba3ce1423c5a.1479142062.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20161114144103.12120-5-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <b4589c6a3275c0c7c8e3c379faedba3ce1423c5a.1479142062.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 14, 2016 at 03:41:02PM +0100, Axel Haslam wrote:
-> This patch documents the device tree bindings required for
-> the ohci controller found in TI da8xx family of SoC's
-> 
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/ohci-da8xx.txt         | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBOb3YgMTQsIDIwMTYgYXQgMDY6NTQ6MTdQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
+ZToKPiBBZGQgdmVyeSBiYXNpYyB0aS1mdHA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZlci4gVGhl
+IG9ubHkgZmVhdHVyZQo+IHNlcGFyYXRpbmcgdGhpcyBmcm9tIGEgY29tcGxldGVseSBkdW1teSBi
+cmlkZ2UgaXMgdGhlIEVESUQgcmVhZAo+IHN1cHBvcnQgdHJvdWdoIEREQyBJMkMuIEV2ZW4gdGhh
+dCBmdW5jdGlvbmFsaXR5IHNob3VsZCBiZSBpbiBhCj4gc2VwYXJhdGUgZ2VuZXJpYyBjb25uZWN0
+b3IgZHJpdmVyLiBIb3dldmVyLCBiZWNhdXNlIG9mIG1pc3NpbmcgRFJNCj4gaW5mcmFzdHJ1Y3R1
+cmUgc3VwcG9ydCB0aGUgY29ubmVjdG9yIGlzIGltcGxlbWVudGVkIHdpdGhpbiB0aGUgYnJpZGdl
+Cj4gZHJpdmVyLiBTb21lIHRmcDQxMCBIVyBzcGVjaWZpYyBmZWF0dXJlcyBtYXkgYmUgYWRkZWQg
+bGF0ZXIgaWYgbmVlZGVkLAo+IGJlY2F1c2UgdGhlcmUgaXMgYSBzZXQgb2YgcmVnaXN0ZXJzIGJl
+aGluZCBpMmMgaWYgaXQgaXMgY29ubmVjdGVkLgo+IAo+IFRoaXMgaW1wbGVtZW50YXRpb25zIGlz
+IHRlc3RlZCBhZ2FpbnN0IG15IG5ldyB0aWxjZGMgYnJpZGdlIHN1cHBvcnQKPiBhbmQgaXQgd29y
+a3Mgd2l0aCBCZWFnbGVCb25lIERWSS1EIENhcGUgUmV2IEEzLiBBIERUIGJpbmRpbmcgZG9jdW1l
+bnQKPiBpcyBhbHNvIGFkZGVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJo
+YUB0aS5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAu
+dHh0ICAgICAgICAgIHwgIDQxICsrKysKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlk
+Z2UvdGktdGZwNDEwLmMgICAgICAgICAgICAgICAgIHwgMjIzICsrKysrKysrKysrKysrKysrKysr
+Kwo+ICA0IGZpbGVzIGNoYW5nZWQsIDI3MiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGks
+dGZwNDEwLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90
+aS10ZnA0MTAuYwo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0Cj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi43NDQ2YjJiCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0ZnA0
+MTAudHh0Cj4gQEAgLTAsMCArMSw0MSBAQAo+ICtURlA0MTAgRFZJIGJyaWRnZSBiaW5kaW5ncwo+
+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArCS0gY29tcGF0aWJsZTogInRpLHRmcDQxMCIK
+PiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXMKPiArCS0gcmVnOiBJMkMgYWRkcmVzcy4gSWYgYW5k
+IG9ubHkgaWYgcHJlc2VudCB0aGUgZHJpdmVyIG5vZGUKPiArCSAgc2hvdWxkIGJlIHBsYWNlZCBp
+bnRvIHRoZSBpMmMgY29udHJvbGxlciBub2RlIHdoZXJlIHRoZQo+ICsJICB0ZnA0MTAgaTJjIGlz
+IGNvbm5lY3RlZCB0byAodGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gZG9lcwo+ICsJICBub3Qg
+eWV0IHN1cHBvcnQgdGhpcykuCgpTbyB0aGlzIGNoaXAgY2FuIHdvcmsgd2l0aG91dCBwcm9ncmFt
+bWluZyBJIGd1ZXNzPwoKcmVnIHNob3VsZCBvbmx5IGJlIG5vdCBwcmVzZW50IGlmIEkyQyBpcyBu
+b3QgY29ubmVjdGVkIGluIHRoZSBkZXNpZ24uIEl0IApjYW4ndCBiZSBhIGZ1bmN0aW9uIG9mIHdo
+YXQgdGhlIGRyaXZlciBzdXBwb3J0cy4gSW4gb3RoZXJ3b3JkcywgeW91IApjYW4ndCBiZSBtb3Zp
+bmcgdGhpcyBub2RlIGFyb3VuZCBiYXNlZCBvbiB3aGVuIHlvdSBhZGQgSTJDIGNvbnRyb2wuCgpS
+b2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
