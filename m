@@ -1,144 +1,101 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] ARM: dts: add basic support for Rockchip RK1108
- SOC
-Date: Wed, 16 Nov 2016 12:53:46 +0100
-Message-ID: <6212491.PZIkq4o7iJ@phil>
-References: <1479124550-24037-1-git-send-email-andy.yan@rock-chips.com>
- <1479125688-24528-1-git-send-email-andy.yan@rock-chips.com>
- <2204596.BeWafPDT3k@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2204596.BeWafPDT3k@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] input: touchscreen: silead: Add regulator support
+Date: Wed, 16 Nov 2016 12:55:07 +0100
+Message-ID: <20161116115507.24220-1-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 15. November 2016, 12:45:16 CET schrieb Heiko Stuebner:
-> Am Montag, 14. November 2016, 20:14:48 CET schrieb Andy Yan:
-> > RK1108 is embedded with an ARM Cortex-A7 single core and a DSP core.
-> > It is designed for varies application scenario such as car DVR, sports
-> > DV, secure camera and UAV camera.
-> > 
-> > This patch add basic support for it with DMAC / UART / CRU / pinctrl / MMC
-> > enabled.
-> > 
-> > Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Tested-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > ---
-> > 
-> > Changes in v2:
-> > - fix timer and gic dt description
-> > - ordering devices by register address
-> > 
-> >  arch/arm/boot/dts/rk1108.dtsi | 428
-> > 
-> > ++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 428
-> > insertions(+)
-> > 
-> >  create mode 100644 arch/arm/boot/dts/rk1108.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
-> > new file mode 100644
-> > index 0000000..636c294
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/rk1108.dtsi
-> > @@ -0,0 +1,428 @@
-> > +/*
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPL or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This file is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License as
-> > + *     published by the Free Software Foundation; either version 2 of the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This file is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall be
-> > + *     included in all copies or substantial portions of the Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/clock/rk1108-cru.h>
-> > +#include <dt-bindings/pinctrl/rockchip.h>
-> > +/ {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +
-> > +	compatible = "rockchip,rk1108";
-> > +
-> > +	interrupt-parent = <&gic>;
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +		serial1 = &uart1;
-> > +		serial2 = &uart2;
-> > +	};
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu0: cpu@f00 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a7";
-> > +			reg = <0xf00>;
-> > +		};
-> > +	};
-> > +
-> > +	arm-pmu {
-> > +		compatible = "arm,cortex-a7-pmu";
-> > +		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> > +
-> > +
-> 
-> unnecessary empty line (only 1 please)
-> 
-> otherwise looks fine now, just needs to wait for fixed clock ids now.
+On some tablets the touchscreen controller is powered by separate
+regulators, add support for this.
 
-after Shawn fixed the clocks, applied now to my dts32 branch with that line 
-removed.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes in v2:
+-Use devm_regulator_bulk_get() and friends
+-Use devm_add_action_or_reset() to disable the regulator
+---
+ .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 ++
+ drivers/input/touchscreen/silead.c                 | 29 ++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index e844c3f..b726823 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -22,6 +22,8 @@ Optional properties:
+ - touchscreen-inverted-y  : See touchscreen.txt
+ - touchscreen-swapped-x-y : See touchscreen.txt
+ - silead,max-fingers	  : maximum number of fingers the touchscreen can detect
++- vddio-supply		  : regulator phandle for controller VDDIO
++- avdd-supply		  : regulator phandle for controller AVDD
+ 
+ Example:
+ 
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index f502c84..404830a 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -29,6 +29,7 @@
+ #include <linux/input/touchscreen.h>
+ #include <linux/pm.h>
+ #include <linux/irq.h>
++#include <linux/regulator/consumer.h>
+ 
+ #include <asm/unaligned.h>
+ 
+@@ -73,6 +74,7 @@ struct silead_ts_data {
+ 	struct i2c_client *client;
+ 	struct gpio_desc *gpio_power;
+ 	struct input_dev *input;
++	struct regulator_bulk_data regulators[2];
+ 	char fw_name[64];
+ 	struct touchscreen_properties prop;
+ 	u32 max_fingers;
+@@ -433,6 +435,13 @@ static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
+ }
+ #endif
+ 
++static void silead_disable_regulator(void *arg)
++{
++	struct silead_ts_data *data = arg;
++
++	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
++}
++
+ static int silead_ts_probe(struct i2c_client *client,
+ 			   const struct i2c_device_id *id)
+ {
+@@ -465,6 +474,26 @@ static int silead_ts_probe(struct i2c_client *client,
+ 	if (client->irq <= 0)
+ 		return -ENODEV;
+ 
++	data->regulators[0].supply = "vddio";
++	data->regulators[1].supply = "avdd";
++	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->regulators),
++					data->regulators);
++	if (error)
++		return error;
++
++	/*
++	 * Enable regulators at probe and disable them at remove, we need
++	 * to keep the chip powered otherwise it forgets its firmware.
++	 */
++	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
++				      data->regulators);
++	if (error)
++		return error;
++
++	error = devm_add_action_or_reset(dev, silead_disable_regulator, data);
++	if (error)
++		return error;
++
+ 	/* Power GPIO pin */
+ 	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+ 	if (IS_ERR(data->gpio_power)) {
+-- 
+2.9.3
 
-Thanks
-Heiko
