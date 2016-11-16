@@ -1,59 +1,127 @@
-From: Alexandre Bailon <abailon@baylibre.com>
-Subject: Re: [PATCH v4 4/4] ARM: dts: da850: Add the usb otg device node
-Date: Wed, 16 Nov 2016 11:47:19 +0100
-Message-ID: <70fbd003-18f0-8ceb-650e-c8fcd29531a9@baylibre.com>
-References: <1478188752-22447-1-git-send-email-abailon@baylibre.com>
- <1478188752-22447-5-git-send-email-abailon@baylibre.com>
- <0c94c5e0-9d2c-fff5-1213-2fb2adb20ab0@ti.com>
- <d2050c80-255e-25d6-99ba-7634f2c7e39a@baylibre.com>
- <d4c8da0e-d66d-1268-78e5-d994399c9166@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d4c8da0e-d66d-1268-78e5-d994399c9166@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, khilman@baylibre.com, robh+dt@kernel.org, b-liu@ti.com
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 3/3] usb: musb: da8xx: Add DT support for the DA8xx driver
+Date: Wed, 16 Nov 2016 11:52:25 +0100
+Message-ID: <1479293545-7516-4-git-send-email-abailon@baylibre.com>
+References: <1479293545-7516-1-git-send-email-abailon@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479293545-7516-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2016 11:41 AM, Sekhar Nori wrote:
-> On Wednesday 16 November 2016 04:05 PM, Alexandre Bailon wrote:
->> On 11/15/2016 11:46 AM, Sekhar Nori wrote:
->>> On Thursday 03 November 2016 09:29 PM, Alexandre Bailon wrote:
->>>> This adds the device tree node for the usb otg
->>>> controller present in the da850 family of SoC's.
->>>> This also enables the otg usb controller for the lcdk board.
->>>>
->>>> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
->>>> ---
->>>>  arch/arm/boot/dts/da850-lcdk.dts |  8 ++++++++
->>>>  arch/arm/boot/dts/da850.dtsi     | 15 +++++++++++++++
->>>>  2 files changed, 23 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
->>>> index 7b8ab21..9f5040c 100644
->>>> --- a/arch/arm/boot/dts/da850-lcdk.dts
->>>> +++ b/arch/arm/boot/dts/da850-lcdk.dts
->>>> @@ -158,6 +158,14 @@
->>>>  	rx-num-evt = <32>;
->>>>  };
->>>>  
->>>> +&usb_phy {
->>>> +	status = "okay";
->>>> +	};
->>>
->>> As mentioned by David already, this node needs to be removed. Please
-> 
->> I have missed it. But why should I remove it?
->> Without it, usb otg won't work.
-> 
-> Grr, I replied to the wrong hunk. The part in da850-lcdk.dts needs to be
-> preserved (but please fix the indentation on the closing brace).
-OK. Thanks for the confirmation.
-> 
-> The part in da850.dtsi needs to be removed as it is already merged.
-> 
-> Thanks,
-> Sekhar
-> 
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+
+This adds DT support for TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver
+
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Tested-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+---
+ drivers/usb/musb/da8xx.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+index 2440f88..f205a03 100644
+--- a/drivers/usb/musb/da8xx.c
++++ b/drivers/usb/musb/da8xx.c
+@@ -6,6 +6,9 @@
+  * Based on the DaVinci "glue layer" code.
+  * Copyright (C) 2005-2006 by Texas Instruments
+  *
++ * DT support
++ * Copyright (c) 2016 Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
++ *
+  * This file is part of the Inventra Controller Driver for Linux.
+  *
+  * The Inventra Controller Driver for Linux is free software; you
+@@ -433,6 +436,21 @@ static int da8xx_musb_exit(struct musb *musb)
+ 	return 0;
+ }
+ 
++static inline u8 get_vbus_power(struct device *dev)
++{
++	struct regulator *vbus_supply;
++	int current_uA;
++
++	vbus_supply = regulator_get_optional(dev, "vbus");
++	if (IS_ERR(vbus_supply))
++		return 255;
++	current_uA = regulator_get_current_limit(vbus_supply);
++	regulator_put(vbus_supply);
++	if (current_uA <= 0 || current_uA > 510000)
++		return 255;
++	return current_uA / 1000 / 2;
++}
++
+ static const struct musb_platform_ops da8xx_ops = {
+ 	.quirks		= MUSB_DMA_CPPI | MUSB_INDEXED_EP,
+ 	.init		= da8xx_musb_init,
+@@ -458,6 +476,12 @@ static const struct platform_device_info da8xx_dev_info = {
+ 	.dma_mask	= DMA_BIT_MASK(32),
+ };
+ 
++static const struct musb_hdrc_config da8xx_config = {
++	.ram_bits = 10,
++	.num_eps = 5,
++	.multipoint = 1,
++};
++
+ static int da8xx_probe(struct platform_device *pdev)
+ {
+ 	struct resource musb_resources[2];
+@@ -465,6 +489,7 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	struct da8xx_glue		*glue;
+ 	struct platform_device_info	pinfo;
+ 	struct clk			*clk;
++	struct device_node		*np = pdev->dev.of_node;
+ 	int				ret;
+ 
+ 	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
+@@ -487,6 +512,16 @@ static int da8xx_probe(struct platform_device *pdev)
+ 	glue->dev			= &pdev->dev;
+ 	glue->clk			= clk;
+ 
++	if (IS_ENABLED(CONFIG_OF) && np) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		pdata->config	= &da8xx_config;
++		pdata->mode	= musb_get_mode(&pdev->dev);
++		pdata->power	= get_vbus_power(&pdev->dev);
++	}
++
+ 	pdata->platform_ops		= &da8xx_ops;
+ 
+ 	glue->usb_phy = usb_phy_generic_register();
+@@ -537,11 +572,22 @@ static int da8xx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id da8xx_id_table[] = {
++	{
++		.compatible = "ti,da830-musb",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, da8xx_id_table);
++#endif
++
+ static struct platform_driver da8xx_driver = {
+ 	.probe		= da8xx_probe,
+ 	.remove		= da8xx_remove,
+ 	.driver		= {
+ 		.name	= "musb-da8xx",
++		.of_match_table = of_match_ptr(da8xx_id_table),
+ 	},
+ };
+ 
+-- 
+2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
