@@ -1,116 +1,76 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 13:54:54 -0800
-Message-ID: <20161117215454.GA23571@roeck-us.net>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <582DEB81.6050806@topic.nl>
- <20161117185654.GA19338@roeck-us.net>
- <582E0A6C.5010307@topic.nl>
+From: Peter Rosin <peda@axentia.se>
+Subject: [RFC PATCH v2 4/7] dt-bindings: iio: iio-mux: document iio-mux bindings
+Date: Thu, 17 Nov 2016 22:48:06 +0100
+Message-ID: <1479419289-17553-5-git-send-email-peda@axentia.se>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <582E0A6C.5010307@topic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Tom Levens <tom.levens@cern.ch>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1479419289-17553-1-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 08:52:12PM +0100, Mike Looijmans wrote:
-> ﻿On 17-11-2016 19:56, Guenter Roeck wrote:
-> >On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
-> >>﻿On 17-11-16 17:56, Guenter Roeck wrote:
-> >>>On 11/17/2016 04:10 AM, Tom Levens wrote:
-> >>>>Updated version of the ltc2990 driver which supports all measurement
-> >>>>modes available in the chip. The mode can be set through a devicetree
-> >>>>attribute.
-> >>>
-> >[ ... ]
-> >
-> >>>>
-> >>>>static int ltc2990_i2c_probe(struct i2c_client *i2c,
-> >>>>                  const struct i2c_device_id *id)
-> >>>>{
-> >>>>     int ret;
-> >>>>     struct device *hwmon_dev;
-> >>>>+    struct ltc2990_data *data;
-> >>>>+    struct device_node *of_node = i2c->dev.of_node;
-> >>>>
-> >>>>     if (!i2c_check_functionality(i2c->adapter,
-> >>>>I2C_FUNC_SMBUS_BYTE_DATA |
-> >>>>                      I2C_FUNC_SMBUS_WORD_DATA))
-> >>>>         return -ENODEV;
-> >>>>
-> >>>>-    /* Setup continuous mode, current monitor */
-> >>>>+    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
-> >>>>GFP_KERNEL);
-> >>>>+    if (unlikely(!data))
-> >>>>+        return -ENOMEM;
-> >>>>+    data->i2c = i2c;
-> >>>>+
-> >>>>+    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
-> >>>>&data->mode))
-> >>>>+        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
-> >>>
-> >>>Iam arguing with myself if we should still do this or if we should read
-> >>>the mode
-> >>>from the chip instead if it isn't provided (after all, it may have been
-> >>>initialized
-> >>>by the BIOS/ROMMON).
-> >>
-> >>I think the mode should be explicitly set, without default. There's no way
-> >>to tell whether the BIOS or bootloader has really set it up or whether the
-> >>chip is just reporting whatever it happened to default to. And given the
-> >>chip's function, it's unlikely a bootloader would want to initialize it.
-> >>
-> >Unlikely but possible. Even if we all agree that the chip should be configured
-> >by the driver, I don't like imposing that view on everyone else.
-> >
-> >>My advice would be to make it a required property. If not set, display an
-> >>error and bail out.
-> >>
-> >It is not that easy, unfortunately. It also has to work on a non-devicetree
-> >system. I would not object to making the property mandatory, but we would
-> >still need to provide non-DT support.
-> >
-> >My "use case" for taking the current mode from the chip if not specified
-> >is that it would enable me to run a module test with all modes. I consider
-> >this extremely valuable.
-> 
-> Good point.
-> 
-> The chip defaults to measuring internal temperature only, and the mode
-> defaults to "0".
-> 
-> Choosing a mode that doesn't match the actual circuitry could be bad for the
-> chip or the board (though unlikely, it'll probably just be useless) since it
-> will actively drive some of the inputs in the temperature modes (which is
-> default for V3/V4 pins).
-> 
-> Instead of failing, one could choose to set the default mode to "7", which
-> just measures the 4 voltages, which would be a harmless mode in all cases.
-> 
-> As a way to let a bootloader set things up, I think it would be a good check
-> to see if CONTROL register bits 4:3 are set. If "00", the chip is not
-> acquiring data at all, and probably needs configuration still. In that case,
-> the mode must be provided by the devicetree (or the default "7").
-> If bits 4:3 are "11", it has already been set up to measure its inputs, and
-> it's okay to continue doing just that and use the current value of 2:0
-> register as default mode (if the devicetree didn't specify any mode at all).
-> 
+---
+ .../bindings/iio/multiplexer/iio-mux.txt           | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
 
-At first glance, agreed, though by default b[3:4] are 00, and only the
-internal temperature is measured. Actually, the 5 mode bits are all
-relevant to determine what is measured. Maybe it would be better to take
-all 5 bits into account instead of blindly setting b[34]:=11 and a specific
-setting of b[0:2]. Sure, that would make the mode table a bit larger,
-but then ltc2990_attrs_ena[] could be made an u16 array, and a table size
-of 64 bytes would not be that bad.
-
-What do you think ?
-
-Thanks,
-Guenter
+diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+new file mode 100644
+index 000000000000..df6e4d5cc45e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+@@ -0,0 +1,49 @@
++IIO multiplexer bindings
++
++If a multiplexer is used to select when hardware signal is fed to
++e.g. an ADC channel, these bindings describe that situation.
++
++Required properties:
++- compatible : "iio-mux"
++- io-channels : Channel node of the parent channel that has multiplexed
++		input.
++- io-channel-names : Should be "parent".
++- control-muxes : Node of the multiplexer that controls the input signal.
++- control-mux-names : Should be "mux".
++- #address-cells = <1>;
++- #size-cells = <0>;
++
++Required properties for iio-mux child nodes:
++- reg : The multiplexer number.
++
++Example:
++	control_adc_mux: control-adc-mux {
++		compatible = "mux-gpio";
++
++		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
++			    <&pioA 1 GPIO_ACTIVE_HIGH>;
++	};
++
++	adc-mux {
++		compatible = "iio-mux";
++		io-channels = <&adc 0>;
++		io-channel-names = "parent";
++
++		control-muxes = <&control_adc_mux>;
++		control-mux-names = "mux";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		sync@0 {
++			reg = <0>;
++		};
++
++		in@1 {
++			reg = <1>;
++		};
++
++		system-regulator@2 {
++			reg = <2>;
++		};
++	};
+-- 
+2.1.4
