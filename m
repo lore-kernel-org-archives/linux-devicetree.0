@@ -1,291 +1,73 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: qcom: Add apq8064 CoreSight components
-Date: Thu, 17 Nov 2016 12:04:49 -0700
-Message-ID: <20161117190449.GB7884@linaro.org>
-References: <20161117153609.11705-1-georgi.djakov@linaro.org>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: am335x-boneblack: Add blue-and-red-wiring -property to LCDC node
+Date: Thu, 17 Nov 2016 22:13:42 +0200
+Message-ID: <a7a7cd2666199316cbf13f5c1c9a387838f645bf.1479413359.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161117153609.11705-1-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 05:36:09PM +0200, Georgi Djakov wrote:
-> From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Add initial set of CoreSight components found on Qualcomm's
-> 8064 chipset.
-> 
-> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-coresight.dtsi | 196 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/qcom-apq8064.dtsi           |  11 +-
->  2 files changed, 203 insertions(+), 4 deletions(-)
->  create mode 100644 arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi b/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-> new file mode 100644
-> index 000000000000..9395fddb1bf0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-> @@ -0,0 +1,196 @@
-> +/*
-> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +&soc {
-> +
-> +	etb@1a01000 {
-> +		compatible = "coresight-etb10", "arm,primecell";
-> +		reg = <0x1a01000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		port {
-> +			etb_in: endpoint {
-> +				slave-mode;
-> +				remote-endpoint = <&replicator_out0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	tpiu@1a03000 {
-> +		compatible = "arm,coresight-tpiu", "arm,primecell";
-> +		reg = <0x1a03000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		port {
-> +			tpiu_in: endpoint {
-> +				slave-mode;
-> +				remote-endpoint = <&replicator_out1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	replicator {
-> +		compatible = "arm,coresight-replicator";
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				replicator_out0: endpoint {
-> +					remote-endpoint = <&etb_in>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				replicator_out1: endpoint {
-> +					remote-endpoint = <&tpiu_in>;
-> +				};
-> +			};
-> +			port@2 {
-> +				reg = <0>;
-> +				replicator_in: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&funnel_out>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	funnel@1a04000 {
-> +		compatible = "arm,coresight-funnel", "arm,primecell";
-> +		reg = <0x1a04000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			/*
-> +			 * Not described input ports:
-> +			 * 2 - connected to STM component
-> +			 * 3 - not-connected
-> +			 * 6 - not-connected
-> +			 * 7 - not-connected
-> +			 */
-> +			port@0 {
-> +				reg = <0>;
-> +				funnel_in0: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&etm0_out>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				funnel_in1: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&etm1_out>;
-> +				};
-> +			};
-> +			port@4 {
-> +				reg = <4>;
-> +				funnel_in4: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&etm2_out>;
-> +				};
-> +			};
-> +			port@5 {
-> +				reg = <5>;
-> +				funnel_in5: endpoint {
-> +					slave-mode;
-> +					remote-endpoint = <&etm3_out>;
-> +				};
-> +			};
-> +			port@8 {
-> +				reg = <0>;
-> +				funnel_out: endpoint {
-> +					remote-endpoint = <&replicator_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	etm@1a1c000 {
-> +		compatible = "arm,coresight-etm3x", "arm,primecell";
-> +		reg = <0x1a1c000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		cpu = <&CPU0>;
-> +
-> +		port {
-> +			etm0_out: endpoint {
-> +				remote-endpoint = <&funnel_in0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	etm@1a1d000 {
-> +		compatible = "arm,coresight-etm3x", "arm,primecell";
-> +		reg = <0x1a1d000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		cpu = <&CPU1>;
-> +
-> +		port {
-> +			etm1_out: endpoint {
-> +				remote-endpoint = <&funnel_in1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	etm@1a1e000 {
-> +		compatible = "arm,coresight-etm3x", "arm,primecell";
-> +		reg = <0x1a1e000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		cpu = <&CPU2>;
-> +
-> +		port {
-> +			etm2_out: endpoint {
-> +				remote-endpoint = <&funnel_in4>;
-> +			};
-> +		};
-> +	};
-> +
-> +	etm@1a1f000 {
-> +		compatible = "arm,coresight-etm3x", "arm,primecell";
-> +		reg = <0x1a1f000 0x1000>;
-> +
-> +		clocks = <&rpmcc RPM_QDSS_CLK>;
-> +		clock-names = "apb_pclk";
-> +
-> +		cpu = <&CPU3>;
-> +
-> +		port {
-> +			etm3_out: endpoint {
-> +				remote-endpoint = <&funnel_in5>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 268bd470c865..18469c632e2f 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -4,6 +4,7 @@
->  #include <dt-bindings/clock/qcom,gcc-msm8960.h>
->  #include <dt-bindings/reset/qcom,gcc-msm8960.h>
->  #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
-> +#include <dt-bindings/clock/qcom,rpmcc.h>
->  #include <dt-bindings/soc/qcom,gsbi.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> @@ -27,7 +28,7 @@
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  
-> -		cpu@0 {
-> +		CPU0: cpu@0 {
->  			compatible = "qcom,krait";
->  			enable-method = "qcom,kpss-acc-v1";
->  			device_type = "cpu";
-> @@ -38,7 +39,7 @@
->  			cpu-idle-states = <&CPU_SPC>;
->  		};
->  
-> -		cpu@1 {
-> +		CPU1: cpu@1 {
->  			compatible = "qcom,krait";
->  			enable-method = "qcom,kpss-acc-v1";
->  			device_type = "cpu";
-> @@ -49,7 +50,7 @@
->  			cpu-idle-states = <&CPU_SPC>;
->  		};
->  
-> -		cpu@2 {
-> +		CPU2: cpu@2 {
->  			compatible = "qcom,krait";
->  			enable-method = "qcom,kpss-acc-v1";
->  			device_type = "cpu";
-> @@ -60,7 +61,7 @@
->  			cpu-idle-states = <&CPU_SPC>;
->  		};
->  
-> -		cpu@3 {
-> +		CPU3: cpu@3 {
->  			compatible = "qcom,krait";
->  			enable-method = "qcom,kpss-acc-v1";
->  			device_type = "cpu";
-> @@ -1418,4 +1419,6 @@
->  		};
->  	};
->  };
-> +
-> +#include "qcom-apq8064-coresight.dtsi"
->  #include "qcom-apq8064-pins.dtsi"
+Add blue-and-red-wiring -property to LCDC node. Also adds comments on
+how to get support 24 bit RGB mode. After this patch am335x-boneblack
+support RGB565, BGR888, and XBGR8888 color formats. See details in
+Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt.
 
-Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+The BBB has straight color wiring from am335x to tda19988, however the
+tda19988 can be configured to cross the blue and red wires. The
+comments show how to do that with video-ports property of tda19988
+node and how to tell LCDC that blue and red wires are crossed, with
+blue-and-red-wiring LCDC node property. This changes supported color
+formats from 16 bit RGB and 24 bit BGR to 16 bit BGR and 24 bit RGB.
+
+Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+---
+Hi Tony,
+Could you pick this for 4.10. We left it out form 4.9 to avoid
+conflict with beaglebone-back hdmi audio dts patches that slipped in
+trough drm branch.
+
+Cheers,
+Jyri
+
+ arch/arm/boot/dts/am335x-boneblack.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index 6bbb1fe..db00d8e 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -79,6 +79,14 @@
+ 
+ &lcdc {
+ 	status = "okay";
++
++	/* If you want to get 24 bit RGB and 16 BGR mode instead of
++	 * current 16 bit RGB and 24 BGR modes, set the propety
++	 * below to "crossed" and uncomment the video-ports -property
++	 * in tda19988 node.
++	 */
++	blue-and-red-wiring = "straight";
++
+ 	port {
+ 		lcdc_0: endpoint@0 {
+ 			remote-endpoint = <&hdmi_0>;
+@@ -95,6 +103,9 @@
+ 		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
+ 		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
+ 
++		/* Convert 24bit BGR to RGB, e.g. cross red and blue wiring */
++		/* video-ports = <0x234501>; */
++
+ 		#sound-dai-cells = <0>;
+ 		audio-ports = <	TDA998x_I2S	0x03>;
+ 
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
