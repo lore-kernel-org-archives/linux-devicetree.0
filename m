@@ -1,70 +1,47 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun5i: Add touchscreen node to
- reference-design-tablet.dtsi
-Date: Thu, 17 Nov 2016 21:24:49 +0100
-Message-ID: <20161117202449.hgn5ws4l3nowx563@lukather>
-References: <20161116131508.12541-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: sun6i: hummingbird-a31:
+ Enable display output through VGA bridge
+Date: Thu, 17 Nov 2016 21:27:49 +0100
+Message-ID: <20161117202749.kotctovy5cquaxfp@lukather>
+References: <20161116154232.872-1-wens@csie.org>
+ <20161116154232.872-3-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x4zywx2kedxyxomf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="gzhu77dqdxxyynuq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRVFXDAQKGQE45M7LFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20161116131508.12541-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161116154232.872-3-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---x4zywx2kedxyxomf
-Content-Type: text/plain; charset=us-ascii
+--gzhu77dqdxxyynuq
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 16, 2016 at 02:15:08PM +0100, Hans de Goede wrote:
-> Just like on sun8i all sun5i tablets use the same interrupt and power
-> gpios for their touchscreens. I've checked all known a13 fex files and
-> only the UTOO P66 uses a different gpio for the interrupt.
->=20
-> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
-> fills in the necessary gpios to avoid duplication in the tablet dts files,
-> just like we do in sun8i-reference-design-tablet.dtsi.
->=20
-> This will make future patches adding touchscreen nodes to a13 tablets
-> simpler.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On Wed, Nov 16, 2016 at 11:42:32PM +0800, Chen-Yu Tsai wrote:
+> The Hummingbird A31 board has a VGA DAC which converts RGB output
+> from the LCD interface to VGA analog signals.
+> 
+> Add nodes for the VGA DAC, its power supply, and enable this part
+> of the display pipeline.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Applied, thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---x4zywx2kedxyxomf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYLhIQAAoJEBx+YmzsjxAg4lkQAMLmXTZKrRIaBxSdK33JCLOg
-UtRD+xn985YLuqFaX2KG5SaUAFfayAlTs0xyhYtfMqH5INy2l62ud7tOOQxKqGlM
-5CA59tjRMmmkXhf2Bs5TLesaW8r1dpOuUTvMkFuTCXfrAsr5G4frF1biclqjxAuk
-QxkGqnnODTrpPrf+65/xExa3Y8tvRIn3eYxuV4KbOP/372nv1XwEph8Y4uYT0d3y
-kBFyOo537dmnvFTnp3Y4VPmFRXIKo+XAIr67DaBSpA4v0Doyhdkvaob+hZ0gxlTx
-00vnm70r+KNvsDvuhe+elXDviovdQaSAhvibClfY4nGlZY+Osxe+ZTFWwJei5gk2
-e0hF3e9/dUNYZdogZjsKU+DJgiLpmIrXTmu+7gBxQTHoNcKY+nQNN9c+8GMeSngn
-Q8XKK7I6T45JmCjnt8yGSBswSJPUhurq6qNZhgAqEYrObl8aQxfHCDbu/xxlj3pY
-bGNbbwqMhYpN4jdWWJ2AMo5sK3omK9uOIpzC77Wn8RqmDv96e1UfZUCOYbKkcZmk
-flTWOR9JR25OIy15Rr9dgDkiL55TlGbjZNXGL+S9Sp6CANuaYjM/A4uBxh2g3K/K
-3r7paQr0Ub4rsAP4ZwPFk8o78+7Wqs6TfmvAsIxyJTOYDAadYCRXmUw0AGTwTXNq
-JWBAS3MNphveb/UIWGHH
-=aSG9
------END PGP SIGNATURE-----
-
---x4zywx2kedxyxomf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gzhu77dqdxxyynuq--
