@@ -1,141 +1,40 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 18/19] ARM: dts: armada-370-xp: Remove button address and fixup names
-Date: Fri, 18 Nov 2016 00:05:07 +0100
-Message-ID: <20161117230508.28539-19-gregory.clement@free-electrons.com>
-References: <20161117230508.28539-1-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 00/13] Various Armada 375 DT warning fixup
+Date: Fri, 18 Nov 2016 00:08:17 +0100
+Message-ID: <20161117230830.31047-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117230508.28539-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The gpio-key nodes do not have a reg property, so remove the address from
-the unit name.
+Hi,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/armada-370-rd.dts                      | 2 +-
- arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi       | 6 +++---
- arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi | 6 +++---
- arch/arm/boot/dts/armada-xp-axpwifiap.dts                | 2 +-
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts            | 4 ++--
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts         | 2 +-
- 6 files changed, 11 insertions(+), 11 deletions(-)
+In this third version as request by Rob Herring I removed the '_' sign
+in the unit address. I also added a comment in the device tree files
+explaining how this unit address was composed.
 
-diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index 649dc108bc08..085fe5f2ee91 100644
---- a/arch/arm/boot/dts/armada-370-rd.dts
-+++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -130,7 +130,7 @@
- 				compatible = "gpio-keys";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				button@1 {
-+				button {
- 					label = "Software Button";
- 					linux,code = <KEY_POWER>;
- 					gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-index 6ba394b7a55a..7e624dae8713 100644
---- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-+++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-@@ -149,19 +149,19 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		button@1 {
-+		power {
- 			label = "Power button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
- 			debounce-interval = <100>;
- 		};
--		button@2 {
-+		backup {
- 			label = "Backup button";
- 			linux,code = <KEY_OPTION>;
- 			gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
- 			debounce-interval = <100>;
- 		};
--		button@3 {
-+		reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-index d5adb8f300ac..f67f375a288e 100644
---- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-+++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-@@ -97,19 +97,19 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		button@1 {
-+		power {
- 			label = "Power button";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
- 			debounce-interval = <100>;
- 		};
--		button@2 {
-+		reset {
- 			label = "Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
- 			debounce-interval = <100>;
- 		};
--		button@3 {
-+		button {
- 			label = "USB VBUS error";
- 			linux,code = <KEY_UNKNOWN>;
- 			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-index 3bf27a9215e3..f62cdc350e98 100644
---- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-+++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-@@ -121,7 +121,7 @@
- 		pinctrl-0 = <&keys_pin>;
- 		pinctrl-names = "default";
- 
--		button@1 {
-+		reset {
- 			label = "Factory Reset Button";
- 			linux,code = <KEY_SETUP>;
- 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index f17c98d6cd0f..47a9ee09370e 100644
---- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-+++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -275,13 +275,13 @@
- 		pinctrl-0 = <&keys_pin>;
- 		pinctrl-names = "default";
- 
--		button@1 {
-+		wps {
- 			label = "WPS";
- 			linux,code = <KEY_WPS_BUTTON>;
- 			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@2 {
-+		reset {
- 			label = "Factory Reset Button";
- 			linux,code = <KEY_RESTART>;
- 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 79bb2e7c6252..0ed919cf2088 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -119,7 +119,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--				button@1 {
-+				init {
- 					label = "Init Button";
- 					linux,code = <KEY_POWER>;
- 					gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+Gregory
+
+Gregory CLEMENT (13):
+  ARM: dts: armada-375: Add node labels
+  ARM: dts: armada-375: Use the node labels
+  ARM: dts: armada-375: Fixup mdio DT warning
+  ARM: dts: armada-375: Fixup bootrom DT warning
+  ARM: dts: armada-375: Fixup devbus DT warning
+  ARM: dts: armada-375: Fixup sa-ram DT warning
+  ARM: dts: armada-375: Fixup pcie DT warnings
+  ARM: dts: armada-375: Fixup pinctrl DT warnings
+  ARM: dts: armada-375: Fixup soc DT warning
+  ARM: dts: armada-375: Fixup internal-regs DT warning
+  ARM: dts: armada-375: Remove skeleton.dtsi
+  ARM: dts: armada-375: Fixup memory DT warning
+  ARM: dts: armada-375: Fixup ethernet child DT warning
+
+ arch/arm/boot/dts/armada-375-db.dts | 277 ++++++++++++++++++------------------
+ arch/arm/boot/dts/armada-375.dtsi   | 102 ++++++++-----
+ 2 files changed, 205 insertions(+), 174 deletions(-)
+
 -- 
 2.10.2
 
