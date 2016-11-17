@@ -1,57 +1,142 @@
-From: klaus.goger@theobroma-systems.com
-Subject: Re: [PATCH] ARM: dts: sunxi: Explicitly enable pull-ups for MMC pins
-Date: Thu, 17 Nov 2016 21:57:43 +0100
-Message-ID: <ea02ec937a12d6ca2a2e0d8bbea5c484@theobroma-systems.com>
-References: <20161117093438.17988-1-wens@csie.org>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Thu, 17 Nov 2016 13:00:09 -0800
+Message-ID: <582E1A59.7040502@gmail.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161117093438.17988-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479396775-32033-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-17 10:34, Chen-Yu Tsai wrote:
-> Given that MMC starts in open-drain mode and the pull-ups are required,
-> it's best to enable it for all the pin settings.
+On 11/17/16 07:32, Sudeep Holla wrote:
+> Currently platforms/drivers needing to get the machine model name are
+> replicating the same snippet of code. In some case, the OF reference
+> counting is either missing or incorrect.
+> 
+> This patch adds support to read the machine model name either using
+> the "model" or the "compatible" property in the device tree root node
+> to the core OF/DT code.
+> 
+> This can be used to remove all the duplicate code snippets doing exactly
+> same thing later.
 
-It's even more complicated than that with MMC. It starts in open-drain 
-mode for
-CMD during initialization but changes to push-pull afterwards. The card 
-has
-internal pull-ups to prevent bus floating during setup and will disable 
-them
-after switching to 4bit mode (or 8bit for eMMC when available).
-But even after switching to push-pull drivers there are states the bus 
-would
-float and pull ups have to ensure a high level on the bus.
+I find five instances of reading only property "model":
 
-See JESD84-A441 chapter 7.15 ff as reference.
+  arch/arm/mach-imx/cpu.c
+  arch/arm/mach-mxs/mach-mxs.c
+  arch/c6x/kernel/setup.c
+  arch/mips/cavium-octeon/setup.c
+  arch/sh/boards/of-generic.c
 
-   The difference between the P-bit and Z-bit is that a P-bit is actively 
-driven
-   to HIGH by the card respectively host output driver, while Z-bit is 
-driven to
-  (respectively kept) HIGH by the pull-up resistors Rcmd respectively 
-Rdat.
+I find one instance of reading property "model", then if
+that does not exist, property "compatible":
 
+  arch/mips/generic/proc.c
 
-Enabling the pull ups on the CPU would be the right choice considering 
-that
-most boards will not have external pull-ups. Even if they would have 
-one,
-adding the internal in parallel would work in almost all cases and the
-increase in power consumption would be negligible.
+The proposed patch matches the code used in one place, and thus
+current usage does not match the patch description.
 
-Cheers,
-Klaus
+Is my search bad?  Are you planning to add additional instances
+of reading "model" then "compatible"?
+
+-Frank
+
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  6 ++++++
+>  2 files changed, 38 insertions(+)
+> 
+> Hi Rob,
+> 
+> It would be good if we can target this for v4.10, so that we have no
+> dependencies to push PATCH 2/2 in v4.11
+> 
+> Regards,
+> Sudeep
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index a0bccb54a9bd..0810c5ecf1aa 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -546,6 +546,38 @@ int of_machine_is_compatible(const char *compat)
+>  EXPORT_SYMBOL(of_machine_is_compatible);
+> 
+>  /**
+> + * of_machine_get_model_name - Find and read the model name or the compatible
+> + *		value for the machine.
+> + * @model:	pointer to null terminated return string, modified only if
+> + *		return value is 0.
+> + *
+> + * Returns a string containing either the model name or the compatible value
+> + * of the machine if found, else return error.
+> + *
+> + * Search for a machine model name or the compatible if model name is missing
+> + * in a device tree node and retrieve a null terminated string value (pointer
+> + * to data, not a copy). Returns 0 on success, -EINVAL if root of the device
+> + * tree is not found and other error returned by of_property_read_string on
+> + * failure.
+> + */
+> +int of_machine_get_model_name(const char **model)
+> +{
+> +	int error;
+> +
+> +	if (!of_node_get(of_root))
+> +		return -EINVAL;
+> +
+> +	error = of_property_read_string(of_root, "model", model);
+> +	if (error)
+> +		error = of_property_read_string_index(of_root, "compatible",
+> +						      0, model);
+> +	of_node_put(of_root);
+> +
+> +	return error;
+> +}
+> +EXPORT_SYMBOL(of_machine_get_model_name);
+> +
+> +/**
+>   *  __of_device_is_available - check if a device is available for use
+>   *
+>   *  @device: Node to check for availability, with locks already held
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index d72f01009297..13fc66531f1b 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -367,6 +367,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
+>  extern int of_alias_get_highest_id(const char *stem);
+> 
+>  extern int of_machine_is_compatible(const char *compat);
+> +extern int of_machine_get_model_name(const char **model);
+> 
+>  extern int of_add_property(struct device_node *np, struct property *prop);
+>  extern int of_remove_property(struct device_node *np, struct property *prop);
+> @@ -788,6 +789,11 @@ static inline int of_machine_is_compatible(const char *compat)
+>  	return 0;
+>  }
+> 
+> +static inline int of_machine_get_model_name(const char **model)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
+>  {
+>  	return false;
+> --
+> 2.7.4
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
