@@ -1,300 +1,251 @@
-From: <c_traja@qti.qualcomm.com>
-Subject: [PATCHv2 2/4] ath10k: Add support to update btcoex priority value via
- nl80211
-Date: Thu, 17 Nov 2016 17:14:22 +0530
-Message-ID: <1479383064-25718-3-git-send-email-c_traja@qti.qualcomm.com>
-References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-To: ath10k@lists.infradead.org
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Tamizh chelvam <c_traja@qti.qualcomm.com>, tamizhchelvam@codeaurora.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [RFC PATCH] of: base: add support to get machine model name
+Date: Thu, 17 Nov 2016 11:50:50 +0000
+Message-ID: <1479383450-19183-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-mips@linux-mips.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tamizh chelvam <c_traja@qti.qualcomm.com>
+Currently platforms/drivers needing to get the machine model name are
+replicating the same snippet of code. In some case, the OF reference
+counting is either missing or incorrect.
 
-This patch adds support to update btcoex priority value via nl80211.
-Here driver will be exposing the supported frame format for this
-feature via btcoex_support_flags which is a member of
-wiphy structure. 10.4 based firmware support this feature.
-WMI service WMI_SERVICE_BTCOEX is used to identify the firmware support
-of this feature. BTCOEX needs to enable to modify this value.
+This patch adds support to read the machine model name either using
+the "model" or the "compatible" property in the device tree root node.
 
-This patch has dependency of
-"cfg80211: Add new NL80211_CMD_SET_BTCOEX_PRIORITY to support BTCOEX"
-patch.
-
-Signed-off-by: Tamizh chelvam <c_traja@qti.qualcomm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/net/wireless/ath/ath10k/mac.c     |   78 +++++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath10k/wmi-ops.h |   19 +++++++
- drivers/net/wireless/ath/ath10k/wmi.c     |   19 +++++++
- drivers/net/wireless/ath/ath10k/wmi.h     |   18 +++++++
- 4 files changed, 134 insertions(+)
+ arch/arm/mach-imx/cpu.c           |  4 +---
+ arch/arm/mach-mxs/mach-mxs.c      |  3 +--
+ arch/mips/cavium-octeon/setup.c   | 12 ++----------
+ arch/mips/generic/proc.c          | 15 +++------------
+ arch/sh/boards/of-generic.c       |  6 +-----
+ drivers/of/base.c                 | 34 ++++++++++++++++++++++++++++++++++
+ drivers/soc/fsl/guts.c            |  3 +--
+ drivers/soc/renesas/renesas-soc.c |  4 +---
+ include/linux/of.h                |  6 ++++++
+ 9 files changed, 50 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index e7131b9..ce5d529 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -7502,6 +7502,71 @@ static int ath10k_mac_op_set_btcoex(struct ieee80211_hw *hw, bool enabled)
- 	return ret;
+Hi,
+
+While trying to fix a simple build warning(as below) in -next for fsl/guts.c,
+I came across this code duplication in multiple places.
+
+WARNING: modpost: Found 1 section mismatch(es).
+To see full details build your kernel with:
+'make CONFIG_DEBUG_SECTION_MISMATCH=y'
+
+With CONFIG_DEBUG_SECTION_MISMATCH enabled, the details are reported:
+
+WARNING: vmlinux.o(.text+0x55d014): Section mismatch in reference from the
+function fsl_guts_probe() to the function
+.init.text:of_flat_dt_get_machine_name()
+The function fsl_guts_probe() references
+the function __init of_flat_dt_get_machine_name().
+This is often because fsl_guts_probe lacks a __init
+annotation or the annotation of of_flat_dt_get_machine_name is wrong.
+
+I can split the patch if needed if people are OK with the idea.
+
+Regards,
+Sudeep
+
+diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
+index b3347d32349f..846f40008752 100644
+--- a/arch/arm/mach-imx/cpu.c
++++ b/arch/arm/mach-imx/cpu.c
+@@ -85,9 +85,7 @@ struct device * __init imx_soc_device_init(void)
+
+ 	soc_dev_attr->family = "Freescale i.MX";
+
+-	root = of_find_node_by_path("/");
+-	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
+-	of_node_put(root);
++	ret = of_machine_get_model_name(&soc_dev_attr->machine);
+ 	if (ret)
+ 		goto free_soc;
+
+diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
+index e4f21086b42b..ed9af3a894f0 100644
+--- a/arch/arm/mach-mxs/mach-mxs.c
++++ b/arch/arm/mach-mxs/mach-mxs.c
+@@ -391,8 +391,7 @@ static void __init mxs_machine_init(void)
+ 	if (!soc_dev_attr)
+ 		return;
+
+-	root = of_find_node_by_path("/");
+-	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
++	ret = of_machine_get_model_name(&soc_dev_attr->machine);
+ 	if (ret)
+ 		return;
+
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index 9a2db1c013d9..2e2b1b5befa4 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -498,16 +498,8 @@ static void __init init_octeon_system_type(void)
+ 	char const *board_type;
+
+ 	board_type = cvmx_board_type_to_string(octeon_bootinfo->board_type);
+-	if (board_type == NULL) {
+-		struct device_node *root;
+-		int ret;
+-
+-		root = of_find_node_by_path("/");
+-		ret = of_property_read_string(root, "model", &board_type);
+-		of_node_put(root);
+-		if (ret)
+-			board_type = "Unsupported Board";
+-	}
++	if (!board_type && of_machine_get_model_name(&board_type))
++		board_type = "Unsupported Board";
+
+ 	snprintf(octeon_system_type, sizeof(octeon_system_type), "%s (%s)",
+ 		 board_type, octeon_model_get_string(read_c0_prid()));
+diff --git a/arch/mips/generic/proc.c b/arch/mips/generic/proc.c
+index 42b33250a4a2..f7fc067bf908 100644
+--- a/arch/mips/generic/proc.c
++++ b/arch/mips/generic/proc.c
+@@ -10,20 +10,11 @@
+
+ #include <linux/of.h>
+
+-#include <asm/bootinfo.h>
+-
+ const char *get_system_type(void)
+ {
+ 	const char *str;
+-	int err;
+-
+-	err = of_property_read_string(of_root, "model", &str);
+-	if (!err)
+-		return str;
+-
+-	err = of_property_read_string_index(of_root, "compatible", 0, &str);
+-	if (!err)
+-		return str;
+
+-	return "Unknown";
++	if (of_machine_get_model_name(&str))
++		return "Unknown";
++	return str;
  }
- 
-+u32
-+ath10k_mac_get_btcoex_prio(struct cfg80211_btcoex_priority *btcoex_priority)
-+{
-+	u32 btcoex_prio = 0;
-+
-+	if (btcoex_priority->wlan_be_preferred)
-+		btcoex_prio |= WIPHY_WLAN_BE_PREFERRED;
-+
-+	if (btcoex_priority->wlan_bk_preferred)
-+		btcoex_prio |= WIPHY_WLAN_BK_PREFERRED;
-+
-+	if (btcoex_priority->wlan_vi_preferred)
-+		btcoex_prio |= WIPHY_WLAN_VI_PREFERRED;
-+
-+	if (btcoex_priority->wlan_vo_preferred)
-+		btcoex_prio |= WIPHY_WLAN_VO_PREFERRED;
-+
-+	if (btcoex_priority->wlan_beacon_preferred)
-+		btcoex_prio |= WIPHY_WLAN_BEACON_PREFERRED;
-+
-+	if (btcoex_priority->wlan_mgmt_preferred)
-+		btcoex_prio |= WIPHY_WLAN_MGMT_PREFERRED;
-+
-+	return btcoex_prio;
-+}
-+
-+static int ath10k_mac_op_set_btcoex_priority(struct ieee80211_hw *hw,
-+			struct cfg80211_btcoex_priority *btcoex_priority)
-+{
-+	u32 btcoex_prio;
-+	struct ath10k *ar = hw->priv;
-+	int ret;
-+
-+	if (!(test_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags))) {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
-+
-+	mutex_lock(&ar->conf_mutex);
-+
-+	if (ar->state != ATH10K_STATE_ON &&
-+	    ar->state != ATH10K_STATE_RESTARTED) {
-+		ret = -ENETDOWN;
-+		goto exit;
-+	}
-+
-+	btcoex_prio = ath10k_mac_get_btcoex_prio(btcoex_priority);
-+
-+	if (btcoex_prio > 0x3f) {
-+		ret = -E2BIG;
-+		goto exit;
-+	}
-+
-+	ret = ath10k_wmi_set_coex_param(ar, btcoex_prio);
-+
-+	if (ret) {
-+		ath10k_warn(ar, "failed to set btcoex priority: %d\n", ret);
-+		goto exit;
-+	}
-+
-+exit:
-+	mutex_unlock(&ar->conf_mutex);
-+	return ret;
-+}
-+
- static const struct ieee80211_ops ath10k_ops = {
- 	.tx				= ath10k_mac_op_tx,
- 	.wake_tx_queue			= ath10k_mac_op_wake_tx_queue,
-@@ -7544,6 +7609,7 @@ static int ath10k_mac_op_set_btcoex(struct ieee80211_hw *hw, bool enabled)
- 	.unassign_vif_chanctx		= ath10k_mac_op_unassign_vif_chanctx,
- 	.switch_vif_chanctx		= ath10k_mac_op_switch_vif_chanctx,
- 	.set_btcoex                     = ath10k_mac_op_set_btcoex,
-+	.set_btcoex_priority		= ath10k_mac_op_set_btcoex_priority,
- 
- 	CFG80211_TESTMODE_CMD(ath10k_tm_cmd)
- 
-@@ -8134,6 +8200,18 @@ int ath10k_mac_register(struct ath10k *ar)
- 	 */
- 	ar->hw->offchannel_tx_hw_queue = IEEE80211_MAX_QUEUES - 1;
- 
-+	if (test_bit(WMI_SERVICE_BTCOEX, ar->wmi.svc_map)) {
-+		ar->hw->wiphy->btcoex_support_flags =
-+			WIPHY_WLAN_BE_PREFERRED |
-+			WIPHY_WLAN_BK_PREFERRED |
-+			WIPHY_WLAN_VI_PREFERRED |
-+			WIPHY_WLAN_VO_PREFERRED |
-+			WIPHY_WLAN_BEACON_PREFERRED |
-+			WIPHY_WLAN_MGMT_PREFERRED;
-+		ath10k_dbg(ar, ATH10K_DBG_BOOT, "btcoex supported mask :%u\n",
-+			   ar->hw->wiphy->btcoex_support_flags);
-+	}
-+
- 	switch (ar->running_fw->fw_file.wmi_op_version) {
- 	case ATH10K_FW_WMI_OP_VERSION_MAIN:
- 		ar->hw->wiphy->iface_combinations = ath10k_if_comb;
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-index c9a8bb1..90c8390 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-@@ -197,6 +197,8 @@ struct wmi_ops {
- 					(struct ath10k *ar,
- 					 enum wmi_bss_survey_req_type type);
- 	struct sk_buff *(*gen_echo)(struct ath10k *ar, u32 value);
-+	struct sk_buff *(*gen_set_coex_param)(struct ath10k *ar,
-+					      u32 btcoex_prio);
- };
- 
- int ath10k_wmi_cmd_send(struct ath10k *ar, struct sk_buff *skb, u32 cmd_id);
-@@ -1411,4 +1413,21 @@ struct wmi_ops {
- 	return ath10k_wmi_cmd_send(ar, skb, wmi->cmd->echo_cmdid);
+diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
+index 1fb6d5714bae..938a14499298 100644
+--- a/arch/sh/boards/of-generic.c
++++ b/arch/sh/boards/of-generic.c
+@@ -135,11 +135,7 @@ static void __init sh_of_setup(char **cmdline_p)
+ 	board_time_init = sh_of_time_init;
+
+ 	sh_mv.mv_name = "Unknown SH model";
+-	root = of_find_node_by_path("/");
+-	if (root) {
+-		of_property_read_string(root, "model", &sh_mv.mv_name);
+-		of_node_put(root);
+-	}
++	of_machine_get_model_name(&sh_mv.mv_name);
+
+ 	sh_of_smp_probe();
  }
- 
-+static inline int
-+ath10k_wmi_set_coex_param(struct ath10k *ar, u32 btcoex_prio)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a0bccb54a9bd..752cb8eefd6e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -546,6 +546,40 @@ int of_machine_is_compatible(const char *compat)
+ EXPORT_SYMBOL(of_machine_is_compatible);
+
+ /**
++ * of_machine_get_model_name - Find and read the model name or the compatible
++ *		value for the machine.
++ * @model:	pointer to null terminated return string, modified only if
++ *		return value is 0.
++ *
++ * Returns a string containing either the model name or the compatible value
++ * of the machine if found, else return error.
++ *
++ * Search for a machine model name or the compatible if model name is missing
++ * in a device tree node and retrieve a null terminated string value (pointer
++ * to data, not a copy). Returns 0 on success, -EINVAL if root of the device
++ * tree is not found and other error returned by of_property_read_string on
++ * failure.
++ */
++int of_machine_get_model_name(const char **model)
 +{
-+	struct sk_buff *skb;
++	int error;
++	struct device_node *root;
 +
-+	if (!ar->wmi.ops->gen_set_coex_param)
-+		return -EOPNOTSUPP;
++	root = of_find_node_by_path("/");
++	if (!root)
++		return -EINVAL;
 +
-+	skb = ar->wmi.ops->gen_set_coex_param(ar, btcoex_prio);
++	error = of_property_read_string(root, "model", model);
++	if (error)
++		error = of_property_read_string_index(root, "compatible",
++						      0, model);
++	of_node_put(root);
 +
-+	if (IS_ERR(skb))
-+		return PTR_ERR(skb);
-+
-+	return ath10k_wmi_cmd_send(ar, skb,
-+				   ar->wmi.cmd->set_coex_param_cmdid);
++	return error;
 +}
++EXPORT_SYMBOL(of_machine_get_model_name);
 +
- #endif
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 387c4ee..de35c17 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -710,6 +710,7 @@
- 	.pdev_bss_chan_info_request_cmdid =
- 			WMI_10_4_PDEV_BSS_CHAN_INFO_REQUEST_CMDID,
- 	.ext_resource_cfg_cmdid = WMI_10_4_EXT_RESOURCE_CFG_CMDID,
-+	.set_coex_param_cmdid = WMI_10_4_BTCOEX_CFG_CMDID,
- };
- 
- /* MAIN WMI VDEV param map */
-@@ -7859,6 +7860,23 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
++/**
+  *  __of_device_is_available - check if a device is available for use
+  *
+  *  @device: Node to check for availability, with locks already held
+diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
+index 0ac88263c2d7..94aef0465451 100644
+--- a/drivers/soc/fsl/guts.c
++++ b/drivers/soc/fsl/guts.c
+@@ -152,8 +152,7 @@ static int fsl_guts_probe(struct platform_device *pdev)
+ 		return PTR_ERR(guts->regs);
+
+ 	/* Register soc device */
+-	machine = of_flat_dt_get_machine_name();
+-	if (machine)
++	if (!of_machine_get_model_name(&machine))
+ 		soc_dev_attr.machine = devm_kstrdup(dev, machine, GFP_KERNEL);
+
+ 	svr = fsl_guts_get_svr();
+diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
+index 330960312296..d9a119073de5 100644
+--- a/drivers/soc/renesas/renesas-soc.c
++++ b/drivers/soc/renesas/renesas-soc.c
+@@ -228,9 +228,7 @@ static int __init renesas_soc_init(void)
+ 	if (!soc_dev_attr)
+ 		return -ENOMEM;
+
+-	np = of_find_node_by_path("/");
+-	of_property_read_string(np, "model", &soc_dev_attr->machine);
+-	of_node_put(np);
++	of_machine_get_model_name(&soc_dev_attr->machine);
+
+ 	soc_dev_attr->family = kstrdup_const(family->name, GFP_KERNEL);
+ 	soc_dev_attr->soc_id = kstrdup_const(strchr(match->compatible, ',') + 1,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d72f01009297..13fc66531f1b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -367,6 +367,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
+ extern int of_alias_get_highest_id(const char *stem);
+
+ extern int of_machine_is_compatible(const char *compat);
++extern int of_machine_get_model_name(const char **model);
+
+ extern int of_add_property(struct device_node *np, struct property *prop);
+ extern int of_remove_property(struct device_node *np, struct property *prop);
+@@ -788,6 +789,11 @@ static inline int of_machine_is_compatible(const char *compat)
  	return 0;
  }
- 
-+static struct sk_buff *
-+ath10k_wmi_10_4_op_gen_set_coex_param(struct ath10k *ar,
-+				      u32 btcoex_prio)
+
++static inline int of_machine_get_model_name(const char **model)
 +{
-+	struct wmi_set_coex_param_10_4_cmd *cmd;
-+	struct sk_buff *skb;
-+
-+	skb = ath10k_wmi_alloc_skb(ar, sizeof(*cmd));
-+	if (!skb)
-+		return ERR_PTR(-ENOMEM);
-+
-+	cmd = (struct wmi_set_coex_param_10_4_cmd *)skb->data;
-+	cmd->btcoex_prio = __cpu_to_le32(btcoex_prio);
-+
-+	ath10k_dbg(ar, ATH10K_DBG_WMI, "BTCOEX priority :%u\n", btcoex_prio);
-+	return skb;
++	return -EINVAL;
 +}
- static const struct wmi_ops wmi_ops = {
- 	.rx = ath10k_wmi_op_rx,
- 	.map_svc = wmi_main_svc_map,
-@@ -8205,6 +8223,7 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
- 	.gen_pdev_bss_chan_info_req = ath10k_wmi_10_2_op_gen_pdev_bss_chan_info,
- 	.gen_echo = ath10k_wmi_op_gen_echo,
- 	.gen_pdev_get_tpc_config = ath10k_wmi_10_2_4_op_gen_pdev_get_tpc_config,
-+	.gen_set_coex_param = ath10k_wmi_10_4_op_gen_set_coex_param,
- };
- 
- int ath10k_wmi_attach(struct ath10k *ar)
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
-index 1b243c8..3a739e3 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi.h
-@@ -184,6 +184,8 @@ enum wmi_service {
- 	WMI_SERVICE_TX_MODE_PUSH_ONLY,
- 	WMI_SERVICE_TX_MODE_PUSH_PULL,
- 	WMI_SERVICE_TX_MODE_DYNAMIC,
-+	WMI_SERVICE_VDEV_RX_FILTER,
-+	WMI_SERVICE_BTCOEX,
- 
- 	/* keep last */
- 	WMI_SERVICE_MAX,
-@@ -310,6 +312,8 @@ enum wmi_10_4_service {
- 	WMI_10_4_SERVICE_TX_MODE_PUSH_ONLY,
- 	WMI_10_4_SERVICE_TX_MODE_PUSH_PULL,
- 	WMI_10_4_SERVICE_TX_MODE_DYNAMIC,
-+	WMI_10_4_SERVICE_VDEV_RX_FILTER,
-+	WMI_10_4_SERVICE_BTCOEX,
- };
- 
- static inline char *wmi_service_name(int service_id)
-@@ -408,6 +412,7 @@ static inline char *wmi_service_name(int service_id)
- 	SVCSTR(WMI_SERVICE_TX_MODE_PUSH_ONLY);
- 	SVCSTR(WMI_SERVICE_TX_MODE_PUSH_PULL);
- 	SVCSTR(WMI_SERVICE_TX_MODE_DYNAMIC);
-+	SVCSTR(WMI_SERVICE_BTCOEX);
- 	default:
- 		return NULL;
- 	}
-@@ -663,6 +668,8 @@ static inline void wmi_10_4_svc_map(const __le32 *in, unsigned long *out,
- 	       WMI_SERVICE_TX_MODE_PUSH_PULL, len);
- 	SVCMAP(WMI_10_4_SERVICE_TX_MODE_DYNAMIC,
- 	       WMI_SERVICE_TX_MODE_DYNAMIC, len);
-+	SVCMAP(WMI_10_4_SERVICE_BTCOEX,
-+	       WMI_SERVICE_BTCOEX, len);
- }
- 
- #undef SVCMAP
-@@ -837,6 +844,7 @@ struct wmi_cmd_map {
- 	u32 pdev_bss_chan_info_request_cmdid;
- 	u32 pdev_enable_adaptive_cca_cmdid;
- 	u32 ext_resource_cfg_cmdid;
-+	u32 set_coex_param_cmdid;
- };
- 
- /*
-@@ -1646,6 +1654,11 @@ enum wmi_10_4_cmd_id {
- 	WMI_10_4_EXT_RESOURCE_CFG_CMDID,
- 	WMI_10_4_VDEV_SET_IE_CMDID,
- 	WMI_10_4_SET_LTEU_CONFIG_CMDID,
-+	WMI_10_4_ATF_SSID_GROUPING_REQUEST_CMDID,
-+	WMI_10_4_PEER_ATF_EXT_REQUEST_CMDID,
-+	WMI_10_4_SET_PERIODIC_CHANNEL_STATS_CONFIG,
-+	WMI_10_4_PEER_BWF_REQUEST_CMDID,
-+	WMI_10_4_BTCOEX_CFG_CMDID,
- 	WMI_10_4_PDEV_UTF_CMDID = WMI_10_4_END_CMDID - 1,
- };
- 
-@@ -2723,6 +2736,11 @@ struct wmi_ext_resource_config_10_4_cmd {
- 	__le32 fw_feature_bitmap;
- };
- 
-+struct wmi_set_coex_param_10_4_cmd {
-+	/* contains wlan priority frame type value preferred over bt */
-+	__le32 btcoex_prio;
-+};
 +
- /* strucutre describing host memory chunk. */
- struct host_memory_chunk {
- 	/* id of the request that is passed up in service ready */
--- 
-1.7.9.5
+ static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
+ {
+ 	return false;
+--
+2.7.4
