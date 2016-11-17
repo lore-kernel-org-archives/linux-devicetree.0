@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 03/19] ARM: dts: armada-370-xp: add node labels
-Date: Fri, 18 Nov 2016 00:04:52 +0100
-Message-ID: <20161117230508.28539-4-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 05/19] ARM: dts: armada-370-xp: Fixup mdio DT warning
+Date: Fri, 18 Nov 2016 00:04:54 +0100
+Message-ID: <20161117230508.28539-6-gregory.clement@free-electrons.com>
 References: <20161117230508.28539-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161117230508.28539-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,557 +10,684 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As it was previously done for kirkwood, this adds missing node labels to
-Armada 370 and XP common and SoC specific nodes to allow to reference
-them more easily.
+MDIO has a reg property so the unit name should contain an address.
+Take the opportunity to use the node label instead of the full name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi     | 32 ++++++++++++++++----------------
- arch/arm/boot/dts/armada-370.dtsi        | 20 ++++++++++----------
- arch/arm/boot/dts/armada-xp-mv78230.dtsi | 12 ++++++------
- arch/arm/boot/dts/armada-xp-mv78260.dtsi | 20 ++++++++++----------
- arch/arm/boot/dts/armada-xp-mv78460.dtsi | 22 +++++++++++-----------
- arch/arm/boot/dts/armada-xp.dtsi         | 12 ++++++------
- 6 files changed, 59 insertions(+), 59 deletions(-)
+ arch/arm/boot/dts/armada-370-db.dts                | 24 +++++++--------
+ arch/arm/boot/dts/armada-370-mirabox.dts           | 23 +++++++-------
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts     | 16 +++++-----
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts     | 24 +++++++--------
+ arch/arm/boot/dts/armada-370-rd.dts                | 19 ++++++------
+ arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts  | 13 ++++----
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi | 18 +++++------
+ .../dts/armada-370-seagate-personal-cloud.dtsi     | 18 +++++------
+ arch/arm/boot/dts/armada-370-synology-ds213j.dts   | 12 ++++----
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  2 +-
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts          | 20 ++++++------
+ arch/arm/boot/dts/armada-xp-db.dts                 | 36 +++++++++++-----------
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 36 +++++++++++-----------
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    | 20 ++++++------
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     | 21 +++++++------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   | 36 +++++++++++-----------
+ arch/arm/boot/dts/armada-xp-synology-ds414.dts     | 20 ++++++------
+ 17 files changed, 181 insertions(+), 177 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 1d8171380fa0..54359896b76c 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -86,7 +86,7 @@
- 		pcie-mem-aperture = <0xf8000000 0x7e00000>;
- 		pcie-io-aperture  = <0xffe00000 0x100000>;
- 
--		devbus-bootcs {
-+		devbus_bootcs: devbus-bootcs {
- 			compatible = "marvell,mvebu-devbus";
- 			reg = <MBUS_ID(0xf0, 0x01) 0x10400 0x8>;
- 			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0xffffffff>;
-@@ -96,7 +96,7 @@
- 			status = "disabled";
- 		};
- 
--		devbus-cs0 {
-+		devbus_cs0: devbus-cs0 {
- 			compatible = "marvell,mvebu-devbus";
- 			reg = <MBUS_ID(0xf0, 0x01) 0x10408 0x8>;
- 			ranges = <0 MBUS_ID(0x01, 0x3e) 0 0xffffffff>;
-@@ -106,7 +106,7 @@
- 			status = "disabled";
- 		};
- 
--		devbus-cs1 {
-+		devbus_cs1: devbus-cs1 {
- 			compatible = "marvell,mvebu-devbus";
- 			reg = <MBUS_ID(0xf0, 0x01) 0x10410 0x8>;
- 			ranges = <0 MBUS_ID(0x01, 0x3d) 0 0xffffffff>;
-@@ -116,7 +116,7 @@
- 			status = "disabled";
- 		};
- 
--		devbus-cs2 {
-+		devbus_cs2: devbus-cs2 {
- 			compatible = "marvell,mvebu-devbus";
- 			reg = <MBUS_ID(0xf0, 0x01) 0x10418 0x8>;
- 			ranges = <0 MBUS_ID(0x01, 0x3b) 0 0xffffffff>;
-@@ -126,7 +126,7 @@
- 			status = "disabled";
- 		};
- 
--		devbus-cs3 {
-+		devbus_cs3: devbus-cs3 {
- 			compatible = "marvell,mvebu-devbus";
- 			reg = <MBUS_ID(0xf0, 0x01) 0x10420 0x8>;
- 			ranges = <0 MBUS_ID(0x01, 0x37) 0 0xffffffff>;
-@@ -142,7 +142,7 @@
- 			#size-cells = <1>;
- 			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
- 
--			rtc@10300 {
-+			rtc: rtc@10300 {
- 				compatible = "marvell,orion-rtc";
- 				reg = <0x10300 0x20>;
- 				interrupts = <50>;
-@@ -214,38 +214,38 @@
- 				msi-controller;
- 			};
- 
--			coherency-fabric@20200 {
-+			coherencyfab: coherency-fabric@20200 {
- 				compatible = "marvell,coherency-fabric";
- 				reg = <0x20200 0xb0>, <0x21010 0x1c>;
- 			};
- 
--			timer@20300 {
-+			timer: timer@20300 {
- 				reg = <0x20300 0x30>, <0x21040 0x30>;
- 				interrupts = <37>, <38>, <39>, <40>, <5>, <6>;
- 			};
- 
--			watchdog@20300 {
-+			watchdog: watchdog@20300 {
- 				reg = <0x20300 0x34>, <0x20704 0x4>;
- 			};
- 
--			cpurst@20800 {
-+			cpurst: cpurst@20800 {
- 				compatible = "marvell,armada-370-cpu-reset";
- 				reg = <0x20800 0x8>;
- 			};
- 
--			pmsu@22000 {
-+			pmsu: pmsu@22000 {
- 				compatible = "marvell,armada-370-pmsu";
- 				reg = <0x22000 0x1000>;
- 			};
- 
--			usb@50000 {
-+			usb0: usb@50000 {
- 				compatible = "marvell,orion-ehci";
- 				reg = <0x50000 0x500>;
- 				interrupts = <45>;
- 				status = "disabled";
- 			};
- 
--			usb@51000 {
-+			usb1: usb@51000 {
- 				compatible = "marvell,orion-ehci";
- 				reg = <0x51000 0x500>;
- 				interrupts = <46>;
-@@ -274,7 +274,7 @@
- 				status = "disabled";
- 			};
- 
--			sata@a0000 {
-+			sata: sata@a0000 {
- 				compatible = "marvell,armada-370-sata";
- 				reg = <0xa0000 0x5000>;
- 				interrupts = <55>;
-@@ -283,7 +283,7 @@
- 				status = "disabled";
- 			};
- 
--			nand@d0000 {
-+			nand: nand@d0000 {
- 				compatible = "marvell,armada370-nand";
- 				reg = <0xd0000 0x54>;
- 				#address-cells = <1>;
-@@ -293,7 +293,7 @@
- 				status = "disabled";
- 			};
- 
--			mvsdio@d4000 {
-+			sdio: mvsdio@d4000 {
- 				compatible = "marvell,orion-sdio";
- 				reg = <0xd4000 0x200>;
- 				interrupts = <54>;
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 79b5463209aa..5ed086da1e51 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -70,7 +70,7 @@
- 			reg = <MBUS_ID(0x01, 0xe0) 0 0x100000>;
- 		};
- 
--		pcie-controller {
-+		pciec: pcie-controller {
- 			compatible = "marvell,armada-370-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-@@ -89,7 +89,7 @@
- 				0x82000000 0x2 0     MBUS_ID(0x08, 0xe8) 0       1 0 /* Port 1.0 MEM */
- 				0x81000000 0x2 0     MBUS_ID(0x08, 0xe0) 0       1 0 /* Port 1.0 IO  */>;
- 
--			pcie@1,0 {
-+			pcie0: pcie@1,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
- 				reg = <0x0800 0 0 0 0>;
-@@ -106,7 +106,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@2,0 {
-+			pcie2: pcie@2,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82002800 0 0x80000 0 0x2000>;
- 				reg = <0x1000 0 0 0 0>;
-@@ -190,7 +190,7 @@
- 				pinctrl-names = "default";
- 			};
- 
--			system-controller@18200 {
-+			systemc: system-controller@18200 {
- 				compatible = "marvell,armada-370-xp-system-controller";
- 				reg = <0x18200 0x100>;
- 			};
-@@ -208,14 +208,14 @@
- 				#clock-cells = <1>;
- 			};
- 
--			thermal@18300 {
-+			thermal: thermal@18300 {
- 				compatible = "marvell,armada370-thermal";
- 				reg = <0x18300 0x4
- 					0x18304 0x4>;
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index 033fa63544f7..d26115085ea1 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -86,18 +86,6 @@
  				status = "okay";
  			};
  
--			sscg@18330 {
-+			sscg: sscg@18330 {
- 				reg = <0x18330 0x4>;
- 			};
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -260,6 +248,18 @@
+ 		compatible = "linux,spdif-dir";
+ 	};
+ };
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
  
-@@ -233,7 +233,7 @@
- 				clocks = <&coreclk 2>;
- 			};
- 
--			cpu-config@21000 {
-+			cpuconf: cpu-config@21000 {
- 				compatible = "marvell,armada-370-cpu-config";
- 				reg = <0x21000 0x8>;
- 			};
-@@ -256,7 +256,7 @@
- 				clocks = <&coreclk 0>;
- 			};
- 
--			xor@60800 {
-+			xor0: xor@60800 {
- 				compatible = "marvell,orion-xor";
- 				reg = <0x60800 0x100
- 				       0x60A00 0x100>;
-@@ -275,7 +275,7 @@
+ &spi0 {
+ 	pinctrl-0 = <&spi0_pins2>;
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index d5e19cd4d256..3e1ef56b6319 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -113,17 +113,6 @@
  				};
  			};
  
--			xor@60900 {
-+			xor1: xor@60900 {
- 				compatible = "marvell,orion-xor";
- 				reg = <0x60900 0x100
- 				       0x60b00 0x100>;
-@@ -302,7 +302,7 @@
- 				compatible = "marvell,armada-370-neta";
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-			};
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -197,6 +186,18 @@
+ 	};
+ };
+ 
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	pwr_led_pin: pwr-led-pin {
+ 		marvell,pins = "mpp63";
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+index a9e3810aea65..a6409853db6d 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+@@ -99,14 +99,6 @@
+ 				status = "okay";
  			};
  
--			crypto@90000 {
-+			cesa: crypto@90000 {
- 				compatible = "marvell,armada-370-crypto";
- 				reg = <0x90000 0x10000>;
- 				reg-names = "regs";
-diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-index 6e6d0f04bf2b..ebf79d6de1a1 100644
---- a/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-@@ -86,7 +86,7 @@
- 		 * configured as x4 or quad x1 lanes. One unit is
- 		 * x1 only.
- 		 */
--		pcie-controller {
-+		pciec: pcie-controller {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-@@ -114,7 +114,7 @@
- 				0x82000000 0x5 0       MBUS_ID(0x08, 0xe8) 0 1 0 /* Port 1.0 MEM */
- 				0x81000000 0x5 0       MBUS_ID(0x08, 0xe0) 0 1 0 /* Port 1.0 IO  */>;
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-					reg = <0>;
+-				};
+-			};
+-
+ 			ethernet@74000 {
+ 				pinctrl-0 = <&ge1_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -260,6 +252,14 @@
+ 	};
+ };
  
--			pcie@1,0 {
-+			pcie1: pcie@1,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
- 				reg = <0x0800 0 0 0 0>;
-@@ -131,7 +131,7 @@
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++		reg = <0>;
++	};
++};
++
+ &pinctrl {
+ 	power_led_pin: power-led-pin {
+ 		marvell,pins = "mpp57";
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+index 14c379699350..fd5f1d9a434a 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+@@ -93,18 +93,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -282,6 +270,18 @@
+ 	};
+ };
+ 
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	poweroff: poweroff {
+ 		marvell,pins = "mpp60";
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index fbef730e8d37..621add7e12d5 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -102,14 +102,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy = <&phy0>;
+@@ -235,7 +227,16 @@
+ 			};
+ 		};
+ 	 };
+- };
++};
++
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
+ 
+ &pinctrl {
+ 	fan_pins: fan-pins {
+diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts b/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
+index ae2e1fe50ef6..82ce5ec6467b 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
++++ b/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
+@@ -36,12 +36,6 @@
+ 		};
+ 
+ 		internal-regs {
+-			mdio {
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@74000 {
+ 				status = "okay";
+ 				pinctrl-0 = <&ge1_rgmii_pins>;
+@@ -131,3 +125,10 @@
+ 			  1300 0>;
+ 	};
+ };
++
++&mdio {
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+index 3036e25c5992..724a47908e3f 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+@@ -51,15 +51,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+@@ -208,6 +199,15 @@
+ 	};
+ };
+ 
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
+ &pinctrl {
+ 	pinctrl-0 = <&hdd0_led_sata_pin>, <&hdd1_led_sata_pin>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+index 01cded310cbc..fb52a34f0a35 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+@@ -51,15 +51,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio {
+-				pinctrl-0 = <&mdio_pins>;
+-				pinctrl-names = "default";
+-
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-			};
+-
+ 			ethernet@74000 {
+ 				status = "okay";
+ 				pinctrl-0 = <&ge1_rgmii_pins>;
+@@ -143,6 +134,15 @@
+ 	};
+ };
+ 
++&mdio {
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
+ &pinctrl {
+ 	pinctrl-0 = <&sata_led_pin>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
+index a9cc42776874..a696bbf0f703 100644
+--- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
++++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
+@@ -127,12 +127,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			mdio {
+-				phy1: ethernet-phy@1 { /* Marvell 88E1512 */
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 			       status = "okay";
+ 			       phy = <&phy1>;
+@@ -220,6 +214,12 @@
+ 	};
+ };
+ 
++&mdio {
++	phy1: ethernet-phy@1 { /* Marvell 88E1512 */
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	disk1_led_pin: disk1-led-pin {
+ 		marvell,pins = "mpp31";
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 54359896b76c..a4f9684def1c 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -259,7 +259,7 @@
  				status = "disabled";
  			};
  
--			pcie@2,0 {
-+			pcie2: pcie@2,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x44000 0 0x2000>;
- 				reg = <0x1000 0 0 0 0>;
-@@ -148,7 +148,7 @@
- 				status = "disabled";
+-			mdio: mdio {
++			mdio: mdio@72004 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "marvell,orion-mdio";
+diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+index ce152719bc28..7038c8625ac5 100644
+--- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
++++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+@@ -111,16 +111,6 @@
+ 				status = "okay";
  			};
  
--			pcie@3,0 {
-+			pcie3: pcie@3,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x48000 0 0x2000>;
- 				reg = <0x1800 0 0 0 0>;
-@@ -165,7 +165,7 @@
- 				status = "disabled";
+-			mdio {
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -153,6 +143,16 @@
+ 	};
+ };
+ 
++&mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	pinctrl-0 = <&phy_int_pin>;
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index 075120bc3ec4..665c81ff98db 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -160,24 +160,6 @@
+ 				status = "okay";
  			};
  
--			pcie@4,0 {
-+			pcie4: pcie@4,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x4c000 0 0x2000>;
- 				reg = <0x2000 0 0 0 0>;
-@@ -182,7 +182,7 @@
- 				status = "disabled";
+-			mdio {
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-
+-				phy2: ethernet-phy@2 {
+-					reg = <25>;
+-				};
+-
+-				phy3: ethernet-phy@3 {
+-					reg = <27>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy = <&phy0>;
+@@ -266,6 +248,24 @@
+ 	};
+ };
+ 
++&mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++
++	phy2: ethernet-phy@2 {
++		reg = <25>;
++	};
++
++	phy3: ethernet-phy@3 {
++		reg = <27>;
++	};
++};
++
+ &spi0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 190e4eccb180..09c9cabdf67a 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -175,24 +175,6 @@
+ 				status = "okay";
  			};
  
--			pcie@5,0 {
-+			pcie5: pcie@5,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x80000 0 0x2000>;
- 				reg = <0x2800 0 0 0 0>;
-diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-index c5fdc99f0dbe..34e78a568460 100644
---- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-@@ -87,7 +87,7 @@
- 		 * configured as x4 or quad x1 lanes. One unit is
- 		 * x4 only.
- 		 */
--		pcie-controller {
-+		pciec: pcie-controller {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-@@ -129,7 +129,7 @@
- 				0x82000000 0x9 0     MBUS_ID(0x04, 0xf8) 0 1 0 /* Port 2.0 MEM */
- 				0x81000000 0x9 0     MBUS_ID(0x04, 0xf0) 0 1 0 /* Port 2.0 IO  */>;
+-			mdio {
+-				phy0: ethernet-phy@0 {
+-					reg = <16>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <17>;
+-				};
+-
+-				phy2: ethernet-phy@2 {
+-					reg = <18>;
+-				};
+-
+-				phy3: ethernet-phy@3 {
+-					reg = <19>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy = <&phy0>;
+@@ -251,6 +233,24 @@
+ 	};
+ };
  
--			pcie@1,0 {
-+			pcie1: pcie@1,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
- 				reg = <0x0800 0 0 0 0>;
-@@ -146,7 +146,7 @@
- 				status = "disabled";
++&mdio {
++	phy0: ethernet-phy@0 {
++		reg = <16>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <17>;
++	};
++
++	phy2: ethernet-phy@2 {
++		reg = <18>;
++	};
++
++	phy3: ethernet-phy@3 {
++		reg = <19>;
++	};
++};
++
+ &spi0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+index 8af463f26ea1..0a6a43692620 100644
+--- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
++++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+@@ -89,16 +89,6 @@
+ 				status = "okay";
  			};
  
--			pcie@2,0 {
-+			pcie2: pcie@2,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x44000 0 0x2000>;
- 				reg = <0x1000 0 0 0 0>;
-@@ -163,7 +163,7 @@
- 				status = "disabled";
+-			mdio {
+-				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -296,6 +286,16 @@
+ 	};
+ };
+ 
++&mdio {
++	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	poweroff_pin: poweroff-pin {
+ 		marvell,pins = "mpp24";
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+index b6bf5344fbbe..c4685cb86f06 100644
+--- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -153,16 +153,6 @@
+ 				status = "okay";
  			};
  
--			pcie@3,0 {
-+			pcie3: pcie@3,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x48000 0 0x2000>;
- 				reg = <0x1800 0 0 0 0>;
-@@ -180,7 +180,7 @@
- 				status = "disabled";
+-			mdio {
+-				phy0: ethernet-phy@0 { /* Marvell 88E1318 */
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 { /* Marvell 88E1318 */
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+ 				pinctrl-names = "default";
+@@ -300,6 +290,17 @@
+ 	};
+ };
+ 
++&mdio {
++	phy0: ethernet-phy@0 { /* Marvell 88E1318 */
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 { /* Marvell 88E1318 */
++		reg = <1>;
++	};
++};
++
++
+ &pinctrl {
+ 	poweroff: poweroff {
+ 		marvell,pins = "mpp42";
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index ed3b889d16ce..2e2cd9353761 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -155,24 +155,6 @@
+ 				};
  			};
  
--			pcie@4,0 {
-+			pcie4: pcie@4,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x4c000 0 0x2000>;
- 				reg = <0x2000 0 0 0 0>;
-@@ -197,7 +197,7 @@
- 				status = "disabled";
+-			mdio {
+-				phy0: ethernet-phy@0 {
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 {
+-					reg = <1>;
+-				};
+-
+-				phy2: ethernet-phy@2 {
+-					reg = <2>;
+-				};
+-
+-				phy3: ethernet-phy@3 {
+-					reg = <3>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy = <&phy0>;
+@@ -240,6 +222,24 @@
+ 	};
+ };
+ 
++&mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++
++	phy2: ethernet-phy@2 {
++		reg = <2>;
++	};
++
++	phy3: ethernet-phy@3 {
++		reg = <3>;
++	};
++};
++
+ &pinctrl {
+ 	led_pins: led-pins-0 {
+ 		marvell,pins = "mpp49", "mpp51", "mpp53";
+diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
+index ae286736b90a..189ec7f4667c 100644
+--- a/arch/arm/boot/dts/armada-xp-synology-ds414.dts
++++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
+@@ -150,16 +150,6 @@
+ 				status = "okay";
  			};
  
--			pcie@5,0 {
-+			pcie5: pcie@5,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x80000 0 0x2000>;
- 				reg = <0x2800 0 0 0 0>;
-@@ -214,7 +214,7 @@
- 				status = "disabled";
- 			};
+-			mdio {
+-				phy0: ethernet-phy@0 { /* Marvell 88E1512 */
+-					reg = <0>;
+-				};
+-
+-				phy1: ethernet-phy@1 { /* Marvell 88E1512 */
+-					reg = <1>;
+-				};
+-			};
+-
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				pinctrl-0 = <&ge0_rgmii_pins>;
+@@ -240,6 +230,16 @@
+ 	};
+ };
  
--			pcie@6,0 {
-+			pcie6: pcie@6,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x84000 0 0x2000>;
- 				reg = <0x3000 0 0 0 0>;
-@@ -231,7 +231,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@7,0 {
-+			pcie7: pcie@7,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x88000 0 0x2000>;
- 				reg = <0x3800 0 0 0 0>;
-@@ -248,7 +248,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@8,0 {
-+			pcie8: pcie@8,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x8c000 0 0x2000>;
- 				reg = <0x4000 0 0 0 0>;
-@@ -265,7 +265,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@9,0 {
-+			pcie9: pcie@9,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x42000 0 0x2000>;
- 				reg = <0x4800 0 0 0 0>;
-diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-index 0e24f1a38540..5148827ed934 100644
---- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-@@ -104,7 +104,7 @@
- 		 * configured as x4 or quad x1 lanes. Two units are
- 		 * x4/x1.
- 		 */
--		pcie-controller {
-+		pciec: pcie-controller {
- 			compatible = "marvell,armada-xp-pcie";
- 			status = "disabled";
- 			device_type = "pci";
-@@ -150,7 +150,7 @@
- 				0x82000000 0xa 0     MBUS_ID(0x08, 0xf8) 0 1 0 /* Port 3.0 MEM */
- 				0x81000000 0xa 0     MBUS_ID(0x08, 0xf0) 0 1 0 /* Port 3.0 IO  */>;
- 
--			pcie@1,0 {
-+			pcie1: pcie@1,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
- 				reg = <0x0800 0 0 0 0>;
-@@ -167,7 +167,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@2,0 {
-+			pcie2: pcie@2,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82001000 0 0x44000 0 0x2000>;
- 				reg = <0x1000 0 0 0 0>;
-@@ -184,7 +184,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@3,0 {
-+			pcie3: pcie@3,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82001800 0 0x48000 0 0x2000>;
- 				reg = <0x1800 0 0 0 0>;
-@@ -201,7 +201,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@4,0 {
-+			pcie4: pcie@4,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82002000 0 0x4c000 0 0x2000>;
- 				reg = <0x2000 0 0 0 0>;
-@@ -218,7 +218,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@5,0 {
-+			pcie5: pcie@5,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82002800 0 0x80000 0 0x2000>;
- 				reg = <0x2800 0 0 0 0>;
-@@ -235,7 +235,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@6,0 {
-+			pcie6: pcie@6,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82003000 0 0x84000 0 0x2000>;
- 				reg = <0x3000 0 0 0 0>;
-@@ -252,7 +252,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@7,0 {
-+			pcie7: pcie@7,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82003800 0 0x88000 0 0x2000>;
- 				reg = <0x3800 0 0 0 0>;
-@@ -269,7 +269,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@8,0 {
-+			pcie8: pcie@8,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82004000 0 0x8c000 0 0x2000>;
- 				reg = <0x4000 0 0 0 0>;
-@@ -286,7 +286,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@9,0 {
-+			pcie9: pcie@9,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82004800 0 0x42000 0 0x2000>;
- 				reg = <0x4800 0 0 0 0>;
-@@ -303,7 +303,7 @@
- 				status = "disabled";
- 			};
- 
--			pcie@10,0 {
-+			pcie10: pcie@10,0 {
- 				device_type = "pci";
- 				assigned-addresses = <0x82005000 0 0x82000 0 0x2000>;
- 				reg = <0x5000 0 0 0 0>;
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index e141de2a4a1c..654a61e525b4 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -118,7 +118,7 @@
- 				status = "disabled";
- 			};
- 
--			system-controller@18200 {
-+			systemc: system-controller@18200 {
- 				compatible = "marvell,armada-370-xp-system-controller";
- 				reg = <0x18200 0x500>;
- 			};
-@@ -136,7 +136,7 @@
- 				#clock-cells = <1>;
- 			};
- 
--			thermal@182b0 {
-+			thermal: thermal@182b0 {
- 				compatible = "marvell,armadaxp-thermal";
- 				reg = <0x182b0 0x4
- 					0x184d0 0x4>;
-@@ -191,7 +191,7 @@
- 				clocks = <&gateclk 19>;
- 			};
- 
--			usb@52000 {
-+			usb2: usb@52000 {
- 				compatible = "marvell,orion-ehci";
- 				reg = <0x52000 0x500>;
- 				interrupts = <47>;
-@@ -199,7 +199,7 @@
- 				status = "disabled";
- 			};
- 
--			xor@60900 {
-+			xor1: xor@60900 {
- 				compatible = "marvell,orion-xor";
- 				reg = <0x60900 0x100
- 				       0x60b00 0x100>;
-@@ -227,7 +227,7 @@
- 				compatible = "marvell,armada-xp-neta";
- 			};
- 
--			crypto@90000 {
-+			cesa: crypto@90000 {
- 				compatible = "marvell,armada-xp-crypto";
- 				reg = <0x90000 0x10000>;
- 				reg-names = "regs";
-@@ -247,7 +247,7 @@
- 				status = "disabled";
- 			};
- 
--			xor@f0900 {
-+			xor0: xor@f0900 {
- 				compatible = "marvell,orion-xor";
- 				reg = <0xF0900 0x100
- 				       0xF0B00 0x100>;
++&mdio {
++	phy0: ethernet-phy@0 { /* Marvell 88E1512 */
++		reg = <0>;
++	};
++
++	phy1: ethernet-phy@1 { /* Marvell 88E1512 */
++		reg = <1>;
++	};
++};
++
+ &pinctrl {
+ 	sata1_pwr_pin: sata1-pwr-pin {
+ 		marvell,pins = "mpp42";
 -- 
 2.10.2
 
