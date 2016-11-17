@@ -1,136 +1,224 @@
-From: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Subject: [PATCH v2 1/2] regulator: max77620: add support to configure MPOK
-Date: Thu, 17 Nov 2016 23:24:35 +0530
-Message-ID: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to
+ reference-design-tablet.dtsi
+Date: Thu, 17 Nov 2016 19:35:20 +0100
+Message-ID: <20161117183520.vpyw72mchynpqx7d@lukather>
+References: <20161113192203.7101-1-hdegoede@redhat.com>
+ <20161114200802.vdduhyxnkgmpsyd5@lukather>
+ <0c3a9e9c-d310-c6c3-ae10-1ae9e520963e@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ldewangan@nvidia.com, svelpula@nvidia.com, vreddytalla@nvidia.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mcemdzigfkydcwxq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0c3a9e9c-d310-c6c3-ae10-1ae9e520963e-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding support to configure regulator POK mapping bit
-to control nRST_IO and GPIO1 POK function.
-In  tegra based platform which uses MAX20024 pmic, when
-some of regulators are configured FPS_NONE(flexible power sequencer)
-causes PMIC GPIO1 to go low which lead to various other rails turning off,
-to avoid this MPOK bit of those regulators need to be set to 0
-so that PMIC GPIO1 will not go low.
 
-Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+--mcemdzigfkydcwxq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-changes in v2:
-- updated commit message for the patch
-- address review comments
----
- drivers/regulator/max77620-regulator.c | 46 ++++++++++++++++++++++++++++++++++
- include/linux/mfd/max77620.h           |  2 ++
- 2 files changed, 48 insertions(+)
+Hi Hans,
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index a1b49a6..850b14c 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -81,6 +81,7 @@ struct max77620_regulator_pdata {
- 	int suspend_fps_pd_slot;
- 	int suspend_fps_pu_slot;
- 	int current_mode;
-+	int power_ok;
- 	int ramp_rate_setting;
- };
- 
-@@ -351,11 +352,48 @@ static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
- 	return 0;
- }
- 
-+static int max77620_config_power_ok(struct max77620_regulator *pmic, int id)
-+{
-+	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
-+	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
-+	struct max77620_chip *chip = dev_get_drvdata(pmic->dev->parent);
-+	u8 val, mask;
-+	int ret;
-+
-+	switch (chip->chip_id) {
-+	case MAX20024:
-+		if (rpdata->power_ok >= 0) {
-+			if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
-+				mask = MAX20024_SD_CFG1_MPOK_MASK;
-+			else
-+				mask = MAX20024_LDO_CFG2_MPOK_MASK;
-+
-+			val = rpdata->power_ok ? mask : 0;
-+
-+			ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr,
-+						 mask, val);
-+			if (ret < 0) {
-+				dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
-+					rinfo->cfg_addr, ret);
-+				return ret;
-+			}
-+		}
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
- {
- 	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
- 	int ret;
- 
-+	max77620_config_power_ok(pmic, id);
-+
- 	/* Update power mode */
- 	ret = max77620_regulator_get_power_mode(pmic, id);
- 	if (ret < 0)
-@@ -595,6 +633,12 @@ static int max77620_of_parse_cb(struct device_node *np,
- 			np, "maxim,suspend-fps-power-down-slot", &pval);
- 	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
- 
-+	ret = of_property_read_u32(np, "maxim,power-ok-control", &pval);
-+	if (!ret)
-+		rpdata->power_ok = pval;
-+	else
-+		rpdata->power_ok = -1;
-+
- 	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
- 	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
- 
-@@ -807,6 +851,8 @@ static int max77620_regulator_resume(struct device *dev)
- 	for (id = 0; id < MAX77620_NUM_REGS; id++) {
- 		reg_pdata = &pmic->reg_pdata[id];
- 
-+		max77620_config_power_ok(pmic, id);
-+
- 		max77620_regulator_set_fps_slots(pmic, id, false);
- 		if (reg_pdata->active_fps_src < 0)
- 			continue;
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-index 3ca0af07..ad2a9a8 100644
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -180,6 +180,7 @@
- #define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
- #define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
- #define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
-+#define MAX20024_SD_CFG1_MPOK_MASK		BIT(1)
- #define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
- #define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
- #define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
-@@ -187,6 +188,7 @@
- /* LDO_CNFG2 */
- #define MAX77620_LDO_POWER_MODE_MASK		0xC0
- #define MAX77620_LDO_POWER_MODE_SHIFT		6
-+#define MAX20024_LDO_CFG2_MPOK_MASK		BIT(2)
- #define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
- #define MAX77620_LDO_CFG2_ADE_DISABLE		0
- #define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
--- 
-2.1.4
+On Tue, Nov 15, 2016 at 11:12:35AM +0100, Hans de Goede wrote:
+> Hi,
+>=20
+> On 14-11-16 21:08, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Sun, Nov 13, 2016 at 08:22:02PM +0100, Hans de Goede wrote:
+> > > Just like on sun8i all sun5i tablets use the same interrupt and power
+> > > gpios for their touchscreens. I've checked all known a13 fex files and
+> > > only the UTOO P66 uses a different gpio for the interrupt.
+> > >=20
+> > > Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
+> > > fills in the necessary gpios to avoid duplication in the tablet dts f=
+iles,
+> > > just like we do in sun8i-reference-design-tablet.dtsi.
+> > >=20
+> > > This will make future patches adding touchscreen nodes to a13 tablets
+> > > simpler.
+> > >=20
+> > > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++----=
+----------
+> > >  .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++=
+++
+> > >  2 files changed, 39 insertions(+), 24 deletions(-)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot=
+/dts/sun5i-a13-utoo-p66.dts
+> > > index a8b0bcc..3d7ff10 100644
+> > > --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> > > +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+> > > @@ -83,22 +83,6 @@
+> > >  	allwinner,pins =3D "PG3";
+> > >  };
+> > >=20
+> > > -&i2c1 {
+> > > -	icn8318: touchscreen@40 {
+> > > -		compatible =3D "chipone,icn8318";
+> > > -		reg =3D <0x40>;
+> > > -		interrupt-parent =3D <&pio>;
+> > > -		interrupts =3D <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+> > > -		pinctrl-names =3D "default";
+> > > -		pinctrl-0 =3D <&ts_wake_pin_p66>;
+> > > -		wake-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> > > -		touchscreen-size-x =3D <800>;
+> > > -		touchscreen-size-y =3D <480>;
+> > > -		touchscreen-inverted-x;
+> > > -		touchscreen-swapped-x-y;
+> > > -	};
+> > > -};
+> > > -
+> > >  &mmc2 {
+> > >  	pinctrl-names =3D "default";
+> > >  	pinctrl-0 =3D <&mmc2_pins_a>;
+> > > @@ -121,20 +105,26 @@
+> > >  		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> > >  		allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+> > >  	};
+> > > -
+> > > -	ts_wake_pin_p66: ts_wake_pin@0 {
+> > > -		allwinner,pins =3D "PB3";
+> > > -		allwinner,function =3D "gpio_out";
+> > > -		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> > > -		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> > > -	};
+> > > -
+> > >  };
+> > >=20
+> > >  &reg_usb0_vbus {
+> > >  	gpio =3D <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+> > >  };
+> > >=20
+> > > +&touchscreen {
+> > > +	compatible =3D "chipone,icn8318";
+> > > +	reg =3D <0x40>;
+> > > +	/* The P66 uses a different EINT then the reference design */
+> > > +	interrupts =3D <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+> > > +	/* The icn8318 binding expects wake-gpios instead of power-gpios */
+> > > +	wake-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> > > +	touchscreen-size-x =3D <800>;
+> > > +	touchscreen-size-y =3D <480>;
+> > > +	touchscreen-inverted-x;
+> > > +	touchscreen-swapped-x-y;
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > >  &uart1 {
+> > >  	/* The P66 uses the uart pins as gpios */
+> > >  	status =3D "disabled";
+> > > diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/a=
+rch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> > > index 20cc940..7af488a 100644
+> > > --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> > > +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+> > > @@ -41,6 +41,7 @@
+> > >   */
+> > >  #include "sunxi-reference-design-tablet.dtsi"
+> > >=20
+> > > +#include <dt-bindings/interrupt-controller/irq.h>
+> > >  #include <dt-bindings/pwm/pwm.h>
+> > >=20
+> > >  / {
+> > > @@ -84,6 +85,23 @@
+> > >  };
+> > >=20
+> > >  &i2c1 {
+> > > +	/*
+> > > +	 * The gsl1680 is rated at 400KHz and it will not work reliable at
+> > > +	 * 100KHz, this has been confirmed on multiple different q8 tablets.
+> > > +	 * All other devices on this bus are also rated for 400KHz.
+> > > +	 */
+> > > +	clock-frequency =3D <400000>;
+> > > +
+> > > +	touchscreen: touchscreen {
+> > > +		interrupt-parent =3D <&pio>;
+> > > +		interrupts =3D <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
+> > > +		pinctrl-names =3D "default";
+> > > +		pinctrl-0 =3D <&ts_power_pin>;
+> > > +		power-gpios =3D <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+> > > +		/* Tablet dts must provide reg and compatible */
+> > > +		status =3D "disabled";
+> > > +	};
+> > > +
+> > >  	pcf8563: rtc@51 {
+> > >  		compatible =3D "nxp,pcf8563";
+> > >  		reg =3D <0x51>;
+> > > @@ -125,6 +143,13 @@
+> > >  		allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+> > >  	};
+> > >=20
+> > > +	ts_power_pin: ts_power_pin {
+> > > +		allwinner,pins =3D "PB3";
+> > > +		allwinner,function =3D "gpio_out";
+> > > +		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> > > +		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> > > +	};
+> > > +
+> >=20
+> > For the next release, we'll switch to the generic pin mux properties
+> > ("pins" and "function"), and we actually implemented the fact that the
+> > drive and pull properties are optional, so you can drop them both.
+> >=20
+> > You'll need next + http://lists.infradead.org/pipermail/linux-arm-kerne=
+l/2016-November/467123.html
+>=20
+> Ok, before I send a v2 first a question about this, for the touchscreen
+> case I actually need:
+>=20
+> 		allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> 		allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>=20
+> Because otherwise when the touchscreen controller is powered by a separate
+> regulator and that regulator is off, then it may draw just enough current
+> from its enable pin to be sort-of listening to the i2c bus and mess up
+> that bus.
+>=20
+> So is this the default, or do we get the power-on default when not
+> specifying these? If it is the power-on default then we do need to
+> specify these, because AFAICT the power-on drive strength typically
+> is 20 mA.
+
+Leaving them out will keep whatever state has been programmed. Putting
+them in the DT will force them to whatever value has been set.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--mcemdzigfkydcwxq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYLfhjAAoJEBx+YmzsjxAgLEkQAJ7vMmptamg2kKC4rWJhg8Co
+/9rVotaDFndK2Q2kTS/hwTkAuPFEdDotjDl6lhSyrwojkFAot2KcLoUbJ5tJZEEV
+FGoVtdEyPEN4UIntixgfVEbz6YKsi4v+K6Ic2EbkqDS524W4gBWiVs5AbMXP9HnU
+hANPY1LlIAXpRh5mVaS1bLZKh/QPigBGTMX1cBK4VkAbbseOTOrDuwx9TFzKtLog
+sluSnSS+58jOs0mS6bo99HvCK7qLJhn8x2pIDzV0eUKyQcLNhjcU3IKgK09z2twr
+5Bun7oscUFaejWnhfx9kPhrjj56n9OvYupyMdagJfgLia1QJP1lmFJ3UYH9QnadD
+iYb861ldNZlCt9Bc+IOWia6b2nvw4LfrdXFtnrCWM1+dEAG3sWeKRH3r/uuWexio
+0yRjSPqJqVpsZZuKB4hQreEB5BWd2shkqT4BrFyyPEx2fnZqY8lEwQMK3uK5Ojtr
+jwKioBwel7wxOSidtwcyZnIRK8zHfCmx5ztd5l9FMmR5hxjNcRxMrqAQGT8wCOwU
+ZTriBIjo4EK8MkGQGbu2wZbtNqKdC0rzbm/fRJXrUgo8y6p6AICxHENYcAs2Na4p
+kSFfQtTdAKF+YkcAjIUSe2wwKsjETZeI90HDwOgL0OnUitzZyqi2vvIfo9k9GjW/
+KArXp+MK3XvrYH35ribJ
+=+A/x
+-----END PGP SIGNATURE-----
+
+--mcemdzigfkydcwxq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
