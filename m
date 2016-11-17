@@ -1,37 +1,41 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/2] arm64: dts: NS2: enable sdio1
-Date: Thu, 17 Nov 2016 18:25:02 -0500
-Message-ID: <1479425103-2119-2-git-send-email-jon.mason@broadcom.com>
-References: <1479425103-2119-1-git-send-email-jon.mason@broadcom.com>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: Fix issue where code would fall through to error case.
+Date: Thu, 17 Nov 2016 15:25:57 -0800
+Message-ID: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479425103-2119-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable sdio1 in the Northstar2 SVK device tree file
+No longer fall through into the error case that prints out
+an error if no error (err = 0) occurred.
 
-Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Fixes d9181b20a83(of: Add back an error message, restructured)
+Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/of/resolver.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index 07c69a3e..de8d379 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -161,6 +161,10 @@
- 	status = "ok";
- };
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 783bd09..785076d 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
  
-+&sdio1 {
-+	status = "ok";
-+};
+ 		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+ 		if (err)
+-			break;
++			goto err_out;
+ 	}
+ 
++	of_node_put(tree_symbols);
 +
- &nand {
- 	nandcs@0 {
- 		compatible = "brcm,nandcs";
++	return 0;
++
+ err_out:
+ 	pr_err("overlay phandle fixup failed: %d\n", err);
+ out:
 -- 
 2.7.4
 
