@@ -1,74 +1,42 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am335x-boneblack: Add blue-and-red-wiring -property to LCDC node
-Date: Thu, 17 Nov 2016 22:13:42 +0200
-Message-ID: <a7a7cd2666199316cbf13f5c1c9a387838f645bf.1479413359.git.jsarha@ti.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
+Date: Thu, 17 Nov 2016 22:16:40 +0200
+Message-ID: <53a30979-9dd9-1fdf-2b2c-5b98b379bc68@ti.com>
+References: <cover.1479388871.git.jsarha@ti.com>
+ <6eaa1b5d467cd354f7d5dc5ff8da1b9bf732ff11.1479388871.git.jsarha@ti.com>
+ <5969991d-c4cd-4ac5-9025-dfcd2b6b914d@ti.com> <12647548.AgjiIO6s4p@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <12647548.AgjiIO6s4p@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, khilman@baylibre.com, dri-devel@lists.freedesktop.org, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add blue-and-red-wiring -property to LCDC node. Also adds comments on
-how to get support 24 bit RGB mode. After this patch am335x-boneblack
-support RGB565, BGR888, and XBGR8888 color formats. See details in
-Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt.
-
-The BBB has straight color wiring from am335x to tda19988, however the
-tda19988 can be configured to cross the blue and red wires. The
-comments show how to do that with video-ports property of tda19988
-node and how to tell LCDC that blue and red wires are crossed, with
-blue-and-red-wiring LCDC node property. This changes supported color
-formats from 16 bit RGB and 24 bit BGR to 16 bit BGR and 24 bit RGB.
-
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
----
-Hi Tony,
-Could you pick this for 4.10. We left it out form 4.9 to avoid
-conflict with beaglebone-back hdmi audio dts patches that slipped in
-trough drm branch.
-
-Cheers,
-Jyri
-
- arch/arm/boot/dts/am335x-boneblack.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 6bbb1fe..db00d8e 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -79,6 +79,14 @@
- 
- &lcdc {
- 	status = "okay";
-+
-+	/* If you want to get 24 bit RGB and 16 BGR mode instead of
-+	 * current 16 bit RGB and 24 BGR modes, set the propety
-+	 * below to "crossed" and uncomment the video-ports -property
-+	 * in tda19988 node.
-+	 */
-+	blue-and-red-wiring = "straight";
-+
- 	port {
- 		lcdc_0: endpoint@0 {
- 			remote-endpoint = <&hdmi_0>;
-@@ -95,6 +103,9 @@
- 		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
- 		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
- 
-+		/* Convert 24bit BGR to RGB, e.g. cross red and blue wiring */
-+		/* video-ports = <0x234501>; */
-+
- 		#sound-dai-cells = <0>;
- 		audio-ports = <	TDA998x_I2S	0x03>;
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMTcvMTYgMTk6MjAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+ID4gT29wcywgZm9y
+Z290IHRvIGhhbmRsZSB0aGUgcmV0dXJuIHZhbHVlcy4gVGhpcyBpcyBob3cgSSBmaXhlZCBpdDoK
+Pj4gPiBzdGF0aWMgaW50IF9faW5pdCB0ZnA0MTBfbW9kdWxlX2luaXQodm9pZCkKPj4gPiB7Cj4+
+ID4gCWludCByZXQ7Cj4+ID4gCj4+ID4gCXJldCA9IGkyY19hZGRfZHJpdmVyKCZ0ZnA0MTBfaTJj
+X2RyaXZlcik7Cj4+ID4gCWlmIChyZXQpCj4+ID4gCQlyZXR1cm4gcmV0Owo+PiA+IAo+PiA+IAly
+ZXQgPSBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJnRmcDQxMF9wbGF0Zm9ybV9kcml2ZXIpOwo+
+PiA+IAlpZiAocmV0KQo+PiA+IAkJaTJjX2RlbF9kcml2ZXIoJnRmcDQxMF9pMmNfZHJpdmVyKTsK
+Pj4gPiAKPj4gPiAJcmV0dXJuIHJldDsKPj4gPiB9Cj4gSWYgcmVnaXN0cmF0aW9uIG9mIG9uZSBv
+ZiB0aGUgdHdvIGRyaXZlcnMgZmFpbCwgd291bGRuJ3QgaXQgbWFrZSBzZW5zZSB0byAKPiBzdGls
+bCBjb250aW51ZSAocHJvYmFibHkgd2l0aCBhbiBlcnJvciBtZXNzYWdlKSB0byBhdm9pZCBicmVh
+a2luZyB0aGUgb3RoZXIgCj4gb25lID8KPiAKCk9oLCBnb29kIHBvaW50LiBJIGZpeCB0aGF0IHRv
+by4gQW55dGhpbmcgZWxzZSBhYm91dCB0aGlzIHNlcmllcz8gSSdkCmxpa2UgdG8gc2VuZCBhIHB1
+bGwgcmVxdWVzdCBmb3IgNC4xMCBzb29uLgoKPj4+ID4gPiArCj4+PiA+ID4gKwlyZXR1cm4gMDsK
+Pj4+ID4gPiArfQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
