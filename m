@@ -1,76 +1,77 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] net: ethernet: faraday: To support device tree usage.
-Date: Thu, 17 Nov 2016 10:37:31 +0800
-Message-ID: <CAEbi=3eMcJ6U0opLEFgomS5ZBTfqyL2acag7JakuGFxsbgM_aA@mail.gmail.com>
-References: <1479285795-3105-1-git-send-email-green.hu@gmail.com>
- <CAEbi=3esyRi4cnUNf4uPKCQtyRekBRo81Frd=BSJy8qf=3uc+A@mail.gmail.com>
- <20161116143715.GH19962@lunn.ch> <7309308.u1IWIyx3Gm@wuerfel>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
+Date: Thu, 17 Nov 2016 11:03:42 +0800
+Message-ID: <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-2-wenpan@hisilicon.com> <5893354.6MrIxqzRoI@wuerfel>
+ <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
+ <582C2785.2010804@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7309308.u1IWIyx3Gm@wuerfel>
+In-Reply-To: <582C2785.2010804-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: wenpan <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marty Plummer <netz.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, jalen.hsu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lvkuanliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.lixu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qinxiaojun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 12:12 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday, November 16, 2016 3:37:15 PM CET Andrew Lunn wrote:
->> On Wed, Nov 16, 2016 at 10:26:52PM +0800, Greentime Hu wrote:
->> > On Wed, Nov 16, 2016 at 9:47 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
->> > > On Wed, Nov 16, 2016 at 04:43:15PM +0800, Greentime Hu wrote:
->> > >> To support device tree usage for ftmac100.
->> > >>
->> > >> Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > >> ---
->> > >>  drivers/net/ethernet/faraday/ftmac100.c |    7 +++++++
->> > >>  1 file changed, 7 insertions(+)
->> > >>
->> > >> diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
->> > >> index dce5f7b..81dd9e1 100644
->> > >> --- a/drivers/net/ethernet/faraday/ftmac100.c
->> > >> +++ b/drivers/net/ethernet/faraday/ftmac100.c
->> > >> @@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
->> > >>       return 0;
->> > >>  }
->> > >>
->> > >> +static const struct of_device_id mac_of_ids[] = {
->> > >> +     { .compatible = "andestech,atmac100" },
->> > >> +     { }
->> > >
->> > > andestech is not in
->> > > Documentation/devicetree/bindings/vendor-prefixes.txt Please provide a
->> > > separate patch adding it.
->> > OK. I will provide another patch to add andestech.
->> >
->> > > Humm, why andestech? Why not something based around faraday
->> > > technology?
->> > It is because we use the same ftmac100 IP provided from faraday
->> > technology but I am now using it in andestech SoC.
->>
->> Please make sure you get an acked-by: from the device tree
->> maintainers. They might want you to use faraday, since that is the
->> original IP provider. For example, all Synopsys licensed IP uses
->> "snps,XXX", not the SoC vendor with the license.
->
-> I think ideally we have both the ID from andes and from faraday here.
->
-> Note that we already have "moxa,moxart-mac" as a compatible string
-> for this hardware, though it uses a different driver.
->
-> We should probably have a single binding document describing
-> both compatible strings and any optional properties.
->
->         Arnd
+Hi Wei，
 
-I am agree with that.
-Andes got this ftmac100 ip from faraday and we refined it.
-We rename it to atmac100 to provide to our customer.
-These 2 mac100 are using different hardware RTL code but they are
-software compatible.
+On 2016/11/16 17:31, Wei Xu wrote:
+> Hi Pan,
+> 
+> On 2016/11/16 8:56, wenpan wrote:
+>> Hi Marty，
+>> Does this confict with your patch？ If not，I hope this could be merged first.  Besides could you tell me the link to your related patch?
+> 
+> This is the link: https://patchwork.kernel.org/patch/9334743/
+> 
 
-Most of the IPs in Andes SoC are named as atXXX in its dts.
-I suggest using this string "andestech,atmac100".
+Thank you for offering this.If I want to give some comments on Marty's patch,
+what should I do?
+
+For Marty's patch, I think there's no need to add specific config item ARCH_HIxxxx
+for every chipset. Some existing chipsets depend on ARCH_HISI directly like Hi3519
+and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HISI, this kind
+of chipsets will must choose other place to select it. I suggest we should keep selecting
+ARM_GIC under ARCH_HISI as Pan's patch do.
+
+The code may be like this:
+
+config ARCH_HISI
+ 	bool "Hisilicon SoC Support"
+-	depends on ARCH_MULTI_V7
++	depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
+ 	select ARM_AMBA
+-	select ARM_GIC
++	select ARM_GIC if ARCH_MULTI_V7
++	select ARM_VIC if ARCH_MULTI_V5 || depends on ARCH_MULTI_V6
+ 	select ARM_TIMER_SP804
+ 	select POWER_RESET
+ 	select POWER_RESET_HISI
+ 	select POWER_SUPPLY
+
+What's your opinion?
+
+Best Regards,
+Jiancheng
+
+>> On 2016/10/17 21:48, Arnd Bergmann wrote:
+>>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
+>>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
+>>>>
+>>>> Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>>>>
+>>>
+>>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
+>>> patches for Hi3520, which I think is closely related to this one.
+>>> Please try to work together so the patches don't conflict. It should
+>>> be fairly straightforward since you are basically doing the same
+>>> change here.
+>>>
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
