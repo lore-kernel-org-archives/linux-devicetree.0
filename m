@@ -1,456 +1,194 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 18:40:17 +0100
-Message-ID: <582DEB81.6050806@topic.nl>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to
+ reference-design-tablet.dtsi
+Date: Thu, 17 Nov 2016 19:52:38 +0100
+Message-ID: <7db6926e-a490-21c7-851b-1bc34ae97a6a@redhat.com>
+References: <20161113192203.7101-1-hdegoede@redhat.com>
+ <20161114200802.vdduhyxnkgmpsyd5@lukather>
+ <0c3a9e9c-d310-c6c3-ae10-1ae9e520963e@redhat.com>
+ <20161117183520.vpyw72mchynpqx7d@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Tom Levens <tom.levens@cern.ch>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161117183520.vpyw72mchynpqx7d@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-﻿On 17-11-16 17:56, Guenter Roeck wrote:
-> On 11/17/2016 04:10 AM, Tom Levens wrote:
->> Updated version of the ltc2990 driver which supports all measurement
->> modes available in the chip. The mode can be set through a devicetree
->> attribute.
+Hi,
+
+On 17-11-16 19:35, Maxime Ripard wrote:
+> Hi Hans,
 >
-> property
+> On Tue, Nov 15, 2016 at 11:12:35AM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 14-11-16 21:08, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Sun, Nov 13, 2016 at 08:22:02PM +0100, Hans de Goede wrote:
+>>>> Just like on sun8i all sun5i tablets use the same interrupt and power
+>>>> gpios for their touchscreens. I've checked all known a13 fex files and
+>>>> only the UTOO P66 uses a different gpio for the interrupt.
+>>>>
+>>>> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
+>>>> fills in the necessary gpios to avoid duplication in the tablet dts files,
+>>>> just like we do in sun8i-reference-design-tablet.dtsi.
+>>>>
+>>>> This will make future patches adding touchscreen nodes to a13 tablets
+>>>> simpler.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------------
+>>>>  .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
+>>>>  2 files changed, 39 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+>>>> index a8b0bcc..3d7ff10 100644
+>>>> --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+>>>> +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
+>>>> @@ -83,22 +83,6 @@
+>>>>  	allwinner,pins = "PG3";
+>>>>  };
+>>>>
+>>>> -&i2c1 {
+>>>> -	icn8318: touchscreen@40 {
+>>>> -		compatible = "chipone,icn8318";
+>>>> -		reg = <0x40>;
+>>>> -		interrupt-parent = <&pio>;
+>>>> -		interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+>>>> -		pinctrl-names = "default";
+>>>> -		pinctrl-0 = <&ts_wake_pin_p66>;
+>>>> -		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+>>>> -		touchscreen-size-x = <800>;
+>>>> -		touchscreen-size-y = <480>;
+>>>> -		touchscreen-inverted-x;
+>>>> -		touchscreen-swapped-x-y;
+>>>> -	};
+>>>> -};
+>>>> -
+>>>>  &mmc2 {
+>>>>  	pinctrl-names = "default";
+>>>>  	pinctrl-0 = <&mmc2_pins_a>;
+>>>> @@ -121,20 +105,26 @@
+>>>>  		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>>>>  	};
+>>>> -
+>>>> -	ts_wake_pin_p66: ts_wake_pin@0 {
+>>>> -		allwinner,pins = "PB3";
+>>>> -		allwinner,function = "gpio_out";
+>>>> -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>> -		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>> -	};
+>>>> -
+>>>>  };
+>>>>
+>>>>  &reg_usb0_vbus {
+>>>>  	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+>>>>  };
+>>>>
+>>>> +&touchscreen {
+>>>> +	compatible = "chipone,icn8318";
+>>>> +	reg = <0x40>;
+>>>> +	/* The P66 uses a different EINT then the reference design */
+>>>> +	interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
+>>>> +	/* The icn8318 binding expects wake-gpios instead of power-gpios */
+>>>> +	wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+>>>> +	touchscreen-size-x = <800>;
+>>>> +	touchscreen-size-y = <480>;
+>>>> +	touchscreen-inverted-x;
+>>>> +	touchscreen-swapped-x-y;
+>>>> +	status = "okay";
+>>>> +};
+>>>> +
+>>>>  &uart1 {
+>>>>  	/* The P66 uses the uart pins as gpios */
+>>>>  	status = "disabled";
+>>>> diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>>>> index 20cc940..7af488a 100644
+>>>> --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>>>> +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
+>>>> @@ -41,6 +41,7 @@
+>>>>   */
+>>>>  #include "sunxi-reference-design-tablet.dtsi"
+>>>>
+>>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>>>  #include <dt-bindings/pwm/pwm.h>
+>>>>
+>>>>  / {
+>>>> @@ -84,6 +85,23 @@
+>>>>  };
+>>>>
+>>>>  &i2c1 {
+>>>> +	/*
+>>>> +	 * The gsl1680 is rated at 400KHz and it will not work reliable at
+>>>> +	 * 100KHz, this has been confirmed on multiple different q8 tablets.
+>>>> +	 * All other devices on this bus are also rated for 400KHz.
+>>>> +	 */
+>>>> +	clock-frequency = <400000>;
+>>>> +
+>>>> +	touchscreen: touchscreen {
+>>>> +		interrupt-parent = <&pio>;
+>>>> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
+>>>> +		pinctrl-names = "default";
+>>>> +		pinctrl-0 = <&ts_power_pin>;
+>>>> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
+>>>> +		/* Tablet dts must provide reg and compatible */
+>>>> +		status = "disabled";
+>>>> +	};
+>>>> +
+>>>>  	pcf8563: rtc@51 {
+>>>>  		compatible = "nxp,pcf8563";
+>>>>  		reg = <0x51>;
+>>>> @@ -125,6 +143,13 @@
+>>>>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>>>>  	};
+>>>>
+>>>> +	ts_power_pin: ts_power_pin {
+>>>> +		allwinner,pins = "PB3";
+>>>> +		allwinner,function = "gpio_out";
+>>>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>>>> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>>> +	};
+>>>> +
+>>>
+>>> For the next release, we'll switch to the generic pin mux properties
+>>> ("pins" and "function"), and we actually implemented the fact that the
+>>> drive and pull properties are optional, so you can drop them both.
+>>>
+>>> You'll need next + http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/467123.html
+>>
+>> Ok, before I send a v2 first a question about this, for the touchscreen
+>> case I actually need:
+>>
+>> 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>>
+>> Because otherwise when the touchscreen controller is powered by a separate
+>> regulator and that regulator is off, then it may draw just enough current
+>> from its enable pin to be sort-of listening to the i2c bus and mess up
+>> that bus.
+>>
+>> So is this the default, or do we get the power-on default when not
+>> specifying these? If it is the power-on default then we do need to
+>> specify these, because AFAICT the power-on drive strength typically
+>> is 20 mA.
 >
->>
->> Signed-off-by: Tom Levens <tom.levens@cern.ch>
->> ---
->>
->> Changes since v1:
->>   * Refactored value conversion (patch 1/3)
->>   * Split the devicetree binding into separate patch (patch 2/3)
->>   * Specifying an invalid mode now returns -EINVAL, previously this
->>     only issued a warning and used the default value
->>   * Removed the "mode" sysfs attribute, as the mode of the chip is
->>     hardware specific and should not be user configurable. This allows
->> much
->>     simpler code as a result.
->>
->>  Documentation/hwmon/ltc2990 |   24 ++++---
->>  drivers/hwmon/Kconfig       |    7 +--
->>  drivers/hwmon/ltc2990.c     |  167
->> ++++++++++++++++++++++++++++++++++++-------
->>  3 files changed, 159 insertions(+), 39 deletions(-)
->>
->> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
->> index c25211e..3ed68f6 100644
->> --- a/Documentation/hwmon/ltc2990
->> +++ b/Documentation/hwmon/ltc2990
->> @@ -8,6 +8,7 @@ Supported chips:
->>      Datasheet: http://www.linear.com/product/ltc2990
->>
->>  Author: Mike Looijmans <mike.looijmans@topic.nl>
->> +        Tom Levens <tom.levens@cern.ch>
->>
->>
->>  Description
->> @@ -16,10 +17,8 @@ Description
->>  LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
->>  The chip's inputs can measure 4 voltages, or two inputs together (1+2
->> and 3+4)
->>  can be combined to measure a differential voltage, which is typically
->> used to
->> -measure current through a series resistor, or a temperature.
->> -
->> -This driver currently uses the 2x differential mode only. In order to
->> support
->> -other modes, the driver will need to be expanded.
->> +measure current through a series resistor, or a temperature with an
->> external
->> +diode.
->>
->>
->>  Usage Notes
->> @@ -32,12 +31,19 @@ devices explicitly.
->>  Sysfs attributes
->>  ----------------
->>
->> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
->> +temp1_input   Internal chip temperature in millidegrees Celcius
->> +
->> +A subset of the following attributes are visible, depending on the
->> measurement
->> +mode of the chip.
->> +
->> +in[1-4]_input Voltage at V[1-4] pin in millivolt
->> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
->> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
->> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
->> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
->> +
->>  The "curr*_input" measurements actually report the voltage drop
->> across the
->>  input pins in microvolts. This is equivalent to the current through a
->> 1mOhm
->>  sense resistor. Divide the reported value by the actual sense
->> resistor value
->>  in mOhm to get the actual value.
->> -
->> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
->> -temp1_input   Internal chip temperature in millidegrees Celcius
->> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense
->> resistor.
->> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense
->> resistor.
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index 45cef3d..f7096ca 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -699,15 +699,12 @@ config SENSORS_LTC2945
->>        be called ltc2945.
->>
->>  config SENSORS_LTC2990
->> -    tristate "Linear Technology LTC2990 (current monitoring mode only)"
->> +    tristate "Linear Technology LTC2990"
->>      depends on I2C
->>      help
->>        If you say yes here you get support for Linear Technology LTC2990
->>        I2C System Monitor. The LTC2990 supports a combination of voltage,
->> -      current and temperature monitoring, but in addition to the Vcc
->> supply
->> -      voltage and chip temperature, this driver currently only supports
->> -      reading two currents by measuring two differential voltages across
->> -      series resistors.
->> +      current and temperature monitoring.
->>
->>        This driver can also be built as a module. If so, the module will
->>        be called ltc2990.
->> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
->> index 0ec4102..e8d36f5 100644
->> --- a/drivers/hwmon/ltc2990.c
->> +++ b/drivers/hwmon/ltc2990.c
->> @@ -6,11 +6,7 @@
->>   *
->>   * License: GPLv2
->>   *
->> - * This driver assumes the chip is wired as a dual current monitor, and
->> - * reports the voltage drop across two series resistors. It also reports
->> - * the chip's internal temperature and Vcc power supply voltage.
->> - *
->> - * Value conversion refactored
->> + * Value conversion refactored and support for all measurement modes
->> added
->>   * by Tom Levens <tom.levens@cern.ch>
->>   */
->>
->> @@ -21,6 +17,7 @@
->>  #include <linux/i2c.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->> +#include <linux/of.h>
->>
->>  #define LTC2990_STATUS    0x00
->>  #define LTC2990_CONTROL    0x01
->> @@ -35,32 +32,96 @@
->>  #define LTC2990_CONTROL_KELVIN        BIT(7)
->>  #define LTC2990_CONTROL_SINGLE        BIT(6)
->>  #define LTC2990_CONTROL_MEASURE_ALL    (0x3 << 3)
->> -#define LTC2990_CONTROL_MODE_CURRENT    0x06
->> -#define LTC2990_CONTROL_MODE_VOLTAGE    0x07
->> +#define LTC2990_CONTROL_MODE_DEFAULT    0x06
->
-> I think LTC2990_CONTROL_MODE_CURRENT was better - it describes the
-> actual mode.
-> Changing the define to _DEFAULT does not really improve code readability.
+> Leaving them out will keep whatever state has been programmed. Putting
+> them in the DT will force them to whatever value has been set.
 
-I think I understand what the author intended - the mode becomes an 
-index into the array.
+Thanks for the answer, in the mean time I've send a v2 which leaves
+them in using the new names (which according to your answer seems to
+be the right thing to do).
 
-But I think the define can be dropped altogether, see below.
+Regards,
 
->
->> +#define LTC2990_CONTROL_MODE_MAX    0x07
->> +
->> +#define LTC2990_IN0    BIT(0)
->> +#define LTC2990_IN1    BIT(1)
->> +#define LTC2990_IN2    BIT(2)
->> +#define LTC2990_IN3    BIT(3)
->> +#define LTC2990_IN4    BIT(4)
->> +#define LTC2990_CURR1    BIT(5)
->> +#define LTC2990_CURR2    BIT(6)
->> +#define LTC2990_TEMP1    BIT(7)
->> +#define LTC2990_TEMP2    BIT(8)
->> +#define LTC2990_TEMP3    BIT(9)
->> +
->> +static const int ltc2990_attrs_ena[] = {
->> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
->> +    LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
->> +    LTC2990_TEMP2 | LTC2990_CURR2,
->> +    LTC2990_TEMP2 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_CURR2,
->> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
->> +};
->> +
->> +struct ltc2990_data {
->> +    struct i2c_client *i2c;
->> +    u32 mode;
->> +};
->>
->>  /* Return the converted value from the given register in uV or mC */
->> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32
->> *result)
->> +static int ltc2990_get_value(struct i2c_client *i2c, int index, s32
->> *result)
->>  {
->>      s32 val;
->> +    u8 reg;
->> +
->> +    switch (index) {
->> +    case LTC2990_IN0:
->> +        reg = LTC2990_VCC_MSB;
->> +        break;
->> +    case LTC2990_IN1:
->> +    case LTC2990_CURR1:
->> +    case LTC2990_TEMP2:
->> +        reg = LTC2990_V1_MSB;
->> +        break;
->> +    case LTC2990_IN2:
->> +        reg = LTC2990_V2_MSB;
->> +        break;
->> +    case LTC2990_IN3:
->> +    case LTC2990_CURR2:
->> +    case LTC2990_TEMP3:
->> +        reg = LTC2990_V3_MSB;
->> +        break;
->> +    case LTC2990_IN4:
->> +        reg = LTC2990_V4_MSB;
->> +        break;
->> +    case LTC2990_TEMP1:
->> +        reg = LTC2990_TINT_MSB;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->>
->>      val = i2c_smbus_read_word_swapped(i2c, reg);
->>      if (unlikely(val < 0))
->>          return val;
->>
->> -    switch (reg) {
->> -    case LTC2990_TINT_MSB:
->> -        /* internal temp, 0.0625 degrees/LSB, 13-bit  */
->> +    switch (index) {
->> +    case LTC2990_TEMP1:
->> +    case LTC2990_TEMP2:
->> +    case LTC2990_TEMP3:
->> +        /* temp, 0.0625 degrees/LSB, 13-bit  */
->>          *result = sign_extend32(val, 12) * 1000 / 16;
->>          break;
->> -    case LTC2990_V1_MSB:
->> -    case LTC2990_V3_MSB:
->> -         /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
->> +    case LTC2990_CURR1:
->> +    case LTC2990_CURR2:
->> +         /* Vx-Vy, 19.42uV/LSB */
->>          *result = sign_extend32(val, 14) * 1942 / 100;
->>          break;
->> -    case LTC2990_VCC_MSB:
->> -        /* Vcc, 305.18Î¼V/LSB, 2.5V offset */
->> +    case LTC2990_IN0:
->> +        /* Vcc, 305.18uV/LSB, 2.5V offset */
->>          *result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
->>          break;
->> +    case LTC2990_IN1:
->> +    case LTC2990_IN2:
->> +    case LTC2990_IN3:
->> +    case LTC2990_IN4:
->> +        /* Vx: 305.18uV/LSB */
->> +        *result = sign_extend32(val, 14) * 30518 / (100 * 1000);
->> +        break;
->>      default:
->>          return -EINVAL; /* won't happen, keep compiler happy */
->>      }
->> @@ -72,48 +133,104 @@ static ssize_t ltc2990_show_value(struct device
->> *dev,
->>                    struct device_attribute *da, char *buf)
->>  {
->>      struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
->> +    struct ltc2990_data *data = dev_get_drvdata(dev);
->>      s32 value;
->>      int ret;
->>
->> -    ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
->> +    ret = ltc2990_get_value(data->i2c, attr->index, &value);
->>      if (unlikely(ret < 0))
->>          return ret;
->>
->>      return snprintf(buf, PAGE_SIZE, "%d\n", value);
->>  }
->>
->> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
->> +                     struct attribute *a, int n)
->> +{
->> +    struct device *dev = container_of(kobj, struct device, kobj);
->> +    struct ltc2990_data *data = dev_get_drvdata(dev);
->> +    struct device_attribute *da =
->> +            container_of(a, struct device_attribute, attr);
->> +    struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
->> +
->> +    if (attr->index == LTC2990_TEMP1 ||
->> +        attr->index == LTC2990_IN0 ||
->> +        attr->index & ltc2990_attrs_ena[data->mode])
->> +        return a->mode;
->> +    else
->
-> Unnecessary else
->
->> +        return 0;
->> +}
->> +
->>  static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value,
->> NULL,
->> -              LTC2990_TINT_MSB);
->> +              LTC2990_TEMP1);
->> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value,
->> NULL,
->> +              LTC2990_TEMP2);
->> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value,
->> NULL,
->> +              LTC2990_TEMP3);
->>  static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value,
->> NULL,
->> -              LTC2990_V1_MSB);
->> +              LTC2990_CURR1);
->>  static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value,
->> NULL,
->> -              LTC2990_V3_MSB);
->> +              LTC2990_CURR2);
->>  static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
->> -              LTC2990_VCC_MSB);
->> +              LTC2990_IN0);
->> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN1);
->> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN2);
->> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN3);
->> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN4);
->>
->>  static struct attribute *ltc2990_attrs[] = {
->>      &sensor_dev_attr_temp1_input.dev_attr.attr,
->> +    &sensor_dev_attr_temp2_input.dev_attr.attr,
->> +    &sensor_dev_attr_temp3_input.dev_attr.attr,
->>      &sensor_dev_attr_curr1_input.dev_attr.attr,
->>      &sensor_dev_attr_curr2_input.dev_attr.attr,
->>      &sensor_dev_attr_in0_input.dev_attr.attr,
->> +    &sensor_dev_attr_in1_input.dev_attr.attr,
->> +    &sensor_dev_attr_in2_input.dev_attr.attr,
->> +    &sensor_dev_attr_in3_input.dev_attr.attr,
->> +    &sensor_dev_attr_in4_input.dev_attr.attr,
->>      NULL,
->>  };
->> -ATTRIBUTE_GROUPS(ltc2990);
->> +
->> +static const struct attribute_group ltc2990_group = {
->> +    .attrs = ltc2990_attrs,
->> +    .is_visible = ltc2990_attrs_visible,
->> +};
->> +__ATTRIBUTE_GROUPS(ltc2990);
->>
->>  static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>                   const struct i2c_device_id *id)
->>  {
->>      int ret;
->>      struct device *hwmon_dev;
->> +    struct ltc2990_data *data;
->> +    struct device_node *of_node = i2c->dev.of_node;
->>
->>      if (!i2c_check_functionality(i2c->adapter,
->> I2C_FUNC_SMBUS_BYTE_DATA |
->>                       I2C_FUNC_SMBUS_WORD_DATA))
->>          return -ENODEV;
->>
->> -    /* Setup continuous mode, current monitor */
->> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
->> GFP_KERNEL);
->> +    if (unlikely(!data))
->> +        return -ENOMEM;
->> +    data->i2c = i2c;
->> +
->> +    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
->> &data->mode))
->> +        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
->
-> Iam arguing with myself if we should still do this or if we should read
-> the mode
-> from the chip instead if it isn't provided (after all, it may have been
-> initialized
-> by the BIOS/ROMMON).
-
-I think the mode should be explicitly set, without default. There's no 
-way to tell whether the BIOS or bootloader has really set it up or 
-whether the chip is just reporting whatever it happened to default to. 
-And given the chip's function, it's unlikely a bootloader would want to 
-initialize it.
-
-My advice would be to make it a required property. If not set, display 
-an error and bail out.
-
-> Mike, would that break your application, or can you specify the mode in
-> devicetree ?
-
-I'm fine with specifying this in the devicetree. It will break things 
-for me, but I've been warned and willing to bow for the greater good :)
-
->
-> Thanks,
-> Guenter
->
->> +
->> +    if (data->mode > LTC2990_CONTROL_MODE_MAX) {
->> +        dev_err(&i2c->dev, "Error: Invalid mode %d.\n", data->mode);
->> +        return -EINVAL;
->> +    }
->> +
->> +    /* Setup continuous mode */
->>      ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
->>                      LTC2990_CONTROL_MEASURE_ALL |
->> -                    LTC2990_CONTROL_MODE_CURRENT);
->> +                    data->mode);
->>      if (ret < 0) {
->>          dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
->>          return ret;
->> @@ -127,7 +244,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>
->>      hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
->>                                 i2c->name,
->> -                               i2c,
->> +                               data,
->>                                 ltc2990_groups);
->>
->>      return PTR_ERR_OR_ZERO(hwmon_dev);
->>
->
-
-
--- 
-Mike Looijmans
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
