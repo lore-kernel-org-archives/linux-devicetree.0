@@ -1,63 +1,71 @@
-From: Abhimanyu Saini <abhimanyu.saini@nxp.com>
-Subject: RE: [RESEND][PATCH 6/6] arm64: Add DTS support for FSL's LS2088A SoC
-Date: Thu, 17 Nov 2016 12:31:03 +0000
-Message-ID: <AM2PR04MB059660B0CD1A643A1AB75C08EDB10@AM2PR04MB0596.eurprd04.prod.outlook.com>
-References: <1478597664-14799-1-git-send-email-abhimanyu.saini@nxp.com>
- <1478597664-14799-7-git-send-email-abhimanyu.saini@nxp.com>
- <20161114063346.GH3310@dragon>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v3 0/3] drm/tilcdc: Add bridge support and sync-lost flood
+ recovery
+Date: Thu, 17 Nov 2016 15:28:45 +0200
+Message-ID: <cover.1479388871.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161114063346.GH3310@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Priyanka Jain <priyanka.jain@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>, Scott Wood <scott.wood@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: bcousson@baylibre.com, khilman@baylibre.com, Jyri Sarha <jsarha@ti.com>, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-> > Following levels of DTSI/DTS files have been created for the LS2088A
-> > SoC family:
-> >
-> >      - fsl-ls2088a.dtsi:
-> >             DTS-Include file for FSL LS2088A SoC.
-> >
-> >      - fsl-ls2088a-qds.dts:
-> >             DTS file for FSL LS2088A QDS board.
-> >
-> >      - fsl-ls2088a-rdb.dts:
-> >             DTS file for FSL LS2088A RDB board.
-> 
-> I compared the following files.
-> 
->  fsl-ls2088a.dtsi vs. fsl-ls2080a.dtsi
->  fsl-ls2088a-qds.dtsi vs. fsl-ls2080a-qds.dtsi  fsl-ls2088a-rdb.dtsi vs.
-> fsl-ls2080a-rdb.dtsi
-> 
-> They are basically identical except a couple of small changes.  Can we do
-> something to have these SoCs share the dts files at some level to avoid
-> maintaining duplicated files?
-
-Hi Shawn,
-
-Yes, we could reorganize DTSI and DTS file.
-I can create fsl-ls2080a-ls2088a.dtsi and move all the common nodes to this file,
-
-Then fsl-ls2080a.dtsi and fsl-ls2088a.dtsi which will include
-the common file and add ls2080a and ls2088a specific nodes respectively.
-
-Same hierarchy can be created for fsl-ls2080a-qds.dts, fsl-ls2080a-rdb,
-fsl-ls2088a-qds.dts and fsl-ls2088a-rdb, wherein the common nodes will lie in
-fsl-ls2080a-ls2088a-qds.dts and fsl-ls2080a-ls2088a-rdb.dts
-
-What do you think?
-
-Abhimanyu
+Q2hhbmdlcyBzaW5jZSB2MjoKLSAiZHJtL3RpbGNkYzogUmVjb3ZlciBmcm9tIHN5bmMgbG9zdCBl
+cnJvciBmbG9vZCBieSByZXNldHRpbmcgdGhlIExDREMiCiAgLSBubyBjaGFuZ2UKLSAiZHJtL2Jy
+aWRnZTogQWRkIHRpLXRmcDQxMCBEVkkgdHJhbnNtaXR0ZXIgZHJpdmVyIgogIC0gRml4IGRldmVp
+Y2UtdHJlZSBkb2N1bWVudAogICAgLSAiZHJpdmVyIG5vZGUiIC0+ICJkZXZpY2Ugbm9kZSIKICAg
+IC0gcmVtb3ZlICIodGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gZG9lcyBub3QgeWV0IHN1cHBv
+cnQgdGhpcykiCiAgLSBBZGQgZHVtbXkgaTJjIHN1cHBvcnQuIFRoZSBkcml2ZXIgcHJvYmUgd29y
+a3MgYWxzbyBpZiBwbGFjZWQgdW5kZXIKICAgIGkyYyBjb250cm9sbGVyIG5vZGUsIGJ1dCB0aGVy
+ZSBpcyBubyBhY3R1YWwgaTJjIHByb2JpbmcuCi0gImRybS90aWxjZGM6IEFkZCBkcm0gYnJpZGdl
+IHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZlcnMiCiAgLSBubyBjaGFuZ2UK
+CkNoYW5nZXMgc2luY2UgZmlyc3QgdmVyc2lvbiBvZiB0aGUgc2VyaWVzOgotICJkcm0vdGlsY2Rj
+OiBSZWNvdmVyIGZyb20gc3luYyBsb3N0IGVycm9yIGZsb29kIGJ5IHJlc2V0dGluZyB0aGUgTENE
+QyIKICAtIG5vIGNoYW5nZQotICJkcm0vYnJpZGdlOiBBZGQgdGktdGZwNDEwIERWSSB0cmFuc21p
+dHRlciBkcml2ZXIiCiAgLSBIRE1JIC0+IERWSQogIC0gRFQgQmluZGluZyBkb2N1bWVudAogICAg
+LSBQcmVwYXJlIGZvciB0ZnA0MTAgY29ubmVjdGVkIHRyb3VnaCBpMmMgYnkgb3B0aW9uYWwgcmVn
+IHByb3BlcnR5CiAgICAtIFJlcXVpcmUgdHdvIHBvcnQgbm9kZXMKICAtIEltcGxlbWVudGF0aW9u
+CiAgICAtIEltcGxlbWVudCBjb25uZWN0b3Igbm9kZSBmdW5jdGlvbmFsaXR5IHdpdGggaW4gdGZw
+NDEwIGJyaWRnZQogICAgICBkcml2ZSwgYnV0IGZvbGxvdyBnZW5lcmljIGNvbm5lY3RvciBiaW5k
+aW5nIGJ5IHB1bGxpbmcgdGhlCiAgICAgIGRkYy1pMmMtYnVzIHByb3BlcnR5IGZyb20gdGhlIGNv
+bm5lY3RvciBub2RlLgotICJkcm0vdGlsY2RjOiBBZGQgZHJtIGJyaWRnZSBzdXBwb3J0IGZvciBh
+dHRhY2hpbmcgZHJtIGJyaWRnZSBkcml2ZXJzIgogIC0gUmVtb3ZlIGVhcmxpZXIgY2hhbmdlIGlu
+IFREIGJpbmRpbmcgZG9jdW1lbnQuIFRoZXJlIGlzIG5vIG5lZWQgdG8KICAgIG1lbnRpb24gRFJN
+IGltcGxlbWVudGF0aW9uIGRldGFpbHMsIGxpa2UgYnJpZGdlIHN1cHBvcnQsIGluIERUCiAgICBi
+aW5kaW5nLgoKVGhlIGZpcnN0IHBhdGNoIGlzIGFuIGluZGVwZW5kZW50IG9uIGFuZCBJJ3ZlIGJl
+ZW4gdGVzdGluZyBpdCBmb3IKcXVpdGUgYSB3aGlsZSBub3cuCgpUaGUgdGZwNDEwIGJyaWRnZSBk
+cml2ZXIgYW5kIHRoZSB0aWxjZGMgYnJpZGdlIHN1cHBvcnQgYXJlIHRlc3RlZCB3aXRoCkJlYWds
+ZUJvbmUgRFZJLUQgQ2FwZSBSZXYgQTMuIFRoZSB0ZnA0MTAgYnJpZGdlIGRyaXZlciBpcyBtaXNz
+aW5nIGEKbG90IG9mIGZlYXR1cmVzLCBiZWNhdXNlIHRoZSBEVkktRCBjYXBlIGRvZXMgbm90IGhh
+dmUgdG9vIG1hbnkgd2lyZXMKY29ubmVjdGVkLiBUaGUgbWlzc2luZyBmZWF0dXJlcyBjYW4gYmUg
+YWRkZWQgbGF0ZXIgd2hlbiB0aGV5IGFyZQpuZWVkZWQuCgpKeXJpIFNhcmhhICgzKToKICBkcm0v
+dGlsY2RjOiBSZWNvdmVyIGZyb20gc3luYyBsb3N0IGVycm9yIGZsb29kIGJ5IHJlc2V0dGluZyB0
+aGUgTENEQwogIGRybS9icmlkZ2U6IEFkZCB0aS10ZnA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZl
+cgogIGRybS90aWxjZGM6IEFkZCBkcm0gYnJpZGdlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0g
+YnJpZGdlIGRyaXZlcnMKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4
+dCAgICAgICAgICB8ICA0MCArKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgIHwgICA3ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUg
+ICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktdGZw
+NDEwLmMgICAgICAgICAgICAgICAgIHwgMjg3ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVy
+cy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfY3J0Yy5jICAgICAgICAgICAgICAgfCAgMjYgKy0KIGRy
+aXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5jICAgICAgICAgICAgICAgIHwgICA3ICst
+CiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19kcnYuaCAgICAgICAgICAgICAgICB8ICAg
+MiArCiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRlcm5hbC5jICAgICAgICAgICB8
+IDE0MCArKysrKysrKy0tCiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRlcm5hbC5o
+ICAgICAgICAgICB8ICAgMSArCiA5IGZpbGVzIGNoYW5nZWQsIDQ5MSBpbnNlcnRpb25zKCspLCAy
+MCBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dAogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvdGktdGZwNDEwLmMKCi0tIAoxLjkuMQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
