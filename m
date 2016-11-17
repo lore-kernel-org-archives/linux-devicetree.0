@@ -1,79 +1,110 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] soc/tegra: Implement Tegra186 PMC support
-Date: Thu, 17 Nov 2016 17:40:35 +0000
-Message-ID: <efb274c8-d361-f4d1-95aa-547b9e941d68@arm.com>
-References: <20161117171636.20580-1-thierry.reding@gmail.com>
- <0068ebe4-09f3-4434-fc38-071cf2d553bc@arm.com>
- <20161117173110.GA7915@ulmo.ba.sec>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND PATCH v7 0/3] Add clockevent for timer-nps driver to
+ NPS400 SoC
+Date: Thu, 17 Nov 2016 09:50:35 -0800
+Message-ID: <d3ae0f3b-a343-1e34-533b-3bc640c24fed@synopsys.com>
+References: <1479277873-18994-1-git-send-email-noamca@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117173110.GA7915-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479277873-18994-1-git-send-email-noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/15/2016 10:31 PM, Noam Camus wrote:
+> From: Noam Camus <noamca-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> 
+> Change log
+> ---
+> V6 --> V7
+> Apply several comments made by Daniel Lezcano:
+> 1) Remove CLOCK_EVT_FEAT_PERIODIC support. This way it is
+>  pure oneshot driver. This simplifies driver so that:
+>  nps_clkevent_add_thread()
+>  nps_clkevent_rm_thread()
+>  are more clearer without any vague logic if to change
+>  TSI bit of current HW thread or not.
+> 2) tick_resume is also calls nps_clkevent_rm_thread()
+> 3) Few (hopefully last) typo fixes. 
+> 
+> V5 --> V6
+> Apply several comments made by Daniel Lezcano:
+> 1) nps_get_timer_clk() - use clk_put() on error scenario
+> 2) nps_get_timer_clk() - return EINVAL and not plain 1
+> 3) Fix typos in log (double checked with spell checker)
+> 
+> V4 --> V5
+> Apply several comments made by Daniel Lezcano:
+> 1) Add __init attribute to nps_get_timer_clk()
+> 2) Fix return value of nps_get_timer_clk()
+>  when failing to get clk rate
+> 3) Change clocksource rate from 301 -> 300
+> 
+> V3 --> V4
+> Main changes are [Thanks for the review]:
+> Fix many typos at log [Daniel]
+> Add handling for bad return values [Daniel and Thomas]
+> Replace use of internal irqchip pointers with existing IRQ API [Thomas]
+> Provide interrupt handler (percpu) with dev_id equal to evt [Thomas]
+> Fix passing *clk by reference to nps_get_timer_clk() [Daniel]
+> 
+> V2 --> V3
+> Apply Rob Herring comment about backword compatibility
+> 
+> V1 --> V2
+> Apply Daniel Lezcano comments:
+> 	CLOCKSOURCE_OF_DECLARE return value
+> 	update hotplug callbacks usage
+> 	squash of 2 first commits.
+> In this version I created new commit to serve as preperation for adding clockevents.
+> This way the last patch is more readable with clockevent content.
+> ---
+> 
+> In first version of this driver we supported clocksource for the NPS400.
+> The support for clockevent was taken from Synopsys ARC timer driver.
+> This was good for working with our simulator of NPS400.
+> However in NPS400 ASIC the timers behave differently than simulation.
+> The timers in ASIC are shared between all threads whithin a core
+> and hence need different driver to support this behaviour.
+> 
+> The idea of this design is that we got 16 HW threads per core
+> each represented at bimask in a shared register in this core.
+> So when thread wants that next clockevent expiration will produce
+> timer interrupt to itself the correspondance bit in this register
+> should be set.
+> So theoretically if all 16 bits are set then all HW threads will get
+> timer interrupt on next expiration of timer 0.
+> 
+> Note that we use Synopsys ARC design naming convention for the timers
+> where:
+> timer0 is used for clockevents
+> timer1 is used for clocksource.
+> 
+> Noam Camus (3):
+>   soc: Support for NPS HW scheduling
+>   clocksource: update "fn" at CLOCKSOURCE_OF_DECLARE() of nps400 timer
+>   clocksource: Add clockevent support to NPS400 driver
+> 
+>  .../bindings/timer/ezchip,nps400-timer.txt         |   15 --
+>  .../bindings/timer/ezchip,nps400-timer0.txt        |   17 ++
+>  .../bindings/timer/ezchip,nps400-timer1.txt        |   15 ++
+>  arch/arc/plat-eznps/include/plat/ctop.h            |    2 -
+>  drivers/clocksource/timer-nps.c                    |  223 ++++++++++++++++++--
+>  include/soc/nps/mtm.h                              |   59 +++++
+>  6 files changed, 294 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+>  create mode 100644 include/soc/nps/mtm.h
 
+Added to ARC for-next !
 
-On 17/11/16 17:31, Thierry Reding wrote:
-> On Thu, Nov 17, 2016 at 05:28:53PM +0000, Sudeep Holla wrote:
->>
->>
->> On 17/11/16 17:16, Thierry Reding wrote:
->>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The power management controller on Tegra186 has changed in backwards-
->>> incompatible ways with respect to earlier generations. This implements a
->>> new driver that supports inversion of the PMU interrupt as well as the
->>> "recovery", "bootloader" and "forced-recovery" reboot commands.
->>>
->>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  34 +++++
->>>  drivers/soc/tegra/Makefile                         |   2 +-
->>>  drivers/soc/tegra/pmc-tegra186.c                   | 169 +++++++++++++++++++++
->>>  3 files changed, 204 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
->>>  create mode 100644 drivers/soc/tegra/pmc-tegra186.c
->>>
->>
->> [...]
->>
->>> diff --git a/drivers/soc/tegra/pmc-tegra186.c b/drivers/soc/tegra/pmc-tegra186.c
->>> new file mode 100644
->>> index 000000000000..ee28eddd8e3c
->>> --- /dev/null
->>> +++ b/drivers/soc/tegra/pmc-tegra186.c
->>
->> [...]
->>
->>> +
->>> +	/*
->>> +	 * If available, call the system restart implementation that was
->>> +	 * registered earlier (typically PSCI).
->>> +	 */
->>> +	if (pmc->system_restart) {
->>> +		pmc->system_restart(reboot_mode, cmd);
->>> +		return NOTIFY_DONE;
->>> +	}
->>> +
->>
->> IIUC, Tegra186 implements PSCI v1.0 and it always takes above path.
->> So what other platforms does this driver support ? The name is
->> pmc-tegra186.c, hence the confusion.
->
-> It's technically possible to run Tegra186 without PSCI enabled, or even
-> boot it with firmware that doesn't implement PSCI. In such cases it
-
-OK, with enable-method as "spin-table" I suppose ?
-
-> would be nice to still be able to reboot via the PMC code above.
-
-I assume it's only for development purposes as you won't have much CPU
-power management support without PSCI.
-
--- 
-Regards,
-Sudeep
+Thx,
+-Vineet
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
