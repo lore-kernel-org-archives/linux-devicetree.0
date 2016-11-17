@@ -1,391 +1,98 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 08:56:49 -0800
-Message-ID: <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH] clk: qcom: smd-rpm: Add msm8974 clocks
+Date: Thu, 17 Nov 2016 17:53:56 +0200
+Message-ID: <3c57fe94-e6b3-d884-9c80-aa26e5ef9fde@linaro.org>
+References: <1479192844-1281-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479384616-12479-3-git-send-email-tom.levens-vJEk5272eHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
-Cc: jdelvare-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479192844-1281-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2016 04:10 AM, Tom Levens wrote:
-> Updated version of the ltc2990 driver which supports all measurement
-> modes available in the chip. The mode can be set through a devicetree
-> attribute.
-
-property
-
+On 11/15/2016 08:54 AM, Bjorn Andersson wrote:
+> This adds all RPM based clocks for msm8974 except cxo and gfx3d_clk_src.
 >
-> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
+>  drivers/clk/qcom/clk-smd-rpm.c                     | 71 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h             | 40 +++++++++++-
+>  3 files changed, 110 insertions(+), 2 deletions(-)
 >
-> Changes since v1:
->   * Refactored value conversion (patch 1/3)
->   * Split the devicetree binding into separate patch (patch 2/3)
->   * Specifying an invalid mode now returns -EINVAL, previously this
->     only issued a warning and used the default value
->   * Removed the "mode" sysfs attribute, as the mode of the chip is
->     hardware specific and should not be user configurable. This allows much
->     simpler code as a result.
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 87d3714b956a..a7235e9e1c97 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -11,6 +11,7 @@ Required properties :
+>                 compatible "qcom,rpmcc" should be also included.
 >
->  Documentation/hwmon/ltc2990 |   24 ++++---
->  drivers/hwmon/Kconfig       |    7 +--
->  drivers/hwmon/ltc2990.c     |  167 ++++++++++++++++++++++++++++++++++++-------
->  3 files changed, 159 insertions(+), 39 deletions(-)
+>  			"qcom,rpmcc-msm8916", "qcom,rpmcc"
+> +			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+>  			"qcom,rpmcc-apq8064", "qcom,rpmcc"
 >
-> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
-> index c25211e..3ed68f6 100644
-> --- a/Documentation/hwmon/ltc2990
-> +++ b/Documentation/hwmon/ltc2990
-> @@ -8,6 +8,7 @@ Supported chips:
->      Datasheet: http://www.linear.com/product/ltc2990
->
->  Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-> +        Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
->
->
->  Description
-> @@ -16,10 +17,8 @@ Description
->  LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
->  The chip's inputs can measure 4 voltages, or two inputs together (1+2 and 3+4)
->  can be combined to measure a differential voltage, which is typically used to
-> -measure current through a series resistor, or a temperature.
-> -
-> -This driver currently uses the 2x differential mode only. In order to support
-> -other modes, the driver will need to be expanded.
-> +measure current through a series resistor, or a temperature with an external
-> +diode.
->
->
->  Usage Notes
-> @@ -32,12 +31,19 @@ devices explicitly.
->  Sysfs attributes
->  ----------------
->
-> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
-> +temp1_input   Internal chip temperature in millidegrees Celcius
-> +
-> +A subset of the following attributes are visible, depending on the measurement
-> +mode of the chip.
-> +
-> +in[1-4]_input Voltage at V[1-4] pin in millivolt
-> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
-> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
-> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
-> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
-> +
->  The "curr*_input" measurements actually report the voltage drop across the
->  input pins in microvolts. This is equivalent to the current through a 1mOhm
->  sense resistor. Divide the reported value by the actual sense resistor value
->  in mOhm to get the actual value.
-> -
-> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
-> -temp1_input   Internal chip temperature in millidegrees Celcius
-> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense resistor.
-> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense resistor.
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 45cef3d..f7096ca 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -699,15 +699,12 @@ config SENSORS_LTC2945
->  	  be called ltc2945.
->
->  config SENSORS_LTC2990
-> -	tristate "Linear Technology LTC2990 (current monitoring mode only)"
-> +	tristate "Linear Technology LTC2990"
->  	depends on I2C
->  	help
->  	  If you say yes here you get support for Linear Technology LTC2990
->  	  I2C System Monitor. The LTC2990 supports a combination of voltage,
-> -	  current and temperature monitoring, but in addition to the Vcc supply
-> -	  voltage and chip temperature, this driver currently only supports
-> -	  reading two currents by measuring two differential voltages across
-> -	  series resistors.
-> +	  current and temperature monitoring.
->
->  	  This driver can also be built as a module. If so, the module will
->  	  be called ltc2990.
-> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-> index 0ec4102..e8d36f5 100644
-> --- a/drivers/hwmon/ltc2990.c
-> +++ b/drivers/hwmon/ltc2990.c
-> @@ -6,11 +6,7 @@
->   *
->   * License: GPLv2
->   *
-> - * This driver assumes the chip is wired as a dual current monitor, and
-> - * reports the voltage drop across two series resistors. It also reports
-> - * the chip's internal temperature and Vcc power supply voltage.
-> - *
-> - * Value conversion refactored
-> + * Value conversion refactored and support for all measurement modes added
->   * by Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
->   */
->
-> @@ -21,6 +17,7 @@
->  #include <linux/i2c.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->
->  #define LTC2990_STATUS	0x00
->  #define LTC2990_CONTROL	0x01
-> @@ -35,32 +32,96 @@
->  #define LTC2990_CONTROL_KELVIN		BIT(7)
->  #define LTC2990_CONTROL_SINGLE		BIT(6)
->  #define LTC2990_CONTROL_MEASURE_ALL	(0x3 << 3)
-> -#define LTC2990_CONTROL_MODE_CURRENT	0x06
-> -#define LTC2990_CONTROL_MODE_VOLTAGE	0x07
-> +#define LTC2990_CONTROL_MODE_DEFAULT	0x06
-
-I think LTC2990_CONTROL_MODE_CURRENT was better - it describes the actual mode.
-Changing the define to _DEFAULT does not really improve code readability.
-
-> +#define LTC2990_CONTROL_MODE_MAX	0x07
-> +
-> +#define LTC2990_IN0	BIT(0)
-> +#define LTC2990_IN1	BIT(1)
-> +#define LTC2990_IN2	BIT(2)
-> +#define LTC2990_IN3	BIT(3)
-> +#define LTC2990_IN4	BIT(4)
-> +#define LTC2990_CURR1	BIT(5)
-> +#define LTC2990_CURR2	BIT(6)
-> +#define LTC2990_TEMP1	BIT(7)
-> +#define LTC2990_TEMP2	BIT(8)
-> +#define LTC2990_TEMP3	BIT(9)
-> +
-> +static const int ltc2990_attrs_ena[] = {
-> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
-> +	LTC2990_CURR1 | LTC2990_TEMP3,
-> +	LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
-> +	LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
-> +	LTC2990_TEMP2 | LTC2990_CURR2,
-> +	LTC2990_TEMP2 | LTC2990_TEMP3,
-> +	LTC2990_CURR1 | LTC2990_CURR2,
-> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
-> +};
-> +
-> +struct ltc2990_data {
-> +	struct i2c_client *i2c;
-> +	u32 mode;
-> +};
->
->  /* Return the converted value from the given register in uV or mC */
-> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 *result)
-> +static int ltc2990_get_value(struct i2c_client *i2c, int index, s32 *result)
->  {
->  	s32 val;
-> +	u8 reg;
-> +
-> +	switch (index) {
-> +	case LTC2990_IN0:
-> +		reg = LTC2990_VCC_MSB;
-> +		break;
-> +	case LTC2990_IN1:
-> +	case LTC2990_CURR1:
-> +	case LTC2990_TEMP2:
-> +		reg = LTC2990_V1_MSB;
-> +		break;
-> +	case LTC2990_IN2:
-> +		reg = LTC2990_V2_MSB;
-> +		break;
-> +	case LTC2990_IN3:
-> +	case LTC2990_CURR2:
-> +	case LTC2990_TEMP3:
-> +		reg = LTC2990_V3_MSB;
-> +		break;
-> +	case LTC2990_IN4:
-> +		reg = LTC2990_V4_MSB;
-> +		break;
-> +	case LTC2990_TEMP1:
-> +		reg = LTC2990_TINT_MSB;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
->
->  	val = i2c_smbus_read_word_swapped(i2c, reg);
->  	if (unlikely(val < 0))
->  		return val;
->
-> -	switch (reg) {
-> -	case LTC2990_TINT_MSB:
-> -		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
-> +	switch (index) {
-> +	case LTC2990_TEMP1:
-> +	case LTC2990_TEMP2:
-> +	case LTC2990_TEMP3:
-> +		/* temp, 0.0625 degrees/LSB, 13-bit  */
->  		*result = sign_extend32(val, 12) * 1000 / 16;
->  		break;
-> -	case LTC2990_V1_MSB:
-> -	case LTC2990_V3_MSB:
-> -		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
-> +	case LTC2990_CURR1:
-> +	case LTC2990_CURR2:
-> +		 /* Vx-Vy, 19.42uV/LSB */
->  		*result = sign_extend32(val, 14) * 1942 / 100;
->  		break;
-> -	case LTC2990_VCC_MSB:
-> -		/* Vcc, 305.18μV/LSB, 2.5V offset */
-> +	case LTC2990_IN0:
-> +		/* Vcc, 305.18uV/LSB, 2.5V offset */
->  		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
->  		break;
-> +	case LTC2990_IN1:
-> +	case LTC2990_IN2:
-> +	case LTC2990_IN3:
-> +	case LTC2990_IN4:
-> +		/* Vx: 305.18uV/LSB */
-> +		*result = sign_extend32(val, 14) * 30518 / (100 * 1000);
-> +		break;
->  	default:
->  		return -EINVAL; /* won't happen, keep compiler happy */
->  	}
-> @@ -72,48 +133,104 @@ static ssize_t ltc2990_show_value(struct device *dev,
->  				  struct device_attribute *da, char *buf)
->  {
->  	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-> +	struct ltc2990_data *data = dev_get_drvdata(dev);
->  	s32 value;
->  	int ret;
->
-> -	ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
-> +	ret = ltc2990_get_value(data->i2c, attr->index, &value);
->  	if (unlikely(ret < 0))
->  		return ret;
->
->  	return snprintf(buf, PAGE_SIZE, "%d\n", value);
->  }
->
-> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
-> +				     struct attribute *a, int n)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct ltc2990_data *data = dev_get_drvdata(dev);
-> +	struct device_attribute *da =
-> +			container_of(a, struct device_attribute, attr);
-> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-> +
-> +	if (attr->index == LTC2990_TEMP1 ||
-> +	    attr->index == LTC2990_IN0 ||
-> +	    attr->index & ltc2990_attrs_ena[data->mode])
-> +		return a->mode;
-> +	else
-
-Unnecessary else
-
-> +		return 0;
-> +}
-> +
->  static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value, NULL,
-> -			  LTC2990_TINT_MSB);
-> +			  LTC2990_TEMP1);
-> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_TEMP2);
-> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_TEMP3);
->  static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value, NULL,
-> -			  LTC2990_V1_MSB);
-> +			  LTC2990_CURR1);
->  static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value, NULL,
-> -			  LTC2990_V3_MSB);
-> +			  LTC2990_CURR2);
->  static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
-> -			  LTC2990_VCC_MSB);
-> +			  LTC2990_IN0);
-> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_IN1);
-> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_IN2);
-> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_IN3);
-> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
-> +			  LTC2990_IN4);
->
->  static struct attribute *ltc2990_attrs[] = {
->  	&sensor_dev_attr_temp1_input.dev_attr.attr,
-> +	&sensor_dev_attr_temp2_input.dev_attr.attr,
-> +	&sensor_dev_attr_temp3_input.dev_attr.attr,
->  	&sensor_dev_attr_curr1_input.dev_attr.attr,
->  	&sensor_dev_attr_curr2_input.dev_attr.attr,
->  	&sensor_dev_attr_in0_input.dev_attr.attr,
-> +	&sensor_dev_attr_in1_input.dev_attr.attr,
-> +	&sensor_dev_attr_in2_input.dev_attr.attr,
-> +	&sensor_dev_attr_in3_input.dev_attr.attr,
-> +	&sensor_dev_attr_in4_input.dev_attr.attr,
->  	NULL,
+>  - #clock-cells : shall contain 1
+> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+> index a27013dbc0aa..b8fcac6f2f87 100644
+> --- a/drivers/clk/qcom/clk-smd-rpm.c
+> +++ b/drivers/clk/qcom/clk-smd-rpm.c
+> @@ -462,8 +462,79 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
+>  	.num_clks = ARRAY_SIZE(msm8916_clks),
 >  };
-> -ATTRIBUTE_GROUPS(ltc2990);
+>
+> +/* msm8974 */
+> +DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+> +DEFINE_CLK_SMD_RPM(msm8974, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
+> +DEFINE_CLK_SMD_RPM(msm8974, mmssnoc_ahb_clk, mmssnoc_ahb_a_clk, QCOM_SMD_RPM_BUS_CLK, 3);
+> +DEFINE_CLK_SMD_RPM(msm8974, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
+> +DEFINE_CLK_SMD_RPM(msm8974, gfx3d_clk_src, gfx3d_a_clk_src, QCOM_SMD_RPM_MEM_CLK, 1);
+> +DEFINE_CLK_SMD_RPM(msm8974, ocmemgx_clk, ocmemgx_a_clk, QCOM_SMD_RPM_MEM_CLK, 2);
+> +DEFINE_CLK_SMD_RPM_QDSS(msm8974, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_d0, cxo_d0_a, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_d1, cxo_d1_a, 2);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a0, cxo_a0_a, 4);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a1, cxo_a1_a, 5);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a2, cxo_a2_a, 6);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, diff_clk, diff_a_clk, 7);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, div_clk1, div_a_clk1, 11);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, div_clk2, div_a_clk2, 12);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_d0_pin, cxo_d0_a_pin, 1);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_d1_pin, cxo_d1_a_pin, 2);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a0_pin, cxo_a0_a_pin, 4);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a1_pin, cxo_a1_a_pin, 5);
+> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a2_pin, cxo_a2_a_pin, 6);
 > +
-> +static const struct attribute_group ltc2990_group = {
-> +	.attrs = ltc2990_attrs,
-> +	.is_visible = ltc2990_attrs_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(ltc2990);
->
->  static int ltc2990_i2c_probe(struct i2c_client *i2c,
->  			     const struct i2c_device_id *id)
->  {
->  	int ret;
->  	struct device *hwmon_dev;
-> +	struct ltc2990_data *data;
-> +	struct device_node *of_node = i2c->dev.of_node;
->
->  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->  				     I2C_FUNC_SMBUS_WORD_DATA))
->  		return -ENODEV;
->
-> -	/* Setup continuous mode, current monitor */
-> +	data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data), GFP_KERNEL);
-> +	if (unlikely(!data))
-> +		return -ENOMEM;
-> +	data->i2c = i2c;
-> +
-> +	if (!of_node || of_property_read_u32(of_node, "lltc,mode", &data->mode))
-> +		data->mode = LTC2990_CONTROL_MODE_DEFAULT;
+> +static struct clk_smd_rpm *msm8974_clks[] = {
+> +	[RPM_SMD_PNOC_CLK]		= &msm8974_pnoc_clk,
+> +	[RPM_SMD_PNOC_A_CLK]		= &msm8974_pnoc_a_clk,
+> +	[RPM_SMD_SNOC_CLK]		= &msm8974_snoc_clk,
+> +	[RPM_SMD_SNOC_A_CLK]		= &msm8974_snoc_a_clk,
+> +	[RPM_SMD_CNOC_CLK]		= &msm8974_cnoc_clk,
+> +	[RPM_SMD_CNOC_A_CLK]		= &msm8974_cnoc_a_clk,
+> +	[RPM_SMD_MMSSNOC_AHB_CLK]	= &msm8974_mmssnoc_ahb_clk,
+> +	[RPM_SMD_MMSSNOC_AHB_A_CLK]	= &msm8974_mmssnoc_ahb_a_clk,
+> +	[RPM_SMD_BIMC_CLK]		= &msm8974_bimc_clk,
+> +	[RPM_SMD_BIMC_A_CLK]		= &msm8974_bimc_a_clk,
+> +	[RPM_SMD_OCMEMGX_CLK]		= &msm8974_ocmemgx_clk,
+> +	[RPM_SMD_OCMEMGX_A_CLK]		= &msm8974_ocmemgx_a_clk,
+> +	[RPM_SMD_QDSS_CLK]		= &msm8974_qdss_clk,
+> +	[RPM_SMD_QDSS_A_CLK]		= &msm8974_qdss_a_clk,
+> +	[RPM_SMD_CXO_D0]			= &msm8974_cxo_d0,
+> +	[RPM_SMD_CXO_D0_A]		= &msm8974_cxo_d0_a,
+> +	[RPM_SMD_CXO_D1]			= &msm8974_cxo_d1,
+> +	[RPM_SMD_CXO_D1_A]		= &msm8974_cxo_d1_a,
+> +	[RPM_SMD_CXO_A0]			= &msm8974_cxo_a0,
+> +	[RPM_SMD_CXO_A0_A]		= &msm8974_cxo_a0_a,
+> +	[RPM_SMD_CXO_A1]			= &msm8974_cxo_a1,
+> +	[RPM_SMD_CXO_A1_A]		= &msm8974_cxo_a1_a,
+> +	[RPM_SMD_CXO_A2]			= &msm8974_cxo_a2,
 
-Iam arguing with myself if we should still do this or if we should read the mode
-from the chip instead if it isn't provided (after all, it may have been initialized
-by the BIOS/ROMMON).
+There are some extra tabs above. Otherwise looks fine:
+Tested-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Mike, would that break your application, or can you specify the mode in devicetree ?
-
-Thanks,
-Guenter
-
-> +
-> +	if (data->mode > LTC2990_CONTROL_MODE_MAX) {
-> +		dev_err(&i2c->dev, "Error: Invalid mode %d.\n", data->mode);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Setup continuous mode */
->  	ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
->  					LTC2990_CONTROL_MEASURE_ALL |
-> -					LTC2990_CONTROL_MODE_CURRENT);
-> +					data->mode);
->  	if (ret < 0) {
->  		dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
->  		return ret;
-> @@ -127,7 +244,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->
->  	hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
->  							   i2c->name,
-> -							   i2c,
-> +							   data,
->  							   ltc2990_groups);
->
->  	return PTR_ERR_OR_ZERO(hwmon_dev);
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR,
+Georgi
