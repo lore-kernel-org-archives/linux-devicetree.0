@@ -1,44 +1,44 @@
-From: <c_traja@qti.qualcomm.com>
-Subject: [PATCHv2 0/4] ath10k: Add support for BTCOEX feature.
-Date: Thu, 17 Nov 2016 17:14:20 +0530
-Message-ID: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
+From: <c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Subject: [PATCHv2 3/4] dt: bindings: add new dt entry for BTCOEX feature in qcom,ath10k.txt
+Date: Thu, 17 Nov 2016 17:14:23 +0530
+Message-ID: <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
+References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ath10k@lists.infradead.org
-Cc: linux-wireless@vger.kernel.org, tamizhchelvam@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Tamizh chelvam <c_traja@qti.qualcomm.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479383064-25718-1-git-send-email-c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tamizh chelvam <c_traja@qti.qualcomm.com>
+From: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-This patch set add support to enable/disable BTCOEX via nl80211,
-also support to update BTCOEX priority value for 10.4 based firmware.
-Document the dt entry in qcom,ath10k.txt and reads btcoex support
-flag and btcoex gpio pin detail from dt.
+There two things done in this patch.
 
-Tamizh chelvam (4):
-  ath10k: Add support to enable or disable btcoex via nl80211
-  ath10k: Add support to update btcoex priority value via nl80211
-  dt: bindings: add new dt entry for BTCOEX feature in qcom,ath10k.txt
-  ath10k: Add support to read btcoex related data from DT
+1) 'btcoex_support' flag for BTCOEX feature support by the hardware.
+2) 'wlan_btcoex_gpio' is used to fill wlan priority pin number for
+   BTCOEX priority feature support.
 
-V2:
+Signed-off-by: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../bindings/net/wireless/qcom,ath10k.txt          |    4 ++++
+ 1 file changed, 4 insertions(+)
 
- * Added device tree list in CC
- * fixed mutex unlock issue in 
-   "ath10k: Add support to update btcoex priority value via nl80211"
-
- .../bindings/net/wireless/qcom,ath10k.txt          |    4 +
- drivers/net/wireless/ath/ath10k/core.c             |   44 +++++-
- drivers/net/wireless/ath/ath10k/core.h             |    9 ++
- drivers/net/wireless/ath/ath10k/debug.c            |   40 +-----
- drivers/net/wireless/ath/ath10k/mac.c              |  140 +++++++++++++++++++-
- drivers/net/wireless/ath/ath10k/mac.h              |    1 +
- drivers/net/wireless/ath/ath10k/wmi-ops.h          |   19 +++
- drivers/net/wireless/ath/ath10k/wmi.c              |   20 +++
- drivers/net/wireless/ath/ath10k/wmi.h              |   20 +++
- 9 files changed, 261 insertions(+), 36 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index 74d7f0a..08150e2d 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -46,6 +46,10 @@ Optional properties:
+ 				 hw versions.
+ - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
+ 				     the length can vary between hw versions.
++- btcoex_support  : should contain eithr "0" or "1" to indicate btcoex
++		    support by the hardware.
++- btcoex_gpio_pin :  btcoex gpio pin number for the device which
++		     supports BTCOEX.
+ 
+ Example (to supply the calibration data alone):
+ 
 -- 
 1.7.9.5
