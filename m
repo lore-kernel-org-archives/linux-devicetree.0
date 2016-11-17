@@ -1,85 +1,130 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v4 1/2] drm/bridge: dumb-vga-dac: Support a VDD regulator
- supply
-Date: Thu, 17 Nov 2016 13:18:58 +0530
-Message-ID: <31b8b5b9-9621-286a-7649-cc999ab020da@codeaurora.org>
-References: <20161116154232.872-1-wens@csie.org>
- <20161116154232.872-2-wens@csie.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCHv2 05/10] mmc: dw_mmc: call the dw_mci_prep_stop_abort() by
+ default
+Date: Thu, 17 Nov 2016 15:49:55 +0800
+Message-ID: <d4b0cab4-8db3-052b-13aa-ecd5765aef97@rock-chips.com>
+References: <20161115101232.3854-1-jh80.chung@samsung.com>
+ <20161115101232.3854-6-jh80.chung@samsung.com>
+ <CGME20161116091850epcas5p43ee5a8003c36321f4266c5942bd42060@epcas5p4.samsung.com>
+ <6d7625c0-8588-5d11-7475-38fa611d8614@rock-chips.com>
+ <868dbb62-4b0d-3492-0b13-093ce63c5cde@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161116154232.872-2-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <868dbb62-4b0d-3492-0b13-093ce63c5cde-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpUaGFua3MgZm9yIHRoZSBwYXRjaC4KCk9uIDExLzE2LzIwMTYgMDk6MTIgUE0sIENoZW4t
-WXUgVHNhaSB3cm90ZToKPiBTb21lIGR1bWIgVkdBIERBQ3MgYXJlIGFjdGl2ZSBjb21wb25lbnRz
-IHdoaWNoIHJlcXVpcmUgZXh0ZXJuYWwgcG93ZXIuCj4gQWRkIHN1cHBvcnQgZm9yIHNwZWNpZnlp
-bmcgYSByZWd1bGF0b3IgYXMgaXRzIHBvd2VyIHN1cHBseS4KPgo+IFNpZ25lZC1vZmYtYnk6IENo
-ZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdh
-LWRhYy50eHQgICAgICAgfCAgMiArKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdh
-LWRhYy5jICAgICAgICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMiBmaWxl
-cyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2Et
-ZGFjLnR4dAo+IGluZGV4IDAwM2JjMjQ2YTI3MC4uMTY0Y2JiMTVmMDRjIDEwMDY0NAo+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZn
-YS1kYWMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPiBAQCAtMTYsNiArMTYsOCBAQCBncmFwaCBiaW5k
-aW5ncyBzcGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBo
-LnR4dC4KPiAgLSBWaWRlbyBwb3J0IDAgZm9yIFJHQiBpbnB1dAo+ICAtIFZpZGVvIHBvcnQgMSBm
-b3IgVkdBIG91dHB1dAo+Cj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gdmRkLXN1cHBseTog
-UG93ZXIgc3VwcGx5IGZvciBEQUMKPgo+ICBFeGFtcGxlCj4gIC0tLS0tLS0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMKPiBpbmRleCBhZmVjMjMyMTg1YTcuLjE1YjU0OWY5NDMw
-NyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+IEBAIC0xMiw2ICsx
-Miw3IEBACj4KPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICAjaW5jbHVkZSA8bGludXgv
-b2ZfZ3JhcGguaD4KPiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+Cj4g
-ICNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICAjaW5jbHVkZSA8ZHJtL2RybV9hdG9taWNfaGVscGVy
-Lmg+Cj4gQEAgLTIzLDYgKzI0LDcgQEAgc3RydWN0IGR1bWJfdmdhIHsKPiAgCXN0cnVjdCBkcm1f
-Y29ubmVjdG9yCWNvbm5lY3RvcjsKPgo+ICAJc3RydWN0IGkyY19hZGFwdGVyCSpkZGM7Cj4gKwlz
-dHJ1Y3QgcmVndWxhdG9yCSp2ZGQ7Cj4gIH07Cj4KPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZHVt
-Yl92Z2EgKgo+IEBAIC0xMjQsOCArMTI2LDMyIEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfYXR0YWNo
-KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gIAlyZXR1cm4gMDsKPiAgfQo+Cj4gK3N0YXRp
-YyB2b2lkIGR1bWJfdmdhX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICt7Cj4g
-KwlzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9icmlkZ2VfdG9fZHVtYl92Z2EoYnJpZGdlKTsK
-PiArCWludCByZXQgPSAwOwo+ICsKPiArCWlmICh2Z2EtPnZkZCkKPiArCQlyZXQgPSByZWd1bGF0
-b3JfZW5hYmxlKHZnYS0+dmRkKTsKPiArCj4gKwlpZiAocmV0KSB7Cj4gKwkJRFJNX0VSUk9SKCJG
-YWlsZWQgdG8gZW5hYmxlIHZkZCByZWd1bGF0b3I6ICVkXG4iLCByZXQpOwo+ICsJCXJldHVybjsK
-CldlIGRvbid0IG5lZWQgdGhpcyByZXR1cm4gZm9yIG5vdy4gSWYgeW91J3JlIG9rYXkgd2l0aCBp
-dCwgY2FuIEkgZml4IHRoaXMKYW5kIHF1ZXVlIHRvIG1pc2M/CgpUaGFua3MsCkFyY2hpdAoKPiAr
-CX0KPiArfQo+ICsKPiArc3RhdGljIHZvaWQgZHVtYl92Z2FfZGlzYWJsZShzdHJ1Y3QgZHJtX2Jy
-aWRnZSAqYnJpZGdlKQo+ICt7Cj4gKwlzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9icmlkZ2Vf
-dG9fZHVtYl92Z2EoYnJpZGdlKTsKPiArCj4gKwlpZiAodmdhLT52ZGQpCj4gKwkJcmVndWxhdG9y
-X2Rpc2FibGUodmdhLT52ZGQpOwo+ICt9Cj4gKwo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9i
-cmlkZ2VfZnVuY3MgZHVtYl92Z2FfYnJpZGdlX2Z1bmNzID0gewo+ICAJLmF0dGFjaAkJPSBkdW1i
-X3ZnYV9hdHRhY2gsCj4gKwkuZW5hYmxlCQk9IGR1bWJfdmdhX2VuYWJsZSwKPiArCS5kaXNhYmxl
-CT0gZHVtYl92Z2FfZGlzYWJsZSwKPiAgfTsKPgo+ICBzdGF0aWMgc3RydWN0IGkyY19hZGFwdGVy
-ICpkdW1iX3ZnYV9yZXRyaWV2ZV9kZGMoc3RydWN0IGRldmljZSAqZGV2KQo+IEBAIC0xNjksNiAr
-MTk1LDE1IEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikKPiAgCQlyZXR1cm4gLUVOT01FTTsKPiAgCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBk
-ZXYsIHZnYSk7Cj4KPiArCXZnYS0+dmRkID0gZGV2bV9yZWd1bGF0b3JfZ2V0X29wdGlvbmFsKCZw
-ZGV2LT5kZXYsICJ2ZGQiKTsKPiArCWlmIChJU19FUlIodmdhLT52ZGQpKSB7Cj4gKwkJcmV0ID0g
-UFRSX0VSUih2Z2EtPnZkZCk7Cj4gKwkJaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQo+ICsJCQly
-ZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCQl2Z2EtPnZkZCA9IE5VTEw7Cj4gKwkJZGV2X2RiZygm
-cGRldi0+ZGV2LCAiTm8gdmRkIHJlZ3VsYXRvciBmb3VuZDogJWRcbiIsIHJldCk7Cj4gKwl9Cj4g
-Kwo+ICAJdmdhLT5kZGMgPSBkdW1iX3ZnYV9yZXRyaWV2ZV9kZGMoJnBkZXYtPmRldik7Cj4gIAlp
-ZiAoSVNfRVJSKHZnYS0+ZGRjKSkgewo+ICAJCWlmIChQVFJfRVJSKHZnYS0+ZGRjKSA9PSAtRU5P
-REVWKSB7Cj4KCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJl
-ciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
-UHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+在 2016/11/17 13:05, Jaehoon Chung 写道:
+> On 11/16/2016 06:16 PM, Shawn Lin wrote:
+>> 在 2016/11/15 18:12, Jaehoon Chung 写道:
+>>> stop_cmdr should be set to values relevant to stop command.
+>>> It migth be assigned to values whatever there is mrq->stop or not.
+>>> Then it doesn't need to use dw_mci_prepare_command().
+>>> It's enough to use the prep_stop_abort for preparing stop command.
+>>>
+>>
+>> Have you considered to clean up the logic of preparing abort cmd
+>> within dw_mci_prepare_command?
+>
+> I have considered this..but i didn't check fully for this logic.
+> I think it's possible to clean and make more simpler than now.
+>
+> how about thinking more after applying these patch-set? :)
+
+it's okay :)
+
+>
+> Best Regards,
+> Jaehoon Chung
+>
+>>
+>>
+>>         if (cmd->opcode == MMC_STOP_TRANSMISSION ||
+>>             cmd->opcode == MMC_GO_IDLE_STATE ||
+>>             cmd->opcode == MMC_GO_INACTIVE_STATE ||
+>>             (cmd->opcode == SD_IO_RW_DIRECT &&
+>>              ((cmd->arg >> 9) & 0x1FFFF) == SDIO_CCCR_ABORT))
+>>                 cmdr |= SDMMC_CMD_STOP;
+>>
+>>
+>>> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>>> ---
+>>>  drivers/mmc/host/dw_mmc.c | 15 +++++----------
+>>>  1 file changed, 5 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>> index 3cda68c..12e1107 100644
+>>> --- a/drivers/mmc/host/dw_mmc.c
+>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>> @@ -385,7 +385,7 @@ static void dw_mci_start_command(struct dw_mci *host,
+>>>
+>>>  static inline void send_stop_abort(struct dw_mci *host, struct mmc_data *data)
+>>>  {
+>>> -    struct mmc_command *stop = data->stop ? data->stop : &host->stop_abort;
+>>> +    struct mmc_command *stop = &host->stop_abort;
+>>>
+>>>      dw_mci_start_command(host, stop, host->stop_cmdr);
+>>>  }
+>>> @@ -1277,10 +1277,7 @@ static void __dw_mci_start_request(struct dw_mci *host,
+>>>          spin_unlock_irqrestore(&host->irq_lock, irqflags);
+>>>      }
+>>>
+>>> -    if (mrq->stop)
+>>> -        host->stop_cmdr = dw_mci_prepare_command(slot->mmc, mrq->stop);
+>>> -    else
+>>> -        host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
+>>> +    host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
+>>>  }
+>>>
+>>>  static void dw_mci_start_request(struct dw_mci *host,
+>>> @@ -1890,8 +1887,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
+>>>                             &host->pending_events)) {
+>>>                  dw_mci_stop_dma(host);
+>>> -                if (data->stop ||
+>>> -                    !(host->data_status & (SDMMC_INT_DRTO |
+>>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
+>>>                                 SDMMC_INT_EBE)))
+>>>                      send_stop_abort(host, data);
+>>>                  state = STATE_DATA_ERROR;
+>>> @@ -1927,8 +1923,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
+>>>                             &host->pending_events)) {
+>>>                  dw_mci_stop_dma(host);
+>>> -                if (data->stop ||
+>>> -                    !(host->data_status & (SDMMC_INT_DRTO |
+>>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
+>>>                                 SDMMC_INT_EBE)))
+>>>                      send_stop_abort(host, data);
+>>>                  state = STATE_DATA_ERROR;
+>>> @@ -2004,7 +1999,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>>              host->cmd = NULL;
+>>>              host->data = NULL;
+>>>
+>>> -            if (mrq->stop)
+>>> +            if (!mrq->sbc && mrq->stop)
+>>>                  dw_mci_command_complete(host, mrq->stop);
+>>>              else
+>>>                  host->cmd_status = 0;
+>>>
+>>
+>>
+>
+>
+>
+>
+
+
+-- 
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
