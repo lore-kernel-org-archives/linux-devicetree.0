@@ -1,90 +1,331 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 10:56:54 -0800
-Message-ID: <20161117185654.GA19338@roeck-us.net>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <582DEB81.6050806@topic.nl>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Thu, 17 Nov 2016 11:59:18 -0700
+Message-ID: <20161117185918.GA7884@linaro.org>
+References: <20161117153522.11630-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <582DEB81.6050806@topic.nl>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Tom Levens <tom.levens@cern.ch>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20161117153522.11630-1-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
-> ﻿On 17-11-16 17:56, Guenter Roeck wrote:
-> >On 11/17/2016 04:10 AM, Tom Levens wrote:
-> >>Updated version of the ltc2990 driver which supports all measurement
-> >>modes available in the chip. The mode can be set through a devicetree
-> >>attribute.
-> >
-[ ... ] 
-
-> >>
-> >> static int ltc2990_i2c_probe(struct i2c_client *i2c,
-> >>                  const struct i2c_device_id *id)
-> >> {
-> >>     int ret;
-> >>     struct device *hwmon_dev;
-> >>+    struct ltc2990_data *data;
-> >>+    struct device_node *of_node = i2c->dev.of_node;
-> >>
-> >>     if (!i2c_check_functionality(i2c->adapter,
-> >>I2C_FUNC_SMBUS_BYTE_DATA |
-> >>                      I2C_FUNC_SMBUS_WORD_DATA))
-> >>         return -ENODEV;
-> >>
-> >>-    /* Setup continuous mode, current monitor */
-> >>+    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
-> >>GFP_KERNEL);
-> >>+    if (unlikely(!data))
-> >>+        return -ENOMEM;
-> >>+    data->i2c = i2c;
-> >>+
-> >>+    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
-> >>&data->mode))
-> >>+        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
-> >
-> >Iam arguing with myself if we should still do this or if we should read
-> >the mode
-> >from the chip instead if it isn't provided (after all, it may have been
-> >initialized
-> >by the BIOS/ROMMON).
+On Thu, Nov 17, 2016 at 05:35:22PM +0200, Georgi Djakov wrote:
+> From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> I think the mode should be explicitly set, without default. There's no way
-> to tell whether the BIOS or bootloader has really set it up or whether the
-> chip is just reporting whatever it happened to default to. And given the
-> chip's function, it's unlikely a bootloader would want to initialize it.
-> 
-Unlikely but possible. Even if we all agree that the chip should be configured
-by the driver, I don't like imposing that view on everyone else.
+> Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
 
-> My advice would be to make it a required property. If not set, display an
-> error and bail out.
-> 
-It is not that easy, unfortunately. It also has to work on a non-devicetree
-system. I would not object to making the property mandatory, but we would
-still need to provide non-DT support.
+Hello Georgi,
 
-My "use case" for taking the current mode from the chip if not specified
-is that it would enable me to run a module test with all modes. I consider
-this extremely valuable.
+Could you add a better desccription for the SoC?  To me "8x16" doesn't
+say much.
 
-> >Mike, would that break your application, or can you specify the mode in
-> >devicetree ?
-> 
-> I'm fine with specifying this in the devicetree. It will break things for
-> me, but I've been warned and willing to bow for the greater good :)
-> 
-I should have asked if your system uses devicetree. If it does, the problem
-should be easy to fix for you. If not, we'll need to find a solution
-for your use case.
+With that change:
+Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks,
-Guenter
+> 
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> This patch was on hold for some time, as it has a dependency on RPM clocks,
+> which is now merged into clk-next.
+> 
+> Changes since v3: (https://lkml.org/lkml/2015/5/11/134)
+>  * Include msm8916-coresight.dtsi into msm8916.dtsi
+> 
+> Changes since v2: (https://lkml.org/lkml/2015/4/29/242)
+>  * Added "1x" to "qcom,coresight-replicator" compatible string, to match what
+>    devicetree bindings documentations says.
+> 
+> 
+>  arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi | 254 ++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi           |   2 +
+>  2 files changed, 256 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+> new file mode 100644
+> index 000000000000..900f1f484a0a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+> @@ -0,0 +1,254 @@
+> +/*
+> + * Copyright (c) 2013 - 2015, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +&soc {
+> +
+> +	tpiu@820000 {
+> +		compatible = "arm,coresight-tpiu", "arm,primecell";
+> +		reg = <0x820000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		port {
+> +			tpiu_in: endpoint {
+> +				slave-mode;
+> +				remote-endpoint = <&replicator_out1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@821000 {
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x821000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/*
+> +			 * Not described input ports:
+> +			 * 0 - connected to Resource and Power Manger CPU ETM
+> +			 * 1 - not-connected
+> +			 * 2 - connected to Modem CPU ETM
+> +			 * 3 - not-connected
+> +			 * 5 - not-connected
+> +			 * 6 - connected trought funnel to Wireless CPU ETM
+> +			 * 7 - connected to STM component
+> +			 */
+> +			port@4 {
+> +				reg = <4>;
+> +				funnel0_in4: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&funnel1_out>;
+> +				};
+> +			};
+> +			port@8 {
+> +				reg = <0>;
+> +				funnel0_out: endpoint {
+> +					remote-endpoint = <&etf_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	replicator@824000 {
+> +		compatible = "qcom,coresight-replicator1x", "arm,primecell";
+> +		reg = <0x824000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				replicator_out0: endpoint {
+> +					remote-endpoint = <&etr_in>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				replicator_out1: endpoint {
+> +					remote-endpoint = <&tpiu_in>;
+> +				};
+> +			};
+> +			port@2 {
+> +				reg = <0>;
+> +				replicator_in: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&etf_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etf@825000 {
+> +		compatible = "arm,coresight-tmc", "arm,primecell";
+> +		reg = <0x825000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				etf_out: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&funnel0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <0>;
+> +				etf_in: endpoint {
+> +					remote-endpoint = <&replicator_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etr@826000 {
+> +		compatible = "arm,coresight-tmc", "arm,primecell";
+> +		reg = <0x826000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		port {
+> +			etr_in: endpoint {
+> +				slave-mode;
+> +				remote-endpoint = <&replicator_out0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@841000 {	/* APSS funnel only 4 inputs are used */
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x841000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				funnel1_in0: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&etm0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				funnel1_in1: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&etm1_out>;
+> +				};
+> +			};
+> +			port@2 {
+> +				reg = <2>;
+> +				funnel1_in2: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&etm2_out>;
+> +				};
+> +			};
+> +			port@3 {
+> +				reg = <3>;
+> +				funnel1_in3: endpoint {
+> +					slave-mode;
+> +					remote-endpoint = <&etm3_out>;
+> +				};
+> +			};
+> +			port@4 {
+> +				reg = <0>;
+> +				funnel1_out: endpoint {
+> +					remote-endpoint = <&funnel0_in4>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@85c000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		reg = <0x85c000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		cpu = <&CPU0>;
+> +
+> +		port {
+> +			etm0_out: endpoint {
+> +				remote-endpoint = <&funnel1_in0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@85d000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		reg = <0x85d000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		cpu = <&CPU1>;
+> +
+> +		port {
+> +			etm1_out: endpoint {
+> +				remote-endpoint = <&funnel1_in1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@85e000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		reg = <0x85e000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		cpu = <&CPU2>;
+> +
+> +		port {
+> +			etm2_out: endpoint {
+> +				remote-endpoint = <&funnel1_in2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@85f000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		reg = <0x85f000 0x1000>;
+> +
+> +		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+> +		clock-names = "apb_pclk", "atclk";
+> +
+> +		cpu = <&CPU3>;
+> +
+> +		port {
+> +			etm3_out: endpoint {
+> +				remote-endpoint = <&funnel1_in3>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 4221b7d2c0ce..bfaeb9364190 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+>  #include <dt-bindings/reset/qcom,gcc-msm8916.h>
+> +#include <dt-bindings/clock/qcom,rpmcc.h>
+>  
+>  / {
+>  	model = "Qualcomm Technologies, Inc. MSM8916";
+> @@ -993,4 +994,5 @@
+>  	};
+>  };
+>  
+> +#include "msm8916-coresight.dtsi"
+>  #include "msm8916-pins.dtsi"
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
