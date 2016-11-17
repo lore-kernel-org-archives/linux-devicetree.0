@@ -1,101 +1,77 @@
-From: Jian Yuan <yuanjian12@hisilicon.com>
-Subject: Re: [PATCH v5] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Thu, 17 Nov 2016 10:32:38 +0800
-Message-ID: <d9cbc20c-d1c8-ca7b-953f-035013cf758e@hisilicon.com>
-References: <1479289833-232200-1-git-send-email-yuanjian12@hisilicon.com>
- <664f5d9b-ebf4-d511-8e59-2f57c00ea901@mleia.com>
+From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] net: ethernet: faraday: To support device tree usage.
+Date: Thu, 17 Nov 2016 10:37:31 +0800
+Message-ID: <CAEbi=3eMcJ6U0opLEFgomS5ZBTfqyL2acag7JakuGFxsbgM_aA@mail.gmail.com>
+References: <1479285795-3105-1-git-send-email-green.hu@gmail.com>
+ <CAEbi=3esyRi4cnUNf4uPKCQtyRekBRo81Frd=BSJy8qf=3uc+A@mail.gmail.com>
+ <20161116143715.GH19962@lunn.ch> <7309308.u1IWIyx3Gm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <664f5d9b-ebf4-d511-8e59-2f57c00ea901@mleia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7309308.u1IWIyx3Gm@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 17, 2016 at 12:12 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday, November 16, 2016 3:37:15 PM CET Andrew Lunn wrote:
+>> On Wed, Nov 16, 2016 at 10:26:52PM +0800, Greentime Hu wrote:
+>> > On Wed, Nov 16, 2016 at 9:47 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> > > On Wed, Nov 16, 2016 at 04:43:15PM +0800, Greentime Hu wrote:
+>> > >> To support device tree usage for ftmac100.
+>> > >>
+>> > >> Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > >> ---
+>> > >>  drivers/net/ethernet/faraday/ftmac100.c |    7 +++++++
+>> > >>  1 file changed, 7 insertions(+)
+>> > >>
+>> > >> diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
+>> > >> index dce5f7b..81dd9e1 100644
+>> > >> --- a/drivers/net/ethernet/faraday/ftmac100.c
+>> > >> +++ b/drivers/net/ethernet/faraday/ftmac100.c
+>> > >> @@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
+>> > >>       return 0;
+>> > >>  }
+>> > >>
+>> > >> +static const struct of_device_id mac_of_ids[] = {
+>> > >> +     { .compatible = "andestech,atmac100" },
+>> > >> +     { }
+>> > >
+>> > > andestech is not in
+>> > > Documentation/devicetree/bindings/vendor-prefixes.txt Please provide a
+>> > > separate patch adding it.
+>> > OK. I will provide another patch to add andestech.
+>> >
+>> > > Humm, why andestech? Why not something based around faraday
+>> > > technology?
+>> > It is because we use the same ftmac100 IP provided from faraday
+>> > technology but I am now using it in andestech SoC.
+>>
+>> Please make sure you get an acked-by: from the device tree
+>> maintainers. They might want you to use faraday, since that is the
+>> original IP provider. For example, all Synopsys licensed IP uses
+>> "snps,XXX", not the SoC vendor with the license.
+>
+> I think ideally we have both the ID from andes and from faraday here.
+>
+> Note that we already have "moxa,moxart-mac" as a compatible string
+> for this hardware, though it uses a different driver.
+>
+> We should probably have a single binding document describing
+> both compatible strings and any optional properties.
+>
+>         Arnd
 
+I am agree with that.
+Andes got this ftmac100 ip from faraday and we refined it.
+We rename it to atmac100 to provide to our customer.
+These 2 mac100 are using different hardware RTL code but they are
+software compatible.
 
-On 2016/11/17 7:55, Vladimir Zapolskiy wrote:
-> On 11/16/2016 11:50 AM, Jian Yuan wrote:
->> From: yuanjian <yuanjian12@hisilicon.com>
->>
->> Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
->> The PWM controller is primarily in charge of controlling P-Iris lens.
->>
->> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
->> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
->> ---
->> Change Log:
->> v5:
->> remove the generic compatible string "hisilicon, hibvt-pwm".
->> v4:
->> Add #pwm-cells in the bindings document.
->> v3:
->> fixed issues pointed by thierry.
->> Add PWM compatible string for Hi3519V100.
->> Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
->> v2:
->> The number of PWMs is change to be probeable based on the compatible string.
->>
->>  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  22 ++
->>  drivers/pwm/Kconfig                                |   9 +
->>  drivers/pwm/Makefile                               |   1 +
->>  drivers/pwm/pwm-hibvt.c                            | 269 +++++++++++++++++++++
->>  4 files changed, 301 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->>  create mode 100644 drivers/pwm/pwm-hibvt.c
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->> new file mode 100644
->> index 0000000..fe63950
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->> @@ -0,0 +1,22 @@
->> +Hisilicon PWM controller
->> +
->> +Required properties:
->> +-compatible: should contain one SoC specific compatible string
->> + The SoC specific strings supported including:
->> +    "hisilicon,hi3516cv300-pwm"
->> +    "hisilicon,hi3519v100-pwm"
->> +- reg: physical base address and length of the controller's registers.
->> +- clocks: phandle and clock specifier of the PWM reference clock.
->> +- resets: phandle and reset specifier for the PWM controller reset.
->> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
-> 
-> Since the controller has separate polarity control register, and
-> the driver handles polarity settings, please test/change #pwm-cells
-> set to 3. It is better to do it right now before someone wants
-> to change number of cells in future and support polarity specified
-> in DTB.
-> 
-Goog advice. I would add it in next patch v6.
->> +  the cells format.
->> +
->> +Example:
->> +    pwm: pwm@12130000 {
->> +
-> 
-> Remove empty line above.
-> 
-Ok.
->> +        compatible = "hisilicon,hi3516cv300-pwm";
->> +        reg = <0x12130000 0x10000>;
->> +        clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
->> +        resets = <&crg_ctrl 0x38 0>;
->> +        #pwm-cells = <2>;
-> 
-> After tesing #pwm-cells = <3> don't forget to updated this line.
-> 
-Got it.
-Thanks,
-Jian Yuan
->> +    };
-> 
-> -- 
-> With best wishes,
-> Vladimir
-> 
-> .
-> 
+Most of the IPs in Andes SoC are named as atXXX in its dts.
+I suggest using this string "andestech,atmac100".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
