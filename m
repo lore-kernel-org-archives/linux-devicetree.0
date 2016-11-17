@@ -1,15 +1,11 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH -next] ARM: dts: omap5: replace gpio-key,wakeup with
- wakeup-source property
-Date: Thu, 17 Nov 2016 15:32:12 +0000
-Message-ID: <8d06724a-98af-05ab-f5a8-07c552722fca@arm.com>
-References: <1479138250-17780-1-git-send-email-sudeep.holla@arm.com>
- <20161117152717.GS4082@atomide.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v4] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Thu, 17 Nov 2016 17:35:22 +0200
+Message-ID: <20161117153522.11630-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161117152717.GS4082@atomide.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,33 +15,309 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, zhang.chunyan@linaro.org, robh+dt@kernel.org, iivanov.xz@gmail.com, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxNy8xMS8xNiAxNToyNywgVG9ueSBMaW5kZ3JlbiB3cm90ZToKPiAqIFN1ZGVlcCBIb2xs
-YSA8c3VkZWVwLmhvbGxhQGFybS5jb20+IFsxNjExMTQgMDc6NDRdOgo+PiBUaG91Z2ggdGhlIGtl
-eWJvYXJkIGRyaXZlciBmb3IgR1BJTyBidXR0b25zKGdwaW8ta2V5cykgd2lsbCBjb250aW51ZSB0
-bwo+PiBjaGVjayBmb3Ivc3VwcG9ydCB0aGUgbGVnYWN5ICJncGlvLWtleSx3YWtldXAiIGJvb2xl
-YW4gcHJvcGVydHkgdG8KPj4gZW5hYmxlIGdwaW8gYnV0dG9ucyBhcyB3YWtldXAgc291cmNlLCAi
-d2FrZXVwLXNvdXJjZSIgaXMgdGhlIG5ldwo+PiBzdGFuZGFyZCBiaW5kaW5nLgo+Pgo+PiBUaGlz
-IHBhdGNoIHJlcGxhY2VzIHRoZSBsZWdhY3kgImdwaW8ta2V5LHdha2V1cCIgd2l0aCB0aGUgdW5p
-ZmllZAo+PiAid2FrZXVwLXNvdXJjZSIgcHJvcGVydHkgaW4gb3JkZXIgdG8gYXZvaWQgYW55IGZ1
-cnRoZXIgY29weS1wYXN0ZQo+PiBkdXBsaWNhdGlvbi4KPj4KPj4gQ2M6ICJCZW5vw650IENvdXNz
-b24iIDxiY291c3NvbkBiYXlsaWJyZS5jb20+Cj4+IENjOiBUb255IExpbmRncmVuIDx0b255QGF0
-b21pZGUuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBh
-cm0uY29tPgo+PiAtLS0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL29tYXA1LXVldm0uZHRzIHwgMiAr
-LQo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+
-IEhpLAo+Pgo+PiBJbnNwaXRlIG9mIGdldHRpbmcgcmlkIG9mIG1vc3Qgb2YgdGhlIGxlZ2FjeSBw
-cm9wZXJ0eSBhbG1vc3QgYSB5ZWFyIGFnbywKPj4gYWRkaXRpb24gb2YgbmV3IHBsYXRmb3JtcyBo
-YXZlIGJyb3VnaHQgdGhpcyBiYWNrIGFuZCBvdmVyIHRpbWUgaXQncwo+PiBub3cgZm91bmQgYWdh
-aW4gaW4gZmV3IHBsYWNlcy4gSnVzdCBnZXQgcmlkIG9mIHRoZW0gKmFnYWluKgo+Cj4gVGhhbmtz
-IGZvciB0aGUgYW5udWFsIGNoZWNrIHVwIDopCj4KPiBBY2tlZC1ieTogVG9ueSBMaW5kZ3JlbiA8
-dG9ueUBhdG9taWRlLmNvbT4KPgo+IFBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3Ugd2FudCBtZSB0
-byBwaWNrIHRoaXMgdXAgaW5zdGVhZC4KClllcyB0aGF0IHdvdWxkIGJlIGJldHRlci4gQWxzbyBp
-dCdzIHByZXNlbnQgb25seSBpbiB5b3VyIC1uZXh0LApsb29rcyBsaWtlIHNvbWV0aGluZyBuZXds
-eSBhZGRlZCB2aWEgY29tbWl0IDJkNDZjMGM2MDcyNSAoIkFSTToKZHRzOiBvbWFwNSB1ZXZtOiBh
-ZGQgVVNSMSBidXR0b24iKQoKLS0gClJlZ2FyZHMsClN1ZGVlcAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+
+Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
+
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+
+This patch was on hold for some time, as it has a dependency on RPM clocks,
+which is now merged into clk-next.
+
+Changes since v3: (https://lkml.org/lkml/2015/5/11/134)
+ * Include msm8916-coresight.dtsi into msm8916.dtsi
+
+Changes since v2: (https://lkml.org/lkml/2015/4/29/242)
+ * Added "1x" to "qcom,coresight-replicator" compatible string, to match what
+   devicetree bindings documentations says.
+
+
+ arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi | 254 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi           |   2 +
+ 2 files changed, 256 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+new file mode 100644
+index 000000000000..900f1f484a0a
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8916-coresight.dtsi
+@@ -0,0 +1,254 @@
++/*
++ * Copyright (c) 2013 - 2015, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++&soc {
++
++	tpiu@820000 {
++		compatible = "arm,coresight-tpiu", "arm,primecell";
++		reg = <0x820000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		port {
++			tpiu_in: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out1>;
++			};
++		};
++	};
++
++	funnel@821000 {
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0x821000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/*
++			 * Not described input ports:
++			 * 0 - connected to Resource and Power Manger CPU ETM
++			 * 1 - not-connected
++			 * 2 - connected to Modem CPU ETM
++			 * 3 - not-connected
++			 * 5 - not-connected
++			 * 6 - connected trought funnel to Wireless CPU ETM
++			 * 7 - connected to STM component
++			 */
++			port@4 {
++				reg = <4>;
++				funnel0_in4: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel1_out>;
++				};
++			};
++			port@8 {
++				reg = <0>;
++				funnel0_out: endpoint {
++					remote-endpoint = <&etf_in>;
++				};
++			};
++		};
++	};
++
++	replicator@824000 {
++		compatible = "qcom,coresight-replicator1x", "arm,primecell";
++		reg = <0x824000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				replicator_out0: endpoint {
++					remote-endpoint = <&etr_in>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				replicator_out1: endpoint {
++					remote-endpoint = <&tpiu_in>;
++				};
++			};
++			port@2 {
++				reg = <0>;
++				replicator_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&etf_out>;
++				};
++			};
++		};
++	};
++
++	etf@825000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0x825000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				etf_out: endpoint {
++					slave-mode;
++					remote-endpoint = <&funnel0_out>;
++				};
++			};
++			port@1 {
++				reg = <0>;
++				etf_in: endpoint {
++					remote-endpoint = <&replicator_in>;
++				};
++			};
++		};
++	};
++
++	etr@826000 {
++		compatible = "arm,coresight-tmc", "arm,primecell";
++		reg = <0x826000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		port {
++			etr_in: endpoint {
++				slave-mode;
++				remote-endpoint = <&replicator_out0>;
++			};
++		};
++	};
++
++	funnel@841000 {	/* APSS funnel only 4 inputs are used */
++		compatible = "arm,coresight-funnel", "arm,primecell";
++		reg = <0x841000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				funnel1_in0: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				funnel1_in1: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm1_out>;
++				};
++			};
++			port@2 {
++				reg = <2>;
++				funnel1_in2: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm2_out>;
++				};
++			};
++			port@3 {
++				reg = <3>;
++				funnel1_in3: endpoint {
++					slave-mode;
++					remote-endpoint = <&etm3_out>;
++				};
++			};
++			port@4 {
++				reg = <0>;
++				funnel1_out: endpoint {
++					remote-endpoint = <&funnel0_in4>;
++				};
++			};
++		};
++	};
++
++	etm@85c000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85c000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU0>;
++
++		port {
++			etm0_out: endpoint {
++				remote-endpoint = <&funnel1_in0>;
++			};
++		};
++	};
++
++	etm@85d000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85d000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU1>;
++
++		port {
++			etm1_out: endpoint {
++				remote-endpoint = <&funnel1_in1>;
++			};
++		};
++	};
++
++	etm@85e000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85e000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU2>;
++
++		port {
++			etm2_out: endpoint {
++				remote-endpoint = <&funnel1_in2>;
++			};
++		};
++	};
++
++	etm@85f000 {
++		compatible = "arm,coresight-etm4x", "arm,primecell";
++		reg = <0x85f000 0x1000>;
++
++		clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++		clock-names = "apb_pclk", "atclk";
++
++		cpu = <&CPU3>;
++
++		port {
++			etm3_out: endpoint {
++				remote-endpoint = <&funnel1_in3>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 4221b7d2c0ce..bfaeb9364190 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8916.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. MSM8916";
+@@ -993,4 +994,5 @@
+ 	};
+ };
+ 
++#include "msm8916-coresight.dtsi"
+ #include "msm8916-pins.dtsi"
