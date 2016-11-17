@@ -1,57 +1,236 @@
-From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Subject: [PATCH V3 0/4]  pv88080: PV88080 driver submission
-Date: Fri, 18 Nov 2016 09:35:47 +0900
-Message-ID: <cover.1479429347.git.eric.jeong@diasemi.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [RFC PATCH v2 7/7] i2c: i2c-mux-simple: new driver
+Date: Thu, 17 Nov 2016 22:48:09 +0100
+Message-ID: <1479419289-17553-8-git-send-email-peda@axentia.se>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Support Opensource <support.opensource@diasemi.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479419289-17553-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+This is a generic simple i2c mux that uses the generic multiplexer
+subsystem to do the muxing.
 
-This patch set adds support for the PV88080 PMIC.
-And, this patch is done as part of the existing PV88080 Regulator
-driver by expanding the driver for GPIO function support.
+The user can select if the mux is to be mux-locked and parent-locked
+as described in Documentation/i2c/i2c-topology.
+---
+ drivers/i2c/muxes/Kconfig          |  12 +++
+ drivers/i2c/muxes/Makefile         |   1 +
+ drivers/i2c/muxes/i2c-mux-simple.c | 168 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 181 insertions(+)
+ create mode 100644 drivers/i2c/muxes/i2c-mux-simple.c
 
-In this patch set the following is provided:
-
-[PATCH V3 1/4] Move binding document
-[PATCH V3 2/4] MFD core support
-[PATCH V3 3/4] Update regulator driver for MFD support
-[PATCH V3 4/4] Add GPIO function support
-
-This patch applies against linux-next and next-20161117
-
-Thank you,
-Eric Jeong, Dialog Semiconductor Ltd.
-
-Eric Jeong (4):
-  Documentation: pv88080: Move binding document
-  mfd: pv88080: MFD core support
-  regulator: pv88080: Update Regulator driver for MFD support
-  gpio: pv88080: Add GPIO function support
-
- .../bindings/{regulator => mfd}/pv88080.txt        |   16 +-
- drivers/gpio/Kconfig                               |   11 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-pv88080.c                        |  213 +++++++++++++
- drivers/mfd/Kconfig                                |   12 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/pv88080.c                              |  331 ++++++++++++++++++++
- drivers/regulator/Kconfig                          |    9 +-
- drivers/regulator/pv88080-regulator.c              |  185 ++++-------
- drivers/regulator/pv88080-regulator.h              |  118 -------
- include/linux/mfd/pv88080.h                        |  222 +++++++++++++
- 11 files changed, 872 insertions(+), 247 deletions(-)
- rename Documentation/devicetree/bindings/{regulator => mfd}/pv88080.txt (79%)
- create mode 100644 drivers/gpio/gpio-pv88080.c
- create mode 100644 drivers/mfd/pv88080.c
- delete mode 100644 drivers/regulator/pv88080-regulator.h
- create mode 100644 include/linux/mfd/pv88080.h
-
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index e280c8ecc0b5..45e80ad2d4ab 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -72,6 +72,18 @@ config I2C_MUX_REG
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-mux-reg.
+ 
++config I2C_MUX_SIMPLE
++	tristate "Simple I2C multiplexer"
++	depends on OF
++	help
++	  If you say yes to this option, support will be included for a
++	  simple generic I2C multiplexer. This driver provides access to
++	  I2C busses connected through a MUX, which is controlled
++	  by a generic MUX controller.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called i2c-mux-simple.
++
+ config I2C_DEMUX_PINCTRL
+ 	tristate "pinctrl-based I2C demultiplexer"
+ 	depends on PINCTRL && OF
+diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
+index 7c267c29b191..eea1fb9e6466 100644
+--- a/drivers/i2c/muxes/Makefile
++++ b/drivers/i2c/muxes/Makefile
+@@ -10,5 +10,6 @@ obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
+ obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
+ obj-$(CONFIG_I2C_MUX_PINCTRL)	+= i2c-mux-pinctrl.o
+ obj-$(CONFIG_I2C_MUX_REG)	+= i2c-mux-reg.o
++obj-$(CONFIG_I2C_MUX_SIMPLE)	+= i2c-mux-simple.o
+ 
+ ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
+diff --git a/drivers/i2c/muxes/i2c-mux-simple.c b/drivers/i2c/muxes/i2c-mux-simple.c
+new file mode 100644
+index 000000000000..6d8ddbc94ecc
+--- /dev/null
++++ b/drivers/i2c/muxes/i2c-mux-simple.c
+@@ -0,0 +1,168 @@
++/*
++ * Generic simple I2C multiplexer
++ *
++ * Peter Rosin <peda@axentia.se>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/i2c.h>
++#include <linux/i2c-mux.h>
++#include <linux/module.h>
++#include <linux/mux.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++
++struct mux {
++	struct mux_control *control;
++
++	bool do_not_deselect;
++};
++
++static int i2c_mux_select(struct i2c_mux_core *muxc, u32 chan)
++{
++	struct mux *mux = i2c_mux_priv(muxc);
++	int ret;
++
++	ret = mux_control_select(mux->control, chan);
++	mux->do_not_deselect = ret < 0;
++
++	return ret;
++}
++
++static int i2c_mux_deselect(struct i2c_mux_core *muxc, u32 chan)
++{
++	struct mux *mux = i2c_mux_priv(muxc);
++
++	if (mux->do_not_deselect)
++		return 0;
++
++	return mux_control_deselect(mux->control);
++}
++
++static struct i2c_adapter *mux_parent_adapter(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct device_node *parent_np;
++	struct i2c_adapter *parent;
++
++	parent_np = of_parse_phandle(np, "i2c-parent", 0);
++	if (!parent_np) {
++		dev_err(dev, "Cannot parse i2c-parent\n");
++		return ERR_PTR(-ENODEV);
++	}
++	parent = of_find_i2c_adapter_by_node(parent_np);
++	of_node_put(parent_np);
++	if (!parent)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return parent;
++}
++
++static const struct of_device_id i2c_mux_of_match[] = {
++	{ .compatible = "i2c-mux-simple,parent-locked",
++	  .data = (void *)0, },
++	{ .compatible = "i2c-mux-simple,mux-locked",
++	  .data = (void *)1, },
++	{},
++};
++MODULE_DEVICE_TABLE(of, i2c_mux_of_match);
++
++static int i2c_mux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *child;
++	const struct of_device_id *match;
++	struct i2c_mux_core *muxc;
++	struct mux *mux;
++	struct i2c_adapter *parent;
++	int children;
++	int ret;
++
++	if (!np)
++		return -ENODEV;
++
++	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		return -ENOMEM;
++
++	mux->control = devm_mux_control_get(dev, "mux");
++	if (IS_ERR(mux->control)) {
++		if (PTR_ERR(mux->control) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get control-mux\n");
++		return PTR_ERR(mux->control);
++	}
++
++	parent = mux_parent_adapter(dev);
++	if (IS_ERR(parent)) {
++		if (PTR_ERR(parent) != -EPROBE_DEFER)
++			dev_err(dev, "failed to get i2c-parent adapter\n");
++		return PTR_ERR(parent);
++	}
++
++	children = of_get_child_count(np);
++
++	muxc = i2c_mux_alloc(parent, dev, children, 0, 0,
++			     i2c_mux_select, i2c_mux_deselect);
++	if (!muxc) {
++		ret = -ENOMEM;
++		goto err_parent;
++	}
++	muxc->priv = mux;
++
++	platform_set_drvdata(pdev, muxc);
++
++	match = of_match_device(of_match_ptr(i2c_mux_of_match), dev);
++	if (match)
++		muxc->mux_locked = !!of_device_get_match_data(dev);
++
++	for_each_child_of_node(np, child) {
++		u32 chan;
++
++		ret = of_property_read_u32(child, "reg", &chan);
++		if (ret < 0)
++			goto err_children;
++
++		ret = i2c_mux_add_adapter(muxc, 0, chan, 0);
++		if (ret)
++			goto err_children;
++	}
++
++	dev_info(dev, "%d-port mux on %s adapter\n", children, parent->name);
++
++	return 0;
++
++err_children:
++	i2c_mux_del_adapters(muxc);
++err_parent:
++	i2c_put_adapter(parent);
++
++	return ret;
++}
++
++static int i2c_mux_remove(struct platform_device *pdev)
++{
++	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
++
++	i2c_mux_del_adapters(muxc);
++	i2c_put_adapter(muxc->parent);
++
++	return 0;
++}
++
++static struct platform_driver i2c_mux_driver = {
++	.probe	= i2c_mux_probe,
++	.remove	= i2c_mux_remove,
++	.driver	= {
++		.name	= "i2c-mux-simple",
++		.of_match_table = i2c_mux_of_match,
++	},
++};
++module_platform_driver(i2c_mux_driver);
++
++MODULE_DESCRIPTION("Simple I2C multiplexer driver");
++MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
++MODULE_LICENSE("GPL v2");
 -- 
-end-of-patch for PATCH V3
-
+2.1.4
