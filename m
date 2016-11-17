@@ -1,56 +1,44 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [RFC PATCH 4/7] dt-bindings: iio: iio-mux: document iio-mux
- bindings
-Date: Thu, 17 Nov 2016 12:40:15 +0100
-Message-ID: <e09b7aa4-8e98-b07c-d0d8-b24d619f9e00@metafoo.de>
-References: <1479340111-1259-1-git-send-email-peda@axentia.se>
- <1479340111-1259-5-git-send-email-peda@axentia.se>
+From: <c_traja@qti.qualcomm.com>
+Subject: [PATCHv2 0/4] ath10k: Add support for BTCOEX feature.
+Date: Thu, 17 Nov 2016 17:14:20 +0530
+Message-ID: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1479340111-1259-5-git-send-email-peda@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ath10k@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org, tamizhchelvam@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Tamizh chelvam <c_traja@qti.qualcomm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2016 12:48 AM, Peter Rosin wrote:
-> ---
->  .../bindings/iio/multiplexer/iio-mux.txt           | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> new file mode 100644
-> index 000000000000..2f5c7fc35a42
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> @@ -0,0 +1,59 @@
-> +IIO multiplexer bindings
-> +
-> +If a multiplexer is used to select when hardware signal is fed to
-> +e.g. an ADC channel, these bindings describe that situation.
-> +
-> +Required properties:
-> +- compatible : "iio-mux"
-> +- io-channels : Channel node of the parent channel that has multiplexed
-> +		input.
-> +- io-channel-names : Should be "parent".
-> +- control-muxes : Node of the multiplexer that controls the input signal.
-> +- control-mux-names : Should be "mux".
-> +- #address-cells = <1>;
-> +- #size-cells = <0>;
-> +
-> +Required properties for iio-mux child nodes:
-> +- reg : The multiplexer number.
-> +
-> +Optional properties for iio-mux child nodes:
-> +- iio-ext-info : Array of string pairs, the first item in each pair is the
-> +		 iio ext_info attribute name, and the second item in each
-> +		 pair is the iio ext_info value for that attribute. The
-> +		 mux will write these ext_info values to the corresponding
-> +		 ext_info attributes on every multiplexer switch.
+From: Tamizh chelvam <c_traja@qti.qualcomm.com>
 
-This can't go into the devicetree in its current form as it exposes
-implementation details of the Linux kernel drivers.
+This patch set add support to enable/disable BTCOEX via nl80211,
+also support to update BTCOEX priority value for 10.4 based firmware.
+Document the dt entry in qcom,ath10k.txt and reads btcoex support
+flag and btcoex gpio pin detail from dt.
+
+Tamizh chelvam (4):
+  ath10k: Add support to enable or disable btcoex via nl80211
+  ath10k: Add support to update btcoex priority value via nl80211
+  dt: bindings: add new dt entry for BTCOEX feature in qcom,ath10k.txt
+  ath10k: Add support to read btcoex related data from DT
+
+V2:
+
+ * Added device tree list in CC
+ * fixed mutex unlock issue in 
+   "ath10k: Add support to update btcoex priority value via nl80211"
+
+ .../bindings/net/wireless/qcom,ath10k.txt          |    4 +
+ drivers/net/wireless/ath/ath10k/core.c             |   44 +++++-
+ drivers/net/wireless/ath/ath10k/core.h             |    9 ++
+ drivers/net/wireless/ath/ath10k/debug.c            |   40 +-----
+ drivers/net/wireless/ath/ath10k/mac.c              |  140 +++++++++++++++++++-
+ drivers/net/wireless/ath/ath10k/mac.h              |    1 +
+ drivers/net/wireless/ath/ath10k/wmi-ops.h          |   19 +++
+ drivers/net/wireless/ath/ath10k/wmi.c              |   20 +++
+ drivers/net/wireless/ath/ath10k/wmi.h              |   20 +++
+ 9 files changed, 261 insertions(+), 36 deletions(-)
+
+-- 
+1.7.9.5
