@@ -1,8 +1,8 @@
 From: <c_traja@qti.qualcomm.com>
-Subject: [PATCHv2 1/4] ath10k: Add support to enable or disable btcoex via
+Subject: [PATCHv2 2/4] ath10k: Add support to update btcoex priority value via
  nl80211
-Date: Thu, 17 Nov 2016 17:14:21 +0530
-Message-ID: <1479383064-25718-2-git-send-email-c_traja@qti.qualcomm.com>
+Date: Thu, 17 Nov 2016 17:14:22 +0530
+Message-ID: <1479383064-25718-3-git-send-email-c_traja@qti.qualcomm.com>
 References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,169 +24,277 @@ List-Id: devicetree@vger.kernel.org
 
 From: Tamizh chelvam <c_traja@qti.qualcomm.com>
 
-This patch add support to enable or disable btcoex via nl80211.
-The firmware support this feature since 10.2.4.54 on 2G-only board,
-dual band or 5G boards don't support this. WMI service
-WMI_SERVICE_COEX_GPIO is used to identify the firmware support of this
-feature.
+This patch adds support to update btcoex priority value via nl80211.
+Here driver will be exposing the supported frame format for this
+feature via btcoex_support_flags which is a member of
+wiphy structure. 10.4 based firmware support this feature.
+WMI service WMI_SERVICE_BTCOEX is used to identify the firmware support
+of this feature. BTCOEX needs to enable to modify this value.
+
+This patch has dependency of
+"cfg80211: Add new NL80211_CMD_SET_BTCOEX_PRIORITY to support BTCOEX"
+patch.
 
 Signed-off-by: Tamizh chelvam <c_traja@qti.qualcomm.com>
 ---
- drivers/net/wireless/ath/ath10k/debug.c |   37 ++------------------
- drivers/net/wireless/ath/ath10k/mac.c   |   58 +++++++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath10k/mac.h   |    1 +
- 3 files changed, 62 insertions(+), 34 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c     |   78 +++++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/wmi-ops.h |   19 +++++++
+ drivers/net/wireless/ath/ath10k/wmi.c     |   19 +++++++
+ drivers/net/wireless/ath/ath10k/wmi.h     |   18 +++++++
+ 4 files changed, 134 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index 82a4c67..ea30fbe 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -26,6 +26,7 @@
- #include "debug.h"
- #include "hif.h"
- #include "wmi-ops.h"
-+#include "mac.h"
- 
- /* ms */
- #define ATH10K_DEBUG_HTT_STATS_INTERVAL 1000
-@@ -2138,7 +2139,6 @@ static ssize_t ath10k_write_btcoex(struct file *file,
- 	size_t buf_size;
- 	int ret;
- 	bool val;
--	u32 pdev_param;
- 
- 	buf_size = min(count, (sizeof(buf) - 1));
- 	if (copy_from_user(buf, ubuf, buf_size))
-@@ -2150,40 +2150,9 @@ static ssize_t ath10k_write_btcoex(struct file *file,
- 		return -EINVAL;
- 
- 	mutex_lock(&ar->conf_mutex);
--
--	if (ar->state != ATH10K_STATE_ON &&
--	    ar->state != ATH10K_STATE_RESTARTED) {
--		ret = -ENETDOWN;
--		goto exit;
--	}
--
--	if (!(test_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags) ^ val)) {
-+	ret = ath10k_mac_set_btcoex(ar, val);
-+	if (!ret)
- 		ret = count;
--		goto exit;
--	}
--
--	pdev_param = ar->wmi.pdev_param->enable_btcoex;
--	if (test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
--		     ar->running_fw->fw_file.fw_features)) {
--		ret = ath10k_wmi_pdev_set_param(ar, pdev_param, val);
--		if (ret) {
--			ath10k_warn(ar, "failed to enable btcoex: %d\n", ret);
--			ret = count;
--			goto exit;
--		}
--	} else {
--		ath10k_info(ar, "restarting firmware due to btcoex change");
--		queue_work(ar->workqueue, &ar->restart_work);
--	}
--
--	if (val)
--		set_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags);
--	else
--		clear_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags);
--
--	ret = count;
--
--exit:
- 	mutex_unlock(&ar->conf_mutex);
- 
- 	return ret;
 diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 717b2fa..e7131b9 100644
+index e7131b9..ce5d529 100644
 --- a/drivers/net/wireless/ath/ath10k/mac.c
 +++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -7445,6 +7445,63 @@ struct ath10k_mac_change_chanctx_arg {
- 	return 0;
+@@ -7502,6 +7502,71 @@ static int ath10k_mac_op_set_btcoex(struct ieee80211_hw *hw, bool enabled)
+ 	return ret;
  }
  
-+static inline void ath10k_mac_update_btcoex_flag(struct ath10k *ar, bool val)
++u32
++ath10k_mac_get_btcoex_prio(struct cfg80211_btcoex_priority *btcoex_priority)
 +{
-+	if (val)
-+		set_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags);
-+	else
-+		clear_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags);
++	u32 btcoex_prio = 0;
++
++	if (btcoex_priority->wlan_be_preferred)
++		btcoex_prio |= WIPHY_WLAN_BE_PREFERRED;
++
++	if (btcoex_priority->wlan_bk_preferred)
++		btcoex_prio |= WIPHY_WLAN_BK_PREFERRED;
++
++	if (btcoex_priority->wlan_vi_preferred)
++		btcoex_prio |= WIPHY_WLAN_VI_PREFERRED;
++
++	if (btcoex_priority->wlan_vo_preferred)
++		btcoex_prio |= WIPHY_WLAN_VO_PREFERRED;
++
++	if (btcoex_priority->wlan_beacon_preferred)
++		btcoex_prio |= WIPHY_WLAN_BEACON_PREFERRED;
++
++	if (btcoex_priority->wlan_mgmt_preferred)
++		btcoex_prio |= WIPHY_WLAN_MGMT_PREFERRED;
++
++	return btcoex_prio;
 +}
 +
-+int ath10k_mac_set_btcoex(struct ath10k *ar, bool val)
++static int ath10k_mac_op_set_btcoex_priority(struct ieee80211_hw *hw,
++			struct cfg80211_btcoex_priority *btcoex_priority)
 +{
-+	u32 pdev_param;
++	u32 btcoex_prio;
++	struct ath10k *ar = hw->priv;
 +	int ret;
 +
-+	lockdep_assert_held(&ar->conf_mutex);
-+
-+	if (ar->state != ATH10K_STATE_ON &&
-+	    ar->state != ATH10K_STATE_RESTARTED)
-+		return -ENETDOWN;
-+
-+	if (!(test_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags) ^ val))
-+		return 0;
-+
-+	pdev_param = ar->wmi.pdev_param->enable_btcoex;
-+	if (test_bit(ATH10K_FW_FEATURE_BTCOEX_PARAM,
-+		     ar->running_fw->fw_file.fw_features)) {
-+		ret = ath10k_wmi_pdev_set_param(ar, pdev_param, val);
-+
-+		if (ret) {
-+			ath10k_warn(ar,
-+				    "failed to modify btcoex state: %d\n", ret);
-+			return ret;
-+		}
-+		ath10k_mac_update_btcoex_flag(ar, val);
-+	} else {
-+		ath10k_info(ar, "restarting firmware due to btcoex change");
-+		ath10k_mac_update_btcoex_flag(ar, val);
-+		queue_work(ar->workqueue, &ar->restart_work);
++	if (!(test_bit(ATH10K_FLAG_BTCOEX, &ar->dev_flags))) {
++		ret = -EINVAL;
++		goto exit;
 +	}
 +
-+	return 0;
-+}
-+
-+static int ath10k_mac_op_set_btcoex(struct ieee80211_hw *hw, bool enabled)
-+{
-+	int ret;
-+	struct ath10k *ar = hw->priv;
-+
-+	if (!test_bit(WMI_SERVICE_COEX_GPIO, ar->wmi.svc_map))
-+		return -EOPNOTSUPP;
-+
 +	mutex_lock(&ar->conf_mutex);
-+	ret = ath10k_mac_set_btcoex(ar, enabled);
-+	mutex_unlock(&ar->conf_mutex);
 +
++	if (ar->state != ATH10K_STATE_ON &&
++	    ar->state != ATH10K_STATE_RESTARTED) {
++		ret = -ENETDOWN;
++		goto exit;
++	}
++
++	btcoex_prio = ath10k_mac_get_btcoex_prio(btcoex_priority);
++
++	if (btcoex_prio > 0x3f) {
++		ret = -E2BIG;
++		goto exit;
++	}
++
++	ret = ath10k_wmi_set_coex_param(ar, btcoex_prio);
++
++	if (ret) {
++		ath10k_warn(ar, "failed to set btcoex priority: %d\n", ret);
++		goto exit;
++	}
++
++exit:
++	mutex_unlock(&ar->conf_mutex);
 +	return ret;
 +}
 +
  static const struct ieee80211_ops ath10k_ops = {
  	.tx				= ath10k_mac_op_tx,
  	.wake_tx_queue			= ath10k_mac_op_wake_tx_queue,
-@@ -7486,6 +7543,7 @@ struct ath10k_mac_change_chanctx_arg {
- 	.assign_vif_chanctx		= ath10k_mac_op_assign_vif_chanctx,
+@@ -7544,6 +7609,7 @@ static int ath10k_mac_op_set_btcoex(struct ieee80211_hw *hw, bool enabled)
  	.unassign_vif_chanctx		= ath10k_mac_op_unassign_vif_chanctx,
  	.switch_vif_chanctx		= ath10k_mac_op_switch_vif_chanctx,
-+	.set_btcoex                     = ath10k_mac_op_set_btcoex,
+ 	.set_btcoex                     = ath10k_mac_op_set_btcoex,
++	.set_btcoex_priority		= ath10k_mac_op_set_btcoex_priority,
  
  	CFG80211_TESTMODE_CMD(ath10k_tm_cmd)
  
-diff --git a/drivers/net/wireless/ath/ath10k/mac.h b/drivers/net/wireless/ath/ath10k/mac.h
-index 1bd29ec..de1fa72 100644
---- a/drivers/net/wireless/ath/ath10k/mac.h
-+++ b/drivers/net/wireless/ath/ath10k/mac.h
-@@ -82,6 +82,7 @@ struct ieee80211_txq *ath10k_mac_txq_lookup(struct ath10k *ar,
- 					    u16 peer_id,
- 					    u8 tid);
- int ath10k_mac_ext_resource_config(struct ath10k *ar, u32 val);
-+int ath10k_mac_set_btcoex(struct ath10k *ar, bool val);
+@@ -8134,6 +8200,18 @@ int ath10k_mac_register(struct ath10k *ar)
+ 	 */
+ 	ar->hw->offchannel_tx_hw_queue = IEEE80211_MAX_QUEUES - 1;
  
- static inline struct ath10k_vif *ath10k_vif_to_arvif(struct ieee80211_vif *vif)
- {
++	if (test_bit(WMI_SERVICE_BTCOEX, ar->wmi.svc_map)) {
++		ar->hw->wiphy->btcoex_support_flags =
++			WIPHY_WLAN_BE_PREFERRED |
++			WIPHY_WLAN_BK_PREFERRED |
++			WIPHY_WLAN_VI_PREFERRED |
++			WIPHY_WLAN_VO_PREFERRED |
++			WIPHY_WLAN_BEACON_PREFERRED |
++			WIPHY_WLAN_MGMT_PREFERRED;
++		ath10k_dbg(ar, ATH10K_DBG_BOOT, "btcoex supported mask :%u\n",
++			   ar->hw->wiphy->btcoex_support_flags);
++	}
++
+ 	switch (ar->running_fw->fw_file.wmi_op_version) {
+ 	case ATH10K_FW_WMI_OP_VERSION_MAIN:
+ 		ar->hw->wiphy->iface_combinations = ath10k_if_comb;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+index c9a8bb1..90c8390 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
++++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
+@@ -197,6 +197,8 @@ struct wmi_ops {
+ 					(struct ath10k *ar,
+ 					 enum wmi_bss_survey_req_type type);
+ 	struct sk_buff *(*gen_echo)(struct ath10k *ar, u32 value);
++	struct sk_buff *(*gen_set_coex_param)(struct ath10k *ar,
++					      u32 btcoex_prio);
+ };
+ 
+ int ath10k_wmi_cmd_send(struct ath10k *ar, struct sk_buff *skb, u32 cmd_id);
+@@ -1411,4 +1413,21 @@ struct wmi_ops {
+ 	return ath10k_wmi_cmd_send(ar, skb, wmi->cmd->echo_cmdid);
+ }
+ 
++static inline int
++ath10k_wmi_set_coex_param(struct ath10k *ar, u32 btcoex_prio)
++{
++	struct sk_buff *skb;
++
++	if (!ar->wmi.ops->gen_set_coex_param)
++		return -EOPNOTSUPP;
++
++	skb = ar->wmi.ops->gen_set_coex_param(ar, btcoex_prio);
++
++	if (IS_ERR(skb))
++		return PTR_ERR(skb);
++
++	return ath10k_wmi_cmd_send(ar, skb,
++				   ar->wmi.cmd->set_coex_param_cmdid);
++}
++
+ #endif
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 387c4ee..de35c17 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -710,6 +710,7 @@
+ 	.pdev_bss_chan_info_request_cmdid =
+ 			WMI_10_4_PDEV_BSS_CHAN_INFO_REQUEST_CMDID,
+ 	.ext_resource_cfg_cmdid = WMI_10_4_EXT_RESOURCE_CFG_CMDID,
++	.set_coex_param_cmdid = WMI_10_4_BTCOEX_CFG_CMDID,
+ };
+ 
+ /* MAIN WMI VDEV param map */
+@@ -7859,6 +7860,23 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
+ 	return 0;
+ }
+ 
++static struct sk_buff *
++ath10k_wmi_10_4_op_gen_set_coex_param(struct ath10k *ar,
++				      u32 btcoex_prio)
++{
++	struct wmi_set_coex_param_10_4_cmd *cmd;
++	struct sk_buff *skb;
++
++	skb = ath10k_wmi_alloc_skb(ar, sizeof(*cmd));
++	if (!skb)
++		return ERR_PTR(-ENOMEM);
++
++	cmd = (struct wmi_set_coex_param_10_4_cmd *)skb->data;
++	cmd->btcoex_prio = __cpu_to_le32(btcoex_prio);
++
++	ath10k_dbg(ar, ATH10K_DBG_WMI, "BTCOEX priority :%u\n", btcoex_prio);
++	return skb;
++}
+ static const struct wmi_ops wmi_ops = {
+ 	.rx = ath10k_wmi_op_rx,
+ 	.map_svc = wmi_main_svc_map,
+@@ -8205,6 +8223,7 @@ static int ath10k_wmi_10_4_op_get_vdev_subtype(struct ath10k *ar,
+ 	.gen_pdev_bss_chan_info_req = ath10k_wmi_10_2_op_gen_pdev_bss_chan_info,
+ 	.gen_echo = ath10k_wmi_op_gen_echo,
+ 	.gen_pdev_get_tpc_config = ath10k_wmi_10_2_4_op_gen_pdev_get_tpc_config,
++	.gen_set_coex_param = ath10k_wmi_10_4_op_gen_set_coex_param,
+ };
+ 
+ int ath10k_wmi_attach(struct ath10k *ar)
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.h b/drivers/net/wireless/ath/ath10k/wmi.h
+index 1b243c8..3a739e3 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.h
++++ b/drivers/net/wireless/ath/ath10k/wmi.h
+@@ -184,6 +184,8 @@ enum wmi_service {
+ 	WMI_SERVICE_TX_MODE_PUSH_ONLY,
+ 	WMI_SERVICE_TX_MODE_PUSH_PULL,
+ 	WMI_SERVICE_TX_MODE_DYNAMIC,
++	WMI_SERVICE_VDEV_RX_FILTER,
++	WMI_SERVICE_BTCOEX,
+ 
+ 	/* keep last */
+ 	WMI_SERVICE_MAX,
+@@ -310,6 +312,8 @@ enum wmi_10_4_service {
+ 	WMI_10_4_SERVICE_TX_MODE_PUSH_ONLY,
+ 	WMI_10_4_SERVICE_TX_MODE_PUSH_PULL,
+ 	WMI_10_4_SERVICE_TX_MODE_DYNAMIC,
++	WMI_10_4_SERVICE_VDEV_RX_FILTER,
++	WMI_10_4_SERVICE_BTCOEX,
+ };
+ 
+ static inline char *wmi_service_name(int service_id)
+@@ -408,6 +412,7 @@ static inline char *wmi_service_name(int service_id)
+ 	SVCSTR(WMI_SERVICE_TX_MODE_PUSH_ONLY);
+ 	SVCSTR(WMI_SERVICE_TX_MODE_PUSH_PULL);
+ 	SVCSTR(WMI_SERVICE_TX_MODE_DYNAMIC);
++	SVCSTR(WMI_SERVICE_BTCOEX);
+ 	default:
+ 		return NULL;
+ 	}
+@@ -663,6 +668,8 @@ static inline void wmi_10_4_svc_map(const __le32 *in, unsigned long *out,
+ 	       WMI_SERVICE_TX_MODE_PUSH_PULL, len);
+ 	SVCMAP(WMI_10_4_SERVICE_TX_MODE_DYNAMIC,
+ 	       WMI_SERVICE_TX_MODE_DYNAMIC, len);
++	SVCMAP(WMI_10_4_SERVICE_BTCOEX,
++	       WMI_SERVICE_BTCOEX, len);
+ }
+ 
+ #undef SVCMAP
+@@ -837,6 +844,7 @@ struct wmi_cmd_map {
+ 	u32 pdev_bss_chan_info_request_cmdid;
+ 	u32 pdev_enable_adaptive_cca_cmdid;
+ 	u32 ext_resource_cfg_cmdid;
++	u32 set_coex_param_cmdid;
+ };
+ 
+ /*
+@@ -1646,6 +1654,11 @@ enum wmi_10_4_cmd_id {
+ 	WMI_10_4_EXT_RESOURCE_CFG_CMDID,
+ 	WMI_10_4_VDEV_SET_IE_CMDID,
+ 	WMI_10_4_SET_LTEU_CONFIG_CMDID,
++	WMI_10_4_ATF_SSID_GROUPING_REQUEST_CMDID,
++	WMI_10_4_PEER_ATF_EXT_REQUEST_CMDID,
++	WMI_10_4_SET_PERIODIC_CHANNEL_STATS_CONFIG,
++	WMI_10_4_PEER_BWF_REQUEST_CMDID,
++	WMI_10_4_BTCOEX_CFG_CMDID,
+ 	WMI_10_4_PDEV_UTF_CMDID = WMI_10_4_END_CMDID - 1,
+ };
+ 
+@@ -2723,6 +2736,11 @@ struct wmi_ext_resource_config_10_4_cmd {
+ 	__le32 fw_feature_bitmap;
+ };
+ 
++struct wmi_set_coex_param_10_4_cmd {
++	/* contains wlan priority frame type value preferred over bt */
++	__le32 btcoex_prio;
++};
++
+ /* strucutre describing host memory chunk. */
+ struct host_memory_chunk {
+ 	/* id of the request that is passed up in service ready */
 -- 
 1.7.9.5
