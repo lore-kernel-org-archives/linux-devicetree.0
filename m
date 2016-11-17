@@ -1,59 +1,118 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5] drm/mediatek: fixed the calc method of data rate per
- lane
-Date: Thu, 17 Nov 2016 13:36:46 +0800
-Message-ID: <1479361006.13083.7.camel@mtksdaap41>
-References: <1479266454-31892-1-git-send-email-jitao.shi@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [RFC PATCH] mfd: dt: Add Aspeed LPC binding
+Date: Thu, 17 Nov 2016 16:36:33 +1030
+Message-ID: <20161117060633.3837-1-andrew@aj.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479266454-31892-1-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jitao:
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+---
 
+I'd like to start a discussion about how to handle the LPC register space in
+the Aspeed SoC. There are a number of issues, largely concerned with the layout
+of the registers but also with the fact that LPC register state is used by the
+pinmux to determine some pin functionality.
 
-On Wed, 2016-11-16 at 11:20 +0800, Jitao Shi wrote:
-> Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e.
-> Tlpx, Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP
-> mode, those signals will cause h-time larger than normal and reduce FPS.
-> So need to multiply a coefficient to offset the extra signal's effect.
->   coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+
-> 		 Ths_trail+Ths_exit)/(htotal*bpp/lane_number)
-> 
-> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+So the register layout is problematic. Registers for what I think are coherent
+pieces of functionality functionality are littered through the layout: Post
+Code Control registers (PCCR) are interleaved with LPC Host Controller
+registers (LHCR) which are interleaved with Host Interface Controller registers
+(HICR) which are segmented by LPC Snoop registers. It seems appropriate that
+the whole thing is represented as an MFD syscon, with the alternative being
+writing several distinct drivers that map some number of resources to access
+all of their registers.
 
-It looks good to me.
-But this patch conflict with [1] which is one patch of MT2701 series. I
-want to apply MT2701 patches first, so please help to refine this patch
-based on MT2701 patches.
+The disadvantage of not representing the LPC space as a syscon is the LPC Host
+Controller driver will need to provide accessor functions for the pinmux
+driver. Pinmux also depends on bits in the Display Controller, and would need
+similar accessors provided there. The idea of using syscon regmaps removes the
+need to write these accessors. If the changes between the AST2400 and AST2500
+are anything to go by, the pinmux complexity of the SoCs will only increase
+which will likely lead to the spread of these accessor functions.
 
-[1] https://patchwork.kernel.org/patch/9422821/
+Yet another option would be to only expose the LPC Host Controller as a syscon
+instead of the whole LPC register space. I feel this is a little distasteful
+as the LHCRs are not in contiguous memory space; as mentioned above they are
+separated (seemingly randomly) by a PCCR. We could specify the LPC Host
+Controller as a syscon and provide multiple resources: The syscon
+implementation consumes the first resource which is what we desire here for use
+with pinmux, but the driver would be left to map any subsequent resources. That
+feels odd to me, but I'm interested in arguments for it.
 
-Regards,
-CK
+We could also map the LPC Host Controller syscon across the offending PCCR, but
+then any driver developed for the Post Code Controller would have to take a
+reference to the LPC Host Controller regmap. I feel like we might wind up with
+a syscon phandle spaghetti across the LPC controller if we use that approach.
 
-> ---
-> Change since v4:
->  - tune the calc comment more clear.
->  - define the phy timings as constants.
-> 
-> Chnage since v3:
->  - wrapp the commit msg.
->  - fix alignment of some lines. 
-> 
-> Change since v2:
->  - move phy timing back to dsi_phy_timconfig.
-> 
-> Change since v1:
->  - phy_timing2 and phy_timing3 refer clock cycle time.
->  - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT.
-> ---
->  
+Finally, the LPC registers can be divided in two: one set for H8S/2168
+compatible LPC functionality, and the rest for Aspeed-specific registers.
+Division in two is required if we are going to throw a regmap over the LPC
+space as the H8S/2168 registers are 1-byte wide, whilst the Aspeed LPC
+registers are 4-bytes. As far as I can tell we can treat them as separate
+functionality without any loss; if there is a cross-over in configuration we
+can have each phandle the other in the devicetree.
+
+The final complication is the iBT device sits in the Aspeed-specific part of
+the LPC controller and has an upstream driver that isn't regmap-capable.
+Describing the LPC controller as a syscon will require some changes there, but
+I think we can make it work without too much trouble.
+
+What is the recommended approach to managing such hardware?
+
+Cheers,
+
+Andrew
+
+PS: I sent a devicetree binding document out for the LPC Host Controller as
+part of a recent pinmux series[1]. As it stands the example in the document
+doesn't cover the all the registers relevant to the LPC Host Controller, which
+was a motivation for trying to sort the problem out properly.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg540084.html
+
+ .../devicetree/bindings/mfd/aspeed-lpc.txt         | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+new file mode 100644
+index 000000000000..36c8a9e08dc6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+@@ -0,0 +1,28 @@
++* Device tree bindings for the Aspeed LPC Controller
++
++The Aspeed LPC controller contains registers for a variety of functions. Not
++all registers for a function are contiguous, and some registers are referenced
++by functions outside the LPC controller.
++
++Note that this is separate from the H8S/2168 compatible register set occupying
++the start of the LPC controller address space.
++
++Some significant functions in the LPC controller:
++
++* LPC Host Controller
++* Host Interface Controller
++* iBT Controller
++* SuperIO Scratch registers
++
++Required properties:
++- compatible:		"aspeed,ast2500-lpc", "syscon"
++- reg:			contains offset/length value of the Aspeed-specific LPC
++			memory region.
++
++Example:
++
++lpc: lpc@1e7890a0 {
++	compatible = "aspeed,ast2500-lpc", "syscon";
++	reg = <0x1e789080 0x1e0>;
++};
++
+-- 
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
