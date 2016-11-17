@@ -1,11 +1,17 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH] ARM: dts: qcom: Add apq8064 CoreSight components
-Date: Thu, 17 Nov 2016 17:36:09 +0200
-Message-ID: <20161117153609.11705-1-georgi.djakov@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH -next] ARM: dts: omap5: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Thu, 17 Nov 2016 07:47:01 -0800
+Message-ID: <20161117154700.GT4082@atomide.com>
+References: <1479138250-17780-1-git-send-email-sudeep.holla@arm.com>
+ <20161117152717.GS4082@atomide.com>
+ <8d06724a-98af-05ab-f5a8-07c552722fca@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <8d06724a-98af-05ab-f5a8-07c552722fca@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,277 +21,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, zhang.chunyan@linaro.org, robh+dt@kernel.org, iivanov.xz@gmail.com, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
-
-Add initial set of CoreSight components found on Qualcomm's
-8064 chipset.
-
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064-coresight.dtsi | 196 ++++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi           |  11 +-
- 2 files changed, 203 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi b/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-new file mode 100644
-index 000000000000..9395fddb1bf0
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064-coresight.dtsi
-@@ -0,0 +1,196 @@
-+/*
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+&soc {
-+
-+	etb@1a01000 {
-+		compatible = "coresight-etb10", "arm,primecell";
-+		reg = <0x1a01000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		port {
-+			etb_in: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out0>;
-+			};
-+		};
-+	};
-+
-+	tpiu@1a03000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0x1a03000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		port {
-+			tpiu_in: endpoint {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out1>;
-+			};
-+		};
-+	};
-+
-+	replicator {
-+		compatible = "arm,coresight-replicator";
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				replicator_out0: endpoint {
-+					remote-endpoint = <&etb_in>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				replicator_out1: endpoint {
-+					remote-endpoint = <&tpiu_in>;
-+				};
-+			};
-+			port@2 {
-+				reg = <0>;
-+				replicator_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@1a04000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0x1a04000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/*
-+			 * Not described input ports:
-+			 * 2 - connected to STM component
-+			 * 3 - not-connected
-+			 * 6 - not-connected
-+			 * 7 - not-connected
-+			 */
-+			port@0 {
-+				reg = <0>;
-+				funnel_in0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				funnel_in1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm1_out>;
-+				};
-+			};
-+			port@4 {
-+				reg = <4>;
-+				funnel_in4: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm2_out>;
-+				};
-+			};
-+			port@5 {
-+				reg = <5>;
-+				funnel_in5: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm3_out>;
-+				};
-+			};
-+			port@8 {
-+				reg = <0>;
-+				funnel_out: endpoint {
-+					remote-endpoint = <&replicator_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	etm@1a1c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0x1a1c000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		cpu = <&CPU0>;
-+
-+		port {
-+			etm0_out: endpoint {
-+				remote-endpoint = <&funnel_in0>;
-+			};
-+		};
-+	};
-+
-+	etm@1a1d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0x1a1d000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		cpu = <&CPU1>;
-+
-+		port {
-+			etm1_out: endpoint {
-+				remote-endpoint = <&funnel_in1>;
-+			};
-+		};
-+	};
-+
-+	etm@1a1e000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0x1a1e000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		cpu = <&CPU2>;
-+
-+		port {
-+			etm2_out: endpoint {
-+				remote-endpoint = <&funnel_in4>;
-+			};
-+		};
-+	};
-+
-+	etm@1a1f000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0x1a1f000 0x1000>;
-+
-+		clocks = <&rpmcc RPM_QDSS_CLK>;
-+		clock-names = "apb_pclk";
-+
-+		cpu = <&CPU3>;
-+
-+		port {
-+			etm3_out: endpoint {
-+				remote-endpoint = <&funnel_in5>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 268bd470c865..18469c632e2f 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/clock/qcom,gcc-msm8960.h>
- #include <dt-bindings/reset/qcom,gcc-msm8960.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
-+#include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/soc/qcom,gsbi.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -27,7 +28,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@0 {
-+		CPU0: cpu@0 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -38,7 +39,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@1 {
-+		CPU1: cpu@1 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -49,7 +50,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@2 {
-+		CPU2: cpu@2 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -60,7 +61,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@3 {
-+		CPU3: cpu@3 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -1418,4 +1419,6 @@
- 		};
- 	};
- };
-+
-+#include "qcom-apq8064-coresight.dtsi"
- #include "qcom-apq8064-pins.dtsi"
+KiBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0uY29tPiBbMTYxMTE3IDA3OjMyXToKPiAK
+PiAKPiBPbiAxNy8xMS8xNiAxNToyNywgVG9ueSBMaW5kZ3JlbiB3cm90ZToKPiA+ICogU3VkZWVw
+IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4gWzE2MTExNCAwNzo0NF06Cj4gPiA+IFRob3Vn
+aCB0aGUga2V5Ym9hcmQgZHJpdmVyIGZvciBHUElPIGJ1dHRvbnMoZ3Bpby1rZXlzKSB3aWxsIGNv
+bnRpbnVlIHRvCj4gPiA+IGNoZWNrIGZvci9zdXBwb3J0IHRoZSBsZWdhY3kgImdwaW8ta2V5LHdh
+a2V1cCIgYm9vbGVhbiBwcm9wZXJ0eSB0bwo+ID4gPiBlbmFibGUgZ3BpbyBidXR0b25zIGFzIHdh
+a2V1cCBzb3VyY2UsICJ3YWtldXAtc291cmNlIiBpcyB0aGUgbmV3Cj4gPiA+IHN0YW5kYXJkIGJp
+bmRpbmcuCj4gPiA+IAo+ID4gPiBUaGlzIHBhdGNoIHJlcGxhY2VzIHRoZSBsZWdhY3kgImdwaW8t
+a2V5LHdha2V1cCIgd2l0aCB0aGUgdW5pZmllZAo+ID4gPiAid2FrZXVwLXNvdXJjZSIgcHJvcGVy
+dHkgaW4gb3JkZXIgdG8gYXZvaWQgYW55IGZ1cnRoZXIgY29weS1wYXN0ZQo+ID4gPiBkdXBsaWNh
+dGlvbi4KPiA+ID4gCj4gPiA+IENjOiAiQmVub8OudCBDb3Vzc29uIiA8YmNvdXNzb25AYmF5bGli
+cmUuY29tPgo+ID4gPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPiA+ID4g
+U2lnbmVkLW9mZi1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4KPiA+ID4g
+LS0tCj4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwNS11ZXZtLmR0cyB8IDIgKy0KPiA+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gPiAKPiA+
+ID4gSGksCj4gPiA+IAo+ID4gPiBJbnNwaXRlIG9mIGdldHRpbmcgcmlkIG9mIG1vc3Qgb2YgdGhl
+IGxlZ2FjeSBwcm9wZXJ0eSBhbG1vc3QgYSB5ZWFyIGFnbywKPiA+ID4gYWRkaXRpb24gb2YgbmV3
+IHBsYXRmb3JtcyBoYXZlIGJyb3VnaHQgdGhpcyBiYWNrIGFuZCBvdmVyIHRpbWUgaXQncwo+ID4g
+PiBub3cgZm91bmQgYWdhaW4gaW4gZmV3IHBsYWNlcy4gSnVzdCBnZXQgcmlkIG9mIHRoZW0gKmFn
+YWluKgo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBhbm51YWwgY2hlY2sgdXAgOikKPiA+IAo+ID4g
+QWNrZWQtYnk6IFRvbnkgTGluZGdyZW4gPHRvbnlAYXRvbWlkZS5jb20+Cj4gPiAKPiA+IFBsZWFz
+ZSBsZXQgbWUga25vdyBpZiB5b3Ugd2FudCBtZSB0byBwaWNrIHRoaXMgdXAgaW5zdGVhZC4KPiAK
+PiBZZXMgdGhhdCB3b3VsZCBiZSBiZXR0ZXIuIEFsc28gaXQncyBwcmVzZW50IG9ubHkgaW4geW91
+ciAtbmV4dCwKPiBsb29rcyBsaWtlIHNvbWV0aGluZyBuZXdseSBhZGRlZCB2aWEgY29tbWl0IDJk
+NDZjMGM2MDcyNSAoIkFSTToKPiBkdHM6IG9tYXA1IHVldm06IGFkZCBVU1IxIGJ1dHRvbiIpCgpP
+SyBhcHBsaWVkIGludG8gb21hcC1mb3ItdjQuMTAvZHQ6b21hcC1mb3ItdjQuMTAvZHQgdGhhbmtz
+LgoKVG9ueQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
