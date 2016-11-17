@@ -1,162 +1,115 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/4] mailbox: Add iProc mailbox controller driver
-Date: Thu, 17 Nov 2016 09:10:25 +0530
-Message-ID: <CABb+yY3ga7CgZaRi_5Qu4UXNjGdhuLHM0gZjrwusFSLfCuc5cQ@mail.gmail.com>
-References: <1476817238-1226-1-git-send-email-jonathan.richardson@broadcom.com>
- <1476817238-1226-3-git-send-email-jonathan.richardson@broadcom.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2 05/10] mmc: dw_mmc: call the dw_mci_prep_stop_abort() by
+ default
+Date: Thu, 17 Nov 2016 14:05:25 +0900
+Message-ID: <868dbb62-4b0d-3492-0b13-093ce63c5cde@samsung.com>
+References: <20161115101232.3854-1-jh80.chung@samsung.com>
+ <20161115101232.3854-6-jh80.chung@samsung.com>
+ <CGME20161116091850epcas5p43ee5a8003c36321f4266c5942bd42060@epcas5p4.samsung.com>
+ <6d7625c0-8588-5d11-7475-38fa611d8614@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1476817238-1226-3-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-reply-to: <6d7625c0-8588-5d11-7475-38fa611d8614-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On 11/16/2016 06:16 PM, Shawn Lin wrote:
+> ÔÚ 2016/11/15 18:12, Jaehoon Chung Ð´µÀ:
+>> stop_cmdr should be set to values relevant to stop command.
+>> It migth be assigned to values whatever there is mrq->stop or not.
+>> Then it doesn't need to use dw_mci_prepare_command().
+>> It's enough to use the prep_stop_abort for preparing stop command.
+>>
+> 
+> Have you considered to clean up the logic of preparing abort cmd
+> within dw_mci_prepare_command?
 
-On Wed, Oct 19, 2016 at 12:30 AM, Jonathan Richardson
-<jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> The Broadcom iProc mailbox controller handles all communication with a
-> Cortex-M0 MCU processor that provides support for power, clock, and
-> reset management.
->
-> Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/mailbox/Kconfig             |  10 +
->  drivers/mailbox/Makefile            |   2 +
->  drivers/mailbox/bcm-iproc-mailbox.c | 422 ++++++++++++++++++++++++++++++++++++
->  include/linux/bcm_iproc_mailbox.h   |  32 +++
->
-This should be include/linux/mailbox/bcm_iproc_mailbox.h
+I have considered this..but i didn't check fully for this logic.
+I think it's possible to clean and make more simpler than now.
 
+how about thinking more after applying these patch-set? :)
 
-> +++ b/drivers/mailbox/bcm-iproc-mailbox.c
-> @@ -0,0 +1,422 @@
-> +/*
-> + * Copyright (C) 2016 Broadcom.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/notifier.h>
-> +#include <linux/reboot.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/mailbox_client.h>
->
-Need of mailbox_controller.h & client.h is a bad sign.
+Best Regards,
+Jaehoon Chung
 
-> +
-> +static int iproc_mbox_send_data_m0_imp(struct iproc_mbox *mbox,
-> +       struct iproc_mbox_msg *msg, int max_retries, int poll_period_us)
-> +{
-> +       unsigned long flags;
-> +       u32 val;
-> +       int err = 0;
-> +       int retries;
-> +
-> +       spin_lock_irqsave(&mbox->lock, flags);
-> +
-> +       dev_dbg(mbox->dev, "Send msg to M0: cmd=0x%x, param=0x%x, wait_ack=%d\n",
-> +               msg->cmd, msg->param, msg->wait_ack);
-> +
-> +       writel(msg->cmd, mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
-> +       writel(msg->param, mbox->base + IPROC_CRMU_MAILBOX1_OFFSET);
-> +
-> +       if (msg->wait_ack) {
-> +               err = msg->reply_code = -ETIMEDOUT;
-> +               for (retries = 0; retries < max_retries; retries++) {
-> +                       val = readl(mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
-> +                       if (val & M0_IPC_CMD_DONE_MASK) {
-> +                               /*
-> +                                * M0 replied - save reply code and
-> +                                * clear error.
-> +                                */
-> +                               msg->reply_code = (val &
-> +                                       M0_IPC_CMD_REPLY_MASK) >>
-> +                                       M0_IPC_CMD_REPLY_SHIFT;
-> +                               err = 0;
-> +                               break;
-> +                       }
-> +                       udelay(poll_period_us);
-> +               }
-> +       }
-> +
-> +       spin_unlock_irqrestore(&mbox->lock, flags);
-> +
-> +       return err;
-> +}
-> +
-OK, so this is the real message passing voodoo.
+> 
+> 
+>         if (cmd->opcode == MMC_STOP_TRANSMISSION ||
+>             cmd->opcode == MMC_GO_IDLE_STATE ||
+>             cmd->opcode == MMC_GO_INACTIVE_STATE ||
+>             (cmd->opcode == SD_IO_RW_DIRECT &&
+>              ((cmd->arg >> 9) & 0x1FFFF) == SDIO_CCCR_ABORT))
+>                 cmdr |= SDMMC_CMD_STOP;
+> 
+> 
+>> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c | 15 +++++----------
+>>  1 file changed, 5 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 3cda68c..12e1107 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -385,7 +385,7 @@ static void dw_mci_start_command(struct dw_mci *host,
+>>
+>>  static inline void send_stop_abort(struct dw_mci *host, struct mmc_data *data)
+>>  {
+>> -    struct mmc_command *stop = data->stop ? data->stop : &host->stop_abort;
+>> +    struct mmc_command *stop = &host->stop_abort;
+>>
+>>      dw_mci_start_command(host, stop, host->stop_cmdr);
+>>  }
+>> @@ -1277,10 +1277,7 @@ static void __dw_mci_start_request(struct dw_mci *host,
+>>          spin_unlock_irqrestore(&host->irq_lock, irqflags);
+>>      }
+>>
+>> -    if (mrq->stop)
+>> -        host->stop_cmdr = dw_mci_prepare_command(slot->mmc, mrq->stop);
+>> -    else
+>> -        host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
+>> +    host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
+>>  }
+>>
+>>  static void dw_mci_start_request(struct dw_mci *host,
+>> @@ -1890,8 +1887,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
+>>                             &host->pending_events)) {
+>>                  dw_mci_stop_dma(host);
+>> -                if (data->stop ||
+>> -                    !(host->data_status & (SDMMC_INT_DRTO |
+>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
+>>                                 SDMMC_INT_EBE)))
+>>                      send_stop_abort(host, data);
+>>                  state = STATE_DATA_ERROR;
+>> @@ -1927,8 +1923,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
+>>                             &host->pending_events)) {
+>>                  dw_mci_stop_dma(host);
+>> -                if (data->stop ||
+>> -                    !(host->data_status & (SDMMC_INT_DRTO |
+>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
+>>                                 SDMMC_INT_EBE)))
+>>                      send_stop_abort(host, data);
+>>                  state = STATE_DATA_ERROR;
+>> @@ -2004,7 +1999,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>>              host->cmd = NULL;
+>>              host->data = NULL;
+>>
+>> -            if (mrq->stop)
+>> +            if (!mrq->sbc && mrq->stop)
+>>                  dw_mci_command_complete(host, mrq->stop);
+>>              else
+>>                  host->cmd_status = 0;
+>>
+> 
+> 
 
-> +static void iproc_mbox_aon_gpio_forwarding_enable(struct iproc_mbox *mbox,
-> +       bool en)
-> +{
-> +       struct iproc_mbox_msg msg;
-> +       const int max_retries = 5;
-> +       const int poll_period_us = 200;
-> +
-> +       msg.cmd = M0_IPC_M0_CMD_AON_GPIO_FORWARDING_ENABLE;
-> +       msg.param = en ? 1 : 0;
-> +       msg.wait_ack = true;
-> +
-> +       iproc_mbox_send_data_m0_imp(mbox, &msg, max_retries, poll_period_us);
-> +}
-> +
-> +static void iproc_mbox_irq_unmask(struct irq_data *d)
-> +{
-> +       struct iproc_mbox *iproc_mbox = irq_data_get_irq_chip_data(d);
-> +
-> +       iproc_mbox_aon_gpio_forwarding_enable(iproc_mbox, true);
-> +}
-> +
-> +static void iproc_mbox_irq_mask(struct irq_data *d)
-> +{
-> +       /* Do nothing - Mask callback is not required, since upon GPIO event,
-> +        * M0 disables GPIO forwarding to A9. Hence, GPIO forwarding is already
-> +        * disabled  when in mbox irq handler, and no other mbox events from M0
-> +        * to A9 are expected until GPIO forwarding is enabled following
-> +        * iproc_mbox_irq_unmask()
-> +        */
-> +}
-> +
-> +static struct irq_chip iproc_mbox_irq_chip = {
-> +       .name = "bcm-iproc-mbox",
-> +       .irq_mask = iproc_mbox_irq_mask,
-> +       .irq_unmask = iproc_mbox_irq_unmask,
-> +};
-> +
-.... these are simply using the mailbox controllers directly. So you
-are actually clubbing a mailbox client (interrupt controller) with the
-provider (mailbox) here.
-
-I think you need move the IRQ controller part under drivers/irqchip/
-that uses the mailbox api to manage its 'irq lines'.
-
-Thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
