@@ -1,42 +1,53 @@
-From: <yuantian.tang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: updated sata node on ls1046a dts
-Date: Thu, 17 Nov 2016 15:59:20 +0800
-Message-ID: <1479369560-9188-2-git-send-email-yuantian.tang@nxp.com>
-References: <1479369560-9188-1-git-send-email-yuantian.tang@nxp.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 3/3] remoteproc: qcom: add Venus video core firmware
+ loader driver
+Date: Thu, 17 Nov 2016 11:08:48 +0200
+Message-ID: <51fef06b-8cf1-ae37-a6bd-6a1a30c34898@linaro.org>
+References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1478539853-23218-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20161114191641.GH5177@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1479369560-9188-1-git-send-email-yuantian.tang@nxp.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: tj@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tang Yuantian <Yuantian.Tang@nxp.com>, Tang Yuantian <yuantian.tang@nxp.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20161114191641.GH5177@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@nxp.com>
+Hi,
 
-On ls1046a soc, sata ecc should be disabled. So added sata ecc
-register address so that driver can get this information.
+On 11/14/2016 09:16 PM, Stephen Boyd wrote:
+> On 11/07, Stanimir Varbanov wrote:
+>> +#include <linux/module.h>
+>> +#include <linux/of_reserved_mem.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/qcom_scm.h>
+>> +#include <linux/remoteproc.h>
+>> +
+>> +#include "qcom_mdt_loader.h"
+>> +#include "remoteproc_internal.h"
+>> +
+>> +#define VENUS_CRASH_REASON_SMEM		425
+> 
+> This is unused. Is there going to be some common smem API to get
+> the crash reason?
 
-Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This is leftover and never used, so I will delete it. About smem maybe
+Bjorn have some idea?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 38806ca..88aaaf1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -507,7 +507,9 @@
- 
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1046a-ahci";
--			reg = <0x0 0x3200000 0x0 0x10000>;
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			    <0x0 0x20140520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clockgen 4 1>;
- 		};
+>> +
+>> +static const struct of_device_id venus_of_match[] = {
+>> +	{ .compatible = "qcom,venus-pil" },
+>> +	{ },
+>> +};
+> 
+> Add a MODULE_DEVICE_TABLE?
+> 
+
+OK.
+
 -- 
-2.1.0.27.g96db324
-
+regards,
+Stan
