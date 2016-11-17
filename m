@@ -1,151 +1,36 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Thu, 17 Nov 2016 14:12:58 -0800
-Message-ID: <582E2B6A.5050406@gmail.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <582E1A59.7040502@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] ARM: dts: qcom: Add apq8064 CoreSight components
+Date: Thu, 17 Nov 2016 14:16:06 -0800
+Message-ID: <d466f591-baac-c734-a49b-8aab763c1876@codeaurora.org>
+References: <20161117153609.11705-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <582E1A59.7040502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161117153609.11705-1-georgi.djakov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, andy.gross@linaro.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, zhang.chunyan@linaro.org, iivanov.xz@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/16 13:00, Frank Rowand wrote:
-> On 11/17/16 07:32, Sudeep Holla wrote:
->> Currently platforms/drivers needing to get the machine model name are
->> replicating the same snippet of code. In some case, the OF reference
->> counting is either missing or incorrect.
->>
->> This patch adds support to read the machine model name either using
->> the "model" or the "compatible" property in the device tree root node
->> to the core OF/DT code.
->>
->> This can be used to remove all the duplicate code snippets doing exactly
->> same thing later.
-> 
-> I find five instances of reading only property "model":
-> 
->   arch/arm/mach-imx/cpu.c
->   arch/arm/mach-mxs/mach-mxs.c
->   arch/c6x/kernel/setup.c
->   arch/mips/cavium-octeon/setup.c
->   arch/sh/boards/of-generic.c
+On 11/17/2016 07:36 AM, Georgi Djakov wrote:
+> From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+>
+> Add initial set of CoreSight components found on Qualcomm's
+> 8064 chipset.
+>
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  arch/arm/boot/dts/qcom-apq8064-coresight.dtsi | 196 ++++++++++++++++++++++++++
 
-My initial search was a little too strict. With a less restrictive
-search I find 16 more instances of reading property "model" and
-not reading property "compatible".
+Why not put this inside the soc file? This would be the first time we
+add a new file for something that's inside the SoC node that probably
+won't change thereafter. At least for pins I slightly agree with having
+a different file, we're adding more and more things there so it's nice
+to have a consolidated place of all possible configurations to choose
+from. But here it's mostly a static device description so what's the gain?
 
-> 
-> I find one instance of reading property "model", then if
-> that does not exist, property "compatible":
-> 
->   arch/mips/generic/proc.c
-> 
-> The proposed patch matches the code used in one place, and thus
-> current usage does not match the patch description.
-> 
-> Is my search bad?  Are you planning to add additional instances
-> of reading "model" then "compatible"?
-> 
-> -Frank
-> 
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
->>  include/linux/of.h |  6 ++++++
->>  2 files changed, 38 insertions(+)
->>
->> Hi Rob,
->>
->> It would be good if we can target this for v4.10, so that we have no
->> dependencies to push PATCH 2/2 in v4.11
->>
->> Regards,
->> Sudeep
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index a0bccb54a9bd..0810c5ecf1aa 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -546,6 +546,38 @@ int of_machine_is_compatible(const char *compat)
->>  EXPORT_SYMBOL(of_machine_is_compatible);
->>
->>  /**
->> + * of_machine_get_model_name - Find and read the model name or the compatible
->> + *		value for the machine.
->> + * @model:	pointer to null terminated return string, modified only if
->> + *		return value is 0.
->> + *
->> + * Returns a string containing either the model name or the compatible value
->> + * of the machine if found, else return error.
->> + *
->> + * Search for a machine model name or the compatible if model name is missing
->> + * in a device tree node and retrieve a null terminated string value (pointer
->> + * to data, not a copy). Returns 0 on success, -EINVAL if root of the device
->> + * tree is not found and other error returned by of_property_read_string on
->> + * failure.
->> + */
->> +int of_machine_get_model_name(const char **model)
->> +{
->> +	int error;
->> +
->> +	if (!of_node_get(of_root))
->> +		return -EINVAL;
->> +
->> +	error = of_property_read_string(of_root, "model", model);
->> +	if (error)
->> +		error = of_property_read_string_index(of_root, "compatible",
->> +						      0, model);
->> +	of_node_put(of_root);
->> +
->> +	return error;
->> +}
->> +EXPORT_SYMBOL(of_machine_get_model_name);
->> +
->> +/**
->>   *  __of_device_is_available - check if a device is available for use
->>   *
->>   *  @device: Node to check for availability, with locks already held
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index d72f01009297..13fc66531f1b 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -367,6 +367,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
->>  extern int of_alias_get_highest_id(const char *stem);
->>
->>  extern int of_machine_is_compatible(const char *compat);
->> +extern int of_machine_get_model_name(const char **model);
->>
->>  extern int of_add_property(struct device_node *np, struct property *prop);
->>  extern int of_remove_property(struct device_node *np, struct property *prop);
->> @@ -788,6 +789,11 @@ static inline int of_machine_is_compatible(const char *compat)
->>  	return 0;
->>  }
->>
->> +static inline int of_machine_get_model_name(const char **model)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->>  static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
->>  {
->>  	return false;
->> --
->> 2.7.4
->>
->>
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
