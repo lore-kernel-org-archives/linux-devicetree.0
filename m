@@ -1,14 +1,13 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [RFC PATCH] of: base: add support to get machine model name
-Date: Thu, 17 Nov 2016 14:08:30 +0000
-Message-ID: <622ddcbc-69b9-98f2-51f3-e256764ecb93@arm.com>
-References: <1479383450-19183-1-git-send-email-sudeep.holla@arm.com>
- <3670336.mMHByOpDl4@wuerfel>
+Date: Thu, 17 Nov 2016 15:13:53 +0100
+Message-ID: <2202339.ajrKjCY7Ro@wuerfel>
+References: <1479383450-19183-1-git-send-email-sudeep.holla@arm.com> <3670336.mMHByOpDl4@wuerfel> <622ddcbc-69b9-98f2-51f3-e256764ecb93@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <3670336.mMHByOpDl4@wuerfel>
+In-Reply-To: <622ddcbc-69b9-98f2-51f3-e256764ecb93@arm.com>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -18,44 +17,33 @@ List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
 List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, November 17, 2016 2:08:30 PM CET Sudeep Holla wrote:
+> On 17/11/16 13:50, Arnd Bergmann wrote:
+> > On Thursday, November 17, 2016 11:50:50 AM CET Sudeep Holla wrote:
+> >> Currently platforms/drivers needing to get the machine model name are
+> >> replicating the same snippet of code. In some case, the OF reference
+> >> counting is either missing or incorrect.
+> >>
+> >> This patch adds support to read the machine model name either using
+> >> the "model" or the "compatible" property in the device tree root node.
+> >>
+> >> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > I like the idea. One small comment:
+> >
+> 
+> Thanks. I prefer it as single patch but it can't be applied to any tree.
+> Any suggestions on handling this patch to fix the warning in -next ?
+> 
+The patch that causes the warning is currently in the mmc tree, and I
+don't think it would be good to have your entire patch in there too.
 
+It's probably best to just fix the warning there now by adding another
+open-coded copy of that function, and then apply your patch on top
+for v4.11.
 
-On 17/11/16 13:50, Arnd Bergmann wrote:
-> On Thursday, November 17, 2016 11:50:50 AM CET Sudeep Holla wrote:
->> Currently platforms/drivers needing to get the machine model name are
->> replicating the same snippet of code. In some case, the OF reference
->> counting is either missing or incorrect.
->>
->> This patch adds support to read the machine model name either using
->> the "model" or the "compatible" property in the device tree root node.
->>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->
-> I like the idea. One small comment:
->
-
-Thanks. I prefer it as single patch but it can't be applied to any tree.
-Any suggestions on handling this patch to fix the warning in -next ?
-
->> +int of_machine_get_model_name(const char **model)
->> +{
->> +	int error;
->> +	struct device_node *root;
->> +
->> +	root = of_find_node_by_path("/");
->> +	if (!root)
->> +		return -EINVAL;
->
-> The global of_root variable points ot this already, and is defined
-> in the same file, so I think we can just skip the lookup.
->
-
-Ah right, will fix it.
-
--- 
-Regards,
-Sudeep
+	Arnd
