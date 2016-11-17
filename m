@@ -1,147 +1,70 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 20:52:12 +0100
-Message-ID: <582E0A6C.5010307@topic.nl>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <582DEB81.6050806@topic.nl> <20161117185654.GA19338@roeck-us.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun5i: Add touchscreen node to
+ reference-design-tablet.dtsi
+Date: Thu, 17 Nov 2016 21:24:49 +0100
+Message-ID: <20161117202449.hgn5ws4l3nowx563@lukather>
+References: <20161116131508.12541-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20161117185654.GA19338@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Tom Levens <tom.levens@cern.ch>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x4zywx2kedxyxomf"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161116131508.12541-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-﻿On 17-11-2016 19:56, Guenter Roeck wrote:
-> On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
->> ﻿On 17-11-16 17:56, Guenter Roeck wrote:
->>> On 11/17/2016 04:10 AM, Tom Levens wrote:
->>>> Updated version of the ltc2990 driver which supports all measurement
->>>> modes available in the chip. The mode can be set through a devicetree
->>>> attribute.
->>>
-> [ ... ]
->
->>>>
->>>> static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>>>                   const struct i2c_device_id *id)
->>>> {
->>>>      int ret;
->>>>      struct device *hwmon_dev;
->>>> +    struct ltc2990_data *data;
->>>> +    struct device_node *of_node = i2c->dev.of_node;
->>>>
->>>>      if (!i2c_check_functionality(i2c->adapter,
->>>> I2C_FUNC_SMBUS_BYTE_DATA |
->>>>                       I2C_FUNC_SMBUS_WORD_DATA))
->>>>          return -ENODEV;
->>>>
->>>> -    /* Setup continuous mode, current monitor */
->>>> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
->>>> GFP_KERNEL);
->>>> +    if (unlikely(!data))
->>>> +        return -ENOMEM;
->>>> +    data->i2c = i2c;
->>>> +
->>>> +    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
->>>> &data->mode))
->>>> +        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
->>>
->>> Iam arguing with myself if we should still do this or if we should read
->>> the mode
->> >from the chip instead if it isn't provided (after all, it may have been
->>> initialized
->>> by the BIOS/ROMMON).
->>
->> I think the mode should be explicitly set, without default. There's no way
->> to tell whether the BIOS or bootloader has really set it up or whether the
->> chip is just reporting whatever it happened to default to. And given the
->> chip's function, it's unlikely a bootloader would want to initialize it.
->>
-> Unlikely but possible. Even if we all agree that the chip should be configured
-> by the driver, I don't like imposing that view on everyone else.
->
->> My advice would be to make it a required property. If not set, display an
->> error and bail out.
->>
-> It is not that easy, unfortunately. It also has to work on a non-devicetree
-> system. I would not object to making the property mandatory, but we would
-> still need to provide non-DT support.
->
-> My "use case" for taking the current mode from the chip if not specified
-> is that it would enable me to run a module test with all modes. I consider
-> this extremely valuable.
 
-Good point.
+--x4zywx2kedxyxomf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The chip defaults to measuring internal temperature only, and the mode 
-defaults to "0".
+On Wed, Nov 16, 2016 at 02:15:08PM +0100, Hans de Goede wrote:
+> Just like on sun8i all sun5i tablets use the same interrupt and power
+> gpios for their touchscreens. I've checked all known a13 fex files and
+> only the UTOO P66 uses a different gpio for the interrupt.
+>=20
+> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
+> fills in the necessary gpios to avoid duplication in the tablet dts files,
+> just like we do in sun8i-reference-design-tablet.dtsi.
+>=20
+> This will make future patches adding touchscreen nodes to a13 tablets
+> simpler.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Choosing a mode that doesn't match the actual circuitry could be bad for 
-the chip or the board (though unlikely, it'll probably just be useless) 
-since it will actively drive some of the inputs in the temperature modes 
-(which is default for V3/V4 pins).
+Applied, thanks!
+Maxime
 
-Instead of failing, one could choose to set the default mode to "7", 
-which just measures the 4 voltages, which would be a harmless mode in 
-all cases.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-As a way to let a bootloader set things up, I think it would be a good 
-check to see if CONTROL register bits 4:3 are set. If "00", the chip is 
-not acquiring data at all, and probably needs configuration still. In 
-that case, the mode must be provided by the devicetree (or the default "7").
-If bits 4:3 are "11", it has already been set up to measure its inputs, 
-and it's okay to continue doing just that and use the current value of 
-2:0 register as default mode (if the devicetree didn't specify any mode 
-at all).
+--x4zywx2kedxyxomf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The reason I wanted the property to be mandatory is to trigger users 
-like me (probably I'm the only other user so far) to update their 
-devicetree. But I'd notice quickly enough if it defaults to something 
-else. So that's not very compelling.
+-----BEGIN PGP SIGNATURE-----
 
->>> Mike, would that break your application, or can you specify the mode in
->>> devicetree ?
->>
->> I'm fine with specifying this in the devicetree. It will break things for
->> me, but I've been warned and willing to bow for the greater good :)
->>
-> I should have asked if your system uses devicetree. If it does, the problem
-> should be easy to fix for you. If not, we'll need to find a solution
-> for your use case.
+iQIcBAEBCAAGBQJYLhIQAAoJEBx+YmzsjxAg4lkQAMLmXTZKrRIaBxSdK33JCLOg
+UtRD+xn985YLuqFaX2KG5SaUAFfayAlTs0xyhYtfMqH5INy2l62ud7tOOQxKqGlM
+5CA59tjRMmmkXhf2Bs5TLesaW8r1dpOuUTvMkFuTCXfrAsr5G4frF1biclqjxAuk
+QxkGqnnODTrpPrf+65/xExa3Y8tvRIn3eYxuV4KbOP/372nv1XwEph8Y4uYT0d3y
+kBFyOo537dmnvFTnp3Y4VPmFRXIKo+XAIr67DaBSpA4v0Doyhdkvaob+hZ0gxlTx
+00vnm70r+KNvsDvuhe+elXDviovdQaSAhvibClfY4nGlZY+Osxe+ZTFWwJei5gk2
+e0hF3e9/dUNYZdogZjsKU+DJgiLpmIrXTmu+7gBxQTHoNcKY+nQNN9c+8GMeSngn
+Q8XKK7I6T45JmCjnt8yGSBswSJPUhurq6qNZhgAqEYrObl8aQxfHCDbu/xxlj3pY
+bGNbbwqMhYpN4jdWWJ2AMo5sK3omK9uOIpzC77Wn8RqmDv96e1UfZUCOYbKkcZmk
+flTWOR9JR25OIy15Rr9dgDkiL55TlGbjZNXGL+S9Sp6CANuaYjM/A4uBxh2g3K/K
+3r7paQr0Ub4rsAP4ZwPFk8o78+7Wqs6TfmvAsIxyJTOYDAadYCRXmUw0AGTwTXNq
+JWBAS3MNphveb/UIWGHH
+=aSG9
+-----END PGP SIGNATURE-----
 
-I'm using devicetree. I planned to 'mainline' the boards some time this 
-year...
-
->
-> Thanks,
-> Guenter
->
-
-
--- 
-Mike Looijmans
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
-
-
-
-
-
+--x4zywx2kedxyxomf--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
