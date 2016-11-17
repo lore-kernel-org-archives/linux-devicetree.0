@@ -1,77 +1,101 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH V8 0/6] thermal: bcm2835: add thermal driver
-Date: Wed, 16 Nov 2016 18:21:56 -0800
-Message-ID: <20161117022154.GA3184@localhost.localdomain>
-References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
+From: Jian Yuan <yuanjian12@hisilicon.com>
+Subject: Re: [PATCH v5] pwm: add pwm driver for HiSilicon BVT SOCs
+Date: Thu, 17 Nov 2016 10:32:38 +0800
+Message-ID: <d9cbc20c-d1c8-ca7b-953f-035013cf758e@hisilicon.com>
+References: <1479289833-232200-1-git-send-email-yuanjian12@hisilicon.com>
+ <664f5d9b-ebf4-d511-8e59-2f57c00ea901@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <664f5d9b-ebf4-d511-8e59-2f57c00ea901@mleia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-On Wed, Nov 02, 2016 at 10:18:20AM +0000, kernel@martin.sperl.org wrote:
-> From: Martin Sperl <kernel@martin.sperl.org>
-> 
-> Add a thermal driver for the TSENSE device of the bcm2835/6/7 SOC.
-> 
-> If the firmware enables the HW, then the configuration is not touched.
-> In case the firmware has not enabled the device, then we try to set
-> it up correctly (which unfortunately can not get tested).
-> 
-> It exposes temperature and a critical trip point
-> (using a hardcoded default of 80C or the temperature configured
-> in the control register by the firmware, which reads as
-> 407C currently)
-> 
-> The calibrations are (potentially) different for bcm2835, bcm2836
-> and bcm2837 and can get selected by the compatible property
-> in the device tree.
-> 
-> The driver also exposes the registers via debugfs.
-> 
-> Possible future enhancements:
-> * the device has the ability to trigger interrupts on reaching
->   the programmed critical temperature.
->   I have no knowledge which interrupt could be responsible
->   for this on the ARM side, so if we get to know which irq
->   it is we can implement that.
->   Instead the driver right now implements polling in 1 second intervals
-> * the device can also reset the HW after the trip point
->   has been reached (also with some delay, so that corrective
->   actions can get taken) - this is currently not enabled by the
->   firmware, but could.
-> * we could define more trip points for THERMAL_TRIP_HOT
-> * make the trip point limits modifiable (ops.set_trip_temp)
-> 
-> Note:
->   No support for 32-bit arm bcm2837, as there is no
->   arch/arm/boot/dts/bcm2836.dtsi upstream as of now.
->   64-bit arm support is not tested
-> 
-> Changelog:
->  V1 -> V2: renamed dt-binding documentation file
->        	   added specific settings depending on compatible
-> 	   added trip point based on register
-> 	   setting up ctrl-register if HW is not enabled by firmware
-> 	     as per recommendation of Eric (untested)
-> 	   check that clock frequency is in range
-> 	     (1.9 - 5MHz - as per comment in clk-bcm2835.c)
->  	   added driver to multi_v7_defconfig
->  V2 -> V3: made a module in multi_v7_defconfig
->            fixed typo in dt-binding document
->  V3 -> V4: moved driver back to thermal (not using bcm sub-directory)
->        	   set polling interval to 1second (was 0ms, so interrupt driven)
->  V4 -> V5: use correct compatiblity for different soc versions in dt
->        	   support ARM64 for bcm2837 in devicetree and defconfig
->  V5 -> V6: incorporated changes recommended by Stefan Wahren
->  V6 -> V7: removed depends on ARCH_BCM2836 || ARCH_BCM2837 in Kconfig
->  V7 -> V8: rebased
-> 
 
-Despite the minor questions on patch 2, specially on the request to use
-existing slope and offset properties, I am ok with the other DT changes.
+
+On 2016/11/17 7:55, Vladimir Zapolskiy wrote:
+> On 11/16/2016 11:50 AM, Jian Yuan wrote:
+>> From: yuanjian <yuanjian12@hisilicon.com>
+>>
+>> Add PWM driver for the PWM controller found on HiSilicon BVT SOCs, like Hi3519V100, Hi3516CV300, etc.
+>> The PWM controller is primarily in charge of controlling P-Iris lens.
+>>
+>> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+>> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
+>> ---
+>> Change Log:
+>> v5:
+>> remove the generic compatible string "hisilicon, hibvt-pwm".
+>> v4:
+>> Add #pwm-cells in the bindings document.
+>> v3:
+>> fixed issues pointed by thierry.
+>> Add PWM compatible string for Hi3519V100.
+>> Implement .apply() function which support atomic, instead of .enable()/.disable()/.config().
+>> v2:
+>> The number of PWMs is change to be probeable based on the compatible string.
+>>
+>>  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  22 ++
+>>  drivers/pwm/Kconfig                                |   9 +
+>>  drivers/pwm/Makefile                               |   1 +
+>>  drivers/pwm/pwm-hibvt.c                            | 269 +++++++++++++++++++++
+>>  4 files changed, 301 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+>>  create mode 100644 drivers/pwm/pwm-hibvt.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+>> new file mode 100644
+>> index 0000000..fe63950
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
+>> @@ -0,0 +1,22 @@
+>> +Hisilicon PWM controller
+>> +
+>> +Required properties:
+>> +-compatible: should contain one SoC specific compatible string
+>> + The SoC specific strings supported including:
+>> +    "hisilicon,hi3516cv300-pwm"
+>> +    "hisilicon,hi3519v100-pwm"
+>> +- reg: physical base address and length of the controller's registers.
+>> +- clocks: phandle and clock specifier of the PWM reference clock.
+>> +- resets: phandle and reset specifier for the PWM controller reset.
+>> +- #pwm-cells: Should be 2. See pwm.txt in this directory for a description of
+> 
+> Since the controller has separate polarity control register, and
+> the driver handles polarity settings, please test/change #pwm-cells
+> set to 3. It is better to do it right now before someone wants
+> to change number of cells in future and support polarity specified
+> in DTB.
+> 
+Goog advice. I would add it in next patch v6.
+>> +  the cells format.
+>> +
+>> +Example:
+>> +    pwm: pwm@12130000 {
+>> +
+> 
+> Remove empty line above.
+> 
+Ok.
+>> +        compatible = "hisilicon,hi3516cv300-pwm";
+>> +        reg = <0x12130000 0x10000>;
+>> +        clocks = <&crg_ctrl HI3516CV300_PWM_CLK>;
+>> +        resets = <&crg_ctrl 0x38 0>;
+>> +        #pwm-cells = <2>;
+> 
+> After tesing #pwm-cells = <3> don't forget to updated this line.
+> 
+Got it.
+Thanks,
+Jian Yuan
+>> +    };
+> 
+> -- 
+> With best wishes,
+> Vladimir
+> 
+> .
+> 
