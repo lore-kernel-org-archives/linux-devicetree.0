@@ -1,55 +1,91 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
-Date: Thu, 17 Nov 2016 11:45:12 +0200
-Message-ID: <1829466.vPTafcVR8L@avalon>
-References: <cover.1479142062.git.jsarha@ti.com> <20161116133331.miem6us563uu62t7@rob-hp-laptop> <506ba969-d753-d026-5357-3329a750ceaf@ti.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
+ soc
+Date: Thu, 17 Nov 2016 10:51:33 +0100
+Message-ID: <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
+References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
+ <1478081906-12009-3-git-send-email-kernel@martin.sperl.org>
+ <20161117021107.GA2647@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <506ba969-d753-d026-5357-3329a750ceaf-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161117021107.GA2647@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jyri,
 
-On Wednesday 16 Nov 2016 16:39:28 Jyri Sarha wrote:
-> On 11/16/16 15:33, Rob Herring wrote:
-> >> +Optional properties
-> >> 
-> >>> +	- reg: I2C address. If and only if present the driver node
 
-I assume you meant device node, not driver node ?
+On 17.11.2016 03:11, Eduardo Valentin wrote:
+> Hey Martin,
+>
+> Very sorry for the late feedback. Not so sure if this one got queued
+> already or not. Anyways, just minor questions as follows:
+>
+> On Wed, Nov 02, 2016 at 10:18:22AM +0000, kernel@martin.sperl.org wrote:
+>> From: Martin Sperl <kernel@martin.sperl.org>
+>>
+>> Add basic thermal driver for bcm2835 SOC.
+>>
+>> This driver currently relies on the firmware setting up the
+>> tsense HW block and does not set it up itself.
+>>
+>> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+>> Acked-by: Eric Anholt <eric@anholt.net>
+>> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>
+...
+>> +static int bcm2835_thermal_adc2temp(
+>> +	const struct bcm2835_thermal_info *info, u32 adc)
+>> +{
+>> +	return info->offset + (adc * info->slope);
+>
+> Any specific reason we cannot use thermal_zone_params->slope and
+> thermal_zone_params->offset?
 
-> >>> +	  should be placed into the i2c controller node where the
-> >>> +	  tfp410 i2c is connected to (the current implementation does
-> >>> +	  not yet support this).
-> > 
-> > So this chip can work without programming I guess?
-> 
-> Yes. Just powering it up is enough for most application.
-> 
-> > reg should only be not present if I2C is not connected in the design. It
-> > can't be a function of what the driver supports. In otherwords, you
-> > can't be moving this node around based on when you add I2C control.
-> 
-> Ok, I'll try to implement a dummy i2c driver at the same time too. I can
-> not test anything related to it because I do not have a piece of HW with
-> tfp410 i2c wires connected, but it should not matter as long as I am
-> able to probe it as a i2c client.
+You could - the patch was just rebased to 4.9 and those slope and
+offset just got merged during this cycle.
 
-I think that Rob's point was that whether the current implementation supports 
-this or not is irrelevant from a DT bindings point of view. It should not be 
-mentioned in the bindings document.
+Do we really need to modify it - the patch has been around since 4.6.
 
--- 
-Regards,
+>> +
+>> +static int bcm2835_thermal_get_trip_temp(
+>> +	struct thermal_zone_device *tz, int trip, int *temp)
+>> +{
+>> +	struct bcm2835_thermal_data *data = tz->devdata;
+>> +	u32 val = readl(data->regs + BCM2835_TS_TSENSCTL);
+>> +
+>> +	/* get the THOLD bits */
+>> +	val &= BCM2835_TS_TSENSCTL_THOLD_MASK;
+>> +	val >>= BCM2835_TS_TSENSCTL_THOLD_SHIFT;
+>> +
+>> +	/* if it is zero then use the info value */
+>> +	if (val)
+>
+> Is this a read only register or is this driver supposed to program it?
+> In which scenario it would be 0? Can this be added as comments?
 
-Laurent Pinchart
+It is RW, but the Firmware typically sets up the thermal device with the 
+correct values already - this is just a fallback.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +static int bcm2835_thermal_get_temp(struct thermal_zone_device *tz,
+>> +				    int *temp)
+>> +{
+>> +	struct bcm2835_thermal_data *data = tz->devdata;
+>> +	u32 val = readl(data->regs + BCM2835_TS_TSENSSTAT);
+>> +
+>> +	if (!(val & BCM2835_TS_TSENSSTAT_VALID))
+>
+> What cases you would get the valid bit not set? Do you need to wait for
+> the conversion to finish?
+
+I guess: if you have just enabled the HW-block (which the FW does much
+in advance) and start to read the value immediately (before the first 
+sample period has finished), then this will not be valid.
+
+So do you need another version of the patchset that uses that new API?
+
+Thanks,
+	Martin
