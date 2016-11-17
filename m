@@ -1,37 +1,48 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dt: imx31: fix AVIC base address
-Date: Thu, 17 Nov 2016 11:44:10 -0200
-Message-ID: <CAOMZO5CfqBaHaOKEgEFU5a4D8ekJX2Mpoon_3eNAOveKj+=-wA@mail.gmail.com>
-References: <20161117013051.29381-1-vz@mleia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] of: base: add support to get machine model name
+Date: Thu, 17 Nov 2016 14:50:13 +0100
+Message-ID: <3670336.mMHByOpDl4@wuerfel>
+References: <1479383450-19183-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161117013051.29381-1-vz@mleia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1479383450-19183-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 11:30 PM, Vladimir Zapolskiy <vz@mleia.com> wrote:
-> From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
->
-> On i.MX31 AVIC interrupt controller base address is at 0x68000000.
->
-> The problem was shadowed by the AVIC driver, which takes the correct
-> base address from a SoC specific header file.
->
-> Fixes: d2a37b3d91f4 ("ARM i.MX31: Add devicetree support")
-> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+On Thursday, November 17, 2016 11:50:50 AM CET Sudeep Holla wrote:
+> Currently platforms/drivers needing to get the machine model name are
+> replicating the same snippet of code. In some case, the OF reference
+> counting is either missing or incorrect.
+> 
+> This patch adds support to read the machine model name either using
+> the "model" or the "compatible" property in the device tree root node.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Yes, this is what the Reference Manual states, thanks.
+I like the idea. One small comment:
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+> +int of_machine_get_model_name(const char **model)
+> +{
+> +	int error;
+> +	struct device_node *root;
+> +
+> +	root = of_find_node_by_path("/");
+> +	if (!root)
+> +		return -EINVAL;
+
+The global of_root variable points ot this already, and is defined
+in the same file, so I think we can just skip the lookup.
+
+	Arnd
