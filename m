@@ -1,121 +1,59 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [RFC PATCH 6/7] dt-bindings: i2c: i2c-mux-simple: document i2c-mux-simple bindings
-Date: Thu, 17 Nov 2016 00:48:30 +0100
-Message-ID: <1479340111-1259-7-git-send-email-peda@axentia.se>
-References: <1479340111-1259-1-git-send-email-peda@axentia.se>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5] drm/mediatek: fixed the calc method of data rate per
+ lane
+Date: Thu, 17 Nov 2016 13:36:46 +0800
+Message-ID: <1479361006.13083.7.camel@mtksdaap41>
+References: <1479266454-31892-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479340111-1259-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <1479266454-31892-1-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
----
- .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+Hi, Jitao:
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
-new file mode 100644
-index 000000000000..fec1ab39ad64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
-@@ -0,0 +1,91 @@
-+Simple I2C Bus Mux
-+
-+This binding describes an I2C bus multiplexer that uses GPIOs to
-+route the I2C signals.
-+
-+                                  .-----.  .-----.
-+                                  | dev |  | dev |
-+    .------------.                '-----'  '-----'
-+    | SoC        |                   |        |
-+    |            |          .--------+--------'
-+    |   .------. |  .------+    child bus A, on MUX value set to 0
-+    |   | I2C  |-|--| Mux  |
-+    |   '------' |  '--+---+    child bus B, on MUX value set to 1
-+    |   .------. |     |    '----------+--------+--------.
-+    |   | MUX- | |     |               |        |        |
-+    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
-+    |   '------' |                  | dev |  | dev |  | dev |
-+    '------------'                  '-----'  '-----'  '-----'
-+
-+Required properties:
-+- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
-+- i2c-parent: The phandle of the I2C bus that this multiplexer's master-side
-+  port is connected to.
-+- control-muxes : Node of the multiplexer that controls "Mux".
-+- control-mux-names : Should be "mux".
-+* Standard I2C mux properties. See i2c-mux.txt in this directory.
-+* I2C child bus nodes. See i2c-mux.txt in this directory.
-+
-+Optional properties:
-+- idle-state: value to set the muxer to when idle. When no value is
-+  given, it defaults to the last value used.
-+
-+For each i2c child node, an I2C child bus will be created. They will
-+be numbered based on their order in the device tree.
-+
-+Whenever an access is made to a device on a child bus, the value set
-+in the relevant node's reg property will be fed to the mux controller.
-+
-+If an idle state is defined, using the idle-state (optional) property,
-+whenever an access is not being made to a device on a child bus, the
-+mux controller will be set according to the idle value.
-+
-+If an idle state is not defined, the most recently used value will be
-+left programmed into hardware whenever no access is being made to a
-+device on a child bus.
-+
-+Example:
-+	control_i2c_mux: control-i2c-mux {
-+		compatible = "mux-gpio";
-+
-+		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-+			    <&pioA 1 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	i2c-mux {
-+		compatible = "i2c-mux-simple,mux-locked";
-+		i2c-parent = <&i2c1>;
-+
-+		control-muxes = <&control_i2c_mux>;
-+		control-mux-names = "mux";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ssd1307: oled@3c {
-+				compatible = "solomon,ssd1307fb-i2c";
-+				reg = <0x3c>;
-+				pwms = <&pwm 4 3000>;
-+				reset-gpios = <&gpio2 7 1>;
-+				reset-active-low;
-+			};
-+		};
-+
-+		i2c@3 {
-+			reg = <3>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pca9555: pca9555@20 {
-+				compatible = "nxp,pca9555";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x20>;
-+			};
-+		};
-+	};
--- 
-2.1.4
+
+On Wed, 2016-11-16 at 11:20 +0800, Jitao Shi wrote:
+> Tune dsi frame rate by pixel clock, dsi add some extra signal (i.e.
+> Tlpx, Ths-prepare, Ths-zero, Ths-trail,Ths-exit) when enter and exit LP
+> mode, those signals will cause h-time larger than normal and reduce FPS.
+> So need to multiply a coefficient to offset the extra signal's effect.
+>   coefficient = ((htotal*bpp/lane_number)+Tlpx+Ths_prep+Ths_zero+
+> 		 Ths_trail+Ths_exit)/(htotal*bpp/lane_number)
+> 
+> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+It looks good to me.
+But this patch conflict with [1] which is one patch of MT2701 series. I
+want to apply MT2701 patches first, so please help to refine this patch
+based on MT2701 patches.
+
+[1] https://patchwork.kernel.org/patch/9422821/
+
+Regards,
+CK
+
+> ---
+> Change since v4:
+>  - tune the calc comment more clear.
+>  - define the phy timings as constants.
+> 
+> Chnage since v3:
+>  - wrapp the commit msg.
+>  - fix alignment of some lines. 
+> 
+> Change since v2:
+>  - move phy timing back to dsi_phy_timconfig.
+> 
+> Change since v1:
+>  - phy_timing2 and phy_timing3 refer clock cycle time.
+>  - define values of LPX HS_PRPR HS_ZERO HS_TRAIL TA_GO TA_SURE TA_GET DA_HS_EXIT.
+> ---
+>  
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
