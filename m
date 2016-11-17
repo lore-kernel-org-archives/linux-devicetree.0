@@ -1,142 +1,297 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 2/5] media: i2c: max2175: Add MAX2175 support
-Date: Thu, 17 Nov 2016 12:41:37 +0000
-Message-ID: <SG2PR06MB1038F2246828039C76F86318C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1478706284-59134-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <20161114194110.fh6gyhfdciikj7kt@rob-hp-laptop>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] drm: sunxi: Add a basic DRM driver
+ for Allwinner DE2
+Date: Thu, 17 Nov 2016 15:57:07 +0100
+Message-ID: <20161117155707.cd8881bc7893b131d8507b92@free.fr>
+References: <cover.1477142934.git.moinejf@free.fr>
+	<8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
+	<20161024140419.ah6hywf3b24pj3fv@lukather>
+	<20161025161441.6b248efe9229bd80e3f7a33c@free.fr>
+	<20161027220316.y7u3h4qsfftryrmp@lukather>
+	<20161028193420.0f7dc67ea1042ff72b09b701@free.fr>
+	<20161107223741.gjxj4tqwuxud2iqc@lukather>
+	<20161108153752.a17440e784f2e3993c79ee69@free.fr>
+	<20161116213306.s5o5zi7pgppwuq7t@lukather>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114194110.fh6gyhfdciikj7kt@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBR4KW7AQKGQEDQQOCKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161116213306.s5o5zi7pgppwuq7t@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, 16 Nov 2016 22:33:06 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Thanks for the review comments.
-
-> On Wed, Nov 09, 2016 at 03:44:41PM +0000, Ramesh Shanmugasundaram wrote:
-> > This patch adds driver support for MAX2175 chip. This is Maxim
-> > Integrated's RF to Bits tuner front end chip designed for
-> > software-defined radio solutions. This driver exposes the tuner as a
-> > sub-device instance with standard and custom controls to configure the
-> device.
-> >
-> > Signed-off-by: Ramesh Shanmugasundaram
-> > <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/max2175.txt      |   61 +
+> > > > The Device Engine just handles the planes of the LCDs, but, indeed,
+> > > > the LCDs must know about the DE and the DE must know about the LCDs=
+.
+> > > > There are 2 ways to realize this knowledge in the DT:
+> > > > 1) either the DE has one or two phandle's to the LCDs,
+> > > > 2) or the LCDs have a phandle to the DE.
+> > > >=20
+> > > > I chose the 1st way, the DE ports pointing to the endpoint of the L=
+CDs
+> > > > which is part of the video link (OF-graph LCD <-> connector).
+> > > > It would be possible to have phandles to the LCDs themselves, but t=
+his
+> > > > asks for more code.
+> > > >=20
+> > > > The second way is also possible, but it also complexifies a bit the
+> > > > exchanges DE <-> LCD.
+> > >=20
+> > > I'm still not sure how it would complexify anything, and why you can'=
+t
+> > > use the display graph to model the relation between the display engin=
+e
+> > > and the TCON (and why you want to use a generic property that refers
+> > > to the of-graph while it really isn't).
+> >=20
+> > Complexification:
+> > 1- my solution:
+> >   At startup time, the DE device is the DRM device.
 >=20
-> It's preferred that bindings are a separate patch.
+> How do you deal with SoCs with multiple display engines then?
 
-OK. I will do the same for the other driver.
+In the H3, A83T and A64, there is only one DE.
+If many DEs in a SoC, there may be either one DRM device per DE or one
+DRM device for the whole system. In this last case, the (global) DE
+would have many resources (many I/O memory maps / IRQs..) and the
+physical DE of each endpoint would be indicated by the position of its
+phandle in the 'ports' array (DT documentation).
 
+> > It has to know the devices entering in the video chains.
+> >   The CRTCs (LCD/TCON) are found by
+> > 	ports[i] -> parent
+> >   The connectors are found by
+> > 	ports[i] -> endpoint -> remote_endpoint -> parent
+> > 2- with ports pointing to the LCDs:
+> >   The CRTCs (LCD/TCON) are simply
+> > 	ports[i]
+> >   The connectors are found by
+> > 	loop on all ports of ports[i]
+> > 		ports[i][j] -> endpoint -> remote_endpoint -> parent
+> > 3- with a phandle to the DE in the LCDs:
 >=20
-> >  drivers/media/i2c/Kconfig                          |    4 +
-> >  drivers/media/i2c/Makefile                         |    2 +
-> >  drivers/media/i2c/max2175/Kconfig                  |    8 +
-> >  drivers/media/i2c/max2175/Makefile                 |    4 +
-> >  drivers/media/i2c/max2175/max2175.c                | 1558
-> ++++++++++++++++++++
-> >  drivers/media/i2c/max2175/max2175.h                |  108 ++
-> >  7 files changed, 1745 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/media/i2c/max2175.txt
-> >  create mode 100644 drivers/media/i2c/max2175/Kconfig  create mode
-> > 100644 drivers/media/i2c/max2175/Makefile
-> >  create mode 100644 drivers/media/i2c/max2175/max2175.c
-> >  create mode 100644 drivers/media/i2c/max2175/max2175.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> > b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> > new file mode 100644
-> > index 0000000..69f0dad
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
-> > @@ -0,0 +1,61 @@
-> > +Maxim Integrated MAX2175 RF to Bits tuner
-> > +-----------------------------------------
-> > +
-> > +The MAX2175 IC is an advanced analog/digital hybrid-radio receiver
-> > +with RF to Bits(r) front-end designed for software-defined radio
-> solutions.
-> > +
-> > +Required properties:
-> > +--------------------
-> > +- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
-> > +- clocks: phandle to the fixed xtal clock.
-> > +- clock-names: name of the fixed xtal clock.
-> > +- port: child port node of a tuner that defines the local and remote
-> > +  endpoints. The remote endpoint is assumed to be an SDR device
-> > +  that is capable of receiving the digital samples from the tuner.
-> > +
-> > +Optional properties:
-> > +--------------------
-> > +- maxim,slave	      : empty property indicates this is a slave of
-> > +			another master tuner. This is used to define two
-> > +			tuners in diversity mode (1 master, 1 slave). By
-> > +			default each tuner is an individual master.
-> > +- maxim,refout-load-pF: load capacitance value (in pF) on reference
+> What do you mean with LCD? Panels? Why would panels have a phandle to
+> the display engine?
+
+LCD is the same as CRTC. I don't think people will connect old CRT's to
+their new ARM boards. LCD's may be panels, modern TV sets, or any
+digital display. The word LCD seems clearer to me in this context, even
+if there may a DAC as an ancoder.
+
+> >   The DE cannot be the DRM device because there is no information about
+> >   the video devices in the DT. Then, the DRM devices are the LCDs.
+> >   These LCDs must give their indices to the DE. So, the DE must impleme=
+nt
+> >   some callback function to accept a LCD definition, and there must be
+> >   a list of DEs in the driver to make the association DE <-> LCD[i]
+> >   Some more problem may be raised if a user wants to have the same fram=
+e
+> >   buffer on the 2 LCDs of a DE.
 >=20
-> Please add 'pF' to property-units.txt.
+> I have no idea what you're talking about, sorry.
 
-Agreed.
+Here is the DT (I am using back 'CRTC'):
 
+	de: display-controller@xxx {
+		...
+	};
+	crtc0: crt-controller@xxx{
+		...
+		display-controller =3D <&de>;
+		ports {
+			...		/* to the crtc0 connectors */
+		}
+	};
+	crtc1: crt-controller@xxx{
+		...
+		display-controller =3D <&de>;
+		ports {
+			...		/* to the crtc1 connectors */
+		};
+	};
+
+There are 2 DRM devices: one on crtc0, the other one on crtc1.
+The DE device is isolated. But, to treat the planes, it must receive
+information about the CRTCs. How?
+
+> > Anyway, my solution is already used in the IMX Soc.
+> > See 'display-subsystem' in arch/arm/boot/dts/imx6q.dtsi for an example.
 >=20
-> > +			output drive level. The possible load values are
-> > +			 0pF (default - refout disabled)
-> > +			10pF
-> > +			20pF
-> > +			30pF
-> > +			40pF
-> > +			60pF
-> > +			70pF
-> > +- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path is
-> > +			selected for AM antenna input. By default this
-> > +			filter path is not used.
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +Board specific DTS file
-> > +
-> > +/* Fixed XTAL clock node */
-> > +maxim_xtal: maximextal {
+> Pointing out random example in the tree doesn't make a compelling
+> argument.
+
+This is not a random example. There was a thread about the 'ports'
+phandle in the DT definition of the IMX video subsystem, and what kind
+of OF function should be used (see one of my previous mails). In the DRI
+list, nobody objected about the phandle by itself.
+
+> > > > > > > Panel functions? In the CRTC driver?
+> > > > > >=20
+> > > > > > Yes, dumb panel.
+> > > > >=20
+> > > > > What do you mean by that? Using a Parallel/RGB interface?
+> > > >=20
+> > > > Sorry, I though this was a well-known name. The 'dump panel' was us=
+ed
+> > > > in the documentation of my previous ARM machine as the video frame =
+sent
+> > > > to the HDMI controller. 'video_frame' is OK for you?
+> > >=20
+> > > If it's the frame sent to the encoder, then it would be the CRTC by
+> > > DRM's nomenclature.
+> >=20
+> > The CRTC is a software entity. The frame buffer is a hardware entity.
 >=20
-> clock {
-
-Agreed.
-
+> Why are you about framebuffer now, this is nowhere in that
+> discussion. Any way, the framebuffer is also what is put in a plane,
+> so there's a name collision here, and you'll probably want to change
+> it.
 >=20
-> > +	compatible =3D "fixed-clock";
-> > +	#clock-cells =3D <0>;
-> > +	clock-frequency =3D <36864000>;
-> > +};
-> > +
-> > +/* A tuner device instance under i2c bus */
-> > +max2175_0: tuner@60 {
-> > +	compatible =3D "maxim,max2175";
-> > +	reg =3D <0x60>;
-> > +	clocks =3D <&maxim_xtal>;
-> > +	clock-names =3D "xtal";
-> > +	maxim,refout-load-pF =3D <10>;
-> > +
-> > +	port {
-> > +		max2175_0_ep: endpoint {
-> > +			remote-endpoint =3D <&slave_rx_v4l2_sdr_device>;
+> Judging by the previous discussion, this should really be called
+> encoder if it encodes the frames on a bus format, or CRTC if it
+> composes the planes.
+
+I think that we will end in agreeing on the words. We just need some
+time!
+Here is how I understand the Allwinner's DE2:
+
+- the TCON is the piece of hardware which gets some memory area and
+  sends it to a bus according to some configuation (screen resolution,
+  timings...). The bus data are encoded and transmitted to the connector.
+  At the end, the display device receives frames. So, going back to the
+  TCON, the memory are is the frame buffer.
+
+- this frame buffer is virtual, empty, 'dumb', it is a dumb panel!
+  It is filled by planes. This job is done by a specific image
+  processor, the one contained in the DE2.
+
+- the DE2 processor gets the plane source images from the SoC memory.
+  It adjusts the images according to many configuration parameters and
+  includes the result into the frame buffer.
+
+So:
+	LCD =3D CRTC =3D frame buffer =3D dumb panel =3D TCON
+
+- LCD =3D hardware piece of a display device (terminal side) which renders
+  the colored pixels in a digital way. By extension, the hardware part
+  (computer side) of a display engine which handles the definitions of
+  a digital or analog physical display device. By extension also,
+  the software structure (driver side) which defines a physical screen.
+
+- CRTC =3D DRM software entity which handles the definitions of a screen,
+  but not just a CRT.
+
+- frame buffer =3D piece of memory which contains the images which are
+  sent to a screen.
+
+- dumb panel =3D abstract entity which defines the characteristics of a
+  physical screen.
+
+You may note that, in the DE2 scheme, the TCON and LCD are not in the
+same (software) device while they are part of the same DRM software
+entity, the CTRC.
+
+> > > > > If it is similar, I think hardcoding the pipe number is pretty ba=
+d,
+> > > > > because that would restrict the combination of planes and formats=
+,
+> > > > > while some other might have worked.
+> > > >=20
+> > > > From what I understood about the DE2, the pipes just define the pri=
+ority
+> > > > of the overlay channels (one pipe for one channel).
+> > > > With the cursor constraint, there must be at least 2 channels in
+> > > > order (primary, cursor). Then, with these 2 channels/pipes, there c=
+an be
+> > > > 6 so-called overlay planes (3 RGB/YUV and 3 RGB only).
+> > > > Enabling the pipes 2 and 3 (LCD 0 only) would offer 8 more planes, =
+but
+> > > > RGB only. Then, it might be useful to have dynamic pipes.
+> > >=20
+> > > That's very valuable (and definitely should go into a comment),
+> > > thanks!
+> > >=20
+> > > I still believe that's it should be into a (simple at first)
+> > > atomic_check. That would be easier to extend and quite easy to
+> > > document and get simply by looking at the code.
+> >=20
+> > Sorry for I don't understand what you mean.
 >=20
-> 'v4l2' is not something that should appear in a DT.
+> You can check all the constraints you exposed above in atomic_check
+> instead of hardcoding it.
 
-OK. I'll leave it as "slave_rx_device".
+Sorry, but I don't like to run useless code for pure static definition.
 
-Thanks,
-Ramesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > The DE and the LCDs are different devices on different drivers.
+> > A DE must be only one device because it has to handle concurent
+> > accesses from its 2 LCDs. Then 2 drivers.
+>=20
+> If it's different drivers, why are they in the same module?
+>=20
+> > But only one module. Why? Because there cannot be double direction
+> > calls from one module to an other one, and, in our case, for example,
+> > - the DRM (DE) device must call vblank functions which are handled in
+> >   the CRTC (TCON) device, and
+> > - the CRTC device must call DE initialization functions at startup time=
+.
+>=20
+> I'm sorry, but that doesn't make any sense. The crtc device should
+> take care of the CRTC functions. Your DRM CRTC and encoders can
+> definitely be shared across different devices, you can have a look at
+> how we're doing it for sun4i.
+>=20
+> We basically have 3 drivers to create most of the display pipeline:
+>   - One for the DRM device
+>   - One for the display engine
+>   - One for the TCON
+
+Your DRM device is useless. It is simpler to have the DRM device as the
+display engine.
+Also, maybe, you have not the constraint the DE being shared between
+2 CRTCs.
+
+> Once they have all loaded and registered in the component framework,
+> their bind callback is called, and it's when the DRM entities are
+> created using exported functions to manipulate what needs to be setup.
+>=20
+> It's definitely doable, it just takes some effort.
+
+It seems you did not look at what I have coded...
+
+> > On the other side, removing the cursor would just let one more plane.
+> > Do we really need this one? In other words, I'd be pleased to know how
+> > you run 7 applications doing video overlay.
+>=20
+> You can use those planes to do composition too, with each application
+> having one or more plane. Android uses that.
+>=20
+> There's no argument to have a cursor plane, really. Even regular
+> graphic stack like X can use a regular overlay to have its cursor on
+> it. It doesn't *remove* anything, it just allows to use the plane for
+> what it was supposed to be used for.
+
+I'd be glad to know how you can have a hardware cursor without defining
+it in drm_crtc_init_with_planes().
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
