@@ -1,193 +1,50 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun5i: Add touchscreen node to
- reference-design-tablet.dtsi
-Date: Thu, 17 Nov 2016 19:52:38 +0100
-Message-ID: <7db6926e-a490-21c7-851b-1bc34ae97a6a@redhat.com>
-References: <20161113192203.7101-1-hdegoede@redhat.com>
- <20161114200802.vdduhyxnkgmpsyd5@lukather>
- <0c3a9e9c-d310-c6c3-ae10-1ae9e520963e@redhat.com>
- <20161117183520.vpyw72mchynpqx7d@lukather>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Thu, 17 Nov 2016 10:54:18 -0800
+Message-ID: <f32528d5-2f14-7ee3-63d8-4aef827eb1c1@synopsys.com>
+References: <cover.1479339900.git.johnyoun@synopsys.com>
+ <7fa1c1c4d703c435d698cdf140c9d43163347f1d.1479339900.git.johnyoun@synopsys.com>
+ <874m36tkgz.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117183520.vpyw72mchynpqx7d@lukather>
+In-Reply-To: <874m36tkgz.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11/17/2016 3:28 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> writes:
+>> Add the "snps,ahb-burst" binding and read it in.
+>>
+>> This property controls which burst type to perform on the AHB bus as a
+>> master in internal DMA mode. This overrides the legacy param value,
+>> which we need to keep around for now since several platforms use it.
+>>
+>> Some platforms may see better or worse performance based on this
+>> value. The HAPS platform is one example where all INCRx have worse
+>> performance than INCR.
+>>
+>> Other platforms (such as the Canyonlands board) report that the default
+>> value causes system hangs.
+>>
+>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> 
+> it's getting rather late for this merge window. I still need an ack by
+> Rob or any of the devicetree folks.
+> 
 
-On 17-11-16 19:35, Maxime Ripard wrote:
-> Hi Hans,
->
-> On Tue, Nov 15, 2016 at 11:12:35AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 14-11-16 21:08, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Sun, Nov 13, 2016 at 08:22:02PM +0100, Hans de Goede wrote:
->>>> Just like on sun8i all sun5i tablets use the same interrupt and power
->>>> gpios for their touchscreens. I've checked all known a13 fex files and
->>>> only the UTOO P66 uses a different gpio for the interrupt.
->>>>
->>>> Add a touchscreen node to sun5i-reference-design-tablet.dtsi, which
->>>> fills in the necessary gpios to avoid duplication in the tablet dts files,
->>>> just like we do in sun8i-reference-design-tablet.dtsi.
->>>>
->>>> This will make future patches adding touchscreen nodes to a13 tablets
->>>> simpler.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/sun5i-a13-utoo-p66.dts           | 38 ++++++++--------------
->>>>  .../boot/dts/sun5i-reference-design-tablet.dtsi    | 25 ++++++++++++++
->>>>  2 files changed, 39 insertions(+), 24 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->>>> index a8b0bcc..3d7ff10 100644
->>>> --- a/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->>>> +++ b/arch/arm/boot/dts/sun5i-a13-utoo-p66.dts
->>>> @@ -83,22 +83,6 @@
->>>>  	allwinner,pins = "PG3";
->>>>  };
->>>>
->>>> -&i2c1 {
->>>> -	icn8318: touchscreen@40 {
->>>> -		compatible = "chipone,icn8318";
->>>> -		reg = <0x40>;
->>>> -		interrupt-parent = <&pio>;
->>>> -		interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
->>>> -		pinctrl-names = "default";
->>>> -		pinctrl-0 = <&ts_wake_pin_p66>;
->>>> -		wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->>>> -		touchscreen-size-x = <800>;
->>>> -		touchscreen-size-y = <480>;
->>>> -		touchscreen-inverted-x;
->>>> -		touchscreen-swapped-x-y;
->>>> -	};
->>>> -};
->>>> -
->>>>  &mmc2 {
->>>>  	pinctrl-names = "default";
->>>>  	pinctrl-0 = <&mmc2_pins_a>;
->>>> @@ -121,20 +105,26 @@
->>>>  		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>>>  	};
->>>> -
->>>> -	ts_wake_pin_p66: ts_wake_pin@0 {
->>>> -		allwinner,pins = "PB3";
->>>> -		allwinner,function = "gpio_out";
->>>> -		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>> -		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>>> -	};
->>>> -
->>>>  };
->>>>
->>>>  &reg_usb0_vbus {
->>>>  	gpio = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
->>>>  };
->>>>
->>>> +&touchscreen {
->>>> +	compatible = "chipone,icn8318";
->>>> +	reg = <0x40>;
->>>> +	/* The P66 uses a different EINT then the reference design */
->>>> +	interrupts = <6 9 IRQ_TYPE_EDGE_FALLING>; /* EINT9 (PG9) */
->>>> +	/* The icn8318 binding expects wake-gpios instead of power-gpios */
->>>> +	wake-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->>>> +	touchscreen-size-x = <800>;
->>>> +	touchscreen-size-y = <480>;
->>>> +	touchscreen-inverted-x;
->>>> +	touchscreen-swapped-x-y;
->>>> +	status = "okay";
->>>> +};
->>>> +
->>>>  &uart1 {
->>>>  	/* The P66 uses the uart pins as gpios */
->>>>  	status = "disabled";
->>>> diff --git a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->>>> index 20cc940..7af488a 100644
->>>> --- a/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->>>> +++ b/arch/arm/boot/dts/sun5i-reference-design-tablet.dtsi
->>>> @@ -41,6 +41,7 @@
->>>>   */
->>>>  #include "sunxi-reference-design-tablet.dtsi"
->>>>
->>>> +#include <dt-bindings/interrupt-controller/irq.h>
->>>>  #include <dt-bindings/pwm/pwm.h>
->>>>
->>>>  / {
->>>> @@ -84,6 +85,23 @@
->>>>  };
->>>>
->>>>  &i2c1 {
->>>> +	/*
->>>> +	 * The gsl1680 is rated at 400KHz and it will not work reliable at
->>>> +	 * 100KHz, this has been confirmed on multiple different q8 tablets.
->>>> +	 * All other devices on this bus are also rated for 400KHz.
->>>> +	 */
->>>> +	clock-frequency = <400000>;
->>>> +
->>>> +	touchscreen: touchscreen {
->>>> +		interrupt-parent = <&pio>;
->>>> +		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>; /* EINT11 (PG11) */
->>>> +		pinctrl-names = "default";
->>>> +		pinctrl-0 = <&ts_power_pin>;
->>>> +		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>; /* PB3 */
->>>> +		/* Tablet dts must provide reg and compatible */
->>>> +		status = "disabled";
->>>> +	};
->>>> +
->>>>  	pcf8563: rtc@51 {
->>>>  		compatible = "nxp,pcf8563";
->>>>  		reg = <0x51>;
->>>> @@ -125,6 +143,13 @@
->>>>  		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>>>  	};
->>>>
->>>> +	ts_power_pin: ts_power_pin {
->>>> +		allwinner,pins = "PB3";
->>>> +		allwinner,function = "gpio_out";
->>>> +		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>> +		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>>> +	};
->>>> +
->>>
->>> For the next release, we'll switch to the generic pin mux properties
->>> ("pins" and "function"), and we actually implemented the fact that the
->>> drive and pull properties are optional, so you can drop them both.
->>>
->>> You'll need next + http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/467123.html
->>
->> Ok, before I send a v2 first a question about this, for the touchscreen
->> case I actually need:
->>
->> 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->>
->> Because otherwise when the touchscreen controller is powered by a separate
->> regulator and that regulator is off, then it may draw just enough current
->> from its enable pin to be sort-of listening to the i2c bus and mess up
->> that bus.
->>
->> So is this the default, or do we get the power-on default when not
->> specifying these? If it is the power-on default then we do need to
->> specify these, because AFAICT the power-on drive strength typically
->> is 20 mA.
->
-> Leaving them out will keep whatever state has been programmed. Putting
-> them in the DT will force them to whatever value has been set.
-
-Thanks for the answer, in the mean time I've send a v2 which leaves
-them in using the new names (which according to your answer seems to
-be the right thing to do).
+Sure, no problem if it doesn't make it.
 
 Regards,
+John
 
-Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
