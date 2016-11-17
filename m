@@ -1,95 +1,93 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [RFC PATCH] mfd: dt: Add Aspeed LPC binding
-Date: Fri, 18 Nov 2016 10:11:41 +1030
-Message-ID: <1479426101.5215.13.camel@aj.id.au>
-References: <20161117060633.3837-1-andrew@aj.id.au>
-         <CACRpkdazPEbU2gmDyke=GTYtjVp8aeauS+PVkp-zuiVoVz7kbw@mail.gmail.com>
+From: Tom Levens <tom.levens@cern.ch>
+Subject: [PATCH v2 1/3] hwmon: ltc2990: refactor value conversion
+Date: Thu, 17 Nov 2016 13:10:14 +0100
+Message-ID: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-ZRMEcVri4dE1vHummK7t"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdazPEbU2gmDyke=GTYtjVp8aeauS+PVkp-zuiVoVz7kbw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Tom Levens <tom.levens@cern.ch>
 List-Id: devicetree@vger.kernel.org
 
+Conversion from raw values to signed integers has been refactored using
+the macros in bitops.h.
 
---=-ZRMEcVri4dE1vHummK7t
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tom Levens <tom.levens@cern.ch>
+---
+ drivers/hwmon/ltc2990.c |   27 ++++++++++-----------------
+ 1 files changed, 10 insertions(+), 17 deletions(-)
 
-On Thu, 2016-11-17 at 10:30 +0100, Linus Walleij wrote:
-> > On Thu, Nov 17, 2016 at 7:06 AM, Andrew Jeffery <andrew@aj.id.au> wrote=
-:
->=20
-> > +* Device tree bindings for the Aspeed LPC Controller
->=20
-> We are going overboard with the lingo sometimes, to the point that we do =
-not
-> understand how terse things become.
+diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+index 8f8fe05..0ec4102 100644
+--- a/drivers/hwmon/ltc2990.c
++++ b/drivers/hwmon/ltc2990.c
+@@ -9,8 +9,12 @@
+  * This driver assumes the chip is wired as a dual current monitor, and
+  * reports the voltage drop across two series resistors. It also reports
+  * the chip's internal temperature and Vcc power supply voltage.
++ *
++ * Value conversion refactored
++ * by Tom Levens <tom.levens@cern.ch>
+  */
+ 
++#include <linux/bitops.h>
+ #include <linux/err.h>
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+@@ -34,19 +38,10 @@
+ #define LTC2990_CONTROL_MODE_CURRENT	0x06
+ #define LTC2990_CONTROL_MODE_VOLTAGE	0x07
+ 
+-/* convert raw register value to sign-extended integer in 16-bit range */
+-static int ltc2990_voltage_to_int(int raw)
+-{
+-	if (raw & BIT(14))
+-		return -(0x4000 - (raw & 0x3FFF)) << 2;
+-	else
+-		return (raw & 0x3FFF) << 2;
+-}
+-
+ /* Return the converted value from the given register in uV or mC */
+-static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
++static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 *result)
+ {
+-	int val;
++	s32 val;
+ 
+ 	val = i2c_smbus_read_word_swapped(i2c, reg);
+ 	if (unlikely(val < 0))
+@@ -55,18 +50,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+ 	switch (reg) {
+ 	case LTC2990_TINT_MSB:
+ 		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
+-		val = (val & 0x1FFF) << 3;
+-		*result = (val * 1000) >> 7;
++		*result = sign_extend32(val, 12) * 1000 / 16;
+ 		break;
+ 	case LTC2990_V1_MSB:
+ 	case LTC2990_V3_MSB:
+ 		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+-		*result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
++		*result = sign_extend32(val, 14) * 1942 / 100;
+ 		break;
+ 	case LTC2990_VCC_MSB:
+ 		/* Vcc, 305.18μV/LSB, 2.5V offset */
+-		*result = (ltc2990_voltage_to_int(val) * 30518 /
+-			   (4 * 100 * 1000)) + 2500;
++		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+ 		break;
+ 	default:
+ 		return -EINVAL; /* won't happen, keep compiler happy */
+@@ -79,7 +72,7 @@ static ssize_t ltc2990_show_value(struct device *dev,
+ 				  struct device_attribute *da, char *buf)
+ {
+ 	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+-	int value;
++	s32 value;
+ 	int ret;
+ 
+ 	ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
+-- 
+1.7.1
 
-Sorry for that, it is a bit terse. Sometimes I struggle to gauge how
-much context I should provide.
-
-Joel's reply covers the details of your queries below, but I'll make
-sure to add the information to the bindings as well.
-
->=20
-> LPC =3D Low Pin Count, right?
-> Explain that right here: it is a slow external bus, right?
-
-> > +The Aspeed LPC controller contains registers for a variety of function=
-s. Not
-> > +all registers for a function are contiguous, and some registers are re=
-ferenced
-> > +by functions outside the LPC controller.
-> > +
-> > +Note that this is separate from the H8S/2168 compatible register set o=
-ccupying
-> > +the start of the LPC controller address space.
-> > +
-> > +Some significant functions in the LPC controller:
-> > +
-> > +* LPC Host Controller
-> > +* Host Interface Controller
->=20
-> Host interface to what?
->=20
-> > +* iBT Controller
->=20
-> What is iBT?
->=20
-> > +* SuperIO Scratch registers
->=20
-> Again more context please.
->=20
-> With standards documents, either explain everything or provide
-> pointers for the information.
-
-ACK!
-
-Andrew
---=-ZRMEcVri4dE1vHummK7t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJYLkA1AAoJEJ0dnzgO5LT5MmMQAI/h4v22+5QF/yK75NyupeCi
-B8hHw1vApkk3f8EfBvDZzC31E7mPljqg6eOdddJHRcAELbQMOzXUFTAYyt/Oo8Ki
-CxzN5Cykp6d4IpYQl6ysYWvt8D/XIMOXiMpQH1IDcvxIHJ/X2VRp7yiNcuRW/R1v
-lF2KZhBe01ui+5htBsEAJ1wmGFRJftQL+K7riP800nwDg8F9DU8/lxo3xfuzgs9S
-RyGF4psT2UupOhxGGAGRBTzVroREDOX/3fZarKFKJJyleE9OkfUxFU2OzsmSHxBr
-IqlBwrCC4dj/6dg1VNOKvng3/JmgTyV86zvt+IFM32ri3r1ZOmfWw8Awo7W5SfVk
-np0TwXficFJInN36UmPJIQJCFqprEhDq8+vo6GxaBqypxFnt9KDEdvoTQvOuWpwz
-XNgD+FyBaolK8BVmVy1DLc7L3Bo9LYUPixGqXQZR1pASozN5I95cpHO3HwOo3TCd
-BFZzBhpvycHwB7RwGd+TWeniwbH4LvEWiQcXA9/Cvf2b3cShW7ONPD8n+uOFyDV2
-UA3z28fFgxK3fsHfbDwovdVTQmH5+XCCzmTpDMeotQbGClfSwmB0lt0DXV9KzkfU
-+8rsSRnZ6D3Bxo5+hyJFcnELsXdqWpCAYlMBuk66XXiif1UxAwxIlqnOisQMxI5q
-T/qnhIpfuPpfz670Oqgv
-=XZ8Q
------END PGP SIGNATURE-----
-
---=-ZRMEcVri4dE1vHummK7t--
