@@ -1,130 +1,149 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCHv2 05/10] mmc: dw_mmc: call the dw_mci_prep_stop_abort() by
- default
-Date: Thu, 17 Nov 2016 15:49:55 +0800
-Message-ID: <d4b0cab4-8db3-052b-13aa-ecd5765aef97@rock-chips.com>
-References: <20161115101232.3854-1-jh80.chung@samsung.com>
- <20161115101232.3854-6-jh80.chung@samsung.com>
- <CGME20161116091850epcas5p43ee5a8003c36321f4266c5942bd42060@epcas5p4.samsung.com>
- <6d7625c0-8588-5d11-7475-38fa611d8614@rock-chips.com>
- <868dbb62-4b0d-3492-0b13-093ce63c5cde@samsung.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] drm/bridge: dumb-vga-dac: Support a
+ VDD regulator supply
+Date: Thu, 17 Nov 2016 15:55:47 +0800
+Message-ID: <CAGb2v668A-hFnWy22_DarSSZ6TkvH5=WH-UvaXOFQJBqyKzPXw@mail.gmail.com>
+References: <20161116154232.872-1-wens@csie.org> <20161116154232.872-2-wens@csie.org>
+ <31b8b5b9-9621-286a-7649-cc999ab020da@codeaurora.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <868dbb62-4b0d-3492-0b13-093ce63c5cde-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHGFWXAQKGQEB6V5EUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <31b8b5b9-9621-286a-7649-cc999ab020da-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2016/11/17 13:05, Jaehoon Chung 写道:
-> On 11/16/2016 06:16 PM, Shawn Lin wrote:
->> 在 2016/11/15 18:12, Jaehoon Chung 写道:
->>> stop_cmdr should be set to values relevant to stop command.
->>> It migth be assigned to values whatever there is mrq->stop or not.
->>> Then it doesn't need to use dw_mci_prepare_command().
->>> It's enough to use the prep_stop_abort for preparing stop command.
->>>
+On Thu, Nov 17, 2016 at 3:48 PM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Hi,
+>
+> Thanks for the patch.
+>
+>
+> On 11/16/2016 09:12 PM, Chen-Yu Tsai wrote:
 >>
->> Have you considered to clean up the logic of preparing abort cmd
->> within dw_mci_prepare_command?
+>> Some dumb VGA DACs are active components which require external power.
+>> Add support for specifying a regulator as its power supply.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../bindings/display/bridge/dumb-vga-dac.txt       |  2 ++
+>>  drivers/gpu/drm/bridge/dumb-vga-dac.c              | 35
+>> ++++++++++++++++++++++
+>>  2 files changed, 37 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>> b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>> index 003bc246a270..164cbb15f04c 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>> +++ b/Documentation/devicetree/bindings/display/bridge/dumb-vga-dac.txt
+>> @@ -16,6 +16,8 @@ graph bindings specified in
+>> Documentation/devicetree/bindings/graph.txt.
+>>  - Video port 0 for RGB input
+>>  - Video port 1 for VGA output
+>>
+>> +Optional properties:
+>> +- vdd-supply: Power supply for DAC
+>>
+>>  Example
+>>  -------
+>> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>> b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>> index afec232185a7..15b549f94307 100644
+>> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+>> @@ -12,6 +12,7 @@
+>>
+>>  #include <linux/module.h>
+>>  #include <linux/of_graph.h>
+>> +#include <linux/regulator/consumer.h>
+>>
+>>  #include <drm/drmP.h>
+>>  #include <drm/drm_atomic_helper.h>
+>> @@ -23,6 +24,7 @@ struct dumb_vga {
+>>         struct drm_connector    connector;
+>>
+>>         struct i2c_adapter      *ddc;
+>> +       struct regulator        *vdd;
+>>  };
+>>
+>>  static inline struct dumb_vga *
+>> @@ -124,8 +126,32 @@ static int dumb_vga_attach(struct drm_bridge *bridge)
+>>         return 0;
+>>  }
+>>
+>> +static void dumb_vga_enable(struct drm_bridge *bridge)
+>> +{
+>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>> +       int ret = 0;
+>> +
+>> +       if (vga->vdd)
+>> +               ret = regulator_enable(vga->vdd);
+>> +
+>> +       if (ret) {
+>> +               DRM_ERROR("Failed to enable vdd regulator: %d\n", ret);
+>> +               return;
 >
-> I have considered this..but i didn't check fully for this logic.
-> I think it's possible to clean and make more simpler than now.
 >
-> how about thinking more after applying these patch-set? :)
+> We don't need this return for now. If you're okay with it, can I fix this
+> and queue to misc?
 
-it's okay :)
+Yes, please!
+
+Thanks
+ChenYu
 
 >
-> Best Regards,
-> Jaehoon Chung
->
->>
->>
->>         if (cmd->opcode == MMC_STOP_TRANSMISSION ||
->>             cmd->opcode == MMC_GO_IDLE_STATE ||
->>             cmd->opcode == MMC_GO_INACTIVE_STATE ||
->>             (cmd->opcode == SD_IO_RW_DIRECT &&
->>              ((cmd->arg >> 9) & 0x1FFFF) == SDIO_CCCR_ABORT))
->>                 cmdr |= SDMMC_CMD_STOP;
->>
->>
->>> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>> ---
->>>  drivers/mmc/host/dw_mmc.c | 15 +++++----------
->>>  1 file changed, 5 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>> index 3cda68c..12e1107 100644
->>> --- a/drivers/mmc/host/dw_mmc.c
->>> +++ b/drivers/mmc/host/dw_mmc.c
->>> @@ -385,7 +385,7 @@ static void dw_mci_start_command(struct dw_mci *host,
->>>
->>>  static inline void send_stop_abort(struct dw_mci *host, struct mmc_data *data)
->>>  {
->>> -    struct mmc_command *stop = data->stop ? data->stop : &host->stop_abort;
->>> +    struct mmc_command *stop = &host->stop_abort;
->>>
->>>      dw_mci_start_command(host, stop, host->stop_cmdr);
->>>  }
->>> @@ -1277,10 +1277,7 @@ static void __dw_mci_start_request(struct dw_mci *host,
->>>          spin_unlock_irqrestore(&host->irq_lock, irqflags);
->>>      }
->>>
->>> -    if (mrq->stop)
->>> -        host->stop_cmdr = dw_mci_prepare_command(slot->mmc, mrq->stop);
->>> -    else
->>> -        host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
->>> +    host->stop_cmdr = dw_mci_prep_stop_abort(host, cmd);
->>>  }
->>>
->>>  static void dw_mci_start_request(struct dw_mci *host,
->>> @@ -1890,8 +1887,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
->>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
->>>                             &host->pending_events)) {
->>>                  dw_mci_stop_dma(host);
->>> -                if (data->stop ||
->>> -                    !(host->data_status & (SDMMC_INT_DRTO |
->>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
->>>                                 SDMMC_INT_EBE)))
->>>                      send_stop_abort(host, data);
->>>                  state = STATE_DATA_ERROR;
->>> @@ -1927,8 +1923,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
->>>              if (test_and_clear_bit(EVENT_DATA_ERROR,
->>>                             &host->pending_events)) {
->>>                  dw_mci_stop_dma(host);
->>> -                if (data->stop ||
->>> -                    !(host->data_status & (SDMMC_INT_DRTO |
->>> +                if (!(host->data_status & (SDMMC_INT_DRTO |
->>>                                 SDMMC_INT_EBE)))
->>>                      send_stop_abort(host, data);
->>>                  state = STATE_DATA_ERROR;
->>> @@ -2004,7 +1999,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
->>>              host->cmd = NULL;
->>>              host->data = NULL;
->>>
->>> -            if (mrq->stop)
->>> +            if (!mrq->sbc && mrq->stop)
->>>                  dw_mci_command_complete(host, mrq->stop);
->>>              else
->>>                  host->cmd_status = 0;
->>>
->>
->>
+> Thanks,
+> Archit
 >
 >
+>> +       }
+>> +}
+>> +
+>> +static void dumb_vga_disable(struct drm_bridge *bridge)
+>> +{
+>> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
+>> +
+>> +       if (vga->vdd)
+>> +               regulator_disable(vga->vdd);
+>> +}
+>> +
+>>  static const struct drm_bridge_funcs dumb_vga_bridge_funcs = {
+>>         .attach         = dumb_vga_attach,
+>> +       .enable         = dumb_vga_enable,
+>> +       .disable        = dumb_vga_disable,
+>>  };
+>>
+>>  static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
+>> @@ -169,6 +195,15 @@ static int dumb_vga_probe(struct platform_device
+>> *pdev)
+>>                 return -ENOMEM;
+>>         platform_set_drvdata(pdev, vga);
+>>
+>> +       vga->vdd = devm_regulator_get_optional(&pdev->dev, "vdd");
+>> +       if (IS_ERR(vga->vdd)) {
+>> +               ret = PTR_ERR(vga->vdd);
+>> +               if (ret == -EPROBE_DEFER)
+>> +                       return -EPROBE_DEFER;
+>> +               vga->vdd = NULL;
+>> +               dev_dbg(&pdev->dev, "No vdd regulator found: %d\n", ret);
+>> +       }
+>> +
+>>         vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
+>>         if (IS_ERR(vga->ddc)) {
+>>                 if (PTR_ERR(vga->ddc) == -ENODEV) {
+>>
 >
->
-
-
--- 
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
