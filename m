@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 19/19] ARM: dts: armada-370-xp: Fixup regulator DT warning
-Date: Fri, 18 Nov 2016 00:05:08 +0100
-Message-ID: <20161117230508.28539-20-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 18/19] ARM: dts: armada-370-xp: Remove button address and fixup names
+Date: Fri, 18 Nov 2016 00:05:07 +0100
+Message-ID: <20161117230508.28539-19-gregory.clement@free-electrons.com>
 References: <20161117230508.28539-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161117230508.28539-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,76 +10,132 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-regulator has a reg property so the unit name should contain an address.
+The gpio-key nodes do not have a reg property, so remove the address from
+the unit name.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-synology-ds213j.dts | 4 ++--
- arch/arm/boot/dts/armada-xp-synology-ds414.dts   | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/armada-370-rd.dts                      | 2 +-
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi       | 6 +++---
+ arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi | 6 +++---
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts                | 2 +-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts            | 4 ++--
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts         | 2 +-
+ 6 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-synology-ds213j.dts b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-index 060d45f8a571..25ee9e88964e 100644
---- a/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-+++ b/arch/arm/boot/dts/armada-370-synology-ds213j.dts
-@@ -194,7 +194,7 @@
- 		pinctrl-0 = <&sata1_pwr_pin &sata2_pwr_pin>;
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 649dc108bc08..085fe5f2ee91 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -130,7 +130,7 @@
+ 				compatible = "gpio-keys";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				button@1 {
++				button {
+ 					label = "Software Button";
+ 					linux,code = <KEY_POWER>;
+ 					gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+index 6ba394b7a55a..7e624dae8713 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
+@@ -149,19 +149,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		button@1 {
++		power {
+ 			label = "Power button";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@2 {
++		backup {
+ 			label = "Backup button";
+ 			linux,code = <KEY_OPTION>;
+ 			gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@3 {
++		reset {
+ 			label = "Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+index d5adb8f300ac..f67f375a288e 100644
+--- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
++++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
+@@ -97,19 +97,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		button@1 {
++		power {
+ 			label = "Power button";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@2 {
++		reset {
+ 			label = "Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 23 GPIO_ACTIVE_LOW>;
+ 			debounce-interval = <100>;
+ 		};
+-		button@3 {
++		button {
+ 			label = "USB VBUS error";
+ 			linux,code = <KEY_UNKNOWN>;
+ 			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+index 3bf27a9215e3..f62cdc350e98 100644
+--- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
++++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+@@ -121,7 +121,7 @@
+ 		pinctrl-0 = <&keys_pin>;
  		pinctrl-names = "default";
  
--		sata1_regulator: sata1-regulator {
-+		sata1_regulator: sata1-regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
- 			regulator-name = "SATA1 Power";
-@@ -207,7 +207,7 @@
- 			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		sata2_regulator: sata2-regulator {
-+		sata2_regulator: sata2-regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <2>;
- 			regulator-name = "SATA2 Power";
-diff --git a/arch/arm/boot/dts/armada-xp-synology-ds414.dts b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-index 08e77ce6ee53..62568952f553 100644
---- a/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-+++ b/arch/arm/boot/dts/armada-xp-synology-ds414.dts
-@@ -162,7 +162,7 @@
- 			     &sata3_pwr_pin &sata4_pwr_pin>;
+-		button@1 {
++		reset {
+ 			label = "Factory Reset Button";
+ 			linux,code = <KEY_SETUP>;
+ 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+index f17c98d6cd0f..47a9ee09370e 100644
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -275,13 +275,13 @@
+ 		pinctrl-0 = <&keys_pin>;
  		pinctrl-names = "default";
  
--		sata1_regulator: sata1-regulator {
-+		sata1_regulator: sata1-regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
- 			regulator-name = "SATA1 Power";
-@@ -175,7 +175,7 @@
- 			gpio = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+-		button@1 {
++		wps {
+ 			label = "WPS";
+ 			linux,code = <KEY_WPS_BUTTON>;
+ 			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
  		};
  
--		sata2_regulator: sata2-regulator {
-+		sata2_regulator: sata2-regulator@2 {
- 			compatible = "regulator-fixed";
- 			reg = <2>;
- 			regulator-name = "SATA2 Power";
-@@ -188,7 +188,7 @@
- 			gpio = <&gpio1 12 GPIO_ACTIVE_HIGH>;
- 		};
+-		button@2 {
++		reset {
+ 			label = "Factory Reset Button";
+ 			linux,code = <KEY_RESTART>;
+ 			gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index 79bb2e7c6252..0ed919cf2088 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -119,7 +119,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
--		sata3_regulator: sata3-regulator {
-+		sata3_regulator: sata3-regulator@3 {
- 			compatible = "regulator-fixed";
- 			reg = <3>;
- 			regulator-name = "SATA3 Power";
-@@ -201,7 +201,7 @@
- 			gpio = <&gpio1 13 GPIO_ACTIVE_HIGH>;
- 		};
- 
--		sata4_regulator: sata4-regulator {
-+		sata4_regulator: sata4-regulator@4 {
- 			compatible = "regulator-fixed";
- 			reg = <4>;
- 			regulator-name = "SATA4 Power";
+-				button@1 {
++				init {
+ 					label = "Init Button";
+ 					linux,code = <KEY_POWER>;
+ 					gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
 -- 
 2.10.2
 
