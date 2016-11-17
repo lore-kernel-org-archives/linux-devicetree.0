@@ -1,98 +1,127 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH] clk: qcom: smd-rpm: Add msm8974 clocks
-Date: Thu, 17 Nov 2016 17:53:56 +0200
-Message-ID: <3c57fe94-e6b3-d884-9c80-aa26e5ef9fde@linaro.org>
-References: <1479192844-1281-1-git-send-email-bjorn.andersson@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] hwmon: ltc2990: refactor value conversion
+Date: Thu, 17 Nov 2016 08:36:07 -0800
+Message-ID: <1eff12d5-e0f9-aaa0-010d-1ddcccdd6ec9@roeck-us.net>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <86c28b4f-c78b-8d3e-5c48-fa42ca614ba4@roeck-us.net>
+ <alpine.LRH.2.20.1611171613250.12237@pcbe13573-vm.dyndns.cern.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479192844-1281-1-git-send-email-bjorn.andersson@linaro.org>
+In-Reply-To: <alpine.LRH.2.20.1611171613250.12237@pcbe13573-vm.dyndns.cern.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Tom Levens <tom.levens@cern.ch>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2016 08:54 AM, Bjorn Andersson wrote:
-> This adds all RPM based clocks for msm8974 except cxo and gfx3d_clk_src.
+On 11/17/2016 08:23 AM, Tom Levens wrote:
+> Hi Guenter,
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
->  drivers/clk/qcom/clk-smd-rpm.c                     | 71 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             | 40 +++++++++++-
->  3 files changed, 110 insertions(+), 2 deletions(-)
+> Thanks for taking the time to review the patch.
 >
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> index 87d3714b956a..a7235e9e1c97 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-> @@ -11,6 +11,7 @@ Required properties :
->                 compatible "qcom,rpmcc" should be also included.
+> On Thu, 17 Nov 2016, Guenter Roeck wrote:
 >
->  			"qcom,rpmcc-msm8916", "qcom,rpmcc"
-> +			"qcom,rpmcc-msm8974", "qcom,rpmcc"
->  			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+>> Hi Tom,
+>>
+>> On 11/17/2016 04:10 AM, Tom Levens wrote:
+>>>  Conversion from raw values to signed integers has been refactored using
+>>>  the macros in bitops.h.
+>>>
+>> Please also mention that this fixes a bug in negative temperature conversions.
 >
->  - #clock-cells : shall contain 1
-> diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-> index a27013dbc0aa..b8fcac6f2f87 100644
-> --- a/drivers/clk/qcom/clk-smd-rpm.c
-> +++ b/drivers/clk/qcom/clk-smd-rpm.c
-> @@ -462,8 +462,79 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
->  	.num_clks = ARRAY_SIZE(msm8916_clks),
->  };
+> Yes, of course, I will include the information in v3.
 >
-> +/* msm8974 */
-> +DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
-> +DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
-> +DEFINE_CLK_SMD_RPM(msm8974, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
-> +DEFINE_CLK_SMD_RPM(msm8974, mmssnoc_ahb_clk, mmssnoc_ahb_a_clk, QCOM_SMD_RPM_BUS_CLK, 3);
-> +DEFINE_CLK_SMD_RPM(msm8974, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
-> +DEFINE_CLK_SMD_RPM(msm8974, gfx3d_clk_src, gfx3d_a_clk_src, QCOM_SMD_RPM_MEM_CLK, 1);
-> +DEFINE_CLK_SMD_RPM(msm8974, ocmemgx_clk, ocmemgx_a_clk, QCOM_SMD_RPM_MEM_CLK, 2);
-> +DEFINE_CLK_SMD_RPM_QDSS(msm8974, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_d0, cxo_d0_a, 1);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_d1, cxo_d1_a, 2);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a0, cxo_a0_a, 4);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a1, cxo_a1_a, 5);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, cxo_a2, cxo_a2_a, 6);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, diff_clk, diff_a_clk, 7);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, div_clk1, div_a_clk1, 11);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8974, div_clk2, div_a_clk2, 12);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_d0_pin, cxo_d0_a_pin, 1);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_d1_pin, cxo_d1_a_pin, 2);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a0_pin, cxo_a0_a_pin, 4);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a1_pin, cxo_a1_a_pin, 5);
-> +DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8974, cxo_a2_pin, cxo_a2_a_pin, 6);
-> +
-> +static struct clk_smd_rpm *msm8974_clks[] = {
-> +	[RPM_SMD_PNOC_CLK]		= &msm8974_pnoc_clk,
-> +	[RPM_SMD_PNOC_A_CLK]		= &msm8974_pnoc_a_clk,
-> +	[RPM_SMD_SNOC_CLK]		= &msm8974_snoc_clk,
-> +	[RPM_SMD_SNOC_A_CLK]		= &msm8974_snoc_a_clk,
-> +	[RPM_SMD_CNOC_CLK]		= &msm8974_cnoc_clk,
-> +	[RPM_SMD_CNOC_A_CLK]		= &msm8974_cnoc_a_clk,
-> +	[RPM_SMD_MMSSNOC_AHB_CLK]	= &msm8974_mmssnoc_ahb_clk,
-> +	[RPM_SMD_MMSSNOC_AHB_A_CLK]	= &msm8974_mmssnoc_ahb_a_clk,
-> +	[RPM_SMD_BIMC_CLK]		= &msm8974_bimc_clk,
-> +	[RPM_SMD_BIMC_A_CLK]		= &msm8974_bimc_a_clk,
-> +	[RPM_SMD_OCMEMGX_CLK]		= &msm8974_ocmemgx_clk,
-> +	[RPM_SMD_OCMEMGX_A_CLK]		= &msm8974_ocmemgx_a_clk,
-> +	[RPM_SMD_QDSS_CLK]		= &msm8974_qdss_clk,
-> +	[RPM_SMD_QDSS_A_CLK]		= &msm8974_qdss_a_clk,
-> +	[RPM_SMD_CXO_D0]			= &msm8974_cxo_d0,
-> +	[RPM_SMD_CXO_D0_A]		= &msm8974_cxo_d0_a,
-> +	[RPM_SMD_CXO_D1]			= &msm8974_cxo_d1,
-> +	[RPM_SMD_CXO_D1_A]		= &msm8974_cxo_d1_a,
-> +	[RPM_SMD_CXO_A0]			= &msm8974_cxo_a0,
-> +	[RPM_SMD_CXO_A0_A]		= &msm8974_cxo_a0_a,
-> +	[RPM_SMD_CXO_A1]			= &msm8974_cxo_a1,
-> +	[RPM_SMD_CXO_A1_A]		= &msm8974_cxo_a1_a,
-> +	[RPM_SMD_CXO_A2]			= &msm8974_cxo_a2,
+>>
+>>>  Signed-off-by: Tom Levens <tom.levens@cern.ch>
+>>>  ---
+>>>   drivers/hwmon/ltc2990.c |   27 ++++++++++-----------------
+>>>   1 files changed, 10 insertions(+), 17 deletions(-)
+>>>
+>>>  diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+>>>  index 8f8fe05..0ec4102 100644
+>>>  --- a/drivers/hwmon/ltc2990.c
+>>>  +++ b/drivers/hwmon/ltc2990.c
+>>>  @@ -9,8 +9,12 @@
+>>>    * This driver assumes the chip is wired as a dual current monitor, and
+>>>    * reports the voltage drop across two series resistors. It also reports
+>>>    * the chip's internal temperature and Vcc power supply voltage.
+>>>  + *
+>>>  + * Value conversion refactored
+>>>  + * by Tom Levens <tom.levens@cern.ch>
+>>
+>> Kind of unusual to do that for minor changes like this. Imagine if everyone would do that.
+>> The commit log is what gives you credit.
+>
+> Good point, thanks for the hint. I will remove it from v3.
+>
+>>>    */
+>>>
+>>>  +#include <linux/bitops.h>
+>>>   #include <linux/err.h>
+>>>   #include <linux/hwmon.h>
+>>>   #include <linux/hwmon-sysfs.h>
+>>>  @@ -34,19 +38,10 @@
+>>>   #define LTC2990_CONTROL_MODE_CURRENT    0x06
+>>>   #define LTC2990_CONTROL_MODE_VOLTAGE    0x07
+>>>
+>>>  -/* convert raw register value to sign-extended integer in 16-bit range */
+>>>  -static int ltc2990_voltage_to_int(int raw)
+>>>  -{
+>>>  -    if (raw & BIT(14))
+>>>  -        return -(0x4000 - (raw & 0x3FFF)) << 2;
+>>>  -    else
+>>>  -        return (raw & 0x3FFF) << 2;
+>>>  -}
+>>>  -
+>>>  /* Return the converted value from the given register in uV or mC */
+>>>  -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>>>  +static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 *result)
+>>>  {
+>>>  -    int val;
+>>>  +    s32 val;
+>>
+>> Please just leave the variable type alone. it is also used for the return value
+>> from i2c_smbus_read_word_swapped(), which is an int, and changing it to s32 doesn't really make the code better.
+>
+> According to i2c.h the return type for i2c_smbus_read_word_swapped() is s32, which is why I modified it here. But it could be changed back if you think it is better to leave it as an int.
+>
+Ah, ok. Good to know. Please leave it anyway, reason being that there is no real
+reason to change it. Effectively those are just whitespace changes (unlike the rest,
+which is part bug fix, part cleanup).
 
-There are some extra tabs above. Otherwise looks fine:
-Tested-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> Can you send me a register map for the chip ? I would like to write a module test.
+>
+> Here is an example register dump:
 
-BR,
-Georgi
+I meant the output of i2cdump (something like "i2cdump -y -f <bus> <i2c-address> w").
+
+Thanks,
+Guenter
+
+>
+> 00 00 00 00
+> 01 90 07 d0
+> 2c cd 7d 80
+> 7c 29 20 00
+>
+> The expected values in this case are:
+>
+> in0_input     5000
+> in1_input    610
+> in2_input    3500
+> in3_input    -195
+> in4_input    -299
+> temp1_input     25000
+> temp2_input     125000
+> temp3_input    -40000
+> curr1_input    38840
+> curr2_input    -12428
+>
+> Testing with lltc,mode set to <5>, <6> and <7> should give you all measurements.
+>
+>> Thanks,
+>> Guenter
+>
+> Cheers,
+>
