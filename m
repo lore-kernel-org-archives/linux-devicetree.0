@@ -1,103 +1,55 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v4 1/2] drm/bridge: dumb-vga-dac: Support a VDD regulator
- supply
-Date: Thu, 17 Nov 2016 14:47:11 +0530
-Message-ID: <973dddaf-334f-de71-e9bc-4f25e55f1632@codeaurora.org>
-References: <20161116154232.872-1-wens@csie.org>
- <20161116154232.872-2-wens@csie.org>
- <31b8b5b9-9621-286a-7649-cc999ab020da@codeaurora.org>
- <CAGb2v668A-hFnWy22_DarSSZ6TkvH5=WH-UvaXOFQJBqyKzPXw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] mfd: dt: Add Aspeed LPC binding
+Date: Thu, 17 Nov 2016 10:30:46 +0100
+Message-ID: <CACRpkdazPEbU2gmDyke=GTYtjVp8aeauS+PVkp-zuiVoVz7kbw@mail.gmail.com>
+References: <20161117060633.3837-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v668A-hFnWy22_DarSSZ6TkvH5=WH-UvaXOFQJBqyKzPXw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161117060633.3837-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMS8xNy8yMDE2IDAxOjI1IFBNLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4gT24gVGh1LCBO
-b3YgMTcsIDIwMTYgYXQgMzo0OCBQTSwgQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3Jh
-Lm9yZz4gd3JvdGU6Cj4+IEhpLAo+Pgo+PiBUaGFua3MgZm9yIHRoZSBwYXRjaC4KPj4KPj4KPj4g
-T24gMTEvMTYvMjAxNiAwOToxMiBQTSwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgo+Pj4KPj4+IFNvbWUg
-ZHVtYiBWR0EgREFDcyBhcmUgYWN0aXZlIGNvbXBvbmVudHMgd2hpY2ggcmVxdWlyZSBleHRlcm5h
-bCBwb3dlci4KPj4+IEFkZCBzdXBwb3J0IGZvciBzcGVjaWZ5aW5nIGEgcmVndWxhdG9yIGFzIGl0
-cyBwb3dlciBzdXBwbHkuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5z
-QGNzaWUub3JnPgo+Pj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+
-PiAtLS0KPj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EtZGFjLnR4dCAg
-ICAgICB8ICAyICsrCj4+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyAg
-ICAgICAgICAgICAgfCAzNQo+Pj4gKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gIDIgZmlsZXMg
-Y2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQKPj4+IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50
-eHQKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
-L2R1bWItdmdhLWRhYy50eHQKPj4+IGluZGV4IDAwM2JjMjQ2YTI3MC4uMTY0Y2JiMTVmMDRjIDEw
-MDY0NAo+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kdW1iLXZnYS1kYWMudHh0Cj4+PiBAQCAtMTYsNiAr
-MTYsOCBAQCBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KPj4+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+PiAgLSBWaWRlbyBwb3J0IDAgZm9yIFJHQiBp
-bnB1dAo+Pj4gIC0gVmlkZW8gcG9ydCAxIGZvciBWR0Egb3V0cHV0Cj4+Pgo+Pj4gK09wdGlvbmFs
-IHByb3BlcnRpZXM6Cj4+PiArLSB2ZGQtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIERBQwo+Pj4K
-Pj4+ICBFeGFtcGxlCj4+PiAgLS0tLS0tLQo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMKPj4+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1i
-LXZnYS1kYWMuYwo+Pj4gaW5kZXggYWZlYzIzMjE4NWE3Li4xNWI1NDlmOTQzMDcgMTAwNjQ0Cj4+
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jCj4+PiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jCj4+PiBAQCAtMTIsNiArMTIsNyBA
-QAo+Pj4KPj4+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4+PiAgI2luY2x1ZGUgPGxpbnV4
-L29mX2dyYXBoLmg+Cj4+PiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+
-Pj4KPj4+ICAjaW5jbHVkZSA8ZHJtL2RybVAuaD4KPj4+ICAjaW5jbHVkZSA8ZHJtL2RybV9hdG9t
-aWNfaGVscGVyLmg+Cj4+PiBAQCAtMjMsNiArMjQsNyBAQCBzdHJ1Y3QgZHVtYl92Z2Egewo+Pj4g
-ICAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAgICBjb25uZWN0b3I7Cj4+Pgo+Pj4gICAgICAg
-ICBzdHJ1Y3QgaTJjX2FkYXB0ZXIgICAgICAqZGRjOwo+Pj4gKyAgICAgICBzdHJ1Y3QgcmVndWxh
-dG9yICAgICAgICAqdmRkOwo+Pj4gIH07Cj4+Pgo+Pj4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IGR1
-bWJfdmdhICoKPj4+IEBAIC0xMjQsOCArMTI2LDMyIEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfYXR0
-YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4+PiAgICAgICAgIHJldHVybiAwOwo+Pj4g
-IH0KPj4+Cj4+PiArc3RhdGljIHZvaWQgZHVtYl92Z2FfZW5hYmxlKHN0cnVjdCBkcm1fYnJpZGdl
-ICpicmlkZ2UpCj4+PiArewo+Pj4gKyAgICAgICBzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9i
-cmlkZ2VfdG9fZHVtYl92Z2EoYnJpZGdlKTsKPj4+ICsgICAgICAgaW50IHJldCA9IDA7Cj4+PiAr
-Cj4+PiArICAgICAgIGlmICh2Z2EtPnZkZCkKPj4+ICsgICAgICAgICAgICAgICByZXQgPSByZWd1
-bGF0b3JfZW5hYmxlKHZnYS0+dmRkKTsKPj4+ICsKPj4+ICsgICAgICAgaWYgKHJldCkgewo+Pj4g
-KyAgICAgICAgICAgICAgIERSTV9FUlJPUigiRmFpbGVkIHRvIGVuYWJsZSB2ZGQgcmVndWxhdG9y
-OiAlZFxuIiwgcmV0KTsKPj4+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4+Cj4+Cj4+IFdlIGRv
-bid0IG5lZWQgdGhpcyByZXR1cm4gZm9yIG5vdy4gSWYgeW91J3JlIG9rYXkgd2l0aCBpdCwgY2Fu
-IEkgZml4IHRoaXMKPj4gYW5kIHF1ZXVlIHRvIG1pc2M/Cj4KPiBZZXMsIHBsZWFzZSEKCnB1c2hl
-ZCB0byBkcm0tbWlzYy4KClRoYW5rcywKQXJjaGl0Cgo+Cj4gVGhhbmtzCj4gQ2hlbll1Cj4KPj4K
-Pj4gVGhhbmtzLAo+PiBBcmNoaXQKPj4KPj4KPj4+ICsgICAgICAgfQo+Pj4gK30KPj4+ICsKPj4+
-ICtzdGF0aWMgdm9pZCBkdW1iX3ZnYV9kaXNhYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Up
-Cj4+PiArewo+Pj4gKyAgICAgICBzdHJ1Y3QgZHVtYl92Z2EgKnZnYSA9IGRybV9icmlkZ2VfdG9f
-ZHVtYl92Z2EoYnJpZGdlKTsKPj4+ICsKPj4+ICsgICAgICAgaWYgKHZnYS0+dmRkKQo+Pj4gKyAg
-ICAgICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKHZnYS0+dmRkKTsKPj4+ICt9Cj4+PiArCj4+
-PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGR1bWJfdmdhX2JyaWRnZV9m
-dW5jcyA9IHsKPj4+ICAgICAgICAgLmF0dGFjaCAgICAgICAgID0gZHVtYl92Z2FfYXR0YWNoLAo+
-Pj4gKyAgICAgICAuZW5hYmxlICAgICAgICAgPSBkdW1iX3ZnYV9lbmFibGUsCj4+PiArICAgICAg
-IC5kaXNhYmxlICAgICAgICA9IGR1bWJfdmdhX2Rpc2FibGUsCj4+PiAgfTsKPj4+Cj4+PiAgc3Rh
-dGljIHN0cnVjdCBpMmNfYWRhcHRlciAqZHVtYl92Z2FfcmV0cmlldmVfZGRjKHN0cnVjdCBkZXZp
-Y2UgKmRldikKPj4+IEBAIC0xNjksNiArMTk1LDE1IEBAIHN0YXRpYyBpbnQgZHVtYl92Z2FfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQo+Pj4gKnBkZXYpCj4+PiAgICAgICAgICAgICAgICAg
-cmV0dXJuIC1FTk9NRU07Cj4+PiAgICAgICAgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHZn
-YSk7Cj4+Pgo+Pj4gKyAgICAgICB2Z2EtPnZkZCA9IGRldm1fcmVndWxhdG9yX2dldF9vcHRpb25h
-bCgmcGRldi0+ZGV2LCAidmRkIik7Cj4+PiArICAgICAgIGlmIChJU19FUlIodmdhLT52ZGQpKSB7
-Cj4+PiArICAgICAgICAgICAgICAgcmV0ID0gUFRSX0VSUih2Z2EtPnZkZCk7Cj4+PiArICAgICAg
-ICAgICAgICAgaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQo+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4+PiArICAgICAgICAgICAgICAgdmdhLT52ZGQg
-PSBOVUxMOwo+Pj4gKyAgICAgICAgICAgICAgIGRldl9kYmcoJnBkZXYtPmRldiwgIk5vIHZkZCBy
-ZWd1bGF0b3IgZm91bmQ6ICVkXG4iLCByZXQpOwo+Pj4gKyAgICAgICB9Cj4+PiArCj4+PiAgICAg
-ICAgIHZnYS0+ZGRjID0gZHVtYl92Z2FfcmV0cmlldmVfZGRjKCZwZGV2LT5kZXYpOwo+Pj4gICAg
-ICAgICBpZiAoSVNfRVJSKHZnYS0+ZGRjKSkgewo+Pj4gICAgICAgICAgICAgICAgIGlmIChQVFJf
-RVJSKHZnYS0+ZGRjKSA9PSAtRU5PREVWKSB7Cj4+Pgo+Pgo+PiAtLQo+PiBRdWFsY29tbSBJbm5v
-dmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKPj4g
-YSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKLS0gClF1YWxjb21tIElu
-bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAph
-IExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Nov 17, 2016 at 7:06 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+
+> +* Device tree bindings for the Aspeed LPC Controller
+
+We are going overboard with the lingo sometimes, to the point that we do not
+understand how terse things become.
+
+LPC = Low Pin Count, right?
+Explain that right here: it is a slow external bus, right?
+
+> +The Aspeed LPC controller contains registers for a variety of functions. Not
+> +all registers for a function are contiguous, and some registers are referenced
+> +by functions outside the LPC controller.
+> +
+> +Note that this is separate from the H8S/2168 compatible register set occupying
+> +the start of the LPC controller address space.
+> +
+> +Some significant functions in the LPC controller:
+> +
+> +* LPC Host Controller
+> +* Host Interface Controller
+
+Host interface to what?
+
+> +* iBT Controller
+
+What is iBT?
+
+> +* SuperIO Scratch registers
+
+Again more context please.
+
+With standards documents, either explain everything or provide
+pointers for the information.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
