@@ -1,64 +1,55 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v10 01/11] remoteproc: st_slim_rproc: add a slimcore
- rproc driver
-Date: Thu, 17 Nov 2016 15:22:52 +0530
-Message-ID: <20161117095252.GC2698@localhost>
-References: <1476783556-2501-1-git-send-email-peter.griffin@linaro.org>
- <1476783556-2501-2-git-send-email-peter.griffin@linaro.org>
- <20161103213703.GA15449@tuxbot>
- <20161107135735.GA27280@griffinp-ThinkPad-X1-Carbon-2nd>
- <20161114051854.GW3000@localhost>
- <20161117063646.GE28340@tuxbot>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
+Date: Thu, 17 Nov 2016 11:45:12 +0200
+Message-ID: <1829466.vPTafcVR8L@avalon>
+References: <cover.1479142062.git.jsarha@ti.com> <20161116133331.miem6us563uu62t7@rob-hp-laptop> <506ba969-d753-d026-5357-3329a750ceaf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161117063646.GE28340@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ohad@wizery.com, patrice.chotard@st.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <506ba969-d753-d026-5357-3329a750ceaf-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 10:36:46PM -0800, Bjorn Andersson wrote:
-> On Sun 13 Nov 21:18 PST 2016, Vinod Koul wrote:
-> 
-> > On Mon, Nov 07, 2016 at 01:57:35PM +0000, Peter Griffin wrote:
-> > > > 
-> > > > As you now make changes to the entire remoteproc Kconfig file, rather
-> > > > than simply add a Kconfig symbol we can't bring this in via Vinod's tree
-> > > > without providing Linus with a messy merge conflict.
-> > > > 
-> > > > So the remoteproc parts now has to go through my tree.
-> > > 
-> > > OK, I think the best approach is for Vinod to create an immutable
-> > > branch with the entire fdma series on, and then both of you merge that branch into
-> > > your respective trees.
-> > 
-> > my topic/st_fdma is immutable branch. You cna merge it, if you need a signed
-> > tag, please do let me know
-> > 
-> 
-> Hi Vinod,
-> 
-> It looks like you reverted the wrong Kconfig fix, the one I objected to
-> was the change in drivers/remoteproc, not the one in drivers/dma.
-> 
-> The ST_FMDA depends on functions exposed by REMOTEPROC and
-> ST_SLIM_REMOTEPROC, the latter in turn depends on REMOTEPROC, which you
-> guys made user selectable - and as such should not be selected - but I
-> think we should move forward and get everything merged and then we can
-> go back and figure out how this should be addressed (or left alone?).
-> 
-> I have merged "topic/st_fdma" into rproc-next, so that I can fix up the
-> now broken drivers/remoteproc/Kconfig.
-> 
-> We do however both need to revert the revert or there will be link
-> errors if you build the dma driver with remoteproc=n. If you do this I
-> can merge the topic once more and we'll keep the set of changes in sync.
+Hi Jyri,
 
-Oops my bad, thanks for letting me know. I have reverted this now and
-pushing out. Please do let me know if this was fine
+On Wednesday 16 Nov 2016 16:39:28 Jyri Sarha wrote:
+> On 11/16/16 15:33, Rob Herring wrote:
+> >> +Optional properties
+> >> 
+> >>> +	- reg: I2C address. If and only if present the driver node
 
-Thanks
+I assume you meant device node, not driver node ?
+
+> >>> +	  should be placed into the i2c controller node where the
+> >>> +	  tfp410 i2c is connected to (the current implementation does
+> >>> +	  not yet support this).
+> > 
+> > So this chip can work without programming I guess?
+> 
+> Yes. Just powering it up is enough for most application.
+> 
+> > reg should only be not present if I2C is not connected in the design. It
+> > can't be a function of what the driver supports. In otherwords, you
+> > can't be moving this node around based on when you add I2C control.
+> 
+> Ok, I'll try to implement a dummy i2c driver at the same time too. I can
+> not test anything related to it because I do not have a piece of HW with
+> tfp410 i2c wires connected, but it should not matter as long as I am
+> able to probe it as a i2c client.
+
+I think that Rob's point was that whether the current implementation supports 
+this or not is irrelevant from a DT bindings point of view. It should not be 
+mentioned in the bindings document.
+
 -- 
-~Vinod
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
