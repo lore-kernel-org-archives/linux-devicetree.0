@@ -1,48 +1,57 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/4] Documentation: devictree: dwc2: Add AHB burst binding
-Date: Thu, 17 Nov 2016 12:52:17 -0800
-Message-ID: <5ee218659a68fa48b92f4537e0e0e52f6c7ce92c.1479415762.git.johnyoun@synopsys.com>
-References: <cover.1479415762.git.johnyoun@synopsys.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1479415762.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: klaus.goger@theobroma-systems.com
+Subject: Re: [PATCH] ARM: dts: sunxi: Explicitly enable pull-ups for MMC pins
+Date: Thu, 17 Nov 2016 21:57:43 +0100
+Message-ID: <ea02ec937a12d6ca2a2e0d8bbea5c484@theobroma-systems.com>
+References: <20161117093438.17988-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161117093438.17988-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the "snps,ahb-burst" property which controls the burst type to
-perform on the AHB bus as a master in internal DMA mode.
+On 2016-11-17 10:34, Chen-Yu Tsai wrote:
+> Given that MMC starts in open-drain mode and the pull-ups are required,
+> it's best to enable it for all the pin settings.
 
-Some platforms may see better or worse performance based on this
-value. The HAPS platform is one example where all INCRx have worse
-performance than INCR.
+It's even more complicated than that with MMC. It starts in open-drain 
+mode for
+CMD during initialization but changes to push-pull afterwards. The card 
+has
+internal pull-ups to prevent bus floating during setup and will disable 
+them
+after switching to 4bit mode (or 8bit for eMMC when available).
+But even after switching to push-pull drivers there are states the bus 
+would
+float and pull ups have to ensure a high level on the bus.
 
-Other platforms (such as the Canyonlands board) report that the default
-value causes system hangs.
+See JESD84-A441 chapter 7.15 ff as reference.
 
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
- 1 file changed, 2 insertions(+)
+   The difference between the P-bit and Z-bit is that a P-bit is actively 
+driven
+   to HIGH by the card respectively host output driver, while Z-bit is 
+driven to
+  (respectively kept) HIGH by the pull-up resistors Rcmd respectively 
+Rdat.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 6c7c2bce..9e7b4b4 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -26,6 +26,8 @@ Optional properties:
- Refer to phy/phy-bindings.txt for generic phy consumer properties
- - dr_mode: shall be one of "host", "peripheral" and "otg"
-   Refer to usb/generic.txt
-+- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
-+  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
- - g-rx-fifo-size: size of rx fifo size in gadget mode.
- - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
- - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
--- 
-2.10.0
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Enabling the pull ups on the CPU would be the right choice considering 
+that
+most boards will not have external pull-ups. Even if they would have 
+one,
+adding the internal in parallel would work in almost all cases and the
+increase in power consumption would be negligible.
+
+Cheers,
+Klaus
