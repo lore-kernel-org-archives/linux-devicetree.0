@@ -1,98 +1,75 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH net 1/3] net: phy: realtek: add eee advertisement
- disable options
-Date: Thu, 17 Nov 2016 22:48:37 +0100
-Message-ID: <1479419317.17538.75.camel@baylibre.com>
-References: <1479220154-25851-1-git-send-email-jbrunet@baylibre.com>
-         <1479220154-25851-2-git-send-email-jbrunet@baylibre.com>
-         <CANAwSgTjG8G0U+A1p7hOKND9rjY4BzZfPgyWWHAEryYkHj_UOw@mail.gmail.com>
-         <1479378055.17538.57.camel@baylibre.com>
-         <CANAwSgTB5=8tVj1FrZF3EgjK5mjUMwLYb90NeWSFDCsRjsuB6A@mail.gmail.com>
+From: Wolfram Sang <wsa-dev@sang-engineering.com>
+Subject: Re: [v4, 1/3] i2c: pxa: Add support for the I2C units found in
+ Armada 3700
+Date: Thu, 17 Nov 2016 22:54:40 +0100
+Message-ID: <20161117215440.GA10851@katana>
+References: <20161109115715.2557-2-romain.perier@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTB5=8tVj1FrZF3EgjK5mjUMwLYb90NeWSFDCsRjsuB6A@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Andre Roth <neolynx@gmail.com>, linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161109115715.2557-2-romain.perier@free-electrons.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Romain Perier <romain.perier@free-electrons.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igal Liberman <igall@marv>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-11-17 at 23:30 +0530, Anand Moon wrote:
-> Hi Jerone,
-> 
-> > > How about adding callback functionality for .soft_reset to handle
-> > > BMCR
-> > > where we update the Auto-Negotiation for the phy,
-> > > as per the datasheet of the rtl8211f.
 
-I think BMCR is already pretty well handled by the genphy, don't you
-think ?
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > 
-> > I'm not sure I understand how this would help with our issue (and
-> > EEE).
-> > Am I missing something or is it something unrelated that you would
-> > like
-> > to see happening on this driver ?
-> > 
-> [snip]
-> 
-> I was just tying other phy module to understand the feature.
-> But in order to improve  the throughput I tried to integrate blow u-
-> boot commit.
-> 
-> commit 3d6af748ebd831524cb22a29433e9092af469ec7
-> Author: Shengzhou Liu <Shengzhou.Liu@freescale.com>
-> Date:   Thu Mar 12 18:54:59 2015 +0800
-> 
->     net/phy: Add support for realtek RTL8211F
-> 
->     RTL8211F has different registers from RTL8211E.
->     This patch adds support for RTL8211F PHY which
->     can be found on Freescale's T1023 RDB board.
-> 
-> And added the similar functionality to  .config_aneg    =
-> &rtl8211f_config_aneg,
-> 
 
-I assume this is the commit you are referring to : 
-http://git.denx.de/?p=u-boot.git;a=commit;h=3d6af748ebd831524cb22a29433
-e9092af469ec7
+> +	[REGS_A3700] = {
+> +		.ibmr = 0x00,
+> +		.idbr = 0x04,
+> +		.icr =	0x08,
+> +		.isr =	0x0c,
+> +		.isar = 0x10,
+> +	},
 
-I tried looking a this particular commit and the other ones in
-realtek.c history of u-boot. I don't really see what it does that linux
-is not already doing.
+Can't you reuse REGS_PXA3XX?
 
-> And I seem to have better results in through put with periodic drop
-> but it recovers.
-> -----
-> odroid@odroid64:~$ iperf3 -c 10.0.0.102 -p 2006 -i 1 -t 100 -V
-> iperf 3.0.11
-> Linux odroid64 4.9.0-rc5-xc2ml #18 SMP PREEMPT Thu Nov 17 22:56:00 
+>  static const struct platform_device_id i2c_pxa_id_table[] = {
+> @@ -98,6 +106,7 @@ static const struct platform_device_id i2c_pxa_id_table[] = {
+>  	{ "pxa3xx-pwri2c",	REGS_PXA3XX },
+>  	{ "ce4100-i2c",		REGS_CE4100 },
+>  	{ "pxa910-i2c",		REGS_PXA910 },
+> +	{ "armada-3700-i2c",	REGS_A3700  },
 
-[...]
+So, you declare a platform_device_id here...
 
-> 
-> Test Complete. Summary Results:
-> [ ID] Interval           Transfer     Bandwidth       Retr
-> [  4]   0.00-100.00 sec  10.5 GBytes   902
-> Mbits/sec    4             sender
-> [  4]   0.00-100.00 sec  10.5 GBytes   902
-> Mbits/sec                  receiver
-> CPU Utilization: local/sender 5.6% (0.2%u/5.4%s), remote/receiver
-> 17.1% (1.2%u/15.9%s)
-> 
+> +	if (of_device_is_compatible(np, "marvell,armada-3700-i2c")) {
+> +		i2c->fm_mask = ICR_BUSMODE_FM;
+> +		i2c->hs_mask = ICR_BUSMODE_HS;
+> +	} else {
+> +		i2c->fm_mask = ICR_FM;
+> +		i2c->hs_mask = ICR_HS;
+> +	}
 
-That's the kind of throughput we have on the C2 once the link is
-reliable (with EEE switch off for GbE)
+... but don't consider this case here?
 
-> Can your confirm this at your end.
-> Once confirm I will try to send this as a fix for this issue.
-> 
 
-I'm testing the code to disable EEE in a generic way. I'll post the RFC
-for it asap.
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> -Best Regards
-> Anand Moon
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYLicgAAoJEBQN5MwUoCm2itQP/2D78mzxQjZmSYiLtTdAX9/8
+iy42TibAfL4u86k3dUsOF6yWL8y2ydiLzU2nX88BQNiQUu2o5b/J5pKhJ+GLgX85
+eWPiEy2NEFts+gBbhSYAxEkbbY5V7g9TuY6qssw0wVOhD1Db77GJu9IBmsPFvIZf
+wg9+L+feFelcmPk/DlNQcM8dc8fVrIiHiCBFXVTAfYfdNpVBK8qNFvhAIeIO4Mom
+1iYBZ6OCjzzzHnduyHTEJy1D65AEet9cDfENxAGkRnrXFVpA73EuMX6erXcaJVM8
+NOg1sAa1SpwxcIAPyFLOlsqhzQg7oKIgZAJvu042aRKlQCilaxg0au90okk3inm2
+IPX6HRYJO4/smCQRbIi+d4xcFfUXx46lxrp74KfGXE6tcuqyY8yoJsa0M1l/ZKo7
+tVFoOWFtP5ZQuifq0Yloj6lcjJQ1Uz9JG7y1cXhNujZHHU+lt0jmgNeCpIEV4icw
+sf60DWGrQHeJwvpZaL8ij8oH7ZhWtSMMTbNgmFfMq0a4xLHyAkRvcKmV4rXBV+wh
+dNDGKG2sIQilwrzvibTLaEgkSktyXIq8GKZEco332TZLcqXhAh9KUXm92/bNk5tS
+sr4nshppGcfk4nJLC2yaHJ57Sr/5SiCUYyk0iLtvUhyV3M1+z1U9CqIuOpCj01NN
+9c6mZZb0MoMD6vXYEJFi
+=rN3o
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
