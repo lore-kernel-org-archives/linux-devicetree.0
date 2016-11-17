@@ -1,41 +1,90 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v8 05/16] dt-bindings: sdhci-msm: Add xo property
-Date: Thu, 17 Nov 2016 15:03:52 -0800
-Message-ID: <20161117230352.GO25626@codeaurora.org>
-References: <20161116191335.GH25626@codeaurora.org>
- <1479343623-31163-1-git-send-email-riteshh@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479343623-31163-1-git-send-email-riteshh@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, andy.gross@linaro.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 00/19] Various Armada 370/XP DT warning fixup
+Date: Fri, 18 Nov 2016 00:04:49 +0100
+Message-ID: <20161117230508.28539-1-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17, Ritesh Harjani wrote:
-> Add "xo" property which is tcxo clock.
-> 
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 485483a..4e61086 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -17,6 +17,7 @@ Required properties:
->  	"iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
->  	"core"	- SDC MMC clock (MCLK) (required)
->  	"bus"	- SDCC bus voter clock (optional)
-> +	"xo" - TCXO clock (optional)
+Hi,
 
-Seems everything else is tabbed before the dash. Otherwise,
+As it was done a few months ago for kirkwood, this patchset fixes up
+various warning from the DT compiler when using the flag W=1 with
+make.
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+In this third version as request by Rob Herring I removed the '_' sign
+in the unit address. I also added a comment in the device tree files
+explaining how this unit address was composed.
+
+As for the first two versions, the only remaining warnings are the following:
+  DTC     arch/arm/boot/dts/armada-370-db.dtb
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
+
+However it seems a false positive as here the '@' is part of the name
+of the node and is not a reference of an address. Moreover the node
+name is directly used by the driver so it must not be modified.
+
+Gregory
+
+Gregory CLEMENT (19):
+  ARM: dts: armada-xp-matrix: Fix the location of the pcie-controller
+    node
+  ARM: dts: armada-370-xp: move the cpurst node in the common file
+  ARM: dts: armada-370-xp: add node labels
+  ARM: dts: armada-370-xp: Use the node labels
+  ARM: dts: armada-370-xp: Fixup mdio DT warning
+  ARM: dts: armada-370-xp: Fixup bootrom DT warning
+  ARM: dts: armada-370-xp: Fixup devbus DT warning
+  ARM: dts: armada-370-xp: Fixup bm-bppi DT warning
+  ARM: dts: armada-370-xp: Fixup sa-ram DT warning
+  ARM: dts: armada-xp: Fixup pcie DT warnings
+  ARM: dts: armada-370: Fixup pcie DT warnings
+  ARM: dts: armada-370-xp: Remove skeleton.dtsi
+  ARM: dts: armada-370-xp: Fixup l2-cache DT warning
+  ARM: dts: armada-370-xp: Fixup internal-regs DT warning
+  ARM: dts: armada-370-xp: Fixup soc DT warning
+  ARM: dts: armada-370-xp: Fixup memory DT warning
+  ARM: dts: armada-370-xp: Remove address from dsa unit name
+  ARM: dts: armada-370-xp: Remove button address and fixup names
+  ARM: dts: armada-370-xp: Fixup regulator DT warning
+
+ arch/arm/boot/dts/armada-370-db.dts                |  75 +++++----
+ arch/arm/boot/dts/armada-370-dlink-dns327l.dts     |  42 +++--
+ arch/arm/boot/dts/armada-370-mirabox.dts           |  69 ++++----
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts     |  62 +++----
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts     |  70 ++++----
+ arch/arm/boot/dts/armada-370-rd.dts                |  69 ++++----
+ arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts  |  39 +++--
+ arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi |  57 ++++---
+ .../dts/armada-370-seagate-personal-cloud-2bay.dts |  12 +-
+ .../boot/dts/armada-370-seagate-personal-cloud.dts |  12 +-
+ .../dts/armada-370-seagate-personal-cloud.dtsi     |  56 ++++---
+ arch/arm/boot/dts/armada-370-synology-ds213j.dts   |  30 ++--
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  56 ++++---
+ arch/arm/boot/dts/armada-370.dtsi                  | 160 +++++++++---------
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts          |  80 ++++-----
+ arch/arm/boot/dts/armada-xp-db.dts                 | 178 +++++++++++----------
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 154 +++++++++---------
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts    |  65 ++++----
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts      |  64 ++++----
+ arch/arm/boot/dts/armada-xp-matrix.dts             |  32 ++--
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           |  24 ++-
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           |  32 ++--
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           |  34 ++--
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |  79 +++++----
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   | 132 ++++++++-------
+ arch/arm/boot/dts/armada-xp-synology-ds414.dts     |  87 +++++-----
+ arch/arm/boot/dts/armada-xp.dtsi                   | 126 +++++++++------
+ 27 files changed, 1073 insertions(+), 823 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
