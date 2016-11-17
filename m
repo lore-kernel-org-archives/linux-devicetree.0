@@ -1,53 +1,46 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2 3/3] remoteproc: qcom: add Venus video core firmware
- loader driver
-Date: Thu, 17 Nov 2016 11:08:48 +0200
-Message-ID: <51fef06b-8cf1-ae37-a6bd-6a1a30c34898@linaro.org>
-References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
- <1478539853-23218-4-git-send-email-stanimir.varbanov@linaro.org>
- <20161114191641.GH5177@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] mfd: dt: Add Aspeed LPC binding
+Date: Thu, 17 Nov 2016 10:16:15 +0100
+Message-ID: <4751029.AudB7s5avo@wuerfel>
+References: <20161117060633.3837-1-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161114191641.GH5177@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161117060633.3837-1-andrew@aj.id.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 11/14/2016 09:16 PM, Stephen Boyd wrote:
-> On 11/07, Stanimir Varbanov wrote:
->> +#include <linux/module.h>
->> +#include <linux/of_reserved_mem.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/qcom_scm.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include "qcom_mdt_loader.h"
->> +#include "remoteproc_internal.h"
->> +
->> +#define VENUS_CRASH_REASON_SMEM		425
+On Thursday, November 17, 2016 4:36:33 PM CET Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
 > 
-> This is unused. Is there going to be some common smem API to get
-> the crash reason?
-
-This is leftover and never used, so I will delete it. About smem maybe
-Bjorn have some idea?
-
->> +
->> +static const struct of_device_id venus_of_match[] = {
->> +	{ .compatible = "qcom,venus-pil" },
->> +	{ },
->> +};
+> I'd like to start a discussion about how to handle the LPC register space in
+> the Aspeed SoC. There are a number of issues, largely concerned with the layout
+> of the registers but also with the fact that LPC register state is used by the
+> pinmux to determine some pin functionality.
+...
 > 
-> Add a MODULE_DEVICE_TABLE?
-> 
+> What is the recommended approach to managing such hardware?
 
-OK.
+Can you clarify which side of the LPC bus this is? We are currently having
+a discussion for how to integrate the LPC master on an ARM64 server that
+uses LPC to access an Aspeed LPC slave. For this one we want to use the
+traditional ISA DT binding.
 
--- 
-regards,
-Stan
+I'm guessing that you are interesting in the other side here, for mapping
+the registers of the LPC slave on the Aspeed BMC, but that's not clear from
+your email, as I'm assuming that the same chip has both master and slave
+interfaces.
+
+	Arnd
