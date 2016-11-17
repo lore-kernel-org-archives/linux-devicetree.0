@@ -1,39 +1,29 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 03/13] ARM: dts: armada-375: Fixup mdio DT warning
-Date: Fri, 18 Nov 2016 00:08:20 +0100
-Message-ID: <20161117230830.31047-4-gregory.clement@free-electrons.com>
-References: <20161117230830.31047-1-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117230830.31047-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: firmware: scm: Add MSM8996 DT
+ bindings
+Date: Thu, 17 Nov 2016 15:12:29 -0800
+Message-ID: <20161117231229.GT25626@codeaurora.org>
+References: <1479259165-1601-1-git-send-email-spjoshi@codeaurora.org>
+ <1479259165-1601-2-git-send-email-spjoshi@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479259165-1601-2-git-send-email-spjoshi@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sarangdhar Joshi <spjoshi@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Jordan Crouse <jcrouse@codeaurora.org>, Trilok Soni <tsoni@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-MDIO has a reg property so the unit name should contain an address.
+On 11/15, Sarangdhar Joshi wrote:
+> Add SCM DT bindings for Qualcomm's MSM8996 platform.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Sarangdhar Joshi <spjoshi@codeaurora.org>
+> ---
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/armada-375.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-index e016ff3ed970..97b663d83fb6 100644
---- a/arch/arm/boot/dts/armada-375.dtsi
-+++ b/arch/arm/boot/dts/armada-375.dtsi
-@@ -203,7 +203,7 @@
- 				      <0xc100 0x100>;
- 			};
- 
--			mdio: mdio {
-+			mdio: mdio@c0054 {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				compatible = "marvell,orion-mdio";
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
