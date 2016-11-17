@@ -1,63 +1,106 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5] drm/mediatek: fixed the calc method of data rate per
- lane
-Date: Fri, 18 Nov 2016 13:17:35 +0800
-Message-ID: <1479446255.24375.3.camel@mtksdaap41>
-References: <1479266454-31892-1-git-send-email-jitao.shi@mediatek.com>
- <1479361006.13083.7.camel@mtksdaap41>
- <CAGS+omBpdRH5ZnvcApX_pevwSBHwUon77DhhjX0p9aQXuOy4DA@mail.gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [RFC PATCH v2 3/7] iio: inkern: api for manipulating ext_info of iio channels
+Date: Thu, 17 Nov 2016 22:48:05 +0100
+Message-ID: <1479419289-17553-4-git-send-email-peda@axentia.se>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGS+omBpdRH5ZnvcApX_pevwSBHwUon77DhhjX0p9aQXuOy4DA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, dri-devel <dri-devel@lists.freedesktop.org>, Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= <yingjoe.chen@mediatek.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC
- support" <linux-mediatek@lists.infradead.org>, Andy Yan <andy.yan@rock-chips.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang =?UTF-8?Q?=28=E9=BB=83=E6=99=BA=E5=82=91=29?= <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.o>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479419289-17553-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIERhbmllbDoKCk9uIEZyaSwgMjAxNi0xMS0xOCBhdCAxMToyMiArMDgwMCwgRGFuaWVsIEt1
-cnR6IHdyb3RlOgo+IEhpIENLLAo+IAo+IE9uIFRodSwgTm92IDE3LCAyMDE2IGF0IDE6MzYgUE0s
-IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+IHdyb3RlOgo+ID4gSGksIEppdGFvOgo+ID4KPiA+
-Cj4gPiBPbiBXZWQsIDIwMTYtMTEtMTYgYXQgMTE6MjAgKzA4MDAsIEppdGFvIFNoaSB3cm90ZToK
-PiA+PiBUdW5lIGRzaSBmcmFtZSByYXRlIGJ5IHBpeGVsIGNsb2NrLCBkc2kgYWRkIHNvbWUgZXh0
-cmEgc2lnbmFsIChpLmUuCj4gPj4gVGxweCwgVGhzLXByZXBhcmUsIFRocy16ZXJvLCBUaHMtdHJh
-aWwsVGhzLWV4aXQpIHdoZW4gZW50ZXIgYW5kIGV4aXQgTFAKPiA+PiBtb2RlLCB0aG9zZSBzaWdu
-YWxzIHdpbGwgY2F1c2UgaC10aW1lIGxhcmdlciB0aGFuIG5vcm1hbCBhbmQgcmVkdWNlIEZQUy4K
-PiA+PiBTbyBuZWVkIHRvIG11bHRpcGx5IGEgY29lZmZpY2llbnQgdG8gb2Zmc2V0IHRoZSBleHRy
-YSBzaWduYWwncyBlZmZlY3QuCj4gPj4gICBjb2VmZmljaWVudCA9ICgoaHRvdGFsKmJwcC9sYW5l
-X251bWJlcikrVGxweCtUaHNfcHJlcCtUaHNfemVybysKPiA+PiAgICAgICAgICAgICAgICBUaHNf
-dHJhaWwrVGhzX2V4aXQpLyhodG90YWwqYnBwL2xhbmVfbnVtYmVyKQo+ID4+Cj4gPj4gU2lnbmVk
-LW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5zaGlAbWVkaWF0ZWsuY29tPgo+ID4KPiA+IEl0IGxv
-b2tzIGdvb2QgdG8gbWUuCj4gPiBCdXQgdGhpcyBwYXRjaCBjb25mbGljdCB3aXRoIFsxXSB3aGlj
-aCBpcyBvbmUgcGF0Y2ggb2YgTVQyNzAxIHNlcmllcy4gSQo+ID4gd2FudCB0byBhcHBseSBNVDI3
-MDEgcGF0Y2hlcyBmaXJzdCwgc28gcGxlYXNlIGhlbHAgdG8gcmVmaW5lIHRoaXMgcGF0Y2gKPiA+
-IGJhc2VkIG9uIE1UMjcwMSBwYXRjaGVzLgo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhlIE1UMjcwMSBE
-U0kgcGF0Y2hlcyBhcmUgcXVpdGUgcmVhZHkgeWV0IChJIGp1c3QKPiByZXZpZXdlZCB0aGUgb25l
-IGJlbG93KS4KPiBDYW4gd2UgaW5zdGVhZCBsYW5kIEppdGFvJ3Mgc21hbGwgdGFyZ2V0ZWQgY2hh
-bmdlIGZpcnN0LCBhbmQgdGhlbgo+IHJlYmFzZSB0aGUgTVQyNzAxIHNlcmllcyBvbiB0b3AuCj4g
-Cj4gVGhhbmtzLAo+IC1EYW4KCgpNVDI3MDEgc2VyaWVzIGxvb2tzIHN0aWxsIGhhdmUgc29tZSBk
-ZWZlY3QgdG8gYmUgZml4ZWQuClRoZXJlZm9yZSwgSSB3b3VsZCBhcHBseSB0aGlzIHBhdGNoIGZp
-cnN0LgpUaGFua3MgZm9yIHlvdXIgaGVscC4KClJlZ2FyZHMsCkNLCgo+ID4KPiA+IFsxXSBodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk0MjI4MjEvCj4gPgo+ID4gUmVnYXJkcywK
-PiA+IENLCj4gPgo+ID4+IC0tLQo+ID4+IENoYW5nZSBzaW5jZSB2NDoKPiA+PiAgLSB0dW5lIHRo
-ZSBjYWxjIGNvbW1lbnQgbW9yZSBjbGVhci4KPiA+PiAgLSBkZWZpbmUgdGhlIHBoeSB0aW1pbmdz
-IGFzIGNvbnN0YW50cy4KPiA+Pgo+ID4+IENobmFnZSBzaW5jZSB2MzoKPiA+PiAgLSB3cmFwcCB0
-aGUgY29tbWl0IG1zZy4KPiA+PiAgLSBmaXggYWxpZ25tZW50IG9mIHNvbWUgbGluZXMuCj4gPj4K
-PiA+PiBDaGFuZ2Ugc2luY2UgdjI6Cj4gPj4gIC0gbW92ZSBwaHkgdGltaW5nIGJhY2sgdG8gZHNp
-X3BoeV90aW1jb25maWcuCj4gPj4KPiA+PiBDaGFuZ2Ugc2luY2UgdjE6Cj4gPj4gIC0gcGh5X3Rp
-bWluZzIgYW5kIHBoeV90aW1pbmczIHJlZmVyIGNsb2NrIGN5Y2xlIHRpbWUuCj4gPj4gIC0gZGVm
-aW5lIHZhbHVlcyBvZiBMUFggSFNfUFJQUiBIU19aRVJPIEhTX1RSQUlMIFRBX0dPIFRBX1NVUkUg
-VEFfR0VUIERBX0hTX0VYSVQuCj4gPj4gLS0tCj4gPj4KPiA+CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Extend the inkern api with functions for reading and writing ext_info
+of iio channels.
+---
+ drivers/iio/inkern.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/iio/consumer.h |  6 +++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index cfca17ba2535..a8099b164222 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -850,3 +850,58 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(iio_write_channel_raw);
++
++int iio_get_channel_ext_info_count(struct iio_channel *chan)
++{
++	const struct iio_chan_spec_ext_info *ext_info;
++	unsigned int i = 0;
++
++	if (!chan->channel->ext_info)
++		return i;
++
++	for (ext_info = chan->channel->ext_info; ext_info->name; ext_info++)
++		++i;
++
++	return i;
++}
++EXPORT_SYMBOL_GPL(iio_get_channel_ext_info_count);
++
++ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
++				  const char *attr, char *buf)
++{
++	const struct iio_chan_spec_ext_info *ext_info;
++
++	if (!chan->channel->ext_info)
++		return -EINVAL;
++
++	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
++		if (strcmp(attr, ext_info->name))
++			continue;
++
++		return ext_info->read(chan->indio_dev, ext_info->private,
++				      chan->channel, buf);
++	}
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(iio_read_channel_ext_info);
++
++ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
++				   const char *buf, size_t len)
++{
++	const struct iio_chan_spec_ext_info *ext_info;
++
++	if (!chan->channel->ext_info)
++		return -EINVAL;
++
++	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
++		if (strcmp(attr, ext_info->name))
++			continue;
++
++		return ext_info->write(chan->indio_dev, ext_info->private,
++				       chan->channel, buf, len);
++	}
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(iio_write_channel_ext_info);
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index 9a4f336d8b4a..471dece8729a 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -299,4 +299,10 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val,
+ int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
+ 	int *processed, unsigned int scale);
+ 
++int iio_get_channel_ext_info_count(struct iio_channel *chan);
++ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
++				  const char *attr, char *buf);
++ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
++				   const char *buf, size_t len);
++
+ #endif
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
