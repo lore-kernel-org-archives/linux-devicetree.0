@@ -1,48 +1,60 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dt: imx31: fix AVIC base address
-Date: Thu, 17 Nov 2016 03:30:51 +0200
-Message-ID: <20161117013051.29381-1-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH] ARM: dts: lpc435x: remove address and size cells from
+ gpio-keys-polled nodes
+Date: Thu, 17 Nov 2016 04:06:15 +0200
+Message-ID: <20161117020615.30383-1-vz@mleia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+The change removes redundant #address-cells and #size-cells properties from
+gpio-keys-polled compatible device nodes found in lpc4357-ea4357-devkit and
+lpc4350-hitex-eval board DTS files.
 
-On i.MX31 AVIC interrupt controller base address is at 0x68000000.
-
-The problem was shadowed by the AVIC driver, which takes the correct
-base address from a SoC specific header file.
-
-Fixes: d2a37b3d91f4 ("ARM i.MX31: Add devicetree support")
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm/boot/dts/imx31.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc4350-hitex-eval.dts    | 2 --
+ arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
-index c534c1f..179335b 100644
---- a/arch/arm/boot/dts/imx31.dtsi
-+++ b/arch/arm/boot/dts/imx31.dtsi
-@@ -31,11 +31,11 @@
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
+index 874c75d..7649285 100644
+--- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
++++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
+@@ -40,8 +40,6 @@
  
--	avic: avic-interrupt-controller@60000000 {
-+	avic: interrupt-controller@68000000 {
- 		compatible = "fsl,imx31-avic", "fsl,avic";
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
--		reg = <0x60000000 0x100000>;
-+		reg = <0x68000000 0x100000>;
- 	};
+ 	pca_buttons {
+ 		compatible = "gpio-keys-polled";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <100>;
+ 		autorepeat;
  
- 	soc {
+diff --git a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+index 9b5fad6..50ee2d5 100644
+--- a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
++++ b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+@@ -57,8 +57,6 @@
+ 		compatible = "gpio-keys-polled";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&gpio_joystick_pins>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <100>;
+ 		autorepeat;
+ 
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
