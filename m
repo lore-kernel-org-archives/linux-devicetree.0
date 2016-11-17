@@ -1,297 +1,131 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] drm: sunxi: Add a basic DRM driver
- for Allwinner DE2
-Date: Thu, 17 Nov 2016 15:57:07 +0100
-Message-ID: <20161117155707.cd8881bc7893b131d8507b92@free.fr>
-References: <cover.1477142934.git.moinejf@free.fr>
-	<8afc5e020c5767face34fe3a9ab300ce9e67ba00.1477142934.git.moinejf@free.fr>
-	<20161024140419.ah6hywf3b24pj3fv@lukather>
-	<20161025161441.6b248efe9229bd80e3f7a33c@free.fr>
-	<20161027220316.y7u3h4qsfftryrmp@lukather>
-	<20161028193420.0f7dc67ea1042ff72b09b701@free.fr>
-	<20161107223741.gjxj4tqwuxud2iqc@lukather>
-	<20161108153752.a17440e784f2e3993c79ee69@free.fr>
-	<20161116213306.s5o5zi7pgppwuq7t@lukather>
-Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
+ soc
+Date: Thu, 17 Nov 2016 07:10:22 -0800
+Message-ID: <20161117151019.GA3115@localhost.localdomain>
+References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
+ <1478081906-12009-3-git-send-email-kernel@martin.sperl.org>
+ <20161117021107.GA2647@localhost.localdomain>
+ <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBR4KW7AQKGQEDQQOCKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161116213306.s5o5zi7pgppwuq7t@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Sperl <kernel@martin.sperl.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Nov 2016 22:33:06 +0100
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hello Martin,
 
-> > > > The Device Engine just handles the planes of the LCDs, but, indeed,
-> > > > the LCDs must know about the DE and the DE must know about the LCDs=
-.
-> > > > There are 2 ways to realize this knowledge in the DT:
-> > > > 1) either the DE has one or two phandle's to the LCDs,
-> > > > 2) or the LCDs have a phandle to the DE.
-> > > >=20
-> > > > I chose the 1st way, the DE ports pointing to the endpoint of the L=
-CDs
-> > > > which is part of the video link (OF-graph LCD <-> connector).
-> > > > It would be possible to have phandles to the LCDs themselves, but t=
-his
-> > > > asks for more code.
-> > > >=20
-> > > > The second way is also possible, but it also complexifies a bit the
-> > > > exchanges DE <-> LCD.
-> > >=20
-> > > I'm still not sure how it would complexify anything, and why you can'=
-t
-> > > use the display graph to model the relation between the display engin=
-e
-> > > and the TCON (and why you want to use a generic property that refers
-> > > to the of-graph while it really isn't).
-> >=20
-> > Complexification:
-> > 1- my solution:
-> >   At startup time, the DE device is the DRM device.
->=20
-> How do you deal with SoCs with multiple display engines then?
+On Thu, Nov 17, 2016 at 10:51:33AM +0100, Martin Sperl wrote:
+> 
+> 
+> On 17.11.2016 03:11, Eduardo Valentin wrote:
+> >Hey Martin,
+> >
+> >Very sorry for the late feedback. Not so sure if this one got queued
+> >already or not. Anyways, just minor questions as follows:
+> >
+> >On Wed, Nov 02, 2016 at 10:18:22AM +0000, kernel@martin.sperl.org wrote:
+> >>From: Martin Sperl <kernel@martin.sperl.org>
+> >>
+> >>Add basic thermal driver for bcm2835 SOC.
+> >>
+> >>This driver currently relies on the firmware setting up the
+> >>tsense HW block and does not set it up itself.
+> >>
+> >>Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> >>Acked-by: Eric Anholt <eric@anholt.net>
+> >>Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+> >>
+> ...
+> >>+static int bcm2835_thermal_adc2temp(
+> >>+	const struct bcm2835_thermal_info *info, u32 adc)
+> >>+{
+> >>+	return info->offset + (adc * info->slope);
+> >
+> >Any specific reason we cannot use thermal_zone_params->slope and
+> >thermal_zone_params->offset?
+> 
+> You could - the patch was just rebased to 4.9 and those slope and
+> offset just got merged during this cycle.
+> 
+> Do we really need to modify it - the patch has been around since 4.6.
+> 
+> >>+
+> >>+static int bcm2835_thermal_get_trip_temp(
+> >>+	struct thermal_zone_device *tz, int trip, int *temp)
+> >>+{
+> >>+	struct bcm2835_thermal_data *data = tz->devdata;
+> >>+	u32 val = readl(data->regs + BCM2835_TS_TSENSCTL);
+> >>+
+> >>+	/* get the THOLD bits */
+> >>+	val &= BCM2835_TS_TSENSCTL_THOLD_MASK;
+> >>+	val >>= BCM2835_TS_TSENSCTL_THOLD_SHIFT;
+> >>+
+> >>+	/* if it is zero then use the info value */
+> >>+	if (val)
+> >
+> >Is this a read only register or is this driver supposed to program it?
+> >In which scenario it would be 0? Can this be added as comments?
+> 
+> It is RW, but the Firmware typically sets up the thermal device with the
+> correct values already - this is just a fallback.
 
-In the H3, A83T and A64, there is only one DE.
-If many DEs in a SoC, there may be either one DRM device per DE or one
-DRM device for the whole system. In this last case, the (global) DE
-would have many resources (many I/O memory maps / IRQs..) and the
-physical DE of each endpoint would be indicated by the position of its
-phandle in the 'ports' array (DT documentation).
+OK, but how do you differentiate from a buggy firmware or misconfigured
+hardware? How do you know if the firmware is supposed to be loaded and
+ready? There is no firmware loading in this driver. Also, there is no
+dependency with a driver that loads firmware, or at least, I missed it.
 
-> > It has to know the devices entering in the video chains.
-> >   The CRTCs (LCD/TCON) are found by
-> > 	ports[i] -> parent
-> >   The connectors are found by
-> > 	ports[i] -> endpoint -> remote_endpoint -> parent
-> > 2- with ports pointing to the LCDs:
-> >   The CRTCs (LCD/TCON) are simply
-> > 	ports[i]
-> >   The connectors are found by
-> > 	loop on all ports of ports[i]
-> > 		ports[i][j] -> endpoint -> remote_endpoint -> parent
-> > 3- with a phandle to the DE in the LCDs:
->=20
-> What do you mean with LCD? Panels? Why would panels have a phandle to
-> the display engine?
+> 
+> >>+static int bcm2835_thermal_get_temp(struct thermal_zone_device *tz,
+> >>+				    int *temp)
+> >>+{
+> >>+	struct bcm2835_thermal_data *data = tz->devdata;
+> >>+	u32 val = readl(data->regs + BCM2835_TS_TSENSSTAT);
+> >>+
+> >>+	if (!(val & BCM2835_TS_TSENSSTAT_VALID))
+> >
+> >What cases you would get the valid bit not set? Do you need to wait for
+> >the conversion to finish?
+> 
+> I guess: if you have just enabled the HW-block (which the FW does much
+> in advance) and start to read the value immediately (before the first sample
+> period has finished), then this will not be valid.
+> 
 
-LCD is the same as CRTC. I don't think people will connect old CRT's to
-their new ARM boards. LCD's may be panels, modern TV sets, or any
-digital display. The word LCD seems clearer to me in this context, even
-if there may a DAC as an ancoder.
+Then again, how does this driver make sure the initialization procedure
+is correct, and that by the time it is using the hardware, the hardware
+is in a sane state?
 
-> >   The DE cannot be the DRM device because there is no information about
-> >   the video devices in the DT. Then, the DRM devices are the LCDs.
-> >   These LCDs must give their indices to the DE. So, the DE must impleme=
-nt
-> >   some callback function to accept a LCD definition, and there must be
-> >   a list of DEs in the driver to make the association DE <-> LCD[i]
-> >   Some more problem may be raised if a user wants to have the same fram=
-e
-> >   buffer on the 2 LCDs of a DE.
->=20
-> I have no idea what you're talking about, sorry.
+Back to the original question, does it mean the hardware is in
+some sort of continuous ADC conversion mode or reading the temperature
+requires specific steps to get the conversion done, and therefore you
+are checking the valid bit here?
 
-Here is the DT (I am using back 'CRTC'):
 
-	de: display-controller@xxx {
-		...
-	};
-	crtc0: crt-controller@xxx{
-		...
-		display-controller =3D <&de>;
-		ports {
-			...		/* to the crtc0 connectors */
-		}
-	};
-	crtc1: crt-controller@xxx{
-		...
-		display-controller =3D <&de>;
-		ports {
-			...		/* to the crtc1 connectors */
-		};
-	};
 
-There are 2 DRM devices: one on crtc0, the other one on crtc1.
-The DE device is isolated. But, to treat the planes, it must receive
-information about the CRTCs. How?
+> So do you need another version of the patchset that uses that new API?
 
-> > Anyway, my solution is already used in the IMX Soc.
-> > See 'display-subsystem' in arch/arm/boot/dts/imx6q.dtsi for an example.
->=20
-> Pointing out random example in the tree doesn't make a compelling
-> argument.
+I think the API usage is change that can be done together with
+clarification for the above questions too: on hardware state,
+firmware loading, maybe a master driver dependency, and the ADC
+conversion sequence, which are not well clear to me on this driver. As long as
+this is clarified and documented in the code (can be simple comments so
+it is clear to whoever reads in the future), then I would be OK with
+this driver. 
 
-This is not a random example. There was a thread about the 'ports'
-phandle in the DT definition of the IMX video subsystem, and what kind
-of OF function should be used (see one of my previous mails). In the DRI
-list, nobody objected about the phandle by itself.
-
-> > > > > > > Panel functions? In the CRTC driver?
-> > > > > >=20
-> > > > > > Yes, dumb panel.
-> > > > >=20
-> > > > > What do you mean by that? Using a Parallel/RGB interface?
-> > > >=20
-> > > > Sorry, I though this was a well-known name. The 'dump panel' was us=
-ed
-> > > > in the documentation of my previous ARM machine as the video frame =
-sent
-> > > > to the HDMI controller. 'video_frame' is OK for you?
-> > >=20
-> > > If it's the frame sent to the encoder, then it would be the CRTC by
-> > > DRM's nomenclature.
-> >=20
-> > The CRTC is a software entity. The frame buffer is a hardware entity.
->=20
-> Why are you about framebuffer now, this is nowhere in that
-> discussion. Any way, the framebuffer is also what is put in a plane,
-> so there's a name collision here, and you'll probably want to change
-> it.
->=20
-> Judging by the previous discussion, this should really be called
-> encoder if it encodes the frames on a bus format, or CRTC if it
-> composes the planes.
-
-I think that we will end in agreeing on the words. We just need some
-time!
-Here is how I understand the Allwinner's DE2:
-
-- the TCON is the piece of hardware which gets some memory area and
-  sends it to a bus according to some configuation (screen resolution,
-  timings...). The bus data are encoded and transmitted to the connector.
-  At the end, the display device receives frames. So, going back to the
-  TCON, the memory are is the frame buffer.
-
-- this frame buffer is virtual, empty, 'dumb', it is a dumb panel!
-  It is filled by planes. This job is done by a specific image
-  processor, the one contained in the DE2.
-
-- the DE2 processor gets the plane source images from the SoC memory.
-  It adjusts the images according to many configuration parameters and
-  includes the result into the frame buffer.
-
-So:
-	LCD =3D CRTC =3D frame buffer =3D dumb panel =3D TCON
-
-- LCD =3D hardware piece of a display device (terminal side) which renders
-  the colored pixels in a digital way. By extension, the hardware part
-  (computer side) of a display engine which handles the definitions of
-  a digital or analog physical display device. By extension also,
-  the software structure (driver side) which defines a physical screen.
-
-- CRTC =3D DRM software entity which handles the definitions of a screen,
-  but not just a CRT.
-
-- frame buffer =3D piece of memory which contains the images which are
-  sent to a screen.
-
-- dumb panel =3D abstract entity which defines the characteristics of a
-  physical screen.
-
-You may note that, in the DE2 scheme, the TCON and LCD are not in the
-same (software) device while they are part of the same DRM software
-entity, the CTRC.
-
-> > > > > If it is similar, I think hardcoding the pipe number is pretty ba=
-d,
-> > > > > because that would restrict the combination of planes and formats=
-,
-> > > > > while some other might have worked.
-> > > >=20
-> > > > From what I understood about the DE2, the pipes just define the pri=
-ority
-> > > > of the overlay channels (one pipe for one channel).
-> > > > With the cursor constraint, there must be at least 2 channels in
-> > > > order (primary, cursor). Then, with these 2 channels/pipes, there c=
-an be
-> > > > 6 so-called overlay planes (3 RGB/YUV and 3 RGB only).
-> > > > Enabling the pipes 2 and 3 (LCD 0 only) would offer 8 more planes, =
-but
-> > > > RGB only. Then, it might be useful to have dynamic pipes.
-> > >=20
-> > > That's very valuable (and definitely should go into a comment),
-> > > thanks!
-> > >=20
-> > > I still believe that's it should be into a (simple at first)
-> > > atomic_check. That would be easier to extend and quite easy to
-> > > document and get simply by looking at the code.
-> >=20
-> > Sorry for I don't understand what you mean.
->=20
-> You can check all the constraints you exposed above in atomic_check
-> instead of hardcoding it.
-
-Sorry, but I don't like to run useless code for pure static definition.
-
-> > The DE and the LCDs are different devices on different drivers.
-> > A DE must be only one device because it has to handle concurent
-> > accesses from its 2 LCDs. Then 2 drivers.
->=20
-> If it's different drivers, why are they in the same module?
->=20
-> > But only one module. Why? Because there cannot be double direction
-> > calls from one module to an other one, and, in our case, for example,
-> > - the DRM (DE) device must call vblank functions which are handled in
-> >   the CRTC (TCON) device, and
-> > - the CRTC device must call DE initialization functions at startup time=
-.
->=20
-> I'm sorry, but that doesn't make any sense. The crtc device should
-> take care of the CRTC functions. Your DRM CRTC and encoders can
-> definitely be shared across different devices, you can have a look at
-> how we're doing it for sun4i.
->=20
-> We basically have 3 drivers to create most of the display pipeline:
->   - One for the DRM device
->   - One for the display engine
->   - One for the TCON
-
-Your DRM device is useless. It is simpler to have the DRM device as the
-display engine.
-Also, maybe, you have not the constraint the DE being shared between
-2 CRTCs.
-
-> Once they have all loaded and registered in the component framework,
-> their bind callback is called, and it's when the DRM entities are
-> created using exported functions to manipulate what needs to be setup.
->=20
-> It's definitely doable, it just takes some effort.
-
-It seems you did not look at what I have coded...
-
-> > On the other side, removing the cursor would just let one more plane.
-> > Do we really need this one? In other words, I'd be pleased to know how
-> > you run 7 applications doing video overlay.
->=20
-> You can use those planes to do composition too, with each application
-> having one or more plane. Android uses that.
->=20
-> There's no argument to have a cursor plane, really. Even regular
-> graphic stack like X can use a regular overlay to have its cursor on
-> it. It doesn't *remove* anything, it just allows to use the plane for
-> what it was supposed to be used for.
-
-I'd be glad to know how you can have a hardware cursor without defining
-it in drm_crtc_init_with_planes().
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> Thanks,
+> 	Martin
