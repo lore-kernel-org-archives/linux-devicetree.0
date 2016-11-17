@@ -1,57 +1,391 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH -next] ARM: dts: omap5: replace gpio-key,wakeup with
- wakeup-source property
-Date: Thu, 17 Nov 2016 07:47:01 -0800
-Message-ID: <20161117154700.GT4082@atomide.com>
-References: <1479138250-17780-1-git-send-email-sudeep.holla@arm.com>
- <20161117152717.GS4082@atomide.com>
- <8d06724a-98af-05ab-f5a8-07c552722fca@arm.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
+Date: Thu, 17 Nov 2016 08:56:49 -0800
+Message-ID: <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <8d06724a-98af-05ab-f5a8-07c552722fca@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479384616-12479-3-git-send-email-tom.levens-vJEk5272eHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+Cc: jdelvare-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xsYUBhcm0uY29tPiBbMTYxMTE3IDA3OjMyXToKPiAK
-PiAKPiBPbiAxNy8xMS8xNiAxNToyNywgVG9ueSBMaW5kZ3JlbiB3cm90ZToKPiA+ICogU3VkZWVw
-IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4gWzE2MTExNCAwNzo0NF06Cj4gPiA+IFRob3Vn
-aCB0aGUga2V5Ym9hcmQgZHJpdmVyIGZvciBHUElPIGJ1dHRvbnMoZ3Bpby1rZXlzKSB3aWxsIGNv
-bnRpbnVlIHRvCj4gPiA+IGNoZWNrIGZvci9zdXBwb3J0IHRoZSBsZWdhY3kgImdwaW8ta2V5LHdh
-a2V1cCIgYm9vbGVhbiBwcm9wZXJ0eSB0bwo+ID4gPiBlbmFibGUgZ3BpbyBidXR0b25zIGFzIHdh
-a2V1cCBzb3VyY2UsICJ3YWtldXAtc291cmNlIiBpcyB0aGUgbmV3Cj4gPiA+IHN0YW5kYXJkIGJp
-bmRpbmcuCj4gPiA+IAo+ID4gPiBUaGlzIHBhdGNoIHJlcGxhY2VzIHRoZSBsZWdhY3kgImdwaW8t
-a2V5LHdha2V1cCIgd2l0aCB0aGUgdW5pZmllZAo+ID4gPiAid2FrZXVwLXNvdXJjZSIgcHJvcGVy
-dHkgaW4gb3JkZXIgdG8gYXZvaWQgYW55IGZ1cnRoZXIgY29weS1wYXN0ZQo+ID4gPiBkdXBsaWNh
-dGlvbi4KPiA+ID4gCj4gPiA+IENjOiAiQmVub8OudCBDb3Vzc29uIiA8YmNvdXNzb25AYmF5bGli
-cmUuY29tPgo+ID4gPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPiA+ID4g
-U2lnbmVkLW9mZi1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4KPiA+ID4g
-LS0tCj4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwNS11ZXZtLmR0cyB8IDIgKy0KPiA+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gPiAKPiA+
-ID4gSGksCj4gPiA+IAo+ID4gPiBJbnNwaXRlIG9mIGdldHRpbmcgcmlkIG9mIG1vc3Qgb2YgdGhl
-IGxlZ2FjeSBwcm9wZXJ0eSBhbG1vc3QgYSB5ZWFyIGFnbywKPiA+ID4gYWRkaXRpb24gb2YgbmV3
-IHBsYXRmb3JtcyBoYXZlIGJyb3VnaHQgdGhpcyBiYWNrIGFuZCBvdmVyIHRpbWUgaXQncwo+ID4g
-PiBub3cgZm91bmQgYWdhaW4gaW4gZmV3IHBsYWNlcy4gSnVzdCBnZXQgcmlkIG9mIHRoZW0gKmFn
-YWluKgo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBhbm51YWwgY2hlY2sgdXAgOikKPiA+IAo+ID4g
-QWNrZWQtYnk6IFRvbnkgTGluZGdyZW4gPHRvbnlAYXRvbWlkZS5jb20+Cj4gPiAKPiA+IFBsZWFz
-ZSBsZXQgbWUga25vdyBpZiB5b3Ugd2FudCBtZSB0byBwaWNrIHRoaXMgdXAgaW5zdGVhZC4KPiAK
-PiBZZXMgdGhhdCB3b3VsZCBiZSBiZXR0ZXIuIEFsc28gaXQncyBwcmVzZW50IG9ubHkgaW4geW91
-ciAtbmV4dCwKPiBsb29rcyBsaWtlIHNvbWV0aGluZyBuZXdseSBhZGRlZCB2aWEgY29tbWl0IDJk
-NDZjMGM2MDcyNSAoIkFSTToKPiBkdHM6IG9tYXA1IHVldm06IGFkZCBVU1IxIGJ1dHRvbiIpCgpP
-SyBhcHBsaWVkIGludG8gb21hcC1mb3ItdjQuMTAvZHQ6b21hcC1mb3ItdjQuMTAvZHQgdGhhbmtz
-LgoKVG9ueQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On 11/17/2016 04:10 AM, Tom Levens wrote:
+> Updated version of the ltc2990 driver which supports all measurement
+> modes available in the chip. The mode can be set through a devicetree
+> attribute.
+
+property
+
+>
+> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+> ---
+>
+> Changes since v1:
+>   * Refactored value conversion (patch 1/3)
+>   * Split the devicetree binding into separate patch (patch 2/3)
+>   * Specifying an invalid mode now returns -EINVAL, previously this
+>     only issued a warning and used the default value
+>   * Removed the "mode" sysfs attribute, as the mode of the chip is
+>     hardware specific and should not be user configurable. This allows much
+>     simpler code as a result.
+>
+>  Documentation/hwmon/ltc2990 |   24 ++++---
+>  drivers/hwmon/Kconfig       |    7 +--
+>  drivers/hwmon/ltc2990.c     |  167 ++++++++++++++++++++++++++++++++++++-------
+>  3 files changed, 159 insertions(+), 39 deletions(-)
+>
+> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
+> index c25211e..3ed68f6 100644
+> --- a/Documentation/hwmon/ltc2990
+> +++ b/Documentation/hwmon/ltc2990
+> @@ -8,6 +8,7 @@ Supported chips:
+>      Datasheet: http://www.linear.com/product/ltc2990
+>
+>  Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+> +        Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>
+>
+>  Description
+> @@ -16,10 +17,8 @@ Description
+>  LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
+>  The chip's inputs can measure 4 voltages, or two inputs together (1+2 and 3+4)
+>  can be combined to measure a differential voltage, which is typically used to
+> -measure current through a series resistor, or a temperature.
+> -
+> -This driver currently uses the 2x differential mode only. In order to support
+> -other modes, the driver will need to be expanded.
+> +measure current through a series resistor, or a temperature with an external
+> +diode.
+>
+>
+>  Usage Notes
+> @@ -32,12 +31,19 @@ devices explicitly.
+>  Sysfs attributes
+>  ----------------
+>
+> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+> +temp1_input   Internal chip temperature in millidegrees Celcius
+> +
+> +A subset of the following attributes are visible, depending on the measurement
+> +mode of the chip.
+> +
+> +in[1-4]_input Voltage at V[1-4] pin in millivolt
+> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
+> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
+> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
+> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
+> +
+>  The "curr*_input" measurements actually report the voltage drop across the
+>  input pins in microvolts. This is equivalent to the current through a 1mOhm
+>  sense resistor. Divide the reported value by the actual sense resistor value
+>  in mOhm to get the actual value.
+> -
+> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+> -temp1_input   Internal chip temperature in millidegrees Celcius
+> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense resistor.
+> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense resistor.
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 45cef3d..f7096ca 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -699,15 +699,12 @@ config SENSORS_LTC2945
+>  	  be called ltc2945.
+>
+>  config SENSORS_LTC2990
+> -	tristate "Linear Technology LTC2990 (current monitoring mode only)"
+> +	tristate "Linear Technology LTC2990"
+>  	depends on I2C
+>  	help
+>  	  If you say yes here you get support for Linear Technology LTC2990
+>  	  I2C System Monitor. The LTC2990 supports a combination of voltage,
+> -	  current and temperature monitoring, but in addition to the Vcc supply
+> -	  voltage and chip temperature, this driver currently only supports
+> -	  reading two currents by measuring two differential voltages across
+> -	  series resistors.
+> +	  current and temperature monitoring.
+>
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called ltc2990.
+> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+> index 0ec4102..e8d36f5 100644
+> --- a/drivers/hwmon/ltc2990.c
+> +++ b/drivers/hwmon/ltc2990.c
+> @@ -6,11 +6,7 @@
+>   *
+>   * License: GPLv2
+>   *
+> - * This driver assumes the chip is wired as a dual current monitor, and
+> - * reports the voltage drop across two series resistors. It also reports
+> - * the chip's internal temperature and Vcc power supply voltage.
+> - *
+> - * Value conversion refactored
+> + * Value conversion refactored and support for all measurement modes added
+>   * by Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>   */
+>
+> @@ -21,6 +17,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>
+>  #define LTC2990_STATUS	0x00
+>  #define LTC2990_CONTROL	0x01
+> @@ -35,32 +32,96 @@
+>  #define LTC2990_CONTROL_KELVIN		BIT(7)
+>  #define LTC2990_CONTROL_SINGLE		BIT(6)
+>  #define LTC2990_CONTROL_MEASURE_ALL	(0x3 << 3)
+> -#define LTC2990_CONTROL_MODE_CURRENT	0x06
+> -#define LTC2990_CONTROL_MODE_VOLTAGE	0x07
+> +#define LTC2990_CONTROL_MODE_DEFAULT	0x06
+
+I think LTC2990_CONTROL_MODE_CURRENT was better - it describes the actual mode.
+Changing the define to _DEFAULT does not really improve code readability.
+
+> +#define LTC2990_CONTROL_MODE_MAX	0x07
+> +
+> +#define LTC2990_IN0	BIT(0)
+> +#define LTC2990_IN1	BIT(1)
+> +#define LTC2990_IN2	BIT(2)
+> +#define LTC2990_IN3	BIT(3)
+> +#define LTC2990_IN4	BIT(4)
+> +#define LTC2990_CURR1	BIT(5)
+> +#define LTC2990_CURR2	BIT(6)
+> +#define LTC2990_TEMP1	BIT(7)
+> +#define LTC2990_TEMP2	BIT(8)
+> +#define LTC2990_TEMP3	BIT(9)
+> +
+> +static const int ltc2990_attrs_ena[] = {
+> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
+> +	LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
+> +	LTC2990_TEMP2 | LTC2990_CURR2,
+> +	LTC2990_TEMP2 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_CURR2,
+> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
+> +};
+> +
+> +struct ltc2990_data {
+> +	struct i2c_client *i2c;
+> +	u32 mode;
+> +};
+>
+>  /* Return the converted value from the given register in uV or mC */
+> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 *result)
+> +static int ltc2990_get_value(struct i2c_client *i2c, int index, s32 *result)
+>  {
+>  	s32 val;
+> +	u8 reg;
+> +
+> +	switch (index) {
+> +	case LTC2990_IN0:
+> +		reg = LTC2990_VCC_MSB;
+> +		break;
+> +	case LTC2990_IN1:
+> +	case LTC2990_CURR1:
+> +	case LTC2990_TEMP2:
+> +		reg = LTC2990_V1_MSB;
+> +		break;
+> +	case LTC2990_IN2:
+> +		reg = LTC2990_V2_MSB;
+> +		break;
+> +	case LTC2990_IN3:
+> +	case LTC2990_CURR2:
+> +	case LTC2990_TEMP3:
+> +		reg = LTC2990_V3_MSB;
+> +		break;
+> +	case LTC2990_IN4:
+> +		reg = LTC2990_V4_MSB;
+> +		break;
+> +	case LTC2990_TEMP1:
+> +		reg = LTC2990_TINT_MSB;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>
+>  	val = i2c_smbus_read_word_swapped(i2c, reg);
+>  	if (unlikely(val < 0))
+>  		return val;
+>
+> -	switch (reg) {
+> -	case LTC2990_TINT_MSB:
+> -		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
+> +	switch (index) {
+> +	case LTC2990_TEMP1:
+> +	case LTC2990_TEMP2:
+> +	case LTC2990_TEMP3:
+> +		/* temp, 0.0625 degrees/LSB, 13-bit  */
+>  		*result = sign_extend32(val, 12) * 1000 / 16;
+>  		break;
+> -	case LTC2990_V1_MSB:
+> -	case LTC2990_V3_MSB:
+> -		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+> +	case LTC2990_CURR1:
+> +	case LTC2990_CURR2:
+> +		 /* Vx-Vy, 19.42uV/LSB */
+>  		*result = sign_extend32(val, 14) * 1942 / 100;
+>  		break;
+> -	case LTC2990_VCC_MSB:
+> -		/* Vcc, 305.18μV/LSB, 2.5V offset */
+> +	case LTC2990_IN0:
+> +		/* Vcc, 305.18uV/LSB, 2.5V offset */
+>  		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+>  		break;
+> +	case LTC2990_IN1:
+> +	case LTC2990_IN2:
+> +	case LTC2990_IN3:
+> +	case LTC2990_IN4:
+> +		/* Vx: 305.18uV/LSB */
+> +		*result = sign_extend32(val, 14) * 30518 / (100 * 1000);
+> +		break;
+>  	default:
+>  		return -EINVAL; /* won't happen, keep compiler happy */
+>  	}
+> @@ -72,48 +133,104 @@ static ssize_t ltc2990_show_value(struct device *dev,
+>  				  struct device_attribute *da, char *buf)
+>  {
+>  	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+> +	struct ltc2990_data *data = dev_get_drvdata(dev);
+>  	s32 value;
+>  	int ret;
+>
+> -	ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
+> +	ret = ltc2990_get_value(data->i2c, attr->index, &value);
+>  	if (unlikely(ret < 0))
+>  		return ret;
+>
+>  	return snprintf(buf, PAGE_SIZE, "%d\n", value);
+>  }
+>
+> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
+> +				     struct attribute *a, int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct ltc2990_data *data = dev_get_drvdata(dev);
+> +	struct device_attribute *da =
+> +			container_of(a, struct device_attribute, attr);
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+> +
+> +	if (attr->index == LTC2990_TEMP1 ||
+> +	    attr->index == LTC2990_IN0 ||
+> +	    attr->index & ltc2990_attrs_ena[data->mode])
+> +		return a->mode;
+> +	else
+
+Unnecessary else
+
+> +		return 0;
+> +}
+> +
+>  static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_TINT_MSB);
+> +			  LTC2990_TEMP1);
+> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_TEMP2);
+> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_TEMP3);
+>  static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_V1_MSB);
+> +			  LTC2990_CURR1);
+>  static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_V3_MSB);
+> +			  LTC2990_CURR2);
+>  static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_VCC_MSB);
+> +			  LTC2990_IN0);
+> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN1);
+> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN2);
+> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN3);
+> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN4);
+>
+>  static struct attribute *ltc2990_attrs[] = {
+>  	&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp2_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp3_input.dev_attr.attr,
+>  	&sensor_dev_attr_curr1_input.dev_attr.attr,
+>  	&sensor_dev_attr_curr2_input.dev_attr.attr,
+>  	&sensor_dev_attr_in0_input.dev_attr.attr,
+> +	&sensor_dev_attr_in1_input.dev_attr.attr,
+> +	&sensor_dev_attr_in2_input.dev_attr.attr,
+> +	&sensor_dev_attr_in3_input.dev_attr.attr,
+> +	&sensor_dev_attr_in4_input.dev_attr.attr,
+>  	NULL,
+>  };
+> -ATTRIBUTE_GROUPS(ltc2990);
+> +
+> +static const struct attribute_group ltc2990_group = {
+> +	.attrs = ltc2990_attrs,
+> +	.is_visible = ltc2990_attrs_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(ltc2990);
+>
+>  static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>  			     const struct i2c_device_id *id)
+>  {
+>  	int ret;
+>  	struct device *hwmon_dev;
+> +	struct ltc2990_data *data;
+> +	struct device_node *of_node = i2c->dev.of_node;
+>
+>  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+>  				     I2C_FUNC_SMBUS_WORD_DATA))
+>  		return -ENODEV;
+>
+> -	/* Setup continuous mode, current monitor */
+> +	data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data), GFP_KERNEL);
+> +	if (unlikely(!data))
+> +		return -ENOMEM;
+> +	data->i2c = i2c;
+> +
+> +	if (!of_node || of_property_read_u32(of_node, "lltc,mode", &data->mode))
+> +		data->mode = LTC2990_CONTROL_MODE_DEFAULT;
+
+Iam arguing with myself if we should still do this or if we should read the mode
+from the chip instead if it isn't provided (after all, it may have been initialized
+by the BIOS/ROMMON).
+
+Mike, would that break your application, or can you specify the mode in devicetree ?
+
+Thanks,
+Guenter
+
+> +
+> +	if (data->mode > LTC2990_CONTROL_MODE_MAX) {
+> +		dev_err(&i2c->dev, "Error: Invalid mode %d.\n", data->mode);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Setup continuous mode */
+>  	ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
+>  					LTC2990_CONTROL_MEASURE_ALL |
+> -					LTC2990_CONTROL_MODE_CURRENT);
+> +					data->mode);
+>  	if (ret < 0) {
+>  		dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
+>  		return ret;
+> @@ -127,7 +244,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>
+>  	hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
+>  							   i2c->name,
+> -							   i2c,
+> +							   data,
+>  							   ltc2990_groups);
+>
+>  	return PTR_ERR_OR_ZERO(hwmon_dev);
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
