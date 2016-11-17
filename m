@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 11/19] ARM: dts: armada-370: Fixup pcie DT warnings
-Date: Fri, 18 Nov 2016 00:05:00 +0100
-Message-ID: <20161117230508.28539-12-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 12/19] ARM: dts: armada-370-xp: Remove skeleton.dtsi
+Date: Fri, 18 Nov 2016 00:05:01 +0100
+Message-ID: <20161117230508.28539-13-gregory.clement@free-electrons.com>
 References: <20161117230508.28539-1-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161117230508.28539-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,442 +10,65 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PCIe has a ranges property, so the unit name should contain an address.
-Take the opportunity to use the node label instead of the full name.
+The skeleton.dtsi file was removed in ARM64 for different reasons as
+explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
+
+These also applies to ARM and it will also allow to get rid of the
+following DTC warnings in the future:
+
+"Node /memory has a reg or ranges property, but no unit name"
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-db.dts                | 37 +++++++++++-----------
- arch/arm/boot/dts/armada-370-dlink-dns327l.dts     | 28 ++++++++--------
- arch/arm/boot/dts/armada-370-mirabox.dts           | 32 +++++++++----------
- arch/arm/boot/dts/armada-370-netgear-rn102.dts     | 32 +++++++++----------
- arch/arm/boot/dts/armada-370-netgear-rn104.dts     | 32 +++++++++----------
- arch/arm/boot/dts/armada-370-rd.dts                | 32 +++++++++----------
- arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts  | 14 ++++----
- arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi | 19 +++++------
- .../dts/armada-370-seagate-personal-cloud.dtsi     | 18 +++++------
- arch/arm/boot/dts/armada-370.dtsi                  |  2 +-
- 10 files changed, 124 insertions(+), 122 deletions(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi | 2 --
+ arch/arm/boot/dts/armada-370.dtsi    | 4 +++-
+ arch/arm/boot/dts/armada-xp.dtsi     | 3 +++
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index d26115085ea1..f3adc187c6a5 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -170,24 +170,6 @@
- 				};
- 			};
- 		};
--
--		pcie-controller {
--			status = "okay";
--			/*
--			 * The two PCIe units are accessible through
--			 * both standard PCIe slots and mini-PCIe
--			 * slots on the board.
--			 */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
- 	};
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index d273142eafe3..266d9c5853b5 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -50,8 +50,6 @@
+  * 370 and Armada XP SoC.
+  */
  
- 	sound {
-@@ -248,6 +230,25 @@
- 		compatible = "linux,spdif-dir";
- 	};
- };
-+
-+&pciec {
-+	status = "okay";
-+	/*
-+	 * The two PCIe units are accessible through
-+	 * both standard PCIe slots and mini-PCIe
-+	 * slots on the board.
-+	 */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-index e2a363b1dd8a..9e499eeede4b 100644
---- a/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-+++ b/arch/arm/boot/dts/armada-370-dlink-dns327l.dts
-@@ -72,20 +72,6 @@
- 			MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000
- 			MBUS_ID(0x09, 0x01) 0 0xf1100000 0x10000>;
+-/include/ "skeleton64.dtsi"
+-
+ #define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
  
--		pcie-controller {
--			status = "okay";
--
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			sata@a0000 {
- 				nr-ports = <2>;
-@@ -262,6 +248,20 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &pinctrl {
- 	sata_l_white_pin: sata-l-white-pin {
- 		marvell,pins = "mpp57";
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index 3e1ef56b6319..c4dded0cd0c1 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -64,22 +64,6 @@
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x01) 0 0xf1100000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Internal mini-PCIe connector */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Connected on the PCB to a USB 3.0 XHCI controller */
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -186,6 +170,22 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* Internal mini-PCIe connector */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Connected on the PCB to a USB 3.0 XHCI controller */
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index a6409853db6d..99b9d73ebbaf 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -66,22 +66,6 @@
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x01) 0 0xf1100000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Connected to Marvell 88SE9170 SATA controller */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Connected to FL1009 USB 3.0 controller */
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 
- 			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-@@ -252,6 +236,22 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* Connected to Marvell 88SE9170 SATA controller */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Connected to FL1009 USB 3.0 controller */
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index fd5f1d9a434a..b5dd30178725 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -66,22 +66,6 @@
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x01) 0 0xf1100000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Connected to FL1009 USB 3.0 controller */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Connected to Marvell 88SE9215 SATA controller */
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 
- 			/* RTC is provided by Intersil ISL12057 I2C RTC chip */
-@@ -270,6 +254,22 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* Connected to FL1009 USB 3.0 controller */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Connected to Marvell 88SE9215 SATA controller */
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index 621add7e12d5..29722b9f288e 100644
---- a/arch/arm/boot/dts/armada-370-rd.dts
-+++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -77,22 +77,6 @@
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x01) 0 0xf1100000 0x10000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* Internal mini-PCIe connector */
--			pcie@1,0 {
--				/* Port 0, Lane 0 */
--				status = "okay";
--			};
--
--			/* Internal mini-PCIe connector */
--			pcie@2,0 {
--				/* Port 1, Lane 0 */
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -229,6 +213,22 @@
- 	 };
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* Internal mini-PCIe connector */
-+	pcie@1,0 {
-+		/* Port 0, Lane 0 */
-+		status = "okay";
-+	};
-+
-+	/* Internal mini-PCIe connector */
-+	pcie@2,0 {
-+		/* Port 1, Lane 0 */
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts b/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
-index 82ce5ec6467b..eb6af53b4954 100644
---- a/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
-+++ b/arch/arm/boot/dts/armada-370-seagate-nas-4bay.dts
-@@ -28,13 +28,6 @@
- 	compatible = "seagate,dart-4", "marvell,armada370", "marvell,armada-370-xp";
- 
- 	soc {
--		pcie-controller {
--			/* SATA AHCI controller 88SE9170 */
--			pcie@1,0 {
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			ethernet@74000 {
- 				status = "okay";
-@@ -126,6 +119,13 @@
- 	};
- };
- 
-+&pciec {
-+	/* SATA AHCI controller 88SE9170 */
-+	pcie@1,0 {
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
-diff --git a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-index 724a47908e3f..9b582c47f10c 100644
---- a/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-+++ b/arch/arm/boot/dts/armada-370-seagate-nas-xbay.dtsi
-@@ -32,15 +32,6 @@
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* USB 3.0 bridge ASM1042A */
--			pcie@2,0 {
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			serial@12000 {
- 				status = "okay";
-@@ -199,6 +190,16 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* USB 3.0 bridge ASM1042A */
-+	pcie@2,0 {
-+		status = "okay";
-+	};
-+};
-+
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-index fb52a34f0a35..bb678a45ac8e 100644
---- a/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-+++ b/arch/arm/boot/dts/armada-370-seagate-personal-cloud.dtsi
-@@ -33,15 +33,6 @@
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
- 
--		pcie-controller {
--			status = "okay";
--
--			/* USB 3.0 Bridge ASM1042A */
--			pcie@1,0 {
--				status = "okay";
--			};
--		};
--
- 		internal-regs {
- 			coherency-fabric@20200 {
- 				broken-idle;
-@@ -134,6 +125,15 @@
- 	};
- };
- 
-+&pciec {
-+	status = "okay";
-+
-+	/* USB 3.0 Bridge ASM1042A */
-+	pcie@1,0 {
-+		status = "okay";
-+	};
-+};
-+
- &mdio {
- 	pinctrl-0 = <&mdio_pins>;
- 	pinctrl-names = "default";
+ / {
 diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 7ba3e609a5ae..59b9abf5b46f 100644
+index 59b9abf5b46f..40d1a73d0967 100644
 --- a/arch/arm/boot/dts/armada-370.dtsi
 +++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -74,7 +74,7 @@
- 			reg = <MBUS_ID(0x01, 0xe0) 0 0x100000>;
- 		};
+@@ -50,9 +50,11 @@
+  */
  
--		pciec: pcie-controller {
-+		pciec: pcie-controller@82000000 {
- 			compatible = "marvell,armada-370-pcie";
- 			status = "disabled";
- 			device_type = "pci";
+ #include "armada-370-xp.dtsi"
+-/include/ "skeleton.dtsi"
+ 
+ / {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
+ 	model = "Marvell Armada 370 family SoC";
+ 	compatible = "marvell,armada370", "marvell,armada-370-xp";
+ 
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 395eb9ffb53b..175253e7335e 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -53,6 +53,9 @@
+ #include "armada-370-xp.dtsi"
+ 
+ / {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
+ 	model = "Marvell Armada XP family SoC";
+ 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
+ 
 -- 
 2.10.2
 
