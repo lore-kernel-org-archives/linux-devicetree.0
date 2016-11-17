@@ -1,169 +1,163 @@
-From: Rick Chang <rick.chang@mediatek.com>
-Subject: [PATCH v6 0/3] Add Mediatek JPEG Decoder
-Date: Thu, 17 Nov 2016 11:38:32 +0800
-Message-ID: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 2/4] mailbox: Add iProc mailbox controller driver
+Date: Thu, 17 Nov 2016 09:10:25 +0530
+Message-ID: <CABb+yY3ga7CgZaRi_5Qu4UXNjGdhuLHM0gZjrwusFSLfCuc5cQ@mail.gmail.com>
+References: <1476817238-1226-1-git-send-email-jonathan.richardson@broadcom.com>
+ <1476817238-1226-3-git-send-email-jonathan.richardson@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Rick Chang <rick.chang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1476817238-1226-3-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series of patches provide a v4l2 driver to control Mediatek JPEG decoder
-for decoding JPEG image and Motion JPEG bitstream.
+Hi Jonathan,
 
-changes since v5:
-- remove redundant name from struct mtk_jpeg_fmt
-- Set state of all buffers to VB2_BUF_STATE_QUEUED if fail in start streaming
-- Remove VB2_USERPTR
-- Add check for buffer index
-
-changes since v4:
-- Change file name of binding documentation
-- Revise DT binding documentation
-- Revise compatible string
-
-changes since v3:
-- Revise DT binding documentation
-- Revise compatible string
-
-changes since v2:
-- Revise DT binding documentation 
-
-changes since v1:
-- Rebase for v4.9-rc1.
-- Update Compliance test version and result
-- Remove redundant path in Makefile
-- Fix potential build error without CONFIG_PM_RUNTIME and CONFIG_PM_SLEEP
-- Fix warnings from patch check and smatch check
-
-* Dependency
-The patch "arm: dts: mt2701: Add node for JPEG decoder" depends on: 
-  CCF "Add clock support for Mediatek MT2701"[1]
-  iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
-
-[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
-[2] https://patchwork.kernel.org/patch/9164013/
-
-* Compliance test
-v4l2-compliance SHA   : 4ad7174b908a36c4f315e3fe2efa7e2f8a6f375a
-
-Driver Info:
-        Driver name   : mtk-jpeg decode
-        Card type     : mtk-jpeg decoder
-        Bus info      : platform:15004000.jpegdec
-        Driver version: 4.9.0
-        Capabilities  : 0x84204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x04204000
-                Video Memory-to-Memory Multiplanar
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video3 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-                test VIDIOC_QUERYCTRL: OK (Not Supported)
-                test VIDIOC_G/S_CTRL: OK (Not Supported)
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 0 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK
-                test Scaling: OK
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
+On Wed, Oct 19, 2016 at 12:30 AM, Jonathan Richardson
+<jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> The Broadcom iProc mailbox controller handles all communication with a
+> Cortex-M0 MCU processor that provides support for power, clock, and
+> reset management.
+>
+> Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/mailbox/Kconfig             |  10 +
+>  drivers/mailbox/Makefile            |   2 +
+>  drivers/mailbox/bcm-iproc-mailbox.c | 422 ++++++++++++++++++++++++++++++++++++
+>  include/linux/bcm_iproc_mailbox.h   |  32 +++
+>
+This should be include/linux/mailbox/bcm_iproc_mailbox.h
 
 
-Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+> +++ b/drivers/mailbox/bcm-iproc-mailbox.c
+> @@ -0,0 +1,422 @@
+> +/*
+> + * Copyright (C) 2016 Broadcom.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/notifier.h>
+> +#include <linux/reboot.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/mailbox_client.h>
+>
+Need of mailbox_controller.h & client.h is a bad sign.
 
-Rick Chang (3):
-  dt-bindings: mediatek: Add a binding for Mediatek JPEG Decoder
-  vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-  arm: dts: mt2701: Add node for Mediatek JPEG Decoder
+> +
+> +static int iproc_mbox_send_data_m0_imp(struct iproc_mbox *mbox,
+> +       struct iproc_mbox_msg *msg, int max_retries, int poll_period_us)
+> +{
+> +       unsigned long flags;
+> +       u32 val;
+> +       int err = 0;
+> +       int retries;
+> +
+> +       spin_lock_irqsave(&mbox->lock, flags);
+> +
+> +       dev_dbg(mbox->dev, "Send msg to M0: cmd=0x%x, param=0x%x, wait_ack=%d\n",
+> +               msg->cmd, msg->param, msg->wait_ack);
+> +
+> +       writel(msg->cmd, mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
+> +       writel(msg->param, mbox->base + IPROC_CRMU_MAILBOX1_OFFSET);
+> +
+> +       if (msg->wait_ack) {
+> +               err = msg->reply_code = -ETIMEDOUT;
+> +               for (retries = 0; retries < max_retries; retries++) {
+> +                       val = readl(mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
+> +                       if (val & M0_IPC_CMD_DONE_MASK) {
+> +                               /*
+> +                                * M0 replied - save reply code and
+> +                                * clear error.
+> +                                */
+> +                               msg->reply_code = (val &
+> +                                       M0_IPC_CMD_REPLY_MASK) >>
+> +                                       M0_IPC_CMD_REPLY_SHIFT;
+> +                               err = 0;
+> +                               break;
+> +                       }
+> +                       udelay(poll_period_us);
+> +               }
+> +       }
+> +
+> +       spin_unlock_irqrestore(&mbox->lock, flags);
+> +
+> +       return err;
+> +}
+> +
+OK, so this is the real message passing voodoo.
 
- .../bindings/media/mediatek-jpeg-decoder.txt       |   37 +
- arch/arm/boot/dts/mt2701.dtsi                      |   14 +
- drivers/media/platform/Kconfig                     |   15 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/mtk-jpeg/Makefile           |    2 +
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 1303 ++++++++++++++++++++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  139 +++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c      |  417 +++++++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h      |   91 ++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c   |  160 +++
- drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h   |   25 +
- drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h     |   58 +
- 12 files changed, 2263 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
- create mode 100644 drivers/media/platform/mtk-jpeg/Makefile
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
- create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+> +static void iproc_mbox_aon_gpio_forwarding_enable(struct iproc_mbox *mbox,
+> +       bool en)
+> +{
+> +       struct iproc_mbox_msg msg;
+> +       const int max_retries = 5;
+> +       const int poll_period_us = 200;
+> +
+> +       msg.cmd = M0_IPC_M0_CMD_AON_GPIO_FORWARDING_ENABLE;
+> +       msg.param = en ? 1 : 0;
+> +       msg.wait_ack = true;
+> +
+> +       iproc_mbox_send_data_m0_imp(mbox, &msg, max_retries, poll_period_us);
+> +}
+> +
+> +static void iproc_mbox_irq_unmask(struct irq_data *d)
+> +{
+> +       struct iproc_mbox *iproc_mbox = irq_data_get_irq_chip_data(d);
+> +
+> +       iproc_mbox_aon_gpio_forwarding_enable(iproc_mbox, true);
+> +}
+> +
+> +static void iproc_mbox_irq_mask(struct irq_data *d)
+> +{
+> +       /* Do nothing - Mask callback is not required, since upon GPIO event,
+> +        * M0 disables GPIO forwarding to A9. Hence, GPIO forwarding is already
+> +        * disabled  when in mbox irq handler, and no other mbox events from M0
+> +        * to A9 are expected until GPIO forwarding is enabled following
+> +        * iproc_mbox_irq_unmask()
+> +        */
+> +}
+> +
+> +static struct irq_chip iproc_mbox_irq_chip = {
+> +       .name = "bcm-iproc-mbox",
+> +       .irq_mask = iproc_mbox_irq_mask,
+> +       .irq_unmask = iproc_mbox_irq_unmask,
+> +};
+> +
+.... these are simply using the mailbox controllers directly. So you
+are actually clubbing a mailbox client (interrupt controller) with the
+provider (mailbox) here.
 
--- 
-1.9.1
+I think you need move the IRQ controller part under drivers/irqchip/
+that uses the mailbox api to manage its 'irq lines'.
+
+Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
