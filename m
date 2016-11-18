@@ -1,45 +1,37 @@
-From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Subject: [PATCH V3 3/4] regulator: pv88080: Update Regulator driver for MFD
- support
-Date: Fri, 18 Nov 2016 09:35:46 +0900
-Message-ID: <7248b3cd414d462a97b80d9e5d044e592f85d973.1479429347.git.eric.jeong@diasemi.com>
+From: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V3 4/4] gpio: pv88080: Add GPIO function support
+Date: Fri, 18 Nov 2016 09:35:47 +0900
+Message-ID: <8817cbdacccbed87a97e4efa35d45a1f08d78708.1479429347.git.eric.jeong@diasemi.com>
 References: <cover.1479429347.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1479429347.git.eric.jeong@diasemi.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1479429347.git.eric.jeong-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LINUX-GPIO <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+From: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-This change convert from using struct i2c_clinet 
-to using struct platform_device for MFD structure.
-And, the declaration of of_device_id and regmap_config
-are also move to MFD driver.
+This patch adds support for PV88080 PMIC GPIOs.
+PV88080 has two configurable GPIOs.
 
-The configuration for MASK registers is moved 
-to MFD core.
+Kconfig and Makefile are updated to reflect support
+for PV88080 PMIC GPIO. 
 
-Kconfig is updated to reflect support for PV88080 regulator.
-
-Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Signed-off-by: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
 ---
 This patch applies against linux-next and next-20161117
 
 Hi,
 
-The existing PV88080 regulstor driver is updated to support
-MFD structure by adding GPIO function.
-Most of changes are related with MFD structure support.
-
 Change since PATCH V2
- - Fix regression in config and driver
- - Change IRQ name.
+ - Add the set_single_ended function
+ - Add property reading function
+ - Simplify and clarfy the funcion of gpio_chip
 
 Change since PATCH V1
  - Patch separated from PATCH V1
@@ -48,471 +40,269 @@ Regards,
 Eric Jeong, Dialog Semiconductor Ltd.
 
 
- drivers/regulator/Kconfig             |    9 +-
- drivers/regulator/pv88080-regulator.c |  185 +++++++++++----------------------
- drivers/regulator/pv88080-regulator.h |  118 ---------------------
- 3 files changed, 66 insertions(+), 246 deletions(-)
- delete mode 100644 drivers/regulator/pv88080-regulator.h
+ drivers/gpio/Kconfig        |   11 +++
+ drivers/gpio/Makefile       |    1 +
+ drivers/gpio/gpio-pv88080.c |  213 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 225 insertions(+)
+ create mode 100644 drivers/gpio/gpio-pv88080.c
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 936f7cc..ea89653 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -577,10 +577,13 @@ config REGULATOR_PV88060
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index a9a1c8a..cb11686 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -949,6 +949,17 @@ config GPIO_PALMAS
+ 	  Select this option to enable GPIO driver for the TI PALMAS
+ 	  series chip family.
  
- config REGULATOR_PV88080
- 	tristate "Powerventure Semiconductor PV88080 regulator"
--	depends on I2C
--	select REGMAP_I2C
++config GPIO_PV88080
++	tristate "Powerventure Semiconductor PV88080 GPIO"
 +	depends on MFD_PV88080
- 	help
--	  Say y here to support the buck convertors on PV88080
-+	  Say y here to support the BUCKs regulators found on
-+	  PV88080 PMICs.
++	help
++	  Support for GPIO pins on PV88080 PMIC.
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called pv88080-regulator.
- 
- config REGULATOR_PV88090
- 	tristate "Powerventure Semiconductor PV88090 regulator"
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index 954a20e..eb9024d 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -14,8 +14,8 @@
-  */
- 
- #include <linux/err.h>
--#include <linux/i2c.h>
- #include <linux/module.h>
++	  Say yes here to enable the GPIO driver for the PV88080 chip.
++
++	  The Powerventure PMIC chip has 2 GPIO pins that can be
++	  controlled by this driver.
++
+ config GPIO_RC5T583
+ 	bool "RICOH RC5T583 GPIO"
+ 	depends on MFD_RC5T583
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 8043a95..2a2311e 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -92,6 +92,7 @@ obj-$(CONFIG_GPIO_PCF857X)	+= gpio-pcf857x.o
+ obj-$(CONFIG_GPIO_PCH)		+= gpio-pch.o
+ obj-$(CONFIG_GPIO_PISOSR)	+= gpio-pisosr.o
+ obj-$(CONFIG_GPIO_PL061)	+= gpio-pl061.o
++obj-$(CONFIG_GPIO_PV88080)	+= gpio-pv88080.o
+ obj-$(CONFIG_GPIO_PXA)		+= gpio-pxa.o
+ obj-$(CONFIG_GPIO_RC5T583)	+= gpio-rc5t583.o
+ obj-$(CONFIG_GPIO_RDC321X)	+= gpio-rdc321x.o
+diff --git a/drivers/gpio/gpio-pv88080.c b/drivers/gpio/gpio-pv88080.c
+new file mode 100644
+index 0000000..6f4734f
+--- /dev/null
++++ b/drivers/gpio/gpio-pv88080.c
+@@ -0,0 +1,213 @@
++/*
++ * gpio-pv88080.c - GPIO device driver for PV88080
++ * Copyright (C) 2016  Powerventure Semiconductor Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/bitops.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -25,9 +25,8 @@
- #include <linux/irq.h>
- #include <linux/interrupt.h>
- #include <linux/regulator/of_regulator.h>
--#include "pv88080-regulator.h"
- 
--#define PV88080_MAX_REGULATORS	4
++
 +#include <linux/mfd/pv88080.h>
- 
- /* PV88080 REGULATOR IDs */
- enum {
-@@ -38,11 +37,6 @@ enum {
- 	PV88080_ID_HVBUCK,
- };
- 
--enum pv88080_types {
--	TYPE_PV88080_AA,
--	TYPE_PV88080_BA,
--};
--
- struct pv88080_regulator {
- 	struct regulator_desc desc;
- 	/* Current limiting */
-@@ -55,14 +49,6 @@ struct pv88080_regulator {
- 	unsigned int conf5;
- };
- 
--struct pv88080 {
--	struct device *dev;
--	struct regmap *regmap;
--	struct regulator_dev *rdev[PV88080_MAX_REGULATORS];
--	unsigned long type;
--	const struct pv88080_compatible_regmap *regmap_config;
--};
--
- struct pv88080_buck_voltage {
- 	int min_uV;
- 	int max_uV;
-@@ -93,9 +79,11 @@ struct pv88080_compatible_regmap {
- 	int hvbuck_vsel_mask;
- };
- 
--static const struct regmap_config pv88080_regmap_config = {
--	.reg_bits = 8,
--	.val_bits = 8,
-+struct pv88080_regulators {
-+	int	virq;
-+	struct pv88080 *pv88080;
-+	struct regulator_dev *rdev[PV88080_MAX_REGULATORS];
-+	const struct pv88080_compatible_regmap *regmap_config;
- };
- 
- /* Current limits array (in uA) for BUCK1, BUCK2, BUCK3.
-@@ -211,16 +199,6 @@ struct pv88080_compatible_regmap {
- 	.hvbuck_vsel_mask		  = PV88080_VHVBUCK_MASK,
- };
- 
--#ifdef CONFIG_OF
--static const struct of_device_id pv88080_dt_ids[] = {
--	{ .compatible = "pvs,pv88080",    .data = (void *)TYPE_PV88080_AA },
--	{ .compatible = "pvs,pv88080-aa", .data = (void *)TYPE_PV88080_AA },
--	{ .compatible = "pvs,pv88080-ba", .data = (void *)TYPE_PV88080_BA },
--	{},
--};
--MODULE_DEVICE_TABLE(of, pv88080_dt_ids);
--#endif
--
- static unsigned int pv88080_buck_get_mode(struct regulator_dev *rdev)
- {
- 	struct pv88080_regulator *info = rdev_get_drvdata(rdev);
-@@ -372,9 +350,10 @@ static int pv88080_get_current_limit(struct regulator_dev *rdev)
- 	PV88080_HVBUCK(PV88080, HVBUCK, 0, 5000, 1275000),
- };
- 
--static irqreturn_t pv88080_irq_handler(int irq, void *data)
-+static irqreturn_t pv88080_vdd_overtemp_event(int irq, void *data)
- {
--	struct pv88080 *chip = data;
-+	struct pv88080_regulators *regulators = data;
-+	struct pv88080 *chip = regulators->pv88080;
- 	int i, reg_val, err, ret = IRQ_NONE;
- 
- 	err = regmap_read(chip->regmap, PV88080_REG_EVENT_A, &reg_val);
-@@ -383,8 +362,9 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 
- 	if (reg_val & PV88080_E_VDD_FLT) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
--			if (chip->rdev[i] != NULL) {
--				regulator_notifier_call_chain(chip->rdev[i],
-+			if (regulators->rdev[i] != NULL) {
-+				regulator_notifier_call_chain(
-+					regulators->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
- 			}
-@@ -400,8 +380,9 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 
- 	if (reg_val & PV88080_E_OVER_TEMP) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
--			if (chip->rdev[i] != NULL) {
--				regulator_notifier_call_chain(chip->rdev[i],
-+			if (regulators->rdev[i] != NULL) {
-+				regulator_notifier_call_chain(
-+					regulators->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
- 			}
-@@ -425,94 +406,61 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- /*
-  * I2C driver interface functions
-  */
--static int pv88080_i2c_probe(struct i2c_client *i2c,
--		const struct i2c_device_id *id)
-+static int pv88080_regulator_probe(struct platform_device *pdev)
- {
--	struct regulator_init_data *init_data = dev_get_platdata(&i2c->dev);
--	struct pv88080 *chip;
-+	struct regulator_init_data *init_data = dev_get_platdata(&pdev->dev);
-+	struct pv88080 *chip = dev_get_drvdata(pdev->dev.parent);
-+	struct pv88080_regulators *regulators;
- 	const struct pv88080_compatible_regmap *regmap_config;
--	const struct of_device_id *match;
- 	struct regulator_config config = { };
--	int i, error, ret;
-+	int i, ret, irq;
- 	unsigned int conf2, conf5;
- 
--	chip = devm_kzalloc(&i2c->dev, sizeof(struct pv88080), GFP_KERNEL);
--	if (!chip)
-+	regulators = devm_kzalloc(&pdev->dev,
-+			sizeof(struct pv88080_regulators), GFP_KERNEL);
-+	if (!regulators)
- 		return -ENOMEM;
- 
--	chip->dev = &i2c->dev;
--	chip->regmap = devm_regmap_init_i2c(i2c, &pv88080_regmap_config);
--	if (IS_ERR(chip->regmap)) {
--		error = PTR_ERR(chip->regmap);
--		dev_err(chip->dev, "Failed to allocate register map: %d\n",
--			error);
--		return error;
--	}
-+	platform_set_drvdata(pdev, regulators);
- 
--	if (i2c->dev.of_node) {
--		match = of_match_node(pv88080_dt_ids, i2c->dev.of_node);
--		if (!match) {
--			dev_err(chip->dev, "Failed to get of_match_node\n");
--			return -EINVAL;
--		}
--		chip->type = (unsigned long)match->data;
--	} else {
--		chip->type = id->driver_data;
-+	irq = platform_get_irq_byname(pdev, "VDD_TEMP_FAULT");
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "Failed to get IRQ.\n");
-+		return irq;
- 	}
- 
--	i2c_set_clientdata(i2c, chip);
--
--	if (i2c->irq != 0) {
--		ret = regmap_write(chip->regmap, PV88080_REG_MASK_A, 0xFF);
--		if (ret < 0) {
--			dev_err(chip->dev,
--				"Failed to mask A reg: %d\n", ret);
--			return ret;
--		}
--		ret = regmap_write(chip->regmap, PV88080_REG_MASK_B, 0xFF);
--		if (ret < 0) {
--			dev_err(chip->dev,
--				"Failed to mask B reg: %d\n", ret);
--			return ret;
--		}
--		ret = regmap_write(chip->regmap, PV88080_REG_MASK_C, 0xFF);
--		if (ret < 0) {
--			dev_err(chip->dev,
--				"Failed to mask C reg: %d\n", ret);
--			return ret;
--		}
--
--		ret = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL,
--					pv88080_irq_handler,
--					IRQF_TRIGGER_LOW|IRQF_ONESHOT,
--					"pv88080", chip);
--		if (ret != 0) {
--			dev_err(chip->dev, "Failed to request IRQ: %d\n",
--				i2c->irq);
-+	regulators->virq = regmap_irq_get_virq(chip->irq_data, irq);
-+	if (regulators->virq >= 0) {
-+		ret = devm_request_threaded_irq(&pdev->dev,
-+				regulators->virq, NULL,
-+				pv88080_vdd_overtemp_event,
-+				IRQF_TRIGGER_LOW|IRQF_ONESHOT,
-+				"VDD_TEMP_FAULT", regulators);
-+		if (ret) {
-+			dev_err(chip->dev, "Failed to request IRQ: %d\n", irq);
- 			return ret;
- 		}
-+	}
- 
--		ret = regmap_update_bits(chip->regmap, PV88080_REG_MASK_A,
--			PV88080_M_VDD_FLT | PV88080_M_OVER_TEMP, 0);
--		if (ret < 0) {
--			dev_err(chip->dev,
--				"Failed to update mask reg: %d\n", ret);
--			return ret;
--		}
--	} else {
--		dev_warn(chip->dev, "No IRQ configured\n");
-+	ret = regmap_update_bits(chip->regmap, PV88080_REG_MASK_A,
-+		PV88080_M_VDD_FLT | PV88080_M_OVER_TEMP, 0);
-+	if (ret < 0) {
-+		dev_err(chip->dev,
-+			"Failed to update mask reg: %d\n", ret);
++
++#define PV88080_PORT_DIRECTION_INPUT	0
++#define PV88080_PORT_DIRECTION_OUTPUT	1
++
++struct pv88080_gpio {
++	struct pv88080 *chip;
++	struct gpio_chip gpio_chip;
++	unsigned int input_reg;
++	unsigned int output_reg;
++	unsigned int gpio_base_reg;
++};
++
++static int pv88080_gpio_get_direction(struct gpio_chip *gc,
++				unsigned int offset)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++	unsigned int value;
++	int ret;
++
++	ret = regmap_read(chip->regmap, priv->gpio_base_reg + offset, &value);
++	if (ret)
 +		return ret;
- 	}
- 
- 	switch (chip->type) {
- 	case TYPE_PV88080_AA:
--		chip->regmap_config = &pv88080_aa_regs;
-+		regulators->regmap_config = &pv88080_aa_regs;
- 		break;
- 	case TYPE_PV88080_BA:
--		chip->regmap_config = &pv88080_ba_regs;
-+		regulators->regmap_config = &pv88080_ba_regs;
- 		break;
- 	}
- 
--	regmap_config = chip->regmap_config;
-+	regulators->pv88080 = chip;
-+	regmap_config = regulators->regmap_config;
- 	config.dev = chip->dev;
- 	config.regmap = chip->regmap;
- 
-@@ -564,12 +512,12 @@ static int pv88080_i2c_probe(struct i2c_client *i2c,
- 			/(pv88080_regulator_info[i].desc.uV_step) + 1;
- 
- 		config.driver_data = (void *)&pv88080_regulator_info[i];
--		chip->rdev[i] = devm_regulator_register(chip->dev,
-+		regulators->rdev[i] = devm_regulator_register(chip->dev,
- 			&pv88080_regulator_info[i].desc, &config);
--		if (IS_ERR(chip->rdev[i])) {
-+		if (IS_ERR(regulators->rdev[i])) {
- 			dev_err(chip->dev,
- 				"Failed to register PV88080 regulator\n");
--			return PTR_ERR(chip->rdev[i]);
-+			return PTR_ERR(regulators->rdev[i]);
- 		}
- 	}
- 
-@@ -582,40 +530,27 @@ static int pv88080_i2c_probe(struct i2c_client *i2c,
- 	pv88080_regulator_info[PV88080_ID_HVBUCK].desc.vsel_mask
- 		= regmap_config->hvbuck_vsel_mask;
- 
--	/* Registeration for HVBUCK */
- 	if (init_data)
- 		config.init_data = &init_data[PV88080_ID_HVBUCK];
- 
- 	config.driver_data = (void *)&pv88080_regulator_info[PV88080_ID_HVBUCK];
--	chip->rdev[PV88080_ID_HVBUCK] = devm_regulator_register(chip->dev,
-+	regulators->rdev[PV88080_ID_HVBUCK] = devm_regulator_register(chip->dev,
- 		&pv88080_regulator_info[PV88080_ID_HVBUCK].desc, &config);
--	if (IS_ERR(chip->rdev[PV88080_ID_HVBUCK])) {
-+	if (IS_ERR(regulators->rdev[PV88080_ID_HVBUCK])) {
- 		dev_err(chip->dev, "Failed to register PV88080 regulator\n");
--		return PTR_ERR(chip->rdev[PV88080_ID_HVBUCK]);
-+		return PTR_ERR(regulators->rdev[PV88080_ID_HVBUCK]);
- 	}
- 
- 	return 0;
- }
--
--static const struct i2c_device_id pv88080_i2c_id[] = {
--	{ "pv88080",    TYPE_PV88080_AA },
--	{ "pv88080-aa", TYPE_PV88080_AA },
--	{ "pv88080-ba", TYPE_PV88080_BA },
--	{},
--};
--MODULE_DEVICE_TABLE(i2c, pv88080_i2c_id);
--
--static struct i2c_driver pv88080_regulator_driver = {
-+static struct platform_driver pv88080_regulator_driver = {
- 	.driver = {
--		.name = "pv88080",
--		.of_match_table = of_match_ptr(pv88080_dt_ids),
-+		.name = "pv88080-regulator",
- 	},
--	.probe = pv88080_i2c_probe,
--	.id_table = pv88080_i2c_id,
-+	.probe = pv88080_regulator_probe,
- };
-+module_platform_driver(pv88080_regulator_driver);
- 
--module_i2c_driver(pv88080_regulator_driver);
--
--MODULE_AUTHOR("James Ban <James.Ban.opensource@diasemi.com>");
-+MODULE_AUTHOR("Eric Jeong <eric.jeong.opensource@diasemi.com>");
- MODULE_DESCRIPTION("Regulator device driver for Powerventure PV88080");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/regulator/pv88080-regulator.h b/drivers/regulator/pv88080-regulator.h
-deleted file mode 100644
-index ae25ff3..0000000
---- a/drivers/regulator/pv88080-regulator.h
-+++ /dev/null
-@@ -1,118 +0,0 @@
--/*
-- * pv88080-regulator.h - Regulator definitions for PV88080
-- * Copyright (C) 2016 Powerventure Semiconductor Ltd.
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * as published by the Free Software Foundation; either version 2
-- * of the License, or (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
--
--#ifndef __PV88080_REGISTERS_H__
--#define __PV88080_REGISTERS_H__
--
--/* System Control and Event Registers */
--#define	PV88080_REG_EVENT_A				0x04
--#define	PV88080_REG_MASK_A				0x09
--#define	PV88080_REG_MASK_B				0x0A
--#define	PV88080_REG_MASK_C				0x0B
--
--/* Regulator Registers - rev. AA */
--#define PV88080AA_REG_HVBUCK_CONF1		0x2D
--#define PV88080AA_REG_HVBUCK_CONF2		0x2E
--#define	PV88080AA_REG_BUCK1_CONF0		0x27
--#define	PV88080AA_REG_BUCK1_CONF1		0x28
--#define	PV88080AA_REG_BUCK1_CONF2		0x59
--#define	PV88080AA_REG_BUCK1_CONF5		0x5C
--#define	PV88080AA_REG_BUCK2_CONF0		0x29
--#define	PV88080AA_REG_BUCK2_CONF1		0x2A
--#define	PV88080AA_REG_BUCK2_CONF2		0x61
--#define	PV88080AA_REG_BUCK2_CONF5		0x64
--#define	PV88080AA_REG_BUCK3_CONF0		0x2B
--#define	PV88080AA_REG_BUCK3_CONF1		0x2C
--#define	PV88080AA_REG_BUCK3_CONF2		0x69
--#define	PV88080AA_REG_BUCK3_CONF5		0x6C
--
--/* Regulator Registers - rev. BA */
--#define	PV88080BA_REG_HVBUCK_CONF1		0x33
--#define	PV88080BA_REG_HVBUCK_CONF2		0x34
--#define	PV88080BA_REG_BUCK1_CONF0		0x2A
--#define	PV88080BA_REG_BUCK1_CONF1		0x2C
--#define	PV88080BA_REG_BUCK1_CONF2		0x5A
--#define	PV88080BA_REG_BUCK1_CONF5		0x5D
--#define	PV88080BA_REG_BUCK2_CONF0		0x2D
--#define	PV88080BA_REG_BUCK2_CONF1		0x2F
--#define	PV88080BA_REG_BUCK2_CONF2		0x63
--#define	PV88080BA_REG_BUCK2_CONF5		0x66
--#define	PV88080BA_REG_BUCK3_CONF0		0x30
--#define	PV88080BA_REG_BUCK3_CONF1		0x32
--#define	PV88080BA_REG_BUCK3_CONF2		0x6C
--#define	PV88080BA_REG_BUCK3_CONF5		0x6F
--
--/* PV88080_REG_EVENT_A (addr=0x04) */
--#define	PV88080_E_VDD_FLT				0x01
--#define	PV88080_E_OVER_TEMP				0x02
--
--/* PV88080_REG_MASK_A (addr=0x09) */
--#define	PV88080_M_VDD_FLT				0x01
--#define	PV88080_M_OVER_TEMP				0x02
--
--/* PV88080_REG_BUCK1_CONF0 (addr=0x27|0x2A) */
--#define	PV88080_BUCK1_EN				0x80
--#define PV88080_VBUCK1_MASK				0x7F
--
--/* PV88080_REG_BUCK2_CONF0 (addr=0x29|0x2D) */
--#define	PV88080_BUCK2_EN				0x80
--#define PV88080_VBUCK2_MASK				0x7F
--
--/* PV88080_REG_BUCK3_CONF0 (addr=0x2B|0x30) */
--#define	PV88080_BUCK3_EN				0x80
--#define PV88080_VBUCK3_MASK				0x7F
--
--/* PV88080_REG_BUCK1_CONF1 (addr=0x28|0x2C) */
--#define PV88080_BUCK1_ILIM_SHIFT		2
--#define PV88080_BUCK1_ILIM_MASK			0x0C
--#define PV88080_BUCK1_MODE_MASK			0x03
--
--/* PV88080_REG_BUCK2_CONF1 (addr=0x2A|0x2F) */
--#define PV88080_BUCK2_ILIM_SHIFT		2
--#define PV88080_BUCK2_ILIM_MASK			0x0C
--#define PV88080_BUCK2_MODE_MASK			0x03
--
--/* PV88080_REG_BUCK3_CONF1 (addr=0x2C|0x32) */
--#define PV88080_BUCK3_ILIM_SHIFT		2
--#define PV88080_BUCK3_ILIM_MASK			0x0C
--#define PV88080_BUCK3_MODE_MASK			0x03
--
--#define	PV88080_BUCK_MODE_SLEEP			0x00
--#define	PV88080_BUCK_MODE_AUTO			0x01
--#define	PV88080_BUCK_MODE_SYNC			0x02
--
--/* PV88080_REG_HVBUCK_CONF1 (addr=0x2D|0x33) */
--#define PV88080_VHVBUCK_MASK			0xFF
--
--/* PV88080_REG_HVBUCK_CONF1 (addr=0x2E|0x34) */
--#define PV88080_HVBUCK_EN				0x01
--
--/* PV88080_REG_BUCK2_CONF2 (addr=0x61|0x63) */
--/* PV88080_REG_BUCK3_CONF2 (addr=0x69|0x6C) */
--#define PV88080_BUCK_VDAC_RANGE_SHIFT	7
--#define PV88080_BUCK_VDAC_RANGE_MASK	0x01
--
--#define PV88080_BUCK_VDAC_RANGE_1		0x00
--#define PV88080_BUCK_VDAC_RANGE_2		0x01
--
--/* PV88080_REG_BUCK2_CONF5 (addr=0x64|0x66) */
--/* PV88080_REG_BUCK3_CONF5 (addr=0x6C|0x6F) */
--#define PV88080_BUCK_VRANGE_GAIN_SHIFT	0
--#define PV88080_BUCK_VRANGE_GAIN_MASK	0x01
--
--#define PV88080_BUCK_VRANGE_GAIN_1		0x00
--#define PV88080_BUCK_VRANGE_GAIN_2		0x01
--
--#endif	/* __PV88080_REGISTERS_H__ */
++
++	value = !(value & PV88080_GPIO_DIRECTION_MASK);
++
++	return value;
++}
++
++static int pv88080_gpio_direction_input(struct gpio_chip *gc,
++				unsigned int offset)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++
++	return regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
++			PV88080_GPIO_DIRECTION_MASK, 0);
++}
++
++static int pv88080_gpio_direction_output(struct gpio_chip *gc,
++				unsigned int offset, int value)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++
++	return regmap_update_bits(chip->regmap, priv->gpio_base_reg + offset,
++			PV88080_GPIO_DIRECTION_MASK, 1);
++}
++
++static int pv88080_gpio_get(struct gpio_chip *gc, unsigned int offset)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++	unsigned int reg, value;
++	int ret;
++
++	ret = regmap_read(chip->regmap, priv->gpio_base_reg + offset, &value);
++	if (ret < 0)
++		return ret;
++
++	if (value & PV88080_GPIO_DIRECTION_MASK)
++		reg = priv->output_reg;
++	else
++		reg = priv->input_reg;
++
++	ret = regmap_read(chip->regmap, reg, &value);
++	if (ret < 0)
++		return ret;
++
++	value = !!(value & BIT(offset));
++
++	return value;
++}
++
++static void pv88080_gpio_set(struct gpio_chip *gc, unsigned int offset,
++				int value)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++	int ret;
++
++	ret = regmap_update_bits(chip->regmap, priv->output_reg,
++			BIT(offset), (value << offset));
++	if (ret < 0)
++		dev_err(chip->dev, "Failed to update gpio\n");
++}
++
++static int pv88080_set_single_ended(struct gpio_chip *gc,
++				unsigned int offset,
++				enum single_ended_mode mode)
++{
++	struct pv88080_gpio *priv = gpiochip_get_data(gc);
++	struct pv88080 *chip = priv->chip;
++	int ret;
++
++	switch (mode) {
++	case LINE_MODE_OPEN_DRAIN:
++		ret = regmap_update_bits(chip->regmap,
++					priv->gpio_base_reg + offset,
++					PV88080_GPIO_SINGLE_ENDED_MASK, 0);
++		break;
++	case LINE_MODE_PUSH_PULL:
++		ret = regmap_update_bits(chip->regmap,
++					priv->gpio_base_reg + offset,
++					PV88080_GPIO_SINGLE_ENDED_MASK, 1 << 1);
++		break;
++	default:
++		ret = -ENOTSUPP;
++		break;
++	}
++
++	return ret;
++}
++
++static const struct gpio_chip template_gpio = {
++	.label = "pv88080-gpio",
++	.owner = THIS_MODULE,
++	.get_direction = pv88080_gpio_get_direction,
++	.direction_input = pv88080_gpio_direction_input,
++	.direction_output = pv88080_gpio_direction_output,
++	.get = pv88080_gpio_get,
++	.set = pv88080_gpio_set,
++	.set_single_ended = pv88080_set_single_ended,
++	.base = -1,
++	.ngpio = 2,
++};
++
++static const struct of_device_id pv88080_gpio_of_match[] = {
++	{ .compatible = "pvs,pv88080-gpio", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, pv88080_gpio_of_match);
++
++static int pv88080_gpio_probe(struct platform_device *pdev)
++{
++	struct pv88080 *chip = dev_get_drvdata(pdev->dev.parent);
++	struct pv88080_gpio *priv;
++	struct device_node *np = pdev->dev.of_node;
++	u32 ngpios;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev,
++			sizeof(struct pv88080_gpio), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->chip = chip;
++	priv->gpio_chip = template_gpio;
++	priv->gpio_chip.parent = &pdev->dev;
++
++	switch (chip->type) {
++	case TYPE_PV88080_AA:
++		priv->input_reg = PV88080AA_REG_GPIO_INPUT;
++		priv->output_reg = PV88080AA_REG_GPIO_OUTPUT;
++		priv->gpio_base_reg = PV88080AA_REG_GPIO_GPIO0;
++		break;
++	case TYPE_PV88080_BA:
++		priv->input_reg = PV88080BA_REG_GPIO_INPUT;
++		priv->output_reg = PV88080BA_REG_GPIO_OUTPUT;
++		priv->gpio_base_reg = PV88080BA_REG_GPIO_GPIO0;
++		break;
++	}
++
++	if (!of_property_read_u32(np, "ngpios", &ngpios))
++		priv->gpio_chip.ngpio = ngpios;
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &priv->gpio_chip, priv);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Unable to register gpiochip\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return 0;
++}
++
++static struct platform_driver pv88080_gpio_driver = {
++	.driver = {
++		.name = "pv88080-gpio",
++		.of_match_table = of_match_ptr(pv88080_gpio_of_match),
++	},
++	.probe = pv88080_gpio_probe,
++};
++module_platform_driver(pv88080_gpio_driver);
++
++MODULE_AUTHOR("Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>");
++MODULE_DESCRIPTION("GPIO device driver for Powerventure PV88080");
++MODULE_LICENSE("GPL");
++
 -- 
 end-of-patch for PATCH V3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
