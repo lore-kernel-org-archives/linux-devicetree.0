@@ -1,93 +1,73 @@
-From: Tom Levens <tom.levens@cern.ch>
-Subject: [PATCH v2 1/3] hwmon: ltc2990: refactor value conversion
-Date: Thu, 17 Nov 2016 13:10:14 +0100
-Message-ID: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: Fix issue where code would fall through to error
+ case.
+Date: Thu, 17 Nov 2016 16:02:54 -0800
+Message-ID: <582E452E.3080909@gmail.com>
+References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
+ <582E3FFC.80305@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Tom Levens <tom.levens@cern.ch>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <582E3FFC.80305@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc: pantelis.antoniou@konsulko.com, moritz@pure-entropy.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Conversion from raw values to signed integers has been refactored using
-the macros in bitops.h.
+On 11/17/16 15:40, Frank Rowand wrote:
+> On 11/17/16 15:25, Moritz Fischer wrote:
+>> No longer fall through into the error case that prints out
+>> an error if no error (err = 0) occurred.
+>>
+>> Fixes d9181b20a83(of: Add back an error message, restructured)
+>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>> ---
+>>  drivers/of/resolver.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>> index 783bd09..785076d 100644
+>> --- a/drivers/of/resolver.c
+>> +++ b/drivers/of/resolver.c
+>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
+>>  
+>>  		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+>>  		if (err)
+>> -			break;
+>> +			goto err_out;
+>>  	}
+>>  
+>> +	of_node_put(tree_symbols);
+>> +
+>> +	return 0;
+>> +
+>>  err_out:
+>>  	pr_err("overlay phandle fixup failed: %d\n", err);
+>>  out:
+> 
+> Thanks for catching that.
+> 
+> Rob, please apply.
+> 
+> Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
+> 
+> -Frank
 
-Signed-off-by: Tom Levens <tom.levens@cern.ch>
----
- drivers/hwmon/ltc2990.c |   27 ++++++++++-----------------
- 1 files changed, 10 insertions(+), 17 deletions(-)
+On second thought, isn't the common pattern when clean up is needed for
+both the no-error path and the error path something like:
 
-diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-index 8f8fe05..0ec4102 100644
---- a/drivers/hwmon/ltc2990.c
-+++ b/drivers/hwmon/ltc2990.c
-@@ -9,8 +9,12 @@
-  * This driver assumes the chip is wired as a dual current monitor, and
-  * reports the voltage drop across two series resistors. It also reports
-  * the chip's internal temperature and Vcc power supply voltage.
-+ *
-+ * Value conversion refactored
-+ * by Tom Levens <tom.levens@cern.ch>
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
-@@ -34,19 +38,10 @@
- #define LTC2990_CONTROL_MODE_CURRENT	0x06
- #define LTC2990_CONTROL_MODE_VOLTAGE	0x07
- 
--/* convert raw register value to sign-extended integer in 16-bit range */
--static int ltc2990_voltage_to_int(int raw)
--{
--	if (raw & BIT(14))
--		return -(0x4000 - (raw & 0x3FFF)) << 2;
--	else
--		return (raw & 0x3FFF) << 2;
--}
--
- /* Return the converted value from the given register in uV or mC */
--static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
-+static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 *result)
- {
--	int val;
-+	s32 val;
- 
- 	val = i2c_smbus_read_word_swapped(i2c, reg);
- 	if (unlikely(val < 0))
-@@ -55,18 +50,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
- 	switch (reg) {
- 	case LTC2990_TINT_MSB:
- 		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
--		val = (val & 0x1FFF) << 3;
--		*result = (val * 1000) >> 7;
-+		*result = sign_extend32(val, 12) * 1000 / 16;
- 		break;
- 	case LTC2990_V1_MSB:
- 	case LTC2990_V3_MSB:
- 		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
--		*result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
-+		*result = sign_extend32(val, 14) * 1942 / 100;
- 		break;
- 	case LTC2990_VCC_MSB:
- 		/* Vcc, 305.18μV/LSB, 2.5V offset */
--		*result = (ltc2990_voltage_to_int(val) * 30518 /
--			   (4 * 100 * 1000)) + 2500;
-+		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
- 		break;
- 	default:
- 		return -EINVAL; /* won't happen, keep compiler happy */
-@@ -79,7 +72,7 @@ static ssize_t ltc2990_show_value(struct device *dev,
- 				  struct device_attribute *da, char *buf)
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
--	int value;
-+	s32 value;
- 	int ret;
- 
- 	ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
--- 
-1.7.1
 
+        out:
+                of_node_put(tree_symbols);
+                return err;
+
+        err_out:
+                pr_err("overlay phandle fixup failed: %d\n", err);
+                goto out;
+        }
+
+
+I don't have a strong opinion, whatever Rob wants to take is fine with me.
+
+-Frank
