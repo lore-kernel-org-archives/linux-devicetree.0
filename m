@@ -1,159 +1,399 @@
-From: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Fri, 18 Nov 2016 13:23:36 +0100
-Message-ID: <alpine.LRH.2.20.1611181316110.5613@pcbe13573-vm.dyndns.cern.ch>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <1479384616-12479-3-git-send-email-tom.levens@cern.ch> <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net> <582DEB81.6050806@topic.nl> <20161117185654.GA19338@roeck-us.net> <582E0A6C.5010307@topic.nl>
- <20161117215454.GA23571@roeck-us.net> <09DCF2E6-3F08-4F0E-837B-55F591008AAB@cern.ch> <20161117234024.GA26747@roeck-us.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 4/5] i2c: designware: Add slave mode as separated
+ driver
+Date: Fri, 18 Nov 2016 14:49:48 +0200
+Message-ID: <1479473388.22212.26.camel@linux.intel.com>
+References: <cover.1479410047.git.lolivei@synopsys.com>
+         <36abadc931ab0814019c9b2214886bcb4e4ce5c1.1479410047.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-        boundary="-1920950886-711264204-1479471820=:5613"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117234024.GA26747-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, "jdelvare-IBi9RG/b67k@public.gmane.org" <jdelvare-IBi9RG/b67k@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <36abadc931ab0814019c9b2214886bcb4e4ce5c1.1479410047.git.lolivei@synopsys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
----1920950886-711264204-1479471820=:5613
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
+On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
+>  - Slave mode selected by compatibility string in platform module
+>  - Changes in Makefile to compile i2c-designware-core with slave
+> functions
 
 
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -160,6 +160,30 @@ static void i2c_dw_configure_master(struct
+> platform_device *pdev)
+>  	}
+>  }
+>  
+> +static void i2c_dw_configure_slave(struct platform_device *pdev)
+> +{
+> +	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
+> +
+> +	dev->slave_cfg = DW_IC_CON_RX_FIFO_FULL_HLD_CTRL |
+> +			 DW_IC_CON_RESTART_EN |
+> DW_IC_CON_STOP_DET_IFADDRESSED |
+> +			 DW_IC_CON_SPEED_FAST;
+> +
+> +	dev->functionality |= I2C_FUNC_SLAVE;
+> +	dev->functionality &= ~I2C_FUNC_10BIT_ADDR;
 
-On Fri, 18 Nov 2016, Guenter Roeck wrote:
+> +	dev_info(&pdev->dev, "I am registed as a I2C Slave!\n");
 
-> On Thu, Nov 17, 2016 at 11:25:30PM +0000, Tom Levens wrote:
->> On 17 Nov 2016, at 22:54, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>> On Thu, Nov 17, 2016 at 08:52:12PM +0100, Mike Looijmans wrote:
->>>> ﻿On 17-11-2016 19:56, Guenter Roeck wrote:
->>>>> On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
->>>>>> ﻿On 17-11-16 17:56, Guenter Roeck wrote:
->>>>>>> On 11/17/2016 04:10 AM, Tom Levens wrote:
->>>>>>>> Updated version of the ltc2990 driver which supports all measurement
->>>>>>>> modes available in the chip. The mode can be set through a devicetree
->>>>>>>> attribute.
->>>>>>>
->>>>> [ ... ]
->>>>>
->>>>>>>>
->>>>>>>> static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>>>>>>>                 const struct i2c_device_id *id)
->>>>>>>> {
->>>>>>>>    int ret;
->>>>>>>>    struct device *hwmon_dev;
->>>>>>>> +    struct ltc2990_data *data;
->>>>>>>> +    struct device_node *of_node = i2c->dev.of_node;
->>>>>>>>
->>>>>>>>    if (!i2c_check_functionality(i2c->adapter,
->>>>>>>> I2C_FUNC_SMBUS_BYTE_DATA |
->>>>>>>>                     I2C_FUNC_SMBUS_WORD_DATA))
->>>>>>>>        return -ENODEV;
->>>>>>>>
->>>>>>>> -    /* Setup continuous mode, current monitor */
->>>>>>>> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
->>>>>>>> GFP_KERNEL);
->>>>>>>> +    if (unlikely(!data))
->>>>>>>> +        return -ENOMEM;
->>>>>>>> +    data->i2c = i2c;
->>>>>>>> +
->>>>>>>> +    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
->>>>>>>> &data->mode))
->>>>>>>> +        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
->>>>>>>
->>>>>>> Iam arguing with myself if we should still do this or if we should read
->>>>>>> the mode
->>>>>>> from the chip instead if it isn't provided (after all, it may have been
->>>>>>> initialized
->>>>>>> by the BIOS/ROMMON).
->>>>>>
->>>>>> I think the mode should be explicitly set, without default. There's no way
->>>>>> to tell whether the BIOS or bootloader has really set it up or whether the
->>>>>> chip is just reporting whatever it happened to default to. And given the
->>>>>> chip's function, it's unlikely a bootloader would want to initialize it.
->>>>>>
->>>>> Unlikely but possible. Even if we all agree that the chip should be configured
->>>>> by the driver, I don't like imposing that view on everyone else.
->>>>>
->>>>>> My advice would be to make it a required property. If not set, display an
->>>>>> error and bail out.
->>>>>>
->>>>> It is not that easy, unfortunately. It also has to work on a non-devicetree
->>>>> system. I would not object to making the property mandatory, but we would
->>>>> still need to provide non-DT support.
->>>>>
->>>>> My "use case" for taking the current mode from the chip if not specified
->>>>> is that it would enable me to run a module test with all modes. I consider
->>>>> this extremely valuable.
->>>>
->>>> Good point.
->>>>
->>>> The chip defaults to measuring internal temperature only, and the mode
->>>> defaults to "0".
->>>>
->>>> Choosing a mode that doesn't match the actual circuitry could be bad for the
->>>> chip or the board (though unlikely, it'll probably just be useless) since it
->>>> will actively drive some of the inputs in the temperature modes (which is
->>>> default for V3/V4 pins).
->>>>
->>>> Instead of failing, one could choose to set the default mode to "7", which
->>>> just measures the 4 voltages, which would be a harmless mode in all cases.
->>>>
->>>> As a way to let a bootloader set things up, I think it would be a good check
->>>> to see if CONTROL register bits 4:3 are set. If "00", the chip is not
->>>> acquiring data at all, and probably needs configuration still. In that case,
->>>> the mode must be provided by the devicetree (or the default "7").
->>>> If bits 4:3 are "11", it has already been set up to measure its inputs, and
->>>> it's okay to continue doing just that and use the current value of 2:0
->>>> register as default mode (if the devicetree didn't specify any mode at all).
->>>>
->>>
->>> At first glance, agreed, though by default b[3:4] are 00, and only the
->>> internal temperature is measured. Actually, the 5 mode bits are all
->>> relevant to determine what is measured. Maybe it would be better to take
->>> all 5 bits into account instead of blindly setting b[34]:=11 and a specific
->>> setting of b[0:2]. Sure, that would make the mode table a bit larger,
->>> but then ltc2990_attrs_ena[] could be made an u16 array, and a table size
->>> of 64 bytes would not be that bad.
->>
->> I would tend to agree that it should be possible to configure all 5 mode
->> bits through the devicetree. What I would propose is as follows.
->>
->> If a devicetree node exists, the mode parameter(s?) are required and the
->> chip is initialised.
->>
->> If a devicetree node doesn't exist, it is assumed that the chip has
->> already been configured (by the BIOS, etc). The mode is read from the
->> chip to set the visibility of the sysfs attributes. In the worst case, where the
->> chip has not been configured by another source, it would only be possible
->> to measure the internal temperature -- but I think this is an acceptable
->> limitation.
->>
-> SGTM.
->
->> The only case that this does not cover is if the device tree node
->> exists but the chip is expected to be configured by some other source.
->> Maybe I am wrong, but I would not expect this to be a terribly common
->> situation.
->>
->> What do you think?
->>
-> I would not bother about this case. Just make the mode property mandatory.
+Not for production. 
 
-What do you think about making the devicetree property a list of two 
-integers? Something like
+> @@ -244,7 +268,11 @@ static int dw_i2c_plat_probe(struct
+> platform_device *pdev)
+>  		I2C_FUNC_SMBUS_WORD_DATA |
+>  		I2C_FUNC_SMBUS_I2C_BLOCK;
+>  
+> -	i2c_dw_configure_master(pdev);
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +		 "snps,designware-i2c-slave"))
 
-lltc,mode = <7 3>;
+No.
 
-which would set mode[2..0]=7 and mode[4..3]=3.
+We don't use of_property_*() anymore in general. Instead find
+appropriate device_property_*() one. Besides, remind about comment
+regarding to the property itself.
 
-To me, this is easier to setup from the datasheet than a single integer 
-value. The other option would be to split it into two properties, but I am 
-struggling to come up with suitable names for them -- the datasheet 
-helpfully calls both fields "mode".
+> +		i2c_dw_configure_slave(pdev);
+> +	else
+> +		i2c_dw_configure_master(pdev);
 
-Cheers,
----1920950886-711264204-1479471820=:5613--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would go then switch case here, where third variant prints an error
+that mode X doesn't supported / invalid and bails out.
+
+> @@ -257,7 +285,13 @@ static int dw_i2c_plat_probe(struct
+> platform_device *pdev)
+>  	}
+>  
+>  	if (!dev->tx_fifo_depth) {
+> -		u32 param1 = i2c_dw_read_comp_param(dev);
+> +		u32 param1;
+> +
+
+> +		if (of_device_is_compatible(pdev->dev.of_node,
+> +			 "snps,designware-i2c-slave"))
+
+Cache it in local variable if needed.
+
+> +			param1 = i2c_dw_read_comp_param_slave(dev);
+> +		else
+> +			param1 = i2c_dw_read_comp_param(dev);
+
+Shouldn't it have a _master suffix?
+
+>  
+>  		dev->tx_fifo_depth = ((param1 >> 16) & 0xff) + 1;
+>  		dev->rx_fifo_depth = ((param1 >> 8)  & 0xff) + 1;
+> @@ -278,8 +312,12 @@ static int dw_i2c_plat_probe(struct
+> platform_device *pdev)
+>  		pm_runtime_set_active(&pdev->dev);
+>  		pm_runtime_enable(&pdev->dev);
+>  	}
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +		 "snps,designware-i2c-slave"))
+> +		r = i2c_dw_probe_slave(dev);
+> +	else
+> +		r = i2c_dw_probe(dev);
+
+Ditto.
+
+> @@ -291,10 +329,13 @@ static int dw_i2c_plat_remove(struct
+> platform_device *pdev)
+>  	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
+>  
+>  	pm_runtime_get_sync(&pdev->dev);
+
+> -
+
+Doesn't belong to the patch.
+
+>  	i2c_del_adapter(&dev->adapter);
+>  
+> -	i2c_dw_disable(dev);
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +		 "snps,designware-i2c-slave"))
+> +		i2c_dw_disable_slave(dev);
+> +	else
+> +		i2c_dw_disable(dev);
+
+_master?
+
+>  
+>  	pm_runtime_dont_use_autosuspend(&pdev->dev);
+>  	pm_runtime_put_sync(&pdev->dev);
+> @@ -307,6 +348,9 @@ static int dw_i2c_plat_remove(struct
+> platform_device *pdev)
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id dw_i2c_of_match[] = {
+>  	{ .compatible = "snps,designware-i2c", },
+> +#ifndef CONFIG_ACPI
+
+No, no, no.
+
+> +	{ .compatible = "snps,designware-i2c-slave", },
+> +#endif
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
+> @@ -334,7 +378,11 @@ static int dw_i2c_plat_suspend(struct device
+> *dev)
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct dw_i2c_dev *i_dev = platform_get_drvdata(pdev);
+>  
+> -	i2c_dw_disable(i_dev);
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +		 "snps,designware-i2c-slave"))
+> +		i2c_dw_disable_slave(i_dev);
+> +	else
+> +		i2c_dw_disable(i_dev);
+
+Same comments as above.
+
+>  	i2c_dw_plat_prepare_clk(i_dev, false);
+>  
+>  	return 0;
+> @@ -347,8 +395,13 @@ static int dw_i2c_plat_resume(struct device *dev)
+>  
+>  	i2c_dw_plat_prepare_clk(i_dev, true);
+>  
+> -	if (!i_dev->pm_runtime_disabled)
+> -		i2c_dw_init(i_dev);
+> +	if (!i_dev->pm_runtime_disabled) {
+> +		if (of_device_is_compatible(pdev->dev.of_node,
+> +			 "snps,designware-i2c-slave"))
+> +			i2c_dw_init_slave(i_dev);
+> +		else
+> +			i2c_dw_init(i_dev);
+
+Ditto.
+
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-designware-slave.c
+
+Slave...
+
+> @@ -0,0 +1,445 @@
+> +/*
+> + * Synopsys DesignWare I2C adapter driver (master only).
+
+Master...
+
+> + *
+> + * Based on the TI DAVINCI I2C adapter driver.
+> + *
++ * Copyright (C) 2006 Texas Instruments.
+> + * Copyright (C) 2007 MontaVista Software Inc.
+> + * Copyright (C) 2009 Provigent Ltd.
+
+Are you sure about these lines?
+
+
+> +#include <linux/export.h>
+> +#include <linux/errno.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+
++ empty line.
+
+> +#include "i2c-designware-core.h"
+> +
+
+
+> +/**
+> + * i2c_dw_init_slave() - initialize the designware i2c slave hardware
+> + * @dev: device private data
+> + *
+> + * This functions configures and enables the I2C.
+> + * This function is called during I2C init function, and in case of
+> timeout at
+> + * run time.
+> + */
+> +int i2c_dw_init_slave(struct dw_i2c_dev *dev)
+> +{
+> +	u32 hcnt, lcnt;
+> +	u32 reg, comp_param1;
+> +	u32 sda_falling_time, scl_falling_time;
+
+Reversed tree, pls.
+
+> +	int ret;
+> +
+> +	ret = i2c_dw_acquire_lock(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	reg = dw_readl(dev, DW_IC_COMP_TYPE);
+> +	if (reg == ___constant_swab32(DW_IC_COMP_TYPE_VALUE)) {
+> +		/* Configure register endianness access */
+> +		dev->accessor_flags |= ACCESS_SWAP;
+> +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
+> +		/* Configure register access mode 16bit */
+> +		dev->accessor_flags |= ACCESS_16BIT;
+> +	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
+> 
+
+> +		dev_err(dev->dev, "Unknown Synopsys component type: "
+> +			"0x%08x\n", reg);
+
+Don't break literals.
+
+Choose one that fits.
+
+dev_err(dev->dev, "Unknown Synopsys component type: "0x%08x\n",
+	reg);
+
+dev_err(dev->dev,
+	"Unknown Synopsys component type: "0x%08x\n", reg);
+
+dev_err(dev->dev,
+	"Unknown Synopsys component type: "0x%08x\n",
+	
+reg);
+
+> +		i2c_dw_release_lock(dev);
+> +		return -ENODEV;
+> +	}
+> +
+> +	comp_param1 = dw_readl(dev, DW_IC_COMP_PARAM_1);
+> +
+> 
+
+> +	/* Disable the adapter */
+
+Useless.
+
+> +	__i2c_dw_enable_and_wait(dev, false);
+> +
+> +	/* set standard and fast speed deviders for high/low periods
+> */
+
+Capital letter!
+
+> +	sda_falling_time = dev->sda_falling_time ?: 300; /* ns */
+> +	scl_falling_time = dev->scl_falling_time ?: 300; /* ns */
+> +
+> +	/* Set SCL timing parameters for standard-mode */
+> +	if (dev->ss_hcnt && dev->ss_lcnt) {
+> +		hcnt = dev->ss_hcnt;
+> +		lcnt = dev->ss_lcnt;
+> +	} else {
+> +		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
+> +					4000,	/* tHD;STA =
+> tHIGH = 4.0 us */
+> +					sda_falling_time,
+> +					0,	/* 0: DW default,
+> 1: Ideal */
+> +					0);	/* No offset */
+> +		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
+> +					4700,	/* tLOW = 4.7 us
+> */
+> +					scl_falling_time,
+> +					0);	/* No offset */
+> +	}
+> +	dw_writel(dev, hcnt, DW_IC_SS_SCL_HCNT);
+> +	dw_writel(dev, lcnt, DW_IC_SS_SCL_LCNT);
+> +	dev_dbg(dev->dev, "Standard-mode HCNT:LCNT = %d:%d\n", hcnt,
+> lcnt);
+> +
+> +	/* Set SCL timing parameters for fast-mode or fast-mode plus
+> */
+> +	if ((dev->clk_freq == 1000000) && dev->fp_hcnt && dev-
+> >fp_lcnt) {
+> +		hcnt = dev->fp_hcnt;
+> +		lcnt = dev->fp_lcnt;
+> +	} else if (dev->fs_hcnt && dev->fs_lcnt) {
+> +		hcnt = dev->fs_hcnt;
+> +		lcnt = dev->fs_lcnt;
+> +	} else {
+> +		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
+> +					600,	/* tHD;STA =
+> tHIGH = 0.6 us */
+> +					sda_falling_time,
+> +					0,	/* 0: DW default,
+> 1: Ideal */
+> +					0);	/* No offset */
+> +		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
+> +					1300,	/* tLOW = 1.3 us
+> */
+> +					scl_falling_time,
+> +					0);	/* No offset */
+> +	}
+> +	dw_writel(dev, hcnt, DW_IC_FS_SCL_HCNT);
+> +	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
+> +	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt,
+> lcnt);
+> +
+> +	if ((dev->slave_cfg & DW_IC_CON_SPEED_MASK) ==
+> +		DW_IC_CON_SPEED_HIGH) {
+> +		if ((comp_param1 &
+> DW_IC_COMP_PARAM_1_SPEED_MODE_MASK)
+> +			!= DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH) {
+> +			dev_err(dev->dev, "High Speed not
+> supported!\n");
+> +			dev->slave_cfg &= ~DW_IC_CON_SPEED_MASK;
+> +			dev->slave_cfg |= DW_IC_CON_SPEED_FAST;
+> +		} else if (dev->hs_hcnt && dev->hs_lcnt) {
+> +			hcnt = dev->hs_hcnt;
+> +			lcnt = dev->hs_lcnt;
+> +			dw_writel(dev, hcnt, DW_IC_HS_SCL_HCNT);
+> +			dw_writel(dev, lcnt, DW_IC_HS_SCL_LCNT);
+> +			dev_dbg(dev->dev, "HighSpeed-mode HCNT:LCNT =
+> %d:%d\n",
+> +				hcnt, lcnt);
+> +		}
+> +	}
+> +
+> +	/* Configure SDA Hold Time if required */
+> +	reg = dw_readl(dev, DW_IC_COMP_VERSION);
+> +	reg = dw_readl(dev, DW_IC_COMP_VERSION);
+> +	if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
+> +		if (!dev->sda_hold_time) {
+> +			/* Keep previous hold time setting if no one
+> set it */
+> +			dev->sda_hold_time = dw_readl(dev,
+> DW_IC_SDA_HOLD);
+> +		}
+> +		/*
+> +		 * Workaround for avoiding TX arbitration lost in
+> case I2C
+> +		 * slave pulls SDA down "too quickly" after falling
+> egde of
+> +		 * SCL by enabling non-zero SDA RX hold.
+> Specification says it
+> +		 * extends incoming SDA low to high transition while
+> SCL is
+> +		 * high but it apprears to help also above issue.
+> +		 */
+> +		if (!(dev->sda_hold_time & DW_IC_SDA_HOLD_RX_MASK))
+> +			dev->sda_hold_time |= 1 <<
+> DW_IC_SDA_HOLD_RX_SHIFT;
+> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +	} else {
+> +		dev_warn(dev->dev,
+> +			"Hardware too old to adjust SDA hold
+> time.\n");
+> +	}
+> +
+> +	i2c_dw_configure_fifo_slave(dev);
+> +	i2c_dw_release_lock(dev);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_dw_init_slave);
+
+So, don't make a noise in exported name space. When we need two sets of
+functions make an ops structure and assign it where appropriate.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
