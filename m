@@ -1,155 +1,32 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Fri, 18 Nov 2016 06:16:38 -0800
-Message-ID: <a14b7f7e-8f89-866c-36bd-af97cc23ac6e@roeck-us.net>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <582DEB81.6050806@topic.nl> <20161117185654.GA19338@roeck-us.net>
- <582E0A6C.5010307@topic.nl> <20161117215454.GA23571@roeck-us.net>
- <09DCF2E6-3F08-4F0E-837B-55F591008AAB@cern.ch>
- <20161117234024.GA26747@roeck-us.net>
- <alpine.LRH.2.20.1611181316110.5613@pcbe13573-vm.dyndns.cern.ch>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 05/16] dt-bindings: sdhci-msm: Add xo property
+Date: Fri, 18 Nov 2016 08:17:06 -0600
+Message-ID: <20161118141706.syt4gnhf4zur746i@rob-hp-laptop>
+References: <20161116191335.GH25626@codeaurora.org>
+ <1479343623-31163-1-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LRH.2.20.1611181316110.5613@pcbe13573-vm.dyndns.cern.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Levens <tom.levens@cern.ch>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, "jdelvare@suse.com" <jdelvare@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1479343623-31163-1-git-send-email-riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2016 04:23 AM, Tom Levens wrote:
->
->
-> On Fri, 18 Nov 2016, Guenter Roeck wrote:
->
->> On Thu, Nov 17, 2016 at 11:25:30PM +0000, Tom Levens wrote:
->>> On 17 Nov 2016, at 22:54, Guenter Roeck <linux@roeck-us.net> wrote:
->>>> On Thu, Nov 17, 2016 at 08:52:12PM +0100, Mike Looijmans wrote:
->>>>> ﻿On 17-11-2016 19:56, Guenter Roeck wrote:
->>>>>> On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
->>>>>>> ﻿On 17-11-16 17:56, Guenter Roeck wrote:
->>>>>>>> On 11/17/2016 04:10 AM, Tom Levens wrote:
->>>>>>>>> Updated version of the ltc2990 driver which supports all measurement
->>>>>>>>> modes available in the chip. The mode can be set through a devicetree
->>>>>>>>> attribute.
->>>>>>>>
->>>>>> [ ... ]
->>>>>>
->>>>>>>>>
->>>>>>>>> static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>>>>>>>>                 const struct i2c_device_id *id)
->>>>>>>>> {
->>>>>>>>>    int ret;
->>>>>>>>>    struct device *hwmon_dev;
->>>>>>>>> +    struct ltc2990_data *data;
->>>>>>>>> +    struct device_node *of_node = i2c->dev.of_node;
->>>>>>>>>
->>>>>>>>>    if (!i2c_check_functionality(i2c->adapter,
->>>>>>>>> I2C_FUNC_SMBUS_BYTE_DATA |
->>>>>>>>>                     I2C_FUNC_SMBUS_WORD_DATA))
->>>>>>>>>        return -ENODEV;
->>>>>>>>>
->>>>>>>>> -    /* Setup continuous mode, current monitor */
->>>>>>>>> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
->>>>>>>>> GFP_KERNEL);
->>>>>>>>> +    if (unlikely(!data))
->>>>>>>>> +        return -ENOMEM;
->>>>>>>>> +    data->i2c = i2c;
->>>>>>>>> +
->>>>>>>>> +    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
->>>>>>>>> &data->mode))
->>>>>>>>> +        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
->>>>>>>>
->>>>>>>> Iam arguing with myself if we should still do this or if we should read
->>>>>>>> the mode
->>>>>>>> from the chip instead if it isn't provided (after all, it may have been
->>>>>>>> initialized
->>>>>>>> by the BIOS/ROMMON).
->>>>>>>
->>>>>>> I think the mode should be explicitly set, without default. There's no way
->>>>>>> to tell whether the BIOS or bootloader has really set it up or whether the
->>>>>>> chip is just reporting whatever it happened to default to. And given the
->>>>>>> chip's function, it's unlikely a bootloader would want to initialize it.
->>>>>>>
->>>>>> Unlikely but possible. Even if we all agree that the chip should be configured
->>>>>> by the driver, I don't like imposing that view on everyone else.
->>>>>>
->>>>>>> My advice would be to make it a required property. If not set, display an
->>>>>>> error and bail out.
->>>>>>>
->>>>>> It is not that easy, unfortunately. It also has to work on a non-devicetree
->>>>>> system. I would not object to making the property mandatory, but we would
->>>>>> still need to provide non-DT support.
->>>>>>
->>>>>> My "use case" for taking the current mode from the chip if not specified
->>>>>> is that it would enable me to run a module test with all modes. I consider
->>>>>> this extremely valuable.
->>>>>
->>>>> Good point.
->>>>>
->>>>> The chip defaults to measuring internal temperature only, and the mode
->>>>> defaults to "0".
->>>>>
->>>>> Choosing a mode that doesn't match the actual circuitry could be bad for the
->>>>> chip or the board (though unlikely, it'll probably just be useless) since it
->>>>> will actively drive some of the inputs in the temperature modes (which is
->>>>> default for V3/V4 pins).
->>>>>
->>>>> Instead of failing, one could choose to set the default mode to "7", which
->>>>> just measures the 4 voltages, which would be a harmless mode in all cases.
->>>>>
->>>>> As a way to let a bootloader set things up, I think it would be a good check
->>>>> to see if CONTROL register bits 4:3 are set. If "00", the chip is not
->>>>> acquiring data at all, and probably needs configuration still. In that case,
->>>>> the mode must be provided by the devicetree (or the default "7").
->>>>> If bits 4:3 are "11", it has already been set up to measure its inputs, and
->>>>> it's okay to continue doing just that and use the current value of 2:0
->>>>> register as default mode (if the devicetree didn't specify any mode at all).
->>>>>
->>>>
->>>> At first glance, agreed, though by default b[3:4] are 00, and only the
->>>> internal temperature is measured. Actually, the 5 mode bits are all
->>>> relevant to determine what is measured. Maybe it would be better to take
->>>> all 5 bits into account instead of blindly setting b[34]:=11 and a specific
->>>> setting of b[0:2]. Sure, that would make the mode table a bit larger,
->>>> but then ltc2990_attrs_ena[] could be made an u16 array, and a table size
->>>> of 64 bytes would not be that bad.
->>>
->>> I would tend to agree that it should be possible to configure all 5 mode
->>> bits through the devicetree. What I would propose is as follows.
->>>
->>> If a devicetree node exists, the mode parameter(s?) are required and the
->>> chip is initialised.
->>>
->>> If a devicetree node doesn't exist, it is assumed that the chip has
->>> already been configured (by the BIOS, etc). The mode is read from the
->>> chip to set the visibility of the sysfs attributes. In the worst case, where the
->>> chip has not been configured by another source, it would only be possible
->>> to measure the internal temperature -- but I think this is an acceptable
->>> limitation.
->>>
->> SGTM.
->>
->>> The only case that this does not cover is if the device tree node
->>> exists but the chip is expected to be configured by some other source.
->>> Maybe I am wrong, but I would not expect this to be a terribly common
->>> situation.
->>>
->>> What do you think?
->>>
->> I would not bother about this case. Just make the mode property mandatory.
->
-> What do you think about making the devicetree property a list of two integers? Something like
->
-> lltc,mode = <7 3>;
->
-> which would set mode[2..0]=7 and mode[4..3]=3.
->
-I would personally just use a single value for b[4..0]. But that is really up for bikeshedding
-(eg should it be <7 3> or <3 7>. I'll leave that up to Rob to decide - he knows better than me
-of what makes more sense from a DT perspective.
+On Thu, Nov 17, 2016 at 06:17:03AM +0530, Ritesh Harjani wrote:
+> Add "xo" property which is tcxo clock.
 
-Guenter
+Technically, xo is not a property, but a value.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> 
+> Signed-off-by: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 1 +
+>  1 file changed, 1 insertion(+)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
