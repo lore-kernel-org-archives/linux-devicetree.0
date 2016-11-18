@@ -1,69 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
-Date: Fri, 18 Nov 2016 08:16:08 -0600
-Message-ID: <20161118141608.r7jsu7pfc4ztjt33@rob-hp-laptop>
-References: <cover.1479339900.git.johnyoun@synopsys.com>
- <7fa1c1c4d703c435d698cdf140c9d43163347f1d.1479339900.git.johnyoun@synopsys.com>
- <633e5a10-1ea0-48c7-a5b7-a5ff2625e759@i2se.com>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCHv0 1/1] fbdev: add Intel FPGA FRAME BUFFER driver
+Date: Fri, 18 Nov 2016 14:15:47 +0000
+Message-ID: <20161118141547.465c431e@lxorguk.ukuu.org.uk>
+References: <1479287278-5192-1-git-send-email-hean.loong.ong@intel.com>
+        <20161118140903.q33zx7bk5nergq45@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <633e5a10-1ea0-48c7-a5b7-a5ff2625e759-eS4NqCHxEME@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161118140903.q33zx7bk5nergq45@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "Ong, Hean Loong" <hean.loong.ong@intel.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 04:35:10PM +0100, Stefan Wahren wrote:
-> Hi John,
-> 
-> Am 17.11.2016 um 00:47 schrieb John Youn:
-> > Add the "snps,ahb-burst" binding and read it in.
-> >
-> > This property controls which burst type to perform on the AHB bus as a
-> > master in internal DMA mode. This overrides the legacy param value,
-> > which we need to keep around for now since several platforms use it.
-> >
-> > Some platforms may see better or worse performance based on this
-> > value. The HAPS platform is one example where all INCRx have worse
-> > performance than INCR.
-> >
-> > Other platforms (such as the Canyonlands board) report that the default
-> > value causes system hangs.
-> >
-> > Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> > Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/dwc2.txt |  2 +
-> >  drivers/usb/dwc2/core.h                        |  9 +++++
-> >  drivers/usb/dwc2/params.c                      | 56 ++++++++++++++++++++++++++
-> >  3 files changed, 67 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > index 6c7c2bce..9e7b4b4 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> 
-> according to Documentation/devicetree/bindings/submitting-patches.txt
-> this change should be a separate patch.
-> 
-> > @@ -26,6 +26,8 @@ Optional properties:
-> >  Refer to phy/phy-bindings.txt for generic phy consumer properties
-> >  - dr_mode: shall be one of "host", "peripheral" and "otg"
-> >    Refer to usb/generic.txt
-> > +- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
-> > +  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
-> 
-> This doesn't apply in case of the bcm2835. I would prefer this option is
-> ignored in that case with a dev_warn("snps,ahb-burst is not supported on
-> this platform").
+> AIUI, we're not taking new FB drivers. This should be a DRM driver 
+> instead.
 
-Also, perhaps you should allow that the compatible string can define the 
-default.
+Yes - clone one of the dumb DRM drivers, or if you've got any little bits
+of acceleration (even rolling the display) then it's possibly worth
+accelerating for text mode.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- max-width: The width of the framebuffer in pixels.
+> > +- max-height: The height of the framebuffer in pixels.
+> > +- bits-per-color: only "8" is currently supported  
+> 
+> These are not h/w properties.
+
+How are the max ones not hardware properties ?
+
+Alan
