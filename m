@@ -1,94 +1,82 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Fri, 18 Nov 2016 11:17:57 +0100
-Message-ID: <2281986.miqFuFkAbO@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <EE11001F9E5DDD47B7634E2F8A612F2E1F90EA45@lhreml507-mbx> <20161114112625.GO10219@e106497-lin.cambridge.arm.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: exynos: add the mshc_2 node for supporting
+ T-Flash
+Date: Fri, 18 Nov 2016 11:38:09 +0100
+Message-ID: <26cc8cc3-0a91-e253-5a10-8e080c3e486f@samsung.com>
+References: <CGME20161118071238epcas4p222702d2c716bf2d7cd9c9354ab99a189@epcas4p2.samsung.com>
+ <20161118071224.12876-1-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161114112625.GO10219-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-reply-to: <20161118071224.12876-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "liviu.dudau-5wv7dgnIgG8@public.gmane.org" <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt@ke>
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, November 14, 2016 11:26:25 AM CET liviu.dudau-5wv7dgnIgG8@public.gmane.org wrote:
-> On Mon, Nov 14, 2016 at 08:26:42AM +0000, Gabriele Paoloni wrote:
-> > > Nope, that is not what it means. It means that PCI devices can see I/O
-> > > addresses
-> > > on the bus that start from 0. There never was any usage for non-PCI
-> > > controllers
-> > 
-> > So I am a bit confused...
-> > From http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
-> > It seems that ISA buses operate on cpu I/O address range [0, 0xFFF].
-> > I thought that was the reason why for most architectures we have
-> > PCIBIOS_MIN_IO equal to 0x1000 (so I thought that ISA controllers
-> > usually use [0, PCIBIOS_MIN_IO - 1] )
-> 
-> First of all, cpu I/O addresses is an x86-ism. ARM architectures and others
->  have no separate address space for I/O, it is all merged into one unified
-> address space. So, on arm/arm64 for example, PCIBIOS_MIN_IO = 0 could mean
-> that we don't care about ISA I/O because the platform does not support having
-> an ISA bus (e.g.).
+Dear Jaehoon,
 
-I think to be more specific, PCIBIOS_MIN_IO=0 would indicate that you cannot
-have a PCI-to-ISA or PCI-to-LPC bridge in any PCI domain. This is different
-from having an LPC master outside of PCI, as that lives in its own domain
-and has a separately addressable I/O space.
 
-> > As said before this series forbid IO tokens to be in [0, PCIBIOS_MIN_IO)
-> > to allow special ISA controllers to use that range with special
-> > accessors.
-> > Having a variable threshold would make life much more difficult
-> > as there would be a probe dependency between the PCI controller and
-> > the special ISA one (PCI to wait for the special ISA device to be
-> > probed and set the right threshold value from DT or ACPI table).
-> > 
-> > Instead using PCIBIOS_MIN_IO is easier and should not impose much
-> > constraint as [PCIBIOS_MIN_IO, IO_SPACE_LIMIT] is available to
-> > the PCI controller for I/O tokens...
-> 
-> What I am suggesting is to leave PCIBIOS_MIN_IO alone which still reserves
-> space for ISA controller and add a PCIBIOS_MIN_DIRECT_IO that will reserve
-> space for your direct address I/O on top of PCIBIOS_MIN_IO.
+On 2016-11-18 08:12, Jaehoon Chung wrote:
+> Add the mshc_2 node for supporting T-flash.
+>
+> And it needs to add the "mshc*" aliases. Because dwmmc driver should be
+> assigned to "ctrl_id" after parsing to "mshc".
+> If there is no aliases for mshc, then it might be set to the wrong
+> capabilities.
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> index 9ea3f32..75dab01 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> @@ -42,6 +42,8 @@
+>   		spi2 = &spi_2;
+>   		spi3 = &spi_3;
+>   		spi4 = &spi_4;
+> +		mshc0 = &mshc_0;
+> +		mshc2 = &mshc_2;
+>   	};
+>   
+>   	chosen {
+> @@ -661,6 +663,23 @@
+>   	assigned-clock-rates = <800000000>;
+>   };
+>   
+> +&mshc_2 {
+> +	status = "okay";
+> +	num-slots = <1>;
+> +	cap-sd-highspeed;
+> +	disable-wp;
+> +	cd-gpios = <&gpa2 4 0>;
 
-The PCIBIOS_MIN_DIRECT_IO name still suggests having something related to
-PCIBIOS_MIN_IO, but it really isn't. We are talking about multiple
-concepts here that are not the same but that are somewhat related:
+cd-gpios = <&gpa2 4 GPIO_ACTIVE_HIGH>;
 
-a) keeping PCI devices from allocating low I/O ports on the PCI bus
-   that would conflict with ISA devices behind a bridge of the
-   same bus.
+> +	cd-inverted;
+> +	card-detect-delay = <200>;
+> +	samsung,dw-mshc-ciu-div = <3>;
+> +	samsung,dw-mshc-sdr-timing = <0 4>;
+> +	samsung,dw-mshc-ddr-timing = <0 2>;
+> +	fifo-depth = <0x80>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
+> +	bus-width = <4>;
+> +};
+> +
+>   &pinctrl_alive {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&initial_alive>;
 
-b) reserving the low 0x0-0xfff range of the Linux-internal I/O
-   space abstraction to a particular LPC or PCI domain to make
-   legacy device drivers work that hardcode a particular port
-   number.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-c) Redirecting inb/outb to call a domain-specific accessor function
-   rather than doing the normal MMIO window for an LPC master or
-   more generally any arbitrary LPC or PCI domain that has a
-   nonstandard I/O space. 
-   [side note: actually if we generalized this, we could avoid
-    assigning an MMIO range for the I/O space on the pci-mvebu
-    driver, and that would help free up some other remapping
-    windows]
-
-I think there is no need to change a) here, we have PCIBIOS_MIN_IO
-today and even if we don't need it, there is no obvious downside.
-I would also argue that we can ignore b) for the discussion of
-the HiSilicon LPC driver, we just need to assign some range
-of logical addresses to each domain.
-
-That means solving c) is the important problem here, and it
-shouldn't be so hard.  We can do this either with a single
-special domain as in the v5 patch series, or by generalizing it
-so that any I/O space mapping gets looked up through the device
-pointer of the bus master.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
