@@ -1,43 +1,73 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT] ARM: dts: exynos: Fix invalid GIC interrupt flags in audio block of Exynos5410
-Date: Fri, 18 Nov 2016 14:59:24 +0200
-Message-ID: <1479473964-9085-1-git-send-email-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND PATCH] ARM: dts: stm32f429: Add missing USART3 pin config to
+ STM32F469I-DISCO board
+Date: Fri, 18 Nov 2016 11:13:29 -0200
+Message-ID: <CAF3+Tqer616rqU6rKeSKF5vusTdNSAQ_okCgRtx8ZnhOjjK78g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, ">" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Recently added audio block of Exynos5410 missed global fixup of GIC
-interrupt flags.  Interrupt of type IRQ_TYPE_NONE is not allowed for GIC
-interrupts so use level high.
+Including new STM32 maintainer. Rebased at stm32-dt-for-v4.10-1 and
+stm32-dt-for-v4.10-2 branches. It fix the port/pin initialization in
+case boot-loader does not configure/initialize the pins.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This patch adds USART3 pin configuration on PB10/PA11 pins
+for STM32F469I-DISCO board.
+
+Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5410.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32f429.dtsi      | 13 +++++++++++++
+ arch/arm/boot/dts/stm32f469-disco.dts |  2 ++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index bb90bbdbe2d9..2b6adafe18e2 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -203,7 +203,7 @@
- 			pdma0: pdma@12680000 {
- 				compatible = "arm,pl330", "arm,primecell";
- 				reg = <0x121A0000 0x1000>;
--				interrupts = <GIC_SPI 34 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clock CLK_PDMA0>;
- 				clock-names = "apb_pclk";
- 				#dma-cells = <1>;
-@@ -214,7 +214,7 @@
- 			pdma1: pdma@12690000 {
- 				compatible = "arm,pl330", "arm,primecell";
- 				reg = <0x121B0000 0x1000>;
--				interrupts = <GIC_SPI 35 IRQ_TYPE_NONE>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clock CLK_PDMA1>;
- 				clock-names = "apb_pclk";
- 				#dma-cells = <1>;
--- 
-2.7.4
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 35df462..1d94eba 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -284,6 +284,19 @@
+                                };
+                        };
+
++                       usart3_pins_a: usart3@0 {
++                               pins1 {
++                                       pinmux =
+<STM32F429_PB10_FUNC_USART3_TX>;
++                                       bias-disable;
++                                       drive-push-pull;
++                                       slew-rate = <0>;
++                               };
++                               pins2 {
++                                       pinmux =
+<STM32F429_PB11_FUNC_USART3_RX>;
++                                       bias-disable;
++                               };
++                       };
++
+                        usbotg_hs_pins_a: usbotg_hs@0 {
+                                pins {
+                                        pinmux =
+<STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts
+b/arch/arm/boot/dts/stm32f469-disco.dts
+index e911af8..eb3e638 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -71,5 +71,7 @@
+ };
+
+ &usart3 {
++       pinctrl-0 = <&usart3_pins_a>;
++       pinctrl-names = "default";
+        status = "okay";
+ };
+
+
+--
+2.7.4 (Apple Git-66)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
