@@ -1,68 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] remoteproc: qcom: Encapsulate pvt data structure
- for q6v56 hexagon.
-Date: Fri, 18 Nov 2016 10:40:30 -0800
-Message-ID: <20161118184030.GJ28340@tuxbot>
-References: <1478268057-11847-1-git-send-email-akdwived@codeaurora.org>
- <1478268057-11847-2-git-send-email-akdwived@codeaurora.org>
- <20161110203013.fphvzd4df3zvjdfi@rob-hp-laptop>
- <a29bce91-1300-0728-51dd-7d009d9e056b@codeaurora.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] mfd: dt: Add bindings for the Aspeed LPC Host
+ Controller (LPCHC)
+Date: Fri, 18 Nov 2016 18:44:37 +0000
+Message-ID: <20161118184437.GD19884@dell.home>
+References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
+ <1478097481-14895-4-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a29bce91-1300-0728-51dd-7d009d9e056b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1478097481-14895-4-git-send-email-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 16 Nov 06:02 PST 2016, Avaneesh Kumar Dwivedi wrote:
+Arnd,
 
-> 
-> 
-> On 11/11/2016 2:00 AM, Rob Herring wrote:
-> >On Fri, Nov 04, 2016 at 07:30:54PM +0530, Avaneesh Kumar Dwivedi wrote:
-> >>Encapsulate resources specific to each version of hexagon chip to
-> >>device node to avoid conditional check for manipulation of those
-> >>resources in driver code.
-> >>
-> >>Signed-off-by: Avaneesh Kumar Dwivedi <akdwived-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>---
-> >>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   1 +
-> >>  drivers/remoteproc/qcom_q6v5_pil.c                 | 137 ++++++++++++++++++---
-> >>  2 files changed, 120 insertions(+), 18 deletions(-)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> >>index 57cb49e..cbc165c 100644
-> >>--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> >>+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> >>@@ -8,6 +8,7 @@ on the Qualcomm Hexagon core.
-> >>  	Value type: <string>
-> >>  	Definition: must be one of:
-> >>  		    "qcom,q6v5-pil"
-> >>+		"qcom,q6v56-pil"
-> >Perhaps some explanation in the commit message about what these magic
-> >numbers mean?
-> 
->     "v56" represent class of hexagon chip, which again is differentiated
-> based on version number. Two
->     different MSM SOC may use same class of hexagon chip. example is as
-> below.
-> 
->     msm8974  q6v5 version  5.0.0
->     msm8916  q6v5 version  5.1.1
+Do you have a preference?
 
-But looking at the Qualcomm tree I think I got 8916 wrong, it seems that
-it should be "q6v56" and your patches indicates that the 8996 has a
-q6v55 - which doesn't make sense to me and in some places there's
-comments indicating it's version 6.
+> The Aspeed LPC Host Controller is presented as a syscon device to
+> arbitrate access by LPC and pinmux drivers. LPC pinmux configuration on
+> fifth generation SoCs depends on bits in both the System Control Unit
+> and the LPC Host Controller.
+> 
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt | 17 +++++++++++++++++
 
-I asked you about this but I can't find an answer in any of your
-replies.
+Create a new directory in bindings/mfd called 'syscon'.
 
-Regards,
-Bjorn
+Or perhaps 'bindings/syscon'.
+
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> new file mode 100644
+> index 000000000000..792651488c3d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
+> @@ -0,0 +1,17 @@
+> +* Device tree bindings for the Aspeed LPC Host Controller (LPCHC)
+> +
+> +The LPCHC registers configure LPC behaviour between the BMC and the host
+> +system. The LPCHC also participates in pinmux requests on g5 SoCs and is
+> +therefore considered a syscon device.
+> +
+> +Required properties:
+> +- compatible:		"aspeed,ast2500-lpchc", "syscon"
+> +- reg:			contains offset/length value of the LPCHC memory
+> +			region.
+
+Why not just use a single tab, then you don't have to linewrap?
+
+> +Example:
+> +
+> +lpchc: lpchc@1e7890a0 {
+> +	compatible = "aspeed,ast2500-lpchc", "syscon";
+> +	reg = <0x1e7890a0 0xc4>;
+> +};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
