@@ -1,140 +1,159 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v8] mwifiex: parse device tree node for PCIe
-Date: Fri, 18 Nov 2016 18:07:04 +0530
-Message-ID: <1479472624-22340-1-git-send-email-akarwar@marvell.com>
+From: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
+Date: Fri, 18 Nov 2016 13:23:36 +0100
+Message-ID: <alpine.LRH.2.20.1611181316110.5613@pcbe13573-vm.dyndns.cern.ch>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <1479384616-12479-3-git-send-email-tom.levens@cern.ch> <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net> <582DEB81.6050806@topic.nl> <20161117185654.GA19338@roeck-us.net> <582E0A6C.5010307@topic.nl>
+ <20161117215454.GA23571@roeck-us.net> <09DCF2E6-3F08-4F0E-837B-55F591008AAB@cern.ch> <20161117234024.GA26747@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed;
+        boundary="-1920950886-711264204-1479471820=:5613"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161117234024.GA26747-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, "jdelvare-IBi9RG/b67k@public.gmane.org" <jdelvare-IBi9RG/b67k@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---1920950886-711264204-1479471820=:5613
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-This patch derives device tree node from pcie bus layer framework.
-Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-marvell-8xxx.txt) to accommodate PCIe changes.
 
-Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
-v2: Included vendor and product IDs in compatible strings for PCIe
-chipsets(Rob Herring)
-v3: Patch is created using -M option so that it will only include diff of
-original and renamed files(Rob Herring)
-Resend v3: Resending the patch because I missed to include device tree mailing
-while sending v3.
-v4: Fix error handling, also move-on even if no device tree node is present.
-v5: Update commit log to include memory leak, return -EINVAL instead of -1.
-v6: Remove an unnecessary error print, fix typo in commit log
-v7: a) Earlier versions of this patch claims to have a change which fixes "memory
-       leak". But it actually introduces double-free problem. That change is removed
-       here(Brian Norris)
-    b) Cosmetic change in bindings documentation(Rob Herring)
-	s/marvell/Marvell/
-	s/sdio\/pcie/SDIO\/PCIE/
-v8: Same as v7. I had missed to CC device tree mailing list in v7. Correcting this
-    in v8.
----
- .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++++---
- drivers/net/wireless/marvell/mwifiex/pcie.c        | 24 ++++++++++++++++++++++
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 ++-
- 3 files changed, 31 insertions(+), 4 deletions(-)
- rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-similarity index 91%
-rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-index c421aba..980b16df 100644
---- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-@@ -1,8 +1,8 @@
--Marvell 8897/8997 (sd8897/sd8997) SDIO devices
-+Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
- ------
- 
--This node provides properties for controlling the marvell sdio wireless device.
--The node is expected to be specified as a child node to the SDIO controller that
-+This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
-+The node is expected to be specified as a child node to the SDIO/PCIE controller that
- connects the device to the system.
- 
- Required properties:
-@@ -10,6 +10,8 @@ Required properties:
-   - compatible : should be one of the following:
- 	* "marvell,sd8897"
- 	* "marvell,sd8997"
-+	* "pci11ab,2b42"
-+	* "pci1b4b,2b42"
- 
- Optional properties:
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3047c1a..5737cc6 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -37,6 +37,22 @@
- 
- static struct semaphore add_remove_card_sem;
- 
-+static const struct of_device_id mwifiex_pcie_of_match_table[] = {
-+	{ .compatible = "pci11ab,2b42" },
-+	{ .compatible = "pci1b4b,2b42" },
-+	{ }
-+};
-+
-+static int mwifiex_pcie_probe_of(struct device *dev)
-+{
-+	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
-+		dev_err(dev, "required compatible string missing\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int
- mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
- 		       size_t size, int flags)
-@@ -185,6 +201,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 					const struct pci_device_id *ent)
- {
- 	struct pcie_service_card *card;
-+	int ret;
- 
- 	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
- 		 pdev->vendor, pdev->device, pdev->revision);
-@@ -206,6 +223,13 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
- 		card->pcie.can_ext_scan = data->can_ext_scan;
- 	}
- 
-+	/* device tree node parsing and platform specific configuration*/
-+	if (pdev->dev.of_node) {
-+		ret = mwifiex_pcie_probe_of(&pdev->dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
- 			     MWIFIEX_PCIE)) {
- 		pr_err("%s failed\n", __func__);
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index 0a54e21..b697b61 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -2235,7 +2235,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
- 		 * The cal-data can be read from device tree and/or
- 		 * a configuration file and downloaded to firmware.
- 		 */
--		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
-+		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
-+		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
- 		    adapter->dev->of_node) {
- 			adapter->dt_node = adapter->dev->of_node;
- 			if (of_property_read_u32(adapter->dt_node,
--- 
-1.9.1
+On Fri, 18 Nov 2016, Guenter Roeck wrote:
+
+> On Thu, Nov 17, 2016 at 11:25:30PM +0000, Tom Levens wrote:
+>> On 17 Nov 2016, at 22:54, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>> On Thu, Nov 17, 2016 at 08:52:12PM +0100, Mike Looijmans wrote:
+>>>> ﻿On 17-11-2016 19:56, Guenter Roeck wrote:
+>>>>> On Thu, Nov 17, 2016 at 06:40:17PM +0100, Mike Looijmans wrote:
+>>>>>> ﻿On 17-11-16 17:56, Guenter Roeck wrote:
+>>>>>>> On 11/17/2016 04:10 AM, Tom Levens wrote:
+>>>>>>>> Updated version of the ltc2990 driver which supports all measurement
+>>>>>>>> modes available in the chip. The mode can be set through a devicetree
+>>>>>>>> attribute.
+>>>>>>>
+>>>>> [ ... ]
+>>>>>
+>>>>>>>>
+>>>>>>>> static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>>>>>>>>                 const struct i2c_device_id *id)
+>>>>>>>> {
+>>>>>>>>    int ret;
+>>>>>>>>    struct device *hwmon_dev;
+>>>>>>>> +    struct ltc2990_data *data;
+>>>>>>>> +    struct device_node *of_node = i2c->dev.of_node;
+>>>>>>>>
+>>>>>>>>    if (!i2c_check_functionality(i2c->adapter,
+>>>>>>>> I2C_FUNC_SMBUS_BYTE_DATA |
+>>>>>>>>                     I2C_FUNC_SMBUS_WORD_DATA))
+>>>>>>>>        return -ENODEV;
+>>>>>>>>
+>>>>>>>> -    /* Setup continuous mode, current monitor */
+>>>>>>>> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data),
+>>>>>>>> GFP_KERNEL);
+>>>>>>>> +    if (unlikely(!data))
+>>>>>>>> +        return -ENOMEM;
+>>>>>>>> +    data->i2c = i2c;
+>>>>>>>> +
+>>>>>>>> +    if (!of_node || of_property_read_u32(of_node, "lltc,mode",
+>>>>>>>> &data->mode))
+>>>>>>>> +        data->mode = LTC2990_CONTROL_MODE_DEFAULT;
+>>>>>>>
+>>>>>>> Iam arguing with myself if we should still do this or if we should read
+>>>>>>> the mode
+>>>>>>> from the chip instead if it isn't provided (after all, it may have been
+>>>>>>> initialized
+>>>>>>> by the BIOS/ROMMON).
+>>>>>>
+>>>>>> I think the mode should be explicitly set, without default. There's no way
+>>>>>> to tell whether the BIOS or bootloader has really set it up or whether the
+>>>>>> chip is just reporting whatever it happened to default to. And given the
+>>>>>> chip's function, it's unlikely a bootloader would want to initialize it.
+>>>>>>
+>>>>> Unlikely but possible. Even if we all agree that the chip should be configured
+>>>>> by the driver, I don't like imposing that view on everyone else.
+>>>>>
+>>>>>> My advice would be to make it a required property. If not set, display an
+>>>>>> error and bail out.
+>>>>>>
+>>>>> It is not that easy, unfortunately. It also has to work on a non-devicetree
+>>>>> system. I would not object to making the property mandatory, but we would
+>>>>> still need to provide non-DT support.
+>>>>>
+>>>>> My "use case" for taking the current mode from the chip if not specified
+>>>>> is that it would enable me to run a module test with all modes. I consider
+>>>>> this extremely valuable.
+>>>>
+>>>> Good point.
+>>>>
+>>>> The chip defaults to measuring internal temperature only, and the mode
+>>>> defaults to "0".
+>>>>
+>>>> Choosing a mode that doesn't match the actual circuitry could be bad for the
+>>>> chip or the board (though unlikely, it'll probably just be useless) since it
+>>>> will actively drive some of the inputs in the temperature modes (which is
+>>>> default for V3/V4 pins).
+>>>>
+>>>> Instead of failing, one could choose to set the default mode to "7", which
+>>>> just measures the 4 voltages, which would be a harmless mode in all cases.
+>>>>
+>>>> As a way to let a bootloader set things up, I think it would be a good check
+>>>> to see if CONTROL register bits 4:3 are set. If "00", the chip is not
+>>>> acquiring data at all, and probably needs configuration still. In that case,
+>>>> the mode must be provided by the devicetree (or the default "7").
+>>>> If bits 4:3 are "11", it has already been set up to measure its inputs, and
+>>>> it's okay to continue doing just that and use the current value of 2:0
+>>>> register as default mode (if the devicetree didn't specify any mode at all).
+>>>>
+>>>
+>>> At first glance, agreed, though by default b[3:4] are 00, and only the
+>>> internal temperature is measured. Actually, the 5 mode bits are all
+>>> relevant to determine what is measured. Maybe it would be better to take
+>>> all 5 bits into account instead of blindly setting b[34]:=11 and a specific
+>>> setting of b[0:2]. Sure, that would make the mode table a bit larger,
+>>> but then ltc2990_attrs_ena[] could be made an u16 array, and a table size
+>>> of 64 bytes would not be that bad.
+>>
+>> I would tend to agree that it should be possible to configure all 5 mode
+>> bits through the devicetree. What I would propose is as follows.
+>>
+>> If a devicetree node exists, the mode parameter(s?) are required and the
+>> chip is initialised.
+>>
+>> If a devicetree node doesn't exist, it is assumed that the chip has
+>> already been configured (by the BIOS, etc). The mode is read from the
+>> chip to set the visibility of the sysfs attributes. In the worst case, where the
+>> chip has not been configured by another source, it would only be possible
+>> to measure the internal temperature -- but I think this is an acceptable
+>> limitation.
+>>
+> SGTM.
+>
+>> The only case that this does not cover is if the device tree node
+>> exists but the chip is expected to be configured by some other source.
+>> Maybe I am wrong, but I would not expect this to be a terribly common
+>> situation.
+>>
+>> What do you think?
+>>
+> I would not bother about this case. Just make the mode property mandatory.
+
+What do you think about making the devicetree property a list of two 
+integers? Something like
+
+lltc,mode = <7 3>;
+
+which would set mode[2..0]=7 and mode[4..3]=3.
+
+To me, this is easier to setup from the datasheet than a single integer 
+value. The other option would be to split it into two properties, but I am 
+struggling to come up with suitable names for them -- the datasheet 
+helpfully calls both fields "mode".
+
+Cheers,
+---1920950886-711264204-1479471820=:5613--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
