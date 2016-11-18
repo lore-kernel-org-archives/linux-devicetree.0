@@ -1,66 +1,48 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] DW DMAC: update device tree
-Date: Fri, 18 Nov 2016 21:26:29 +0200
-Message-ID: <1479497189.22212.41.camel@linux.intel.com>
-References: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] Documentation: Add binding document for Lattice
+ iCE40 FPGA manager
+Date: Fri, 18 Nov 2016 20:28:08 +0100
+Message-ID: <9df14dce-936d-ee36-721b-288477e68fe0@denx.de>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk>
+ <1478486962-26794-2-git-send-email-joel@airwebreathe.org.uk>
+ <20161114161130.2arzmaev6ajsw4qt@rob-hp-laptop>
+ <alpine.DEB.2.20.1611181255120.3387@atull-VirtualBox2>
+ <CAAtXAHcORUBHH-V98cK0CABtjXYB1afhLHb_2m-akn5tMcv5vQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAtXAHcORUBHH-V98cK0CABtjXYB1afhLHb_2m-akn5tMcv5vQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Clifford Wolf <clifford-cPpHkPqGOEfk7+2FdBfRIA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-18 at 22:12 +0300, Eugeniy Paltsev wrote:
-> It wasn't possible to enable some features like
-> memory-to-memory transfers or multi block transfers via DT.
-> It is fixed by these patches.
-
-First of all, please, give time to reviewers to comment the patches.
-Usually it should be at least 24h (for the series that has been sent
-first time 1 week approximately).
-
-> 
-> Changes for v3:
->  * Update existing platform data.
->    We don't need to update existing DTS because default logic 
->    wasn't change: we don't set "is_nollp" if we read 
->    configuration from DT before. And we don't set it now if
->    "multi-block" property doesn't exist in DTS.
-
-See my comments in the patches.
-And do not send the updated version earlier than Monday, please.
-
-> 
-> Changes for v2:
->  * I thought about is_memcpy DT property: all known devices, which 
->    use DT for configuration, support memory-to-memory transfers. 
->    So we don't need to read it from DT. So enable it by default, 
->    if we read configuration from DT.
-> 
->  * Use "multi-block" instead of "hw-llp" name to be more clear.
-> 
->  * Move adding DT property and adding documentation for this
->    property to one patch.
-> 
-> Eugeniy Paltsev (2):
->   DW DMAC: enable memory-to-memory transfers support
->   DW DMAC: add multi-block property to device tree
-> 
->  Documentation/devicetree/bindings/dma/snps-dma.txt |  2 ++
->  drivers/dma/dw/core.c                              |  2 +-
->  drivers/dma/dw/platform.c                          | 11 +++++++++++
->  drivers/tty/serial/8250/8250_lpss.c                |  2 +-
->  include/linux/platform_data/dma-dw.h               |  4 ++--
->  5 files changed, 17 insertions(+), 4 deletions(-)
-> 
+On 11/18/2016 08:17 PM, Moritz Fischer wrote:
+> On Fri, Nov 18, 2016 at 10:56 AM, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+>> On Mon, 14 Nov 2016, Rob Herring wrote:
+>>
+>>> On Sun, Nov 06, 2016 at 07:49:21PM -0700, Joel Holdsworth wrote:
+>>>> This adds documentation of the device tree bindings of the Lattice iCE40
+>>>> FPGA driver for the FPGA manager framework.
+>>>>
+>>>> Signed-off-by: Joel Holdsworth <joel-IJEoVVyKhCJXvIrf17iDB/XRex20P6io@public.gmane.org>
+>>>> ---
+>>>>  .../bindings/fpga/lattice-ice40-fpga-mgr.txt        | 21 +++++++++++++++++++++
+>>>>  1 file changed, 21 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>
+>> Acked-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
 -- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
+Best regards,
+Marek Vasut
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
