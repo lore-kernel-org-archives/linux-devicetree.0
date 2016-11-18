@@ -1,87 +1,98 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] soc/tegra: Implement Tegra186 PMC support
-Date: Fri, 18 Nov 2016 15:00:07 +0100
-Message-ID: <20161118140007.GC14358@ulmo.ba.sec>
-References: <20161117171636.20580-1-thierry.reding@gmail.com>
- <e9a081f5-8e93-d3e8-a702-79903e5a6a78@nvidia.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v8 09/16] mmc: sdhci: Factor out sdhci_enable_clock
+Date: Fri, 18 Nov 2016 15:56:00 +0200
+Message-ID: <df833f0b-041f-67d1-4b91-ef4399ecf15c@intel.com>
+References: <1479312052-22396-1-git-send-email-riteshh@codeaurora.org>
+ <1479312052-22396-10-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e9a081f5-8e93-d3e8-a702-79903e5a6a78-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1479312052-22396-10-git-send-email-riteshh@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, sboyd@codeaurora.org, andy.gross@linaro.org
+Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com
 List-Id: devicetree@vger.kernel.org
 
+On 16/11/16 18:00, Ritesh Harjani wrote:
+> Factor out sdhci_enable_clock from sdhci_set_clock
+> and make it EXPORT_SYMBOL so that it can be called.
 
---t0UkRYy7tHLRMCai
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This seems fine apart from minor comments below.
 
-On Fri, Nov 18, 2016 at 09:36:04AM +0000, Jon Hunter wrote:
->=20
-> On 17/11/16 17:16, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > The power management controller on Tegra186 has changed in backwards-
-> > incompatible ways with respect to earlier generations. This implements a
-> > new driver that supports inversion of the PMU interrupt as well as the
-> > "recovery", "bootloader" and "forced-recovery" reboot commands.
-> >=20
-> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  34 +++++
-> >  drivers/soc/tegra/Makefile                         |   2 +-
-> >  drivers/soc/tegra/pmc-tegra186.c                   | 169 +++++++++++++=
-++++++++
-> >  3 files changed, 204 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,=
-tegra186-pmc.txt
-> >  create mode 100644 drivers/soc/tegra/pmc-tegra186.c
->=20
-> ...
->=20
-> > diff --git a/drivers/soc/tegra/Makefile b/drivers/soc/tegra/Makefile
-> > index ae857ff7d53d..9976a0de1927 100644
-> > --- a/drivers/soc/tegra/Makefile
-> > +++ b/drivers/soc/tegra/Makefile
-> > @@ -1,4 +1,4 @@
-> >  obj-y +=3D fuse/
-> > =20
-> >  obj-y +=3D common.o
-> > -obj-y +=3D pmc.o
-> > +obj-y +=3D pmc.o pmc-tegra186.o
->=20
-> Do we want to enable this driver for all Tegra devices? Was not sure if
-> this should be dependent on ARM64.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci.c | 28 +++++++++++++++++-----------
+>  drivers/mmc/host/sdhci.h |  1 +
+>  2 files changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index d08d507..8a89d89 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -1344,20 +1344,10 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  }
+>  EXPORT_SYMBOL_GPL(sdhci_calc_clk);
+>  
+> -void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> +void sdhci_enable_clock(struct sdhci_host *host, unsigned short clk)
 
-Yeah, I think adding an non-user-visible Kconfig symbol for this might
-make sense. Then we can use Kconfig to encode the logic about where to
-enable this and simply use the Kconfig symbol in the Makefile.
+We write a u16 so let's make clk a u16 instead of unsigned short.
 
-Thierry
+I would have called it sdhci_enable_clk() to go with sdhci_calc_clk() and
+slightly different from sdhci_set_clock() which is a callback whereas the
+other 2 are helpers.
 
---t0UkRYy7tHLRMCai
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJYLwlkAAoJEN0jrNd/PrOhHhMQALWqrKK6cyDU4FnMSaRvS5m2
-cW7NVgvZEdvLysooyMD2Z1f/bLajYlh/ud8Yq0wd5AQju58AXVFzVBE0+0NU+aK4
-QA7HhJl9MTC7A2CJv+pCV7rQAY5peaBadYj/ks+pLoSEoFj9jh9sA/vQritnG+Xw
-9zZtT4i+QG+RtRvwwKX2pRDwNxdopx0z1/TszMfN1LZWi+9ZgweoYhR/jxPI9Cxg
-uNG1+sBEaBfo9zyIAoNXLU+JJRjPSmsYDCrwQrVuC93jWrywveNn78kG/DaIm9Jm
-CP7NbxUO9c/azHVkyzx1P1sBYp1VF2jUp0FVBk3fCQlp/GVsUs372BYLTxY6esnw
-TJEil9XWmMEUa05euLhqPaosaHfI727OFGj/1TorNiW3+tQDPDiOVEOyxHuLcn5j
-cdDowwFHRhrKd8q5aRgXA3Gi8zFvw9kZ2gpdfdoKCrOurI8JOgDRcNLUKAXFYcOs
-SxpZOOahfByuksgZjjDQ5PigQ9Uj/bQRhpykIEacKPIEZV90X6Pcd3i5ys15cDHj
-0qQc+W0WNtXXNa+P/CLS0Wiz6mXe/ZMA/9Mj9VNARhpzlmANz7dv38wxCRCwYPbP
-oFdP7By9x4djWN+zFmF4aaHR0pzcRBWZ9AJ6tS5mUk/XXj1YNBo5TPQp8kxagxRa
-AL3muICQo7nx1bxzVpCj
-=ZZTj
------END PGP SIGNATURE-----
-
---t0UkRYy7tHLRMCai--
+>  {
+> -	u16 clk;
+>  	unsigned long timeout;
+>  
+> -	host->mmc->actual_clock = 0;
+> -
+> -	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> -
+> -	if (clock == 0)
+> -		return;
+> -
+> -	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+> -
+>  	clk |= SDHCI_CLOCK_INT_EN;
+>  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>  
+> @@ -1378,6 +1368,22 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+>  	clk |= SDHCI_CLOCK_CARD_EN;
+>  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>  }
+> +EXPORT_SYMBOL_GPL(sdhci_enable_clock);
+> +
+> +void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> +{
+> +	u16 clk;
+> +
+> +	host->mmc->actual_clock = 0;
+> +
+> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +
+> +	if (clock == 0)
+> +		return;
+> +
+> +	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+> +	sdhci_enable_clock(host, clk);
+> +}
+>  EXPORT_SYMBOL_GPL(sdhci_set_clock);
+>  
+>  static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 766df17..8e77a3b 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -681,6 +681,7 @@ static inline bool sdhci_sdio_irq_enabled(struct sdhci_host *host)
+>  u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
+>  		   unsigned int *actual_clock);
+>  void sdhci_set_clock(struct sdhci_host *host, unsigned int clock);
+> +void sdhci_enable_clock(struct sdhci_host *host, unsigned short clk);
+>  void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+>  		     unsigned short vdd);
+>  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+> 
