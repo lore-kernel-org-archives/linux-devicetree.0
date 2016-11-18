@@ -1,106 +1,44 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [RFC PATCH v2 1/7] dt-bindings: document devicetree bindings for mux-gpio
-Date: Thu, 17 Nov 2016 22:48:03 +0100
-Message-ID: <1479419289-17553-2-git-send-email-peda@axentia.se>
-References: <1479419289-17553-1-git-send-email-peda@axentia.se>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: Add blue-and-red-wiring
+ -property to LCDC node
+Date: Thu, 17 Nov 2016 17:25:32 -0800
+Message-ID: <20161118012531.GI7129@atomide.com>
+References: <a7a7cd2666199316cbf13f5c1c9a387838f645bf.1479413359.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479419289-17553-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <a7a7cd2666199316cbf13f5c1c9a387838f645bf.1479413359.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
----
- .../devicetree/bindings/misc/mux-gpio.txt          | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/mux-gpio.txt
+* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [161117 12:14]:
+> Add blue-and-red-wiring -property to LCDC node. Also adds comments on
+> how to get support 24 bit RGB mode. After this patch am335x-boneblack
+> support RGB565, BGR888, and XBGR8888 color formats. See details in
+> Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt.
+> 
+> The BBB has straight color wiring from am335x to tda19988, however the
+> tda19988 can be configured to cross the blue and red wires. The
+> comments show how to do that with video-ports property of tda19988
+> node and how to tell LCDC that blue and red wires are crossed, with
+> blue-and-red-wiring LCDC node property. This changes supported color
+> formats from 16 bit RGB and 24 bit BGR to 16 bit BGR and 24 bit RGB.
+> 
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+> ---
+> Hi Tony,
+> Could you pick this for 4.10. We left it out form 4.9 to avoid
+> conflict with beaglebone-back hdmi audio dts patches that slipped in
+> trough drm branch.
 
-diff --git a/Documentation/devicetree/bindings/misc/mux-gpio.txt b/Documentation/devicetree/bindings/misc/mux-gpio.txt
-new file mode 100644
-index 000000000000..73699a37824f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/mux-gpio.txt
-@@ -0,0 +1,79 @@
-+GPIO-based multiplexer controller bindings
-+
-+Define what GPIO pins are used to control a multiplexer. Or several
-+multiplexers, if the same pins control more than one multiplexer.
-+
-+Required properties:
-+- compatible : "mux-gpio"
-+- mux-gpios : list of gpios used to control the multiplexer, least
-+	      significant bit first.
-+
-+Optional properties:
-+- idle-state : if present, the state the mux will have when idle.
-+
-+Example:
-+	control_mux: control-adc-mux {
-+		compatible = "mux-gpio";
-+
-+		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-+			    <&pioA 1 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	adc-mux {
-+		compatible = "iio-mux";
-+		io-channels = <&adc 0>;
-+		io-channel-names = "parent";
-+
-+		control-muxes = <&control_mux>;
-+		control-mux-names = "mux";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		sync-1@0 {
-+			reg = <0>;
-+		};
-+
-+		in@1 {
-+			reg = <1>;
-+		};
-+
-+		out@2 {
-+			reg = <2>;
-+		};
-+
-+		sync-2@3 {
-+			reg = <3>;
-+		};
-+	};
-+
-+	i2c-mux {
-+		compatible = "i2c-mux-simple,mux-locked";
-+		i2c-parent = <&i2c1>;
-+
-+		control-muxes = <&control_mux>;
-+		control-mux-names = "mux";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ssd1307: oled@3c {
-+				/* ... */
-+			};
-+		};
-+
-+		i2c@3 {
-+			reg = <3>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pca9555: pca9555@20 {
-+				/* ... */
-+			};
-+		};
-+	};
--- 
-2.1.4
+Thanks applying into omap-for-v4.10/dt.
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
