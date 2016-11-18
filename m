@@ -1,64 +1,135 @@
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Subject: [PATCH 2/2] backlight: arcxcnn: devicetree bindings for ArticSand devices
-Date: Fri, 18 Nov 2016 10:17:41 -0500
-Message-ID: <1479482261-19072-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v2 1/7] dt-bindings: document devicetree bindings for
+ mux-gpio
+Date: Fri, 18 Nov 2016 09:35:28 -0600
+Message-ID: <20161118153528.tl24bp5xjwpjppk6@rob-hp-laptop>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
+ <1479419289-17553-2-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479419289-17553-2-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Re-submission of arcxcnn backlight driver addressing the naming convention
- concerns raised by Rob H. Note that all the device tree properties are
- determined by the board design or IC EPROM settings and are not intended
- to be user adjustable.
+On Thu, Nov 17, 2016 at 10:48:03PM +0100, Peter Rosin wrote:
+> ---
+>  .../devicetree/bindings/misc/mux-gpio.txt          | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/mux-gpio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/mux-gpio.txt b/Documentation/devicetree/bindings/misc/mux-gpio.txt
+> new file mode 100644
+> index 000000000000..73699a37824f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/mux-gpio.txt
+> @@ -0,0 +1,79 @@
+> +GPIO-based multiplexer controller bindings
+> +
+> +Define what GPIO pins are used to control a multiplexer. Or several
+> +multiplexers, if the same pins control more than one multiplexer.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+I think this makes sense in your case, but I think it is too complicated 
+for a non-shared case. Perhaps mux-gpios should be used directly (i.e. 
+in the adc-mux node) and control-muxes only used for the shared case.
 
----
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+Part of me feels like you are working around in DT the GPIO subsystem 
+limitation that it can't share GPIO lines. Either this could be fixed 
+in some way in the GPIO subsystem, or the mux subsys could deal with it. 
+You just have to look up if you already have a mux registered for the 
+same GPIOs. Of course, that may make the mux subsys pretty much GPIO 
+only, but I'm having a hard time thinking how you would have shared 
+muxes that are not GPIO controlled. Any other control would be 
+integrated into the mux itself.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..a7b6ff2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,33 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible: should be "arc,arc2c0608"
-+- reg: slave address
-+
-+Optional properties:
-+- default-brightness: brightness value on boot, value from: 0-4095
-+- label: The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources: List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+- arc,led-config-0: setting for register ILED_CONFIG_0
-+- arc,led-config-1: setting for register ILED_CONFIG_1
-+- arc,dim-freq: PWM mode frequence setting (bits [3:0] used)
-+- arc,comp-config: setting for register CONFIG_COMP
-+- arc,filter-config: setting for register FILTER_CONFIG
-+- arc,trim-config: setting for register IMAXTUNE
-+
-+Note: Optional properties not specified will default to values in IC EPROM
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+};
-+
--- 
-2.7.4
+> +
+> +Required properties:
+> +- compatible : "mux-gpio"
+> +- mux-gpios : list of gpios used to control the multiplexer, least
+> +	      significant bit first.
+> +
+> +Optional properties:
+> +- idle-state : if present, the state the mux will have when idle.
+
+Needs some detail on what the value is. One bit per gpio? One cell per 
+gpio?
+
+> +
+> +Example:
+> +	control_mux: control-adc-mux {
+> +		compatible = "mux-gpio";
+> +
+> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	adc-mux {
+> +		compatible = "iio-mux";
+> +		io-channels = <&adc 0>;
+> +		io-channel-names = "parent";
+> +
+> +		control-muxes = <&control_mux>;
+
+This is a common name? It should be in a common mux binding doc.
+
+> +		control-mux-names = "mux";
+
+I think this can be dropped at least until you have more than 1.
+
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		sync-1@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		in@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		out@2 {
+> +			reg = <2>;
+> +		};
+> +
+> +		sync-2@3 {
+> +			reg = <3>;
+> +		};
+> +	};
+> +
+> +	i2c-mux {
+> +		compatible = "i2c-mux-simple,mux-locked";
+> +		i2c-parent = <&i2c1>;
+> +
+> +		control-muxes = <&control_mux>;
+> +		control-mux-names = "mux";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		i2c@0 {
+> +			reg = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			ssd1307: oled@3c {
+> +				/* ... */
+> +			};
+> +		};
+> +
+> +		i2c@3 {
+> +			reg = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			pca9555: pca9555@20 {
+> +				/* ... */
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.1.4
+> 
