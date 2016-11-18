@@ -1,99 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 1/4] Documentation: pv88080: Move binding document
-Date: Fri, 18 Nov 2016 09:38:42 -0600
-Message-ID: <20161118153842.bbcmfczxvrwamlqs@rob-hp-laptop>
-References: <cover.1479429347.git.eric.jeong@diasemi.com>
- <8d6dc516374bf2c1cf0841aa68a888bca33413a0.1479429347.git.eric.jeong@diasemi.com>
+From: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] hwmon: ltc2990: add devicetree binding
+Date: Fri, 18 Nov 2016 16:36:53 +0100
+Message-ID: <alpine.LRH.2.20.1611181604150.26466@pcbe13573-vm.dyndns.cern.ch>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <1479384616-12479-2-git-send-email-tom.levens@cern.ch> <20161118145035.ir46ohk5uqaln6kp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8d6dc516374bf2c1cf0841aa68a888bca33413a0.1479429347.git.eric.jeong@diasemi.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Eric Jeong <eric.jeong.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161118145035.ir46ohk5uqaln6kp@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2016 at 09:35:46AM +0900, Eric Jeong wrote:
-> 
-> From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> 
-> The change is to move pv88080 binding document 
-> from the regulator directory to mfd binding directory
-> for PV88080 PMIC MFD support.
-> And, GPIO properties are added.
-> 
-> 
-> Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> 
-> ---
-> This patch applies against linux-next and next-20161117
-> 
-> Hi,
-> 
-> Change since PATCH V2
->  - Added property and description for gpio
-> 
-> Change since PATCH V1
->  - Patch separated from PATCH V1
-> 
-> Regards,
-> Eric Jeong, Dialog Semiconductor Ltd.
-> 
-> 
->  .../bindings/{regulator => mfd}/pv88080.txt        |   16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/{regulator => mfd}/pv88080.txt (79%)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/pv88080.txt b/Documentation/devicetree/bindings/mfd/pv88080.txt
-> similarity index 79%
-> rename from Documentation/devicetree/bindings/regulator/pv88080.txt
-> rename to Documentation/devicetree/bindings/mfd/pv88080.txt
-> index e6e4b9c8..7e24f95 100644
-> --- a/Documentation/devicetree/bindings/regulator/pv88080.txt
-> +++ b/Documentation/devicetree/bindings/mfd/pv88080.txt
-> @@ -1,4 +1,4 @@
-> -* Powerventure Semiconductor PV88080 Voltage Regulator
-> +* Powerventure Semiconductor PV88080 PMIC
->  
->  Required properties:
->  - compatible: Must be one of the following, depending on the
-> @@ -16,8 +16,15 @@ Required properties:
->    standard binding for regulators; see regulator.txt.
->    BUCK1, BUCK2, BUCK3 and HVBUCK.
->  
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +- #gpio-cells: Should be 2. See gpio.txt in this directory
-> +  for a description of the cells format.
-> +
->  Optional properties:
-> +- ngpios : Number of in-use slots of available slots for GPIO.
-> +  Maximum is 2.
->  - Any optional property defined in regulator.txt
-> +  and gpio.txt for more information.
->  
->  Example:
->  
-> @@ -27,6 +34,13 @@ Example:
->  		interrupt-parent = <&gpio>;
->  		interrupts = <24 24>;
->  
-> +		gpioex {
+Hi Rob,
 
-gpio-controller {
+Thanks for taking the time to look at this patch.
 
-> +			compatible = "pvs,pv88080-gpio";
+On Fri, 18 Nov 2016, Rob Herring wrote:
+> On Thu, Nov 17, 2016 at 01:10:15PM +0100, Tom Levens wrote:
+>> Add a devicetree binding for the ltc2990 hwmon driver.
+>>
+>> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/hwmon/ltc2990.txt          |   28 ++++++++++++++++++++
+>>  1 files changed, 28 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2990.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2990.txt b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+>> new file mode 100644
+>> index 0000000..e4040e0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+>> @@ -0,0 +1,28 @@
+>> +ltc2990
+>> +
+>> +Required properties:
+>> +- compatible: Must be "lltc,ltc2990"
+>> +- reg: I2C slave address
+>> +
+>> +Optional properties:
+>> +- lltc,mode:
+>
+> What determines the mode? If this is something a user will want to
+> control, then it should be a sysfs attr rather than DT prop. If the
+> board design dictates then DT is the right place.
 
-Is this documented?
+It is based on the external connections of the chip. So, I would say that 
+it is board specific.
 
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			ngpios = <2>;
-> +		};
-> +
->  		regulators {
->  			BUCK1 {
->  				regulator-name = "buck1";
-> -- 
-> end-of-patch for PATCH V3
-> 
+> 'mode' is a bit vague, 'lltc,meas-mode' perhaps.
+
+Sure thing.
+
+There is also one question which came up in the thread for the patch 3 of 
+this patchset. The full mode for this chip is actually made of two logical 
+values which are written to the bits 4..3 and 2..0 of the register. This 
+version of the patch only configures one of the values, but for the next 
+version we would like to configure both. While combining them into a 
+single integer value would be possible, they are defined as two values in 
+the datasheet. Therefore, I propose using an array, such as:
+
+lltc,meas-mode = <7 3>;
+
+This would set the mode[2..0]=7 and mode[4..3]=3.
+
+What do you think of this? Or should this be split into two properties? 
+However, in this case I struggle come up with names for the properties. 
+The datasheet, helpfully, calls both the fields "mode" and there is no 
+clear difference in their function as both control which measurements are 
+available.
+
+Thanks,
+
+>> +A	Sets the chip's measurement mode, defaults to <6> if unset.
+>> +
+>> +	The following measurements are available in each mode:
+>> +
+>> +	0: V1, V2, TR2
+>> +	1: V1-V2, TR2
+>> +	2: V1-V2, V3, V4
+>> +	3: TR1, V3, V4
+>> +	4: TR1, V3-V4
+>> +	5: TR1, TR2
+>> +	6: V1-V2, V3-V4
+>> +	7: V1, V2, V3, V4
+>> +
+>> +Example:
+>> +
+>> +ltc2990@4c {
+>> +	compatible = "lltc,ltc2990";
+>> +	reg = <0x4c>;
+>> +	lltc,mode = <7>;
+>> +};
+>> --
+>> 1.7.1
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
