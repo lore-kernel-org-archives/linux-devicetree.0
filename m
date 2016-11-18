@@ -1,65 +1,74 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 1/2] regulator: pwm: DT: Add ramp delay for exponential voltage transition
-Date: Fri, 18 Nov 2016 20:05:55 +0530
-Message-ID: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v13 1/5] dt/bindings: add bindings for optee
+Date: Fri, 18 Nov 2016 15:51:36 +0100
+Message-ID: <1479480700-554-2-git-send-email-jens.wiklander@linaro.org>
+References: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>, broonie@kernel.org, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some PWM regulator has the exponential transition in voltage change as
-opposite to fixed slew-rate linear transition on other regulators.
-For such PWM regulators, add the property to tell that voltage change
-is exponential and having fixed delay for any level of change.
+Introduces linaro prefix and adds bindings for ARM TrustZone based OP-TEE
+implementation.
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-CC: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-CC: Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 ---
-This patch is continuation of discussion on patch
-	regulator: pwm: Fix regulator ramp delay for continuous mode
-https://patchwork.kernel.org/patch/9216857/
-where is it discussed to have separate property for PWM which has
-exponential voltage transition.
+ .../bindings/arm/firmware/linaro,optee-tz.txt      | 31 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
 
-Changes from V1:
-- Pass the flag to tell that voltage ramp is exponential instead of
-  providing delay.
----
- .../devicetree/bindings/regulator/pwm-regulator.txt          | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index 3aeba9f..2d9ef3a 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -54,6 +54,18 @@ Optional properties:
- --------------------
- - enable-gpios:		GPIO to use to enable/disable the regulator
- 
-+- voltage-ramp-exponential: Boolean, Some of PWM regulator has the exponential
-+			transition in voltage ramp as opposite to fixed
-+			slew-rate linear transition on other regulators.
-+			For such PWM regulator, presence of this property will
-+			tell that value of the regulator ramp delay provided by
-+			DT property "regulator-ramp-delay" is exponential and
-+			fixed delay for any voltage level change.
-+			If PWM regulator supports the fixed linear slew rate
-+			then this property should be absent from DT node and
-+			property "regulator-ramp-delay" is used as linear slew
-+			rate.
+diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+new file mode 100644
+index 0000000..d38834c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+@@ -0,0 +1,31 @@
++OP-TEE Device Tree Bindings
 +
- Any property defined as part of the core regulator binding can also be used.
- (See: ../regulator/regulator.txt)
- 
++OP-TEE is a piece of software using hardware features to provide a Trusted
++Execution Environment. The security can be provided with ARM TrustZone, but
++also by virtualization or a separate chip.
++
++We're using "linaro" as the first part of the compatible property for
++the reference implementation maintained by Linaro.
++
++* OP-TEE based on ARM TrustZone required properties:
++
++- compatible     : should contain "linaro,optee-tz"
++
++- method         : The method of calling the OP-TEE Trusted OS. Permitted
++                   values are:
++
++                   "smc" : SMC #0, with the register assignments specified
++		           in drivers/tee/optee/optee_smc.h
++
++                   "hvc" : HVC #0, with the register assignments specified
++		           in drivers/tee/optee/optee_smc.h
++
++
++
++Example:
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index f0a48ea..6ab5d04 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -155,6 +155,7 @@ lacie	LaCie
+ lantiq	Lantiq Semiconductor
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
++linaro	Linaro Limited
+ linux	Linux-specific binding
+ lltc	Linear Technology Corporation
+ lsi	LSI Corp. (LSI Logic)
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
