@@ -1,74 +1,64 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] dt-bindings: mfd: Provide human readable defines
- for TPS65217 interrupts
-Date: Fri, 18 Nov 2016 14:53:53 +0000
-Message-ID: <20161118145353.GE2301@dell.home>
-References: <20161028123702.21849-1-woogyom.kim@gmail.com>
- <20161028123702.21849-6-woogyom.kim@gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 1/2] regulator: pwm: DT: Add ramp delay for exponential voltage transition
+Date: Fri, 18 Nov 2016 20:05:55 +0530
+Message-ID: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161028123702.21849-6-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Oct 2016, Milo Kim wrote:
+Some PWM regulator has the exponential transition in voltage change as
+opposite to fixed slew-rate linear transition on other regulators.
+For such PWM regulators, add the property to tell that voltage change
+is exponential and having fixed delay for any level of change.
 
-> TPS65217 supports three interrupt sources. This patch enables assigning
-> each IRQ number in the charger and power button node. Then corresponding
-> IRQ will be requested by each driver.
-> 
-> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  include/dt-bindings/mfd/tps65217.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 include/dt-bindings/mfd/tps65217.h
-> 
-> diff --git a/include/dt-bindings/mfd/tps65217.h b/include/dt-bindings/mfd/tps65217.h
-> new file mode 100644
-> index 0000000..cafb9e6
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/tps65217.h
-> @@ -0,0 +1,26 @@
-> +/*
-> + * This header provides macros for TI TPS65217 DT bindings.
-> + *
-> + * Copyright (C) 2016 Texas Instruments
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_TPS65217_H__
-> +#define __DT_BINDINGS_TPS65217_H__
-> +
-> +#define TPS65217_IRQ_USB	0
-> +#define TPS65217_IRQ_AC		1
-> +#define TPS65217_IRQ_PB		2
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+CC: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+CC: Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-What are "AC" and "PB".  Seeing as these are meant to be "human
-readable", let's make them more human friendly.
+---
+This patch is continuation of discussion on patch
+	regulator: pwm: Fix regulator ramp delay for continuous mode
+https://patchwork.kernel.org/patch/9216857/
+where is it discussed to have separate property for PWM which has
+exponential voltage transition.
 
-> +#endif
+Changes from V1:
+- Pass the flag to tell that voltage ramp is exponential instead of
+  providing delay.
+---
+ .../devicetree/bindings/regulator/pwm-regulator.txt          | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+index 3aeba9f..2d9ef3a 100644
+--- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+@@ -54,6 +54,18 @@ Optional properties:
+ --------------------
+ - enable-gpios:		GPIO to use to enable/disable the regulator
+ 
++- voltage-ramp-exponential: Boolean, Some of PWM regulator has the exponential
++			transition in voltage ramp as opposite to fixed
++			slew-rate linear transition on other regulators.
++			For such PWM regulator, presence of this property will
++			tell that value of the regulator ramp delay provided by
++			DT property "regulator-ramp-delay" is exponential and
++			fixed delay for any voltage level change.
++			If PWM regulator supports the fixed linear slew rate
++			then this property should be absent from DT node and
++			property "regulator-ramp-delay" is used as linear slew
++			rate.
++
+ Any property defined as part of the core regulator binding can also be used.
+ (See: ../regulator/regulator.txt)
+ 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
