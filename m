@@ -1,49 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Fri, 18 Nov 2016 10:20:49 +0100
-Message-ID: <2436881.9RqUVYxmDf@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <1478806353.7430.137.camel@kernel.crashing.org> <5825984B.3030303@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5825984B.3030303@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, gabriele.paoloni@huawei.com, catalin.marinas@arm.com, will.deacon@arm.com, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, minyard@acm.org, marc.zyngier@arm.com, liviu.dudau@arm.com, john.garry@huawei.com, zourongrong@gmail.com, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-kernel@vger.kernel.org, olof@lixom.net
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 0/2] PM / Domains / OPP: Introduce domain-performance-state binding
+Date: Fri, 18 Nov 2016 14:53:11 +0530
+Message-ID: <cover.1479459752.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 11, 2016 6:07:07 PM CET zhichang.yuan wrote:
-> 
-> I have similar idea as your PPC MMIO.
-> 
-> We notice the prototype of {in/out()} is something like that:
-> 
-> static inline u8 inb(unsigned long addr)
-> static inline void outb(u8 value, unsigned long addr)
-> 
-> The type of parameter 'addr' is unsigned long. For I/O space, it is big enough.
-> So, could you divide this 'addr' into several bit segments? The top 8 bits is
-> defined as bus index. For normal direct IO, the bus index is 0. For those bus
-> device which need indirectIO or some special I/O accessors, when these devices
-> are initializing, can request to allocate an unique ID to them, and register
-> their own accessors to the entry which is corresponding to the ID.
+Hello,
 
-Ah, have you looked at the IA64 code? It does exactly this.
-For ARM64 we decided to use the same basic approach as powerpc with
-a single range of virtual memory for mapping it as that somewhat
-simplified all cases we knew about at the time.
+Some platforms have the capability to configure the performance state of
+their Power Domains. The performance levels are represented by positive
+integer values, a lower value represents lower performance state.
 
-> In this way, we can support multiple domains, I think.
-> But I am not sure whether it is feasible, for example, are there some
-> architectures/platforms had populated the top 8 bits? Do we need to request IO
-> region from ioport_resource for those devices?  etc...
+We had some discussions about it in the past on the PM list [1], which
+is followed by discussions during the LPC. The outcome of all that was
+that we should extend Power Domain framework to support active state
+power management as well.
 
-On a 64-bit architecture, the top 32 bits of the port number are
-definitely free to use for this, and 8 bits are probably sufficient.
+The power-domains until now were only concentrating on the idle state
+management of the device and this needs to change in order to reuse the
+infrastructure of power domains for active state management.
 
-Even on 32 bit architectures, I can't see why we'd ever need more than
-16 bits worth of addressing within a domain, so using 8 bit domain
-and 16 bit address leaves 8 or 40 unused bits.
+To get a complete picture of the proposed plan, following is what we
+need to do:
+- Create DT bindings to get domain performance state information for the
+  platforms.
+- Enhance OPP framework to parse these and call into the PM Qos
+  framework with a performance state request.
+- Enhance PM Qos framework to provide the API to be used by consumers
+  (or OPP framework) and pass it on to the (Generic) Power Domain
+  framework.
+- Enhance Generic Power Domain framework to accept such requests,
+  accumulate all belonging to a single power domain and call domain
+  driver specific callback with the performance state we want for the
+  domain.
+- The domain driver shall then, in a platform specific way, set the
+  requested performance level.
+- Note that these features are applicable to the CPU, GPU and other IIO
+  or non-IIO devices.
+- There can be cases where a device can choose between multiple power
+  domains based on what performance level we want for the device. In
+  such cases, we should represent the multiplexer with a separate power
+  domain. In effect, the device (or OPP table) will correspond to a
+  single power domain, but the backend driver of that domain shall
+  implement the multiplexing functionality.
 
-	Arnd
+This patchset implements the very first part of this chain and
+introduces a new optional property for the consumers of the
+power-domains: domain-performance-state. This property can be used
+directly by the consumer or its OPP table.
+
+--
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=147747923708075&w=2
+
+Viresh Kumar (2):
+  PM / Domains: Introduce domain-performance-state binding
+  PM / OPP: Introduce domain-performance-state binding to OPP nodes
+
+ Documentation/devicetree/bindings/opp/opp.txt      | 57 ++++++++++++++++++++++
+ .../devicetree/bindings/power/power_domain.txt     |  6 +++
+ 2 files changed, 63 insertions(+)
+
+-- 
+2.7.1.410.g6faf27b
+
