@@ -1,40 +1,94 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v13 5/5] arm64: dt: hikey: Add optee node
-Date: Fri, 18 Nov 2016 15:51:40 +0100
-Message-ID: <1479480700-554-6-git-send-email-jens.wiklander@linaro.org>
-References: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 2/2] regulator: pwm: Add ramp delay for exponential voltage transition
+Date: Fri, 18 Nov 2016 20:05:56 +0530
+Message-ID: <1479479756-10755-2-git-send-email-ldewangan@nvidia.com>
+References: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
+In-Reply-To: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>, broonie@kernel.org, Jerome Forissier <jerome.forissier@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
+To: broonie@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Douglas Anderson <dianders@chromium.org>, Aleksandr Frid <afrid@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jerome Forissier <jerome.forissier@linaro.org>
+Some PWM regulator has the exponential transition in voltage change
+as opposite to fixed slew-rate linear transition on other regulators.
+For such PWM regulators, add support for handling the exponential
+voltage ramp delay.
 
-Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+CC: Douglas Anderson <dianders@chromium.org>
+CC: Aleksandr Frid <afrid@nvidia.com>
+
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+This patch is continuation of discussion on patch
+	regulator: pwm: Fix regulator ramp delay for continuous mode
+https://patchwork.kernel.org/patch/9216857/
+where is it discussed to have separate property for PWM which has
+exponential voltage transition.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index dba3c13..89c1539 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -406,6 +406,13 @@
- 			};
- 		};
- 	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
- };
+Changes from V1:
+- Use new DT property to finding that voltage ramp is exponential or
+  not and use flag for having fixed delay for all voltage change.
+---
+ drivers/regulator/pwm-regulator.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index 1b88e0e1..bcffeee 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -233,6 +233,24 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
+ 	return 0;
+ }
  
- &uart2 {
++/**
++ * Some of PWM regulators have exponential voltage ramp. On such PWM
++ * regulators, voltage settling time is same regardless of voltage
++ * level change.
++ */
++static int pwm_regulator_set_voltage_time(struct regulator_dev *rdev,
++					  int old_uV, int new_uV)
++{
++	return rdev->constraints->ramp_delay;
++}
++
++static int pwm_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
++					      unsigned int old_selector,
++					      unsigned int new_selector)
++{
++	return rdev->constraints->ramp_delay;
++}
++
+ static struct regulator_ops pwm_regulator_voltage_table_ops = {
+ 	.set_voltage_sel = pwm_regulator_set_voltage_sel,
+ 	.get_voltage_sel = pwm_regulator_get_voltage_sel,
+@@ -294,17 +312,25 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
+ 	drvdata->desc.ops = &drvdata->ops;
+ 	drvdata->desc.n_voltages	= length / sizeof(*duty_cycle_table);
+ 
++	if (of_property_read_bool(np, "voltage-ramp-exponential"))
++		drvdata->ops.set_voltage_time_sel =
++					pwm_regulator_set_voltage_time_sel;
+ 	return 0;
+ }
+ 
+ static int pwm_regulator_init_continuous(struct platform_device *pdev,
+ 					 struct pwm_regulator_data *drvdata)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	u32 dutycycle_range[2] = { 0, 100 };
+ 	u32 dutycycle_unit = 100;
+ 
+ 	memcpy(&drvdata->ops, &pwm_regulator_voltage_continuous_ops,
+ 	       sizeof(drvdata->ops));
++
++	if (of_property_read_bool(np, "voltage-ramp-exponential"))
++		drvdata->ops.set_voltage_time = pwm_regulator_set_voltage_time;
++
+ 	drvdata->desc.ops = &drvdata->ops;
+ 	drvdata->desc.continuous_voltage_range = true;
+ 
 -- 
-1.9.1
+2.1.4
