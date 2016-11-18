@@ -1,98 +1,108 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v8 09/16] mmc: sdhci: Factor out sdhci_enable_clock
-Date: Fri, 18 Nov 2016 15:56:00 +0200
-Message-ID: <df833f0b-041f-67d1-4b91-ef4399ecf15c@intel.com>
-References: <1479312052-22396-1-git-send-email-riteshh@codeaurora.org>
- <1479312052-22396-10-git-send-email-riteshh@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: add documentation for rk1108 cru
+Date: Fri, 18 Nov 2016 08:03:13 -0600
+Message-ID: <20161118140313.5uz56im37nt6qv7x@rob-hp-laptop>
+References: <1479286163-34789-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1479312052-22396-10-git-send-email-riteshh@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, sboyd@codeaurora.org, andy.gross@linaro.org
-Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479286163-34789-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/11/16 18:00, Ritesh Harjani wrote:
-> Factor out sdhci_enable_clock from sdhci_set_clock
-> and make it EXPORT_SYMBOL so that it can be called.
-
-This seems fine apart from minor comments below.
-
+On Wed, Nov 16, 2016 at 04:49:21PM +0800, Shawn Lin wrote:
+> This adds the dt-binding documentation for the clock and reset unit
+> found on Rockchip rk1108 SoCs.
 > 
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 
 > ---
->  drivers/mmc/host/sdhci.c | 28 +++++++++++++++++-----------
->  drivers/mmc/host/sdhci.h |  1 +
->  2 files changed, 18 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index d08d507..8a89d89 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1344,20 +1344,10 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  }
->  EXPORT_SYMBOL_GPL(sdhci_calc_clk);
->  
-> -void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> +void sdhci_enable_clock(struct sdhci_host *host, unsigned short clk)
+> Changes in v3:
+> - fix mismatch of external clk input name
+> - add hdmiphy and usbphy clk input
+> 
+> Changes in v2: None
+> 
+>  .../bindings/clock/rockchip,rk1108-cru.txt         | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> new file mode 100644
+> index 0000000..4da1261
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> @@ -0,0 +1,59 @@
+> +* Rockchip RK1108 Clock and Reset Unit
+> +
+> +The RK1108 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk1108-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changeable, due to the missing pll lock status.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. All available clocks are defined as
+> +preprocessor macros in the dt-bindings/clock/rk1108-cru.h headers and can be
+> +used in device tree sources. Similar macros exist for the reset sources in
+> +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
 
-We write a u16 so let's make clk a u16 instead of unsigned short.
+This stilll doesn't seem right. These are inputs to the CRU or 
+completely separate? If inputs, then you need a 'clocks' property. If 
+completely separate, then they should be listed in their respective IP 
+block binding (e.g. the USB phy).
 
-I would have called it sdhci_enable_clk() to go with sdhci_calc_clk() and
-slightly different from sdhci_set_clock() which is a callback whereas the
-other 2 are helpers.
-
->  {
-> -	u16 clk;
->  	unsigned long timeout;
->  
-> -	host->mmc->actual_clock = 0;
-> -
-> -	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> -
-> -	if (clock == 0)
-> -		return;
-> -
-> -	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
-> -
->  	clk |= SDHCI_CLOCK_INT_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->  
-> @@ -1378,6 +1368,22 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  	clk |= SDHCI_CLOCK_CARD_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->  }
-> +EXPORT_SYMBOL_GPL(sdhci_enable_clock);
+> + - "xin24m" - crystal input - required,
+> + - "ext_vip" - external VIP clock - optional
+> + - "ext_i2s" - external I2S clock - optional
+> + - "ext_gmac" - external GMAC clock - optional
+> + - "hdmiphy" - external clock input derived from HDMI PHY - optional
+> + - "usbphy" - external clock input derived from USB PHY - optional
 > +
-> +void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> +{
-> +	u16 clk;
+> +Example: Clock controller node:
 > +
-> +	host->mmc->actual_clock = 0;
+> +	cru: cru@20200000 {
+> +		compatible = "rockchip,rk1108-cru";
+> +		reg = <0x20200000 0x1000>;
+> +		rockchip,grf = <&grf>;
 > +
-> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
 > +
-> +	if (clock == 0)
-> +		return;
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller:
 > +
-> +	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
-> +	sdhci_enable_clock(host, clk);
-> +}
->  EXPORT_SYMBOL_GPL(sdhci_set_clock);
->  
->  static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 766df17..8e77a3b 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -681,6 +681,7 @@ static inline bool sdhci_sdio_irq_enabled(struct sdhci_host *host)
->  u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  		   unsigned int *actual_clock);
->  void sdhci_set_clock(struct sdhci_host *host, unsigned int clock);
-> +void sdhci_enable_clock(struct sdhci_host *host, unsigned short clk);
->  void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->  		     unsigned short vdd);
->  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+> +	uart0: serial@10230000 {
+> +		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
+> +		reg = <0x10230000 0x100>;
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg-shift = <2>;
+> +		reg-io-width = <4>;
+> +		clocks = <&cru SCLK_UART0>;
+> +	};
+> -- 
+> 1.9.1
+> 
 > 
