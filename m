@@ -1,58 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 3/4] dt: bindings: add new dt entry for BTCOEX feature
- in qcom,ath10k.txt
-Date: Fri, 18 Nov 2016 08:44:06 -0600
-Message-ID: <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
-References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
- <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Fri, 18 Nov 2016 08:46:51 -0600
+Message-ID: <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
+In-Reply-To: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: c_traja@qti.qualcomm.com
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, tamizhchelvam@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 05:14:23PM +0530, c_traja@qti.qualcomm.com wrote:
-> From: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+On Thu, Nov 17, 2016 at 03:32:54PM +0000, Sudeep Holla wrote:
+> Currently platforms/drivers needing to get the machine model name are
+> replicating the same snippet of code. In some case, the OF reference
+> counting is either missing or incorrect.
 > 
-> There two things done in this patch.
+> This patch adds support to read the machine model name either using
+> the "model" or the "compatible" property in the device tree root node
+> to the core OF/DT code.
 > 
-> 1) 'btcoex_support' flag for BTCOEX feature support by the hardware.
-> 2) 'wlan_btcoex_gpio' is used to fill wlan priority pin number for
->    BTCOEX priority feature support.
+> This can be used to remove all the duplicate code snippets doing exactly
+> same thing later.
 > 
-> Signed-off-by: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  .../bindings/net/wireless/qcom,ath10k.txt          |    4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  6 ++++++
+>  2 files changed, 38 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 74d7f0a..08150e2d 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -46,6 +46,10 @@ Optional properties:
->  				 hw versions.
->  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
->  				     the length can vary between hw versions.
-> +- btcoex_support  : should contain eithr "0" or "1" to indicate btcoex
-> +		    support by the hardware.
+> Hi Rob,
+> 
+> It would be good if we can target this for v4.10, so that we have no
+> dependencies to push PATCH 2/2 in v4.11
 
-This is BT coexistence? Make this boolean and n
-
-> +- btcoex_gpio_pin :  btcoex gpio pin number for the device which
-> +		     supports BTCOEX.
-
-This is a pin number on the chip, not any pin number Linux GPIO subsys 
-cares about, right? Is there a connection to the host too, or this is 
-internal between BT and WiFi?
-
-Do you really need 2 properties? Does supporting this feature require 
-the GPIO? If so, then the first property is redundant.
-
-Needs vendor prefix and don't use '_'. Should be something like 
-'qcom,bt-coexist-gpio-pin'.
+Applied.
 
 Rob
