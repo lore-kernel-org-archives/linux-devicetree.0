@@ -1,108 +1,100 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 09/13] ARM: dts: armada-375: Fixup soc DT warning
-Date: Fri, 18 Nov 2016 10:38:32 +0100
-Message-ID: <877f81b013.fsf@free-electrons.com>
-References: <20161117230830.31047-1-gregory.clement@free-electrons.com>
-        <20161117230830.31047-10-gregory.clement@free-electrons.com>
-        <20161118095455.00bfe007@free-electrons.com>
-        <87d1htb1qr.fsf@free-electrons.com>
-        <20161118101248.784eff2b@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v2] ata: xgene: Enable NCQ support for APM X-Gene SATA controller hardware v1.1
+Date: Fri, 18 Nov 2016 15:15:45 +0530
+Message-ID: <1479462345-13942-1-git-send-email-rsahu@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161118101248.784eff2b-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
-        message of "Fri, 18 Nov 2016 10:12:48 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On ven., nov. 18 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+This patch enables NCQ support for APM X-Gene SATA controller hardware v1.1
+that was broken with hardware v1.0. Second thing, here we should not assume
+XGENE_AHCI_V2 always in case of having valid _CID in ACPI table. I need to
+remove this assumption because V1_1 also has a valid _CID for backward
+compatibly with v1.
 
-> Hello,
->
-> On Fri, 18 Nov 2016 10:01:32 +0100, Gregory CLEMENT wrote:
->
->> >> +	soc@f00100000000 {  
->> >
->> > Where is this value coming from? Why does the soc node needs to have a  
->> 
->> It cames from the dts files.
->
-> Where?
+v2 changes:
+	1. Changed patch description
 
---- a/arch/arm/boot/dts/armada-375-db.dts
-+++ b/arch/arm/boot/dts/armada-375-db.dts
-@@ -63,7 +63,11 @@
- 		reg = <0x00000000 0x40000000>; /* 1 GB */
- 	};
- 
--	soc {
-+	/* The following unit address is composed of the target
-+	 * value (bit [40-47]), attributes value (bits [32-39],
-+	 * and the address value in the window memory: [0-31].
-+	 */
-+	soc@f00100000000 {
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/ata/ahci_xgene.c |   14 ++++++++------
+ 1 files changed, 8 insertions(+), 6 deletions(-)
 
-just here ---------^
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index 73b19b2..8b88be9 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -87,6 +87,7 @@
 
- 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x09) 0 0xf1100000 0x10000
+ enum xgene_ahci_version {
+ 	XGENE_AHCI_V1 = 1,
++	XGENE_AHCI_V1_1,
+ 	XGENE_AHCI_V2,
+ };
 
+@@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id xgene_ahci_acpi_match[] = {
+ 	{ "APMC0D0D", XGENE_AHCI_V1},
++	{ "APMC0D67", XGENE_AHCI_V1_1},
+ 	{ "APMC0D32", XGENE_AHCI_V2},
+ 	{},
+ };
+@@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
 
+ static const struct of_device_id xgene_ahci_of_match[] = {
+ 	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
++	{.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
+ 	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
+ 	{},
+ };
+@@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	const struct of_device_id *of_devid;
+ 	enum xgene_ahci_version version = XGENE_AHCI_V1;
+-	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+-					      &xgene_ahci_v2_port_info };
++	const struct ata_port_info *ppi;
+ 	int rc;
 
+ 	hpriv = ahci_platform_get_resources(pdev);
+@@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 				dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
+ 					__func__);
+ 				version = XGENE_AHCI_V1;
+-			} else if (info->valid & ACPI_VALID_CID) {
+-				version = XGENE_AHCI_V2;
+ 			}
+ 		}
+ 	}
+@@ -858,18 +858,20 @@ skip_clk_phy:
 
->
->> > unit address? It doesn't have a 'reg' property if I remember
->> > correctly.  
->> 
->> But it has a range property.
->
-> And? There are multiple ranges, and you randomly took the first one for
-> the unit address of the soc node?
+ 	switch (version) {
+ 	case XGENE_AHCI_V1:
++		ppi = &xgene_ahci_v1_port_info;
+ 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
+ 		break;
+ 	case XGENE_AHCI_V2:
++		ppi = &xgene_ahci_v2_port_info;
+ 		hpriv->flags |= AHCI_HFLAG_YES_FBS;
+ 		hpriv->irq_handler = xgene_ahci_irq_intr;
+ 		break;
+ 	default:
++		ppi = &xgene_ahci_v1_port_info;
+ 		break;
+ 	}
 
-Not randomly I followed the same rules that for the regs mentioned in
-the ePAPR paragraph 2.2.1.1:
+-	rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
+-				     &ahci_platform_sht);
++	rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
+ 	if (rc)
+ 		goto disable_resources;
 
-"The unit-address should match the first address specified in the reg
-property of the node."
+--
+1.7.1
 
->
-> You realize that the ranges property is a list of ranges, and they
-> could be in any order? Why would you pick the base address of one of
-> the ranges rather than any of the others?
-
-It is the same for the regs so as explained I followed the same rules.
-
->
-> I believe there is simply no unit address for the soc {} node. There is
-> definitely one for the internal-regs {} node, but not for the soc {}
-> node.
-
-It is not the interpretation of the DTC:
-
-"Warning (unit_address_vs_reg): Node /soc has a reg or ranges property,
-but no unit name"
-
-Gregory
-
->
-> Best regards,
->
-> Thomas
-> -- 
-> Thomas Petazzoni, CTO, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
