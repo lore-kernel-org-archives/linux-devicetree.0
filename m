@@ -1,77 +1,62 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LPCHC)
-Date: Fri, 18 Nov 2016 18:45:35 +0000
-Message-ID: <20161118184535.GE19884@dell.home>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/6] mfd: dt: Add bindings for the Aspeed SoC Display
+ Controller (GFX)
+Date: Fri, 18 Nov 2016 18:47:15 +0000
+Message-ID: <20161118184715.GG19884@dell.home>
 References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
- <1478097481-14895-4-git-send-email-andrew@aj.id.au>
- <20161118184437.GD19884@dell.home>
+ <1478097481-14895-3-git-send-email-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161118184437.GD19884-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1478097481-14895-3-git-send-email-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, arnd@arndb.de
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[Sending Arnd this time!]
+On Thu, 03 Nov 2016, Andrew Jeffery wrote:
 
-> Arnd,
+> The Aspeed SoC Display Controller is presented as a syscon device to
+> arbitrate access by display and pinmux drivers. Video pinmux
+> configuration on fifth generation SoCs depends on bits in both the
+> System Control Unit and the Display Controller.
 > 
-> Do you have a preference?
-> 
-> > The Aspeed LPC Host Controller is presented as a syscon device to
-> > arbitrate access by LPC and pinmux drivers. LPC pinmux configuration on
-> > fifth generation SoCs depends on bits in both the System Control Unit
-> > and the LPC Host Controller.
-> > 
-> > Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt | 17 +++++++++++++++++
-> 
-> Create a new directory in bindings/mfd called 'syscon'.
-> 
-> Or perhaps 'bindings/syscon'.
-> 
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-> > new file mode 100644
-> > index 000000000000..792651488c3d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-> > @@ -0,0 +1,17 @@
-> > +* Device tree bindings for the Aspeed LPC Host Controller (LPCHC)
-> > +
-> > +The LPCHC registers configure LPC behaviour between the BMC and the host
-> > +system. The LPCHC also participates in pinmux requests on g5 SoCs and is
-> > +therefore considered a syscon device.
-> > +
-> > +Required properties:
-> > +- compatible:		"aspeed,ast2500-lpchc", "syscon"
-> > +- reg:			contains offset/length value of the LPCHC memory
-> > +			region.
-> 
-> Why not just use a single tab, then you don't have to linewrap?
-> 
-> > +Example:
-> > +
-> > +lpchc: lpchc@1e7890a0 {
-> > +	compatible = "aspeed,ast2500-lpchc", "syscon";
-> > +	reg = <0x1e7890a0 0xc4>;
-> > +};
-> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+
+Same here.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> new file mode 100644
+> index 000000000000..aea5370efd97
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> @@ -0,0 +1,17 @@
+> +* Device tree bindings for Aspeed SoC Display Controller (GFX)
+> +
+> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
+> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
+> +syscon device.
+> +
+> +Required properties:
+> +- compatible:		"aspeed,ast2500-gfx", "syscon"
+> +- reg:			contains offset/length value of the GFX memory
+> +			region.
+> +
+> +Example:
+> +
+> +gfx: display@1e6e6000 {
+> +	compatible = "aspeed,ast2500-gfx", "syscon";
+> +	reg = <0x1e6e6000 0x1000>;
+> +};
 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
