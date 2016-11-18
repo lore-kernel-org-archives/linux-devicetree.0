@@ -1,60 +1,88 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 0/2] Support for Axentia TSE-850
-Date: Fri, 18 Nov 2016 14:48:07 +0100
-Message-ID: <1479476889-9789-1-git-send-email-peda@axentia.se>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] usb: dwc2: add amcc,dwc-otg support
+Date: Fri, 18 Nov 2016 07:49:45 -0600
+Message-ID: <20161118134945.3cx5ciajp6pffys7@rob-hp-laptop>
+References: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e2d277d12b82ea88e5092058e883f7cdecb5cec3.1479250846.git.johnyoun@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Youn <johnyoun@synopsys.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Christian Lamparter <chunkeey@googlemail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tue, Nov 15, 2016 at 03:03:40PM -0800, John Youn wrote:
+> From: Christian Lamparter <chunkeey@googlemail.com>
+> 
+> This patch adds support for the "amcc,usb-otg" device
+> which is found in the PowerPC Canyonlands' dts.
+> 
+> The device definition was added by:
+> 
+> commit c89b3458d8cc ("powerpc/44x: Add USB DWC DTS entry to Canyonlands
+> board")
+> 
+> but without any driver support as the dwc2 driver wasn't available at
+> that time.
+> 
+> Note: The system can't use the generic "snps,dwc2" compatible
+> because of the special ahbcfg configuration. The default
+> GAHBCFG_HBSTLEN_INCR4 of snps,dwc2 can cause a system hang
+> when the USB and SATA is used concurrently.
+> 
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: John Youn <johnyoun@synopsys.com>
+> ---
+> 
+> Sorry, the previous one broke compilation. This fixes it.
+> 
+> Regards,
+> John
+> 
+> v3 [johnyoun]:
+> * Fixed compilation issue
+> 
+> v2 [johnyoun]:
+> * Removed params struct
+> * Minor commit message formatting
+> 
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>  drivers/usb/dwc2/params.c                      | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index ad8f7ff..6c7c2bce 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
+>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
+>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
+> +  - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
+>    - snps,dwc2: A generic DWC2 USB controller with default parameters.
+>  - reg : Should contain 1 register range (address and length)
+>  - interrupts : Should contain 1 interrupt
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 513556a..a786256 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -239,6 +239,7 @@ const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
+>  	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
+>  	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
+> +	{ .compatible = "amcc,dwc-otg", .data = NULL },
 
-After finally having all essintial drivers upstreamed (the
-last ones are currently in -next) I would like to have the
-dts and the defconfig also upstreamed.
+'.data = NULL' is unnecessary.
 
-checkpatch complains about missing docs for some compatible
-strings:
+With that fixed,
 
-axentia,tse850v3   (v3 is the hw version that we currently use)
-axentia,tse850     (in case we have future versions with commonality)
-axentia,linea      (the cpu module, reused in other products as well)
-nxp,se97b          (temp sensor in the below eeprom module)
-nxp,24c02          (eeprom on the main board)
-st,24c64           (eeprom on the cpu module)
+Acked-by: Rob Herring <robh@kernel.org>
 
-I don't know where I should document those, or if it's even
-needed? I get the feeling that the last three are not "my fault".
-Anyway, please advice. Or, even better, apply as-is... :-)
-
-Cheers,
-Peter
-
-Peter Rosin (2):
-  ARM: dts: add devicetree for the Axentia TSE-850
-  ARM: tse850_defconfig: add Axentia TSE-850
-
- MAINTAINERS                            |   7 +
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/axentia-linea.dtsi   |  52 +++++++
- arch/arm/boot/dts/axentia-tse850-3.dts | 275 +++++++++++++++++++++++++++++++++
- arch/arm/configs/tse850_defconfig      | 223 ++++++++++++++++++++++++++
- 5 files changed, 558 insertions(+)
- create mode 100644 arch/arm/boot/dts/axentia-linea.dtsi
- create mode 100644 arch/arm/boot/dts/axentia-tse850-3.dts
- create mode 100644 arch/arm/configs/tse850_defconfig
-
--- 
-2.1.4
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+> -- 
+> 2.10.0
+> 
