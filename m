@@ -1,172 +1,34 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v13 4/5] Documentation: tee subsystem and op-tee driver
-Date: Fri, 18 Nov 2016 15:51:39 +0100
-Message-ID: <1479480700-554-5-git-send-email-jens.wiklander@linaro.org>
-References: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>, broonie@kernel.org, Jens Wiklander <jens.wiklander@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] soc/tegra: Implement Tegra186 PMC support
+Date: Fri, 18 Nov 2016 08:53:21 -0600
+Message-ID: <20161118145321.nu6f4rpdqwunzhgd@rob-hp-laptop>
+References: <20161117171636.20580-1-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161117171636.20580-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
----
- Documentation/00-INDEX |   2 +
- Documentation/tee.txt  | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS            |   1 +
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/tee.txt
+On Thu, Nov 17, 2016 at 06:16:36PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> The power management controller on Tegra186 has changed in backwards-
+> incompatible ways with respect to earlier generations. This implements a
+> new driver that supports inversion of the PMU interrupt as well as the
+> "recovery", "bootloader" and "forced-recovery" reboot commands.
+> 
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  34 +++++
 
-diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
-index 3acc4f1..4a5a887 100644
---- a/Documentation/00-INDEX
-+++ b/Documentation/00-INDEX
-@@ -436,6 +436,8 @@ sysrq.txt
- 	- info on the magic SysRq key.
- target/
- 	- directory with info on generating TCM v4 fabric .ko modules
-+tee.txt
-+	- info on the TEE subsystem and drivers
- this_cpu_ops.txt
- 	- List rationale behind and the way to use this_cpu operations.
- thermal/
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-new file mode 100644
-index 0000000..7185993
---- /dev/null
-+++ b/Documentation/tee.txt
-@@ -0,0 +1,118 @@
-+TEE subsystem
-+This document describes the TEE subsystem in Linux.
-+
-+A TEE (Trusted Execution Environment) is a trusted OS running in some
-+secure environment, for example, TrustZone on ARM CPUs, or a separate
-+secure co-processor etc. A TEE driver handles the details needed to
-+communicate with the TEE.
-+
-+This subsystem deals with:
-+
-+- Registration of TEE drivers
-+
-+- Managing shared memory between Linux and the TEE
-+
-+- Providing a generic API to the TEE
-+
-+The TEE interface
-+=================
-+
-+include/uapi/linux/tee.h defines the generic interface to a TEE.
-+
-+User space (the client) connects to the driver by opening /dev/tee[0-9]* or
-+/dev/teepriv[0-9]*.
-+
-+- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor
-+  which user space can mmap. When user space doesn't need the file
-+  descriptor any more, it should be closed. When shared memory isn't needed
-+  any longer it should be unmapped with munmap() to allow the reuse of
-+  memory.
-+
-+- TEE_IOC_VERSION lets user space know which TEE this driver handles and
-+  the its capabilities.
-+
-+- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application.
-+
-+- TEE_IOC_INVOKE invokes a function in a Trusted Application.
-+
-+- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE.
-+
-+- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application.
-+
-+There are two classes of clients, normal clients and supplicants. The latter is
-+a helper process for the TEE to access resources in Linux, for example file
-+system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
-+/dev/teepriv[0-9].
-+
-+Much of the communication between clients and the TEE is opaque to the
-+driver. The main job for the driver is to receive requests from the
-+clients, forward them to the TEE and send back the results. In the case of
-+supplicants the communication goes in the other direction, the TEE sends
-+requests to the supplicant which then sends back the result.
-+
-+OP-TEE driver
-+=============
-+
-+The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
-+TrustZone based OP-TEE solution that is supported.
-+
-+Lowest level of communication with OP-TEE builds on ARM SMC Calling
-+Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
-+[3] used internally by the driver. Stacked on top of that is OP-TEE Message
-+Protocol [4].
-+
-+OP-TEE SMC interface provides the basic functions required by SMCCC and some
-+additional functions specific for OP-TEE. The most interesting functions are:
-+
-+- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
-+  which is then returned by TEE_IOC_VERSION
-+
-+- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
-+  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
-+  separate secure co-processor.
-+
-+- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
-+
-+- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
-+  range to used for shared memory between Linux and OP-TEE.
-+
-+The GlobalPlatform TEE Client API [5] is implemented on top of the generic
-+TEE API.
-+
-+Picture of the relationship between the different components in the
-+OP-TEE architecture.
-+
-+    User space                  Kernel                   Secure world
-+    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
-+ +--------+                                             +-------------+
-+ | Client |                                             | Trusted     |
-+ +--------+                                             | Application |
-+    /\                                                  +-------------+
-+    || +----------+                                           /\
-+    || |tee-      |                                           ||
-+    || |supplicant|                                           \/
-+    || +----------+                                     +-------------+
-+    \/      /\                                          | TEE Internal|
-+ +-------+  ||                                          | API         |
-+ + TEE   |  ||            +--------+--------+           +-------------+
-+ | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
-+ | API   |  \/            | subsys | driver |           | Trusted OS  |
-+ +-------+----------------+----+-------+----+-----------+-------------+
-+ |      Generic TEE API        |       |     OP-TEE MSG               |
-+ |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
-+ +-----------------------------+       +------------------------------+
-+
-+RPC (Remote Procedure Call) are requests from secure world to kernel driver
-+or tee-supplicant. An RPC is identified by a special range of SMCCC return
-+values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
-+kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-+tee-supplicant without further involvement of the driver, except switching
-+shared memory buffer representation.
-+
-+References:
-+[1] https://github.com/OP-TEE/optee_os
-+[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+[3] drivers/tee/optee/optee_smc.h
-+[4] drivers/tee/optee/optee_msg.h
-+[5] http://www.globalplatform.org/specificationsdevice.asp look for
-+    "TEE Client API Specification v1.0" and click download.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 84348f2..e50120e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10660,6 +10660,7 @@ S:	Maintained
- F:	include/linux/tee_drv.h
- F:	include/uapi/linux/tee.h
- F:	drivers/tee/
-+F:	Documentation/tee.txt
- 
- THUNDERBOLT DRIVER
- M:	Andreas Noever <andreas.noever@gmail.com>
--- 
-1.9.1
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/soc/tegra/Makefile                         |   2 +-
+>  drivers/soc/tegra/pmc-tegra186.c                   | 169 +++++++++++++++++++++
+>  3 files changed, 204 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+>  create mode 100644 drivers/soc/tegra/pmc-tegra186.c
