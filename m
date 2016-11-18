@@ -1,95 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Fri, 18 Nov 2016 11:20:57 -0600
-Message-ID: <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com> <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
- <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 3/3] remoteproc: qcom: add Venus video core firmware
+ loader driver
+Date: Fri, 18 Nov 2016 09:23:21 -0800
+Message-ID: <20161118172321.GC2769@tuxbot>
+References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1478539853-23218-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20161114191641.GH5177@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161114191641.GH5177@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2016 at 7:50 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> On 30/10/16 22:41, Rob Herring wrote:
->>
->> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
->>>
->>> Add a clock implementation, TI SCI clock, that will hook to the common
->>> clock framework, and allow each clock to be controlled via TI SCI
->>> protocol.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37
->>> ++++++++++++++++++++++
->>>  MAINTAINERS                                        |  1 +
->>>  2 files changed, 38 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>> b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>> new file mode 100644
->>> index 0000000..bfc3ca4
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>> @@ -0,0 +1,37 @@
->>> +Texas Instruments TI-SCI Clocks
->>> +===============================
->>> +
->>> +All clocks on Texas Instruments' SoCs that contain a System Controller,
->>> +are only controlled by this entity. Communication between a host
->>> processor
->>> +running an OS and the System Controller happens through a protocol known
->>> +as TI-SCI[1]. This clock implementation plugs into the common clock
->>> +framework and makes use of the TI-SCI protocol on clock API requests.
->>> +
->>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>> +
->>> +Required properties:
->>> +-------------------
->>> +- compatible: Must be "ti,k2g-sci-clk"
->>> +- #clock-cells: Shall be 2.
->>> +  In clock consumers, this cell represents the device ID and clock ID
->>> +  exposed by the PM firmware. The assignments can be found in the header
->>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
->>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
->>> +  is the SoC involved, for example 'k2g'.
->>> +
->>> +Examples:
->>> +--------
->>> +
->>> +pmmc: pmmc {
->>> +       compatible = "ti,k2g-sci";
->>> +
->>> +       k2g_clks: k2g_clks {
->>
->>
->> Use "clocks" for node name instead.
->>
->>> +               compatible = "ti,k2g-sci-clk";
->>
->>
->> I'm starting to think all these child nodes for SCI are pointless. Is
->> there any reason why the parent node can't be the clock provider (along
->> with all the other providers it acks as)?
->
->
-> I believe the only reason to keep them separate is to have kernel side of
-> things modular. If we have separate nodes, the drivers can be probed
-> separately.
->
-> If not, we need to build one huge blob with all the features in it, so the
-> main driver can probe everything in one go, with annoying back-and-forth
-> callbacks in place (assuming we still want to keep stuff somehow modular.)
+On Mon 14 Nov 11:16 PST 2016, Stephen Boyd wrote:
 
-Since when is DT the only way to create a device? The main driver can
-create devices for all the sub-functions like clocks. This is the same
-as MFDs which have been done both ways.
+> On 11/07, Stanimir Varbanov wrote:
+> > +#include <linux/module.h>
+> > +#include <linux/of_reserved_mem.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/qcom_scm.h>
+> > +#include <linux/remoteproc.h>
+> > +
+> > +#include "qcom_mdt_loader.h"
+> > +#include "remoteproc_internal.h"
+> > +
+> > +#define VENUS_CRASH_REASON_SMEM		425
+> 
+> This is unused. Is there going to be some common smem API to get
+> the crash reason?
 
-Rob
+There are a couple of these operations that are good candidates to be
+shared between all Qualcomm remoteproc drivers. I just haven't spent the
+time to figure out how to properly splice it.
+
+For the crash reason specifically, there are three operations done in
+the other drivers; read-and-null-terminate, then this is outputed to the
+log, also indicating what type of event we had. And finally the
+remoteproc core is informed about the crash, with a event-type passed
+and we get another line in the log based on that, i.e. there's room for
+a few improvements in this area.
+
+Regards,
+Bjorn
