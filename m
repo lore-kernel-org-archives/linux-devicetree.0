@@ -1,54 +1,109 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] soc/tegra: Implement Tegra186 PMC support
-Date: Fri, 18 Nov 2016 09:36:04 +0000
-Message-ID: <e9a081f5-8e93-d3e8-a702-79903e5a6a78@nvidia.com>
-References: <20161117171636.20580-1-thierry.reding@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 09/13] ARM: dts: armada-375: Fixup soc DT warning
+Date: Fri, 18 Nov 2016 10:38:32 +0100
+Message-ID: <877f81b013.fsf@free-electrons.com>
+References: <20161117230830.31047-1-gregory.clement@free-electrons.com>
+        <20161117230830.31047-10-gregory.clement@free-electrons.com>
+        <20161118095455.00bfe007@free-electrons.com>
+        <87d1htb1qr.fsf@free-electrons.com>
+        <20161118101248.784eff2b@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161117171636.20580-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161118101248.784eff2b-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Thomas Petazzoni's
+        message of "Fri, 18 Nov 2016 10:12:48 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
+ 
+ On ven., nov. 18 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On 17/11/16 17:16, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> The power management controller on Tegra186 has changed in backwards-
-> incompatible ways with respect to earlier generations. This implements a
-> new driver that supports inversion of the PMU interrupt as well as the
-> "recovery", "bootloader" and "forced-recovery" reboot commands.
-> 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  34 +++++
->  drivers/soc/tegra/Makefile                         |   2 +-
->  drivers/soc/tegra/pmc-tegra186.c                   | 169 +++++++++++++++++++++
->  3 files changed, 204 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
->  create mode 100644 drivers/soc/tegra/pmc-tegra186.c
+> Hello,
+>
+> On Fri, 18 Nov 2016 10:01:32 +0100, Gregory CLEMENT wrote:
+>
+>> >> +	soc@f00100000000 {  
+>> >
+>> > Where is this value coming from? Why does the soc node needs to have a  
+>> 
+>> It cames from the dts files.
+>
+> Where?
 
-...
+--- a/arch/arm/boot/dts/armada-375-db.dts
++++ b/arch/arm/boot/dts/armada-375-db.dts
+@@ -63,7 +63,11 @@
+ 		reg = <0x00000000 0x40000000>; /* 1 GB */
+ 	};
+ 
+-	soc {
++	/* The following unit address is composed of the target
++	 * value (bit [40-47]), attributes value (bits [32-39],
++	 * and the address value in the window memory: [0-31].
++	 */
++	soc@f00100000000 {
+ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
 
-> diff --git a/drivers/soc/tegra/Makefile b/drivers/soc/tegra/Makefile
-> index ae857ff7d53d..9976a0de1927 100644
-> --- a/drivers/soc/tegra/Makefile
-> +++ b/drivers/soc/tegra/Makefile
-> @@ -1,4 +1,4 @@
->  obj-y += fuse/
->  
->  obj-y += common.o
-> -obj-y += pmc.o
-> +obj-y += pmc.o pmc-tegra186.o
+just here ---------^
 
-Do we want to enable this driver for all Tegra devices? Was not sure if
-this should be dependent on ARM64.
+ 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
+ 			  MBUS_ID(0x09, 0x09) 0 0xf1100000 0x10000
 
-Cheers
-Jon
+
+
+
+>
+>> > unit address? It doesn't have a 'reg' property if I remember
+>> > correctly.  
+>> 
+>> But it has a range property.
+>
+> And? There are multiple ranges, and you randomly took the first one for
+> the unit address of the soc node?
+
+Not randomly I followed the same rules that for the regs mentioned in
+the ePAPR paragraph 2.2.1.1:
+
+"The unit-address should match the first address specified in the reg
+property of the node."
+
+>
+> You realize that the ranges property is a list of ranges, and they
+> could be in any order? Why would you pick the base address of one of
+> the ranges rather than any of the others?
+
+It is the same for the regs so as explained I followed the same rules.
+
+>
+> I believe there is simply no unit address for the soc {} node. There is
+> definitely one for the internal-regs {} node, but not for the soc {}
+> node.
+
+It is not the interpretation of the DTC:
+
+"Warning (unit_address_vs_reg): Node /soc has a reg or ranges property,
+but no unit name"
+
+Gregory
+
+>
+> Best regards,
+>
+> Thomas
+> -- 
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
 -- 
-nvpublic
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
