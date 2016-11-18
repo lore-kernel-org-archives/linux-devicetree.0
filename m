@@ -1,59 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] mwifiex: parse device tree node for PCIe
-Date: Fri, 18 Nov 2016 11:06:58 -0600
-Message-ID: <20161118170658.iar5xzh7pu4qfjgg@rob-hp-laptop>
-References: <1479472624-22340-1-git-send-email-akarwar@marvell.com>
- <87oa1coj1m.fsf@purkki.adurom.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
+Date: Fri, 18 Nov 2016 11:20:57 -0600
+Message-ID: <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-2-git-send-email-t-kristo@ti.com> <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
+ <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87oa1coj1m.fsf-5ukZ45wKbUHoml4zekdYB16hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2016 at 06:21:41PM +0200, Kalle Valo wrote:
-> Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
-> 
-> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >
-> > This patch derives device tree node from pcie bus layer framework.
-> > Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-> > marvell-8xxx.txt) to accommodate PCIe changes.
-> >
-> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> 
-> [...]
-> 
-> > @@ -10,6 +10,8 @@ Required properties:
-> >    - compatible : should be one of the following:
-> >  	* "marvell,sd8897"
-> >  	* "marvell,sd8997"
-> > +	* "pci11ab,2b42"
-> > +	* "pci1b4b,2b42"
-> 
-> Are these correct? In v6 Rob said:
+On Mon, Oct 31, 2016 at 7:50 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> On 30/10/16 22:41, Rob Herring wrote:
+>>
+>> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
+>>>
+>>> Add a clock implementation, TI SCI clock, that will hook to the common
+>>> clock framework, and allow each clock to be controlled via TI SCI
+>>> protocol.
+>>>
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37
+>>> ++++++++++++++++++++++
+>>>  MAINTAINERS                                        |  1 +
+>>>  2 files changed, 38 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>> b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>> new file mode 100644
+>>> index 0000000..bfc3ca4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>> @@ -0,0 +1,37 @@
+>>> +Texas Instruments TI-SCI Clocks
+>>> +===============================
+>>> +
+>>> +All clocks on Texas Instruments' SoCs that contain a System Controller,
+>>> +are only controlled by this entity. Communication between a host
+>>> processor
+>>> +running an OS and the System Controller happens through a protocol known
+>>> +as TI-SCI[1]. This clock implementation plugs into the common clock
+>>> +framework and makes use of the TI-SCI protocol on clock API requests.
+>>> +
+>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>> +
+>>> +Required properties:
+>>> +-------------------
+>>> +- compatible: Must be "ti,k2g-sci-clk"
+>>> +- #clock-cells: Shall be 2.
+>>> +  In clock consumers, this cell represents the device ID and clock ID
+>>> +  exposed by the PM firmware. The assignments can be found in the header
+>>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+>>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+>>> +  is the SoC involved, for example 'k2g'.
+>>> +
+>>> +Examples:
+>>> +--------
+>>> +
+>>> +pmmc: pmmc {
+>>> +       compatible = "ti,k2g-sci";
+>>> +
+>>> +       k2g_clks: k2g_clks {
+>>
+>>
+>> Use "clocks" for node name instead.
+>>
+>>> +               compatible = "ti,k2g-sci-clk";
+>>
+>>
+>> I'm starting to think all these child nodes for SCI are pointless. Is
+>> there any reason why the parent node can't be the clock provider (along
+>> with all the other providers it acks as)?
+>
+>
+> I believe the only reason to keep them separate is to have kernel side of
+> things modular. If we have separate nodes, the drivers can be probed
+> separately.
+>
+> If not, we need to build one huge blob with all the features in it, so the
+> main driver can probe everything in one go, with annoying back-and-forth
+> callbacks in place (assuming we still want to keep stuff somehow modular.)
 
-Yes, Marvell has 2 vendor IDs it turns out.
+Since when is DT the only way to create a device? The main driver can
+create devices for all the sub-functions like clocks. This is the same
+as MFDs which have been done both ways.
 
-> 
-> "I think I already said this, but you have the vendor and product IDs 
-> reversed."
-> 
-> https://patchwork.kernel.org/patch/9390225/
-> 
-> -- 
-> Kalle Valo
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
