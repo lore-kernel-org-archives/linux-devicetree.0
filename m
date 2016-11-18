@@ -1,44 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Fri, 18 Nov 2016 08:46:51 -0600
-Message-ID: <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] hwmon: ltc2990: add devicetree binding
+Date: Fri, 18 Nov 2016 08:50:36 -0600
+Message-ID: <20161118145035.ir46ohk5uqaln6kp@rob-hp-laptop>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <1479384616-12479-2-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <1479384616-12479-2-git-send-email-tom.levens-vJEk5272eHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 03:32:54PM +0000, Sudeep Holla wrote:
-> Currently platforms/drivers needing to get the machine model name are
-> replicating the same snippet of code. In some case, the OF reference
-> counting is either missing or incorrect.
+On Thu, Nov 17, 2016 at 01:10:15PM +0100, Tom Levens wrote:
+> Add a devicetree binding for the ltc2990 hwmon driver.
 > 
-> This patch adds support to read the machine model name either using
-> the "model" or the "compatible" property in the device tree root node
-> to the core OF/DT code.
-> 
-> This can be used to remove all the duplicate code snippets doing exactly
-> same thing later.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
 > ---
->  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
->  include/linux/of.h |  6 ++++++
->  2 files changed, 38 insertions(+)
+>  .../devicetree/bindings/hwmon/ltc2990.txt          |   28 ++++++++++++++++++++
+>  1 files changed, 28 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2990.txt
 > 
-> Hi Rob,
+> diff --git a/Documentation/devicetree/bindings/hwmon/ltc2990.txt b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+> new file mode 100644
+> index 0000000..e4040e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+> @@ -0,0 +1,28 @@
+> +ltc2990
+> +
+> +Required properties:
+> +- compatible: Must be "lltc,ltc2990"
+> +- reg: I2C slave address
+> +
+> +Optional properties:
+> +- lltc,mode:
+
+What determines the mode? If this is something a user will want to 
+control, then it should be a sysfs attr rather than DT prop. If the 
+board design dictates then DT is the right place.
+
+'mode' is a bit vague, 'lltc,meas-mode' perhaps.
+
+> +	Sets the chip's measurement mode, defaults to <6> if unset.
+> +
+> +	The following measurements are available in each mode:
+> +
+> +	0: V1, V2, TR2
+> +	1: V1-V2, TR2
+> +	2: V1-V2, V3, V4
+> +	3: TR1, V3, V4
+> +	4: TR1, V3-V4
+> +	5: TR1, TR2
+> +	6: V1-V2, V3-V4
+> +	7: V1, V2, V3, V4
+> +
+> +Example:
+> +
+> +ltc2990@4c {
+> +	compatible = "lltc,ltc2990";
+> +	reg = <0x4c>;
+> +	lltc,mode = <7>;
+> +};
+> -- 
+> 1.7.1
 > 
-> It would be good if we can target this for v4.10, so that we have no
-> dependencies to push PATCH 2/2 in v4.11
-
-Applied.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
