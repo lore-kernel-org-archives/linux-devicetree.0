@@ -1,121 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] PCI: qcom: add support to msm8996 PCIE controller
-Date: Fri, 18 Nov 2016 08:35:49 -0600
-Message-ID: <CAL_JsqJ+_mrwJkwDdbHirXcWiGXEAorE_46_gayTMYyQ9vK0FA@mail.gmail.com>
-References: <1479219837-7868-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20161116150858.343voujjg4p2zdhn@rob-hp-laptop> <50449970-74f5-1d73-4c78-323741b8a705@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 3/4] dt: bindings: add new dt entry for BTCOEX feature
+ in qcom,ath10k.txt
+Date: Fri, 18 Nov 2016 08:44:06 -0600
+Message-ID: <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
+References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
+ <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50449970-74f5-1d73-4c78-323741b8a705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: c_traja@qti.qualcomm.com
+Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, tamizhchelvam@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 10:29 AM, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->
-> On 16/11/16 15:08, Rob Herring wrote:
->>
->> On Tue, Nov 15, 2016 at 02:23:57PM +0000, Srinivas Kandagatla wrote:
->>>
->>> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
->>
->>
->> s/pcie/PCIe/
->
-> Will fix two instances this and spin a next version.
->
->>
->>> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
->>> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
->>>
->>> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
->>
->>
->> s/pcie/PCIe/
->>
->>> pipe clocks are only setup after the phy is powered on.
->>> It also adds ltssm_enable callback as it is very much different to other
->>> supported SOCs in the driver.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Acked-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>
->>>  Changes since v4:
->>>         - removed duplicate define spotted by Stan.
->>>         - renamed halt register to remove msm8996 suggested by Stan.
->>>         - dropped simple-pm-bus and runtime pm patches as these can
->>>          potentially go into pm domain provider.
->>>
->>>  .../devicetree/bindings/pci/qcom,pcie.txt          |  67 +++++++-
->>>  drivers/pci/host/pcie-qcom.c                       | 175
->>> ++++++++++++++++++++-
->>>  2 files changed, 236 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> index 4059a6f..141d8c3 100644
->>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> @@ -7,6 +7,7 @@
->>>                         - "qcom,pcie-ipq8064" for ipq8064
->>>                         - "qcom,pcie-apq8064" for apq8064
->>>                         - "qcom,pcie-apq8084" for apq8084
->>> +                       - "qcom,pcie-msm8996" for msm8996 or apq8096
->>>
->>>  - reg:
->>>         Usage: required
->>> @@ -92,6 +93,17 @@
->>>                         - "aux"         Auxiliary (AUX) clock
->>>                         - "bus_master"  Master AXI clock
->>>                         - "bus_slave"   Slave AXI clock
->>> +
->>> +- clock-names:
->>> +       Usage: required for msm8996/apq8096
->>> +       Value type: <stringlist>
->>> +       Definition: Should contain the following entries
->>> +                       - "pipe"        Pipe Clock driving internal
->>> logic.
->>> +                       - "aux"         Auxiliary (AUX) clock.
->>> +                       - "cfg"         Configuration clk.
->>> +                       - "bus_master"  Master AXI clock.
->>> +                       - "bus_slave"   Slave AXI clock.
->>> +
->>>  - resets:
->>>         Usage: required
->>>         Value type: <prop-encoded-array>
->>> @@ -115,7 +127,7 @@
->>>                         - "core" Core reset
->>>
->>>  - power-domains:
->>> -       Usage: required for apq8084
->>> +       Usage: required for apq8084 and msm8996/apq8096
->>>         Value type: <prop-encoded-array>
->>>         Definition: A phandle and power domain specifier pair to the
->>>                     power domain which is responsible for collapsing
->>> @@ -231,3 +243,56 @@
->>>                 pinctrl-0 = <&pcie0_pins_default>;
->>>                 pinctrl-names = "default";
->>>         };
->>> +
->>> +* Example for apq8096:
->>
->>
->> Do you really need an example for every chip?
->
->
-> Yes, for consistency reasons, as there are two examples already in this
-> document. Also having an example does not harm anyway.
+On Thu, Nov 17, 2016 at 05:14:23PM +0530, c_traja@qti.qualcomm.com wrote:
+> From: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+> 
+> There two things done in this patch.
+> 
+> 1) 'btcoex_support' flag for BTCOEX feature support by the hardware.
+> 2) 'wlan_btcoex_gpio' is used to fill wlan priority pin number for
+>    BTCOEX priority feature support.
+> 
+> Signed-off-by: Tamizh chelvam <tamizhchelvam@codeaurora.org>
+> ---
+>  .../bindings/net/wireless/qcom,ath10k.txt          |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 74d7f0a..08150e2d 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -46,6 +46,10 @@ Optional properties:
+>  				 hw versions.
+>  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
+>  				     the length can vary between hw versions.
+> +- btcoex_support  : should contain eithr "0" or "1" to indicate btcoex
+> +		    support by the hardware.
 
-You have the dts itself, and we don't need 2 copies of the same thing.
-If anything, drop one of the 2 examples already there.
+This is BT coexistence? Make this boolean and n
+
+> +- btcoex_gpio_pin :  btcoex gpio pin number for the device which
+> +		     supports BTCOEX.
+
+This is a pin number on the chip, not any pin number Linux GPIO subsys 
+cares about, right? Is there a connection to the host too, or this is 
+internal between BT and WiFi?
+
+Do you really need 2 properties? Does supporting this feature require 
+the GPIO? If so, then the first property is redundant.
+
+Needs vendor prefix and don't use '_'. Should be something like 
+'qcom,bt-coexist-gpio-pin'.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
