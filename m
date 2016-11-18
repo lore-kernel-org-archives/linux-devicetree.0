@@ -1,399 +1,184 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 4/5] i2c: designware: Add slave mode as separated
- driver
-Date: Fri, 18 Nov 2016 14:49:48 +0200
-Message-ID: <1479473388.22212.26.camel@linux.intel.com>
-References: <cover.1479410047.git.lolivei@synopsys.com>
-         <36abadc931ab0814019c9b2214886bcb4e4ce5c1.1479410047.git.lolivei@synopsys.com>
+From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
+Date: Fri, 18 Nov 2016 12:53:08 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F921283@lhreml507-mbx>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <2281986.miqFuFkAbO@wuerfel>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F921146@lhreml507-mbx>
+ <2822893.F0LqNAm9bT@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <36abadc931ab0814019c9b2214886bcb4e4ce5c1.1479410047.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2822893.F0LqNAm9bT@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "liviu.dudau-5wv7dgnIgG8@public.gmane.org" <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Yuanzhichang <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt@kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
->  - Slave mode selected by compatibility string in platform module
->  - Changes in Makefile to compile i2c-designware-core with slave
-> functions
-
-
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -160,6 +160,30 @@ static void i2c_dw_configure_master(struct
-> platform_device *pdev)
->  	}
->  }
->  
-> +static void i2c_dw_configure_slave(struct platform_device *pdev)
-> +{
-> +	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
-> +
-> +	dev->slave_cfg = DW_IC_CON_RX_FIFO_FULL_HLD_CTRL |
-> +			 DW_IC_CON_RESTART_EN |
-> DW_IC_CON_STOP_DET_IFADDRESSED |
-> +			 DW_IC_CON_SPEED_FAST;
-> +
-> +	dev->functionality |= I2C_FUNC_SLAVE;
-> +	dev->functionality &= ~I2C_FUNC_10BIT_ADDR;
-
-> +	dev_info(&pdev->dev, "I am registed as a I2C Slave!\n");
-
-Not for production. 
-
-> @@ -244,7 +268,11 @@ static int dw_i2c_plat_probe(struct
-> platform_device *pdev)
->  		I2C_FUNC_SMBUS_WORD_DATA |
->  		I2C_FUNC_SMBUS_I2C_BLOCK;
->  
-> -	i2c_dw_configure_master(pdev);
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +		 "snps,designware-i2c-slave"))
-
-No.
-
-We don't use of_property_*() anymore in general. Instead find
-appropriate device_property_*() one. Besides, remind about comment
-regarding to the property itself.
-
-> +		i2c_dw_configure_slave(pdev);
-> +	else
-> +		i2c_dw_configure_master(pdev);
-
-I would go then switch case here, where third variant prints an error
-that mode X doesn't supported / invalid and bails out.
-
-> @@ -257,7 +285,13 @@ static int dw_i2c_plat_probe(struct
-> platform_device *pdev)
->  	}
->  
->  	if (!dev->tx_fifo_depth) {
-> -		u32 param1 = i2c_dw_read_comp_param(dev);
-> +		u32 param1;
-> +
-
-> +		if (of_device_is_compatible(pdev->dev.of_node,
-> +			 "snps,designware-i2c-slave"))
-
-Cache it in local variable if needed.
-
-> +			param1 = i2c_dw_read_comp_param_slave(dev);
-> +		else
-> +			param1 = i2c_dw_read_comp_param(dev);
-
-Shouldn't it have a _master suffix?
-
->  
->  		dev->tx_fifo_depth = ((param1 >> 16) & 0xff) + 1;
->  		dev->rx_fifo_depth = ((param1 >> 8)  & 0xff) + 1;
-> @@ -278,8 +312,12 @@ static int dw_i2c_plat_probe(struct
-> platform_device *pdev)
->  		pm_runtime_set_active(&pdev->dev);
->  		pm_runtime_enable(&pdev->dev);
->  	}
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +		 "snps,designware-i2c-slave"))
-> +		r = i2c_dw_probe_slave(dev);
-> +	else
-> +		r = i2c_dw_probe(dev);
-
-Ditto.
-
-> @@ -291,10 +329,13 @@ static int dw_i2c_plat_remove(struct
-> platform_device *pdev)
->  	struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
->  
->  	pm_runtime_get_sync(&pdev->dev);
-
-> -
-
-Doesn't belong to the patch.
-
->  	i2c_del_adapter(&dev->adapter);
->  
-> -	i2c_dw_disable(dev);
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +		 "snps,designware-i2c-slave"))
-> +		i2c_dw_disable_slave(dev);
-> +	else
-> +		i2c_dw_disable(dev);
-
-_master?
-
->  
->  	pm_runtime_dont_use_autosuspend(&pdev->dev);
->  	pm_runtime_put_sync(&pdev->dev);
-> @@ -307,6 +348,9 @@ static int dw_i2c_plat_remove(struct
-> platform_device *pdev)
->  #ifdef CONFIG_OF
->  static const struct of_device_id dw_i2c_of_match[] = {
->  	{ .compatible = "snps,designware-i2c", },
-> +#ifndef CONFIG_ACPI
-
-No, no, no.
-
-> +	{ .compatible = "snps,designware-i2c-slave", },
-> +#endif
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
-> @@ -334,7 +378,11 @@ static int dw_i2c_plat_suspend(struct device
-> *dev)
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct dw_i2c_dev *i_dev = platform_get_drvdata(pdev);
->  
-> -	i2c_dw_disable(i_dev);
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +		 "snps,designware-i2c-slave"))
-> +		i2c_dw_disable_slave(i_dev);
-> +	else
-> +		i2c_dw_disable(i_dev);
-
-Same comments as above.
-
->  	i2c_dw_plat_prepare_clk(i_dev, false);
->  
->  	return 0;
-> @@ -347,8 +395,13 @@ static int dw_i2c_plat_resume(struct device *dev)
->  
->  	i2c_dw_plat_prepare_clk(i_dev, true);
->  
-> -	if (!i_dev->pm_runtime_disabled)
-> -		i2c_dw_init(i_dev);
-> +	if (!i_dev->pm_runtime_disabled) {
-> +		if (of_device_is_compatible(pdev->dev.of_node,
-> +			 "snps,designware-i2c-slave"))
-> +			i2c_dw_init_slave(i_dev);
-> +		else
-> +			i2c_dw_init(i_dev);
-
-Ditto.
-
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-designware-slave.c
-
-Slave...
-
-> @@ -0,0 +1,445 @@
-> +/*
-> + * Synopsys DesignWare I2C adapter driver (master only).
-
-Master...
-
-> + *
-> + * Based on the TI DAVINCI I2C adapter driver.
-> + *
-+ * Copyright (C) 2006 Texas Instruments.
-> + * Copyright (C) 2007 MontaVista Software Inc.
-> + * Copyright (C) 2009 Provigent Ltd.
-
-Are you sure about these lines?
-
-
-> +#include <linux/export.h>
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-
-+ empty line.
-
-> +#include "i2c-designware-core.h"
-> +
-
-
-> +/**
-> + * i2c_dw_init_slave() - initialize the designware i2c slave hardware
-> + * @dev: device private data
-> + *
-> + * This functions configures and enables the I2C.
-> + * This function is called during I2C init function, and in case of
-> timeout at
-> + * run time.
-> + */
-> +int i2c_dw_init_slave(struct dw_i2c_dev *dev)
-> +{
-> +	u32 hcnt, lcnt;
-> +	u32 reg, comp_param1;
-> +	u32 sda_falling_time, scl_falling_time;
-
-Reversed tree, pls.
-
-> +	int ret;
-> +
-> +	ret = i2c_dw_acquire_lock(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	reg = dw_readl(dev, DW_IC_COMP_TYPE);
-> +	if (reg == ___constant_swab32(DW_IC_COMP_TYPE_VALUE)) {
-> +		/* Configure register endianness access */
-> +		dev->accessor_flags |= ACCESS_SWAP;
-> +	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
-> +		/* Configure register access mode 16bit */
-> +		dev->accessor_flags |= ACCESS_16BIT;
-> +	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: 18 November 2016 12:24
+> To: Gabriele Paoloni
+> Cc: liviu.dudau-5wv7dgnIgG8@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> Yuanzhichang; mark.rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; minyard-HInyCGIudOg@public.gmane.org; linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org; John Garry; will.deacon-5wv7dgnIgG8@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; xuwei (O); Linuxarm; zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; kantyzc-9Onoh4P/yGk@public.gmane.org; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> catalin.marinas-5wv7dgnIgG8@public.gmane.org; olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org; bhelgaas@go og le.com;
+> zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Jason Gunthorpe; Thomas Petazzoni
+> Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on
+> Hip06
 > 
-
-> +		dev_err(dev->dev, "Unknown Synopsys component type: "
-> +			"0x%08x\n", reg);
-
-Don't break literals.
-
-Choose one that fits.
-
-dev_err(dev->dev, "Unknown Synopsys component type: "0x%08x\n",
-	reg);
-
-dev_err(dev->dev,
-	"Unknown Synopsys component type: "0x%08x\n", reg);
-
-dev_err(dev->dev,
-	"Unknown Synopsys component type: "0x%08x\n",
-	
-reg);
-
-> +		i2c_dw_release_lock(dev);
-> +		return -ENODEV;
-> +	}
-> +
-> +	comp_param1 = dw_readl(dev, DW_IC_COMP_PARAM_1);
-> +
+> On Friday, November 18, 2016 12:07:28 PM CET Gabriele Paoloni wrote:
+> > > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > > On Monday, November 14, 2016 11:26:25 AM CET liviu.dudau-5wv7dgnIgG8@public.gmane.org
+> wrote:
+> > > > On Mon, Nov 14, 2016 at 08:26:42AM +0000, Gabriele Paoloni wrote:
+> > > > > > Nope, that is not what it means. It means that PCI devices
+> can
+> > > see I/O
+> > > > > > addresses
+> > > > > > on the bus that start from 0. There never was any usage for
+> non-
+> > > PCI
+> > > > > > controllers
+> > > > >
+> > > > > So I am a bit confused...
+> > > > > From http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+> > > > > It seems that ISA buses operate on cpu I/O address range [0,
+> > > 0xFFF].
+> > > > > I thought that was the reason why for most architectures we
+> have
+> > > > > PCIBIOS_MIN_IO equal to 0x1000 (so I thought that ISA
+> controllers
+> > > > > usually use [0, PCIBIOS_MIN_IO - 1] )
+> > > >
+> > > > First of all, cpu I/O addresses is an x86-ism. ARM architectures
+> and
+> > > others
+> > > >  have no separate address space for I/O, it is all merged into
+> one
+> > > unified
+> > > > address space. So, on arm/arm64 for example, PCIBIOS_MIN_IO = 0
+> could
+> > > mean
+> > > > that we don't care about ISA I/O because the platform does not
+> > > support having
+> > > > an ISA bus (e.g.).
+> > >
+> > > I think to be more specific, PCIBIOS_MIN_IO=0 would indicate that
+> you
+> > > cannot
+> > > have a PCI-to-ISA or PCI-to-LPC bridge in any PCI domain. This is
+> > > different
+> > > from having an LPC master outside of PCI, as that lives in its own
+> > > domain
+> > > and has a separately addressable I/O space.
+> >
+> > Yes correct so if we go for the single domain solution arch that
+> > have PCIBIOS_MIN_IO=0 cannot support special devices such as LPC
+> > unless we also redefine PCIBIOS_MIN_IO, right?
 > 
+> This is what I was referring to below as the difference between
+> a) and b): Setting PCIBIOS_MIN_IO=0 means you cannot have LPC
+> behind PCI, but it shouldn't stop you from having a separate
+> LPC bridge.
+> 
+> > > The PCIBIOS_MIN_DIRECT_IO name still suggests having something
+> related
+> > > to
+> > > PCIBIOS_MIN_IO, but it really isn't. We are talking about multiple
+> > > concepts here that are not the same but that are somewhat related:
+> > >
+> > > a) keeping PCI devices from allocating low I/O ports on the PCI bus
+> > >    that would conflict with ISA devices behind a bridge of the
+> > >    same bus.
+> > >
+> > > b) reserving the low 0x0-0xfff range of the Linux-internal I/O
+> > >    space abstraction to a particular LPC or PCI domain to make
+> > >    legacy device drivers work that hardcode a particular port
+> > >    number.
+> > >
+> > > c) Redirecting inb/outb to call a domain-specific accessor function
+> > >    rather than doing the normal MMIO window for an LPC master or
+> > >    more generally any arbitrary LPC or PCI domain that has a
+> > >    nonstandard I/O space.
+> > >    [side note: actually if we generalized this, we could avoid
+> > >     assigning an MMIO range for the I/O space on the pci-mvebu
+> > >     driver, and that would help free up some other remapping
+> > >     windows]
+> > >
+> > > I think there is no need to change a) here, we have PCIBIOS_MIN_IO
+> > > today and even if we don't need it, there is no obvious downside.
+> > > I would also argue that we can ignore b) for the discussion of
+> > > the HiSilicon LPC driver, we just need to assign some range
+> > > of logical addresses to each domain.
+> > >
+> > > That means solving c) is the important problem here, and it
+> > > shouldn't be so hard.  We can do this either with a single
+> > > special domain as in the v5 patch series, or by generalizing it
+> > > so that any I/O space mapping gets looked up through the device
+> > > pointer of the bus master.
+> >
+> > I am not very on the "generalized" multi-domain solution...
+> > Currently the IO accessors prototypes have an unsigned long addr
+> > as input parameter. If we live in a multi-domain IO system
+> > how can we distinguish inside the accessor which domain addr
+> > belongs to?
+> 
+> The easiest change compared to the v5 code would be to walk
+> a linked list of 'struct extio_ops' structures rather than
+> assuming there is only ever one of them. I think one of the
+> earlier versions actually did this.
 
-> +	/* Disable the adapter */
+Right but if my understanding is correct if we live in a multi-
+domain I/O space world when you have an input addr in the I/O
+accessors this addr can be duplicated (for example for the standard
+PCI IO domain and for our special LPC domain).
+So effectively even if you walk a linked list there is a problem
+of disambiguation...am I right? 
 
-Useless.
+> 
+> Another option the IA64 approach mentioned in another subthread
+> today, looking up the operations based on an index from the
+> upper bits of the port number. If we do this, we probably
+> want to do that for all PIO access and replace the entire
+> virtual address remapping logic with that. I think Bjorn
+> in the past argued in favor of such an approach, while I
+> advocated the current scheme for simplicity based on how
+> every I/O space these days is just memory mapped (which now
+> turned out to be false, both on powerpc and arm64).
 
-> +	__i2c_dw_enable_and_wait(dev, false);
-> +
-> +	/* set standard and fast speed deviders for high/low periods
-> */
+This seems really complex...I am a bit worried that possibly
+we end up in having the maintainers saying that it is not worth
+to re-invent the world just for this special LPC device...
 
-Capital letter!
+To be honest with you I would keep things simple for this
+LPC and introduce more complex reworks later if more devices
+need to be introduced.
 
-> +	sda_falling_time = dev->sda_falling_time ?: 300; /* ns */
-> +	scl_falling_time = dev->scl_falling_time ?: 300; /* ns */
-> +
-> +	/* Set SCL timing parameters for standard-mode */
-> +	if (dev->ss_hcnt && dev->ss_lcnt) {
-> +		hcnt = dev->ss_hcnt;
-> +		lcnt = dev->ss_lcnt;
-> +	} else {
-> +		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
-> +					4000,	/* tHD;STA =
-> tHIGH = 4.0 us */
-> +					sda_falling_time,
-> +					0,	/* 0: DW default,
-> 1: Ideal */
-> +					0);	/* No offset */
-> +		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
-> +					4700,	/* tLOW = 4.7 us
-> */
-> +					scl_falling_time,
-> +					0);	/* No offset */
-> +	}
-> +	dw_writel(dev, hcnt, DW_IC_SS_SCL_HCNT);
-> +	dw_writel(dev, lcnt, DW_IC_SS_SCL_LCNT);
-> +	dev_dbg(dev->dev, "Standard-mode HCNT:LCNT = %d:%d\n", hcnt,
-> lcnt);
-> +
-> +	/* Set SCL timing parameters for fast-mode or fast-mode plus
-> */
-> +	if ((dev->clk_freq == 1000000) && dev->fp_hcnt && dev-
-> >fp_lcnt) {
-> +		hcnt = dev->fp_hcnt;
-> +		lcnt = dev->fp_lcnt;
-> +	} else if (dev->fs_hcnt && dev->fs_lcnt) {
-> +		hcnt = dev->fs_hcnt;
-> +		lcnt = dev->fs_lcnt;
-> +	} else {
-> +		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
-> +					600,	/* tHD;STA =
-> tHIGH = 0.6 us */
-> +					sda_falling_time,
-> +					0,	/* 0: DW default,
-> 1: Ideal */
-> +					0);	/* No offset */
-> +		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
-> +					1300,	/* tLOW = 1.3 us
-> */
-> +					scl_falling_time,
-> +					0);	/* No offset */
-> +	}
-> +	dw_writel(dev, hcnt, DW_IC_FS_SCL_HCNT);
-> +	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
-> +	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt,
-> lcnt);
-> +
-> +	if ((dev->slave_cfg & DW_IC_CON_SPEED_MASK) ==
-> +		DW_IC_CON_SPEED_HIGH) {
-> +		if ((comp_param1 &
-> DW_IC_COMP_PARAM_1_SPEED_MODE_MASK)
-> +			!= DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH) {
-> +			dev_err(dev->dev, "High Speed not
-> supported!\n");
-> +			dev->slave_cfg &= ~DW_IC_CON_SPEED_MASK;
-> +			dev->slave_cfg |= DW_IC_CON_SPEED_FAST;
-> +		} else if (dev->hs_hcnt && dev->hs_lcnt) {
-> +			hcnt = dev->hs_hcnt;
-> +			lcnt = dev->hs_lcnt;
-> +			dw_writel(dev, hcnt, DW_IC_HS_SCL_HCNT);
-> +			dw_writel(dev, lcnt, DW_IC_HS_SCL_LCNT);
-> +			dev_dbg(dev->dev, "HighSpeed-mode HCNT:LCNT =
-> %d:%d\n",
-> +				hcnt, lcnt);
-> +		}
-> +	}
-> +
-> +	/* Configure SDA Hold Time if required */
-> +	reg = dw_readl(dev, DW_IC_COMP_VERSION);
-> +	reg = dw_readl(dev, DW_IC_COMP_VERSION);
-> +	if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
-> +		if (!dev->sda_hold_time) {
-> +			/* Keep previous hold time setting if no one
-> set it */
-> +			dev->sda_hold_time = dw_readl(dev,
-> DW_IC_SDA_HOLD);
-> +		}
-> +		/*
-> +		 * Workaround for avoiding TX arbitration lost in
-> case I2C
-> +		 * slave pulls SDA down "too quickly" after falling
-> egde of
-> +		 * SCL by enabling non-zero SDA RX hold.
-> Specification says it
-> +		 * extends incoming SDA low to high transition while
-> SCL is
-> +		 * high but it apprears to help also above issue.
-> +		 */
-> +		if (!(dev->sda_hold_time & DW_IC_SDA_HOLD_RX_MASK))
-> +			dev->sda_hold_time |= 1 <<
-> DW_IC_SDA_HOLD_RX_SHIFT;
-> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-> +	} else {
-> +		dev_warn(dev->dev,
-> +			"Hardware too old to adjust SDA hold
-> time.\n");
-> +	}
-> +
-> +	i2c_dw_configure_fifo_slave(dev);
-> +	i2c_dw_release_lock(dev);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(i2c_dw_init_slave);
+What if we stick on a single domain now where we introduce a
+reserved threshold for the IO space (say INDIRECT_MAX_IO).
 
-So, don't make a noise in exported name space. When we need two sets of
-functions make an ops structure and assign it where appropriate.
+We define INDIRECT_MAX_IO as 0 in "include/linux/extio.h" and
+we define INDIRECT_MAX_IO as 0x1000 in "arch/arm64/include/asm/io.h"
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+So effectively this threshold can change according to the
+architecture and so far we only define it for ARM64 as we need
+it for ARM64...
+
+Thoughts?
+
+Thanks again
+
+Gab
+
+> 
+> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
