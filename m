@@ -1,66 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Fri, 18 Nov 2016 12:46:21 +0100
-Message-ID: <2565107.vdSUAxpRt4@wuerfel>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <17821285.aIcTyCGn5n@wuerfel> <582469C8.9090609@hisilicon.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 3/4] regulator: pv88080: Update Regulator driver for
+ MFD support
+Date: Fri, 18 Nov 2016 12:00:28 +0000
+Message-ID: <20161118120028.7wiqfnehnyubqarr@sirena.org.uk>
+References: <cover.1479429347.git.eric.jeong@diasemi.com>
+ <7248b3cd414d462a97b80d9e5d044e592f85d973.1479429347.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <582469C8.9090609@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: linux-arm-kernel@lists.infradead.org, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "minyard@acm.org" <minyard@acm.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, John Garry <john.garry@huawei.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kantyzc@163.com" <kantyzc@163.com>"linux-serial@vger.kernel.org" <linux>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gx5lb34odtfvjdza"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7248b3cd414d462a97b80d9e5d044e592f85d973.1479429347.git.eric.jeong-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-GPIO <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[found this old mail in my drafts folder, might as well send it now]
 
-On Thursday, November 10, 2016 8:36:24 PM CET zhichang.yuan wrote:
-> Sorry! I can't catch your idea yet:(
-> 
-> When to register the I/O range? Is it done just after the successfully
-> of_translate_address() during the children scanning?
+--gx5lb34odtfvjdza
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No, you do it when first finding the bus itself, just like we do for
-PCI host bridges.
+On Fri, Nov 18, 2016 at 09:35:46AM +0900, Eric Jeong wrote:
+>=20
+> From: Eric Jeong <eric.jeong.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
+> This change convert from using struct i2c_clinet=20
+> to using struct platform_device for MFD structure.
+> And, the declaration of of_device_id and regmap_config
+> are also move to MFD driver.
 
-> If yes, when a child is scanning, there is no range data in arm64_extio_ops. The
-> addr_is_indirect_io() calling in of_get_isa_indirect_io() don't need. All we can
-> check is just whether the address to be translated is IO and is under a parent
-> device which has no 'ranges' property.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The children should only be scanned after the I/O range has been
-registered for the parent.
+--gx5lb34odtfvjdza
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > Your current version has
-> > 
-> >         if (arm64_extio_ops->pfout)                             \
-> >                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
-> >                        addr, value, sizeof(type));             \
-> > 
-> > Instead, just subtract the start of the range from the logical
-> > port number to transform it back into a bus-local port number:
-> > 
-> >         if (arm64_extio_ops->pfout)                             \
-> >                 arm64_extio_ops->pfout(arm64_extio_ops->devpara,\
-> >                        addr - arm64_extio_ops->start, value, sizeof(type)); \
-> > 
-> I think there is some information needed sync.
-> In the old patch-set, we don't bypass the pci_address_to_pio() after
-> successfully of_translate_address(). In this way, we don't need to reserve any
-> PIO space for our LPC since the logical port are from the same mapping
-> algorithm. Based on this way, the port number in the device resource is logical
-> one, then we need to subtract the start of the resource to get back the
-> bus-local port.
-> 
-> From V3, we don't apply the mapping based on pci_address_to_pio(), the
-> of_translate_address() return the bus-local port directly and store into
-> relevant device resource. So, in the current arm64_extio_ops->pfout(), the
-> reverse translation don't need anymore. The input "addr" is bus-local port now.
+-----BEGIN PGP SIGNATURE-----
 
-Ok, so this would have to be changed again: If we want to support multiple
-bus domains, of_translate_address() must translate between the bus specific
-address and the general Linux I/O port number. Even without doing that,
-it seems nicer to not overlap the range of the first PCI host bridge.
+iQEcBAABCAAGBQJYLu1bAAoJECTWi3JdVIfQV/kH/1yLcbafFa4WljwD8DegzykI
+jb8GgFDJJYQx/4GAEawteCOVhtMjWUEpiiRs/lEouse9D0lPAPB2MCP91b8EzSt7
+j3CflZXUDgWydV9sdpESHKJ2iqFN11W9mWvepskBwEYM3BOO5TE38qk79CZPoexj
+CLX6EdtdAvztu8/LX7om1eWbI2IBI7dcQYEEmd0Jb4mf0fosOU/+ob3DnOGwwJDb
+bKFFSnfHvb4biCrNty3DUWwZ3wvLQyzT1bx3GMXwX6oWGA6Kws7rvdHiHfj2P2fT
+SYVtGauShO9nvXGs4BJ0JQWEVBa3jUYAsKvJtMumD+imvnVlhV0Ffj2S5PS0dew=
+=2ehP
+-----END PGP SIGNATURE-----
 
-	Arnd
+--gx5lb34odtfvjdza--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
