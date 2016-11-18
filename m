@@ -1,62 +1,31 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/6] mfd: dt: Add bindings for the Aspeed SoC Display
- Controller (GFX)
-Date: Fri, 18 Nov 2016 18:47:15 +0000
-Message-ID: <20161118184715.GG19884@dell.home>
-References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
- <1478097481-14895-3-git-send-email-andrew@aj.id.au>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v8 2/3] Documentation: Add binding document for Lattice
+ iCE40 FPGA manager
+Date: Fri, 18 Nov 2016 12:56:12 -0600
+Message-ID: <alpine.DEB.2.20.1611181255120.3387@atull-VirtualBox2>
+References: <1478486962-26794-1-git-send-email-joel@airwebreathe.org.uk> <1478486962-26794-2-git-send-email-joel@airwebreathe.org.uk> <20161114161130.2arzmaev6ajsw4qt@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1478097481-14895-3-git-send-email-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, arnd@arndb.de
-Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161114161130.2arzmaev6ajsw4qt@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Joel Holdsworth <joel@airwebreathe.org.uk>, moritz.fischer@ettus.com, geert@linux-m68k.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, marex@denx.de, clifford@clifford.at
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 03 Nov 2016, Andrew Jeffery wrote:
+On Mon, 14 Nov 2016, Rob Herring wrote:
 
-> The Aspeed SoC Display Controller is presented as a syscon device to
-> arbitrate access by display and pinmux drivers. Video pinmux
-> configuration on fifth generation SoCs depends on bits in both the
-> System Control Unit and the Display Controller.
+> On Sun, Nov 06, 2016 at 07:49:21PM -0700, Joel Holdsworth wrote:
+> > This adds documentation of the device tree bindings of the Lattice iCE40
+> > FPGA driver for the FPGA manager framework.
+> > 
+> > Signed-off-by: Joel Holdsworth <joel@airwebreathe.org.uk>
+> > ---
+> >  .../bindings/fpga/lattice-ice40-fpga-mgr.txt        | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt
 > 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/mfd/aspeed-gfx.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-Same here.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> new file mode 100644
-> index 000000000000..aea5370efd97
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-gfx.txt
-> @@ -0,0 +1,17 @@
-> +* Device tree bindings for Aspeed SoC Display Controller (GFX)
-> +
-> +The Aspeed SoC Display Controller primarily does as its name suggests, but also
-> +participates in pinmux requests on the g5 SoCs. It is therefore considered a
-> +syscon device.
-> +
-> +Required properties:
-> +- compatible:		"aspeed,ast2500-gfx", "syscon"
-> +- reg:			contains offset/length value of the GFX memory
-> +			region.
-> +
-> +Example:
-> +
-> +gfx: display@1e6e6000 {
-> +	compatible = "aspeed,ast2500-gfx", "syscon";
-> +	reg = <0x1e6e6000 0x1000>;
-> +};
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Acked-by: Alan Tull <atull@opensource.altera.com>
