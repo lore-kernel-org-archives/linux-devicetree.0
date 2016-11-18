@@ -1,112 +1,661 @@
-From: Tom Levens <tom.levens@cern.ch>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 17 Nov 2016 23:25:30 +0000
-Message-ID: <09DCF2E6-3F08-4F0E-837B-55F591008AAB@cern.ch>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <582DEB81.6050806@topic.nl> <20161117185654.GA19338@roeck-us.net>
- <582E0A6C.5010307@topic.nl> <20161117215454.GA23571@roeck-us.net>
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Subject: [PATCH V3 2/4] mfd: pv88080: MFD core support
+Date: Fri, 18 Nov 2016 09:35:46 +0900
+Message-ID: <d5a2f377ee9ea7a7b68c9545ada0405b8134a9f4.1479429347.git.eric.jeong@diasemi.com>
+References: <cover.1479429347.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20161117215454.GA23571@roeck-us.net>
-Content-Language: en-US
-Content-ID: <06FCCBD77300374E9378EE3ECAA23FA6@cern.ch>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, "jdelvare@suse.com" <jdelvare@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1479429347.git.eric.jeong@diasemi.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcgTm92IDIwMTYsIGF0IDIyOjU0LCBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5u
-ZXQ+IHdyb3RlOg0KPiBPbiBUaHUsIE5vdiAxNywgMjAxNiBhdCAwODo1MjoxMlBNICswMTAwLCBN
-aWtlIExvb2lqbWFucyB3cm90ZToNCj4+IO+7v09uIDE3LTExLTIwMTYgMTk6NTYsIEd1ZW50ZXIg
-Um9lY2sgd3JvdGU6DQo+Pj4gT24gVGh1LCBOb3YgMTcsIDIwMTYgYXQgMDY6NDA6MTdQTSArMDEw
-MCwgTWlrZSBMb29pam1hbnMgd3JvdGU6DQo+Pj4+IO+7v09uIDE3LTExLTE2IDE3OjU2LCBHdWVu
-dGVyIFJvZWNrIHdyb3RlOg0KPj4+Pj4gT24gMTEvMTcvMjAxNiAwNDoxMCBBTSwgVG9tIExldmVu
-cyB3cm90ZToNCj4+Pj4+PiBVcGRhdGVkIHZlcnNpb24gb2YgdGhlIGx0YzI5OTAgZHJpdmVyIHdo
-aWNoIHN1cHBvcnRzIGFsbCBtZWFzdXJlbWVudA0KPj4+Pj4+IG1vZGVzIGF2YWlsYWJsZSBpbiB0
-aGUgY2hpcC4gVGhlIG1vZGUgY2FuIGJlIHNldCB0aHJvdWdoIGEgZGV2aWNldHJlZQ0KPj4+Pj4+
-IGF0dHJpYnV0ZS4NCj4+Pj4+IA0KPj4+IFsgLi4uIF0NCj4+PiANCj4+Pj4+PiANCj4+Pj4+PiBz
-dGF0aWMgaW50IGx0YzI5OTBfaTJjX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICppMmMsDQo+Pj4+
-Pj4gICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4+Pj4+
-PiB7DQo+Pj4+Pj4gICAgaW50IHJldDsNCj4+Pj4+PiAgICBzdHJ1Y3QgZGV2aWNlICpod21vbl9k
-ZXY7DQo+Pj4+Pj4gKyAgICBzdHJ1Y3QgbHRjMjk5MF9kYXRhICpkYXRhOw0KPj4+Pj4+ICsgICAg
-c3RydWN0IGRldmljZV9ub2RlICpvZl9ub2RlID0gaTJjLT5kZXYub2Zfbm9kZTsNCj4+Pj4+PiAN
-Cj4+Pj4+PiAgICBpZiAoIWkyY19jaGVja19mdW5jdGlvbmFsaXR5KGkyYy0+YWRhcHRlciwNCj4+
-Pj4+PiBJMkNfRlVOQ19TTUJVU19CWVRFX0RBVEEgfA0KPj4+Pj4+ICAgICAgICAgICAgICAgICAg
-ICAgSTJDX0ZVTkNfU01CVVNfV09SRF9EQVRBKSkNCj4+Pj4+PiAgICAgICAgcmV0dXJuIC1FTk9E
-RVY7DQo+Pj4+Pj4gDQo+Pj4+Pj4gLSAgICAvKiBTZXR1cCBjb250aW51b3VzIG1vZGUsIGN1cnJl
-bnQgbW9uaXRvciAqLw0KPj4+Pj4+ICsgICAgZGF0YSA9IGRldm1fa3phbGxvYygmaTJjLT5kZXYs
-IHNpemVvZihzdHJ1Y3QgbHRjMjk5MF9kYXRhKSwNCj4+Pj4+PiBHRlBfS0VSTkVMKTsNCj4+Pj4+
-PiArICAgIGlmICh1bmxpa2VseSghZGF0YSkpDQo+Pj4+Pj4gKyAgICAgICAgcmV0dXJuIC1FTk9N
-RU07DQo+Pj4+Pj4gKyAgICBkYXRhLT5pMmMgPSBpMmM7DQo+Pj4+Pj4gKw0KPj4+Pj4+ICsgICAg
-aWYgKCFvZl9ub2RlIHx8IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG9mX25vZGUsICJsbHRjLG1vZGUi
-LA0KPj4+Pj4+ICZkYXRhLT5tb2RlKSkNCj4+Pj4+PiArICAgICAgICBkYXRhLT5tb2RlID0gTFRD
-Mjk5MF9DT05UUk9MX01PREVfREVGQVVMVDsNCj4+Pj4+IA0KPj4+Pj4gSWFtIGFyZ3Vpbmcgd2l0
-aCBteXNlbGYgaWYgd2Ugc2hvdWxkIHN0aWxsIGRvIHRoaXMgb3IgaWYgd2Ugc2hvdWxkIHJlYWQN
-Cj4+Pj4+IHRoZSBtb2RlDQo+Pj4+PiBmcm9tIHRoZSBjaGlwIGluc3RlYWQgaWYgaXQgaXNuJ3Qg
-cHJvdmlkZWQgKGFmdGVyIGFsbCwgaXQgbWF5IGhhdmUgYmVlbg0KPj4+Pj4gaW5pdGlhbGl6ZWQN
-Cj4+Pj4+IGJ5IHRoZSBCSU9TL1JPTU1PTikuDQo+Pj4+IA0KPj4+PiBJIHRoaW5rIHRoZSBtb2Rl
-IHNob3VsZCBiZSBleHBsaWNpdGx5IHNldCwgd2l0aG91dCBkZWZhdWx0LiBUaGVyZSdzIG5vIHdh
-eQ0KPj4+PiB0byB0ZWxsIHdoZXRoZXIgdGhlIEJJT1Mgb3IgYm9vdGxvYWRlciBoYXMgcmVhbGx5
-IHNldCBpdCB1cCBvciB3aGV0aGVyIHRoZQ0KPj4+PiBjaGlwIGlzIGp1c3QgcmVwb3J0aW5nIHdo
-YXRldmVyIGl0IGhhcHBlbmVkIHRvIGRlZmF1bHQgdG8uIEFuZCBnaXZlbiB0aGUNCj4+Pj4gY2hp
-cCdzIGZ1bmN0aW9uLCBpdCdzIHVubGlrZWx5IGEgYm9vdGxvYWRlciB3b3VsZCB3YW50IHRvIGlu
-aXRpYWxpemUgaXQuDQo+Pj4+IA0KPj4+IFVubGlrZWx5IGJ1dCBwb3NzaWJsZS4gRXZlbiBpZiB3
-ZSBhbGwgYWdyZWUgdGhhdCB0aGUgY2hpcCBzaG91bGQgYmUgY29uZmlndXJlZA0KPj4+IGJ5IHRo
-ZSBkcml2ZXIsIEkgZG9uJ3QgbGlrZSBpbXBvc2luZyB0aGF0IHZpZXcgb24gZXZlcnlvbmUgZWxz
-ZS4NCj4+PiANCj4+Pj4gTXkgYWR2aWNlIHdvdWxkIGJlIHRvIG1ha2UgaXQgYSByZXF1aXJlZCBw
-cm9wZXJ0eS4gSWYgbm90IHNldCwgZGlzcGxheSBhbg0KPj4+PiBlcnJvciBhbmQgYmFpbCBvdXQu
-DQo+Pj4+IA0KPj4+IEl0IGlzIG5vdCB0aGF0IGVhc3ksIHVuZm9ydHVuYXRlbHkuIEl0IGFsc28g
-aGFzIHRvIHdvcmsgb24gYSBub24tZGV2aWNldHJlZQ0KPj4+IHN5c3RlbS4gSSB3b3VsZCBub3Qg
-b2JqZWN0IHRvIG1ha2luZyB0aGUgcHJvcGVydHkgbWFuZGF0b3J5LCBidXQgd2Ugd291bGQNCj4+
-PiBzdGlsbCBuZWVkIHRvIHByb3ZpZGUgbm9uLURUIHN1cHBvcnQuDQo+Pj4gDQo+Pj4gTXkgInVz
-ZSBjYXNlIiBmb3IgdGFraW5nIHRoZSBjdXJyZW50IG1vZGUgZnJvbSB0aGUgY2hpcCBpZiBub3Qg
-c3BlY2lmaWVkDQo+Pj4gaXMgdGhhdCBpdCB3b3VsZCBlbmFibGUgbWUgdG8gcnVuIGEgbW9kdWxl
-IHRlc3Qgd2l0aCBhbGwgbW9kZXMuIEkgY29uc2lkZXINCj4+PiB0aGlzIGV4dHJlbWVseSB2YWx1
-YWJsZS4NCj4+IA0KPj4gR29vZCBwb2ludC4NCj4+IA0KPj4gVGhlIGNoaXAgZGVmYXVsdHMgdG8g
-bWVhc3VyaW5nIGludGVybmFsIHRlbXBlcmF0dXJlIG9ubHksIGFuZCB0aGUgbW9kZQ0KPj4gZGVm
-YXVsdHMgdG8gIjAiLg0KPj4gDQo+PiBDaG9vc2luZyBhIG1vZGUgdGhhdCBkb2Vzbid0IG1hdGNo
-IHRoZSBhY3R1YWwgY2lyY3VpdHJ5IGNvdWxkIGJlIGJhZCBmb3IgdGhlDQo+PiBjaGlwIG9yIHRo
-ZSBib2FyZCAodGhvdWdoIHVubGlrZWx5LCBpdCdsbCBwcm9iYWJseSBqdXN0IGJlIHVzZWxlc3Mp
-IHNpbmNlIGl0DQo+PiB3aWxsIGFjdGl2ZWx5IGRyaXZlIHNvbWUgb2YgdGhlIGlucHV0cyBpbiB0
-aGUgdGVtcGVyYXR1cmUgbW9kZXMgKHdoaWNoIGlzDQo+PiBkZWZhdWx0IGZvciBWMy9WNCBwaW5z
-KS4NCj4+IA0KPj4gSW5zdGVhZCBvZiBmYWlsaW5nLCBvbmUgY291bGQgY2hvb3NlIHRvIHNldCB0
-aGUgZGVmYXVsdCBtb2RlIHRvICI3Iiwgd2hpY2gNCj4+IGp1c3QgbWVhc3VyZXMgdGhlIDQgdm9s
-dGFnZXMsIHdoaWNoIHdvdWxkIGJlIGEgaGFybWxlc3MgbW9kZSBpbiBhbGwgY2FzZXMuDQo+PiAN
-Cj4+IEFzIGEgd2F5IHRvIGxldCBhIGJvb3Rsb2FkZXIgc2V0IHRoaW5ncyB1cCwgSSB0aGluayBp
-dCB3b3VsZCBiZSBhIGdvb2QgY2hlY2sNCj4+IHRvIHNlZSBpZiBDT05UUk9MIHJlZ2lzdGVyIGJp
-dHMgNDozIGFyZSBzZXQuIElmICIwMCIsIHRoZSBjaGlwIGlzIG5vdA0KPj4gYWNxdWlyaW5nIGRh
-dGEgYXQgYWxsLCBhbmQgcHJvYmFibHkgbmVlZHMgY29uZmlndXJhdGlvbiBzdGlsbC4gSW4gdGhh
-dCBjYXNlLA0KPj4gdGhlIG1vZGUgbXVzdCBiZSBwcm92aWRlZCBieSB0aGUgZGV2aWNldHJlZSAo
-b3IgdGhlIGRlZmF1bHQgIjciKS4NCj4+IElmIGJpdHMgNDozIGFyZSAiMTEiLCBpdCBoYXMgYWxy
-ZWFkeSBiZWVuIHNldCB1cCB0byBtZWFzdXJlIGl0cyBpbnB1dHMsIGFuZA0KPj4gaXQncyBva2F5
-IHRvIGNvbnRpbnVlIGRvaW5nIGp1c3QgdGhhdCBhbmQgdXNlIHRoZSBjdXJyZW50IHZhbHVlIG9m
-IDI6MA0KPj4gcmVnaXN0ZXIgYXMgZGVmYXVsdCBtb2RlIChpZiB0aGUgZGV2aWNldHJlZSBkaWRu
-J3Qgc3BlY2lmeSBhbnkgbW9kZSBhdCBhbGwpLg0KPj4gDQo+IA0KPiBBdCBmaXJzdCBnbGFuY2Us
-IGFncmVlZCwgdGhvdWdoIGJ5IGRlZmF1bHQgYlszOjRdIGFyZSAwMCwgYW5kIG9ubHkgdGhlDQo+
-IGludGVybmFsIHRlbXBlcmF0dXJlIGlzIG1lYXN1cmVkLiBBY3R1YWxseSwgdGhlIDUgbW9kZSBi
-aXRzIGFyZSBhbGwNCj4gcmVsZXZhbnQgdG8gZGV0ZXJtaW5lIHdoYXQgaXMgbWVhc3VyZWQuIE1h
-eWJlIGl0IHdvdWxkIGJlIGJldHRlciB0byB0YWtlDQo+IGFsbCA1IGJpdHMgaW50byBhY2NvdW50
-IGluc3RlYWQgb2YgYmxpbmRseSBzZXR0aW5nIGJbMzRdOj0xMSBhbmQgYSBzcGVjaWZpYw0KPiBz
-ZXR0aW5nIG9mIGJbMDoyXS4gU3VyZSwgdGhhdCB3b3VsZCBtYWtlIHRoZSBtb2RlIHRhYmxlIGEg
-Yml0IGxhcmdlciwNCj4gYnV0IHRoZW4gbHRjMjk5MF9hdHRyc19lbmFbXSBjb3VsZCBiZSBtYWRl
-IGFuIHUxNiBhcnJheSwgYW5kIGEgdGFibGUgc2l6ZQ0KPiBvZiA2NCBieXRlcyB3b3VsZCBub3Qg
-YmUgdGhhdCBiYWQuDQoNCkkgd291bGQgdGVuZCB0byBhZ3JlZSB0aGF0IGl0IHNob3VsZCBiZSBw
-b3NzaWJsZSB0byBjb25maWd1cmUgYWxsIDUgbW9kZQ0KYml0cyB0aHJvdWdoIHRoZSBkZXZpY2V0
-cmVlLiBXaGF0IEkgd291bGQgcHJvcG9zZSBpcyBhcyBmb2xsb3dzLg0KDQpJZiBhIGRldmljZXRy
-ZWUgbm9kZSBleGlzdHMsIHRoZSBtb2RlIHBhcmFtZXRlcihzPykgYXJlIHJlcXVpcmVkIGFuZCB0
-aGUgDQpjaGlwIGlzIGluaXRpYWxpc2VkLg0KDQpJZiBhIGRldmljZXRyZWUgbm9kZSBkb2Vzbid0
-IGV4aXN0LCBpdCBpcyBhc3N1bWVkIHRoYXQgdGhlIGNoaXAgaGFzIA0KYWxyZWFkeSBiZWVuIGNv
-bmZpZ3VyZWQgKGJ5IHRoZSBCSU9TLCBldGMpLiBUaGUgbW9kZSBpcyByZWFkIGZyb20gdGhlIA0K
-Y2hpcCB0byBzZXQgdGhlIHZpc2liaWxpdHkgb2YgdGhlIHN5c2ZzIGF0dHJpYnV0ZXMuIEluIHRo
-ZSB3b3JzdCBjYXNlLCB3aGVyZSB0aGUgDQpjaGlwIGhhcyBub3QgYmVlbiBjb25maWd1cmVkIGJ5
-IGFub3RoZXIgc291cmNlLCBpdCB3b3VsZCBvbmx5IGJlIHBvc3NpYmxlDQp0byBtZWFzdXJlIHRo
-ZSBpbnRlcm5hbCB0ZW1wZXJhdHVyZSAtLSBidXQgSSB0aGluayB0aGlzIGlzIGFuIGFjY2VwdGFi
-bGUNCmxpbWl0YXRpb24uDQoNClRoZSBvbmx5IGNhc2UgdGhhdCB0aGlzIGRvZXMgbm90IGNvdmVy
-IGlzIGlmIHRoZSBkZXZpY2UgdHJlZSBub2RlIA0KZXhpc3RzIGJ1dCB0aGUgY2hpcCBpcyBleHBl
-Y3RlZCB0byBiZSBjb25maWd1cmVkIGJ5IHNvbWUgb3RoZXIgc291cmNlLiANCk1heWJlIEkgYW0g
-d3JvbmcsIGJ1dCBJIHdvdWxkIG5vdCBleHBlY3QgdGhpcyB0byBiZSBhIHRlcnJpYmx5IGNvbW1v
-bg0Kc2l0dWF0aW9uLg0KDQpXaGF0IGRvIHlvdSB0aGluaz8NCg0KQ2hlZXJzLA0KVG9tDQoNCg==
+
+From: Eric Jeong <eric.jeong.opensource@diasemi.com> 
+ 
+This patch adds supports for PV88080 MFD core device.
+
+It provides communication through the I2C interface.
+It contains the following components:
+    - Regulators
+    - Configurable GPIOs
+ 
+Kconfig and Makefile are updated to reflect support for PV88080 PMIC. 
+
+Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com> 
+
+---
+This patch applies against linux-next and next-20161117 
+ 
+Hi, 
+
+This patch adds MFD core driver for PV88080 PMIC.
+This is done as part of the existing PV88080 regulator driver by expending
+the driver for GPIO function support.
+
+Change since PATCH V2
+ - Make one file insted of usging core and i2c file
+ - Use devm_ function to be managed resource automatically
+ - Separated mfd_cell and regmap_irq_chip declaration for clarification.
+ - Updated Kconfig to use OF and assign yes to I2C
+
+Change since PATCH V1
+ - Patch separated from PATCH V1
+
+Regards,
+Eric Jeong, Dialog Semiconductor Ltd.
+
+
+ drivers/mfd/Kconfig         |   12 ++
+ drivers/mfd/Makefile        |    1 +
+ drivers/mfd/pv88080.c       |  331 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/pv88080.h |  222 +++++++++++++++++++++++++++++
+ 4 files changed, 566 insertions(+)
+ create mode 100644 drivers/mfd/pv88080.c
+ create mode 100644 include/linux/mfd/pv88080.h
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 06dc9b0..75abf2d 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -792,6 +792,18 @@ config MFD_PM8921_CORE
+ 	  Say M here if you want to include support for PM8921 chip as a module.
+ 	  This will build a module called "pm8921-core".
+ 
++config MFD_PV88080
++	tristate "Powerventure Semiconductor PV88080 PMIC Support"
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	depends on I2C=y && OF
++	help
++	  Say yes here for support for the Powerventure Semiconductor PV88080 PMIC.
++	  This includes the I2C driver and core APIs.
++	  Additional drivers must be enabled in order to use the functionality
++	  of the device.
++
+ config MFD_QCOM_RPM
+ 	tristate "Qualcomm Resource Power Manager (RPM)"
+ 	depends on ARCH_QCOM && OF
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index db39377..e9e16c6 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -173,6 +173,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+= si476x-core.o
+ obj-$(CONFIG_MFD_CS5535)	+= cs5535-mfd.o
+ obj-$(CONFIG_MFD_OMAP_USB_HOST)	+= omap-usb-host.o omap-usb-tll.o
+ obj-$(CONFIG_MFD_PM8921_CORE) 	+= pm8921-core.o ssbi.o
++obj-$(CONFIG_MFD_PV88080)	+= pv88080.o
+ obj-$(CONFIG_MFD_QCOM_RPM)	+= qcom_rpm.o
+ obj-$(CONFIG_MFD_SPMI_PMIC)	+= qcom-spmi-pmic.o
+ obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
+diff --git a/drivers/mfd/pv88080.c b/drivers/mfd/pv88080.c
+new file mode 100644
+index 0000000..518b44f
+--- /dev/null
++++ b/drivers/mfd/pv88080.c
+@@ -0,0 +1,331 @@
++/*
++ * pv88080-i2c.c - I2C access driver for PV88080
++ *
++ * Copyright (C) 2016  Powerventure Semiconductor Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++
++#include <linux/mfd/pv88080.h>
++
++#define	PV88080_REG_EVENT_A_OFFSET	0
++#define	PV88080_REG_EVENT_B_OFFSET	1
++#define	PV88080_REG_EVENT_C_OFFSET	2
++
++static const struct resource regulators_aa_resources[] = {
++	{
++		.name	= "VDD_TEMP_FAULT",
++		.start  = PV88080_AA_IRQ_VDD_FLT,
++		.end	= PV88080_AA_IRQ_OVER_TEMP,
++		.flags	= IORESOURCE_IRQ,
++	},
++};
++
++static const struct resource regulators_ba_resources[] = {
++	{
++		.name	= "VDD_TEMP_FAULT",
++		.start  = PV88080_BA_IRQ_VDD_FLT,
++		.end	= PV88080_BA_IRQ_OVER_TEMP,
++		.flags	= IORESOURCE_IRQ,
++	},
++};
++
++static const struct mfd_cell pv88080_aa_cells[] = {
++	{
++		.name = "pv88080-regulator",
++		.num_resources = ARRAY_SIZE(regulators_aa_resources),
++		.resources = regulators_aa_resources,
++		.of_compatible = "pvs,pv88080-regulator",
++	},
++	{
++		.name = "pv88080-gpio",
++		.of_compatible = "pvs,pv88080-gpio",
++	},
++};
++
++static const struct mfd_cell pv88080_ba_cells[] = {
++	{
++		.name = "pv88080-regulator",
++		.num_resources = ARRAY_SIZE(regulators_ba_resources),
++		.resources = regulators_ba_resources,
++		.of_compatible = "pvs,pv88080-regulator",
++	},
++	{
++		.name = "pv88080-gpio",
++		.of_compatible = "pvs,pv88080-gpio",
++	},
++};
++
++static const struct regmap_irq pv88080_aa_irqs[] = {
++	/* PV88080 event A register for AA/AB silicon */
++	[PV88080_AA_IRQ_VDD_FLT] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_VDD_FLT,
++	},
++	[PV88080_AA_IRQ_OVER_TEMP] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_OVER_TEMP,
++	},
++	[PV88080_AA_IRQ_SEQ_RDY] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_SEQ_RDY,
++	},
++	/* PV88080 event B register for AA/AB silicon */
++	[PV88080_AA_IRQ_HVBUCK_OV] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_OV,
++	},
++	[PV88080_AA_IRQ_HVBUCK_UV] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_UV,
++	},
++	[PV88080_AA_IRQ_HVBUCK_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_SCP,
++	},
++	[PV88080_AA_IRQ_BUCK1_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK1_SCP,
++	},
++	[PV88080_AA_IRQ_BUCK2_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK2_SCP,
++	},
++	[PV88080_AA_IRQ_BUCK3_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK3_SCP,
++	},
++	/* PV88080 event C register for AA/AB silicon */
++	[PV88080_AA_IRQ_GPIO_FLAG0] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_GPIO_FLAG0,
++	},
++	[PV88080_AA_IRQ_GPIO_FLAG1] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_GPIO_FLAG1,
++	},
++};
++
++static const struct regmap_irq pv88080_ba_irqs[] = {
++	/* PV88080 event A register for BA/BB silicon */
++	[PV88080_BA_IRQ_VDD_FLT] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_VDD_FLT,
++	},
++	[PV88080_BA_IRQ_OVER_TEMP] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_OVER_TEMP,
++	},
++	[PV88080_BA_IRQ_SEQ_RDY] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_SEQ_RDY,
++	},
++	[PV88080_BA_IRQ_EXT_OT] = {
++		.reg_offset = PV88080_REG_EVENT_A_OFFSET,
++		.mask = PV88080_M_EXT_OT,
++	},
++	/* PV88080 event B register for BA/BB silicon */
++	[PV88080_BA_IRQ_HVBUCK_OV] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_OV,
++	},
++	[PV88080_BA_IRQ_HVBUCK_UV] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_UV,
++	},
++	[PV88080_BA_IRQ_HVBUCK_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_HVBUCK_SCP,
++	},
++	[PV88080_BA_IRQ_BUCK1_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK1_SCP,
++	},
++	[PV88080_BA_IRQ_BUCK2_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK2_SCP,
++	},
++	[PV88080_BA_IRQ_BUCK3_SCP] = {
++		.reg_offset = PV88080_REG_EVENT_B_OFFSET,
++		.mask = PV88080_M_BUCK3_SCP,
++	},
++	/* PV88080 event C register for BA/BB silicon */
++	[PV88080_BA_IRQ_GPIO_FLAG0] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_GPIO_FLAG0,
++	},
++	[PV88080_BA_IRQ_GPIO_FLAG1] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_GPIO_FLAG1,
++	},
++	[PV88080_BA_IRQ_BUCK1_DROP_TIMEOUT] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_BUCK1_DROP_TIMEOUT,
++	},
++	[PV88080_BA_IRQ_BUCK2_DROP_TIMEOUT] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_BUCK2_DROP_TIMEOUT,
++	},
++	[PB88080_BA_IRQ_BUCK3_DROP_TIMEOUT] = {
++		.reg_offset = PV88080_REG_EVENT_C_OFFSET,
++		.mask = PV88080_M_BUCk3_DROP_TIMEOUT,
++	},
++};
++
++static const struct regmap_irq_chip pv88080_aa_irq_chip = {
++	.name = "pv88080-irq",
++	.irqs = pv88080_aa_irqs,
++	.num_irqs = ARRAY_SIZE(pv88080_aa_irqs),
++	.num_regs = 3,
++	.status_base = PV88080_REG_EVENT_A,
++	.mask_base = PV88080_REG_MASK_A,
++	.ack_base = PV88080_REG_EVENT_A,
++	.init_ack_masked = true,
++};
++
++static const struct regmap_irq_chip pv88080_ba_irq_chip = {
++	.name = "pv88080-irq",
++	.irqs = pv88080_ba_irqs,
++	.num_irqs = ARRAY_SIZE(pv88080_ba_irqs),
++	.num_regs = 3,
++	.status_base = PV88080_REG_EVENT_A,
++	.mask_base = PV88080_REG_MASK_A,
++	.ack_base = PV88080_REG_EVENT_A,
++	.init_ack_masked = true,
++};
++
++static const struct regmap_config pv88080_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static const struct of_device_id pv88080_of_match_table[] = {
++	{ .compatible = "pvs,pv88080",    .data = (void *)TYPE_PV88080_AA },
++	{ .compatible = "pvs,pv88080-aa", .data = (void *)TYPE_PV88080_AA },
++	{ .compatible = "pvs,pv88080-ba", .data = (void *)TYPE_PV88080_BA },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, pv88080_of_match_table);
++
++static int pv88080_probe(struct i2c_client *client,
++				const struct i2c_device_id *ids)
++{
++	struct pv88080 *chip;
++	const struct of_device_id *match;
++	const struct regmap_irq_chip *pv88080_irq_chips;
++	const struct mfd_cell *pv88080_mfd_cells;
++	int ret, n_devs;
++
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	if (client->dev.of_node) {
++		match = of_match_node(pv88080_of_match_table,
++						client->dev.of_node);
++		if (!match) {
++			dev_err(&client->dev, "Failed to get of_match_node\n");
++			return -EINVAL;
++		}
++		chip->type = (unsigned long)match->data;
++	} else {
++		chip->type = ids->driver_data;
++	}
++
++	i2c_set_clientdata(client, chip);
++
++	chip->irq = client->irq;
++	chip->dev = &client->dev;
++
++	chip->regmap = devm_regmap_init_i2c(client, &pv88080_regmap_config);
++	if (IS_ERR(chip->regmap)) {
++		dev_err(chip->dev, "Failed to initialize register map\n");
++		return PTR_ERR(chip->regmap);
++	}
++
++	ret = regmap_write(chip->regmap, PV88080_REG_MASK_A, 0xFF);
++	if (ret < 0) {
++		dev_err(chip->dev, "Failed to mask A reg: %d\n", ret);
++		return ret;
++	}
++	ret = regmap_write(chip->regmap, PV88080_REG_MASK_B, 0xFF);
++	if (ret < 0) {
++		dev_err(chip->dev, "Failed to mask B reg: %d\n", ret);
++		return ret;
++	}
++	ret = regmap_write(chip->regmap, PV88080_REG_MASK_C, 0xFF);
++	if (ret < 0) {
++		dev_err(chip->dev, "Failed to mask C reg: %d\n", ret);
++		return ret;
++	}
++
++	switch (chip->type) {
++	case TYPE_PV88080_AA:
++		pv88080_irq_chips = &pv88080_aa_irq_chip;
++		pv88080_mfd_cells = pv88080_aa_cells;
++		n_devs = ARRAY_SIZE(pv88080_aa_cells);
++		break;
++	case TYPE_PV88080_BA:
++		pv88080_irq_chips = &pv88080_ba_irq_chip;
++		pv88080_mfd_cells = pv88080_ba_cells;
++		n_devs = ARRAY_SIZE(pv88080_ba_cells);
++		break;
++	}
++
++	ret = devm_regmap_add_irq_chip(chip->dev, chip->regmap,
++			chip->irq, IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++			0, pv88080_irq_chips, &chip->irq_data);
++	if (ret) {
++		dev_err(chip->dev, "Failed to add IRQ %d: %d\n",
++				chip->irq, ret);
++		return ret;
++	}
++
++	ret = devm_mfd_add_devices(chip->dev, PLATFORM_DEVID_NONE,
++			pv88080_mfd_cells, n_devs,
++			NULL, 0, NULL);
++	if (ret) {
++		dev_err(chip->dev, "Failed to add MFD devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct i2c_device_id pv88080_id_table[] = {
++	{ "pv88080",	TYPE_PV88080_AA },
++	{ "pv88080-aa", TYPE_PV88080_AA },
++	{ "pv88080-ba", TYPE_PV88080_BA },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, pv88080_id_table);
++
++static struct i2c_driver pv88080_driver = {
++	.driver	= {
++		.name = "pv88080",
++		.of_match_table = of_match_ptr(pv88080_of_match_table),
++	},
++	.probe = pv88080_probe,
++	.id_table = pv88080_id_table,
++};
++module_i2c_driver(pv88080_driver);
++
++MODULE_AUTHOR("Eric Jeong <eric.jeong.opensource@diasemi.com>");
++MODULE_DESCRIPTION("MFD Driver for Powerventure PV88080");
++MODULE_LICENSE("GPL");
++
+diff --git a/include/linux/mfd/pv88080.h b/include/linux/mfd/pv88080.h
+new file mode 100644
+index 0000000..76d6656
+--- /dev/null
++++ b/include/linux/mfd/pv88080.h
+@@ -0,0 +1,222 @@
++/*
++ * pv88080.h - Declarations for PV88080.
++ * Copyright (C) 2016 Powerventure Semiconductor Ltd.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __PV88080_H__
++#define __PV88080_H__
++
++#include <linux/regulator/machine.h>
++#include <linux/device.h>
++#include <linux/regmap.h>
++
++/* System Control and Event Registers */
++#define PV88080_REG_STATUS_A			0x01
++#define PV88080_REG_EVENT_A				0x04
++#define PV88080_REG_MASK_A				0x09
++#define PV88080_REG_MASK_B				0x0A
++#define PV88080_REG_MASK_C				0x0B
++
++/* GPIO Registers - rev. AA */
++#define PV88080AA_REG_GPIO_INPUT		0x18
++#define PV88080AA_REG_GPIO_OUTPUT		0x19
++#define PV88080AA_REG_GPIO_GPIO0		0x1A
++
++/* Regulator Registers - rev. AA */
++#define PV88080AA_REG_HVBUCK_CONF1		0x2D
++#define PV88080AA_REG_HVBUCK_CONF2		0x2E
++#define PV88080AA_REG_BUCK1_CONF0		0x27
++#define PV88080AA_REG_BUCK1_CONF1		0x28
++#define PV88080AA_REG_BUCK1_CONF2		0x59
++#define PV88080AA_REG_BUCK1_CONF5		0x5C
++#define PV88080AA_REG_BUCK2_CONF0		0x29
++#define PV88080AA_REG_BUCK2_CONF1		0x2A
++#define PV88080AA_REG_BUCK2_CONF2		0x61
++#define PV88080AA_REG_BUCK2_CONF5		0x64
++#define PV88080AA_REG_BUCK3_CONF0		0x2B
++#define PV88080AA_REG_BUCK3_CONF1		0x2C
++#define PV88080AA_REG_BUCK3_CONF2		0x69
++#define PV88080AA_REG_BUCK3_CONF5		0x6C
++
++/* GPIO Registers - rev. BA */
++#define PV88080BA_REG_GPIO_INPUT		0x17
++#define PV88080BA_REG_GPIO_OUTPUT		0x18
++#define PV88080BA_REG_GPIO_GPIO0		0x19
++
++/* Regulator Registers - rev. BA */
++#define PV88080BA_REG_HVBUCK_CONF1		0x33
++#define PV88080BA_REG_HVBUCK_CONF2		0x34
++#define PV88080BA_REG_BUCK1_CONF0		0x2A
++#define PV88080BA_REG_BUCK1_CONF1		0x2C
++#define PV88080BA_REG_BUCK1_CONF2		0x5A
++#define PV88080BA_REG_BUCK1_CONF5		0x5D
++#define PV88080BA_REG_BUCK2_CONF0		0x2D
++#define PV88080BA_REG_BUCK2_CONF1		0x2F
++#define PV88080BA_REG_BUCK2_CONF2		0x63
++#define PV88080BA_REG_BUCK2_CONF5		0x66
++#define PV88080BA_REG_BUCK3_CONF0		0x30
++#define PV88080BA_REG_BUCK3_CONF1		0x32
++#define PV88080BA_REG_BUCK3_CONF2		0x6C
++#define PV88080BA_REG_BUCK3_CONF5		0x6F
++
++/* PV88080_REG_EVENT_A (addr=0x04) */
++#define PV88080_E_VDD_FLT				0x01
++#define PV88080_E_OVER_TEMP				0x02
++#define PV88080_E_SEQ_RDY				0x04
++#define PV88080_E_EXT_OT				0x08
++
++/* PV88080_REG_MASK_A (addr=0x09) */
++#define PV88080_M_VDD_FLT				0x01
++#define PV88080_M_OVER_TEMP				0x02
++#define PV88080_M_SEQ_RDY				0x04
++#define PV88080_M_EXT_OT				0x08
++
++/* PV88080_REG_EVENT_B (addr=0x05) */
++#define PV88080_E_HVBUCK_OV				0x01
++#define PV88080_E_HVBUCK_UV				0x02
++#define PV88080_E_HVBUCK_SCP			0x04
++#define PV88080_E_BUCK1_SCP				0x08
++#define PV88080_E_BUCK2_SCP				0x10
++#define PV88080_E_BUCK3_SCP				0x20
++
++/* PV88080_REG_MASK_B (addr=0x0A) */
++#define PV88080_M_HVBUCK_OV				0x01
++#define PV88080_M_HVBUCK_UV				0x02
++#define PV88080_M_HVBUCK_SCP			0x04
++#define PV88080_M_BUCK1_SCP				0x08
++#define PV88080_M_BUCK2_SCP				0x10
++#define PV88080_M_BUCK3_SCP				0x20
++
++/* PV88080_REG_EVENT_C (addr=0x06) */
++#define PV88080_E_GPIO_FLAG0			0x01
++#define PV88080_E_GPIO_FLAG1			0x02
++#define PV88080_E_BUCK1_DROP_TIMEOUT	0x08
++#define PV88080_E_BUCK2_DROP_TIMEOUT	0x10
++#define PV88080_E_BUCk3_DROP_TIMEOUT	0x20
++
++/* PV88080_REG_MASK_C (addr=0x0B) */
++#define PV88080_M_GPIO_FLAG0			0x01
++#define PV88080_M_GPIO_FLAG1			0x02
++#define PV88080_M_BUCK1_DROP_TIMEOUT	0x08
++#define PV88080_M_BUCK2_DROP_TIMEOUT	0x10
++#define PV88080_M_BUCk3_DROP_TIMEOUT	0x20
++
++/* PV88080xx_REG_GPIO_GPIO0 (addr=0x1A|0x19) */
++#define PV88080_GPIO_DIRECTION_MASK		0x01
++#define PV88080_GPIO_SINGLE_ENDED_MASK	0x02
++
++/* PV88080_REG_BUCK1_CONF0 (addr=0x27|0x2A) */
++#define PV88080_BUCK1_EN				0x80
++#define PV88080_VBUCK1_MASK				0x7F
++
++/* PV88080_REG_BUCK2_CONF0 (addr=0x29|0x2D) */
++#define PV88080_BUCK2_EN				0x80
++#define PV88080_VBUCK2_MASK				0x7F
++
++/* PV88080_REG_BUCK3_CONF0 (addr=0x2B|0x30) */
++#define PV88080_BUCK3_EN				0x80
++#define PV88080_VBUCK3_MASK				0x7F
++
++/* PV88080_REG_BUCK1_CONF1 (addr=0x28|0x2C) */
++#define PV88080_BUCK1_ILIM_SHIFT		2
++#define PV88080_BUCK1_ILIM_MASK			0x0C
++#define PV88080_BUCK1_MODE_MASK			0x03
++
++/* PV88080_REG_BUCK2_CONF1 (addr=0x2A|0x2F) */
++#define PV88080_BUCK2_ILIM_SHIFT		2
++#define PV88080_BUCK2_ILIM_MASK			0x0C
++#define PV88080_BUCK2_MODE_MASK			0x03
++
++/* PV88080_REG_BUCK3_CONF1 (addr=0x2C|0x32) */
++#define PV88080_BUCK3_ILIM_SHIFT		2
++#define PV88080_BUCK3_ILIM_MASK			0x0C
++#define PV88080_BUCK3_MODE_MASK			0x03
++
++#define PV88080_BUCK_MODE_SLEEP			0x00
++#define PV88080_BUCK_MODE_AUTO			0x01
++#define PV88080_BUCK_MODE_SYNC			0x02
++
++/* PV88080_REG_HVBUCK_CONF1 (addr=0x2D|0x33) */
++#define PV88080_VHVBUCK_MASK			0xFF
++
++/* PV88080_REG_HVBUCK_CONF1 (addr=0x2E|0x34) */
++#define PV88080_HVBUCK_EN				0x01
++
++/* PV88080_REG_BUCK2_CONF2 (addr=0x61|0x63) */
++/* PV88080_REG_BUCK3_CONF2 (addr=0x69|0x6C) */
++#define PV88080_BUCK_VDAC_RANGE_SHIFT	7
++#define PV88080_BUCK_VDAC_RANGE_MASK	0x01
++
++#define PV88080_BUCK_VDAC_RANGE_1		0x00
++#define PV88080_BUCK_VDAC_RANGE_2		0x01
++
++/* PV88080_REG_BUCK2_CONF5 (addr=0x64|0x66) */
++/* PV88080_REG_BUCK3_CONF5 (addr=0x6C|0x6F) */
++#define PV88080_BUCK_VRANGE_GAIN_SHIFT	0
++#define PV88080_BUCK_VRANGE_GAIN_MASK	0x01
++
++#define PV88080_BUCK_VRANGE_GAIN_1		0x00
++#define PV88080_BUCK_VRANGE_GAIN_2		0x01
++
++#define PV88080_MAX_REGULATORS			4
++
++enum pv88080_types {
++	TYPE_PV88080_AA,
++	TYPE_PV88080_BA,
++};
++
++/* Interrupts */
++enum pv88080_aa_irqs {
++	PV88080_AA_IRQ_VDD_FLT,
++	PV88080_AA_IRQ_OVER_TEMP,
++	PV88080_AA_IRQ_SEQ_RDY,
++	PV88080_AA_IRQ_HVBUCK_OV,
++	PV88080_AA_IRQ_HVBUCK_UV,
++	PV88080_AA_IRQ_HVBUCK_SCP,
++	PV88080_AA_IRQ_BUCK1_SCP,
++	PV88080_AA_IRQ_BUCK2_SCP,
++	PV88080_AA_IRQ_BUCK3_SCP,
++	PV88080_AA_IRQ_GPIO_FLAG0,
++	PV88080_AA_IRQ_GPIO_FLAG1,
++};
++
++enum pv88080_ba_irqs {
++	PV88080_BA_IRQ_VDD_FLT,
++	PV88080_BA_IRQ_OVER_TEMP,
++	PV88080_BA_IRQ_SEQ_RDY,
++	PV88080_BA_IRQ_EXT_OT,
++	PV88080_BA_IRQ_HVBUCK_OV,
++	PV88080_BA_IRQ_HVBUCK_UV,
++	PV88080_BA_IRQ_HVBUCK_SCP,
++	PV88080_BA_IRQ_BUCK1_SCP,
++	PV88080_BA_IRQ_BUCK2_SCP,
++	PV88080_BA_IRQ_BUCK3_SCP,
++	PV88080_BA_IRQ_GPIO_FLAG0,
++	PV88080_BA_IRQ_GPIO_FLAG1,
++	PV88080_BA_IRQ_BUCK1_DROP_TIMEOUT,
++	PV88080_BA_IRQ_BUCK2_DROP_TIMEOUT,
++	PB88080_BA_IRQ_BUCK3_DROP_TIMEOUT,
++};
++
++struct pv88080 {
++	struct device *dev;
++	struct regmap *regmap;
++	unsigned long type;
++
++	/* IRQ Data */
++	int irq;
++	struct regmap_irq_chip_data *irq_data;
++};
++
++#endif	/* __PV88080_H__ */
++
+-- 
+end-of-patch for PATCH V3
+
