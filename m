@@ -1,55 +1,50 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 1/2] PM / Domains: Introduce domain-performance-state binding
-Date: Fri, 18 Nov 2016 14:53:12 +0530
-Message-ID: <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
-References: <cover.1479459752.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1479459752.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1479459752.git.viresh.kumar@linaro.org>
-References: <cover.1479459752.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rafael Wysocki <rjw@rjwysocki.net>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 2/3] ARM64 LPC: Add missing range exception for special
+ ISA
+Date: Fri, 18 Nov 2016 10:22:46 +0100
+Message-ID: <11716372.n451O5j8Vs@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <5900275.i4NZvtxTcC@wuerfel> <20161114111111.1b753dc3@lxorguk.ukuu.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161114111111.1b753dc3@lxorguk.ukuu.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, catalin.marinas@arm.com, gabriele.paoloni@huawei.com, benh@kernel.crashing.org, will.deacon@arm.com, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, minyard@acm.org, marc.zyngier@arm.com, liviu.dudau@arm.com, john.garry@huawei.com, olof@lixom.net, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-kernel@vger.kernel.org, "zhichang.yuan" <yuanzhichang@hisilicon.com>, zourongrong@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Some platforms have the capability to configure the performance state of
-their Power Domains. The performance levels are represented by positive
-integer values, a lower value represents lower performance state.
+On Monday, November 14, 2016 11:11:11 AM CET One Thousand Gnomes wrote:
+> > > It's not a safe assumption for x86 at least. There are a few systems with
+> > > multiple ISA busses particularly older laptops with a docking station.  
+> > 
+> > But do they have multiple ISA domains? There is no real harm in supporting
+> > it, the (small) downsides I can think of are:
+> 
+> I don't believe they x86 class ones have multiple ISA domains. But as
+> I've said I don't know how the electronics in the older ThinkPad worked
+> when it used two PIIX4s with some LPC or ISA stuff on each.
+> 
+> It works in DOS and unmodified Linux so I'm pretty sure there are no
+> additional domains. Likewise the various x86 schemes that route some bits
+> of ISA bus off into strange places work in DOS and don't have any
+> overlaps.
+> 
+> yenta_socket handles PCI/PCMCIA bridging and routes a range of that flat
+> ISA space appropriately to the card.
 
-The power-domains until now were only concentrating on the idle state
-management of the device and this needs to change in order to reuse the
-infrastructure of power domains for active state management.
+Right, that's what I had expected, so we still don't even
+need to handle multiple ISA I/O address spaces for the
+only known case of multiple ISA buses, though we may decide
+to generalize the code like that anyway.
 
-This patch introduces a new optional property for the consumers of the
-power-domains: domain-performance-state.
-
-If the consumers don't need the capability of switching to different
-domain performance states at runtime, then they can simply define their
-required domain performance state in their node directly. Otherwise the
-consumers can define their requirements with help of other
-infrastructure, for example the OPP table.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index e1650364b296..db42eacf8b5c 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
-  - power-domains : A phandle and PM domain specifier as defined by bindings of
-                    the power controller specified by phandle.
- 
-+Optional properties:
-+- domain-performance-state: A positive integer value representing the minimum
-+  performance level (of the parent domain) required by the consumer for its
-+  working. The integer value '1' represents the lowest performance level and the
-+  highest value represents the highest performance level.
-+
- Example:
- 
- 	leaky-device@12350000 {
--- 
-2.7.1.410.g6faf27b
+	Arnd
