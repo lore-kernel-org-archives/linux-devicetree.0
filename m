@@ -1,61 +1,171 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH] arm64: dts: exynos: add the mshc_2 node for supporting T-Flash
-Date: Fri, 18 Nov 2016 16:12:24 +0900
-Message-ID: <20161118071224.12876-1-jh80.chung@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, krzk@kernel.org, cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Jaehoon Chung <jh80.chung@samsung.com>
+From: Tom Levens <tom.levens@cern.ch>
+Subject: Re: [PATCH v2 1/3] hwmon: ltc2990: refactor value conversion
+Date: Fri, 18 Nov 2016 09:18:44 +0100
+Message-ID: <alpine.LRH.2.20.1611171955330.14972@pcbe13573-vm.dyndns.cern.ch>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <86c28b4f-c78b-8d3e-5c48-fa42ca614ba4@roeck-us.net> <alpine.LRH.2.20.1611171613250.12237@pcbe13573-vm.dyndns.cern.ch> <1eff12d5-e0f9-aaa0-010d-1ddcccdd6ec9@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1eff12d5-e0f9-aaa0-010d-1ddcccdd6ec9@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Tom Levens <tom.levens@cern.ch>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the mshc_2 node for supporting T-flash.
+Hi Guenter,
 
-And it needs to add the "mshc*" aliases. Because dwmmc driver should be
-assigned to "ctrl_id" after parsing to "mshc".
-If there is no aliases for mshc, then it might be set to the wrong
-capabilities.
+On Thu, 17 Nov 2016, Guenter Roeck wrote:
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> On 11/17/2016 08:23 AM, Tom Levens wrote:
+>>  Hi Guenter,
+>>
+>>  Thanks for taking the time to review the patch.
+>>
+>>  On Thu, 17 Nov 2016, Guenter Roeck wrote:
+>> 
+>> >  Hi Tom,
+>> > 
+>> >  On 11/17/2016 04:10 AM, Tom Levens wrote:
+>> > >   Conversion from raw values to signed integers has been refactored 
+>> > >   using
+>> > >   the macros in bitops.h.
+>> > > 
+>> >  Please also mention that this fixes a bug in negative temperature 
+>> >  conversions.
+>>
+>>  Yes, of course, I will include the information in v3.
+>> 
+>> > 
+>> > >   Signed-off-by: Tom Levens <tom.levens@cern.ch>
+>> > >   ---
+>> > >    drivers/hwmon/ltc2990.c |   27 ++++++++++-----------------
+>> > >    1 files changed, 10 insertions(+), 17 deletions(-)
+>> > > 
+>> > >   diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+>> > >   index 8f8fe05..0ec4102 100644
+>> > >   --- a/drivers/hwmon/ltc2990.c
+>> > >   +++ b/drivers/hwmon/ltc2990.c
+>> > >   @@ -9,8 +9,12 @@
+>> > >     * This driver assumes the chip is wired as a dual current monitor, 
+>> > >     and
+>> > >     * reports the voltage drop across two series resistors. It also 
+>> > >     reports
+>> > >     * the chip's internal temperature and Vcc power supply voltage.
+>> > >   + *
+>> > >   + * Value conversion refactored
+>> > >   + * by Tom Levens <tom.levens@cern.ch>
+>> > 
+>> >  Kind of unusual to do that for minor changes like this. Imagine if 
+>> >  everyone would do that.
+>> >  The commit log is what gives you credit.
+>>
+>>  Good point, thanks for the hint. I will remove it from v3.
+>> 
+>> > >     */
+>> > > 
+>> > >   +#include <linux/bitops.h>
+>> > >    #include <linux/err.h>
+>> > >    #include <linux/hwmon.h>
+>> > >    #include <linux/hwmon-sysfs.h>
+>> > >   @@ -34,19 +38,10 @@
+>> > >    #define LTC2990_CONTROL_MODE_CURRENT    0x06
+>> > >    #define LTC2990_CONTROL_MODE_VOLTAGE    0x07
+>> > > 
+>> > >   -/* convert raw register value to sign-extended integer in 16-bit 
+>> > >   range */
+>> > >   -static int ltc2990_voltage_to_int(int raw)
+>> > >   -{
+>> > >   -    if (raw & BIT(14))
+>> > >   -        return -(0x4000 - (raw & 0x3FFF)) << 2;
+>> > >   -    else
+>> > >   -        return (raw & 0x3FFF) << 2;
+>> > >   -}
+>> > >   -
+>> > >   /* Return the converted value from the given register in uV or mC */
+>> > >   -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int 
+>> > >   *result)
+>> > >   +static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, s32 
+>> > >   *result)
+>> > >   {
+>> > >   -    int val;
+>> > >   +    s32 val;
+>> > 
+>> >  Please just leave the variable type alone. it is also used for the 
+>> >  return value
+>> >  from i2c_smbus_read_word_swapped(), which is an int, and changing it to 
+>> >  s32 doesn't really make the code better.
+>>
+>>  According to i2c.h the return type for i2c_smbus_read_word_swapped() is
+>>  s32, which is why I modified it here. But it could be changed back if you
+>>  think it is better to leave it as an int.
+>> 
+> Ah, ok. Good to know. Please leave it anyway, reason being that there is no 
+> real
+> reason to change it. Effectively those are just whitespace changes (unlike 
+> the rest,
+> which is part bug fix, part cleanup).
+>
+>> >  Can you send me a register map for the chip ? I would like to write a 
+>> >  module test.
+>>
+>>  Here is an example register dump:
+>
+> I meant the output of i2cdump (something like "i2cdump -y -f <bus> 
+> <i2c-address> w").
+>
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-index 9ea3f32..75dab01 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-@@ -42,6 +42,8 @@
- 		spi2 = &spi_2;
- 		spi3 = &spi_3;
- 		spi4 = &spi_4;
-+		mshc0 = &mshc_0;
-+		mshc2 = &mshc_2;
- 	};
- 
- 	chosen {
-@@ -661,6 +663,23 @@
- 	assigned-clock-rates = <800000000>;
- };
- 
-+&mshc_2 {
-+	status = "okay";
-+	num-slots = <1>;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	cd-gpios = <&gpa2 4 0>;
-+	cd-inverted;
-+	card-detect-delay = <200>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <0 2>;
-+	fifo-depth = <0x80>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
-+	bus-width = <4>;
-+};
-+
- &pinctrl_alive {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&initial_alive>;
--- 
-2.10.1
+The register map wraps at 0x0F, so I only sent you the first 16 bytes. But 
+the fully expanded form is:
+
+      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+10: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+20: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+30: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+40: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+50: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+60: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+70: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+80: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+90: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+a0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+b0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+c0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+d0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+e0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+f0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+
+Cheers,
+
+> Thanks,
+> Guenter
+>
+>>
+>>  00 00 00 00
+>>  01 90 07 d0
+>>  2c cd 7d 80
+>>  7c 29 20 00
+>>
+>>  The expected values in this case are:
+>>
+>>  in0_input     5000
+>>  in1_input    610
+>>  in2_input    3500
+>>  in3_input    -195
+>>  in4_input    -299
+>>  temp1_input     25000
+>>  temp2_input     125000
+>>  temp3_input    -40000
+>>  curr1_input    38840
+>>  curr2_input    -12428
+>>
+>>  Testing with lltc,mode set to <5>, <6> and <7> should give you all
+>>  measurements.
+>> 
+>> >  Thanks,
+>> >  Guenter
+>>
+>>  Cheers,
+>> 
+>
+>
