@@ -1,135 +1,99 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 1/7] dt-bindings: document devicetree bindings for
- mux-gpio
-Date: Fri, 18 Nov 2016 09:35:28 -0600
-Message-ID: <20161118153528.tl24bp5xjwpjppk6@rob-hp-laptop>
-References: <1479419289-17553-1-git-send-email-peda@axentia.se>
- <1479419289-17553-2-git-send-email-peda@axentia.se>
+Subject: Re: [PATCH V3 1/4] Documentation: pv88080: Move binding document
+Date: Fri, 18 Nov 2016 09:38:42 -0600
+Message-ID: <20161118153842.bbcmfczxvrwamlqs@rob-hp-laptop>
+References: <cover.1479429347.git.eric.jeong@diasemi.com>
+ <8d6dc516374bf2c1cf0841aa68a888bca33413a0.1479429347.git.eric.jeong@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479419289-17553-2-git-send-email-peda@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+In-Reply-To: <8d6dc516374bf2c1cf0841aa68a888bca33413a0.1479429347.git.eric.jeong@diasemi.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 10:48:03PM +0100, Peter Rosin wrote:
-> ---
->  .../devicetree/bindings/misc/mux-gpio.txt          | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/mux-gpio.txt
+On Fri, Nov 18, 2016 at 09:35:46AM +0900, Eric Jeong wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/mux-gpio.txt b/Documentation/devicetree/bindings/misc/mux-gpio.txt
-> new file mode 100644
-> index 000000000000..73699a37824f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/mux-gpio.txt
-> @@ -0,0 +1,79 @@
-> +GPIO-based multiplexer controller bindings
+> From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+> 
+> The change is to move pv88080 binding document 
+> from the regulator directory to mfd binding directory
+> for PV88080 PMIC MFD support.
+> And, GPIO properties are added.
+> 
+> 
+> Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
+> 
+> ---
+> This patch applies against linux-next and next-20161117
+> 
+> Hi,
+> 
+> Change since PATCH V2
+>  - Added property and description for gpio
+> 
+> Change since PATCH V1
+>  - Patch separated from PATCH V1
+> 
+> Regards,
+> Eric Jeong, Dialog Semiconductor Ltd.
+> 
+> 
+>  .../bindings/{regulator => mfd}/pv88080.txt        |   16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>  rename Documentation/devicetree/bindings/{regulator => mfd}/pv88080.txt (79%)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/pv88080.txt b/Documentation/devicetree/bindings/mfd/pv88080.txt
+> similarity index 79%
+> rename from Documentation/devicetree/bindings/regulator/pv88080.txt
+> rename to Documentation/devicetree/bindings/mfd/pv88080.txt
+> index e6e4b9c8..7e24f95 100644
+> --- a/Documentation/devicetree/bindings/regulator/pv88080.txt
+> +++ b/Documentation/devicetree/bindings/mfd/pv88080.txt
+> @@ -1,4 +1,4 @@
+> -* Powerventure Semiconductor PV88080 Voltage Regulator
+> +* Powerventure Semiconductor PV88080 PMIC
+>  
+>  Required properties:
+>  - compatible: Must be one of the following, depending on the
+> @@ -16,8 +16,15 @@ Required properties:
+>    standard binding for regulators; see regulator.txt.
+>    BUCK1, BUCK2, BUCK3 and HVBUCK.
+>  
+> +- gpio-controller: Marks the device node as a GPIO controller.
+> +- #gpio-cells: Should be 2. See gpio.txt in this directory
+> +  for a description of the cells format.
 > +
-> +Define what GPIO pins are used to control a multiplexer. Or several
-> +multiplexers, if the same pins control more than one multiplexer.
+>  Optional properties:
+> +- ngpios : Number of in-use slots of available slots for GPIO.
+> +  Maximum is 2.
+>  - Any optional property defined in regulator.txt
+> +  and gpio.txt for more information.
+>  
+>  Example:
+>  
+> @@ -27,6 +34,13 @@ Example:
+>  		interrupt-parent = <&gpio>;
+>  		interrupts = <24 24>;
+>  
+> +		gpioex {
 
-I think this makes sense in your case, but I think it is too complicated 
-for a non-shared case. Perhaps mux-gpios should be used directly (i.e. 
-in the adc-mux node) and control-muxes only used for the shared case.
+gpio-controller {
 
-Part of me feels like you are working around in DT the GPIO subsystem 
-limitation that it can't share GPIO lines. Either this could be fixed 
-in some way in the GPIO subsystem, or the mux subsys could deal with it. 
-You just have to look up if you already have a mux registered for the 
-same GPIOs. Of course, that may make the mux subsys pretty much GPIO 
-only, but I'm having a hard time thinking how you would have shared 
-muxes that are not GPIO controlled. Any other control would be 
-integrated into the mux itself.
+> +			compatible = "pvs,pv88080-gpio";
 
-> +
-> +Required properties:
-> +- compatible : "mux-gpio"
-> +- mux-gpios : list of gpios used to control the multiplexer, least
-> +	      significant bit first.
-> +
-> +Optional properties:
-> +- idle-state : if present, the state the mux will have when idle.
+Is this documented?
 
-Needs some detail on what the value is. One bit per gpio? One cell per 
-gpio?
-
-> +
-> +Example:
-> +	control_mux: control-adc-mux {
-> +		compatible = "mux-gpio";
-> +
-> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	adc-mux {
-> +		compatible = "iio-mux";
-> +		io-channels = <&adc 0>;
-> +		io-channel-names = "parent";
-> +
-> +		control-muxes = <&control_mux>;
-
-This is a common name? It should be in a common mux binding doc.
-
-> +		control-mux-names = "mux";
-
-I think this can be dropped at least until you have more than 1.
-
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		sync-1@0 {
-> +			reg = <0>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			ngpios = <2>;
 > +		};
 > +
-> +		in@1 {
-> +			reg = <1>;
-> +		};
-> +
-> +		out@2 {
-> +			reg = <2>;
-> +		};
-> +
-> +		sync-2@3 {
-> +			reg = <3>;
-> +		};
-> +	};
-> +
-> +	i2c-mux {
-> +		compatible = "i2c-mux-simple,mux-locked";
-> +		i2c-parent = <&i2c1>;
-> +
-> +		control-muxes = <&control_mux>;
-> +		control-mux-names = "mux";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			ssd1307: oled@3c {
-> +				/* ... */
-> +			};
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			pca9555: pca9555@20 {
-> +				/* ... */
-> +			};
-> +		};
-> +	};
+>  		regulators {
+>  			BUCK1 {
+>  				regulator-name = "buck1";
 > -- 
-> 2.1.4
+> end-of-patch for PATCH V3
 > 
