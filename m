@@ -1,106 +1,87 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [RFC PATCH v2 3/7] iio: inkern: api for manipulating ext_info of iio channels
-Date: Thu, 17 Nov 2016 22:48:05 +0100
-Message-ID: <1479419289-17553-4-git-send-email-peda@axentia.se>
-References: <1479419289-17553-1-git-send-email-peda@axentia.se>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
+Date: Fri, 18 Nov 2016 14:42:08 +0800
+Message-ID: <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com>
+ <20161017120705.3726-2-wenpan@hisilicon.com> <5893354.6MrIxqzRoI@wuerfel>
+ <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
+ <582C2785.2010804@hisilicon.com>
+ <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479419289-17553-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marty Plummer <netz.kernel@gmail.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>, wenpan <wenpan@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com, qinxiaojun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Extend the inkern api with functions for reading and writing ext_info
-of iio channels.
----
- drivers/iio/inkern.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/iio/consumer.h |  6 +++++
- 2 files changed, 61 insertions(+)
+Hi Marty,
 
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index cfca17ba2535..a8099b164222 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -850,3 +850,58 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(iio_write_channel_raw);
-+
-+int iio_get_channel_ext_info_count(struct iio_channel *chan)
-+{
-+	const struct iio_chan_spec_ext_info *ext_info;
-+	unsigned int i = 0;
-+
-+	if (!chan->channel->ext_info)
-+		return i;
-+
-+	for (ext_info = chan->channel->ext_info; ext_info->name; ext_info++)
-+		++i;
-+
-+	return i;
-+}
-+EXPORT_SYMBOL_GPL(iio_get_channel_ext_info_count);
-+
-+ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
-+				  const char *attr, char *buf)
-+{
-+	const struct iio_chan_spec_ext_info *ext_info;
-+
-+	if (!chan->channel->ext_info)
-+		return -EINVAL;
-+
-+	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
-+		if (strcmp(attr, ext_info->name))
-+			continue;
-+
-+		return ext_info->read(chan->indio_dev, ext_info->private,
-+				      chan->channel, buf);
-+	}
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(iio_read_channel_ext_info);
-+
-+ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
-+				   const char *buf, size_t len)
-+{
-+	const struct iio_chan_spec_ext_info *ext_info;
-+
-+	if (!chan->channel->ext_info)
-+		return -EINVAL;
-+
-+	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
-+		if (strcmp(attr, ext_info->name))
-+			continue;
-+
-+		return ext_info->write(chan->indio_dev, ext_info->private,
-+				       chan->channel, buf, len);
-+	}
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(iio_write_channel_ext_info);
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 9a4f336d8b4a..471dece8729a 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -299,4 +299,10 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val,
- int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
- 	int *processed, unsigned int scale);
- 
-+int iio_get_channel_ext_info_count(struct iio_channel *chan);
-+ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
-+				  const char *attr, char *buf);
-+ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
-+				   const char *buf, size_t len);
-+
- #endif
--- 
-2.1.4
+On 2016/11/17 11:03, Jiancheng Xue wrote:
+> Hi Wei，
+> 
+> On 2016/11/16 17:31, Wei Xu wrote:
+>> Hi Pan,
+>>
+>> On 2016/11/16 8:56, wenpan wrote:
+>>> Hi Marty，
+>>> Does this confict with your patch？ If not，I hope this could be merged first.  Besides could you tell me the link to your related patch?
+>>
+>> This is the link: https://patchwork.kernel.org/patch/9334743/
+>>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Could you give your comments on this patch?
+If you have any objections to it, please let us know.
+
+> 
+> Thank you for offering this.If I want to give some comments on Marty's patch,
+> what should I do?
+> 
+> For Marty's patch, I think there's no need to add specific config item ARCH_HIxxxx
+> for every chipset. Some existing chipsets depend on ARCH_HISI directly like Hi3519
+> and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HISI, this kind
+> of chipsets will must choose other place to select it. I suggest we should keep selecting
+> ARM_GIC under ARCH_HISI as Pan's patch do.
+> 
+> The code may be like this:
+> 
+> config ARCH_HISI
+>  	bool "Hisilicon SoC Support"
+> -	depends on ARCH_MULTI_V7
+> +	depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
+>  	select ARM_AMBA
+> -	select ARM_GIC
+> +	select ARM_GIC if ARCH_MULTI_V7
+> +	select ARM_VIC if ARCH_MULTI_V5 || depends on ARCH_MULTI_V6
+>  	select ARM_TIMER_SP804
+>  	select POWER_RESET
+>  	select POWER_RESET_HISI
+>  	select POWER_SUPPLY
+> 
+
+What's your opinion about this?
+
+Best Regards,
+Jiancheng
+
+>>> On 2016/10/17 21:48, Arnd Bergmann wrote:
+>>>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
+>>>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
+>>>>>
+>>>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
+>>>>>
+>>>>
+>>>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
+>>>> patches for Hi3520, which I think is closely related to this one.
+>>>> Please try to work together so the patches don't conflict. It should
+>>>> be fairly straightforward since you are basically doing the same
+>>>> change here.
+>>>>
+> 
+> 
+> 
+> .
+> 
+
