@@ -1,63 +1,100 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 09/13] ARM: dts: armada-375: Fixup soc DT warning
-Date: Fri, 18 Nov 2016 14:38:35 +0100
-Message-ID: <20161118143835.660cf275@free-electrons.com>
-References: <20161117230830.31047-1-gregory.clement@free-electrons.com>
-        <20161117230830.31047-10-gregory.clement@free-electrons.com>
-        <20161118095455.00bfe007@free-electrons.com>
-        <87d1htb1qr.fsf@free-electrons.com>
-        <20161118101248.784eff2b@free-electrons.com>
-        <877f81b013.fsf@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
+Date: Fri, 18 Nov 2016 14:42:38 +0100
+Message-ID: <2271602.GoSoby0zHK@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <2822893.F0LqNAm9bT@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F921283@lhreml507-mbx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <877f81b013.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F921283@lhreml507-mbx>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Gabriele Paoloni <gabriele.paoloni@huawei.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Linuxarm <linuxarm@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "minyard@acm.org" <minyard@acm.org>, "will.deacon@arm.com" <will.deacon@arm.com>, John Garry <john.garry@huawei.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, 18 Nov 2016 10:38:32 +0100, Gregory CLEMENT wrote:
-
-> >> > unit address? It doesn't have a 'reg' property if I remember
-> >> > correctly.    
-> >> 
-> >> But it has a range property.  
-> >
-> > And? There are multiple ranges, and you randomly took the first one for
-> > the unit address of the soc node?  
+On Friday, November 18, 2016 12:53:08 PM CET Gabriele Paoloni wrote:
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > On Friday, November 18, 2016 12:07:28 PM CET Gabriele Paoloni wrote:
+> > > > I think there is no need to change a) here, we have PCIBIOS_MIN_IO
+> > > > today and even if we don't need it, there is no obvious downside.
+> > > > I would also argue that we can ignore b) for the discussion of
+> > > > the HiSilicon LPC driver, we just need to assign some range
+> > > > of logical addresses to each domain.
+> > > >
+> > > > That means solving c) is the important problem here, and it
+> > > > shouldn't be so hard.  We can do this either with a single
+> > > > special domain as in the v5 patch series, or by generalizing it
+> > > > so that any I/O space mapping gets looked up through the device
+> > > > pointer of the bus master.
+> > >
+> > > I am not very on the "generalized" multi-domain solution...
+> > > Currently the IO accessors prototypes have an unsigned long addr
+> > > as input parameter. If we live in a multi-domain IO system
+> > > how can we distinguish inside the accessor which domain addr
+> > > belongs to?
+> > 
+> > The easiest change compared to the v5 code would be to walk
+> > a linked list of 'struct extio_ops' structures rather than
+> > assuming there is only ever one of them. I think one of the
+> > earlier versions actually did this.
 > 
-> Not randomly I followed the same rules that for the regs mentioned in
-> the ePAPR paragraph 2.2.1.1:
+> Right but if my understanding is correct if we live in a multi-
+> domain I/O space world when you have an input addr in the I/O
+> accessors this addr can be duplicated (for example for the standard
+> PCI IO domain and for our special LPC domain).
+> So effectively even if you walk a linked list there is a problem
+> of disambiguation...am I right? 
+
+No, unlike the PCI memory space, the PIO addresses are not
+usually distinct, i.e. every PCI bus has its own 64K I/O
+addresses starting at zero. We linearize them into the
+Linux I/O space using the per-domain io_offset value.
+
+For the ISA/LPC spaces there are only 4k of addresses, they
+the bus addresses always overlap, but we can trivially
+figure out the bus address from Linux I/O port number
+by subtracting the start of the range.
+
+> > Another option the IA64 approach mentioned in another subthread
+> > today, looking up the operations based on an index from the
+> > upper bits of the port number. If we do this, we probably
+> > want to do that for all PIO access and replace the entire
+> > virtual address remapping logic with that. I think Bjorn
+> > in the past argued in favor of such an approach, while I
+> > advocated the current scheme for simplicity based on how
+> > every I/O space these days is just memory mapped (which now
+> > turned out to be false, both on powerpc and arm64).
 > 
-> "The unit-address should match the first address specified in the reg
-> property of the node."
+> This seems really complex...I am a bit worried that possibly
+> we end up in having the maintainers saying that it is not worth
+> to re-invent the world just for this special LPC device...
 
-But it doesn't say anything about the ranges property. Isn't the dtc
-warning in fact over-zealous? The ePAPR says that the unit address
-should be the first address of the reg property, but doesn't say
-anything about the ranges property.
+It would clearly be a rather invasive change, but the
+end-result isn't necessarily more complex than what we
+have today, as we'd kill off the crazy pci_pio_to_address()
+and pci_address_to_pio() hacks in address translation.
 
-What I dislike is that there absolutely nothing that forces the ranges
-to be written in this order. In another board, it can be written in a
-completely different order, which means that the unit address would be
-different, which is really silly.
+> To be honest with you I would keep things simple for this
+> LPC and introduce more complex reworks later if more devices
+> need to be introduced.
+> 
+> What if we stick on a single domain now where we introduce a
+> reserved threshold for the IO space (say INDIRECT_MAX_IO).
 
-I continue to believe this rule doesn't make sense, and the soc node
-shouldn't have a unit address. Maybe Rob or Mark (who is not in Cc, for
-some reason?) should say a word about this?
+I said having a single domain is fine, but I still don't
+like the idea of reserving low port numbers for this hack,
+it would mean that the numbers change for everyone else.
 
-Best regards,
+> We define INDIRECT_MAX_IO as 0 in "include/linux/extio.h" and
+> we define INDIRECT_MAX_IO as 0x1000 in "arch/arm64/include/asm/io.h"
+> 
+> So effectively this threshold can change according to the
+> architecture and so far we only define it for ARM64 as we need
+> it for ARM64...
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I liked the idea of having it done in asm-generic/io.h (in an ifdef)
+and lib/*.c under an as someone suggested earlier. There is nothing
+ARM64 specific in the implementation.
+
+	Arnd
