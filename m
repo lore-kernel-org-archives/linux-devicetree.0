@@ -1,75 +1,87 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC 4/6] ARM: dts: dra7: add entry for bb2d module
-Date: Fri, 18 Nov 2016 07:56:35 -0600
-Message-ID: <15bbd8af-c321-689b-ca85-acce581bd8a7@ti.com>
-References: <20161118024436.13447-1-robertcnelson@gmail.com>
- <20161118024436.13447-4-robertcnelson@gmail.com>
- <1479466741.20533.5.camel@pengutronix.de>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] soc/tegra: Implement Tegra186 PMC support
+Date: Fri, 18 Nov 2016 15:00:07 +0100
+Message-ID: <20161118140007.GC14358@ulmo.ba.sec>
+References: <20161117171636.20580-1-thierry.reding@gmail.com>
+ <e9a081f5-8e93-d3e8-a702-79903e5a6a78@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479466741.20533.5.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gowtham Tammana <g-tammana-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e9a081f5-8e93-d3e8-a702-79903e5a6a78-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2016 04:59 AM, Lucas Stach wrote:
-> Am Donnerstag, den 17.11.2016, 20:44 -0600 schrieb Robert Nelson:
->> From: Gowtham Tammana <g-tammana-l0cyMroinI0@public.gmane.org>
->>
->> BB2D entry is added to the dts file. Crossbar index number is used
->> for interrupt mapping.
->>
->> Signed-off-by: Gowtham Tammana <g-tammana-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dra7.dtsi | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index addb753..43488b6 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -959,6 +959,16 @@
->>  			ti,hwmods = "dmm";
->>  		};
->>
->> +		bb2d: bb2d@59000000 {
->> +			compatible = "ti,dra7-bb2d";
->> +			reg = <0x59000000 0x0700>;
->> +			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
->> +			ti,hwmods = "bb2d";
->> +			clocks = <&dpll_core_h24x2_ck>;
->> +			clock-names = "fclk";
->
-> "fclk" is not an accepted clock name for the etnaviv driver. It supports
-> up to 3 clocks: "bus", "core" and "shader". If there is only one clock
-> required in your design it would probably be the "core" clock.
 
-fclk is used as a standard for all hwmod (SoC level control library 
-that existed prior to ARM DT-fication, and now slowly being converted 
-to DT). I think the core and bus clock is the same here.. I wonder if 
-something duplicated like the following will fly?
+--t0UkRYy7tHLRMCai
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-clocks = <&dpll_core_h24x2_ck>, <&dpll_core_h24x2_ck> ;
-clock-names = "fclk", "core";
+On Fri, Nov 18, 2016 at 09:36:04AM +0000, Jon Hunter wrote:
+>=20
+> On 17/11/16 17:16, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > The power management controller on Tegra186 has changed in backwards-
+> > incompatible ways with respect to earlier generations. This implements a
+> > new driver that supports inversion of the PMU interrupt as well as the
+> > "recovery", "bootloader" and "forced-recovery" reboot commands.
+> >=20
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  34 +++++
+> >  drivers/soc/tegra/Makefile                         |   2 +-
+> >  drivers/soc/tegra/pmc-tegra186.c                   | 169 +++++++++++++=
+++++++++
+> >  3 files changed, 204 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,=
+tegra186-pmc.txt
+> >  create mode 100644 drivers/soc/tegra/pmc-tegra186.c
+>=20
+> ...
+>=20
+> > diff --git a/drivers/soc/tegra/Makefile b/drivers/soc/tegra/Makefile
+> > index ae857ff7d53d..9976a0de1927 100644
+> > --- a/drivers/soc/tegra/Makefile
+> > +++ b/drivers/soc/tegra/Makefile
+> > @@ -1,4 +1,4 @@
+> >  obj-y +=3D fuse/
+> > =20
+> >  obj-y +=3D common.o
+> > -obj-y +=3D pmc.o
+> > +obj-y +=3D pmc.o pmc-tegra186.o
+>=20
+> Do we want to enable this driver for all Tegra devices? Was not sure if
+> this should be dependent on ARM64.
 
-It might have been better if hwmod clocks were'nt assumed from 
-clock-names.. instead it could have been something like:
-ti,hwmod-fck-clk-names = "core";
-ti,hwmod-ick-clk-names = "bus";
-ti,hwmod-ock-clk-names = "shader";
-clocks = <&dpll_core_h24x2_ck>, <&clk2>, <&clk3>;
-clock-names = "core", "bus", "shader";
+Yeah, I think adding an non-user-visible Kconfig symbol for this might
+make sense. Then we can use Kconfig to encode the logic about where to
+enable this and simply use the Kconfig symbol in the Makefile.
 
-Tero: ?
+Thierry
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--t0UkRYy7tHLRMCai
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCAAGBQJYLwlkAAoJEN0jrNd/PrOhHhMQALWqrKK6cyDU4FnMSaRvS5m2
+cW7NVgvZEdvLysooyMD2Z1f/bLajYlh/ud8Yq0wd5AQju58AXVFzVBE0+0NU+aK4
+QA7HhJl9MTC7A2CJv+pCV7rQAY5peaBadYj/ks+pLoSEoFj9jh9sA/vQritnG+Xw
+9zZtT4i+QG+RtRvwwKX2pRDwNxdopx0z1/TszMfN1LZWi+9ZgweoYhR/jxPI9Cxg
+uNG1+sBEaBfo9zyIAoNXLU+JJRjPSmsYDCrwQrVuC93jWrywveNn78kG/DaIm9Jm
+CP7NbxUO9c/azHVkyzx1P1sBYp1VF2jUp0FVBk3fCQlp/GVsUs372BYLTxY6esnw
+TJEil9XWmMEUa05euLhqPaosaHfI727OFGj/1TorNiW3+tQDPDiOVEOyxHuLcn5j
+cdDowwFHRhrKd8q5aRgXA3Gi8zFvw9kZ2gpdfdoKCrOurI8JOgDRcNLUKAXFYcOs
+SxpZOOahfByuksgZjjDQ5PigQ9Uj/bQRhpykIEacKPIEZV90X6Pcd3i5ys15cDHj
+0qQc+W0WNtXXNa+P/CLS0Wiz6mXe/ZMA/9Mj9VNARhpzlmANz7dv38wxCRCwYPbP
+oFdP7By9x4djWN+zFmF4aaHR0pzcRBWZ9AJ6tS5mUk/XXj1YNBo5TPQp8kxagxRa
+AL3muICQo7nx1bxzVpCj
+=ZZTj
+-----END PGP SIGNATURE-----
+
+--t0UkRYy7tHLRMCai--
