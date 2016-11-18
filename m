@@ -1,62 +1,140 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 3/5] i2c: designware: Add slave definitions
-Date: Fri, 18 Nov 2016 14:35:52 +0200
-Message-ID: <1479472552.22212.23.camel@linux.intel.com>
-References: <cover.1479410047.git.lolivei@synopsys.com>
-         <f1bf9ca52e47cdd79b8f0d5e0c159a8727857269.1479410047.git.lolivei@synopsys.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v8] mwifiex: parse device tree node for PCIe
+Date: Fri, 18 Nov 2016 18:07:04 +0530
+Message-ID: <1479472624-22340-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <f1bf9ca52e47cdd79b8f0d5e0c159a8727857269.1479410047.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
->  - Add slave defintitions to i2c-designware-core
->  - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the
-> modules
->  - Add compatible string to designware-core.txt explaining the
-> devicetree bindings
-> 
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
+This patch derives device tree node from pcie bus layer framework.
+Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+marvell-8xxx.txt) to accommodate PCIe changes.
 
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -2,7 +2,9 @@
->  
->  Required properties :
->  
-> - - compatible : should be "snps,designware-i2c"
-> + - compatible : should be:
-> +   - "snps,designware-i2c" to setup the hardware block as I2C master.
-> +   - "snps,designware-i2c-slave" to setup the hardware block as I2C
-> slave.
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+v2: Included vendor and product IDs in compatible strings for PCIe
+chipsets(Rob Herring)
+v3: Patch is created using -M option so that it will only include diff of
+original and renamed files(Rob Herring)
+Resend v3: Resending the patch because I missed to include device tree mailing
+while sending v3.
+v4: Fix error handling, also move-on even if no device tree node is present.
+v5: Update commit log to include memory leak, return -EINVAL instead of -1.
+v6: Remove an unnecessary error print, fix typo in commit log
+v7: a) Earlier versions of this patch claims to have a change which fixes "memory
+       leak". But it actually introduces double-free problem. That change is removed
+       here(Brian Norris)
+    b) Cosmetic change in bindings documentation(Rob Herring)
+	s/marvell/Marvell/
+	s/sdio\/pcie/SDIO\/PCIE/
+v8: Same as v7. I had missed to CC device tree mailing list in v7. Correcting this
+    in v8.
+---
+ .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++++---
+ drivers/net/wireless/marvell/mwifiex/pcie.c        | 24 ++++++++++++++++++++++
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 ++-
+ 3 files changed, 31 insertions(+), 4 deletions(-)
+ rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
 
-Not sure about this one.
-
-Compatible string is more generic than list of modes. Basically you have
-to add a property which selects mode.
-
-DT people's ACK is a must for this change.
-
-
---- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -470,6 +470,7 @@ config I2C_DESIGNWARE_CORE
->  config I2C_DESIGNWARE_PLATFORM
->  	tristate "Synopsys DesignWare Platform"
->  	select I2C_DESIGNWARE_CORE
-> +	select I2C_SLAVE
-> 
-
-Common rule, generic dependencies usually go first
-
-	select I2C_SLAVE
- 	select I2C_DESIGNWARE_CORE
-
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+similarity index 91%
+rename from Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+rename to Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index c421aba..980b16df 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,8 +1,8 @@
+-Marvell 8897/8997 (sd8897/sd8997) SDIO devices
++Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
+ 
+-This node provides properties for controlling the marvell sdio wireless device.
+-The node is expected to be specified as a child node to the SDIO controller that
++This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
++The node is expected to be specified as a child node to the SDIO/PCIE controller that
+ connects the device to the system.
+ 
+ Required properties:
+@@ -10,6 +10,8 @@ Required properties:
+   - compatible : should be one of the following:
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
++	* "pci11ab,2b42"
++	* "pci1b4b,2b42"
+ 
+ Optional properties:
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 3047c1a..5737cc6 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -37,6 +37,22 @@
+ 
+ static struct semaphore add_remove_card_sem;
+ 
++static const struct of_device_id mwifiex_pcie_of_match_table[] = {
++	{ .compatible = "pci11ab,2b42" },
++	{ .compatible = "pci1b4b,2b42" },
++	{ }
++};
++
++static int mwifiex_pcie_probe_of(struct device *dev)
++{
++	if (!of_match_node(mwifiex_pcie_of_match_table, dev->of_node)) {
++		dev_err(dev, "required compatible string missing\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int
+ mwifiex_map_pci_memory(struct mwifiex_adapter *adapter, struct sk_buff *skb,
+ 		       size_t size, int flags)
+@@ -185,6 +201,7 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+ 					const struct pci_device_id *ent)
+ {
+ 	struct pcie_service_card *card;
++	int ret;
+ 
+ 	pr_debug("info: vendor=0x%4.04X device=0x%4.04X rev=%d\n",
+ 		 pdev->vendor, pdev->device, pdev->revision);
+@@ -206,6 +223,13 @@ static int mwifiex_pcie_probe(struct pci_dev *pdev,
+ 		card->pcie.can_ext_scan = data->can_ext_scan;
+ 	}
+ 
++	/* device tree node parsing and platform specific configuration*/
++	if (pdev->dev.of_node) {
++		ret = mwifiex_pcie_probe_of(&pdev->dev);
++		if (ret)
++			return ret;
++	}
++
+ 	if (mwifiex_add_card(card, &add_remove_card_sem, &pcie_ops,
+ 			     MWIFIEX_PCIE)) {
+ 		pr_err("%s failed\n", __func__);
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index 0a54e21..b697b61 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -2235,7 +2235,8 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 		 * The cal-data can be read from device tree and/or
+ 		 * a configuration file and downloaded to firmware.
+ 		 */
+-		if (priv->adapter->iface_type == MWIFIEX_SDIO &&
++		if ((priv->adapter->iface_type == MWIFIEX_SDIO ||
++		    priv->adapter->iface_type == MWIFIEX_PCIE) &&
+ 		    adapter->dev->of_node) {
+ 			adapter->dt_node = adapter->dev->of_node;
+ 			if (of_property_read_u32(adapter->dt_node,
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+1.9.1
