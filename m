@@ -1,87 +1,61 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
-Date: Fri, 18 Nov 2016 14:42:08 +0800
-Message-ID: <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
-References: <20161017120705.3726-1-wenpan@hisilicon.com>
- <20161017120705.3726-2-wenpan@hisilicon.com> <5893354.6MrIxqzRoI@wuerfel>
- <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
- <582C2785.2010804@hisilicon.com>
- <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Marty Plummer <netz.kernel@gmail.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, wenpan <wenpan@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, howell.yang@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com, qinxiaojun@huawei.com
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH] arm64: dts: exynos: add the mshc_2 node for supporting T-Flash
+Date: Fri, 18 Nov 2016 16:12:24 +0900
+Message-ID: <20161118071224.12876-1-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, krzk@kernel.org, cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marty,
+Add the mshc_2 node for supporting T-flash.
 
-On 2016/11/17 11:03, Jiancheng Xue wrote:
-> Hi Wei，
-> 
-> On 2016/11/16 17:31, Wei Xu wrote:
->> Hi Pan,
->>
->> On 2016/11/16 8:56, wenpan wrote:
->>> Hi Marty，
->>> Does this confict with your patch？ If not，I hope this could be merged first.  Besides could you tell me the link to your related patch?
->>
->> This is the link: https://patchwork.kernel.org/patch/9334743/
->>
+And it needs to add the "mshc*" aliases. Because dwmmc driver should be
+assigned to "ctrl_id" after parsing to "mshc".
+If there is no aliases for mshc, then it might be set to the wrong
+capabilities.
 
-Could you give your comments on this patch?
-If you have any objections to it, please let us know.
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> 
-> Thank you for offering this.If I want to give some comments on Marty's patch,
-> what should I do?
-> 
-> For Marty's patch, I think there's no need to add specific config item ARCH_HIxxxx
-> for every chipset. Some existing chipsets depend on ARCH_HISI directly like Hi3519
-> and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HISI, this kind
-> of chipsets will must choose other place to select it. I suggest we should keep selecting
-> ARM_GIC under ARCH_HISI as Pan's patch do.
-> 
-> The code may be like this:
-> 
-> config ARCH_HISI
->  	bool "Hisilicon SoC Support"
-> -	depends on ARCH_MULTI_V7
-> +	depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
->  	select ARM_AMBA
-> -	select ARM_GIC
-> +	select ARM_GIC if ARCH_MULTI_V7
-> +	select ARM_VIC if ARCH_MULTI_V5 || depends on ARCH_MULTI_V6
->  	select ARM_TIMER_SP804
->  	select POWER_RESET
->  	select POWER_RESET_HISI
->  	select POWER_SUPPLY
-> 
-
-What's your opinion about this?
-
-Best Regards,
-Jiancheng
-
->>> On 2016/10/17 21:48, Arnd Bergmann wrote:
->>>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
->>>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
->>>>>
->>>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com>
->>>>>
->>>>
->>>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
->>>> patches for Hi3520, which I think is closely related to this one.
->>>> Please try to work together so the patches don't conflict. It should
->>>> be fairly straightforward since you are basically doing the same
->>>> change here.
->>>>
-> 
-> 
-> 
-> .
-> 
-
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+index 9ea3f32..75dab01 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+@@ -42,6 +42,8 @@
+ 		spi2 = &spi_2;
+ 		spi3 = &spi_3;
+ 		spi4 = &spi_4;
++		mshc0 = &mshc_0;
++		mshc2 = &mshc_2;
+ 	};
+ 
+ 	chosen {
+@@ -661,6 +663,23 @@
+ 	assigned-clock-rates = <800000000>;
+ };
+ 
++&mshc_2 {
++	status = "okay";
++	num-slots = <1>;
++	cap-sd-highspeed;
++	disable-wp;
++	cd-gpios = <&gpa2 4 0>;
++	cd-inverted;
++	card-detect-delay = <200>;
++	samsung,dw-mshc-ciu-div = <3>;
++	samsung,dw-mshc-sdr-timing = <0 4>;
++	samsung,dw-mshc-ddr-timing = <0 2>;
++	fifo-depth = <0x80>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
++	bus-width = <4>;
++};
++
+ &pinctrl_alive {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&initial_alive>;
+-- 
+2.10.1
