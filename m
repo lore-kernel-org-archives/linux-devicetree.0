@@ -1,33 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] devicetree: bindings: nvmem: Add compatible
- string for imx6ul
-Date: Fri, 18 Nov 2016 08:17:36 -0600
-Message-ID: <20161118141736.3wop5fokghvxg4z6@rob-hp-laptop>
-References: <1479344899-3141-1-git-send-email-ping.bai@nxp.com>
- <1479344899-3141-2-git-send-email-ping.bai@nxp.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] hwmon: ltc2990: refactor value conversion
+Date: Fri, 18 Nov 2016 06:17:53 -0800
+Message-ID: <1f8995f1-6126-87b7-bcda-bee2cabbbf81@roeck-us.net>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <86c28b4f-c78b-8d3e-5c48-fa42ca614ba4@roeck-us.net>
+ <alpine.LRH.2.20.1611171613250.12237@pcbe13573-vm.dyndns.cern.ch>
+ <1eff12d5-e0f9-aaa0-010d-1ddcccdd6ec9@roeck-us.net>
+ <alpine.LRH.2.20.1611171955330.14972@pcbe13573-vm.dyndns.cern.ch>
+ <b0c20fac-9f4c-dff2-abef-cd79b1f1ae0a@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479344899-3141-2-git-send-email-ping.bai-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b0c20fac-9f4c-dff2-abef-cd79b1f1ae0a@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Levens <tom.levens@cern.ch>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 09:08:18AM +0800, Bai Ping wrote:
-> Add new compatible string for i.MX6UL SOC.
-> 
-> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
-> ---
-> Changes for V2:
-> - reformat the changes suggested by Rob Herring
-> 
->  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+On 11/18/2016 06:09 AM, Guenter Roeck wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> The register map wraps at 0x0F, so I only sent you the first 16 bytes. But the fully expanded form is:
+>>
+>>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+>> 00: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 10: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 20: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 30: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 40: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 50: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 60: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 70: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 80: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> 90: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> a0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> b0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> c0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> d0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> e0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>> f0: 00 00 00 00 01 90 07 d0 2c cd 7d 80 7c 29 20 00
+>
+> Sorry, I wasn't clear. The chip uses 16-bit registers, so the
+> "w" in the command would be important to report the entire
+> register content, not just the first 8 bit of each register.
+>
+Too early, sorry. the above is fine.
+
+Guenter
