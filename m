@@ -1,108 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: add documentation for rk1108 cru
-Date: Fri, 18 Nov 2016 08:03:13 -0600
-Message-ID: <20161118140313.5uz56im37nt6qv7x@rob-hp-laptop>
-References: <1479286163-34789-1-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv0 1/1] fbdev: add Intel FPGA FRAME BUFFER driver
+Date: Fri, 18 Nov 2016 08:09:03 -0600
+Message-ID: <20161118140903.q33zx7bk5nergq45@rob-hp-laptop>
+References: <1479287278-5192-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479286163-34789-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org
+In-Reply-To: <1479287278-5192-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2016 at 04:49:21PM +0800, Shawn Lin wrote:
-> This adds the dt-binding documentation for the clock and reset unit
-> found on Rockchip rk1108 SoCs.
+On Wed, Nov 16, 2016 at 05:07:58PM +0800, Ong, Hean Loong wrote:
+> From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> 	This patch enables the display port IP driver for
+> 	Intel Arria 10 SOCFPGA Golden Hardware
+> 	Reference Design (GHRD).
 > 
+> 	The driver requires enabling the options such as
+> 	Coheherent Memory Allocation,
+> 	Intel FPGA Frame Buffer, Frame Buffer Conasole
+> 
+> Signed-off-by: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 > ---
+>  .../devicetree/bindings/video/intelfpgavipfb.txt   |   22 ++
+
+bindings/display/
+
+It is preferred that bindings are a separate patch.
+
+>  MAINTAINERS                                        |    6 +
+>  drivers/video/fbdev/Kconfig                        |   15 +
+>  drivers/video/fbdev/Makefile                       |    1 +
+>  drivers/video/fbdev/intelfpgavipfb.c               |  302 ++++++++++++++++++++
+
+AIUI, we're not taking new FB drivers. This should be a DRM driver 
+instead.
+
+>  5 files changed, 346 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/intelfpgavipfb.txt
+>  create mode 100644 drivers/video/fbdev/intelfpgavipfb.c
 > 
-> Changes in v3:
-> - fix mismatch of external clk input name
-> - add hdmiphy and usbphy clk input
-> 
-> Changes in v2: None
-> 
->  .../bindings/clock/rockchip,rk1108-cru.txt         | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
+> diff --git a/Documentation/devicetree/bindings/video/intelfpgavipfb.txt b/Documentation/devicetree/bindings/video/intelfpgavipfb.txt
 > new file mode 100644
-> index 0000000..4da1261
+> index 0000000..8928c99
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk1108-cru.txt
-> @@ -0,0 +1,59 @@
-> +* Rockchip RK1108 Clock and Reset Unit
+> +++ b/Documentation/devicetree/bindings/video/intelfpgavipfb.txt
+> @@ -0,0 +1,22 @@
+> +Intel FPGA Video and Image Processing(VIP) Frame Buffer bindings
 > +
-> +The RK1108 clock controller generates and supplies clock to various
-> +controllers within the SoC and also implements a reset controller for SoC
-> +peripherals.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "rockchip,rk1108-cru"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Optional Properties:
-> +
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/rk1108-cru.h headers and can be
-> +used in device tree sources. Similar macros exist for the reset sources in
-> +these files.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the SoC. It is expected
-> +that they are defined using standard clock bindings with following
-> +clock-output-names:
+> +Required properties:
+> +- compatible: "intel,vip-frame-buffer2"
 
-This stilll doesn't seem right. These are inputs to the CRU or 
-completely separate? If inputs, then you need a 'clocks' property. If 
-completely separate, then they should be listed in their respective IP 
-block binding (e.g. the USB phy).
+Should be something like 'intel,arria10-vip'. Describe the h/w block, 
+frame-buffer is a Linux term.
 
-> + - "xin24m" - crystal input - required,
-> + - "ext_vip" - external VIP clock - optional
-> + - "ext_i2s" - external I2S clock - optional
-> + - "ext_gmac" - external GMAC clock - optional
-> + - "hdmiphy" - external clock input derived from HDMI PHY - optional
-> + - "usbphy" - external clock input derived from USB PHY - optional
+> +- reg: Physical base address and length of the framebuffer controller's
+> +  registers.
+> +- max-width: The width of the framebuffer in pixels.
+> +- max-height: The height of the framebuffer in pixels.
+> +- bits-per-color: only "8" is currently supported
+
+These are not h/w properties.
+
+> +- mem-word-width = the bus width of the avalon master port on the frame reader
+
+Needs a vendor prefix.
+
 > +
-> +Example: Clock controller node:
+> +Example:
 > +
-> +	cru: cru@20200000 {
-> +		compatible = "rockchip,rk1108-cru";
-> +		reg = <0x20200000 0x1000>;
-> +		rockchip,grf = <&grf>;
+> +alt_vip_vfr_0: vip@0xff260000 {
+> +	compatible = "intel,vip-frame-buffer2";
+> +	reg = <0xff260000 0x00000080>;
+> +	max-width = <1024>;
+> +	max-height = <768>;
+> +	bits-per-color = <8>;
+> +	mem-word-width = <128>;
+> +};
 > +
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	uart0: serial@10230000 {
-> +		compatible = "rockchip,rk1108-uart", "snps,dw-apb-uart";
-> +		reg = <0x10230000 0x100>;
-> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clocks = <&cru SCLK_UART0>;
-> +	};
-> -- 
-> 1.9.1
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
