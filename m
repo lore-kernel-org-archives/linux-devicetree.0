@@ -1,49 +1,47 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v8] mwifiex: parse device tree node for PCIe
-Date: Fri, 18 Nov 2016 18:21:41 +0200
-Message-ID: <87oa1coj1m.fsf@purkki.adurom.net>
-References: <1479472624-22340-1-git-send-email-akarwar@marvell.com>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add Macnica Americas vendor prefix
+Date: Fri, 18 Nov 2016 10:25:17 -0600
+Message-ID: <CADhT+wcesJRSf0q+_BDEmtsMTAO2LcAPkqjsRW2mNc1znMp4qg@mail.gmail.com>
+References: <20161101153632.6844-1-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479472624-22340-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-        (Amitkumar Karwar's message of "Fri, 18 Nov 2016 18:07:04 +0530")
+In-Reply-To: <20161101153632.6844-1-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
+Hi Rob,
 
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Tue, Nov 1, 2016 at 10:36 AM, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Add a vendor prefix for the Macnica company.
+> http://http://www.macnica.com
 >
-> This patch derives device tree node from pcie bus layer framework.
-> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
-> marvell-8xxx.txt) to accommodate PCIe changes.
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index f0a48ea..81674f2 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -158,6 +158,7 @@ lg  LG Corporation
+>  linux  Linux-specific binding
+>  lltc   Linear Technology Corporation
+>  lsi    LSI Corp. (LSI Logic)
+> +macnica        Macnica Americas
+>  marvell        Marvell Technology Group Ltd.
+>  maxim  Maxim Integrated Products
+>  meas   Measurement Specialties
+> --
+> 2.8.3
 
-[...]
+Just a gentle ping.
 
-> @@ -10,6 +10,8 @@ Required properties:
->    - compatible : should be one of the following:
->  	* "marvell,sd8897"
->  	* "marvell,sd8997"
-> +	* "pci11ab,2b42"
-> +	* "pci1b4b,2b42"
-
-Are these correct? In v6 Rob said:
-
-"I think I already said this, but you have the vendor and product IDs 
-reversed."
-
-https://patchwork.kernel.org/patch/9390225/
-
--- 
-Kalle Valo
+Thanks,
+Dinh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
