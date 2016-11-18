@@ -1,82 +1,70 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: exynos: add the mshc_2 node for supporting
- T-Flash
-Date: Fri, 18 Nov 2016 11:38:09 +0100
-Message-ID: <26cc8cc3-0a91-e253-5a10-8e080c3e486f@samsung.com>
-References: <CGME20161118071238epcas4p222702d2c716bf2d7cd9c9354ab99a189@epcas4p2.samsung.com>
- <20161118071224.12876-1-jh80.chung@samsung.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Fri, 18 Nov 2016 10:41:10 +0000
+Message-ID: <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <582E1A59.7040502@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20161118071224.12876-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <582E1A59.7040502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Jaehoon,
 
 
-On 2016-11-18 08:12, Jaehoon Chung wrote:
-> Add the mshc_2 node for supporting T-flash.
+On 17/11/16 21:00, Frank Rowand wrote:
+> On 11/17/16 07:32, Sudeep Holla wrote:
+>> Currently platforms/drivers needing to get the machine model name are
+>> replicating the same snippet of code. In some case, the OF reference
+>> counting is either missing or incorrect.
+>>
+>> This patch adds support to read the machine model name either using
+>> the "model" or the "compatible" property in the device tree root node
+>> to the core OF/DT code.
+>>
+>> This can be used to remove all the duplicate code snippets doing exactly
+>> same thing later.
 >
-> And it needs to add the "mshc*" aliases. Because dwmmc driver should be
-> assigned to "ctrl_id" after parsing to "mshc".
-> If there is no aliases for mshc, then it might be set to the wrong
-> capabilities.
+> I find five instances of reading only property "model":
 >
-> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
+>   arch/arm/mach-imx/cpu.c
+>   arch/arm/mach-mxs/mach-mxs.c
+>   arch/c6x/kernel/setup.c
+>   arch/mips/cavium-octeon/setup.c
+>   arch/sh/boards/of-generic.c
 >
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> index 9ea3f32..75dab01 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -42,6 +42,8 @@
->   		spi2 = &spi_2;
->   		spi3 = &spi_3;
->   		spi4 = &spi_4;
-> +		mshc0 = &mshc_0;
-> +		mshc2 = &mshc_2;
->   	};
->   
->   	chosen {
-> @@ -661,6 +663,23 @@
->   	assigned-clock-rates = <800000000>;
->   };
->   
-> +&mshc_2 {
-> +	status = "okay";
-> +	num-slots = <1>;
-> +	cap-sd-highspeed;
-> +	disable-wp;
-> +	cd-gpios = <&gpa2 4 0>;
 
-cd-gpios = <&gpa2 4 GPIO_ACTIVE_HIGH>;
+Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
+that this will be used for.
 
-> +	cd-inverted;
-> +	card-detect-delay = <200>;
-> +	samsung,dw-mshc-ciu-div = <3>;
-> +	samsung,dw-mshc-sdr-timing = <0 4>;
-> +	samsung,dw-mshc-ddr-timing = <0 2>;
-> +	fifo-depth = <0x80>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus1 &sd2_bus4>;
-> +	bus-width = <4>;
-> +};
-> +
->   &pinctrl_alive {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&initial_alive>;
+> I find one instance of reading property "model", then if
+> that does not exist, property "compatible":
+>
+>   arch/mips/generic/proc.c
+>
 
-Best regards
+Correct as you can check in patch 2/2
+
+> The proposed patch matches the code used in one place, and thus
+> current usage does not match the patch description.
+>
+
+Yes, but does it matter ? compatibles are somewhat informative about the
+model IMO.
+
+> Is my search bad?  Are you planning to add additional instances
+> of reading "model" then "compatible"?
+>
+
+No, just replacing the existing ones as in patch 2/2
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
