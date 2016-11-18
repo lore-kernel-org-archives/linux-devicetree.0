@@ -1,75 +1,92 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: RE: [PATCH v2 2/2] MIPS: DTS: img: add device tree for Marduk board
-Date: Fri, 18 Nov 2016 11:27:33 +0000
-Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5889FEB65@HHMAIL01.hh.imgtec.org>
-References: <1476424555-22629-1-git-send-email-rahul.bedarkar@imgtec.com>
- <1476424555-22629-2-git-send-email-rahul.bedarkar@imgtec.com>
- <20161018141337.3lardgah2qprqtdx@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
+Date: Fri, 18 Nov 2016 12:38:49 +0100
+Message-ID: <6279668.zEh0VO1Gaf@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <2436881.9RqUVYxmDf@wuerfel> <582EE223.4090605@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161018141337.3lardgah2qprqtdx@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Rahul Bedarkar <Rahul.Bedarkar@imgtec.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <582EE223.4090605@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Cc: linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, gabriele.paoloni@huawei.com, catalin.marinas@arm.com, will.deacon@arm.com, linuxarm@huawei.com, lorenzo.pieralisi@arm.com, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, minyard@acm.org, marc.zyngier@arm.com, liviu.dudau@arm.com, john.garry@huawei.com, zourongrong@gmail.com, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-kernel@vger.kernel.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: 18 October 2016 15:14
-> To: Rahul Bedarkar
-> Cc: Ralf Baechle; Mark Rutland; James Hartley; linux-mips@linux-mips.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 2/2] MIPS: DTS: img: add device tree for Marduk
-> board
+On Friday, November 18, 2016 7:12:35 PM CET zhichang.yuan wrote:
+> Hi, Arnd,
 > 
-> On Fri, Oct 14, 2016 at 11:25:55AM +0530, Rahul Bedarkar wrote:
-> > Add support for Imagination Technologies' Marduk board which is based
-> > on Pistachio SoC. It is also known as Creator Ci40. Marduk is legacy
-> > name and will be there for decades.
-> >
-> > Documentation for this board can be found on
-> > https://docs.creatordev.io/ci40/
-> >
-> > This patch adds initial support for board with following peripherals:
-> >
-> > * PWM based heartbeat LED
-> > * GPIO based buttons
-> > * SPI NOR flash on SPI1
-> > * UART0 and UART1
-> > * SD card
-> > * Ethernet
-> > * USB
-> > * PWM
-> > * ADC
-> > * I2C
-> >
-> > Signed-off-by: Rahul Bedarkar <rahul.bedarkar@imgtec.com>
-> > ---
-> > Changes in v2:
-> >   - Correct RAM size. It is 256MB instead of 128MB.
-> >   - Rename nodes pwm_leds -> leds and gpio_keys -> keys (Suggested by
-> Rob Herring)
-> >   - Don't use '_' in node name for internal_dac_supply (Suggested by Rob
-> Herring)
-> >   - Add part name in compatible string for spi-nor (Suggested by Rob
-> > Herring)
-> > ---
-> >  .../bindings/mips/img/pistachio-marduk.txt         |  10 ++
-> >  MAINTAINERS                                        |   6 +
-> >  arch/mips/boot/dts/img/Makefile                    |   9 ++
-> >  arch/mips/boot/dts/img/pistachio_marduk.dts        | 163
-> +++++++++++++++++++++
-> >  4 files changed, 188 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/mips/img/pistachio-marduk.txt
-> >  create mode 100644 arch/mips/boot/dts/img/Makefile  create mode
-> > 100644 arch/mips/boot/dts/img/pistachio_marduk.dts
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> On 2016/11/18 17:20, Arnd Bergmann wrote:
+> > On Friday, November 11, 2016 6:07:07 PM CET zhichang.yuan wrote:
+> >>
+> >> I have similar idea as your PPC MMIO.
+> >>
+> >> We notice the prototype of {in/out()} is something like that:
+> >>
+> >> static inline u8 inb(unsigned long addr)
+> >> static inline void outb(u8 value, unsigned long addr)
+> >>
+> >> The type of parameter 'addr' is unsigned long. For I/O space, it is big enough.
+> >> So, could you divide this 'addr' into several bit segments? The top 8 bits is
+> >> defined as bus index. For normal direct IO, the bus index is 0. For those bus
+> >> device which need indirectIO or some special I/O accessors, when these devices
+> >> are initializing, can request to allocate an unique ID to them, and register
+> >> their own accessors to the entry which is corresponding to the ID.
+> > 
+> > Ah, have you looked at the IA64 code? It does exactly this.
+> > For ARM64 we decided to use the same basic approach as powerpc with
+> > a single range of virtual memory for mapping it as that somewhat
+> > simplified all cases we knew about at the time.
+> 
+> Yes. I spent some time to trace how to work on PPC. But the code is a bit long,
+> I am not clear on how the indirectIO there was supported.
+> 
+> I noticed there are CONFIG_PPC_INDIRECT_PIO and CONFIG_PPC_INDIRECT_MMIO on PPC.
+> It seems that only CONFIG_PPC_INDIRECT_MMIO applied some MSB to store the bus
+> tokens which are used to get iowa_busses[] for specific operation helpers.
+> I can not find how CONFIG_PPC_INDIRECT_PIO support multiple ISA domains. It
+> seems only Opal-lpc.c adopt this INDIRECT_PIO method.
+> 
+> Although CONFIG_PPC_INDIRECT_MMIO is for MMIO, seems not suitable for ISA/LPC
+> I/O. But this idea is helpful.
+> 
+> what else did I miss??
 
-Acked-by: James Hartley <james.hartley@imgtec.com>
+I mentioned two different things here: ia64 IIRC uses some bits of the
+port number to look up the domain, while powerpc traditionally had no
+support for any such lookup, it did the same thing as ARM64 with
+virtual remapping of MMIO ranges into an address range starting at
+a fixed virtual address.
+
+CONFIG_PPC_INDIRECT_PIO is a fairly recent addition, I was not thinking
+of that.
+
+> >> In this way, we can support multiple domains, I think.
+> >> But I am not sure whether it is feasible, for example, are there some
+> >> architectures/platforms had populated the top 8 bits? Do we need to request IO
+> >> region from ioport_resource for those devices?  etc...
+> > 
+> > On a 64-bit architecture, the top 32 bits of the port number are
+> > definitely free to use for this, and 8 bits are probably sufficient.
+> > 
+> > Even on 32 bit architectures, I can't see why we'd ever need more than
+> > 16 bits worth of addressing within a domain, so using 8 bit domain
+> > and 16 bit address leaves 8 or 40 unused bits.
+> 
+> Yes. 8 bits are enough.
+> But the maximal PIO on some architectures are defined as ~0 or -1. There is no
+> any bare space left. Probably we can not ensure the upper 8 bits available.
+
+Right, we clearly can't use it across all architectures. The trick with
+architectures using ULONG_MAX as the limit for port numbers is that they
+treat it as a 1:1 mapping between port numbers and virtual addresses,
+which is yet another way to handle the MMIO-based devices, but that has
+a number of downsides we don't need to get into now.
+
+What I think the code should do is a generic workaround handling that
+architectures can opt-in to. We'd start doing this on ARM64 only,
+and can then decide whether to change ARM or PowerPC over to use
+that as well.
+
+	Arnd
