@@ -1,27 +1,62 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: am335x-icev2: Add Industrial input support
-Date: Fri, 18 Nov 2016 07:08:06 -0800
-Message-ID: <20161118150805.GU4082@atomide.com>
-References: <20161007144428.16671-1-afd@ti.com>
- <7095f8b0-efdb-6187-7580-43e8a0fa2cf3@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7095f8b0-efdb-6187-7580-43e8a0fa2cf3-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bruno Meirelles Herrera <bruherrera@gmail.com>
+Subject: [RESEND PATCH v1] ARM: dts: stm32f429: Add missing USART3 pin config to STM32F469I-DISCO board
+Date: Fri, 18 Nov 2016 13:10:33 -0200
+Message-ID: <20161118151033.30592-1-bmh@certi.org.br>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> [161118 07:00]:
-> ping?
+Including new STM32 maintainer. Rebased at stm32-dt-for-v4.10-1 and
+stm32-dt-for-v4.10-2 branches. It fix the port/pin initialization in
+case boot-loader does not configure/initialize the pins. 
+Fixing line wrapping from last patch
 
-Sorry somehow I missed this series, looks good to me so applying
-to omap-for-v4.10/dt thanks.
+This patch adds USART3 pin configuration on PB10/PA11 pins
+for STM32F469I-DISCO board.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi      | 13 +++++++++++++
+ arch/arm/boot/dts/stm32f469-disco.dts |  2 ++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index e4dae0e..1b8b105 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -316,6 +316,19 @@
+ 				};
+ 			};
+ 
++			usart3_pins_a: usart3@0 {
++				pins1 {
++					pinmux = <STM32F429_PB10_FUNC_USART3_TX>;
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins2 {
++					pinmux = <STM32F429_PB11_FUNC_USART3_RX>;
++					bias-disable;
++				};
++			};
++
+ 			usbotg_hs_pins_a: usbotg_hs@0 {
+ 				pins {
+ 					pinmux = <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 8877c00..75f4303 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -79,5 +79,7 @@
+ };
+ 
+ &usart3 {
++	pinctrl-0 = <&usart3_pins_a>;
++	pinctrl-names = "default";
+ 	status = "okay";
+ };
+-- 
+2.9.3 (Apple Git-75)
