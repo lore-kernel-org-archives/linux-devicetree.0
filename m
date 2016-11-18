@@ -1,54 +1,42 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Fri, 18 Nov 2016 12:00:00 -0800
-Message-ID: <582F5DC0.4080804@gmail.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: qcom: msm8996: Fixup smp2p node
+Date: Fri, 18 Nov 2016 12:06:49 -0800
+Message-ID: <1479499609-13336-1-git-send-email-bjorn.andersson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/16 06:46, Rob Herring wrote:
-> On Thu, Nov 17, 2016 at 03:32:54PM +0000, Sudeep Holla wrote:
->> Currently platforms/drivers needing to get the machine model name are
->> replicating the same snippet of code. In some case, the OF reference
->> counting is either missing or incorrect.
->>
->> This patch adds support to read the machine model name either using
->> the "model" or the "compatible" property in the device tree root node
->> to the core OF/DT code.
->>
->> This can be used to remove all the duplicate code snippets doing exactly
->> same thing later.
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
->>  include/linux/of.h |  6 ++++++
->>  2 files changed, 38 insertions(+)
->>
->> Hi Rob,
->>
->> It would be good if we can target this for v4.10, so that we have no
->> dependencies to push PATCH 2/2 in v4.11
-> 
-> Applied.
-> 
-> Rob
-> 
+The SMEM state property name changes between the integration branch and
+mainline, update to use the correct one.
 
-A little fast on the trigger Rob.
+Fixes: 2f45d9fcd531 ("arm64: dts: msm8996: Add SMP2P and APCS nodes")
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
 
--Frank
+Seems we're still carrying this discrepancy somewhere and I missed it in my
+review, sorry about that.
+
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index cde4114bae5a..712d5d043105 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -530,7 +530,7 @@
+ 
+ 		adsp_smp2p_out: master-kernel {
+ 			qcom,entry-name = "master-kernel";
+-			#qcom,state-cells = <1>;
++			#qcom,smem-state-cells = <1>;
+ 		};
+ 
+ 		adsp_smp2p_in: slave-kernel {
+-- 
+2.5.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
