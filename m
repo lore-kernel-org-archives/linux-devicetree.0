@@ -1,52 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: ahci-fsl-qoriq: added explanation for
- reg-names
-Date: Fri, 18 Nov 2016 08:21:38 -0600
-Message-ID: <20161118142138.jwehwhevgkhi6hww@rob-hp-laptop>
-References: <1479369560-9188-1-git-send-email-yuantian.tang@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] DT: i2c: W83793 is a trivial device
+Date: Fri, 18 Nov 2016 08:30:32 -0600
+Message-ID: <20161118143032.qupvnq5clbgnlpni@rob-hp-laptop>
+References: <20161117102324.18319-1-fl@n621.de>
+ <20161117102324.18319-3-fl@n621.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479369560-9188-1-git-send-email-yuantian.tang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: yuantian.tang@nxp.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161117102324.18319-3-fl-J+Jo6bLUB7M@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Larysch <fl-J+Jo6bLUB7M@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 03:59:19PM +0800, yuantian.tang@nxp.com wrote:
-> From: Tang Yuantian <Yuantian.Tang@nxp.com>
-> 
-> Added explanation for reg-names to make it more clear.
-> 
-> Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
+On Thu, Nov 17, 2016 at 11:23:24AM +0100, Florian Larysch wrote:
+> Signed-off-by: Florian Larysch <fl-J+Jo6bLUB7M@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
-> index fc33ca0..80cf10c 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
-> @@ -10,6 +10,8 @@ Required properties:
->  Optional properties:
->    - dma-coherent: Enable AHCI coherent DMA operation.
->    - reg-names: register area names when there are more than 1 register area.
-> +		example: 'ahci' is for sata controller register.
-> +			 'sata-ecc' is for sata ecc register.
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-This is not an example, but should be exactly what names are used.
-
-When is there more than one area? That should be defined by the 
-compatible string and spelled out here.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
