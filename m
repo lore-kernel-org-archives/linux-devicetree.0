@@ -1,56 +1,38 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 2/5] i2c: designware: Master mode as separated driver
-Date: Fri, 18 Nov 2016 14:30:14 +0200
-Message-ID: <1479472214.22212.21.camel@linux.intel.com>
-References: <cover.1479410047.git.lolivei@synopsys.com>
-         <897ada44bfa73aaa5e092d4b178461f52c0566db.1479410047.git.lolivei@synopsys.com>
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Fri, 18 Nov 2016 14:31:40 +0200
+Message-ID: <ab252efa-7368-8029-25cb-e49833458d13@linaro.org>
+References: <20161117153522.11630-1-georgi.djakov@linaro.org>
+ <20161117185918.GA7884@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <897ada44bfa73aaa5e092d4b178461f52c0566db.1479410047.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161117185918.GA7884-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
->  - The functions related to I2C master mode of operation were
-> transformed in a single driver.
->  - The name of the i2c-designware-core.c had to be changed to i2c-
-> designware-src.c to for the cmake to be able to correctly compile both
-> modules into one
->  - Common definitions were moved to i2c-designware-core.h
+On 11/17/2016 08:59 PM, Mathieu Poirier wrote:
+> On Thu, Nov 17, 2016 at 05:35:22PM +0200, Georgi Djakov wrote:
+>> From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Add initial set of CoreSight components found on Qualcomm's 8x16 chipset.
+>
+> Hello Georgi,
+>
+> Could you add a better desccription for the SoC?  To me "8x16" doesn't
+> say much.
 
->  drivers/i2c/busses/i2c-designware-src.c            | 252
-> +++++++++++++++
+Ok, will do it. Thanks!
 
-Perhaps i2c-designware-common.c ?
+>
+> With that change:
+> Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
 
-> @@ -21,8 +21,6 @@
->   * ------------------------------------------------------------------
-> ----------
->   *
->   */
-> -
-> -
-
-No need to do that in this patch.
-
->  #define DW_IC_CON_MASTER		0x1
->  #define DW_IC_CON_SPEED_STD		0x2
->  #define DW_IC_CON_SPEED_FAST		0x4
-> @@ -32,6 +30,123 @@
->  #define DW_IC_CON_RESTART_EN		0x20
->  #define DW_IC_CON_SLAVE_DISABLE		0x40
->  
-> +/*
-> + * Registers offset
-> + */
-> +#define DW_IC_CON		0x0
-
-Okay, can we split this to move definitions and the rest?
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
