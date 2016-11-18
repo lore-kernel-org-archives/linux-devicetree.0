@@ -1,48 +1,54 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 3/3] remoteproc: qcom: add Venus video core firmware
- loader driver
-Date: Fri, 18 Nov 2016 09:23:21 -0800
-Message-ID: <20161118172321.GC2769@tuxbot>
-References: <1478539853-23218-1-git-send-email-stanimir.varbanov@linaro.org>
- <1478539853-23218-4-git-send-email-stanimir.varbanov@linaro.org>
- <20161114191641.GH5177@codeaurora.org>
+From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] driver: Add DT support for DA8xx
+Date: Fri, 18 Nov 2016 11:37:14 -0600
+Message-ID: <20161118173714.GA29773@uda0271908>
+References: <1479293545-7516-1-git-send-email-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161114191641.GH5177@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1479293545-7516-1-git-send-email-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Nov 11:16 PST 2016, Stephen Boyd wrote:
-
-> On 11/07, Stanimir Varbanov wrote:
-> > +#include <linux/module.h>
-> > +#include <linux/of_reserved_mem.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/qcom_scm.h>
-> > +#include <linux/remoteproc.h>
-> > +
-> > +#include "qcom_mdt_loader.h"
-> > +#include "remoteproc_internal.h"
-> > +
-> > +#define VENUS_CRASH_REASON_SMEM		425
+On Wed, Nov 16, 2016 at 11:52:22AM +0100, Alexandre Bailon wrote:
+> Changes in v2:
+> * Remove unrelated changes in patch 3
+> * Rename the device node in patch 4
 > 
-> This is unused. Is there going to be some common smem API to get
-> the crash reason?
+> Changes in v3:
+> * Fix few mistakes in DT binding sample
+> * Only build the device table if DT is enabled
+> 
+> Change in v4:
+> * Fix a nit
+> 
+> Changes in v5:
+> * Nothing. Resent the v4 in two seppaated series: one for platform and one for
+>   driver.
+> 
+> Petr Kulhavy (3):
+>   dt/bindings: Add binding for the DA8xx MUSB driver
+>   usb: musb: core: added helper function for parsing DT
+>   usb: musb: da8xx: Add DT support for the DA8xx driver
 
-There are a couple of these operations that are good candidates to be
-shared between all Qualcomm remoteproc drivers. I just haven't spent the
-time to figure out how to properly splice it.
+Applied. Thanks.
+-Bin.
 
-For the crash reason specifically, there are three operations done in
-the other drivers; read-and-null-terminate, then this is outputed to the
-log, also indicating what type of event we had. And finally the
-remoteproc core is informed about the crash, with a event-type passed
-and we get another line in the log based on that, i.e. there's room for
-a few improvements in this area.
-
-Regards,
-Bjorn
+> 
+>  .../devicetree/bindings/usb/da8xx-usb.txt          | 43 ++++++++++++++++++++
+>  drivers/usb/musb/da8xx.c                           | 46 ++++++++++++++++++++++
+>  drivers/usb/musb/musb_core.c                       | 19 +++++++++
+>  drivers/usb/musb/musb_core.h                       |  6 +++
+>  4 files changed, 114 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> 
+> -- 
+> 2.7.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
