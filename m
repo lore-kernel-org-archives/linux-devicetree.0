@@ -1,34 +1,16 @@
-From: Bruno Meirelles Herrera <bruherrera@gmail.com>
-Subject: [RESEND PATCH] ARM: dts: stm32f469-disco: Fix memory size from 8MB to 16MB
-Date: Fri, 18 Nov 2016 12:58:45 -0200
-Message-ID: <20161118145845.30455-1-bmh@certi.org.br>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 1/7] ARM: dts: am335x-icev2: Add Industrial input support
+Date: Fri, 18 Nov 2016 09:00:24 -0600
+Message-ID: <7095f8b0-efdb-6187-7580-43e8a0fa2cf3@ti.com>
+References: <20161007144428.16671-1-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161007144428.16671-1-afd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bruno Herrera <bruherrera@gmail.com>
+To: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bruno Herrera <bruherrera@gmail.com>
-
-This patch fix memory size to support 16MB of external SDRAM.
-
-Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
----
- arch/arm/boot/dts/stm32f469-disco.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index 75f4303..fda12a4 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -58,7 +58,7 @@
- 	};
- 
- 	memory {
--		reg = <0x00000000 0x800000>;
-+		reg = <0x00000000 0x1000000>;
- 	};
- 
- 	aliases {
--- 
-2.9.3 (Apple Git-75)
+ping?
