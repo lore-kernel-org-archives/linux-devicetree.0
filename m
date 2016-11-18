@@ -1,70 +1,56 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] i2c: designware: Add slave definitions
-Date: Fri, 18 Nov 2016 11:01:55 -0600
-Message-ID: <20161118170155.chrdpguohgl6vo5f@rob-hp-laptop>
-References: <cover.1479410047.git.lolivei@synopsys.com>
- <f1bf9ca52e47cdd79b8f0d5e0c159a8727857269.1479410047.git.lolivei@synopsys.com>
- <1479472552.22212.23.camel@linux.intel.com>
+Subject: Re: [PATCH v8] mwifiex: parse device tree node for PCIe
+Date: Fri, 18 Nov 2016 11:06:10 -0600
+Message-ID: <20161118170610.42gumxv37a3dsgxu@rob-hp-laptop>
+References: <1479472624-22340-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479472552.22212.23.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <1479472624-22340-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2016 at 02:35:52PM +0200, Andy Shevchenko wrote:
-> On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
-> >  - Add slave defintitions to i2c-designware-core
-> >  - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the
-> > modules
-> >  - Add compatible string to designware-core.txt explaining the
-> > devicetree bindings
-> > 
+On Fri, Nov 18, 2016 at 06:07:04PM +0530, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > 
+> This patch derives device tree node from pcie bus layer framework.
+> Device tree bindings file has been renamed(marvell-sd8xxx.txt ->
+> marvell-8xxx.txt) to accommodate PCIe changes.
 > 
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > @@ -2,7 +2,9 @@
-> >  
-> >  Required properties :
-> >  
-> > - - compatible : should be "snps,designware-i2c"
-> > + - compatible : should be:
-> > +   - "snps,designware-i2c" to setup the hardware block as I2C master.
-> > +   - "snps,designware-i2c-slave" to setup the hardware block as I2C
-> > slave.
-> 
-> Not sure about this one.
-> 
-> Compatible string is more generic than list of modes. Basically you have
-> to add a property which selects mode.
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2: Included vendor and product IDs in compatible strings for PCIe
+> chipsets(Rob Herring)
+> v3: Patch is created using -M option so that it will only include diff of
+> original and renamed files(Rob Herring)
+> Resend v3: Resending the patch because I missed to include device tree mailing
+> while sending v3.
+> v4: Fix error handling, also move-on even if no device tree node is present.
+> v5: Update commit log to include memory leak, return -EINVAL instead of -1.
+> v6: Remove an unnecessary error print, fix typo in commit log
+> v7: a) Earlier versions of this patch claims to have a change which fixes "memory
+>        leak". But it actually introduces double-free problem. That change is removed
+>        here(Brian Norris)
+>     b) Cosmetic change in bindings documentation(Rob Herring)
+> 	s/marvell/Marvell/
+> 	s/sdio\/pcie/SDIO\/PCIE/
+> v8: Same as v7. I had missed to CC device tree mailing list in v7. Correcting this
+>     in v8.
+> ---
+>  .../{marvell-sd8xxx.txt => marvell-8xxx.txt}       |  8 +++++---
 
-Yes, agreed. And come up with a common property.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> DT people's ACK is a must for this change.
-> 
-> 
-> --- a/drivers/i2c/busses/Kconfig
-> > +++ b/drivers/i2c/busses/Kconfig
-> > @@ -470,6 +470,7 @@ config I2C_DESIGNWARE_CORE
-> >  config I2C_DESIGNWARE_PLATFORM
-> >  	tristate "Synopsys DesignWare Platform"
-> >  	select I2C_DESIGNWARE_CORE
-> > +	select I2C_SLAVE
-> > 
-> 
-> Common rule, generic dependencies usually go first
-> 
-> 	select I2C_SLAVE
->  	select I2C_DESIGNWARE_CORE
-> 
-> -- 
-> Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Intel Finland Oy
+>  drivers/net/wireless/marvell/mwifiex/pcie.c        | 24 ++++++++++++++++++++++
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c     |  3 ++-
+>  3 files changed, 31 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/net/wireless/{marvell-sd8xxx.txt => marvell-8xxx.txt} (91%)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
