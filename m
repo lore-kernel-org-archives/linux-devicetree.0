@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 02/13] devicetree/bindings: display: Add bindings for LVDS panels
-Date: Sat, 19 Nov 2016 05:28:02 +0200
-Message-ID: <1479526093-7014-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
+Date: Sat, 19 Nov 2016 05:28:01 +0200
+Message-ID: <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,144 +10,112 @@ To: dri-devel@lists.freedesktop.org
 Cc: linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
-Multiple incompatible data link layers have been used over time to
-transmit image data to LVDS panels. This binding supports display panels
-compatible with the JEIDA-59-1999, Open-LDI and VESA SWPG
-specifications.
+Document properties common to several display panels in a central
+location that can be referenced by the panel device tree bindings.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../bindings/display/panel/panel-lvds.txt          | 120 +++++++++++++++++++++
- 1 file changed, 120 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+ .../bindings/display/panel/panel-common.txt        | 91 ++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
 new file mode 100644
-index 000000000000..b938269f841e
+index 000000000000..ec52c472c845
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-@@ -0,0 +1,120 @@
-+LVDS Display Panel
-+==================
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+@@ -0,0 +1,91 @@
++Common Properties for Display Panel
++===================================
 +
-+LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-+incompatible data link layers have been used over time to transmit image data
-+to LVDS panels. This bindings supports display panels compatible with the
-+following specifications.
++This document defines device tree properties common to several classes of
++display panels. It doesn't constitue a device tree binding specification by
++itself but is meant to be referenced by device tree bindings.
 +
-+[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
-+1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
-+[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-+Semiconductor
-+[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-+Electronics Standards Association (VESA)
-+
-+Device compatible with those specifications have been marketed under the
-+FPD-Link and FlatLink brands.
++When referenced from panel device tree bindings the properties defined in this
++document are defined as follows. The panel device tree bindings are
++responsible for defining whether each property is required or optional.
 +
 +
-+Required properties:
++Descriptive Properties
++----------------------
 +
-+- compatible: Shall contain "panel-lvds" in addition to a mandatory
-+  panel-specific compatible string defined in individual panel bindings. The
-+  "panel-lvds" value shall never be used on its own.
-+- width-mm: See panel-common.txt.
-+- height-mm: See panel-common.txt.
-+- data-mapping: The color signals mapping order, "jeida-18", "jeida-24"
-+  or "vesa-24".
++- width-mm,
++- height-mm: The width-mm and height-mm specify the width and height of the
++  physical area where images are displayed. These properties are expressed in
++  millimeters and rounded to the closest unit.
 +
-+Optional properties:
++- label: The label property specifies a symbolic name for the panel as a
++  string suitable for use by humans. It typically contains a name inscribed on
++  the system (e.g. as an affixed label) or specified in the system's
++  documentation (e.g. in the user's manual).
 +
-+- label: See panel-common.txt.
-+- gpios: See panel-common.txt.
-+- backlight: See panel-common.txt.
-+- data-mirror: If set, reverse the bit order described in the data mappings
-+  below on all data lanes, transmitting bits for slots 6 to 0 instead of
-+  0 to 6.
-+
-+Required nodes:
-+
-+- panel-timing: See panel-common.txt.
-+- ports: See panel-common.txt. These bindings require a single port subnode
-+  corresponding to the panel LVDS input.
++  If no such name exists, and unless the property is mandatory according to
++  device tree bindings, it shall rather be omitted than constructed of
++  non-descriptive information. For instance an LCD panel in a system that
++  contains a single panel shall not be labelled "LCD" if that name is not
++  inscribed on the system or used in a descriptive fashion in system
++  documentation.
 +
 +
-+LVDS data mappings are defined as follows.
++Display Timings
++---------------
 +
-+- "jeida-18" - 18-bit data mapping compatible with the [JEIDA], [LDI] and
-+  [VESA] specifications. Data are transferred as follows on 3 LVDS lanes.
-+
-+Slot	    0       1       2       3       4       5       6
-+	________________                         _________________
-+Clock	                \_______________________/
-+	  ______  ______  ______  ______  ______  ______  ______
-+DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
-+DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
-+DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
-+
-+- "jeida-24" - 24-bit data mapping compatible with the [DSIM] and [LDI]
-+  specifications. Data are transferred as follows on 4 LVDS lanes.
-+
-+Slot	    0       1       2       3       4       5       6
-+	________________                         _________________
-+Clock	                \_______________________/
-+	  ______  ______  ______  ______  ______  ______  ______
-+DATA0	><__G2__><__R7__><__R6__><__R5__><__R4__><__R3__><__R2__><
-+DATA1	><__B3__><__B2__><__G7__><__G6__><__G5__><__G4__><__G3__><
-+DATA2	><_CTL2_><_CTL1_><_CTL0_><__B7__><__B6__><__B5__><__B4__><
-+DATA3	><_CTL3_><__B1__><__B0__><__G1__><__G0__><__R1__><__R0__><
-+
-+- "vesa-24" - 24-bit data mapping compatible with the [VESA] specification.
-+  Data are transferred as follows on 4 LVDS lanes.
-+
-+Slot	    0       1       2       3       4       5       6
-+	________________                         _________________
-+Clock	                \_______________________/
-+	  ______  ______  ______  ______  ______  ______  ______
-+DATA0	><__G0__><__R5__><__R4__><__R3__><__R2__><__R1__><__R0__><
-+DATA1	><__B1__><__B0__><__G5__><__G4__><__G3__><__G2__><__G1__><
-+DATA2	><_CTL2_><_CTL1_><_CTL0_><__B5__><__B4__><__B3__><__B2__><
-+DATA3	><_CTL3_><__B7__><__B6__><__G7__><__G6__><__R7__><__R6__><
-+
-+Control signals are mapped as follows.
-+
-+CTL0: HSync
-+CTL1: VSync
-+CTL2: Data Enable
-+CTL3: 0
++- panel-timing: Most display panels are restricted to a single resolution and
++  require specific display timings. The panel-timing subnode expresses those
++  timings as specified in the timing subnode section of the display timing
++  bindings defined in
++  Documentation/devicetree/bindings/display/display-timing.txt.
 +
 +
-+Example
-+-------
++Connectivity
++------------
 +
-+panel {
-+	compatible = "mitsubishi,aa121td01", "panel-lvds";
++- ports: Panels receive video data through one or multiple connections. While
++  the nature of those connections is specific to the panel type, the
++  connectivity is expressed in a standard fashion using ports as specified in
++  the device graph bindings defined in
++  Documentation/devicetree/bindings/graph.txt.
 +
-+	width-mm = <261>;
-+	height-mm = <163>;
++- ddc-i2c-bus: Some panels expose EDID information through an I2C-compatible
++  bus such as DDC2 or E-DDC. For such panels the ddc-i2c-bus contains a
++  phandle to the system I2C controller connected to that bus.
 +
-+	data-mapping = "jeida-24";
 +
-+	panel-timing {
-+		/* 1280x800 @60Hz */
-+		clock-frequency = <71000000>;
-+		hactive = <1280>;
-+		vactive = <800>;
-+		hsync-len = <70>;
-+		hfront-porch = <20>;
-+		hback-porch = <70>;
-+		vsync-len = <5>;
-+		vfront-porch = <3>;
-+		vback-porch = <15>;
-+	};
++Control I/Os
++------------
 +
-+	port {
-+		panel_in: endpoint {
-+			remote-endpoint = <&lvds_encoder>;
-+		};
-+	};
-+};
++Many display panels can be controlled through pins driven by GPIOs. The nature
++and timing of those control signals are device-specific and left for panel
++device tree bindings to specify. The following GPIO specifiers can however be
++used for panels that implement compatible control signals.
++
++- enable-gpios: Specifier for a GPIO connected to the panel enable control
++  signal. The enable signal is active high and enables operation of the panel.
++  This property can also be used for panels implementing an active low power
++  down signal, which is a negated version of the enable signal. Active low
++  enable signals (or active high power down signals) can be supported by
++  inverting the GPIO specifier polarity flag.
++
++  Note that the enable signal control panel operation only and must not be
++  confused with a backlight enable signal.
++
++- reset-gpios: Specifier for a GPIO coonnected to the panel reset control
++  signal. The reset signal is active low and resets the panel internal logic
++  while active. Active high reset signals can be supported by inverting the
++  GPIO specifier polarity flag.
++
++
++Backlight
++---------
++
++Most display panels include a backlight. Some of them also include a backlight
++controller exposed through a control bus such as I2C or DSI. Others expose
++backlight control through GPIO, PWM or other signals connected to an external
++backlight controller.
++
++- backlight: For panels whose backlight is controlled by an external backlight
++  controller, this property contains a phandle that references the controller.
 -- 
 Regards,
 
