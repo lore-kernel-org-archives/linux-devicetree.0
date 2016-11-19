@@ -1,43 +1,78 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM64: dts: meson-gxbb: add the USB reset also to the
- second USB PHY
-Date: Fri, 18 Nov 2016 23:35:19 +0100
-Message-ID: <CAFBinCBVaQ7SLwQ0M2eJj0iyQuErF1Ev5dtGzKr7itiesy11MQ@mail.gmail.com>
-References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-4-martin.blumenstingl@googlemail.com> <m2twb7w1j6.fsf@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 1/4] [media] davinci: add support for DT init
+Date: Fri, 18 Nov 2016 16:32:05 -0800
+Message-ID: <20161119003208.10550-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m2twb7w1j6.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?q?Bartosz=20Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Add basic support for initialization via DT.
 
-On Wed, Nov 16, 2016 at 10:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->
->> When the USB PHY driver was introduced the reset framework did not
->> have support for triggering a reset pulse for shared resets. On GXBB
->> however there is only one reset line for both PHYs (meaning we have a
->> shared reset line). With the latest changes to the reset framework and
->> the corresponding updates to the phy-meson8b-usb2 driver we can now pass
->> the reset to the second PHY as well.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->
-> Applied.
-Unfortunately I think I put crucial information only in the
-cover-letter's description:
-"the dts patch has a runtime-dependency on patch 1 and 2"
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+ drivers/media/platform/davinci/vpif.c         |  9 +++++++++
+ drivers/media/platform/davinci/vpif_capture.c | 14 ++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-So please feel free to keep or drop the patch as it is. In case you
-decide drop it I will re-send it for 4.11 (after all the 4.10 stuff is
-done).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
+index 0380cf2e5775..077e328e0281 100644
+--- a/drivers/media/platform/davinci/vpif.c
++++ b/drivers/media/platform/davinci/vpif.c
+@@ -464,8 +464,17 @@ static const struct dev_pm_ops vpif_pm = {
+ #define vpif_pm_ops NULL
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id vpif_of_match[] = {
++	{ .compatible = "ti,vpif", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, vpif_of_match);
++#endif
++
+ static struct platform_driver vpif_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(vpif_of_match),
+ 		.name	= "vpif",
+ 		.pm	= vpif_pm_ops,
+ 	},
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index 5104cc0ee40e..79cef74e164f 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1435,6 +1435,11 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	int res_idx = 0;
+ 	int i, err;
+ 
++	if (!pdev->dev.platform_data) {
++		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
++		return -EINVAL;
++	}
++
+ 	vpif_dev = &pdev->dev;
+ 
+ 	err = initialize_vpif();
+@@ -1618,8 +1623,17 @@ static int vpif_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(vpif_pm_ops, vpif_suspend, vpif_resume);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id vpif_capture_of_match[] = {
++	{ .compatible = "ti,vpif-capture", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, vpif_capture_of_match);
++#endif
++
+ static __refdata struct platform_driver vpif_driver = {
+ 	.driver	= {
++		.of_match_table = of_match_ptr(vpif_capture_of_match),
+ 		.name	= VPIF_DRIVER_NAME,
+ 		.pm	= &vpif_pm_ops,
+ 	},
+-- 
+2.9.3
