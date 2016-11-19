@@ -1,122 +1,138 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
-Date: Sat, 19 Nov 2016 05:28:01 +0200
-Message-ID: <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH v2 03/13] devicetree/bindings: display: Add bindings for two Mitsubishi panels
+Date: Sat, 19 Nov 2016 05:28:03 +0200
+Message-ID: <1479526093-7014-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document properties common to several display panels in a central
-location that can be referenced by the panel device tree bindings.
+The AA104XD12 and AA121TD01 are LVDS display panels. Their bindings are
+modelled on the the LVS panel bindings.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 ---
- .../bindings/display/panel/panel-common.txt        | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.txt
+ .../display/panel/mitsubishi,aa104xd12.txt         | 47 ++++++++++++++++++++++
+ .../display/panel/mitsubishi,aa121td01.txt         | 47 ++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
 new file mode 100644
-index 000000000000..ec52c472c845
+index 000000000000..ced0121aed7d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
-@@ -0,0 +1,91 @@
-+Common Properties for Display Panel
-+===================================
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
+@@ -0,0 +1,47 @@
++Mitsubishi AA204XD12 LVDS Display Panel
++=======================================
 +
-+This document defines device tree properties common to several classes of
-+display panels. It doesn't constitue a device tree binding specification by
-+itself but is meant to be referenced by device tree bindings.
++The AA104XD12 is a 10.4" XGA TFT-LCD display panel.
 +
-+When referenced from panel device tree bindings the properties defined in this
-+document are defined as follows. The panel device tree bindings are
-+responsible for defining whether each property is required or optional.
++These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
++with the following device-specific properties.
 +
 +
-+Descriptive Properties
-+----------------------
++Required properties:
 +
-+- width-mm,
-+- height-mm: The width-mm and height-mm specify the width and height of the
-+  physical area where images are displayed. These properties are expressed in
-+  millimeters and rounded to the closest unit.
-+
-+- label: The label property specifies a symbolic name for the panel as a
-+  string suitable for use by humans. It typically contains a name inscribed on
-+  the system (e.g. as an affixed label) or specified in the system's
-+  documentation (e.g. in the user's manual).
-+
-+  If no such name exists, and unless the property is mandatory according to
-+  device tree bindings, it shall rather be omitted than constructed of
-+  non-descriptive information. For instance an LCD panel in a system that
-+  contains a single panel shall not be labelled "LCD" if that name is not
-+  inscribed on the system or used in a descriptive fashion in system
-+  documentation.
++- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
++  order.
++- vcc-supply: Reference to the regulator powering the panel VCC pins.
 +
 +
-+Display Timings
-+---------------
++Example
++-------
 +
-+- panel-timing: Most display panels are restricted to a single resolution and
-+  require specific display timings. The panel-timing subnode expresses those
-+  timings as specified in the timing subnode section of the display timing
-+  bindings defined in
-+  Documentation/devicetree/bindings/display/display-timing.txt.
++panel {
++	compatible = "mitsubishi,aa104xd12", "panel-lvds";
++	vcc-supply = <&vcc_3v3>;
 +
++	width-mm = <210>;
++	height-mm = <158>;
 +
-+Connectivity
-+------------
++	data-mapping = "jeida-24";
 +
-+- ports: Panels receive video data through one or multiple connections. While
-+  the nature of those connections is specific to the panel type, the
-+  connectivity is expressed in a standard fashion using ports as specified in
-+  the device graph bindings defined in
-+  Documentation/devicetree/bindings/graph.txt.
++	panel-timing {
++		/* 1024x768 @65Hz */
++		clock-frequency = <65000000>;
++		hactive = <1024>;
++		vactive = <768>;
++		hsync-len = <136>;
++		hfront-porch = <20>;
++		hback-porch = <160>;
++		vfront-porch = <3>;
++		vback-porch = <29>;
++		vsync-len = <6>;
++	};
 +
-+- ddc-i2c-bus: Some panels expose EDID information through an I2C-compatible
-+  bus such as DDC2 or E-DDC. For such panels the ddc-i2c-bus contains a
-+  phandle to the system I2C controller connected to that bus.
++	port {
++		panel_in: endpoint {
++			remote-endpoint = <&lvds_encoder>;
++		};
++	};
++};
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+new file mode 100644
+index 000000000000..d6e1097504fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+@@ -0,0 +1,47 @@
++Mitsubishi AA121TD01 LVDS Display Panel
++=======================================
 +
++The AA121TD01 is a 12.1" WXGA TFT-LCD display panel.
 +
-+Control I/Os
-+------------
-+
-+Many display panels can be controlled through pins driven by GPIOs. The nature
-+and timing of those control signals are device-specific and left for panel
-+device tree bindings to specify. The following GPIO specifiers can however be
-+used for panels that implement compatible control signals.
-+
-+- enable-gpios: Specifier for a GPIO connected to the panel enable control
-+  signal. The enable signal is active high and enables operation of the panel.
-+  This property can also be used for panels implementing an active low power
-+  down signal, which is a negated version of the enable signal. Active low
-+  enable signals (or active high power down signals) can be supported by
-+  inverting the GPIO specifier polarity flag.
-+
-+  Note that the enable signal control panel operation only and must not be
-+  confused with a backlight enable signal.
-+
-+- reset-gpios: Specifier for a GPIO coonnected to the panel reset control
-+  signal. The reset signal is active low and resets the panel internal logic
-+  while active. Active high reset signals can be supported by inverting the
-+  GPIO specifier polarity flag.
++These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
++with the following device-specific properties.
 +
 +
-+Backlight
-+---------
++Required properties:
 +
-+Most display panels include a backlight. Some of them also include a backlight
-+controller exposed through a control bus such as I2C or DSI. Others expose
-+backlight control through GPIO, PWM or other signals connected to an external
-+backlight controller.
++- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
++  order.
++- vcc-supply: Reference to the regulator powering the panel VCC pins.
 +
-+- backlight: For panels whose backlight is controlled by an external backlight
-+  controller, this property contains a phandle that references the controller.
++
++Example
++-------
++
++panel {
++	compatible = "mitsubishi,aa121td01", "panel-lvds";
++	vcc-supply = <&vcc_3v3>;
++
++	width-mm = <261>;
++	height-mm = <163>;
++
++	data-mapping = "jeida-24";
++
++	panel-timing {
++		/* 1280x800 @60Hz */
++		clock-frequency = <71000000>;
++		hactive = <1280>;
++		vactive = <800>;
++		hsync-len = <70>;
++		hfront-porch = <20>;
++		hback-porch = <70>;
++		vsync-len = <5>;
++		vfront-porch = <3>;
++		vback-porch = <15>;
++	};
++
++	port {
++		panel_in: endpoint {
++			remote-endpoint = <&lvds_encoder>;
++		};
++	};
++};
 -- 
 Regards,
 
 Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
