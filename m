@@ -1,138 +1,115 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2 03/13] devicetree/bindings: display: Add bindings for two Mitsubishi panels
-Date: Sat, 19 Nov 2016 05:28:03 +0200
-Message-ID: <1479526093-7014-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 0/9] R-Car DU: Use drm bridge API
+Date: Sat, 19 Nov 2016 05:48:13 +0200
+Message-ID: <1479527302-7674-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The AA104XD12 and AA121TD01 are LVDS display panels. Their bindings are
-modelled on the the LVS panel bindings.
+Hello,
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
- .../display/panel/mitsubishi,aa104xd12.txt         | 47 ++++++++++++++++++++++
- .../display/panel/mitsubishi,aa121td01.txt         | 47 ++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
+This patch series replaces the custom external encoders support implementation
+in the R-Car DU driver with code based on the DRM bridge API.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
-new file mode 100644
-index 000000000000..ced0121aed7d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
-@@ -0,0 +1,47 @@
-+Mitsubishi AA204XD12 LVDS Display Panel
-+=======================================
-+
-+The AA104XD12 is a 10.4" XGA TFT-LCD display panel.
-+
-+These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
-+with the following device-specific properties.
-+
-+
-+Required properties:
-+
-+- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
-+  order.
-+- vcc-supply: Reference to the regulator powering the panel VCC pins.
-+
-+
-+Example
-+-------
-+
-+panel {
-+	compatible = "mitsubishi,aa104xd12", "panel-lvds";
-+	vcc-supply = <&vcc_3v3>;
-+
-+	width-mm = <210>;
-+	height-mm = <158>;
-+
-+	data-mapping = "jeida-24";
-+
-+	panel-timing {
-+		/* 1024x768 @65Hz */
-+		clock-frequency = <65000000>;
-+		hactive = <1024>;
-+		vactive = <768>;
-+		hsync-len = <136>;
-+		hfront-porch = <20>;
-+		hback-porch = <160>;
-+		vfront-porch = <3>;
-+		vback-porch = <29>;
-+		vsync-len = <6>;
-+	};
-+
-+	port {
-+		panel_in: endpoint {
-+			remote-endpoint = <&lvds_encoder>;
-+		};
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
-new file mode 100644
-index 000000000000..d6e1097504fe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
-@@ -0,0 +1,47 @@
-+Mitsubishi AA121TD01 LVDS Display Panel
-+=======================================
-+
-+The AA121TD01 is a 12.1" WXGA TFT-LCD display panel.
-+
-+These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
-+with the following device-specific properties.
-+
-+
-+Required properties:
-+
-+- compatible: Shall contain "mitsubishi,aa121td01" and "panel-lvds", in that
-+  order.
-+- vcc-supply: Reference to the regulator powering the panel VCC pins.
-+
-+
-+Example
-+-------
-+
-+panel {
-+	compatible = "mitsubishi,aa121td01", "panel-lvds";
-+	vcc-supply = <&vcc_3v3>;
-+
-+	width-mm = <261>;
-+	height-mm = <163>;
-+
-+	data-mapping = "jeida-24";
-+
-+	panel-timing {
-+		/* 1280x800 @60Hz */
-+		clock-frequency = <71000000>;
-+		hactive = <1280>;
-+		vactive = <800>;
-+		hsync-len = <70>;
-+		hfront-porch = <20>;
-+		hback-porch = <70>;
-+		vsync-len = <5>;
-+		vfront-porch = <3>;
-+		vback-porch = <15>;
-+	};
-+
-+	port {
-+		panel_in: endpoint {
-+			remote-endpoint = <&lvds_encoder>;
-+		};
-+	};
-+};
+While the overall diffstat isn't impressive, the rcar-du-drm driver gets
+notably thinner in the process:
+
+	9 files changed, 57 insertions(+), 374 deletions(-)
+
+This is offset by a reusable driver for LVDS encoders along with the
+corresponding DT bindings (+ 204 lines).
+
+Patches 1/9 and 2/9 add DT bindings for LVDS encoders with a corresponding
+driver. It supports "dumb" LVDS encoders only, similarly to the dumb-vga-dac
+driver. One notable difference, though, is that LVDS encoders can't be purely
+passive, and thus require at least one power supply (and usually multiple of
+them) and have a few control GPIOs (most notably to control reset, power down,
+clock polarity and/or LVDS slew rate). However, on many systems those encoders
+are integrated in such a way that the control pins are pulled up or down
+appropriately and the power supplies are either always on or shared with other
+display components that make them operate as if they were always on. For that
+reason a common drivers for those systems is useful, with simple DT bindings
+that don't try to cover any device-specific control pin or power supply.
+
+To ensure backward compatibility most LVDS encoders should *not* use the
+common simple "lvds-encoder" compatible string, but should instead define a
+device-specific compatible string that can then be added to the lvds-encoder
+driver (patch 4/9). This way, when the need to control pins or supplies will
+arise, a new driver can be developed matching on the device-specific
+compatible string, which will then be removed from the simple driver. Existing
+systems will migrate transparently without requiring a change to their device
+tree.
+
+A similar reasoning applies to VGA DACs, leading to the addition of the
+"adi,adv7123" compatible string to the dumb-vga-dac driver's OF match table in
+patch 3/9.
+
+Patch 5/9 adds a new type field to the drm_bridge structure to inform bridge
+users of the bridge type. This is useful for display driver to create a DRM
+encoder of the appropriate type without having to resort to heuristics.
+Patches 6/9 and 7/9 update all bridge drivers to initialize the new field to
+the appropriate value.
+
+Patches 8/9 and 9/9 finally migrate the rcar-du-drm driver to the DRM bridge
+API, removing the custom VGA DAC implementation in patch 8/9 and the table of
+bridge compatible strings used to find the encoder type in patch 9/9.
+
+Compared to v1,
+
+- The patches have been rebased on top of the "[PATCH v2 00/13] R-Car DU: Add
+  support for LVDS mode selection" series.
+- The LVDS encoder DT bindings have been split from the LVDS encoder driver
+  into a separate patch.
+- The wording of the DRM bridge documentation new property has been updated.
+
+Laurent Pinchart (9):
+  drm: bridge: Add LVDS encoder DT bindings
+  drm: bridge: Add LVDS encoder driver
+  drm: bridge: vga-dac: Add adi,adv7123 compatible string
+  drm: bridge: lvds-encoder: Add thine,thc63lvdm83d compatible string
+  drm: Add encoder_type field to the drm_bridge structure
+  drm: bridge: Set bridges' encoder type
+  drm: Set on-chip bridges' encoder type
+  drm: rcar-du: Replace manual bridge implementation with DRM bridge
+  drm: rcar-du: Initialize encoder's type based on the bridge's type
+
+ .../bindings/display/bridge/lvds-transmitter.txt   |  64 +++++++
+ drivers/gpu/drm/bridge/Kconfig                     |   8 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       |   1 +
+ drivers/gpu/drm/bridge/analogix-anx78xx.c          |   1 +
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c |   1 +
+ drivers/gpu/drm/bridge/dumb-vga-dac.c              |   2 +
+ drivers/gpu/drm/bridge/dw-hdmi.c                   |   2 +
+ drivers/gpu/drm/bridge/lvds-encoder.c              | 204 +++++++++++++++++++++
+ drivers/gpu/drm/bridge/nxp-ptn3460.c               |   2 +
+ drivers/gpu/drm/bridge/parade-ps8622.c             |   2 +
+ drivers/gpu/drm/bridge/sii902x.c                   |   2 +
+ drivers/gpu/drm/bridge/tc358767.c                  |   2 +
+ drivers/gpu/drm/exynos/exynos_drm_mic.c            |   2 +
+ drivers/gpu/drm/mediatek/mtk_hdmi.c                |   2 +
+ drivers/gpu/drm/rcar-du/Kconfig                    |   6 -
+ drivers/gpu/drm/rcar-du/Makefile                   |   5 +-
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.c          | 103 ++++++-----
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |   3 -
+ drivers/gpu/drm/rcar-du/rcar_du_hdmienc.c          | 137 --------------
+ drivers/gpu/drm/rcar-du/rcar_du_hdmienc.h          |  35 ----
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c              |  37 +---
+ drivers/gpu/drm/rcar-du/rcar_du_vgacon.c           |  82 ---------
+ drivers/gpu/drm/rcar-du/rcar_du_vgacon.h           |  23 ---
+ drivers/gpu/drm/sti/sti_dvo.c                      |   2 +
+ include/drm/drm_bridge.h                           |   8 +
+ 26 files changed, 363 insertions(+), 374 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+ create mode 100644 drivers/gpu/drm/bridge/lvds-encoder.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmienc.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmienc.h
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_vgacon.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_vgacon.h
+
 -- 
 Regards,
 
 Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
