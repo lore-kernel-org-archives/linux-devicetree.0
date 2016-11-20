@@ -1,7 +1,7 @@
 From: Hao Zhang <hao5781286@gmail.com>
-Subject: [PATCH v4 2/3] ARM64: dts: sun6i: add dma node for a64.
-Date: Sun, 20 Nov 2016 18:45:39 +0800
-Message-ID: <1479638740-20520-3-git-send-email-hao5781286@gmail.com>
+Subject: [PATCH v4 1/3] Documentation: DT: add dma compatible for sun50i A64 SOC
+Date: Sun, 20 Nov 2016 18:45:38 +0800
+Message-ID: <1479638740-20520-2-git-send-email-hao5781286@gmail.com>
 References: <1479638740-20520-1-git-send-email-hao5781286@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1479638740-20520-1-git-send-email-hao5781286@gmail.com>
@@ -10,33 +10,24 @@ To: maxime.ripard@free-electrons.com, wens@csie.org, dan.j.williams@intel.com, v
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hao5781286@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Accroding to the Allwinner_A64_User_Manual_V1.0 P198
-the DMA base address is 0x01c02000.
+This add the property of Allwinner sun50i A64 dma.
 
 Signed-off-by: Hao Zhang <hao5781286@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/dma/sun6i-dma.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index e3c3d7d8..403bbfa 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -122,6 +122,15 @@
- 		#size-cells = <1>;
- 		ranges;
- 
-+		dma: dma-controller@1c02000 {
-+			compatible = "allwinner,sun50i-a64-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
-+
- 		ccu: clock@01c20000 {
- 			compatible = "allwinner,sun50i-a64-ccu";
- 			reg = <0x01c20000 0x400>;
+diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+index 6b26704..4398b99 100644
+--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
++++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 		  "allwinner,sun8i-a23-dma"
+ 		  "allwinner,sun8i-a83t-dma"
+ 		  "allwinner,sun8i-h3-dma"
++		  "allwinner,sun50i-a64-dma"
+ - reg:		Should contain the registers base address and length
+ - interrupts:	Should contain a reference to the interrupt used by this device
+ - clocks:	Should contain a reference to the parent AHB clock
 -- 
 2.7.4
