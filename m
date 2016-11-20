@@ -1,13 +1,13 @@
 From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v6 5/5] ARM: dts: sun8i-h3: Add HDMI video to
- the Orange PI 2
-Date: Sun, 20 Nov 2016 12:26:45 +0100
-Message-ID: <6c0482c335be69d3178d3ecbee43f04caa00c57f.1479641523.git.moinejf@free.fr>
+Subject: [PATCH v6 4/5] ARM: dts: sun8i-h3: Add HDMI video to
+ the Banana Pi M2+
+Date: Sun, 20 Nov 2016 12:23:19 +0100
+Message-ID: <9dc91753796f8413f276ea62479bd767b549d8c2.1479641523.git.moinejf@free.fr>
 References: <cover.1479641523.git.moinejf@free.fr>
 Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBAVEY3AQKGQEH37FWPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBANEY3AQKGQE7LKCB3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.1479641523.git.moinejf-GANU6spQydw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,22 +22,22 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 13 +++++++++++++
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index 047e9e1..9ecc6f1 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -56,6 +56,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+index c0c49dd..4b5baae 100644
+--- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+@@ -55,6 +55,7 @@
+ 	aliases {
  		serial0 = &uart0;
- 		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
- 		ethernet1 = &rtl8189;
+ 		serial1 = &uart1;
 +		lcd0 = &lcd0;
  	};
  
  	chosen {
-@@ -105,16 +106,28 @@
+@@ -93,6 +94,10 @@
  	};
  };
  
@@ -46,6 +46,9 @@ index 047e9e1..9ecc6f1 100644
 +};
 +
  &ehci1 {
+ 	status = "okay";
+ };
+@@ -101,12 +106,20 @@
  	status = "okay";
  };
  
