@@ -1,201 +1,177 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: add rockchip serial flash controller
- driver
-Date: Sun, 20 Nov 2016 22:11:24 +0100
-Message-ID: <8f8213a1-f694-8159-fdbd-5e607c8aaaa2@gmail.com>
-References: <1478855766-151673-1-git-send-email-shawn.lin@rock-chips.com>
- <1478855766-151673-3-git-send-email-shawn.lin@rock-chips.com>
- <b1420e9d-b6a1-7fe8-4381-e32e0bc7dd53@gmail.com>
- <775a8918-bc93-218a-808d-2a160137ad56@rock-chips.com>
+From: Richard Kojedzinszky <richard.kojedzinszky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/9] ARM: dts: sun7i: BPI-M1+ and Lamobo-R1 fixes
+Date: Sun, 20 Nov 2016 14:09:14 -0800 (PST)
+Message-ID: <e1e70fec-7a09-4899-b3a7-e0431d2e642a@googlegroups.com>
+References: <1467796250-22010-1-git-send-email-wens@csie.org>
+Reply-To: richard.kojedzinszky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <775a8918-bc93-218a-808d-2a160137ad56-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed;
+	boundary="----=_Part_7643_702317274.1479679754279"
+Return-path: <linux-sunxi+bncBD2JJSMIC4IKXQOIYECRUBGG5TPU6-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1467796250-22010-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2016 02:59 AM, Shawn Lin wrote:
-> Hi Marek,
+------=_Part_7643_702317274.1479679754279
+Content-Type: multipart/alternative;
+	boundary="----=_Part_7644_293954286.1479679754279"
 
-Hi,
+------=_Part_7644_293954286.1479679754279
+Content-Type: text/plain; charset=UTF-8
 
-[...]
+Hi there,
 
->>> +static int rockchip_sfc_read_reg(struct spi_nor *nor, u8 opcode,
->>> +                 u8 *buf, int len)
->>> +{
->>> +    struct rockchip_sfc_priv *priv = nor->priv;
->>> +    struct rockchip_sfc *sfc = priv->sfc;
->>> +    int ret;
->>> +    u32 tmp;
->>> +    u32 i;
->>> +
->>> +    ret = rockchip_sfc_op_reg(nor, opcode, len, SFC_CMD_DIR_RD);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    while (len > 0) {
->>> +        tmp = readl_relaxed(sfc->regbase + SFC_DATA);
->>> +        for (i = 0; i < len; i++)
->>> +            *buf++ = (u8)((tmp >> (i * 8)) & 0xff);
->>
->> Won't this fail for len > 4 ?
-> 
-> nope, this loop will reduce 4 for each successful readl. And
-> reading the remained bytes which isn't aligned to DWORD, isn't it?
+I own a sinovoip's bananapi m1+, and using the latest dts and latest 
+mainline kernel the os does not boot up, the mmc does not get initialized. 
+I had to make mmc0 and mmc3 compatible with
+"allwinner,sun5i-a13-mmc", then the device booted up well. It turned out to 
+me that actually the MMC_CAP_1_8V_DDR flag 
+in drivers/mmc/host/sunxi-mmc.c:1249 caused the wrong behaviour. If I just 
+remove that capability, the board also boots up well. I dont know what have 
+I found.
 
-Try for len = 8 ... it will write 8 bytes to the buf, but half of them
-would be zero. I believe it should look like:
+And also, as a board has usb ports in it, I had to enable the usb phy. I 
+have a local dts which works for me now, should not it be included in 
+mainline?
 
-        for (i = 0; i < 4 /* was len */; i++)
-            *buf++ = (u8)((tmp >> (i * 8)) & 0xff);
+I have attached my dts which makes my device boot up well.
 
->>
->> Also, you can use ioread32_rep() here, but (!) that won't work for
->> unaligned reads, which I dunno if they can happen here, but please do
->> double-check.
-> 
-> yes, I have checked this API as well as others like memcpy_{to,from}io
-> , etc. They will generate a external abort for arm core as the unaligned
-> (DWORD) read/write via AHB aren't supported by Rockchip Socs. So I have
-> to open code these stuff. This could be easily found for other
-> upstreamed rockchip drivers. :)
-
-This is normal, but you can still use the _rep variant if you handle the
-corner cases.
-
->>
->>> +        len = len - 4;
->>> +    }
->>> +
->>> +    return 0;
->>> +}
-
-[...]
-
->>> +static ssize_t rockchip_sfc_write(struct spi_nor *nor, loff_t to,
->>> +                  size_t len, const u_char *write_buf)
->>> +{
->>> +    struct rockchip_sfc_priv *priv = nor->priv;
->>> +    struct rockchip_sfc *sfc = priv->sfc;
->>> +    size_t offset;
->>> +    int ret;
->>> +    dma_addr_t dma_addr = 0;
->>> +
->>> +    if (!sfc->use_dma)
->>> +        goto no_dma;
->>
->> Seems like there's a lot of similarity between read/write .
-> 
-> I was thinking to combine read/write with a extra argument to
-> indicate WR/RD. But as we could see still some differece between
-> WR and RD and there are already some condiction checks. So it
-> will make the code hard to read with stuffing lots of condition
-> checks. So I splited out read and write strightforward. :)
-
-Hrm, is it that bad ?
-
->>> +    for (offset = 0; offset < len; offset += SFC_DMA_MAX_LEN) {
->>> +        size_t trans = min_t(size_t, SFC_DMA_MAX_LEN, len - offset);
->>> +
->>> +        dma_addr = dma_map_single(NULL, (void *)write_buf,
->>> +                      trans, DMA_TO_DEVICE);
->>> +        if (dma_mapping_error(sfc->dev, dma_addr)) {
->>> +            dma_addr = 0;
->>> +            memcpy(sfc->buffer, write_buf + offset, trans);
->>> +        }
->>> +
->>> +        /* Fail to map dma, use pre-allocated area instead */
->>> +        ret = rockchip_sfc_dma_transfer(nor, to + offset,
->>> +                        dma_addr ? dma_addr :
->>> +                        sfc->dma_buffer,
->>> +                        trans, SFC_CMD_DIR_WR);
->>> +        if (dma_addr)
->>> +            dma_unmap_single(NULL, dma_addr,
->>> +                     trans, DMA_TO_DEVICE);
->>> +        if (ret) {
->>> +            dev_warn(nor->dev, "DMA write timeout\n");
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>> +    return len;
->>> +no_dma:
->>> +    ret = rockchip_sfc_pio_transfer(nor, to, len,
->>> +                    (u_char *)write_buf, SFC_CMD_DIR_WR);
->>> +    if (ret) {
->>> +        dev_warn(nor->dev, "PIO write timeout\n");
->>> +        return ret;
->>> +    }
->>> +    return len;
->>> +}
-
-[...]
-
->>> +static void rockchip_sfc_unregister_all(struct rockchip_sfc *sfc)
->>> +{
->>> +    int i;
->>> +
->>> +    for (i = 0; i < sfc->num_chip; i++)
->>> +        mtd_device_unregister(&sfc->nor[i]->mtd);
->>> +}
->>> +
->>> +static int rockchip_sfc_register_all(struct rockchip_sfc *sfc)
->>> +{
->>> +    struct device *dev = sfc->dev;
->>> +    struct device_node *np;
->>> +    int ret;
->>> +
->>> +    for_each_available_child_of_node(dev->of_node, np) {
->>> +        ret = rockchip_sfc_register(np, sfc);
->>> +        if (ret)
->>> +            goto fail;
->>> +
->>> +        if (sfc->num_chip == SFC_MAX_CHIP_NUM) {
->>> +            dev_warn(dev, "Exceeds the max cs limitation\n");
->>> +            break;
->>> +        }
->>> +    }
->>> +
->>> +    return 0;
->>> +
->>> +fail:
->>> +    dev_err(dev, "Failed to register all chip\n");
->>> +    rockchip_sfc_unregister_all(sfc);
->>
->> See cadence qspi where we only unregister the registered flashes.
->> Implement it the same way here.
->>
-> 
-> yup, but I'm afraid that rockchip_sfc_unregister_all confused you
-> as it actually unregisters the registered ones, not for all.
-> 
-> static void rockchip_sfc_unregister_all(struct rockchip_sfc *sfc)
-> {
->         int i;
-> 
->         for (i = 0; i < sfc->num_chip; i++)
->                 mtd_device_unregister(&sfc->nor[i]->mtd);
-> }
-> 
-> sfc->num_chip stands for how many flashes registered successfully.
-
-Does it work if you have a hole in there ? Like if you have a flash on
-chipselect 0 and chipselect 2 ?
-
->>> +    return ret;
->>> +}
-
-[...]
-
+Regards,
+On Wednesday, July 6, 2016 at 11:11:00 AM UTC+2, Chen-Yu Tsai wrote:
+>
+> Hi Maxime, 
+>
+> These are a bunch of fixes I did to get my boards running. Some of them 
+> are cleanups, while others enable hardware that we already support on 
+> other boards, such as USB or the audio codec. 
+>
+> Regards 
+> ChenYu 
+>
+> Chen-Yu Tsai (9): 
+>   ARM: dts: sun7i: lamobo-r1: Fix USB-based WiFi module power 
+>   ARM: dts: sun7i: lamobo-r1: Remove usb1 vbus regulator 
+>   ARM: dts: sun7i: lamobo-r1: Fix GPIO flags in reg_ahci_5v 
+>   ARM: dts: sun7i: lamobo-r1: Enable audio codec 
+>   ARM: dts: sun7i: bananapi-m1-plus: Reindent whole file using tabs 
+>   ARM: dts: sun7i: bananapi-m1-plus: Unify suffix for board specific 
+>     labels 
+>   ARM: dts: sun7i: bananapi-m1-plus: red LED is power LED 
+>   ARM: dts: sun7i: bananapi-m1-plus: Add PMIC regulators and OPPs for 
+>     cpufreq 
+>   ARM: dts: sun7i: bananapi-m1-plus: Enable USB OTG 
+>
+>  arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts | 342 
+> ++++++++++++++--------- 
+>  arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts        |  20 +- 
+>  2 files changed, 218 insertions(+), 144 deletions(-) 
+>
+> -- 
+> 2.8.1 
+>
+>
 
 -- 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+------=_Part_7644_293954286.1479679754279
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi there,<div><br></div><div>I own a sinovoip&#39;s banana=
+pi m1+, and using the latest dts and latest mainline kernel the os does not=
+ boot up, the mmc does not get initialized. I had to make mmc0 and mmc3 com=
+patible with</div><div>&quot;allwinner,sun5i-a13-mmc&quot;, then the device=
+ booted up well. It turned out to me that actually the=C2=A0MMC_CAP_1_8V_DD=
+R flag in=C2=A0drivers/mmc/host/sunxi-mmc.c:1249 caused the wrong behaviour=
+. If I just remove that capability, the board also boots up well. I dont kn=
+ow what have I found.<br></div><div><br></div><div>And also, as a board has=
+ usb ports in it, I had to enable the usb phy. I have a local dts which wor=
+ks for me now, should not it be included in mainline?</div><div><br></div><=
+div>I have attached my dts which makes my device boot up well.</div><div><b=
+r></div><div>Regards,</div><div>On Wednesday, July 6, 2016 at 11:11:00 AM U=
+TC+2, Chen-Yu Tsai wrote:<blockquote class=3D"gmail_quote" style=3D"margin:=
+ 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">Hi Ma=
+xime,
+<br>
+<br>These are a bunch of fixes I did to get my boards running. Some of them
+<br>are cleanups, while others enable hardware that we already support on
+<br>other boards, such as USB or the audio codec.
+<br>
+<br>Regards
+<br>ChenYu
+<br>
+<br>Chen-Yu Tsai (9):
+<br>=C2=A0 ARM: dts: sun7i: lamobo-r1: Fix USB-based WiFi module power
+<br>=C2=A0 ARM: dts: sun7i: lamobo-r1: Remove usb1 vbus regulator
+<br>=C2=A0 ARM: dts: sun7i: lamobo-r1: Fix GPIO flags in reg_ahci_5v
+<br>=C2=A0 ARM: dts: sun7i: lamobo-r1: Enable audio codec
+<br>=C2=A0 ARM: dts: sun7i: bananapi-m1-plus: Reindent whole file using tab=
+s
+<br>=C2=A0 ARM: dts: sun7i: bananapi-m1-plus: Unify suffix for board specif=
+ic
+<br>=C2=A0 =C2=A0 labels
+<br>=C2=A0 ARM: dts: sun7i: bananapi-m1-plus: red LED is power LED
+<br>=C2=A0 ARM: dts: sun7i: bananapi-m1-plus: Add PMIC regulators and OPPs =
+for
+<br>=C2=A0 =C2=A0 cpufreq
+<br>=C2=A0 ARM: dts: sun7i: bananapi-m1-plus: Enable USB OTG
+<br>
+<br>=C2=A0arch/arm/boot/dts/sun7i-a20-<wbr>bananapi-m1-plus.dts | 342 +++++=
++++++++++---------
+<br>=C2=A0arch/arm/boot/dts/sun7i-a20-<wbr>lamobo-r1.dts =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0| =C2=A020 +-
+<br>=C2=A02 files changed, 218 insertions(+), 144 deletions(-)
+<br>
+<br>--=20
+<br>2.8.1
+<br>
+<br></blockquote></div></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+------=_Part_7644_293954286.1479679754279--
+
+------=_Part_7643_702317274.1479679754279
+Content-Type: application/octet-stream;
+	name=sun7i-a20-bananapi-m1-plus-local.dts
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=sun7i-a20-bananapi-m1-plus-local.dts
+X-Attachment-Id: f7c9abda-395f-44a0-964f-a8d13cc18a86
+Content-ID: <f7c9abda-395f-44a0-964f-a8d13cc18a86>
+
+#include "sun7i-a20-bananapi-m1-plus.dts"
+
+&mmc0 {
+	compatible = "allwinner,sun5i-a13-mmc";
+};
+
+&mmc3 {
+	compatible = "allwinner,sun5i-a13-mmc";
+};
+
+&usbphy {
+	status = "okay";
+};
+
+------=_Part_7643_702317274.1479679754279--
