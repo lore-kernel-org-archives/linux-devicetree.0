@@ -1,120 +1,96 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
-Date: Mon, 21 Nov 2016 15:15:05 +1030
-Message-ID: <CACPK8Xc7Dy=4oaZ_+j3hCEkMY+sqZ_-QkCQ9okmUoOjTpuZvvA@mail.gmail.com>
-References: <1478688149-4554-1-git-send-email-clg@kaod.org> <bc14b6ba-800c-bf69-763e-65ead8d4efa7@gmail.com>
+From: <yanjiang.jin-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: [PATCH] fsldma: t4240qds: drop "SG" CAP for DMA3
+Date: Mon, 21 Nov 2016 12:52:49 +0800
+Message-ID: <1479703969-15413-1-git-send-email-yanjiang.jin@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bc14b6ba-800c-bf69-763e-65ead8d4efa7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: mark.rutland-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, zw-aYo+Mbtxn2uXDw4h08c5KA@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanjiang.jin-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jinyanjiang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
+From: Yanjiang Jin <yanjiang.jin-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
 
-Thank you for the review. I have answered a few of your questions;
-I'll leave the rest to Cedric.
+T4240QDS DMA controller uses the external DMA control signals to start or
+restart a paused DMA transfer, acknowledge a DMA transfer in progress and
+also indicates a transfer completion.
+"scatterlist copy" depends on these signals.
 
-On Mon, Nov 21, 2016 at 8:13 AM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
->> index 4a682ee0f632..96148600fdab 100644
->> --- a/drivers/mtd/spi-nor/Kconfig
->> +++ b/drivers/mtd/spi-nor/Kconfig
->> @@ -76,4 +76,16 @@ config SPI_NXP_SPIFI
->>         Flash. Enable this option if you have a device with a SPIFI
->>         controller and want to access the Flash as a mtd device.
->>
->> +config ASPEED_FLASH_SPI
->
-> Should be SPI_ASPEED , see the other controllers and keep the list sorted.
+But as "T4240 Reference Manual" shown:
+"The external DMA control signals are available on DMA1 and DMA2. They are
+ not supported by DMA3."
 
-Perhaps SPI_NOR_ASPEED so it's clear it's not a driver for a generic SPI bus?
+So add an of_node property "fsl,external-dma-control-signals" to only DMA1
+and DMA2, it can prevent DMA3 from doing DMA_SG operations. Else we would
+get the below errors during doing dmatest:
 
->
->> +     tristate "Aspeed flash controllers in SPI mode"
->> +     depends on HAS_IOMEM && OF
->> +     depends on ARCH_ASPEED || COMPILE_TEST
->> +     # IO_SPACE_LIMIT must be equivalent to (~0UL)
->> +     depends on !NEED_MACH_IO_H
->
-> Why?
->
->> +     help
->> +       This enables support for the New Static Memory Controller
->> +       (FMC) in the Aspeed SoCs (AST2400 and AST2500) when attached
->> +       to SPI nor chips, and support for the SPI Memory controller
->> +       (SPI) for the BIOS.
->
-> I think there is a naming chaos between FMC, SMC (as in Static MC) and
-> SMC (as in SPI MC).
+modprobe dmatest run=1 iterations=42
 
-Yes, you're spot on. This naming chaos comes form the vendor's documentation.
+dmatest: Started 1 threads using dma2chan0
+fsl-elo-dma ffe102300.dma: chan0: Transfer Error!
+fsl-elo-dma ffe102300.dma: chan0: irq: unhandled sr 0x00000080
+dmatest: dma2chan0-sg0: dstbuf[0x3954] not copied! Expected d8, got 2b
+........................
+dmatest: dma2chan7-sg0: dstbuf[0x1c51] not copied! Expected df, got 2e
+dmatest: dma2chan7-sg0: 1301 errors suppressed
+dmatest: dma2chan7-sg0: result #42: 'data error' with
+src_off=0xf21 dst_off=0x1c32 len=0x535 (1333)
+dmatest: dma2chan7-sg0: summary 42 tests, 42 failures 2952 iops 23968 KB/s
 
-I think we could re-work this sentence to make it clearer.
+Signed-off-by: Yanjiang Jin <yanjiang.jin-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |  6 ++++++
+ drivers/dma/fsldma.c                        | 11 +++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
->> +static int aspeed_smc_read_from_ahb(void *buf, const void __iomem *src,
->> +                                 size_t len)
->> +{
->
-> What if start of buf is unaligned ?
->
->> +     if ((((unsigned long)src | (unsigned long)buf | len) & 3) == 0) {
->
-> Uh, should use boolean OR, not bitwise or. Also, if you're testing
-> pointer for NULL, do if (!ptr) .
->
-> if (!src || !buf || !len)
->    return;
+diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+index 68c4ead..155997d 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+@@ -1029,7 +1029,13 @@
+ 	};
+ 
+ /include/ "elo3-dma-0.dtsi"
++	dma@100300 {
++		fsl,external-dma-control-signals;
++	};
+ /include/ "elo3-dma-1.dtsi"
++	dma@101300 {
++		fsl,external-dma-control-signals;
++	};
+ /include/ "elo3-dma-2.dtsi"
+ 
+ /include/ "qoriq-espi-0.dtsi"
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index 51c75bf..f7054f4 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -1354,12 +1354,19 @@ static int fsldma_of_probe(struct platform_device *op)
+ 	fdev->irq = irq_of_parse_and_map(op->dev.of_node, 0);
+ 
+ 	dma_cap_set(DMA_MEMCPY, fdev->common.cap_mask);
+-	dma_cap_set(DMA_SG, fdev->common.cap_mask);
++
+ 	dma_cap_set(DMA_SLAVE, fdev->common.cap_mask);
++
++	if (of_get_property(op->dev.of_node,
++		"fsl,external-dma-control-signals", NULL)) {
++		dma_cap_set(DMA_SG, fdev->common.cap_mask);
++		fdev->common.device_prep_dma_sg = fsl_dma_prep_sg;
++	} else
++		dma_cap_clear(DMA_SG, fdev->common.cap_mask);
++
+ 	fdev->common.device_alloc_chan_resources = fsl_dma_alloc_chan_resources;
+ 	fdev->common.device_free_chan_resources = fsl_dma_free_chan_resources;
+ 	fdev->common.device_prep_dma_memcpy = fsl_dma_prep_memcpy;
+-	fdev->common.device_prep_dma_sg = fsl_dma_prep_sg;
+ 	fdev->common.device_tx_status = fsl_tx_status;
+ 	fdev->common.device_issue_pending = fsl_dma_memcpy_issue_pending;
+ 	fdev->common.device_config = fsl_dma_device_config;
+-- 
+1.9.1
 
-That's a different test. We're testing here that the buffers are
-aligned to see if we can do a word-at-a-time copy.
-
-If not, it falls through to do a byte-at-a-time copy. I think this
-covers your first question about buf being unaligned.
-
-Cedric, perhaps you could create a macro called IS_ALLIGNED to make it
-clear what this is doing?
-
->
-> while (...)
->
->> +             while (len > 3) {
->> +                     *(u32 *)buf = readl(src);
->> +                     buf += 4;
->> +                     src += 4;
->> +                     len -= 4;
->> +             }
->> +     }
->> +
->> +     while (len--) {
->> +             *(u8 *)buf = readb(src);
->> +             buf += 1;
->> +             src += 1;
->> +     }
->> +     return 0;
->> +}
->> +/*
->> + * SPI Flash Configuration Register (AST2400 SPI)
->> + */
->> +#define CONFIG_REG                   0x0
->> +#define    CONFIG_ENABLE_CE_INACTIVE     BIT(1)
->> +#define    CONFIG_WRITE                          BIT(0)
->
-> #define[space]FOO[tab]BIT(bar)
-
-These are bits within the CONFIG_REG. It follows the same style as
-other spi-nor drivers, eg. nxp-spifi.
-
-I think it's somewhat clearer, but if you have a strong preference
-against then fair enough.
-
->
->> +/*
->> + * SPI Flash Configuration Register (AST2500 SPI)
->> + * Type setting Register (AST2500 FMC and AST2400 FMC)
->> + */
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
