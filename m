@@ -1,95 +1,101 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: [PATCH] ARM: dts: sunxi: Enable UEXT related nodes for Olimex A20 SOM
- EVB
-Date: Mon, 21 Nov 2016 17:49:11 +0100
-Message-ID: <20161121164911.76900-1-manu@bidouilliste.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/5] drm: sun8i: Add a basic DRM driver for Allwinner
+ DE2
+Date: Mon, 21 Nov 2016 10:59:21 -0600
+Message-ID: <20161121165921.cvh5gd3hbkbznhht@rob-hp-laptop>
+References: <cover.1479641523.git.moinejf@free.fr>
+ <ff2140c86ea3b06406c77d9e8746474b6f8400c4.1479641523.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <ff2140c86ea3b06406c77d9e8746474b6f8400c4.1479641523.git.moinejf@free.fr>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-UEXT are Universal EXTension connector from Olimex. They embed i2c, spi
-and uart pins along power in one connector and are found on most,
-if not all, Olimex boards.
-The Olimex A20 SOM EVB have two UEXT connector so enable the nodes found on
-those two connectors.
-
-Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
----
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 36 ++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index 23aacce..e879c119 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -116,6 +116,18 @@
- 	};
- };
- 
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
- &lradc {
- 	vref-supply = <&reg_vcc3v0>;
- 	status = "okay";
-@@ -284,12 +296,36 @@
- 	status = "okay";
- };
- 
-+&spi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi1_pins_a>,
-+		<&spi1_cs0_pins_a>;
-+};
-+
-+&spi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2_pins_a>,
-+		<&spi2_cs0_pins_a>;
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
- 	status = "okay";
- };
- 
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart6_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
-+	status = "okay";
-+};
-+
- &usb_otg {
- 	dr_mode = "otg";
- 	status = "okay";
--- 
-2.9.2
+T24gU3VuLCBOb3YgMjAsIDIwMTYgYXQgMTA6NTM6MjVBTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBBbGx3aW5uZXIncyByZWNlbnQgU29DcywgYXMgQTY0LCBBODNUIGFuZCBI
+MywgY29udGFpbiBhIG5ldyBkaXNwbGF5Cj4gZW5naW5lLCBERTIuCj4gVGhpcyBwYXRjaCBhZGRz
+IGEgRFJNIHZpZGVvIGRyaXZlciBmb3IgdGhpcyBkZXZpY2UuCj4gCj4gU2lnbmVkLW9mZi1ieTog
+SmVhbi1GcmFuY29pcyBNb2luZSA8bW9pbmVqZkBmcmVlLmZyPgo+IC0tLQo+ICAuLi4vYmluZGlu
+Z3MvZGlzcGxheS9zdW54aS9zdW44aS1kZTIudHh0ICAgICAgICAgICB8ICA4MyArKysKCkl0J3Mg
+cHJlZmVycmVkIHRvIHNwbGl0IGJpbmRpbmdzIHRvIGEgc2VwYXJhdGUgcGF0Y2guCgo+ICBkcml2
+ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4g
+IGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAx
+ICsKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
+fCAgMTkgKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuOGkvTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgICB8ICAgNyArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW44aS9kZTJfY3J0Yy5jICAgICAgICAg
+ICAgICAgICAgIHwgNDQwICsrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL2Rl
+Ml9jcnRjLmggICAgICAgICAgICAgICAgICAgfCAgNTAgKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1
+bjhpL2RlMl9kcm0uaCAgICAgICAgICAgICAgICAgICAgfCAgNDggKysKPiAgZHJpdmVycy9ncHUv
+ZHJtL3N1bjhpL2RlMl9kcnYuYyAgICAgICAgICAgICAgICAgICAgfCAzNzkgKysrKysrKysrKysK
+PiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL2RlMl9wbGFuZS5jICAgICAgICAgICAgICAgICAgfCA3
+MTIgKysrKysrKysrKysrKysrKysrKysrCj4gIDEwIGZpbGVzIGNoYW5nZWQsIDE3NDEgaW5zZXJ0
+aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGktZGUyLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3N1bjhpL0tjb25maWcKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9zdW44aS9NYWtlZmlsZQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL3N1bjhpL2RlMl9jcnRjLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9zdW44aS9kZTJfY3J0Yy5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vc3VuOGkvZGUyX2RybS5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+c3VuOGkvZGUyX2Rydi5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3Vu
+OGkvZGUyX3BsYW5lLmMKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGktZGUyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjhpLWRlMi50eHQKPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmI5ZWRkNGIKPiAtLS0gL2Rldi9udWxsCj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGkt
+ZGUyLnR4dAo+IEBAIC0wLDAgKzEsODMgQEAKPiArQWxsd2lubmVyIHN1bjhpIERpc3BsYXkgRW5n
+aW5lIDIgc3Vic3lzdGVtCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQo+ICsKPiArVGhlIEFsbHdpbm5lciBERTIgc3Vic3lzdGVtIGNvbnRhaW5zIGEgZGlzcGxh
+eSBjb250cm9sbGVyIChERTIpLAo+ICtvbmUgb3IgdHdvIExDRCBjb250cm9sbGVycyAoVENPTikg
+YW5kIHRoZWlyIGV4dGVybmFsIGludGVyZmFjZXMuCj4gKwo+ICtEaXNwbGF5IGNvbnRyb2xsZXIK
+PiArPT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiAr
+LSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmcKPiArCQki
+YWxsd2lubmVyLHN1bjhpLWE4M3QtZGlzcGxheS1lbmdpbmUiCj4gKwkJImFsbHdpbm5lcixzdW44
+aS1oMy1kaXNwbGF5LWVuZ2luZSIKPiArCj4gKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sg
+c3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCj4gKwkJY2xvY2stbmFt
+ZXMgcHJvcGVydHkuCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4KPiArCQkiZ2F0
+ZSI6IERFIGJ1cyBnYXRlCj4gKwkJImNsb2NrIjogREUgY2xvY2sKPiArCj4gKy0gcmVzZXRzOiBw
+aGFuZGxlIHRvIHRoZSByZXNldCBvZiB0aGUgZGV2aWNlCj4gKwo+ICstIHBvcnRzOiBwaGFuZGxl
+J3MgdG8gdGhlIExDRCBwb3J0cwoKVGhpcyBzaG91bGQgdXNlIE9GIGdyYXBoIHRvIGRlc2NyaWJl
+IHRoZSBjb25uZWN0aW9uIGZyb20gdGhlIERFIHRvIHRoZSAKTENEIGNvbnRyb2xsZXJzIGxpa2Ug
+dGhlIHN1bjRpIGJpbmRpbmcgZG9lcy4KCk5vIHJlZ2lzdGVycyBmb3IgdGhlIERFPwoKPiArCj4g
+K0xDRCBjb250cm9sbGVyCj4gKz09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUKPiArCQkiYWxsd2lubmVyLHN1bjhp
+LWE4M3QtdGNvbiIKPiArCj4gKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVy
+cyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCj4gKwkJY2xvY2stbmFtZXMgcHJvcGVy
+dHkuCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4KPiArCQkiZ2F0ZSI6IFRDT04g
+YnVzIGdhdGUKPiArCQkiY2xvY2siOiBUQ09OIHBpeGVsIGNsb2NrCj4gKwo+ICstIHJlc2V0czog
+cGhhbmRsZSB0byB0aGUgcmVzZXQgb2YgdGhlIGRldmljZQo+ICsKPiArLSBwb3J0OiBwb3J0IG5v
+ZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9ucyBhcyBkZWZpbmVkIGluCj4gKwlEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKCk5lZWQg
+dG8gc3BlY2lmeSBob3cgbWFueSBwb3J0cyBhbmQgZW5kcG9pbnRzLgoKPiArCj4gK0V4YW1wbGU6
+Cj4gKwo+ICsJZGU6IGRlLWNvbnRyb2xsZXJAMDEwMDAwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAi
+YWxsd2lubmVyLHN1bjhpLWgzLWRpc3BsYXktZW5naW5lIjsKPiArCQkuLi4KCldoYXQgYXJlIHlv
+dSBub3Qgc2hvd2luZz8KCj4gKwkJY2xvY2tzID0gPCYmY2N1IENMS19CVVNfREU+LCA8JmNjdSBD
+TEtfREU+Owo+ICsJCWNsb2NrLW5hbWVzID0gImdhdGUiLCAiY2xvY2siOwo+ICsJCXJlc2V0cyA9
+IDwmY2N1IFJTVF9CVVNfREU+Owo+ICsJCXBvcnRzID0gPCZsY2QwX3A+Owo+ICsJfTsKPiArCj4g
+KwlsY2QwOiBsY2QtY29udHJvbGxlckAwMWMwYzAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhbGx3
+aW5uZXIsc3VuOGktYTgzdC10Y29uIjsKPiArCQkuLi4KCmRpdHRvLgoKPiArCQljbG9ja3MgPSA8
+JmNjdSBDTEtfQlVTX1RDT04wPiwgPCZjY3UgQ0xLX1RDT04wPjsKPiArCQljbG9jay1uYW1lcyA9
+ICJnYXRlIiwgImNsb2NrIjsKPiArCQlyZXNldHMgPSA8JmNjdSBSU1RfQlVTX1RDT04wPjsKPiAr
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQlsY2Qw
+X3A6IHBvcnQgewo+ICsJCQlsY2QwX2VwOiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUtZW5kcG9p
+bnQgPSA8JmhkbWlfZXA+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWhkbWk6IGhk
+bWlAMDFlZTAwMDAgewo+ICsJCS4uLgo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNz
+aXplLWNlbGxzID0gPDA+Owo+ICsJCXBvcnQgewo+ICsJCQloZG1pX2VwOiBlbmRwb2ludCB7Cj4g
+KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZDBfZXA+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9
+Owo+ICsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
