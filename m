@@ -1,39 +1,120 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V2] usb: xhci: add support for performing fake doorbell
-Date: Mon, 21 Nov 2016 08:57:38 +0100
-Message-ID: <CACna6rw0tnjEOSqjd=q66yWZWa+oNAkH-tk=RLiLzz_=i0x-sA@mail.gmail.com>
-References: <20161001215817.25384-1-zajec5@gmail.com> <20161017203036.23399-1-zajec5@gmail.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
+Date: Mon, 21 Nov 2016 10:14:28 +0200
+Message-ID: <0fe81866-8bfd-f3a7-d808-9cb23841f504@ti.com>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-2-git-send-email-t-kristo@ti.com>
+ <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
+ <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
+ <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161017203036.23399-1-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathias,
+On 18/11/16 19:20, Rob Herring wrote:
+> On Mon, Oct 31, 2016 at 7:50 AM, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
+>> On 30/10/16 22:41, Rob Herring wrote:
+>>>
+>>> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
+>>>>
+>>>> Add a clock implementation, TI SCI clock, that will hook to the common
+>>>> clock framework, and allow each clock to be controlled via TI SCI
+>>>> protocol.
+>>>>
+>>>> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37
+>>>> ++++++++++++++++++++++
+>>>>  MAINTAINERS                                        |  1 +
+>>>>  2 files changed, 38 insertions(+)
+>>>>  create mode 100644
+>>>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>> b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>> new file mode 100644
+>>>> index 0000000..bfc3ca4
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>> @@ -0,0 +1,37 @@
+>>>> +Texas Instruments TI-SCI Clocks
+>>>> +===============================
+>>>> +
+>>>> +All clocks on Texas Instruments' SoCs that contain a System Controller,
+>>>> +are only controlled by this entity. Communication between a host
+>>>> processor
+>>>> +running an OS and the System Controller happens through a protocol known
+>>>> +as TI-SCI[1]. This clock implementation plugs into the common clock
+>>>> +framework and makes use of the TI-SCI protocol on clock API requests.
+>>>> +
+>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>>> +
+>>>> +Required properties:
+>>>> +-------------------
+>>>> +- compatible: Must be "ti,k2g-sci-clk"
+>>>> +- #clock-cells: Shall be 2.
+>>>> +  In clock consumers, this cell represents the device ID and clock ID
+>>>> +  exposed by the PM firmware. The assignments can be found in the header
+>>>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+>>>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+>>>> +  is the SoC involved, for example 'k2g'.
+>>>> +
+>>>> +Examples:
+>>>> +--------
+>>>> +
+>>>> +pmmc: pmmc {
+>>>> +       compatible = "ti,k2g-sci";
+>>>> +
+>>>> +       k2g_clks: k2g_clks {
+>>>
+>>>
+>>> Use "clocks" for node name instead.
+>>>
+>>>> +               compatible = "ti,k2g-sci-clk";
+>>>
+>>>
+>>> I'm starting to think all these child nodes for SCI are pointless. Is
+>>> there any reason why the parent node can't be the clock provider (along
+>>> with all the other providers it acks as)?
+>>
+>>
+>> I believe the only reason to keep them separate is to have kernel side of
+>> things modular. If we have separate nodes, the drivers can be probed
+>> separately.
+>>
+>> If not, we need to build one huge blob with all the features in it, so the
+>> main driver can probe everything in one go, with annoying back-and-forth
+>> callbacks in place (assuming we still want to keep stuff somehow modular.)
+>
+> Since when is DT the only way to create a device? The main driver can
+> create devices for all the sub-functions like clocks. This is the same
+> as MFDs which have been done both ways.
 
-On 17 October 2016 at 22:30, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wro=
-te:
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->
-> Broadcom's Northstar XHCI controllers seem to need a special start
-> procedure to work correctly. There isn't any official documentation of
-> this, the problem is that controller doesn't detect any connected
-> devices with default setup. Moreover connecting USB device to controller
-> that doesn't run properly can cause SoC's watchdog issues.
->
-> A workaround that was successfully tested on multiple devices is to
-> perform a fake doorbell. This patch adds code for doing this and enables
-> it on BCM4708 family.
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> ---
-> V2: Enable quirk for brcm,bcm4708 machines instead of adding separated bi=
-nding
->     for it. Thanks Rob for your comment on this.
+Yes obviously this can be done, my main point was that it will require 
+building some sort of infra within the driver to handle this. With 
+separate nodes, none of this is going to be needed. Also, we will lose 
+any kind of configurability via DT if we don't have separate nodes; now 
+we can select the available clocks / genpds via the compatible string of 
+the clocks/genpd nodes themselves (this isn't clearly evident as of now 
+as we only support a grand total of one device, which is k2g-evm.) 
+Otherwise we need to probe against the main node and add a separate 
+compatible string for every device, and carry this information to the 
+sibling devices also somehow. It is just so much simpler if we can just 
+keep separate nodes for them.
 
-Do you think you can pick & push this one? V2 follows Rob's suggestion
-and he has some DT knowledge for sure, so I guess it should be OK.
+Also, plenty of things are doing this kind of stuff already in 
+DT/kernel, having a parent node in place and sub-functions added 
+separately for ease of use, with apparently no visible point for having 
+the nodes within the DT.
+
+-Tero
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
