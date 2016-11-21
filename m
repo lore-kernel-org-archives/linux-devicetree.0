@@ -1,38 +1,29 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM64: dts: Add support for Meson GXM
-Date: Mon, 21 Nov 2016 09:10:53 -0800
-Message-ID: <m2shqk3giq.fsf@baylibre.com>
-References: <20161121162905.14285-1-narmstrong@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] Documentation: DT: add dma compatible for sun50i
+ A64 SOC
+Date: Mon, 21 Nov 2016 11:12:05 -0600
+Message-ID: <20161121171205.g6v6dtdbeuehtqrp@rob-hp-laptop>
+References: <1479638740-20520-1-git-send-email-hao5781286@gmail.com>
+ <1479638740-20520-2-git-send-email-hao5781286@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161121162905.14285-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Mon, 21 Nov 2016 17:29:03 +0100")
+Content-Disposition: inline
+In-Reply-To: <1479638740-20520-2-git-send-email-hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+On Sun, Nov 20, 2016 at 06:45:38PM +0800, Hao Zhang wrote:
+> This add the property of Allwinner sun50i A64 dma.
+> 
+> Signed-off-by: Hao Zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/dma/sun6i-dma.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-> The new Amlogic GXM SoC (S912) is part of the Meson GX family and is nearly
-> identical to GXM but with a second Quad-A53 core cluster.
->
-> The GXM dtsi includes the GXL dtsi and the p20x dtsi is refactored in a
-> common p20x/q20x to support the GXM Q200 and Q201 board that uses the exact
-> same board layout since the S905D and S912 are pinout compatible.
->
-> The last patch adds support for the Nexbox A1 Set-Top-Box based on the S912.
->
-> Changes since RFC :
->  - Refactor the p20x/q20x dtsi into a single common file
->  - Add support for Nexbox A1
-
-Thanks for refactoring.  Looks great.
-
-Applied.
-
-Kevin
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
