@@ -1,63 +1,49 @@
-From: Jun Nie <jun.nie@linaro.org>
-Subject: Re: [PATCH v6 3/5] Documentation: synopsys-dw-mshc: add binding for
- fifo quirks
-Date: Mon, 21 Nov 2016 09:28:06 +0800
-Message-ID: <CABymUCOwgZF76tkpN-fB9BS4WX6kUH_7DmUuwjFPmrirDXmmxw@mail.gmail.com>
-References: <1479450555-19047-1-git-send-email-jun.nie@linaro.org> <1479450555-19047-4-git-send-email-jun.nie@linaro.org>
+From: "Ong, Hean Loong" <hean.loong.ong@intel.com>
+Subject: Re: [PATCHv0 1/1] fbdev: add Intel FPGA FRAME BUFFER driver
+Date: Mon, 21 Nov 2016 10:41:24 +0800
+Message-ID: <1479696084.2822.4.camel@intel.com>
+References: <1479287278-5192-1-git-send-email-hean.loong.ong@intel.com>
+         <20161118140903.q33zx7bk5nergq45@rob-hp-laptop>
+         <20161118141547.465c431e@lxorguk.ukuu.org.uk>
+         <CAL_JsqK2Emqub_JKiXYQUPzxRbws5w=SGUTyZx+qaEExV9V3_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1479450555-19047-4-git-send-email-jun.nie@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Jason Liu <jason.liu@linaro.org>, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc <linux-mmc@vger.kernel.org>, Jun Nie <jun.nie@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK2Emqub_JKiXYQUPzxRbws5w=SGUTyZx+qaEExV9V3_A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-11-18 14:29 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
-> Add fifo-addr property and fifo-watermark-quirk property to
-> synopsys-dw-mshc bindings. It is intended to provide more
-> dt interface to support SoCs specific configuration.
->
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> index 4e00e85..8bf2e41 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -76,6 +76,17 @@ Optional properties:
->
->  * broken-cd: as documented in mmc core bindings.
->
-> +* data-addr: Override fifo address with value provided by DT. The default FIFO reg
-> +  offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A) by
-> +  driver. If the controller does not follow this rule, please use this property
-> +  to set fifo address in device tree.
-> +
-> +* fifo-watermark-aligned: Data done irq is expected if data length is less than
-> +  watermark in PIO mode. But fifo watermark is requested to be aligned with data
-> +  length in some SoC so that TX/RX irq can be generated with data done irq. Add this
-> +  watermark quirk to mark this requirement and force fifo watermark setting
-> +  accordingly.
-> +
->  * vmmc-supply: The phandle to the regulator to use for vmmc.  If this is
->    specified we'll defer probe until we can find this regulator.
->
-> @@ -103,6 +114,8 @@ board specific portions as listed below.
->                 interrupts = <0 75 0>;
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> +               data-addr = <0x200>;
-> +               fifo-watermark-aligned;
->         };
->
->  [board specific internal DMA resources]
-> --
-> 1.9.1
->
+On Fri, 2016-11-18 at 12:56 -0600, Rob Herring wrote:
+> On Fri, Nov 18, 2016 at 8:15 AM, One Thousand Gnomes
+> <gnomes@lxorguk.ukuu.org.uk> wrote:
+> > 
+> > > 
+> > > AIUI, we're not taking new FB drivers. This should be a DRM
+> > > driver
+> > > instead.
+> > Yes - clone one of the dumb DRM drivers, or if you've got any
+> > little bits
+> > of acceleration (even rolling the display) then it's possibly worth
+> > accelerating for text mode.
+> > 
+> > > 
+> > > > 
+> > > > +- max-width: The width of the framebuffer in pixels.
+> > > > +- max-height: The height of the framebuffer in pixels.
+> > > > +- bits-per-color: only "8" is currently supported
+> > > These are not h/w properties.
+> > How are the max ones not hardware properties ?
+> Because the way they are used is setting the mode, not some check of
+> the max when the mode is set. If this is synthesized for only one
+> size, then that would be different, but we have bindings for modes.
+> 
+> Rob
 
-Add DT maintainer to review and act. Thank you!
+Currently the idea is to just synthesize the display to just 1920 x
+1080. Therefore we came to a conclusion that it should be part of the
+HW properties.
 
-Jun
+HeanLoong
