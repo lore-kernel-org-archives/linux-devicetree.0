@@ -1,93 +1,67 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
- eee-disable-advert option documentation
-Date: Mon, 21 Nov 2016 17:16:33 +0100
-Message-ID: <1479744993.17538.85.camel@baylibre.com>
-References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
-         <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
-         <20161121160149.GF1922@lunn.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/2] regulator: pwm: DT: Add ramp delay for
+ exponential voltage transition
+Date: Mon, 21 Nov 2016 10:17:27 -0600
+Message-ID: <20161121161727.y6pvydowiyeyy7qs@rob-hp-laptop>
+References: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161121160149.GF1922-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Aleksandr Frid <afrid@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-11-21 at 17:01 +0100, Andrew Lunn wrote:
-> On Mon, Nov 21, 2016 at 04:35:23PM +0100, Jerome Brunet wrote:
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/net/phy.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/phy.txt
-> > b/Documentation/devicetree/bindings/net/phy.txt
-> > index bc1c3c8bf8fa..7f066b7c1e2c 100644
-> > --- a/Documentation/devicetree/bindings/net/phy.txt
-> > +++ b/Documentation/devicetree/bindings/net/phy.txt
-> > @@ -35,6 +35,11 @@ Optional Properties:
-> >  - broken-turn-around: If set, indicates the PHY device does not
-> > correctly
-> >    release the turn around line low at the end of a MDIO
-> > transaction.
-> >  
-> > +- eee-advert-disable: Bits to clear in the MDIO_AN_EEE_ADV
-> > register to
-> > +  disable EEE modes. Example
-> > +    * 0x4: disable EEE for 1000T,
-> > +    * 0x6: disable EEE for 100TX and 1000T
-> > +
+On Fri, Nov 18, 2016 at 08:05:55PM +0530, Laxman Dewangan wrote:
+> Some PWM regulator has the exponential transition in voltage change as
+> opposite to fixed slew-rate linear transition on other regulators.
+> For such PWM regulators, add the property to tell that voltage change
+> is exponential and having fixed delay for any level of change.
 > 
-> Hi Jerome
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> CC: Douglas Anderson <dianders@chromium.org>
+> CC: Aleksandr Frid <afrid@nvidia.com>
 > 
-> I like the direction this patchset is taking. But hex values are
-> pretty unfriendly. 
-
-Agreed
-
-> Please add a set of boolean properties, and do the
-> mapping to hex in the C code.
+> ---
+> This patch is continuation of discussion on patch
+> 	regulator: pwm: Fix regulator ramp delay for continuous mode
+> https://patchwork.kernel.org/patch/9216857/
+> where is it discussed to have separate property for PWM which has
+> exponential voltage transition.
 > 
-> That would also make extending this API easier. e.g. say you have a
-> 10Gbps PHY with EEE, and you need to disable it. This hex value
-> quickly gets ugly, eee-advert-disable-10000 is nice and simple.
-
-What I did not realize when doing this patch for the realtek driver is
-that there is already 6 valid modes defined in the kernel
-
-#define MDIO_EEE_100TX		MDIO_AN_EEE_ADV_100TX	/*
-100TX EEE cap */
-#define MDIO_EEE_1000T		MDIO_AN_EEE_ADV_1000T	/*
-1000T EEE cap */
-#define MDIO_EEE_10GT		0x0008	/* 10GT EEE cap */
-#define MDIO_EEE_1000KX		0x0010	/* 1000KX EEE cap
-*/
-#define MDIO_EEE_10GKX4		0x0020	/* 10G KX4 EEE cap
-*/
-#define MDIO_EEE_10GKR		0x0040	/* 10G KR EEE cap
-*/
-
-I took care of only 2 in the case of realtek.c since it only support
-MDIO_EEE_100TX and MDIO_EEE_1000T.
-
-Defining a property for each is certainly doable but it does not look
-very nice either. If it extends in the future, it will get even more
-messier, especially if you want to disable everything.
-
-What do you think about keeping a single mask value but use the define
-above in the DT ? It would be more readable than hex and easy to
-extend, don't you think ?
-
-These defines are already part of the uapi so I guess we can use those
-in the DT bindings ?
-
+> Changes from V1:
+> - Pass the flag to tell that voltage ramp is exponential instead of
+>   providing delay.
+> ---
+>  .../devicetree/bindings/regulator/pwm-regulator.txt          | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> 	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> index 3aeba9f..2d9ef3a 100644
+> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> @@ -54,6 +54,18 @@ Optional properties:
+>  --------------------
+>  - enable-gpios:		GPIO to use to enable/disable the regulator
+>  
+> +- voltage-ramp-exponential: Boolean, Some of PWM regulator has the exponential
+> +			transition in voltage ramp as opposite to fixed
+> +			slew-rate linear transition on other regulators.
+> +			For such PWM regulator, presence of this property will
+> +			tell that value of the regulator ramp delay provided by
+> +			DT property "regulator-ramp-delay" is exponential and
+> +			fixed delay for any voltage level change.
+> +			If PWM regulator supports the fixed linear slew rate
+> +			then this property should be absent from DT node and
+> +			property "regulator-ramp-delay" is used as linear slew
+> +			rate.
+
+Sorry, but on further thought, I don't think we should mix different 
+units for the same property. Also, the fact that the ramp is exponential 
+is irrelevant. You just want an absolute delay time rather than a rate, 
+right? So instead, how about just "regulator-ramp-time-us". Roughly what 
+you had in v1, but not PWM specific.
+
+Rob
