@@ -1,81 +1,23 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Mon, 21 Nov 2016 11:24:54 -0800
-Message-ID: <58334A06.103@gmail.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
- <582F6312.5040009@gmail.com> <58331B5D.8060907@gmail.com>
- <55e27115-421e-b67b-eb7a-9b1c3d662711@arm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/2] arm64: dts: NS2: Add sdio1, PCI phys
+Date: Mon, 21 Nov 2016 11:27:47 -0800
+Message-ID: <4c9d5d1a-bd4d-7e21-2076-da95af383e05@gmail.com>
+References: <1479425103-2119-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <55e27115-421e-b67b-eb7a-9b1c3d662711-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479425103-2119-1-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/16 08:23, Sudeep Holla wrote:
-> 
-> 
-> On 21/11/16 16:05, Frank Rowand wrote:
->> Hi Sudeep,
->>
->> On 11/18/16 12:22, Frank Rowand wrote:
->>> On 11/18/16 02:41, Sudeep Holla wrote:
->>>>
->>>>
->>>> On 17/11/16 21:00, Frank Rowand wrote:
->>>>> On 11/17/16 07:32, Sudeep Holla wrote:
->>>>>> Currently platforms/drivers needing to get the machine model name are
->>>>>> replicating the same snippet of code. In some case, the OF reference
->>>>>> counting is either missing or incorrect.
->>>>>>
->>>>>> This patch adds support to read the machine model name either using
->>>>>> the "model" or the "compatible" property in the device tree root node
->>>>>> to the core OF/DT code.
->>>>>>
->>>>>> This can be used to remove all the duplicate code snippets doing exactly
->>>>>> same thing later.
->>>>>
->>>>> I find five instances of reading only property "model":
->>>>>
->>>>>   arch/arm/mach-imx/cpu.c
->>>>>   arch/arm/mach-mxs/mach-mxs.c
->>>>>   arch/c6x/kernel/setup.c
->>>>>   arch/mips/cavium-octeon/setup.c
->>>>>   arch/sh/boards/of-generic.c
->>>>>
->>>>
->>>> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
->>>> that this will be used for.
->>>
->>> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
->>
->> Can you please re-send patch 2/2?
->>
-> 
-> Since it is based on -next, I would prefer to wait until next merge
-> window to resend. You should be able to check in the link I sent if
-> that's OK.
+On 11/17/2016 03:25 PM, Jon Mason wrote:
+> The second SDIO seems to have been forgotten to be enabled in the
+> Northstar2 SVK dts.  Also, the PCI PHY entries are missing from the PCI
+> bus device tree entries.
 
-I am missing or misunderstanding something.
-
-I do not know what "the link I sent" means.
-
-For some reason, the devicetree mail list and lmkl mail failed to send
-me a copy of patch 2/2.  Or my mail server failed to receive them.  That
-is why I asked you to resend the patch. I just now looked in the devicetree
-archive and found it there.
-
-So I now can see how you plan to use the new function.
-
--Frank
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied, thanks Jon
+-- 
+Florian
