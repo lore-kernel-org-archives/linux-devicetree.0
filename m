@@ -1,53 +1,99 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 00/16] mmc: sdhci-msm: Add clk-rates, DDR, HS400
- support
-Date: Mon, 21 Nov 2016 15:11:38 -0800
-Message-ID: <20161121231138.GY25626@codeaurora.org>
-References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
- <CAPDyKFrRbf0+G5K=-jsaevAGbTqhTAss2zJv3QdiyCrv0BG-zA@mail.gmail.com>
- <d4d05fb9-8a9e-6cf2-dc63-0edbd27a9e55@codeaurora.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM64: dts: Add support for Meson GXM
+Date: Mon, 21 Nov 2016 15:42:38 -0800
+Message-ID: <m2oa181jtd.fsf@baylibre.com>
+References: <20161121162905.14285-1-narmstrong@baylibre.com>
+        <20161121162905.14285-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d4d05fb9-8a9e-6cf2-dc63-0edbd27a9e55-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20161121162905.14285-2-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Mon, 21 Nov 2016 17:29:04 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Lemberg <alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Mateusz Nowak <mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yuliy Izrailov <Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Griego <david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak@codea>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21, Ritesh Harjani wrote:
-> 
-> 
-> On 11/21/2016 3:36 PM, Ulf Hansson wrote:
-> >On 21 November 2016 at 07:37, Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >>Hi,
-> >>
-> >>This is v9 version of the patch series which adds support for MSM8996.
-> >>Adds HS400 driver support as well.
-> >>These are tested on internal msm8996 & db410c HW.
-> >>
-> >>The patch series is ready. Do we think we can apply these
-> >>patches for next now?
-> >
-> >I guess the DTS changes can be picked up by Andy, so they can go via arm-soc?
-> Yes.
-> 
-> >
-> >Then, does the mmc changes depend on the clock changes? If so, I can
-> >pick them as well, but then I need an ack from Stephen....
-> Ideal and preferable, would be that clk & mmc changes go in
-> together. But either ways should be fine.
-> 
+Neil,
 
-There's only a runtime dependency where the clk rates will be
-wrong if clk tree isn't merged. I'd rather just apply the clk
-ones directly to clk tree and let all three trees come together
-in linux-next and work.
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Following the Amlogic Linux kernel, it seem the only differences
+> between the GXL and GXM SoCs are the CPU Clusters.
+>
+> This commit renames the gxl-s905d-p23x DTSI in a common file for
+> S905D p20x and S912 q20x boards.
+
+s/p20x/p23x/ ??
+
+> Then adds a meson-gxm dtsi and reproduce the P23x to Q20x boards
+> dts files since the S905D and S912 SoCs shares the same pinout
+> and the P23x and Q20x boards are identical.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+I had to drop this as it breaks the network on (at least) gxbb-p200, but...
+
+[...]
+
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> index 03e3d76..17bb77c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> @@ -56,3 +56,22 @@
+>  	pinctrl-0 = <&i2c_b_pins>;
+>  	pinctrl-names = "default";
+>  };
+> +
+> +&ethmac {
+> +	status = "okay";
+> +	pinctrl-0 = <&eth_rgmii_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	phy-handle = <&eth_phy0>;
+> +
+> +	mdio {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		eth_phy0: ethernet-phy@0 {
+> +			reg = <0>;
+> +			realtek,disable-eee-1000t;
+> +		};
+> +	};
+> +};
+
+... backing out this change makes it work again.
+
+This change also looks suspicious as it's using the proposed disable-eee
+properties, which I don't think have been merged yet.
+
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> index 39bb037..5608c51 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> @@ -50,3 +50,10 @@
+>  	compatible = "amlogic,p201", "amlogic,meson-gxbb";
+>  	model = "Amlogic Meson GXBB P201 Development Board";
+>  };
+> +
+> +&ethmac {
+> +	status = "okay";
+> +	pinctrl-0 = <&eth_rmii_pins>;
+> +	pinctrl-names = "default";
+> +	phy-mode = "rmii";
+> +};
+
+This also doesn't look releveant to the GXL/GXM changes being introduced
+in this patch.
+
+Could you separate out any GXBB-related changes into a separate patch
+(if they are in fact needed) and re-spin this?
+
+Thanks,
+
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
