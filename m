@@ -1,219 +1,142 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: add rockchip serial flash controller
- driver
-Date: Mon, 21 Nov 2016 10:51:38 +0800
-Message-ID: <76670120-dacd-ef0e-cf36-cbf549b19853@rock-chips.com>
-References: <1478855766-151673-1-git-send-email-shawn.lin@rock-chips.com>
- <1478855766-151673-3-git-send-email-shawn.lin@rock-chips.com>
- <b1420e9d-b6a1-7fe8-4381-e32e0bc7dd53@gmail.com>
- <775a8918-bc93-218a-808d-2a160137ad56@rock-chips.com>
- <8f8213a1-f694-8159-fdbd-5e607c8aaaa2@gmail.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v2 3/9] arm64: dts: rockchip: add VOP and VOP iommu node
+ for rk3399
+Date: Mon, 21 Nov 2016 10:55:25 +0800
+Message-ID: <558a2302-39ec-35cb-c375-ae7f5a16006a@gmail.com>
+References: <1478697721-2323-1-git-send-email-wxt@rock-chips.com>
+ <1478697721-2323-4-git-send-email-wxt@rock-chips.com>
+ <10151352.zSDKCnp23A@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8f8213a1-f694-8159-fdbd-5e607c8aaaa2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <10151352.zSDKCnp23A@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Catalin Marinas <catalin.marinas@arm.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, linux-kernel@vger.kernel.org, Yakir Yang <ykk@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, eddie.cai@rock-chips.com, zhangqing <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On 2016/11/21 5:11, Marek Vasut wrote:
-> On 11/16/2016 02:59 AM, Shawn Lin wrote:
->> Hi Marek,
->
-> Hi,
->
-> [...]
->
->>>> +static int rockchip_sfc_read_reg(struct spi_nor *nor, u8 opcode,
->>>> +                 u8 *buf, int len)
->>>> +{
->>>> +    struct rockchip_sfc_priv *priv = nor->priv;
->>>> +    struct rockchip_sfc *sfc = priv->sfc;
->>>> +    int ret;
->>>> +    u32 tmp;
->>>> +    u32 i;
->>>> +
->>>> +    ret = rockchip_sfc_op_reg(nor, opcode, len, SFC_CMD_DIR_RD);
->>>> +    if (ret)
->>>> +        return ret;
->>>> +
->>>> +    while (len > 0) {
->>>> +        tmp = readl_relaxed(sfc->regbase + SFC_DATA);
->>>> +        for (i = 0; i < len; i++)
->>>> +            *buf++ = (u8)((tmp >> (i * 8)) & 0xff);
->>>
->>> Won't this fail for len > 4 ?
+在 2016年11月15日 00:05, Heiko Stuebner 写道:
+> Am Mittwoch, 9. November 2016, 21:21:55 CET schrieb Caesar Wang:
+>> From: Mark Yao <mark.yao@rock-chips.com>
 >>
->> nope, this loop will reduce 4 for each successful readl. And
->> reading the remained bytes which isn't aligned to DWORD, isn't it?
->
-> Try for len = 8 ... it will write 8 bytes to the buf, but half of them
-> would be zero. I believe it should look like:
->
->         for (i = 0; i < 4 /* was len */; i++)
->             *buf++ = (u8)((tmp >> (i * 8)) & 0xff);
->
-
-you're right, I was misunderstanding your comment and fixed it in V2. :)
-
->>>
->>> Also, you can use ioread32_rep() here, but (!) that won't work for
->>> unaligned reads, which I dunno if they can happen here, but please do
->>> double-check.
+>> Add the core display-subsystem node and the two display controllers
+>> available on the rk3399.
 >>
->> yes, I have checked this API as well as others like memcpy_{to,from}io
->> , etc. They will generate a external abort for arm core as the unaligned
->> (DWORD) read/write via AHB aren't supported by Rockchip Socs. So I have
->> to open code these stuff. This could be easily found for other
->> upstreamed rockchip drivers. :)
->
-> This is normal, but you can still use the _rep variant if you handle the
-> corner cases.
->
-
-Sure, I will keep improving it once more comment for my v2 sent last
-friday there. :)
-
->>>
->>>> +        len = len - 4;
->>>> +    }
->>>> +
->>>> +    return 0;
->>>> +}
->
-> [...]
->
->>>> +static ssize_t rockchip_sfc_write(struct spi_nor *nor, loff_t to,
->>>> +                  size_t len, const u_char *write_buf)
->>>> +{
->>>> +    struct rockchip_sfc_priv *priv = nor->priv;
->>>> +    struct rockchip_sfc *sfc = priv->sfc;
->>>> +    size_t offset;
->>>> +    int ret;
->>>> +    dma_addr_t dma_addr = 0;
->>>> +
->>>> +    if (!sfc->use_dma)
->>>> +        goto no_dma;
->>>
->>> Seems like there's a lot of similarity between read/write .
+>> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>> ---
 >>
->> I was thinking to combine read/write with a extra argument to
->> indicate WR/RD. But as we could see still some differece between
->> WR and RD and there are already some condiction checks. So it
->> will make the code hard to read with stuffing lots of condition
->> checks. So I splited out read and write strightforward. :)
->
-> Hrm, is it that bad ?
->
->>>> +    for (offset = 0; offset < len; offset += SFC_DMA_MAX_LEN) {
->>>> +        size_t trans = min_t(size_t, SFC_DMA_MAX_LEN, len - offset);
->>>> +
->>>> +        dma_addr = dma_map_single(NULL, (void *)write_buf,
->>>> +                      trans, DMA_TO_DEVICE);
->>>> +        if (dma_mapping_error(sfc->dev, dma_addr)) {
->>>> +            dma_addr = 0;
->>>> +            memcpy(sfc->buffer, write_buf + offset, trans);
->>>> +        }
->>>> +
->>>> +        /* Fail to map dma, use pre-allocated area instead */
->>>> +        ret = rockchip_sfc_dma_transfer(nor, to + offset,
->>>> +                        dma_addr ? dma_addr :
->>>> +                        sfc->dma_buffer,
->>>> +                        trans, SFC_CMD_DIR_WR);
->>>> +        if (dma_addr)
->>>> +            dma_unmap_single(NULL, dma_addr,
->>>> +                     trans, DMA_TO_DEVICE);
->>>> +        if (ret) {
->>>> +            dev_warn(nor->dev, "DMA write timeout\n");
->>>> +            return ret;
->>>> +        }
->>>> +    }
->>>> +
->>>> +    return len;
->>>> +no_dma:
->>>> +    ret = rockchip_sfc_pio_transfer(nor, to, len,
->>>> +                    (u_char *)write_buf, SFC_CMD_DIR_WR);
->>>> +    if (ret) {
->>>> +        dev_warn(nor->dev, "PIO write timeout\n");
->>>> +        return ret;
->>>> +    }
->>>> +    return len;
->>>> +}
->
-> [...]
->
->>>> +static void rockchip_sfc_unregister_all(struct rockchip_sfc *sfc)
->>>> +{
->>>> +    int i;
->>>> +
->>>> +    for (i = 0; i < sfc->num_chip; i++)
->>>> +        mtd_device_unregister(&sfc->nor[i]->mtd);
->>>> +}
->>>> +
->>>> +static int rockchip_sfc_register_all(struct rockchip_sfc *sfc)
->>>> +{
->>>> +    struct device *dev = sfc->dev;
->>>> +    struct device_node *np;
->>>> +    int ret;
->>>> +
->>>> +    for_each_available_child_of_node(dev->of_node, np) {
->>>> +        ret = rockchip_sfc_register(np, sfc);
->>>> +        if (ret)
->>>> +            goto fail;
->>>> +
->>>> +        if (sfc->num_chip == SFC_MAX_CHIP_NUM) {
->>>> +            dev_warn(dev, "Exceeds the max cs limitation\n");
->>>> +            break;
->>>> +        }
->>>> +    }
->>>> +
->>>> +    return 0;
->>>> +
->>>> +fail:
->>>> +    dev_err(dev, "Failed to register all chip\n");
->>>> +    rockchip_sfc_unregister_all(sfc);
->>>
->>> See cadence qspi where we only unregister the registered flashes.
->>> Implement it the same way here.
->>>
+>> Changes in v2: None
 >>
->> yup, but I'm afraid that rockchip_sfc_unregister_all confused you
->> as it actually unregisters the registered ones, not for all.
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 58
+>> ++++++++++++++++++++++++++++++++ 1 file changed, 58 insertions(+)
 >>
->> static void rockchip_sfc_unregister_all(struct rockchip_sfc *sfc)
->> {
->>         int i;
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index e5b5b3d..f1d289a 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -1290,6 +1290,64 @@
+>>   		status = "disabled";
+>>   	};
 >>
->>         for (i = 0; i < sfc->num_chip; i++)
->>                 mtd_device_unregister(&sfc->nor[i]->mtd);
->> }
->>
->> sfc->num_chip stands for how many flashes registered successfully.
+>> +	vopl: vop@ff8f0000 {
+>> +		compatible = "rockchip,rk3399-vop-lit";
+>> +		reg = <0x0 0xff8f0000 0x0 0x3efc>;
+>> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> we're usig 4 irq elements nowadays to accomodate the pmus for separate
+> clusters, see
 >
-> Does it work if you have a hole in there ? Like if you have a flash on
-> chipselect 0 and chipselect 2 ?
+> https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=210bbd38bb88989ce19208f98e530ff0468f38bd
+>
+> Same for the edp node.
 
-Yes it does, as it won't leave a room for chipselect 1 whose node isn't
-present, which means there isn't a hole in there at all. :)
+Ah!  Sorry.
 
 >
->>>> +    return ret;
->>>> +}
+> Also, sadly the rockchip drm seems to need some tweaks still, as I wasn't
+> able to get any display output yet.
 >
-> [...]
+> To make the vop at least compile I needed to forward-port
+> https://github.com/mmind/linux-rockchip/commit/05ad856e54fc1aa1939ad1057897036cedc7fb0b
+> https://github.com/mmind/linux-rockchip/commit/0edb1f7e1ac77437a17d7966121ee6e10ab5db67
+>
+> [full branch is https://github.com/mmind/linux-rockchip/commits/tmp/testing_20161109 ]
+
+Pls allow me to have a look at it and bring up with ChromeOs, the 
+upstream maybe miss some patches for upstream. (DRM or IOMMU or ....)
+I will resend the other patches if  I bring up and show display with 
+upstream  on 
+https://github.com/Caesar-github/rockchip/commits/rk3399/tmp-test
+
+-Caesar
+> but I'm not sure if I did that correctly yet and am also still seeing
+> nothing on the display and get iommu errors when starting X11
 >
 >
-
-
--- 
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Heiko
+>
+>> +		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
+>> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+>> +		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
+>> +		reset-names = "axi", "ahb", "dclk";
+>> +		iommus = <&vopl_mmu>;
+>> +		status = "disabled";
+>> +
+>> +		vopl_out: port {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	vopl_mmu: iommu@ff8f3f00 {
+>> +		compatible = "rockchip,iommu";
+>> +		reg = <0x0 0xff8f3f00 0x0 0x100>;
+>> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "vopl_mmu";
+>> +		#iommu-cells = <0>;
+>> +		status = "disabled";
+>> +	};
+>> +
+>> +	vopb: vop@ff900000 {
+>> +		compatible = "rockchip,rk3399-vop-big";
+>> +		reg = <0x0 0xff900000 0x0 0x3efc>;
+>> +		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+>> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+>> +		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
+>> +		reset-names = "axi", "ahb", "dclk";
+>> +		iommus = <&vopb_mmu>;
+>> +		status = "disabled";
+>> +
+>> +		vopb_out: port {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	vopb_mmu: iommu@ff903f00 {
+>> +		compatible = "rockchip,iommu";
+>> +		reg = <0x0 0xff903f00 0x0 0x100>;
+>> +		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-names = "vopb_mmu";
+>> +		#iommu-cells = <0>;
+>> +		status = "disabled";
+>> +	};
+>> +
+>> +	display_subsystem: display-subsystem {
+>> +		compatible = "rockchip,display-subsystem";
+>> +		ports = <&vopl_out>, <&vopb_out>;
+>> +		status = "disabled";
+>> +	};
+>> +
+>>   	pinctrl: pinctrl {
+>>   		compatible = "rockchip,rk3399-pinctrl";
+>>   		rockchip,grf = <&grf>;
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
