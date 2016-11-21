@@ -1,43 +1,67 @@
 From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v5 0/2] drm/panel: simple: add support for Sharp LQ150X1LG11 panels
-Date: Mon, 21 Nov 2016 16:00:47 +0100
-Message-ID: <1479740449-20201-1-git-send-email-peda@axentia.se>
+Subject: [PATCH v5 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
+Date: Mon, 21 Nov 2016 16:00:48 +0100
+Message-ID: <1479740449-20201-2-git-send-email-peda@axentia.se>
+References: <1479740449-20201-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479740449-20201-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
 
-This patch seems to have been forgotten? Thierry said that a
-resend was not needed, but time is passing and the merge window
-is nearing, so I'm resending anyway with the squashed .bpc-fix.
-
-v4 -> v5 changes:
-- change sharp_lq150x1lg11.bpc to 6 as noted by Thierry
-- rebased onto v4.9-rc6
-
-v3 -> v4 changes:
-- addressed review comments from Rob (lvds -> sellvds and a couple of typos).
-
-Cheers,
-Peter
-
-Gustaf Lindström (1):
-  drm/panel: simple: add support for Sharp LQ150X1LG11 panels
-
-Peter Rosin (1):
-  dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
-
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
  .../bindings/display/panel/sharp,lq150x1lg11.txt   | 36 ++++++++++++++++++++++
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++
- 2 files changed, 63 insertions(+)
+ 1 file changed, 36 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
 
+diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+new file mode 100644
+index 000000000000..0f57c3143506
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+@@ -0,0 +1,36 @@
++Sharp 15" LQ150X1LG11 XGA TFT LCD panel
++
++Required properties:
++- compatible: should be "sharp,lq150x1lg11"
++- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
++
++Optional properties:
++- backlight: phandle of the backlight device
++- rlud-gpios: a single GPIO for the RL/UD (rotate 180 degrees) pin.
++- sellvds-gpios: a single GPIO for the SELLVDS pin.
++
++If rlud-gpios and/or sellvds-gpios are not specified, the RL/UD and/or SELLVDS
++pins are assumed to be handled appropriately by the hardware.
++
++Example:
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 100000>;                      /* VBR */
++
++		brightness-levels = <0 20 40 60 80 100>;
++		default-brightness-level = <2>;
++
++		power-supply = <&vdd_12v_reg>;               /* VDD */
++		enable-gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;  /* XSTABY */
++	};
++
++	panel {
++		compatible = "sharp,lq150x1lg11";
++
++		power-supply = <&vcc_3v3_reg>;               /* VCC */
++
++		backlight = <&backlight>;
++		rlud-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;    /* RL/UD */
++		sellvds-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>; /* SELLVDS */
++	};
 -- 
 2.1.4
 
