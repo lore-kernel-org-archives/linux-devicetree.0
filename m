@@ -1,54 +1,66 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 2/4] [media] davinci: vpif_capture: don't lock over
- s_stream
-Date: Mon, 21 Nov 2016 15:37:20 +0100
-Message-ID: <f385c65b-1f73-a5b1-b498-43916d5bdfb6@xs4all.nl>
-References: <20161119003208.10550-1-khilman@baylibre.com>
- <20161119003208.10550-2-khilman@baylibre.com>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Mon, 21 Nov 2016 15:51:59 +0100
+Message-ID: <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+ <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20161119003208.10550-2-khilman@baylibre.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rick Chang <rick.chang@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/11/16 01:32, Kevin Hilman wrote:
-> Video capture subdevs may be over I2C and may sleep during xfer, so we
-> cannot do IRQ-disabled locking when calling the subdev.
->
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+On 17/11/16 04:38, Rick Chang wrote:
+> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 > ---
->  drivers/media/platform/davinci/vpif_capture.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> This patch depends on:
+>   CCF "Add clock support for Mediatek MT2701"[1]
+>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
 >
-> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-> index 79cef74e164f..becc3e63b472 100644
-> --- a/drivers/media/platform/davinci/vpif_capture.c
-> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> @@ -193,12 +193,16 @@ static int vpif_start_streaming(struct vb2_queue *vq, unsigned int count)
->  		}
->  	}
->
-> +	spin_unlock_irqrestore(&common->irqlock, flags);
-> +
->  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
->  	if (ret && ret != -ENOIOCTLCMD && ret != -ENODEV) {
->  		vpif_dbg(1, debug, "stream on failed in subdev\n");
->  		goto err;
->  	}
->
-> +	spin_lock_irqsave(&common->irqlock, flags);
+> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+> [2] https://patchwork.kernel.org/patch/9164013/
 
-This needs to be moved to right after the v4l2_subdev_call, otherwise the
-goto err above will not have the spinlock.
+I assume that 1 & 2 will appear in 4.10? So this patch needs to go in 
+after the
+other two are merged in 4.10?
+
+Regards,
 
 	Hans
 
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 8f13c70..4dd5048 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -298,6 +298,20 @@
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+>  	};
+>
+> +	jpegdec: jpegdec@15004000 {
+> +		compatible = "mediatek,mt2701-jpgdec";
+> +		reg = <0 0x15004000 0 0x1000>;
+> +		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
+> +			  <&imgsys CLK_IMG_JPGDEC>;
+> +		clock-names = "jpgdec-smi",
+> +			      "jpgdec";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> +		mediatek,larb = <&larb2>;
+> +		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
+> +			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+> +	};
 > +
->  	/* Call vpif_set_params function to set the parameters and addresses */
->  	ret = vpif_set_video_params(vpif, ch->channel_id);
->  	if (ret < 0) {
+>  	vdecsys: syscon@16000000 {
+>  		compatible = "mediatek,mt2701-vdecsys", "syscon";
+>  		reg = <0 0x16000000 0 0x1000>;
 >
