@@ -1,368 +1,53 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 2/2] reset: Add the TI SCI reset driver
-Date: Mon, 21 Nov 2016 15:30:52 -0600
-Message-ID: <20161121213052.8684-3-afd@ti.com>
-References: <20161121213052.8684-1-afd@ti.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 00/16] mmc: sdhci-msm: Add clk-rates, DDR, HS400
+ support
+Date: Mon, 21 Nov 2016 15:11:38 -0800
+Message-ID: <20161121231138.GY25626@codeaurora.org>
+References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
+ <CAPDyKFrRbf0+G5K=-jsaevAGbTqhTAss2zJv3QdiyCrv0BG-zA@mail.gmail.com>
+ <d4d05fb9-8a9e-6cf2-dc63-0edbd27a9e55@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161121213052.8684-1-afd-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d4d05fb9-8a9e-6cf2-dc63-0edbd27a9e55-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
+To: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Lemberg <alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Mateusz Nowak <mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Yuliy Izrailov <Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org>, Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Griego <david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak@codea>
 List-Id: devicetree@vger.kernel.org
 
-Some TI Keystone family of SoCs contain a system controller (like the
-Power Management Micro Controller (PMMC) on K2G SoCs) that manage the
-low-level device control (like clocks, resets etc) for the various
-hardware modules present on the SoC. These device control operations
-are provided to the host processor OS through a communication protocol
-called the TI System Control Interface (TI SCI) protocol.
+On 11/21, Ritesh Harjani wrote:
+> 
+> 
+> On 11/21/2016 3:36 PM, Ulf Hansson wrote:
+> >On 21 November 2016 at 07:37, Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> >>Hi,
+> >>
+> >>This is v9 version of the patch series which adds support for MSM8996.
+> >>Adds HS400 driver support as well.
+> >>These are tested on internal msm8996 & db410c HW.
+> >>
+> >>The patch series is ready. Do we think we can apply these
+> >>patches for next now?
+> >
+> >I guess the DTS changes can be picked up by Andy, so they can go via arm-soc?
+> Yes.
+> 
+> >
+> >Then, does the mmc changes depend on the clock changes? If so, I can
+> >pick them as well, but then I need an ack from Stephen....
+> Ideal and preferable, would be that clk & mmc changes go in
+> together. But either ways should be fine.
+> 
 
-This patch adds a reset driver that communicates to the system
-controller over the TI SCI protocol for performing reset management
-of various devices present on the SoC. Various reset functionalities
-are achieved by the means of different TI SCI device operations
-provided by the TI SCI framework.
+There's only a runtime dependency where the clk rates will be
+wrong if clk tree isn't merged. I'd rather just apply the clk
+ones directly to clk tree and let all three trees come together
+in linux-next and work.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-[s-anna-l0cyMroinI0@public.gmane.org: documentation changes, revised commit message]
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Acked-by: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- MAINTAINERS                  |   1 +
- drivers/reset/Kconfig        |   9 ++
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-ti-sci.c | 272 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 283 insertions(+)
- create mode 100644 drivers/reset/reset-ti-sci.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index accf991..b93d91a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11901,6 +11901,7 @@ F:	include/dt-bindings/clock/k2g.h
- F:	drivers/clk/keystone/sci-clk.c
- F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
- F:	include/dt-bindings/reset/k2g.h
-+F:	drivers/reset/reset-ti-sci.c
- 
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 06d9fa2..4c21c9d 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,15 @@ config RESET_SUNXI
- 	help
- 	  This enables the reset driver for Allwinner SoCs.
- 
-+config RESET_TI_SCI
-+	tristate "TI System Control Interface (TI-SCI) reset driver"
-+	depends on RESET_CONTROLLER
-+	depends on TI_SCI_PROTOCOL
-+	help
-+	  This enables the reset driver support over TI System Control Interface
-+	  available on some new TI's SoCs. If you wish to use reset resources
-+	  managed by the TI System Controller, say Y here. Otherwise, say N.
-+
- config TI_SYSCON_RESET
- 	tristate "TI SYSCON Reset Driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index bbe7026..36321f2 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
- obj-$(CONFIG_RESET_STM32) += reset-stm32.o
- obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
-+obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
- obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-diff --git a/drivers/reset/reset-ti-sci.c b/drivers/reset/reset-ti-sci.c
-new file mode 100644
-index 0000000..9ac8499
---- /dev/null
-+++ b/drivers/reset/reset-ti-sci.c
-@@ -0,0 +1,272 @@
-+/*
-+ * Texas Instrument's System Control Interface (TI-SCI) reset driver
-+ *
-+ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/idr.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/soc/ti/ti_sci_protocol.h>
-+
-+/**
-+ * struct ti_sci_reset_control - reset control structure
-+ * @dev_id: SoC-specific device identifier
-+ * @reset_mask: reset mask to use for toggling reset
-+ * @lock: synchronize reset_mask read-modify-writes
-+ */
-+struct ti_sci_reset_control {
-+	u32 dev_id;
-+	u32 reset_mask;
-+	struct mutex lock;
-+};
-+
-+/**
-+ * struct ti_sci_reset_data - reset controller information structure
-+ * @rcdev: reset controller entity
-+ * @dev: reset controller device pointer
-+ * @sci: TI SCI handle used for communication with system controller
-+ * @idr: idr structure for mapping ids to reset control structures
-+ */
-+struct ti_sci_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	const struct ti_sci_handle *sci;
-+	struct idr idr;
-+};
-+
-+#define to_ti_sci_reset_data(p)	\
-+	container_of((p), struct ti_sci_reset_data, rcdev)
-+
-+/**
-+ * ti_sci_reset_set() - program a device's reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to toggle
-+ * @assert: boolean flag to indicate assert or deassert
-+ *
-+ * This is a common internal function used to assert or deassert a device's
-+ * reset using the TI SCI protocol. The device's reset is asserted if the
-+ * @assert argument is true, or deasserted if @assert argument is false.
-+ * The mechanism itself is a read-modify-write procedure, the current device
-+ * reset register is read using a TI SCI device operation, the new value is
-+ * set or un-set using the reset's mask, and the new reset value written by
-+ * using another TI SCI device operation.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_set(struct reset_controller_dev *rcdev,
-+			    unsigned long id, bool assert)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	const struct ti_sci_handle *sci = data->sci;
-+	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-+	struct ti_sci_reset_control *control;
-+	u32 reset_state;
-+	int ret;
-+
-+	control = idr_find(&data->idr, id);
-+	if (!control)
-+		return -EINVAL;
-+
-+	mutex_lock(&control->lock);
-+
-+	ret = dev_ops->get_device_resets(sci, control->dev_id,
-+					 &reset_state);
-+	if (ret)
-+		goto out;
-+
-+	if (assert)
-+		reset_state |= control->reset_mask;
-+	else
-+		reset_state &= ~control->reset_mask;
-+
-+	ret = dev_ops->set_device_resets(sci, control->dev_id,
-+				         reset_state);
-+out:
-+	mutex_unlock(&control->lock);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ti_sci_reset_assert() - assert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to be asserted
-+ *
-+ * This function implements the reset driver op to assert a device's reset
-+ * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-+ * with the corresponding parameters as passed in, but with the @assert
-+ * argument set to true for asserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	return ti_sci_reset_set(rcdev, id, true);
-+}
-+
-+/**
-+ * ti_sci_reset_deassert() - deassert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to be deasserted
-+ *
-+ * This function implements the reset driver op to deassert a device's reset
-+ * using the TI SCI protocol. This invokes the function ti_sci_reset_set()
-+ * with the corresponding parameters as passed in, but with the @assert
-+ * argument set to false for deasserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	return ti_sci_reset_set(rcdev, id, false);
-+}
-+
-+/**
-+ * ti_sci_reset_status() - check device reset status
-+ * @rcdev: reset controller entity
-+ * @id: ID of reset to be checked
-+ *
-+ * This function implements the reset driver op to return the status of a
-+ * device's reset using the TI SCI protocol. The reset register value is read
-+ * by invoking the TI SCI device operation .get_device_resets(), and the
-+ * status of the specific reset is extracted and returned using this reset's
-+ * reset mask.
-+ *
-+ * Return: 0 if reset is deasserted, or a non-zero value if reset is asserted
-+ */
-+static int ti_sci_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	const struct ti_sci_handle *sci = data->sci;
-+	const struct ti_sci_dev_ops *dev_ops = &sci->ops.dev_ops;
-+	struct ti_sci_reset_control *control;
-+	u32 reset_state;
-+	int ret;
-+
-+	control = idr_find(&data->idr, id);
-+	if (!control)
-+		return -EINVAL;
-+
-+	ret = dev_ops->get_device_resets(sci, control->dev_id,
-+					 &reset_state);
-+	if (ret)
-+		return ret;
-+
-+	return reset_state & control->reset_mask;
-+}
-+
-+static struct reset_control_ops ti_sci_reset_ops = {
-+	.assert		= ti_sci_reset_assert,
-+	.deassert	= ti_sci_reset_deassert,
-+	.status		= ti_sci_reset_status,
-+};
-+
-+/**
-+ * ti_sci_reset_of_xlate() - translate a set of OF arguments to a reset ID
-+ * @rcdev: reset controller entity
-+ * @reset_spec: OF reset argument specifier
-+ *
-+ * This function performs the translation of the reset argument specifier
-+ * values defined in a reset consumer device node. The function allocates a
-+ * reset control structure for that device reset, and will be used by the
-+ * driver for performing any reset functions on that reset. An idr structure
-+ * is allocated and used to map to the reset control structure. This idr
-+ * is used by the driver to do reset lookups.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int ti_sci_reset_of_xlate(struct reset_controller_dev *rcdev,
-+				 const struct of_phandle_args *reset_spec)
-+{
-+	struct ti_sci_reset_data *data = to_ti_sci_reset_data(rcdev);
-+	struct ti_sci_reset_control *control;
-+
-+	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
-+		return -EINVAL;
-+
-+	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
-+	if (!control)
-+		return -ENOMEM;
-+
-+	control->dev_id = reset_spec->args[0];
-+	control->reset_mask = reset_spec->args[1];
-+	mutex_init(&control->lock);
-+
-+	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
-+}
-+
-+static const struct of_device_id ti_sci_reset_of_match[] = {
-+	{ .compatible = "ti,sci-reset", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ti_sci_reset_of_match);
-+
-+static int ti_sci_reset_probe(struct platform_device *pdev)
-+{
-+	struct ti_sci_reset_data *data;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->sci = devm_ti_sci_get_handle(&pdev->dev);
-+	if (IS_ERR(data->sci))
-+		return PTR_ERR(data->sci);
-+
-+	data->rcdev.ops = &ti_sci_reset_ops;
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.of_node = pdev->dev.of_node;
-+	data->rcdev.of_reset_n_cells = 2;
-+	data->rcdev.of_xlate = ti_sci_reset_of_xlate;
-+	data->dev = &pdev->dev;
-+	idr_init(&data->idr);
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return reset_controller_register(&data->rcdev);
-+}
-+
-+static int ti_sci_reset_remove(struct platform_device *pdev)
-+{
-+	struct ti_sci_reset_data *data = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&data->rcdev);
-+
-+	idr_destroy(&data->idr);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ti_sci_reset_driver = {
-+	.probe = ti_sci_reset_probe,
-+	.remove = ti_sci_reset_remove,
-+	.driver = {
-+		.name = "ti-sci-reset",
-+		.of_match_table = ti_sci_reset_of_match,
-+	},
-+};
-+module_platform_driver(ti_sci_reset_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>");
-+MODULE_DESCRIPTION("TI System Control Interface (TI SCI) Reset driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.10.2
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
