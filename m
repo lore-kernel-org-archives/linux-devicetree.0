@@ -1,35 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/13] devicetree/bindings: display: Add bindings for
- two Mitsubishi panels
-Date: Mon, 21 Nov 2016 10:49:51 -0600
-Message-ID: <20161121164951.brssvqc4n5ydkm45@rob-hp-laptop>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1479526093-7014-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: [PATCH] ARM: dts: sunxi: Enable UEXT related nodes for Olimex A20 SOM
+ EVB
+Date: Mon, 21 Nov 2016 17:49:11 +0100
+Message-ID: <20161121164911.76900-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479526093-7014-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 19, 2016 at 05:28:03AM +0200, Laurent Pinchart wrote:
-> The AA104XD12 and AA121TD01 are LVDS display panels. Their bindings are
-> modelled on the the LVS panel bindings.
+UEXT are Universal EXTension connector from Olimex. They embed i2c, spi
+and uart pins along power in one connector and are found on most,
+if not all, Olimex boards.
+The Olimex A20 SOM EVB have two UEXT connector so enable the nodes found on
+those two connectors.
 
-s/LVS/LVDS/
+Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+---
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 36 ++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../display/panel/mitsubishi,aa104xd12.txt         | 47 ++++++++++++++++++++++
->  .../display/panel/mitsubishi,aa121td01.txt         | 47 ++++++++++++++++++++++
->  2 files changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa121td01.txt
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+index 23aacce..e879c119 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -116,6 +116,18 @@
+ 	};
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
+ &lradc {
+ 	vref-supply = <&reg_vcc3v0>;
+ 	status = "okay";
+@@ -284,12 +296,36 @@
+ 	status = "okay";
+ };
+ 
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi1_pins_a>,
++		<&spi1_cs0_pins_a>;
++};
++
++&spi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2_pins_a>,
++		<&spi2_cs0_pins_a>;
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+ 	status = "okay";
+ };
+ 
++&uart6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart6_pins_a>;
++	status = "okay";
++};
++
++&uart7 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart7_pins_a>;
++	status = "okay";
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
+-- 
+2.9.2
