@@ -1,48 +1,298 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
- eee-disable-advert option documentation
-Date: Mon, 21 Nov 2016 17:01:49 +0100
-Message-ID: <20161121160149.GF1922@lunn.ch>
-References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
- <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Andre Roth <neolynx@gmail.com>, linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel@lists.infradead.org
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5] arm64: dts: qcom: Add msm8916 CoreSight components
+Date: Mon, 21 Nov 2016 18:03:43 +0200
+Message-ID: <20161121160343.8181-1-georgi.djakov@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhang.chunyan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 04:35:23PM +0100, Jerome Brunet wrote:
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/net/phy.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-> index bc1c3c8bf8fa..7f066b7c1e2c 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -35,6 +35,11 @@ Optional Properties:
->  - broken-turn-around: If set, indicates the PHY device does not correctly
->    release the turn around line low at the end of a MDIO transaction.
->  
-> +- eee-advert-disable: Bits to clear in the MDIO_AN_EEE_ADV register to
-> +  disable EEE modes. Example
-> +    * 0x4: disable EEE for 1000T,
-> +    * 0x6: disable EEE for 100TX and 1000T
-> +
+From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Hi Jerome
+Add initial set of CoreSight components found on Qualcomm msm8916 and
+apq8016 based platforms, including the DragonBoard 410c board.
 
-I like the direction this patchset is taking. But hex values are
-pretty unfriendly. Please add a set of boolean properties, and do the
-mapping to hex in the C code.
+Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
 
-That would also make extending this API easier. e.g. say you have a
-10Gbps PHY with EEE, and you need to disable it. This hex value
-quickly gets ugly, eee-advert-disable-10000 is nice and simple.
+Changes since v4: (https://lkml.org/lkml/2016/11/17/533)
+ * Move everything into the SoC dtsi file as suggested by Stephen Boyd.
+ * Updated commit message.
+ * Got Ack from Mathieu.
 
-	Andrew
+Changes since v3: (https://lkml.org/lkml/2015/5/11/134)
+ * Include msm8916-coresight.dtsi into msm8916.dtsi
+
+Changes since v2: (https://lkml.org/lkml/2015/4/29/242)
+ * Added "1x" to "qcom,coresight-replicator" compatible string, to match what
+   devicetree bindings documentations says.
+
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 241 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 241 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 4221b7d2c0ce..464f2740e512 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -14,6 +14,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8916.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8916.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ 
+ / {
+ 	model = "Qualcomm Technologies, Inc. MSM8916";
+@@ -853,6 +854,246 @@
+ 				memory-region = <&mpss_mem>;
+ 			};
+ 		};
++
++		tpiu@820000 {
++			compatible = "arm,coresight-tpiu", "arm,primecell";
++			reg = <0x820000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			port {
++				tpiu_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator_out1>;
++				};
++			};
++		};
++
++		funnel@821000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x821000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/*
++				 * Not described input ports:
++				 * 0 - connected to Resource and Power Manger CPU ETM
++				 * 1 - not-connected
++				 * 2 - connected to Modem CPU ETM
++				 * 3 - not-connected
++				 * 5 - not-connected
++				 * 6 - connected trought funnel to Wireless CPU ETM
++				 * 7 - connected to STM component
++				 */
++
++				port@4 {
++					reg = <4>;
++					funnel0_in4: endpoint {
++						slave-mode;
++						remote-endpoint = <&funnel1_out>;
++					};
++				};
++				port@8 {
++					reg = <0>;
++					funnel0_out: endpoint {
++						remote-endpoint = <&etf_in>;
++					};
++				};
++			};
++		};
++
++		replicator@824000 {
++			compatible = "qcom,coresight-replicator1x", "arm,primecell";
++			reg = <0x824000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					replicator_out0: endpoint {
++						remote-endpoint = <&etr_in>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					replicator_out1: endpoint {
++						remote-endpoint = <&tpiu_in>;
++					};
++				};
++				port@2 {
++					reg = <0>;
++					replicator_in: endpoint {
++						slave-mode;
++						remote-endpoint = <&etf_out>;
++					};
++				};
++			};
++		};
++
++		etf@825000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x825000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					etf_out: endpoint {
++						slave-mode;
++						remote-endpoint = <&funnel0_out>;
++					};
++				};
++				port@1 {
++					reg = <0>;
++					etf_in: endpoint {
++						remote-endpoint = <&replicator_in>;
++					};
++				};
++			};
++		};
++
++		etr@826000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x826000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			port {
++				etr_in: endpoint {
++					slave-mode;
++					remote-endpoint = <&replicator_out0>;
++				};
++			};
++		};
++
++		funnel@841000 {	/* APSS funnel only 4 inputs are used */
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x841000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					funnel1_in0: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm0_out>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					funnel1_in1: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm1_out>;
++					};
++				};
++				port@2 {
++					reg = <2>;
++					funnel1_in2: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm2_out>;
++					};
++				};
++				port@3 {
++					reg = <3>;
++					funnel1_in3: endpoint {
++						slave-mode;
++						remote-endpoint = <&etm3_out>;
++					};
++				};
++				port@4 {
++					reg = <0>;
++					funnel1_out: endpoint {
++						remote-endpoint = <&funnel0_in4>;
++					};
++				};
++			};
++		};
++
++		etm@85c000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x85c000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU0>;
++
++			port {
++				etm0_out: endpoint {
++				remote-endpoint = <&funnel1_in0>;
++				};
++			};
++		};
++
++		etm@85d000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x85d000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU1>;
++
++			port {
++				etm1_out: endpoint {
++					remote-endpoint = <&funnel1_in1>;
++				};
++			};
++		};
++
++		etm@85e000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x85e000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU2>;
++
++			port {
++				etm2_out: endpoint {
++					remote-endpoint = <&funnel1_in2>;
++				};
++			};
++		};
++
++		etm@85f000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x85f000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU3>;
++
++			port {
++				etm3_out: endpoint {
++					remote-endpoint = <&funnel1_in3>;
++				};
++			};
++		};
+ 	};
+ 
+ 	smd {
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
