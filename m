@@ -1,55 +1,66 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos: remove the cd-gpios property for eMMC
- of odroid-xu3/4
-Date: Mon, 21 Nov 2016 19:06:05 +0200
-Message-ID: <20161121170605.GA8181@kozik-lap>
-References: <20161121071032.10183-1-jh80.chung@samsung.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM64: dts: Add support for Meson GXM
+Date: Mon, 21 Nov 2016 09:06:54 -0800
+Message-ID: <m2wpfw3gpd.fsf@baylibre.com>
+References: <20161121162905.14285-1-narmstrong@baylibre.com>
+        <20161121162905.14285-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161121071032.10183-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20161121162905.14285-2-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Mon, 21 Nov 2016 17:29:04 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 04:10:32PM +0900, Jaehoon Chung wrote:
-> Odroid-xu3/4 didn't need to use the cd-gpios for detecting card.
-> Because Host controller has the CDETECT register through SDx_CDN line.
-> Host controller can know whether card is inserted or not with this
-> register.
-> 
-> When i have checked the Odroid-xu3/4, they are using CDETECT register.
-> (Not using exteranl cd-gpio.)
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Makes sense. Just one question: the sd0_cd pinctrl setting should stay,
-right?
-
-Best regards,
-Krzysztof
-
-> Fixes: fb1aeedb61ad ("ARM: dts: add mmc detect gpio for exynos5422-odroidxu3")
-> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Following the Amlogic Linux kernel, it seem the only differences
+> between the GXL and GXM SoCs are the CPU Clusters.
+>
+> This commit renames the gxl-s905d-p23x DTSI in a common file for
+> S905D p20x and S912 q20x boards.
+>
+> Then adds a meson-gxm dtsi and reproduce the P23x to Q20x boards
+> dts files since the S905D and S912 SoCs shares the same pinout
+> and the P23x and Q20x boards are identical.
+>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index 9e63328..05b9afdd 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -510,7 +510,6 @@
->  &mmc_0 {
->  	status = "okay";
->  	mmc-pwrseq = <&emmc_pwrseq>;
-> -	cd-gpios = <&gpc0 2 GPIO_ACTIVE_LOW>;
->  	card-detect-delay = <200>;
->  	samsung,dw-mshc-ciu-div = <3>;
->  	samsung,dw-mshc-sdr-timing = <0 4>;
-> -- 
-> 2.10.1
-> 
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |   6 +
+>  arch/arm64/boot/dts/amlogic/Makefile               |   2 +
+>  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 190 +++++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    |  19 +++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    |   7 +
+>  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |   3 +-
+>  .../boot/dts/amlogic/meson-gxl-s905d-p231.dts      |   3 +-
+>  .../boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi     | 188 --------------------
+>  .../arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts |  77 +++++++++
+>  .../arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts |  58 +++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         | 114 +++++++++++++
+>  11 files changed, 477 insertions(+), 190 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+>  delete mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p23x.dtsi
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-s912-q201.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+
+Applied.
+
+Git tip: for future reference, set 'git config diff.renames true' so and
+the diffstat shows a better summary when files are moved/renamed.
+
+e.g, rather than the large ++ and -- above, you'd see:
+
+ ...gxl-s905d-p23x.dtsi => meson-gx-p23x-q20x.dtsi} |   4 +-
+ 
+Which is much more comforting to a maintainer than a bunch of
+(potentially unrelated) adds and removes.
+
+Thanks,
+
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
