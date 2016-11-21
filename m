@@ -1,56 +1,32 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] arm64: arch_timer: Add device tree binding for
- hisilicon-161601 erratum
-Date: Mon, 21 Nov 2016 20:49:38 +0800
-Message-ID: <c3020c0d-bc45-2bb1-f53a-c5e76ab45499@huawei.com>
-References: <1479212167-5812-1-git-send-email-dingtianhong@huawei.com>
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: Re: [PATCH v2 5/8] dt-bindings: mfd: Provide human readable defines
+ for TPS65217 interrupts
+Date: Mon, 21 Nov 2016 22:05:21 +0900
+Message-ID: <c04af1ac-b692-f3df-47b0-72c5263374bf@gmail.com>
+References: <20161028123702.21849-1-woogyom.kim@gmail.com>
+ <20161028123702.21849-6-woogyom.kim@gmail.com>
+ <20161118145353.GE2301@dell.home> <20161118151051.GV4082@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479212167-5812-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161118151051.GV4082@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>
+Cc: bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Ping....
+On 11/19/2016 12:10 AM, Tony Lindgren wrote:
+>>> +#define TPS65217_IRQ_USB	0
+>>> > > +#define TPS65217_IRQ_AC		1
+>>> > > +#define TPS65217_IRQ_PB		2
+>> >
+>> > What are "AC" and "PB".  Seeing as these are meant to be "human
+>> > readable", let's make them more human friendly.
+> Good idea. Milo, please do an incremental single follow-up patch as
+> I already have applied this and the dts changes using it.
 
-On 2016/11/15 20:16, Ding Tianhong wrote:
-> This erratum describes a bug in logic outside the core, so MIDR can't be
-> used to identify its presence, and reading an SoC-specific revision
-> register from common arch timer code would be awkward.  So, describe it
-> in the device tree.
-> 
-> v2: Use the new erratum name and update the description.
-> 
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index ef5fbe9..c27b2c4 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
->    This also affects writes to the tval register, due to the implicit
->    counter read.
->  
-> +- hisilicon,erratum-161601 : A boolean property. Indicates the presence of
-> +  erratum 161601, which says that reading the counter is unreliable unless
-> +  reading twice on the register and the value of the second read is larger
-> +  than the first by less than 32. If the verification is unsuccessful, then
-> +  discard the value of this read and repeat this procedure until the verification
-> +  is successful.  This also affects writes to the tval register, due to the
-> +  implicit counter read.
-> +
->  ** Optional properties:
->  
->  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
-> 
+Thanks for catching this. Let me send a patch soon.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Milo
