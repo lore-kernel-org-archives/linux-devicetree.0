@@ -1,71 +1,75 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v5 1/2] dt-bindings: display: Add Sharp LQ150X1LG11 panel binding
-Date: Mon, 21 Nov 2016 16:00:48 +0100
-Message-ID: <1479740449-20201-2-git-send-email-peda@axentia.se>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v5 2/2] drm/panel: simple: add support for Sharp LQ150X1LG11 panels
+Date: Mon, 21 Nov 2016 16:00:49 +0100
+Message-ID: <1479740449-20201-3-git-send-email-peda@axentia.se>
 References: <1479740449-20201-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479740449-20201-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479740449-20201-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Gustaf=20Lindstr=C3=B6m?= <gl@axentia.se>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
+
+From: Gustaf Lindström <gl@axentia.se>
 
 The Sharp 15" LQ150X1LG11 panel is an XGA TFT LCD panel.
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/display/panel/sharp,lq150x1lg11.txt   | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
+The simple-panel driver is used to get support for essential
+functionality of the panel.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
-new file mode 100644
-index 000000000000..0f57c3143506
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sharp,lq150x1lg11.txt
-@@ -0,0 +1,36 @@
-+Sharp 15" LQ150X1LG11 XGA TFT LCD panel
+Signed-off-by: Gustaf Lindström <gl@axentia.se>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 113db3c4a633..76f0ef7e5b7c 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1420,6 +1420,30 @@ static const struct panel_desc sharp_lq123p1jx31 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode sharp_lq150x1lg11_mode = {
++	.clock = 71100,
++	.hdisplay = 1024,
++	.hsync_start = 1024 + 168,
++	.hsync_end = 1024 + 168 + 64,
++	.htotal = 1024 + 168 + 64 + 88,
++	.vdisplay = 768,
++	.vsync_start = 768 + 37,
++	.vsync_end = 768 + 37 + 2,
++	.vtotal = 768 + 37 + 2 + 8,
++	.vrefresh = 60,
++};
 +
-+Required properties:
-+- compatible: should be "sharp,lq150x1lg11"
-+- power-supply: regulator to provide the VCC supply voltage (3.3 volts)
++static const struct panel_desc sharp_lq150x1lg11 = {
++	.modes = &sharp_lq150x1lg11_mode,
++	.num_modes = 1,
++	.bpc = 6,
++	.size = {
++		.width = 304,
++		.height = 228,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB565_1X16,
++};
 +
-+Optional properties:
-+- backlight: phandle of the backlight device
-+- rlud-gpios: a single GPIO for the RL/UD (rotate 180 degrees) pin.
-+- sellvds-gpios: a single GPIO for the SELLVDS pin.
-+
-+If rlud-gpios and/or sellvds-gpios are not specified, the RL/UD and/or SELLVDS
-+pins are assumed to be handled appropriately by the hardware.
-+
-+Example:
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 100000>;                      /* VBR */
-+
-+		brightness-levels = <0 20 40 60 80 100>;
-+		default-brightness-level = <2>;
-+
-+		power-supply = <&vdd_12v_reg>;               /* VDD */
-+		enable-gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;  /* XSTABY */
-+	};
-+
-+	panel {
-+		compatible = "sharp,lq150x1lg11";
-+
-+		power-supply = <&vcc_3v3_reg>;               /* VCC */
-+
-+		backlight = <&backlight>;
-+		rlud-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;    /* RL/UD */
-+		sellvds-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>; /* SELLVDS */
-+	};
+ static const struct drm_display_mode shelly_sca07010_bfn_lnn_mode = {
+ 	.clock = 33300,
+ 	.hdisplay = 800,
+@@ -1683,6 +1707,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "sharp,lq123p1jx31",
+ 		.data = &sharp_lq123p1jx31,
+ 	}, {
++		.compatible = "sharp,lq150x1lg11",
++		.data = &sharp_lq150x1lg11,
++	}, {
+ 		.compatible = "shelly,sca07010-bfn-lnn",
+ 		.data = &shelly_sca07010_bfn_lnn,
+ 	}, {
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
