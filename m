@@ -1,135 +1,60 @@
-From: Ryan Harkin <ryan.harkin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI protocol
-Date: Mon, 21 Nov 2016 15:04:39 +0000
-Message-ID: <CAD0U-hK982V+kUArjVSG7pTs5CLpNsgJaC5t8aPg8XuoiMRU0A@mail.gmail.com>
-References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
- <20161108145118.GR1041@n2100.armlinux.org.uk> <28decdc3-6b86-924f-d3c1-9873a8cfce77@arm.com>
- <20161108154038.GS1041@n2100.armlinux.org.uk> <20161108160625.GU1041@n2100.armlinux.org.uk>
- <fb4348a8-197c-2219-ff01-8716e2a0b955@arm.com> <20161108174622.GW1041@n2100.armlinux.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state
+ binding
+Date: Mon, 21 Nov 2016 09:07:08 -0600
+Message-ID: <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
+References: <cover.1479459752.git.viresh.kumar@linaro.org>
+ <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161108174622.GW1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 November 2016 at 17:46, Russell King - ARM Linux
-<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> On Tue, Nov 08, 2016 at 05:37:25PM +0000, Sudeep Holla wrote:
->>
->>
->> On 08/11/16 16:06, Russell King - ARM Linux wrote:
->> >On Tue, Nov 08, 2016 at 03:40:38PM +0000, Russell King - ARM Linux wrote:
->> >>As it contains a zero sized Image and .dtb files, I tried copying my
->> >>Image and .dtb over, and also copied my original config.txt (only
->> >>change is AUTORUN: FALSE).  It still doesn't appear to boot beyond
->> >>this point.
->> >
->> >Well, it seems that I can't even go back to my original set of firmware
->> >as UEFI has stopped working:
->> >
->> >NOTICE:  Booting Trusted Firmware
->> >NOTICE:  BL1: v1.0(release):14b6608
->> >NOTICE:  BL1: Built : 14:15:51, Sep  1 2014
->> >NOTICE:  BL1: Booting BL2
->> >NOTICE:  BL2: v1.0(release):14b6608
->> >NOTICE:  BL2: Built : 14:15:51, Sep  1 2014
->> >NOTICE:  BL1: Booting BL3-1
->> >NOTICE:  BL3-1: v1.0(release):14b6608
->> >NOTICE:  BL3-1: Built : 14:15:53, Sep  1 2014
->> >UEFI firmware (version v2.1 built at 14:41:56 on Oct 23 2014)
->> >Warning: Fail to load FDT file 'juno.dtb'.
->> >
->>
->> This again because of incompatibility of the configuration data saved in
->> NOR flash. The erase command I gave early is to erase that when you
->> switched between the UEFI binaries. It's really horrible mess UEFI
->> created in the initial days of Juno, and hopefully they have moved to
->> some standard format these days.
->
-> Yea, what it means is I've no possibility to go back to what was
-> originally working now, since I don't understand how to get UEFI to
-> behave (Will set the machine up for me, I don't have any information
-> on how it was originally configured other than what was on the uSD
-> card, which appears incomplete.)
->
->> >and UEFI is the most unfriendly thing going - the "boot manager" thing
->> >doesn't let you view the configuration:
->> >
->>
->> I completely agree. I had real bad times in past dealing with such
->> things in UEFI.
->>
->> >[1] Linux from NOR Flash
->> >[2] Shell
->> >[3] Boot Manager
->> >Start: 3
->> >[1] Add Boot Device Entry
->> >[2] Update Boot Device Entry
->> >[3] Remove Boot Device Entry
->> >[4] Reorder Boot Device Entries
->> >[5] Update FDT path
->> >[6] Set Boot Timeout
->> >[7] Return to main menu
->> >Choice:
->> >
->> >and dropping into the shell... well, I've no idea how to get a listing
->> >of what it thinks is in the NOR device (or even how to refer to the
->> >NOR device.)  "devices" shows nothing that's even remotely English.
->> >
+On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
+> Some platforms have the capability to configure the performance state of
+> their Power Domains. The performance levels are represented by positive
+> integer values, a lower value represents lower performance state.
+> 
+> The power-domains until now were only concentrating on the idle state
+> management of the device and this needs to change in order to reuse the
+> infrastructure of power domains for active state management.
+> 
+> This patch introduces a new optional property for the consumers of the
+> power-domains: domain-performance-state.
+> 
+> If the consumers don't need the capability of switching to different
+> domain performance states at runtime, then they can simply define their
+> required domain performance state in their node directly. Otherwise the
+> consumers can define their requirements with help of other
+> infrastructure, for example the OPP table.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index e1650364b296..db42eacf8b5c 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
+>   - power-domains : A phandle and PM domain specifier as defined by bindings of
+>                     the power controller specified by phandle.
+>  
+> +Optional properties:
+> +- domain-performance-state: A positive integer value representing the minimum
+> +  performance level (of the parent domain) required by the consumer for its
+> +  working. The integer value '1' represents the lowest performance level and the
+> +  highest value represents the highest performance level.
 
-Using UEFI is painful enough on Juno.  Using a 2 year old version with
-"that" menu system is even worse.
+How does one come up with the range of values? It seems like you are 
+just making up numbers. Couldn't the domain performance level be an OPP 
+in the sense that it is a collection of clock frequencies and voltage 
+settings?
 
-So I'll just pitch in here and recommend you switch to using u-boot.
-Then you can see your config with "printenv" and you'll probably
-understand it too.
-
-The board will boot my prebuilt kernel/DTB using u-boot if you erase
-the uSD card and unzip this firmware image to it:
-
-http://releases.linaro.org/members/arm/platforms/16.10/juno-latest-oe-uboot.zip
-
-Then you can copy over your own kernel & DTB for your own testing,
-configure u-boot for TFTP, or whatever you like.
-
-Switching to u-boot won't solve any thermal sensor calibration problems.
-
-
->>
->> I think startup.nsh needs some edits. Just replace it with something like:
->>
->> "norkern dtb=board.dtb console=ttyAMA0,115200n8 root=/dev/nfs rw
->> rootwait ip=dhcp systemd.log_target=null nfsroot=..." or something
->> alike. Currently it just echos and stops.
->>
->> Regarding the new firmware stopping abruptly, I have no clue, except
->> asking you to erase the flash completely when switching between the
->> firmware versions. That has worked for me for all UEFI related issues in
->> the past. It's really annoying I understand.
->>
->> flash> eraseall
->
-> I've tried that, it still stops at the same point, after:
->
-> FV2 Hob           0xFE07B000 - 0xFE8253BF
->
-> and remains unresponsive.
->
-> I do notice that the uSD card becomes visible through USB at this point
-> though.
->
-> Okay, well, I'm going to have to disable Juno from the nightly boots
-> until we get some kind of resolution on this, as my Juno is now
-> incapable of booting anything.
->
-> --
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
