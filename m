@@ -1,60 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state
- binding
-Date: Mon, 21 Nov 2016 09:07:08 -0600
-Message-ID: <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
-References: <cover.1479459752.git.viresh.kumar@linaro.org>
- <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/8] firmware: arm_scpi: add support for legacy SCPI
+ protocol
+Date: Mon, 21 Nov 2016 15:12:38 +0000
+Message-ID: <0af5ded0-8ea9-2b11-e70e-dc33b9111905@arm.com>
+References: <1478148731-11712-1-git-send-email-sudeep.holla@arm.com>
+ <20161108145118.GR1041@n2100.armlinux.org.uk>
+ <28decdc3-6b86-924f-d3c1-9873a8cfce77@arm.com>
+ <20161108154038.GS1041@n2100.armlinux.org.uk>
+ <20161108160625.GU1041@n2100.armlinux.org.uk>
+ <fb4348a8-197c-2219-ff01-8716e2a0b955@arm.com>
+ <20161108174622.GW1041@n2100.armlinux.org.uk>
+ <CAD0U-hK982V+kUArjVSG7pTs5CLpNsgJaC5t8aPg8XuoiMRU0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD0U-hK982V+kUArjVSG7pTs5CLpNsgJaC5t8aPg8XuoiMRU0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryan Harkin <ryan.harkin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Philippe Robin <Philippe.Robin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
-> Some platforms have the capability to configure the performance state of
-> their Power Domains. The performance levels are represented by positive
-> integer values, a lower value represents lower performance state.
-> 
-> The power-domains until now were only concentrating on the idle state
-> management of the device and this needs to change in order to reuse the
-> infrastructure of power domains for active state management.
-> 
-> This patch introduces a new optional property for the consumers of the
-> power-domains: domain-performance-state.
-> 
-> If the consumers don't need the capability of switching to different
-> domain performance states at runtime, then they can simply define their
-> required domain performance state in their node directly. Otherwise the
-> consumers can define their requirements with help of other
-> infrastructure, for example the OPP table.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index e1650364b296..db42eacf8b5c 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
->   - power-domains : A phandle and PM domain specifier as defined by bindings of
->                     the power controller specified by phandle.
->  
-> +Optional properties:
-> +- domain-performance-state: A positive integer value representing the minimum
-> +  performance level (of the parent domain) required by the consumer for its
-> +  working. The integer value '1' represents the lowest performance level and the
-> +  highest value represents the highest performance level.
 
-How does one come up with the range of values? It seems like you are 
-just making up numbers. Couldn't the domain performance level be an OPP 
-in the sense that it is a collection of clock frequencies and voltage 
-settings?
 
-Rob
+On 21/11/16 15:04, Ryan Harkin wrote:
+
+[...]
+
+> Switching to u-boot won't solve any thermal sensor calibration problems.
+>
+
+Indeed. The board Russell had was one of those early ones which was not
+calibrated properly. He is now able to use the 16.10 release after
+calibration.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
