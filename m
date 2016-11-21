@@ -1,101 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/5] drm: sun8i: Add a basic DRM driver for Allwinner
- DE2
-Date: Mon, 21 Nov 2016 10:59:21 -0600
-Message-ID: <20161121165921.cvh5gd3hbkbznhht@rob-hp-laptop>
-References: <cover.1479641523.git.moinejf@free.fr>
- <ff2140c86ea3b06406c77d9e8746474b6f8400c4.1479641523.git.moinejf@free.fr>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: exynos: remove the cd-gpios property for eMMC
+ of odroid-xu3/4
+Date: Mon, 21 Nov 2016 19:06:05 +0200
+Message-ID: <20161121170605.GA8181@kozik-lap>
+References: <20161121071032.10183-1-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ff2140c86ea3b06406c77d9e8746474b6f8400c4.1479641523.git.moinejf@free.fr>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20161121071032.10183-1-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBOb3YgMjAsIDIwMTYgYXQgMTA6NTM6MjVBTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiBBbGx3aW5uZXIncyByZWNlbnQgU29DcywgYXMgQTY0LCBBODNUIGFuZCBI
-MywgY29udGFpbiBhIG5ldyBkaXNwbGF5Cj4gZW5naW5lLCBERTIuCj4gVGhpcyBwYXRjaCBhZGRz
-IGEgRFJNIHZpZGVvIGRyaXZlciBmb3IgdGhpcyBkZXZpY2UuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-SmVhbi1GcmFuY29pcyBNb2luZSA8bW9pbmVqZkBmcmVlLmZyPgo+IC0tLQo+ICAuLi4vYmluZGlu
-Z3MvZGlzcGxheS9zdW54aS9zdW44aS1kZTIudHh0ICAgICAgICAgICB8ICA4MyArKysKCkl0J3Mg
-cHJlZmVycmVkIHRvIHNwbGl0IGJpbmRpbmdzIHRvIGEgc2VwYXJhdGUgcGF0Y2guCgo+ICBkcml2
-ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4g
-IGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
-fCAgMTkgKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3VuOGkvTWFrZWZpbGUgICAgICAgICAgICAgICAg
-ICAgICB8ICAgNyArCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW44aS9kZTJfY3J0Yy5jICAgICAgICAg
-ICAgICAgICAgIHwgNDQwICsrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL2Rl
-Ml9jcnRjLmggICAgICAgICAgICAgICAgICAgfCAgNTAgKysKPiAgZHJpdmVycy9ncHUvZHJtL3N1
-bjhpL2RlMl9kcm0uaCAgICAgICAgICAgICAgICAgICAgfCAgNDggKysKPiAgZHJpdmVycy9ncHUv
-ZHJtL3N1bjhpL2RlMl9kcnYuYyAgICAgICAgICAgICAgICAgICAgfCAzNzkgKysrKysrKysrKysK
-PiAgZHJpdmVycy9ncHUvZHJtL3N1bjhpL2RlMl9wbGFuZS5jICAgICAgICAgICAgICAgICAgfCA3
-MTIgKysrKysrKysrKysrKysrKysrKysrCj4gIDEwIGZpbGVzIGNoYW5nZWQsIDE3NDEgaW5zZXJ0
-aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGktZGUyLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3N1bjhpL0tjb25maWcKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9zdW44aS9NYWtlZmlsZQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL3N1bjhpL2RlMl9jcnRjLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9zdW44aS9kZTJfY3J0Yy5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vc3VuOGkvZGUyX2RybS5oCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-c3VuOGkvZGUyX2Rydi5jCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3Vu
-OGkvZGUyX3BsYW5lLmMKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGktZGUyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjhpLWRlMi50eHQKPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmI5ZWRkNGIKPiAtLS0gL2Rldi9udWxsCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuOGkt
-ZGUyLnR4dAo+IEBAIC0wLDAgKzEsODMgQEAKPiArQWxsd2lubmVyIHN1bjhpIERpc3BsYXkgRW5n
-aW5lIDIgc3Vic3lzdGVtCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PQo+ICsKPiArVGhlIEFsbHdpbm5lciBERTIgc3Vic3lzdGVtIGNvbnRhaW5zIGEgZGlzcGxh
-eSBjb250cm9sbGVyIChERTIpLAo+ICtvbmUgb3IgdHdvIExDRCBjb250cm9sbGVycyAoVENPTikg
-YW5kIHRoZWlyIGV4dGVybmFsIGludGVyZmFjZXMuCj4gKwo+ICtEaXNwbGF5IGNvbnRyb2xsZXIK
-PiArPT09PT09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiAr
-LSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmcKPiArCQki
-YWxsd2lubmVyLHN1bjhpLWE4M3QtZGlzcGxheS1lbmdpbmUiCj4gKwkJImFsbHdpbm5lcixzdW44
-aS1oMy1kaXNwbGF5LWVuZ2luZSIKPiArCj4gKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sg
-c3BlY2lmaWVycyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCj4gKwkJY2xvY2stbmFt
-ZXMgcHJvcGVydHkuCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4KPiArCQkiZ2F0
-ZSI6IERFIGJ1cyBnYXRlCj4gKwkJImNsb2NrIjogREUgY2xvY2sKPiArCj4gKy0gcmVzZXRzOiBw
-aGFuZGxlIHRvIHRoZSByZXNldCBvZiB0aGUgZGV2aWNlCj4gKwo+ICstIHBvcnRzOiBwaGFuZGxl
-J3MgdG8gdGhlIExDRCBwb3J0cwoKVGhpcyBzaG91bGQgdXNlIE9GIGdyYXBoIHRvIGRlc2NyaWJl
-IHRoZSBjb25uZWN0aW9uIGZyb20gdGhlIERFIHRvIHRoZSAKTENEIGNvbnRyb2xsZXJzIGxpa2Ug
-dGhlIHN1bjRpIGJpbmRpbmcgZG9lcy4KCk5vIHJlZ2lzdGVycyBmb3IgdGhlIERFPwoKPiArCj4g
-K0xDRCBjb250cm9sbGVyCj4gKz09PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUKPiArCQkiYWxsd2lubmVyLHN1bjhp
-LWE4M3QtdGNvbiIKPiArCj4gKy0gY2xvY2tzOiBtdXN0IGluY2x1ZGUgY2xvY2sgc3BlY2lmaWVy
-cyBjb3JyZXNwb25kaW5nIHRvIGVudHJpZXMgaW4gdGhlCj4gKwkJY2xvY2stbmFtZXMgcHJvcGVy
-dHkuCj4gKwo+ICstIGNsb2NrLW5hbWVzOiBtdXN0IGNvbnRhaW4KPiArCQkiZ2F0ZSI6IFRDT04g
-YnVzIGdhdGUKPiArCQkiY2xvY2siOiBUQ09OIHBpeGVsIGNsb2NrCj4gKwo+ICstIHJlc2V0czog
-cGhhbmRsZSB0byB0aGUgcmVzZXQgb2YgdGhlIGRldmljZQo+ICsKPiArLSBwb3J0OiBwb3J0IG5v
-ZGUgd2l0aCBlbmRwb2ludCBkZWZpbml0aW9ucyBhcyBkZWZpbmVkIGluCj4gKwlEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKCk5lZWQg
-dG8gc3BlY2lmeSBob3cgbWFueSBwb3J0cyBhbmQgZW5kcG9pbnRzLgoKPiArCj4gK0V4YW1wbGU6
-Cj4gKwo+ICsJZGU6IGRlLWNvbnRyb2xsZXJAMDEwMDAwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAi
-YWxsd2lubmVyLHN1bjhpLWgzLWRpc3BsYXktZW5naW5lIjsKPiArCQkuLi4KCldoYXQgYXJlIHlv
-dSBub3Qgc2hvd2luZz8KCj4gKwkJY2xvY2tzID0gPCYmY2N1IENMS19CVVNfREU+LCA8JmNjdSBD
-TEtfREU+Owo+ICsJCWNsb2NrLW5hbWVzID0gImdhdGUiLCAiY2xvY2siOwo+ICsJCXJlc2V0cyA9
-IDwmY2N1IFJTVF9CVVNfREU+Owo+ICsJCXBvcnRzID0gPCZsY2QwX3A+Owo+ICsJfTsKPiArCj4g
-KwlsY2QwOiBsY2QtY29udHJvbGxlckAwMWMwYzAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhbGx3
-aW5uZXIsc3VuOGktYTgzdC10Y29uIjsKPiArCQkuLi4KCmRpdHRvLgoKPiArCQljbG9ja3MgPSA8
-JmNjdSBDTEtfQlVTX1RDT04wPiwgPCZjY3UgQ0xLX1RDT04wPjsKPiArCQljbG9jay1uYW1lcyA9
-ICJnYXRlIiwgImNsb2NrIjsKPiArCQlyZXNldHMgPSA8JmNjdSBSU1RfQlVTX1RDT04wPjsKPiAr
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQlsY2Qw
-X3A6IHBvcnQgewo+ICsJCQlsY2QwX2VwOiBlbmRwb2ludCB7Cj4gKwkJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JmhkbWlfZXA+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCWhkbWk6IGhk
-bWlAMDFlZTAwMDAgewo+ICsJCS4uLgo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNz
-aXplLWNlbGxzID0gPDA+Owo+ICsJCXBvcnQgewo+ICsJCQloZG1pX2VwOiBlbmRwb2ludCB7Cj4g
-KwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZDBfZXA+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9
-Owo+ICsKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Nov 21, 2016 at 04:10:32PM +0900, Jaehoon Chung wrote:
+> Odroid-xu3/4 didn't need to use the cd-gpios for detecting card.
+> Because Host controller has the CDETECT register through SDx_CDN line.
+> Host controller can know whether card is inserted or not with this
+> register.
+> 
+> When i have checked the Odroid-xu3/4, they are using CDETECT register.
+> (Not using exteranl cd-gpio.)
+
+Makes sense. Just one question: the sd0_cd pinctrl setting should stay,
+right?
+
+Best regards,
+Krzysztof
+
+> Fixes: fb1aeedb61ad ("ARM: dts: add mmc detect gpio for exynos5422-odroidxu3")
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> index 9e63328..05b9afdd 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> @@ -510,7 +510,6 @@
+>  &mmc_0 {
+>  	status = "okay";
+>  	mmc-pwrseq = <&emmc_pwrseq>;
+> -	cd-gpios = <&gpc0 2 GPIO_ACTIVE_LOW>;
+>  	card-detect-delay = <200>;
+>  	samsung,dw-mshc-ciu-div = <3>;
+>  	samsung,dw-mshc-sdr-timing = <0 4>;
+> -- 
+> 2.10.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
