@@ -1,60 +1,41 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
- eee-disable-advert option documentation
-Date: Mon, 21 Nov 2016 17:47:33 +0100
-Message-ID: <20161121164733.GG1922@lunn.ch>
-References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
- <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
- <20161121160149.GF1922@lunn.ch>
- <1479744993.17538.85.camel@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Mon, 21 Nov 2016 10:48:15 -0600
+Message-ID: <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479744993.17538.85.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> What I did not realize when doing this patch for the realtek driver is
-> that there is already 6 valid modes defined in the kernel
+On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
+> Document properties common to several display panels in a central
+> location that can be referenced by the panel device tree bindings.
 > 
-> #define MDIO_EEE_100TX		MDIO_AN_EEE_ADV_100TX	/*
-> 100TX EEE cap */
-> #define MDIO_EEE_1000T		MDIO_AN_EEE_ADV_1000T	/*
-> 1000T EEE cap */
-> #define MDIO_EEE_10GT		0x0008	/* 10GT EEE cap */
-> #define MDIO_EEE_1000KX		0x0010	/* 1000KX EEE cap
-> */
-> #define MDIO_EEE_10GKX4		0x0020	/* 10G KX4 EEE cap
-> */
-> #define MDIO_EEE_10GKR		0x0040	/* 10G KR EEE cap
-> */
-> 
-> I took care of only 2 in the case of realtek.c since it only support
-> MDIO_EEE_100TX and MDIO_EEE_1000T.
-> 
-> Defining a property for each is certainly doable but it does not look
-> very nice either. If it extends in the future, it will get even more
-> messier, especially if you want to disable everything.
 
-Yes, agreed.
- 
-> What do you think about keeping a single mask value but use the define
-> above in the DT ? It would be more readable than hex and easy to
-> extend, don't you think ?
-> 
-> These defines are already part of the uapi so I guess we can use those
-> in the DT bindings ?
+Looks good. Just one comment...
 
-I don't think they are accessible from the dtc include path. You will
-need to make a copy, in include/dt-bindings/net/phy.h
+[...]
 
-But yes, using these defines is a good idea.
+> +Connectivity
+> +------------
+> +
+> +- ports: Panels receive video data through one or multiple connections. While
+> +  the nature of those connections is specific to the panel type, the
+> +  connectivity is expressed in a standard fashion using ports as specified in
+> +  the device graph bindings defined in
+> +  Documentation/devicetree/bindings/graph.txt.
 
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We allow panels to either use graph binding or be a child of the display 
+controller. Using the graph is preferred, but in the simple cases just a 
+child node is sufficient. This should be described here or somewhere in 
+this doc.
+
+Rob
