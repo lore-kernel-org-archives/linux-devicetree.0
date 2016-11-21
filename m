@@ -1,41 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
- panel properties
-Date: Mon, 21 Nov 2016 10:48:15 -0600
-Message-ID: <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
+Date: Mon, 21 Nov 2016 17:48:28 +0100
+Message-ID: <CAMpxmJUXJi6PDq0qc-0+r2mLPASLpJUt_njWtXr4Mx4k0Fa82g@mail.gmail.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
+ <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
-> Document properties common to several display panels in a central
-> location that can be referenced by the panel device tree bindings.
-> 
-
-Looks good. Just one comment...
-
-[...]
-
-> +Connectivity
-> +------------
-> +
-> +- ports: Panels receive video data through one or multiple connections. While
-> +  the nature of those connections is specific to the panel type, the
-> +  connectivity is expressed in a standard fashion using ports as specified in
-> +  the device graph bindings defined in
-> +  Documentation/devicetree/bindings/graph.txt.
-
-We allow panels to either use graph binding or be a child of the display 
-controller. Using the graph is preferred, but in the simple cases just a 
-child node is sufficient. This should be described here or somewhere in 
-this doc.
-
-Rob
+MjAxNi0xMS0yMSAxNzozMyBHTVQrMDE6MDAgU2VraGFyIE5vcmkgPG5zZWtoYXJAdGkuY29tPjoK
+PiBPbiBNb25kYXkgMzEgT2N0b2JlciAyMDE2IDA4OjE1IFBNLCBCYXJ0b3N6IEdvbGFzemV3c2tp
+IHdyb3RlOgo+PiArc3RhdGljIGludCBkYTh4eF9kZHJjdGxfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikKPj4gK3sKPj4gKyAgICAgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9j
+b25maWdfa25vYiAqa25vYjsKPj4gKyAgICAgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0bF9zZXR0
+aW5nICpzZXR0aW5nOwo+PiArICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7Cj4+ICsgICAg
+IHN0cnVjdCByZXNvdXJjZSAqcmVzOwo+PiArICAgICB2b2lkIF9faW9tZW0gKmRkcmN0bDsKPj4g
+KyAgICAgc3RydWN0IGRldmljZSAqZGV2Owo+PiArICAgICB1MzIgcmVnOwo+PiArCj4+ICsgICAg
+IGRldiA9ICZwZGV2LT5kZXY7Cj4+ICsgICAgIG5vZGUgPSBkZXYtPm9mX25vZGU7Cj4+ICsKPj4g
+KyAgICAgc2V0dGluZyA9IGRhOHh4X2RkcmN0bF9nZXRfYm9hcmRfc2V0dGluZ3MoKTsKPj4gKyAg
+ICAgaWYgKCFzZXR0aW5nKSB7Cj4+ICsgICAgICAgICAgICAgZGV2X2VycihkZXYsICJubyBzZXR0
+aW5ncyBmb3IgYm9hcmQgJyVzJ1xuIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgIG9mX2ZsYXRf
+ZHRfZ2V0X21hY2hpbmVfbmFtZSgpKTsKPj4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsK
+Pj4gKyAgICAgfQo+Cj4gVGhpcyBjYXVzZXMgYSBzZWN0aW9uIG1pc21hdGNoIGJlY2F1c2Ugb2Zf
+ZmxhdF9kdF9nZXRfbWFjaGluZV9uYW1lKCkKPiBoYXMgYW4gX19pbml0IGFubm90YXRpb24uIEkg
+ZGlkIG5vdCBub3RpY2UgdGhhdCBiZWZvcmUsIHNvcnJ5Lgo+Cj4gSXQgY2FuIGJlIGZpeGVkIHdp
+dGggYSBwYXRjaCBsaWtlIGJlbG93Ogo+Cj4gLS0tODwtLS0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9tZW1vcnkvZGE4eHgtZGRyY3RsLmMgYi9kcml2ZXJzL21lbW9yeS9kYTh4eC1kZHJjdGwuYwo+
+IGluZGV4IGEyMGU3YmJiY2JlMC4uOWNhNWFhYjNhYzU0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+bWVtb3J5L2RhOHh4LWRkcmN0bC5jCj4gKysrIGIvZHJpdmVycy9tZW1vcnkvZGE4eHgtZGRyY3Rs
+LmMKPiBAQCAtMTAyLDYgKzEwMiwxOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRhOHh4X2RkcmN0
+bF9zZXR0aW5nICpkYTh4eF9kZHJjdGxfZ2V0X2JvYXJkX3NldHRpbmdzKHZvaWQpCj4gICAgICAg
+ICByZXR1cm4gTlVMTDsKPiAgfQo+Cj4gK3N0YXRpYyBjb25zdCBjaGFyKiBkYTh4eF9kZHJjdGxf
+Z2V0X21hY2hpbmVfbmFtZSh2b2lkKQo+ICt7Cj4gKyAgICAgICBjb25zdCBjaGFyICpzdHI7Cj4g
+KyAgICAgICBpbnQgcmV0Owo+ICsKPiArICAgICAgIHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3Ry
+aW5nKG9mX3Jvb3QsICJtb2RlbCIsICZzdHIpOwo+ICsgICAgICAgaWYgKHJldCkKPiArICAgICAg
+ICAgICAgICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcob2Zfcm9vdCwgImNvbXBhdGli
+bGUiLCAmc3RyKTsKPiArCj4gKyAgICAgICByZXR1cm4gc3RyOwo+ICt9Cj4gKwo+ICBzdGF0aWMg
+aW50IGRhOHh4X2RkcmN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7
+Cj4gICAgICAgICBjb25zdCBzdHJ1Y3QgZGE4eHhfZGRyY3RsX2NvbmZpZ19rbm9iICprbm9iOwo+
+IEBAIC0xMTgsNyArMTMwLDcgQEAgc3RhdGljIGludCBkYTh4eF9kZHJjdGxfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgIHNldHRpbmcgPSBkYTh4eF9kZHJjdGxf
+Z2V0X2JvYXJkX3NldHRpbmdzKCk7Cj4gICAgICAgICBpZiAoIXNldHRpbmcpIHsKPiAgICAgICAg
+ICAgICAgICAgZGV2X2VycihkZXYsICJubyBzZXR0aW5ncyBmb3IgYm9hcmQgJyVzJ1xuIiwKPiAt
+ICAgICAgICAgICAgICAgICAgICAgICBvZl9mbGF0X2R0X2dldF9tYWNoaW5lX25hbWUoKSk7Cj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgZGE4eHhfZGRyY3RsX2dldF9tYWNoaW5lX25hbWUoKSk7
+Cj4gICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+ICAgICAgICAgfQo+IC0tLTg8LS0t
+Cj4KPiBBIHNpbWlsYXIgZml4IGlzIHJlcXVpcmVkIGZvciB0aGUgb3RoZXIgZHJpdmVyIGluIHRo
+aXMgc2VyaWVzIChwYXRjaAo+IDIvNSkuIEkgbmVlZCBzb21lIGFkdmlzZSBvbiB3aGV0aGVyIEkg
+c2hvdWxkIGludHJvZHVjZSBhIGNvbW1vbgo+IGZ1bmN0aW9uIHRvIGdldCB0aGUgbWFjaGluZSBu
+YW1lIHBvc3Qga2VybmVsIGJvb3QtdXAgKEkgY2Fubm90IHNlZSBhbgo+IGV4aXN0aW5nIG9uZSku
+IElmIHllcywgYW55IGFkdmlzZSBvbiB3aGljaCBmaWxlIGl0IHNob3VsZCBnbyBpbnRvPwo+CgpI
+aSBTZWtoYXIsCgp0aGFua3MgZm9yIHNwb3R0aW5nIHRoYXQuCgpJIHRoaW5rIHdlIHNob3VsZCBp
+bnRyb2R1Y2UgdGhpcyBmdW5jdGlvbiByaWdodCBhd2F5LCByYXRoZXIgdGhhbgpoYXZpbmcgdHdv
+IHN0YXRpYyBmdW5jdGlvbnMgZG9pbmcgdGhlIHNhbWUgdGhpbmcuIElmIHlvdSBkb24ndCBtaW5k
+LApJJ2xsIHRyeSB0byBmaW5kIGEgZ29vZCBzcG90IGZvciBpdCBhbmQgc2VuZCBhIGZvbGxvdy11
+cCBzZXJpZXMgZml4aW5nCnRoZSBpc3N1ZS4KCkJlc3QgcmVnYXJkcywKQmFydG9zeiBHb2xhc3pl
+d3NraQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
