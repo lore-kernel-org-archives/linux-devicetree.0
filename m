@@ -1,109 +1,140 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Mon, 21 Nov 2016 08:05:49 -0800
-Message-ID: <58331B5D.8060907@gmail.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
- <582F6312.5040009@gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC PATCH v2 3/7] iio: inkern: api for manipulating ext_info of
+ iio channels
+Date: Mon, 21 Nov 2016 17:07:56 +0100
+Message-ID: <c64f8dc0-9469-17e7-281f-3d723cc5c7dc@axentia.se>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
+ <1479419289-17553-4-git-send-email-peda@axentia.se>
+ <d5cd7550-2cde-5beb-2cdb-ad6d501fc0ef@kernel.org>
+ <6ea462c2-53ae-0f50-deb9-e500a97f2ac4@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <582F6312.5040009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6ea462c2-53ae-0f50-deb9-e500a97f2ac4@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+On 2016-11-21 16:45, Lars-Peter Clausen wrote:
+> On 11/19/2016 04:38 PM, Jonathan Cameron wrote:
+>> On 17/11/16 21:48, Peter Rosin wrote:
+>>> Extend the inkern api with functions for reading and writing ext_info
+>>> of iio channels.
+>> I'd like Lars' feedback on this one.
+>>
+>> Superficially looks fine to me but I am not as familiar with this interface
+>> as Lars is ;) (he wrote it IIRC:)
+> 
+> The implementation looks OK. I'm not necessarily convinced about the concept
+> though, but the code is manageable so I guess it is OK.
+> 
+> The final version should add kernel API documentation for the new functions.
 
-On 11/18/16 12:22, Frank Rowand wrote:
-> On 11/18/16 02:41, Sudeep Holla wrote:
->>
->>
->> On 17/11/16 21:00, Frank Rowand wrote:
->>> On 11/17/16 07:32, Sudeep Holla wrote:
->>>> Currently platforms/drivers needing to get the machine model name are
->>>> replicating the same snippet of code. In some case, the OF reference
->>>> counting is either missing or incorrect.
->>>>
->>>> This patch adds support to read the machine model name either using
->>>> the "model" or the "compatible" property in the device tree root node
->>>> to the core OF/DT code.
->>>>
->>>> This can be used to remove all the duplicate code snippets doing exactly
->>>> same thing later.
->>>
->>> I find five instances of reading only property "model":
->>>
->>>   arch/arm/mach-imx/cpu.c
->>>   arch/arm/mach-mxs/mach-mxs.c
->>>   arch/c6x/kernel/setup.c
->>>   arch/mips/cavium-octeon/setup.c
->>>   arch/sh/boards/of-generic.c
->>>
->>
->> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
->> that this will be used for.
-> 
-> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
+I added that in v3 that I sent earlier today.
 
-Can you please re-send patch 2/2?
+>>> ---
+>>>  drivers/iio/inkern.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++
+>>>  include/linux/iio/consumer.h |  6 +++++
+>>>  2 files changed, 61 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+>>> index cfca17ba2535..a8099b164222 100644
+>>> --- a/drivers/iio/inkern.c
+>>> +++ b/drivers/iio/inkern.c
+>>> @@ -850,3 +850,58 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
+>>>  	return ret;
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(iio_write_channel_raw);
+>>> +
+>>> +int iio_get_channel_ext_info_count(struct iio_channel *chan)
+> 
+> should be unsigned.
 
--Frank
+Correct, I had a plan to do that change, but it slipped my mind. Thanks
+for catching it!
 
+>>> +{
+>>> +	const struct iio_chan_spec_ext_info *ext_info;
+>>> +	unsigned int i = 0;
+>>> +
+>>> +	if (!chan->channel->ext_info)
+>>> +		return i;
+>>> +
+>>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ext_info++)
+>>> +		++i;
+>>> +
+>>> +	return i;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iio_get_channel_ext_info_count);
+>>> +
+>>> +ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
+>>> +				  const char *attr, char *buf)
+>>> +{
+>>> +	const struct iio_chan_spec_ext_info *ext_info;
+>>> +
+>>> +	if (!chan->channel->ext_info)
+>>> +		return -EINVAL;
+>>> +
+>>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
+>>> +		if (strcmp(attr, ext_info->name))
+>>> +			continue;
 > 
-> I did see a list of drivers in the RFC patch that you sent several hours
-> before this patch.
-> 
-> In that patch you replaced reading the model name from the _flat_ device
-> tree with the new function in at least one location.  That is not
-> correct.
-> 
-> 
->>
->>> I find one instance of reading property "model", then if
->>> that does not exist, property "compatible":
->>>
->>>   arch/mips/generic/proc.c
->>>
->>
->> Correct as you can check in patch 2/2
->>
->>> The proposed patch matches the code used in one place, and thus
->>> current usage does not match the patch description.
->>>
->>
->> Yes, but does it matter ? compatibles are somewhat informative about the
->> model IMO.
-> 
-> Yes it does matter.  That is just sloppy and makes devicetree yet harder
-> to understand.  It hurts clarity.  The new function name says get "model",
-> not get "model" or "first element of the compatible list".
-> 
-> And using the _first_ element only of the compatible list to determine
-> model is not a good paradigm.  It is yet another hidden, special case,
-> undocumented trap to lure in the unwary.
-> 
-> It is extremely unlikely that the change actually changes behavior for an
-> existing device tree because there is probably no dts that does not
-> contain the model property but does contain the proper magic value in
-> the compatible property.  But did you actually check for that?
-> 
->>
->>> Is my search bad?  Are you planning to add additional instances
->>> of reading "model" then "compatible"?
->>>
->>
->> No, just replacing the existing ones as in patch 2/2
->>
-> 
-> You also ignored Arnd's comment in reply to your RFC patch.
-> 
-> -Frank
-> 
+> You could factor the lookup out into a helper function that is used for both
+> read and write. And also stop searching once a match was found.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll do a lookup helper for v4. But the stop-searching-thing is already
+done with the return statements at the end of the for-loops.
+
+Thanks for looking!
+
+Cheers,
+Peter
+
+>>> +
+>>> +		return ext_info->read(chan->indio_dev, ext_info->private,
+>>> +				      chan->channel, buf);
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iio_read_channel_ext_info);
+>>> +
+>>> +ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
+>>> +				   const char *buf, size_t len)
+>>> +{
+>>> +	const struct iio_chan_spec_ext_info *ext_info;
+>>> +
+>>> +	if (!chan->channel->ext_info)
+>>> +		return -EINVAL;
+>>> +
+>>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
+>>> +		if (strcmp(attr, ext_info->name))
+>>> +			continue;
+>>> +
+>>> +		return ext_info->write(chan->indio_dev, ext_info->private,
+>>> +				       chan->channel, buf, len);
+>>> +	}
+>>> +
+>>> +	return -EINVAL;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(iio_write_channel_ext_info);
+>>> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+>>> index 9a4f336d8b4a..471dece8729a 100644
+>>> --- a/include/linux/iio/consumer.h
+>>> +++ b/include/linux/iio/consumer.h
+>>> @@ -299,4 +299,10 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val,
+>>>  int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
+>>>  	int *processed, unsigned int scale);
+>>>  
+>>> +int iio_get_channel_ext_info_count(struct iio_channel *chan);
+>>> +ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
+>>> +				  const char *attr, char *buf);
+>>> +ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
+>>> +				   const char *buf, size_t len);
+>>> +
+>>>  #endif
+>>>
+>>
+> 
