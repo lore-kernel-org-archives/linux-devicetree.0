@@ -1,37 +1,108 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] clk: qcom: smd-rpmcc: Add msm8974 clocks
-Date: Mon, 21 Nov 2016 10:18:08 -0600
-Message-ID: <20161121161808.5kebw6r5lxnepqau@rob-hp-laptop>
-References: <1479486805-21853-1-git-send-email-bjorn.andersson@linaro.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Mon, 21 Nov 2016 16:20:15 +0000
+Message-ID: <0f150e21-ba46-d4f2-98e8-a226eb82ca3e@arm.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
+ <582F6312.5040009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479486805-21853-1-git-send-email-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <582F6312.5040009@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2016 at 08:33:25AM -0800, Bjorn Andersson wrote:
-> This adds all RPM based clocks for msm8974, except cxo and
-> gfx3d_clk_src.
-> 
-> Tested-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> Changes since v1:
-> - Fixed the screwed up indentation
-> 
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->  drivers/clk/qcom/clk-smd-rpm.c                     | 71 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             | 40 +++++++++++-
->  3 files changed, 110 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 18/11/16 20:22, Frank Rowand wrote:
+> On 11/18/16 02:41, Sudeep Holla wrote:
+>>
+>>
+>> On 17/11/16 21:00, Frank Rowand wrote:
+>>> On 11/17/16 07:32, Sudeep Holla wrote:
+>>>> Currently platforms/drivers needing to get the machine model name are
+>>>> replicating the same snippet of code. In some case, the OF reference
+>>>> counting is either missing or incorrect.
+>>>>
+>>>> This patch adds support to read the machine model name either using
+>>>> the "model" or the "compatible" property in the device tree root node
+>>>> to the core OF/DT code.
+>>>>
+>>>> This can be used to remove all the duplicate code snippets doing exactly
+>>>> same thing later.
+>>>
+>>> I find five instances of reading only property "model":
+>>>
+>>>   arch/arm/mach-imx/cpu.c
+>>>   arch/arm/mach-mxs/mach-mxs.c
+>>>   arch/c6x/kernel/setup.c
+>>>   arch/mips/cavium-octeon/setup.c
+>>>   arch/sh/boards/of-generic.c
+>>>
+>>
+>> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
+>> that this will be used for.
+>
+> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
+>
+
+Yes on both [1][2]
+
+> I did see a list of drivers in the RFC patch that you sent several hours
+> before this patch.
+>
+> In that patch you replaced reading the model name from the _flat_ device
+> tree with the new function in at least one location.  That is not
+> correct.
+>
+>
+>>
+>>> I find one instance of reading property "model", then if
+>>> that does not exist, property "compatible":
+>>>
+>>>   arch/mips/generic/proc.c
+>>>
+>>
+>> Correct as you can check in patch 2/2
+>>
+>>> The proposed patch matches the code used in one place, and thus
+>>> current usage does not match the patch description.
+>>>
+>>
+>> Yes, but does it matter ? compatibles are somewhat informative about the
+>> model IMO.
+>
+> Yes it does matter.  That is just sloppy and makes devicetree yet harder
+> to understand.  It hurts clarity.  The new function name says get "model",
+> not get "model" or "first element of the compatible list".
+>
+
+This is a implementation in the Linux and it doesn't change anything in
+DT semantics. I am not able to get your concern.
+
+> And using the _first_ element only of the compatible list to determine
+> model is not a good paradigm.  It is yet another hidden, special case,
+> undocumented trap to lure in the unwary.
+>
+
+The function is documented and again this doesn't enforce anything in 
+the bindings. It's just the way it's used by the Linux kernel.
+
+[...]
+
+>
+> You also ignored Arnd's comment in reply to your RFC patch.
+>
+
+OK, all I can see is that Arnd wanted to reuse of_root, which I did.
+Did I miss anything else ?
+
+-- 
+Regards,
+Sudeep
+
+[1] http://marc.info/?l=linux-kernel&m=147940586616629&w=2
+[2] http://marc.info/?l=linux-kernel&m=147940575116579&w=2
