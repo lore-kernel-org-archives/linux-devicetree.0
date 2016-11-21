@@ -1,57 +1,150 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH V5 1/3] ARM64 LPC: Indirect ISA port IO introduced
-Date: Mon, 21 Nov 2016 12:58:28 +0000
-Message-ID: <79d73f93-1cf8-19db-ca5c-8fb6257edd6c@huawei.com>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <1478576829-112707-2-git-send-email-yuanzhichang@hisilicon.com>
- <20161108120323.GC15297@leverpostej>
- <1478647002.7430.69.camel@kernel.crashing.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/2] regulator: max77620: add support to configure MPOK
+Date: Mon, 21 Nov 2016 13:09:48 +0000
+Message-ID: <20161121130948.GC3917@dell>
+References: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1478647002.7430.69.camel@kernel.crashing.org>
+Content-Disposition: inline
+In-Reply-To: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bhelgaas@google.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, marc.zyngier@arm.com
+To: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, svelpula@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2016 23:16, Benjamin Herrenschmidt wrote:
-> On Tue, 2016-11-08 at 12:03 +0000, Mark Rutland wrote:
->> On Tue, Nov 08, 2016 at 11:47:07AM +0800, zhichang.yuan wrote:
->>>
->>> For arm64, there is no I/O space as other architectural platforms, such as
->>> X86. Most I/O accesses are achieved based on MMIO. But for some arm64 SoCs,
->>> such as Hip06, when accessing some legacy ISA devices connected to LPC, those
->>> known port addresses are used to control the corresponding target devices, for
->>> example, 0x2f8 is for UART, 0xe4 is for ipmi-bt. It is different from the
->>> normal MMIO mode in using.
->>
->> This has nothing to do with arm64. Hardware with this kind of indirect
->> bus access could be integrated with a variety of CPU architectures. It
->> simply hasn't been, yet.
->
-> On some ppc's we also use similar indirect access methods for IOs. We
-> have a generic infrastructure for re-routing some memory or IO regions
-> to hooks.
->
-> On POWER8, our PCIe doesn't do IO at all, but we have an LPC bus behind
-> firmware calls ;-) We use that infrastructure to plumb in the LPC bus.
->
-Hi,
+On Thu, 17 Nov 2016, Venkat Reddy Talla wrote:
 
-I would like to mention another topic on supporting LPC, and this is 
-regard to eSPI support.
-eSPI is seen as the successor for LPC, and some BMCs already support it.
+> Adding support to configure regulator POK mapping bit
+> to control nRST_IO and GPIO1 POK function.
+> In  tegra based platform which uses MAX20024 pmic, when
+> some of regulators are configured FPS_NONE(flexible power sequencer)
+> causes PMIC GPIO1 to go low which lead to various other rails turning off,
+> to avoid this MPOK bit of those regulators need to be set to 0
+> so that PMIC GPIO1 will not go low.
+> 
+> Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+> 
+> ---
+> changes in v2:
+> - updated commit message for the patch
+> - address review comments
+> ---
+>  drivers/regulator/max77620-regulator.c | 46 ++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max77620.h           |  2 ++
 
-I had a chat with Arnd on this, and the idea to model LPC as a SPI bus 
-adpater (and also eSPI).
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-However it seems to me that most platforms will/should support eSPI as a 
-transparent bridge, same as LPC on x86. So I don't think that this is 
-much point in modelling LPC/eSPI as a bus.
+>  2 files changed, 48 insertions(+)
+> 
+> diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+> index a1b49a6..850b14c 100644
+> --- a/drivers/regulator/max77620-regulator.c
+> +++ b/drivers/regulator/max77620-regulator.c
+> @@ -81,6 +81,7 @@ struct max77620_regulator_pdata {
+>  	int suspend_fps_pd_slot;
+>  	int suspend_fps_pu_slot;
+>  	int current_mode;
+> +	int power_ok;
+>  	int ramp_rate_setting;
+>  };
+>  
+> @@ -351,11 +352,48 @@ static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
+>  	return 0;
+>  }
+>  
+> +static int max77620_config_power_ok(struct max77620_regulator *pmic, int id)
+> +{
+> +	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
+> +	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
+> +	struct max77620_chip *chip = dev_get_drvdata(pmic->dev->parent);
+> +	u8 val, mask;
+> +	int ret;
+> +
+> +	switch (chip->chip_id) {
+> +	case MAX20024:
+> +		if (rpdata->power_ok >= 0) {
+> +			if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
+> +				mask = MAX20024_SD_CFG1_MPOK_MASK;
+> +			else
+> +				mask = MAX20024_LDO_CFG2_MPOK_MASK;
+> +
+> +			val = rpdata->power_ok ? mask : 0;
+> +
+> +			ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr,
+> +						 mask, val);
+> +			if (ret < 0) {
+> +				dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
+> +					rinfo->cfg_addr, ret);
+> +				return ret;
+> +			}
+> +		}
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
+>  {
+>  	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
+>  	int ret;
+>  
+> +	max77620_config_power_ok(pmic, id);
+> +
+>  	/* Update power mode */
+>  	ret = max77620_regulator_get_power_mode(pmic, id);
+>  	if (ret < 0)
+> @@ -595,6 +633,12 @@ static int max77620_of_parse_cb(struct device_node *np,
+>  			np, "maxim,suspend-fps-power-down-slot", &pval);
+>  	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
+>  
+> +	ret = of_property_read_u32(np, "maxim,power-ok-control", &pval);
+> +	if (!ret)
+> +		rpdata->power_ok = pval;
+> +	else
+> +		rpdata->power_ok = -1;
+> +
+>  	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
+>  	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
+>  
+> @@ -807,6 +851,8 @@ static int max77620_regulator_resume(struct device *dev)
+>  	for (id = 0; id < MAX77620_NUM_REGS; id++) {
+>  		reg_pdata = &pmic->reg_pdata[id];
+>  
+> +		max77620_config_power_ok(pmic, id);
+> +
+>  		max77620_regulator_set_fps_slots(pmic, id, false);
+>  		if (reg_pdata->active_fps_src < 0)
+>  			continue;
+> diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
+> index 3ca0af07..ad2a9a8 100644
+> --- a/include/linux/mfd/max77620.h
+> +++ b/include/linux/mfd/max77620.h
+> @@ -180,6 +180,7 @@
+>  #define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
+>  #define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
+>  #define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
+> +#define MAX20024_SD_CFG1_MPOK_MASK		BIT(1)
+>  #define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
+>  #define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
+>  #define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
+> @@ -187,6 +188,7 @@
+>  /* LDO_CNFG2 */
+>  #define MAX77620_LDO_POWER_MODE_MASK		0xC0
+>  #define MAX77620_LDO_POWER_MODE_SHIFT		6
+> +#define MAX20024_LDO_CFG2_MPOK_MASK		BIT(2)
+>  #define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
+>  #define MAX77620_LDO_CFG2_ADE_DISABLE		0
+>  #define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
 
-So we shall continue with indriect-IO support...
-
-Thanks,
-John
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
