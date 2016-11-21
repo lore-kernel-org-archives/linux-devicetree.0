@@ -1,682 +1,229 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: at91/dt: add dts file for sama5d36ek CMP board
-Date: Mon, 21 Nov 2016 12:23:52 +0100
-Message-ID: <98ed7834-b12d-91b7-fbc9-a59e3e355db9@atmel.com>
-References: <1479705283-3052-1-git-send-email-wenyou.yang@atmel.com>
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: Re: [PATCH v9 00/16] mmc: sdhci-msm: Add clk-rates, DDR, HS400
+ support
+Date: Mon, 21 Nov 2016 17:12:42 +0530
+Message-ID: <d4d05fb9-8a9e-6cf2-dc63-0edbd27a9e55@codeaurora.org>
+References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
+ <CAPDyKFrRbf0+G5K=-jsaevAGbTqhTAss2zJv3QdiyCrv0BG-zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479705283-3052-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrRbf0+G5K=-jsaevAGbTqhTAss2zJv3QdiyCrv0BG-zA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, David Brown <david.brown@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Alex Lemberg <alex.lemberg@sandisk.com>, Mateusz Nowak <mateusz.nowak@intel.com>, Yuliy Izrailov <Yuliy.Izrailov@sandisk.com>, Asutosh Das <asutoshd@codeaurora.org>, David Griego <david.griego@linaro.org>, Sahitya Tummala <stummala@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Pramod Gurav <pramod.gurav@linaro.org>, jeremymc@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Le 21/11/2016 à 06:14, Wenyou Yang a écrit :
-> The sama5d36ek CMP board is the variant of sama5d3xek board.
-> It is equipped with the low-power DDR2 SDRAM, PMIC ACT8865 and
-> some power rail. Its main purpose is used to measure the power
-> consumption.
-> The difference of the sama5d36ek CMP dts from sama5d36ek dts is
-> listed as below.
->  1. The USB host nodes are removed, that is, the USB host is disabled.
->  2. The gpio_keys node is added to wake up from the sleep.
->  3. The LCD isn't supported due to the pins for LCD are conflicted
->     with gpio_keys.
->  4. The adc0 node support the pinctrl sleep state to fix the over
->     consumption on VDDANA.
-> 
-> As said in errata, "When the USB host ports are used in high speed
-> mode (EHCI), it is not possible to suspend the ports if no device is
-> attached on each port. This leads to increased power consumption even
-> if the system is in a low power mode." That is why the the USB host
-> is disabled.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Thanks Wenyou.
+On 11/21/2016 3:36 PM, Ulf Hansson wrote:
+> On 21 November 2016 at 07:37, Ritesh Harjani <riteshh@codeaurora.org> wrote:
+>> Hi,
+>>
+>> This is v9 version of the patch series which adds support for MSM8996.
+>> Adds HS400 driver support as well.
+>> These are tested on internal msm8996 & db410c HW.
+>>
+>> The patch series is ready. Do we think we can apply these
+>> patches for next now?
+>
+> I guess the DTS changes can be picked up by Andy, so they can go via arm-soc?
+Yes.
 
-Regards,
+>
+> Then, does the mmc changes depend on the clock changes? If so, I can
+> pick them as well, but then I need an ack from Stephen....
+Ideal and preferable, would be that clk & mmc changes go in together. 
+But either ways should be fine.
 
-> ---
-> 
-> Changes in v3:
->  - Use a dual license scheme for DT files.
->  - Use the proper model name and the compatible string to reflect
->    the nature of this new "CMP" board.
->  - Change name of wakeup property to "wakeup-source".
->  - Remove unnecessary comments.
->  - Remove bootargs.
-> 
-> Changes in v2:
->  - Add the pinctrl sleep state for adc0 node to fix the over
->    consumption on VDDANA.
->  - Improve the commit log.
-> 
->  arch/arm/boot/dts/sama5d36ek_cmp.dts  |  87 ++++++++++
->  arch/arm/boot/dts/sama5d3xcm_cmp.dtsi | 201 +++++++++++++++++++++++
->  arch/arm/boot/dts/sama5d3xmb_cmp.dtsi | 301 ++++++++++++++++++++++++++++++++++
->  3 files changed, 589 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sama5d36ek_cmp.dts
->  create mode 100644 arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
->  create mode 100644 arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/sama5d36ek_cmp.dts b/arch/arm/boot/dts/sama5d36ek_cmp.dts
-> new file mode 100644
-> index 0000000..b632143
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sama5d36ek_cmp.dts
-> @@ -0,0 +1,87 @@
-> +/*
-> + * sama5d36ek_cmp.dts - Device Tree file for SAMA5D36-EK CMP board
-> + *
-> + *  Copyright (C) 2016 Atmel,
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +/dts-v1/;
-> +#include "sama5d36.dtsi"
-> +#include "sama5d3xmb_cmp.dtsi"
-> +
-> +/ {
-> +	model = "Atmel SAMA5D36EK-CMP";
-> +	compatible = "atmel,sama5d36ek-cmp", "atmel,sama5d3xmb-cmp", "atmel,sama5d3xcm-cmp", "atmel,sama5d36", "atmel,sama5d3", "atmel,sama5";
-> +
-> +	ahb {
-> +		apb {
-> +			spi0: spi@f0004000 {
-> +				status = "okay";
-> +			};
-> +
-> +			ssc0: ssc@f0008000 {
-> +				status = "okay";
-> +			};
-> +
-> +			can0: can@f000c000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c0: i2c@f0014000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c1: i2c@f0018000 {
-> +				status = "okay";
-> +			};
-> +
-> +			macb0: ethernet@f0028000 {
-> +				status = "okay";
-> +			};
-> +
-> +			macb1: ethernet@f802c000 {
-> +				status = "okay";
-> +			};
-> +		};
-> +	};
-> +
-> +	sound {
-> +		status = "okay";
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-> new file mode 100644
-> index 0000000..dc7572b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-> @@ -0,0 +1,201 @@
-> +/*
-> + * sama5d3xcm_cmp.dtsi - Device Tree Include file for SAMA5D36 CMP CPU Module
-> + *
-> + *  Copyright (C) 2016 Atmel,
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/ {
-> +	compatible = "atmel,sama5d3xcm-cmp", "atmel,sama5d3", "atmel,sama5";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x20000000 0x20000000>;
-> +	};
-> +
-> +	clocks {
-> +		slow_xtal {
-> +			clock-frequency = <32768>;
-> +		};
-> +
-> +		main_xtal {
-> +			clock-frequency = <12000000>;
-> +		};
-> +	};
-> +
-> +	ahb {
-> +		apb {
-> +			spi0: spi@f0004000 {
-> +				cs-gpios = <&pioD 13 0>, <0>, <0>, <0>;
-> +			};
-> +
-> +			macb0: ethernet@f0028000 {
-> +				phy-mode = "rgmii";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				ethernet-phy@1 {
-> +					reg = <0x1>;
-> +					interrupt-parent = <&pioB>;
-> +					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +					txen-skew-ps = <800>;
-> +					txc-skew-ps = <3000>;
-> +					rxdv-skew-ps = <400>;
-> +					rxc-skew-ps = <3000>;
-> +					rxd0-skew-ps = <400>;
-> +					rxd1-skew-ps = <400>;
-> +					rxd2-skew-ps = <400>;
-> +					rxd3-skew-ps = <400>;
-> +				};
-> +
-> +				ethernet-phy@7 {
-> +					reg = <0x7>;
-> +					interrupt-parent = <&pioB>;
-> +					interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +					txen-skew-ps = <800>;
-> +					txc-skew-ps = <3000>;
-> +					rxdv-skew-ps = <400>;
-> +					rxc-skew-ps = <3000>;
-> +					rxd0-skew-ps = <400>;
-> +					rxd1-skew-ps = <400>;
-> +					rxd2-skew-ps = <400>;
-> +					rxd3-skew-ps = <400>;
-> +				};
-> +			};
-> +
-> +			i2c1: i2c@f0018000 {
-> +				pmic: act8865@5b {
-> +					compatible = "active-semi,act8865";
-> +					reg = <0x5b>;
-> +					status = "disabled";
-> +
-> +					regulators {
-> +						vcc_1v8_reg: DCDC_REG1 {
-> +							regulator-name = "VCC_1V8";
-> +							regulator-min-microvolt = <1800000>;
-> +							regulator-max-microvolt = <1800000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vcc_1v2_reg: DCDC_REG2 {
-> +							regulator-name = "VCC_1V2";
-> +							regulator-min-microvolt = <1100000>;
-> +							regulator-max-microvolt = <1300000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vcc_3v3_reg: DCDC_REG3 {
-> +							regulator-name = "VCC_3V3";
-> +							regulator-min-microvolt = <3300000>;
-> +							regulator-max-microvolt = <3300000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vddana_reg: LDO_REG1 {
-> +							regulator-name = "VDDANA";
-> +							regulator-min-microvolt = <3300000>;
-> +							regulator-max-microvolt = <3300000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vddfuse_reg: LDO_REG2 {
-> +							regulator-name = "FUSE_2V5";
-> +							regulator-min-microvolt = <2500000>;
-> +							regulator-max-microvolt = <2500000>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		nand0: nand@60000000 {
-> +			nand-bus-width = <8>;
-> +			nand-ecc-mode = "hw";
-> +			atmel,has-pmecc;
-> +			atmel,pmecc-cap = <4>;
-> +			atmel,pmecc-sector-size = <512>;
-> +			nand-on-flash-bbt;
-> +			status = "okay";
-> +
-> +			at91bootstrap@0 {
-> +				label = "at91bootstrap";
-> +				reg = <0x0 0x40000>;
-> +			};
-> +
-> +			bootloader@40000 {
-> +				label = "bootloader";
-> +				reg = <0x40000 0x80000>;
-> +			};
-> +
-> +			bootloaderenv@c0000 {
-> +				label = "bootloader env";
-> +				reg = <0xc0000 0xc0000>;
-> +			};
-> +
-> +			dtb@180000 {
-> +				label = "device tree";
-> +				reg = <0x180000 0x80000>;
-> +			};
-> +
-> +			kernel@200000 {
-> +				label = "kernel";
-> +				reg = <0x200000 0x600000>;
-> +			};
-> +
-> +			rootfs@800000 {
-> +				label = "rootfs";
-> +				reg = <0x800000 0x0f800000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		d2 {
-> +			label = "d2";
-> +			gpios = <&pioE 25 GPIO_ACTIVE_LOW>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-> new file mode 100644
-> index 0000000..252e0d3
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-> @@ -0,0 +1,301 @@
-> +/*
-> + * sama5d3xmb_cmp.dts - Device Tree file for SAMA5D3x CMP mother board
-> + *
-> + *  Copyright (C) 2016 Atmel,
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +#include "sama5d3xcm_cmp.dtsi"
-> +
-> +/ {
-> +	compatible = "atmel,sama5d3xmb-cmp", "atmel,sama5d3xcm-cmp", "atmel,sama5d3", "atmel,sama5";
-> +
-> +	ahb {
-> +		apb {
-> +			mmc0: mmc@f0000000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3 &pinctrl_mmc0_cd>;
-> +				status = "okay";
-> +				slot@0 {
-> +					reg = <0>;
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 17 GPIO_ACTIVE_HIGH>;
-> +				};
-> +			};
-> +
-> +			spi0: spi@f0004000 {
-> +				dmas = <0>, <0>;	/*  Do not use DMA for spi0 */
-> +
-> +				m25p80@0 {
-> +					compatible = "atmel,at25df321a";
-> +					spi-max-frequency = <50000000>;
-> +					reg = <0>;
-> +				};
-> +			};
-> +
-> +			ssc0: ssc@f0008000 {
-> +				atmel,clk-from-rk-pin;
-> +			};
-> +
-> +			/*
-> +			 * i2c0 conflicts with ISI:
-> +			 * disable it to allow the use of ISI
-> +			 * can not enable audio when i2c0 disabled
-> +			 */
-> +			i2c0: i2c@f0014000 {
-> +				wm8904: wm8904@1a {
-> +					compatible = "wlf,wm8904";
-> +					reg = <0x1a>;
-> +					clocks = <&pck0>;
-> +					clock-names = "mclk";
-> +				};
-> +			};
-> +
-> +			i2c1: i2c@f0018000 {
-> +				ov2640: camera@0x30 {
-> +					compatible = "ovti,ov2640";
-> +					reg = <0x30>;
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&pinctrl_pck1_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +					resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-> +					pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-> +					/* use pck1 for the master clock of ov2640 */
-> +					clocks = <&pck1>;
-> +					clock-names = "xvclk";
-> +					assigned-clocks = <&pck1>;
-> +					assigned-clock-rates = <25000000>;
-> +
-> +					port {
-> +						ov2640_0: endpoint {
-> +							remote-endpoint = <&isi_0>;
-> +							bus-width = <8>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +
-> +			usart1: serial@f0020000 {
-> +				dmas = <0>, <0>;	/*  Do not use DMA for usart1 */
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
-> +				status = "okay";
-> +			};
-> +
-> +			isi: isi@f0034000 {
-> +				port {
-> +					isi_0: endpoint {
-> +						remote-endpoint = <&ov2640_0>;
-> +						bus-width = <8>;
-> +						vsync-active = <1>;
-> +						hsync-active = <1>;
-> +					};
-> +				};
-> +			};
-> +
-> +			mmc1: mmc@f8000000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
-> +				status = "okay";
-> +				slot@0 {
-> +					reg = <0>;
-> +					bus-width = <4>;
-> +					cd-gpios = <&pioD 18 GPIO_ACTIVE_HIGH>;
-> +				};
-> +			};
-> +
-> +			adc0: adc@f8018000 {
-> +				pinctrl-names = "default", "sleep";
-> +				pinctrl-0 = <
-> +					&pinctrl_adc0_adtrg
-> +					&pinctrl_adc0_ad0
-> +					&pinctrl_adc0_ad1
-> +					&pinctrl_adc0_ad2
-> +					&pinctrl_adc0_ad3
-> +					&pinctrl_adc0_ad4
-> +					>;
-> +				pinctrl-1 = <
-> +					&pinctrl_adc0_adtrg_sleep
-> +					&pinctrl_adc0_ad0_sleep
-> +					&pinctrl_adc0_ad1_sleep
-> +					&pinctrl_adc0_ad2_sleep
-> +					&pinctrl_adc0_ad3_sleep
-> +					&pinctrl_adc0_ad4_sleep
-> +					>;
-> +				status = "okay";
-> +			};
-> +
-> +			macb1: ethernet@f802c000 {
-> +				phy-mode = "rmii";
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				phy0: ethernet-phy@1 {
-> +					/*interrupt-parent = <&pioE>;*/
-> +					/*interrupts = <30 IRQ_TYPE_EDGE_FALLING>;*/
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			pinctrl@fffff200 {
-> +				adc0 {
-> +					pinctrl_adc0_adtrg_sleep: adc0_adtrg_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 19 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +					pinctrl_adc0_ad0_sleep: adc0_ad0_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 20 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +					pinctrl_adc0_ad1_sleep: adc0_ad1_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 21 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +					pinctrl_adc0_ad2_sleep: adc0_ad2_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 22 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +					pinctrl_adc0_ad3_sleep: adc0_ad3_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 23 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +					pinctrl_adc0_ad4_sleep: adc0_ad4_1 {
-> +						atmel,pins =
-> +							<AT91_PIOD 24 AT91_PERIPH_GPIO (AT91_PINCTRL_OUTPUT | AT91_PINCTRL_OUTPUT_VAL(0))>;
-> +					};
-> +				};
-> +
-> +				board {
-> +					pinctrl_gpio_keys: gpio_keys {
-> +						atmel,pins =
-> +							<AT91_PIOE 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-> +					};
-> +
-> +					pinctrl_mmc0_cd: mmc0_cd {
-> +						atmel,pins =
-> +							<AT91_PIOD 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
-> +					};
-> +
-> +					pinctrl_mmc1_cd: mmc1_cd {
-> +						atmel,pins =
-> +							<AT91_PIOD 18 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
-> +					};
-> +
-> +					pinctrl_pck0_as_audio_mck: pck0_as_audio_mck {
-> +						atmel,pins =
-> +							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-> +					};
-> +
-> +					pinctrl_pck1_as_isi_mck: pck1_as_isi_mck-0 {
-> +						atmel,pins =
-> +							<AT91_PIOD 31 AT91_PERIPH_B AT91_PINCTRL_NONE>;
-> +					};
-> +
-> +					pinctrl_sensor_reset: sensor_reset-0 {
-> +						atmel,pins =
-> +							<AT91_PIOE 24 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-> +					};
-> +
-> +					pinctrl_sensor_power: sensor_power-0 {
-> +						atmel,pins =
-> +							<AT91_PIOE 29 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-> +					};
-> +
-> +					pinctrl_usba_vbus: usba_vbus {
-> +						atmel,pins =
-> +							<AT91_PIOD 29 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
-> +					};
-> +				};
-> +			};
-> +
-> +			dbgu: serial@ffffee00 {
-> +				dmas = <0>, <0>;	/*  Do not use DMA for dbgu */
-> +				status = "okay";
-> +			};
-> +
-> +			watchdog@fffffe40 {
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		usb0: gadget@00500000 {
-> +			atmel,vbus-gpio = <&pioD 29 GPIO_ACTIVE_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_usba_vbus>;
-> +			status = "okay";
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "atmel,asoc-wm8904";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
-> +
-> +		atmel,model = "wm8904 @ SAMA5D3EK";
-> +		atmel,audio-routing =
-> +			"Headphone Jack", "HPOUTL",
-> +			"Headphone Jack", "HPOUTR",
-> +			"IN2L", "Line In Jack",
-> +			"IN2R", "Line In Jack",
-> +			"Mic", "MICBIAS",
-> +			"IN1L", "Mic";
-> +
-> +		atmel,ssc-controller = <&ssc0>;
-> +		atmel,audio-codec = <&wm8904>;
-> +
-> +		status = "disabled";
-> +	};
-> +
-> +	/* Conflict with LCD pins */
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		status = "okay";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> +
-> +		pb_user1 {
-> +			label = "pb_user1";
-> +			gpios = <&pioE 27 GPIO_ACTIVE_HIGH>;
-> +			linux,code = <0x100>;
-> +			wakeup-source;
-> +		};
-> +	};
-> +};
-> 
-
+>
+> Kind regards
+> Uffe
+>
+>>
+>> There are only minor changes in v9.
+>> 1. From <&xo_board 0> -> <&xo_board>.
+>> 2. Addressed Adrian minor comments on 009.
+>> 3. Other minor changes.
+>>
+>>
+>> Older history:-
+>>
+>> Changes from v7 -> v8 :-
+>> 1. Added patch 005 to add dt bindings for xo_clock.
+>> 2. Added patch 009 to factor out sdhci_enable_clock as discussed on v7 series.
+>> 2.a. Modified patch 010 by making use of sdhci_enable_clock.
+>> 2.b. Addressed Stephen's comment on patch 010 to call clk_set_rate unconditionally.
+>> 3. Addressed Stephen comments to remove unncessary one line comments, braces and other
+>> minor comments.
+>> 4. Added changes from Jeremy in patch 002 for gcc-msm8994 as well for sdcc clk_rcg2_floor_ops.
+>> minor comments.
+>>
+>> v7 was verified on my Nexus 5X (msm8992).
+>>
+>> Older history :-
+>> Below are the changes in v7.
+>>
+>> Changes from v6 -> v7 :-
+>> 1. Removed patch "clk: Add clk_hw_get_clk() helper API to be used by clk providers"
+>> in v7 as it was not required.
+>> 2. Addressed Stephen review comments on -
+>> "clk: qcom: Add rcg ops to return floor value closest to the requested rate"
+>> 3. Addressed comments from Stephen to add xo_clock entry in the sdhc clock node.
+>> Using the same xo_clock entry from DT to get the clk_rate of xo_clock used in
+>> sdhci-msm driver. Patch 04 adds this entry into DT.
+>> Patch 05 adds the driver support for xo_clock mentioned above.
+>> Hence there is a minor change in Patch05, which can be reviewed and taken
+>> into the tree.
+>>
+>> IMHO, almost all patches are almost done and are ready to be accepted.
+>> Will below process work out?
+>> Patches 001 & 002 :- (clock changes) - Can go via Stephen's Boyd Tree.
+>> Patches 004 & 010 :- (DTS changes) - Can go via Andy Gross.
+>> Patches 003, 005-009 & 011-014 :- (sdhci-msm changes) - Adrian's tree.
+>>
+>> Please let me know in case if anything else is required on above.
+>>
+>>
+>> Changes from v5 -> v6 :-
+>> 1. Earlier in v5 series DT node was added to get the clk-rates table
+>> needed for sdhci-msm driver. But this is removed in this(v6) patch series
+>> and instead the clk changes are done in the clk driver as per Rob H comment.
+>>
+>> 2. Added clk driver changes(patch 1-3) to provide floor rate values of requested
+>> clock for sdhc client.
+>> For following boards- apq8084, msm8996, msm8916, msm8974.
+>>
+>> 3. Other minor patch comments were addressed.
+>>
+>> Changes from v4 -> v5 :-
+>> 1. Added HS400 sdhci-msm controller specific changes:- (Patch 10, 11, 12)
+>> 2. Addressed comment from Adrian on Patch 07 @[3].
+>> 3. Addressed comment from Arnd on Patch 03, to directly add
+>>    clk_table into sdhci_msm_host. [4]
+>> 4. Addressed comment from Bjorn to not enforce having clk-rates property
+>>    in DT for older targets based on discussion at [5]
+>> 5. Retained Acks from Adrian on patches (01 & 02 & 06) where there were no
+>>    changes made while addressing above comments.
+>>
+>> Older history:-
+>> This is v4 version of the patch series.
+>> Patches 01, 02, 05 & 06 were Acked-by Adrian.
+>>
+>> Changes from v3 -> v4 :-
+>> 1. Addressed comments from Adrian on Patch 03, 07, 08.
+>> 2. Addressed comments from Bjorn on Patch 03.
+>> 3. Added clk-rate support for sdhc DT nodes to all MSM platforms.
+>>    in Pacth 04.
+>> 4. Rebased on next branch of Ulf.
+>>
+>> Changes from v2 -> v3 :-
+>> 1. Addded Patch 01 based on Bjorn comment[2] -
+>>    This fixes/unrolls the poor coding style of read/writes of
+>>    registers from base sdhci-msm driver.
+>>
+>> 2. Fixed/unrolled poor style of reads/writes of registers in Patch 02,
+>>    based on Bjorn comment[2]. Also changed name of flag from
+>>    use_updated_dll_reset -> use_14lpp_dll_reset.
+>>
+>> Changes from v1->v2 :-
+>> 1. Removed patch 06 & 08 from v1 patch series[1]
+>> (which were introducing unnecessary quirks).
+>>    Instead have implemented __sdhci_msm_set_clock version of
+>>    sdhci_set_clock in sdhci_msm driver itself in patch 07 of
+>>    this patch series.
+>> 2. Enabled extra quirk (SDHCI_QUIRK2_PRESET_VALUE_BROKEN) in
+>>    patch 05 of this patch series.
+>>
+>>
+>> Description of patches :-
+>> This patchset adds clk-rates & other required changes to
+>> upstream sdhci-msm driver from codeaurora tree.
+>> It has been tested on a db410c Dragonboard and msm8996 based
+>> platform.
+>>
+>> Patch 0001-0003- Adds support in qcom clk driver to return
+>> floor value of requested clock rate instead of ceil rate
+>> for sdhc clients.
+>>
+>> Patch 0004- Adds updated dll sequence for newer controllers
+>> which has minor_version >= 0x42. This is required for msm8996.
+>>
+>> MSM controller HW recommendation is to use the base MCI clock
+>> and directly control this MCI clock at GCC in order to
+>> change the clk-rate.
+>> Patches 06-08 bring in required change for this to
+>> sdhci-msm.
+>>
+>> MSM controller would require 2x clock rate from source
+>> for DDR bus speed modes. Patch 09 adds this support.
+>>
+>> Patch 0010- adds DDR support in DT for sdhc1 of msm8916.
+>>
+>> Patches 0011-0014- Adds HS400 support to sdhci-msm.
+>>
+>>
+>> [1]:- http://www.spinics.net/lists/linux-mmc/msg38467.html
+>> [2]:- http://www.spinics.net/lists/linux-mmc/msg38578.html
+>> [3]:- https://patchwork.kernel.org/patch/9289345/
+>> [4]:- https://www.spinics.net/lists/linux-mmc/msg39107.html
+>> [5]:- http://www.spinics.net/lists/linux-mmc/msg38749.html
+>> [6]:- https://patchwork.kernel.org/patch/9297381/
+>>
+>>
+>> Rajendra Nayak (2):
+>>   clk: qcom: Add rcg ops to return floor value closest to the requested
+>>     rate
+>>   clk: qcom: Move all sdcc rcgs to use clk_rcg2_floor_ops
+>>
+>> Ritesh Harjani (12):
+>>   mmc: sdhci-msm: Change poor style writel/readl of registers
+>>   ARM: dts: Add xo to sdhc clock node on qcom platforms
+>>   dt-bindings: sdhci-msm: Add xo value
+>>   mmc: sdhci-msm: Add get_min_clock() and get_max_clock() callback
+>>   mmc: sdhci-msm: Enable few quirks
+>>   mmc: sdhci: Factor out sdhci_enable_clk
+>>   mmc: sdhci-msm: Implement set_clock callback for sdhci-msm
+>>   mmc: sdhci-msm: Add clock changes for DDR mode.
+>>   arm64: dts: qcom: msm8916: Add ddr support to sdhc1
+>>   mmc: sdhci-msm: Save the calculated tuning phase
+>>   mmc: sdhci-msm: Add calibration tuning for CDCLP533 circuit
+>>   sdhci: sdhci-msm: update dll configuration
+>>
+>> Venkat Gopalakrishnan (2):
+>>   mmc: sdhci-msm: Update DLL reset sequence
+>>   mmc: sdhci-msm: Add HS400 platform support
+>>
+>>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   1 +
+>>  arch/arm/boot/dts/qcom-apq8084.dtsi                |  16 +-
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi                |  16 +-
+>>  arch/arm64/boot/dts/qcom/msm8916.dtsi              |  11 +-
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi              |   9 +-
+>>  drivers/clk/qcom/clk-rcg.h                         |   1 +
+>>  drivers/clk/qcom/clk-rcg2.c                        |  76 ++-
+>>  drivers/clk/qcom/common.c                          |  16 +
+>>  drivers/clk/qcom/common.h                          |   2 +
+>>  drivers/clk/qcom/gcc-apq8084.c                     |   8 +-
+>>  drivers/clk/qcom/gcc-msm8916.c                     |   4 +-
+>>  drivers/clk/qcom/gcc-msm8974.c                     |   8 +-
+>>  drivers/clk/qcom/gcc-msm8994.c                     |   8 +-
+>>  drivers/clk/qcom/gcc-msm8996.c                     |   8 +-
+>>  drivers/mmc/host/sdhci-msm.c                       | 626 +++++++++++++++++++--
+>>  drivers/mmc/host/sdhci.c                           |  28 +-
+>>  drivers/mmc/host/sdhci.h                           |   1 +
+>>  17 files changed, 739 insertions(+), 100 deletions(-)
+>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project.
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
 -- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
