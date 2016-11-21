@@ -1,67 +1,74 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
-Date: Mon, 21 Nov 2016 16:23:00 +0000
-Message-ID: <55e27115-421e-b67b-eb7a-9b1c3d662711@arm.com>
-References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
- <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
- <582F6312.5040009@gmail.com> <58331B5D.8060907@gmail.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v2 1/3] ARM: sunxi: add support for H2+ SoC
+Date: Tue, 22 Nov 2016 00:24:19 +0800
+Message-ID: <20161121162421.800-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58331B5D.8060907-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Corbet <corbet@lwn.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Allwinner H2+ is a quad-core Cortex-A7 SoC.
 
+It is very like H3, that they share the same SoC ID (0x1680), and H3
+memory maps as well as drivers works well on the SoC.
 
-On 21/11/16 16:05, Frank Rowand wrote:
-> Hi Sudeep,
->
-> On 11/18/16 12:22, Frank Rowand wrote:
->> On 11/18/16 02:41, Sudeep Holla wrote:
->>>
->>>
->>> On 17/11/16 21:00, Frank Rowand wrote:
->>>> On 11/17/16 07:32, Sudeep Holla wrote:
->>>>> Currently platforms/drivers needing to get the machine model name are
->>>>> replicating the same snippet of code. In some case, the OF reference
->>>>> counting is either missing or incorrect.
->>>>>
->>>>> This patch adds support to read the machine model name either using
->>>>> the "model" or the "compatible" property in the device tree root node
->>>>> to the core OF/DT code.
->>>>>
->>>>> This can be used to remove all the duplicate code snippets doing exactly
->>>>> same thing later.
->>>>
->>>> I find five instances of reading only property "model":
->>>>
->>>>   arch/arm/mach-imx/cpu.c
->>>>   arch/arm/mach-mxs/mach-mxs.c
->>>>   arch/c6x/kernel/setup.c
->>>>   arch/mips/cavium-octeon/setup.c
->>>>   arch/sh/boards/of-generic.c
->>>>
->>>
->>> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
->>> that this will be used for.
->>
->> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
->
-> Can you please re-send patch 2/2?
->
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
+ Documentation/arm/sunxi/README                  | 4 ++++
+ Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+ arch/arm/mach-sunxi/sunxi.c                     | 1 +
+ 3 files changed, 6 insertions(+)
 
-Since it is based on -next, I would prefer to wait until next merge
-window to resend. You should be able to check in the link I sent if
-that's OK.
-
+diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+index cd02433..1fe4d99c 100644
+--- a/Documentation/arm/sunxi/README
++++ b/Documentation/arm/sunxi/README
+@@ -63,6 +63,10 @@ SunXi family
+         + User Manual
+           http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
+ 
++      - Allwinner H2+ (sun8i)
++        + No document available now, but is known to be working properly with
++          H3 drivers and memory map.
++
+       - Allwinner H3 (sun8i)
+         + Datasheet
+           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+index 4d6467c..26b35a7 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.txt
++++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+@@ -13,6 +13,7 @@ using one of the following compatible strings:
+   allwinner,sun8i-a33
+   allwinner,sun8i-a83t
+   allwinner,sun8i-h3
++  allwinner,sun8i-h2plus
+   allwinner,sun9i-a80
+   allwinner,sun50i-a64
+   nextthing,gr8
+diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+index 2e2bde2..3647ad7 100644
+--- a/arch/arm/mach-sunxi/sunxi.c
++++ b/arch/arm/mach-sunxi/sunxi.c
+@@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] = {
+ 	"allwinner,sun8i-a23",
+ 	"allwinner,sun8i-a33",
+ 	"allwinner,sun8i-a83t",
++	"allwinner,sun8i-h2plus",
+ 	"allwinner,sun8i-h3",
+ 	NULL,
+ };
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.2
