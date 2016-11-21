@@ -1,156 +1,134 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/2] regulator: max77620: add support to configure MPOK
-Date: Mon, 21 Nov 2016 13:11:21 +0000
-Message-ID: <20161121131121.GE3917@dell>
-References: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
- <20161121130948.GC3917@dell>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Mon, 21 Nov 2016 14:11:02 +0100
+Message-ID: <CAJZ5v0gzc0S=WB9B=qDyEVL4yz-SUeML56K+dRTrHt7uojxfCw@mail.gmail.com>
+References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
+ <1478210075-92045-2-git-send-email-lina.iyer@linaro.org> <87zikt6mc1.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161121130948.GC3917@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, svelpula@nvidia.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <87zikt6mc1.fsf@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Brendan Jackman <brendan.jackman@arm.com>
+Cc: Lina Iyer <lina.iyer@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Juri Lelli <Juri.Lelli@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Nov 2016, Lee Jones wrote:
+On Mon, Nov 21, 2016 at 1:37 PM, Brendan Jackman
+<brendan.jackman@arm.com> wrote:
+> Hi,
+>
+> On Thu, Nov 03 2016 at 21:54, Lina Iyer <lina.iyer@linaro.org> wrote:
+>> Re-using idle state definition provided by arm,idle-state for domain
+>> idle states creates a lot of confusion and limits further evolution of
+>> the domain idle definition. To keep things clear and simple, define a
+>> idle states for domain using a new compatible "domain-idle-state".
+>>
+>> Fix existing PM domains code to look for the newly defined compatible.
+>
+> This looks good to me, pinging for review from others/queue for merge.
 
-> On Thu, 17 Nov 2016, Venkat Reddy Talla wrote:
-> 
-> > Adding support to configure regulator POK mapping bit
-> > to control nRST_IO and GPIO1 POK function.
-> > In  tegra based platform which uses MAX20024 pmic, when
-> > some of regulators are configured FPS_NONE(flexible power sequencer)
-> > causes PMIC GPIO1 to go low which lead to various other rails turning off,
-> > to avoid this MPOK bit of those regulators need to be set to 0
-> > so that PMIC GPIO1 will not go low.
-> > 
-> > Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
-> > 
-> > ---
-> > changes in v2:
-> > - updated commit message for the patch
-> > - address review comments
-> > ---
-> >  drivers/regulator/max77620-regulator.c | 46 ++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/max77620.h           |  2 ++
-> 
-> For my own reference:
->   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Well, I need an ACK from at least one DT bindings maintainer so that I
+can queue it up.
 
-Mark if you want to take this patch, feel free.
+>> Cc: <devicetree@vger.kernel.org>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>> ---
+>>  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+>>  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+>>  drivers/base/power/domain.c                        |  2 +-
+>>  3 files changed, 38 insertions(+), 5 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> new file mode 100644
+>> index 0000000..eefc7ed
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> @@ -0,0 +1,33 @@
+>> +PM Domain Idle State Node:
+>> +
+>> +A domain idle state node represents the state parameters that will be used to
+>> +select the state when there are no active components in the domain.
+>> +
+>> +The state node has the following parameters -
+>> +
+>> +- compatible:
+>> +     Usage: Required
+>> +     Value type: <string>
+>> +     Definition: Must be "domain-idle-state".
+>> +
+>> +- entry-latency-us
+>> +     Usage: Required
+>> +     Value type: <prop-encoded-array>
+>> +     Definition: u32 value representing worst case latency in
+>> +                 microseconds required to enter the idle state.
+>> +                 The exit-latency-us duration may be guaranteed
+>> +                 only after entry-latency-us has passed.
+>> +
+>> +- exit-latency-us
+>> +     Usage: Required
+>> +     Value type: <prop-encoded-array>
+>> +     Definition: u32 value representing worst case latency
+>> +                 in microseconds required to exit the idle state.
+>> +
+>> +- min-residency-us
+>> +     Usage: Required
+>> +     Value type: <prop-encoded-array>
+>> +     Definition: u32 value representing minimum residency duration
+>> +                 in microseconds after which the idle state will yield
+>> +                 power benefits after overcoming the overhead in entering
+>> +i                the idle state.
+>> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+>> index e165036..723e1ad 100644
+>> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+>> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>> @@ -31,7 +31,7 @@ Optional properties:
+>>
+>>  - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+>>                  generic domain power state. The idle state definitions are
+>> -                compatible with arm,idle-state specified in [1].
+>> +                compatible with domain-idle-state specified in [1].
+>>    The domain-idle-state property reflects the idle state of this PM domain and
+>>    not the idle states of the devices or sub-domains in the PM domain. Devices
+>>    and sub-domains have their own idle-states independent of the parent
+>> @@ -85,7 +85,7 @@ Example 3:
+>>       };
+>>
+>>       DOMAIN_RET: state@0 {
+>> -             compatible = "arm,idle-state";
+>> +             compatible = "domain-idle-state";
+>>               reg = <0x0>;
+>>               entry-latency-us = <1000>;
+>>               exit-latency-us = <2000>;
+>> @@ -93,7 +93,7 @@ Example 3:
+>>       };
+>>
+>>       DOMAIN_PWR_DN: state@1 {
+>> -             compatible = "arm,idle-state";
+>> +             compatible = "domain-idle-state";
+>>               reg = <0x1>;
+>>               entry-latency-us = <5000>;
+>>               exit-latency-us = <8000>;
+>> @@ -118,4 +118,4 @@ The node above defines a typical PM domain consumer device, which is located
+>>  inside a PM domain with index 0 of a power controller represented by a node
+>>  with the label "power".
+>>
+>> -[1]. Documentation/devicetree/bindings/arm/idle-states.txt
+>> +[1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>> index 661737c..f0bc672 100644
+>> --- a/drivers/base/power/domain.c
+>> +++ b/drivers/base/power/domain.c
+>> @@ -2048,7 +2048,7 @@ int genpd_dev_pm_attach(struct device *dev)
+>>  EXPORT_SYMBOL_GPL(genpd_dev_pm_attach);
+>>
+>>  static const struct of_device_id idle_state_match[] = {
+>> -     { .compatible = "arm,idle-state", },
+>> +     { .compatible = "domain-idle-state", },
+>>       { }
+>>  };
+> --
 
-> >  2 files changed, 48 insertions(+)
-> > 
-> > diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-> > index a1b49a6..850b14c 100644
-> > --- a/drivers/regulator/max77620-regulator.c
-> > +++ b/drivers/regulator/max77620-regulator.c
-> > @@ -81,6 +81,7 @@ struct max77620_regulator_pdata {
-> >  	int suspend_fps_pd_slot;
-> >  	int suspend_fps_pu_slot;
-> >  	int current_mode;
-> > +	int power_ok;
-> >  	int ramp_rate_setting;
-> >  };
-> >  
-> > @@ -351,11 +352,48 @@ static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
-> >  	return 0;
-> >  }
-> >  
-> > +static int max77620_config_power_ok(struct max77620_regulator *pmic, int id)
-> > +{
-> > +	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
-> > +	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
-> > +	struct max77620_chip *chip = dev_get_drvdata(pmic->dev->parent);
-> > +	u8 val, mask;
-> > +	int ret;
-> > +
-> > +	switch (chip->chip_id) {
-> > +	case MAX20024:
-> > +		if (rpdata->power_ok >= 0) {
-> > +			if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
-> > +				mask = MAX20024_SD_CFG1_MPOK_MASK;
-> > +			else
-> > +				mask = MAX20024_LDO_CFG2_MPOK_MASK;
-> > +
-> > +			val = rpdata->power_ok ? mask : 0;
-> > +
-> > +			ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr,
-> > +						 mask, val);
-> > +			if (ret < 0) {
-> > +				dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
-> > +					rinfo->cfg_addr, ret);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +		break;
-> > +
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
-> >  {
-> >  	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
-> >  	int ret;
-> >  
-> > +	max77620_config_power_ok(pmic, id);
-> > +
-> >  	/* Update power mode */
-> >  	ret = max77620_regulator_get_power_mode(pmic, id);
-> >  	if (ret < 0)
-> > @@ -595,6 +633,12 @@ static int max77620_of_parse_cb(struct device_node *np,
-> >  			np, "maxim,suspend-fps-power-down-slot", &pval);
-> >  	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
-> >  
-> > +	ret = of_property_read_u32(np, "maxim,power-ok-control", &pval);
-> > +	if (!ret)
-> > +		rpdata->power_ok = pval;
-> > +	else
-> > +		rpdata->power_ok = -1;
-> > +
-> >  	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
-> >  	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
-> >  
-> > @@ -807,6 +851,8 @@ static int max77620_regulator_resume(struct device *dev)
-> >  	for (id = 0; id < MAX77620_NUM_REGS; id++) {
-> >  		reg_pdata = &pmic->reg_pdata[id];
-> >  
-> > +		max77620_config_power_ok(pmic, id);
-> > +
-> >  		max77620_regulator_set_fps_slots(pmic, id, false);
-> >  		if (reg_pdata->active_fps_src < 0)
-> >  			continue;
-> > diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-> > index 3ca0af07..ad2a9a8 100644
-> > --- a/include/linux/mfd/max77620.h
-> > +++ b/include/linux/mfd/max77620.h
-> > @@ -180,6 +180,7 @@
-> >  #define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
-> >  #define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
-> >  #define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
-> > +#define MAX20024_SD_CFG1_MPOK_MASK		BIT(1)
-> >  #define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
-> >  #define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
-> >  #define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
-> > @@ -187,6 +188,7 @@
-> >  /* LDO_CNFG2 */
-> >  #define MAX77620_LDO_POWER_MODE_MASK		0xC0
-> >  #define MAX77620_LDO_POWER_MODE_SHIFT		6
-> > +#define MAX20024_LDO_CFG2_MPOK_MASK		BIT(2)
-> >  #define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
-> >  #define MAX77620_LDO_CFG2_ADE_DISABLE		0
-> >  #define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
-> 
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Rafael
