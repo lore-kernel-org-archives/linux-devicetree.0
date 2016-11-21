@@ -1,140 +1,93 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC PATCH v2 3/7] iio: inkern: api for manipulating ext_info of
- iio channels
-Date: Mon, 21 Nov 2016 17:07:56 +0100
-Message-ID: <c64f8dc0-9469-17e7-281f-3d723cc5c7dc@axentia.se>
-References: <1479419289-17553-1-git-send-email-peda@axentia.se>
- <1479419289-17553-4-git-send-email-peda@axentia.se>
- <d5cd7550-2cde-5beb-2cdb-ad6d501fc0ef@kernel.org>
- <6ea462c2-53ae-0f50-deb9-e500a97f2ac4@metafoo.de>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
+ eee-disable-advert option documentation
+Date: Mon, 21 Nov 2016 17:16:33 +0100
+Message-ID: <1479744993.17538.85.camel@baylibre.com>
+References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
+         <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
+         <20161121160149.GF1922@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6ea462c2-53ae-0f50-deb9-e500a97f2ac4@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161121160149.GF1922-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-21 16:45, Lars-Peter Clausen wrote:
-> On 11/19/2016 04:38 PM, Jonathan Cameron wrote:
->> On 17/11/16 21:48, Peter Rosin wrote:
->>> Extend the inkern api with functions for reading and writing ext_info
->>> of iio channels.
->> I'd like Lars' feedback on this one.
->>
->> Superficially looks fine to me but I am not as familiar with this interface
->> as Lars is ;) (he wrote it IIRC:)
+On Mon, 2016-11-21 at 17:01 +0100, Andrew Lunn wrote:
+> On Mon, Nov 21, 2016 at 04:35:23PM +0100, Jerome Brunet wrote:
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/net/phy.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/phy.txt
+> > b/Documentation/devicetree/bindings/net/phy.txt
+> > index bc1c3c8bf8fa..7f066b7c1e2c 100644
+> > --- a/Documentation/devicetree/bindings/net/phy.txt
+> > +++ b/Documentation/devicetree/bindings/net/phy.txt
+> > @@ -35,6 +35,11 @@ Optional Properties:
+> >  - broken-turn-around: If set, indicates the PHY device does not
+> > correctly
+> >    release the turn around line low at the end of a MDIO
+> > transaction.
+> >  
+> > +- eee-advert-disable: Bits to clear in the MDIO_AN_EEE_ADV
+> > register to
+> > +  disable EEE modes. Example
+> > +    * 0x4: disable EEE for 1000T,
+> > +    * 0x6: disable EEE for 100TX and 1000T
+> > +
 > 
-> The implementation looks OK. I'm not necessarily convinced about the concept
-> though, but the code is manageable so I guess it is OK.
+> Hi Jerome
 > 
-> The final version should add kernel API documentation for the new functions.
+> I like the direction this patchset is taking. But hex values are
+> pretty unfriendly. 
 
-I added that in v3 that I sent earlier today.
+Agreed
 
->>> ---
->>>  drivers/iio/inkern.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/iio/consumer.h |  6 +++++
->>>  2 files changed, 61 insertions(+)
->>>
->>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
->>> index cfca17ba2535..a8099b164222 100644
->>> --- a/drivers/iio/inkern.c
->>> +++ b/drivers/iio/inkern.c
->>> @@ -850,3 +850,58 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
->>>  	return ret;
->>>  }
->>>  EXPORT_SYMBOL_GPL(iio_write_channel_raw);
->>> +
->>> +int iio_get_channel_ext_info_count(struct iio_channel *chan)
+> Please add a set of boolean properties, and do the
+> mapping to hex in the C code.
 > 
-> should be unsigned.
+> That would also make extending this API easier. e.g. say you have a
+> 10Gbps PHY with EEE, and you need to disable it. This hex value
+> quickly gets ugly, eee-advert-disable-10000 is nice and simple.
 
-Correct, I had a plan to do that change, but it slipped my mind. Thanks
-for catching it!
+What I did not realize when doing this patch for the realtek driver is
+that there is already 6 valid modes defined in the kernel
 
->>> +{
->>> +	const struct iio_chan_spec_ext_info *ext_info;
->>> +	unsigned int i = 0;
->>> +
->>> +	if (!chan->channel->ext_info)
->>> +		return i;
->>> +
->>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ext_info++)
->>> +		++i;
->>> +
->>> +	return i;
->>> +}
->>> +EXPORT_SYMBOL_GPL(iio_get_channel_ext_info_count);
->>> +
->>> +ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
->>> +				  const char *attr, char *buf)
->>> +{
->>> +	const struct iio_chan_spec_ext_info *ext_info;
->>> +
->>> +	if (!chan->channel->ext_info)
->>> +		return -EINVAL;
->>> +
->>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
->>> +		if (strcmp(attr, ext_info->name))
->>> +			continue;
+#define MDIO_EEE_100TX		MDIO_AN_EEE_ADV_100TX	/*
+100TX EEE cap */
+#define MDIO_EEE_1000T		MDIO_AN_EEE_ADV_1000T	/*
+1000T EEE cap */
+#define MDIO_EEE_10GT		0x0008	/* 10GT EEE cap */
+#define MDIO_EEE_1000KX		0x0010	/* 1000KX EEE cap
+*/
+#define MDIO_EEE_10GKX4		0x0020	/* 10G KX4 EEE cap
+*/
+#define MDIO_EEE_10GKR		0x0040	/* 10G KR EEE cap
+*/
+
+I took care of only 2 in the case of realtek.c since it only support
+MDIO_EEE_100TX and MDIO_EEE_1000T.
+
+Defining a property for each is certainly doable but it does not look
+very nice either. If it extends in the future, it will get even more
+messier, especially if you want to disable everything.
+
+What do you think about keeping a single mask value but use the define
+above in the DT ? It would be more readable than hex and easy to
+extend, don't you think ?
+
+These defines are already part of the uapi so I guess we can use those
+in the DT bindings ?
+
 > 
-> You could factor the lookup out into a helper function that is used for both
-> read and write. And also stop searching once a match was found.
-
-I'll do a lookup helper for v4. But the stop-searching-thing is already
-done with the return statements at the end of the for-loops.
-
-Thanks for looking!
-
-Cheers,
-Peter
-
->>> +
->>> +		return ext_info->read(chan->indio_dev, ext_info->private,
->>> +				      chan->channel, buf);
->>> +	}
->>> +
->>> +	return -EINVAL;
->>> +}
->>> +EXPORT_SYMBOL_GPL(iio_read_channel_ext_info);
->>> +
->>> +ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
->>> +				   const char *buf, size_t len)
->>> +{
->>> +	const struct iio_chan_spec_ext_info *ext_info;
->>> +
->>> +	if (!chan->channel->ext_info)
->>> +		return -EINVAL;
->>> +
->>> +	for (ext_info = chan->channel->ext_info; ext_info->name; ++ext_info) {
->>> +		if (strcmp(attr, ext_info->name))
->>> +			continue;
->>> +
->>> +		return ext_info->write(chan->indio_dev, ext_info->private,
->>> +				       chan->channel, buf, len);
->>> +	}
->>> +
->>> +	return -EINVAL;
->>> +}
->>> +EXPORT_SYMBOL_GPL(iio_write_channel_ext_info);
->>> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
->>> index 9a4f336d8b4a..471dece8729a 100644
->>> --- a/include/linux/iio/consumer.h
->>> +++ b/include/linux/iio/consumer.h
->>> @@ -299,4 +299,10 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val,
->>>  int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
->>>  	int *processed, unsigned int scale);
->>>  
->>> +int iio_get_channel_ext_info_count(struct iio_channel *chan);
->>> +ssize_t iio_read_channel_ext_info(struct iio_channel *chan,
->>> +				  const char *attr, char *buf);
->>> +ssize_t iio_write_channel_ext_info(struct iio_channel *chan, const char *attr,
->>> +				   const char *buf, size_t len);
->>> +
->>>  #endif
->>>
->>
-> 
+> 	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
