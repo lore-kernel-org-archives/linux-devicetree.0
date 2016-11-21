@@ -1,264 +1,109 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v2] ARM: dts: qcom: Add apq8064 CoreSight components
-Date: Mon, 21 Nov 2016 18:04:58 +0200
-Message-ID: <20161121160458.8328-1-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, zhang.chunyan@linaro.org, iivanov.xz@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, georgi.djakov@linaro.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Mon, 21 Nov 2016 08:05:49 -0800
+Message-ID: <58331B5D.8060907@gmail.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
+ <582F6312.5040009@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <582F6312.5040009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
+Hi Sudeep,
 
-Add initial set of CoreSight components found on Qualcomm apq8064 based
-platforms, including the IFC6410 board.
+On 11/18/16 12:22, Frank Rowand wrote:
+> On 11/18/16 02:41, Sudeep Holla wrote:
+>>
+>>
+>> On 17/11/16 21:00, Frank Rowand wrote:
+>>> On 11/17/16 07:32, Sudeep Holla wrote:
+>>>> Currently platforms/drivers needing to get the machine model name are
+>>>> replicating the same snippet of code. In some case, the OF reference
+>>>> counting is either missing or incorrect.
+>>>>
+>>>> This patch adds support to read the machine model name either using
+>>>> the "model" or the "compatible" property in the device tree root node
+>>>> to the core OF/DT code.
+>>>>
+>>>> This can be used to remove all the duplicate code snippets doing exactly
+>>>> same thing later.
+>>>
+>>> I find five instances of reading only property "model":
+>>>
+>>>   arch/arm/mach-imx/cpu.c
+>>>   arch/arm/mach-mxs/mach-mxs.c
+>>>   arch/c6x/kernel/setup.c
+>>>   arch/mips/cavium-octeon/setup.c
+>>>   arch/sh/boards/of-generic.c
+>>>
+>>
+>> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
+>> that this will be used for.
+> 
+> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
 
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+Can you please re-send patch 2/2?
 
-Changes since v1 (https://lkml.org/lkml/2016/11/17/474)
- * Moved everything into the SoC dtsi file as suggested by Stephen Boyd.
- * Updated commit message.
- * Got Ack from Mathieu.
+-Frank
 
- arch/arm/boot/dts/qcom-apq8064.dtsi | 191 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 187 insertions(+), 4 deletions(-)
+> 
+> I did see a list of drivers in the RFC patch that you sent several hours
+> before this patch.
+> 
+> In that patch you replaced reading the model name from the _flat_ device
+> tree with the new function in at least one location.  That is not
+> correct.
+> 
+> 
+>>
+>>> I find one instance of reading property "model", then if
+>>> that does not exist, property "compatible":
+>>>
+>>>   arch/mips/generic/proc.c
+>>>
+>>
+>> Correct as you can check in patch 2/2
+>>
+>>> The proposed patch matches the code used in one place, and thus
+>>> current usage does not match the patch description.
+>>>
+>>
+>> Yes, but does it matter ? compatibles are somewhat informative about the
+>> model IMO.
+> 
+> Yes it does matter.  That is just sloppy and makes devicetree yet harder
+> to understand.  It hurts clarity.  The new function name says get "model",
+> not get "model" or "first element of the compatible list".
+> 
+> And using the _first_ element only of the compatible list to determine
+> model is not a good paradigm.  It is yet another hidden, special case,
+> undocumented trap to lure in the unwary.
+> 
+> It is extremely unlikely that the change actually changes behavior for an
+> existing device tree because there is probably no dts that does not
+> contain the model property but does contain the proper magic value in
+> the compatible property.  But did you actually check for that?
+> 
+>>
+>>> Is my search bad?  Are you planning to add additional instances
+>>> of reading "model" then "compatible"?
+>>>
+>>
+>> No, just replacing the existing ones as in patch 2/2
+>>
+> 
+> You also ignored Arnd's comment in reply to your RFC patch.
+> 
+> -Frank
+> 
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 268bd470c865..2e8dd5d098f3 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/clock/qcom,gcc-msm8960.h>
- #include <dt-bindings/reset/qcom,gcc-msm8960.h>
- #include <dt-bindings/clock/qcom,mmcc-msm8960.h>
-+#include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/soc/qcom,gsbi.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -27,7 +28,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		cpu@0 {
-+		CPU0: cpu@0 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -38,7 +39,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@1 {
-+		CPU1: cpu@1 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -49,7 +50,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@2 {
-+		CPU2: cpu@2 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -60,7 +61,7 @@
- 			cpu-idle-states = <&CPU_SPC>;
- 		};
- 
--		cpu@3 {
-+		CPU3: cpu@3 {
- 			compatible = "qcom,krait";
- 			enable-method = "qcom,kpss-acc-v1";
- 			device_type = "cpu";
-@@ -1416,6 +1417,187 @@
- 				};
- 			};
- 		};
-+
-+		etb@1a01000 {
-+			compatible = "coresight-etb10", "arm,primecell";
-+			reg = <0x1a01000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			port {
-+				etb_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator_out0>;
-+				};
-+			};
-+		};
-+
-+		tpiu@1a03000 {
-+			compatible = "arm,coresight-tpiu", "arm,primecell";
-+			reg = <0x1a03000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			port {
-+				tpiu_in: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&replicator_out1>;
-+				};
-+			};
-+		};
-+
-+		replicator {
-+			compatible = "arm,coresight-replicator";
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					replicator_out0: endpoint {
-+						remote-endpoint = <&etb_in>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					replicator_out1: endpoint {
-+						remote-endpoint = <&tpiu_in>;
-+					};
-+				};
-+				port@2 {
-+					reg = <0>;
-+					replicator_in: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&funnel_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@1a04000 {
-+			compatible = "arm,coresight-funnel", "arm,primecell";
-+			reg = <0x1a04000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				/*
-+				 * Not described input ports:
-+				 * 2 - connected to STM component
-+				 * 3 - not-connected
-+				 * 6 - not-connected
-+				 * 7 - not-connected
-+				 */
-+				port@0 {
-+					reg = <0>;
-+					funnel_in0: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					funnel_in1: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+				port@4 {
-+					reg = <4>;
-+					funnel_in4: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+				port@5 {
-+					reg = <5>;
-+					funnel_in5: endpoint {
-+						slave-mode;
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+				port@8 {
-+					reg = <0>;
-+					funnel_out: endpoint {
-+						remote-endpoint = <&replicator_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@1a1c000 {
-+			compatible = "arm,coresight-etm3x", "arm,primecell";
-+			reg = <0x1a1c000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU0>;
-+
-+			port {
-+				etm0_out: endpoint {
-+					remote-endpoint = <&funnel_in0>;
-+				};
-+			};
-+		};
-+
-+		etm@1a1d000 {
-+			compatible = "arm,coresight-etm3x", "arm,primecell";
-+			reg = <0x1a1d000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU1>;
-+
-+			port {
-+				etm1_out: endpoint {
-+					remote-endpoint = <&funnel_in1>;
-+				};
-+			};
-+		};
-+
-+		etm@1a1e000 {
-+			compatible = "arm,coresight-etm3x", "arm,primecell";
-+			reg = <0x1a1e000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU2>;
-+
-+			port {
-+				etm2_out: endpoint {
-+					remote-endpoint = <&funnel_in4>;
-+				};
-+			};
-+		};
-+
-+		etm@1a1f000 {
-+			compatible = "arm,coresight-etm3x", "arm,primecell";
-+			reg = <0x1a1f000 0x1000>;
-+
-+			clocks = <&rpmcc RPM_QDSS_CLK>;
-+			clock-names = "apb_pclk";
-+
-+			cpu = <&CPU3>;
-+
-+			port {
-+				etm3_out: endpoint {
-+					remote-endpoint = <&funnel_in5>;
-+				};
-+			};
-+		};
- 	};
- };
- #include "qcom-apq8064-pins.dtsi"
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
