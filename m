@@ -1,104 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] mfd: cpcap: Add minimal support
-Date: Mon, 21 Nov 2016 10:34:39 -0600
-Message-ID: <20161121163439.22ztjxnq535lo6dd@rob-hp-laptop>
-References: <20161119012748.17224-1-tony@atomide.com>
- <20161121114558.GJ32509@dell>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
+ eee-disable-advert option documentation
+Date: Mon, 21 Nov 2016 17:47:33 +0100
+Message-ID: <20161121164733.GG1922@lunn.ch>
+References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
+ <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
+ <20161121160149.GF1922@lunn.ch>
+ <1479744993.17538.85.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161121114558.GJ32509@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>
+In-Reply-To: <1479744993.17538.85.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 11:45:58AM +0000, Lee Jones wrote:
-> On Fri, 18 Nov 2016, Tony Lindgren wrote:
+> What I did not realize when doing this patch for the realtek driver is
+> that there is already 6 valid modes defined in the kernel
 > 
-> > Many Motorola phones like droid 4 are using a custom PMIC called CPCAP
-> > or 6556002. We can support it's core features quite easily with regmap_spi
-> > and regmap_irq.
-> > 
-> > The children of cpcap, such as regulators, ADC and USB, can be just regular
-> > device drivers and defined in the dts file. They get probed as we call
-> > of_platform_populate() at the end of our probe, and then the children
-> > can just call dev_get_regmap(dev.parent, NULL) to get the regmap.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Marcel Partap <mpartap@gmx.net>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Michael Scott <michael.scott@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/cpcap.txt |  36 ++++
-> >  drivers/mfd/Kconfig                             |   8 +
-> >  drivers/mfd/Makefile                            |   1 +
-> >  drivers/mfd/cpcap.c                             | 255 ++++++++++++++++++++++++
-> >  include/linux/mfd/cpcap.h                       | 238 ++++++++++++++++++++++
-> >  5 files changed, 538 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/cpcap.txt
-> >  create mode 100644 drivers/mfd/cpcap.c
-> >  create mode 100644 include/linux/mfd/cpcap.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/cpcap.txt b/Documentation/devicetree/bindings/mfd/cpcap.txt
-> > new file mode 100644
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/cpcap.txt
-> > @@ -0,0 +1,36 @@
-> > +CPCAP PMIC device tree binding
-> > +
-> > +Required properties:
-> > +- compatible		: Motorola device "motorola,cpcap", others "st,6556002"
-> > +- reg			: Chip select and size
-> > +- interrupt-parent	: The parent interrupt controller
-> > +- interrupts		: The interrupt line the device is connected to
-> > +- interrupt-controller	: Marks the device node as an interrupt controller
-> > +- #interrupt-cells	: The number of cells to describe an IRQ, should be 2
-> > +- #address-cells	: Child device offset number of cells, typically 1
-> > +- #size-cells		: Child device size number of cells, typically 1
-> > +- ranges		: Child device register range
-> > +- spi-max-frequency	: Typically set to 3000000
-> > +- spi-cs_high		: SPI chip select direction
-> > +
-> > +Example:
-> > +
-> > +&mcspi1 {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	ranges;
-> > +	cpcap: pmic@0 {
-> > +		compatible = "motorola,cpcap", "st,6556002";
-> > +		reg = <0 0>;	/* cs0, size 0 */
+> #define MDIO_EEE_100TX		MDIO_AN_EEE_ADV_100TX	/*
+> 100TX EEE cap */
+> #define MDIO_EEE_1000T		MDIO_AN_EEE_ADV_1000T	/*
+> 1000T EEE cap */
+> #define MDIO_EEE_10GT		0x0008	/* 10GT EEE cap */
+> #define MDIO_EEE_1000KX		0x0010	/* 1000KX EEE cap
+> */
+> #define MDIO_EEE_10GKX4		0x0020	/* 10G KX4 EEE cap
+> */
+> #define MDIO_EEE_10GKR		0x0040	/* 10G KR EEE cap
+> */
 > 
-> Is this really correct?
-
-No, SPI devices are 1 cell and there shouldn't be a ranges prop.
-
+> I took care of only 2 in the case of realtek.c since it only support
+> MDIO_EEE_100TX and MDIO_EEE_1000T.
 > 
-> How can ranges have a size of 0x8000 and this 0?
+> Defining a property for each is certainly doable but it does not look
+> very nice either. If it extends in the future, it will get even more
+> messier, especially if you want to disable everything.
 
-reg here doesn't affect ranges and address translation.
-
-Perhaps this is trying to make address translation work, but if that 
-does, it is by chance. Children of pmic addresses in the range of 
-0-0x8000 would get translated to "cpu address" 0-0x8000 as long as the 
-DT has empty ranges up to the root. If the parent bus (i.e. SoC bus) has 
-any base address, then that is going to get added which would not be 
-good.
-
+Yes, agreed.
+ 
+> What do you think about keeping a single mask value but use the define
+> above in the DT ? It would be more readable than hex and easy to
+> extend, don't you think ?
 > 
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <7 IRQ_TYPE_EDGE_RISING>;
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <2>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0 0x8000>;
-> > +		spi-max-frequency = <3000000>;
-> > +		spi-cs-high;
-> > +	};
-> > +};
-> > +
+> These defines are already part of the uapi so I guess we can use those
+> in the DT bindings ?
+
+I don't think they are accessible from the dtc include path. You will
+need to make a copy, in include/dt-bindings/net/phy.h
+
+But yes, using these defines is a good idea.
+
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
