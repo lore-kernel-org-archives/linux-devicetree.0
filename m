@@ -1,43 +1,94 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 10/10] ARM: dts: da850: add usb device node
-Date: Mon, 21 Nov 2016 11:53:32 +0100
-Message-ID: <CAKXjFTNNJ7je04U7+yR7Fhn8Lkg8JswR9c7zcA14qVarj5+i6Q@mail.gmail.com>
-References: <20161107203948.28324-1-ahaslam@baylibre.com> <20161107203948.28324-11-ahaslam@baylibre.com>
- <48d0c158-f7c8-0d1e-f06e-b7b28d6f2b93@lechnology.com> <CAKXjFTN_VvxJ+mk=ooUiGqZJnuJJJn33KsBF2n6SvZNjWpYm3Q@mail.gmail.com>
- <c812d211-fff8-520f-cc1f-6fa69a765498@ti.com> <e8bc1888-4936-7d8e-cf8a-a3f2b5644ef5@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Mon, 21 Nov 2016 11:08:43 +0000
+Message-ID: <89eaabf1-c830-3ae9-5f34-a7f6d79e0816@nvidia.com>
+References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com>
+ <1478696782-11657-3-git-send-email-ldewangan@nvidia.com>
+ <b65cf9ea-208a-0704-7cc9-843bc18da508@nvidia.com>
+ <5832C005.3070104@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e8bc1888-4936-7d8e-cf8a-a3f2b5644ef5-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5832C005.3070104-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 11:49 AM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
-> On Monday 21 November 2016 04:16 PM, Sekhar Nori wrote:
->>>> In commit 2957e36e76c836b167e5e0c1edb578d8a9bd7af6 in the linux-davinci
->>>> >> tree, the alias for the musb device is usb0. So, I think we should use usb1
->>>> >> here instead of ohci - or change the usb0 alias to musb.
->>>> >>
->>>> >> https://git.kernel.org/cgit/linux/kernel/git/nsekhar/linux-davinci.git/commit/?h=v4.10/dt&id=2957e36e76c836b167e5e0c1edb578d8a9bd7af6
->>> >
->>> > ok, i will change to usb1, since i will be resubmiting this.
->
->> I have already applied a version of this patch. Please re-base against
->> linux-davinci/master and send a delta patch.
->
-> Hmm, no. scratch that. I mixed this up with the musb patch I applied.
-> usb1 sounds good. Please also separate out the soc and board specific
-> dts additions for your next version.
+Hi Laxman,
 
-Ok will do.
+On 21/11/16 09:36, Laxman Dewangan wrote:
+> 
+> Hi Jon,
+> I will update the patch per your comment.
 
+Thanks.
 
->
+> Here is answer for some of the query.
+> 
 > Thanks,
-> Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Laxman
+> 
+> 
+> On Tuesday 15 November 2016 08:37 PM, Jon Hunter wrote:
+>> On 09/11/16 13:06, Laxman Dewangan wrote:
+>>> +/**
+>>> + * Macro for 1.8V, keep 200mV as tolerance for deciding that
+>>> + * IO pads should be set for 3.3V (high voltage) or 1.8V.
+>>> + */
+>>> +#define TEGRA_IO_PAD_1800000UV_UPPER_LIMIT 2000000
+>> Is there a reference we could add for the source of this information?
+> 
+> I had a discussion with the ASIC on this and as per them
+>     1.8 V nominal is (1.62V, 1.98V)
+>     3.3 V nominal is (2.97V,3.63V)
+> 
+> I am working with them to update the TRM document but we can assume that
+> this information will be there in TRM.
+
+My feeling is that if all use-cases today are using either 1.8V or 3.3V,
+then may be we should not worry about this and only support either 1.8V
+or 3.3V. I would be more in favour of supporting other voltages if there
+is a real need.
+
+>>> +    const struct pinctrl_pin_desc *pins_desc;
+>>> +    int num_pins_desc;
+>>> +};
+>>> +
+>>> +struct tegra_io_pads_regulator_info {
+>>> +    struct device *dev;
+>>> +    const struct tegra_io_pads_cfg_info *pads_cfg;
+>>> +    struct regulator *regulator;
+>>> +    struct notifier_block regulator_nb;
+>>> +};
+>> Is this struct necessary? Seems to be a lot of duplicated information
+>> from the other structs. Why not add the regulator and regulator_nb to
+>> the main struct? OK, not all io_pads have a regulator but you are only
+>> saving one pointer.
+> Yes, some of IO pads support multi-voltage.
+
+Yes, but I am saying why not put this information in the main struct and
+not bother having yet another struct where half of the information is
+duplicated.
+
+>>
+>> +        if ((vdata->old_uV > TEGRA_IO_PAD_1800000UV_UPPER_LIMIT) &&
+>> +            (vdata->min_uV <= TEGRA_IO_PAD_1800000UV_UPPER_LIMIT))
+>> +            break;
+>> The data-sheet for Tegra210 only lists 1.8V or 3.3V as supported
+>> options. Do we need to support a range? Or does the h/w support a range
+>> of voltages? I am just wondering why we cannot check explicitly for 1.8V
+>> or 3.3V and treat anything else as an error.
+> 
+> Two voltage level, not range.
+
+Ok, then I think it would be much simpler if we just support the
+voltages we are using today.
+
+Cheers
+Jon
+
+-- 
+nvpublic
