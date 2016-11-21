@@ -1,142 +1,187 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Mon, 21 Nov 2016 21:01:29 +0000
-Message-ID: <29e19381-9250-3059-b083-49e8ab56ea7f@nvidia.com>
-References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com>
- <1478696782-11657-3-git-send-email-ldewangan@nvidia.com>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Mon, 21 Nov 2016 22:10:43 +0100
+Message-ID: <2016796.9qgSSGQn9z@debian64>
+References: <cover.1479339900.git.johnyoun@synopsys.com> <6396482.jQaH1ArAfZ@debian64> <e01e1b30-a399-94cc-33c9-625008b31d4b@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1478696782-11657-3-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e01e1b30-a399-94cc-33c9-625008b31d4b-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello John,
 
-On 09/11/16 13:06, Laxman Dewangan wrote:
-> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-> low power state of some of its IO pads. The IO pads can work in
-> the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
-> sources. When IO interfaces are not used then IO pads can be
-> configure in low power state to reduce the power consumption from
-> that IO pads.
-> 
-> On Tegra124, the voltage level of IO power rail source is auto
-> detected by hardware(SoC) and hence it is only require to configure
-> in low power mode if IO pads are not used.
-> 
-> On T210 onwards, the auto-detection of voltage level from IO power
-> rail is removed from SoC and hence SW need to configure the PMC
-> register explicitly to set proper voltage in IO pads based on
-> IO rail power source voltage.
-> 
-> This driver adds the IO pad driver to configure the power state and
-> IO pad voltage based on the usage and power tree via pincontrol
-> framework. The configuration can be static and dynamic.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> ---
-> Changes from V1:
-> - Dropped the custom properties to set pad voltage and use regulator.
-> - Added support for regulator to get vottage in boot and configure IO
->   pad voltage.
-> - Add support for callback to handle regulator notification and configure
->   IO pad voltage based on voltage change.
-> ---
->  drivers/pinctrl/tegra/Kconfig                |  12 +
->  drivers/pinctrl/tegra/Makefile               |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c | 488 +++++++++++++++++++++++++++
->  3 files changed, 501 insertions(+)
->  create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c
+On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
+> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
+> > On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
+> >> On Thu, Nov 17, 2016 at 04:35:10PM +0100, Stefan Wahren wrote:
+> >>> Hi John,
+> >>>
+> >>> Am 17.11.2016 um 00:47 schrieb John Youn:
+> >>>> Add the "snps,ahb-burst" binding and read it in.
+> >>>>
+> >>>> This property controls which burst type to perform on the AHB bus as a
+> >>>> master in internal DMA mode. This overrides the legacy param value,
+> >>>> which we need to keep around for now since several platforms use it.
+> >>>>
+> >>>> Some platforms may see better or worse performance based on this
+> >>>> value. The HAPS platform is one example where all INCRx have worse
+> >>>> performance than INCR.
+> >>>>
+> >>>> Other platforms (such as the Canyonlands board) report that the default
+> >>>> value causes system hangs.
+> >>>>
+> >>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> >>>> Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> >>>> ---
+> >>>>  Documentation/devicetree/bindings/usb/dwc2.txt |  2 +
+> >>>>  drivers/usb/dwc2/core.h                        |  9 +++++
+> >>>>  drivers/usb/dwc2/params.c                      | 56 ++++++++++++++++++++++++++
+> >>>>  3 files changed, 67 insertions(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> >>>> index 6c7c2bce..9e7b4b4 100644
+> >>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> >>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> >>>
+> >>> according to Documentation/devicetree/bindings/submitting-patches.txt
+> >>> this change should be a separate patch.
+> >>>
+> >>>> @@ -26,6 +26,8 @@ Optional properties:
+> >>>>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+> >>>>  - dr_mode: shall be one of "host", "peripheral" and "otg"
+> >>>>    Refer to usb/generic.txt
+> >>>> +- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
+> >>>> +  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
+> >>>
+> >>> This doesn't apply in case of the bcm2835. I would prefer this option is
+> >>> ignored in that case with a dev_warn("snps,ahb-burst is not supported on
+> >>> this platform").
+> >>
+> >> Also, perhaps you should allow that the compatible string can define the 
+> >> default.
+> >>
+> > I hoped you would say that :).
+> > 
+> > I've attached a patch (on top of John Youn changes) that does
+> > just that for the amcc,dwc-otg. I put the GAHBCFG_HBSTLEN_INCR
+> > value into the .data, if that's a problem, I can certainly 
+> > respin the patch and put it in a dedicated struct.
+> > 
+> > Regards
+> > 
+> > Christian
+> > ---
+> > From 4c31a029dde714828810b1c3e61a5b1412ac939a Mon Sep 17 00:00:00 2001
+> > From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Date: Fri, 18 Nov 2016 21:03:19 +0100
+> > Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
+> > 
+> > This patch adds a of_device_id table which can be used by
+> > existing devices to supply a ahb-burst value for the platform
+> > without having to add a "snps,ahb-burst" entry to the dts.
+> > 
+> > Note: Adding new devices to this table is discouraged.
+> >       please consider adding the "snps,ahb-burst" property
+> >       with the correct configuration to your device tree
+> >       file instead.
+> > 
+> > Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  drivers/usb/dwc2/params.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> > index e0fc9aa..51be266 100644
+> > --- a/drivers/usb/dwc2/params.c
+> > +++ b/drivers/usb/dwc2/params.c
+> > @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
+> >  	[GAHBCFG_HBSTLEN_INCR16]	= "INCR16",
+> >  };
+> >  
+> > +/*
+> > + * This table provides AHB burst configuration for existing
+> > + * device tree bindings that work poorly with the default setting.
+> > + *
+> > + * Note: Adding new devices to this table is discouraged.
+> > + *	 please consider adding the "snps,ahb-burst" property
+> > + *	 with the correct configuration to your device tree
+> > + *	 file instead.
+> > + */
+> > +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
+> > +	{
+> > +		.compatible = "amcc,dwc-otg",
+> > +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
+> > +	},
+> > +};
+> > +
+> >  static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+> >  {
+> >  	struct device_node *node = hsotg->dev->of_node;
+> > @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+> >  	ret = device_property_read_string(hsotg->dev,
+> >  					  "snps,ahb-burst", &str);
+> >  	if (ret < 0) {
+> > +		const struct of_device_id *match;
+> > +
+> > +		match = of_match_node(dwc2_compat_ahb_bursts, node);
+> > +		if (match)
+> > +			ret = (int)match->data;
+> > +
+> >  		return ret;
+> >  	} else if (of_device_is_compatible(node, "brcm,bcm2835-usb")) {
+> >  		dev_warn(hsotg->dev,
+> > 
+> I'd prefer if you use the binding which requires no extra code in
+> dwc2.
+I'm fine with either option. However it think that this would require
+that either Mark or Rob would allow an exception to the "keep existing
+dts the way they are) and ack the following change to the canyonlands.dts. 
 
-...
+In that case I wouldn't need the overwrite in dwc2_get_property_ahb_burst.
 
-> +#define TEGRA124_PAD_INFO_TABLE(_entry_)			\
-> +	_entry_(0, "audio", AUDIO, true, NULL),			\
-> +	_entry_(1, "bb", BB, true, NULL),			\
-> +	_entry_(2, "cam", CAM, true, NULL),			\
-> +	_entry_(3, "comp", COMP, true, NULL),			\
-> +	_entry_(4, "csia", CSIA, true, NULL),			\
-> +	_entry_(5, "csib", CSIB, true, NULL),			\
-> +	_entry_(6, "csie", CSIE, true, NULL),			\
-> +	_entry_(7, "dsi", DSI, true, NULL),			\
-> +	_entry_(8, "dsib", DSIB, true, NULL),			\
-> +	_entry_(9, "dsic", DSIC, true, NULL),			\
-> +	_entry_(10, "dsid", DSID, true, NULL),			\
-> +	_entry_(11, "hdmi", HDMI, true, NULL),			\
-> +	_entry_(12, "hsic", HSIC, true, NULL),			\
-> +	_entry_(13, "hv", HV, true, NULL),			\
-> +	_entry_(14, "lvds", LVDS, true, NULL),			\
-> +	_entry_(15, "mipi-bias", MIPI_BIAS, true, NULL),	\
-> +	_entry_(16, "nand", NAND, true, NULL),			\
-> +	_entry_(17, "pex-bias", PEX_BIAS, true, NULL),		\
-> +	_entry_(18, "pex-clk1", PEX_CLK1, true, NULL),		\
-> +	_entry_(19, "pex-clk2", PEX_CLK2, true, NULL),		\
-> +	_entry_(20, "pex-ctrl", PEX_CNTRL, true, NULL),		\
-> +	_entry_(21, "sdmmc1", SDMMC1, true, NULL),		\
-> +	_entry_(22, "sdmmc3", SDMMC3, true, NULL),		\
-> +	_entry_(23, "sdmmc4", SDMMC4, true, NULL),		\
-> +	_entry_(24, "sys-ddc", SYS_DDC, true, NULL),		\
-> +	_entry_(25, "uart", UART, true, NULL),			\
-> +	_entry_(26, "usb0", USB0, true, NULL),			\
-> +	_entry_(27, "usb1", USB1, true, NULL),			\
-> +	_entry_(28, "usb2", USB2, true, NULL),			\
-> +	_entry_(29, "usb-bias", USB_BIAS, true, NULL)
-> +
-> +#define TEGRA210_PAD_INFO_TABLE(_entry_)			\
-> +	_entry_(0, "audio", AUDIO, true, "vddio-audio"),	\
-> +	_entry_(1, "audio-hv", AUDIO_HV, true, "vddio-audio-hv"), \
-> +	_entry_(2, "cam", CAM, true, "vddio-cam"),		\
-> +	_entry_(3, "csia", CSIA, true, NULL),			\
-> +	_entry_(4, "csib", CSIB, true, NULL),			\
-> +	_entry_(5, "csic", CSIC, true, NULL),			\
-> +	_entry_(6, "csid", CSID, true, NULL),			\
-> +	_entry_(7, "csie", CSIE, true, NULL),			\
-> +	_entry_(8, "csif", CSIF, true, NULL),			\
-> +	_entry_(9, "dbg", DBG, true, "vddio-dbg"),		\
-> +	_entry_(10, "debug-nonao", DEBUG_NONAO, true, NULL),	\
-> +	_entry_(11, "dmic", DMIC, true, "vddio-dmic"),		\
-> +	_entry_(12, "dp", DP, true, NULL),			\
-> +	_entry_(13, "dsi", DSI, true, NULL),			\
-> +	_entry_(14, "dsib", DSIB, true, NULL),			\
-> +	_entry_(15, "dsic", DSIC, true, NULL),			\
-> +	_entry_(16, "dsid", DSID, true, NULL),			\
-> +	_entry_(17, "emmc", SDMMC4, true, NULL),		\
-> +	_entry_(18, "emmc2", EMMC2, true, NULL),		\
-> +	_entry_(19, "gpio", GPIO, true, "vddio-gpio"),		\
-> +	_entry_(20, "hdmi", HDMI, true, NULL),			\
-> +	_entry_(21, "hsic", HSIC, true, NULL),			\
-> +	_entry_(22, "lvds", LVDS, true, NULL),			\
-> +	_entry_(23, "mipi-bias", MIPI_BIAS, true, NULL),	\
-> +	_entry_(24, "pex-bias", PEX_BIAS, true, NULL),		\
-> +	_entry_(25, "pex-clk1", PEX_CLK1, true, NULL),		\
-> +	_entry_(26, "pex-clk2", PEX_CLK2, true, NULL),		\
-> +	_entry_(27, "pex-ctrl", PEX_CNTRL, false, "vddio-pex-ctrl"), \
-> +	_entry_(28, "sdmmc1", SDMMC1, true, "vddio-sdmmc1"),	\
-> +	_entry_(29, "sdmmc3", SDMMC3, true, "vddio-sdmmc3"),	\
-> +	_entry_(30, "spi", SPI, true, "vddio-spi"),		\
-> +	_entry_(31, "spi-hv", SPI_HV, true, "vddio-spi-hv"),	\
-> +	_entry_(32, "uart", UART, true, "vddio-uart"),		\
-> +	_entry_(33, "usb0", USB0, true, NULL),			\
-> +	_entry_(34, "usb1", USB1, true, NULL),			\
-> +	_entry_(35, "usb2", USB2, true, NULL),			\
-> +	_entry_(36, "usb3", USB3, true, NULL),			\
-> +	_entry_(37, "usb-bias", USB_BIAS, true, NULL)
+Regards,
+Christian
+---
+>From e78604cb0b8ea8db277ef9bf321a613f8e0c7129 Mon Sep 17 00:00:00 2001
+From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Mon, 21 Nov 2016 21:46:19 +0100
+Subject: [PATCH] powerpc/dts: set snps,ahb-burst to INCR16
 
-Can you also fix these checkpatch errors ...
+The dwc2 driver defaults to INCR4 which can cause a
+system hang when the USB and SATA is used concurrently.
 
-ERROR: Macros with complex values should be enclosed in parentheses
-#424: FILE: drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c:350:
+Note: This patch requires:
+	"usb: dwc2: add amcc,dwc-otg support"
+	(which already landed in the usb subsystem queue)
+	and "usb: dwc2: Add AHB burst configuration"
 
-ERROR: Macros with complex values should be enclosed in parentheses
-#456: FILE: drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c:382:
+Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/powerpc/boot/dts/canyonlands.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers
-Jon
-
+diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
+index 0d6ac92..90db712 100644
+--- a/arch/powerpc/boot/dts/canyonlands.dts
++++ b/arch/powerpc/boot/dts/canyonlands.dts
+@@ -179,6 +179,7 @@
+ 
+ 		USBOTG0: usbotg@bff80000 {
+ 			compatible = "amcc,dwc-otg";
++			snps,ahb-burst = "INCR16";
+ 			reg = <0x4 0xbff80000 0x10000>;
+ 			interrupt-parent = <&USBOTG0>;
+ 			#interrupt-cells = <1>;
 -- 
-nvpublic
+2.10.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
