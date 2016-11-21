@@ -1,62 +1,50 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH V2] usb: xhci: add support for performing fake doorbell
-Date: Mon, 21 Nov 2016 17:31:44 +0200
-Message-ID: <58331360.5000508@linux.intel.com>
-References: <20161001215817.25384-1-zajec5@gmail.com>
- <20161017203036.23399-1-zajec5@gmail.com>
- <CACna6rw0tnjEOSqjd=q66yWZWa+oNAkH-tk=RLiLzz_=i0x-sA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [RFC PATCH net v2 0/3] Fix OdroidC2 Gigabit Tx link issue
+Date: Mon, 21 Nov 2016 16:35:21 +0100
+Message-ID: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACna6rw0tnjEOSqjd=q66yWZWa+oNAkH-tk=RLiLzz_=i0x-sA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Andre Roth <neolynx@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21.11.2016 09:57, Rafał Miłecki wrote:
-> Hi Mathias,
->
-> On 17 October 2016 at 22:30, Rafał Miłecki <zajec5@gmail.com> wrote:
->> From: Rafał Miłecki <rafal@milecki.pl>
->>
->> Broadcom's Northstar XHCI controllers seem to need a special start
->> procedure to work correctly. There isn't any official documentation of
->> this, the problem is that controller doesn't detect any connected
->> devices with default setup. Moreover connecting USB device to controller
->> that doesn't run properly can cause SoC's watchdog issues.
->>
->> A workaround that was successfully tested on multiple devices is to
->> perform a fake doorbell. This patch adds code for doing this and enables
->> it on BCM4708 family.
->>
->> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->> ---
->> V2: Enable quirk for brcm,bcm4708 machines instead of adding separated binding
->>      for it. Thanks Rob for your comment on this.
->
-> Do you think you can pick & push this one? V2 follows Rob's suggestion
-> and he has some DT knowledge for sure, so I guess it should be OK.
-> --
+This patchset fixes an issue with the OdroidC2 board (DWMAC + RTL8211F).
+Initially reported as a low Tx throughput issue at gigabit speed, the
+platform enters LPI too often. This eventually break the link (both Tx
+and Rx), and require to bring the interface down and up again to get the
+Rx path working again.
 
-Is there some more background information on this?
+The root cause of this issue is not fully understood yet but disabling EEE
+advertisement on the PHY prevent this feature to be negotiated.
+With this change, the link is stable and reliable, with the expected
+throughput performance.
 
-I don't have any contacts to Broadcom myself, adding the BMC Kernel Feedback list to CC.
-Maybe someone over there has an errata, documentation or just general feedback.
+The patchset adds options in the generic phy driver to disable EEE
+advertisement, through device tree. The way it is done is very similar
+to the handling of the max-speed property.
 
-How was this workaround even figured out? ringing the doorbell for the first
-device doesn't seem like something found by trial and error,  especially when
-xhci specs state that:
+This V2 is posted is posted as an RFC. Since it changes the generic PHY
+it propably requires to be a bit more careful.
+If you are not confortable taking for the coming rc, I can rebase on
+net-next instead.
 
-"Software shall not write the Doorbell of an endpoint until after it has issued a
-Configure Endpoint Command for the endpoint and received a successful Command
-Completion Event."
+Chnages since V1: [1]
+ - Disable the advertisement of EEE in the generic code instead of the
+   realtek driver.
 
-The whole workaround is a bit intrusive, allocating a fake device, ring a doorbell for a
-fake device in the wrong state, clearing off HSE (host system error) which should only be set
-when things really go bad, some random usleeps, and possible calling xhci_start() twice.
+[1] : http://lkml.kernel.org/r/1479220154-25851-1-git-send-email-jbrunet@baylibre.com
 
-I can't take this as is without some more info.
+Jerome Brunet (3):
+  net: phy: add an option to disable EEE advertisement
+  dt: bindings: add ethernet phy eee-disable-advert option documentation
+  ARM64: dts: meson: odroidc2: disable advertisement EEE for GbE.
 
--Mathias
+ Documentation/devicetree/bindings/net/phy.txt      |  5 ++
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 15 ++++
+ drivers/net/phy/phy.c                              |  3 +
+ drivers/net/phy/phy_device.c                       | 80 +++++++++++++++++++---
+ include/linux/phy.h                                |  3 +
+ 5 files changed, 97 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
