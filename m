@@ -1,96 +1,39 @@
-From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 09/16] mmc: sdhci: Factor out sdhci_enable_clk
-Date: Mon, 21 Nov 2016 09:45:40 +0200
-Message-ID: <419c6e7d-4068-4fc6-e4fc-ee0c7248a964@intel.com>
-References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
- <1479710246-26676-10-git-send-email-riteshh@codeaurora.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH V2] usb: xhci: add support for performing fake doorbell
+Date: Mon, 21 Nov 2016 08:57:38 +0100
+Message-ID: <CACna6rw0tnjEOSqjd=q66yWZWa+oNAkH-tk=RLiLzz_=i0x-sA@mail.gmail.com>
+References: <20161001215817.25384-1-zajec5@gmail.com> <20161017203036.23399-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479710246-26676-10-git-send-email-riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.lemberg-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, mateusz.nowak-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Yuliy.Izrailov-XdAiOPVOjttBDgjK7y7TUQ@public.gmane.org, asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, david.griego-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pramod.gurav-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161017203036.23399-1-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/16 08:37, Ritesh Harjani wrote:
-> Factor out sdhci_enable_clk from sdhci_set_clock
-> and make it EXPORT_SYMBOL so that it can be called.
-> 
-> Signed-off-by: Ritesh Harjani <riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Hi Mathias,
 
-Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
+On 17 October 2016 at 22:30, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> wro=
+te:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>
+> Broadcom's Northstar XHCI controllers seem to need a special start
+> procedure to work correctly. There isn't any official documentation of
+> this, the problem is that controller doesn't detect any connected
+> devices with default setup. Moreover connecting USB device to controller
+> that doesn't run properly can cause SoC's watchdog issues.
+>
+> A workaround that was successfully tested on multiple devices is to
+> perform a fake doorbell. This patch adds code for doing this and enables
+> it on BCM4708 family.
+>
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 > ---
->  drivers/mmc/host/sdhci.c | 28 +++++++++++++++++-----------
->  drivers/mmc/host/sdhci.h |  1 +
->  2 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index d08d507..62aedf1 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1344,20 +1344,10 @@ u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  }
->  EXPORT_SYMBOL_GPL(sdhci_calc_clk);
->  
-> -void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> +void sdhci_enable_clk(struct sdhci_host *host, u16 clk)
->  {
-> -	u16 clk;
->  	unsigned long timeout;
->  
-> -	host->mmc->actual_clock = 0;
-> -
-> -	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> -
-> -	if (clock == 0)
-> -		return;
-> -
-> -	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
-> -
->  	clk |= SDHCI_CLOCK_INT_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->  
-> @@ -1378,6 +1368,22 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  	clk |= SDHCI_CLOCK_CARD_EN;
->  	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->  }
-> +EXPORT_SYMBOL_GPL(sdhci_enable_clk);
-> +
-> +void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> +{
-> +	u16 clk;
-> +
-> +	host->mmc->actual_clock = 0;
-> +
-> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> +
-> +	if (clock == 0)
-> +		return;
-> +
-> +	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
-> +	sdhci_enable_clk(host, clk);
-> +}
->  EXPORT_SYMBOL_GPL(sdhci_set_clock);
->  
->  static void sdhci_set_power_reg(struct sdhci_host *host, unsigned char mode,
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 9c35776..2fe9e80 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -682,6 +682,7 @@ static inline bool sdhci_sdio_irq_enabled(struct sdhci_host *host)
->  u16 sdhci_calc_clk(struct sdhci_host *host, unsigned int clock,
->  		   unsigned int *actual_clock);
->  void sdhci_set_clock(struct sdhci_host *host, unsigned int clock);
-> +void sdhci_enable_clk(struct sdhci_host *host, u16 clk);
->  void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
->  		     unsigned short vdd);
->  void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
-> 
+> V2: Enable quirk for brcm,bcm4708 machines instead of adding separated bi=
+nding
+>     for it. Thanks Rob for your comment on this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you think you can pick & push this one? V2 follows Rob's suggestion
+and he has some DT knowledge for sure, so I guess it should be OK.
