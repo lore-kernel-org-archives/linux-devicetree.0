@@ -1,68 +1,34 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Mon, 21 Nov 2016 15:06:05 +0530
-Message-ID: <5832C005.3070104@nvidia.com>
-References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com> <1478696782-11657-3-git-send-email-ldewangan@nvidia.com> <b65cf9ea-208a-0704-7cc9-843bc18da508@nvidia.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v3 0/2] DW DMAC: update device tree
+Date: Mon, 21 Nov 2016 10:02:14 +0000
+Message-ID: <1479722477.2487.5.camel@synopsys.com>
+References: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+         <1479497189.22212.41.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b65cf9ea-208a-0704-7cc9-843bc18da508-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479497189.22212.41.camel@linux.intel.com>
+Content-Language: en-US
+Content-ID: <5C511858F21CDA409C8AF3268483A091@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+Cc: "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Jon,
-I will update the patch per your comment.
-Here is answer for some of the query.
-
-Thanks,
-Laxman
-
-
-On Tuesday 15 November 2016 08:37 PM, Jon Hunter wrote:
-> On 09/11/16 13:06, Laxman Dewangan wrote:
->> +/**
->> + * Macro for 1.8V, keep 200mV as tolerance for deciding that
->> + * IO pads should be set for 3.3V (high voltage) or 1.8V.
->> + */
->> +#define TEGRA_IO_PAD_1800000UV_UPPER_LIMIT 2000000
-> Is there a reference we could add for the source of this information?
-
-I had a discussion with the ASIC on this and as per them
-     1.8 V nominal is (1.62V, 1.98V)
-     3.3 V nominal is (2.97V,3.63V)
-
-I am working with them to update the TRM document but we can assume that 
-this information will be there in TRM.
-
->> +	const struct pinctrl_pin_desc *pins_desc;
->> +	int num_pins_desc;
->> +};
->> +
->> +struct tegra_io_pads_regulator_info {
->> +	struct device *dev;
->> +	const struct tegra_io_pads_cfg_info *pads_cfg;
->> +	struct regulator *regulator;
->> +	struct notifier_block regulator_nb;
->> +};
-> Is this struct necessary? Seems to be a lot of duplicated information
-> from the other structs. Why not add the regulator and regulator_nb to
-> the main struct? OK, not all io_pads have a regulator but you are only
-> saving one pointer.
-Yes, some of IO pads support multi-voltage.
-
-
->
-> +		if ((vdata->old_uV > TEGRA_IO_PAD_1800000UV_UPPER_LIMIT) &&
-> +		    (vdata->min_uV <= TEGRA_IO_PAD_1800000UV_UPPER_LIMIT))
-> +			break;
-> The data-sheet for Tegra210 only lists 1.8V or 3.3V as supported
-> options. Do we need to support a range? Or does the h/w support a range
-> of voltages? I am just wondering why we cannot check explicitly for 1.8V
-> or 3.3V and treat anything else as an error.
-
-Two voltage level, not range.
+SGkgQW5keSwNCg0KT24gRnJpLCAyMDE2LTExLTE4IGF0IDIxOjI2ICswMjAwLCBBbmR5IFNoZXZj
+aGVua28gd3JvdGU6DQo+IE9uIEZyaSwgMjAxNi0xMS0xOCBhdCAyMjoxMiArMDMwMCwgRXVnZW5p
+eSBQYWx0c2V2IHdyb3RlOg0KPiA+IA0KPiA+IEl0IHdhc24ndCBwb3NzaWJsZSB0byBlbmFibGUg
+c29tZSBmZWF0dXJlcyBsaWtlDQo+ID4gbWVtb3J5LXRvLW1lbW9yeSB0cmFuc2ZlcnMgb3IgbXVs
+dGkgYmxvY2sgdHJhbnNmZXJzIHZpYSBEVC4NCj4gPiBJdCBpcyBmaXhlZCBieSB0aGVzZSBwYXRj
+aGVzLg0KPiANCj4gRmlyc3Qgb2YgYWxsLCBwbGVhc2UsIGdpdmUgdGltZSB0byByZXZpZXdlcnMg
+dG8gY29tbWVudCB0aGUgcGF0Y2hlcy4NCj4gVXN1YWxseSBpdCBzaG91bGQgYmUgYXQgbGVhc3Qg
+MjRoIChmb3IgdGhlIHNlcmllcyB0aGF0IGhhcyBiZWVuIHNlbnQNCj4gZmlyc3QgdGltZSAxIHdl
+ZWsgYXBwcm94aW1hdGVseSkuDQoNCkknbSBub3QgcmVhbGx5IHN1cmUgYSBsb3Qgb2YgcGVvcGxl
+IGdldCBkaXN0dXJiZWQgYnkgdGhpcyBzZXJpZXMNCmFuZCBnaXZlbiB0aGlzIGFsbCBoYXMgYmVl
+biBkaXNjdXNzZWQgZm9yIG1vbnRocyBub3cgSSdkIHJlYWxseSBsaWtlDQp0byBzZWUgY2hhbmdl
+cyByZXF1aXJlZCBmb3Igb3VyIEhXIHRvIHdvcmsgdG8gbGFuZCBpbiB1cHN0cmVhbSBBU0FQLg0K
+DQpUb28gYmFkIHdlJ3JlIGxhdGUgZm9yIDQuOSAod2hpY2ggaXMgc3VwcG9zZWQgdG8gYmUgdGhl
+IG5leHQgTFRTKSBidXQNCndlIG5lZWQgdG8gbWFrZSBzdXJlIHRoaXMgc2VyaWVzIGhpdHMgNC4x
+MCBmb3Igc3VyZS4NCg0KSG9wZSB0aGlzIHJhY2UgZG9lc24ndCBhZmZlY3QgeW91IHRoYXQgbXVj
+aC4NCg0KLUFsZXhleQ0KDQo=
