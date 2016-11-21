@@ -1,79 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sh-msiof: Add support for R-Car M3-W" to the spi tree
-Date: Mon, 21 Nov 2016 19:20:42 +0000
-Message-ID: <E1c8u8w-00080T-Qa@debutante>
-References: <1479749095-13548-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1479749095-13548-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Mon, 21 Nov 2016 11:24:54 -0800
+Message-ID: <58334A06.103@gmail.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <582E1A59.7040502@gmail.com> <075d4718-8cd2-e390-b755-bc24e7497eae@arm.com>
+ <582F6312.5040009@gmail.com> <58331B5D.8060907@gmail.com>
+ <55e27115-421e-b67b-eb7a-9b1c3d662711@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55e27115-421e-b67b-eb7a-9b1c3d662711-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 11/21/16 08:23, Sudeep Holla wrote:
+> 
+> 
+> On 21/11/16 16:05, Frank Rowand wrote:
+>> Hi Sudeep,
+>>
+>> On 11/18/16 12:22, Frank Rowand wrote:
+>>> On 11/18/16 02:41, Sudeep Holla wrote:
+>>>>
+>>>>
+>>>> On 17/11/16 21:00, Frank Rowand wrote:
+>>>>> On 11/17/16 07:32, Sudeep Holla wrote:
+>>>>>> Currently platforms/drivers needing to get the machine model name are
+>>>>>> replicating the same snippet of code. In some case, the OF reference
+>>>>>> counting is either missing or incorrect.
+>>>>>>
+>>>>>> This patch adds support to read the machine model name either using
+>>>>>> the "model" or the "compatible" property in the device tree root node
+>>>>>> to the core OF/DT code.
+>>>>>>
+>>>>>> This can be used to remove all the duplicate code snippets doing exactly
+>>>>>> same thing later.
+>>>>>
+>>>>> I find five instances of reading only property "model":
+>>>>>
+>>>>>   arch/arm/mach-imx/cpu.c
+>>>>>   arch/arm/mach-mxs/mach-mxs.c
+>>>>>   arch/c6x/kernel/setup.c
+>>>>>   arch/mips/cavium-octeon/setup.c
+>>>>>   arch/sh/boards/of-generic.c
+>>>>>
+>>>>
+>>>> Ah sorry you were not Cc-ed in 2/2, but that shows all the instances
+>>>> that this will be used for.
+>>>
+>>> I have not seen 2/2.  I do not see it on the devicetree list or on lkml.
+>>
+>> Can you please re-send patch 2/2?
+>>
+> 
+> Since it is based on -next, I would prefer to wait until next merge
+> window to resend. You should be able to check in the link I sent if
+> that's OK.
 
-   spi: sh-msiof: Add support for R-Car M3-W
+I am missing or misunderstanding something.
 
-has been applied to the spi tree at
+I do not know what "the link I sent" means.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+For some reason, the devicetree mail list and lmkl mail failed to send
+me a copy of patch 2/2.  Or my mail server failed to receive them.  That
+is why I asked you to resend the patch. I just now looked in the devicetree
+archive and found it there.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+So I now can see how you plan to use the new function.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+-Frank
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
 
-Thanks,
-Mark
-
->From eb51cffa743de5c78cfbf44f576b0f1eccc784f4 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Mon, 21 Nov 2016 18:24:55 +0100
-Subject: [PATCH] spi: sh-msiof: Add support for R-Car M3-W
-
-MSIOF in R-Car M3-W (r8a7796) is handled fine by the existing driver.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- drivers/spi/spi-sh-msiof.c                         | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index aa005c1d10d9..da6614c63796 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -10,6 +10,7 @@ Required properties:
- 			 "renesas,msiof-r8a7792" (R-Car V2H)
- 			 "renesas,msiof-r8a7793" (R-Car M2-N)
- 			 "renesas,msiof-r8a7794" (R-Car E2)
-+			 "renesas,msiof-r8a7796" (R-Car M3-W)
- 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
- - reg                  : A list of offsets and lengths of the register sets for
- 			 the device.
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 1de3a772eb7d..0012ad02e569 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -980,6 +980,7 @@ static const struct of_device_id sh_msiof_match[] = {
- 	{ .compatible = "renesas,msiof-r8a7792",   .data = &r8a779x_data },
- 	{ .compatible = "renesas,msiof-r8a7793",   .data = &r8a779x_data },
- 	{ .compatible = "renesas,msiof-r8a7794",   .data = &r8a779x_data },
-+	{ .compatible = "renesas,msiof-r8a7796",   .data = &r8a779x_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sh_msiof_match);
--- 
-2.10.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
