@@ -1,13 +1,15 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [RFC PATCH 1/2] arm64: dts: add MUSB node to Allwinner
- A64 dtsi
-Date: Wed, 23 Nov 2016 00:59:01 +0800
-Message-ID: <20161122165902.62543-1-icenowy@aosc.xyz>
+Subject: [RFC PATCH 2/2] arm64: dts: enable the MUSB controller
+ of Pine64 in host-only mode
+Date: Wed, 23 Nov 2016 00:59:02 +0800
+Message-ID: <20161122165902.62543-2-icenowy@aosc.xyz>
+References: <20161122165902.62543-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB4HS2HAQKGQE6ZL63JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB7HS2HAQKGQETY55HHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161122165902.62543-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,46 +20,36 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 SoC has a MUSB controller like the one in A33, so add
-a node for it, just use the compatible of A33 MUSB.
+A64 has a MUSB controller wired to the USB PHY 0, which is connected
+to the upper USB Type-A port of Pine64.
 
-Host mode is tested to work properly on Pine64 and will be added into
-the device tree of Pine64 in next patch.
-
-Peripheral mode is also tested on Pine64, by changing dr_mode property
-of usb_otg node and use a non-standard USB Type-A to Type-A cable.
+As the port is a Type-A female port, enable it in host-only mode in the
+device tree, which makes devices with USB Type-A male port can work on
+this port (which is originally designed by Pine64 team).
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
-This patchset depends on my patch which adds usbphy to A64 dtsi.
-( http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/469561.html )
+Peripheral mode is also proven to work, with dr_mode changed to "peripheral"
+and using a Type-A to Type-A cable.
 
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 2572dd6..261324a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -122,6 +122,19 @@
- 		#size-cells = <1>;
- 		ranges;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index f9a11e6..cf91051 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -81,6 +81,11 @@
+ 	status = "okay";
+ };
  
-+		usb_otg: usb@01c19000 {
-+			compatible = "allwinner,sun8i-a33-musb";
-+			reg = <0x01c19000 0x0400>;
-+			clocks = <&ccu CLK_BUS_OTG>;
-+			resets = <&ccu RST_BUS_OTG>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "mc";
-+			phys = <&usbphy 0>;
-+			phy-names = "usb";
-+			extcon = <&usbphy 0>;
-+			status = "disabled";
-+		};
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
 +
- 		usbphy: phy@01c19400 {
- 			compatible = "allwinner,sun50i-a64-usb-phy";
- 			reg = <0x01c19400 0x14>,
+ &usbphy {
+ 	status = "okay";
+ };
 -- 
 2.10.2
