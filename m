@@ -1,68 +1,28 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
-Date: Tue, 22 Nov 2016 18:06:16 +0100
-Message-ID: <20161122170616.29557-1-manu@bidouilliste.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 0/2] serial: introduce DSR handling property
+Date: Tue, 22 Nov 2016 18:14:09 +0100
+Message-ID: <1479834851-32442-1-git-send-email-chf.fritz@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
-others three only have 1.
-Add the num-cs property to each node.
+This patchset introduces device-tree property "disable-dsr" including
+documentation and usage.
 
-Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Christoph Fritz (2):
+  doc: DT: add generic serial property to disable DSR
+  serial: imx: make DSR irq handling conditional
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 94cf5a1..ed21982 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -871,6 +871,7 @@
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			num-cs = 4;
- 		};
- 
- 		spi1: spi@01c06000 {
-@@ -885,6 +886,7 @@
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			num-cs = 1;
- 		};
- 
- 		emac: ethernet@01c0b000 {
-@@ -1037,6 +1039,7 @@
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			num-cs = 1;
- 		};
- 
- 		ahci: sata@01c18000 {
-@@ -1079,6 +1082,7 @@
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			num-cs = 1;
- 		};
- 
- 		pio: pinctrl@01c20800 {
+ Documentation/devicetree/bindings/serial/serial.txt | 2 ++
+ drivers/tty/serial/imx.c                            | 9 +++++++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
 -- 
-2.9.2
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
