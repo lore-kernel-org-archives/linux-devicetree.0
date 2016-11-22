@@ -1,63 +1,63 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM64: dts: meson-gxbb: add the USB reset also to the
- second USB PHY
-Date: Tue, 22 Nov 2016 23:05:17 +0100
-Message-ID: <CAFBinCCU-4vpttr14aHYjnO+yeQ=CM4dSe98ZSn_OCdatPagyg@mail.gmail.com>
-References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-1-martin.blumenstingl@googlemail.com>
- <20161112131305.26088-4-martin.blumenstingl@googlemail.com>
- <m2twb7w1j6.fsf@baylibre.com> <CAFBinCBVaQ7SLwQ0M2eJj0iyQuErF1Ev5dtGzKr7itiesy11MQ@mail.gmail.com>
- <m2eg2437za.fsf@baylibre.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
+Date: Tue, 22 Nov 2016 16:23:23 -0600
+Message-ID: <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
+References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m2eg2437za.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1479207611-18028-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 9:15 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+On 11/15/2016 05:00 AM, Bartosz Golaszewski wrote:
+> Add the nodes for the MSTPRI configuration and DDR2/mDDR memory
+> controller drivers to da850.dtsi.
 >
->> Hi Kevin,
->>
->> On Wed, Nov 16, 2016 at 10:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->>>
->>>> When the USB PHY driver was introduced the reset framework did not
->>>> have support for triggering a reset pulse for shared resets. On GXBB
->>>> however there is only one reset line for both PHYs (meaning we have a
->>>> shared reset line). With the latest changes to the reset framework and
->>>> the corresponding updates to the phy-meson8b-usb2 driver we can now pass
->>>> the reset to the second PHY as well.
->>>>
->>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>>
->>> Applied.
->> Unfortunately I think I put crucial information only in the
->> cover-letter's description:
->> "the dts patch has a runtime-dependency on patch 1 and 2"
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+> v1 -> v2:
+> - moved the priority controller node above the cfgchip node
+> - renamed added nodes to better reflect their purpose
 >
-> I saw that, but also see that both of those have been queued, so should
-> land in v4.10 also.
+>  arch/arm/boot/dts/da850.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
->> So please feel free to keep or drop the patch as it is. In case you
->> decide drop it I will re-send it for 4.11 (after all the 4.10 stuff is
->> done).
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 1bb1f6d..412eec6 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -210,6 +210,10 @@
+>  			};
 >
-> IMO, it's fine to keep it.  That means there may be some versions of
-> linux-next that have the problem where the reset will get asserted
-> twice, but since that is affecting very few people (probably only you),
-> I think it's OK, since it will be fine once v4.10-rc1 is released.
-fine with me, just wanted to let you know (so you're aware of it in
-case someone runs into an issue with this)
+>  		};
+> +		prictrl: priority-controller@14110 {
+> +			compatible = "ti,da850-mstpri";
+> +			reg = <0x14110 0x0c>;
 
-> If you don't want that, let me know and I'll drop it for now.
-let's keep it - this will mean that more users will test it :)
+I think we should add status = "disabled"; here and let boards opt in.
 
+> +		};
+>  		cfgchip: chip-controller@1417c {
+>  			compatible = "ti,da830-cfgchip", "syscon", "simple-mfd";
+>  			reg = <0x1417c 0x14>;
+> @@ -451,4 +455,8 @@
+>  			  1 0 0x68000000 0x00008000>;
+>  		status = "disabled";
+>  	};
+> +	memctrl: memory-controller@b0000000 {
+> +		compatible = "ti,da850-ddr-controller";
+> +		reg = <0xb0000000 0xe8>;
 
-Martin
+same here. status = "disabled";
+
+> +	};
+>  };
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
