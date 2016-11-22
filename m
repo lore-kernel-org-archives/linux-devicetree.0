@@ -1,57 +1,55 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Tue, 22 Nov 2016 13:58:32 +0100
-Message-ID: <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw@mail.gmail.com>
-References: <1479810013-29894-1-git-send-email-ldewangan@nvidia.com> <1479810013-29894-3-git-send-email-ldewangan@nvidia.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] mfd: palmas: Remove redundant check in
+ palmas_power_off
+Date: Tue, 22 Nov 2016 13:02:08 +0000
+Message-ID: <20161122130208.GD316@dell.lan>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-3-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479810013-29894-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1478754560-27923-3-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 11:20 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+On Thu, 10 Nov 2016, Keerthy wrote:
 
-> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-> low power state of some of its IO pads. The IO pads can work in
-> the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
-> sources. When IO interfaces are not used then IO pads can be
-> configure in low power state to reduce the power consumption from
-> that IO pads.
->
-> On Tegra124, the voltage level of IO power rail source is auto
-> detected by hardware(SoC) and hence it is only require to configure
-> in low power mode if IO pads are not used.
->
-> On T210 onwards, the auto-detection of voltage level from IO power
-> rail is removed from SoC and hence SW need to configure the PMC
-> register explicitly to set proper voltage in IO pads based on
-> IO rail power source voltage.
->
-> This driver adds the IO pad driver to configure the power state and
-> IO pad voltage based on the usage and power tree via pincontrol
-> framework. The configuration can be static and dynamic.
->
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> palmas_dev and palmas_power_off are always assigned together.
+> So the check for palmas_dev inside palmas_power_off function
+> is redundant. Removing the same.
+> 
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/mfd/palmas.c | 3 ---
+>  1 file changed, 3 deletions(-)
 
-Overall very nice!
+Applied, thanks.
 
-> +               rinfo->regulator = devm_regulator_get_optional(dev,
-> +                                               soc_data->cfg[i].vsupply);
+> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+> index 8f8bacb..ee9e9ea 100644
+> --- a/drivers/mfd/palmas.c
+> +++ b/drivers/mfd/palmas.c
+> @@ -431,9 +431,6 @@ static void palmas_power_off(void)
+>  	unsigned int addr;
+>  	int ret, slave;
+>  
+> -	if (!palmas_dev)
+> -		return;
+> -
+>  	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PMU_CONTROL_BASE);
+>  	addr = PALMAS_BASE_TO_REG(PALMAS_PMU_CONTROL_BASE, PALMAS_DEV_CTRL);
+>  
 
-Please just use devm_regulator_get().
-
-As has been discussed at lenth elsewhere "optional" in regulator_get_optional
-does *not* mean "software optional", it means "hardware optional".
-
-Such as a terminal that may have a voltage connected or not be
-connected to anything at all.
-
-If the system does not define a regulator you will anyway get a
-dummy regulator.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
