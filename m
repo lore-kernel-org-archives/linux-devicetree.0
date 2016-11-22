@@ -1,53 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
- panel properties
-Date: Tue, 22 Nov 2016 11:36:55 +0200
-Message-ID: <2307840.2mk6E40XHl@avalon>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
+Date: Tue, 22 Nov 2016 10:41:12 +0100
+Message-ID: <2907606.qYBKeXi75W@wuerfel>
+References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <3993565.nedzUBZcVS@wuerfel> <0084ef53-c0e6-51e8-afa5-07264dfce529@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0084ef53-c0e6-51e8-afa5-07264dfce529-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gTW9uZGF5IDIxIE5vdiAyMDE2IDEwOjQ4OjE1IFJvYiBIZXJyaW5nIHdyb3Rl
-Ogo+IE9uIFNhdCwgTm92IDE5LCAyMDE2IGF0IDA1OjI4OjAxQU0gKzAyMDAsIExhdXJlbnQgUGlu
-Y2hhcnQgd3JvdGU6Cj4gPiBEb2N1bWVudCBwcm9wZXJ0aWVzIGNvbW1vbiB0byBzZXZlcmFsIGRp
-c3BsYXkgcGFuZWxzIGluIGEgY2VudHJhbAo+ID4gbG9jYXRpb24gdGhhdCBjYW4gYmUgcmVmZXJl
-bmNlZCBieSB0aGUgcGFuZWwgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gCj4gTG9va3MgZ29vZC4g
-SnVzdCBvbmUgY29tbWVudC4uLgo+IAo+IFsuLi5dCj4gCj4gPiArQ29ubmVjdGl2aXR5Cj4gPiAr
-LS0tLS0tLS0tLS0tCj4gPiArCj4gPiArLSBwb3J0czogUGFuZWxzIHJlY2VpdmUgdmlkZW8gZGF0
-YSB0aHJvdWdoIG9uZSBvciBtdWx0aXBsZSBjb25uZWN0aW9ucy4KPiA+IFdoaWxlCj4gPiArICB0
-aGUgbmF0dXJlIG9mIHRob3NlIGNvbm5lY3Rpb25zIGlzIHNwZWNpZmljIHRvIHRoZSBwYW5lbCB0
-eXBlLCB0aGUKPiA+ICsgIGNvbm5lY3Rpdml0eSBpcyBleHByZXNzZWQgaW4gYSBzdGFuZGFyZCBm
-YXNoaW9uIHVzaW5nIHBvcnRzIGFzCj4gPiBzcGVjaWZpZWQgaW4KPiA+ICsgIHRoZSBkZXZpY2Ug
-Z3JhcGggYmluZGluZ3MgZGVmaW5lZCBpbgo+ID4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dyYXBoLnR4dC4KPiAKPiBXZSBhbGxvdyBwYW5lbHMgdG8gZWl0aGVyIHVzZSBn
-cmFwaCBiaW5kaW5nIG9yIGJlIGEgY2hpbGQgb2YgdGhlIGRpc3BsYXkKPiBjb250cm9sbGVyLgoK
-SSBrbmV3IHRoYXQgc29tZSBkaXNwbGF5IGNvbnRyb2xsZXJzIHVzZSBhIHBoYW5kbGUgdG8gdGhl
-IHBhbmVsIChzZWUgdGhlIApmc2wscGFuZWwgYW5kIG52aWRpYSxwYW5lbCBwcm9wZXJ0aWVzKSwg
-YnV0IEkgZGlkbid0IGtub3cgd2UgaGFkIHBhbmVscyBhcyAKY2hpbGRyZW4gb2YgZGlzcGxheSBj
-b250cm9sbGVyIG5vZGVzLiBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCBhbGxvdyB0aGF0IGZvciAK
-YW55dGhpbmcgYnV0IERTSSBwYW5lbHMsIGFzIHRoZSBEVCBoaWVyYXJjaHkgaXMgYmFzZWQgb24g
-Y29udHJvbCBidXNlcy4gQXJlIAp5b3Ugc3VyZSB3ZSBoYXZlIG90aGVyIHBhbmVscyBpbnN0YW50
-aWF0ZWQgdGhyb3VnaCB0aGF0IG1lY2hhbmlzbSA/Cgo+IFVzaW5nIHRoZSBncmFwaCBpcyBwcmVm
-ZXJyZWQsIGJ1dCBpbiB0aGUgc2ltcGxlIGNhc2VzIGp1c3QgYSBjaGlsZCBub2RlIGlzCj4gc3Vm
-ZmljaWVudC4gVGhpcyBzaG91bGQgYmUgZGVzY3JpYmVkIGhlcmUgb3Igc29tZXdoZXJlIGluIHRo
-aXMgZG9jLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tuesday, November 22, 2016 5:22:42 PM CET zhangfei wrote:
+> Hi, Arnd
+> 
+> On 2016年11月22日 16:45, Arnd Bergmann wrote:
+> > On Tuesday, November 22, 2016 3:49:16 PM CET Zhangfei Gao wrote:
+> >> @@ -1,8 +1,8 @@
+> >>   obj-y += core.o
+> >> -obj-y += hisilicon/
+> >>   obj-$(CONFIG_ARCH_STI) += sti/
+> >>   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+> >>   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> >> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
+> >>   obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+> >>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> >>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+> > Please leave the obj-y line, otherwise the COMPILE_TEST variant won't work.
+> 
+> COMPILE_TEST is added in drivers/reset/hisilicon/Kconfig
+> like
+> config COMMON_RESET_HI3660
+>          tristate "Hi3660 Reset Driver"
+>          depends on ARCH_HISI || COMPILE_TEST
+> 
+> The reason not using "obj-y" here is that reset.c will be compiled unconditionally.
+> 
+> drivers/reset/hisilicon/Makefile
+> obj-y   += reset.o
+
+Yes, that line has to change as well then, to only build it when one
+of the hardware specific drivers is enabled.
+
+	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
