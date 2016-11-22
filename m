@@ -1,57 +1,107 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] drivers: mfd: ti_am335x_tscadc: increase ADC ref
- clock to 24MHz
-Date: Tue, 22 Nov 2016 13:04:38 +0000
-Message-ID: <20161122130438.GF316@dell.lan>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
- <20161111075838.5815-1-mugunthanvnm@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 22 Nov 2016 15:14:08 +0200
+Message-ID: <2645572.hCCJeODTBK@avalon>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20161122110548.GB22735@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161111075838.5815-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161122110548.GB22735@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Don't make up $SUBJECT line format.
-
-> Increase ADC reference clock from 3MHz to 24MHz so that the
-> sampling rates goes up from 100K samples per second to 800K
-> samples per second on AM335x and AM437x SoC.
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-> ---
->  include/linux/mfd/ti_am335x_tscadc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Change looks okay though.
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
-> index b9a53e013bff..f6c449b96ea5 100644
-> --- a/include/linux/mfd/ti_am335x_tscadc.h
-> +++ b/include/linux/mfd/ti_am335x_tscadc.h
-> @@ -137,7 +137,7 @@
->  #define SEQ_STATUS BIT(5)
->  #define CHARGE_STEP		0x11
->  
-> -#define ADC_CLK			3000000
-> +#define ADC_CLK			24000000
->  #define TOTAL_STEPS		16
->  #define TOTAL_CHANNELS		8
->  #define FIFO1_THRESHOLD		19
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVGhpZXJyeSwKCk9uIFR1ZXNkYXkgMjIgTm92IDIwMTYgMTI6MDU6NDggVGhpZXJyeSBSZWRp
+bmcgd3JvdGU6Cj4gT24gU2F0LCBOb3YgMTksIDIwMTYgYXQgMDU6Mjg6MDFBTSArMDIwMCwgTGF1
+cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IERvY3VtZW50IHByb3BlcnRpZXMgY29tbW9uIHRvIHNl
+dmVyYWwgZGlzcGxheSBwYW5lbHMgaW4gYSBjZW50cmFsCj4gPiBsb2NhdGlvbiB0aGF0IGNhbiBi
+ZSByZWZlcmVuY2VkIGJ5IHRoZSBwYW5lbCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiA+IAo+ID4g
+U2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4gPGxhdXJlbnQucGluY2hhcnQrcmVu
+ZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+ID4gLS0tCj4gPiAKPiA+ICAuLi4vYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9wYW5lbC1jb21tb24udHh0ICAgICAgICB8IDkxICsrKysrKysrKysrKysrKysr
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQKPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9wYW5lbC1jb21tb24udHh0PiAKPiA+IGRpZmYgLS1naXQKPiA+IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dAo+ID4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1jb21t
+b24udHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5l
+YzUyYzQ3MmM4NDUKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQKPiA+IEBAIC0w
+LDAgKzEsOTEgQEAKPiA+ICtDb21tb24gUHJvcGVydGllcyBmb3IgRGlzcGxheSBQYW5lbAo+ID4g
+Kz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPiArCj4gPiArVGhpcyBkb2N1
+bWVudCBkZWZpbmVzIGRldmljZSB0cmVlIHByb3BlcnRpZXMgY29tbW9uIHRvIHNldmVyYWwgY2xh
+c3NlcyBvZgo+ID4gK2Rpc3BsYXkgcGFuZWxzLiBJdCBkb2Vzbid0IGNvbnN0aXR1ZSBhIGRldmlj
+ZSB0cmVlIGJpbmRpbmcgc3BlY2lmaWNhdGlvbgo+ID4gYnkKPiA+ICtpdHNlbGYgYnV0IGlzIG1l
+YW50IHRvIGJlIHJlZmVyZW5jZWQgYnkgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gPiArCj4gPiAr
+V2hlbiByZWZlcmVuY2VkIGZyb20gcGFuZWwgZGV2aWNlIHRyZWUgYmluZGluZ3MgdGhlIHByb3Bl
+cnRpZXMgZGVmaW5lZCBpbgo+ID4gdGhpcwo+ID4gK2RvY3VtZW50IGFyZSBkZWZpbmVkIGFzIGZv
+bGxvd3MuIFRoZSBwYW5lbCBkZXZpY2UgdHJlZSBiaW5kaW5ncyBhcmUKPiA+ICtyZXNwb25zaWJs
+ZSBmb3IgZGVmaW5pbmcgd2hldGhlciBlYWNoIHByb3BlcnR5IGlzIHJlcXVpcmVkIG9yIG9wdGlv
+bmFsLgo+ID4gKwo+ID4gKwo+ID4gK0Rlc2NyaXB0aXZlIFByb3BlcnRpZXMKPiA+ICstLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tCj4gPiArCj4gPiArLSB3aWR0aC1tbSwKPiA+ICstIGhlaWdodC1tbTog
+VGhlIHdpZHRoLW1tIGFuZCBoZWlnaHQtbW0gc3BlY2lmeSB0aGUgd2lkdGggYW5kIGhlaWdodCBv
+Zgo+ID4gdGhlCj4gPiArICBwaHlzaWNhbCBhcmVhIHdoZXJlIGltYWdlcyBhcmUgZGlzcGxheWVk
+LiBUaGVzZSBwcm9wZXJ0aWVzIGFyZQo+ID4gZXhwcmVzc2VkIGluCj4gPiArICBtaWxsaW1ldGVy
+cyBhbmQgcm91bmRlZCB0byB0aGUgY2xvc2VzdCB1bml0Lgo+IAo+IEVybS4uLiB0aGlzIGlzIGFs
+cmVhZHkgaW1wbGllZCBieSB0aGUgY29tcGF0aWJsZSBzdHJpbmcuIEhhdmluZyB0aGlzIGluCj4g
+ZGV2aWNlIHRyZWUgaXMgY29tcGxldGVseSByZWR1bmRhbnQuCgpOb3RoaW5nIG5ldyB1bmRlciB0
+aGUgc3VuIGhlcmUsIHdlIGFscmVhZHkgaGF2ZSBwbGVudHkgb2YgcHJvcGVydGllcyB0aGF0IApj
+b3VsZCBiZSBpbXBsaWVkIGJ5IGNvbXBhdGlibGUgc3RyaW5ncy4gRm9yIGluc3RhbmNlIGZvciBT
+b0MgSVAgY29yZXMgbWFueSAKdmVuZG9ycyB1c2UgYm90aCBhbiBTb0Mtc3BlY2lmaWMgY29tcGF0
+aWJsZSBzdHJpbmcgYW5kIGEgZ2VuZXJpYyBjb21wYXRpYmxlIApzdHJpbmcgKGUuZy4gInJlbmVz
+YXMsZ3Bpby1yOGE3Nzk1IiBhbmQgInJlbmVzYXMsZ3Bpby1yY2FyIikuIFRoZSBTb0MtCmNvbXBh
+dGlibGUgc3RyaW5nIGltcGxpZXMgcmVnaXN0ZXIgYWRkcmVzc2VzLCBjbG9ja3MgYW5kIGludGVy
+cnVwdHMsIGJ1dCB3ZSAKc3RpbGwgZGVzY3JpYmUgdGhlbSBpbiBEVC4KCkF0IHRoZSBlbmQgb2Yg
+dGhlIGRheSBpbmZvcm1hdGlvbiBhYm91dCBkZXZpY2VzIGFuZCB0aGVpciBpbnRlZ3JhdGlvbiBp
+biB0aGUgCnN5c3RlbSBuZWVkcyB0byBiZSBhdmFpbGFibGUsIGVpdGhlciBmcm9tIERUIG9yIGZy
+b20gQyBjb2RlLiBEVCBiaW5kaW5ncyAKc2hvdWxkIGJlIGRlc2lnbmVkIHRvIHN0cmlrZSBhIGdv
+b2QgYmFsYW5jZSB0aGVyZSwgYXZvaWRpbmcgcmVkdW5kYW50IAppbmZvcm1hdGlvbiBpbiBEVCAo
+YW5kIHRodXMga2VlcGluZyB0aGUgYmluZGluZ3Mgc2ltcGxlKSB3aGlsZSBzdGlsbCBwcm92aWRp
+bmcgCmVub3VnaCBpbmZvcm1hdGlvbiB0byBhbGxvdyBmb3IgYSByZWFzb25hYmxlIGxldmVsIG9m
+IGdlbmVyaWNpdHkgaW4gT1MgCmltcGxlbWVudGF0aW9ucy4KCj4gPiArLSBsYWJlbDogVGhlIGxh
+YmVsIHByb3BlcnR5IHNwZWNpZmllcyBhIHN5bWJvbGljIG5hbWUgZm9yIHRoZSBwYW5lbCBhcyBh
+Cj4gPiArICBzdHJpbmcgc3VpdGFibGUgZm9yIHVzZSBieSBodW1hbnMuIEl0IHR5cGljYWxseSBj
+b250YWlucyBhIG5hbWUKPiA+IGluc2NyaWJlZCBvbgo+ID4gKyAgdGhlIHN5c3RlbSAoZS5nLiBh
+cyBhbiBhZmZpeGVkIGxhYmVsKSBvciBzcGVjaWZpZWQgaW4gdGhlIHN5c3RlbSdzCj4gPiArICBk
+b2N1bWVudGF0aW9uIChlLmcuIGluIHRoZSB1c2VyJ3MgbWFudWFsKS4KPiA+ICsKPiA+ICsgIElm
+IG5vIHN1Y2ggbmFtZSBleGlzdHMsIGFuZCB1bmxlc3MgdGhlIHByb3BlcnR5IGlzIG1hbmRhdG9y
+eSBhY2NvcmRpbmcKPiA+IHRvCj4gPiArICBkZXZpY2UgdHJlZSBiaW5kaW5ncywgaXQgc2hhbGwg
+cmF0aGVyIGJlIG9taXR0ZWQgdGhhbiBjb25zdHJ1Y3RlZCBvZgo+ID4gKyAgbm9uLWRlc2NyaXB0
+aXZlIGluZm9ybWF0aW9uLiBGb3IgaW5zdGFuY2UgYW4gTENEIHBhbmVsIGluIGEgc3lzdGVtIHRo
+YXQKPiA+ICsgIGNvbnRhaW5zIGEgc2luZ2xlIHBhbmVsIHNoYWxsIG5vdCBiZSBsYWJlbGxlZCAi
+TENEIiBpZiB0aGF0IG5hbWUgaXMgbm90Cj4gPiArICBpbnNjcmliZWQgb24gdGhlIHN5c3RlbSBv
+ciB1c2VkIGluIGEgZGVzY3JpcHRpdmUgZmFzaGlvbiBpbiBzeXN0ZW0KPiA+ICsgIGRvY3VtZW50
+YXRpb24uCj4gPiArCj4gPiArCj4gPiArRGlzcGxheSBUaW1pbmdzCj4gPiArLS0tLS0tLS0tLS0t
+LS0tCj4gPiArCj4gPiArLSBwYW5lbC10aW1pbmc6IE1vc3QgZGlzcGxheSBwYW5lbHMgYXJlIHJl
+c3RyaWN0ZWQgdG8gYSBzaW5nbGUgcmVzb2x1dGlvbgo+ID4gYW5kCj4gPiArICByZXF1aXJlIHNw
+ZWNpZmljIGRpc3BsYXkgdGltaW5ncy4gVGhlIHBhbmVsLXRpbWluZyBzdWJub2RlIGV4cHJlc3Nl
+cwo+ID4gdGhvc2UKPiA+ICsgIHRpbWluZ3MgYXMgc3BlY2lmaWVkIGluIHRoZSB0aW1pbmcgc3Vi
+bm9kZSBzZWN0aW9uIG9mIHRoZSBkaXNwbGF5Cj4gPiB0aW1pbmcKPiA+ICsgIGJpbmRpbmdzIGRl
+ZmluZWQgaW4KPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2Rpc3BsYXktdGltaW5nLnR4dC4KPiAKPiBXaHk/IFRoYXQncyBhbHNvIGltcGxpZWQgYnkgdGhl
+IGNvbXBhdGlibGUgc3RyaW5nLiBIb25lc3RseSwgSSB0aG91Z2h0Cj4gYnkgbm93IHdlIGhhZCBi
+ZWVuIG92ZXIgdGhpcyBvZnRlbiBlbm91Z2guLi4KClNhbWUgYXJndW1lbnQgYXMgYWJvdmUuIEkg
+d29uJ3QgdHJ5IHRvIGNoYW5nZSB5b3VyIG1pbmQgYW5kIGZpeCB0aGUgc2ltcGxlIApwYW5lbCBk
+cml2ZXIsIGJ1dCBJIHN0aWxsIHN0YW5kIGZpcm0gb24gbXkgYmVsaWVmIHRoYXQgZXhwcmVzc2lu
+ZyB0aGUgc2l6ZSBhbmQgCnRpbWluZ3MgaW4gRFQgaXMgdGhlIHJpZ2h0IHNvbHV0aW9uIGluIGEg
+d2lkZSB2YXJpZXR5IG9mIGNhc2VzIChhbmQgeWVzIEkndmUgCnJlYWQgaHR0cDovL3NpZXRjaC10
+YWdyLmJsb2dzcG90LmZpLzIwMTYvMDQvZGlzcGxheS1wYW5lbHMtYXJlLW5vdC1zcGVjaWFsLmh0
+bWwsIGFuZCB3aGlsZSBJIGFncmVlIHdpdGggdGhlIHRpdGxlLCBJIHN0aWxsIGJlbGlldmUgc2l6
+ZSBhbmQgCnRpbWluZ3MgaW4gRFQgYXJlIG5vdCB3cm9uZykuCgotLSAKUmVnYXJkcywKCkxhdXJl
+bnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
