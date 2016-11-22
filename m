@@ -1,207 +1,178 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
-Date: Mon, 21 Nov 2016 19:32:30 -0800
-Message-ID: <0677657e-043d-c6d4-783e-9b471d12afcb@synopsys.com>
-References: <cover.1479339900.git.johnyoun@synopsys.com>
- <6396482.jQaH1ArAfZ@debian64>
- <e01e1b30-a399-94cc-33c9-625008b31d4b@synopsys.com>
- <2016796.9qgSSGQn9z@debian64>
+From: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/4] Add Mediatek JPEG Decoder
+Date: Tue, 22 Nov 2016 11:46:13 +0800
+Message-ID: <1479786377-11567-1-git-send-email-rick.chang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2016796.9qgSSGQn9z@debian64>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2016 1:10 PM, Christian Lamparter wrote:
-> Hello John,
-> 
-> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
->> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
->>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
->>>> On Thu, Nov 17, 2016 at 04:35:10PM +0100, Stefan Wahren wrote:
->>>>> Hi John,
->>>>>
->>>>> Am 17.11.2016 um 00:47 schrieb John Youn:
->>>>>> Add the "snps,ahb-burst" binding and read it in.
->>>>>>
->>>>>> This property controls which burst type to perform on the AHB bus as a
->>>>>> master in internal DMA mode. This overrides the legacy param value,
->>>>>> which we need to keep around for now since several platforms use it.
->>>>>>
->>>>>> Some platforms may see better or worse performance based on this
->>>>>> value. The HAPS platform is one example where all INCRx have worse
->>>>>> performance than INCR.
->>>>>>
->>>>>> Other platforms (such as the Canyonlands board) report that the default
->>>>>> value causes system hangs.
->>>>>>
->>>>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>>>> Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/usb/dwc2.txt |  2 +
->>>>>>  drivers/usb/dwc2/core.h                        |  9 +++++
->>>>>>  drivers/usb/dwc2/params.c                      | 56 ++++++++++++++++++++++++++
->>>>>>  3 files changed, 67 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>>>> index 6c7c2bce..9e7b4b4 100644
->>>>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->>>>>
->>>>> according to Documentation/devicetree/bindings/submitting-patches.txt
->>>>> this change should be a separate patch.
->>>>>
->>>>>> @@ -26,6 +26,8 @@ Optional properties:
->>>>>>  Refer to phy/phy-bindings.txt for generic phy consumer properties
->>>>>>  - dr_mode: shall be one of "host", "peripheral" and "otg"
->>>>>>    Refer to usb/generic.txt
->>>>>> +- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
->>>>>> +  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
->>>>>
->>>>> This doesn't apply in case of the bcm2835. I would prefer this option is
->>>>> ignored in that case with a dev_warn("snps,ahb-burst is not supported on
->>>>> this platform").
->>>>
->>>> Also, perhaps you should allow that the compatible string can define the 
->>>> default.
->>>>
->>> I hoped you would say that :).
->>>
->>> I've attached a patch (on top of John Youn changes) that does
->>> just that for the amcc,dwc-otg. I put the GAHBCFG_HBSTLEN_INCR
->>> value into the .data, if that's a problem, I can certainly 
->>> respin the patch and put it in a dedicated struct.
->>>
->>> Regards
->>>
->>> Christian
->>> ---
->>> From 4c31a029dde714828810b1c3e61a5b1412ac939a Mon Sep 17 00:00:00 2001
->>> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Date: Fri, 18 Nov 2016 21:03:19 +0100
->>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
->>>
->>> This patch adds a of_device_id table which can be used by
->>> existing devices to supply a ahb-burst value for the platform
->>> without having to add a "snps,ahb-burst" entry to the dts.
->>>
->>> Note: Adding new devices to this table is discouraged.
->>>       please consider adding the "snps,ahb-burst" property
->>>       with the correct configuration to your device tree
->>>       file instead.
->>>
->>> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  drivers/usb/dwc2/params.c | 22 ++++++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
->>>
->>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
->>> index e0fc9aa..51be266 100644
->>> --- a/drivers/usb/dwc2/params.c
->>> +++ b/drivers/usb/dwc2/params.c
->>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
->>>  	[GAHBCFG_HBSTLEN_INCR16]	= "INCR16",
->>>  };
->>>  
->>> +/*
->>> + * This table provides AHB burst configuration for existing
->>> + * device tree bindings that work poorly with the default setting.
->>> + *
->>> + * Note: Adding new devices to this table is discouraged.
->>> + *	 please consider adding the "snps,ahb-burst" property
->>> + *	 with the correct configuration to your device tree
->>> + *	 file instead.
->>> + */
->>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
->>> +	{
->>> +		.compatible = "amcc,dwc-otg",
->>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
->>> +	},
->>> +};
->>> +
->>>  static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
->>>  {
->>>  	struct device_node *node = hsotg->dev->of_node;
->>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
->>>  	ret = device_property_read_string(hsotg->dev,
->>>  					  "snps,ahb-burst", &str);
->>>  	if (ret < 0) {
->>> +		const struct of_device_id *match;
->>> +
->>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
->>> +		if (match)
->>> +			ret = (int)match->data;
->>> +
->>>  		return ret;
->>>  	} else if (of_device_is_compatible(node, "brcm,bcm2835-usb")) {
->>>  		dev_warn(hsotg->dev,
->>>
->> I'd prefer if you use the binding which requires no extra code in
->> dwc2.
-> I'm fine with either option. However it think that this would require
-> that either Mark or Rob would allow an exception to the "keep existing
-> dts the way they are) and ack the following change to the canyonlands.dts. 
+This series of patches provide a v4l2 driver to control Mediatek JPEG decoder
+for decoding JPEG image and Motion JPEG bitstream.
 
-I don't know about that. Under what circumstance can the dts change?
+changes since v6:
+- fix kbuild test fail
+- Add patch for MAINTAINERS
 
-The canyonlands dts was binding to an external vendor driver. So it
-wasn't documented nor expected to work with dwc2 until your recent
-patch adding the compatible string.
+changes since v5:
+- remove redundant name from struct mtk_jpeg_fmt
+- Set state of all buffers to VB2_BUF_STATE_QUEUED if fail in start streaming
+- Remove VB2_USERPTR
+- Add check for buffer index
 
-Systems that use the vendor driver will still work with the dts. If
-you remove the vendor driver and configure it to use dwc2, it won't
-work due to a quirk of the canyonlands hardware, for which you need to
-add a dts property.
+changes since v4:
+- Change file name of binding documentation
+- Revise DT binding documentation
+- Revise compatible string
 
-I think this is reasonable. Rob or Mark, any feedback?
+changes since v3:
+- Revise DT binding documentation
+- Revise compatible string
 
-One of the reasons I don't want to add the code in dwc2 is because I'm
-trying to make dwc2 a generic IP driver like dwc3.
+changes since v2:
+- Revise DT binding documentation 
 
-Regards,
-John
+changes since v1:
+- Rebase for v4.9-rc1.
+- Update Compliance test version and result
+- Remove redundant path in Makefile
+- Fix potential build error without CONFIG_PM_RUNTIME and CONFIG_PM_SLEEP
+- Fix warnings from patch check and smatch check
 
-> 
-> In that case I wouldn't need the overwrite in dwc2_get_property_ahb_burst.
-> 
-> Regards,
-> Christian
-> ---
-> From e78604cb0b8ea8db277ef9bf321a613f8e0c7129 Mon Sep 17 00:00:00 2001
-> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Mon, 21 Nov 2016 21:46:19 +0100
-> Subject: [PATCH] powerpc/dts: set snps,ahb-burst to INCR16
-> 
-> The dwc2 driver defaults to INCR4 which can cause a
-> system hang when the USB and SATA is used concurrently.
-> 
-> Note: This patch requires:
-> 	"usb: dwc2: add amcc,dwc-otg support"
-> 	(which already landed in the usb subsystem queue)
-> 	and "usb: dwc2: Add AHB burst configuration"
-> 
-> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/canyonlands.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
-> index 0d6ac92..90db712 100644
-> --- a/arch/powerpc/boot/dts/canyonlands.dts
-> +++ b/arch/powerpc/boot/dts/canyonlands.dts
-> @@ -179,6 +179,7 @@
->  
->  		USBOTG0: usbotg@bff80000 {
->  			compatible = "amcc,dwc-otg";
-> +			snps,ahb-burst = "INCR16";
->  			reg = <0x4 0xbff80000 0x10000>;
->  			interrupt-parent = <&USBOTG0>;
->  			#interrupt-cells = <1>;
-> 
+* Dependency
+The patch "arm: dts: mt2701: Add node for JPEG decoder" depends on: 
+  CCF "Add clock support for Mediatek MT2701"[1]
+  iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+[2] https://patchwork.kernel.org/patch/9164013/
+
+* Compliance test
+v4l2-compliance SHA   : 4ad7174b908a36c4f315e3fe2efa7e2f8a6f375a
+
+Driver Info:
+        Driver name   : mtk-jpeg decode
+        Card type     : mtk-jpeg decoder
+        Bus info      : platform:15004000.jpegdec
+        Driver version: 4.9.0
+        Capabilities  : 0x84204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video3 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK
+                test Scaling: OK
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+
+Rick Chang (4):
+  dt-bindings: mediatek: Add a binding for Mediatek JPEG Decoder
+  vcodec: mediatek: Add Mediatek JPEG Decoder Driver
+  arm: dts: mt2701: Add node for Mediatek JPEG Decoder
+  vcodec: mediatek: Add Maintainers entry for Mediatek JPEG driver
+
+ .../bindings/media/mediatek-jpeg-decoder.txt       |   37 +
+ MAINTAINERS                                        |    7 +
+ arch/arm/boot/dts/mt2701.dtsi                      |   14 +
+ drivers/media/platform/Kconfig                     |   15 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/mtk-jpeg/Makefile           |    2 +
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 1302 ++++++++++++++++++++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  139 +++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c      |  417 +++++++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h      |   91 ++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c   |  160 +++
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h   |   25 +
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h     |   58 +
+ 13 files changed, 2269 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
+ create mode 100644 drivers/media/platform/mtk-jpeg/Makefile
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
+ create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
+
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
