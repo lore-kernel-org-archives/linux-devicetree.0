@@ -1,48 +1,89 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mfd: Improve readability for TPS65217 interrupt sources
-Date: Tue, 22 Nov 2016 22:08:10 +0100
-Message-ID: <2502592.54T1nU6yzL@wuerfel>
-References: <20161121131515.8040-1-woogyom.kim@gmail.com> <20161122155759.GG10134@dell.home> <20161122160013.GH10134@dell.home>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 22 Nov 2016 15:10:27 -0600
+Message-ID: <CAL_Jsq+kifmd9rvZuN+OKCSDdnU+wB3QLikU1F60VqrwLYaXRQ@mail.gmail.com>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20161122110548.GB22735@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161122160013.GH10134-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20161122110548.GB22735@ulmo.ba.sec>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 22, 2016 4:00:13 PM CET Lee Jones wrote:
-> > > diff --git a/include/dt-bindings/mfd/tps65217.h b/include/dt-bindings/mfd/tps65217.h
-> > > index cafb9e6..0293fdd 100644
-> > > --- a/include/dt-bindings/mfd/tps65217.h
-> > > +++ b/include/dt-bindings/mfd/tps65217.h
-> > > @@ -19,8 +19,8 @@
-> > >  #ifndef __DT_BINDINGS_TPS65217_H__
-> > >  #define __DT_BINDINGS_TPS65217_H__
-> > >  
-> > > -#define TPS65217_IRQ_USB   0
-> > > -#define TPS65217_IRQ_AC            1
-> > > -#define TPS65217_IRQ_PB            2
-> > > +#define TPS65217_IRQ_USB_POWER             0       /* USB power state change */
-> > > +#define TPS65217_IRQ_AC_POWER              1       /* AC power state change */
-> > > +#define TPS65217_IRQ_PUSHBUTTON            2       /* Push button state change */
-> > 
-> > This changes the ABI.
-> > 
-> > It will require a DT Ack.
-> 
-> Tell a lie.  Sorry, I was getting false positives from my grep.  It
-> looks like you use the same scheme from within include/linux.  I
-> suggest that you probable don't want to do that.
+On Tue, Nov 22, 2016 at 5:05 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
+>> Document properties common to several display panels in a central
+>> location that can be referenced by the panel device tree bindings.
+>>
+>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>> ---
+>>  .../bindings/display/panel/panel-common.txt        | 91 ++++++++++++++++++++++
+>>  1 file changed, 91 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+>> new file mode 100644
+>> index 000000000000..ec52c472c845
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+>> @@ -0,0 +1,91 @@
+>> +Common Properties for Display Panel
+>> +===================================
+>> +
+>> +This document defines device tree properties common to several classes of
+>> +display panels. It doesn't constitue a device tree binding specification by
+>> +itself but is meant to be referenced by device tree bindings.
+>> +
+>> +When referenced from panel device tree bindings the properties defined in this
+>> +document are defined as follows. The panel device tree bindings are
+>> +responsible for defining whether each property is required or optional.
+>> +
+>> +
+>> +Descriptive Properties
+>> +----------------------
+>> +
+>> +- width-mm,
+>> +- height-mm: The width-mm and height-mm specify the width and height of the
+>> +  physical area where images are displayed. These properties are expressed in
+>> +  millimeters and rounded to the closest unit.
+>
+> Erm... this is already implied by the compatible string. Having this in
+> device tree is completely redundant.
+>
+>> +- label: The label property specifies a symbolic name for the panel as a
+>> +  string suitable for use by humans. It typically contains a name inscribed on
+>> +  the system (e.g. as an affixed label) or specified in the system's
+>> +  documentation (e.g. in the user's manual).
+>> +
+>> +  If no such name exists, and unless the property is mandatory according to
+>> +  device tree bindings, it shall rather be omitted than constructed of
+>> +  non-descriptive information. For instance an LCD panel in a system that
+>> +  contains a single panel shall not be labelled "LCD" if that name is not
+>> +  inscribed on the system or used in a descriptive fashion in system
+>> +  documentation.
+>> +
+>> +
+>> +Display Timings
+>> +---------------
+>> +
+>> +- panel-timing: Most display panels are restricted to a single resolution and
+>> +  require specific display timings. The panel-timing subnode expresses those
+>> +  timings as specified in the timing subnode section of the display timing
+>> +  bindings defined in
+>> +  Documentation/devicetree/bindings/display/display-timing.txt.
+>
+> Why? That's also implied by the compatible string. Honestly, I thought
+> by now we had been over this often enough...
 
-Doing this change however would cause a bisection problem: you
-can't rename just the constants in the header or just the driver
-using those constants.
+While I completely agree we don't want *only* generic compatibles nor
+generic gpio and power control, I think timing values in DT are fine.
+They are just data copied out of datasheets and aren't tweaked per
+platform. If the same data would make sense to put into a display
+EDID, I think it also makes sense to put that data in DT.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
