@@ -1,106 +1,50 @@
-From: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Subject: RE: [PATCH V3 1/4] Documentation: pv88080: Move binding document
-Date: Tue, 22 Nov 2016 09:20:40 +0000
-Message-ID: <8FA4409277D6E54680546B8811D8541002A087DE90@NB-EX-MBX01.diasemi.com>
-References: <cover.1479429347.git.eric.jeong@diasemi.com>
- <8d6dc516374bf2c1cf0841aa68a888bca33413a0.1479429347.git.eric.jeong@diasemi.com>
- <20161118153842.bbcmfczxvrwamlqs@rob-hp-laptop>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
+Date: Tue, 22 Nov 2016 17:22:42 +0800
+Message-ID: <0084ef53-c0e6-51e8-afa5-07264dfce529@linaro.org>
+References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
+ <1479800961-6249-2-git-send-email-zhangfei.gao@linaro.org>
+ <3993565.nedzUBZcVS@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161118153842.bbcmfczxvrwamlqs@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3993565.nedzUBZcVS@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, November 19, 2016 12:39 AM, Rob Herring wrote:
+Hi, Arnd
 
-> On Fri, Nov 18, 2016 at 09:35:46AM +0900, Eric Jeong wrote:
-> >
-> > From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> >
-> > The change is to move pv88080 binding document from the regulator
-> > directory to mfd binding directory for PV88080 PMIC MFD support.
-> > And, GPIO properties are added.
-> >
-> >
-> > Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> >
-> > ---
-> > This patch applies against linux-next and next-20161117
-> >
-> > Hi,
-> >
-> > Change since PATCH V2
-> >  - Added property and description for gpio
-> >
-> > Change since PATCH V1
-> >  - Patch separated from PATCH V1
-> >
-> > Regards,
-> > Eric Jeong, Dialog Semiconductor Ltd.
-> >
-> >
-> >  .../bindings/{regulator => mfd}/pv88080.txt        |   16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)  rename
-> > Documentation/devicetree/bindings/{regulator => mfd}/pv88080.txt (79%)
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/pv88080.txt
-> > b/Documentation/devicetree/bindings/mfd/pv88080.txt
-> > similarity index 79%
-> > rename from Documentation/devicetree/bindings/regulator/pv88080.txt
-> > rename to Documentation/devicetree/bindings/mfd/pv88080.txt
-> > index e6e4b9c8..7e24f95 100644
-> > --- a/Documentation/devicetree/bindings/regulator/pv88080.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/pv88080.txt
-> > @@ -1,4 +1,4 @@
-> > -* Powerventure Semiconductor PV88080 Voltage Regulator
-> > +* Powerventure Semiconductor PV88080 PMIC
-> >
-> >  Required properties:
-> >  - compatible: Must be one of the following, depending on the @@ -16,8
-> > +16,15 @@ Required properties:
-> >    standard binding for regulators; see regulator.txt.
-> >    BUCK1, BUCK2, BUCK3 and HVBUCK.
-> >
-> > +- gpio-controller: Marks the device node as a GPIO controller.
-> > +- #gpio-cells: Should be 2. See gpio.txt in this directory
-> > +  for a description of the cells format.
-> > +
-> >  Optional properties:
-> > +- ngpios : Number of in-use slots of available slots for GPIO.
-> > +  Maximum is 2.
-> >  - Any optional property defined in regulator.txt
-> > +  and gpio.txt for more information.
-> >
-> >  Example:
-> >
-> > @@ -27,6 +34,13 @@ Example:
-> >  		interrupt-parent = <&gpio>;
-> >  		interrupts = <24 24>;
-> >
-> > +		gpioex {
-> 
-> gpio-controller {
-> 
-> > +			compatible = "pvs,pv88080-gpio";
-> 
-> Is this documented?
+On 2016年11月22日 16:45, Arnd Bergmann wrote:
+> On Tuesday, November 22, 2016 3:49:16 PM CET Zhangfei Gao wrote:
+>> @@ -1,8 +1,8 @@
+>>   obj-y += core.o
+>> -obj-y += hisilicon/
+>>   obj-$(CONFIG_ARCH_STI) += sti/
+>>   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>>   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
+>>   obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+> Please leave the obj-y line, otherwise the COMPILE_TEST variant won't work.
 
-No, It's not documented. I will update this document with the compatible string.
+COMPILE_TEST is added in drivers/reset/hisilicon/Kconfig
+like
+config COMMON_RESET_HI3660
+         tristate "Hi3660 Reset Driver"
+         depends on ARCH_HISI || COMPILE_TEST
 
-> 
-> > +			gpio-controller;
-> > +			#gpio-cells = <2>;
-> > +			ngpios = <2>;
-> > +		};
-> > +
-> >  		regulators {
-> >  			BUCK1 {
-> >  				regulator-name = "buck1";
-> > --
-> > end-of-patch for PATCH V3
-> >
+The reason not using "obj-y" here is that reset.c will be compiled unconditionally.
+
+drivers/reset/hisilicon/Makefile
+obj-y   += reset.o
+
+Thanks
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
