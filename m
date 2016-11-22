@@ -1,111 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 02/13] devicetree/bindings: display: Add bindings for LVDS panels
-Date: Tue, 22 Nov 2016 15:21:15 +0200
-Message-ID: <2373519.sTH62t1aap@avalon>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1479526093-7014-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20161122110241.GA22735@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20161122110241.GA22735@ulmo.ba.sec>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v8 4/8] DT:omap3+tsc2007: use new common touchscreen bindings
+Date: Tue, 22 Nov 2016 15:02:31 +0100
+Message-ID: <7c9a5414d4f2b9734049cd28fcc7ea4b363a5d8c.1479823354.git.hns@goldelico.com>
+References: <cover.1479823354.git.hns@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1479823354.git.hns@goldelico.com>
+In-Reply-To: <cover.1479823354.git.hns@goldelico.com>
+References: <cover.1479823354.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?UTF-8?q?Mika=20Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+While we fix the GTA04 we add proper pinmux for the
+penirq gpio.
 
-On Tuesday 22 Nov 2016 12:02:41 Thierry Reding wrote:
-> On Sat, Nov 19, 2016 at 05:28:02AM +0200, Laurent Pinchart wrote:
-> > LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
-> > Multiple incompatible data link layers have been used over time to
-> > transmit image data to LVDS panels. This binding supports display panels
-> > compatible with the JEIDA-59-1999, Open-LDI and VESA SWPG
-> > specifications.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../bindings/display/panel/panel-lvds.txt          | 120 ++++++++++++++++
-> >  1 file changed, 120 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/display/panel/panel-lvds.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> > b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt new file
-> > mode 100644
-> > index 000000000000..b938269f841e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> > @@ -0,0 +1,120 @@
-> > +LVDS Display Panel
-> > +==================
-> > +
-> > +LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
-> > Multiple +incompatible data link layers have been used over time to
-> > transmit image data +to LVDS panels. This bindings supports display
-> > panels compatible with the +following specifications.
-> > +
-> > +[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999,
-> > February
-> > +1999 (Version 1.0), Japan Electronic Industry Development Association
-> > (JEIDA) +[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95),
-> > National +Semiconductor
-> > +[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-> > +Electronics Standards Association (VESA)
-> > +
-> > +Device compatible with those specifications have been marketed under the
-> > +FPD-Link and FlatLink brands.
-> > +
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: Shall contain "panel-lvds" in addition to a mandatory
-> > +  panel-specific compatible string defined in individual panel bindings.
-> > The
-> > +  "panel-lvds" value shall never be used on its own.
-> 
-> What good is it if it shall never be used on its own? The above sounds
-> to me like the panel-specific compatible string implies the LVDS
-> binding, in a way that many compatible strings imply the simple binding.
-> Note that initially we did the very same thing with "panel-simple", only
-> to realize that it's completely redundant because it is never used.
+Tested on: GTA04A4 and Pyra-Handheld
 
-DT allows specifying multiple compatible strings in decreasing order of 
-genericity to make generic OS implementations possible while retaining the 
-ability to later introduce device-specific code if/when the need arises 
-(mostly because of information that were overlooked, misunderstood or just not 
-available at implementation time - we unfortunately can't produce 100% perfect 
-solutions all the time, I very much regret that). This is exactly what the 
-LVDS panel bindings mandate.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap3-gta04.dtsi | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-> > +- width-mm: See panel-common.txt.
-> > +- height-mm: See panel-common.txt.
-> > +- data-mapping: The color signals mapping order, "jeida-18", "jeida-24"
-> > +  or "vesa-24".
-> > +
-> > +Optional properties:
-> > +
-> > +- label: See panel-common.txt.
-> > +- gpios: See panel-common.txt.
-> > +- backlight: See panel-common.txt.
-> > +- data-mirror: If set, reverse the bit order described in the data
-> > mappings
-> > +  below on all data lanes, transmitting bits for slots 6 to 0 instead of
-> > +  0 to 6.
-> > +
-> > +Required nodes:
-> > +
-> > +- panel-timing: See panel-common.txt.
-> > +- ports: See panel-common.txt. These bindings require a single port
-> > subnode
-> > +  corresponding to the panel LVDS input.
-> 
-> Looks like I should go read the patch that introduces panel-common.txt
-> first...
-
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index b3a8b1f..64d6ee3 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -273,6 +273,13 @@
+ 			OMAP3_CORE1_IOPAD(0x2134, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio112 */
+ 		>;
+ 	};
++
++	penirq_pins: pinmux_penirq_pins {
++		pinctrl-single,pins = <
++			/* here we could enable to wakeup the cpu from suspend by a pen touch */
++			OMAP3_CORE1_IOPAD(0x2194, PIN_INPUT_PULLUP | MUX_MODE4) /* gpio160 */
++		>;
++	};
+ };
+ 
+ &omap3_pmx_core2 {
+@@ -410,10 +417,24 @@
+ 	tsc2007@48 {
+ 		compatible = "ti,tsc2007";
+ 		reg = <0x48>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&penirq_pins>;
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <0 IRQ_TYPE_EDGE_FALLING>; /* GPIO_160 */
+-		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;
+-		ti,x-plate-ohms = <600>;
++		gpios = <&gpio6 0 GPIO_ACTIVE_LOW>;	/* GPIO_160 */
++		touchscreen-size-x = <480>;
++		touchscreen-size-y = <640>;
++		touchscreen-max-pressure = <1000>;
++		touchscreen-fuzz-x = <3>;
++		touchscreen-fuzz-y = <8>;
++		touchscreen-fuzz-pressure = <10>;
++		touchscreen-inverted-y;
++		ti,min-x = <0x100>;
++		ti,max-x = <0xf00>;
++		ti,min-y = <0x100>;
++		ti,max-y = <0xf00>;
++		ti,max-rt = <4096>;
++		ti,x-plate-ohms = <550>;
+ 	};
+ 
+ 	/* RFID EEPROM */
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.3
