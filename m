@@ -1,16 +1,11 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 5/7] add bindings for stm32 IIO timer drivers
-Date: Tue, 22 Nov 2016 18:02:42 +0100
-Message-ID: <216b3783-9f7f-4ead-81fb-5568c762e90f@metafoo.de>
-References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
- <1479831207-32699-6-git-send-email-benjamin.gaignard@st.com>
- <b9a82ce7-745a-1c25-f97f-68aaf0551f3b@metafoo.de>
- <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w@mail.gmail.com>
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Tue, 22 Nov 2016 18:06:16 +0100
+Message-ID: <20161122170616.29557-1-manu@bidouilliste.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,31 +15,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Lee Jones <lee.jones@linaro.org>, jic23@kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2016 06:01 PM, Benjamin Gaignard wrote:
-> [snip]
->>> +     "st,stm32-iio-timer5"
->>> +     "st,stm32-iio-timer6"
->>> +     "st,stm32-iio-timer7"
->>> +     "st,stm32-iio-timer8"
->>> +     "st,stm32-iio-timer9"
->>> +     "st,stm32-iio-timer10"
->>> +     "st,stm32-iio-timer11"
->>> +     "st,stm32-iio-timer12"
->>> +     "st,stm32-iio-timer13"
->>> +     "st,stm32-iio-timer14"
->>
->> We can't do this. This is a binding for a driver, not for the hardware.
->>
-> 
-> Unfortunately each instance for the hardware IP have little
-> differences like which triggers they could accept or size of the
-> counter register,
-> and I doesn't have value inside the hardware to distinguish them so
-> the only way I found is to use compatible.
+The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+others three only have 1.
+Add the num-cs property to each node.
 
-But IIO is not a piece of hardware, its a software framework in the Linux
-kernel.
+Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 94cf5a1..ed21982 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -871,6 +871,7 @@
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			num-cs = 4;
+ 		};
+ 
+ 		spi1: spi@01c06000 {
+@@ -885,6 +886,7 @@
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			num-cs = 1;
+ 		};
+ 
+ 		emac: ethernet@01c0b000 {
+@@ -1037,6 +1039,7 @@
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			num-cs = 1;
+ 		};
+ 
+ 		ahci: sata@01c18000 {
+@@ -1079,6 +1082,7 @@
+ 			status = "disabled";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			num-cs = 1;
+ 		};
+ 
+ 		pio: pinctrl@01c20800 {
+-- 
+2.9.2
