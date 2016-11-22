@@ -1,58 +1,63 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 5/7] add bindings for stm32 IIO timer drivers
-Date: Tue, 22 Nov 2016 17:53:18 +0100
-Message-ID: <b9a82ce7-745a-1c25-f97f-68aaf0551f3b@metafoo.de>
-References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
- <1479831207-32699-6-git-send-email-benjamin.gaignard@st.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [RFC PATCH 1/2] arm64: dts: add MUSB node to Allwinner
+ A64 dtsi
+Date: Wed, 23 Nov 2016 00:59:01 +0800
+Message-ID: <20161122165902.62543-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479831207-32699-6-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB4HS2HAQKGQE6ZL63JA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2016 05:13 PM, Benjamin Gaignard wrote:
-> Define bindings for stm32 IIO timer
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../bindings/iio/timer/stm32-iio-timer.txt         | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
-> new file mode 100644
-> index 0000000..b80025e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
-> @@ -0,0 +1,33 @@
-> +timer IIO trigger bindings for STM32
-> +
-> +Must be a child of STM32 multifunctions timer driver
-> +
-> +Required parameters:
-> +- compatible: must be one of the follow value:
-> +	"st,stm32-iio-timer1"
-> +	"st,stm32-iio-timer2"
-> +	"st,stm32-iio-timer3"
-> +	"st,stm32-iio-timer4"
-> +	"st,stm32-iio-timer5"
-> +	"st,stm32-iio-timer6"
-> +	"st,stm32-iio-timer7"
-> +	"st,stm32-iio-timer8"
-> +	"st,stm32-iio-timer9"
-> +	"st,stm32-iio-timer10"
-> +	"st,stm32-iio-timer11"
-> +	"st,stm32-iio-timer12"
-> +	"st,stm32-iio-timer13"
-> +	"st,stm32-iio-timer14"
+Allwinner A64 SoC has a MUSB controller like the one in A33, so add
+a node for it, just use the compatible of A33 MUSB.
 
-We can't do this. This is a binding for a driver, not for the hardware.
+Host mode is tested to work properly on Pine64 and will be added into
+the device tree of Pine64 in next patch.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peripheral mode is also tested on Pine64, by changing dr_mode property
+of usb_otg node and use a non-standard USB Type-A to Type-A cable.
+
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+This patchset depends on my patch which adds usbphy to A64 dtsi.
+( http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/469561.html )
+
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 2572dd6..261324a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -122,6 +122,19 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		usb_otg: usb@01c19000 {
++			compatible = "allwinner,sun8i-a33-musb";
++			reg = <0x01c19000 0x0400>;
++			clocks = <&ccu CLK_BUS_OTG>;
++			resets = <&ccu RST_BUS_OTG>;
++			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "mc";
++			phys = <&usbphy 0>;
++			phy-names = "usb";
++			extcon = <&usbphy 0>;
++			status = "disabled";
++		};
++
+ 		usbphy: phy@01c19400 {
+ 			compatible = "allwinner,sun50i-a64-usb-phy";
+ 			reg = <0x01c19400 0x14>,
+-- 
+2.10.2
