@@ -1,238 +1,712 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
-Date: Thu, 1 Dec 2016 00:51:36 +0200
-Message-ID: <20161130225136.GO16630@valkosipuli.retiisi.org.uk>
-References: <20161122155244.802-1-khilman@baylibre.com>
- <20161122155244.802-4-khilman@baylibre.com>
- <20161123153723.GE16630@valkosipuli.retiisi.org.uk>
- <m2a8cpvkwj.fsf@baylibre.com>
-Mime-Version: 1.0
+Return-Path: <hns@goldelico.com>
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <m2a8cpvkwj.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-List-Id: devicetree@vger.kernel.org
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v6 4/8] drivers:input:tsc2007: add iio interface to read external ADC input and temperature
+From: H. Nikolaus Schaller <hns@goldelico.com>
+In-Reply-To: <20161119183615.GC20446@dtor-ws>
+Date: Tue, 22 Nov 2016 14:59:52 +0100
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6B5847EC-7412-4D37-B821-59FC60A658F5@goldelico.com>
+References: <cover.1477557860.git.hns@goldelico.com> <810571cc83159c674116f6f55624ca6227510f96.1477557860.git.hns@goldelico.com> <20161119183615.GC20446@dtor-ws>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+List-ID: <devicetree@vger.kernel.org>
 
-Hi Kevin,
+Hi Dmitry,
 
-On Wed, Nov 23, 2016 at 03:25:32PM -0800, Kevin Hilman wrote:
-> Hi Sakari,
-> 
-> Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
-> 
-> > On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
-> >> Allow getting of subdevs from DT ports and endpoints.
-> >> 
-> >> The _get_pdata() function was larely inspired by (i.e. stolen from)
-> >
-> > vpif_capture_get_pdata and "largely"?
-> 
-> Yes, thanks.
-> 
-> >> am437x-vpfe.c
-> >> 
-> >> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++++++++++++-
-> >>  include/media/davinci/vpif_types.h            |   9 +-
-> >>  2 files changed, 133 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-> >> index 94ee6cf03f02..47a4699157e7 100644
-> >> --- a/drivers/media/platform/davinci/vpif_capture.c
-> >> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> >> @@ -26,6 +26,8 @@
-> >>  #include <linux/slab.h>
-> >>  
-> >>  #include <media/v4l2-ioctl.h>
-> >> +#include <media/v4l2-of.h>
-> >> +#include <media/i2c/tvp514x.h>
-> >
-> > Do you need this header?
-> >
-> 
-> Yes, based on discussion with Hans, since there is no DT binding for
-> selecting the input pins of the TVP514x, I have to select it in the
-> driver, so I need the defines from this header.  More on this below...
-> 
-> >>  
-> >>  #include "vpif.h"
-> >>  #include "vpif_capture.h"
-> >> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
-> >>  
-> >>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
-> >>  
-> >> +	if (!chan_cfg)
-> >> +		return -1;
-> >> +	if (input_index >= chan_cfg->input_count)
-> >> +		return -1;
-> >>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
-> >>  	if (subdev_name == NULL)
-> >>  		return -1;
-> >> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
-> >>  	/* loop through the sub device list to get the sub device info */
-> >>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
-> >>  		subdev_info = &vpif_cfg->subdev_info[i];
-> >> -		if (!strcmp(subdev_info->name, subdev_name))
-> >> +		if (subdev_info && !strcmp(subdev_info->name, subdev_name))
-> >>  			return i;
-> >>  	}
-> >>  	return -1;
-> >> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
-> >>  {
-> >>  	int i;
-> >>  
-> >> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
-> >> +		struct v4l2_async_subdev *_asd = vpif_obj.config->asd[i];
-> >> +		const struct device_node *node = _asd->match.of.node;
-> >> +
-> >> +		if (node == subdev->of_node) {
-> >> +			vpif_obj.sd[i] = subdev;
-> >> +			vpif_obj.config->chan_config->inputs[i].subdev_name =
-> >> +				(char *)subdev->of_node->full_name;
-> >> +			vpif_dbg(2, debug,
-> >> +				 "%s: setting input %d subdev_name = %s\n",
-> >> +				 __func__, i, subdev->of_node->full_name);
-> >> +			return 0;
-> >> +		}
-> >> +	}
-> >> +
-> >>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
-> >>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
-> >>  			    subdev->name)) {
-> >> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct v4l2_async_notifier *notifier)
-> >>  	return vpif_probe_complete();
-> >>  }
-> >>  
-> >> +static struct vpif_capture_config *
-> >> +vpif_capture_get_pdata(struct platform_device *pdev)
-> >> +{
-> >> +	struct device_node *endpoint = NULL;
-> >> +	struct v4l2_of_endpoint bus_cfg;
-> >> +	struct vpif_capture_config *pdata;
-> >> +	struct vpif_subdev_info *sdinfo;
-> >> +	struct vpif_capture_chan_config *chan;
-> >> +	unsigned int i;
-> >> +
-> >> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
-> >> +
-> >> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
-> >> +		return pdev->dev.platform_data;
-> >> +
-> >> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> >> +	if (!pdata)
-> >> +		return NULL;
-> >> +	pdata->subdev_info =
-> >> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
-> >> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
-> >> +
-> >> +	if (!pdata->subdev_info)
-> >> +		return NULL;
-> >> +	dev_dbg(&pdev->dev, "%s\n", __func__);
-> >> +
-> >> +	for (i = 0; ; i++) {
-> >> +		struct device_node *rem;
-> >> +		unsigned int flags;
-> >> +		int err;
-> >> +
-> >> +		endpoint = of_graph_get_next_endpoint(pdev->dev.of_node,
-> >> +						      endpoint);
-> >> +		if (!endpoint)
-> >> +			break;
-> >> +
-> >> +		sdinfo = &pdata->subdev_info[i];
-> >
-> > subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
-> >
-> 
-> Right, I need to make the loop only go for a max of
-> VPIF_CAPTURE_MAX_CHANNELS iterations.
-> 
-> >> +		chan = &pdata->chan_config[i];
-> >> +		chan->inputs = devm_kzalloc(&pdev->dev,
-> >> +					    sizeof(*chan->inputs) *
-> >> +					    VPIF_DISPLAY_MAX_CHANNELS,
-> >> +					    GFP_KERNEL);
-> >> +
-> >> +		chan->input_count++;
-> >> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
-> >
-> > I wonder what's the purpose of using index i on this array as well.
-> 
-> The number of endpoints in DT is the number of input channels configured
-> (up to a max of VPIF_CAPTURE_MAX_CHANNELS.)
-> 
-> > If you use that to access a corresponding entry in a different array, I'd
-> > just create a struct that contains the port configuration and the async
-> > sub-device. The omap3isp driver does that, for instance; see
-> > isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if you're
-> > interested. Up to you.
-> 
-> OK, I'll have a look at that driver. The goal here with this series is
-> just to get this working with DT, but also not break the existing legacy
-> platform_device support, so I'm trying not to mess with the
-> driver-interal data structures too much.
+> Am 19.11.2016 um 19:36 schrieb Dmitry Torokhov =
+<dmitry.torokhov@gmail.com>:
+>=20
+> Hi Nikolaus,
+>=20
+> On Thu, Oct 27, 2016 at 10:44:17AM +0200, H. Nikolaus Schaller wrote:
+>> The tsc2007 chip not only has a resistive touch screen controller but
+>> also an external AUX adc imput which can be used for an ambient
+>> light sensor, battery voltage monitoring or any general purpose.
+>>=20
+>> Additionally it can measure the chip temperature.
+>>=20
+>> This extension provides an iio interface for these adc channels.
+>>=20
+>> Since it is not wasting much resources and is very straightforward,
+>> we simply provide all other adc channels as optional iio interfaces
+>> as weel. This can be used for debugging or special applications.
+>>=20
+>> This patch also splits the tsc2007 driver in several source files:
+>> tsc2007.h -- constants, structs and stubs
+>> tsc2007_core.c -- functional parts of the original driver
+>> tsc2007_iio.c -- the optional iio stuff
+>>=20
+>> Makefile magic allows to conditionally link the iio
+>> stuff if CONFIG_IIO=3Dy in a way that it works with
+>> CONFIG_TOUCHSCREEN_TSC2007=3Dm.
+>=20
+> What about CONFIG_TOUCHSCREEN_TSC2007=3Dy and CONFIG_IIO=3Dm?
 
-Ack.
+see reply to v7.
 
-> 
-> >> +		chan->inputs[i].input.std = V4L2_STD_ALL;
-> >> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
-> >> +
-> >> +		/* FIXME: need a new property? ch0:composite ch1: s-video */
-> >> +		if (i == 0)
-> >
-> > Can you assume that the first endopoint has got a particular kind of input?
-> > What if it's not connected?
-> 
-> On all the boards I know of (there aren't many using this SoC), it's a
-> safe assumption.
-> 
-> > If this is a different physical port (not in the meaning another) in the
-> > device, I'd use the reg property for this. Please see
-> > Documentation/devicetree/bindings/media/video-interfaces.txt .
-> 
-> My understanding (which is admittedly somewhat fuzzy) of the TVP514x is
-> that it's not physically a different port.  Instead, it's just telling
-> the TVP514x which pin(s) will be active inputs (and what kind of signal
-> will be present.)
-> 
-> I'm open to a better way to describe this input select from DT, but
-> based on what I heard from Hans, there isn't currently a good way to do
-> that except for in the driver:
-> (c.f. https://marc.info/?l=linux-arm-kernel&m=147887871615788)
-> 
-> Based on further discussion in that thread, it sounds like there may be
-> a way forward coming soon, and I'll be glad to switch to that when it
-> arrives.
+>=20
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> drivers/input/touchscreen/Makefile                 |   2 +
+>> drivers/input/touchscreen/tsc2007.h                | 129 =
+++++++++++++++++++
+>> .../touchscreen/{tsc2007.c =3D> tsc2007_core.c}      | 127 =
+++++++-----------
+>> drivers/input/touchscreen/tsc2007_iio.c            | 151 =
++++++++++++++++++++++
+>> 4 files changed, 320 insertions(+), 89 deletions(-)
+>> create mode 100644 drivers/input/touchscreen/tsc2007.h
+>> rename drivers/input/touchscreen/{tsc2007.c =3D> tsc2007_core.c} =
+(84%)
+>> create mode 100644 drivers/input/touchscreen/tsc2007_iio.c
+>>=20
+>> diff --git a/drivers/input/touchscreen/Makefile =
+b/drivers/input/touchscreen/Makefile
+>> index 81b8645..d932e2d 100644
+>> --- a/drivers/input/touchscreen/Makefile
+>> +++ b/drivers/input/touchscreen/Makefile
+>> @@ -80,6 +80,8 @@ obj-$(CONFIG_TOUCHSCREEN_TSC_SERIO)	+=3D =
+tsc40.o
+>> obj-$(CONFIG_TOUCHSCREEN_TSC200X_CORE)	+=3D tsc200x-core.o
+>> obj-$(CONFIG_TOUCHSCREEN_TSC2004)	+=3D tsc2004.o
+>> obj-$(CONFIG_TOUCHSCREEN_TSC2005)	+=3D tsc2005.o
+>> +tsc2007-y				:=3D tsc2007_core.o
+>> +tsc2007-$(CONFIG_IIO)			+=3D tsc2007_iio.o
+>> obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+=3D tsc2007.o
+>> obj-$(CONFIG_TOUCHSCREEN_UCB1400)	+=3D ucb1400_ts.o
+>> obj-$(CONFIG_TOUCHSCREEN_WACOM_W8001)	+=3D wacom_w8001.o
+>> diff --git a/drivers/input/touchscreen/tsc2007.h =
+b/drivers/input/touchscreen/tsc2007.h
+>> new file mode 100644
+>> index 0000000..87d5ce5
+>> --- /dev/null
+>> +++ b/drivers/input/touchscreen/tsc2007.h
+>> @@ -0,0 +1,129 @@
+>> +/*
+>> + * drivers/input/touchscreen/tsc2007.h
+>=20
+> No file names in comments please.
 
-I'm not sure that properly supporting connectors will provide any help here.
+Ok. Will be removed in v8.
 
-Looking at the s_routing() API, it's the calling driver that has to be aware
-of sub-device specific function parameters. As such it's not a very good
-idea to require that a driver is aware of the value range of another
-driver's parameter. I wonder if a simple enumeration interface would help
-here --- if I understand correctly, the purpose is just to provide a way to
-choose the input using VIDIOC_S_INPUT.
+>=20
+>> + *
+>> + * Copyright (c) 2008 MtekVision Co., Ltd.
+>> + *	Kwangwoo Lee <kwlee@mtekvision.com>
+>> + *
+>> + * Using code from:
+>> + *  - ads7846.c
+>> + *	Copyright (c) 2005 David Brownell
+>> + *	Copyright (c) 2006 Nokia Corporation
+>> + *  - corgi_ts.c
+>> + *	Copyright (C) 2004-2005 Richard Purdie
+>> + *  - omap_ts.[hc], ads7846.h, ts_osk.c
+>> + *	Copyright (C) 2002 MontaVista Software
+>> + *	Copyright (C) 2004 Texas Instruments
+>> + *	Copyright (C) 2005 Dirk Behme
+>> + *
+>> + *  This program is free software; you can redistribute it and/or =
+modify
+>> + *  it under the terms of the GNU General Public License version 2 =
+as
+>> + *  published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/input.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/i2c/tsc2007.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/input/touchscreen.h>
+>> +
+>> +#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
+>> +#define TSC2007_MEASURE_AUX		(0x2 << 4)
+>> +#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
+>> +#define TSC2007_ACTIVATE_XN		(0x8 << 4)
+>> +#define TSC2007_ACTIVATE_YN		(0x9 << 4)
+>> +#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
+>> +#define TSC2007_SETUP			(0xb << 4)
+>> +#define TSC2007_MEASURE_X		(0xc << 4)
+>> +#define TSC2007_MEASURE_Y		(0xd << 4)
+>> +#define TSC2007_MEASURE_Z1		(0xe << 4)
+>> +#define TSC2007_MEASURE_Z2		(0xf << 4)
+>> +
+>> +#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
+>> +#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
+>> +#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
+>> +#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
+>> +
+>> +#define TSC2007_12BIT			(0x0 << 1)
+>> +#define TSC2007_8BIT			(0x1 << 1)
+>> +
+>> +#define	MAX_12BIT			((1 << 12) - 1)
+>> +
+>> +#define ADC_ON_12BIT	(TSC2007_12BIT | =
+TSC2007_ADC_ON_IRQ_DIS0)
+>> +
+>> +#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
+>> +#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
+>> +#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
+>> +#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
+>> +#define PWRDOWN		(TSC2007_12BIT | =
+TSC2007_POWER_OFF_IRQ_EN)
+>> +
+>> +struct ts_event {
+>> +	u16	x;
+>> +	u16	y;
+>> +	u16	z1, z2;
+>> +};
+>> +
+>> +struct tsc2007 {
+>> +	struct input_dev	*input;
+>> +	char			phys[32];
+>> +
+>> +	struct i2c_client	*client;
+>> +
+>> +	u16			model;
+>> +	u16			x_plate_ohms;
+>> +
+>> +	struct touchscreen_properties prop;
+>> +
+>> +	bool			report_resistance;
+>> +	u16			min_x;
+>> +	u16			min_y;
+>> +	u16			max_x;
+>> +	u16			max_y;
+>> +	u16			max_rt;
+>> +	unsigned long		poll_period; /* in jiffies */
+>> +	int			fuzzx;
+>> +	int			fuzzy;
+>> +	int			fuzzz;
+>> +
+>> +	unsigned int		gpio;
+>> +	int			irq;
+>> +
+>> +	wait_queue_head_t	wait;
+>> +	bool			stopped;
+>> +	bool			pendown;
+>> +
+>> +	int			(*get_pendown_state)(struct device *);
+>> +	void			(*clear_penirq)(void);
+>> +
+>> +	struct mutex		mlock;
+>> +#ifdef CONFIG_IIO
+>> +	void			*private;
+>> +#endif
+>> +};
+>> +
+>> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd);
+>> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
+>> +					struct ts_event *tc);
+>> +bool tsc2007_is_pen_down(struct tsc2007 *ts);
+>> +
+>> +#ifdef CONFIG_IIO
+>> +
+>> +/* defined in tsc2007_iio.c */
+>> +int tsc2007_iio_configure(struct tsc2007 *ts);
+>> +void tsc2007_iio_unconfigure(struct tsc2007 *ts);
+>> +
+>> +#else /* CONFIG_IIO */
+>> +
+>> +static inline int tsc2007_iio_configure(struct tsc2007 *ts)
+>> +{
+>> +	return 0;
+>> +}
+>> +static inline void tsc2007_iio_unconfigure(struct tsc2007 *ts)
+>> +{
+>> +}
+>> +
+>> +#endif /* CONFIG_IIO */
+>> diff --git a/drivers/input/touchscreen/tsc2007.c =
+b/drivers/input/touchscreen/tsc2007_core.c
+>> similarity index 84%
+>> rename from drivers/input/touchscreen/tsc2007.c
+>> rename to drivers/input/touchscreen/tsc2007_core.c
+>> index 5e3c4bf..56c9a52 100644
+>> --- a/drivers/input/touchscreen/tsc2007.c
+>> +++ b/drivers/input/touchscreen/tsc2007_core.c
+>> @@ -20,87 +20,9 @@
+>>  *  published by the Free Software Foundation.
+>>  */
+>>=20
+>> -#include <linux/module.h>
+>> -#include <linux/slab.h>
+>> -#include <linux/input.h>
+>> -#include <linux/interrupt.h>
+>> -#include <linux/i2c.h>
+>> -#include <linux/i2c/tsc2007.h>
+>> -#include <linux/of_device.h>
+>> -#include <linux/of.h>
+>> -#include <linux/of_gpio.h>
+>> -#include <linux/input/touchscreen.h>
+>> -
+>> -#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
+>> -#define TSC2007_MEASURE_AUX		(0x2 << 4)
+>> -#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
+>> -#define TSC2007_ACTIVATE_XN		(0x8 << 4)
+>> -#define TSC2007_ACTIVATE_YN		(0x9 << 4)
+>> -#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
+>> -#define TSC2007_SETUP			(0xb << 4)
+>> -#define TSC2007_MEASURE_X		(0xc << 4)
+>> -#define TSC2007_MEASURE_Y		(0xd << 4)
+>> -#define TSC2007_MEASURE_Z1		(0xe << 4)
+>> -#define TSC2007_MEASURE_Z2		(0xf << 4)
+>> -
+>> -#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
+>> -#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
+>> -#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
+>> -#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
+>> -
+>> -#define TSC2007_12BIT			(0x0 << 1)
+>> -#define TSC2007_8BIT			(0x1 << 1)
+>> -
+>> -#define	MAX_12BIT			((1 << 12) - 1)
+>> -
+>> -#define ADC_ON_12BIT	(TSC2007_12BIT | =
+TSC2007_ADC_ON_IRQ_DIS0)
+>> -
+>> -#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
+>> -#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
+>> -#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
+>> -#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
+>> -#define PWRDOWN		(TSC2007_12BIT | =
+TSC2007_POWER_OFF_IRQ_EN)
+>> -
+>> -struct ts_event {
+>> -	u16	x;
+>> -	u16	y;
+>> -	u16	z1, z2;
+>> -};
+>> -
+>> -struct tsc2007 {
+>> -	struct input_dev	*input;
+>> -	char			phys[32];
+>> -
+>> -	struct i2c_client	*client;
+>> -
+>> -	u16			model;
+>> -	u16			x_plate_ohms;
+>> -
+>> -	struct touchscreen_properties prop;
+>> -
+>> -	bool			report_resistance;
+>> -	u16			min_x;
+>> -	u16			min_y;
+>> -	u16			max_x;
+>> -	u16			max_y;
+>> -	u16			max_rt;
+>> -	unsigned long		poll_period; /* in jiffies */
+>> -	int			fuzzx;
+>> -	int			fuzzy;
+>> -	int			fuzzz;
+>> +#include "tsc2007.h"
+>>=20
+>> -	unsigned		gpio;
+>> -	int			irq;
+>> -
+>> -	wait_queue_head_t	wait;
+>> -	bool			stopped;
+>> -	bool			pendown;
+>> -
+>> -	int			(*get_pendown_state)(struct device *);
+>> -	void			(*clear_penirq)(void);
+>> -};
+>> -
+>> -static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
+>> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
+>> {
+>> 	s32 data;
+>> 	u16 val;
+>> @@ -121,6 +43,7 @@ static inline int tsc2007_xfer(struct tsc2007 =
+*tsc, u8 cmd)
+>>=20
+>> 	return val;
+>> }
+>> +EXPORT_SYMBOL(tsc2007_xfer);
+>=20
+> Why do you export all these symbols? As far as I can tell it is still
+> the same module, but now comprising of maybe 2 object files liked
+> together. You do not need to export symbols in this case, liker will
+> resolve them when building the module.
 
-I guess that's somehow ok as long as you have no other combinations of these
-devices but this is hardly future-proof. (And certainly not a problem
-created by this patch.)
+Ah, ok.
 
-It'd be still nice to fix that as presumably we don't have the option of
-reworking how we expect the device tree to look like.
+This has remained from some intermediate version where it was necessary
+to export them.
 
-Cc Laurent.
+Tested in v8 to be no longer necessary.
 
--- 
-Kind regards,
+>=20
+>>=20
+>> static void tsc2007_read_values(struct tsc2007 *tsc, struct ts_event =
+*tc)
+>> {
+>> @@ -138,7 +61,7 @@ static void tsc2007_read_values(struct tsc2007 =
+*tsc, struct ts_event *tc)
+>> 	tsc2007_xfer(tsc, PWRDOWN);
+>> }
+>>=20
+>> -static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
+>> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
+>> 					struct ts_event *tc)
+>> {
+>> 	u32 rt =3D 0;
+>> @@ -158,8 +81,9 @@ static u32 tsc2007_calculate_resistance(struct =
+tsc2007 *tsc,
+>>=20
+>> 	return rt;
+>> }
+>> +EXPORT_SYMBOL(tsc2007_calculate_resistance);
+>>=20
+>> -static bool tsc2007_is_pen_down(struct tsc2007 *ts)
+>> +bool tsc2007_is_pen_down(struct tsc2007 *ts)
+>> {
+>> 	/*
+>> 	 * NOTE: We can't rely on the pressure to determine the pen down
+>> @@ -180,6 +104,7 @@ static bool tsc2007_is_pen_down(struct tsc2007 =
+*ts)
+>>=20
+>> 	return ts->get_pendown_state(&ts->client->dev);
+>> }
+>> +EXPORT_SYMBOL(tsc2007_is_pen_down);
+>>=20
+>> static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
+>> {
+>> @@ -192,7 +117,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, =
+void *handle)
+>> 	while (!ts->stopped && tsc2007_is_pen_down(ts)) {
+>>=20
+>> 		/* pen is down, continue with the measurement */
+>> +
+>> +		mutex_lock(&ts->mlock);
+>> 		tsc2007_read_values(ts, &tc);
+>> +		mutex_unlock(&ts->mlock);
+>>=20
+>> 		rt =3D tsc2007_calculate_resistance(ts, &tc);
+>>=20
+>> @@ -450,7 +378,8 @@ static void tsc2007_call_exit_platform_hw(void =
+*data)
+>> static int tsc2007_probe(struct i2c_client *client,
+>> 			 const struct i2c_device_id *id)
+>> {
+>> -	const struct tsc2007_platform_data *pdata =3D =
+dev_get_platdata(&client->dev);
+>> +	const struct tsc2007_platform_data *pdata =3D
+>> +		dev_get_platdata(&client->dev);
+>> 	struct tsc2007 *ts;
+>> 	struct input_dev *input_dev;
+>> 	int err;
+>> @@ -472,7 +401,13 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 	ts->client =3D client;
+>> 	ts->irq =3D client->irq;
+>> 	ts->input =3D input_dev;
+>> +
+>> +	err =3D tsc2007_iio_configure(ts);
+>=20
+> No, this is not going to work. =46rom teh cursory glance at the new =
+iio
+> code it uses resources that you set up later in tsc2007_probe(). I'd =
+say
+> this needs to go last.
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, it looks as if it now can be moved to the end of the probe function.
+The original code did the memory allocation inside and therefore was
+required to be done first. Now it creates an iio wrapper around the
+"ts" struct.
+
+Tested to compile and work.
+
+>=20
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> 	init_waitqueue_head(&ts->wait);
+>> +	mutex_init(&ts->mlock);
+>>=20
+>> 	snprintf(ts->phys, sizeof(ts->phys),
+>> 		 "%s/input0", dev_name(&client->dev));
+>> @@ -494,7 +429,7 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 	if (pdata) {
+>> 		err =3D tsc2007_probe_pdev(client, ts, pdata, id);
+>> 		if (err)
+>> -			return err;
+>> +			goto probe_err;
+
+>> 		input_set_abs_params(input_dev, ABS_X, 0, =
+ts->max_x-ts->min_x,
+>> 							  ts->fuzzx, 0);
+>> 		input_set_abs_params(input_dev, ABS_Y, 0, =
+ts->max_y-ts->min_y,
+>> @@ -504,7 +439,7 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 	} else {
+>> 		err =3D tsc2007_probe_dt(client, ts);
+>> 		if (err)
+>> -			return err;
+>> +			goto probe_err;
+>> 	}
+>>=20
+>> 	if (pdata) {
+>> @@ -516,7 +451,7 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 				dev_err(&client->dev,
+>> 					"Failed to register =
+exit_platform_hw action, %d\n",
+>> 					err);
+>> -				return err;
+>> +				goto probe_err;
+>> 			}
+>> 		}
+>>=20
+>> @@ -533,7 +468,7 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 	if (err) {
+>> 		dev_err(&client->dev, "Failed to request irq %d: %d\n",
+>> 			ts->irq, err);
+>> -		return err;
+>> +		goto probe_err;
+>> 	}
+>>=20
+>> 	tsc2007_stop(ts);
+>> @@ -543,17 +478,30 @@ static int tsc2007_probe(struct i2c_client =
+*client,
+>> 	if (err < 0) {
+>> 		dev_err(&client->dev,
+>> 			"Failed to setup chip: %d\n", err);
+>> -		return err;	/* usually, chip does not respond */
+>> +		goto probe_err;	/* chip does not respond */
+>> 	}
+>>=20
+>> 	err =3D input_register_device(input_dev);
+>> 	if (err) {
+>> 		dev_err(&client->dev,
+>> 			"Failed to register input device: %d\n", err);
+>> -		return err;
+>> +		goto probe_err;
+>> 	}
+>>=20
+>> 	return 0;
+>> +
+>> +probe_err:
+
+This probe_err/unconfigure is then no longer needed if configure is
+the last step and I will remove.
+
+>=20
+>> +	tsc2007_iio_unconfigure(ts);
+>> +	return err;
+>> +}
+>> +
+>> +static int tsc2007_remove(struct i2c_client *client)
+>> +{
+>> +	struct tsc2007 *ts =3D i2c_get_clientdata(client);
+>> +
+>> +	tsc2007_iio_unconfigure(ts);
+>> +	input_unregister_device(ts->input);
+>=20
+> Why did you add input_unregister_device() for devm-managed device?
+
+Is input_register_device devm based? The function name seems to require
+an explicit unregister step.
+
+But since you say it is not required, I have removed it from v8.
+
+>=20
+>> +	return 0;
+>> }
+>>=20
+>> static const struct i2c_device_id tsc2007_idtable[] =3D {
+>> @@ -578,6 +526,7 @@ static struct i2c_driver tsc2007_driver =3D {
+>> 	},
+>> 	.id_table	=3D tsc2007_idtable,
+>> 	.probe		=3D tsc2007_probe,
+>> +	.remove		=3D tsc2007_remove,
+>> };
+>>=20
+>> module_i2c_driver(tsc2007_driver);
+>> diff --git a/drivers/input/touchscreen/tsc2007_iio.c =
+b/drivers/input/touchscreen/tsc2007_iio.c
+>> new file mode 100644
+>> index 0000000..0375d8b
+>> --- /dev/null
+>> +++ b/drivers/input/touchscreen/tsc2007_iio.c
+>> @@ -0,0 +1,151 @@
+>> +/*
+>> + * drivers/input/touchscreen/tsc2007_iio.c
+>> + *
+>> + * Copyright (c) 2016 Golden Delicious Comp. GmbH&Co. KG
+>> + *	Nikolaus Schaller <hns@goldelico.com>
+>> + *
+>> + *  This program is free software; you can redistribute it and/or =
+modify
+>> + *  it under the terms of the GNU General Public License version 2 =
+as
+>> + *  published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include "tsc2007.h"
+>> +#include <linux/iio/iio.h>
+>> +
+>> +struct tsc2007_iio {
+>> +	struct tsc2007 *ts;
+>> +};
+>> +
+>> +#define TSC2007_CHAN_IIO(_chan, _name, _type, _chan_info) \
+>> +{ \
+>> +	.datasheet_name =3D _name, \
+>> +	.type =3D _type, \
+>> +	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |	\
+>> +			BIT(_chan_info), \
+>> +	.indexed =3D 1, \
+>> +	.channel =3D _chan, \
+>> +}
+>> +
+>> +static const struct iio_chan_spec tsc2007_iio_channel[] =3D {
+>> +	TSC2007_CHAN_IIO(0, "x", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(1, "y", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(2, "z1", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(3, "z2", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(4, "adc", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(5, "rt", IIO_VOLTAGE, IIO_CHAN_INFO_RAW), /* =
+Ohms? */
+>> +	TSC2007_CHAN_IIO(6, "pen", IIO_PRESSURE, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(7, "temp0", IIO_TEMP, IIO_CHAN_INFO_RAW),
+>> +	TSC2007_CHAN_IIO(8, "temp1", IIO_TEMP, IIO_CHAN_INFO_RAW),
+>> +};
+>> +
+>> +static int tsc2007_read_raw(struct iio_dev *indio_dev,
+>> +	struct iio_chan_spec const *chan, int *val, int *val2, long =
+mask)
+>> +{
+>> +	struct tsc2007_iio *iio =3D iio_priv(indio_dev);
+>> +	struct tsc2007 *tsc =3D iio->ts;
+>> +	int adc_chan =3D chan->channel;
+>> +	int ret =3D 0;
+>> +
+>> +	if (adc_chan >=3D ARRAY_SIZE(tsc2007_iio_channel))
+>> +		return -EINVAL;
+>> +
+>> +	if (mask !=3D IIO_CHAN_INFO_RAW)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&tsc->mlock);
+>> +
+>> +	switch (chan->channel) {
+>> +	case 0:
+>> +		*val =3D tsc2007_xfer(tsc, READ_X);
+>> +		break;
+>> +	case 1:
+>> +		*val =3D tsc2007_xfer(tsc, READ_Y);
+>> +		break;
+>> +	case 2:
+>> +		*val =3D tsc2007_xfer(tsc, READ_Z1);
+>> +		break;
+>> +	case 3:
+>> +		*val =3D tsc2007_xfer(tsc, READ_Z2);
+>> +		break;
+>> +	case 4:
+>> +		*val =3D tsc2007_xfer(tsc, (ADC_ON_12BIT | =
+TSC2007_MEASURE_AUX));
+>> +		break;
+>> +	case 5: {
+>> +		struct ts_event tc;
+>> +
+>> +		tc.x =3D tsc2007_xfer(tsc, READ_X);
+>> +		tc.z1 =3D tsc2007_xfer(tsc, READ_Z1);
+>> +		tc.z2 =3D tsc2007_xfer(tsc, READ_Z2);
+>> +		*val =3D tsc2007_calculate_resistance(tsc, &tc);
+>> +		break;
+>> +	}
+>> +	case 6:
+>> +		*val =3D tsc2007_is_pen_down(tsc);
+>> +		break;
+>> +	case 7:
+>> +		*val =3D tsc2007_xfer(tsc,
+>> +				    (ADC_ON_12BIT | =
+TSC2007_MEASURE_TEMP0));
+>> +		break;
+>> +	case 8:
+>> +		*val =3D tsc2007_xfer(tsc,
+>> +				    (ADC_ON_12BIT | =
+TSC2007_MEASURE_TEMP1));
+>> +		break;
+>> +	}
+>> +
+>> +	/* Prepare for next touch reading - power down ADC, enable =
+PENIRQ */
+>> +	tsc2007_xfer(tsc, PWRDOWN);
+>> +
+>> +	mutex_unlock(&tsc->mlock);
+>> +
+>> +	ret =3D IIO_VAL_INT;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct iio_info tsc2007_iio_info =3D {
+>> +	.read_raw =3D tsc2007_read_raw,
+>> +	.driver_module =3D THIS_MODULE,
+>> +};
+>> +
+>> +int tsc2007_iio_configure(struct tsc2007 *ts)
+>> +{
+>> +	int err;
+>> +	struct iio_dev *indio_dev;
+>> +	struct tsc2007_iio *iio;
+>> +
+>> +	indio_dev =3D devm_iio_device_alloc(&ts->client->dev,
+>> +		sizeof(struct tsc2007_iio));
+>> +	if (!indio_dev) {
+>> +		dev_err(&ts->client->dev, "iio_device_alloc failed\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	iio =3D iio_priv(indio_dev);
+>> +	iio->ts =3D ts;
+>> +	ts->private =3D (void *) indio_dev;
+>> +
+>> +	indio_dev->name =3D "tsc2007";
+>> +	indio_dev->dev.parent =3D &ts->client->dev;
+>> +	indio_dev->info =3D &tsc2007_iio_info;
+>> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+>> +	indio_dev->channels =3D tsc2007_iio_channel;
+>> +	indio_dev->num_channels =3D ARRAY_SIZE(tsc2007_iio_channel);
+>> +
+>> +	err =3D iio_device_register(indio_dev);
+>> +	if (err < 0) {
+>> +		dev_err(&ts->client->dev, "iio_device_register() failed: =
+%d\n",
+>> +			err);
+>> +		return err;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(tsc2007_iio_configure);
+>> +
+>> +void tsc2007_iio_unconfigure(struct tsc2007 *ts)
+>> +{
+>> +	struct iio_dev *indio_dev =3D ts->private;
+>> +
+>> +	iio_device_unregister(indio_dev);
+>> +}
+>> +EXPORT_SYMBOL(tsc2007_iio_unconfigure);
+>> --=20
+>> 2.7.3
+>>=20
+>=20
+> Thanks.
+>=20
+> --=20
+> Dmitry
+
+BR and thanks,
+Nikolaus
