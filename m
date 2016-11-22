@@ -1,59 +1,51 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible
- string
-Date: Tue, 22 Nov 2016 17:47:08 +0530
-Message-ID: <8a05aded-3904-e268-081d-baed0ff85f42@ti.com>
-References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
- <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
- <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
- <CAMpxmJU=wR4mdQr5tpNSv8POirtWXR=_s7D_Q_H=Cuy=W=-Jtw@mail.gmail.com>
- <dd85c5f9-0899-7da3-ab58-730107bfb02c@arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Tue, 22 Nov 2016 13:43:34 +0100
+Message-ID: <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+ <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+ <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+ <1479784905.8964.15.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dd85c5f9-0899-7da3-ab58-730107bfb02c-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479784905.8964.15.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rick Chang <rick.chang@mediatek.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 November 2016 04:36 PM, Sudeep Holla wrote:
-> 
-> 
-> On 22/11/16 10:57, Bartosz Golaszewski wrote:
->> 2016-11-22 11:53 GMT+01:00 Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>:
+On 22/11/16 04:21, Rick Chang wrote:
+> Hi Hans,
+>
+> On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
+>> On 17/11/16 04:38, Rick Chang wrote:
+>>> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+>>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+>>> ---
+>>> This patch depends on:
+>>>   CCF "Add clock support for Mediatek MT2701"[1]
+>>>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
 >>>
->>>
->>> On 22/11/16 10:41, Bartosz Golaszewski wrote:
->>>>
->>>> Add a function allowing to retrieve the compatible string of the root
->>>> node of the device tree.
->>>>
->>>
->>> Rob has queued [1] and it's in -next today. You can reuse that if you
->>> are planning to target this for v4.11 or just use open coding in your
->>> driver for v4.10 and target this move for v4.11 to avoid cross tree
->>> dependencies as I already mentioned in your previous thread.
+>>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+>>> [2] https://patchwork.kernel.org/patch/9164013/
 >>
->> Rob's patch checks the model first - I'm not sure this is the behavior
->> we want here as Sekhar suggested we print the machine compatible.
-> 
-> IIUC, you are replacing of_flat_dt_get_machine_name and
-> of_machine_get_model_name does exactly same. So I don't see any point in
-> adding this new function and it's just used for logging purpose.
-> Also Sekhar just gave example by using just compatible adding that
-> function in the driver itself.
-> 
-> As Arnd suggested me[1], you should for v4.10 fix it in the driver
-> itself to avoid the cross tree dependencies at this point similar to [2]
+>> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in
+>> after the
+>> other two are merged in 4.10?
+>>
+>> Regards,
+>>
+>> 	Hans
+>
+> [1] will appear in 4.10, but [2] will appear latter than 4.10.So this
+> patch needs to go in after [1] & [2] will be merged in 4.11.
 
-+1. Bartosz, can you please fix it in the driver for v4.10. If there is
-an API available, we can move to it for v4.11
+So what should I do? Merge the driver for 4.11 and wait with this patch
+until [2] is merged in 4.11? Does that sound reasonable?
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+	Hans
