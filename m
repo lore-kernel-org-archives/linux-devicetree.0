@@ -1,93 +1,106 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state binding
-Date: Tue, 22 Nov 2016 10:12:28 -0800
-Message-ID: <m260nfz8mr.fsf@baylibre.com>
-References: <cover.1479459752.git.viresh.kumar@linaro.org>
-        <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
-        <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
-        <20161122031717.GE10014@vireshk-i7>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
+Date: Tue, 22 Nov 2016 10:21:44 -0800
+Message-ID: <58348CB8.7050304@gmail.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
+ <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
+ <800171a8-2e2c-2afb-f96d-800a17eaa17a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161122031717.GE10014@vireshk-i7> (Viresh Kumar's message of
-        "Tue, 22 Nov 2016 08:47:17 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <800171a8-2e2c-2afb-f96d-800a17eaa17a-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Viresh Kumar <viresh.kumar@linaro.org> writes:
+On 11/21/16 22:25, Sekhar Nori wrote:
+> Hi Frank,
+> 
+> On Tuesday 22 November 2016 07:13 AM, Frank Rowand wrote:
+>> On 11/21/16 08:33, Sekhar Nori wrote:
+>>> On Monday 31 October 2016 08:15 PM, Bartosz Golaszewski wrote:
+>>>> +static int da8xx_ddrctl_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	const struct da8xx_ddrctl_config_knob *knob;
+>>>> +	const struct da8xx_ddrctl_setting *setting;
+>>>> +	struct device_node *node;
+>>>> +	struct resource *res;
+>>>> +	void __iomem *ddrctl;
+>>>> +	struct device *dev;
+>>>> +	u32 reg;
+>>>> +
+>>>> +	dev = &pdev->dev;
+>>>> +	node = dev->of_node;
+>>>> +
+>>>> +	setting = da8xx_ddrctl_get_board_settings();
+>>>> +	if (!setting) {
+>>>> +		dev_err(dev, "no settings for board '%s'\n",
+>>>> +			of_flat_dt_get_machine_name());
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>
+>>> This causes a section mismatch because of_flat_dt_get_machine_name() 
+>>> has an __init annotation. I did not notice that before, sorry.
+>>>
+>>> It can be fixed with a patch like below:
+>>>
+>>> ---8<---
+>>> diff --git a/drivers/memory/da8xx-ddrctl.c b/drivers/memory/da8xx-ddrctl.c
+>>> index a20e7bbbcbe0..9ca5aab3ac54 100644
+>>> --- a/drivers/memory/da8xx-ddrctl.c
+>>> +++ b/drivers/memory/da8xx-ddrctl.c
+>>> @@ -102,6 +102,18 @@ static const struct da8xx_ddrctl_setting *da8xx_ddrctl_get_board_settings(void)
+>>>  	return NULL;
+>>>  }
+>>>  
+>>> +static const char* da8xx_ddrctl_get_machine_name(void)
+>>> +{
+>>> +	const char *str;
+>>> +	int ret;
+>>> +
+>>> +	ret = of_property_read_string(of_root, "model", &str);
+>>> +	if (ret)
+>>> +		ret = of_property_read_string(of_root, "compatible", &str);
+>>> +
+>>> +	return str;
+>>> +}
+>>> +
+>>>  static int da8xx_ddrctl_probe(struct platform_device *pdev)
+>>>  {
+>>>  	const struct da8xx_ddrctl_config_knob *knob;
+>>> @@ -118,7 +130,7 @@ static int da8xx_ddrctl_probe(struct platform_device *pdev)
+>>>  	setting = da8xx_ddrctl_get_board_settings();
+>>>  	if (!setting) {
+>>>  		dev_err(dev, "no settings for board '%s'\n",
+>>> -			of_flat_dt_get_machine_name());
+>>
+>> da8xx_ddrctl_get_board_settings() tries to match based on the "compatible"
+>> property in the root node.  The "model" property in the root node has
+>> nothing to do with the failure to match. So creating and then using
+>> da8xx_ddrctl_get_machine_name() to potentially report model is not useful.
+>>
+>> It should be sufficient to simply report that no compatible matched.
+> 
+> I agree with you on this. Even if model name is printed, you will have
+> to go back and check the compatible anyway. But I think it will be
+> useful to print the compatible instead of just reporting that nothing
+> matched.
+> 
+> Bartosz, if you agree too, could you send a fix patch just printing the
+> compatible?
 
-> On 21-11-16, 09:07, Rob Herring wrote:
->> On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
->> > Some platforms have the capability to configure the performance state of
->> > their Power Domains. The performance levels are represented by positive
->> > integer values, a lower value represents lower performance state.
->> > 
->> > The power-domains until now were only concentrating on the idle state
->> > management of the device and this needs to change in order to reuse the
->> > infrastructure of power domains for active state management.
->> > 
->> > This patch introduces a new optional property for the consumers of the
->> > power-domains: domain-performance-state.
->> > 
->> > If the consumers don't need the capability of switching to different
->> > domain performance states at runtime, then they can simply define their
->> > required domain performance state in their node directly. Otherwise the
->> > consumers can define their requirements with help of other
->> > infrastructure, for example the OPP table.
->> > 
->> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> > ---
->> >  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->> > 
->> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->> > index e1650364b296..db42eacf8b5c 100644
->> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
->> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
->> > @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
->> >   - power-domains : A phandle and PM domain specifier as defined by bindings of
->> >                     the power controller specified by phandle.
->> >  
->> > +Optional properties:
->> > +- domain-performance-state: A positive integer value representing the minimum
->> > +  performance level (of the parent domain) required by the consumer for its
->> > +  working. The integer value '1' represents the lowest performance level and the
->> > +  highest value represents the highest performance level.
->> 
->> How does one come up with the range of values?
->
-> Why would we need a range here? The value here represents the minimum 'state'
-> and the assumption is that everything above that level would be fine. So the
-> range is automatically: domain-performance-state -> MAX.
->
->> It seems like you are 
->> just making up numbers. Couldn't the domain performance level be an OPP 
->> in the sense that it is a collection of clock frequencies and voltage 
->> settings?
->
-> The clock is going to be handled by the device itself (at least for the case we
-> have today) and the performance-state lies with the power-domain which is
-> configured separately. If the performance level includes both clk and voltage,
-> then why would we need to show the clock rates in the DT ? Wouldn't a
-> performance level be enough in such cases?
+Please note that the compatible property might contain several strings, not just
+a single string.
 
-I think the question is: what does the performance-level of a domain
-actually mean?  Or, what are the units?
+> 
+> Thanks,
+> Sekhar
+> 
 
-Depending on the SoC, there's probably a few things this could mean.  It
-might mean is that an underlying bus/interconnect can be configured to
-guarantee a specific bandwidth or throughput.  That in turn might mean
-that that bus/interconnect might have to be set at a specific
-frequency/voltage.
-
-In your case, IIUC, you're just passing some magic value to some
-firmware running on a micro-controller, but under the hood that uC is
-probably configuring a frequency/voltage someplace.
-
-So, if we're going to have a generic DT binding for this, it needs to be
-something that's useful on platforms that are not using magic numbers
-managed by a uC as well.
-
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
