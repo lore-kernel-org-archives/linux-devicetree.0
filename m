@@ -1,122 +1,209 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v2 3/6] mfd: dt: Add bindings for the Aspeed LPC Host
- Controller (LPCHC)
-Date: Tue, 22 Nov 2016 13:55:45 +1030
-Message-ID: <1479785145.2503.20.camel@aj.id.au>
-References: <1478097481-14895-1-git-send-email-andrew@aj.id.au>
-         <1478097481-14895-4-git-send-email-andrew@aj.id.au>
-         <20161118184437.GD19884@dell.home> <20161118184535.GE19884@dell.home>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Mon, 21 Nov 2016 19:32:30 -0800
+Message-ID: <0677657e-043d-c6d4-783e-9b471d12afcb@synopsys.com>
+References: <cover.1479339900.git.johnyoun@synopsys.com>
+ <6396482.jQaH1ArAfZ@debian64>
+ <e01e1b30-a399-94cc-33c9-625008b31d4b@synopsys.com>
+ <2016796.9qgSSGQn9z@debian64>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-A5RHOKktLU8UOxvLUddw"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161118184535.GE19884@dell.home>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, arnd@arndb.de
-Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2016796.9qgSSGQn9z@debian64>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/21/2016 1:10 PM, Christian Lamparter wrote:
+> Hello John,
+> 
+> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
+>> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
+>>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
+>>>> On Thu, Nov 17, 2016 at 04:35:10PM +0100, Stefan Wahren wrote:
+>>>>> Hi John,
+>>>>>
+>>>>> Am 17.11.2016 um 00:47 schrieb John Youn:
+>>>>>> Add the "snps,ahb-burst" binding and read it in.
+>>>>>>
+>>>>>> This property controls which burst type to perform on the AHB bus as a
+>>>>>> master in internal DMA mode. This overrides the legacy param value,
+>>>>>> which we need to keep around for now since several platforms use it.
+>>>>>>
+>>>>>> Some platforms may see better or worse performance based on this
+>>>>>> value. The HAPS platform is one example where all INCRx have worse
+>>>>>> performance than INCR.
+>>>>>>
+>>>>>> Other platforms (such as the Canyonlands board) report that the default
+>>>>>> value causes system hangs.
+>>>>>>
+>>>>>> Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>>>>> Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/usb/dwc2.txt |  2 +
+>>>>>>  drivers/usb/dwc2/core.h                        |  9 +++++
+>>>>>>  drivers/usb/dwc2/params.c                      | 56 ++++++++++++++++++++++++++
+>>>>>>  3 files changed, 67 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>>>> index 6c7c2bce..9e7b4b4 100644
+>>>>>> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+>>>>>
+>>>>> according to Documentation/devicetree/bindings/submitting-patches.txt
+>>>>> this change should be a separate patch.
+>>>>>
+>>>>>> @@ -26,6 +26,8 @@ Optional properties:
+>>>>>>  Refer to phy/phy-bindings.txt for generic phy consumer properties
+>>>>>>  - dr_mode: shall be one of "host", "peripheral" and "otg"
+>>>>>>    Refer to usb/generic.txt
+>>>>>> +- snps,ahb-burst: specifies the ahb burst length. Valid arguments are:
+>>>>>> +  "SINGLE", "INCR", "INCR4", "INCR8", "INCR16". Defaults to "INCR4".
+>>>>>
+>>>>> This doesn't apply in case of the bcm2835. I would prefer this option is
+>>>>> ignored in that case with a dev_warn("snps,ahb-burst is not supported on
+>>>>> this platform").
+>>>>
+>>>> Also, perhaps you should allow that the compatible string can define the 
+>>>> default.
+>>>>
+>>> I hoped you would say that :).
+>>>
+>>> I've attached a patch (on top of John Youn changes) that does
+>>> just that for the amcc,dwc-otg. I put the GAHBCFG_HBSTLEN_INCR
+>>> value into the .data, if that's a problem, I can certainly 
+>>> respin the patch and put it in a dedicated struct.
+>>>
+>>> Regards
+>>>
+>>> Christian
+>>> ---
+>>> From 4c31a029dde714828810b1c3e61a5b1412ac939a Mon Sep 17 00:00:00 2001
+>>> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Date: Fri, 18 Nov 2016 21:03:19 +0100
+>>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
+>>>
+>>> This patch adds a of_device_id table which can be used by
+>>> existing devices to supply a ahb-burst value for the platform
+>>> without having to add a "snps,ahb-burst" entry to the dts.
+>>>
+>>> Note: Adding new devices to this table is discouraged.
+>>>       please consider adding the "snps,ahb-burst" property
+>>>       with the correct configuration to your device tree
+>>>       file instead.
+>>>
+>>> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  drivers/usb/dwc2/params.c | 22 ++++++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+>>> index e0fc9aa..51be266 100644
+>>> --- a/drivers/usb/dwc2/params.c
+>>> +++ b/drivers/usb/dwc2/params.c
+>>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
+>>>  	[GAHBCFG_HBSTLEN_INCR16]	= "INCR16",
+>>>  };
+>>>  
+>>> +/*
+>>> + * This table provides AHB burst configuration for existing
+>>> + * device tree bindings that work poorly with the default setting.
+>>> + *
+>>> + * Note: Adding new devices to this table is discouraged.
+>>> + *	 please consider adding the "snps,ahb-burst" property
+>>> + *	 with the correct configuration to your device tree
+>>> + *	 file instead.
+>>> + */
+>>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
+>>> +	{
+>>> +		.compatible = "amcc,dwc-otg",
+>>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
+>>> +	},
+>>> +};
+>>> +
+>>>  static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+>>>  {
+>>>  	struct device_node *node = hsotg->dev->of_node;
+>>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+>>>  	ret = device_property_read_string(hsotg->dev,
+>>>  					  "snps,ahb-burst", &str);
+>>>  	if (ret < 0) {
+>>> +		const struct of_device_id *match;
+>>> +
+>>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
+>>> +		if (match)
+>>> +			ret = (int)match->data;
+>>> +
+>>>  		return ret;
+>>>  	} else if (of_device_is_compatible(node, "brcm,bcm2835-usb")) {
+>>>  		dev_warn(hsotg->dev,
+>>>
+>> I'd prefer if you use the binding which requires no extra code in
+>> dwc2.
+> I'm fine with either option. However it think that this would require
+> that either Mark or Rob would allow an exception to the "keep existing
+> dts the way they are) and ack the following change to the canyonlands.dts. 
 
---=-A5RHOKktLU8UOxvLUddw
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I don't know about that. Under what circumstance can the dts change?
 
-On Fri, 2016-11-18 at 18:45 +0000, Lee Jones wrote:
-> [Sending Arnd this time!]
->=20
-> > Arnd,
-> >=20
-> > Do you have a preference?
-> >=20
-> > > The Aspeed LPC Host Controller is presented as a syscon device to
-> > > arbitrate access by LPC and pinmux drivers. LPC pinmux configuration =
-on
-> > > fifth generation SoCs depends on bits in both the System Control Unit
-> > > and the LPC Host Controller.
-> > >=20
-> > > > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > ---
-> > > =C2=A0Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt | 17 +++=
-++++++++++++++
-> >=20
-> > Create a new directory in bindings/mfd called 'syscon'.
-> >=20
-> > Or perhaps 'bindings/syscon'.
-> >=20
+The canyonlands dts was binding to an external vendor driver. So it
+wasn't documented nor expected to work with dwc2 until your recent
+patch adding the compatible string.
 
-Sounds good to me. I'll wait for Arnd's feedback.
+Systems that use the vendor driver will still work with the dts. If
+you remove the vendor driver and configure it to use dwc2, it won't
+work due to a quirk of the canyonlands hardware, for which you need to
+add a dts property.
 
-Note that this patch conflicts with some of the ideas I outlined in
+I think this is reasonable. Rob or Mark, any feedback?
 
-https://www.spinics.net/lists/arm-kernel/msg543233.html
+One of the reasons I don't want to add the code in dwc2 is because I'm
+trying to make dwc2 a generic IP driver like dwc3.
 
-I sent it hoping to get some feedback on the approach to take for these
-LPC-related bits. Did you have any suggestions? The problems with
-hardware complexity are amplified by the fact that the datasheet is
-only available under NDA, but I will do what I can to clarify.
+Regards,
+John
 
-> > > =C2=A01 file changed, 17 insertions(+)
-> > > =C2=A0create mode 100644 Documentation/devicetree/bindings/mfd/aspeed=
--lpchc.txt
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt b=
-/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-> > > new file mode 100644
-> > > index 000000000000..792651488c3d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpchc.txt
-> > > @@ -0,0 +1,17 @@
-> > > +* Device tree bindings for the Aspeed LPC Host Controller (LPCHC)
-> > > +
-> > > +The LPCHC registers configure LPC behaviour between the BMC and the =
-host
-> > > +system. The LPCHC also participates in pinmux requests on g5 SoCs an=
-d is
-> > > +therefore considered a syscon device.
-> > > +
-> > > +Required properties:
-> > > > > > +- compatible:		"aspeed,ast2500-lpchc", "syscon"
-> > > > > > +- reg:			contains offset/length value of the LPCHC memory
-> > > +			region.
-> >=20
-> > Why not just use a single tab, then you don't have to linewrap?
+> 
+> In that case I wouldn't need the overwrite in dwc2_get_property_ahb_burst.
+> 
+> Regards,
+> Christian
+> ---
+> From e78604cb0b8ea8db277ef9bf321a613f8e0c7129 Mon Sep 17 00:00:00 2001
+> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Mon, 21 Nov 2016 21:46:19 +0100
+> Subject: [PATCH] powerpc/dts: set snps,ahb-burst to INCR16
+> 
+> The dwc2 driver defaults to INCR4 which can cause a
+> system hang when the USB and SATA is used concurrently.
+> 
+> Note: This patch requires:
+> 	"usb: dwc2: add amcc,dwc-otg support"
+> 	(which already landed in the usb subsystem queue)
+> 	and "usb: dwc2: Add AHB burst configuration"
+> 
+> Signed-off-by: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/powerpc/boot/dts/canyonlands.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
+> index 0d6ac92..90db712 100644
+> --- a/arch/powerpc/boot/dts/canyonlands.dts
+> +++ b/arch/powerpc/boot/dts/canyonlands.dts
+> @@ -179,6 +179,7 @@
+>  
+>  		USBOTG0: usbotg@bff80000 {
+>  			compatible = "amcc,dwc-otg";
+> +			snps,ahb-burst = "INCR16";
+>  			reg = <0x4 0xbff80000 0x10000>;
+>  			interrupt-parent = <&USBOTG0>;
+>  			#interrupt-cells = <1>;
+> 
 
-I'll clean that up.
-
-Cheers,
-
-Andrew
-
-> >=20
-> > > +Example:
-> > > +
-> > > > > > +lpchc: lpchc@1e7890a0 {
-> > > > > > +	compatible =3D "aspeed,ast2500-lpchc", "syscon";
-> > > > > > +	reg =3D <0x1e7890a0 0xc4>;
-> > > +};
->=20
->=20
---=-A5RHOKktLU8UOxvLUddw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJYM7q5AAoJEJ0dnzgO5LT5/AAQALId/kZGcu/TY+M/GaFcv8k3
-9E+qbnXS7QMLa7mpReY2dlZGVtOvkXt1FHQrnbZPGN/KOKlIbhRYkQAWUuXcnGyT
-Gnj3VjTReiLX4kSAv+UInD+cEH9kgL/mqWPV7t+++j9tCj+O4VGtQ5KetKpcC+It
-6t8X1BOZCuT312Fv6v9GwpETp8+Zx5z+DNjFBZVKAaAzb0f1e1pO5bIEdBpA2Pjv
-gZk9uk1XL7RiE0t/FW5z+WtSUeqpqD3mCO+vXHwccNMnHe20LVTJ4rPYTa8Zhh0o
-Wl19j5WxelfZ5yJaVb4KEKFH55DkVPPFnd/Rn9w0Rmvz+LMzMwLOFSjhX597huD0
-lKccG9Cdj0q2OK/QZAtRM72hkFnmPyR/qTcTq3YriGHqhk6cQW7u8K19qeXYVZ8Q
-dls9RQOWH7KgUoGPyJU3DVZvpudFdSoNzag2a9BVzk4PzSat3SOPA0z5Oho9SRqw
-PINTHEkfDZxFE75Zv/3vyOWnSVRrU+Cz2D2zWPhRMxGe/rDYrC9mz2MDD5lE8z9E
-77rweUAMiLJ9McBzE7XX4dW33GLS2ZIP1C2fIYtZ/NwFkSxsP6dSvopn/M8BNmVK
-eBjousDleqQ5PcH4IkkLyxNrV1rRY5F+Of0J0sgVoCcDXd0FjdZo48A74LTIgoYV
-hER6i7afh7C5hFQwXv3+
-=pak+
------END PGP SIGNATURE-----
-
---=-A5RHOKktLU8UOxvLUddw--
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
