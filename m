@@ -1,115 +1,242 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 4/4] [media] dt-bindings: add TI VPIF documentation
-Date: Mon, 21 Nov 2016 17:44:08 -0800
-Message-ID: <20161122014408.22388-5-khilman@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH v2 3/4] [media] davinci: vpif_capture: get subdevs from DT
+Date: Mon, 21 Nov 2016 17:44:07 -0800
+Message-ID: <20161122014408.22388-4-khilman@baylibre.com>
 References: <20161122014408.22388-1-khilman@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161122014408.22388-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Bartosz=20Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20161122014408.22388-1-khilman@baylibre.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?q?Bartosz=20Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
- .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
- create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+Allow getting of subdevs from DT ports and endpoints.
 
-diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
-new file mode 100644
-index 000000000000..bdd93267301f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
-@@ -0,0 +1,65 @@
-+Texas Instruments VPIF Capture
-+------------------------------
+The _get_pdata() function was larely inspired by (i.e. stolen from)
+am437x-vpfe.c
+
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+ drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++++++++++++-
+ include/media/davinci/vpif_types.h            |   9 +-
+ 2 files changed, 133 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index 94ee6cf03f02..47a4699157e7 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -26,6 +26,8 @@
+ #include <linux/slab.h>
+ 
+ #include <media/v4l2-ioctl.h>
++#include <media/v4l2-of.h>
++#include <media/i2c/tvp514x.h>
+ 
+ #include "vpif.h"
+ #include "vpif_capture.h"
+@@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
+ 
+ 	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
+ 
++	if (!chan_cfg)
++		return -1;
++	if (input_index >= chan_cfg->input_count)
++		return -1;
+ 	subdev_name = chan_cfg->inputs[input_index].subdev_name;
+ 	if (subdev_name == NULL)
+ 		return -1;
+@@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
+ 	/* loop through the sub device list to get the sub device info */
+ 	for (i = 0; i < vpif_cfg->subdev_count; i++) {
+ 		subdev_info = &vpif_cfg->subdev_info[i];
+-		if (!strcmp(subdev_info->name, subdev_name))
++		if (subdev_info && !strcmp(subdev_info->name, subdev_name))
+ 			return i;
+ 	}
+ 	return -1;
+@@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
+ {
+ 	int i;
+ 
++	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
++		struct v4l2_async_subdev *_asd = vpif_obj.config->asd[i];
++		const struct device_node *node = _asd->match.of.node;
 +
-+The TI Video Port InterFace (VPIF) capture component is the primary
-+component for video capture on the DA850 family of TI DaVinci SoCs.
++		if (node == subdev->of_node) {
++			vpif_obj.sd[i] = subdev;
++			vpif_obj.config->chan_config->inputs[i].subdev_name =
++				(char *)subdev->of_node->full_name;
++			vpif_dbg(2, debug,
++				 "%s: setting input %d subdev_name = %s\n",
++				 __func__, i, subdev->of_node->full_name);
++			return 0;
++		}
++	}
 +
-+TI Document number reference: SPRUH82C
+ 	for (i = 0; i < vpif_obj.config->subdev_count; i++)
+ 		if (!strcmp(vpif_obj.config->subdev_info[i].name,
+ 			    subdev->name)) {
+@@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct v4l2_async_notifier *notifier)
+ 	return vpif_probe_complete();
+ }
+ 
++static struct vpif_capture_config *
++vpif_capture_get_pdata(struct platform_device *pdev)
++{
++	struct device_node *endpoint = NULL;
++	struct v4l2_of_endpoint bus_cfg;
++	struct vpif_capture_config *pdata;
++	struct vpif_subdev_info *sdinfo;
++	struct vpif_capture_chan_config *chan;
++	unsigned int i;
 +
-+Required properties:
-+- compatible: must be "ti,da850-vpif-capture"
-+- reg: physical base address and length of the registers set for the device;
-+- interrupts: should contain IRQ line for the VPIF
++	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
 +
-+VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
-+channels or a single 16-bit channel.  It should contain at least one
-+port child node with child 'endpoint' node. Please refer to the
-+bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
++	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
++		return pdev->dev.platform_data;
 +
-+Example using 2 8-bit input channels, one of which is connected to an
-+I2C-connected TVP5147 decoder:
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++	pdata->subdev_info =
++		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
++			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
 +
-+	vpif_capture: video-capture@0x00217000 {
-+		compatible = "ti,vpif-capture";
-+		reg = <0x00217000 0x1000>;
-+		interrupts = <92>;
++	if (!pdata->subdev_info)
++		return NULL;
++	dev_dbg(&pdev->dev, "%s\n", __func__);
 +
-+		port {
-+			vpif_ch0: endpoint@0 {
-+				  reg = <0>;
-+				  bus-width = <8>;
-+				  remote-endpoint = <&composite>;
-+			};
++	for (i = 0; ; i++) {
++		struct device_node *rem;
++		unsigned int flags;
++		int err;
 +
-+			vpif_ch1: endpoint@1 {
-+				  reg = <1>;
-+				  bus-width = <8>;
-+				  data-shift = <8>;
-+			};
-+		};
-+	};
++		endpoint = of_graph_get_next_endpoint(pdev->dev.of_node,
++						      endpoint);
++		if (!endpoint)
++			break;
 +
-+[ ... ]
++		sdinfo = &pdata->subdev_info[i];
++		chan = &pdata->chan_config[i];
++		chan->inputs = devm_kzalloc(&pdev->dev,
++					    sizeof(*chan->inputs) *
++					    VPIF_DISPLAY_MAX_CHANNELS,
++					    GFP_KERNEL);
 +
-+&i2c0 {
++		chan->input_count++;
++		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
++		chan->inputs[i].input.std = V4L2_STD_ALL;
++		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
 +
-+	tvp5147@5d {
-+		compatible = "ti,tvp5147";
-+		reg = <0x5d>;
-+		status = "okay";
++		/* FIXME: need a new property? ch0:composite ch1: s-video */
++		if (i == 0)
++			chan->inputs[i].input_route = INPUT_CVBS_VI2B;
++		else
++			chan->inputs[i].input_route = INPUT_SVIDEO_VI2C_VI1C;
++		chan->inputs[i].output_route = OUTPUT_10BIT_422_EMBEDDED_SYNC;
 +
-+		port {
-+			composite: endpoint {
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+				pclk-sample = <0>;
++		err = v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++		if (err) {
++			dev_err(&pdev->dev, "Could not parse the endpoint\n");
++			goto done;
++		}
++		dev_dbg(&pdev->dev, "Endpoint %s, bus_width = %d\n",
++			endpoint->full_name, bus_cfg.bus.parallel.bus_width);
++		flags = bus_cfg.bus.parallel.flags;
 +
-+				/* VPIF channel 0 (lower 8-bits) */
-+				remote-endpoint = <&vpif_ch0>;
-+				bus-width = <8>;
-+			};
-+		};
-+	};
++		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++			chan->vpif_if.hd_pol = 1;
 +
-+};
-diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-new file mode 100644
-index 000000000000..d004e600aabe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-@@ -0,0 +1,8 @@
-+Texas Instruments VPIF
-+----------------------
++		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++			chan->vpif_if.vd_pol = 1;
 +
-+The Video Port InterFace (VPIF) is the core component for video output
-+and capture on DA850 TI Davinci SoCs.
++		chan->vpif_if.if_type = VPIF_IF_BT656;
++		rem = of_graph_get_remote_port_parent(endpoint);
++		if (!rem) {
++			dev_dbg(&pdev->dev, "Remote device at %s not found\n",
++				endpoint->full_name);
++			goto done;
++		}
 +
-+- compatible: must be "ti,da850-vpif"
-+- reg: physical base address and length of the registers set for the device;
++		dev_dbg(&pdev->dev, "Remote device %s, %s found\n",
++			rem->name, rem->full_name);
++		sdinfo->name = rem->full_name;
++
++		pdata->asd[i] = devm_kzalloc(&pdev->dev,
++					     sizeof(struct v4l2_async_subdev),
++					     GFP_KERNEL);
++		if (!pdata->asd[i]) {
++			of_node_put(rem);
++			pdata = NULL;
++			goto done;
++		}
++
++		pdata->asd[i]->match_type = V4L2_ASYNC_MATCH_OF;
++		pdata->asd[i]->match.of.node = rem;
++		of_node_put(rem);
++	}
++
++done:
++	pdata->asd_sizes[0] = i;
++	pdata->subdev_count = i;
++	pdata->card_name = "DA850/OMAP-L138 Video Capture";
++
++	return pdata;
++}
++
+ /**
+  * vpif_probe : This function probes the vpif capture driver
+  * @pdev: platform device pointer
+@@ -1438,6 +1563,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	int res_idx = 0;
+ 	int i, err;
+ 
++	pdev->dev.platform_data = vpif_capture_get_pdata(pdev);
+ 	if (!pdev->dev.platform_data) {
+ 		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
+ 		return -EINVAL;
+@@ -1480,7 +1606,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 		goto vpif_unregister;
+ 	}
+ 
+-	if (!vpif_obj.config->asd_sizes) {
++	if (!vpif_obj.config->asd_sizes[0]) {
+ 		i2c_adap = i2c_get_adapter(1);
+ 		for (i = 0; i < subdev_count; i++) {
+ 			subdevdata = &vpif_obj.config->subdev_info[i];
+diff --git a/include/media/davinci/vpif_types.h b/include/media/davinci/vpif_types.h
+index 3cb1704a0650..4ee3b41975db 100644
+--- a/include/media/davinci/vpif_types.h
++++ b/include/media/davinci/vpif_types.h
+@@ -65,14 +65,14 @@ struct vpif_display_config {
+ 
+ struct vpif_input {
+ 	struct v4l2_input input;
+-	const char *subdev_name;
++	char *subdev_name;
+ 	u32 input_route;
+ 	u32 output_route;
+ };
+ 
+ struct vpif_capture_chan_config {
+ 	struct vpif_interface vpif_if;
+-	const struct vpif_input *inputs;
++	struct vpif_input *inputs;
+ 	int input_count;
+ };
+ 
+@@ -83,7 +83,8 @@ struct vpif_capture_config {
+ 	struct vpif_subdev_info *subdev_info;
+ 	int subdev_count;
+ 	const char *card_name;
+-	struct v4l2_async_subdev **asd;	/* Flat array, arranged in groups */
+-	int *asd_sizes;		/* 0-terminated array of asd group sizes */
++
++	struct v4l2_async_subdev *asd[VPIF_CAPTURE_MAX_CHANNELS];
++	int asd_sizes[VPIF_CAPTURE_MAX_CHANNELS];
+ };
+ #endif /* _VPIF_TYPES_H */
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
