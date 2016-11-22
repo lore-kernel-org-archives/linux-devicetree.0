@@ -1,78 +1,78 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state
- binding
-Date: Tue, 22 Nov 2016 08:47:17 +0530
-Message-ID: <20161122031717.GE10014@vireshk-i7>
-References: <cover.1479459752.git.viresh.kumar@linaro.org>
- <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
- <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
+From: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Tue, 22 Nov 2016 11:21:45 +0800
+Message-ID: <1479784905.8964.15.camel@mtksdaap41>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+         <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+         <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
+In-Reply-To: <d602365a-e87b-5bae-8698-bd43063ef079-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nayak Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21-11-16, 09:07, Rob Herring wrote:
-> On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
-> > Some platforms have the capability to configure the performance state of
-> > their Power Domains. The performance levels are represented by positive
-> > integer values, a lower value represents lower performance state.
-> > 
-> > The power-domains until now were only concentrating on the idle state
-> > management of the device and this needs to change in order to reuse the
-> > infrastructure of power domains for active state management.
-> > 
-> > This patch introduces a new optional property for the consumers of the
-> > power-domains: domain-performance-state.
-> > 
-> > If the consumers don't need the capability of switching to different
-> > domain performance states at runtime, then they can simply define their
-> > required domain performance state in their node directly. Otherwise the
-> > consumers can define their requirements with help of other
-> > infrastructure, for example the OPP table.
-> > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Hans,
+
+On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
+> On 17/11/16 04:38, Rick Chang wrote:
+> > Signed-off-by: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> > index e1650364b296..db42eacf8b5c 100644
-> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> > @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
-> >   - power-domains : A phandle and PM domain specifier as defined by bindings of
-> >                     the power controller specified by phandle.
-> >  
-> > +Optional properties:
-> > +- domain-performance-state: A positive integer value representing the minimum
-> > +  performance level (of the parent domain) required by the consumer for its
-> > +  working. The integer value '1' represents the lowest performance level and the
-> > +  highest value represents the highest performance level.
+> > This patch depends on:
+> >   CCF "Add clock support for Mediatek MT2701"[1]
+> >   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+> >
+> > [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+> > [2] https://patchwork.kernel.org/patch/9164013/
 > 
-> How does one come up with the range of values?
+> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in 
+> after the
+> other two are merged in 4.10?
+> 
+> Regards,
+> 
+> 	Hans
 
-Why would we need a range here? The value here represents the minimum 'state'
-and the assumption is that everything above that level would be fine. So the
-range is automatically: domain-performance-state -> MAX.
+[1] will appear in 4.10, but [2] will appear latter than 4.10.So this
+patch needs to go in after [1] & [2] will be merged in 4.11.
 
-> It seems like you are 
-> just making up numbers. Couldn't the domain performance level be an OPP 
-> in the sense that it is a collection of clock frequencies and voltage 
-> settings?
+> > ---
+> >  arch/arm/boot/dts/mt2701.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> > index 8f13c70..4dd5048 100644
+> > --- a/arch/arm/boot/dts/mt2701.dtsi
+> > +++ b/arch/arm/boot/dts/mt2701.dtsi
+> > @@ -298,6 +298,20 @@
+> >  		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> >  	};
+> >
+> > +	jpegdec: jpegdec@15004000 {
+> > +		compatible = "mediatek,mt2701-jpgdec";
+> > +		reg = <0 0x15004000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
+> > +			  <&imgsys CLK_IMG_JPGDEC>;
+> > +		clock-names = "jpgdec-smi",
+> > +			      "jpgdec";
+> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> > +		mediatek,larb = <&larb2>;
+> > +		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
+> > +			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+> > +	};
+> > +
+> >  	vdecsys: syscon@16000000 {
+> >  		compatible = "mediatek,mt2701-vdecsys", "syscon";
+> >  		reg = <0 0x16000000 0 0x1000>;
+> >
 
-The clock is going to be handled by the device itself (at least for the case we
-have today) and the performance-state lies with the power-domain which is
-configured separately. If the performance level includes both clk and voltage,
-then why would we need to show the clock rates in the DT ? Wouldn't a
-performance level be enough in such cases?
 
--- 
-viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
