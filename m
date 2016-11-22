@@ -1,52 +1,36 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
-Date: Tue, 22 Nov 2016 10:41:12 +0100
-Message-ID: <2907606.qYBKeXi75W@wuerfel>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <3993565.nedzUBZcVS@wuerfel> <0084ef53-c0e6-51e8-afa5-07264dfce529@linaro.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] ARM: dts: da850: specify max width for display node
+Date: Tue, 22 Nov 2016 10:42:55 +0100
+Message-ID: <1479807775-28283-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0084ef53-c0e6-51e8-afa5-07264dfce529-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 22, 2016 5:22:42 PM CET zhangfei wrote:
-> Hi, Arnd
-> 
-> On 2016年11月22日 16:45, Arnd Bergmann wrote:
-> > On Tuesday, November 22, 2016 3:49:16 PM CET Zhangfei Gao wrote:
-> >> @@ -1,8 +1,8 @@
-> >>   obj-y += core.o
-> >> -obj-y += hisilicon/
-> >>   obj-$(CONFIG_ARCH_STI) += sti/
-> >>   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-> >>   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> >> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
-> >>   obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
-> >>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
-> >>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
-> > Please leave the obj-y line, otherwise the COMPILE_TEST variant won't work.
-> 
-> COMPILE_TEST is added in drivers/reset/hisilicon/Kconfig
-> like
-> config COMMON_RESET_HI3660
->          tristate "Hi3660 Reset Driver"
->          depends on ARCH_HISI || COMPILE_TEST
-> 
-> The reason not using "obj-y" here is that reset.c will be compiled unconditionally.
-> 
-> drivers/reset/hisilicon/Makefile
-> obj-y   += reset.o
-
-Yes, that line has to change as well then, to only build it when one
-of the hardware specific drivers is enabled.
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SXQgaGFzIGJlZW4gZGV0ZXJtaW5lZCB0aGF0IHRoZSBoaWdoZXN0IHJlc29sdXRpb24gc3VwcG9y
+dGVkIGNvcnJlY3RseQpieSBMQ0RDIHJldjEgaXMgODAweDYwMCBvbiBkYTg1MCBkdWUgdG8gbWVt
+b3J5IGJhbmR3aWR0aCBjb25zdHJhaW50cy4KClNldCB0aGUgbWF4X3dpZHRoIHByb3BlcnR5IGlu
+IGRhODUwLmR0c2kgdG8gODAwLgoKU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8
+YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9kYTg1MC5k
+dHNpIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9h
+cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRz
+aQppbmRleCAzNjA2NmZhLi4wODc2MjM4IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9k
+YTg1MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKQEAgLTQ0MSw2ICs0
+NDEsNyBAQAogCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC10aWxjZGMiOwogCQkJcmVnID0gPDB4
+MjEzMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDUyPjsKKwkJCW1heC13aWR0aCA9IDw4
+MDA+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsKIAl9OwotLSAKMi45LjMKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
