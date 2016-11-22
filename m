@@ -1,69 +1,75 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/2] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-Date: Tue, 22 Nov 2016 14:39:31 +0530
-Message-ID: <58340B4B.8090403@ti.com>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
- <1476873827-7191-3-git-send-email-vivek.gautam@codeaurora.org>
- <ca4054a8-a813-0f50-3224-1e418eaa7095@ti.com>
- <CAFp+6iGMp9pkt5NVTG9f-xjF5VOmj3Om5ngvMboyjdcR94Bhag@mail.gmail.com>
- <CAFp+6iFhJ245YEuLNd0jOOLVtf=_GFaD12PdiM__-32W==WRTQ@mail.gmail.com>
+From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: RE: [PATCH v3] ARM: at91/dt: add dts file for sama5d36ek CMP board
+Date: Tue, 22 Nov 2016 09:11:43 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB44DB0B@CHN-SV-EXMX07.mchp-main.com>
+References: <1479705283-3052-1-git-send-email-wenyou.yang@atmel.com>
+ <20161121140248.utlir6krokjeeobi@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFhJ245YEuLNd0jOOLVtf=_GFaD12PdiM__-32W==WRTQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161121140248.utlir6krokjeeobi-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 22 November 2016 01:17 PM, Vivek Gautam wrote:
-> Hi Kishon,
-> 
-> 
-> On Thu, Nov 10, 2016 at 2:33 PM, Vivek Gautam
-> <vivek.gautam@codeaurora.org> wrote:
->> Hi Kishon,
->>
-> 
->>>> +unsigned int msm8996_pciephy_tx_offsets[] = { 0x1000, 0x2000, 0x3000 };
->>>> +unsigned int msm8996_pciephy_rx_offsets[] = { 0x1200, 0x2200, 0x3200 };
->>>> +unsigned int msm8996_pciephy_pcs_offsets[] = { 0x1400, 0x2400, 0x3400 };
-> 
->>> you can have a separate reg map for each lane and all these can come from dt.
->>
->> The idea is to avoid the any child nodes for lanes. So, we have the complete
->> ioremaped region and these offsets to tx, rx and pcs blocks.
-> 
-> I don't see benefits in using regmap for different lanes.
-> Do you see benefits in replacing a bunch of readl()/writel() with
-> regmap_read()/regmap_update_bits()/regmap_write() ?
-
-By reg map, I meant register spaces allocated for different lanes.
-> 
-> I can as well use separate 'reg' values for each lanes, and have the offsets
-> come from dt. Something like below :
-> 
->  - reg: array of offset and length of the PHY register sets.
->        at index 0: offset and length of register set for PHY common
->                    serdes block.
->        from index 1 - N: offset and length of register set for each lane,
->                          for N number of phy lanes (ports).
->  - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
-> 
-> Example:
->        pcie_phy: pciephy@34000 {
->                compatible = "qcom,msm8996-qmp-pcie-phy";
->                reg = <0x034000 0x48f>,
->                        <0x035000 5bf>,
->                        <0x036000 5bf>,
->                        <0x037000 5bf>;
->                                        /* tx, rx, pcs */
->                lane-offsets = <0x0 0x200 0x400>;
-
-right, I meant something like this.
-
-Thanks
-Kishon
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleGFuZHJlIEJlbGxv
+bmkgW21haWx0bzphbGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0cm9ucy5jb21dDQo+IFNlbnQ6
+IDIwMTbE6jEx1MIyMcjVIDIyOjAzDQo+IFRvOiBXZW55b3UgWWFuZyAtIEE0MTUzNSA8V2VueW91
+LllhbmdAbWljcm9jaGlwLmNvbT4NCj4gQ2M6IE5pY29sYXMgRmVycmUgPG5pY29sYXMuZmVycmVA
+YXRtZWwuY29tPjsgUnVzc2VsbCBLaW5nDQo+IDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsgUm9i
+IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwNCj4gPHBhd2VsLm1vbGxA
+YXJtLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJl
+bGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtA
+Y29kZWF1cm9yYS5vcmc+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgV2VueW91
+IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzXSBBUk06IGF0OTEvZHQ6IGFkZCBkdHMgZmlsZSBm
+b3Igc2FtYTVkMzZlayBDTVAgYm9hcmQNCj4gDQo+IEhpLA0KPiANCj4gSSBmaXhlZCBpdCB1cCB0
+aGlzIHRpbWUgYnV0IHBsZWFzZSB1c2UgdGhlIHByb3BlciBzdWJqZWN0IHByZWZpeCBuZXh0IHRp
+bWUgKEFSTTogZHRzOg0KPiBhdDkxOikuDQoNClRoYW5rIHlvdS4NCg0KSSBrZWVwIGl0IGluIG1p
+bmQuDQoNCj4gDQo+IE9uIDIxLzExLzIwMTYgYXQgMTM6MTQ6NDIgKzA4MDAsIFdlbnlvdSBZYW5n
+IHdyb3RlIDoNCj4gPiBUaGUgc2FtYTVkMzZlayBDTVAgYm9hcmQgaXMgdGhlIHZhcmlhbnQgb2Yg
+c2FtYTVkM3hlayBib2FyZC4NCj4gPiBJdCBpcyBlcXVpcHBlZCB3aXRoIHRoZSBsb3ctcG93ZXIg
+RERSMiBTRFJBTSwgUE1JQyBBQ1Q4ODY1IGFuZCBzb21lDQo+ID4gcG93ZXIgcmFpbC4gSXRzIG1h
+aW4gcHVycG9zZSBpcyB1c2VkIHRvIG1lYXN1cmUgdGhlIHBvd2VyIGNvbnN1bXB0aW9uLg0KPiA+
+IFRoZSBkaWZmZXJlbmNlIG9mIHRoZSBzYW1hNWQzNmVrIENNUCBkdHMgZnJvbSBzYW1hNWQzNmVr
+IGR0cyBpcyBsaXN0ZWQNCj4gPiBhcyBiZWxvdy4NCj4gPiAgMS4gVGhlIFVTQiBob3N0IG5vZGVz
+IGFyZSByZW1vdmVkLCB0aGF0IGlzLCB0aGUgVVNCIGhvc3QgaXMgZGlzYWJsZWQuDQo+ID4gIDIu
+IFRoZSBncGlvX2tleXMgbm9kZSBpcyBhZGRlZCB0byB3YWtlIHVwIGZyb20gdGhlIHNsZWVwLg0K
+PiA+ICAzLiBUaGUgTENEIGlzbid0IHN1cHBvcnRlZCBkdWUgdG8gdGhlIHBpbnMgZm9yIExDRCBh
+cmUgY29uZmxpY3RlZA0KPiA+ICAgICB3aXRoIGdwaW9fa2V5cy4NCj4gPiAgNC4gVGhlIGFkYzAg
+bm9kZSBzdXBwb3J0IHRoZSBwaW5jdHJsIHNsZWVwIHN0YXRlIHRvIGZpeCB0aGUgb3Zlcg0KPiA+
+ICAgICBjb25zdW1wdGlvbiBvbiBWRERBTkEuDQo+ID4NCj4gPiBBcyBzYWlkIGluIGVycmF0YSwg
+IldoZW4gdGhlIFVTQiBob3N0IHBvcnRzIGFyZSB1c2VkIGluIGhpZ2ggc3BlZWQNCj4gPiBtb2Rl
+IChFSENJKSwgaXQgaXMgbm90IHBvc3NpYmxlIHRvIHN1c3BlbmQgdGhlIHBvcnRzIGlmIG5vIGRl
+dmljZSBpcw0KPiA+IGF0dGFjaGVkIG9uIGVhY2ggcG9ydC4gVGhpcyBsZWFkcyB0byBpbmNyZWFz
+ZWQgcG93ZXIgY29uc3VtcHRpb24gZXZlbg0KPiA+IGlmIHRoZSBzeXN0ZW0gaXMgaW4gYSBsb3cg
+cG93ZXIgbW9kZS4iIFRoYXQgaXMgd2h5IHRoZSB0aGUgVVNCIGhvc3QgaXMNCj4gPiBkaXNhYmxl
+ZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1l
+bC5jb20+DQo+ID4gLS0tDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+ICAtIFVzZSBhIGR1
+YWwgbGljZW5zZSBzY2hlbWUgZm9yIERUIGZpbGVzLg0KPiA+ICAtIFVzZSB0aGUgcHJvcGVyIG1v
+ZGVsIG5hbWUgYW5kIHRoZSBjb21wYXRpYmxlIHN0cmluZyB0byByZWZsZWN0DQo+ID4gICAgdGhl
+IG5hdHVyZSBvZiB0aGlzIG5ldyAiQ01QIiBib2FyZC4NCj4gPiAgLSBDaGFuZ2UgbmFtZSBvZiB3
+YWtldXAgcHJvcGVydHkgdG8gIndha2V1cC1zb3VyY2UiLg0KPiA+ICAtIFJlbW92ZSB1bm5lY2Vz
+c2FyeSBjb21tZW50cy4NCj4gPiAgLSBSZW1vdmUgYm9vdGFyZ3MuDQo+ID4NCj4gPiBDaGFuZ2Vz
+IGluIHYyOg0KPiA+ICAtIEFkZCB0aGUgcGluY3RybCBzbGVlcCBzdGF0ZSBmb3IgYWRjMCBub2Rl
+IHRvIGZpeCB0aGUgb3Zlcg0KPiA+ICAgIGNvbnN1bXB0aW9uIG9uIFZEREFOQS4NCj4gPiAgLSBJ
+bXByb3ZlIHRoZSBjb21taXQgbG9nLg0KPiA+DQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1
+ZDM2ZWtfY21wLmR0cyAgfCAgODcgKysrKysrKysrKw0KPiA+IGFyY2gvYXJtL2Jvb3QvZHRzL3Nh
+bWE1ZDN4Y21fY21wLmR0c2kgfCAyMDEgKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiBhcmNo
+L2FybS9ib290L2R0cy9zYW1hNWQzeG1iX2NtcC5kdHNpIHwgMzAxDQo+ID4gKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDU4OSBpbnNlcnRp
+b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9zYW1hNWQz
+NmVrX2NtcC5kdHMNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Nh
+bWE1ZDN4Y21fY21wLmR0c2kNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
+ZHRzL3NhbWE1ZDN4bWJfY21wLmR0c2kNCj4gPg0KPiBBcHBsaWVkLCB0aGFua3MuDQo+IA0KPiAt
+LQ0KPiBBbGV4YW5kcmUgQmVsbG9uaSwgRnJlZSBFbGVjdHJvbnMNCj4gRW1iZWRkZWQgTGludXgg
+YW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tDQoNCkJl
+c3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
