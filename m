@@ -1,74 +1,53 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
-Date: Tue, 22 Nov 2016 17:34:05 +0800
-Message-ID: <d6e602c0-70e9-0309-86b5-bfd006d86028@linaro.org>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
- <1479800961-6249-4-git-send-email-zhangfei.gao@linaro.org>
- <2220300.Yj4lYzeH2z@wuerfel>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 22 Nov 2016 11:36:55 +0200
+Message-ID: <2307840.2mk6E40XHl@avalon>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2220300.Yj4lYzeH2z@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161121164815.bxca4rfvifloizdh@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd
-
-On 2016年11月22日 16:50, Arnd Bergmann wrote:
-> On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
->> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
->> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
->> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
->> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
->> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
->> +};
->> +
->> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
->> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
->> +       .channels = hi3660_iomcu_rst,
->> +};
->> +
->> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
->> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
->> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
->> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
->> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
->> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
->> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
->> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
->> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
->> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
->> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
->> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
->> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
->> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
->> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
->> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
->> +};
-> I think you can avoid the trap of the ABI incompatibility if
-> you just define those as in the binding as tuples, using #reset-cells=2.
->
-> In particular for the first set, it seems really silly to redefine
-> the numbers when there is just a simple integer number.
-
-Could you clarify more, still not understand.
-The number is index of the arrays, and the index will be used in dts.
-The arrays lists the registers offset and bit shift.
-For example:
-
-[HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3), means register offset : 0x20, and bit shift = 3.
-
-And Documentation/devicetree/bindings/reset/reset.txt
-Required properties:
-#reset-cells:   Number of cells in a reset specifier; Typically 0 for nodes
-                 with a single reset output and 1 for nodes with multiple
-                 reset outputs.
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKT24gTW9uZGF5IDIxIE5vdiAyMDE2IDEwOjQ4OjE1IFJvYiBIZXJyaW5nIHdyb3Rl
+Ogo+IE9uIFNhdCwgTm92IDE5LCAyMDE2IGF0IDA1OjI4OjAxQU0gKzAyMDAsIExhdXJlbnQgUGlu
+Y2hhcnQgd3JvdGU6Cj4gPiBEb2N1bWVudCBwcm9wZXJ0aWVzIGNvbW1vbiB0byBzZXZlcmFsIGRp
+c3BsYXkgcGFuZWxzIGluIGEgY2VudHJhbAo+ID4gbG9jYXRpb24gdGhhdCBjYW4gYmUgcmVmZXJl
+bmNlZCBieSB0aGUgcGFuZWwgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gCj4gTG9va3MgZ29vZC4g
+SnVzdCBvbmUgY29tbWVudC4uLgo+IAo+IFsuLi5dCj4gCj4gPiArQ29ubmVjdGl2aXR5Cj4gPiAr
+LS0tLS0tLS0tLS0tCj4gPiArCj4gPiArLSBwb3J0czogUGFuZWxzIHJlY2VpdmUgdmlkZW8gZGF0
+YSB0aHJvdWdoIG9uZSBvciBtdWx0aXBsZSBjb25uZWN0aW9ucy4KPiA+IFdoaWxlCj4gPiArICB0
+aGUgbmF0dXJlIG9mIHRob3NlIGNvbm5lY3Rpb25zIGlzIHNwZWNpZmljIHRvIHRoZSBwYW5lbCB0
+eXBlLCB0aGUKPiA+ICsgIGNvbm5lY3Rpdml0eSBpcyBleHByZXNzZWQgaW4gYSBzdGFuZGFyZCBm
+YXNoaW9uIHVzaW5nIHBvcnRzIGFzCj4gPiBzcGVjaWZpZWQgaW4KPiA+ICsgIHRoZSBkZXZpY2Ug
+Z3JhcGggYmluZGluZ3MgZGVmaW5lZCBpbgo+ID4gKyAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dyYXBoLnR4dC4KPiAKPiBXZSBhbGxvdyBwYW5lbHMgdG8gZWl0aGVyIHVzZSBn
+cmFwaCBiaW5kaW5nIG9yIGJlIGEgY2hpbGQgb2YgdGhlIGRpc3BsYXkKPiBjb250cm9sbGVyLgoK
+SSBrbmV3IHRoYXQgc29tZSBkaXNwbGF5IGNvbnRyb2xsZXJzIHVzZSBhIHBoYW5kbGUgdG8gdGhl
+IHBhbmVsIChzZWUgdGhlIApmc2wscGFuZWwgYW5kIG52aWRpYSxwYW5lbCBwcm9wZXJ0aWVzKSwg
+YnV0IEkgZGlkbid0IGtub3cgd2UgaGFkIHBhbmVscyBhcyAKY2hpbGRyZW4gb2YgZGlzcGxheSBj
+b250cm9sbGVyIG5vZGVzLiBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCBhbGxvdyB0aGF0IGZvciAK
+YW55dGhpbmcgYnV0IERTSSBwYW5lbHMsIGFzIHRoZSBEVCBoaWVyYXJjaHkgaXMgYmFzZWQgb24g
+Y29udHJvbCBidXNlcy4gQXJlIAp5b3Ugc3VyZSB3ZSBoYXZlIG90aGVyIHBhbmVscyBpbnN0YW50
+aWF0ZWQgdGhyb3VnaCB0aGF0IG1lY2hhbmlzbSA/Cgo+IFVzaW5nIHRoZSBncmFwaCBpcyBwcmVm
+ZXJyZWQsIGJ1dCBpbiB0aGUgc2ltcGxlIGNhc2VzIGp1c3QgYSBjaGlsZCBub2RlIGlzCj4gc3Vm
+ZmljaWVudC4gVGhpcyBzaG91bGQgYmUgZGVzY3JpYmVkIGhlcmUgb3Igc29tZXdoZXJlIGluIHRo
+aXMgZG9jLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
