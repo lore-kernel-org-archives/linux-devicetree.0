@@ -1,144 +1,82 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835 soc
-Date: Tue, 22 Nov 2016 15:28:04 +0100
-Message-ID: <28F93ABE-8210-4389-AE77-4D5E830E669B@martin.sperl.org>
-References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org> <1478081906-12009-3-git-send-email-kernel@martin.sperl.org> <20161117021107.GA2647@localhost.localdomain> <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org> <20161117151019.GA3115@localhost.localdomain> <7957B3CC-0E18-4B27-82EB-EF88B7695E28@martin.sperl.org> <20161119042224.GA25063@localhost.localdomain>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161119042224.GA25063-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4 0/4] drm/tilcdc: Add bridge support and sync-lost flood
+ recovery
+Date: Tue, 22 Nov 2016 16:49:49 +0200
+Message-ID: <cover.1479825908.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: khilman@baylibre.com, Jyri Sarha <jsarha@ti.com>, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo!
-
-On 19.11.2016 05:22, Eduardo Valentin wrote:
-> Hello Martin,
-> 
-> Thanks for your patience to take the time to explain to me how the
-> firmware/linux split is done in your platform. Still, one thing is not
-> clear to me.
-> 
-> On Fri, Nov 18, 2016 at 09:32:47AM +0100, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
->> 
-> 
->> The way that firmware works on the RPI is quite different from most others I guess.
->> in principle you got 2 different CPUs on the bcm2835:
->> * ARM, which runs the linux instance
->> * VideoCore 4, which runs the firmware (loading from SD initially) and
->>  then booting the ARM.
->> 
->> So this Firmware on VC4 is the one that I am talking about.
->> Without the working firmware linux can not boot on arm.
-> 
-> Given that "without the working firmware linux can not boot on arm",
-> 
-> (...)
-> 
->> As far as I understand the conversion is continuous (as soon as the HW is
->> configured). This case is there primarily to handle the situation where
->> we initialize the HW ourselves (see line 226 and below), and we immediately
-> 
-> and around line 226 we have the comment:
-> +       /*
-> +        * right now the FW does set up the HW-block, so we are not
-> +        * touching the configuration registers.
-> +        * But if the HW is not enabled, then set it up
-> +        * using "sane" values used by the firmware right now.
-> +        */
-> 
-> 
->> want to read the ADC value before the first conversion is finished.
->> 
-> 
-> then, does the firmware initializes the device or not?
-> 
-
-Yes, it does (normally)
-
-> What are the cases you would load this driver but still get an
-> uninitialized device? That looks like some bug workaround hidden
-> somewhere. Do system integrators/engineers need to be aware of this w/a?
-> Would the driver work right aways when the subsystem is loaded during
-> boot? How about module insertion?
-> 
-
-I was asked to implement the "initialize" case just in case FW ever
-stopped setting up the device itself, so that is why this code is
-included.
-
-> 
-> Who has the ownership of this device?
-
-Joined ownership I suppose...
-
-> 
->> The above mentioned “configuration if not running” reflect the values that
->> the FW is currently setting. We should not change those values as long as the
->> Firmware is also reading the temperature on its own.
-> 
-> hmm.. that looks like racy to me. Again, How do you synchronize accesses to
-> this device? What if you configure the device and right after the
-> firmware updates the configs? How do you make sure the configs you are
-> writing here are the same used by the firmware? What if the firmware
-> version changes? What versions of the firmware does this driver support?
-> 
-> Would it make sense to simply always initialize the device? Do you have
-> a way to tell the firmware that it should not use the device?
-> 
-> Or, if you want to keep the device driver simply being a dummy reader,
-> would it make sense to simply avoid writing configurations to the
-> device, and simply retry to check if the firmware gets the device
-> initialized?
-
-Again: the device registers are only ever written if the device is not started
-already. Otherwise the driver only reads for the ADC register, so there
-is no real race here.
-
-> 
->> 
->>> 
->>>> So do you need another version of the patchset that uses that new API?
->>> 
->>> I think the API usage is change that can be done together with
->>> clarification for the above questions too: on hardware state,
->>> firmware loading, maybe a master driver dependency, and the ADC
->>> conversion sequence, which are not well clear to me on this driver. As long as
->>> this is clarified and documented in the code (can be simple comments so
->>> it is clear to whoever reads in the future), then I would be OK with
->>> this driver.
->> 
->> So how do you want this to get “documented” in the driver?
->> The setup and Firmware is a generic feature of the SOC, so if we would put
->> some clarifications in this driver, then we would need to put it in every
->> bcm283X driver (which seems unreasonable).
->> 
-> 
-> I think a simple comment explaining the firmware dependency and the
-> expected pre-conditions to get this driver working in a sane state would
-> do it.
-> 
-> A better device initialization would also be appreciated. Based on my
-> limited understanding of this platform, and your explanations, this
-> device seams to have a serious race condition with firmware while
-> accessing this device.
-
-Again: the firmware runs before the ARM is started and for all practical
-purposes the firmware is (as of now) configuring the thermal device.
-
-As for the use of thermal_zone_get_offset/slope: looking into the code
-it looks like this actually blows up the code, as we now would need to
-allocate thermal_zone_params and preset it with the “correct” values.
-
-So more code to maintain and more memory consumed.
-The only advantage I would see is that it would allow to set offset and
-slope directly in the device tree.
-
-Thanks,
-		Martin--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Q2hhbmdlcyBzaW5jZSB2MzoKLSAiZHJtL3RpbGNkYzogRW5hYmxlIHN5bmMgbG9zdCBlcnJvciBh
+bmQgcmVjb3ZlcnkgaGFuZGxpbmcgZm9yIHJldiAxIExDREMiCiAgLSBGaXggYnJva2VuIGlycSBl
+bmFibGUvZGlzYmxlIGNvZGUgZm9yIExDREMgcmV2IDEKLSBBZGQ6ICJkdC1iaW5kaW5nczogTW92
+ZSAidGksdGZwNDEwLnR4dCIgZnJvbSBkaXNwbGF5L3RpIHRvIGRpc3BsYXkvYnJpZGdlIgotICJk
+cm0vYnJpZGdlOiBBZGQgdGktdGZwNDEwIERWSSB0cmFuc21pdHRlciBkcml2ZXIiCiAgLSBEb24n
+dCBmYWlsIGlmIGVpdGhlciBpMmMgb3IgcGxhdGZvcm0gZHJpdmVyIHJlZ2lzdGVyIHN1Y2NlZWRz
+CiAgLSBmdHA0MTAgLT4gdGZwNDEwCiAgLSBNZXJnZSB0aGUgb2xkIGRpc3BsYXkvdGksdGZwNDEw
+LnR4dCBkb2N1bWVudCB3aXRoIG15IGFkZGl0aW9uCgpDaGFuZ2VzIHNpbmNlIHYyOgotICJkcm0v
+dGlsY2RjOiBSZWNvdmVyIGZyb20gc3luYyBsb3N0IGVycm9yIGZsb29kIGJ5IHJlc2V0dGluZyB0
+aGUgTENEQyIKICAtIG5vIGNoYW5nZQotICJkcm0vYnJpZGdlOiBBZGQgdGktdGZwNDEwIERWSSB0
+cmFuc21pdHRlciBkcml2ZXIiCiAgLSBGaXggZGV2ZWljZS10cmVlIGRvY3VtZW50CiAgICAtICJk
+cml2ZXIgbm9kZSIgLT4gImRldmljZSBub2RlIgogICAgLSByZW1vdmUgIih0aGUgY3VycmVudCBp
+bXBsZW1lbnRhdGlvbiBkb2VzIG5vdCB5ZXQgc3VwcG9ydCB0aGlzKSIKICAtIEFkZCBkdW1teSBp
+MmMgc3VwcG9ydC4gVGhlIGRyaXZlciBwcm9iZSB3b3JrcyBhbHNvIGlmIHBsYWNlZCB1bmRlcgog
+ICAgaTJjIGNvbnRyb2xsZXIgbm9kZSwgYnV0IHRoZXJlIGlzIG5vIGFjdHVhbCBpMmMgcHJvYmlu
+Zy4KLSAiZHJtL3RpbGNkYzogQWRkIGRybSBicmlkZ2Ugc3VwcG9ydCBmb3IgYXR0YWNoaW5nIGRy
+bSBicmlkZ2UgZHJpdmVycyIKICAtIG5vIGNoYW5nZQoKQ2hhbmdlcyBzaW5jZSBmaXJzdCB2ZXJz
+aW9uIG9mIHRoZSBzZXJpZXM6Ci0gImRybS90aWxjZGM6IFJlY292ZXIgZnJvbSBzeW5jIGxvc3Qg
+ZXJyb3IgZmxvb2QgYnkgcmVzZXR0aW5nIHRoZSBMQ0RDIgogIC0gbm8gY2hhbmdlCi0gImRybS9i
+cmlkZ2U6IEFkZCB0aS10ZnA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZlciIKICAtIEhETUkgLT4g
+RFZJCiAgLSBEVCBCaW5kaW5nIGRvY3VtZW50CiAgICAtIFByZXBhcmUgZm9yIHRmcDQxMCBjb25u
+ZWN0ZWQgdHJvdWdoIGkyYyBieSBvcHRpb25hbCByZWcgcHJvcGVydHkKICAgIC0gUmVxdWlyZSB0
+d28gcG9ydCBub2RlcwogIC0gSW1wbGVtZW50YXRpb24KICAgIC0gSW1wbGVtZW50IGNvbm5lY3Rv
+ciBub2RlIGZ1bmN0aW9uYWxpdHkgd2l0aCBpbiB0ZnA0MTAgYnJpZGdlCiAgICAgIGRyaXZlLCBi
+dXQgZm9sbG93IGdlbmVyaWMgY29ubmVjdG9yIGJpbmRpbmcgYnkgcHVsbGluZyB0aGUKICAgICAg
+ZGRjLWkyYy1idXMgcHJvcGVydHkgZnJvbSB0aGUgY29ubmVjdG9yIG5vZGUuCi0gImRybS90aWxj
+ZGM6IEFkZCBkcm0gYnJpZGdlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZl
+cnMiCiAgLSBSZW1vdmUgZWFybGllciBjaGFuZ2UgaW4gVEQgYmluZGluZyBkb2N1bWVudC4gVGhl
+cmUgaXMgbm8gbmVlZCB0bwogICAgbWVudGlvbiBEUk0gaW1wbGVtZW50YXRpb24gZGV0YWlscywg
+bGlrZSBicmlkZ2Ugc3VwcG9ydCwgaW4gRFQKICAgIGJpbmRpbmcuCgpUaGUgZmlyc3QgcGF0Y2gg
+aXMgYW4gaW5kZXBlbmRlbnQgb24gYW5kIEkndmUgYmVlbiB0ZXN0aW5nIGl0IGZvcgpxdWl0ZSBh
+IHdoaWxlIG5vdy4KClRoZSB0ZnA0MTAgYnJpZGdlIGRyaXZlciBhbmQgdGhlIHRpbGNkYyBicmlk
+Z2Ugc3VwcG9ydCBhcmUgdGVzdGVkIHdpdGgKQmVhZ2xlQm9uZSBEVkktRCBDYXBlIFJldiBBMy4g
+VGhlIHRmcDQxMCBicmlkZ2UgZHJpdmVyIGlzIG1pc3NpbmcgYQpsb3Qgb2YgZmVhdHVyZXMsIGJl
+Y2F1c2UgdGhlIERWSS1EIGNhcGUgZG9lcyBub3QgaGF2ZSB0b28gbWFueSB3aXJlcwpjb25uZWN0
+ZWQuIFRoZSBtaXNzaW5nIGZlYXR1cmVzIGNhbiBiZSBhZGRlZCBsYXRlciB3aGVuIHRoZXkgYXJl
+Cm5lZWRlZC4KCkp5cmkgU2FyaGEgKDQpOgogIGRybS90aWxjZGM6IFJlY292ZXIgZnJvbSBzeW5j
+IGxvc3QgZXJyb3IgZmxvb2QgYnkgcmVzZXR0aW5nIHRoZSBMQ0RDCiAgZHQtYmluZGluZ3M6IE1v
+dmUgInRpLHRmcDQxMC50eHQiIGZyb20gZGlzcGxheS90aSB0byBkaXNwbGF5L2JyaWRnZQogIGRy
+bS9icmlkZ2U6IEFkZCB0aS10ZnA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZlcgogIGRybS90aWxj
+ZGM6IEFkZCBkcm0gYnJpZGdlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZl
+cnMKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCAgICAgICAgICB8
+ICA0NiArKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksdGZwNDEwLnR4
+dCAgIHwgIDQxIC0tLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDcgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
+ICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYyAg
+ICAgICAgICAgICAgICAgfCAzMTEgKysrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vdGlsY2RjL3RpbGNkY19jcnRjLmMgICAgICAgICAgICAgICB8ICAyNiArLQogZHJpdmVycy9n
+cHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMgICAgICAgICAgICAgICAgfCAgIDcgKy0KIGRyaXZl
+cnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oICAgICAgICAgICAgICAgIHwgICAyICsKIGRy
+aXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmMgICAgICAgICAgIHwgMTQwICsr
+KysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmggICAgICAg
+ICAgIHwgICAxICsKIDEwIGZpbGVzIGNoYW5nZWQsIDUyMSBpbnNlcnRpb25zKCspLCA2MSBkZWxl
+dGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dAogZGVsZXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLHRmcDQxMC50eHQK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXRmcDQxMC5jCgot
+LSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
