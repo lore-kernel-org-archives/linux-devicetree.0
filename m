@@ -1,113 +1,96 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] ARM64: dts: Add support for Meson GXM
-Date: Tue, 22 Nov 2016 10:41:24 +0100
-Message-ID: <65b791bb-243e-ded9-e651-4021f0b23f1a@baylibre.com>
-References: <20161121162905.14285-1-narmstrong@baylibre.com>
- <20161121162905.14285-2-narmstrong@baylibre.com>
- <m2oa181jtd.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2oa181jtd.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/4] clocksource/drivers/arm_arch_timer: Don't assume clock runs in suspend
+Date: Tue, 22 Nov 2016 10:44:21 +0100
+Message-ID: <1479807866-6957-1-git-send-email-daniel.lezcano@linaro.org>
+References: <20161122094300.GA2017@mai>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161122094300.GA2017@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM ARCHITECTED
+        TIMER DRIVER" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2016 12:42 AM, Kevin Hilman wrote:
-> Neil,
-> 
-> Neil Armstrong <narmstrong@baylibre.com> writes:
-> 
->> Following the Amlogic Linux kernel, it seem the only differences
->> between the GXL and GXM SoCs are the CPU Clusters.
->>
->> This commit renames the gxl-s905d-p23x DTSI in a common file for
->> S905D p20x and S912 q20x boards.
-> 
-> s/p20x/p23x/ ??
-> 
->> Then adds a meson-gxm dtsi and reproduce the P23x to Q20x boards
->> dts files since the S905D and S912 SoCs shares the same pinout
->> and the P23x and Q20x boards are identical.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> I had to drop this as it breaks the network on (at least) gxbb-p200, but...
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
->> index 03e3d76..17bb77c 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
->> @@ -56,3 +56,22 @@
->>  	pinctrl-0 = <&i2c_b_pins>;
->>  	pinctrl-names = "default";
->>  };
->> +
->> +&ethmac {
->> +	status = "okay";
->> +	pinctrl-0 = <&eth_rgmii_pins>;
->> +	pinctrl-names = "default";
->> +
->> +	phy-handle = <&eth_phy0>;
->> +
->> +	mdio {
->> +		compatible = "snps,dwmac-mdio";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		eth_phy0: ethernet-phy@0 {
->> +			reg = <0>;
->> +			realtek,disable-eee-1000t;
->> +		};
->> +	};
->> +};
-> 
-> ... backing out this change makes it work again.
-> 
-> This change also looks suspicious as it's using the proposed disable-eee
-> properties, which I don't think have been merged yet.
-> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> index 39bb037..5608c51 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> @@ -50,3 +50,10 @@
->>  	compatible = "amlogic,p201", "amlogic,meson-gxbb";
->>  	model = "Amlogic Meson GXBB P201 Development Board";
->>  };
->> +
->> +&ethmac {
->> +	status = "okay";
->> +	pinctrl-0 = <&eth_rmii_pins>;
->> +	pinctrl-names = "default";
->> +	phy-mode = "rmii";
->> +};
-> 
-> This also doesn't look releveant to the GXL/GXM changes being introduced
-> in this patch.
-> 
-> Could you separate out any GXBB-related changes into a separate patch
-> (if they are in fact needed) and re-spin this?
-> 
-> Thanks,
-> 
-> Kevin
-> 
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Sorry leftover for another work...
+The ARM specifies that the system counter "must be implemented in an
+always-on power domain," and so we try to use the counter as a source of
+timekeeping across suspend/resume. Unfortunately, some SoCs (e.g.,
+Rockchip's RK3399) do not keep the counter ticking properly when
+switched from their high-power clock to the lower-power clock used in
+system suspend. Support this quirk by adding a new device tree property.
 
-Will cleanup for v2.
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 5 +++++
+ drivers/clocksource/arm_arch_timer.c                 | 9 ++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-Neil
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index ef5fbe9..ad440a2 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -38,6 +38,11 @@ to deliver its interrupts via SPIs.
+   architecturally-defined reset values. Only supported for 32-bit
+   systems which follow the ARMv7 architected reset values.
+ 
++- arm,no-tick-in-suspend : The main counter does not tick when the system is in
++  low-power system suspend on some SoCs. This behavior does not match the
++  Architecture Reference Manual's specification that the system counter "must
++  be implemented in an always-on power domain."
++
+ 
+ Example:
+ 
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 73c487d..a2503db 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -81,6 +81,7 @@ static struct clock_event_device __percpu *arch_timer_evt;
+ static enum ppi_nr arch_timer_uses_ppi = VIRT_PPI;
+ static bool arch_timer_c3stop;
+ static bool arch_timer_mem_use_virtual;
++static bool arch_counter_suspend_stop;
+ 
+ static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
+ 
+@@ -576,7 +577,7 @@ static struct clocksource clocksource_counter = {
+ 	.rating	= 400,
+ 	.read	= arch_counter_read,
+ 	.mask	= CLOCKSOURCE_MASK(56),
+-	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
++	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ };
+ 
+ static struct cyclecounter cyclecounter = {
+@@ -616,6 +617,8 @@ static void __init arch_counter_register(unsigned type)
+ 		arch_timer_read_counter = arch_counter_get_cntvct_mem;
+ 	}
+ 
++	if (!arch_counter_suspend_stop)
++		clocksource_counter.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
+ 	start_count = arch_timer_read_counter();
+ 	clocksource_register_hz(&clocksource_counter, arch_timer_rate);
+ 	cyclecounter.mult = clocksource_counter.mult;
+@@ -907,6 +910,10 @@ static int __init arch_timer_of_init(struct device_node *np)
+ 	    of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
+ 		arch_timer_uses_ppi = PHYS_SECURE_PPI;
+ 
++	/* On some systems, the counter stops ticking when in suspend. */
++	arch_counter_suspend_stop = of_property_read_bool(np,
++							 "arm,no-tick-in-suspend");
++
+ 	return arch_timer_init();
+ }
+ CLOCKSOURCE_OF_DECLARE(armv7_arch_timer, "arm,armv7-timer", arch_timer_of_init);
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
