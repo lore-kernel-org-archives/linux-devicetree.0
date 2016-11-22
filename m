@@ -1,55 +1,342 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [RFC PATCH 2/2] arm64: dts: enable the MUSB controller
- of Pine64 in host-only mode
-Date: Wed, 23 Nov 2016 00:59:02 +0800
-Message-ID: <20161122165902.62543-2-icenowy@aosc.xyz>
-References: <20161122165902.62543-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 7/7] add stm32 multi-functions timer driver in DT
+Date: Tue, 22 Nov 2016 18:00:07 +0100
+Message-ID: <341de9a2-033d-c766-e5e1-15d9c5fc5687@st.com>
+References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
+ <1479831207-32699-8-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB7HS2HAQKGQETY55HHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161122165902.62543-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1479831207-32699-8-git-send-email-benjamin.gaignard@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>, linus.walleij@linaro.org, arnaud.pouliquen@st.com, gerald.baeza@st.com, fabrice.gasnier@st.com
 List-Id: devicetree@vger.kernel.org
 
-A64 has a MUSB controller wired to the USB PHY 0, which is connected
-to the upper USB Type-A port of Pine64.
+Hi Benjamin,
 
-As the port is a Type-A female port, enable it in host-only mode in the
-device tree, which makes devices with USB Type-A male port can work on
-this port (which is originally designed by Pine64 team).
+On 11/22/2016 05:13 PM, Benjamin Gaignard wrote:
+> Add timers MFD and childs into DT for stm32f4.
+> Define and enable pwm1 and pwm3 for stm32f469 discovery board
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
-Peripheral mode is also proven to work, with dr_mode changed to "peripheral"
-and using a Type-A to Type-A cable.
+If you have to send a v2 for this series please change commit header by: 
+"ARM: dts: stm32: ..." (if not I will do it by myself)
 
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index f9a11e6..cf91051 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -81,6 +81,11 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
- &usbphy {
- 	status = "okay";
- };
--- 
-2.10.2
+> ---
+>  arch/arm/boot/dts/stm32f429.dtsi      | 246 ++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/stm32f469-disco.dts |  29 ++++
+>  2 files changed, 275 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index bca491d..28a0fe9 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -355,6 +355,21 @@
+>  					slew-rate = <2>;
+>  				};
+>  			};
+> +
+> +			pwm1_pins: pwm@1 {
+> +				pins {
+> +					pinmux = <STM32F429_PA8_FUNC_TIM1_CH1>,
+> +						 <STM32F429_PB13_FUNC_TIM1_CH1N>,
+> +						 <STM32F429_PB12_FUNC_TIM1_BKIN>;
+> +				};
+> +			};
+> +
+> +			pwm3_pins: pwm@3 {
+> +				pins {
+> +					pinmux = <STM32F429_PB4_FUNC_TIM3_CH1>,
+> +						 <STM32F429_PB5_FUNC_TIM3_CH2>;
+> +				};
+> +			};
+>  		};
+>
+>  		rcc: rcc@40023810 {
+> @@ -426,6 +441,237 @@
+>  			interrupts = <80>;
+>  			clocks = <&rcc 0 38>;
+>  		};
+> +
+> +		mfd_timer1: mfdtimer1@40010000 {
+> +			compatible = "st,stm32-mfd-timer1";
+> +			reg = <0x40010000 0x400>;
+> +			clocks = <&rcc 0 160>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <27>;
+> +			status = "disabled";
+> +
+> +			pwm1: pwm1@40010000 {
+> +				compatible = "st,stm32-pwm1";
+> +				status = "disabled";
+> +			};
+> +
+> +			iiotimer1: iiotimer1@40010000 {
+> +				compatible = "st,stm32-iio-timer1";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer2: mfdtimer2@40000000 {
+> +			compatible = "st,stm32-mfd-timer2";
+> +			reg = <0x40000000 0x400>;
+> +			clocks = <&rcc 0 128>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <28>;
+> +			status = "disabled";
+> +
+> +			pwm2: pwm2@40000000 {
+> +				compatible = "st,stm32-pwm2";
+> +				status = "disabled";
+> +			};
+> +			iiotimer2: iiotimer2@40000000 {
+> +				compatible = "st,stm32-iio-timer2";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer3: mfdtimer3@40000400 {
+> +			compatible = "st,stm32-mfd-timer3";
+> +			reg = <0x40000400 0x400>;
+> +			clocks = <&rcc 0 129>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <29>;
+> +			status = "disabled";
+> +
+> +			pwm3: pwm3@40000400 {
+> +				compatible = "st,stm32-pwm3";
+> +				status = "disabled";
+> +			};
+> +			iiotimer3: iiotimer3@40000400 {
+> +				compatible = "st,stm32-iio-timer3";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer4: mfdtimer4@40000800 {
+> +			compatible = "st,stm32-mfd-timer4";
+> +			reg = <0x40000800 0x400>;
+> +			clocks = <&rcc 0 130>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <30>;
+> +			status = "disabled";
+> +
+> +			pwm4: pwm4@40000800 {
+> +				compatible = "st,stm32-pwm4";
+> +				status = "disabled";
+> +			};
+> +			iiotimer4: iiotimer4@40000800 {
+> +				compatible = "st,stm32-iio-timer4";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer5: mfdtimer5@40000C00 {
+> +			compatible = "st,stm32-mfd-timer5";
+> +			reg = <0x40000C00 0x400>;
+> +			clocks = <&rcc 0 131>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <50>;
+> +			status = "disabled";
+> +
+> +			pwm5: pwm5@40000C00 {
+> +				compatible = "st,stm32-pwm5";
+> +				status = "disabled";
+> +			};
+> +			iiotimer5: iiotimer5@40000800 {
+> +				compatible = "st,stm32-iio-timer5";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer6: mfdtimer6@40001000 {
+> +			compatible = "st,stm32-mfd-timer6";
+> +			reg = <0x40001000 0x400>;
+> +			clocks = <&rcc 0 132>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <54>;
+> +			status = "disabled";
+> +
+> +			iiotimer6: iiotimer6@40001000 {
+> +				compatible = "st,stm32-iio-timer6";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer7: mfdtimer7@40001400 {
+> +			compatible = "st,stm32-mfd-timer7";
+> +			reg = <0x40001400 0x400>;
+> +			clocks = <&rcc 0 133>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <55>;
+> +			status = "disabled";
+> +
+> +			iiotimer7: iiotimer7@40001400 {
+> +				compatible = "st,stm32-iio-timer7";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer8: mfdtimer8@40010400 {
+> +			compatible = "st,stm32-mfd-timer8";
+> +			reg = <0x40010400 0x400>;
+> +			clocks = <&rcc 0 161>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <46>;
+> +			status = "disabled";
+> +
+> +			pwm8: pwm8@40010400 {
+> +				compatible = "st,stm32-pwm8";
+> +				status = "disabled";
+> +			};
+> +
+> +			iiotimer8: iiotimer7@40010400 {
+> +				compatible = "st,stm32-iio-timer8";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer9: mfdtimer9@40014000 {
+> +			compatible = "st,stm32-mfd-timer9";
+> +			reg = <0x40014000 0x400>;
+> +			clocks = <&rcc 0 176>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <24>;
+> +			status = "disabled";
+> +
+> +			pwm9: pwm9@40014000 {
+> +				compatible = "st,stm32-pwm9";
+> +				status = "disabled";
+> +			};
+> +
+> +			iiotimer9: iiotimer9@40014000 {
+> +				compatible = "st,stm32-iio-timer9";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer10: mfdtimer10@40014400 {
+> +			compatible = "st,stm32-mfd-timer10";
+> +			reg = <0x40014400 0x400>;
+> +			clocks = <&rcc 0 177>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <25>;
+> +			status = "disabled";
+> +
+> +			pwm10: pwm10@40014400 {
+> +				compatible = "st,stm32-pwm10";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer11: mfdtimer11@40014800 {
+> +			compatible = "st,stm32-mfd-timer11";
+> +			reg = <0x40014800 0x400>;
+> +			clocks = <&rcc 0 178>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <26>;
+> +			status = "disabled";
+> +
+> +			pwm11: pwm11@40014800 {
+> +				compatible = "st,stm32-pwm11";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer12: mfdtimer12@40001800 {
+> +			compatible = "st,stm32-mfd-timer12";
+> +			reg = <0x40001800 0x400>;
+> +			clocks = <&rcc 0 134>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <43>;
+> +			status = "disabled";
+> +
+> +			pwm12: pwm12@40001800 {
+> +				compatible = "st,stm32-pwm12";
+> +				status = "disabled";
+> +			};
+> +			iiotimer12: iiotimer12@40001800 {
+> +				compatible = "st,stm32-iio-timer12";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer13: mfdtimer13@40001C00 {
+> +			compatible = "st,stm32-mfd-timer13";
+> +			reg = <0x40001C00 0x400>;
+> +			clocks = <&rcc 0 135>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <44>;
+> +			status = "disabled";
+> +
+> +			pwm13: pwm13@40001C00 {
+> +				compatible = "st,stm32-pwm13";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		mfd_timer14: mfdtimer14@40002000 {
+> +			compatible = "st,stm32-mfd-timer14";
+> +			reg = <0x40002000 0x400>;
+> +			clocks = <&rcc 0 136>;
+> +			clock-names = "mfd_timer_clk";
+> +			interrupts = <45>;
+> +			status = "disabled";
+> +
+> +			pwm14: pwm14@40002000 {
+> +				compatible = "st,stm32-pwm14";
+> +				status = "disabled";
+> +			};
+> +		};
+>  	};
+>  };
+>
+> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+> index 8a163d7..a8f1788 100644
+> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+> @@ -81,3 +81,32 @@
+>  &usart3 {
+>  	status = "okay";
+>  };
+> +
+> +&mfd_timer1 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +	pinctrl-0	= <&pwm1_pins>;
+> +	pinctrl-names	= "default";
+> +	st,breakinput-polarity = <0>;
+> +	status = "okay";
+> +};
+> +
+> +&iiotimer1 {
+> +	status = "okay";
+> +};
+> +
+> +&mfd_timer3 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	pinctrl-0	= <&pwm3_pins>;
+> +	pinctrl-names	= "default";
+> +	status = "okay";
+> +};
+> +
+> +&iiotimer3 {
+> +	status = "okay";
+> +};
+>
