@@ -1,75 +1,66 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible
- string
-Date: Tue, 22 Nov 2016 15:46:25 +0000
-Message-ID: <fdb93150-9089-c7bb-2b0a-21ded241a647@arm.com>
-References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
- <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
- <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
- <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 4/4] [media] dt-bindings: add TI VPIF documentation
+Date: Tue, 22 Nov 2016 07:50:06 -0800
+Message-ID: <m2wpfvzf81.fsf@baylibre.com>
+References: <20161122014408.22388-1-khilman@baylibre.com>
+        <20161122014408.22388-5-khilman@baylibre.com>
+        <6699f003-a125-1e1b-e161-e9453dad7bdc@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <6699f003-a125-1e1b-e161-e9453dad7bdc@xs4all.nl> (Hans Verkuil's
+        message of "Tue, 22 Nov 2016 13:47:20 +0100")
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+Hans Verkuil <hverkuil@xs4all.nl> writes:
 
-On 22/11/16 15:06, Sekhar Nori wrote:
-> Hi Sudeep,
->
-> On Tuesday 22 November 2016 04:23 PM, Sudeep Holla wrote:
+> On 22/11/16 02:44, Kevin Hilman wrote:
+>> Cc: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>> ---
+>>  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
+>>  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
+>>  2 files changed, 73 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
 >>
->>
->> On 22/11/16 10:41, Bartosz Golaszewski wrote:
->>> Add a function allowing to retrieve the compatible string of the root
->>> node of the device tree.
->>>
->>
->> Rob has queued [1] and it's in -next today. You can reuse that if you
->> are planning to target this for v4.11 or just use open coding in your
->> driver for v4.10 and target this move for v4.11 to avoid cross tree
->> dependencies as I already mentioned in your previous thread.
+>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> new file mode 100644
+>> index 000000000000..bdd93267301f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> @@ -0,0 +1,65 @@
+>> +Texas Instruments VPIF Capture
+>> +------------------------------
+>> +
+>> +The TI Video Port InterFace (VPIF) capture component is the primary
+>> +component for video capture on the DA850 family of TI DaVinci SoCs.
+>> +
+>> +TI Document number reference: SPRUH82C
+>> +
+>> +Required properties:
+>> +- compatible: must be "ti,da850-vpif-capture"
+>> +- reg: physical base address and length of the registers set for the device;
+>> +- interrupts: should contain IRQ line for the VPIF
+>> +
+>> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
+>> +channels or a single 16-bit channel.  It should contain at least one
+>> +port child node with child 'endpoint' node. Please refer to the
+>> +bindings defined in
+>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +Example using 2 8-bit input channels, one of which is connected to an
+>> +I2C-connected TVP5147 decoder:
+>> +
+>> +	vpif_capture: video-capture@0x00217000 {
+>> +		compatible = "ti,vpif-capture";
 >
-> I dont have your original patch in my mailbox, but I wonder if
-> returning a pointer to property string for a node whose reference has
-> already been released is safe to do? Probably not an issue for the root
-> node, but still feels counter-intuitive.
->
-
-I am not sure if I understand the issue here. Are you referring a case
-where of_root is freed ?
-
-Also I have seen drivers today just using this pointer directly, but
-it's better to copy the string(I just saw this done in one case)
-
-> This is the code for reference:
->
-> +int of_machine_get_model_name(const char **model)
-> +{
-> +       int error;
-> +
-> +       if (!of_node_get(of_root))
-> +               return -EINVAL;
-> +
-> +       error = of_property_read_string(of_root, "model", model);
-> +       if (error)
-> +               error = of_property_read_string_index(of_root, "compatible",
-> +                                                     0, model);
-> +       of_node_put(of_root);
-> +
-> +       return error;
-> +}
-> +EXPORT_SYMBOL(of_machine_get_model_name);
->
-> Thanks,
-> Sekhar
+> Did you forget to update the compatible string to ti,da850-vpif-capture?
 >
 
--- 
-Regards,
-Sudeep
+Ugh, yup.   v3 coming right up.
+
+Kevin
