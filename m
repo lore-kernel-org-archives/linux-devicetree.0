@@ -1,92 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] regulator: pwm: DT: Add ramp delay for exponential
- voltage transition
-Date: Tue, 22 Nov 2016 15:13:49 -0600
-Message-ID: <CAL_JsqLwjA4D1_KgZNxVT9AgiXHMv2kpyA_3zyrtASQSnjY=jQ@mail.gmail.com>
-References: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com>
- <20161121161727.y6pvydowiyeyy7qs@rob-hp-laptop> <583406CC.9080306@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Tue, 22 Nov 2016 15:35:19 -0600
+Message-ID: <CAL_JsqLsw6BNSDY8pGJ8x3XF21WdciLC7WC+z796pYtDk_kvxA@mail.gmail.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop> <582F5DC0.4080804@gmail.com> <5834921F.2020809@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <583406CC.9080306-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5834921F.2020809@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 2:50 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On Tue, Nov 22, 2016 at 12:44 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> Hi Rob,
 >
-> On Monday 21 November 2016 09:47 PM, Rob Herring wrote:
+> On 11/18/16 12:00, Frank Rowand wrote:
+>> On 11/18/16 06:46, Rob Herring wrote:
+>>> On Thu, Nov 17, 2016 at 03:32:54PM +0000, Sudeep Holla wrote:
+>>>> Currently platforms/drivers needing to get the machine model name are
+>>>> replicating the same snippet of code. In some case, the OF reference
+>>>> counting is either missing or incorrect.
+>>>>
+>>>> This patch adds support to read the machine model name either using
+>>>> the "model" or the "compatible" property in the device tree root node
+>>>> to the core OF/DT code.
+>>>>
+>>>> This can be used to remove all the duplicate code snippets doing exactly
+>>>> same thing later.
+>>>>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>>> ---
+>>>>  drivers/of/base.c  | 32 ++++++++++++++++++++++++++++++++
+>>>>  include/linux/of.h |  6 ++++++
+>>>>  2 files changed, 38 insertions(+)
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> It would be good if we can target this for v4.10, so that we have no
+>>>> dependencies to push PATCH 2/2 in v4.11
+>>>
+>>> Applied.
+>>>
+>>> Rob
+>>>
 >>
->> On Fri, Nov 18, 2016 at 08:05:55PM +0530, Laxman Dewangan wrote:
->>>
->>> Some PWM regulator has the exponential transition in voltage change as
->>> opposite to fixed slew-rate linear transition on other regulators.
->>> For such PWM regulators, add the property to tell that voltage change
->>> is exponential and having fixed delay for any level of change.
->>>
->>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> CC: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> CC: Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> ---
->>> This patch is continuation of discussion on patch
->>>         regulator: pwm: Fix regulator ramp delay for continuous mode
->>> https://patchwork.kernel.org/patch/9216857/
->>> where is it discussed to have separate property for PWM which has
->>> exponential voltage transition.
->>>
->>> Changes from V1:
->>> - Pass the flag to tell that voltage ramp is exponential instead of
->>>    providing delay.
->>> ---
->>>   .../devicetree/bindings/regulator/pwm-regulator.txt          | 12
->>> ++++++++++++
->>>   1 file changed, 12 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
->>> b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
->>> index 3aeba9f..2d9ef3a 100644
->>> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
->>> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
->>> @@ -54,6 +54,18 @@ Optional properties:
->>>   --------------------
->>>   - enable-gpios:               GPIO to use to enable/disable the
->>> regulator
->>>   +- voltage-ramp-exponential: Boolean, Some of PWM regulator has the
->>> exponential
->>> +                       transition in voltage ramp as opposite to fixed
->>> +                       slew-rate linear transition on other regulators.
->>> +                       For such PWM regulator, presence of this property
->>> will
->>> +                       tell that value of the regulator ramp delay
->>> provided by
->>> +                       DT property "regulator-ramp-delay" is exponential
->>> and
->>> +                       fixed delay for any voltage level change.
->>> +                       If PWM regulator supports the fixed linear slew
->>> rate
->>> +                       then this property should be absent from DT node
->>> and
->>> +                       property "regulator-ramp-delay" is used as linear
->>> slew
->>> +                       rate.
+>> A little fast on the trigger Rob.
 >>
->> Sorry, but on further thought, I don't think we should mix different
->> units for the same property. Also, the fact that the ramp is exponential
->> is irrelevant. You just want an absolute delay time rather than a rate,
->> right? So instead, how about just "regulator-ramp-time-us". Roughly what
->> you had in v1, but not PWM specific.
+>> -Frank
 >
+> This patch adds a function that leads to conflating the "model" property
+> and the "compatible" property. This leads to opaque, confusing and unclear
+> code where ever it is used.   I think it is not good for the device tree
+> framework to contribute to writing unclear code.
 >
-> Can we say "regulator-settling-time-us" and make it generic i.e. part of the
-> regulator core instead of PWM regulator specific?
+> Further, only two of the proposed users of this new function appear to
+> be proper usage.  I do not think that the small amount of reduced lines
+> of code is a good trade off for the reduced code clarity and for the
+> potential for future mis-use of this function.
+>
+> Can I convince you to revert this patch?
 
-Sure.
+Yes, I will revert.
+
+> If not, will you accept a patch to change the function name to more
+> clearly indicate what it does?  (One possible name would be
+> of_model_or_1st_compatible().)
+
+I took it as there's already the FDT equivalent function. I don't have
+an issue with the name as the purpose is to get the best name string
+for the machine which is model if present and most specific compatible
+if not. However, any use of it beyond informational purpose is wrong.
+For matching purposes, only compatible should be used.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
