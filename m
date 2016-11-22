@@ -1,45 +1,108 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] serial: introduce DSR handling property
-Date: Tue, 22 Nov 2016 20:09:36 +0100
-Message-ID: <20161122190936.qmjpplmaherpgipw@pengutronix.de>
-References: <1479834851-32442-1-git-send-email-chf.fritz@googlemail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sunxi: Add bindings for A23/A33/H3 codec's analog path
+ controls" to the asoc tree
+Date: Tue, 22 Nov 2016 19:13:48 +0000
+Message-ID: <E1c9GVo-0000Kk-Ru@debutante>
+References: <20161112064648.26779-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479834851-32442-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161112064648.26779-2-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 06:14:09PM +0100, Christoph Fritz wrote:
-> This patchset introduces device-tree property "disable-dsr" including
-> documentation and usage.
-> 
-> Christoph Fritz (2):
->   doc: DT: add generic serial property to disable DSR
+The patch
 
-I'd add the documentation for all handshaking lines, not only dsr. And
-I'd call it disable-hw-dsr, otherwise
+   ASoC: sunxi: Add bindings for A23/A33/H3 codec's analog path controls
 
-	{
-		disable-dsr;
-		dsr-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-	}
+has been applied to the asoc tree at
 
-looks strange. (Not 100% sure this would make sense, but I think it
-does.)
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Best regards
-Uwe
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 837e71847aefd82c903ee0bb2ff2589e70b0808f Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Sat, 12 Nov 2016 14:46:39 +0800
+Subject: [PATCH] ASoC: sunxi: Add bindings for A23/A33/H3 codec's analog path
+ controls
+
+The internal codec on A23/A33/H3 is split into 2 parts. The
+analog path controls are routed through an embedded custom register
+bus accessed through the PRCM block.
+
+The SoCs share a common set of inputs, outputs, and audio paths.
+The following table lists the differences.
+
+    ----------------------------------------
+    | Feature \ SoC |  A23  |  A33  |  H3  |
+    ----------------------------------------
+    | Headphone     |   v   |   v   |      |
+    ----------------------------------------
+    | Line Out      |       |       |  v   |
+    ----------------------------------------
+    | Phone In/Out  |   v   |   v   |      |
+    ----------------------------------------
+
+Add a binding for this hardware.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/sun8i-codec-analog.txt     | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+new file mode 100644
+index 000000000000..779b735781ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+@@ -0,0 +1,16 @@
++* Allwinner Codec Analog Controls
++
++Required properties:
++- compatible: must be one of the following compatibles:
++		- "allwinner,sun8i-a23-codec-analog"
++		- "allwinner,sun8i-h3-codec-analog"
++
++Required properties if not a sub-node of the PRCM node:
++- reg: must contain the registers location and length
++
++Example:
++prcm: prcm@01f01400 {
++	codec_analog: codec-analog {
++		compatible = "allwinner,sun8i-a23-codec-analog";
++	};
++};
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.2
