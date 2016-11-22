@@ -1,57 +1,76 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
-Date: Tue, 22 Nov 2016 09:50:51 +0100
-Message-ID: <2220300.Yj4lYzeH2z@wuerfel>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <1479800961-6249-4-git-send-email-zhangfei.gao@linaro.org>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] regulator: pwm: DT: Add ramp delay for exponential
+ voltage transition
+Date: Tue, 22 Nov 2016 14:20:20 +0530
+Message-ID: <583406CC.9080306@nvidia.com>
+References: <1479479756-10755-1-git-send-email-ldewangan@nvidia.com> <20161121161727.y6pvydowiyeyy7qs@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479800961-6249-4-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20161121161727.y6pvydowiyeyy7qs@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
-> 
-> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
-> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
-> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
-> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
-> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
-> +};
-> +
-> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
-> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
-> +       .channels = hi3660_iomcu_rst,
-> +};
-> +
-> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
-> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
-> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
-> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
-> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
-> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
-> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
-> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
-> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
-> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
-> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
-> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
-> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
-> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
-> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
-> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
-> +};
 
-I think you can avoid the trap of the ABI incompatibility if
-you just define those as in the binding as tuples, using #reset-cells=2.
+On Monday 21 November 2016 09:47 PM, Rob Herring wrote:
+> On Fri, Nov 18, 2016 at 08:05:55PM +0530, Laxman Dewangan wrote:
+>> Some PWM regulator has the exponential transition in voltage change as
+>> opposite to fixed slew-rate linear transition on other regulators.
+>> For such PWM regulators, add the property to tell that voltage change
+>> is exponential and having fixed delay for any level of change.
+>>
+>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> CC: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> CC: Aleksandr Frid <afrid-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> ---
+>> This patch is continuation of discussion on patch
+>> 	regulator: pwm: Fix regulator ramp delay for continuous mode
+>> https://patchwork.kernel.org/patch/9216857/
+>> where is it discussed to have separate property for PWM which has
+>> exponential voltage transition.
+>>
+>> Changes from V1:
+>> - Pass the flag to tell that voltage ramp is exponential instead of
+>>    providing delay.
+>> ---
+>>   .../devicetree/bindings/regulator/pwm-regulator.txt          | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+>> index 3aeba9f..2d9ef3a 100644
+>> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+>> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+>> @@ -54,6 +54,18 @@ Optional properties:
+>>   --------------------
+>>   - enable-gpios:		GPIO to use to enable/disable the regulator
+>>   
+>> +- voltage-ramp-exponential: Boolean, Some of PWM regulator has the exponential
+>> +			transition in voltage ramp as opposite to fixed
+>> +			slew-rate linear transition on other regulators.
+>> +			For such PWM regulator, presence of this property will
+>> +			tell that value of the regulator ramp delay provided by
+>> +			DT property "regulator-ramp-delay" is exponential and
+>> +			fixed delay for any voltage level change.
+>> +			If PWM regulator supports the fixed linear slew rate
+>> +			then this property should be absent from DT node and
+>> +			property "regulator-ramp-delay" is used as linear slew
+>> +			rate.
+> Sorry, but on further thought, I don't think we should mix different
+> units for the same property. Also, the fact that the ramp is exponential
+> is irrelevant. You just want an absolute delay time rather than a rate,
+> right? So instead, how about just "regulator-ramp-time-us". Roughly what
+> you had in v1, but not PWM specific.
 
-In particular for the first set, it seems really silly to redefine
-the numbers when there is just a simple integer number.
+Can we say "regulator-settling-time-us" and make it generic i.e. part of 
+the regulator core instead of PWM regulator specific?
 
-	Arnd
+So no change for "regulator-ramp-delay".
+new property "regulator-settling-time-us" for fixed settling time in any 
+voltage level change.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
