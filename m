@@ -1,69 +1,51 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] phy: qcom-qmp: new qmp phy driver for qcom-chipsets
-Date: Tue, 22 Nov 2016 13:17:52 +0530
-Message-ID: <CAFp+6iFhJ245YEuLNd0jOOLVtf=_GFaD12PdiM__-32W==WRTQ@mail.gmail.com>
-References: <1476873827-7191-1-git-send-email-vivek.gautam@codeaurora.org>
- <1476873827-7191-3-git-send-email-vivek.gautam@codeaurora.org>
- <ca4054a8-a813-0f50-3224-1e418eaa7095@ti.com> <CAFp+6iGMp9pkt5NVTG9f-xjF5VOmj3Om5ngvMboyjdcR94Bhag@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/6] add hisilicon reset
+Date: Tue, 22 Nov 2016 15:49:15 +0800
+Message-ID: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFp+6iGMp9pkt5NVTG9f-xjF5VOmj3Om5ngvMboyjdcR94Bhag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Add reset-hi3660.c
+Update reset-hi6220 as well
+reset.c is shared by reset-hi3660.c and reset-hi6220.c
+Change hi6220.dtsi accordingly
 
+Zhangfei Gao (6):
+  reset: hisilicon: add reset core
+  dt-bindings: Document the hi3660 reset bindings
+  reset: hisilicon: add reset-hi3660
+  dt-bindings: change hi6220-reset.txt according to reset-hi6220.c
+  reset: hisilicon: Use new driver reset-hi6222
+  arm64: dts: hi6220: update reset node according to reset-hi6220.c
 
-On Thu, Nov 10, 2016 at 2:33 PM, Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Hi Kishon,
->
+ .../bindings/reset/hisilicon,hi3660-reset.txt      |  42 ++++++
+ .../bindings/reset/hisilicon,hi6220-reset.txt      |  14 +-
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  20 ++-
+ drivers/reset/Makefile                             |   2 +-
+ drivers/reset/hisilicon/Kconfig                    |   7 +
+ drivers/reset/hisilicon/Makefile                   |   4 +-
+ drivers/reset/hisilicon/hi6220_reset.c             | 157 ---------------------
+ drivers/reset/hisilicon/reset-hi3660.c             |  78 ++++++++++
+ drivers/reset/hisilicon/reset-hi6220.c             | 123 ++++++++++++++++
+ drivers/reset/hisilicon/reset.c                    | 108 ++++++++++++++
+ drivers/reset/hisilicon/reset.h                    |  37 +++++
+ include/dt-bindings/reset/hisi,hi3660-resets.h     |  38 +++++
+ include/dt-bindings/reset/hisi,hi6220-resets.h     | 130 ++++++++---------
+ 13 files changed, 527 insertions(+), 233 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+ delete mode 100644 drivers/reset/hisilicon/hi6220_reset.c
+ create mode 100644 drivers/reset/hisilicon/reset-hi3660.c
+ create mode 100644 drivers/reset/hisilicon/reset-hi6220.c
+ create mode 100644 drivers/reset/hisilicon/reset.c
+ create mode 100644 drivers/reset/hisilicon/reset.h
+ create mode 100644 include/dt-bindings/reset/hisi,hi3660-resets.h
 
->>> +unsigned int msm8996_pciephy_tx_offsets[] = { 0x1000, 0x2000, 0x3000 };
->>> +unsigned int msm8996_pciephy_rx_offsets[] = { 0x1200, 0x2200, 0x3200 };
->>> +unsigned int msm8996_pciephy_pcs_offsets[] = { 0x1400, 0x2400, 0x3400 };
-
->> you can have a separate reg map for each lane and all these can come from dt.
->
-> The idea is to avoid the any child nodes for lanes. So, we have the complete
-> ioremaped region and these offsets to tx, rx and pcs blocks.
-
-I don't see benefits in using regmap for different lanes.
-Do you see benefits in replacing a bunch of readl()/writel() with
-regmap_read()/regmap_update_bits()/regmap_write() ?
-
-I can as well use separate 'reg' values for each lanes, and have the offsets
-come from dt. Something like below :
-
- - reg: array of offset and length of the PHY register sets.
-       at index 0: offset and length of register set for PHY common
-                   serdes block.
-       from index 1 - N: offset and length of register set for each lane,
-                         for N number of phy lanes (ports).
- - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
-
-Example:
-       pcie_phy: pciephy@34000 {
-               compatible = "qcom,msm8996-qmp-pcie-phy";
-               reg = <0x034000 0x48f>,
-                       <0x035000 5bf>,
-                       <0x036000 5bf>,
-                       <0x037000 5bf>;
-                                       /* tx, rx, pcs */
-               lane-offsets = <0x0 0x200 0x400>;
-
-
-Does this look OK ? Or should i use regmap only ?
-
-
-Thanks
-Vivek
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
