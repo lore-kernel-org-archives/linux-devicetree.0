@@ -1,49 +1,75 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/7] add bindings for stm32 IIO timer drivers
-Date: Tue, 22 Nov 2016 17:18:20 +0000
-Message-ID: <20161122171820.GL10134@dell.home>
-References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
- <1479831207-32699-6-git-send-email-benjamin.gaignard@st.com>
- <b9a82ce7-745a-1c25-f97f-68aaf0551f3b@metafoo.de>
- <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
+Date: Tue, 22 Nov 2016 18:23:16 +0100
+Message-ID: <87d1hno2d7.fsf@free-electrons.com>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+        <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
+        <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
+        <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com> (Ziji Hu's
+        message of "Thu, 10 Nov 2016 19:44:19 +0800")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ziji Hu <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Nov 2016, Benjamin Gaignard wrote:
+Hi Rob,
+ 
+ On jeu., nov. 10 2016, Ziji Hu <huziji@marvell.com> wrote:
 
-> [snip]
-> >> +     "st,stm32-iio-timer5"
-> >> +     "st,stm32-iio-timer6"
-> >> +     "st,stm32-iio-timer7"
-> >> +     "st,stm32-iio-timer8"
-> >> +     "st,stm32-iio-timer9"
-> >> +     "st,stm32-iio-timer10"
-> >> +     "st,stm32-iio-timer11"
-> >> +     "st,stm32-iio-timer12"
-> >> +     "st,stm32-iio-timer13"
-> >> +     "st,stm32-iio-timer14"
-> >
-> > We can't do this. This is a binding for a driver, not for the hardware.
-> >
-> 
-> Unfortunately each instance for the hardware IP have little
-> differences like which triggers they could accept or size of the
-> counter register,
-> and I doesn't have value inside the hardware to distinguish them so
-> the only way I found is to use compatible.
+[...]
 
-Can't you represent these as properties?
+>>> +
+>>> +- reg:
+>>> +  * For "marvell,xenon-sdhci", one register area for Xenon IP.
+>>> +
+>>> +  * For "marvell,armada-3700-sdhci", two register areas.
+>>> +    The first one for Xenon IP register. The second one for the Armada 3700 SOC
+>>> +    PHY PAD Voltage Control register.
+>>> +    Please follow the examples with compatible "marvell,armada-3700-sdhci"
+>>> +    in below.
+>>> +    Please also check property marvell,pad-type in below.
+>>> +
+>>> +Optional Properties:
+>>> +- marvell,xenon-slotno:
+>> 
+>> Multiple slots should be represented as child nodes IMO. I think some 
+>> other bindings already do this.
+>> 
+>
+> 	All the slots are entirely independent.
+> 	I prefer to consider it as multiple independent SDHCs placed in
+> 	a single IP, instead of that a IP contains multiple child slots.
+
+It was indeed what I tried to show in my answer for the 1st version:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-October/461860.html
+
+Maybe you missed it.
+
+You also mentioned other bindings using child nodes, but for this one
+we have one controller with only one set of register with multiple slots
+(Atmel is an example). Here each slot have it own set of register.
+
+Actually giving the fact that each slot is controlled by a different set
+of register I wonder why the hardware can't also deduce the slot number
+from the address register. For me it looks like an hardware bug but we
+have to deal with it.
+
+Do you still think we needchild node here?
+
+>
+> 	It is unlike the implementation which put multiple slots behind PCIe EP interface. sdhci-pci.c will handle each slot init one by one.
+> 	If Xenon SDHC slots are represented as child nodes, there should also be a main entry in Xenon driver to init each child node one by one.
+> 	In my very own opinion, it is inconvenient and unnecessary.
+
+
+Gregory
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
