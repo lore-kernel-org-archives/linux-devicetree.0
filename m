@@ -1,82 +1,93 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v4 0/4] drm/tilcdc: Add bridge support and sync-lost flood
- recovery
-Date: Tue, 22 Nov 2016 16:49:49 +0200
-Message-ID: <cover.1479825908.git.jsarha@ti.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 1/4] drm/tilcdc: Recover from sync lost error flood by resetting the LCDC
+Date: Tue, 22 Nov 2016 16:49:50 +0200
+Message-ID: <f5b3b49589bada08b234bf1f0268af3d69bffce8.1479825908.git.jsarha@ti.com>
+References: <cover.1479825908.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: khilman@baylibre.com, Jyri Sarha <jsarha@ti.com>, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1479825908.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q2hhbmdlcyBzaW5jZSB2MzoKLSAiZHJtL3RpbGNkYzogRW5hYmxlIHN5bmMgbG9zdCBlcnJvciBh
-bmQgcmVjb3ZlcnkgaGFuZGxpbmcgZm9yIHJldiAxIExDREMiCiAgLSBGaXggYnJva2VuIGlycSBl
-bmFibGUvZGlzYmxlIGNvZGUgZm9yIExDREMgcmV2IDEKLSBBZGQ6ICJkdC1iaW5kaW5nczogTW92
-ZSAidGksdGZwNDEwLnR4dCIgZnJvbSBkaXNwbGF5L3RpIHRvIGRpc3BsYXkvYnJpZGdlIgotICJk
-cm0vYnJpZGdlOiBBZGQgdGktdGZwNDEwIERWSSB0cmFuc21pdHRlciBkcml2ZXIiCiAgLSBEb24n
-dCBmYWlsIGlmIGVpdGhlciBpMmMgb3IgcGxhdGZvcm0gZHJpdmVyIHJlZ2lzdGVyIHN1Y2NlZWRz
-CiAgLSBmdHA0MTAgLT4gdGZwNDEwCiAgLSBNZXJnZSB0aGUgb2xkIGRpc3BsYXkvdGksdGZwNDEw
-LnR4dCBkb2N1bWVudCB3aXRoIG15IGFkZGl0aW9uCgpDaGFuZ2VzIHNpbmNlIHYyOgotICJkcm0v
-dGlsY2RjOiBSZWNvdmVyIGZyb20gc3luYyBsb3N0IGVycm9yIGZsb29kIGJ5IHJlc2V0dGluZyB0
-aGUgTENEQyIKICAtIG5vIGNoYW5nZQotICJkcm0vYnJpZGdlOiBBZGQgdGktdGZwNDEwIERWSSB0
-cmFuc21pdHRlciBkcml2ZXIiCiAgLSBGaXggZGV2ZWljZS10cmVlIGRvY3VtZW50CiAgICAtICJk
-cml2ZXIgbm9kZSIgLT4gImRldmljZSBub2RlIgogICAgLSByZW1vdmUgIih0aGUgY3VycmVudCBp
-bXBsZW1lbnRhdGlvbiBkb2VzIG5vdCB5ZXQgc3VwcG9ydCB0aGlzKSIKICAtIEFkZCBkdW1teSBp
-MmMgc3VwcG9ydC4gVGhlIGRyaXZlciBwcm9iZSB3b3JrcyBhbHNvIGlmIHBsYWNlZCB1bmRlcgog
-ICAgaTJjIGNvbnRyb2xsZXIgbm9kZSwgYnV0IHRoZXJlIGlzIG5vIGFjdHVhbCBpMmMgcHJvYmlu
-Zy4KLSAiZHJtL3RpbGNkYzogQWRkIGRybSBicmlkZ2Ugc3VwcG9ydCBmb3IgYXR0YWNoaW5nIGRy
-bSBicmlkZ2UgZHJpdmVycyIKICAtIG5vIGNoYW5nZQoKQ2hhbmdlcyBzaW5jZSBmaXJzdCB2ZXJz
-aW9uIG9mIHRoZSBzZXJpZXM6Ci0gImRybS90aWxjZGM6IFJlY292ZXIgZnJvbSBzeW5jIGxvc3Qg
-ZXJyb3IgZmxvb2QgYnkgcmVzZXR0aW5nIHRoZSBMQ0RDIgogIC0gbm8gY2hhbmdlCi0gImRybS9i
-cmlkZ2U6IEFkZCB0aS10ZnA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZlciIKICAtIEhETUkgLT4g
-RFZJCiAgLSBEVCBCaW5kaW5nIGRvY3VtZW50CiAgICAtIFByZXBhcmUgZm9yIHRmcDQxMCBjb25u
-ZWN0ZWQgdHJvdWdoIGkyYyBieSBvcHRpb25hbCByZWcgcHJvcGVydHkKICAgIC0gUmVxdWlyZSB0
-d28gcG9ydCBub2RlcwogIC0gSW1wbGVtZW50YXRpb24KICAgIC0gSW1wbGVtZW50IGNvbm5lY3Rv
-ciBub2RlIGZ1bmN0aW9uYWxpdHkgd2l0aCBpbiB0ZnA0MTAgYnJpZGdlCiAgICAgIGRyaXZlLCBi
-dXQgZm9sbG93IGdlbmVyaWMgY29ubmVjdG9yIGJpbmRpbmcgYnkgcHVsbGluZyB0aGUKICAgICAg
-ZGRjLWkyYy1idXMgcHJvcGVydHkgZnJvbSB0aGUgY29ubmVjdG9yIG5vZGUuCi0gImRybS90aWxj
-ZGM6IEFkZCBkcm0gYnJpZGdlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZl
-cnMiCiAgLSBSZW1vdmUgZWFybGllciBjaGFuZ2UgaW4gVEQgYmluZGluZyBkb2N1bWVudC4gVGhl
-cmUgaXMgbm8gbmVlZCB0bwogICAgbWVudGlvbiBEUk0gaW1wbGVtZW50YXRpb24gZGV0YWlscywg
-bGlrZSBicmlkZ2Ugc3VwcG9ydCwgaW4gRFQKICAgIGJpbmRpbmcuCgpUaGUgZmlyc3QgcGF0Y2gg
-aXMgYW4gaW5kZXBlbmRlbnQgb24gYW5kIEkndmUgYmVlbiB0ZXN0aW5nIGl0IGZvcgpxdWl0ZSBh
-IHdoaWxlIG5vdy4KClRoZSB0ZnA0MTAgYnJpZGdlIGRyaXZlciBhbmQgdGhlIHRpbGNkYyBicmlk
-Z2Ugc3VwcG9ydCBhcmUgdGVzdGVkIHdpdGgKQmVhZ2xlQm9uZSBEVkktRCBDYXBlIFJldiBBMy4g
-VGhlIHRmcDQxMCBicmlkZ2UgZHJpdmVyIGlzIG1pc3NpbmcgYQpsb3Qgb2YgZmVhdHVyZXMsIGJl
-Y2F1c2UgdGhlIERWSS1EIGNhcGUgZG9lcyBub3QgaGF2ZSB0b28gbWFueSB3aXJlcwpjb25uZWN0
-ZWQuIFRoZSBtaXNzaW5nIGZlYXR1cmVzIGNhbiBiZSBhZGRlZCBsYXRlciB3aGVuIHRoZXkgYXJl
-Cm5lZWRlZC4KCkp5cmkgU2FyaGEgKDQpOgogIGRybS90aWxjZGM6IFJlY292ZXIgZnJvbSBzeW5j
-IGxvc3QgZXJyb3IgZmxvb2QgYnkgcmVzZXR0aW5nIHRoZSBMQ0RDCiAgZHQtYmluZGluZ3M6IE1v
-dmUgInRpLHRmcDQxMC50eHQiIGZyb20gZGlzcGxheS90aSB0byBkaXNwbGF5L2JyaWRnZQogIGRy
-bS9icmlkZ2U6IEFkZCB0aS10ZnA0MTAgRFZJIHRyYW5zbWl0dGVyIGRyaXZlcgogIGRybS90aWxj
-ZGM6IEFkZCBkcm0gYnJpZGdlIHN1cHBvcnQgZm9yIGF0dGFjaGluZyBkcm0gYnJpZGdlIGRyaXZl
-cnMKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCAgICAgICAgICB8
-ICA0NiArKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksdGZwNDEwLnR4
-dCAgIHwgIDQxIC0tLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDcgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYyAg
-ICAgICAgICAgICAgICAgfCAzMTEgKysrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vdGlsY2RjL3RpbGNkY19jcnRjLmMgICAgICAgICAgICAgICB8ICAyNiArLQogZHJpdmVycy9n
-cHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMgICAgICAgICAgICAgICAgfCAgIDcgKy0KIGRyaXZl
-cnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oICAgICAgICAgICAgICAgIHwgICAyICsKIGRy
-aXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmMgICAgICAgICAgIHwgMTQwICsr
-KysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmggICAgICAg
-ICAgIHwgICAxICsKIDEwIGZpbGVzIGNoYW5nZWQsIDUyMSBpbnNlcnRpb25zKCspLCA2MSBkZWxl
-dGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dAogZGVsZXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLHRmcDQxMC50eHQK
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3RpLXRmcDQxMC5jCgot
-LSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Recover from sync lost error flood by resetting the LCDC instead of
+turning off the SYNC_LOST error IRQ. When LCDC starves on limited
+memory bandwidth it may sometimes result an error situation when the
+picture may have shifted couple of pixels to right and SYNC_LOST
+interrupt is generated on every frame. LCDC main reset recovers from
+this situation and causes a brief blanking on the screen.
+
+Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+---
+ drivers/gpu/drm/tilcdc/tilcdc_crtc.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
+index 0d09acc..c787349 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
+@@ -55,6 +55,7 @@ struct tilcdc_crtc {
+ 
+ 	int sync_lost_count;
+ 	bool frame_intact;
++	struct work_struct recover_work;
+ };
+ #define to_tilcdc_crtc(x) container_of(x, struct tilcdc_crtc, base)
+ 
+@@ -252,6 +253,25 @@ static bool tilcdc_crtc_is_on(struct drm_crtc *crtc)
+ 	return crtc->state && crtc->state->enable && crtc->state->active;
+ }
+ 
++static void tilcdc_crtc_recover_work(struct work_struct *work)
++{
++	struct tilcdc_crtc *tilcdc_crtc =
++		container_of(work, struct tilcdc_crtc, recover_work);
++	struct drm_crtc *crtc = &tilcdc_crtc->base;
++
++	dev_info(crtc->dev->dev, "%s: Reset CRTC", __func__);
++
++	drm_modeset_lock_crtc(crtc, NULL);
++
++	if (!tilcdc_crtc_is_on(crtc))
++		goto out;
++
++	tilcdc_crtc_disable(crtc);
++	tilcdc_crtc_enable(crtc);
++out:
++	drm_modeset_unlock_crtc(crtc);
++}
++
+ static void tilcdc_crtc_destroy(struct drm_crtc *crtc)
+ {
+ 	struct tilcdc_crtc *tilcdc_crtc = to_tilcdc_crtc(crtc);
+@@ -838,9 +858,12 @@ irqreturn_t tilcdc_crtc_irq(struct drm_crtc *crtc)
+ 			tilcdc_crtc->frame_intact = false;
+ 			if (tilcdc_crtc->sync_lost_count++ >
+ 			    SYNC_LOST_COUNT_LIMIT) {
+-				dev_err(dev->dev, "%s(0x%08x): Sync lost flood detected, disabling the interrupt", __func__, stat);
++				dev_err(dev->dev, "%s(0x%08x): Sync lost flood detected, recovering", __func__, stat);
++				queue_work(system_wq,
++					   &tilcdc_crtc->recover_work);
+ 				tilcdc_write(dev, LCDC_INT_ENABLE_CLR_REG,
+ 					     LCDC_SYNC_LOST);
++				tilcdc_crtc->sync_lost_count = 0;
+ 			}
+ 		}
+ 
+@@ -880,6 +903,7 @@ struct drm_crtc *tilcdc_crtc_create(struct drm_device *dev)
+ 			"unref", unref_worker);
+ 
+ 	spin_lock_init(&tilcdc_crtc->irq_lock);
++	INIT_WORK(&tilcdc_crtc->recover_work, tilcdc_crtc_recover_work);
+ 
+ 	ret = drm_crtc_init_with_planes(dev, crtc,
+ 					&tilcdc_crtc->primary,
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
