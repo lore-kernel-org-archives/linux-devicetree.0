@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
-Date: Tue, 22 Nov 2016 11:22:05 +0100
-Message-ID: <1479810125.3112.26.camel@pengutronix.de>
+Date: Tue, 22 Nov 2016 11:22:32 +0100
+Message-ID: <1479810152.13701.0.camel@pengutronix.de>
 References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
          <1479800961-6249-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
@@ -242,6 +242,7 @@ anyway.
 
 regards
 Philipp
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
