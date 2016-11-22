@@ -1,35 +1,47 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/6] dt-bindings: change hi6220-reset.txt according to reset-hi6220.c
-Date: Tue, 22 Nov 2016 09:48:32 +0100
-Message-ID: <2314383.qiZ3Cq7QsP@wuerfel>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <1479800961-6249-5-git-send-email-zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 5/6] reset: hisilicon: Use new driver reset-hi6222
+Date: Tue, 22 Nov 2016 09:49:16 +0100
+Message-ID: <3837594.jmpXXfpk9Q@wuerfel>
+References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <1479800961-6249-6-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479800961-6249-5-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1479800961-6249-6-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 22, 2016 3:49:19 PM CET Zhangfei Gao wrote:
->  Required properties:
->  - compatible: should be one of the following:
-> -  - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
-> -  - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
-> -- reg: should be register base and length as documented in the
-> -  datasheet
-> +  - "hisilicon,hi6220-reset-sysctrl" : For peripheral reset controller.
-> +  - "hisilicon,hi6220-reset-mediactrl" : For media reset controller.
-> +- hisi,rst-syscon: phandle of the reset's syscon.
->  - #reset-cells: 1, see below
+On Tuesday, November 22, 2016 3:49:20 PM CET Zhangfei Gao wrote:
 > 
+> -#define PERIPH_RSTDIS0_MMC0             0x000
+> -#define PERIPH_RSTDIS0_MMC1             0x001
+> -#define PERIPH_RSTDIS0_MMC2             0x002
+> -#define PERIPH_RSTDIS0_NANDC            0x003
+> -#define PERIPH_RSTDIS0_USBOTG_BUS       0x004
+> -#define PERIPH_RSTDIS0_POR_PICOPHY      0x005
+> -#define PERIPH_RSTDIS0_USBOTG           0x006
+> -#define PERIPH_RSTDIS0_USBOTG_32K       0x007
+> -#define PERIPH_RSTDIS1_HIFI             0x100
+> -#define PERIPH_RSTDIS1_DIGACODEC        0x105
 
-Please keep the old strings around for compatibility.
+> +/* reset in sysctrl */
+> +#define PERIPH_RSTDIS0_MMC0             0
+> +#define PERIPH_RSTDIS0_MMC1             1
+> +#define PERIPH_RSTDIS0_MMC2             2
+> +#define PERIPH_RSTDIS0_NANDC            3
+> +#define PERIPH_RSTDIS0_USBOTG_BUS       4
+> +#define PERIPH_RSTDIS0_POR_PICOPHY      5
+> +#define PERIPH_RSTDIS0_USBOTG           6
+> +#define PERIPH_RSTDIS0_USBOTG_32K       7
+> +#define PERIPH_RSTDIS1_HIFI             8
+
+You can't redefined the binding here, this is part of the ABI.
+You can however add new numbers as long as the old ones keep
+working.
 
 	Arnd
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
