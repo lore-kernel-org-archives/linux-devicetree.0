@@ -1,15 +1,15 @@
 From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
-Date: Tue, 22 Nov 2016 17:22:42 +0800
-Message-ID: <0084ef53-c0e6-51e8-afa5-07264dfce529@linaro.org>
+Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
+Date: Tue, 22 Nov 2016 17:34:05 +0800
+Message-ID: <d6e602c0-70e9-0309-86b5-bfd006d86028@linaro.org>
 References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
- <1479800961-6249-2-git-send-email-zhangfei.gao@linaro.org>
- <3993565.nedzUBZcVS@wuerfel>
+ <1479800961-6249-4-git-send-email-zhangfei.gao@linaro.org>
+ <2220300.Yj4lYzeH2z@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3993565.nedzUBZcVS@wuerfel>
+In-Reply-To: <2220300.Yj4lYzeH2z@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -17,33 +17,57 @@ List-Id: devicetree@vger.kernel.org
 
 Hi, Arnd
 
-On 2016年11月22日 16:45, Arnd Bergmann wrote:
-> On Tuesday, November 22, 2016 3:49:16 PM CET Zhangfei Gao wrote:
->> @@ -1,8 +1,8 @@
->>   obj-y += core.o
->> -obj-y += hisilicon/
->>   obj-$(CONFIG_ARCH_STI) += sti/
->>   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->>   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
->>   obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->>   obj-$(CONFIG_RESET_MESON) += reset-meson.o
->>   obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
-> Please leave the obj-y line, otherwise the COMPILE_TEST variant won't work.
+On 2016年11月22日 16:50, Arnd Bergmann wrote:
+> On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
+>> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
+>> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
+>> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
+>> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
+>> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
+>> +};
+>> +
+>> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
+>> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
+>> +       .channels = hi3660_iomcu_rst,
+>> +};
+>> +
+>> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
+>> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
+>> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
+>> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
+>> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
+>> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
+>> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
+>> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
+>> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
+>> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
+>> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
+>> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
+>> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
+>> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
+>> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
+>> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
+>> +};
+> I think you can avoid the trap of the ABI incompatibility if
+> you just define those as in the binding as tuples, using #reset-cells=2.
+>
+> In particular for the first set, it seems really silly to redefine
+> the numbers when there is just a simple integer number.
 
-COMPILE_TEST is added in drivers/reset/hisilicon/Kconfig
-like
-config COMMON_RESET_HI3660
-         tristate "Hi3660 Reset Driver"
-         depends on ARCH_HISI || COMPILE_TEST
+Could you clarify more, still not understand.
+The number is index of the arrays, and the index will be used in dts.
+The arrays lists the registers offset and bit shift.
+For example:
 
-The reason not using "obj-y" here is that reset.c will be compiled unconditionally.
+[HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3), means register offset : 0x20, and bit shift = 3.
 
-drivers/reset/hisilicon/Makefile
-obj-y   += reset.o
+And Documentation/devicetree/bindings/reset/reset.txt
+Required properties:
+#reset-cells:   Number of cells in a reset specifier; Typically 0 for nodes
+                 with a single reset output and 1 for nodes with multiple
+                 reset outputs.
 
 Thanks
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
