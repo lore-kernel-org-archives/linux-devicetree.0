@@ -1,75 +1,93 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
-Date: Tue, 22 Nov 2016 18:23:16 +0100
-Message-ID: <87d1hno2d7.fsf@free-electrons.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
-        <ee296deafdcbeb431a592b591ae38a758ba4cce7.1477911954.git-series.gregory.clement@free-electrons.com>
-        <20161109182426.vfrpb4i2mfatdzz3@rob-hp-laptop>
-        <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state binding
+Date: Tue, 22 Nov 2016 10:12:28 -0800
+Message-ID: <m260nfz8mr.fsf@baylibre.com>
+References: <cover.1479459752.git.viresh.kumar@linaro.org>
+        <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
+        <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
+        <20161122031717.GE10014@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <15b06a12-ed69-03a7-ccc7-0c133ce1ac1e@marvell.com> (Ziji Hu's
-        message of "Thu, 10 Nov 2016 19:44:19 +0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ziji Hu <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161122031717.GE10014@vireshk-i7> (Viresh Kumar's message of
+        "Tue, 22 Nov 2016 08:47:17 +0530")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On jeu., nov. 10 2016, Ziji Hu <huziji@marvell.com> wrote:
+Viresh Kumar <viresh.kumar@linaro.org> writes:
 
-[...]
-
->>> +
->>> +- reg:
->>> +  * For "marvell,xenon-sdhci", one register area for Xenon IP.
->>> +
->>> +  * For "marvell,armada-3700-sdhci", two register areas.
->>> +    The first one for Xenon IP register. The second one for the Armada 3700 SOC
->>> +    PHY PAD Voltage Control register.
->>> +    Please follow the examples with compatible "marvell,armada-3700-sdhci"
->>> +    in below.
->>> +    Please also check property marvell,pad-type in below.
->>> +
->>> +Optional Properties:
->>> +- marvell,xenon-slotno:
+> On 21-11-16, 09:07, Rob Herring wrote:
+>> On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
+>> > Some platforms have the capability to configure the performance state of
+>> > their Power Domains. The performance levels are represented by positive
+>> > integer values, a lower value represents lower performance state.
+>> > 
+>> > The power-domains until now were only concentrating on the idle state
+>> > management of the device and this needs to change in order to reuse the
+>> > infrastructure of power domains for active state management.
+>> > 
+>> > This patch introduces a new optional property for the consumers of the
+>> > power-domains: domain-performance-state.
+>> > 
+>> > If the consumers don't need the capability of switching to different
+>> > domain performance states at runtime, then they can simply define their
+>> > required domain performance state in their node directly. Otherwise the
+>> > consumers can define their requirements with help of other
+>> > infrastructure, for example the OPP table.
+>> > 
+>> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
+>> >  1 file changed, 6 insertions(+)
+>> > 
+>> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+>> > index e1650364b296..db42eacf8b5c 100644
+>> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
+>> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>> > @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
+>> >   - power-domains : A phandle and PM domain specifier as defined by bindings of
+>> >                     the power controller specified by phandle.
+>> >  
+>> > +Optional properties:
+>> > +- domain-performance-state: A positive integer value representing the minimum
+>> > +  performance level (of the parent domain) required by the consumer for its
+>> > +  working. The integer value '1' represents the lowest performance level and the
+>> > +  highest value represents the highest performance level.
 >> 
->> Multiple slots should be represented as child nodes IMO. I think some 
->> other bindings already do this.
->> 
+>> How does one come up with the range of values?
 >
-> 	All the slots are entirely independent.
-> 	I prefer to consider it as multiple independent SDHCs placed in
-> 	a single IP, instead of that a IP contains multiple child slots.
-
-It was indeed what I tried to show in my answer for the 1st version:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2016-October/461860.html
-
-Maybe you missed it.
-
-You also mentioned other bindings using child nodes, but for this one
-we have one controller with only one set of register with multiple slots
-(Atmel is an example). Here each slot have it own set of register.
-
-Actually giving the fact that each slot is controlled by a different set
-of register I wonder why the hardware can't also deduce the slot number
-from the address register. For me it looks like an hardware bug but we
-have to deal with it.
-
-Do you still think we needchild node here?
-
+> Why would we need a range here? The value here represents the minimum 'state'
+> and the assumption is that everything above that level would be fine. So the
+> range is automatically: domain-performance-state -> MAX.
 >
-> 	It is unlike the implementation which put multiple slots behind PCIe EP interface. sdhci-pci.c will handle each slot init one by one.
-> 	If Xenon SDHC slots are represented as child nodes, there should also be a main entry in Xenon driver to init each child node one by one.
-> 	In my very own opinion, it is inconvenient and unnecessary.
+>> It seems like you are 
+>> just making up numbers. Couldn't the domain performance level be an OPP 
+>> in the sense that it is a collection of clock frequencies and voltage 
+>> settings?
+>
+> The clock is going to be handled by the device itself (at least for the case we
+> have today) and the performance-state lies with the power-domain which is
+> configured separately. If the performance level includes both clk and voltage,
+> then why would we need to show the clock rates in the DT ? Wouldn't a
+> performance level be enough in such cases?
 
+I think the question is: what does the performance-level of a domain
+actually mean?  Or, what are the units?
 
-Gregory
+Depending on the SoC, there's probably a few things this could mean.  It
+might mean is that an underlying bus/interconnect can be configured to
+guarantee a specific bandwidth or throughput.  That in turn might mean
+that that bus/interconnect might have to be set at a specific
+frequency/voltage.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+In your case, IIUC, you're just passing some magic value to some
+firmware running on a micro-controller, but under the hood that uC is
+probably configuring a frequency/voltage someplace.
+
+So, if we're going to have a generic DT binding for this, it needs to be
+something that's useful on platforms that are not using magic numbers
+managed by a uC as well.
+
+Kevin
