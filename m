@@ -1,74 +1,113 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
-Date: Tue, 22 Nov 2016 10:42:47 +0100
-Message-ID: <3166877.sQekoU5ezv@wuerfel>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <2220300.Yj4lYzeH2z@wuerfel> <d6e602c0-70e9-0309-86b5-bfd006d86028@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] ARM64: dts: Add support for Meson GXM
+Date: Tue, 22 Nov 2016 10:41:24 +0100
+Message-ID: <65b791bb-243e-ded9-e651-4021f0b23f1a@baylibre.com>
+References: <20161121162905.14285-1-narmstrong@baylibre.com>
+ <20161121162905.14285-2-narmstrong@baylibre.com>
+ <m2oa181jtd.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d6e602c0-70e9-0309-86b5-bfd006d86028-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <m2oa181jtd.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 22, 2016 5:34:05 PM CET zhangfei wrote:
-> On 2016年11月22日 16:50, Arnd Bergmann wrote:
-> > On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
-> >> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
-> >> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
-> >> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
-> >> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
-> >> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
-> >> +};
-> >> +
-> >> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
-> >> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
-> >> +       .channels = hi3660_iomcu_rst,
-> >> +};
-> >> +
-> >> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
-> >> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
-> >> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
-> >> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
-> >> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
-> >> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
-> >> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
-> >> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
-> >> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
-> >> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
-> >> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
-> >> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
-> >> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
-> >> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
-> >> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
-> >> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
-> >> +};
-> > I think you can avoid the trap of the ABI incompatibility if
-> > you just define those as in the binding as tuples, using #reset-cells=2.
-> >
-> > In particular for the first set, it seems really silly to redefine
-> > the numbers when there is just a simple integer number.
+On 11/22/2016 12:42 AM, Kevin Hilman wrote:
+> Neil,
 > 
-> Could you clarify more, still not understand.
-> The number is index of the arrays, and the index will be used in dts.
-> The arrays lists the registers offset and bit shift.
-> For example:
+> Neil Armstrong <narmstrong@baylibre.com> writes:
 > 
-> [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3), means register offset : 0x20, and bit shift = 3.
+>> Following the Amlogic Linux kernel, it seem the only differences
+>> between the GXL and GXM SoCs are the CPU Clusters.
+>>
+>> This commit renames the gxl-s905d-p23x DTSI in a common file for
+>> S905D p20x and S912 q20x boards.
 > 
-> And Documentation/devicetree/bindings/reset/reset.txt
-> Required properties:
-> #reset-cells:   Number of cells in a reset specifier; Typically 0 for nodes
->                  with a single reset output and 1 for nodes with multiple
->                  reset outputs.
+> s/p20x/p23x/ ??
+> 
+>> Then adds a meson-gxm dtsi and reproduce the P23x to Q20x boards
+>> dts files since the S905D and S912 SoCs shares the same pinout
+>> and the P23x and Q20x boards are identical.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> I had to drop this as it breaks the network on (at least) gxbb-p200, but...
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+>> index 03e3d76..17bb77c 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+>> @@ -56,3 +56,22 @@
+>>  	pinctrl-0 = <&i2c_b_pins>;
+>>  	pinctrl-names = "default";
+>>  };
+>> +
+>> +&ethmac {
+>> +	status = "okay";
+>> +	pinctrl-0 = <&eth_rgmii_pins>;
+>> +	pinctrl-names = "default";
+>> +
+>> +	phy-handle = <&eth_phy0>;
+>> +
+>> +	mdio {
+>> +		compatible = "snps,dwmac-mdio";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		eth_phy0: ethernet-phy@0 {
+>> +			reg = <0>;
+>> +			realtek,disable-eee-1000t;
+>> +		};
+>> +	};
+>> +};
+> 
+> ... backing out this change makes it work again.
+> 
+> This change also looks suspicious as it's using the proposed disable-eee
+> properties, which I don't think have been merged yet.
+> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+>> index 39bb037..5608c51 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+>> @@ -50,3 +50,10 @@
+>>  	compatible = "amlogic,p201", "amlogic,meson-gxbb";
+>>  	model = "Amlogic Meson GXBB P201 Development Board";
+>>  };
+>> +
+>> +&ethmac {
+>> +	status = "okay";
+>> +	pinctrl-0 = <&eth_rmii_pins>;
+>> +	pinctrl-names = "default";
+>> +	phy-mode = "rmii";
+>> +};
+> 
+> This also doesn't look releveant to the GXL/GXM changes being introduced
+> in this patch.
+> 
+> Could you separate out any GXBB-related changes into a separate patch
+> (if they are in fact needed) and re-spin this?
+> 
+> Thanks,
+> 
+> Kevin
+> 
 
-You can easily enumerate the registers that contain reset bits here,
-so just use one cell for the register and another one for the index.
+Sorry leftover for another work...
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will cleanup for v2.
+
+Neil
