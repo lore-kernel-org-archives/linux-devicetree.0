@@ -1,55 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: Arch counter doesn't tick in system suspend
-Date: Tue, 22 Nov 2016 16:02:41 +0100
-Message-ID: <6410694.RN5yFFi4kR@diego>
-References: <20161122094300.GA2017@mai> <1479807866-6957-1-git-send-email-daniel.lezcano@linaro.org> <1479807866-6957-2-git-send-email-daniel.lezcano@linaro.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible
+ string
+Date: Tue, 22 Nov 2016 20:36:26 +0530
+Message-ID: <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
+References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
+ <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479807866-6957-2-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC support" <linux-rockchip-IAPFreCvJWM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 22. November 2016, 10:44:22 schrieb Daniel Lezcano:
-> From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> The "arm,no-tick-in-suspend" property was introduced to note
-> implementations where the system counter does not quite follow the ARM
-> specification that it "must be implemented in an always-on power
-> domain".
-> 
-> Particularly, RK3399's counter stops ticking when we switch from the
-> 24MHz clock to the 32KHz clock in low-power suspend, so let's mark it as
-> such.
-> 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Sudeep,
 
-not sure if needed, but anyway
-Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+On Tuesday 22 November 2016 04:23 PM, Sudeep Holla wrote:
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index b65c193..d85b651 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -174,6 +174,7 @@
->  			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
->  			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
->  			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
-> +		arm,no-tick-in-suspend;
->  	};
 > 
->  	xin24m: xin24m {
+> On 22/11/16 10:41, Bartosz Golaszewski wrote:
+>> Add a function allowing to retrieve the compatible string of the root
+>> node of the device tree.
+>>
+> 
+> Rob has queued [1] and it's in -next today. You can reuse that if you
+> are planning to target this for v4.11 or just use open coding in your
+> driver for v4.10 and target this move for v4.11 to avoid cross tree
+> dependencies as I already mentioned in your previous thread.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I dont have your original patch in my mailbox, but I wonder if 
+returning a pointer to property string for a node whose reference has 
+already been released is safe to do? Probably not an issue for the root 
+node, but still feels counter-intuitive.
+
+This is the code for reference:
+
++int of_machine_get_model_name(const char **model)
++{
++       int error;
++
++       if (!of_node_get(of_root))
++               return -EINVAL;
++
++       error = of_property_read_string(of_root, "model", model);
++       if (error)
++               error = of_property_read_string_index(of_root, "compatible",
++                                                     0, model);
++       of_node_put(of_root);
++
++       return error;
++}
++EXPORT_SYMBOL(of_machine_get_model_name);
+
+Thanks,
+Sekhar
