@@ -1,134 +1,128 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 02/13] devicetree/bindings: display: Add bindings for
- LVDS panels
-Date: Tue, 22 Nov 2016 12:02:41 +0100
-Message-ID: <20161122110241.GA22735@ulmo.ba.sec>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 22 Nov 2016 12:05:48 +0100
+Message-ID: <20161122110548.GB22735@ulmo.ba.sec>
 References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1479526093-7014-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1479526093-7014-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479526093-7014-3-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <1479526093-7014-2-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---dDRMvlgZJXvWKvBx
+--yEPQxsgoJgBvi8ip
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 19, 2016 at 05:28:02AM +0200, Laurent Pinchart wrote:
-> LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A.
-> Multiple incompatible data link layers have been used over time to
-> transmit image data to LVDS panels. This binding supports display panels
-> compatible with the JEIDA-59-1999, Open-LDI and VESA SWPG
-> specifications.
+On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
+> Document properties common to several display panels in a central
+> location that can be referenced by the panel device tree bindings.
 >=20
 > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnhk3lzF8UVTdg@public.gmane.org=
 m>
 > ---
->  .../bindings/display/panel/panel-lvds.txt          | 120 +++++++++++++++=
+>  .../bindings/display/panel/panel-common.txt        | 91 ++++++++++++++++=
 ++++++
->  1 file changed, 120 insertions(+)
+>  1 file changed, 91 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel=
--lvds.txt
+-common.txt
 >=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-lvds.t=
-xt b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-common=
+=2Etxt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
 > new file mode 100644
-> index 000000000000..b938269f841e
+> index 000000000000..ec52c472c845
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-lvds.txt
-> @@ -0,0 +1,120 @@
-> +LVDS Display Panel
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> @@ -0,0 +1,91 @@
+> +Common Properties for Display Panel
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Mu=
-ltiple
-> +incompatible data link layers have been used over time to transmit image=
- data
-> +to LVDS panels. This bindings supports display panels compatible with the
-> +following specifications.
+> +This document defines device tree properties common to several classes of
+> +display panels. It doesn't constitue a device tree binding specification=
+ by
+> +itself but is meant to be referenced by device tree bindings.
 > +
-> +[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, Februa=
-ry
-> +1999 (Version 1.0), Japan Electronic Industry Development Association (J=
-EIDA)
-> +[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-> +Semiconductor
-> +[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-> +Electronics Standards Association (VESA)
-> +
-> +Device compatible with those specifications have been marketed under the
-> +FPD-Link and FlatLink brands.
+> +When referenced from panel device tree bindings the properties defined i=
+n this
+> +document are defined as follows. The panel device tree bindings are
+> +responsible for defining whether each property is required or optional.
 > +
 > +
-> +Required properties:
+> +Descriptive Properties
+> +----------------------
 > +
-> +- compatible: Shall contain "panel-lvds" in addition to a mandatory
-> +  panel-specific compatible string defined in individual panel bindings.=
- The
-> +  "panel-lvds" value shall never be used on its own.
+> +- width-mm,
+> +- height-mm: The width-mm and height-mm specify the width and height of =
+the
+> +  physical area where images are displayed. These properties are express=
+ed in
+> +  millimeters and rounded to the closest unit.
 
-What good is it if it shall never be used on its own? The above sounds
-to me like the panel-specific compatible string implies the LVDS
-binding, in a way that many compatible strings imply the simple binding.
-Note that initially we did the very same thing with "panel-simple", only
-to realize that it's completely redundant because it is never used.
+Erm... this is already implied by the compatible string. Having this in
+device tree is completely redundant.
 
-> +- width-mm: See panel-common.txt.
-> +- height-mm: See panel-common.txt.
-> +- data-mapping: The color signals mapping order, "jeida-18", "jeida-24"
-> +  or "vesa-24".
+> +- label: The label property specifies a symbolic name for the panel as a
+> +  string suitable for use by humans. It typically contains a name inscri=
+bed on
+> +  the system (e.g. as an affixed label) or specified in the system's
+> +  documentation (e.g. in the user's manual).
 > +
-> +Optional properties:
+> +  If no such name exists, and unless the property is mandatory according=
+ to
+> +  device tree bindings, it shall rather be omitted than constructed of
+> +  non-descriptive information. For instance an LCD panel in a system that
+> +  contains a single panel shall not be labelled "LCD" if that name is not
+> +  inscribed on the system or used in a descriptive fashion in system
+> +  documentation.
 > +
-> +- label: See panel-common.txt.
-> +- gpios: See panel-common.txt.
-> +- backlight: See panel-common.txt.
-> +- data-mirror: If set, reverse the bit order described in the data mappi=
-ngs
-> +  below on all data lanes, transmitting bits for slots 6 to 0 instead of
-> +  0 to 6.
 > +
-> +Required nodes:
+> +Display Timings
+> +---------------
 > +
-> +- panel-timing: See panel-common.txt.
-> +- ports: See panel-common.txt. These bindings require a single port subn=
-ode
-> +  corresponding to the panel LVDS input.
+> +- panel-timing: Most display panels are restricted to a single resolutio=
+n and
+> +  require specific display timings. The panel-timing subnode expresses t=
+hose
+> +  timings as specified in the timing subnode section of the display timi=
+ng
+> +  bindings defined in
+> +  Documentation/devicetree/bindings/display/display-timing.txt.
 
-Looks like I should go read the patch that introduces panel-common.txt
-first...
+Why? That's also implied by the compatible string. Honestly, I thought
+by now we had been over this often enough...
 
 Thierry
 
---dDRMvlgZJXvWKvBx
+--yEPQxsgoJgBvi8ip
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCAAGBQJYNCXPAAoJEN0jrNd/PrOh2Z4P/imodsQDUeD6Sypke/qZuoFS
-NLMkIIcS7x9ii0M7oNSGkqCWo547cQqejst50RHe1lBJVX45Uo/fXPX7SbQnP0Si
-DcbitdN9RGm6b2jEfc6qmm+W6uMGRoWT/gRVKQdtkyqVUAnr2mK9GowUp3LURYn0
-v5shafqIfzPRHSyddhcjYUcZcum0WO7iW1jn52jE/Z1rkvF7LshnON7Oz8nj7OeM
-Vfxr6bgTGyqETb4kfu8d4qtgWG4ryrehVYhFRKMPoPhwp5V0vLblXdJq59EThSd7
-+6xWlNJ9Hq8Mw8TaPegfrK9Tf+feQ7/04KOott2OgIo1aHc0D3CNJ2eYXlPSfYsb
-gMn13EgUUF8F9IP2VTVV8A2ZdNXy3Jc1sjH1XpyNU5tLod8f1eoLIgz7YHsJ7Ggw
-vKMsCzkuFlPCLJl04FjVqeo4+tD0/OFcg1ZTRkidCS1JYu7ee6EIXXNu8q58im1p
-8hzSq7QS6TnimZNtfsj2o4Dh0eN7AuSDwFQmuWfSkndlvEFPi8sNEHE97lfs3hth
-X9Jn2AAeibJR2S7uRyKhTuX6Qbps0D20oH3+BRTkHYnqqLKg9wNPoMxHTgB+rptG
-SguztypEmsBvE0CUl/ygv3Sjv1GISMDUlUZmFLQyzyiXKIRSTlxfEtxw96po95BB
-BRCpkvwm6+rm8Ujz2d4l
-=ff/C
+iQIcBAABCAAGBQJYNCaLAAoJEN0jrNd/PrOhHjIP/ipeDm6ehL6Y7T/WIhBRk0wJ
+edpqRNiasxFjoCgRuU+kHFM/+RQaHqNtzyr8s9kVm5yg4KxPXjddLV3YDLFW/+jy
+ZUeQfeS9sn7sgH9C6kOJxcQYjtUmx1DK+u2jdrnjRt3mP+qa95jAIg53BhSg0gy8
+56Z+2y6SpW/CCYRQaXHL7gUJPu3TxnIqyVxVM03W70N3iUgq751nfODcZqDH2Ro/
+S3XYEGEAeVj6ulzGxeSUmNCD9IZDTHyqI54BWxFCTOKCvFzttncRWWfHseq7EFmt
+EtVRe5Xg5QsEdG1rUqqfLRoCGaou2nQxiA+mwr1sA9Xb1aximet2hG/6mXkUZu6j
+LC4M0qXa5QuBeVKluKE7l3gMMpaF18/lYlXHAOWsiJMrZreyeKQGYBURS95GLvU+
+EH2zHwuR1bbfIFBaznSyda77+ddz+tYKTpSPNoV1KLO0Zwf8cgqKPtTZ2wdIEVoz
+TFxtElSu7Pcn9KbPYyfc5z34wjDX0PNkP/Xz4nE50Zt4FYVVdmXHt8Af+iw8qXTD
+VqWGjGu3XZCqvxE4Ili1N4osw3h+E51SjUriqoUMpuXYtlTNAxmeKdGvt+57jeDq
+E2QMX3QPfrbCfK517CFY4jXaj8TBbWrRvOcftcMPNaAJem40NGpuEkX/aCT8nSV0
+m3MKOQTaP6zn1Jvqt1xh
+=6JEd
 -----END PGP SIGNATURE-----
 
---dDRMvlgZJXvWKvBx--
+--yEPQxsgoJgBvi8ip--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
