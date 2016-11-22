@@ -1,95 +1,124 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
-Date: Tue, 22 Nov 2016 11:22:36 +0100
-Message-ID: <1479810156.13701.1.camel@pengutronix.de>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
-         <2220300.Yj4lYzeH2z@wuerfel>
-         <d6e602c0-70e9-0309-86b5-bfd006d86028@linaro.org>
-         <3166877.sQekoU5ezv@wuerfel>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850: specify max width for display node
+Date: Tue, 22 Nov 2016 12:27:33 +0200
+Message-ID: <77c993f3-1b5f-94cf-c4bc-8a30148e0a4d@ti.com>
+References: <1479807775-28283-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3166877.sQekoU5ezv@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1256482072=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1479807775-28283-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 22.11.2016, 10:42 +0100 schrieb Arnd Bergmann:
-> On Tuesday, November 22, 2016 5:34:05 PM CET zhangfei wrote:
-> > On 2016年11月22日 16:50, Arnd Bergmann wrote:
-> > > On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
-> > >> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
-> > >> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
-> > >> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
-> > >> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
-> > >> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
-> > >> +};
-> > >> +
-> > >> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
-> > >> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
-> > >> +       .channels = hi3660_iomcu_rst,
-> > >> +};
-> > >> +
-> > >> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
-> > >> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
-> > >> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
-> > >> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
-> > >> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
-> > >> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
-> > >> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
-> > >> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
-> > >> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
-> > >> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
-> > >> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
-> > >> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
-> > >> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
-> > >> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
-> > >> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
-> > >> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
-> > >> +};
-> > > I think you can avoid the trap of the ABI incompatibility if
-> > > you just define those as in the binding as tuples, using #reset-cells=2.
-> > >
-> > > In particular for the first set, it seems really silly to redefine
-> > > the numbers when there is just a simple integer number.
-> > 
-> > Could you clarify more, still not understand.
-> > The number is index of the arrays, and the index will be used in dts.
-> > The arrays lists the registers offset and bit shift.
-> > For example:
-> > 
-> > [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3), means register offset : 0x20, and bit shift = 3.
-> > 
-> > And Documentation/devicetree/bindings/reset/reset.txt
-> > Required properties:
-> > #reset-cells:   Number of cells in a reset specifier; Typically 0 for nodes
-> >                  with a single reset output and 1 for nodes with multiple
-> >                  reset outputs.
+--===============1256482072==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="HDJd31sSdheLSB2bvS5ofVJeIWiMINVf0"
 
-This is just a suggestion, for reset controllers where the reset lines
-can reasonably be enumerated by a single integer. If there is a good
-reason to use more complicated bindings, more cells can be used.
-That being said, I dislike having to spread register/bit information
-throughout the device trees at the consumer/phandle sites, if the
-register/bit information absolutely has to be put into the device tree,
-I'd prefer a binding similar to ti-syscon, where it's all in one place.
+--HDJd31sSdheLSB2bvS5ofVJeIWiMINVf0
+Content-Type: multipart/mixed; boundary="qUvnw3SU7kuXgTTQW9prWlu8KH0v2PI9u";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Message-ID: <77c993f3-1b5f-94cf-c4bc-8a30148e0a4d@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850: specify max width for display node
+References: <1479807775-28283-1-git-send-email-bgolaszewski@baylibre.com>
+In-Reply-To: <1479807775-28283-1-git-send-email-bgolaszewski@baylibre.com>
 
-> You can easily enumerate the registers that contain reset bits here,
-> so just use one cell for the register and another one for the index.
+--qUvnw3SU7kuXgTTQW9prWlu8KH0v2PI9u
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Changing the reset cells is an incompatible change, and this is not a
-straight forward register/bit mapping in hardware either. There are
-currently three registers involved: enable (+0x0), disable (+0x4), and
-status (+0x8). Also, what if in the future one of these reset bits have
-to be handled inverted (as just happened for hi3519)?
+On 22/11/16 11:42, Bartosz Golaszewski wrote:
+> It has been determined that the highest resolution supported correctly
+> by LCDC rev1 is 800x600 on da850 due to memory bandwidth constraints.
+>=20
+> Set the max_width property in da850.dtsi to 800.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/boot/dts/da850.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dts=
+i
+> index 36066fa..0876238 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -441,6 +441,7 @@
+>  			compatible =3D "ti,da850-tilcdc";
+>  			reg =3D <0x213000 0x1000>;
+>  			interrupts =3D <52>;
+> +			max-width =3D <800>;
+>  			status =3D "disabled";
+>  		};
+>  	};
+>=20
 
-regards
-Philipp
+Does 1024x768@10 work?
+
+The max-width should be the hardware's maximum supported width, not used
+for bandwidth. tilcdc has max-bandwidth property for that.
+
+ Tomi
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--qUvnw3SU7kuXgTTQW9prWlu8KH0v2PI9u--
+
+--HDJd31sSdheLSB2bvS5ofVJeIWiMINVf0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYNB2VAAoJEPo9qoy8lh71OXAP/1kXj0v0Bmou9qukhF2Oo3yh
+n9TE43dLpGTlT8PmwD6a71aQ0JjOu3WEwbUhWQ9HkXS2yHs04cTCWScREBmdummz
+gebeBPn1ncAzVW2se42UiD/9qLPpQ0gkugFXe5OQscbUdD0nMYth25LTDC5UeNbY
+nvy1u9jXWlKpiO3DNmwK6bFieg0TZJXmkBL+vEu091YpKxwUHGKHIa8bX35aH7u0
+rmTy4EkYY+wIdnxTnOnVmoHgyKhByGbeDzCLaW/mf2M4Yb9zsy2giNLpGYJZrsH5
+zOqapS8JaNE1Bax9dsRFqrwoKU0Lxssokg/UfcrV1GQ5WUdaJHqLJnjp0JI6YkTJ
+sRbH4iuXRFqoFvSmyZJVGrLVFokz4m+CtgpSHZmZm6m7SM5TEakx8Y0zndjEg3hb
+yv2Z7AgCw/xdeHK6jqtpk03e5/+80SlKhbgFdI+EDiOpdgzsQFdm3L539NscuVbT
+v5yK5h8kvJ1AwADJ0ZGPpnU0dGHLo8GzZl+UTZLhBQnuAyTIsbfkmcuKr+KFBQPI
+PiwfRzLRW0rDijYgQ2zq5mSQUgDos1+mElQGkI4UsQQa+hrXO14GeLvVhZmlu7pF
+F4WzXN6UKXlFQcDg6SGujuLZPGorh/MROAQx6a5Q9XP7ca66l8v+gX5EWEW8To/q
+9eCvHyAAjvFR2Dl+WvzN
+=LUe7
+-----END PGP SIGNATURE-----
+
+--HDJd31sSdheLSB2bvS5ofVJeIWiMINVf0--
+
+--===============1256482072==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1256482072==--
