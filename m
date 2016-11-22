@@ -1,66 +1,85 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 4/4] [media] dt-bindings: add TI VPIF documentation
-Date: Tue, 22 Nov 2016 07:50:06 -0800
-Message-ID: <m2wpfvzf81.fsf@baylibre.com>
-References: <20161122014408.22388-1-khilman@baylibre.com>
-        <20161122014408.22388-5-khilman@baylibre.com>
-        <6699f003-a125-1e1b-e161-e9453dad7bdc@xs4all.nl>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/4] [media] davinci: add support for DT init
+Date: Tue, 22 Nov 2016 07:52:41 -0800
+Message-ID: <20161122155244.802-2-khilman@baylibre.com>
+References: <20161122155244.802-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <6699f003-a125-1e1b-e161-e9453dad7bdc@xs4all.nl> (Hans Verkuil's
-        message of "Tue, 22 Nov 2016 13:47:20 +0100")
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161122155244.802-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Bartosz=20Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> writes:
+Add basic support for initialization via DT.
 
-> On 22/11/16 02:44, Kevin Hilman wrote:
->> Cc: Rob Herring <robh@kernel.org>
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->>  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
->>  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
->>  2 files changed, 73 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
->>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
->> new file mode 100644
->> index 000000000000..bdd93267301f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
->> @@ -0,0 +1,65 @@
->> +Texas Instruments VPIF Capture
->> +------------------------------
->> +
->> +The TI Video Port InterFace (VPIF) capture component is the primary
->> +component for video capture on the DA850 family of TI DaVinci SoCs.
->> +
->> +TI Document number reference: SPRUH82C
->> +
->> +Required properties:
->> +- compatible: must be "ti,da850-vpif-capture"
->> +- reg: physical base address and length of the registers set for the device;
->> +- interrupts: should contain IRQ line for the VPIF
->> +
->> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
->> +channels or a single 16-bit channel.  It should contain at least one
->> +port child node with child 'endpoint' node. Please refer to the
->> +bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example using 2 8-bit input channels, one of which is connected to an
->> +I2C-connected TVP5147 decoder:
->> +
->> +	vpif_capture: video-capture@0x00217000 {
->> +		compatible = "ti,vpif-capture";
->
-> Did you forget to update the compatible string to ti,da850-vpif-capture?
->
+Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ drivers/media/platform/davinci/vpif.c         |  9 +++++++++
+ drivers/media/platform/davinci/vpif_capture.c | 14 ++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-Ugh, yup.   v3 coming right up.
+diff --git a/drivers/media/platform/davinci/vpif.c b/drivers/media/platform/davinci/vpif.c
+index 0380cf2e5775..d4434f614141 100644
+--- a/drivers/media/platform/davinci/vpif.c
++++ b/drivers/media/platform/davinci/vpif.c
+@@ -464,8 +464,17 @@ static const struct dev_pm_ops vpif_pm = {
+ #define vpif_pm_ops NULL
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id vpif_of_match[] = {
++	{ .compatible = "ti,da850-vpif", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, vpif_of_match);
++#endif
++
+ static struct platform_driver vpif_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(vpif_of_match),
+ 		.name	= "vpif",
+ 		.pm	= vpif_pm_ops,
+ 	},
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index 5104cc0ee40e..87ee1e2c3864 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1435,6 +1435,11 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	int res_idx = 0;
+ 	int i, err;
+ 
++	if (!pdev->dev.platform_data) {
++		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
++		return -EINVAL;
++	}
++
+ 	vpif_dev = &pdev->dev;
+ 
+ 	err = initialize_vpif();
+@@ -1618,8 +1623,17 @@ static int vpif_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(vpif_pm_ops, vpif_suspend, vpif_resume);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id vpif_capture_of_match[] = {
++	{ .compatible = "ti,da850-vpif-capture", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, vpif_capture_of_match);
++#endif
++
+ static __refdata struct platform_driver vpif_driver = {
+ 	.driver	= {
++		.of_match_table = of_match_ptr(vpif_capture_of_match),
+ 		.name	= VPIF_DRIVER_NAME,
+ 		.pm	= &vpif_pm_ops,
+ 	},
+-- 
+2.9.3
 
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
