@@ -1,117 +1,38 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 4/4] [media] dt-bindings: add TI VPIF documentation
-Date: Tue, 22 Nov 2016 13:47:20 +0100
-Message-ID: <6699f003-a125-1e1b-e161-e9453dad7bdc@xs4all.nl>
-References: <20161122014408.22388-1-khilman@baylibre.com>
- <20161122014408.22388-5-khilman@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20161122014408.22388-5-khilman@baylibre.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/2] da8xx: fix section mismatch in new drivers
+Date: Tue, 22 Nov 2016 13:57:46 +0100
+Message-ID: <1479819468-4016-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/11/16 02:44, Kevin Hilman wrote:
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
->  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
->  2 files changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
->  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
-> new file mode 100644
-> index 000000000000..bdd93267301f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
-> @@ -0,0 +1,65 @@
-> +Texas Instruments VPIF Capture
-> +------------------------------
-> +
-> +The TI Video Port InterFace (VPIF) capture component is the primary
-> +component for video capture on the DA850 family of TI DaVinci SoCs.
-> +
-> +TI Document number reference: SPRUH82C
-> +
-> +Required properties:
-> +- compatible: must be "ti,da850-vpif-capture"
-> +- reg: physical base address and length of the registers set for the device;
-> +- interrupts: should contain IRQ line for the VPIF
-> +
-> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
-> +channels or a single 16-bit channel.  It should contain at least one
-> +port child node with child 'endpoint' node. Please refer to the
-> +bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example using 2 8-bit input channels, one of which is connected to an
-> +I2C-connected TVP5147 decoder:
-> +
-> +	vpif_capture: video-capture@0x00217000 {
-> +		compatible = "ti,vpif-capture";
+Sekhar noticed there's a section mismatch in the da8xx-mstpri and
+da8xx-ddrctl drivers. This is caused by calling
+of_flat_dt_get_machine_name() which has an __init annotation.
 
-Did you forget to update the compatible string to ti,da850-vpif-capture?
+This series addresses this issue by open coding routines that return
+the machine compatible string in both drivers. Once a general function
+for that in of/base is merged, we'll remove them.
 
-	Hans
+v1 -> v2:
+- drop patch [1/3] from v1
+- introduce internal routines in the drivers instead of a general
+  function in of/base.c
 
-> +		reg = <0x00217000 0x1000>;
-> +		interrupts = <92>;
-> +
-> +		port {
-> +			vpif_ch0: endpoint@0 {
-> +				  reg = <0>;
-> +				  bus-width = <8>;
-> +				  remote-endpoint = <&composite>;
-> +			};
-> +
-> +			vpif_ch1: endpoint@1 {
-> +				  reg = <1>;
-> +				  bus-width = <8>;
-> +				  data-shift = <8>;
-> +			};
-> +		};
-> +	};
-> +
-> +[ ... ]
-> +
-> +&i2c0 {
-> +
-> +	tvp5147@5d {
-> +		compatible = "ti,tvp5147";
-> +		reg = <0x5d>;
-> +		status = "okay";
-> +
-> +		port {
-> +			composite: endpoint {
-> +				hsync-active = <1>;
-> +				vsync-active = <1>;
-> +				pclk-sample = <0>;
-> +
-> +				/* VPIF channel 0 (lower 8-bits) */
-> +				remote-endpoint = <&vpif_ch0>;
-> +				bus-width = <8>;
-> +			};
-> +		};
-> +	};
-> +
-> +};
-> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> new file mode 100644
-> index 000000000000..d004e600aabe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> @@ -0,0 +1,8 @@
-> +Texas Instruments VPIF
-> +----------------------
-> +
-> +The Video Port InterFace (VPIF) is the core component for video output
-> +and capture on DA850 TI Davinci SoCs.
-> +
-> +- compatible: must be "ti,da850-vpif"
-> +- reg: physical base address and length of the registers set for the device;
->
+Bartosz Golaszewski (2):
+  bus: da8xx-mstpri: drop the call to of_flat_dt_get_machine_name()
+  memory: da8xx-ddrctl: drop the call to of_flat_dt_get_machine_name()
+
+ drivers/bus/da8xx-mstpri.c    | 22 ++++++++++++++++++++--
+ drivers/memory/da8xx-ddrctl.c | 22 ++++++++++++++++++++--
+ 2 files changed, 40 insertions(+), 4 deletions(-)
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
