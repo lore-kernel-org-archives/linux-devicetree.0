@@ -1,70 +1,49 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 2/2] serial: imx: make DSR irq handling conditional
-Date: Tue, 22 Nov 2016 18:14:11 +0100
-Message-ID: <1479834851-32442-3-git-send-email-chf.fritz@googlemail.com>
-References: <1479834851-32442-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479834851-32442-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/7] add bindings for stm32 IIO timer drivers
+Date: Tue, 22 Nov 2016 17:18:20 +0000
+Message-ID: <20161122171820.GL10134@dell.home>
+References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
+ <1479831207-32699-6-git-send-email-benjamin.gaignard@st.com>
+ <b9a82ce7-745a-1c25-f97f-68aaf0551f3b@metafoo.de>
+ <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks6ZoOND4VobU65OntEYU-f_XoNCV4wNZZ0_dYoOxy73+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes use of device-tree property disable-dsr. Disabling
-DSR can be necessary on i.MX6SX to quirk buggy hardware, for more
-info see commit 276b891e3879 ("ARM: dts: imx6sx: document SION
-necessity of ENET1_REF_CLK1").
+On Tue, 22 Nov 2016, Benjamin Gaignard wrote:
 
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- drivers/tty/serial/imx.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+> [snip]
+> >> +     "st,stm32-iio-timer5"
+> >> +     "st,stm32-iio-timer6"
+> >> +     "st,stm32-iio-timer7"
+> >> +     "st,stm32-iio-timer8"
+> >> +     "st,stm32-iio-timer9"
+> >> +     "st,stm32-iio-timer10"
+> >> +     "st,stm32-iio-timer11"
+> >> +     "st,stm32-iio-timer12"
+> >> +     "st,stm32-iio-timer13"
+> >> +     "st,stm32-iio-timer14"
+> >
+> > We can't do this. This is a binding for a driver, not for the hardware.
+> >
+> 
+> Unfortunately each instance for the hardware IP have little
+> differences like which triggers they could accept or size of the
+> counter register,
+> and I doesn't have value inside the hardware to distinguish them so
+> the only way I found is to use compatible.
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 0df2b1c..bd85a69a4 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -207,6 +207,7 @@ struct imx_port {
- 	unsigned int		dte_mode:1;
- 	unsigned int		irda_inv_rx:1;
- 	unsigned int		irda_inv_tx:1;
-+	unsigned int		dsr:1;
- 	unsigned short		trcv_delay; /* transceiver delay */
- 	struct clk		*clk_ipg;
- 	struct clk		*clk_per;
-@@ -1219,7 +1220,8 @@ static int imx_startup(struct uart_port *port)
- 	/*
- 	 * Finally, clear and enable interrupts
- 	 */
--	writel(USR1_RTSD | USR1_DTRD, sport->port.membase + USR1);
-+	temp = USR1_RTSD | (sport->dsr ? USR1_DTRD : 0);
-+	writel(temp, sport->port.membase + USR1);
- 	writel(USR2_ORE, sport->port.membase + USR2);
- 
- 	if (sport->dma_is_inited && !sport->dma_is_enabled)
-@@ -1259,7 +1261,7 @@ static int imx_startup(struct uart_port *port)
- 		 * now, too.
- 		 */
- 		temp |= IMX21_UCR3_RXDMUXSEL | UCR3_ADNIMP |
--			UCR3_DTRDEN | UCR3_RI | UCR3_DCD;
-+			(sport->dsr ? UCR3_DTRDEN : 0) | UCR3_RI | UCR3_DCD;
- 
- 		if (sport->dte_mode)
- 			temp &= ~(UCR3_RI | UCR3_DCD);
-@@ -1987,6 +1989,9 @@ static int serial_imx_probe_dt(struct imx_port *sport,
- 	if (of_get_property(np, "fsl,dte-mode", NULL))
- 		sport->dte_mode = 1;
- 
-+	if (!of_property_read_bool(np, "disable-dsr"))
-+		sport->dsr = 1;
-+
- 	return 0;
- }
- #else
+Can't you represent these as properties?
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
