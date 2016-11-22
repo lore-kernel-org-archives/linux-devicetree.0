@@ -1,41 +1,56 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 4/4] [media] dt-bindings: add TI VPIF documentation
-Date: Mon, 21 Nov 2016 16:09:40 -0800
-Message-ID: <m28tsc1ikb.fsf@baylibre.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4] [media] davinci: vpif_capture: don't lock over s_stream
+Date: Mon, 21 Nov 2016 16:10:19 -0800
+Message-ID: <m237ik1ij8.fsf@baylibre.com>
 References: <20161119003208.10550-1-khilman@baylibre.com>
-        <20161119003208.10550-4-khilman@baylibre.com>
-        <165090919.oFnaNnsijv@wuerfel>
+        <20161119003208.10550-2-khilman@baylibre.com>
+        <f385c65b-1f73-a5b1-b498-43916d5bdfb6@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <165090919.oFnaNnsijv@wuerfel> (Arnd Bergmann's message of "Mon,
-        21 Nov 2016 15:15:07 +0100")
-Sender: linux-media-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f385c65b-1f73-a5b1-b498-43916d5bdfb6-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> (Hans Verkuil's
+        message of "Mon, 21 Nov 2016 15:37:20 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> writes:
 
-> On Friday, November 18, 2016 4:32:08 PM CET Kevin Hilman wrote:
+> On 19/11/16 01:32, Kevin Hilman wrote:
+>> Video capture subdevs may be over I2C and may sleep during xfer, so we
+>> cannot do IRQ-disabled locking when calling the subdev.
+>>
+>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/media/platform/davinci/vpif_capture.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+>> index 79cef74e164f..becc3e63b472 100644
+>> --- a/drivers/media/platform/davinci/vpif_capture.c
+>> +++ b/drivers/media/platform/davinci/vpif_capture.c
+>> @@ -193,12 +193,16 @@ static int vpif_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>  		}
+>>  	}
+>>
+>> +	spin_unlock_irqrestore(&common->irqlock, flags);
 >> +
->> +Required properties:
->> +- compatible: must be "ti,vpif-capture"
->> +- reg: physical base address and length of the registers set for the device;
->> +- interrupts: should contain IRQ line for the VPIF
->> +
->> 
+>>  	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
+>>  	if (ret && ret != -ENOIOCTLCMD && ret != -ENODEV) {
+>>  		vpif_dbg(1, debug, "stream on failed in subdev\n");
+>>  		goto err;
+>>  	}
+>>
+>> +	spin_lock_irqsave(&common->irqlock, flags);
 >
-> Shouldn't this have a SoC specific identifier or a version number
-> in the compatible string? "vpif" seems rather generic, so it's
-> likely that TI made more than one variant of it.
+> This needs to be moved to right after the v4l2_subdev_call, otherwise the
+> goto err above will not have the spinlock.
 
-AFAICT, they used this for a single generation of davinci SoCs (dm6467,
-da850) and then moved on to using something completely different.
-
-But, that still proves your point because it's very SoC specific, so
-I'll make the compatible specific.
-
-Thanks for the review,
+Yes indeed.  Will respin.
 
 Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
