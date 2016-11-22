@@ -1,112 +1,64 @@
-From: tomas.hlavacek@nic.cz
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Tue, 22 Nov 2016 22:59:51 +0100
-Message-ID: <1479851991.26813.2@smtp.gmail.com>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <1479126185.15557.5@smtp.gmail.com>
- <20161114201640.rr32iyjf5a53v33t@perseus.defre.kleine-koenig.org>
- <20161114202832.GG24546@lunn.ch> <1479586147.10840.0@smtp.gmail.com>
- <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM64: dts: meson-gxbb: add the USB reset also to the
+ second USB PHY
+Date: Tue, 22 Nov 2016 23:05:17 +0100
+Message-ID: <CAFBinCCU-4vpttr14aHYjnO+yeQ=CM4dSe98ZSn_OCdatPagyg@mail.gmail.com>
+References: <20161001152134.8168-1-martin.blumenstingl@googlemail.com>
+ <20161112131305.26088-1-martin.blumenstingl@googlemail.com>
+ <20161112131305.26088-4-martin.blumenstingl@googlemail.com>
+ <m2twb7w1j6.fsf@baylibre.com> <CAFBinCBVaQ7SLwQ0M2eJj0iyQuErF1Ev5dtGzKr7itiesy11MQ@mail.gmail.com>
+ <m2eg2437za.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, marex@denx.de, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <m2eg2437za.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe!
+On Mon, Nov 21, 2016 at 9:15 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>
+>> Hi Kevin,
+>>
+>> On Wed, Nov 16, 2016 at 10:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>>> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>>>
+>>>> When the USB PHY driver was introduced the reset framework did not
+>>>> have support for triggering a reset pulse for shared resets. On GXBB
+>>>> however there is only one reset line for both PHYs (meaning we have a
+>>>> shared reset line). With the latest changes to the reset framework and
+>>>> the corresponding updates to the phy-meson8b-usb2 driver we can now pass
+>>>> the reset to the second PHY as well.
+>>>>
+>>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>>
+>>> Applied.
+>> Unfortunately I think I put crucial information only in the
+>> cover-letter's description:
+>> "the dts patch has a runtime-dependency on patch 1 and 2"
+>
+> I saw that, but also see that both of those have been queued, so should
+> land in v4.10 also.
+>
+>> So please feel free to keep or drop the patch as it is. In case you
+>> decide drop it I will re-send it for 4.11 (after all the 4.10 stuff is
+>> done).
+>
+> IMO, it's fine to keep it.  That means there may be some versions of
+> linux-next that have the problem where the reset will get asserted
+> twice, but since that is affecting very few people (probably only you),
+> I think it's OK, since it will be fine once v4.10-rc1 is released.
+fine with me, just wanted to let you know (so you're aware of it in
+case someone runs into an issue with this)
 
-On Sun, Nov 20, 2016 at 9:30 PM, Uwe Kleine-K=F6nig =
+> If you don't want that, let me know and I'll drop it for now.
+let's keep it - this will mean that more users will test it :)
 
-<uwe@kleine-koenig.org> wrote:
-> Hello Tomas,
-> =
 
-> On Sat, Nov 19, 2016 at 09:09:07PM +0100, tomas.hlavacek@nic.cz wrote:
->>  On Mon, Nov 14, 2016 at 9:28 PM, Andrew Lunn <andrew@lunn.ch> wrote:
->>  > Interrupts don't seem to work very well with the nxp,pca9538. =
-
->> Which
->>  > is probably why it is disabled by default.
->> =
-
->>  I was thinking about this issue and I can remember that there was =
-
->> an earlier
->>  prototype that had a shared interrupt line from PHY (88E1514) and =
-
->> from the
->>  PCA9538. In this case we needed to specifically disable the =
-
->> interrupt of the
->>  PHY to release the interrupt line (which needed a hack into PHY =
-
->> driver
->>  code). The IRQ from PHY is connected as an ordinary input to =
-
->> PCA9538 in
->>  later board prototype. And the same holds for the production =
-
->> version.
-> =
-
-> That would explain why I see an "irq but nobody cared" message when
-> booting the original system.
-> =
-
-> This isn't the problem I meant though. When adding interrupt-parent =3D
-> <&pcawan>; interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>; to the phy node I get =
-
-> an
-> error saying that there is no irq domain associated with this device.
-> =
-
->>  Do you have CZ11NIC13 or older board revision?
-> =
-
-> CZ11NIC12 is indicated on my board.
-
-:-( Well, this board version has wrongly matched length of some =
-
-differential pairs, IRQ from 88E1514 is connected differently, there =
-
-are slight differences in power supplies and (if I am not mistaken) =
-
-something changed in RTC support circuitry. It looks like a huge =
-
-mistake on our side.
-
-Anyway I took your patch and tried few things:
-- clean up comments
-- add pca9538 interrupt-controller
-- remove rtc disable (WFM with CZ11NIC13, which is the production board)
-- add MBUS mem regions for CESA
-- add IRQ for 88E1514 PHY - and there is a problem:
-
-It seems that libphy is probed before pca9538 and we end up with:
-[    4.217550] libphy: orion_mdio_bus: probed
-[    4.221777] irq: no irq domain found for =
-
-/soc/internal-regs/i2c@11000/i2cmux@70/i2c@7/gpio@71 !
-
-Any clue where to look in order to defer probing libphy or at least =
-
-orion_mdio_bus?
-
-I'll post my version of the patch without the PHY IRQ (therefore =
-
-polling will kick in).
-
-Thanks,
-Tomas
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
