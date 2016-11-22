@@ -1,36 +1,41 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3] ARM: da8xx: fix section mismatch in new drivers
-Date: Tue, 22 Nov 2016 11:41:48 +0100
-Message-ID: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 2/3] bus: da8xx-mstpri: drop the call to
+ of_flat_dt_get_machine_name()
+Date: Tue, 22 Nov 2016 11:41:50 +0100
+Message-ID: <1479811311-3080-3-git-send-email-bgolaszewski@baylibre.com>
+References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Sekhar noticed there's a section mismatch in the da8xx-mstpri and
-da8xx-ddrctl drivers. This is caused by calling
-of_flat_dt_get_machine_name() which has an __init annotation.
-
-This series addresses this issue by introducing a new function that
-allows to retrieve the compatible property of the root node and
-using it instead of of_flat_dt_get_machine_name() in the new drivers.
-
-Bartosz Golaszewski (3):
-  of: base: add support to get machine compatible string
-  bus: da8xx-mstpri: drop the call to of_flat_dt_get_machine_name()
-  memory: da8xx-ddrctl: drop the call to of_flat_dt_get_machine_name()
-
- drivers/bus/da8xx-mstpri.c    |  2 +-
- drivers/memory/da8xx-ddrctl.c |  2 +-
- drivers/of/base.c             | 22 ++++++++++++++++++++++
- include/linux/of.h            |  6 ++++++
- 4 files changed, 30 insertions(+), 2 deletions(-)
-
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SW4gb3JkZXIgdG8gYXZvaWQgYSBzZWN0aW9uIG1pc21hdGNoIHVzZSBvZl9tYWNoaW5lX2dldF9j
+b21wYXRpYmxlKCkKaW5zdGVhZCBvZiBvZl9mbGF0X2R0X2dldF9tYWNoaW5lX25hbWUoKSB3aGVu
+IHByaW50aW5nIHRoZSBlcnJvcgptZXNzYWdlLgoKU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xh
+c3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBkcml2ZXJzL2J1cy9kYTh4
+eC1tc3RwcmkuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvYnVzL2RhOHh4LW1zdHByaS5jIGIvZHJpdmVy
+cy9idXMvZGE4eHgtbXN0cHJpLmMKaW5kZXggODVmMGI1My4uNDFjYmJlNiAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKKysrIGIvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJp
+LmMKQEAgLTIyNyw3ICsyMjcsNyBAQCBzdGF0aWMgaW50IGRhOHh4X21zdHByaV9wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXByaW9fbGlzdCA9IGRhOHh4X21zdHByaV9nZXRf
+Ym9hcmRfcHJpbygpOwogCWlmICghcHJpb19saXN0KSB7CiAJCWRldl9lcnIoZGV2LCAibm8gbWFz
+dGVyIHByaW90aXRpZXMgZGVmaW5lZCBmb3IgYm9hcmQgJyVzJ1xuIiwKLQkJCW9mX2ZsYXRfZHRf
+Z2V0X21hY2hpbmVfbmFtZSgpKTsKKwkJCW9mX21hY2hpbmVfZ2V0X2NvbXBhdGlibGUoKSk7CiAJ
+CXJldHVybiAtRUlOVkFMOwogCX0KIAotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
