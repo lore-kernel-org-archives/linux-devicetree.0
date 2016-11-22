@@ -1,92 +1,48 @@
 From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4] clocksource/drivers/arm_arch_timer: Don't assume clock runs in suspend
-Date: Tue, 22 Nov 2016 10:44:21 +0100
-Message-ID: <1479807866-6957-1-git-send-email-daniel.lezcano@linaro.org>
+Subject: [PATCH 2/4] arm64: dts: rockchip: Arch counter doesn't tick in system suspend
+Date: Tue, 22 Nov 2016 10:44:22 +0100
+Message-ID: <1479807866-6957-2-git-send-email-daniel.lezcano@linaro.org>
 References: <20161122094300.GA2017@mai>
+ <1479807866-6957-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161122094300.GA2017@mai>
+In-Reply-To: <1479807866-6957-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM ARCHITECTED
-        TIMER DRIVER" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rock" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-The ARM specifies that the system counter "must be implemented in an
-always-on power domain," and so we try to use the counter as a source of
-timekeeping across suspend/resume. Unfortunately, some SoCs (e.g.,
-Rockchip's RK3399) do not keep the counter ticking properly when
-switched from their high-power clock to the lower-power clock used in
-system suspend. Support this quirk by adding a new device tree property.
+The "arm,no-tick-in-suspend" property was introduced to note
+implementations where the system counter does not quite follow the ARM
+specification that it "must be implemented in an always-on power
+domain".
+
+Particularly, RK3399's counter stops ticking when we switch from the
+24MHz clock to the 32KHz clock in low-power suspend, so let's mark it as
+such.
 
 Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/arch_timer.txt | 5 +++++
- drivers/clocksource/arm_arch_timer.c                 | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index ef5fbe9..ad440a2 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -38,6 +38,11 @@ to deliver its interrupts via SPIs.
-   architecturally-defined reset values. Only supported for 32-bit
-   systems which follow the ARMv7 architected reset values.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index b65c193..d85b651 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -174,6 +174,7 @@
+ 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+ 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
++		arm,no-tick-in-suspend;
+ 	};
  
-+- arm,no-tick-in-suspend : The main counter does not tick when the system is in
-+  low-power system suspend on some SoCs. This behavior does not match the
-+  Architecture Reference Manual's specification that the system counter "must
-+  be implemented in an always-on power domain."
-+
- 
- Example:
- 
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 73c487d..a2503db 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -81,6 +81,7 @@ static struct clock_event_device __percpu *arch_timer_evt;
- static enum ppi_nr arch_timer_uses_ppi = VIRT_PPI;
- static bool arch_timer_c3stop;
- static bool arch_timer_mem_use_virtual;
-+static bool arch_counter_suspend_stop;
- 
- static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
- 
-@@ -576,7 +577,7 @@ static struct clocksource clocksource_counter = {
- 	.rating	= 400,
- 	.read	= arch_counter_read,
- 	.mask	= CLOCKSOURCE_MASK(56),
--	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
-+	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- };
- 
- static struct cyclecounter cyclecounter = {
-@@ -616,6 +617,8 @@ static void __init arch_counter_register(unsigned type)
- 		arch_timer_read_counter = arch_counter_get_cntvct_mem;
- 	}
- 
-+	if (!arch_counter_suspend_stop)
-+		clocksource_counter.flags |= CLOCK_SOURCE_SUSPEND_NONSTOP;
- 	start_count = arch_timer_read_counter();
- 	clocksource_register_hz(&clocksource_counter, arch_timer_rate);
- 	cyclecounter.mult = clocksource_counter.mult;
-@@ -907,6 +910,10 @@ static int __init arch_timer_of_init(struct device_node *np)
- 	    of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
- 		arch_timer_uses_ppi = PHYS_SECURE_PPI;
- 
-+	/* On some systems, the counter stops ticking when in suspend. */
-+	arch_counter_suspend_stop = of_property_read_bool(np,
-+							 "arm,no-tick-in-suspend");
-+
- 	return arch_timer_init();
- }
- CLOCKSOURCE_OF_DECLARE(armv7_arch_timer, "arm,armv7-timer", arch_timer_of_init);
+ 	xin24m: xin24m {
 -- 
 2.7.4
 
