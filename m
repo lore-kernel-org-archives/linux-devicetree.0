@@ -1,10 +1,10 @@
 From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: [PATCH] devicetree: bindings: Add vendor prefix for Andes Technology Corporation
-Date: Tue, 22 Nov 2016 15:10:06 +0800
-Message-ID: <1479798606-19969-1-git-send-email-green.hu@gmail.com>
+Date: Tue, 22 Nov 2016 15:15:05 +0800
+Message-ID: <1479798905-21671-1-git-send-email-green.hu@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
