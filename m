@@ -1,192 +1,78 @@
-From: Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] Add Mediatek JPEG Decoder
-Date: Tue, 22 Nov 2016 11:12:05 +0800
-Message-ID: <1479784325.8964.10.camel@mtksdaap41>
-References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
-         <ac60814a-f54d-a11a-fc65-bdc733682535@xs4all.nl>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state
+ binding
+Date: Tue, 22 Nov 2016 08:47:17 +0530
+Message-ID: <20161122031717.GE10014@vireshk-i7>
+References: <cover.1479459752.git.viresh.kumar@linaro.org>
+ <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
+ <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ac60814a-f54d-a11a-fc65-bdc733682535-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nayak Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On 21-11-16, 09:07, Rob Herring wrote:
+> On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
+> > Some platforms have the capability to configure the performance state of
+> > their Power Domains. The performance levels are represented by positive
+> > integer values, a lower value represents lower performance state.
+> > 
+> > The power-domains until now were only concentrating on the idle state
+> > management of the device and this needs to change in order to reuse the
+> > infrastructure of power domains for active state management.
+> > 
+> > This patch introduces a new optional property for the consumers of the
+> > power-domains: domain-performance-state.
+> > 
+> > If the consumers don't need the capability of switching to different
+> > domain performance states at runtime, then they can simply define their
+> > required domain performance state in their node directly. Otherwise the
+> > consumers can define their requirements with help of other
+> > infrastructure, for example the OPP table.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> > index e1650364b296..db42eacf8b5c 100644
+> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> > @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
+> >   - power-domains : A phandle and PM domain specifier as defined by bindings of
+> >                     the power controller specified by phandle.
+> >  
+> > +Optional properties:
+> > +- domain-performance-state: A positive integer value representing the minimum
+> > +  performance level (of the parent domain) required by the consumer for its
+> > +  working. The integer value '1' represents the lowest performance level and the
+> > +  highest value represents the highest performance level.
+> 
+> How does one come up with the range of values?
 
-Ok, I will include it in patch v7.
+Why would we need a range here? The value here represents the minimum 'state'
+and the assumption is that everything above that level would be fine. So the
+range is automatically: domain-performance-state -> MAX.
 
-On Mon, 2016-11-21 at 15:53 +0100, Hans Verkuil wrote:
-> I'm missing a MAINTAINERS patch for this new driver.
-> 
-> Can you post a patch for that?
-> 
-> It's the only thing preventing this from being merged.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> On 17/11/16 04:38, Rick Chang wrote:
-> > This series of patches provide a v4l2 driver to control Mediatek JPEG decoder
-> > for decoding JPEG image and Motion JPEG bitstream.
-> >
-> > changes since v5:
-> > - remove redundant name from struct mtk_jpeg_fmt
-> > - Set state of all buffers to VB2_BUF_STATE_QUEUED if fail in start streaming
-> > - Remove VB2_USERPTR
-> > - Add check for buffer index
-> >
-> > changes since v4:
-> > - Change file name of binding documentation
-> > - Revise DT binding documentation
-> > - Revise compatible string
-> >
-> > changes since v3:
-> > - Revise DT binding documentation
-> > - Revise compatible string
-> >
-> > changes since v2:
-> > - Revise DT binding documentation
-> >
-> > changes since v1:
-> > - Rebase for v4.9-rc1.
-> > - Update Compliance test version and result
-> > - Remove redundant path in Makefile
-> > - Fix potential build error without CONFIG_PM_RUNTIME and CONFIG_PM_SLEEP
-> > - Fix warnings from patch check and smatch check
-> >
-> > * Dependency
-> > The patch "arm: dts: mt2701: Add node for JPEG decoder" depends on:
-> >   CCF "Add clock support for Mediatek MT2701"[1]
-> >   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
-> >
-> > [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
-> > [2] https://patchwork.kernel.org/patch/9164013/
-> >
-> > * Compliance test
-> > v4l2-compliance SHA   : 4ad7174b908a36c4f315e3fe2efa7e2f8a6f375a
-> >
-> > Driver Info:
-> >         Driver name   : mtk-jpeg decode
-> >         Card type     : mtk-jpeg decoder
-> >         Bus info      : platform:15004000.jpegdec
-> >         Driver version: 4.9.0
-> >         Capabilities  : 0x84204000
-> >                 Video Memory-to-Memory Multiplanar
-> >                 Streaming
-> >                 Extended Pix Format
-> >                 Device Capabilities
-> >         Device Caps   : 0x04204000
-> >                 Video Memory-to-Memory Multiplanar
-> >                 Streaming
-> >                 Extended Pix Format
-> >
-> > Compliance test for device /dev/video3 (not using libv4l2):
-> >
-> > Required ioctls:
-> >         test VIDIOC_QUERYCAP: OK
-> >
-> > Allow for multiple opens:
-> >         test second video open: OK
-> >         test VIDIOC_QUERYCAP: OK
-> >         test VIDIOC_G/S_PRIORITY: OK
-> >         test for unlimited opens: OK
-> >
-> > Debug ioctls:
-> >         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> >         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> >
-> > Input ioctls:
-> >         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> >         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> >         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> >         test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> >         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> >         test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> >         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> >
-> > Output ioctls:
-> >         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> >         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> >         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> >         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> >         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> >         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> >
-> > Input/Output configuration ioctls:
-> >         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> >         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> >         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> >         test VIDIOC_G/S_EDID: OK (Not Supported)
-> >
-> >         Control ioctls:
-> >                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> >                 test VIDIOC_QUERYCTRL: OK (Not Supported)
-> >                 test VIDIOC_G/S_CTRL: OK (Not Supported)
-> >                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> >                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> >                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> >                 Standard Controls: 0 Private Controls: 0
-> >
-> >         Format ioctls:
-> >                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> >                 test VIDIOC_G/S_PARM: OK (Not Supported)
-> >                 test VIDIOC_G_FBUF: OK (Not Supported)
-> >                 test VIDIOC_G_FMT: OK
-> >                 test VIDIOC_TRY_FMT: OK
-> >                 test VIDIOC_S_FMT: OK
-> >                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> >                 test Cropping: OK (Not Supported)
-> >                 test Composing: OK
-> >                 test Scaling: OK
-> >
-> >         Codec ioctls:
-> >                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> >                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> >                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> >
-> >         Buffer ioctls:
-> >                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> >                 test VIDIOC_EXPBUF: OK
-> >
-> > Test input 0:
-> >
-> >
-> > Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
-> >
-> > Rick Chang (3):
-> >   dt-bindings: mediatek: Add a binding for Mediatek JPEG Decoder
-> >   vcodec: mediatek: Add Mediatek JPEG Decoder Driver
-> >   arm: dts: mt2701: Add node for Mediatek JPEG Decoder
-> >
-> >  .../bindings/media/mediatek-jpeg-decoder.txt       |   37 +
-> >  arch/arm/boot/dts/mt2701.dtsi                      |   14 +
-> >  drivers/media/platform/Kconfig                     |   15 +
-> >  drivers/media/platform/Makefile                    |    2 +
-> >  drivers/media/platform/mtk-jpeg/Makefile           |    2 +
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 1303 ++++++++++++++++++++
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  139 +++
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c      |  417 +++++++
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h      |   91 ++
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c   |  160 +++
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h   |   25 +
-> >  drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h     |   58 +
-> >  12 files changed, 2263 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/Makefile
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.c
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_hw.h
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.c
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_parse.h
-> >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_reg.h
-> >
+> It seems like you are 
+> just making up numbers. Couldn't the domain performance level be an OPP 
+> in the sense that it is a collection of clock frequencies and voltage 
+> settings?
 
+The clock is going to be handled by the device itself (at least for the case we
+have today) and the performance-state lies with the power-domain which is
+configured separately. If the performance level includes both clk and voltage,
+then why would we need to show the clock rates in the DT ? Wouldn't a
+performance level be enough in such cases?
 
+-- 
+viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
