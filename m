@@ -1,40 +1,34 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Tue, 22 Nov 2016 13:45:21 +0530
-Message-ID: <5833FE99.2020004@nvidia.com>
-References: <1478696782-11657-1-git-send-email-ldewangan@nvidia.com> <1478696782-11657-3-git-send-email-ldewangan@nvidia.com> <29e19381-9250-3059-b083-49e8ab56ea7f@nvidia.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] reset: hisilicon: add reset core
+Date: Tue, 22 Nov 2016 09:45:35 +0100
+Message-ID: <3993565.nedzUBZcVS@wuerfel>
+References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org> <1479800961-6249-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <29e19381-9250-3059-b083-49e8ab56ea7f-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479800961-6249-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday, November 22, 2016 3:49:16 PM CET Zhangfei Gao wrote:
+> @@ -1,8 +1,8 @@
+>  obj-y += core.o
+> -obj-y += hisilicon/
+>  obj-$(CONFIG_ARCH_STI) += sti/
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> +obj-$(CONFIG_ARCH_HISI) += hisilicon/
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
 
-On Tuesday 22 November 2016 02:31 AM, Jon Hunter wrote:
-> On 09/11/16 13:06, Laxman Dewangan wrote:
-> +	_entry_(32, "uart", UART, true, "vddio-uart"),		\
-> +	_entry_(33, "usb0", USB0, true, NULL),			\
-> +	_entry_(34, "usb1", USB1, true, NULL),			\
-> +	_entry_(35, "usb2", USB2, true, NULL),			\
-> +	_entry_(36, "usb3", USB3, true, NULL),			\
-> +	_entry_(37, "usb-bias", USB_BIAS, true, NULL)
-> Can you also fix these checkpatch errors ...
->
-> ERROR: Macros with complex values should be enclosed in parentheses
-> #424: FILE: drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c:350:
->
-> ERROR: Macros with complex values should be enclosed in parentheses
-> #456: FILE: drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c:382:
+Please leave the obj-y line, otherwise the COMPILE_TEST variant won't work.
 
-I can fix this but will still have the error as:
-
-CHECK: Macro argument reuse '_entry_' - possible side-effects?
-#425: FILE: drivers/pinctrl/tegra/pinctrl-tegra-io-pad.c:425:
-
-
-And there is no better way to fix this.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
