@@ -1,93 +1,70 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 1/4] drm/tilcdc: Recover from sync lost error flood by resetting the LCDC
-Date: Tue, 22 Nov 2016 16:49:50 +0200
-Message-ID: <f5b3b49589bada08b234bf1f0268af3d69bffce8.1479825908.git.jsarha@ti.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4 2/4] dt-bindings: Move "ti,
+ tfp410.txt" from display/ti to display/bridge
+Date: Tue, 22 Nov 2016 16:49:51 +0200
+Message-ID: <6a8fecb2b2038b4bb1f9b240bb8504925f9a97bb.1479825908.git.jsarha@ti.com>
 References: <cover.1479825908.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1479825908.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1479825908.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: khilman@baylibre.com, Jyri Sarha <jsarha@ti.com>, bgolaszewski@baylibre.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Recover from sync lost error flood by resetting the LCDC instead of
-turning off the SYNC_LOST error IRQ. When LCDC starves on limited
-memory bandwidth it may sometimes result an error situation when the
-picture may have shifted couple of pixels to right and SYNC_LOST
-interrupt is generated on every frame. LCDC main reset recovers from
-this situation and causes a brief blanking on the screen.
-
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- drivers/gpu/drm/tilcdc/tilcdc_crtc.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
-index 0d09acc..c787349 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
-@@ -55,6 +55,7 @@ struct tilcdc_crtc {
- 
- 	int sync_lost_count;
- 	bool frame_intact;
-+	struct work_struct recover_work;
- };
- #define to_tilcdc_crtc(x) container_of(x, struct tilcdc_crtc, base)
- 
-@@ -252,6 +253,25 @@ static bool tilcdc_crtc_is_on(struct drm_crtc *crtc)
- 	return crtc->state && crtc->state->enable && crtc->state->active;
- }
- 
-+static void tilcdc_crtc_recover_work(struct work_struct *work)
-+{
-+	struct tilcdc_crtc *tilcdc_crtc =
-+		container_of(work, struct tilcdc_crtc, recover_work);
-+	struct drm_crtc *crtc = &tilcdc_crtc->base;
-+
-+	dev_info(crtc->dev->dev, "%s: Reset CRTC", __func__);
-+
-+	drm_modeset_lock_crtc(crtc, NULL);
-+
-+	if (!tilcdc_crtc_is_on(crtc))
-+		goto out;
-+
-+	tilcdc_crtc_disable(crtc);
-+	tilcdc_crtc_enable(crtc);
-+out:
-+	drm_modeset_unlock_crtc(crtc);
-+}
-+
- static void tilcdc_crtc_destroy(struct drm_crtc *crtc)
- {
- 	struct tilcdc_crtc *tilcdc_crtc = to_tilcdc_crtc(crtc);
-@@ -838,9 +858,12 @@ irqreturn_t tilcdc_crtc_irq(struct drm_crtc *crtc)
- 			tilcdc_crtc->frame_intact = false;
- 			if (tilcdc_crtc->sync_lost_count++ >
- 			    SYNC_LOST_COUNT_LIMIT) {
--				dev_err(dev->dev, "%s(0x%08x): Sync lost flood detected, disabling the interrupt", __func__, stat);
-+				dev_err(dev->dev, "%s(0x%08x): Sync lost flood detected, recovering", __func__, stat);
-+				queue_work(system_wq,
-+					   &tilcdc_crtc->recover_work);
- 				tilcdc_write(dev, LCDC_INT_ENABLE_CLR_REG,
- 					     LCDC_SYNC_LOST);
-+				tilcdc_crtc->sync_lost_count = 0;
- 			}
- 		}
- 
-@@ -880,6 +903,7 @@ struct drm_crtc *tilcdc_crtc_create(struct drm_device *dev)
- 			"unref", unref_worker);
- 
- 	spin_lock_init(&tilcdc_crtc->irq_lock);
-+	INIT_WORK(&tilcdc_crtc->recover_work, tilcdc_crtc_recover_work);
- 
- 	ret = drm_crtc_init_with_planes(dev, crtc,
- 					&tilcdc_crtc->primary,
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TW92ZSAidGksdGZwNDEwLnR4dCIgZnJvbSBkaXNwbGF5L3RpIHRvIGRpc3BsYXkvYnJpZGdlIGJl
+Zm9yZSBhZGRpbmcKZ2VuZXJpYyAobm9uIG9tYXBkcm0vZHNzIHNwZWNpZmljKSBpbXBsZW1lbnRh
+dGlvbiBhbmQgbmV3IGZlYXR1cmVzLgoKU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhh
+QHRpLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCAg
+ICAgICAgICB8IDQxICsrKysrKysrKysrKysrKysrKysrKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksdGZwNDEwLnR4dCAgIHwgNDEgLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQogMiBmaWxlcyBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspLCA0MSBkZWxldGlvbnMoLSkKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvdGksdGZwNDEwLnR4dAogZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLHRmcDQxMC50eHQKCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksdGZw
+NDEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
+ZS90aSx0ZnA0MTAudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjJjYmUz
+MmEKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dApAQCAtMCwwICsxLDQxIEBACitURlA0MTAgRFBJ
+IHRvIERWSSBlbmNvZGVyCis9PT09PT09PT09PT09PT09PT09PT09PT09CisKK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6CistIGNvbXBhdGlibGU6ICJ0aSx0ZnA0MTAiCisKK09wdGlvbmFsIHByb3BlcnRp
+ZXM6CistIHBvd2VyZG93bi1ncGlvczogcG93ZXItZG93biBncGlvCisKK1JlcXVpcmVkIG5vZGVz
+OgorLSBWaWRlbyBwb3J0IDAgZm9yIERQSSBpbnB1dAorLSBWaWRlbyBwb3J0IDEgZm9yIERWSSBv
+dXRwdXQKKworRXhhbXBsZQorLS0tLS0tLQorCit0ZnA0MTA6IGVuY29kZXJAMCB7CisJY29tcGF0
+aWJsZSA9ICJ0aSx0ZnA0MTAiOworCXBvd2VyZG93bi1ncGlvcyA9IDwmdHdsX2dwaW8gMiBHUElP
+X0FDVElWRV9MT1c+OworCisJcG9ydHMgeworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3Np
+emUtY2VsbHMgPSA8MD47CisKKwkJcG9ydEAwIHsKKwkJCXJlZyA9IDwwPjsKKworCQkJdGZwNDEw
+X2luOiBlbmRwb2ludEAwIHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRwaV9vdXQ+OworCQkJ
+fTsKKwkJfTsKKworCQlwb3J0QDEgeworCQkJcmVnID0gPDE+OworCisJCQl0ZnA0MTBfb3V0OiBl
+bmRwb2ludEAwIHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmR2aV9jb25uZWN0b3JfaW4+Owor
+CQkJfTsKKwkJfTsKKwl9OworfTsKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLHRmcDQxMC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSx0ZnA0MTAudHh0CmRlbGV0ZWQgZmlsZSBtb2Rl
+IDEwMDY0NAppbmRleCAyY2JlMzJhLi4wMDAwMDAwCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLHRmcDQxMC50eHQKKysrIC9kZXYvbnVsbApAQCAt
+MSw0MSArMCwwIEBACi1URlA0MTAgRFBJIHRvIERWSSBlbmNvZGVyCi09PT09PT09PT09PT09PT09
+PT09PT09PT09Ci0KLVJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGlibGU6ICJ0aSx0ZnA0
+MTAiCi0KLU9wdGlvbmFsIHByb3BlcnRpZXM6Ci0tIHBvd2VyZG93bi1ncGlvczogcG93ZXItZG93
+biBncGlvCi0KLVJlcXVpcmVkIG5vZGVzOgotLSBWaWRlbyBwb3J0IDAgZm9yIERQSSBpbnB1dAot
+LSBWaWRlbyBwb3J0IDEgZm9yIERWSSBvdXRwdXQKLQotRXhhbXBsZQotLS0tLS0tLQotCi10ZnA0
+MTA6IGVuY29kZXJAMCB7Ci0JY29tcGF0aWJsZSA9ICJ0aSx0ZnA0MTAiOwotCXBvd2VyZG93bi1n
+cGlvcyA9IDwmdHdsX2dwaW8gMiBHUElPX0FDVElWRV9MT1c+OwotCi0JcG9ydHMgewotCQkjYWRk
+cmVzcy1jZWxscyA9IDwxPjsKLQkJI3NpemUtY2VsbHMgPSA8MD47Ci0KLQkJcG9ydEAwIHsKLQkJ
+CXJlZyA9IDwwPjsKLQotCQkJdGZwNDEwX2luOiBlbmRwb2ludEAwIHsKLQkJCQlyZW1vdGUtZW5k
+cG9pbnQgPSA8JmRwaV9vdXQ+OwotCQkJfTsKLQkJfTsKLQotCQlwb3J0QDEgewotCQkJcmVnID0g
+PDE+OwotCi0JCQl0ZnA0MTBfb3V0OiBlbmRwb2ludEAwIHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQg
+PSA8JmR2aV9jb25uZWN0b3JfaW4+OwotCQkJfTsKLQkJfTsKLQl9OwotfTsKLS0gCjEuOS4xCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
