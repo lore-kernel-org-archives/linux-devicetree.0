@@ -1,171 +1,222 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: AM571x-IDK Initial Support
-Date: Tue, 22 Nov 2016 09:47:32 +0530
-Message-ID: <20161122041732.8385-1-lokeshvutla@ti.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH net v2 1/3] net: phy: add an option to disable EEE advertisement
+Date: Tue, 22 Nov 2016 10:34:28 +0530
+Message-ID: <CANAwSgR_osB5FtNsbZcJ9KqhUD9-dfw=SkcNKCezDT2nrCJcOw@mail.gmail.com>
+References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com> <1479742524-30222-2-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479742524-30222-2-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spatton-l0cyMroinI0@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
+Hi Jerome,
 
-The AM571x-IDK board is a board based on TI's AM5718 SOC
-which has a single core 1.5GHz A15 processor. This board is a
-development platform for the Industrial market with:
-- 1GB of DDR3L
-- Dual 1Gbps Ethernet
-- HDMI,
-- PRU-ICSS
-- uSD
-- 16GB eMMC
-- CAN
-- RS-485
-- PCIe
-- USB3.0
-- Video Input Port
-- Industrial IO port and expansion connector
+On 21 November 2016 at 21:05, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> This patch adds an option to disable EEE advertisement in the generic PHY
+> by providing a mask of prohibited modes corresponding to the value found in
+> the MDIO_AN_EEE_ADV register.
+>
+> On some platforms, PHY Low power idle seems to be causing issues, even
+> breaking the link some cases. The patch provides a convenient way for these
+> platforms to disable EEE advertisement and work around the issue.
+>
+> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/net/phy/phy.c        |  3 ++
+>  drivers/net/phy/phy_device.c | 80 +++++++++++++++++++++++++++++++++++++++-----
+>  include/linux/phy.h          |  3 ++
+>  3 files changed, 77 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index f424b867f73e..a44ee14bd953 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -1348,6 +1348,9 @@ int phy_ethtool_set_eee(struct phy_device *phydev, struct ethtool_eee *data)
+>  {
+>         int val = ethtool_adv_to_mmd_eee_adv_t(data->advertised);
+>
+> +       /* Mask prohibited EEE modes */
+> +       val &= ~phydev->eee_advert_disabled;
+> +
+>         phy_write_mmd_indirect(phydev, MDIO_AN_EEE_ADV, MDIO_MMD_AN, val);
+>
+>         return 0;
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 1a4bf8acad78..74c628e046cb 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -1116,6 +1116,43 @@ static int genphy_config_advert(struct phy_device *phydev)
+>  }
+>
+>  /**
+> + * genphy_config_eee_advert - disable unwanted eee mode advertisement
+> + * @phydev: target phy_device struct
+> + *
+> + * Description: Writes MDIO_AN_EEE_ADV after disabling unsupported energy
+> + *   efficent ethernet modes. Returns 0 if the PHY's advertisement hasn't
+> + *   changed, and 1 if it has changed.
+> + */
+> +static int genphy_config_eee_advert(struct phy_device *phydev)
+> +{
+> +       u32 disabled = phydev->eee_advert_disabled;
+> +       u32 old_adv, adv;
+> +
+> +       /* Nothing to disable */
+> +       if (!disabled)
+> +               return 0;
+> +
+> +       /* If the following call fails, we assume that EEE is not
+> +        * supported by the phy. If we read 0, EEE is not advertised
+> +        * In both case, we don't need to continue
+> +        */
+> +       adv = phy_read_mmd_indirect(phydev, MDIO_AN_EEE_ADV, MDIO_MMD_AN);
+> +       if (adv <= 0)
+> +               return 0;
+> +
+> +       old_adv = adv;
+> +       adv &= ~disabled;
+> +
+> +       /* Advertising remains unchanged with the ban */
+> +       if (old_adv == adv)
+> +               return 0;
+> +
+> +       phy_write_mmd_indirect(phydev, MDIO_AN_EEE_ADV, MDIO_MMD_AN, adv);
+> +
+> +       return 1;
+> +}
+> +
+> +/**
+>   * genphy_setup_forced - configures/forces speed/duplex from @phydev
+>   * @phydev: target phy_device struct
+>   *
+> @@ -1173,15 +1210,20 @@ EXPORT_SYMBOL(genphy_restart_aneg);
+>   */
+>  int genphy_config_aneg(struct phy_device *phydev)
+>  {
+> -       int result;
+> +       int err, changed;
+> +
+> +       changed = genphy_config_eee_advert(phydev);
+>
+>         if (AUTONEG_ENABLE != phydev->autoneg)
+>                 return genphy_setup_forced(phydev);
+>
+> -       result = genphy_config_advert(phydev);
+> -       if (result < 0) /* error */
+> -               return result;
+> -       if (result == 0) {
+> +       err = genphy_config_advert(phydev);
+> +       if (err < 0) /* error */
+> +               return err;
+> +
+> +       changed |= err;
+> +
+> +       if (changed == 0) {
+>                 /* Advertisement hasn't changed, but maybe aneg was never on to
+>                  * begin with?  Or maybe phy was isolated?
+>                  */
+> @@ -1191,16 +1233,16 @@ int genphy_config_aneg(struct phy_device *phydev)
+>                         return ctl;
+>
+>                 if (!(ctl & BMCR_ANENABLE) || (ctl & BMCR_ISOLATE))
+> -                       result = 1; /* do restart aneg */
+> +                       changed = 1; /* do restart aneg */
+>         }
+>
+>         /* Only restart aneg if we are advertising something different
+>          * than we were before.
+>          */
+> -       if (result > 0)
+> -               result = genphy_restart_aneg(phydev);
+> +       if (changed > 0)
+> +               return genphy_restart_aneg(phydev);
+>
+> -       return result;
+> +       return 0;
+>  }
+>  EXPORT_SYMBOL(genphy_config_aneg);
+>
+> @@ -1558,6 +1600,21 @@ static void of_set_phy_supported(struct phy_device *phydev)
+>                 __set_phy_supported(phydev, max_speed);
+>  }
+>
+> +static void of_set_phy_eee_disable(struct phy_device *phydev)
+> +{
+> +       struct device_node *node = phydev->mdio.dev.of_node;
+> +       u32 disabled;
+> +
+> +       if (!IS_ENABLED(CONFIG_OF_MDIO))
+> +               return;
+> +
+> +       if (!node)
+> +               return;
+> +
+> +       if (!of_property_read_u32(node, "eee-advert-disable", &disabled))
+> +               phydev->eee_advert_disabled = disabled;
+> +}
+> +
+>  /**
+>   * phy_probe - probe and init a PHY device
+>   * @dev: device to probe and init
+> @@ -1595,6 +1652,11 @@ static int phy_probe(struct device *dev)
+>         of_set_phy_supported(phydev);
+>         phydev->advertising = phydev->supported;
+>
+> +       /* Get the EEE modes we want to prohibit. We will ask
+> +        * the PHY stop advertising these mode later on
+> +        */
+> +       of_set_phy_eee_disable(phydev);
+> +
+>         /* Set the state to READY by default */
+>         phydev->state = PHY_READY;
+>
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index e25f1830fbcf..7f2ea0af16d1 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -401,6 +401,9 @@ struct phy_device {
+>         u32 advertising;
+>         u32 lp_advertising;
+>
+> +       /* Energy efficient ethernet modes which should be prohibited */
+> +       u32 eee_advert_disabled;
+> +
+>         int autoneg;
+>
+>         int link_timeout;
+> --
+> 2.7.4
+>
 
-The link to the data sheet and TRM can be found here:
+iperf3 tcp test summary at my end
 
-http://www.ti.com/product/AM5718
+Test Complete. Summary Results:
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-100.00 sec  10.9 GBytes   936 Mbits/sec    0             sender
+[  4]   0.00-100.00 sec  10.9 GBytes   936 Mbits/sec                  receiver
+CPU Utilization: local/sender 5.7% (0.2%u/5.5%s), remote/receiver
+11.9% (0.9%u/11.0%s)
 
-Initial support is only for basic peripherals.
+iperf3 udp test summary at my end.
 
-Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
-Cahnges since v1:
-- Dropped "ti,dra722", and "ti,dra72" from compatibles
-- Fixes few node names as suggested by Rob.
-Logs: http://pastebin.ubuntu.com/23515001/
+Test Complete. Summary Results:
+[ ID] Interval           Transfer     Bandwidth       Jitter
+Lost/Total Datagrams
+[  4]   0.00-100.00 sec  12.5 MBytes  1.05 Mbits/sec  0.025 ms  0/1599 (0%)
+[  4] Sent 1599 datagrams
+CPU Utilization: local/sender 0.1% (0.0%u/0.1%s), remote/receiver 0.0%
+(0.0%u/0.0%s)
 
- .../devicetree/bindings/arm/omap/omap.txt          |  3 +
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/am571x-idk.dts                   | 81 ++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
- create mode 100644 arch/arm/boot/dts/am571x-idk.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index f53e2ee..6cf680e 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -175,6 +175,9 @@ Boards:
- - AM5728 IDK
-   compatible = "ti,am5728-idk", "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7"
- 
-+- AM5718 IDK
-+  compatible = "ti,am5718-idk", "ti,am5718", "ti,dra7"
-+
- - DRA742 EVM:  Software Development Board for DRA742
-   compatible = "ti,dra7-evm", "ti,dra742", "ti,dra74", "ti,dra7"
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index befcd26..c298078 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -588,6 +588,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	am57xx-cl-som-am57x.dtb \
- 	am57xx-sbc-am57x.dtb \
- 	am572x-idk.dtb \
-+	am571x-idk.dtb \
- 	dra7-evm.dtb \
- 	dra72-evm.dtb \
- 	dra72-evm-revc.dtb
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-new file mode 100644
-index 0000000..d6e43e5
---- /dev/null
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -0,0 +1,81 @@
-+/*
-+ * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "dra72x.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "am57xx-idk-common.dtsi"
-+
-+/ {
-+	model = "TI AM5718 IDK";
-+	compatible = "ti,am5718-idk", "ti,am5718", "ti,dra7";
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x40000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		cpu0-led {
-+			label = "status0:red:cpu0";
-+			gpios = <&gpio2 25 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			linux,default-trigger = "cpu0";
-+		};
-+
-+		usr0-led {
-+			label = "status0:green:usr";
-+			gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		heartbeat-led {
-+			label = "status0:blue:heartbeat";
-+			gpios = <&gpio2 27 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		usr1-led {
-+			label = "status1:red:usr";
-+			gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		usr2-led {
-+			label = "status1:green:usr";
-+			gpios = <&gpio2 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		mmc0-led {
-+			label = "status1:blue:mmc0";
-+			gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			linux,default-trigger = "mmc0";
-+		};
-+	};
-+
-+	extcon_usb2: extcon_usb2 {
-+	     compatible = "linux,extcon-usb-gpio";
-+	     id-gpio = <&gpio5 7 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&ldo1_reg>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio6 27 0>; /* gpio 219 */
-+};
-+
-+&omap_dwc3_2 {
-+	extcon = <&extcon_usb2>;
-+};
--- 
-2.10.1
-
+Best Regards
+-Anand Moon
+>
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
