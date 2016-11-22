@@ -1,86 +1,117 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] reset: hisilicon: add reset-hi3660
-Date: Tue, 22 Nov 2016 18:02:39 +0800
-Message-ID: <5e730474-ad07-ceee-4a17-2291a1dd62b3@linaro.org>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
- <2220300.Yj4lYzeH2z@wuerfel>
- <d6e602c0-70e9-0309-86b5-bfd006d86028@linaro.org>
- <3166877.sQekoU5ezv@wuerfel>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH net v2 2/3] dt: bindings: add ethernet phy
+ eee-disable-advert option documentation
+Date: Tue, 22 Nov 2016 11:13:57 +0100
+Message-ID: <1479809637.17538.113.camel@baylibre.com>
+References: <1479742524-30222-1-git-send-email-jbrunet@baylibre.com>
+         <1479742524-30222-3-git-send-email-jbrunet@baylibre.com>
+         <20161121160149.GF1922@lunn.ch> <1479744993.17538.85.camel@baylibre.com>
+         <20161121164733.GG1922@lunn.ch>
+         <e792c889-8725-3952-ca28-a08537d9f87a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3166877.sQekoU5ezv@wuerfel>
+In-Reply-To: <e792c889-8725-3952-ca28-a08537d9f87a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2016-11-21 at 21:35 -0800, Florian Fainelli wrote:
+> Le 21/11/2016 à 08:47, Andrew Lunn a écrit :
+> > 
+> > > 
+> > > What I did not realize when doing this patch for the realtek
+> > > driver is
+> > > that there is already 6 valid modes defined in the kernel
+> > > 
+> > > #define MDIO_EEE_100TX		MDIO_AN_EEE_ADV_100TX	
+> > > /*
+> > > 100TX EEE cap */
+> > > #define MDIO_EEE_1000T		MDIO_AN_EEE_ADV_1000T	
+> > > /*
+> > > 1000T EEE cap */
+> > > #define MDIO_EEE_10GT		0x0008	/* 10GT EEE
+> > > cap */
+> > > #define MDIO_EEE_1000KX		0x0010	/* 1000KX
+> > > EEE cap
+> > > */
+> > > #define MDIO_EEE_10GKX4		0x0020	/* 10G KX4
+> > > EEE cap
+> > > */
+> > > #define MDIO_EEE_10GKR		0x0040	/* 10G KR EEE
+> > > cap
+> > > */
+> > > 
+> > > I took care of only 2 in the case of realtek.c since it only
+> > > support
+> > > MDIO_EEE_100TX and MDIO_EEE_1000T.
+> > > 
+> > > Defining a property for each is certainly doable but it does not
+> > > look
+> > > very nice either. If it extends in the future, it will get even
+> > > more
+> > > messier, especially if you want to disable everything.
+> > 
+> > Yes, agreed.
+> 
+> One risk with the definition a group of advertisement capabilities
+> (under the form of a bitmask for instance) to enable/disable is that
+> we
+> end up with Device Tree contain some kind of configuration policy as
+> opposed to just flagging particular hardware features as broken.
+
+The code proposed only allows to disable EEE advertisement (not
+enable), so we should not see it used as a configuration policy in DT.
+To make this more explicit, I could replace the property "eee-advert-
+disable" by "eee-broken" ?
+
+> 
+> Fortunately, there does not seem to be a ton of PHYs out there which
+> require EEE
+
+It is quite difficult to have the real picture here because some PHYs
+have EEE disabled by default and you have to explicitly enable it.
+I have no idea of the ratio between the 2 phy policies.
+
+> to be disabled to function properly so having individual
+> properties vs. bitmasks/groups is kind of speculative here.
+
+In the particular instance of the OdroidC2, disabling EEE for GbE only
+enough. However, If you have a PHY broken with, I think it is likely
+that you might want to disable all (supported) EEE modes. That's reason
+why I prefer bitmask. I agree both are functionally similar, this is
+kind of a cosmetic debate.
+
+> 
+> Another approach to solving this problem could be to register a PHY
+> fixup which disables EEE at the PHY level, and which is only called
+> for
+> specific boards affected by this problem
+> (of_machine_is_compatible()).
+> This code can leave in arch/*/* when that is possible, 
+
+That something I was looking at, but we don't have these files anymore
+on ARM64 (looking at your comment, you already know this)
+
+> or it can just be
+> somewhere where it is relevant, e.g; in the PHY driver for instance
+> (similarly to how PCI fixups are done).
+
+Do you prefer having board specific code inside generic driver than
+having the setting living in DT? Peppe told me they also had a few
+platform with similar issues. The point is that this could be useful to
+other people, so it could spread a grow a bit.
+
+I would prefer having this in the DT, but I can definitely do it the
+PHY with of_machine_is_compatible() and register_fixup is this what you
+prefer/want. 
+
+Cheers
+Jerome
 
 
-On 2016年11月22日 17:42, Arnd Bergmann wrote:
-> On Tuesday, November 22, 2016 5:34:05 PM CET zhangfei wrote:
->> On 2016年11月22日 16:50, Arnd Bergmann wrote:
->>> On Tuesday, November 22, 2016 3:49:18 PM CET Zhangfei Gao wrote:
->>>> +static const struct hisi_reset_channel_data hi3660_iomcu_rst[] = {
->>>> +       [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3),
->>>> +       [HI3660_RST_I2C1] = HISI_RST_SEP(0x20, 4),
->>>> +       [HI3660_RST_I2C2] = HISI_RST_SEP(0x20, 5),
->>>> +       [HI3660_RST_I2C6] = HISI_RST_SEP(0x20, 27),
->>>> +};
->>>> +
->>>> +static struct hisi_reset_controller_data hi3660_iomcu_controller = {
->>>> +       .nr_channels = ARRAY_SIZE(hi3660_iomcu_rst),
->>>> +       .channels = hi3660_iomcu_rst,
->>>> +};
->>>> +
->>>> +static const struct hisi_reset_channel_data hi3660_crgctrl_rst[] = {
->>>> +       [HI3660_RST_I2C3] = HISI_RST_SEP(0x78, 7),
->>>> +       [HI3660_RST_I2C4] = HISI_RST_SEP(0x78, 27),
->>>> +       [HI3660_RST_I2C7] = HISI_RST_SEP(0x60, 14),
->>>> +       [HI3660_RST_SD] = HISI_RST_SEP(0x90, 18),
->>>> +       [HI3660_RST_SDIO] = HISI_RST_SEP(0x90, 20),
->>>> +       [HI3660_RST_UFS] = HISI_RST_SEP(0x84, 12),
->>>> +       [HI3660_RST_UFS_ASSERT] = HISI_RST_SEP(0x84, 7),
->>>> +       [HI3660_RST_PCIE_SYS] = HISI_RST_SEP(0x84, 26),
->>>> +       [HI3660_RST_PCIE_PHY] = HISI_RST_SEP(0x84, 27),
->>>> +       [HI3660_RST_PCIE_BUS] = HISI_RST_SEP(0x84, 31),
->>>> +       [HI3660_RST_USB3OTG_PHY] = HISI_RST_SEP(0x90, 3),
->>>> +       [HI3660_RST_USB3OTG] = HISI_RST_SEP(0x90, 5),
->>>> +       [HI3660_RST_USB3OTG_32K] = HISI_RST_SEP(0x90, 6),
->>>> +       [HI3660_RST_USB3OTG_AHB] = HISI_RST_SEP(0x90, 7),
->>>> +       [HI3660_RST_USB3OTG_MUX] = HISI_RST_SEP(0x90, 8),
->>>> +};
->>> I think you can avoid the trap of the ABI incompatibility if
->>> you just define those as in the binding as tuples, using #reset-cells=2.
->>>
->>> In particular for the first set, it seems really silly to redefine
->>> the numbers when there is just a simple integer number.
->> Could you clarify more, still not understand.
->> The number is index of the arrays, and the index will be used in dts.
->> The arrays lists the registers offset and bit shift.
->> For example:
->>
->> [HI3660_RST_I2C0] = HISI_RST_SEP(0x20, 3), means register offset : 0x20, and bit shift = 3.
->>
->> And Documentation/devicetree/bindings/reset/reset.txt
->> Required properties:
->> #reset-cells:   Number of cells in a reset specifier; Typically 0 for nodes
->>                   with a single reset output and 1 for nodes with multiple
->>                   reset outputs.
-> You can easily enumerate the registers that contain reset bits here,
-> so just use one cell for the register and another one for the index.
-
-/* reset separated register offset is 0x4 */
-#define HISI_RST_SEP(off, bit)                                  \
-         { .enable       = REG_FIELD(off, bit, bit),             \
-           .disable      = REG_FIELD(off + 0x4, bit, bit),       \
-           .status       = REG_FIELD(off + 0x8, bit, bit), }
-
-We not only provide the off and bit shift, but fulfill the members in 
-the meantime.
-
-Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
