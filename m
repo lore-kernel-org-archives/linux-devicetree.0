@@ -1,124 +1,99 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 2/2] gpio: axp209: add pinctrl support
-Date: Wed, 23 Nov 2016 14:45:12 +0100
-Message-ID: <20161123144512.55eb45e7@free-electrons.com>
-References: <20161123132749.11666-1-quentin.schulz@free-electrons.com>
-        <20161123132749.11666-3-quentin.schulz@free-electrons.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: power: add bindings for sbs-charger
+Date: Wed, 23 Nov 2016 14:45:20 +0100
+Message-ID: <20161123134520.kpyb2v42rrrnge4i@earth>
+References: <1479900044-19270-1-git-send-email-nicolas.saenz@prodys.net>
+ <1479900044-19270-3-git-send-email-nicolas.saenz@prodys.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161123132749.11666-3-quentin.schulz@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t54nomo3ghgu5cn5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479900044-19270-3-git-send-email-nicolas.saenz@prodys.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Saenz Julienne <nicolas.saenz@prodys.net>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-By far not a full review, just a few things that I saw while scrolling
-through the code.
+--t54nomo3ghgu5cn5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 Nov 2016 14:27:49 +0100, Quentin Schulz wrote:
+Hi,
 
-> +static struct axp20x_desc_function *
-> +axp20x_pinctrl_desc_find_func_by_name(struct axp20x_pctl *pctl,
-> +				      const char *group, const char *func)
-> +{
-> +	const struct axp20x_desc_pin *pin;
-> +	struct axp20x_desc_function *desc_func;
-
-These variables should go inside the for loop. There is this problem in
-other functions in your code: you should keep local variables in the
-scope where they are used.
-
-> +	int i;
+On Wed, Nov 23, 2016 at 12:20:44PM +0100, Nicolas Saenz Julienne wrote:
+> Adds device tree documentation for SBS charger compilant devices as defin=
+ed
+> here: http://sbs-forum.org/specs/sbc110.pdf
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nicolas.saenz@prodys.net>
+> ---
+>  .../bindings/power/supply/sbs_sbs-charger.txt      | 22 ++++++++++++++++=
+++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sb=
+s-charger.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-charg=
+er.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+> new file mode 100644
+> index 0000000..b18ee2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+> @@ -0,0 +1,22 @@
+> +SBS sbs-charger
+> +~~~~~~~~~~
 > +
-> +	for (i = 0; i < pctl->desc->npins; i++) {
-> +		pin = &pctl->desc->pins[i];
+> +Required properties :
+> + - compatible : "sbs,sbs-charger"
+
+I think the binding should request to add a more specific compatible
+value and use "sbs,sbs-charger" as fallback. The sbs-charger spec
+provides a few vendor specific registers. Like this:
+
+compatible =3D "lltc,ltc4100", "sbs,sbs-charger"
+
+> +Optional properties :
+> +- interrupt-parent: Should be the phandle for the interrupt controller. =
+Use in
+> +    conjunction with "interrupts".
+> +- interrupts: Interrupt mapping for GPIO IRQ. Use in conjunction with
+> +    "interrupt-parent". If an interrupt is not provided the driver will =
+switch
+> +    automatically to polling.
 > +
-> +		if (!strcmp(pin->pin.name, group)) {
-
-Change this to:
-
-		if (strcmp(pin->pin.name, group))
-			continue;
-
-This way, the rest of the code in the function is intended with one
-less tab.
-
-Or alternatively, if only one element in the array will match, you can
-also break out from the loop when you have found the matching element,
-and handle whatever needs to be done on this element outside of the
-loop.
-
-> +static struct axp20x_desc_function *
-> +axp20x_pctl_desc_find_func_by_pin(struct axp20x_pctl *pctl, unsigned int offset,
-> +				  const char *func)
-> +{
-> +	const struct axp20x_desc_pin *pin;
-> +	struct axp20x_desc_function *desc_func;
-> +	int i;
+> +Example:
 > +
-> +	for (i = 0; i < pctl->desc->npins; i++) {
-> +		pin = &pctl->desc->pins[i];
+> +	ltc4100@9 {
+> +		compatible =3D "sbs,sbs-charger";
+> +		reg =3D <0x9>;
+> +		interrupt-parent =3D <&gpio6>;
+> +		interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
 > +
-> +		if (pin->pin.number == offset) {
 
-Same comment here.
+-- Sebastian
 
-> +static int axp20x_build_state(struct platform_device *pdev)
-> +{
-> +	struct axp20x_pctl *pctl = platform_get_drvdata(pdev);
-> +	unsigned int npins = pctl->desc->npins;
-> +	const struct axp20x_desc_pin *pin;
-> +	struct axp20x_desc_function *func;
-> +	int i, ret;
-> +
-> +	pctl->ngroups = npins;
-> +	pctl->groups = devm_kzalloc(&pdev->dev,
-> +				    pctl->ngroups * sizeof(*pctl->groups),
-> +				    GFP_KERNEL);
-> +	if (!pctl->groups)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < npins; i++) {
-> +		pctl->groups[i].name = pctl->desc->pins[i].pin.name;
-> +		pctl->groups[i].pin = pctl->desc->pins[i].pin.number;
-> +	}
-> +
-> +	/* We assume 4 functions per pin should be enough as a default max */
-> +	pctl->functions = devm_kzalloc(&pdev->dev,
-> +				       npins * 4 * sizeof(*pctl->functions),
-> +				       GFP_KERNEL);
-> +	if (!pctl->functions)
-> +		return -ENOMEM;
-> +
-> +	/* Create a list of uniquely named functions */
-> +	for (i = 0; i < npins; i++) {
-> +		pin = &pctl->desc->pins[i];
-> +		func = pin->functions;
-> +
-> +		while (func->name) {
-> +			axp20x_pinctrl_add_function(pctl, func->name);
-> +			func++;
-> +		}
-> +	}
-> +
-> +	pctl->functions = krealloc(pctl->functions,
-> +				   pctl->nfunctions * sizeof(*pctl->functions),
-> +				   GFP_KERNEL);
+--t54nomo3ghgu5cn5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Not sure why you need to first allocation for 4 functions, and then
-reallocate a potentially larger (or smaller?) array here.
+-----BEGIN PGP SIGNATURE-----
 
-Will devm_kzalloc() followed by krealloc() really have the expected
-behavior?
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlg1nXAACgkQ2O7X88g7
++pouyg//U3KCoLGrMy2H1wAW3mYa0Wr31CiWHkfAREORNhMotgk5eZx6+Q1rK+uQ
+pgNR9IR+wh+5Yojfqj5zt4H6MtAHQ3WuYnEPdCdDoLw5FGRz/44hwjOQEF6+cRX2
+Rvu5NpIR6S7kwTsUAf2zefUc3w3ObR/dp6chak8AS+gHkZGs46ttsObZ/WzgrYl8
+zf61WvRrgbehNUAJD9ix2HD+VB5hHknCc1kxE3bJcugbr+0dCkBRAX5tHIQ0SB2r
+mhTn+6zHXuRRzWfMq7XDlwC2Xv2QQaNWsGMTKUQQYUxx1jkh/+UQM1BqXUYQwlPX
+hMiPg34u/BQYO312owUUnSMOOdE1NfqV3P8bQ1Tq1zOsMKTseIdcEf/fOt/heZWm
+scbvxp7cPhHPq2KfpcwZNEjLS4z8CqtTDNIH4xdpPjZNtACzODdxcrNAdDY3TQau
+a8oU9YluOt2mNH3D804HTVWXaTa5KJncX1r1DAUKBuyVsPXhDbpmL4lrBxzVJfqe
+/Jp2895/rKTtNrv6ln/h78NdfziU+oY9EIEkIJl0fEVVjCN9wVuPHL6st9R94igU
+1qNBEQwjO6id1yIUQ2uBPzWb/VV1ZHVvjKgNIGDdsWEtMszWUrs3ntT/rVjryJCg
+cw4M9V79+ly6dOXoSlHpgsUeVEQLO19C2+AOn3BLW92ZtcRKRWA=
+=xUn5
+-----END PGP SIGNATURE-----
 
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--t54nomo3ghgu5cn5--
