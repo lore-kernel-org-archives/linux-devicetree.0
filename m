@@ -1,70 +1,40 @@
 From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 3/3] dmaengine: sun6i: share the dma driver with sun50i
-Date: Wed, 23 Nov 2016 09:42:37 +0530
-Message-ID: <20161123041237.GE2698@localhost>
-References: <1479638740-20520-1-git-send-email-hao5781286@gmail.com>
- <1479638740-20520-4-git-send-email-hao5781286@gmail.com>
+Subject: Re: [PATCH v3 2/2] DW DMAC: add multi-block property to device tree
+Date: Wed, 23 Nov 2016 09:45:13 +0530
+Message-ID: <20161123041513.GF2698@localhost>
+References: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1479496356-27834-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1479497593.22212.45.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479638740-20520-4-git-send-email-hao5781286@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hao Zhang <hao5781286@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, maxime.ripard@free-electrons.com, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1479497593.22212.45.camel@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 20, 2016 at 06:45:40PM +0800, Hao Zhang wrote:
-> Changes the limited buswith to 8 bytes,and add
-> the test in sun6i_dma_config function
+On Fri, Nov 18, 2016 at 09:33:13PM +0200, Andy Shevchenko wrote:
+> > @@ -1569,7 +1569,7 @@ int dw_dma_probe(struct dw_dma_chip *chip)
+> >  				(dwc_params >> DWC_PARAMS_MBLK_EN &
+> > 0x1) == 0;
+> >  		} else {
+> >  			dwc->block_size = pdata->block_size;
+> > -			dwc->nollp = pdata->is_nollp;
+> > +			dwc->nollp = pdata->multi_block[i];
 > 
-> Accroding to sun6i dma driver, i think ,if the client
-  ^^^^^^^^
-typo and other grammatical mistakes here..
-
-
-> doesn't configure the address width with dmaengine_slave_config
-> function, it would use the default width. So we can add the test
-> in sun6i_dma_config function called by dmaengine_slave_config,
-> and test the configuration whether is support for the device.
+> You missed the point. You assign positive value to negative variable.
+> It's a bug. Have you tested this? How?
 > 
-> Signed-off-by: Hao Zhang <hao5781286@gmail.com>
-> ---
->  drivers/dma/sun6i-dma.c | 33 ++++++++++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index a235878..f7c90b6 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -250,7 +250,7 @@ static inline s8 convert_burst(u32 maxburst)
->  static inline s8 convert_buswidth(enum dma_slave_buswidth addr_width)
->  {
->  	if ((addr_width < DMA_SLAVE_BUSWIDTH_1_BYTE) ||
-> -	    (addr_width > DMA_SLAVE_BUSWIDTH_4_BYTES))
-> +	    (addr_width > DMA_SLAVE_BUSWIDTH_8_BYTES))
->  		return -EINVAL;
->  
->  	return addr_width >> 1;
-> @@ -758,6 +758,18 @@ static int sun6i_dma_config(struct dma_chan *chan,
->  {
->  	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
->  
-> +	if ((BIT(config->src_addr_width) | chan->device->src_addr_widths) !=
-> +		chan->device->src_addr_widths) {
+> In case of positive property you have to update DTS. By the way, I'm
+> pretty sure that spare13xx boards has auto configuration enabled, though
+> it has to be checked with vendor (I assume you may have fast response
+> from them).
 
-First I dont like coding style here
-
-Second, this is not driver specific, should be move to core..
+Yeah why are we not using auto configuration here would be the first
+question..
 
 -- 
 ~Vinod
