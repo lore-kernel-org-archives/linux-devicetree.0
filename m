@@ -1,47 +1,28 @@
-From: Javi Merino <javi.merino@kernel.org>
-Subject: [PATCH] v4l: async: make v4l2 coexists with devicetree nodes in a dt overlay
-Date: Wed, 23 Nov 2016 10:09:57 +0000
-Message-ID: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Javi Merino <javi.merino@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 1/3] devicetree: bindings: pinctrl: Add binding for
+ ti,da850-pupd
+Date: Wed, 23 Nov 2016 16:31:51 +0530
+Message-ID: <33ddafab-9704-d21c-ea86-22b9b62553b8@ti.com>
+References: <1479871767-20160-1-git-send-email-david@lechnology.com>
+ <1479871767-20160-2-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1479871767-20160-2-git-send-email-david@lechnology.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-In asd's configured with V4L2_ASYNC_MATCH_OF, if the v4l2 subdev is in
-a devicetree overlay, its of_node pointer will be different each time
-the overlay is applied.  We are not interested in matching the
-pointer, what we want to match is that the path is the one we are
-expecting.  Change to use of_node_cmp() so that we continue matching
-after the overlay has been removed and reapplied.
+On Wednesday 23 November 2016 08:59 AM, David Lechner wrote:
+> Device-tree bindings for TI DA8XX/OMAP-L138/AM18XX pullup/pulldown
 
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Javi Merino <javi.merino@kernel.org>
----
-Hi,
+s/DA8XX/DA850. It looks like this support is absent from DA830.
 
-I feel it is a bit of a hack, but I couldn't think of anything better.
-I'm ccing devicetree@ and Pantelis because there may be a simpler
-solution.
+> pinconf controller.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
- drivers/media/v4l2-core/v4l2-async.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 5bada20..d33a17c 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -42,7 +42,8 @@ static bool match_devname(struct v4l2_subdev *sd,
- 
- static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
- {
--	return sd->of_node == asd->match.of.node;
-+	return !of_node_cmp(of_node_full_name(sd->of_node),
-+			    of_node_full_name(asd->match.of.node));
- }
- 
- static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
--- 
-2.1.4
+Thanks,
+Sekhar
