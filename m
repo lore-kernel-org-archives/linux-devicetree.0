@@ -1,49 +1,39 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
- powerhold property
-Date: Wed, 23 Nov 2016 08:33:27 +0000
-Message-ID: <20161123083327.GM10134@dell.home>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
- <20161115000849.GD4082@atomide.com>
- <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v9 00/16] mmc: sdhci-msm: Add clk-rates, DDR, HS400 support
+Date: Wed, 23 Nov 2016 09:32:10 +0100
+Message-ID: <CAPDyKFrSFwBv-uA4Ov_1a2wxpiGZFBDN5wKGn+r63Y9H-UcLYQ@mail.gmail.com>
+References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
+ <CAPDyKFrRbf0+G5K=-jsaevAGbTqhTAss2zJv3QdiyCrv0BG-zA@mail.gmail.com> <20161123050038.GD16531@hector.attlocal.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20161123050038.GD16531@hector.attlocal.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Ritesh Harjani <riteshh@codeaurora.org>, linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Shawn Lin <shawn.lin@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, David Brown <david.brown@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Alex Lemberg <alex.lemberg@sandisk.com>, Mateusz Nowak <mateusz.nowak@intel.com>, Yuliy Izrailov <Yuliy.Izrailov@sandisk.com>, Asutosh Das <asutoshd@codeaurora.org>, David Griego <david.griego@linaro.org>, Sahitya Tummala <stummala@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Rajendra Nayak <rnayak@c>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Nov 2016, Keerthy wrote:
+On 23 November 2016 at 06:00, Andy Gross <andy.gross@linaro.org> wrote:
+> On Mon, Nov 21, 2016 at 11:06:13AM +0100, Ulf Hansson wrote:
+>> On 21 November 2016 at 07:37, Ritesh Harjani <riteshh@codeaurora.org> wrote:
+>> > Hi,
+>> >
+>> > This is v9 version of the patch series which adds support for MSM8996.
+>> > Adds HS400 driver support as well.
+>> > These are tested on internal msm8996 & db410c HW.
+>> >
+>> > The patch series is ready. Do we think we can apply these
+>> > patches for next now?
+>>
+>> I guess the DTS changes can be picked up by Andy, so they can go via arm-soc?
+>
+> Yeah I'll pick up the DTS change and the Documentation change.
 
-> 
-> 
-> On Tuesday 15 November 2016 05:38 AM, Tony Lindgren wrote:
-> > * Keerthy <j-keerthy@ti.com> [161109 21:10]:
-> > > The PMICs have POWERHOLD set by default which prevents PMIC shutdown
-> > > even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
-> > > So to enable pmic power off this property lets one over ride the default
-> > > value and enable pmic power off.
-> > 
-> > This should not cause merge conflicts so probably best to merge along
-> > with the driver changes:
-> > 
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> > 
-> > If you guys want me to pick up this separately let me know.
-> 
-> Hi Lee Jones,
-> 
-> Are you planning to pull DT and Documentation patches as well?
+Andy, I would rather like to pick the DT Documentation change via my
+mmc tree. Just because I normally do that.
 
-No need.  They can be safely applied to their own subsystems.
+This one:
+[PATCH v9 05/16] dt-bindings: sdhci-msm: Add xo value
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Kind regards
+Uffe
