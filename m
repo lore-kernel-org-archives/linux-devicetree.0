@@ -1,148 +1,75 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
-Date: Wed, 23 Nov 2016 08:59:50 +0100
-Message-ID: <20161123075950.fjtplylunwale6j4@lukather>
+Subject: Re: [PATCH v2 1/3] ARM: sunxi: add support for H2+ SoC
+Date: Wed, 23 Nov 2016 08:54:40 +0100
+Message-ID: <20161123075440.jyubhodklpaueupw@lukather>
 References: <20161121162421.800-1-icenowy@aosc.xyz>
- <20161121162421.800-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4780815808593788657=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161121162421.800-3-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m6di2pz3asjbl7wt"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161121162421.800-1-icenowy@aosc.xyz>
+Sender: linux-doc-owner@vger.kernel.org
 To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Andre Przywara <andre.przywara@arm.com>, linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Andre Przywara <andre.przywara@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============4780815808593788657==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bjlgigef2u3ezvmr"
-Content-Disposition: inline
-
-
---bjlgigef2u3ezvmr
+--m6di2pz3asjbl7wt
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Nov 22, 2016 at 12:24:21AM +0800, Icenowy Zheng wrote:
-> There's a Allwinner's XR819 SDIO Wi-Fi module soldered on the board of
-> Orange Pi Zero, which used a dedicated regulator to power.
+On Tue, Nov 22, 2016 at 12:24:19AM +0800, Icenowy Zheng wrote:
+> Allwinner H2+ is a quad-core Cortex-A7 SoC.
 >=20
-> Add the device tree node of the regulator, the enable gpio (with
-> mmc-pwrseq) and the sdio controller.
->=20
-> There's a out-of-tree driver tested to work with this device tree.
+> It is very like H3, that they share the same SoC ID (0x1680), and H3
+> memory maps as well as drivers works well on the SoC.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
-> New patch in the patchset, since a out-of-tree working xradio driver is d=
-one.
+>  Documentation/arm/sunxi/README                  | 4 ++++
+>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>  3 files changed, 6 insertions(+)
 >=20
-> If there is any problem in this patch, it can be omitted.
-
-No particular problem with this one, however it can and should be
-merged with the previous one.
-
-Minor comments below though.
-
->=20
->  arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts | 42 ++++++++++++++++++=
-++++++
->  1 file changed, 42 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts b/arch/arm/=
-boot/dts/sun8i-h2plus-orangepi-zero.dts
-> index b428e47..39cac26 100644
-> --- a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
-> @@ -79,6 +79,24 @@
->  			gpios =3D <&pio 0 17 GPIO_ACTIVE_HIGH>;
->  		};
->  	};
-> +
-> +	reg_vcc_wifi: reg_vcc_wifi {
-> +		compatible =3D "regulator-fixed";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&vcc_wifi_pin_opi0>;
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		regulator-name =3D "vcc-wifi";
-> +		enable-active-high;
-> +		gpio =3D <&pio 0 20 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	wifi_pwrseq: wifi_pwrseq {
-> +		compatible =3D "mmc-pwrseq-simple";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&wifi_pwrseq_pin_opi0>;
-> +		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>;
-> +	};
->  };
+> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/REA=
+DME
+> index cd02433..1fe4d99c 100644
+> --- a/Documentation/arm/sunxi/README
+> +++ b/Documentation/arm/sunxi/README
+> @@ -63,6 +63,10 @@ SunXi family
+>          + User Manual
+>            http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%20=
+1.1.pdf
 > =20
->  &ehci1 {
-> @@ -95,6 +113,20 @@
->  	status =3D "okay";
->  };
-> =20
-> +&mmc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc1_pins_a>;
-> +	vmmc-supply =3D <&reg_vcc_wifi>;
-> +	mmc-pwrseq =3D <&wifi_pwrseq>;
-> +	bus-width =3D <4>;
-> +	non-removable;
-> +	status =3D "okay";
-> +};
+> +      - Allwinner H2+ (sun8i)
+> +        + No document available now, but is known to be working properly=
+ with
+> +          H3 drivers and memory map.
 > +
-> +&mmc1_pins_a {
-> +	allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
 
-This should be bias-pull-up.
+I'm not sure the phrasing is right here. I would prefer something like:
 
-> +};
-> +
->  &ohci1 {
->  	status =3D "okay";
->  };
-> @@ -104,6 +136,11 @@
->  		pins =3D "PA17";
->  		function =3D "gpio_out";
->  	};
-> +
-> +	vcc_wifi_pin_opi0: vcc_wifi_pin@0 {
-> +		allwinner,pins =3D "PA20";
+"No document publicly available now, but looks very similar to the H3"=20
 
-This should be pins
+>        - Allwinner H3 (sun8i)
+>          + Datasheet
+>            http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentat=
+ion/devicetree/bindings/arm/sunxi.txt
+> index 4d6467c..26b35a7 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -13,6 +13,7 @@ using one of the following compatible strings:
+>    allwinner,sun8i-a33
+>    allwinner,sun8i-a83t
+>    allwinner,sun8i-h3
+> +  allwinner,sun8i-h2plus
 
-> +		allwinner,function =3D "gpio_out";
-
-This should be function
-
-> +	};
->  };
-> =20
->  &r_pio {
-> @@ -111,6 +148,11 @@
->  		pins =3D "PL10";
->  		function =3D "gpio_out";
->  	};
-> +
-> +	wifi_pwrseq_pin_opi0: wifi_pwrseq_pin@0 {
-> +		allwinner,pins =3D "PL7";
-> +		allwinner,function =3D "gpio_out";
-
-And same thing here.
+h2-plus please.
 
 Thanks!
 Maxime
@@ -152,38 +79,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---bjlgigef2u3ezvmr
+--m6di2pz3asjbl7wt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYNUx2AAoJEBx+YmzsjxAg3MgQAJl1ppzNHgy1TrCpaz0TlZ/X
-tzphrmvYOJ8vkNOKCmCFVQRwXQbZcwClfugPJA/gUNm7gphZpMvERJniB8vi+tDS
-bRBf456tBSb46Swfgk+5brPjmKr0fWl0o0LqMhRUb8yG8hwCA1SkhevGeSntO3Un
-fXyUTAc+ZJ7h4ZLnsir7PUlJleB4CHU0jF3dK1Ggzcq9aYs8rf4GbE7NEP/flTLY
-2/mcVNgG0MsDSn1Zp1pWqBEnMMULcebQFyhBHd5hnryovsoPABamYvPBi0sPoaEA
-WAxw24ZMWrlHyI+ib6gncy4ypmuoWtgasEmrgMXL9B84NUw8lXTS/Ez3UmQ1YD9N
-0XuV84eLpXXd9CfbZJRNdZfpz6pAbV/AGc3/OGcXn9GJ/QeaCCwHaqvZNYp2nk5M
-mHLaOs0dieXNcQUX18+Ss2QPanvtLz+Nw3PyqSesmZnmAK1kp6j7pVsS87Lgo1ZQ
-87WBSnsSu4wqEX1R+4AQQSVZurJTwLPdRHiu0DEasZ2f9Ei3UGrhZxI4II31SWo4
-T4zz/EG3pOmTSWB7ioaVJnwWBawOLW86Rn0thh48P6L+P1QUvjxesKRqGGzZInc3
-92P+47RVeTVWzU4azD2OIJX3au4tL32127HuCmeEW0umbNHDiHRVa+7BepD8Krxh
-Hv8PgsfZmYFjqS9ldCus
-=gv8O
+iQIcBAEBCAAGBQJYNUs9AAoJEBx+YmzsjxAgP0QQAIUc6g0Mevf4k5yAp+6f49mW
+o9K3kZhpG0P3eKN3xMxxeqThN675r4AkdcNmyvPqD6c3HWfovToBe2h2VA9rOBh1
+39cbXKzxYeNboHiPzHakea8X/dfBlRqJdSaC+Zf4h+Hk88Hxxqahp43rSx9aCuUZ
+OkMW/WLnjg6mKrCJw009TvqA9Ty3rpwCwZvVLwgCkYA8/omzqYrSDpGcmwk2Idkl
+qfd5CVXKfx6In4n8B4axAxOG9nnW4Ps7+Sq1r2djn0ulJRjwH9K0JBQ70Bylnh93
+aeKH7LEMcu+mO6jmEoKpwFOV59OVI1XvbGHIQQH4wNu4/zZPcGZ44J8uBPZ0JpJQ
++lztZ+xml31zL5WT0/OabC9OnRD+FrTIw3SONwKsJrGcI3lvN9wkOpfI3oLMoK8+
+5QNdpuEHa10vEXR/xuO8pWnLXvGZmSFygjsRgnsfceg5xWhRiqWoW1v8gyYDKnS9
+Q9SLbpggv3iMawKVIxxTvkxsSDsRIjQabafrYwTdXsnyWsVTzpXCaGam/2bzK7oo
+5E8MU41JHGRJNU6fOiurlL5chaS1N7xoBkLxTAZjP+TTj1f4UJpge2VPUZyOeXY2
+17A56FIklu00lyy8FWyaO4NzTbQAQV3gFJTWMP3c7E4gJbdmdgcIonMrH51NnSSS
+X0BoyZiQ6q5j9t3b1xdW
+=i5iq
 -----END PGP SIGNATURE-----
 
---bjlgigef2u3ezvmr--
-
-
---===============4780815808593788657==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4780815808593788657==--
+--m6di2pz3asjbl7wt--
