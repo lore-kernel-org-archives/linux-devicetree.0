@@ -1,74 +1,58 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Wed, 23 Nov 2016 14:32:05 -0800
-Message-ID: <m2bmx5x1y2.fsf@baylibre.com>
-References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
- <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
- <CAMpxmJVqog0Fno_DO0NQKmVNvzu5d=3GOLk145wBmB-V70BLeg@mail.gmail.com>
- <5e647eb0-2f8a-b46b-2048-7616bfb54ad7@lechnology.com>
+Subject: Re: [PATCH 3/3] ARM: dts: da850: Add node for pullup/pulldown pinconf
+Date: Wed, 23 Nov 2016 14:33:38 -0800
+Message-ID: <m260ndx1vh.fsf@baylibre.com>
+References: <1479871767-20160-1-git-send-email-david@lechnology.com>
+        <1479871767-20160-4-git-send-email-david@lechnology.com>
+        <8c3e6535-4b79-9731-f801-c13f007e48ab@ti.com>
+        <06bc8517-8c33-85a1-9d5a-29042c7281db@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5e647eb0-2f8a-b46b-2048-7616bfb54ad7@lechnology.com> (David
- Lechner's message of "Wed, 23 Nov 2016 10:19:53 -0600")
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <06bc8517-8c33-85a1-9d5a-29042c7281db@lechnology.com> (David
+        Lechner's message of "Wed, 23 Nov 2016 10:24:06 -0600")
+Sender: linux-kernel-owner@vger.kernel.org
 To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-RGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+IHdyaXRlczoKCj4gT24gMTEvMjMv
-MjAxNiAwNDoyNyBBTSwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4gMjAxNi0xMS0yMiAy
-MzoyMyBHTVQrMDE6MDAgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Ogo+Pj4g
-T24gMTEvMTUvMjAxNiAwNTowMCBBTSwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4+Pgo+
-Pj4+IEFkZCB0aGUgbm9kZXMgZm9yIHRoZSBNU1RQUkkgY29uZmlndXJhdGlvbiBhbmQgRERSMi9t
-RERSIG1lbW9yeQo+Pj4+IGNvbnRyb2xsZXIgZHJpdmVycyB0byBkYTg1MC5kdHNpLgo+Pj4+Cj4+
-Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxp
-YnJlLmNvbT4KPj4+PiAtLS0KPj4+PiB2MSAtPiB2MjoKPj4+PiAtIG1vdmVkIHRoZSBwcmlvcml0
-eSBjb250cm9sbGVyIG5vZGUgYWJvdmUgdGhlIGNmZ2NoaXAgbm9kZQo+Pj4+IC0gcmVuYW1lZCBh
-ZGRlZCBub2RlcyB0byBiZXR0ZXIgcmVmbGVjdCB0aGVpciBwdXJwb3NlCj4+Pj4KPj4+PiAgYXJj
-aC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSB8IDggKysrKysrKysKPj4+PiAgMSBmaWxlIGNoYW5n
-ZWQsIDggaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+Pj4gaW5kZXgg
-MWJiMWY2ZC4uNDEyZWVjNiAxMDA2NDQKPj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1
-MC5kdHNpCj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+IEBAIC0y
-MTAsNiArMjEwLDEwIEBACj4+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+Pgo+Pj4+
-ICAgICAgICAgICAgICAgICB9Owo+Pj4+ICsgICAgICAgICAgICAgICBwcmljdHJsOiBwcmlvcml0
-eS1jb250cm9sbGVyQDE0MTEwIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
-YmxlID0gInRpLGRhODUwLW1zdHByaSI7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVn
-ID0gPDB4MTQxMTAgMHgwYz47Cj4+Pgo+Pj4KPj4+IEkgdGhpbmsgd2Ugc2hvdWxkIGFkZCBzdGF0
-dXMgPSAiZGlzYWJsZWQiOyBoZXJlIGFuZCBsZXQgYm9hcmRzIG9wdCBpbi4KPj4+Cj4+Pj4gKyAg
-ICAgICAgICAgICAgIH07Cj4+Pj4gICAgICAgICAgICAgICAgIGNmZ2NoaXA6IGNoaXAtY29udHJv
-bGxlckAxNDE3YyB7Cj4+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ0
-aSxkYTgzMC1jZmdjaGlwIiwgInN5c2NvbiIsCj4+Pj4gInNpbXBsZS1tZmQiOwo+Pj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDE0MTdjIDB4MTQ+Owo+Pj4+IEBAIC00NTEsNCAr
-NDU1LDggQEAKPj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgIDEgMCAweDY4MDAwMDAwIDB4
-MDAwMDgwMDA+Owo+Pj4+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Pj4+
-ICAgICAgICAgfTsKPj4+PiArICAgICAgIG1lbWN0cmw6IG1lbW9yeS1jb250cm9sbGVyQGIwMDAw
-MDAwIHsKPj4+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1kZHItY29u
-dHJvbGxlciI7Cj4+Pj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweGIwMDAwMDAwIDB4ZTg+Owo+
-Pj4KPj4+Cj4+PiBzYW1lIGhlcmUuIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+Pgo+Pj4+ICsgICAg
-ICAgfTsKPj4+PiAgfTsKPj4+Pgo+Pgo+PiBIaSBEYXZpZCwKPj4KPj4gSSBkaWQgdGhhdCBpbml0
-aWFsbHlbMV1bMl0gYW5kIGl0IHdhcyByZWplY3RlZCBieSBLZXZpblszXSBhbmQgTGF1cmVudFs0
-XS4KPj4KPj4gRllJIHRoaXMgcGF0Y2ggaGFzIGFscmVhZHkgYmVlbiBxdWV1ZWQgYnkgU2VraGFy
-Lgo+Cj4gVGhhbmtzLiBJIGRpZCBub3Qgc2VlIHRob3NlIHRocmVhZHMuCj4KPiBGWUkgdG8gbWFp
-bnRhaW5lcnMsIGhhdmluZyB0aGVzZSBlbmFibGVkIGJ5IGRlZmF1bHQgY2F1c2VzIGVycm9yCj4g
-bWVzc2FnZXMgaW4gdGhlIGtlcm5lbCBsb2cgZm9yIG90aGVyIGJvYXJkcyB0aGF0IGFyZSBub3Qg
-c3VwcG9ydGVkIGJ5Cj4gdGhlIGRyaXZlcnMuCgpUaGVuIHRoZSBkcml2ZXIgaXMgdG9vIG5vaXN5
-IGFuZCBzaG91bGQgYmUgY2xlYW5lZCB1cC4KCj4gU2luY2UgdGhlcmUgaXMgb25seSBvbmUgYm9h
-cmQgdGhhdCBpcyBzdXBwb3J0ZWQgYW5kIHNvb24KPiB0byBiZSAyIHRoYXQgYXJlIG5vdCwgSSB3
-b3VsZCByYXRoZXIgaGF2ZSB0aGlzIGRpc2FibGVkIGJ5IGRlZmF1bHQgdG8KPiBhdm9pZCB0aGUg
-ZXJyb3IgbWVzc2FnZXMuCgpJTU8sIHdoYXQgZXhhY3RseSBhcmUgdGhlIGVycm9yIG1lc3NhZ2Vz
-PyBTb3VuZHMgbGlrZSB0aGUgZHJpdmVyIGlzCmJlaW5nIHRvbyB2ZXJib3NlLCBhbmQgY2FsbGlu
-ZyB0aGluZ3MgZXJyb3JzIHRoYXQgYXJlIG5vdCByZWFsbHkgZXJyb3JzLgoKS2V2aW4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+David Lechner <david@lechnology.com> writes:
+
+> On 11/23/2016 05:12 AM, Sekhar Nori wrote:
+>> On Wednesday 23 November 2016 08:59 AM, David Lechner wrote:
+>>> This SoC has a separate pin controller for configuring pullup/pulldown
+>>> bias on groups of pins.
+>>>
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>>  arch/arm/boot/dts/da850.dtsi | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>>> index 8945815..1c0224c 100644
+>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>> @@ -210,6 +210,11 @@
+>>>  			};
+>>>
+>>>  		};
+>>> +		pinconf: pin-controller@22c00c {
+>>> +			compatible = "ti,da850-pupd";
+>>> +			reg = <0x22c00c 0x8>;
+>>> +			status = "disabled";
+>>> +		};
+>>
+>> Can you please place this below the i2c1 node. I am trying to keep the
+>> nodes sorted by unit address. I know thats broken in many places today,
+>> but lets add the new ones where they should eventually end up.
+>
+> I can do this, but it seems that the predominant sorting pattern here
+> is to keep subsystems together (e.g. all i2c are together, all uart
+> are together, etc.)
+>
+> Would a separate patch to sort everything by unit address to get this
+> cleaned up be acceptable?
+
+No thanks. That kind of thing is the needless churn that gets us flamed.
+
+Kevin
