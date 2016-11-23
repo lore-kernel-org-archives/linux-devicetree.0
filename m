@@ -1,160 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ALSA SoC MAX98927 driver - Initial release
-Date: Wed, 23 Nov 2016 15:46:19 +0000
-Message-ID: <20161123154619.6kw5devrzsw7fapm@sirena.org.uk>
-References: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state binding
+Date: Wed, 23 Nov 2016 07:51:49 -0800
+Message-ID: <m2wpfuw5wq.fsf@baylibre.com>
+References: <cover.1479459752.git.viresh.kumar@linaro.org>
+        <cce951c7159aa235792959ce27546be3aaa554ec.1479459752.git.viresh.kumar@linaro.org>
+        <20161121150708.j4gosfr2uetc7mwp@rob-hp-laptop>
+        <20161122031717.GE10014@vireshk-i7> <m260nfz8mr.fsf@baylibre.com>
+        <CAKfTPtDR6Y5UgaqJ+D5T0yBeFRSYWm6OT1+r4ZABrtqtvF2D0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nci7c2psfevbhbrl"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Lee <RyanS.Lee@maximintegrated.com>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, arnd@arndb.de, michael@amarulasolutions.com, oder_chiou@realtek.com, yesanishhere@gmail.com, jacob@teenage.engineering, Damien.Horsley@imgtec.com, bardliao@realtek.com, kuninori.morimoto.gx@renesas.com, petr@barix.com, lars@metafoo.de, nh6z@nh6z.net, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKfTPtDR6Y5UgaqJ+D5T0yBeFRSYWm6OT1+r4ZABrtqtvF2D0w@mail.gmail.com>
+        (Vincent Guittot's message of "Tue, 22 Nov 2016 19:34:59 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Nayak Rajendra <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Vincent Guittot <vincent.guittot@linaro.org> writes:
 
---nci7c2psfevbhbrl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 22 November 2016 at 19:12, Kevin Hilman <khilman@baylibre.com> wrote:
+>> Viresh Kumar <viresh.kumar@linaro.org> writes:
+>>
+>>> On 21-11-16, 09:07, Rob Herring wrote:
+>>>> On Fri, Nov 18, 2016 at 02:53:12PM +0530, Viresh Kumar wrote:
+>>>> > Some platforms have the capability to configure the performance state of
+>>>> > their Power Domains. The performance levels are represented by positive
+>>>> > integer values, a lower value represents lower performance state.
+>>>> >
+>>>> > The power-domains until now were only concentrating on the idle state
+>>>> > management of the device and this needs to change in order to reuse the
+>>>> > infrastructure of power domains for active state management.
+>>>> >
+>>>> > This patch introduces a new optional property for the consumers of the
+>>>> > power-domains: domain-performance-state.
+>>>> >
+>>>> > If the consumers don't need the capability of switching to different
+>>>> > domain performance states at runtime, then they can simply define their
+>>>> > required domain performance state in their node directly. Otherwise the
+>>>> > consumers can define their requirements with help of other
+>>>> > infrastructure, for example the OPP table.
+>>>> >
+>>>> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>>> > ---
+>>>> >  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
+>>>> >  1 file changed, 6 insertions(+)
+>>>> >
+>>>> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+>>>> > index e1650364b296..db42eacf8b5c 100644
+>>>> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
+>>>> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>>>> > @@ -106,6 +106,12 @@ domain provided by the 'parent' power controller.
+>>>> >   - power-domains : A phandle and PM domain specifier as defined by bindings of
+>>>> >                     the power controller specified by phandle.
+>>>> >
+>>>> > +Optional properties:
+>>>> > +- domain-performance-state: A positive integer value representing the minimum
+>>>> > +  performance level (of the parent domain) required by the consumer for its
+>>>> > +  working. The integer value '1' represents the lowest performance level and the
+>>>> > +  highest value represents the highest performance level.
+>>>>
+>>>> How does one come up with the range of values?
+>>>
+>>> Why would we need a range here? The value here represents the minimum 'state'
+>>> and the assumption is that everything above that level would be fine. So the
+>>> range is automatically: domain-performance-state -> MAX.
+>>>
+>>>> It seems like you are
+>>>> just making up numbers. Couldn't the domain performance level be an OPP
+>>>> in the sense that it is a collection of clock frequencies and voltage
+>>>> settings?
+>>>
+>>> The clock is going to be handled by the device itself (at least for the case we
+>>> have today) and the performance-state lies with the power-domain which is
+>>> configured separately. If the performance level includes both clk and voltage,
+>>> then why would we need to show the clock rates in the DT ? Wouldn't a
+>>> performance level be enough in such cases?
+>>
+>> I think the question is: what does the performance-level of a domain
+>> actually mean?  Or, what are the units?
+>>
+>> Depending on the SoC, there's probably a few things this could mean.  It
+>> might mean is that an underlying bus/interconnect can be configured to
+>> guarantee a specific bandwidth or throughput.  That in turn might mean
+>> that that bus/interconnect might have to be set at a specific
+>> frequency/voltage.
+>>
+>> In your case, IIUC, you're just passing some magic value to some
+>> firmware running on a micro-controller, but under the hood that uC is
+>> probably configuring a frequency/voltage someplace.
+>
+> In the case described by Viresh, it's only about setting the voltage
+> of a power domain that is shared between different devices. these
+> devices wants to run at different frequency (set by the devices) but
+> we have to select a Volateg value that will match with the constraint
+> of all devices (in this case the highest voltage)
 
-On Wed, Nov 23, 2016 at 01:57:06PM +0900, Ryan Lee wrote:
+Then, at least for this use case, we're talking about voltage, not some
+unspecified units.
 
-> +static struct reg_default max98927_reg_map[] =3D {
-> +	{0x0014,  0x78},
-> +	{0x0015,  0xFF},
-> +	{0x0043,  0x04},
-> +	{0x0017,  0x55},
-> +	/* For mono driver we are just enabling one channel*/
+But that makes me wonder, this performance state sounds like something
+that is changing dynamically at runtime, so why do you want to describe
+this statically in DT?
 
-If this table contains anything other than the physical defaults the
-device has it is broken.
+This sounds to me like the job of the genpd.  When any device in the
+domain does its pm_runtime_get(), the domain could check the device
+frequency and see if it needs to change the domain voltage in order for
+that device to operate at that frequency.  When the device goes away
+(using pm_runtime_put()) the domain can check again if it could lower
+the voltage and still meet the requirements of the remaining devices.
 
-> +	{MAX98927_PCM_Rx_Enables_A,  0x03},
-> +	{MAX98927_PCM_Tx_HiZ_Control_A, 0xfc},
-> +	{MAX98927_PCM_Tx_HiZ_Control_B, 0xff},
-> +	{MAX98927_PCM_Tx_Channel_Sources_A, 0x01},
-> +	{MAX98927_PCM_Tx_Channel_Sources_B, 0x01},
-> +	{MAX98927_Measurement_DSP_Config, 0xf7},
-> +	{0x0025,  0x80},
+Kevin
 
-This random mix of strangely formatted #defines and numbers isn't great
-- can we please be consistent and ideally use normal style defines?
 
-> +void max98927_wrapper_write(struct max98927_priv *max98927,
-> +	unsigned int reg, unsigned int val)
-> +{
-> +	if (max98927->regmap)
-> +		regmap_write(max98927->regmap, reg, val);
-> +	if (max98927->sub_regmap)
-> +		regmap_write(max98927->sub_regmap, reg, val);
-> +}
 
-I don't really know what this is doing but it looks very confused.
-Having multiple regmaps is a bit worrying but even more so is having
-some of those regmaps be optional.  If the device does sensibly have
-multiple register maps I'd really not expect to see them appearing and
-disappearing at runtime.  Whatever this is doing it at least needs to be
-documented.
-
-> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> +	case SND_SOC_DAIFMT_CBS_CFS:
-> +		max98927_wrap_update_bits(max98927, MAX98927_PCM_Master_Mode,
-> +		MAX98927_PCM_Master_Mode_PCM_MSTR_MODE_Mask,
-> +		MAX98927_PCM_Master_Mode_PCM_MSTR_MODE_SLAVE);
-> +		break;
-
-Please use a normal kernel coding style, I can't think of any coding
-style where it's normal to indent continuation lines in a multi line
-statement like this.  There are severe coding style problems throughout
-the driver which make it hard to read, it doesn't visually resemble
-normal Linux kernel code.
-
-> +	case SND_SOC_DAIFMT_IB_NF:
-> +		invert =3D MAX98927_PCM_Mode_Config_PCM_BCLKEDGE;
-> +		break;
-
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_I2S:
-> +		max98927->iface |=3D SND_SOC_DAIFMT_I2S;
-> +		max98927_wrap_update_bits(max98927,
-> +			MAX98927_PCM_Mode_Config,
-> +		max98927->iface, max98927->iface);
-> +	break;
-
-The indentation of the break statements isn't consistent within this
-function :(  The former is the normal kernel coding style.
-
-> +		if (i =3D=3D ARRAY_SIZE(rate_table)) {
-> +			pr_err("%s couldn't get the MCLK to match codec\n",
-> +				__func__);
-
-dev_err() and I'm not sure anyone's going to be able to understand that
-error message...
-
-> +static void max98927_handle_pdata(struct snd_soc_codec *codec)
-> +{
-> +	struct max98927_priv *max98927 =3D snd_soc_codec_get_drvdata(codec);
-> +	struct max98927_reg_default *regInfo;
-> +	int cfg_size =3D 0;
-> +	int x;
-> +
-> +	if (max98927->regcfg !=3D NULL)
-> +		cfg_size =3D max98927->regcfg_sz / sizeof(uint32_t);
-> +
-> +	if (cfg_size <=3D 0) {
-> +		dev_dbg(codec->dev,
-> +			"Register configuration is not required.\n");
-> +		return;
-> +	}
-> +
-> +	/* direct configuration from device tree */
-> +	for (x =3D 0; x < cfg_size; x +=3D 3) {
-> +		regInfo =3D (struct max98927_reg_default *)&max98927->regcfg[x];
-> +		dev_info(codec->dev, "CH:%d, reg:0x%02x, value:0x%02x\n",
-> +			be32_to_cpu(regInfo->ch),
-> +			be32_to_cpu(regInfo->reg),
-> +			be32_to_cpu(regInfo->def));
-> +		if (be32_to_cpu(regInfo->ch) =3D=3D PRI_MAX98927
-> +			&& max98927->regmap)
-> +			regmap_write(max98927->regmap,
-> +				be32_to_cpu(regInfo->reg),
-> +				be32_to_cpu(regInfo->def));
-> +		else if (be32_to_cpu(regInfo->ch) =3D=3D SEC_MAX98927
-> +			&& max98927->sub_regmap)
-> +			regmap_write(max98927->sub_regmap,
-> +				be32_to_cpu(regInfo->reg),
-> +				be32_to_cpu(regInfo->def));
-> +	}
-> +}
-
-This also looks like it probably shouldn't be doing whatever it is doing
-but needs some documentation.
-
-I've stopped here.  In general it seems like this driver needs a *lot*
-of work to work with the kernel interfaces in a normal style.  Aside
-=66rom the coding style issues (which really get in the way) the bulk of
-the code appears to be coming from unusual and undocumented ways of
-working with kernel APIs.  I'd strongly recommend taking a look at other
-drivers for similar hardware and making sure that your driver looks like
-them textually and structurally.  If there are things about your
-hardware that mean it needs something unusual then it should be clear to
-someone reading the code what's going on.
-
---nci7c2psfevbhbrl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAABCAAGBQJYNbnKAAoJECTWi3JdVIfQpxMIAIAqMoQIJykRDu+CAEpeD31c
-bPwK9s9tJDltoKzxEVf5V7ZxQJDhd5w+LZAph5vpuAjZal5km/EXtB3A2qi42pGH
-hnQ2bK8cjfKI+gh+u26/+NqV7q0BRWnKncujA57GMzEDjs43i3A6l7sH+cNp19Sm
-yuFyCO6GPTnVbBYYbXQeMvCtGK6DIfpGc0a5heVC1Z5NUtbjvhxvVbF9s6tAMdjr
-GXBFlzSvLaq2boePopmZV1bmNum8nLiH+LO87e4expPOtVPU6LWGX42hAdd3nLO5
-6rTxngfGyLQItj2toPcp3qp8GAU/baaVXQ+4HmRnCM5yjyI3kWN14y9Il3EHnU0=
-=Cu8B
------END PGP SIGNATURE-----
-
---nci7c2psfevbhbrl--
