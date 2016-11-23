@@ -1,57 +1,71 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 1/3] bus: da8xx-mstpri: drop the call to
- of_flat_dt_get_machine_name()
-Date: Wed, 23 Nov 2016 12:06:25 +0100
-Message-ID: <1479899187-10199-2-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH v3 2/3] memory: da8xx-ddrctl: drop the call to of_flat_dt_get_machine_name()
+Date: Wed, 23 Nov 2016 12:06:26 +0100
+Message-ID: <1479899187-10199-3-git-send-email-bgolaszewski@baylibre.com>
 References: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Robin Murphy <robin.murphy@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SW4gb3JkZXIgdG8gYXZvaWQgYSBzZWN0aW9uIG1pc21hdGNoIHVzZSBhIGxvY2FsbHkgaW1wbGVt
-ZW50ZWQgcm91dGluZQppbnN0ZWFkIG9mIG9mX2ZsYXRfZHRfZ2V0X21hY2hpbmVfbmFtZSgpIHdo
-ZW4gcHJpbnRpbmcgdGhlIGVycm9yCm1lc3NhZ2UuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdv
-bGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIGRyaXZlcnMvYnVzL2Rh
-OHh4LW1zdHByaS5jIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2Vk
-LCAyMSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-YnVzL2RhOHh4LW1zdHByaS5jIGIvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKaW5kZXggODVm
-MGI1My4uMDY0ZWViOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKKysr
-IGIvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKQEAgLTE2LDcgKzE2LDYgQEAKICNpbmNsdWRl
-IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KICNpbmNsdWRlIDxsaW51eC9pby5oPgogI2luY2x1
-ZGUgPGxpbnV4L3JlZ21hcC5oPgotI2luY2x1ZGUgPGxpbnV4L29mX2ZkdC5oPgogCiAvKgogICog
-UkVWSVNJVDogTGludXggZG9lc24ndCBoYXZlIGEgZ29vZCBmcmFtZXdvcmsgZm9yIHRoZSBraW5k
-IG9mIHBlcmZvcm1hbmNlCkBAIC0xOTAsNiArMTg5LDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-ZGE4eHhfbXN0cHJpX2JvYXJkX3ByaW9yaXRpZXMgZGE4eHhfbXN0cHJpX2JvYXJkX2NvbmZzW10g
-PSB7CiAJfSwKIH07CiAKKy8qCisgKiBGSVhNRSBSZW1vdmUgdGhpcyBmdW5jdGlvbiBvbmNlIG9m
-L2Jhc2UgZ2V0cyBhIGdlbmVyYWwgcm91dGluZSBmb3IgZ2V0dGluZworICogdGhlIG1hY2hpbmUg
-bW9kZWwvY29tcGF0aWJsZSBzdHJpbmcuCisgKi8KK3N0YXRpYyBjb25zdCBjaGFyICpkYTh4eF9t
-c3RwcmlfbWFjaGluZV9nZXRfY29tcGF0aWJsZSh2b2lkKQoreworCXN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqcm9vdDsKKwljb25zdCBjaGFyICpjb21wYXRpYmxlOworCWludCByZXQgPSAtMTsKKworCXJv
-b3QgPSBvZl9maW5kX25vZGVfYnlfcGF0aCgiLyIpOworCWlmIChyb290KSB7CisJCXJldCA9IG9m
-X3Byb3BlcnR5X3JlYWRfc3RyaW5nX2luZGV4KHJvb3QsICJjb21wYXRpYmxlIiwKKwkJCQkJCSAg
-ICAwLCAmY29tcGF0aWJsZSk7CisJCW9mX25vZGVfcHV0KHJvb3QpOworCX0KKworCXJldHVybiBy
-ZXQgPyBOVUxMIDogY29tcGF0aWJsZTsKK30KKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkYTh4eF9t
-c3RwcmlfYm9hcmRfcHJpb3JpdGllcyAqCiBkYTh4eF9tc3RwcmlfZ2V0X2JvYXJkX3ByaW8odm9p
-ZCkKIHsKQEAgLTIyNyw3ICsyNDYsNyBAQCBzdGF0aWMgaW50IGRhOHh4X21zdHByaV9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXByaW9fbGlzdCA9IGRhOHh4X21zdHByaV9n
-ZXRfYm9hcmRfcHJpbygpOwogCWlmICghcHJpb19saXN0KSB7CiAJCWRldl9lcnIoZGV2LCAibm8g
-bWFzdGVyIHByaW90aXRpZXMgZGVmaW5lZCBmb3IgYm9hcmQgJyVzJ1xuIiwKLQkJCW9mX2ZsYXRf
-ZHRfZ2V0X21hY2hpbmVfbmFtZSgpKTsKKwkJCWRhOHh4X21zdHByaV9tYWNoaW5lX2dldF9jb21w
-YXRpYmxlKCkpOwogCQlyZXR1cm4gLUVJTlZBTDsKIAl9CiAKLS0gCjIuOS4zCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+In order to avoid a section mismatch use a locally implemented routine
+instead of of_flat_dt_get_machine_name() when printing the error
+message.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/memory/da8xx-ddrctl.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/memory/da8xx-ddrctl.c b/drivers/memory/da8xx-ddrctl.c
+index a20e7bb..1b962ee 100644
+--- a/drivers/memory/da8xx-ddrctl.c
++++ b/drivers/memory/da8xx-ddrctl.c
+@@ -14,7 +14,6 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+-#include <linux/of_fdt.h>
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
+ 
+@@ -71,6 +70,26 @@ static const struct da8xx_ddrctl_board_settings da8xx_ddrctl_board_confs[] = {
+ 	},
+ };
+ 
++/*
++ * FIXME Remove this function once of/base gets a general routine for getting
++ * the machine model/compatible string.
++ */
++static const char *da8xx_ddrctl_machine_get_compatible(void)
++{
++	struct device_node *root;
++	const char *compatible;
++	int ret = -1;
++
++	root = of_find_node_by_path("/");
++	if (root) {
++		ret = of_property_read_string_index(root, "compatible",
++						    0, &compatible);
++		of_node_put(root);
++	}
++
++	return ret ? NULL : compatible;
++}
++
+ static const struct da8xx_ddrctl_config_knob *
+ da8xx_ddrctl_match_knob(const struct da8xx_ddrctl_setting *setting)
+ {
+@@ -118,7 +137,7 @@ static int da8xx_ddrctl_probe(struct platform_device *pdev)
+ 	setting = da8xx_ddrctl_get_board_settings();
+ 	if (!setting) {
+ 		dev_err(dev, "no settings for board '%s'\n",
+-			of_flat_dt_get_machine_name());
++			da8xx_ddrctl_machine_get_compatible());
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.9.3
