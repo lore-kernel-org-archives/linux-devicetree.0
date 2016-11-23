@@ -1,60 +1,46 @@
-From: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCHv7 4/5] USB: ohci: da8xx: Add devicetree bindings
-Date: Wed, 23 Nov 2016 19:06:48 +0100
-Message-ID: <20161123180649.6438-5-ahaslam@baylibre.com>
-References: <20161123180649.6438-1-ahaslam@baylibre.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
+Date: Wed, 23 Nov 2016 10:13:01 -0800
+Message-ID: <5835DC2D.5080606@gmail.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
+ <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
+ <800171a8-2e2c-2afb-f96d-800a17eaa17a@ti.com> <58348CB8.7050304@gmail.com>
+ <b668871c-2b54-0a2f-0d68-afaa50e17e63@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161123180649.6438-1-ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <b668871c-2b54-0a2f-0d68-afaa50e17e63-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the device tree bindings required for
-the ohci controller found in TI da8xx family of SoC's
+On 11/22/16 21:55, Sekhar Nori wrote:
+> On Tuesday 22 November 2016 11:51 PM, Frank Rowand wrote:
+>> Please note that the compatible property might contain several strings, not just
+>> a single string.
+> 
+> So I guess the best thing to do is to use
+> of_property_read_string_index() and print the sting at index 0.
+> 
+> Thanks,
+> Sekhar
 
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/usb/ohci-da8xx.txt         | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-da8xx.txt
+If you want to print just one compatible value, you could use that method.
 
-diff --git a/Documentation/devicetree/bindings/usb/ohci-da8xx.txt b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-new file mode 100644
-index 0000000..2dc8f67
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ohci-da8xx.txt
-@@ -0,0 +1,23 @@
-+DA8XX USB OHCI controller
-+
-+Required properties:
-+
-+ - compatible: Should be "ti,da830-ohci"
-+ - reg:        Should contain one register range i.e. start and length
-+ - interrupts: Description of the interrupt line
-+ - phys:       Phandle for the PHY device
-+ - phy-names:  Should be "usb-phy"
-+
-+Optional properties:
-+ - vbus-supply: phandle of regulator that controls vbus power / over-current
-+
-+Example:
-+
-+ohci: usb@0225000 {
-+        compatible = "ti,da830-ohci";
-+        reg = <0x225000 0x1000>;
-+        interrupts = <59>;
-+        phys = <&usb_phy 1>;
-+        phy-names = "usb-phy";
-+        vbus-supply = <&reg_usb_ohci>;
-+};
--- 
-2.9.3
+To give all of the information needed to understand the problem, the error
+message would need to include all of the strings contained in the compatible
+property and all of the .board values in the da8xx_ddrctl_board_confs[] array
+(currently only one entry, but coded to allow additional entries in the
+future).
 
+It is hard to justify an error message that complex.
+
+I would just print an error that no match was found.
+
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
