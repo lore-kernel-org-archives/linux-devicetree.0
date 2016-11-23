@@ -1,60 +1,103 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Wed, 23 Nov 2016 17:12:37 +0530
-Message-ID: <583580AD.60803@nvidia.com>
-References: <1479810013-29894-1-git-send-email-ldewangan@nvidia.com> <1479810013-29894-3-git-send-email-ldewangan@nvidia.com> <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible string
+Date: Wed, 23 Nov 2016 12:07:27 +0000
+Message-ID: <f0ba1a7a-8948-21c3-8a96-d46bf105bb7e@arm.com>
+References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
+ <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
+ <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
+ <fdb93150-9089-c7bb-2b0a-21ded241a647@arm.com>
+ <ae92e013-b41b-6caa-b32f-284ffb6f5aa0@ti.com>
+ <2a644b8c-d91e-5ab1-200b-00f749a36307@arm.com>
+ <ff1ea88a-87c6-6721-8e63-ddb05900cc58@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ff1ea88a-87c6-6721-8e63-ddb05900cc58@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On Tuesday 22 November 2016 06:28 PM, Linus Walleij wrote:
-> On Tue, Nov 22, 2016 at 11:20 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+
+On 23/11/16 11:47, Sekhar Nori wrote:
+> On Wednesday 23 November 2016 03:35 PM, Sudeep Holla wrote:
+>>
+>>
+>> On 23/11/16 07:49, Sekhar Nori wrote:
+>>> On Tuesday 22 November 2016 09:16 PM, Sudeep Holla wrote:
+>>>> Hi Sekhar,
+>>>>
+>>>> On 22/11/16 15:06, Sekhar Nori wrote:
+>>>>> Hi Sudeep,
+>>>>>
+>>>>> On Tuesday 22 November 2016 04:23 PM, Sudeep Holla wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 22/11/16 10:41, Bartosz Golaszewski wrote:
+>>>>>>> Add a function allowing to retrieve the compatible string of the root
+>>>>>>> node of the device tree.
+>>>>>>>
+>>>>>>
+>>>>>> Rob has queued [1] and it's in -next today. You can reuse that if you
+>>>>>> are planning to target this for v4.11 or just use open coding in your
+>>>>>> driver for v4.10 and target this move for v4.11 to avoid cross tree
+>>>>>> dependencies as I already mentioned in your previous thread.
+>>>>>
+>>>>> I dont have your original patch in my mailbox, but I wonder if
+>>>>> returning a pointer to property string for a node whose reference has
+>>>>> already been released is safe to do? Probably not an issue for the root
+>>>>> node, but still feels counter-intuitive.
+>>>>>
+>>>>
+>>>> I am not sure if I understand the issue here. Are you referring a case
+>>>> where of_root is freed ?
+>>>
+>>> Yes, right, thats what I was hinting at. Since you are giving up the
+>>> reference to the device node before the function returns, the user can
+>>> be left with a dangling reference.
+>>>
+>>
+>> Yes I agree.
 >
->> +               rinfo->regulator = devm_regulator_get_optional(dev,
->> +                                               soc_data->cfg[i].vsupply);
-> Please just use devm_regulator_get().
+> So, the if(!of_node_get()) is just an expensive NULL pointer check. I think
+> it is better to be explicit about it by not using of_node_get/put() at all.
+> How about:
 >
-> As has been discussed at lenth elsewhere "optional" in regulator_get_optional
-> does *not* mean "software optional", it means "hardware optional".
+
+Are we planning to use this in any time sensitive paths? Anyways I am
+fine removing them.
+
+> +int of_machine_get_model_name(const char **model)
+> +{
+> +       int error;
+> +
+> +       if (!of_root)
+> +               return -EINVAL;
+> +
+> +       error = of_property_read_string(of_root, "model", model);
+> +       if (error)
+> +               error = of_property_read_string_index(of_root, "compatible",
+> +                                                     0, model);
+> +       return error;
+> +}
+> +EXPORT_SYMBOL(of_machine_get_model_name);
 >
-> Such as a terminal that may have a voltage connected or not be
-> connected to anything at all.
->
-> If the system does not define a regulator you will anyway get a
-> dummy regulator.
->
-The issue with dummy regulator is that the other regulator APIs with 
-dummy regulator fails.
-Once we get the dummy regulator, there is no way to know whether the 
-returned regulator is actual or dummy and when calling the 
-regulator_get_voltage() it failed.
+> I know the patch is already in -next so I guess it depends on how strongly
+> Rob feels about this.
 
-[    2.917176] pinctrl-t210-io-pad.0 supply vddio-audio-hv not found, 
-using dummy regulator
-[    2.925510] pinctrl-tegra-io-pad pinctrl-t210-io-pad.0: Failed to get 
-voltage for rail vddio-aud2
+Frank expressed his concerns and it may be reverted.
 
-
-Here, we need the regulator handle which can support the other regulator 
-APIs.
-
-In some of platforms, we do not use some of the io-pins and on this 
-case, we do not connect the IO rail supply for these pins. So this is 
-like a hardware optional.
-
-If the IO pins are used then it need to have the proper regulator handle.
-Missing regulator handle on DT will be like that IO pads are not used.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Sudeep
