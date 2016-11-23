@@ -1,101 +1,61 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH 5/5] sdhci: Add quirk for delayed IRQ ACK
-Date: Tue, 22 Nov 2016 19:48:56 -0800
-Message-ID: <ecacec51-4b06-49cd-c756-489128729499@redhat.com>
-References: <1479863388-23678-1-git-send-email-jeremymc@redhat.com>
- <1479863388-23678-6-git-send-email-jeremymc@redhat.com>
- <20161123113647.0b3deac0@xhacker>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] DW DMAC: update device tree
+Date: Wed, 23 Nov 2016 09:36:03 +0530
+Message-ID: <20161123040603.GD2698@localhost>
+References: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1479497189.22212.41.camel@linux.intel.com>
+ <1479722477.2487.5.camel@synopsys.com>
+ <1479724626.22212.50.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20161123113647.0b3deac0@xhacker>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1479724626.22212.50.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-22 7:36 PM, Jisheng Zhang wrote:
-> On Tue, 22 Nov 2016 17:09:48 -0800
-> Jeremy McNicoll <jeremymc@redhat.com> wrote:
->
->> On msm8992 it has been observed that IRQs were not getting
->> ACK'd correctly when clocked at speeds greater than 400KHz.
->>
->> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
->> ---
->>  drivers/mmc/host/sdhci-msm.c |  7 +++++++
->>  drivers/mmc/host/sdhci.c     | 12 ++++++++++--
->>  drivers/mmc/host/sdhci.h     |  2 ++
->>  3 files changed, 19 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index 1fcda96..459003c 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -1303,6 +1303,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>  			       CORE_VENDOR_SPEC_CAPABILITIES0);
->>  	}
->>
->> +	/* Enable delayed IRQ handling workaround on 8992 */
->> +	if (core_major == 1 && core_minor == 0x3e) {
->> +		/* Add 40us delay in interrupt handler when operating
->> +		 * at initialization frequency of 400KHz. */
->> +		host->quirks2 |= SDHCI_QUIRK2_SLOW_INT_CLR;
->> +	}
->> +
->>  	/* Setup IRQ for handling power/voltage tasks with PMIC */
->>  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->>  	if (msm_host->pwr_irq < 0) {
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index 5911f98..c1aae22 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -2703,11 +2703,19 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>  			result = IRQ_WAKE_THREAD;
->>  		}
->>
->> -		if (intmask & SDHCI_INT_CMD_MASK)
->> +		if (intmask & SDHCI_INT_CMD_MASK) {
->> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
->> +				udelay(40);
->> +			}
->>  			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK);
->> +		}
->>
->> -		if (intmask & SDHCI_INT_DATA_MASK)
->> +		if (intmask & SDHCI_INT_DATA_MASK) {
->> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
->> +				udelay(40);
->> +			}
->>  			sdhci_data_irq(host, intmask & SDHCI_INT_DATA_MASK);
->> +		}
->>
->>  		if (intmask & SDHCI_INT_BUS_POWER)
->>  			pr_err("%s: Card is consuming too much power!\n",
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index c055e24..5f8301e 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -24,6 +24,8 @@
->>   * Controller registers
->>   */
->>
->> +#define SDHCI_QUIRK2_SLOW_INT_CLR	(1<<5)
->
-> IIRC, new quirk isn't allowed now.
->
+On Mon, Nov 21, 2016 at 12:37:06PM +0200, Andy Shevchenko wrote:
+> On Mon, 2016-11-21 at 10:02 +0000, Alexey Brodkin wrote:
+> > Hi Andy,
+> > 
+> > On Fri, 2016-11-18 at 21:26 +0200, Andy Shevchenko wrote:
+> > > On Fri, 2016-11-18 at 22:12 +0300, Eugeniy Paltsev wrote:
+> > > > 
+> > > > It wasn't possible to enable some features like
+> > > > memory-to-memory transfers or multi block transfers via DT.
+> > > > It is fixed by these patches.
+> > > 
+> > > First of all, please, give time to reviewers to comment the patches.
+> > > Usually it should be at least 24h (for the series that has been sent
+> > > first time 1 week approximately).
+> > 
+> > I'm not really sure a lot of people get disturbed by this series
+> > and given this all has been discussed for months now I'd really like
+> > to see changes required for our HW to work to land in upstream ASAP.
+> 
+> I understand your concern, I'm often in the same position in many areas,
+> including this driver (I'm not a maintainer of slave DMA subsystem).
+> 
+> Though let's face the issues we have with the series:
+> - stuff regarding to style and alike (would be fixed in a day)
+> - DTS naming and conventions, this is apparently a big area, where I
+> might share opinion, but can't decide for
+> - last word by the subsystem maintainer
+> 
+> > Too bad we're late for 4.9 (which is supposed to be the next LTS) but
+> > > we need to make sure this series hits 4.10 for sure.
+> 
+> Vinod, is it possible to get in for this series (if we get Ack from DT
+> people)?
 
-Why not?
+We still have a week or so... But holding race agaisnt upstream is a bad
+idea... Doesnt work that way.
 
--jeremy
-
-> Thanks,
-> Jisheng
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
