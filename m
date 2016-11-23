@@ -1,16 +1,15 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
-Date: Wed, 23 Nov 2016 15:29:11 +0100
-Message-ID: <fe4bbd2a-27ab-db30-4bb2-e9a0d1f4b84d@redhat.com>
-References: <20161121162421.800-1-icenowy@aosc.xyz>
- <20161121162421.800-3-icenowy@aosc.xyz>
- <20161123075950.fjtplylunwale6j4@lukather>
- <CAGb2v64taF9x9MDYW+KUEEUUoSx0bF68QNc7uZXQoNrsozMGtg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+Date: Wed, 23 Nov 2016 15:29:38 +0100
+Message-ID: <20161123142938.GF9057@verge.net.au>
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+ <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v64taF9x9MDYW+KUEEUUoSx0bF68QNc7uZXQoNrsozMGtg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,132 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Andre Przywara <andre.przywara@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
+> On 11/23/2016 01:14 PM, Chris Paterson wrote:
+> > This patch series adds CAN and CAN FD support to the r8a7796.
+> > 
+> > Based on renesas-devel-20161122-v4.9-rc6.
+> > 
+> > Chris Paterson (3):
+> >   arm64: dts: r8a7796: Add CAN external clock support
+> >   arm64: dts: r8a7796: Add CAN support
+> >   arm64: dts: r8a7796: Add CAN FD support
+> > 
+> >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
+> >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
+> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61 ++++++++++++++++++++++
+> >  3 files changed, 75 insertions(+), 10 deletions(-)
+> 
+> For all three:
+> 
+> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> 
+> Who takes this series?
 
-On 23-11-16 15:25, Chen-Yu Tsai wrote:
-> On Wed, Nov 23, 2016 at 3:59 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> Hi,
->>
->> On Tue, Nov 22, 2016 at 12:24:21AM +0800, Icenowy Zheng wrote:
->>> There's a Allwinner's XR819 SDIO Wi-Fi module soldered on the board of
->>> Orange Pi Zero, which used a dedicated regulator to power.
->>>
->>> Add the device tree node of the regulator, the enable gpio (with
->>> mmc-pwrseq) and the sdio controller.
->>>
->>> There's a out-of-tree driver tested to work with this device tree.
->>>
->>> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
->>> ---
->>> New patch in the patchset, since a out-of-tree working xradio driver is done.
->>>
->>> If there is any problem in this patch, it can be omitted.
->>
->> No particular problem with this one, however it can and should be
->> merged with the previous one.
->>
->> Minor comments below though.
->>
->>>
->>>  arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts | 42 ++++++++++++++++++++++++
->>>  1 file changed, 42 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
->>> index b428e47..39cac26 100644
->>> --- a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
->>> +++ b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
->>> @@ -79,6 +79,24 @@
->>>                       gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
->>>               };
->>>       };
->>> +
->>> +     reg_vcc_wifi: reg_vcc_wifi {
->>> +             compatible = "regulator-fixed";
->>> +             pinctrl-names = "default";
->>> +             pinctrl-0 = <&vcc_wifi_pin_opi0>;
->>> +             regulator-min-microvolt = <3300000>;
->>> +             regulator-max-microvolt = <3300000>;
->>> +             regulator-name = "vcc-wifi";
->>> +             enable-active-high;
->>> +             gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
->>> +     };
->>> +
->>> +     wifi_pwrseq: wifi_pwrseq {
->>> +             compatible = "mmc-pwrseq-simple";
->>> +             pinctrl-names = "default";
->>> +             pinctrl-0 = <&wifi_pwrseq_pin_opi0>;
->>> +             reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
->>> +     };
->>>  };
->>>
->>>  &ehci1 {
->>> @@ -95,6 +113,20 @@
->>>       status = "okay";
->>>  };
->>>
->>> +&mmc1 {
->>> +     pinctrl-names = "default";
->>> +     pinctrl-0 = <&mmc1_pins_a>;
->>> +     vmmc-supply = <&reg_vcc_wifi>;
->>> +     mmc-pwrseq = <&wifi_pwrseq>;
->>> +     bus-width = <4>;
->>> +     non-removable;
->>> +     status = "okay";
->>> +};
->>> +
->>> +&mmc1_pins_a {
->>> +     allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>
->> This should be bias-pull-up.
->
-> IIRC I already added this for _all_ existing mmc pinmux settings?
->
->>
->>> +};
->>> +
->>>  &ohci1 {
->>>       status = "okay";
->>>  };
->>> @@ -104,6 +136,11 @@
->>>               pins = "PA17";
->>>               function = "gpio_out";
->>>       };
->>> +
->>> +     vcc_wifi_pin_opi0: vcc_wifi_pin@0 {
->>> +             allwinner,pins = "PA20";
->>
->> This should be pins
->>
->>> +             allwinner,function = "gpio_out";
->>
->> This should be function
->>
->>> +     };
->>>  };
->>>
->>>  &r_pio {
->>> @@ -111,6 +148,11 @@
->>>               pins = "PL10";
->>>               function = "gpio_out";
->>>       };
->>> +
->>> +     wifi_pwrseq_pin_opi0: wifi_pwrseq_pin@0 {
->>> +             allwinner,pins = "PL7";
->>> +             allwinner,function = "gpio_out";
->>
->> And same thing here.
->
-> Might we do away with the pinmux for gpio pins tradition?
-> Recent patches I've sent all omit them.
+I would like to see these patches split up so that the
+.../devicetree/bindings/ portions can go through you whole
+the arch/arm64/boot/dts/renesas/ portions go thorugh my renesas tree.
 
-I'm in favor of doing away with them, except there were
-we need to configure bias / strength.
-
-Regards,
-
-Hans
+Regarding the arch/arm64/boot/dts/renesas/ portion, I would like
+some consideration given to what effect enabling memory above 4Gb
+(64bit addressing) would have.
