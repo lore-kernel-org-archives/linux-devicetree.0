@@ -1,40 +1,41 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] dt-bindings: change hi6220-reset.txt according to
- reset-hi6220.c
-Date: Wed, 23 Nov 2016 17:06:37 -0600
-Message-ID: <20161123230637.m4cvc2l4huxlf5dd@rob-hp-laptop>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
- <1479800961-6249-5-git-send-email-zhangfei.gao@linaro.org>
- <2314383.qiZ3Cq7QsP@wuerfel>
+Subject: Re: [PATCH 1/4] clocksource/drivers/arm_arch_timer: Don't assume
+ clock runs in suspend
+Date: Wed, 23 Nov 2016 17:07:25 -0600
+Message-ID: <20161123230725.c3euemhmfnm3qjtn@rob-hp-laptop>
+References: <20161122094300.GA2017@mai>
+ <1479807866-6957-1-git-send-email-daniel.lezcano@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2314383.qiZ3Cq7QsP@wuerfel>
+In-Reply-To: <1479807866-6957-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM ARCHITECTED TIMER DRIVER" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 09:48:32AM +0100, Arnd Bergmann wrote:
-> On Tuesday, November 22, 2016 3:49:19 PM CET Zhangfei Gao wrote:
-> >  Required properties:
-> >  - compatible: should be one of the following:
-> > -  - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
-> > -  - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
-> > -- reg: should be register base and length as documented in the
-> > -  datasheet
-> > +  - "hisilicon,hi6220-reset-sysctrl" : For peripheral reset controller.
-> > +  - "hisilicon,hi6220-reset-mediactrl" : For media reset controller.
-> > +- hisi,rst-syscon: phandle of the reset's syscon.
-> >  - #reset-cells: 1, see below
-> > 
+On Tue, Nov 22, 2016 at 10:44:21AM +0100, Daniel Lezcano wrote:
+> From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > 
-> Please keep the old strings around for compatibility.
+> The ARM specifies that the system counter "must be implemented in an
+> always-on power domain," and so we try to use the counter as a source of
+> timekeeping across suspend/resume. Unfortunately, some SoCs (e.g.,
+> Rockchip's RK3399) do not keep the counter ticking properly when
+> switched from their high-power clock to the lower-power clock used in
+> system suspend. Support this quirk by adding a new device tree property.
+> 
+> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/arch_timer.txt | 5 +++++
 
-Why are these even changing? The commit message should say why.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
+>  drivers/clocksource/arm_arch_timer.c                 | 9 ++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
