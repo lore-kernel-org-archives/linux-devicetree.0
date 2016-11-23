@@ -1,46 +1,39 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH] can: rcar_canfd: Correct order of interrupt specifiers
-Date: Wed, 23 Nov 2016 14:04:38 +0000
-Message-ID: <SG2PR06MB103872ECF569059335DA7AD0C3B70@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1479908686-14028-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1479908686-14028-1-git-send-email-geert+renesas@glider.be>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH RESEND 0/2] add support for AXP209 GPIOs functions
+Date: Wed, 23 Nov 2016 15:11:49 +0100
+Message-ID: <20161123141151.25315-1-quentin.schulz@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, maxime.ripard@free-electrons.com
+Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+The AXP209 PMIC has three GPIOs. Two of them can be muxed in other modes
+(namely adc or regulator)[1] which cannot be used while the pin is in one
+of GPIO modes.
 
-> Subject: [PATCH] can: rcar_canfd: Correct order of interrupt specifiers
->=20
-> According to both DTS (example and actual files), and Linux driver code,
-> the first interrupt specifier should be the Channel interrupt, while the
-> second interrupt specifier should be the Global interrupt.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index 22a6f10bab057f46..58c27cd839e3a2ac 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -11,7 +11,7 @@ Required properties:
->    family-specific and/or generic versions.
->=20
->  - reg: physical base address and size of the R-Car CAN FD register map.
-> -- interrupts: interrupt specifier for the Global & Channel interrupts
-> +- interrupts: interrupt specifiers for the Channel & Global interrupts
+This adds the possibility to use all functions of the GPIOs present in
+the AXP209 PMIC thanks to the pinctrl subsystem.
 
-Thanks for correcting it.
-Acked-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+An upcoming ADC driver for the AXP209 PMIC will make use of this pinctrl to
+read ADC values of GPIO0 and GPIO1. At the moment, no driver is pinctrling
+these GPIOs.
 
-Thanks,
-Ramesh
+This patch also corrects the register used to read GPIO input status.
+
+[1] see registers 90H, 92H and 93H at
+    http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf
+
+Quentin Schulz (2):
+  gpio: axp209: use correct register for GPIO input status
+  gpio: axp209: add pinctrl support
+
+ .../devicetree/bindings/gpio/gpio-axp209.txt       |  28 +-
+ drivers/gpio/gpio-axp209.c                         | 557 ++++++++++++++++++---
+ 2 files changed, 504 insertions(+), 81 deletions(-)
+
+-- 
+
+Adding Maxime Ripard (original driver author) and LKML to mail recipients.
+2.9.3
+
