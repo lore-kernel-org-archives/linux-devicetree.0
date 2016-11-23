@@ -1,68 +1,49 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 0/10] mmc: Add support to Marvell Xenon SD Host Controller
-Date: Wed, 23 Nov 2016 09:30:14 +0100
-Message-ID: <87vavemwdl.fsf@free-electrons.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
+ powerhold property
+Date: Wed, 23 Nov 2016 08:33:27 +0000
+Message-ID: <20161123083327.GM10134@dell.home>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
+ <20161115000849.GD4082@atomide.com>
+ <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- (Gregory CLEMENT's message of "Mon, 31 Oct 2016 12:09:49 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Hilbert Zhang <zzhang@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Romain Perier <romain.perier@free-electrons.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Yehu da Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Xueping Liu <xpliu@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Yu Cao <yucao@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
- 
- On lun., oct. 31 2016, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+On Wed, 23 Nov 2016, Keerthy wrote:
 
-> Hello,
->
-> This the second version of the series adding support for the SDHCI
-> Xenon controller. It can be currently found on the Armada 37xx and the
-> Armada 7K/8K but will be also used in more Marvell SoC (and not only
-> the mvebu ones actually).
->
-> Some of the remarks had been taking into account since the first
-> version, according to Ziji Hu, here are the following chcanges:
-> "Changes in V2:
->   rebase on v4.9-rc2.
->   Re-write Xenon bindings. Ajust Xenon DT property naming.
->   Add a new DT property to indicate eMMC card type, instead of using
->   variable card_candidate.
->   Clear quirks SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 in Xenon platform data
->   Add support to HS400 retuning."
->
-> I think the main open point which remains is about issuing commands
-> from the ->set_ios() callback (in patch 7).
-> Ulf, could you comment about it?
+> 
+> 
+> On Tuesday 15 November 2016 05:38 AM, Tony Lindgren wrote:
+> > * Keerthy <j-keerthy@ti.com> [161109 21:10]:
+> > > The PMICs have POWERHOLD set by default which prevents PMIC shutdown
+> > > even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
+> > > So to enable pmic power off this property lets one over ride the default
+> > > value and enable pmic power off.
+> > 
+> > This should not cause merge conflicts so probably best to merge along
+> > with the driver changes:
+> > 
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > 
+> > If you guys want me to pick up this separately let me know.
+> 
+> Hi Lee Jones,
+> 
+> Are you planning to pull DT and Documentation patches as well?
 
-This part is the last thing missing, we are about to solve the last
-issues about the binding, but we still didn't have your opinion about
-issuing commands from the ->set_ios() callback and Adrian required it to
-take this series.
-
-To have more context you can have a look on:
-http://marc.info/?l=linux-mmc&m=147618996414673&w=2
-
-it is the original email where Adrian wanted your agreement.
-
-Thanks,
-
-Gregory
+No need.  They can be safely applied to their own subsystems.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
