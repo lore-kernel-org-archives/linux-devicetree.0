@@ -1,285 +1,160 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
-Date: Wed, 23 Nov 2016 17:37:23 +0200
-Message-ID: <20161123153723.GE16630@valkosipuli.retiisi.org.uk>
-References: <20161122155244.802-1-khilman@baylibre.com>
- <20161122155244.802-4-khilman@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ALSA SoC MAX98927 driver - Initial release
+Date: Wed, 23 Nov 2016 15:46:19 +0000
+Message-ID: <20161123154619.6kw5devrzsw7fapm@sirena.org.uk>
+References: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nci7c2psfevbhbrl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161122155244.802-4-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryan Lee <RyanS.Lee@maximintegrated.com>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, arnd@arndb.de, michael@amarulasolutions.com, oder_chiou@realtek.com, yesanishhere@gmail.com, jacob@teenage.engineering, Damien.Horsley@imgtec.com, bardliao@realtek.com, kuninori.morimoto.gx@renesas.com, petr@barix.com, lars@metafoo.de, nh6z@nh6z.net, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
 
-On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
-> Allow getting of subdevs from DT ports and endpoints.
-> 
-> The _get_pdata() function was larely inspired by (i.e. stolen from)
+--nci7c2psfevbhbrl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-vpif_capture_get_pdata and "largely"?
+On Wed, Nov 23, 2016 at 01:57:06PM +0900, Ryan Lee wrote:
 
-> am437x-vpfe.c
-> 
-> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++++++++++++-
->  include/media/davinci/vpif_types.h            |   9 +-
->  2 files changed, 133 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-> index 94ee6cf03f02..47a4699157e7 100644
-> --- a/drivers/media/platform/davinci/vpif_capture.c
-> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> @@ -26,6 +26,8 @@
->  #include <linux/slab.h>
->  
->  #include <media/v4l2-ioctl.h>
-> +#include <media/v4l2-of.h>
-> +#include <media/i2c/tvp514x.h>
+> +static struct reg_default max98927_reg_map[] =3D {
+> +	{0x0014,  0x78},
+> +	{0x0015,  0xFF},
+> +	{0x0043,  0x04},
+> +	{0x0017,  0x55},
+> +	/* For mono driver we are just enabling one channel*/
 
-Do you need this header?
+If this table contains anything other than the physical defaults the
+device has it is broken.
 
->  
->  #include "vpif.h"
->  #include "vpif_capture.h"
-> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
->  
->  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
->  
-> +	if (!chan_cfg)
-> +		return -1;
-> +	if (input_index >= chan_cfg->input_count)
-> +		return -1;
->  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
->  	if (subdev_name == NULL)
->  		return -1;
-> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
->  	/* loop through the sub device list to get the sub device info */
->  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
->  		subdev_info = &vpif_cfg->subdev_info[i];
-> -		if (!strcmp(subdev_info->name, subdev_name))
-> +		if (subdev_info && !strcmp(subdev_info->name, subdev_name))
->  			return i;
->  	}
->  	return -1;
-> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
->  {
->  	int i;
->  
-> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
-> +		struct v4l2_async_subdev *_asd = vpif_obj.config->asd[i];
-> +		const struct device_node *node = _asd->match.of.node;
-> +
-> +		if (node == subdev->of_node) {
-> +			vpif_obj.sd[i] = subdev;
-> +			vpif_obj.config->chan_config->inputs[i].subdev_name =
-> +				(char *)subdev->of_node->full_name;
-> +			vpif_dbg(2, debug,
-> +				 "%s: setting input %d subdev_name = %s\n",
-> +				 __func__, i, subdev->of_node->full_name);
-> +			return 0;
-> +		}
-> +	}
-> +
->  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
->  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
->  			    subdev->name)) {
-> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct v4l2_async_notifier *notifier)
->  	return vpif_probe_complete();
->  }
->  
-> +static struct vpif_capture_config *
-> +vpif_capture_get_pdata(struct platform_device *pdev)
+> +	{MAX98927_PCM_Rx_Enables_A,  0x03},
+> +	{MAX98927_PCM_Tx_HiZ_Control_A, 0xfc},
+> +	{MAX98927_PCM_Tx_HiZ_Control_B, 0xff},
+> +	{MAX98927_PCM_Tx_Channel_Sources_A, 0x01},
+> +	{MAX98927_PCM_Tx_Channel_Sources_B, 0x01},
+> +	{MAX98927_Measurement_DSP_Config, 0xf7},
+> +	{0x0025,  0x80},
+
+This random mix of strangely formatted #defines and numbers isn't great
+- can we please be consistent and ideally use normal style defines?
+
+> +void max98927_wrapper_write(struct max98927_priv *max98927,
+> +	unsigned int reg, unsigned int val)
 > +{
-> +	struct device_node *endpoint = NULL;
-> +	struct v4l2_of_endpoint bus_cfg;
-> +	struct vpif_capture_config *pdata;
-> +	struct vpif_subdev_info *sdinfo;
-> +	struct vpif_capture_chan_config *chan;
-> +	unsigned int i;
-> +
-> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
-> +		return pdev->dev.platform_data;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
-> +	pdata->subdev_info =
-> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
-> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
-> +
-> +	if (!pdata->subdev_info)
-> +		return NULL;
-> +	dev_dbg(&pdev->dev, "%s\n", __func__);
-> +
-> +	for (i = 0; ; i++) {
-> +		struct device_node *rem;
-> +		unsigned int flags;
-> +		int err;
-> +
-> +		endpoint = of_graph_get_next_endpoint(pdev->dev.of_node,
-> +						      endpoint);
-> +		if (!endpoint)
-> +			break;
-> +
-> +		sdinfo = &pdata->subdev_info[i];
+> +	if (max98927->regmap)
+> +		regmap_write(max98927->regmap, reg, val);
+> +	if (max98927->sub_regmap)
+> +		regmap_write(max98927->sub_regmap, reg, val);
+> +}
 
-subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
+I don't really know what this is doing but it looks very confused.
+Having multiple regmaps is a bit worrying but even more so is having
+some of those regmaps be optional.  If the device does sensibly have
+multiple register maps I'd really not expect to see them appearing and
+disappearing at runtime.  Whatever this is doing it at least needs to be
+documented.
 
-> +		chan = &pdata->chan_config[i];
-> +		chan->inputs = devm_kzalloc(&pdev->dev,
-> +					    sizeof(*chan->inputs) *
-> +					    VPIF_DISPLAY_MAX_CHANNELS,
-> +					    GFP_KERNEL);
-> +
-> +		chan->input_count++;
-> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
+> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+> +	case SND_SOC_DAIFMT_CBS_CFS:
+> +		max98927_wrap_update_bits(max98927, MAX98927_PCM_Master_Mode,
+> +		MAX98927_PCM_Master_Mode_PCM_MSTR_MODE_Mask,
+> +		MAX98927_PCM_Master_Mode_PCM_MSTR_MODE_SLAVE);
+> +		break;
 
-I wonder what's the purpose of using index i on this array as well.
+Please use a normal kernel coding style, I can't think of any coding
+style where it's normal to indent continuation lines in a multi line
+statement like this.  There are severe coding style problems throughout
+the driver which make it hard to read, it doesn't visually resemble
+normal Linux kernel code.
 
-If you use that to access a corresponding entry in a different array, I'd
-just create a struct that contains the port configuration and the async
-sub-device. The omap3isp driver does that, for instance; see
-isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if you're
-interested. Up to you.
+> +	case SND_SOC_DAIFMT_IB_NF:
+> +		invert =3D MAX98927_PCM_Mode_Config_PCM_BCLKEDGE;
+> +		break;
 
-> +		chan->inputs[i].input.std = V4L2_STD_ALL;
-> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
-> +
-> +		/* FIXME: need a new property? ch0:composite ch1: s-video */
-> +		if (i == 0)
+> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_I2S:
+> +		max98927->iface |=3D SND_SOC_DAIFMT_I2S;
+> +		max98927_wrap_update_bits(max98927,
+> +			MAX98927_PCM_Mode_Config,
+> +		max98927->iface, max98927->iface);
+> +	break;
 
-Can you assume that the first endopoint has got a particular kind of input?
-What if it's not connected?
+The indentation of the break statements isn't consistent within this
+function :(  The former is the normal kernel coding style.
 
-If this is a different physical port (not in the meaning another) in the
-device, I'd use the reg property for this. Please see
-Documentation/devicetree/bindings/media/video-interfaces.txt .
+> +		if (i =3D=3D ARRAY_SIZE(rate_table)) {
+> +			pr_err("%s couldn't get the MCLK to match codec\n",
+> +				__func__);
 
-> +			chan->inputs[i].input_route = INPUT_CVBS_VI2B;
-> +		else
-> +			chan->inputs[i].input_route = INPUT_SVIDEO_VI2C_VI1C;
-> +		chan->inputs[i].output_route = OUTPUT_10BIT_422_EMBEDDED_SYNC;
-> +
-> +		err = v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Could not parse the endpoint\n");
-> +			goto done;
-> +		}
-> +		dev_dbg(&pdev->dev, "Endpoint %s, bus_width = %d\n",
-> +			endpoint->full_name, bus_cfg.bus.parallel.bus_width);
-> +		flags = bus_cfg.bus.parallel.flags;
-> +
-> +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> +			chan->vpif_if.hd_pol = 1;
-> +
-> +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> +			chan->vpif_if.vd_pol = 1;
-> +
-> +		chan->vpif_if.if_type = VPIF_IF_BT656;
-> +		rem = of_graph_get_remote_port_parent(endpoint);
-> +		if (!rem) {
-> +			dev_dbg(&pdev->dev, "Remote device at %s not found\n",
-> +				endpoint->full_name);
-> +			goto done;
-> +		}
-> +
-> +		dev_dbg(&pdev->dev, "Remote device %s, %s found\n",
-> +			rem->name, rem->full_name);
-> +		sdinfo->name = rem->full_name;
-> +
-> +		pdata->asd[i] = devm_kzalloc(&pdev->dev,
-> +					     sizeof(struct v4l2_async_subdev),
-> +					     GFP_KERNEL);
+dev_err() and I'm not sure anyone's going to be able to understand that
+error message...
 
-Do you ensure somewhere that i isn't overrunning the pdata->asd[] array?
-It's got VPIF_CAPTURE_MAX_CHANNELS entries.
-
-> +		if (!pdata->asd[i]) {
-> +			of_node_put(rem);
-> +			pdata = NULL;
-> +			goto done;
-> +		}
+> +static void max98927_handle_pdata(struct snd_soc_codec *codec)
+> +{
+> +	struct max98927_priv *max98927 =3D snd_soc_codec_get_drvdata(codec);
+> +	struct max98927_reg_default *regInfo;
+> +	int cfg_size =3D 0;
+> +	int x;
 > +
-> +		pdata->asd[i]->match_type = V4L2_ASYNC_MATCH_OF;
-> +		pdata->asd[i]->match.of.node = rem;
-> +		of_node_put(rem);
+> +	if (max98927->regcfg !=3D NULL)
+> +		cfg_size =3D max98927->regcfg_sz / sizeof(uint32_t);
+> +
+> +	if (cfg_size <=3D 0) {
+> +		dev_dbg(codec->dev,
+> +			"Register configuration is not required.\n");
+> +		return;
 > +	}
 > +
-> +done:
-> +	pdata->asd_sizes[0] = i;
-> +	pdata->subdev_count = i;
-> +	pdata->card_name = "DA850/OMAP-L138 Video Capture";
-> +
-> +	return pdata;
+> +	/* direct configuration from device tree */
+> +	for (x =3D 0; x < cfg_size; x +=3D 3) {
+> +		regInfo =3D (struct max98927_reg_default *)&max98927->regcfg[x];
+> +		dev_info(codec->dev, "CH:%d, reg:0x%02x, value:0x%02x\n",
+> +			be32_to_cpu(regInfo->ch),
+> +			be32_to_cpu(regInfo->reg),
+> +			be32_to_cpu(regInfo->def));
+> +		if (be32_to_cpu(regInfo->ch) =3D=3D PRI_MAX98927
+> +			&& max98927->regmap)
+> +			regmap_write(max98927->regmap,
+> +				be32_to_cpu(regInfo->reg),
+> +				be32_to_cpu(regInfo->def));
+> +		else if (be32_to_cpu(regInfo->ch) =3D=3D SEC_MAX98927
+> +			&& max98927->sub_regmap)
+> +			regmap_write(max98927->sub_regmap,
+> +				be32_to_cpu(regInfo->reg),
+> +				be32_to_cpu(regInfo->def));
+> +	}
 > +}
-> +
->  /**
->   * vpif_probe : This function probes the vpif capture driver
->   * @pdev: platform device pointer
-> @@ -1438,6 +1563,7 @@ static __init int vpif_probe(struct platform_device *pdev)
->  	int res_idx = 0;
->  	int i, err;
->  
-> +	pdev->dev.platform_data = vpif_capture_get_pdata(pdev);
->  	if (!pdev->dev.platform_data) {
->  		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
->  		return -EINVAL;
-> @@ -1480,7 +1606,7 @@ static __init int vpif_probe(struct platform_device *pdev)
->  		goto vpif_unregister;
->  	}
->  
-> -	if (!vpif_obj.config->asd_sizes) {
-> +	if (!vpif_obj.config->asd_sizes[0]) {
->  		i2c_adap = i2c_get_adapter(1);
->  		for (i = 0; i < subdev_count; i++) {
->  			subdevdata = &vpif_obj.config->subdev_info[i];
-> diff --git a/include/media/davinci/vpif_types.h b/include/media/davinci/vpif_types.h
-> index 3cb1704a0650..4ee3b41975db 100644
-> --- a/include/media/davinci/vpif_types.h
-> +++ b/include/media/davinci/vpif_types.h
-> @@ -65,14 +65,14 @@ struct vpif_display_config {
->  
->  struct vpif_input {
->  	struct v4l2_input input;
-> -	const char *subdev_name;
-> +	char *subdev_name;
->  	u32 input_route;
->  	u32 output_route;
->  };
->  
->  struct vpif_capture_chan_config {
->  	struct vpif_interface vpif_if;
-> -	const struct vpif_input *inputs;
-> +	struct vpif_input *inputs;
->  	int input_count;
->  };
->  
-> @@ -83,7 +83,8 @@ struct vpif_capture_config {
->  	struct vpif_subdev_info *subdev_info;
->  	int subdev_count;
->  	const char *card_name;
-> -	struct v4l2_async_subdev **asd;	/* Flat array, arranged in groups */
-> -	int *asd_sizes;		/* 0-terminated array of asd group sizes */
-> +
-> +	struct v4l2_async_subdev *asd[VPIF_CAPTURE_MAX_CHANNELS];
-> +	int asd_sizes[VPIF_CAPTURE_MAX_CHANNELS];
->  };
->  #endif /* _VPIF_TYPES_H */
 
--- 
-Kind regards,
+This also looks like it probably shouldn't be doing whatever it is doing
+but needs some documentation.
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've stopped here.  In general it seems like this driver needs a *lot*
+of work to work with the kernel interfaces in a normal style.  Aside
+=66rom the coding style issues (which really get in the way) the bulk of
+the code appears to be coming from unusual and undocumented ways of
+working with kernel APIs.  I'd strongly recommend taking a look at other
+drivers for similar hardware and making sure that your driver looks like
+them textually and structurally.  If there are things about your
+hardware that mean it needs something unusual then it should be clear to
+someone reading the code what's going on.
+
+--nci7c2psfevbhbrl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYNbnKAAoJECTWi3JdVIfQpxMIAIAqMoQIJykRDu+CAEpeD31c
+bPwK9s9tJDltoKzxEVf5V7ZxQJDhd5w+LZAph5vpuAjZal5km/EXtB3A2qi42pGH
+hnQ2bK8cjfKI+gh+u26/+NqV7q0BRWnKncujA57GMzEDjs43i3A6l7sH+cNp19Sm
+yuFyCO6GPTnVbBYYbXQeMvCtGK6DIfpGc0a5heVC1Z5NUtbjvhxvVbF9s6tAMdjr
+GXBFlzSvLaq2boePopmZV1bmNum8nLiH+LO87e4expPOtVPU6LWGX42hAdd3nLO5
+6rTxngfGyLQItj2toPcp3qp8GAU/baaVXQ+4HmRnCM5yjyI3kWN14y9Il3EHnU0=
+=Cu8B
+-----END PGP SIGNATURE-----
+
+--nci7c2psfevbhbrl--
