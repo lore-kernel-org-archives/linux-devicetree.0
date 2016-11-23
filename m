@@ -1,131 +1,76 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Wed, 23 Nov 2016 15:31:43 +0100
-Message-ID: <5a04de78-1181-8198-0bd5-edd435a83289@pengutronix.de>
-References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
- <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
- <20161123142938.GF9057@verge.net.au>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v3 3/5] i2c: designware: Add slave definitions
+Date: Wed, 23 Nov 2016 14:36:28 +0000
+Message-ID: <0e79e7db-acda-d6df-8c00-47b31ae9b7bd@synopsys.com>
+References: <cover.1479410047.git.lolivei@synopsys.com>
+ <f1bf9ca52e47cdd79b8f0d5e0c159a8727857269.1479410047.git.lolivei@synopsys.com>
+ <1479472552.22212.23.camel@linux.intel.com>
+ <20161118170155.chrdpguohgl6vo5f@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8265628251768306161=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161123142938.GF9057@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161118170155.chrdpguohgl6vo5f@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8265628251768306161==
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="EbF0lrbds0EoArl4hxKMsACVFMBk3V6On"
+OK, I will create a "mode" string property in the devicetree that can be
+"master" or "slave".
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---EbF0lrbds0EoArl4hxKMsACVFMBk3V6On
-Content-Type: multipart/mixed; boundary="UC0bpUBoLGnuhRmglfEnqrS9ks89F1S7X";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Simon Horman <horms@verge.net.au>
-Cc: Chris Paterson <chris.paterson2@renesas.com>,
- Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm
- <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
- linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org
-Message-ID: <5a04de78-1181-8198-0bd5-edd435a83289@pengutronix.de>
-Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
- <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
- <20161123142938.GF9057@verge.net.au>
-In-Reply-To: <20161123142938.GF9057@verge.net.au>
 
---UC0bpUBoLGnuhRmglfEnqrS9ks89F1S7X
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Thank you all,
 
-On 11/23/2016 03:29 PM, Simon Horman wrote:
-> On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
->> On 11/23/2016 01:14 PM, Chris Paterson wrote:
->>> This patch series adds CAN and CAN FD support to the r8a7796.
+Luis
+
+On 18-Nov-16 17:01, Rob Herring wrote:
+> On Fri, Nov 18, 2016 at 02:35:52PM +0200, Andy Shevchenko wrote:
+>> On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
+>>>  - Add slave defintitions to i2c-designware-core
+>>>  - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the
+>>> modules
+>>>  - Add compatible string to designware-core.txt explaining the
+>>> devicetree bindings
 >>>
->>> Based on renesas-devel-20161122-v4.9-rc6.
+>>
+>>> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>>> @@ -2,7 +2,9 @@
+>>>  
+>>>  Required properties :
+>>>  
+>>> - - compatible : should be "snps,designware-i2c"
+>>> + - compatible : should be:
+>>> +   - "snps,designware-i2c" to setup the hardware block as I2C master.
+>>> +   - "snps,designware-i2c-slave" to setup the hardware block as I2C
+>>> slave.
+>> Not sure about this one.
+>>
+>> Compatible string is more generic than list of modes. Basically you have
+>> to add a property which selects mode.
+> Yes, agreed. And come up with a common property.
+>
+>> DT people's ACK is a must for this change.
+>>
+>>
+>> --- a/drivers/i2c/busses/Kconfig
+>>> +++ b/drivers/i2c/busses/Kconfig
+>>> @@ -470,6 +470,7 @@ config I2C_DESIGNWARE_CORE
+>>>  config I2C_DESIGNWARE_PLATFORM
+>>>  	tristate "Synopsys DesignWare Platform"
+>>>  	select I2C_DESIGNWARE_CORE
+>>> +	select I2C_SLAVE
 >>>
->>> Chris Paterson (3):
->>>   arm64: dts: r8a7796: Add CAN external clock support
->>>   arm64: dts: r8a7796: Add CAN support
->>>   arm64: dts: r8a7796: Add CAN FD support
->>>
->>>  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
->>>  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
->>>  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61 ++++++++++++=
-++++++++++
->>>  3 files changed, 75 insertions(+), 10 deletions(-)
+>> Common rule, generic dependencies usually go first
 >>
->> For all three:
+>> 	select I2C_SLAVE
+>>  	select I2C_DESIGNWARE_CORE
 >>
->> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
->>
->> Who takes this series?
->=20
-> I would like to see these patches split up so that the
-> .../devicetree/bindings/ portions can go through you whole
-> the arch/arm64/boot/dts/renesas/ portions go thorugh my renesas tree.
+>> -- 
+>> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Intel Finland Oy
 
-Ok
-
-> Regarding the arch/arm64/boot/dts/renesas/ portion, I would like
-> some consideration given to what effect enabling memory above 4Gb
-> (64bit addressing) would have.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---UC0bpUBoLGnuhRmglfEnqrS9ks89F1S7X--
-
---EbF0lrbds0EoArl4hxKMsACVFMBk3V6On
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEES2FAuYbJvAGobdVQPTuqJaypJWoFAlg1qE8ACgkQPTuqJayp
-JWq3cwf/fI9p5wSj0o4SRxQQmjVSyMHVnxAEBiQ3EJFaBgpa5A+JbOfZQ9Yo71C+
-eDVru2/SuJBkOyjaywMUyp6lOgL684qTponx76mtVIr6nNwiRPYGNDi7vs+Xda7a
-KsYIyHGuX60Swf0ksSYndZbo2k0KaRRBa+Yf+s1lYn4QI3/vycaL8544jbfGuIvE
-RLqbHsqbcOywT7gfQV2ygmRQYia7hBvhIv069UryhxlhtuqEugFUD6a62tflQh90
-+Xb1giL6TMaNGO87bN0Uyf/EgJTFTdyD5VLqfsgvRIYUid798JLWUIrcR9bU5enc
-S6Dej2ejfIvfJjsjH8hrXub7O/vu+w==
-=04rC
------END PGP SIGNATURE-----
-
---EbF0lrbds0EoArl4hxKMsACVFMBk3V6On--
-
-
---===============8265628251768306161==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8265628251768306161==--
+-- 
+Best regards,
+Luis
