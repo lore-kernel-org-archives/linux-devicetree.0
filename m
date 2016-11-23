@@ -1,174 +1,84 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
-Date: Wed, 23 Nov 2016 15:22:33 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F931E08@lhreml507-mbx>
-References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
- <2364530.A9QSbaqvfm@wuerfel>
- <EE11001F9E5DDD47B7634E2F8A612F2E1F921A0F@lhreml507-mbx>
- <2359248.XjnRfPbj1B@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] mfd: cpcap: Add minimal support
+Date: Wed, 23 Nov 2016 07:26:52 -0800
+Message-ID: <20161123152652.GB4082@atomide.com>
+References: <20161119012748.17224-1-tony@atomide.com>
+ <20161121114558.GJ32509@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2359248.XjnRfPbj1B@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Linuxarm <linuxarm@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, T homas Petazzoni <thomas.petazzo.ni@free-electrons.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "minyard@acm.org" <minyard@acm.org>, "will.deacon@arm.com" <will.deacon@arm.com>, John Garry <john.garry@huawei.com>, "olof@lixom.net" <olof@lixom.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@go og le.com" <bhelgaas@google.com>, "kantyzc@163.com" <kan>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161121114558.GJ32509@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd
-
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: 23 November 2016 14:16
-> To: Gabriele Paoloni
-> Cc: linux-arm-kernel@lists.infradead.org; mark.rutland@arm.com;
-> benh@kernel.crashing.org; catalin.marinas@arm.com; liviu.dudau@arm.com;
-> Linuxarm; lorenzo.pieralisi@arm.com; xuwei (O); Jason Gunthorpe; linux-
-> serial@vger.kernel.org; linux-pci@vger.kernel.org;
-> devicetree@vger.kernel.org; minyard@acm.org; will.deacon@arm.com; John
-> Garry; zourongrong@gmail.com; robh+dt@kernel.org; bhelgaas@go og
-> le.com; kantyzc@163.com; zhichang.yuan02@gmail.com; T homas Petazzoni;
-> linux-kernel@vger.kernel.org; Yuanzhichang; olof@lixom.net
-> Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on
-> Hip06
+* Lee Jones <lee.jones@linaro.org> [161121 03:43]:
+> On Fri, 18 Nov 2016, Tony Lindgren wrote:
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -97,6 +97,7 @@ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
+> >  obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
+> >  
+> >  obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
+> > +obj-$(CONFIG_MFD_CPCAP)		+= cpcap.o
 > 
-> On Friday, November 18, 2016 5:03:11 PM CET Gabriele Paoloni wrote:
-> > > On Friday, November 18, 2016 4:18:07 PM CET Gabriele Paoloni wrote:
-> > > > From: Arnd Bergmann [mailto:arnd@arndb.de]
-> > > > > On Friday, November 18, 2016 12:53:08 PM CET Gabriele Paoloni
-> > > wrote:
-> > > > > For the ISA/LPC spaces there are only 4k of addresses, they
-> > > > > the bus addresses always overlap, but we can trivially
-> > > > > figure out the bus address from Linux I/O port number
-> > > > > by subtracting the start of the range.
-> > > >
-> > > > Are you saying that our LPC controller should specify a
-> > > > range property to map bus addresses into a cpu address range?
-> > >
-> > > No. There is not CPU address associated with it, because it's
-> > > not memory mapped.
-> > >
-> > > Instead, we need to associate a bus address with a logical
-> > > Linux port number, both in of_address_to_resource and
-> > > in inb()/outb().
-> >
-> > I think this is effectively what we are doing so far with patch 2/3.
-> > The problem with this patch is that we are carving out a "forbidden"
-> > IO tokens range that goes from 0 to PCIBIOS_MIN_IO.
-> >
-> > I think that the proper solution would be to have the LPC driver to
-> > set the carveout threshold used in pci_register_io_range(),
-> > pci_pio_to_address(), pci_address_to_pio(), but this would impose
-> > a probe dependency on the LPC itself that should be probed before
-> > the PCI controller (or before any other devices calling these
-> > functions...)
+> Who is the manufacturer?
+
+Hmm that I don't know. There seems to be both ST and TI versions
+of this chip manufactured for Motorola. So my guess is that it
+should be Motorola unless there's some similar catalog part
+available from ST used by others. If anybody has more info
+on this please let me know :)
+
+> > +	cpcap->vendor = (val >> 6) & 0x0007;
+> > +	cpcap->revision = ((val >> 3) & 0x0007) | ((val << 3) & 0x0038);
 > 
-> Why do you think the order matters? My point was that we should
-> be able to register any region of logical port numbers for any
-> bus here.
+> Lots of magic numbers here.  I suggest you define them.
 
-Maybe I have not followed well so let's roll back to your previous
-comment...
+I'll check if some earlier code has these defined. Otherwise I'll
+just add a comment on the lack of available documentation.
 
-"we need to associate a bus address with a logical Linux port number,
-both in of_address_to_resource and in inb()/outb()"
-
-Actually of_address_to_resource() returns the port number to used
-in inb/outb(); inb() and outb() add the port number to PCI_IOBASE
-to rd/wr to the right virtual address.
-
-Our LPC cannot operate on the virtual address and it operates on
-a bus address range that for LPC is also equal to the cpu address
-range and goes from 0 to 0x1000.
-
-Now as I understand it is risky and not appropriate to reserve
-the logical port numbers from 0 to 0x1000 or to whatever other
-upper bound because existing systems may rely on these port numbers
-retrieved by __of_address_to_resource().
-
-In this scenario I think the best thing to do would be
-in the probe function of the LPC driver:
-1) call pci_register_io_range() passing [0, 0x1000] (that is the
-   range for LPC)
-2) retrieve the logical port numbers associated to the LPC range
-   by calling pci_address_to_pio() for 0 and 0x1000 and assign
-   them to extio_ops_node->start and extio_ops_node->end
-3) implement the LPC accessors to operate on the logical ports
-   associated to the LPC range (in practice in the accessors
-   implementation we will call pci_pio_to_address to retrieve
-   the cpu address to operate on)
-
-What do you think?
-
-Thanks
-
-Gab
-
-
+> > +	error = cpcap_init_irq_bank(cpcap, 0, 0, 16);
 > 
->
-> > > > > > To be honest with you I would keep things simple for this
-> > > > > > LPC and introduce more complex reworks later if more devices
-> > > > > > need to be introduced.
-> > > > > >
-> > > > > > What if we stick on a single domain now where we introduce a
-> > > > > > reserved threshold for the IO space (say INDIRECT_MAX_IO).
-> > > > >
-> > > > > I said having a single domain is fine, but I still don't
-> > > > > like the idea of reserving low port numbers for this hack,
-> > > > > it would mean that the numbers change for everyone else.
-> > > >
-> > > > I don't get this much...I/O tokens that are passed to the I/O
-> > > > accessors are not fixed anyway and they vary depending on the
-> order
-> > > > of adding ranges to io_range_list...so I don't see a big issue
-> > > > with this...
-> > >
-> > > On machines with a legacy devices behind the PCI bridge,
-> > > there may still be a reason to have the low I/O port range
-> > > reserved for the primary bus, e.g. to get a VGA text console
-> > > to work.
-> > >
-> > > On powerpc, this is called the "primary" PCI host, i.e. the
-> > > only one that is allowed to have an ISA bridge.
-> >
-> > Yes but
-> > 1) isn't the PCI controller range property that defines how IO bus
-> address
-> >    map into physical CPU addresses?
+> 'ret' is more traditional.
+
+FYI error seems to be preferred over ret as it's meaning is
+clear, git grep "error =" drivers/input for example.
+I can of course change it if you prefer ret over error.
+
+> > +	error = cpcap_init_irq_bank(cpcap, 2, 32, 64);
+> > +	if (error)
+> > +		return error;
 > 
-> Correct, but the DT knows nothing about logical port numbers in Linux.
+> I don't think I've seen this method of adding bulk IRQ chips before.
+> Isn't there a cleaner or generic way to do this?
+
+I'll check.
+
+...
+> > +#define CPCAP_REG_LDEB		0x1270	/* LMR Debounce Settings */
+> > +#define CPCAP_REG_LGDET		0x1274	/* LMR GCAI Detach Detect */
+> > +#define CPCAP_REG_LMISC		0x1278	/* LMR Misc Bits */
+> > +#define CPCAP_REG_LMACE		0x127c	/* LMR Mace IC Support */
+> > +
+> > +#define CPCAP_REG_TEST		0x7c00	/* Test */
+> > +
+> > +#define CPCAP_REG_ST_TEST1	0x7d08	/* ST Test1 */
+> > +
+> > +#define CPCAP_REG_ST_TEST2	0x7d18	/* ST Test2 */
 > 
-> > 2) How can you guarantee that the cpu range associated with this
-> >    IO bus range is the first to be registered in
-> pci_register_io_range()?
-> >    ( i.e. are you saying that they are just relying on the fact that
-> it is the
-> >      only IO range in the system and by chance the IO tokens and
-> corresponding
-> >      bus addresses are the same? )
-> 
-> To clarify: the special properties of having the first 0x1000 logical
-> port numbers go to a particular physical bus are very obscure. I think
-> it's more important to not change the behavior for existing systems
-> that might rely on it than for new systems that have no such legacy.
-> 
-> The ipmi and uart drivers in particular will get the port numbers
-> filled
-> in their platform device from the DT bus scanning, so they don't care
-> at all about having the same numeric value for port numbers on the bus
-> and logical numbers, but other drivers might rely on particular ports
-> to be mapped on a specific PCI host, especially when those drivers
-> are  used only on systems that don't have more than one PCI domain.
-> 
-> 	Arnd
+> It would be nice to line up the entire file. #OCD
+
+Hmm care to clarify what you mean here? I think it's lined up with
+tabs to line up. I left empty lines where the registers are not
+contiguous. What does #OCD mean, Obsessive Compulsive Disorder over
+header files maybe? :)
+
+Anywys thanks for the review, the rest of the comments I will just
+fix and repost.
+
+Regards,
+
+Tony
