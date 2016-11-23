@@ -1,142 +1,61 @@
-From: Javi Merino <javi.merino@kernel.org>
-Subject: Re: [PATCH] v4l: async: make v4l2 coexists with devicetree nodes in
- a dt overlay
-Date: Wed, 23 Nov 2016 16:03:13 +0000
-Message-ID: <20161123160313.GA1753@ct-lt-587>
-References: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
- <cf31105b-e8c1-4379-cd03-0bdcbdea64d6@osg.samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
+ powerhold property
+Date: Wed, 23 Nov 2016 08:08:41 -0800
+Message-ID: <20161123160841.GG4082@atomide.com>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
+ <20161115000849.GD4082@atomide.com>
+ <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
+ <20161123083327.GM10134@dell.home>
+ <3a05871c-0512-8a84-4ac3-889c661c8638@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cf31105b-e8c1-4379-cd03-0bdcbdea64d6@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+In-Reply-To: <3a05871c-0512-8a84-4ac3-889c661c8638-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 11:25:39AM -0300, Javier Martinez Canillas wrote:
-> Hello Javi,
-> 
-> On 11/23/2016 07:09 AM, Javi Merino wrote:
-> > In asd's configured with V4L2_ASYNC_MATCH_OF, if the v4l2 subdev is in
-> > a devicetree overlay, its of_node pointer will be different each time
-> > the overlay is applied.  We are not interested in matching the
-> > pointer, what we want to match is that the path is the one we are
-> > expecting.  Change to use of_node_cmp() so that we continue matching
-> > after the overlay has been removed and reapplied.
-> >
-> 
-> I'm still not that familiar with DT overlays (and I guess others aren't
-> either) so I think that including an example of a base tree and overlay
-> DTS where this is an issue, could make things more clear in the commit.
-> 
-> IIUC, it should be something like this?
-> 
-> -- base tree --
-> 
-> &i2c1 {
-> 	camera: camera@10 {
-> 		reg = <0x10>;
-> 		port {
-> 			cam_ep: endpoint {
-> 				...
-> 			};
-> 		};
-> 	};
-> };
-> 
-> &media_bridge {
-> 	...
-> 	ports {
-> 		port@0 {
-> 			reg = <0>;
-> 			ep: endpoint {
-> 				remote-endpoint = <&cam_ep>;
-> 			};
-> 		};
-> 	};
-> };
-> 
-> -- overlay --
-> 
-> /plugin/;
-> / {
-> 	...
-> 	fragment@0 {
-> 		target = <&camera>;
-> 		__overlay__ {
-> 			compatible = "foo,bar";
-> 			...
-> 			port {
-> 				cam_ep: endpoint {
-> 					...
-> 				};
-> 			};
-> 		};
-> 	}
-> }
-
-Yes, that's right.  What I have is that the whole camera can be
-plugged or unplugged, so the overlay adds/removes the camera node:
-
-/ {
-	fragment@0 {
-		target-path = "/i2c0";
-		__overlay__ {
-			my_cam {
-				compatible = "foo,bar";
-				port {
-					camera0: endpoint {
-						remote-endpoint = <&vin2a>;
-						...
-					};
-				};
-			};
-		};
-	};
-
-I will add it to the commit message.
-
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-> > Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Signed-off-by: Javi Merino <javi.merino@kernel.org>
-> > ---
-> > Hi,
+* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [161123 00:33]:
+> On Wednesday 23 November 2016 02:03 PM, Lee Jones wrote:
+> > On Wed, 23 Nov 2016, Keerthy wrote:
+> > > On Tuesday 15 November 2016 05:38 AM, Tony Lindgren wrote:
+> > > > * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [161109 21:10]:
+> > > > > The PMICs have POWERHOLD set by default which prevents PMIC shutdown
+> > > > > even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
+> > > > > So to enable pmic power off this property lets one over ride the default
+> > > > > value and enable pmic power off.
+> > > > 
+> > > > This should not cause merge conflicts so probably best to merge along
+> > > > with the driver changes:
+> > > > 
+> > > > Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > > > 
+> > > > If you guys want me to pick up this separately let me know.
+> > > 
+> > > Hi Lee Jones,
+> > > 
+> > > Are you planning to pull DT and Documentation patches as well?
 > > 
-> > I feel it is a bit of a hack, but I couldn't think of anything better.
-> > I'm ccing devicetree@ and Pantelis because there may be a simpler
-> > solution.
-> >
+> > No need.  They can be safely applied to their own subsystems.
 > 
-> I also couldn't think a better way to do this, since IIUC the node's name is
-> the only thing that doesn't change, and is available at the time the bridge
-> driver calls v4l2_async_notifier_register() when parsing the base tree.
+> Okay. Thanks for the response.
 > 
-> >  drivers/media/v4l2-core/v4l2-async.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> > index 5bada20..d33a17c 100644
-> > --- a/drivers/media/v4l2-core/v4l2-async.c
-> > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> > @@ -42,7 +42,8 @@ static bool match_devname(struct v4l2_subdev *sd,
-> >  
-> >  static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
-> >  {
-> > -	return sd->of_node == asd->match.of.node;
-> > +	return !of_node_cmp(of_node_full_name(sd->of_node),
-> > +			    of_node_full_name(asd->match.of.node));
-> >  }
-> >  
-> >  static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
-> > 
+> Tony,
 > 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> Best regards,
-> -- 
-> Javier Martinez Canillas
-> Open Source Group
-> Samsung Research America
+> Hope you can pull the DT patches.
+
+Applying both into omap-for-v4.10/dt thanks. Please send dts changes
+seprately next time if there are no dependencies. This leaves out
+the second guessing who should apply what.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
