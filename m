@@ -1,38 +1,88 @@
-From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mfd: Improve readability for TPS65217
- interrupt sources
-Date: Wed, 23 Nov 2016 20:38:00 +0900
-Message-ID: <bd4944d8-3cef-b3f7-4fba-6de590493047@gmail.com>
-References: <20161121131515.8040-1-woogyom.kim@gmail.com>
- <20161122155759.GG10134@dell.home>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible
+ string
+Date: Wed, 23 Nov 2016 17:17:43 +0530
+Message-ID: <ff1ea88a-87c6-6721-8e63-ddb05900cc58@ti.com>
+References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
+ <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
+ <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
+ <fdb93150-9089-c7bb-2b0a-21ded241a647@arm.com>
+ <ae92e013-b41b-6caa-b32f-284ffb6f5aa0@ti.com>
+ <2a644b8c-d91e-5ab1-200b-00f749a36307@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161122155759.GG10134-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <2a644b8c-d91e-5ab1-200b-00f749a36307-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2016 12:57 AM, Lee Jones wrote:
->>  	pwrbutton {
->> > -		interrupts = <TPS65217_IRQ_PB>;
->> > +		interrupts = <TPS65217_IRQ_PUSHBUTTON>;
-> Push button or power button?
->
+On Wednesday 23 November 2016 03:35 PM, Sudeep Holla wrote:
+> 
+> 
+> On 23/11/16 07:49, Sekhar Nori wrote:
+>> On Tuesday 22 November 2016 09:16 PM, Sudeep Holla wrote:
+>>> Hi Sekhar,
+>>>
+>>> On 22/11/16 15:06, Sekhar Nori wrote:
+>>>> Hi Sudeep,
+>>>>
+>>>> On Tuesday 22 November 2016 04:23 PM, Sudeep Holla wrote:
+>>>>>
+>>>>>
+>>>>> On 22/11/16 10:41, Bartosz Golaszewski wrote:
+>>>>>> Add a function allowing to retrieve the compatible string of the root
+>>>>>> node of the device tree.
+>>>>>>
+>>>>>
+>>>>> Rob has queued [1] and it's in -next today. You can reuse that if you
+>>>>> are planning to target this for v4.11 or just use open coding in your
+>>>>> driver for v4.10 and target this move for v4.11 to avoid cross tree
+>>>>> dependencies as I already mentioned in your previous thread.
+>>>>
+>>>> I dont have your original patch in my mailbox, but I wonder if
+>>>> returning a pointer to property string for a node whose reference has
+>>>> already been released is safe to do? Probably not an issue for the root
+>>>> node, but still feels counter-intuitive.
+>>>>
+>>>
+>>> I am not sure if I understand the issue here. Are you referring a case
+>>> where of_root is freed ?
+>>
+>> Yes, right, thats what I was hinting at. Since you are giving up the
+>> reference to the device node before the function returns, the user can
+>> be left with a dangling reference.
+>>
+> 
+> Yes I agree.
 
-According to the datasheet, push button interrupt is correct.
+So, the if(!of_node_get()) is just an expensive NULL pointer check. I think 
+it is better to be explicit about it by not using of_node_get/put() at all. 
+How about:
 
-	http://www.ti.com/lit/ds/symlink/tps65217.pdf
++int of_machine_get_model_name(const char **model)
++{
++       int error;
++
++       if (!of_root)
++               return -EINVAL;
++
++       error = of_property_read_string(of_root, "model", model);
++       if (error)
++               error = of_property_read_string_index(of_root, "compatible",
++                                                     0, model);
++       return error;
++}
++EXPORT_SYMBOL(of_machine_get_model_name);
 
-This is used for a power button input in Beaglebone boards. In other 
-words, the power button is one of push button usages.
+I know the patch is already in -next so I guess it depends on how strongly 
+Rob feels about this.
 
-So, I'd like to keep general name for the interrupt.
-
-Best regards,
-Milo
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
