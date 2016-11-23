@@ -1,17 +1,17 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: max77620: add documentation for MPOK property" to the regulator tree
-Date: Wed, 23 Nov 2016 16:31:30 +0000
-Message-ID: <E1c9aSI-0006aD-Hf@debutante>
-References: <1479297161-7705-2-git-send-email-vreddytalla@nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479297161-7705-2-git-send-email-vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, svelpula-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: max77620: add support to configure MPOK" to the regulator tree
+Date: Wed, 23 Nov 2016 16:31:33 +0000
+Message-ID: <E1c9aSL-0006bY-FS@debutante>
+References: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>lee.jones@linaro.org, lgirdwood@gmail.combroonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, svelpula@nvidia.com, vreddytalla@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: max77620: add documentation for MPOK property
+   regulator: max77620: add support to configure MPOK
 
 has been applied to the regulator tree at
 
@@ -36,48 +36,129 @@ to this mail.
 Thanks,
 Mark
 
->From 983779235a4d08f94e8cda073200423e0ff01d2e Mon Sep 17 00:00:00 2001
-From: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Date: Thu, 17 Nov 2016 23:24:36 +0530
-Subject: [PATCH] regulator: max77620: add documentation for MPOK property
+>From 383d0fca7035a12f1201277d33e8fc87c9d60c9a Mon Sep 17 00:00:00 2001
+From: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Date: Thu, 17 Nov 2016 23:24:35 +0530
+Subject: [PATCH] regulator: max77620: add support to configure MPOK
 
-Adding documentation for maxim,power-ok-control dts property
+Adding support to configure regulator POK mapping bit
+to control nRST_IO and GPIO1 POK function.
+In  tegra based platform which uses MAX20024 pmic, when
+some of regulators are configured FPS_NONE(flexible power sequencer)
+causes PMIC GPIO1 to go low which lead to various other rails turning off,
+to avoid this MPOK bit of those regulators need to be set to 0
+so that PMIC GPIO1 will not go low.
 
-Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/mfd/max77620.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/regulator/max77620-regulator.c | 46 ++++++++++++++++++++++++++++++++++
+ include/linux/mfd/max77620.h           |  2 ++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-index 2ad44f7e4880..9c16d51cc15b 100644
---- a/Documentation/devicetree/bindings/mfd/max77620.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-@@ -106,6 +106,18 @@ Here supported time periods by device in microseconds are as follows:
- MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
- MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index c39a56b41901..d088a7c79e60 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -80,6 +80,7 @@ struct max77620_regulator_pdata {
+ 	int suspend_fps_pd_slot;
+ 	int suspend_fps_pu_slot;
+ 	int current_mode;
++	int power_ok;
+ 	int ramp_rate_setting;
+ };
  
-+-maxim,power-ok-control: configure map power ok bit
-+			1: Enables POK(Power OK) to control nRST_IO and GPIO1
-+			POK function.
-+			0: Disables POK control.
-+			if property missing, do not configure MPOK bit.
-+			If POK mapping is enabled for GPIO1/nRST_IO then,
-+			GPIO1/nRST_IO pins are HIGH only if all rails
-+			that have POK control enabled are HIGH.
-+			If any of the rails goes down(which are enabled for POK
-+			control) then, GPIO1/nRST_IO goes LOW.
-+			this property is valid for max20024 only.
+@@ -350,11 +351,48 @@ static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
+ 	return 0;
+ }
+ 
++static int max77620_config_power_ok(struct max77620_regulator *pmic, int id)
++{
++	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
++	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
++	struct max77620_chip *chip = dev_get_drvdata(pmic->dev->parent);
++	u8 val, mask;
++	int ret;
 +
- For DT binding details of different sub modules like GPIO, pincontrol,
- regulator, power, please refer respective device-tree binding document
- under their respective sub-system directories.
++	switch (chip->chip_id) {
++	case MAX20024:
++		if (rpdata->power_ok >= 0) {
++			if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
++				mask = MAX20024_SD_CFG1_MPOK_MASK;
++			else
++				mask = MAX20024_LDO_CFG2_MPOK_MASK;
++
++			val = rpdata->power_ok ? mask : 0;
++
++			ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr,
++						 mask, val);
++			if (ret < 0) {
++				dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
++					rinfo->cfg_addr, ret);
++				return ret;
++			}
++		}
++		break;
++
++	default:
++		break;
++	}
++
++	return 0;
++}
++
+ static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
+ {
+ 	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
+ 	int ret;
+ 
++	max77620_config_power_ok(pmic, id);
++
+ 	/* Update power mode */
+ 	ret = max77620_regulator_get_power_mode(pmic, id);
+ 	if (ret < 0)
+@@ -594,6 +632,12 @@ static int max77620_of_parse_cb(struct device_node *np,
+ 			np, "maxim,suspend-fps-power-down-slot", &pval);
+ 	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
+ 
++	ret = of_property_read_u32(np, "maxim,power-ok-control", &pval);
++	if (!ret)
++		rpdata->power_ok = pval;
++	else
++		rpdata->power_ok = -1;
++
+ 	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
+ 	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
+ 
+@@ -806,6 +850,8 @@ static int max77620_regulator_resume(struct device *dev)
+ 	for (id = 0; id < MAX77620_NUM_REGS; id++) {
+ 		reg_pdata = &pmic->reg_pdata[id];
+ 
++		max77620_config_power_ok(pmic, id);
++
+ 		max77620_regulator_set_fps_slots(pmic, id, false);
+ 		if (reg_pdata->active_fps_src < 0)
+ 			continue;
+diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
+index 3ca0af07fc78..ad2a9a852aea 100644
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -180,6 +180,7 @@
+ #define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
+ #define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
+ #define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
++#define MAX20024_SD_CFG1_MPOK_MASK		BIT(1)
+ #define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
+ #define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
+ #define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
+@@ -187,6 +188,7 @@
+ /* LDO_CNFG2 */
+ #define MAX77620_LDO_POWER_MODE_MASK		0xC0
+ #define MAX77620_LDO_POWER_MODE_SHIFT		6
++#define MAX20024_LDO_CFG2_MPOK_MASK		BIT(2)
+ #define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
+ #define MAX77620_LDO_CFG2_ADE_DISABLE		0
+ #define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
