@@ -1,23 +1,23 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Kevin Hilman <khilman@baylibre.com>
 Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
-Date: Wed, 23 Nov 2016 15:25:32 -0800
-Message-ID: <m2a8cpvkwj.fsf@baylibre.com>
+Date: Wed, 23 Nov 2016 15:26:19 -0800
+Message-ID: <m237ihvkv8.fsf@baylibre.com>
 References: <20161122155244.802-1-khilman@baylibre.com>
         <20161122155244.802-4-khilman@baylibre.com>
         <20161123153723.GE16630@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161123153723.GE16630-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org> (Sakari
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20161123153723.GE16630@valkosipuli.retiisi.org.uk> (Sakari
         Ailus's message of "Wed, 23 Nov 2016 17:37:23 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Axel Haslam <ahaslam@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Sakari,
 
-Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
+Sakari Ailus <sakari.ailus@iki.fi> writes:
 
 > On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
 >> Allow getting of subdevs from DT ports and endpoints.
@@ -30,7 +30,7 @@ Yes, thanks.
 
 >> am437x-vpfe.c
 >> 
->> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 >> ---
 >>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++++++++++++-
 >>  include/media/davinci/vpif_types.h            |   9 +-
@@ -248,7 +248,3 @@ for i = i..VPIF_CAPTURE_MAX_CHANNELS.
 Thanks for the review,
 
 Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
