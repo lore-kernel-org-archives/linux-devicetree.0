@@ -1,63 +1,99 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/6] pinctrl: mt8173: set GPIO16 to usb iddig mode
-Date: Wed, 23 Nov 2016 19:32:48 +0100
-Message-ID: <42f5df18-2edd-08f2-a833-9c92ac85e87c@gmail.com>
-References: <1462868614-20602-1-git-send-email-chunfeng.yun@mediatek.com>
- <1462868614-20602-7-git-send-email-chunfeng.yun@mediatek.com>
- <CACRpkdaeD5mk7LXEWnE0=Xute8-JA-fa4tVt4fYhujEXeq2+9w@mail.gmail.com>
- <1462991546.11623.3.camel@mussux00> <1463017282.11651.82.camel@mhfsdcap03>
- <1463018942.1608.5.camel@mussux00> <1463021701.25171.5.camel@mussux00>
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Date: Wed, 23 Nov 2016 19:36:53 +0100
+Message-ID: <09b7d4a1-40e5-7aee-d777-9bd9f9b434b4@kleine-koenig.org>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+ <1479126185.15557.5@smtp.gmail.com>
+ <20161114201640.rr32iyjf5a53v33t@perseus.defre.kleine-koenig.org>
+ <20161114202832.GG24546@lunn.ch> <1479586147.10840.0@smtp.gmail.com>
+ <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
+ <1479851991.26813.2@smtp.gmail.com> <20161123145916.GL14947@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463021701.25171.5.camel@mussux00>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongzhou Yang <hongzhou.yang@mediatek.com>, chunfeng yun <chunfeng.yun@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Maoguang Meng <maoguang.meng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Biao Huang <biao.huang@mediatek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="Gv9xbGlNg2VegxgXFNQr0sQ3v9abR4xbt"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161123145916.GL14947-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, tomas.hlavacek-x+rMaJPWets@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hongzhou,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Gv9xbGlNg2VegxgXFNQr0sQ3v9abR4xbt
+Content-Type: multipart/mixed; boundary="ot4nOiPW2Hs9QcqlGhHUWEgs9wAEu61MV";
+ protected-headers="v1"
+From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, tomas.hlavacek-x+rMaJPWets@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org,
+ Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Message-ID: <09b7d4a1-40e5-7aee-d777-9bd9f9b434b4-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+References: <20161105203841.9661-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+ <1479126185.15557.5-TAvD023jEQEN+BqQ9rBEUg@public.gmane.org>
+ <20161114201640.rr32iyjf5a53v33t-jgopVnDzZD+b0XQX99//ntPVjbGH4+40kFgPdswSElo@public.gmane.org>
+ <20161114202832.GG24546-g2DYL2Zd6BY@public.gmane.org> <1479586147.10840.0-TAvD023jEQEN+BqQ9rBEUg@public.gmane.org>
+ <20161120203037.pd5mhqyjeotileve-jgopVnDzZD+b0XQX99//ntPVjbGH4+40kFgPdswSElo@public.gmane.org>
+ <1479851991.26813.2-TAvD023jEQEN+BqQ9rBEUg@public.gmane.org> <20161123145916.GL14947-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20161123145916.GL14947-g2DYL2Zd6BY@public.gmane.org>
 
-On 12/05/16 04:55, Hongzhou Yang wrote:
-> On Wed, 2016-05-11 at 19:09 -0700, Hongzhou Yang wrote:
->> On Thu, 2016-05-12 at 09:41 +0800, chunfeng yun wrote:
->>> Hi,
->>>
->>> On Wed, 2016-05-11 at 11:32 -0700, Hongzhou Yang wrote:
->>>> On Wed, 2016-05-11 at 13:56 +0200, Linus Walleij wrote:
->>>>> On Tue, May 10, 2016 at 10:23 AM, Chunfeng Yun
->>>>> <chunfeng.yun@mediatek.com> wrote:
->>>>>
->>>>>> the default mode of GPIO16 pin is gpio, when set EINT16 to
->>>>>> IRQ_TYPE_LEVEL_HIGH, no interrupt is triggered, it can be
->>>>>> fixed when set its default mode as usb iddig.
->>>>>>
->>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
->>>>>
->>>>
->>>> Chunfeng, GPIO16 can be used as EINT16 mode, but the pinmux should be 0.
->>>> If you want to set its default mode to iddig, you should set it in dts.
->>>>
->>> I set it in DTS, but it didn't work, because when usb driver requested
->>> IRQ, pinmux was switched back to default mode set by
->>> MTK_EINT_FUNCTION().
->>>
->>
->> After confirmed, there are something wrong with data sheet and pinmux
->> table, and GPIO16 can only receive interrupt by mode 1. So
->>
->> Acked-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
->>
->
-> Linus,
->
-> We find there are some other pins still have the same problem, so please
-> hold on it. Sorry for so much noise.
->
+--ot4nOiPW2Hs9QcqlGhHUWEgs9wAEu61MV
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Did you made any progress on this? I didn't see any patch on the mailing 
-list.
+Hello Andrew,
 
-Regards,
-Matthias
+On 11/23/2016 03:59 PM, Andrew Lunn wrote:
+>>> CZ11NIC12 is indicated on my board.
+>>
+>> :-( Well, this board version has wrongly matched length of some
+>> differential pairs, IRQ from 88E1514 is connected differently, there
+>> are slight differences in power supplies and (if I am not mistaken)
+>> something changed in RTC support circuitry. It looks like a huge
+>> mistake on our side.
+>=20
+> Hi Tomas
+>=20
+> Would these problems also explain why the Ethernet links to the switch
+> don't work? Maybe the differential pairs?
+
+no this is not the problem. When booting the OpenWRT based system I can
+communicate with the device via the switch. (Didn't test deeply, but my
+Laptop got a dhcp lease from the Turris Omnia and I can ping it.) But
+this convinces me, that the hardware is good enough.
+
+If you have any ideas what I can try to make the switch work or help to
+diagnose the problem, just let me know.
+
+Best regards
+Uwe
+
+
+--ot4nOiPW2Hs9QcqlGhHUWEgs9wAEu61MV--
+
+--Gv9xbGlNg2VegxgXFNQr0sQ3v9abR4xbt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAlg14ckACgkQwfwUeK3K
+7Anc2Qf/fl+uNbyp1h/Hd+jSgpsYxqPlS/7XxFusPLnelEkUvirTyMSexFUOKv+W
+mfLSk87tdfKR8D0jFHHEXGYh+CRQhS3U4mgsik3i/ipWKB3dxN29lQARoaMOTqrg
+M0yaj7GK24xzxqWmSweoDdlBWJTNkHDO1Kbj6f4WJlJSJSB42wAXbfWtmcgWZrVz
+pgIh54sxuOrM7EKEMiiP0tjt6Nramr24weuH7d9dqtVOAXmRHF4pLZ59StNDGD0W
+XLJX++uVdB+Sl0o1IbyA1/vTY2s1p2GQZSe+N9HIGc6xUFSjDwSqkH0I6Zsy8C52
+EVGaMKiqbye58Keb2cgkyxsS1t7psg==
+=7fW/
+-----END PGP SIGNATURE-----
+
+--Gv9xbGlNg2VegxgXFNQr0sQ3v9abR4xbt--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
