@@ -1,25 +1,83 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers/of: Export phandle iterators
-Date: Wed, 23 Nov 2016 15:49:54 -0600
-Message-ID: <CAL_JsqLNCZnKyUmzYAuJSLhVNf1MhnSp_uEw4jn=WcLsw2GCZQ@mail.gmail.com>
-References: <a1fa1157cab10f2a6f319d431d355cef79b91820.1479927866.git.robin.murphy@arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: Fix issue where code would fall through to error case.
+Date: Wed, 23 Nov 2016 15:58:40 -0600
+Message-ID: <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
+References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
+ <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com> <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a1fa1157cab10f2a6f319d431d355cef79b91820.1479927866.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer.private@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Moritz Fischer <moritz.fischer@ettus.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, moritz@pure-entropy.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 1:06 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
-> Modular drivers may want to use of_for_each_phandle() - export its
-> constituent functions.
+On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
+<moritz.fischer.private@gmail.com> wrote:
+> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 11/17/16 15:40, Frank Rowand wrote:
+>>> On 11/17/16 15:25, Moritz Fischer wrote:
+>>>> No longer fall through into the error case that prints out
+>>>> an error if no error (err = 0) occurred.
+>>>>
+>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
+>>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+>>>> ---
+>>>>  drivers/of/resolver.c | 6 +++++-
+>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>>>> index 783bd09..785076d 100644
+>>>> --- a/drivers/of/resolver.c
+>>>> +++ b/drivers/of/resolver.c
+>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
+>>>>
+>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+>>>>              if (err)
+>>>> -                    break;
+>>>> +                    goto err_out;
+>>>>      }
+>>>>
+>>>> +    of_node_put(tree_symbols);
+>>>> +
+>>>> +    return 0;
+>>>> +
+>>>>  err_out:
+>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
+>>>>  out:
+>>>
+>>> Thanks for catching that.
+>>>
+>>> Rob, please apply.
+>>>
+>>> Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
+>>>
+>>> -Frank
+>>
+>> On second thought, isn't the common pattern when clean up is needed for
+>> both the no-error path and the error path something like:
+>>
+>>
+>>         out:
+>>                 of_node_put(tree_symbols);
+>>                 return err;
+>>
+>>         err_out:
+>>                 pr_err("overlay phandle fixup failed: %d\n", err);
+>>                 goto out;
+>>         }
+>>
+>>
+>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
+>
+> Same here. I tried to avoid the jumping back part, but if that's the
+> common pattern,
+> I can submit a v2 doing that instead.
 
-Do you have a user?
+Both are ugly. Just do:
+
+if (err)
+  pr_err(...);
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
