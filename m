@@ -1,12 +1,13 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/3] arm64: dts: add USB1-related nodes of Allwinner A64
-Date: Wed, 23 Nov 2016 09:08:36 +0100
-Message-ID: <20161123080836.xigrwdmf4zxbqmqf@lukather>
-References: <20161122155831.8724-1-icenowy@aosc.xyz>
+Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
+Date: Wed, 23 Nov 2016 08:59:50 +0100
+Message-ID: <20161123075950.fjtplylunwale6j4@lukather>
+References: <20161121162421.800-1-icenowy@aosc.xyz>
+ <20161121162421.800-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2555394674027723004=="
+Content-Type: multipart/mixed; boundary="===============4780815808593788657=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161122155831.8724-1-icenowy@aosc.xyz>
+In-Reply-To: <20161121162421.800-3-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,97 +18,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Andre Przywara <andre.przywara@arm.com>, linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============2555394674027723004==
+--===============4780815808593788657==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="b2a6tlvjct7vwijg"
+	protocol="application/pgp-signature"; boundary="bjlgigef2u3ezvmr"
 Content-Disposition: inline
 
 
---b2a6tlvjct7vwijg
+--bjlgigef2u3ezvmr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 22, 2016 at 11:58:29PM +0800, Icenowy Zheng wrote:
-> Allwinner A64 have two HCI USB controllers, a OTG controller and a USB
-> PHY device which have two ports. One of the port is wired to both a HCI
-> USB controller and the OTG controller, which is currently not supported.
-> The another one is only wired to a HCI controller, and the device node of
-> OHCI/EHCI controller of the port can be added now.
+Hi,
+
+On Tue, Nov 22, 2016 at 12:24:21AM +0800, Icenowy Zheng wrote:
+> There's a Allwinner's XR819 SDIO Wi-Fi module soldered on the board of
+> Orange Pi Zero, which used a dedicated regulator to power.
 >=20
-> Also the A64 USB PHY device node is also added for the HCI controllers to
-> work.
+> Add the device tree node of the regulator, the enable gpio (with
+> mmc-pwrseq) and the sdio controller.
+>=20
+> There's a out-of-tree driver tested to work with this device tree.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
-> Changes since v1:
-> - Remove manual CLK_USB_OHCI0 gate, as it's dealed by ccu driver now.
-> - Sort the nodes and fixed {e,o}hci1 regs.
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 44 +++++++++++++++++++++=
-++++++
->  1 file changed, 44 insertions(+)
+> New patch in the patchset, since a out-of-tree working xradio driver is d=
+one.
 >=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-> index 3d70be3..2572dd6 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -122,6 +122,50 @@
->  		#size-cells =3D <1>;
->  		ranges;
+> If there is any problem in this patch, it can be omitted.
+
+No particular problem with this one, however it can and should be
+merged with the previous one.
+
+Minor comments below though.
+
+>=20
+>  arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts | 42 ++++++++++++++++++=
+++++++
+>  1 file changed, 42 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts b/arch/arm/=
+boot/dts/sun8i-h2plus-orangepi-zero.dts
+> index b428e47..39cac26 100644
+> --- a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+> @@ -79,6 +79,24 @@
+>  			gpios =3D <&pio 0 17 GPIO_ACTIVE_HIGH>;
+>  		};
+>  	};
+> +
+> +	reg_vcc_wifi: reg_vcc_wifi {
+> +		compatible =3D "regulator-fixed";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&vcc_wifi_pin_opi0>;
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-name =3D "vcc-wifi";
+> +		enable-active-high;
+> +		gpio =3D <&pio 0 20 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible =3D "mmc-pwrseq-simple";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&wifi_pwrseq_pin_opi0>;
+> +		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>;
+> +	};
+>  };
 > =20
-> +		usbphy: phy@01c19400 {
-> +			compatible =3D "allwinner,sun50i-a64-usb-phy";
-> +			reg =3D <0x01c19400 0x14>,
-> +			      <0x01c1b800 0x4>;
-> +			reg-names =3D "phy_ctrl",
-> +				    "pmu1";
-> +			clocks =3D <&ccu CLK_USB_PHY0>,
-> +				 <&ccu CLK_USB_PHY1>;
-> +			clock-names =3D "usb0_phy",
-> +				      "usb1_phy";
-> +			resets =3D <&ccu RST_USB_PHY0>,
-> +				 <&ccu RST_USB_PHY1>;
-> +			reset-names =3D "usb0_reset",
-> +				      "usb1_reset";
-> +			status =3D "disabled";
-> +			#phy-cells =3D <1>;
-> +		};
+>  &ehci1 {
+> @@ -95,6 +113,20 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&mmc1 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&mmc1_pins_a>;
+> +	vmmc-supply =3D <&reg_vcc_wifi>;
+> +	mmc-pwrseq =3D <&wifi_pwrseq>;
+> +	bus-width =3D <4>;
+> +	non-removable;
+> +	status =3D "okay";
+> +};
 > +
-> +		ohci1: usb@01c1b400 {
-> +			compatible =3D "allwinner,sun50i-a64-ohci", "generic-ohci";
-> +			reg =3D <0x01c1b400 0x100>;
-> +			interrupts =3D <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&ccu CLK_BUS_OHCI1>,
-> +				 <&ccu CLK_USB_OHCI1>;
-> +			resets =3D <&ccu RST_BUS_OHCI1>;
-> +			phys =3D <&usbphy 1>;
-> +			phy-names =3D "usb";
-> +			status =3D "disabled";
-> +		};
+> +&mmc1_pins_a {
+> +	allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+
+This should be bias-pull-up.
+
+> +};
 > +
-> +		ehci1: usb@01c1b000 {
-> +			compatible =3D "allwinner,sun50i-a64-ehci", "generic-ehci";
-> +			reg =3D <0x01c1b000 0x100>;
-> +			interrupts =3D <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&ccu CLK_BUS_OHCI1>,
-> +				 <&ccu CLK_BUS_EHCI1>,
-> +				 <&ccu CLK_USB_OHCI1>;
-> +			resets =3D <&ccu RST_BUS_OHCI1>,
-> +				 <&ccu RST_BUS_EHCI1>;
-> +			phys =3D <&usbphy 1>;
-> +			phy-names =3D "usb";
-> +			status =3D "disabled";
-> +		};
+>  &ohci1 {
+>  	status =3D "okay";
+>  };
+> @@ -104,6 +136,11 @@
+>  		pins =3D "PA17";
+>  		function =3D "gpio_out";
+>  	};
+> +
+> +	vcc_wifi_pin_opi0: vcc_wifi_pin@0 {
+> +		allwinner,pins =3D "PA20";
 
-The nodes were inverted, also, please use "arm64: dts: allwinner:" for
-your prefix in the future.
+This should be pins
 
-I fixed both issues and queued for 4.11.
+> +		allwinner,function =3D "gpio_out";
+
+This should be function
+
+> +	};
+>  };
+> =20
+>  &r_pio {
+> @@ -111,6 +148,11 @@
+>  		pins =3D "PL10";
+>  		function =3D "gpio_out";
+>  	};
+> +
+> +	wifi_pwrseq_pin_opi0: wifi_pwrseq_pin@0 {
+> +		allwinner,pins =3D "PL7";
+> +		allwinner,function =3D "gpio_out";
+
+And same thing here.
 
 Thanks!
 Maxime
@@ -117,30 +152,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---b2a6tlvjct7vwijg
+--bjlgigef2u3ezvmr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYNU6EAAoJEBx+YmzsjxAg5gAQAIoPoLKkEKHgOF8uvZUR4Kp9
-KPvrYbZBAk9ierp28d20SO7Apy1LYv2SEoXZ6wJckPolnVhkJVY42CyfYrlWIEzX
-9rMtCMfjg6WiCWYW4GBq0J8XoNWFnIPVJwfR09ud6+Hi4LXwYEgtPdwUuYd7RLzR
-QKeN9t9V0t/5xkZXmUqy3Ho39IAdMHh1CGAI3BSa9QDs9jb2T8UoQrIB3x4xRYXj
-v1LIsKmtJ791Tea3CQ5RBu8rluWFDHTwpvzLFfUzEIfmXJRzp2sJUb5cJoXRT0dB
-VZUehENKdskKoe1nxedmoHxKTNQgC9oPPC6flc4PSs0O2Mj9imekuQvQXxvzfZg2
-TG7OTelJyJIA1SzcT7/fR+JGL64TvORJ5YY5cSrPdUKCjkBJjQYawk5qe+KxEkwU
-n5+OHo7RKARxtnzZyeM/5g3GZxKgyOg27F129zw+B3IO8l4G0plmk456KUh6CQ1T
-RILsTz6vEwlO8KEZiwul6NAOLY93rtdkS95/asZSLo/fYVoCMHgVP7iqnMAKflyE
-FpZYxUS/kqms48cR8OwLtnBTRcf4gwHaCWWS40H0JRcgn93zUAF7VGMSrLhQ3bVQ
-qwlgq38oAokrRYxa50Q8WLmKAg8SLgrmGvaKOUNWtHfxDfy8wfMq3eBUlJlvZM6+
-xWhbFlLty8/GcD6ROzMW
-=D5Vf
+iQIcBAEBCAAGBQJYNUx2AAoJEBx+YmzsjxAg3MgQAJl1ppzNHgy1TrCpaz0TlZ/X
+tzphrmvYOJ8vkNOKCmCFVQRwXQbZcwClfugPJA/gUNm7gphZpMvERJniB8vi+tDS
+bRBf456tBSb46Swfgk+5brPjmKr0fWl0o0LqMhRUb8yG8hwCA1SkhevGeSntO3Un
+fXyUTAc+ZJ7h4ZLnsir7PUlJleB4CHU0jF3dK1Ggzcq9aYs8rf4GbE7NEP/flTLY
+2/mcVNgG0MsDSn1Zp1pWqBEnMMULcebQFyhBHd5hnryovsoPABamYvPBi0sPoaEA
+WAxw24ZMWrlHyI+ib6gncy4ypmuoWtgasEmrgMXL9B84NUw8lXTS/Ez3UmQ1YD9N
+0XuV84eLpXXd9CfbZJRNdZfpz6pAbV/AGc3/OGcXn9GJ/QeaCCwHaqvZNYp2nk5M
+mHLaOs0dieXNcQUX18+Ss2QPanvtLz+Nw3PyqSesmZnmAK1kp6j7pVsS87Lgo1ZQ
+87WBSnsSu4wqEX1R+4AQQSVZurJTwLPdRHiu0DEasZ2f9Ei3UGrhZxI4II31SWo4
+T4zz/EG3pOmTSWB7ioaVJnwWBawOLW86Rn0thh48P6L+P1QUvjxesKRqGGzZInc3
+92P+47RVeTVWzU4azD2OIJX3au4tL32127HuCmeEW0umbNHDiHRVa+7BepD8Krxh
+Hv8PgsfZmYFjqS9ldCus
+=gv8O
 -----END PGP SIGNATURE-----
 
---b2a6tlvjct7vwijg--
+--bjlgigef2u3ezvmr--
 
 
---===============2555394674027723004==
+--===============4780815808593788657==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -151,4 +186,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============2555394674027723004==--
+--===============4780815808593788657==--
