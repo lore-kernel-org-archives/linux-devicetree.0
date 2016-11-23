@@ -1,46 +1,57 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/3] da8xx: fix section mismatch in new drivers
-Date: Wed, 23 Nov 2016 12:06:24 +0100
-Message-ID: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3 1/3] bus: da8xx-mstpri: drop the call to
+ of_flat_dt_get_machine_name()
+Date: Wed, 23 Nov 2016 12:06:25 +0100
+Message-ID: <1479899187-10199-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Sekhar noticed there's a section mismatch in the da8xx-mstpri and
-da8xx-ddrctl drivers. This is caused by calling
-of_flat_dt_get_machine_name() which has an __init annotation.
-
-This series addresses this issue by open coding routines that return
-the machine compatible string in both drivers. Once a general function
-for that in of/base is merged, we'll remove them.
-
-The third patch fixes a typo that got in last time.
-
-v1 -> v2:
-- drop patch [1/3] from v1
-- introduce internal routines in the drivers instead of a general
-  function in of/base.c
-
-v2 -> v3:
-- use of_property_read_string_index() instead of
-  of_property_read_string() to get the first compatible entry
-- s/priotities/priorities
-
-Bartosz Golaszewski (3):
-  bus: da8xx-mstpri: drop the call to of_flat_dt_get_machine_name()
-  memory: da8xx-ddrctl: drop the call to of_flat_dt_get_machine_name()
-  bus: da8xx-mstpri: fix a typo
-
- drivers/bus/da8xx-mstpri.c    | 25 ++++++++++++++++++++++---
- drivers/memory/da8xx-ddrctl.c | 23 +++++++++++++++++++++--
- 2 files changed, 43 insertions(+), 5 deletions(-)
-
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SW4gb3JkZXIgdG8gYXZvaWQgYSBzZWN0aW9uIG1pc21hdGNoIHVzZSBhIGxvY2FsbHkgaW1wbGVt
+ZW50ZWQgcm91dGluZQppbnN0ZWFkIG9mIG9mX2ZsYXRfZHRfZ2V0X21hY2hpbmVfbmFtZSgpIHdo
+ZW4gcHJpbnRpbmcgdGhlIGVycm9yCm1lc3NhZ2UuCgpTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdv
+bGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgotLS0KIGRyaXZlcnMvYnVzL2Rh
+OHh4LW1zdHByaS5jIHwgMjMgKysrKysrKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2Vk
+LCAyMSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+YnVzL2RhOHh4LW1zdHByaS5jIGIvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKaW5kZXggODVm
+MGI1My4uMDY0ZWViOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKKysr
+IGIvZHJpdmVycy9idXMvZGE4eHgtbXN0cHJpLmMKQEAgLTE2LDcgKzE2LDYgQEAKICNpbmNsdWRl
+IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KICNpbmNsdWRlIDxsaW51eC9pby5oPgogI2luY2x1
+ZGUgPGxpbnV4L3JlZ21hcC5oPgotI2luY2x1ZGUgPGxpbnV4L29mX2ZkdC5oPgogCiAvKgogICog
+UkVWSVNJVDogTGludXggZG9lc24ndCBoYXZlIGEgZ29vZCBmcmFtZXdvcmsgZm9yIHRoZSBraW5k
+IG9mIHBlcmZvcm1hbmNlCkBAIC0xOTAsNiArMTg5LDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+ZGE4eHhfbXN0cHJpX2JvYXJkX3ByaW9yaXRpZXMgZGE4eHhfbXN0cHJpX2JvYXJkX2NvbmZzW10g
+PSB7CiAJfSwKIH07CiAKKy8qCisgKiBGSVhNRSBSZW1vdmUgdGhpcyBmdW5jdGlvbiBvbmNlIG9m
+L2Jhc2UgZ2V0cyBhIGdlbmVyYWwgcm91dGluZSBmb3IgZ2V0dGluZworICogdGhlIG1hY2hpbmUg
+bW9kZWwvY29tcGF0aWJsZSBzdHJpbmcuCisgKi8KK3N0YXRpYyBjb25zdCBjaGFyICpkYTh4eF9t
+c3RwcmlfbWFjaGluZV9nZXRfY29tcGF0aWJsZSh2b2lkKQoreworCXN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqcm9vdDsKKwljb25zdCBjaGFyICpjb21wYXRpYmxlOworCWludCByZXQgPSAtMTsKKworCXJv
+b3QgPSBvZl9maW5kX25vZGVfYnlfcGF0aCgiLyIpOworCWlmIChyb290KSB7CisJCXJldCA9IG9m
+X3Byb3BlcnR5X3JlYWRfc3RyaW5nX2luZGV4KHJvb3QsICJjb21wYXRpYmxlIiwKKwkJCQkJCSAg
+ICAwLCAmY29tcGF0aWJsZSk7CisJCW9mX25vZGVfcHV0KHJvb3QpOworCX0KKworCXJldHVybiBy
+ZXQgPyBOVUxMIDogY29tcGF0aWJsZTsKK30KKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkYTh4eF9t
+c3RwcmlfYm9hcmRfcHJpb3JpdGllcyAqCiBkYTh4eF9tc3RwcmlfZ2V0X2JvYXJkX3ByaW8odm9p
+ZCkKIHsKQEAgLTIyNyw3ICsyNDYsNyBAQCBzdGF0aWMgaW50IGRhOHh4X21zdHByaV9wcm9iZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXByaW9fbGlzdCA9IGRhOHh4X21zdHByaV9n
+ZXRfYm9hcmRfcHJpbygpOwogCWlmICghcHJpb19saXN0KSB7CiAJCWRldl9lcnIoZGV2LCAibm8g
+bWFzdGVyIHByaW90aXRpZXMgZGVmaW5lZCBmb3IgYm9hcmQgJyVzJ1xuIiwKLQkJCW9mX2ZsYXRf
+ZHRfZ2V0X21hY2hpbmVfbmFtZSgpKTsKKwkJCWRhOHh4X21zdHByaV9tYWNoaW5lX2dldF9jb21w
+YXRpYmxlKCkpOwogCQlyZXR1cm4gLUVJTlZBTDsKIAl9CiAKLS0gCjIuOS4zCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
