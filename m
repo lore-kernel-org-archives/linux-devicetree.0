@@ -1,49 +1,45 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] pinctrl: New driver for TI DA8XX/OMAP-L138/AM18XX
- pinconf
-Date: Wed, 23 Nov 2016 16:34:23 +0530
-Message-ID: <88b3d16b-6e5b-ea75-d770-35d9adc6c677@ti.com>
-References: <1479871767-20160-1-git-send-email-david@lechnology.com>
- <1479871767-20160-3-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/3] da8xx: fix section mismatch in new drivers
+Date: Wed, 23 Nov 2016 12:06:24 +0100
+Message-ID: <1479899187-10199-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479871767-20160-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 November 2016 08:59 AM, David Lechner wrote:
-> This adds a new driver for pinconf on TI DA8XX/OMAP-L138/AM18XX. These
+Sekhar noticed there's a section mismatch in the da8xx-mstpri and
+da8xx-ddrctl drivers. This is caused by calling
+of_flat_dt_get_machine_name() which has an __init annotation.
 
-s/DA8XX/DA850/
+This series addresses this issue by open coding routines that return
+the machine compatible string in both drivers. Once a general function
+for that in of/base is merged, we'll remove them.
 
-> SoCs have a separate controller for controlling pullup/pulldown groups.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+The third patch fixes a typo that got in last time.
 
-> +static const char *da850_pupd_get_get_group_name(struct pinctrl_dev *pctldev,
-> +						 unsigned int selector)
-> +{
-> +	return da850_pupd_group_names[selector];
-> +}
-> +
-> +static int da850_pupd_get_get_group_pins(struct pinctrl_dev *pctldev,
-> +					 unsigned int selector,
-> +					 const unsigned int **pins,
-> +					 unsigned int *num_pins)
-> +{
-> +	*num_pins = 0;
-> +
-> +	return 0;
-> +}
+v1 -> v2:
+- drop patch [1/3] from v1
+- introduce internal routines in the drivers instead of a general
+  function in of/base.c
 
-usage of get_get_ in the function names above is odd.
+v2 -> v3:
+- use of_property_read_string_index() instead of
+  of_property_read_string() to get the first compatible entry
+- s/priotities/priorities
 
-Thanks,
-Sekhar
+Bartosz Golaszewski (3):
+  bus: da8xx-mstpri: drop the call to of_flat_dt_get_machine_name()
+  memory: da8xx-ddrctl: drop the call to of_flat_dt_get_machine_name()
+  bus: da8xx-mstpri: fix a typo
+
+ drivers/bus/da8xx-mstpri.c    | 25 ++++++++++++++++++++++---
+ drivers/memory/da8xx-ddrctl.c | 23 +++++++++++++++++++++--
+ 2 files changed, 43 insertions(+), 5 deletions(-)
+
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
