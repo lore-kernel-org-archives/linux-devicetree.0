@@ -1,26 +1,45 @@
-From: Chris Paterson <chris.paterson2@renesas.com>
-Subject: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Wed, 23 Nov 2016 12:14:03 +0000
-Message-ID: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>
+From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: r8a7796: Add CAN external clock support
+Date: Wed, 23 Nov 2016 12:14:24 +0000
+Message-ID: <1479903264-1909-1-git-send-email-chris.paterson2@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds CAN and CAN FD support to the r8a7796.
+Adds external CAN clock node for r8a7796. This clock can be used as
+fCAN clock of CAN and CAN FD controller.
 
-Based on renesas-devel-20161122-v4.9-rc6.
+Based on a patch for r8a7795 by Ramesh Shanmugasundaram.
 
-Chris Paterson (3):
-  arm64: dts: r8a7796: Add CAN external clock support
-  arm64: dts: r8a7796: Add CAN support
-  arm64: dts: r8a7796: Add CAN FD support
+Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
- .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
- arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61 ++++++++++++++++++++++
- 3 files changed, 75 insertions(+), 10 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 41a050d..91d716e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -69,6 +69,13 @@
+ 		clock-frequency = <0>;
+ 	};
+ 
++	/* External CAN clock - to be overridden by boards that provide it */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++
+ 	/* External SCIF clock - to be overridden by boards that provide it */
+ 	scif_clk: scif {
+ 		compatible = "fixed-clock";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
