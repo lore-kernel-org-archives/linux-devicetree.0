@@ -1,84 +1,285 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] mfd: cpcap: Add minimal support
-Date: Wed, 23 Nov 2016 07:26:52 -0800
-Message-ID: <20161123152652.GB4082@atomide.com>
-References: <20161119012748.17224-1-tony@atomide.com>
- <20161121114558.GJ32509@dell>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
+Date: Wed, 23 Nov 2016 17:37:23 +0200
+Message-ID: <20161123153723.GE16630@valkosipuli.retiisi.org.uk>
+References: <20161122155244.802-1-khilman@baylibre.com>
+ <20161122155244.802-4-khilman@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161121114558.GJ32509@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20161122155244.802-4-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [161121 03:43]:
-> On Fri, 18 Nov 2016, Tony Lindgren wrote:
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -97,6 +97,7 @@ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
-> >  obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
-> >  
-> >  obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
-> > +obj-$(CONFIG_MFD_CPCAP)		+= cpcap.o
+Hi Kevin,
+
+On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
+> Allow getting of subdevs from DT ports and endpoints.
 > 
-> Who is the manufacturer?
+> The _get_pdata() function was larely inspired by (i.e. stolen from)
 
-Hmm that I don't know. There seems to be both ST and TI versions
-of this chip manufactured for Motorola. So my guess is that it
-should be Motorola unless there's some similar catalog part
-available from ST used by others. If anybody has more info
-on this please let me know :)
+vpif_capture_get_pdata and "largely"?
 
-> > +	cpcap->vendor = (val >> 6) & 0x0007;
-> > +	cpcap->revision = ((val >> 3) & 0x0007) | ((val << 3) & 0x0038);
+> am437x-vpfe.c
 > 
-> Lots of magic numbers here.  I suggest you define them.
-
-I'll check if some earlier code has these defined. Otherwise I'll
-just add a comment on the lack of available documentation.
-
-> > +	error = cpcap_init_irq_bank(cpcap, 0, 0, 16);
+> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++++++++++++-
+>  include/media/davinci/vpif_types.h            |   9 +-
+>  2 files changed, 133 insertions(+), 6 deletions(-)
 > 
-> 'ret' is more traditional.
+> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+> index 94ee6cf03f02..47a4699157e7 100644
+> --- a/drivers/media/platform/davinci/vpif_capture.c
+> +++ b/drivers/media/platform/davinci/vpif_capture.c
+> @@ -26,6 +26,8 @@
+>  #include <linux/slab.h>
+>  
+>  #include <media/v4l2-ioctl.h>
+> +#include <media/v4l2-of.h>
+> +#include <media/i2c/tvp514x.h>
 
-FYI error seems to be preferred over ret as it's meaning is
-clear, git grep "error =" drivers/input for example.
-I can of course change it if you prefer ret over error.
+Do you need this header?
 
-> > +	error = cpcap_init_irq_bank(cpcap, 2, 32, 64);
-> > +	if (error)
-> > +		return error;
-> 
-> I don't think I've seen this method of adding bulk IRQ chips before.
-> Isn't there a cleaner or generic way to do this?
+>  
+>  #include "vpif.h"
+>  #include "vpif_capture.h"
+> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
+>  
+>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
+>  
+> +	if (!chan_cfg)
+> +		return -1;
+> +	if (input_index >= chan_cfg->input_count)
+> +		return -1;
+>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
+>  	if (subdev_name == NULL)
+>  		return -1;
+> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
+>  	/* loop through the sub device list to get the sub device info */
+>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
+>  		subdev_info = &vpif_cfg->subdev_info[i];
+> -		if (!strcmp(subdev_info->name, subdev_name))
+> +		if (subdev_info && !strcmp(subdev_info->name, subdev_name))
+>  			return i;
+>  	}
+>  	return -1;
+> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
+>  {
+>  	int i;
+>  
+> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
+> +		struct v4l2_async_subdev *_asd = vpif_obj.config->asd[i];
+> +		const struct device_node *node = _asd->match.of.node;
+> +
+> +		if (node == subdev->of_node) {
+> +			vpif_obj.sd[i] = subdev;
+> +			vpif_obj.config->chan_config->inputs[i].subdev_name =
+> +				(char *)subdev->of_node->full_name;
+> +			vpif_dbg(2, debug,
+> +				 "%s: setting input %d subdev_name = %s\n",
+> +				 __func__, i, subdev->of_node->full_name);
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
+>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
+>  			    subdev->name)) {
+> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct v4l2_async_notifier *notifier)
+>  	return vpif_probe_complete();
+>  }
+>  
+> +static struct vpif_capture_config *
+> +vpif_capture_get_pdata(struct platform_device *pdev)
+> +{
+> +	struct device_node *endpoint = NULL;
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct vpif_capture_config *pdata;
+> +	struct vpif_subdev_info *sdinfo;
+> +	struct vpif_capture_chan_config *chan;
+> +	unsigned int i;
+> +
+> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+> +		return pdev->dev.platform_data;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +	pdata->subdev_info =
+> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
+> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
+> +
+> +	if (!pdata->subdev_info)
+> +		return NULL;
+> +	dev_dbg(&pdev->dev, "%s\n", __func__);
+> +
+> +	for (i = 0; ; i++) {
+> +		struct device_node *rem;
+> +		unsigned int flags;
+> +		int err;
+> +
+> +		endpoint = of_graph_get_next_endpoint(pdev->dev.of_node,
+> +						      endpoint);
+> +		if (!endpoint)
+> +			break;
+> +
+> +		sdinfo = &pdata->subdev_info[i];
 
-I'll check.
+subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
 
-...
-> > +#define CPCAP_REG_LDEB		0x1270	/* LMR Debounce Settings */
-> > +#define CPCAP_REG_LGDET		0x1274	/* LMR GCAI Detach Detect */
-> > +#define CPCAP_REG_LMISC		0x1278	/* LMR Misc Bits */
-> > +#define CPCAP_REG_LMACE		0x127c	/* LMR Mace IC Support */
-> > +
-> > +#define CPCAP_REG_TEST		0x7c00	/* Test */
-> > +
-> > +#define CPCAP_REG_ST_TEST1	0x7d08	/* ST Test1 */
-> > +
-> > +#define CPCAP_REG_ST_TEST2	0x7d18	/* ST Test2 */
-> 
-> It would be nice to line up the entire file. #OCD
+> +		chan = &pdata->chan_config[i];
+> +		chan->inputs = devm_kzalloc(&pdev->dev,
+> +					    sizeof(*chan->inputs) *
+> +					    VPIF_DISPLAY_MAX_CHANNELS,
+> +					    GFP_KERNEL);
+> +
+> +		chan->input_count++;
+> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
 
-Hmm care to clarify what you mean here? I think it's lined up with
-tabs to line up. I left empty lines where the registers are not
-contiguous. What does #OCD mean, Obsessive Compulsive Disorder over
-header files maybe? :)
+I wonder what's the purpose of using index i on this array as well.
 
-Anywys thanks for the review, the rest of the comments I will just
-fix and repost.
+If you use that to access a corresponding entry in a different array, I'd
+just create a struct that contains the port configuration and the async
+sub-device. The omap3isp driver does that, for instance; see
+isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if you're
+interested. Up to you.
 
-Regards,
+> +		chan->inputs[i].input.std = V4L2_STD_ALL;
+> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
+> +
+> +		/* FIXME: need a new property? ch0:composite ch1: s-video */
+> +		if (i == 0)
 
-Tony
+Can you assume that the first endopoint has got a particular kind of input?
+What if it's not connected?
+
+If this is a different physical port (not in the meaning another) in the
+device, I'd use the reg property for this. Please see
+Documentation/devicetree/bindings/media/video-interfaces.txt .
+
+> +			chan->inputs[i].input_route = INPUT_CVBS_VI2B;
+> +		else
+> +			chan->inputs[i].input_route = INPUT_SVIDEO_VI2C_VI1C;
+> +		chan->inputs[i].output_route = OUTPUT_10BIT_422_EMBEDDED_SYNC;
+> +
+> +		err = v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Could not parse the endpoint\n");
+> +			goto done;
+> +		}
+> +		dev_dbg(&pdev->dev, "Endpoint %s, bus_width = %d\n",
+> +			endpoint->full_name, bus_cfg.bus.parallel.bus_width);
+> +		flags = bus_cfg.bus.parallel.flags;
+> +
+> +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +			chan->vpif_if.hd_pol = 1;
+> +
+> +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +			chan->vpif_if.vd_pol = 1;
+> +
+> +		chan->vpif_if.if_type = VPIF_IF_BT656;
+> +		rem = of_graph_get_remote_port_parent(endpoint);
+> +		if (!rem) {
+> +			dev_dbg(&pdev->dev, "Remote device at %s not found\n",
+> +				endpoint->full_name);
+> +			goto done;
+> +		}
+> +
+> +		dev_dbg(&pdev->dev, "Remote device %s, %s found\n",
+> +			rem->name, rem->full_name);
+> +		sdinfo->name = rem->full_name;
+> +
+> +		pdata->asd[i] = devm_kzalloc(&pdev->dev,
+> +					     sizeof(struct v4l2_async_subdev),
+> +					     GFP_KERNEL);
+
+Do you ensure somewhere that i isn't overrunning the pdata->asd[] array?
+It's got VPIF_CAPTURE_MAX_CHANNELS entries.
+
+> +		if (!pdata->asd[i]) {
+> +			of_node_put(rem);
+> +			pdata = NULL;
+> +			goto done;
+> +		}
+> +
+> +		pdata->asd[i]->match_type = V4L2_ASYNC_MATCH_OF;
+> +		pdata->asd[i]->match.of.node = rem;
+> +		of_node_put(rem);
+> +	}
+> +
+> +done:
+> +	pdata->asd_sizes[0] = i;
+> +	pdata->subdev_count = i;
+> +	pdata->card_name = "DA850/OMAP-L138 Video Capture";
+> +
+> +	return pdata;
+> +}
+> +
+>  /**
+>   * vpif_probe : This function probes the vpif capture driver
+>   * @pdev: platform device pointer
+> @@ -1438,6 +1563,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+>  	int res_idx = 0;
+>  	int i, err;
+>  
+> +	pdev->dev.platform_data = vpif_capture_get_pdata(pdev);
+>  	if (!pdev->dev.platform_data) {
+>  		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
+>  		return -EINVAL;
+> @@ -1480,7 +1606,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+>  		goto vpif_unregister;
+>  	}
+>  
+> -	if (!vpif_obj.config->asd_sizes) {
+> +	if (!vpif_obj.config->asd_sizes[0]) {
+>  		i2c_adap = i2c_get_adapter(1);
+>  		for (i = 0; i < subdev_count; i++) {
+>  			subdevdata = &vpif_obj.config->subdev_info[i];
+> diff --git a/include/media/davinci/vpif_types.h b/include/media/davinci/vpif_types.h
+> index 3cb1704a0650..4ee3b41975db 100644
+> --- a/include/media/davinci/vpif_types.h
+> +++ b/include/media/davinci/vpif_types.h
+> @@ -65,14 +65,14 @@ struct vpif_display_config {
+>  
+>  struct vpif_input {
+>  	struct v4l2_input input;
+> -	const char *subdev_name;
+> +	char *subdev_name;
+>  	u32 input_route;
+>  	u32 output_route;
+>  };
+>  
+>  struct vpif_capture_chan_config {
+>  	struct vpif_interface vpif_if;
+> -	const struct vpif_input *inputs;
+> +	struct vpif_input *inputs;
+>  	int input_count;
+>  };
+>  
+> @@ -83,7 +83,8 @@ struct vpif_capture_config {
+>  	struct vpif_subdev_info *subdev_info;
+>  	int subdev_count;
+>  	const char *card_name;
+> -	struct v4l2_async_subdev **asd;	/* Flat array, arranged in groups */
+> -	int *asd_sizes;		/* 0-terminated array of asd group sizes */
+> +
+> +	struct v4l2_async_subdev *asd[VPIF_CAPTURE_MAX_CHANNELS];
+> +	int asd_sizes[VPIF_CAPTURE_MAX_CHANNELS];
+>  };
+>  #endif /* _VPIF_TYPES_H */
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
