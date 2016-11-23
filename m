@@ -1,61 +1,70 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] DW DMAC: update device tree
-Date: Wed, 23 Nov 2016 09:36:03 +0530
-Message-ID: <20161123040603.GD2698@localhost>
-References: <1479496356-27834-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
- <1479497189.22212.41.camel@linux.intel.com>
- <1479722477.2487.5.camel@synopsys.com>
- <1479724626.22212.50.camel@linux.intel.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 3/3] dmaengine: sun6i: share the dma driver with sun50i
+Date: Wed, 23 Nov 2016 09:42:37 +0530
+Message-ID: <20161123041237.GE2698@localhost>
+References: <1479638740-20520-1-git-send-email-hao5781286@gmail.com>
+ <1479638740-20520-4-git-send-email-hao5781286@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1479724626.22212.50.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479638740-20520-4-git-send-email-hao5781286@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hao Zhang <hao5781286@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, dmaengine@vger.kernel.org, maxime.ripard@free-electrons.com, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2016 at 12:37:06PM +0200, Andy Shevchenko wrote:
-> On Mon, 2016-11-21 at 10:02 +0000, Alexey Brodkin wrote:
-> > Hi Andy,
-> > 
-> > On Fri, 2016-11-18 at 21:26 +0200, Andy Shevchenko wrote:
-> > > On Fri, 2016-11-18 at 22:12 +0300, Eugeniy Paltsev wrote:
-> > > > 
-> > > > It wasn't possible to enable some features like
-> > > > memory-to-memory transfers or multi block transfers via DT.
-> > > > It is fixed by these patches.
-> > > 
-> > > First of all, please, give time to reviewers to comment the patches.
-> > > Usually it should be at least 24h (for the series that has been sent
-> > > first time 1 week approximately).
-> > 
-> > I'm not really sure a lot of people get disturbed by this series
-> > and given this all has been discussed for months now I'd really like
-> > to see changes required for our HW to work to land in upstream ASAP.
+On Sun, Nov 20, 2016 at 06:45:40PM +0800, Hao Zhang wrote:
+> Changes the limited buswith to 8 bytes,and add
+> the test in sun6i_dma_config function
 > 
-> I understand your concern, I'm often in the same position in many areas,
-> including this driver (I'm not a maintainer of slave DMA subsystem).
-> 
-> Though let's face the issues we have with the series:
-> - stuff regarding to style and alike (would be fixed in a day)
-> - DTS naming and conventions, this is apparently a big area, where I
-> might share opinion, but can't decide for
-> - last word by the subsystem maintainer
-> 
-> > Too bad we're late for 4.9 (which is supposed to be the next LTS) but
-> > > we need to make sure this series hits 4.10 for sure.
-> 
-> Vinod, is it possible to get in for this series (if we get Ack from DT
-> people)?
+> Accroding to sun6i dma driver, i think ,if the client
+  ^^^^^^^^
+typo and other grammatical mistakes here..
 
-We still have a week or so... But holding race agaisnt upstream is a bad
-idea... Doesnt work that way.
+
+> doesn't configure the address width with dmaengine_slave_config
+> function, it would use the default width. So we can add the test
+> in sun6i_dma_config function called by dmaengine_slave_config,
+> and test the configuration whether is support for the device.
+> 
+> Signed-off-by: Hao Zhang <hao5781286@gmail.com>
+> ---
+>  drivers/dma/sun6i-dma.c | 33 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index a235878..f7c90b6 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -250,7 +250,7 @@ static inline s8 convert_burst(u32 maxburst)
+>  static inline s8 convert_buswidth(enum dma_slave_buswidth addr_width)
+>  {
+>  	if ((addr_width < DMA_SLAVE_BUSWIDTH_1_BYTE) ||
+> -	    (addr_width > DMA_SLAVE_BUSWIDTH_4_BYTES))
+> +	    (addr_width > DMA_SLAVE_BUSWIDTH_8_BYTES))
+>  		return -EINVAL;
+>  
+>  	return addr_width >> 1;
+> @@ -758,6 +758,18 @@ static int sun6i_dma_config(struct dma_chan *chan,
+>  {
+>  	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+>  
+> +	if ((BIT(config->src_addr_width) | chan->device->src_addr_widths) !=
+> +		chan->device->src_addr_widths) {
+
+First I dont like coding style here
+
+Second, this is not driver specific, should be move to core..
 
 -- 
 ~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
