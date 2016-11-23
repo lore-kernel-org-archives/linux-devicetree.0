@@ -1,46 +1,37 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
-Date: Wed, 23 Nov 2016 10:13:01 -0800
-Message-ID: <5835DC2D.5080606@gmail.com>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
- <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
- <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
- <800171a8-2e2c-2afb-f96d-800a17eaa17a@ti.com> <58348CB8.7050304@gmail.com>
- <b668871c-2b54-0a2f-0d68-afaa50e17e63@ti.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ALSA SoC MAX98927 driver - Initial release
+Date: Thu, 24 Nov 2016 02:13:44 +0800
+Message-ID: <201611240218.Lg3buQ9j%fengguang.wu@intel.com>
+References: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b668871c-2b54-0a2f-0d68-afaa50e17e63-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1479877026-5172-1-git-send-email-RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Ryan Lee <RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/16 21:55, Sekhar Nori wrote:
-> On Tuesday 22 November 2016 11:51 PM, Frank Rowand wrote:
->> Please note that the compatible property might contain several strings, not just
->> a single string.
-> 
-> So I guess the best thing to do is to use
-> of_property_read_string_index() and print the sting at index 0.
-> 
-> Thanks,
-> Sekhar
+Hi Ryan,
 
-If you want to print just one compatible value, you could use that method.
+[auto build test WARNING on asoc/for-next]
+[also build test WARNING on v4.9-rc6 next-20161123]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-To give all of the information needed to understand the problem, the error
-message would need to include all of the strings contained in the compatible
-property and all of the .board values in the da8xx_ddrctl_board_confs[] array
-(currently only one entry, but coded to allow additional entries in the
-future).
+url:    https://github.com/0day-ci/linux/commits/Ryan-Lee/ALSA-SoC-MAX98927-driver-Initial-release/20161124-004840
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-It is hard to justify an error message that complex.
 
-I would just print an error that no match was found.
+coccinelle warnings: (new ones prefixed by >>)
 
--Frank
+>> sound/soc/codecs/max98927.c:941:3-8: No need to set .owner here. The core will do it.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
