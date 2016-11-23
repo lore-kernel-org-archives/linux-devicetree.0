@@ -1,353 +1,412 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] PCI: qcom: add support to msm8996 PCIe controller
-Date: Wed, 23 Nov 2016 17:08:34 -0600
-Message-ID: <20161123230834.GK16033@bhelgaas-glaptop.roam.corp.google.com>
-References: <1479811409-22375-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
+Date: Thu, 24 Nov 2016 00:23:07 +0100
+Message-ID: <4675465.4Qhqy6WU4X@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com>
+ <EE11001F9E5DDD47B7634E2F8A612F2E1F931E08@lhreml507-mbx>
+ <2168980.T3HadihU3R@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479811409-22375-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2168980.T3HadihU3R@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Linuxarm <linuxarm@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, T homas Petazzoni <thomas.petazzo.ni@free-electrons.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "minyard@acm.org" <minyard@acm.org>, "will.deacon@arm.com" <will.deacon@arm.com>, John Garry <john.garry@huawei.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@go og le.com" <bhelgaas@google.com>, kantyzc@163.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 10:43:29AM +0000, Srinivas Kandagatla wrote:
-> This patch adds support to msm8996/apq8096 PCIe, MSM8996 supports
-> Gen 1/2, One lane, 3 PCIe root-complex with support to MSI and
-> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
+On Wednesday, November 23, 2016 6:07:11 PM CET Arnd Bergmann wrote:
+> On Wednesday, November 23, 2016 3:22:33 PM CET Gabriele Paoloni wrote:
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > > On Friday, November 18, 2016 5:03:11 PM CET Gabriele Paoloni wrote:
+>
+> Please don't proliferate the use of
+> pci_pio_to_address/pci_address_to_pio here, computing the physical
+> address from the logical address is trivial, you just need to
+> subtract the start of the range that you already use when matching
+> the port number range.
 > 
-> This patch adds post_init callback to qcom_pcie_ops, as this is PCIe
-> pipe clocks are only setup after the phy is powered on.
-> It also adds ltssm_enable callback as it is very much different to other
-> supported SOCs in the driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> The only thing we need here is to make of_address_to_resource()
+> return the correct logical port number that was registered for
+> a given host device when asked to translate an address that
+> does not have a CPU address associated with it.
 
-Applied to pci/host-qcom for v4.10, thanks!
+Ok, I admit this was a little harder than I expected, but see below
+for a rough outline of how I think it can be done.
 
-> ---
->  Changes since v5/v6:
->  	- No code changes.
-> 	- s/pcie/PCIe in change log based on Rob's comments.
-> 	- Removed DT example for 8996 as requested by Rob.
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  14 +-
->  drivers/pci/host/pcie-qcom.c                       | 175 ++++++++++++++++++++-
->  2 files changed, 183 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 4059a6f..15ced03 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -7,6 +7,7 @@
->  			- "qcom,pcie-ipq8064" for ipq8064
->  			- "qcom,pcie-apq8064" for apq8064
->  			- "qcom,pcie-apq8084" for apq8084
-> +			- "qcom,pcie-msm8996" for msm8996 or apq8096
->  
->  - reg:
->  	Usage: required
-> @@ -92,6 +93,17 @@
->  			- "aux"		Auxiliary (AUX) clock
->  			- "bus_master"	Master AXI clock
->  			- "bus_slave"	Slave AXI clock
-> +
-> +- clock-names:
-> +	Usage: required for msm8996/apq8096
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries
-> +			- "pipe"	Pipe Clock driving internal logic.
-> +			- "aux"		Auxiliary (AUX) clock.
-> +			- "cfg"		Configuration clk.
-> +			- "bus_master"	Master AXI clock.
-> +			- "bus_slave"	Slave AXI clock.
-> +
->  - resets:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -115,7 +127,7 @@
->  			- "core" Core reset
->  
->  - power-domains:
-> -	Usage: required for apq8084
-> +	Usage: required for apq8084 and msm8996/apq8096
->  	Value type: <prop-encoded-array>
->  	Definition: A phandle and power domain specifier pair to the
->  		    power domain which is responsible for collapsing
-> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
-> index 3593640..25c5556 100644
-> --- a/drivers/pci/host/pcie-qcom.c
-> +++ b/drivers/pci/host/pcie-qcom.c
-> @@ -36,11 +36,17 @@
->  
->  #include "pcie-designware.h"
->  
-> +#define PCIE20_PARF_SYS_CTRL			0x00
->  #define PCIE20_PARF_PHY_CTRL			0x40
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16c
-> +#define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
->  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
-> +#define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
-> +#define PCIE20_PARF_LTSSM			0x1B0
-> +#define PCIE20_PARF_SID_OFFSET			0x234
-> +#define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
->  
->  #define PCIE20_ELBI_SYS_CTRL			0x04
->  #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-> @@ -72,9 +78,18 @@ struct qcom_pcie_resources_v1 {
->  	struct regulator *vdda;
->  };
->  
-> +struct qcom_pcie_resources_v2 {
-> +	struct clk *aux_clk;
-> +	struct clk *master_clk;
-> +	struct clk *slave_clk;
-> +	struct clk *cfg_clk;
-> +	struct clk *pipe_clk;
-> +};
-> +
->  union qcom_pcie_resources {
->  	struct qcom_pcie_resources_v0 v0;
->  	struct qcom_pcie_resources_v1 v1;
-> +	struct qcom_pcie_resources_v2 v2;
->  };
->  
->  struct qcom_pcie;
-> @@ -82,7 +97,9 @@ struct qcom_pcie;
->  struct qcom_pcie_ops {
->  	int (*get_resources)(struct qcom_pcie *pcie);
->  	int (*init)(struct qcom_pcie *pcie);
-> +	int (*post_init)(struct qcom_pcie *pcie);
->  	void (*deinit)(struct qcom_pcie *pcie);
-> +	void (*ltssm_enable)(struct qcom_pcie *pcie);
->  };
->  
->  struct qcom_pcie {
-> @@ -116,17 +133,33 @@ static irqreturn_t qcom_pcie_msi_irq_handler(int irq, void *arg)
->  	return dw_handle_msi_irq(pp);
->  }
->  
-> -static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
-> +static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
->  {
->  	u32 val;
-> -
-> -	if (dw_pcie_link_up(&pcie->pp))
-> -		return 0;
-> -
->  	/* enable link training */
->  	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
->  	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
->  	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +}
-> +
-> +static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
-> +{
-> +	u32 val;
-> +	/* enable link training */
-> +	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
-> +	val |= BIT(8);
-> +	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
-> +}
-> +
-> +static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
-> +{
-> +
-> +	if (dw_pcie_link_up(&pcie->pp))
-> +		return 0;
-> +
-> +	/* Enable Link Training state machine */
-> +	if (pcie->ops->ltssm_enable)
-> +		pcie->ops->ltssm_enable(pcie);
->  
->  	return dw_pcie_wait_for_link(&pcie->pp);
->  }
-> @@ -421,6 +454,113 @@ static int qcom_pcie_init_v1(struct qcom_pcie *pcie)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> +	struct device *dev = pcie->pp.dev;
-> +
-> +	res->aux_clk = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(res->aux_clk))
-> +		return PTR_ERR(res->aux_clk);
-> +
-> +	res->cfg_clk = devm_clk_get(dev, "cfg");
-> +	if (IS_ERR(res->cfg_clk))
-> +		return PTR_ERR(res->cfg_clk);
-> +
-> +	res->master_clk = devm_clk_get(dev, "bus_master");
-> +	if (IS_ERR(res->master_clk))
-> +		return PTR_ERR(res->master_clk);
-> +
-> +	res->slave_clk = devm_clk_get(dev, "bus_slave");
-> +	if (IS_ERR(res->slave_clk))
-> +		return PTR_ERR(res->slave_clk);
-> +
-> +	res->pipe_clk = devm_clk_get(dev, "pipe");
-> +	if (IS_ERR(res->pipe_clk))
-> +		return PTR_ERR(res->pipe_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> +	struct device *dev = pcie->pp.dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(res->aux_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable aux clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->cfg_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable cfg clock\n");
-> +		goto err_cfg_clk;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->master_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable master clock\n");
-> +		goto err_master_clk;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->slave_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable slave clock\n");
-> +		goto err_slave_clk;
-> +	}
-> +
-> +	/* enable PCIe clocks and resets */
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	/* change DBI base address */
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
-> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +	val &= ~BIT(29);
-> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +	val |= BIT(4);
-> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> +	val |= BIT(31);
-> +	writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
-> +
-> +	return 0;
-> +
-> +err_slave_clk:
-> +	clk_disable_unprepare(res->master_clk);
-> +err_master_clk:
-> +	clk_disable_unprepare(res->cfg_clk);
-> +err_cfg_clk:
-> +	clk_disable_unprepare(res->aux_clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_pcie_post_init_v2(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> +	struct device *dev = pcie->pp.dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(res->pipe_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int qcom_pcie_link_up(struct pcie_port *pp)
->  {
->  	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-> @@ -429,6 +569,17 @@ static int qcom_pcie_link_up(struct pcie_port *pp)
->  	return !!(val & PCI_EXP_LNKSTA_DLLLA);
->  }
->  
-> +static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
-> +
-> +	clk_disable_unprepare(res->pipe_clk);
-> +	clk_disable_unprepare(res->slave_clk);
-> +	clk_disable_unprepare(res->master_clk);
-> +	clk_disable_unprepare(res->cfg_clk);
-> +	clk_disable_unprepare(res->aux_clk);
-> +}
-> +
->  static void qcom_pcie_host_init(struct pcie_port *pp)
->  {
->  	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-> @@ -444,6 +595,9 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
->  	if (ret)
->  		goto err_deinit;
->  
-> +	if (pcie->ops->post_init)
-> +		pcie->ops->post_init(pcie);
-> +
->  	dw_pcie_setup_rc(pp);
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
-> @@ -487,12 +641,22 @@ static const struct qcom_pcie_ops ops_v0 = {
->  	.get_resources = qcom_pcie_get_resources_v0,
->  	.init = qcom_pcie_init_v0,
->  	.deinit = qcom_pcie_deinit_v0,
-> +	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
->  };
->  
->  static const struct qcom_pcie_ops ops_v1 = {
->  	.get_resources = qcom_pcie_get_resources_v1,
->  	.init = qcom_pcie_init_v1,
->  	.deinit = qcom_pcie_deinit_v1,
-> +	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
-> +};
-> +
-> +static const struct qcom_pcie_ops ops_v2 = {
-> +	.get_resources = qcom_pcie_get_resources_v2,
-> +	.init = qcom_pcie_init_v2,
-> +	.post_init = qcom_pcie_post_init_v2,
-> +	.deinit = qcom_pcie_deinit_v2,
-> +	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
->  };
->  
->  static int qcom_pcie_probe(struct platform_device *pdev)
-> @@ -572,6 +736,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_v0 },
->  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_v0 },
->  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
-> +	{ .compatible = "qcom,pcie-msm8996", .data = &ops_v2 },
->  	{ }
->  };
->  
-> -- 
-> 2.10.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This makes it possible to translate bus specific I/O port numbers
+from device nodes into Linux port numbers, and gives a way to register
+them. We could take this further and completely remove pci_pio_to_address
+and pci_address_to_pio if we make the I/O port translation always
+go through the io_range list, looking up up the hostbridge by fwnode,
+but we don't have to do that now.
+
+The patch is completely untested and probably buggy, it just seemed
+easier to put out a prototype than to keep going in circles with the
+discussion.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index bf601d4df8cf..6cadf0501bb0 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -730,7 +730,8 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+ 	}
+ }
+ 
+-static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
++static void acpi_pci_root_remap_iospace(struct fwnode_handle *node,
++					struct resource_entry *entry)
+ {
+ #ifdef PCI_IOBASE
+ 	struct resource *res = entry->res;
+@@ -739,11 +740,7 @@ static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
+ 	resource_size_t length = resource_size(res);
+ 	unsigned long port;
+ 
+-	if (pci_register_io_range(cpu_addr, length))
+-		goto err;
+-
+-	port = pci_address_to_pio(cpu_addr);
+-	if (port == (unsigned long)-1)
++	if (pci_register_io_range(node, cpu_addr, length, &port))
+ 		goto err;
+ 
+ 	res->start = port;
+@@ -781,7 +778,8 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
+ 	else {
+ 		resource_list_for_each_entry_safe(entry, tmp, list) {
+ 			if (entry->res->flags & IORESOURCE_IO)
+-				acpi_pci_root_remap_iospace(entry);
++				acpi_pci_root_remap_iospace(&device->fwnode,
++							    entry);
+ 
+ 			if (entry->res->flags & IORESOURCE_DISABLED)
+ 				resource_list_destroy_entry(entry);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index a50025a3777f..df96955a43f8 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -760,8 +760,10 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *nbd,
+ 		set_bit(NBD_RUNNING, &nbd->runtime_flags);
+ 		blk_mq_update_nr_hw_queues(&nbd->tag_set, nbd->num_connections);
+ 		args = kcalloc(num_connections, sizeof(*args), GFP_KERNEL);
+-		if (!args)
++		if (!args) {
++			error = -ENOMEM;
+ 			goto out_err;
++		}
+ 		nbd->task_recv = current;
+ 		mutex_unlock(&nbd->config_lock);
+ 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 02b2903fe9d2..5decaba96eed 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -2,6 +2,7 @@
+ #define pr_fmt(fmt)	"OF: " fmt
+ 
+ #include <linux/device.h>
++#include <linux/fwnode.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+ #include <linux/module.h>
+@@ -323,14 +324,9 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+ 
+ 	if (res->flags & IORESOURCE_IO) {
+ 		unsigned long port;
+-		err = pci_register_io_range(range->cpu_addr, range->size);
++		err = pci_register_io_range(&np->fwnode, range->cpu_addr, range->size, &port);
+ 		if (err)
+ 			goto invalid_range;
+-		port = pci_address_to_pio(range->cpu_addr);
+-		if (port == (unsigned long)-1) {
+-			err = -EINVAL;
+-			goto invalid_range;
+-		}
+ 		res->start = port;
+ 	} else {
+ 		if ((sizeof(resource_size_t) < 8) &&
+@@ -479,7 +475,7 @@ static int of_empty_ranges_quirk(struct device_node *np)
+ 	return false;
+ }
+ 
+-static int of_translate_one(struct device_node *parent, struct of_bus *bus,
++static u64 of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 			    struct of_bus *pbus, __be32 *addr,
+ 			    int na, int ns, int pna, const char *rprop)
+ {
+@@ -507,7 +503,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	ranges = of_get_property(parent, rprop, &rlen);
+ 	if (ranges == NULL && !of_empty_ranges_quirk(parent)) {
+ 		pr_debug("no ranges; cannot translate\n");
+-		return 1;
++		return OF_BAD_ADDR;
+ 	}
+ 	if (ranges == NULL || rlen == 0) {
+ 		offset = of_read_number(addr, na);
+@@ -528,7 +524,7 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	}
+ 	if (offset == OF_BAD_ADDR) {
+ 		pr_debug("not found !\n");
+-		return 1;
++		return offset;
+ 	}
+ 	memcpy(addr, ranges + na, 4 * pna);
+ 
+@@ -537,7 +533,10 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	pr_debug("with offset: %llx\n", (unsigned long long)offset);
+ 
+ 	/* Translate it into parent bus space */
+-	return pbus->translate(addr, offset, pna);
++	if (pbus->translate(addr, offset, pna))
++		return OF_BAD_ADDR;
++
++	return offset;
+ }
+ 
+ /*
+@@ -549,9 +548,14 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+  * that translation is impossible (that is we are not dealing with a value
+  * that can be mapped to a cpu physical address). This is not really specified
+  * that way, but this is traditionally the way IBM at least do things
++ *
++ * Whenever the translation fails, the *host pointer will be set to the
++ * device that lacks a tranlation, and the return code is relative to
++ * that node.
+  */
+ static u64 __of_translate_address(struct device_node *dev,
+-				  const __be32 *in_addr, const char *rprop)
++				  const __be32 *in_addr, const char *rprop,
++				  struct device_node **host)
+ {
+ 	struct device_node *parent = NULL;
+ 	struct of_bus *bus, *pbus;
+@@ -564,6 +568,7 @@ static u64 __of_translate_address(struct device_node *dev,
+ 	/* Increase refcount at current level */
+ 	of_node_get(dev);
+ 
++	*host = NULL;
+ 	/* Get parent & match bus type */
+ 	parent = of_get_parent(dev);
+ 	if (parent == NULL)
+@@ -600,8 +605,9 @@ static u64 __of_translate_address(struct device_node *dev,
+ 		pbus = of_match_bus(parent);
+ 		pbus->count_cells(dev, &pna, &pns);
+ 		if (!OF_CHECK_COUNTS(pna, pns)) {
+-			pr_err("Bad cell count for %s\n",
+-			       of_node_full_name(dev));
++			pr_debug("Bad cell count for %s\n",
++				 of_node_full_name(dev));
++			*host = of_node_get(parent);
+ 			break;
+ 		}
+ 
+@@ -609,7 +615,9 @@ static u64 __of_translate_address(struct device_node *dev,
+ 		    pbus->name, pna, pns, of_node_full_name(parent));
+ 
+ 		/* Apply bus translation */
+-		if (of_translate_one(dev, bus, pbus, addr, na, ns, pna, rprop))
++		result = of_translate_one(dev, bus, pbus, addr, na, ns,
++					  pna, rprop);
++		if (result == OF_BAD_ADDR)
+ 			break;
+ 
+ 		/* Complete the move up one level */
+@@ -628,13 +636,32 @@ static u64 __of_translate_address(struct device_node *dev,
+ 
+ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
+ {
+-	return __of_translate_address(dev, in_addr, "ranges");
++	struct device_node *host;
++	u64 ret;
++
++	ret =  __of_translate_address(dev, in_addr, "ranges", &host);
++	if (host) {
++		of_node_put(host);
++		return OF_BAD_ADDR;
++	}
++
++	return ret;
+ }
+ EXPORT_SYMBOL(of_translate_address);
+ 
+ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
+ {
+-	return __of_translate_address(dev, in_addr, "dma-ranges");
++	struct device_node *host;
++	u64 ret;
++
++	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
++
++	if (host) {
++		of_node_put(host);
++		return OF_BAD_ADDR;
++	}
++
++	return ret;
+ }
+ EXPORT_SYMBOL(of_translate_dma_address);
+ 
+@@ -676,29 +703,48 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+ }
+ EXPORT_SYMBOL(of_get_address);
+ 
++extern unsigned long extio_translate(struct fwnode_handle *node, unsigned long offset);
++
++u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr)
++{
++	u64 taddr;
++	unsigned long port;
++	struct device_node *host;
++
++	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
++	if (host) {
++		/* host specific port access */
++		port = extio_translate(&host->fwnode, taddr);
++		of_node_put(host);
++	} else {
++		/* memory mapped I/O range */
++		port = pci_address_to_pio(taddr);
++		if (port == (unsigned long)-1)
++			return OF_BAD_ADDR;
++	}
++
++	return port;
++}
++
+ static int __of_address_to_resource(struct device_node *dev,
+ 		const __be32 *addrp, u64 size, unsigned int flags,
+ 		const char *name, struct resource *r)
+ {
+ 	u64 taddr;
+ 
+-	if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) == 0)
++	if (flags & IORESOURCE_MEM)
++		taddr = of_translate_address(dev, addrp);
++	else if (flags & IORESOURCE_IO)
++		taddr = of_translate_ioport(dev, addrp);
++	else
+ 		return -EINVAL;
+-	taddr = of_translate_address(dev, addrp);
++
+ 	if (taddr == OF_BAD_ADDR)
+ 		return -EINVAL;
+ 	memset(r, 0, sizeof(struct resource));
+-	if (flags & IORESOURCE_IO) {
+-		unsigned long port;
+-		port = pci_address_to_pio(taddr);
+-		if (port == (unsigned long)-1)
+-			return -EINVAL;
+-		r->start = port;
+-		r->end = port + size - 1;
+-	} else {
+-		r->start = taddr;
+-		r->end = taddr + size - 1;
+-	}
++
++	r->start = taddr;
++	r->end = taddr + size - 1;
+ 	r->flags = flags;
+ 	r->name = name ? name : dev->full_name;
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index eda6a7cf0e54..320ab9fbf6af 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3249,6 +3249,7 @@ EXPORT_SYMBOL(pci_request_regions_exclusive);
+ #ifdef PCI_IOBASE
+ struct io_range {
+ 	struct list_head list;
++	struct fwnode_handle *node;
+ 	phys_addr_t start;
+ 	resource_size_t size;
+ };
+@@ -3257,11 +3258,14 @@ static LIST_HEAD(io_range_list);
+ static DEFINE_SPINLOCK(io_range_lock);
+ #endif
+ 
++#define IO_RANGE_IOEXT (resource_size_t)(-1ull)
++
+ /*
+  * Record the PCI IO range (expressed as CPU physical address + size).
+  * Return a negative value if an error has occured, zero otherwise
+  */
+-int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
++int __weak pci_register_io_range(struct fwnode_handle *node, phys_addr_t addr,
++				 resource_size_t size, unsigned long *port)
+ {
+ 	int err = 0;
+ 
+@@ -3272,7 +3276,12 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+ 	/* check if the range hasn't been previously recorded */
+ 	spin_lock(&io_range_lock);
+ 	list_for_each_entry(range, &io_range_list, list) {
+-		if (addr >= range->start && addr + size <= range->start + size) {
++		if (node == range->node)
++			goto end_register;
++
++		if (addr != IO_RANGE_IOEXT &&
++		    addr >= range->start &&
++		    addr + size <= range->start + size) {
+ 			/* range already registered, bail out */
+ 			goto end_register;
+ 		}
+@@ -3298,6 +3307,7 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+ 		goto end_register;
+ 	}
+ 
++	range->node = node;
+ 	range->start = addr;
+ 	range->size = size;
+ 
+@@ -3305,11 +3315,26 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+ 
+ end_register:
+ 	spin_unlock(&io_range_lock);
++
++	*port = allocated_size;
++#else
++	/*
++	 * powerpc and microblaze have their own registration,
++	 * just look up the value here
++	 */
++	*port = pci_address_to_pio(addr);
+ #endif
+ 
+ 	return err;
+ }
+ 
++#ifdef CONFIG_IOEXT
++int ioext_register_io_range
++{
++	return pci_register_io_range(node, IO_RANGE_IOEXT, size, port);
++}
++#endif
++
+ phys_addr_t pci_pio_to_address(unsigned long pio)
+ {
+ 	phys_addr_t address = (phys_addr_t)OF_BAD_ADDR;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 6bd94a803e8f..b7a8fa3da3ca 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1192,7 +1192,8 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+ 			void *alignf_data);
+ 
+ 
+-int pci_register_io_range(phys_addr_t addr, resource_size_t size);
++int pci_register_io_range(struct fwnode_handle *node, phys_addr_t addr,
++			  resource_size_t size, unsigned long *port);
+ unsigned long pci_address_to_pio(phys_addr_t addr);
+ phys_addr_t pci_pio_to_address(unsigned long pio);
+ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
