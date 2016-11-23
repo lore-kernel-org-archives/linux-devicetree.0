@@ -1,54 +1,63 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
-Date: Wed, 23 Nov 2016 10:23:03 -0800
-Message-ID: <5835DE87.6060208@gmail.com>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
- <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
- <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
- <800171a8-2e2c-2afb-f96d-800a17eaa17a@ti.com> <58348CB8.7050304@gmail.com>
- <b668871c-2b54-0a2f-0d68-afaa50e17e63@ti.com> <5835DC2D.5080606@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 6/6] pinctrl: mt8173: set GPIO16 to usb iddig mode
+Date: Wed, 23 Nov 2016 19:32:48 +0100
+Message-ID: <42f5df18-2edd-08f2-a833-9c92ac85e87c@gmail.com>
+References: <1462868614-20602-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1462868614-20602-7-git-send-email-chunfeng.yun@mediatek.com>
+ <CACRpkdaeD5mk7LXEWnE0=Xute8-JA-fa4tVt4fYhujEXeq2+9w@mail.gmail.com>
+ <1462991546.11623.3.camel@mussux00> <1463017282.11651.82.camel@mhfsdcap03>
+ <1463018942.1608.5.camel@mussux00> <1463021701.25171.5.camel@mussux00>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5835DC2D.5080606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1463021701.25171.5.camel@mussux00>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongzhou Yang <hongzhou.yang@mediatek.com>, chunfeng yun <chunfeng.yun@mediatek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Maoguang Meng <maoguang.meng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Biao Huang <biao.huang@mediatek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/16 10:13, Frank Rowand wrote:
-> On 11/22/16 21:55, Sekhar Nori wrote:
->> On Tuesday 22 November 2016 11:51 PM, Frank Rowand wrote:
->>> Please note that the compatible property might contain several strings, not just
->>> a single string.
->>
->> So I guess the best thing to do is to use
->> of_property_read_string_index() and print the sting at index 0.
->>
->> Thanks,
->> Sekhar
-> 
-> If you want to print just one compatible value, you could use that method.
-> 
-> To give all of the information needed to understand the problem, the error
-> message would need to include all of the strings contained in the compatible
-> property and all of the .board values in the da8xx_ddrctl_board_confs[] array
-> (currently only one entry, but coded to allow additional entries in the
-> future).
-> 
-> It is hard to justify an error message that complex.
-> 
-> I would just print an error that no match was found.
-> 
-> -Frank
+Hi Hongzhou,
 
-I just needed to read some more emails.  I see this approach was taken
-in the "[PATCH v4 0/2] da8xx: fix section mismatch in new drivers"
-series.
+On 12/05/16 04:55, Hongzhou Yang wrote:
+> On Wed, 2016-05-11 at 19:09 -0700, Hongzhou Yang wrote:
+>> On Thu, 2016-05-12 at 09:41 +0800, chunfeng yun wrote:
+>>> Hi,
+>>>
+>>> On Wed, 2016-05-11 at 11:32 -0700, Hongzhou Yang wrote:
+>>>> On Wed, 2016-05-11 at 13:56 +0200, Linus Walleij wrote:
+>>>>> On Tue, May 10, 2016 at 10:23 AM, Chunfeng Yun
+>>>>> <chunfeng.yun@mediatek.com> wrote:
+>>>>>
+>>>>>> the default mode of GPIO16 pin is gpio, when set EINT16 to
+>>>>>> IRQ_TYPE_LEVEL_HIGH, no interrupt is triggered, it can be
+>>>>>> fixed when set its default mode as usb iddig.
+>>>>>>
+>>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>>>>
+>>>>
+>>>> Chunfeng, GPIO16 can be used as EINT16 mode, but the pinmux should be 0.
+>>>> If you want to set its default mode to iddig, you should set it in dts.
+>>>>
+>>> I set it in DTS, but it didn't work, because when usb driver requested
+>>> IRQ, pinmux was switched back to default mode set by
+>>> MTK_EINT_FUNCTION().
+>>>
+>>
+>> After confirmed, there are something wrong with data sheet and pinmux
+>> table, and GPIO16 can only receive interrupt by mode 1. So
+>>
+>> Acked-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>>
+>
+> Linus,
+>
+> We find there are some other pins still have the same problem, so please
+> hold on it. Sorry for so much noise.
+>
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Did you made any progress on this? I didn't see any patch on the mailing 
+list.
+
+Regards,
+Matthias
