@@ -1,56 +1,58 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Wed, 23 Nov 2016 15:59:16 +0100
-Message-ID: <20161123145916.GL14947@lunn.ch>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <1479126185.15557.5@smtp.gmail.com>
- <20161114201640.rr32iyjf5a53v33t@perseus.defre.kleine-koenig.org>
- <20161114202832.GG24546@lunn.ch>
- <1479586147.10840.0@smtp.gmail.com>
- <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
- <1479851991.26813.2@smtp.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] mfd: cpcap: Add minimal support
+Date: Wed, 23 Nov 2016 07:03:01 -0800
+Message-ID: <20161123150300.GA4082@atomide.com>
+References: <20161119012748.17224-1-tony@atomide.com>
+ <20161121114558.GJ32509@dell>
+ <20161121163439.22ztjxnq535lo6dd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1479851991.26813.2@smtp.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tomas.hlavacek@nic.cz
-Cc: Mark Rutland <mark.rutland@arm.com>, marex@denx.de, Jason Cooper <jason@lakedaemon.net>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <20161121163439.22ztjxnq535lo6dd@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> >CZ11NIC12 is indicated on my board.
+* Rob Herring <robh@kernel.org> [161121 08:34]:
+> On Mon, Nov 21, 2016 at 11:45:58AM +0000, Lee Jones wrote:
+> > On Fri, 18 Nov 2016, Tony Lindgren wrote:
+> > > +Example:
+> > > +
+> > > +&mcspi1 {
+> > > +	#address-cells = <1>;
+> > > +	#size-cells = <1>;
+> > > +	ranges;
+> > > +	cpcap: pmic@0 {
+> > > +		compatible = "motorola,cpcap", "st,6556002";
+> > > +		reg = <0 0>;	/* cs0, size 0 */
+> > 
+> > Is this really correct?
 > 
-> :-( Well, this board version has wrongly matched length of some
-> differential pairs, IRQ from 88E1514 is connected differently, there
-> are slight differences in power supplies and (if I am not mistaken)
-> something changed in RTC support circuitry. It looks like a huge
-> mistake on our side.
-
-Hi Tomas
-
-Would these problems also explain why the Ethernet links to the switch
-don't work? Maybe the differential pairs?
-
-> It seems that libphy is probed before pca9538 and we end up with:
-> [    4.217550] libphy: orion_mdio_bus: probed
-> [    4.221777] irq: no irq domain found for
-> /soc/internal-regs/i2c@11000/i2cmux@70/i2c@7/gpio@71 !
+> No, SPI devices are 1 cell and there shouldn't be a ranges prop.
 > 
-> Any clue where to look in order to defer probing libphy or at least
-> orion_mdio_bus?
+> > 
+> > How can ranges have a size of 0x8000 and this 0?
+> 
+> reg here doesn't affect ranges and address translation.
+> 
+> Perhaps this is trying to make address translation work, but if that 
+> does, it is by chance. Children of pmic addresses in the range of 
+> 0-0x8000 would get translated to "cpu address" 0-0x8000 as long as the 
+> DT has empty ranges up to the root. If the parent bus (i.e. SoC bus) has 
+> any base address, then that is going to get added which would not be 
+> good.
 
-I think there is a known phylib problem here. Somewhere in the call
-chain there is a void function, so the EPROBE_DEFFER gets
-discarded. But i could be remembering this wrongly.
+Yes I was thinking we can just get the register offset from the
+cpcap base from dts for children. So a range from 0-0x8000.
 
-      Andrew
+Rob, do you have any better suggestions for doing that?
+
+Anyways, the children can just rely on regmap too, so I'll just
+drop the ranges here. If we ever come up with suitable ranges for
+cases like this we can change it later.
+
+Regards,
+
+Tony
