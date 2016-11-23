@@ -1,62 +1,52 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Wed, 23 Nov 2016 11:27:42 +0100
-Message-ID: <CAMpxmJVqog0Fno_DO0NQKmVNvzu5d=3GOLk145wBmB-V70BLeg@mail.gmail.com>
-References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
- <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] of: base: add support to get machine model name
+Date: Wed, 23 Nov 2016 10:25:57 +0000
+Message-ID: <195d492b-c674-e096-4f84-d37ca5448db2@arm.com>
+References: <1479396775-32033-1-git-send-email-sudeep.holla@arm.com>
+ <20161118144651.275xz4gu6jaefhp7@rob-hp-laptop> <582F5DC0.4080804@gmail.com>
+ <5834921F.2020809@gmail.com>
+ <CAL_JsqLsw6BNSDY8pGJ8x3XF21WdciLC7WC+z796pYtDk_kvxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLsw6BNSDY8pGJ8x3XF21WdciLC7WC+z796pYtDk_kvxA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNi0xMS0yMiAyMzoyMyBHTVQrMDE6MDAgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9n
-eS5jb20+Ogo+IE9uIDExLzE1LzIwMTYgMDU6MDAgQU0sIEJhcnRvc3ogR29sYXN6ZXdza2kgd3Jv
-dGU6Cj4+Cj4+IEFkZCB0aGUgbm9kZXMgZm9yIHRoZSBNU1RQUkkgY29uZmlndXJhdGlvbiBhbmQg
-RERSMi9tRERSIG1lbW9yeQo+PiBjb250cm9sbGVyIGRyaXZlcnMgdG8gZGE4NTAuZHRzaS4KPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxp
-YnJlLmNvbT4KPj4gLS0tCj4+IHYxIC0+IHYyOgo+PiAtIG1vdmVkIHRoZSBwcmlvcml0eSBjb250
-cm9sbGVyIG5vZGUgYWJvdmUgdGhlIGNmZ2NoaXAgbm9kZQo+PiAtIHJlbmFtZWQgYWRkZWQgbm9k
-ZXMgdG8gYmV0dGVyIHJlZmxlY3QgdGhlaXIgcHVycG9zZQo+Pgo+PiAgYXJjaC9hcm0vYm9vdC9k
-dHMvZGE4NTAuZHRzaSB8IDggKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
-bnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9h
-cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+IGluZGV4IDFiYjFmNmQuLjQxMmVlYzYgMTAw
-NjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKPj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+PiBAQCAtMjEwLDYgKzIxMCwxMCBAQAo+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICB9Owo+Pgo+PiAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAg
-ICAgICAgIHByaWN0cmw6IHByaW9yaXR5LWNvbnRyb2xsZXJAMTQxMTAgewo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInRpLGRhODUwLW1zdHByaSI7Cj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwweDE0MTEwIDB4MGM+Owo+Cj4KPiBJIHRoaW5rIHdlIHNo
-b3VsZCBhZGQgc3RhdHVzID0gImRpc2FibGVkIjsgaGVyZSBhbmQgbGV0IGJvYXJkcyBvcHQgaW4u
-Cj4KPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICAgICAgICAgICAgICAgICBjZmdjaGlwOiBjaGlw
-LWNvbnRyb2xsZXJAMTQxN2Mgewo+PiAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gInRpLGRhODMwLWNmZ2NoaXAiLCAic3lzY29uIiwKPj4gInNpbXBsZS1tZmQiOwo+PiAgICAg
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgxNDE3YyAweDE0PjsKPj4gQEAgLTQ1MSw0ICs0
-NTUsOCBAQAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgIDEgMCAweDY4MDAwMDAwIDB4MDAw
-MDgwMDA+Owo+PiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gICAgICAg
-ICB9Owo+PiArICAgICAgIG1lbWN0cmw6IG1lbW9yeS1jb250cm9sbGVyQGIwMDAwMDAwIHsKPj4g
-KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksZGE4NTAtZGRyLWNvbnRyb2xsZXIiOwo+
-PiArICAgICAgICAgICAgICAgcmVnID0gPDB4YjAwMDAwMDAgMHhlOD47Cj4KPgo+IHNhbWUgaGVy
-ZS4gc3RhdHVzID0gImRpc2FibGVkIjsKPgo+PiArICAgICAgIH07Cj4+ICB9Owo+PgoKSGkgRGF2
-aWQsCgpJIGRpZCB0aGF0IGluaXRpYWxseVsxXVsyXSBhbmQgaXQgd2FzIHJlamVjdGVkIGJ5IEtl
-dmluWzNdIGFuZCBMYXVyZW50WzRdLgoKRllJIHRoaXMgcGF0Y2ggaGFzIGFscmVhZHkgYmVlbiBx
-dWV1ZWQgYnkgU2VraGFyLgoKQmVzdCByZWdhcmRzLApCYXJ0b3N6IEdvbGFzemV3c2tpCgpbMV0g
-aHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c1Mzk2MzguaHRtbApb
-Ml0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kZXZpY2V0cmVlL21zZzE0ODU3NS5odG1s
-ClszXSBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RldmljZXRyZWUvbXNnMTQ4NjY3Lmh0
-bWwKWzRdIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2cxNDg2NTUu
-aHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 22/11/16 21:35, Rob Herring wrote:
+> On Tue, Nov 22, 2016 at 12:44 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+
+[...]
+
+>>
+>> This patch adds a function that leads to conflating the "model" property
+>> and the "compatible" property. This leads to opaque, confusing and unclear
+>> code where ever it is used.   I think it is not good for the device tree
+>> framework to contribute to writing unclear code.
+>>
+>> Further, only two of the proposed users of this new function appear to
+>> be proper usage.  I do not think that the small amount of reduced lines
+>> of code is a good trade off for the reduced code clarity and for the
+>> potential for future mis-use of this function.
+>>
+>> Can I convince you to revert this patch?
+>
+> Yes, I will revert.
+>
+>> If not, will you accept a patch to change the function name to more
+>> clearly indicate what it does?  (One possible name would be
+>> of_model_or_1st_compatible().)
+>
+> I took it as there's already the FDT equivalent function.
+
+Yes it was mainly for non of_flat_* replacement for
+of_flat_dt_get_machine_name
+
+-- 
+Regards,
+Sudeep
