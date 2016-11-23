@@ -1,76 +1,53 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v3 3/5] i2c: designware: Add slave definitions
-Date: Wed, 23 Nov 2016 14:36:28 +0000
-Message-ID: <0e79e7db-acda-d6df-8c00-47b31ae9b7bd@synopsys.com>
-References: <cover.1479410047.git.lolivei@synopsys.com>
- <f1bf9ca52e47cdd79b8f0d5e0c159a8727857269.1479410047.git.lolivei@synopsys.com>
- <1479472552.22212.23.camel@linux.intel.com>
- <20161118170155.chrdpguohgl6vo5f@rob-hp-laptop>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] iommu/ipmmu-vmsa: Add r8a7796 DT binding
+Date: Wed, 23 Nov 2016 23:40:54 +0900
+Message-ID: <20161123144054.11919.22936.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161118170155.chrdpguohgl6vo5f@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-OK, I will create a "mode" string property in the devicetree that can be
-"master" or "slave".
+From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 
+Update the IPMMU DT binding documentation to include the r8a7796 compat
+string for R-Car M3-W.
 
-Thank you all,
+Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
 
-Luis
+ This particular patch seems ready to merge IMO. How to proceed?
 
-On 18-Nov-16 17:01, Rob Herring wrote:
-> On Fri, Nov 18, 2016 at 02:35:52PM +0200, Andy Shevchenko wrote:
->> On Fri, 2016-11-18 at 11:19 +0000, Luis Oliveira wrote:
->>>  - Add slave defintitions to i2c-designware-core
->>>  - Changes in Kconfig to auto-enable I2C_SLAVE when compiling the
->>> modules
->>>  - Add compatible string to designware-core.txt explaining the
->>> devicetree bindings
->>>
->>
->>> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
->>> @@ -2,7 +2,9 @@
->>>  
->>>  Required properties :
->>>  
->>> - - compatible : should be "snps,designware-i2c"
->>> + - compatible : should be:
->>> +   - "snps,designware-i2c" to setup the hardware block as I2C master.
->>> +   - "snps,designware-i2c-slave" to setup the hardware block as I2C
->>> slave.
->> Not sure about this one.
->>
->> Compatible string is more generic than list of modes. Basically you have
->> to add a property which selects mode.
-> Yes, agreed. And come up with a common property.
->
->> DT people's ACK is a must for this change.
->>
->>
->> --- a/drivers/i2c/busses/Kconfig
->>> +++ b/drivers/i2c/busses/Kconfig
->>> @@ -470,6 +470,7 @@ config I2C_DESIGNWARE_CORE
->>>  config I2C_DESIGNWARE_PLATFORM
->>>  	tristate "Synopsys DesignWare Platform"
->>>  	select I2C_DESIGNWARE_CORE
->>> +	select I2C_SLAVE
->>>
->> Common rule, generic dependencies usually go first
->>
->> 	select I2C_SLAVE
->>  	select I2C_DESIGNWARE_CORE
->>
->> -- 
->> Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Intel Finland Oy
+ Changes since V2:
+ - Added Acked-by from Rob Herring and Simon Horman - thanks!
 
--- 
-Best regards,
-Luis
+ Changes since V1:
+ - Added Acked-by from Laurent - thanks!
+
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2016-06-06 11:27:37.560607110 +0900
+@@ -16,6 +16,7 @@ Required Properties:
+     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
++    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
+     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+ 
+   - reg: Base address and size of the IPMMU registers.
