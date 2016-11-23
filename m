@@ -1,52 +1,58 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
-Date: Wed, 23 Nov 2016 02:39:40 +0100
-Message-ID: <20161123013940.GM2691@lunn.ch>
-References: <20161105203841.9661-1-uwe@kleine-koenig.org>
- <1479126185.15557.5@smtp.gmail.com>
- <20161114201640.rr32iyjf5a53v33t@perseus.defre.kleine-koenig.org>
- <20161114202832.GG24546@lunn.ch>
- <1479586147.10840.0@smtp.gmail.com>
- <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
- <1479851991.26813.2@smtp.gmail.com>
- <1479860851.10840.11@smtp.gmail.com>
+From: Rick Chang <rick.chang@mediatek.com>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Wed, 23 Nov 2016 09:54:14 +0800
+Message-ID: <1479866054.8964.21.camel@mtksdaap41>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+         <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+         <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+         <1479784905.8964.15.camel@mtksdaap41>
+         <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479860851.10840.11-TAvD023jEQEN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomas.hlavacek-x+rMaJPWets@public.gmane.org
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, marex-ynQEQJNshbs@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 01:27:31AM +0100, tomas.hlavacek-x+rMaJPWets@public.gmane.org wrote:
-> Hi Uwe!
+Hi Hans,
+
+On Tue, 2016-11-22 at 13:43 +0100, Hans Verkuil wrote:
+> On 22/11/16 04:21, Rick Chang wrote:
+> > Hi Hans,
+> >
+> > On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
+> >> On 17/11/16 04:38, Rick Chang wrote:
+> >>> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+> >>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> >>> ---
+> >>> This patch depends on:
+> >>>   CCF "Add clock support for Mediatek MT2701"[1]
+> >>>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+> >>>
+> >>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
+> >>> [2] https://patchwork.kernel.org/patch/9164013/
+> >>
+> >> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in
+> >> after the
+> >> other two are merged in 4.10?
+> >>
+> >> Regards,
+> >>
+> >> 	Hans
+> >
+> > [1] will appear in 4.10, but [2] will appear latter than 4.10.So this
+> > patch needs to go in after [1] & [2] will be merged in 4.11.
 > 
-> On Tue, Nov 22, 2016 at 10:59 PM, tomas.hlavacek-x+rMaJPWets@public.gmane.org wrote:
-> >Anyway I took your patch and tried few things:
-> >- add pca9538 interrupt-controller
-> >- add IRQ for 88E1514 PHY - and there is a problem:
-> ...
+> So what should I do? Merge the driver for 4.11 and wait with this patch
+> until [2] is merged in 4.11? Does that sound reasonable?
 > 
-> I thought it over and if I am not mistaken this is not going to work
-> anyway, because pca9538 driver causes the GPIO driver to set
-> IRQ_NESTED_THREAD, so we can not simply use one of the GPIO expander
-> pins as IRQ source for 88E1514, because request_irq() on it will
-> fail ultimately.
+> Regards,
+> 
+> 	Hans
 
-Actually, the phylib now does uses threaded IRQs, since i implemented
-interrupt support for the mv88e6xxx driver. Its interrupts require
-MDIO transactions, so have to be threaded.
-
-However, i don't think using interrupts on the pca9538 are
-reliable. Interrupt support is compile time optional for that
-driver. It is not clear to me if distributions do compile the driver
-with interrupts enabled. So it could be the probe fails with OpenWRT,
-Debian, etc...
-
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What do you think about this? You merge the driver first and I send this
+patch again after [1] & [2] is merged.
