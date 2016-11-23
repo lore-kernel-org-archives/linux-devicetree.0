@@ -1,54 +1,76 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
-Date: Wed, 23 Nov 2016 10:16:58 +0000
-Message-ID: <60ae05f0-7719-f6c2-f725-97501f6fc219@arm.com>
-References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
- <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
- <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
+From: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv2 3/4] dt: bindings: add new dt entry for BTCOEX feature
+ in qcom,ath10k.txt
+Date: Wed, 23 Nov 2016 15:50:17 +0530
+Message-ID: <df0313af8ab0ed1e7bddcfeca8429632@codeaurora.org>
+References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
+ <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
+ <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5833A2DA.40701@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-drm <dri-devel@lists.freedesktop.org>, linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Thanks for the comments.
 
+On 2016-11-18 20:14, Rob Herring wrote:
+> On Thu, Nov 17, 2016 at 05:14:23PM +0530, c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org 
+> wrote:
+>> From: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> 
+>> There two things done in this patch.
+>> 
+>> 1) 'btcoex_support' flag for BTCOEX feature support by the hardware.
+>> 2) 'wlan_btcoex_gpio' is used to fill wlan priority pin number for
+>>    BTCOEX priority feature support.
+>> 
+>> Signed-off-by: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  .../bindings/net/wireless/qcom,ath10k.txt          |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt 
+>> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> index 74d7f0a..08150e2d 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>> @@ -46,6 +46,10 @@ Optional properties:
+>>  				 hw versions.
+>>  - qcom,ath10k-pre-calibration-data : pre calibration data as an 
+>> array,
+>>  				     the length can vary between hw versions.
+>> +- btcoex_support  : should contain eithr "0" or "1" to indicate 
+>> btcoex
+>> +		    support by the hardware.
+> 
+> This is BT coexistence? Make this boolean and n
 
-On 22/11/16 01:43, Frank Rowand wrote:
-> Hi Sekhar,
->
-> (And adding Sudeep since he becomes involved in this further
-> down thread and at that point says he will re-work this
-> proposed work around in a manner that is incorrect in a
-> manner that is similar to this proposed work around.)
->
-> On 11/21/16 08:33, Sekhar Nori wrote:
+Yes, this is BT coexistence. And I didn't get what are you trying to say 
+in this "Make this boolean and n"
+> 
+>> +- btcoex_gpio_pin :  btcoex gpio pin number for the device which
+>> +		     supports BTCOEX.
+> 
+> This is a pin number on the chip, not any pin number Linux GPIO subsys
+> cares about, right? Is there a connection to the host too, or this is
+> internal between BT and WiFi?
 
+This is internal between BT and wifi.
+> 
+> Do you really need 2 properties? Does supporting this feature require
+> the GPIO? If so, then the first property is redundant.
+> 
+Target/driver can hard copy this gpio pin for some chipsets and there we 
+will need btcoex_support flag to find the btcoex support.
 
-[...]
-
->>  static int da8xx_ddrctl_probe(struct platform_device *pdev)
->>  {
->>  	const struct da8xx_ddrctl_config_knob *knob;
->> @@ -118,7 +130,7 @@ static int da8xx_ddrctl_probe(struct platform_device *pdev)
->>  	setting = da8xx_ddrctl_get_board_settings();
->>  	if (!setting) {
->>  		dev_err(dev, "no settings for board '%s'\n",
->> -			of_flat_dt_get_machine_name());
->
-> da8xx_ddrctl_get_board_settings() tries to match based on the "compatible"
-> property in the root node.  The "model" property in the root node has
-> nothing to do with the failure to match. So creating and then using
-> da8xx_ddrctl_get_machine_name() to potentially report model is not useful.
->
-> It should be sufficient to simply report that no compatible matched.
->
-
-Agreed.
-
--- 
-Regards,
-Sudeep
+> Needs vendor prefix and don't use '_'. Should be something like
+> 'qcom,bt-coexist-gpio-pin'.
+> 
+Sure I'll update this and send in v3 patch
