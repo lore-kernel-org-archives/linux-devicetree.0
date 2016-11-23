@@ -1,95 +1,42 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] power: supply: add sbs-charger driver
-Date: Wed, 23 Nov 2016 14:36:16 +0100
-Message-ID: <20161123133615.js74ap6dnplg55ks@earth>
-References: <1479900044-19270-1-git-send-email-nicolas.saenz@prodys.net>
- <1479900044-19270-2-git-send-email-nicolas.saenz@prodys.net>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 0/2] da8xx: fix section mismatch in new drivers
+Date: Wed, 23 Nov 2016 14:39:58 +0100
+Message-ID: <1479908400-10136-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dgrhprfdjavuzl6j"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479900044-19270-2-git-send-email-nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---dgrhprfdjavuzl6j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Nov 23, 2016 at 12:20:43PM +0100, Nicolas Saenz Julienne wrote:
-> This adds support for sbs-charger compilant chips as defined here:
-> http://sbs-forum.org/specs/sbc110.pdf
->=20
-> This was tested on a arm board connected to an LTC41000 battery charger
-> chip.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nicolas.saenz-gbiq2sxWoaasTnJN9+BGXg@public.gmane.org>
-> ---
->  v1 -> v2:
->  - add spec link in header
->  - use proper gpio/interrupt interface
->  - update regmap configuration (max register & endianness)
->  - dropped oldschool .supplied_to assignments
->  - use devm_* APIs
-
-Thanks. Looks almost fine now.
-
->  drivers/power/supply/Kconfig       |   6 +
->  drivers/power/supply/Makefile      |   1 +
->  drivers/power/supply/sbs-charger.c | 264 +++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 271 insertions(+)
->  create mode 100644 drivers/power/supply/sbs-charger.c
->=20
-> [...]
->
-> +static const struct regmap_config sbs_regmap =3D {
-> +	.reg_bits	=3D 8,
-> +	.val_bits	=3D 16,
-> +	.max_register	=3D SBS_CHARGER_REG_ALARM_WARNING,
-> +	.volatile_reg	=3D sbs_volatile_reg,
-> +	.val_format_endian =3D REGMAP_ENDIAN_LITTLE, /* since based on SMBus */
-> +};
-
-Please provide at least a readable_reg marking the
-range from 0x00-0x10 unreadable. You can check this
-with
-
-cat /sys/kernel/debug/regmap/sbs-charger/registers
-
-> [...]
-
--- Sebastian
-
---dgrhprfdjavuzl6j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlg1m0wACgkQ2O7X88g7
-+ppGAw/9EjzrqNZZ2HRftmitzLnbLzXHBbqMRFCEAeq5rqmWJCoh5nKwQHGTIOxl
-u94soXqLFJgsmn7mBuVST/A0nRmtVB6i7mHHKfLgegQ8eGuTfYJmCvSVb4puClPJ
-iHS8Ywj/LaqC0MtPiJrabB+XTgc+9lA0H8zAIWeiqKWv3PdTJ5ihYv3OtRufNRfq
-XoAeaxunGqh+5jQa7JJNTqAOTn6rVycZNOsbk0nn4rP1yAI960m0ktHhYhbeWk5q
-CJpEM6eHBjN8hvbXS+ZsfRM38OHKNgo8yciNV6KdYnHosy853LoiENBl4TFmYfCb
-lSiXuVqbNxgnz4fPH1irSMlY3v0MtFtHts4C6cy3aVgQ13oP8u33hljAksIuk2Bc
-5mWvl3VEUouEkwYl2XloLj6EJ8MTOths08d0mgJdf5gduuHmAuBrqFLSzZqUSrb5
-TItqjakPIjD/jgoXDgqNvrBLXcnmsyikeNz22vMUf/mjYLIIZGYLuW0YGWjgKi/U
-aMsukeIazlH6MCkUdaJHrJMLrkgoq0auBz6sWO0qQhYmolYsQPzXE2JI7a4/mAZ4
-iPnbqpWE1u3G9iEYoDGsYSt1jP76IZbDrqoexkFKNmYmTn8y3sX+gitoR5AjhImz
-8VfHKwavQa/AaeqSfk2hUwo6kpwTCIAkdUGvt/uXjf4xHIMJQjQ=
-=8+CL
------END PGP SIGNATURE-----
-
---dgrhprfdjavuzl6j--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+U2VraGFyIG5vdGljZWQgdGhlcmUncyBhIHNlY3Rpb24gbWlzbWF0Y2ggaW4gdGhlIGRhOHh4LW1z
+dHByaSBhbmQKZGE4eHgtZGRyY3RsIGRyaXZlcnMuIFRoaXMgaXMgY2F1c2VkIGJ5IGNhbGxpbmcK
+b2ZfZmxhdF9kdF9nZXRfbWFjaGluZV9uYW1lKCkgd2hpY2ggaGFzIGFuIF9faW5pdCBhbm5vdGF0
+aW9uLgoKVGhpcyBzZXJpZXMgbWFrZXMgdGhlIGRyaXZlcnMgZHJvcCB0aGUgY2FsbCBhbmQgbm90
+IHByaW50IHRoZQptYWNoaW5lIG5hbWUgaW4gdGhlIGVycm9yIG1lc3NhZ2UuCgp2MSAtPiB2MjoK
+LSBkcm9wIHBhdGNoIFsxLzNdIGZyb20gdjEKLSBpbnRyb2R1Y2UgaW50ZXJuYWwgcm91dGluZXMg
+aW4gdGhlIGRyaXZlcnMgaW5zdGVhZCBvZiBhIGdlbmVyYWwKICBmdW5jdGlvbiBpbiBvZi9iYXNl
+LmMKCnYyIC0+IHYzOgotIHVzZSBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZ19pbmRleCgpIGluc3Rl
+YWQgb2YKICBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZygpIHRvIGdldCB0aGUgZmlyc3QgY29tcGF0
+aWJsZSBlbnRyeQotIHMvcHJpb3RpdGllcy9wcmlvcml0aWVzCgp2MyAtPiB2NDoKLSBkcm9wIHRo
+ZSBjb21wYXRpYmxlIHN0cmluZyBwcmludGluZyBhbHRvZ2V0aGVyIGFzIHRoZSBuZXcgZnVuY3Rp
+b24KICBpcyBub3Qgc2FmZQotIG1lcmdlIHRoZSB0eXBvIGZpeCBpbnRvIHBhdGNoIFsxLzJdCgpC
+YXJ0b3N6IEdvbGFzemV3c2tpICgyKToKICBidXM6IGRhOHh4LW1zdHByaTogZHJvcCB0aGUgY2Fs
+bCB0byBvZl9mbGF0X2R0X2dldF9tYWNoaW5lX25hbWUoKQogIG1lbW9yeTogZGE4eHgtZGRyY3Rs
+OiBkcm9wIHRoZSBjYWxsIHRvIG9mX2ZsYXRfZHRfZ2V0X21hY2hpbmVfbmFtZSgpCgogZHJpdmVy
+cy9idXMvZGE4eHgtbXN0cHJpLmMgICAgfCA0ICstLS0KIGRyaXZlcnMvbWVtb3J5L2RhOHh4LWRk
+cmN0bC5jIHwgNCArLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNiBkZWxl
+dGlvbnMoLSkKCi0tIAoyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
