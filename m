@@ -1,57 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
-Date: Wed, 23 Nov 2016 16:30:45 -0600
-Message-ID: <CAL_Jsq+CkXcj4Zby7vQtZq=Rttq-drT+7bp9eP81N3bfSXcz6A@mail.gmail.com>
-References: <cover.1479142062.git.jsarha@ti.com> <20161116133331.miem6us563uu62t7@rob-hp-laptop>
- <506ba969-d753-d026-5357-3329a750ceaf@ti.com> <1829466.vPTafcVR8L@avalon>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
+Date: Wed, 23 Nov 2016 14:32:05 -0800
+Message-ID: <m2bmx5x1y2.fsf@baylibre.com>
+References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
+ <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
+ <CAMpxmJVqog0Fno_DO0NQKmVNvzu5d=3GOLk145wBmB-V70BLeg@mail.gmail.com>
+ <5e647eb0-2f8a-b46b-2048-7616bfb54ad7@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1829466.vPTafcVR8L@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5e647eb0-2f8a-b46b-2048-7616bfb54ad7@lechnology.com> (David
+ Lechner's message of "Wed, 23 Nov 2016 10:19:53 -0600")
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 3:45 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Jyri,
->
-> On Wednesday 16 Nov 2016 16:39:28 Jyri Sarha wrote:
->> On 11/16/16 15:33, Rob Herring wrote:
->> >> +Optional properties
->> >>
->> >>> + - reg: I2C address. If and only if present the driver node
->
-> I assume you meant device node, not driver node ?
->
->> >>> +   should be placed into the i2c controller node where the
->> >>> +   tfp410 i2c is connected to (the current implementation does
->> >>> +   not yet support this).
->> >
->> > So this chip can work without programming I guess?
->>
->> Yes. Just powering it up is enough for most application.
->>
->> > reg should only be not present if I2C is not connected in the design. It
->> > can't be a function of what the driver supports. In otherwords, you
->> > can't be moving this node around based on when you add I2C control.
->>
->> Ok, I'll try to implement a dummy i2c driver at the same time too. I can
->> not test anything related to it because I do not have a piece of HW with
->> tfp410 i2c wires connected, but it should not matter as long as I am
->> able to probe it as a i2c client.
->
-> I think that Rob's point was that whether the current implementation supports
-> this or not is irrelevant from a DT bindings point of view. It should not be
-> mentioned in the bindings document.
-
-Right. Now, whether the h/w has I2C wires connected or not is relevant
-to the binding doc. So the doc just needs some rewording, a dummy
-driver isn't needed.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+IHdyaXRlczoKCj4gT24gMTEvMjMv
+MjAxNiAwNDoyNyBBTSwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4gMjAxNi0xMS0yMiAy
+MzoyMyBHTVQrMDE6MDAgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Ogo+Pj4g
+T24gMTEvMTUvMjAxNiAwNTowMCBBTSwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToKPj4+Pgo+
+Pj4+IEFkZCB0aGUgbm9kZXMgZm9yIHRoZSBNU1RQUkkgY29uZmlndXJhdGlvbiBhbmQgRERSMi9t
+RERSIG1lbW9yeQo+Pj4+IGNvbnRyb2xsZXIgZHJpdmVycyB0byBkYTg1MC5kdHNpLgo+Pj4+Cj4+
+Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxp
+YnJlLmNvbT4KPj4+PiAtLS0KPj4+PiB2MSAtPiB2MjoKPj4+PiAtIG1vdmVkIHRoZSBwcmlvcml0
+eSBjb250cm9sbGVyIG5vZGUgYWJvdmUgdGhlIGNmZ2NoaXAgbm9kZQo+Pj4+IC0gcmVuYW1lZCBh
+ZGRlZCBub2RlcyB0byBiZXR0ZXIgcmVmbGVjdCB0aGVpciBwdXJwb3NlCj4+Pj4KPj4+PiAgYXJj
+aC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSB8IDggKysrKysrKysKPj4+PiAgMSBmaWxlIGNoYW5n
+ZWQsIDggaW5zZXJ0aW9ucygrKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+Pj4gaW5kZXgg
+MWJiMWY2ZC4uNDEyZWVjNiAxMDA2NDQKPj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1
+MC5kdHNpCj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+IEBAIC0y
+MTAsNiArMjEwLDEwIEBACj4+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPj4+Pgo+Pj4+
+ICAgICAgICAgICAgICAgICB9Owo+Pj4+ICsgICAgICAgICAgICAgICBwcmljdHJsOiBwcmlvcml0
+eS1jb250cm9sbGVyQDE0MTEwIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gInRpLGRhODUwLW1zdHByaSI7Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPDB4MTQxMTAgMHgwYz47Cj4+Pgo+Pj4KPj4+IEkgdGhpbmsgd2Ugc2hvdWxkIGFkZCBzdGF0
+dXMgPSAiZGlzYWJsZWQiOyBoZXJlIGFuZCBsZXQgYm9hcmRzIG9wdCBpbi4KPj4+Cj4+Pj4gKyAg
+ICAgICAgICAgICAgIH07Cj4+Pj4gICAgICAgICAgICAgICAgIGNmZ2NoaXA6IGNoaXAtY29udHJv
+bGxlckAxNDE3YyB7Cj4+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ0
+aSxkYTgzMC1jZmdjaGlwIiwgInN5c2NvbiIsCj4+Pj4gInNpbXBsZS1tZmQiOwo+Pj4+ICAgICAg
+ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDE0MTdjIDB4MTQ+Owo+Pj4+IEBAIC00NTEsNCAr
+NDU1LDggQEAKPj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgIDEgMCAweDY4MDAwMDAwIDB4
+MDAwMDgwMDA+Owo+Pj4+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Pj4+
+ICAgICAgICAgfTsKPj4+PiArICAgICAgIG1lbWN0cmw6IG1lbW9yeS1jb250cm9sbGVyQGIwMDAw
+MDAwIHsKPj4+PiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC1kZHItY29u
+dHJvbGxlciI7Cj4+Pj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweGIwMDAwMDAwIDB4ZTg+Owo+
+Pj4KPj4+Cj4+PiBzYW1lIGhlcmUuIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+Pgo+Pj4+ICsgICAg
+ICAgfTsKPj4+PiAgfTsKPj4+Pgo+Pgo+PiBIaSBEYXZpZCwKPj4KPj4gSSBkaWQgdGhhdCBpbml0
+aWFsbHlbMV1bMl0gYW5kIGl0IHdhcyByZWplY3RlZCBieSBLZXZpblszXSBhbmQgTGF1cmVudFs0
+XS4KPj4KPj4gRllJIHRoaXMgcGF0Y2ggaGFzIGFscmVhZHkgYmVlbiBxdWV1ZWQgYnkgU2VraGFy
+Lgo+Cj4gVGhhbmtzLiBJIGRpZCBub3Qgc2VlIHRob3NlIHRocmVhZHMuCj4KPiBGWUkgdG8gbWFp
+bnRhaW5lcnMsIGhhdmluZyB0aGVzZSBlbmFibGVkIGJ5IGRlZmF1bHQgY2F1c2VzIGVycm9yCj4g
+bWVzc2FnZXMgaW4gdGhlIGtlcm5lbCBsb2cgZm9yIG90aGVyIGJvYXJkcyB0aGF0IGFyZSBub3Qg
+c3VwcG9ydGVkIGJ5Cj4gdGhlIGRyaXZlcnMuCgpUaGVuIHRoZSBkcml2ZXIgaXMgdG9vIG5vaXN5
+IGFuZCBzaG91bGQgYmUgY2xlYW5lZCB1cC4KCj4gU2luY2UgdGhlcmUgaXMgb25seSBvbmUgYm9h
+cmQgdGhhdCBpcyBzdXBwb3J0ZWQgYW5kIHNvb24KPiB0byBiZSAyIHRoYXQgYXJlIG5vdCwgSSB3
+b3VsZCByYXRoZXIgaGF2ZSB0aGlzIGRpc2FibGVkIGJ5IGRlZmF1bHQgdG8KPiBhdm9pZCB0aGUg
+ZXJyb3IgbWVzc2FnZXMuCgpJTU8sIHdoYXQgZXhhY3RseSBhcmUgdGhlIGVycm9yIG1lc3NhZ2Vz
+PyBTb3VuZHMgbGlrZSB0aGUgZHJpdmVyIGlzCmJlaW5nIHRvbyB2ZXJib3NlLCBhbmQgY2FsbGlu
+ZyB0aGluZ3MgZXJyb3JzIHRoYXQgYXJlIG5vdCByZWFsbHkgZXJyb3JzLgoKS2V2aW4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
