@@ -1,83 +1,57 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of: Fix issue where code would fall through to error case.
-Date: Wed, 23 Nov 2016 15:58:40 -0600
-Message-ID: <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
-References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
- <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com> <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] drm/bridge: Add ti-tfp410 DVI transmitter driver
+Date: Wed, 23 Nov 2016 16:30:45 -0600
+Message-ID: <CAL_Jsq+CkXcj4Zby7vQtZq=Rttq-drT+7bp9eP81N3bfSXcz6A@mail.gmail.com>
+References: <cover.1479142062.git.jsarha@ti.com> <20161116133331.miem6us563uu62t7@rob-hp-laptop>
+ <506ba969-d753-d026-5357-3329a750ceaf@ti.com> <1829466.vPTafcVR8L@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Moritz Fischer <moritz.fischer@ettus.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, moritz@pure-entropy.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1829466.vPTafcVR8L@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
-<moritz.fischer.private@gmail.com> wrote:
-> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 11/17/16 15:40, Frank Rowand wrote:
->>> On 11/17/16 15:25, Moritz Fischer wrote:
->>>> No longer fall through into the error case that prints out
->>>> an error if no error (err = 0) occurred.
->>>>
->>>> Fixes d9181b20a83(of: Add back an error message, restructured)
->>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->>>> ---
->>>>  drivers/of/resolver.c | 6 +++++-
->>>>  1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
->>>> index 783bd09..785076d 100644
->>>> --- a/drivers/of/resolver.c
->>>> +++ b/drivers/of/resolver.c
->>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
->>>>
->>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
->>>>              if (err)
->>>> -                    break;
->>>> +                    goto err_out;
->>>>      }
->>>>
->>>> +    of_node_put(tree_symbols);
->>>> +
->>>> +    return 0;
->>>> +
->>>>  err_out:
->>>>      pr_err("overlay phandle fixup failed: %d\n", err);
->>>>  out:
->>>
->>> Thanks for catching that.
->>>
->>> Rob, please apply.
->>>
->>> Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
->>>
->>> -Frank
->>
->> On second thought, isn't the common pattern when clean up is needed for
->> both the no-error path and the error path something like:
->>
->>
->>         out:
->>                 of_node_put(tree_symbols);
->>                 return err;
->>
->>         err_out:
->>                 pr_err("overlay phandle fixup failed: %d\n", err);
->>                 goto out;
->>         }
->>
->>
->> I don't have a strong opinion, whatever Rob wants to take is fine with me.
+On Thu, Nov 17, 2016 at 3:45 AM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> Hi Jyri,
 >
-> Same here. I tried to avoid the jumping back part, but if that's the
-> common pattern,
-> I can submit a v2 doing that instead.
+> On Wednesday 16 Nov 2016 16:39:28 Jyri Sarha wrote:
+>> On 11/16/16 15:33, Rob Herring wrote:
+>> >> +Optional properties
+>> >>
+>> >>> + - reg: I2C address. If and only if present the driver node
+>
+> I assume you meant device node, not driver node ?
+>
+>> >>> +   should be placed into the i2c controller node where the
+>> >>> +   tfp410 i2c is connected to (the current implementation does
+>> >>> +   not yet support this).
+>> >
+>> > So this chip can work without programming I guess?
+>>
+>> Yes. Just powering it up is enough for most application.
+>>
+>> > reg should only be not present if I2C is not connected in the design. It
+>> > can't be a function of what the driver supports. In otherwords, you
+>> > can't be moving this node around based on when you add I2C control.
+>>
+>> Ok, I'll try to implement a dummy i2c driver at the same time too. I can
+>> not test anything related to it because I do not have a piece of HW with
+>> tfp410 i2c wires connected, but it should not matter as long as I am
+>> able to probe it as a i2c client.
+>
+> I think that Rob's point was that whether the current implementation supports
+> this or not is irrelevant from a DT bindings point of view. It should not be
+> mentioned in the bindings document.
 
-Both are ugly. Just do:
-
-if (err)
-  pr_err(...);
+Right. Now, whether the h/w has I2C wires connected or not is relevant
+to the binding doc. So the doc just needs some rewording, a dummy
+driver isn't needed.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
