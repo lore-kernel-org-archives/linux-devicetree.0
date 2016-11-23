@@ -1,53 +1,56 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] iommu/ipmmu-vmsa: Add r8a7796 DT binding
-Date: Wed, 23 Nov 2016 23:40:54 +0900
-Message-ID: <20161123144054.11919.22936.sendpatchset@little-apple>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH RFC] ARM: dts: add support for Turris Omnia
+Date: Wed, 23 Nov 2016 15:59:16 +0100
+Message-ID: <20161123145916.GL14947@lunn.ch>
+References: <20161105203841.9661-1-uwe@kleine-koenig.org>
+ <1479126185.15557.5@smtp.gmail.com>
+ <20161114201640.rr32iyjf5a53v33t@perseus.defre.kleine-koenig.org>
+ <20161114202832.GG24546@lunn.ch>
+ <1479586147.10840.0@smtp.gmail.com>
+ <20161120203037.pd5mhqyjeotileve@perseus.defre.kleine-koenig.org>
+ <1479851991.26813.2@smtp.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1479851991.26813.2@smtp.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tomas.hlavacek@nic.cz
+Cc: Mark Rutland <mark.rutland@arm.com>, marex@denx.de, Jason Cooper <jason@lakedaemon.net>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> >CZ11NIC12 is indicated on my board.
+> 
+> :-( Well, this board version has wrongly matched length of some
+> differential pairs, IRQ from 88E1514 is connected differently, there
+> are slight differences in power supplies and (if I am not mistaken)
+> something changed in RTC support circuitry. It looks like a huge
+> mistake on our side.
 
-Update the IPMMU DT binding documentation to include the r8a7796 compat
-string for R-Car M3-W.
+Hi Tomas
 
-Signed-off-by: Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
+Would these problems also explain why the Ethernet links to the switch
+don't work? Maybe the differential pairs?
 
- This particular patch seems ready to merge IMO. How to proceed?
+> It seems that libphy is probed before pca9538 and we end up with:
+> [    4.217550] libphy: orion_mdio_bus: probed
+> [    4.221777] irq: no irq domain found for
+> /soc/internal-regs/i2c@11000/i2cmux@70/i2c@7/gpio@71 !
+> 
+> Any clue where to look in order to defer probing libphy or at least
+> orion_mdio_bus?
 
- Changes since V2:
- - Added Acked-by from Rob Herring and Simon Horman - thanks!
+I think there is a known phylib problem here. Somewhere in the call
+chain there is a void function, so the EPROBE_DEFFER gets
+discarded. But i could be remembering this wrongly.
 
- Changes since V1:
- - Added Acked-by from Laurent - thanks!
-
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |    1 +
- 1 file changed, 1 insertion(+)
-
---- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2016-06-06 11:27:37.560607110 +0900
-@@ -16,6 +16,7 @@ Required Properties:
-     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-     - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
-+    - "renesas,ipmmu-r8a7796" for the R8A7796 (R-Car M3-W) IPMMU.
-     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
- 
-   - reg: Base address and size of the IPMMU registers.
+      Andrew
