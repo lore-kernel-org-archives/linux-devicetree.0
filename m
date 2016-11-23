@@ -1,49 +1,88 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
- powerhold property
-Date: Wed, 23 Nov 2016 09:05:19 +0530
-Message-ID: <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
- <20161115000849.GD4082@atomide.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 5/5] sdhci: Add quirk for delayed IRQ ACK
+Date: Wed, 23 Nov 2016 11:36:47 +0800
+Message-ID: <20161123113647.0b3deac0@xhacker>
+References: <1479863388-23678-1-git-send-email-jeremymc@redhat.com>
+        <1479863388-23678-6-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161115000849.GD4082-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1479863388-23678-6-git-send-email-jeremymc@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 22 Nov 2016 17:09:48 -0800
+Jeremy McNicoll <jeremymc@redhat.com> wrote:
 
+> On msm8992 it has been observed that IRQs were not getting
+> ACK'd correctly when clocked at speeds greater than 400KHz.
+> 
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
+>  drivers/mmc/host/sdhci-msm.c |  7 +++++++
+>  drivers/mmc/host/sdhci.c     | 12 ++++++++++--
+>  drivers/mmc/host/sdhci.h     |  2 ++
+>  3 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 1fcda96..459003c 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1303,6 +1303,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  			       CORE_VENDOR_SPEC_CAPABILITIES0);
+>  	}
+>  
+> +	/* Enable delayed IRQ handling workaround on 8992 */
+> +	if (core_major == 1 && core_minor == 0x3e) {
+> +		/* Add 40us delay in interrupt handler when operating
+> +		 * at initialization frequency of 400KHz. */
+> +		host->quirks2 |= SDHCI_QUIRK2_SLOW_INT_CLR;
+> +	}
+> +
+>  	/* Setup IRQ for handling power/voltage tasks with PMIC */
+>  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
+>  	if (msm_host->pwr_irq < 0) {
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 5911f98..c1aae22 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2703,11 +2703,19 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>  			result = IRQ_WAKE_THREAD;
+>  		}
+>  
+> -		if (intmask & SDHCI_INT_CMD_MASK)
+> +		if (intmask & SDHCI_INT_CMD_MASK) {
+> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
+> +				udelay(40);
+> +			}
+>  			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK);
+> +		}
+>  
+> -		if (intmask & SDHCI_INT_DATA_MASK)
+> +		if (intmask & SDHCI_INT_DATA_MASK) {
+> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
+> +				udelay(40);
+> +			}
+>  			sdhci_data_irq(host, intmask & SDHCI_INT_DATA_MASK);
+> +		}
+>  
+>  		if (intmask & SDHCI_INT_BUS_POWER)
+>  			pr_err("%s: Card is consuming too much power!\n",
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index c055e24..5f8301e 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -24,6 +24,8 @@
+>   * Controller registers
+>   */
+>  
+> +#define SDHCI_QUIRK2_SLOW_INT_CLR	(1<<5)
 
-On Tuesday 15 November 2016 05:38 AM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [161109 21:10]:
->> The PMICs have POWERHOLD set by default which prevents PMIC shutdown
->> even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
->> So to enable pmic power off this property lets one over ride the default
->> value and enable pmic power off.
->
-> This should not cause merge conflicts so probably best to merge along
-> with the driver changes:
->
-> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->
-> If you guys want me to pick up this separately let me know.
+IIRC, new quirk isn't allowed now.
 
-Hi Lee Jones,
+Thanks,
+Jisheng
 
-Are you planning to pull DT and Documentation patches as well?
-
-Regards,
-Keerthy
->
-> Regards,
->
-> Tony
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
