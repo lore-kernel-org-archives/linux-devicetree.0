@@ -1,37 +1,50 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v9 02/16] clk: qcom: Move all sdcc rcgs to use
- clk_rcg2_floor_ops
-Date: Wed, 23 Nov 2016 11:00:18 -0800
-Message-ID: <20161123190018.GD25626@codeaurora.org>
-References: <1479710246-26676-1-git-send-email-riteshh@codeaurora.org>
- <1479710246-26676-3-git-send-email-riteshh@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479710246-26676-3-git-send-email-riteshh@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, andy.gross@linaro.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, rnayak@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] drivers/of: Export phandle iterators
+Date: Wed, 23 Nov 2016 19:06:06 +0000
+Message-ID: <a1fa1157cab10f2a6f319d431d355cef79b91820.1479927866.git.robin.murphy@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21, Ritesh Harjani wrote:
-> From: Rajendra Nayak <rnayak@codeaurora.org>
-> 
-> The sdcc driver for msm8996/msm8916/msm8974/msm8994 and apq8084
-> expects a clk_set_rate() on the sdcc rcg clk to set
-> a floor value of supported clk rate closest to the requested
-> rate, by looking up the frequency table.
-> So move all the sdcc rcgs on all these platforms to use the
-> newly introduced clk_rcg2_floor_ops
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> ---
+Modular drivers may want to use of_for_each_phandle() - export its
+constituent functions.
 
-Applied to clk-next
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/of/base.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a0bccb54a9bd..92e35fe0189a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1563,6 +1563,7 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(of_phandle_iterator_init);
+ 
+ int of_phandle_iterator_next(struct of_phandle_iterator *it)
+ {
+@@ -1632,6 +1633,7 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
+ 
+ 	return -EINVAL;
+ }
++EXPORT_SYMBOL_GPL(of_phandle_iterator_next);
+ 
+ int of_phandle_iterator_args(struct of_phandle_iterator *it,
+ 			     uint32_t *args,
+@@ -1649,6 +1651,7 @@ int of_phandle_iterator_args(struct of_phandle_iterator *it,
+ 
+ 	return count;
+ }
++EXPORT_SYMBOL_GPL(of_phandle_iterator_args);
+ 
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.2.dirty
