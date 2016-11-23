@@ -1,108 +1,35 @@
-From: Jeremy McNicoll <jmcnicol-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 5/5] sdhci: Add quirk for delayed IRQ ACK
-Date: Tue, 22 Nov 2016 21:23:46 -0800
-Message-ID: <a24c780d-424a-8ef0-8daf-01cffc728615@redhat.com>
-References: <1479863388-23678-1-git-send-email-jeremymc@redhat.com>
- <1479863388-23678-6-git-send-email-jeremymc@redhat.com>
- <20161123113647.0b3deac0@xhacker>
- <ecacec51-4b06-49cd-c756-489128729499@redhat.com>
- <20161123121209.3623e14b@xhacker>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 1/5] ARM: memory: da8xx-ddrctl: new driver
+Date: Wed, 23 Nov 2016 11:25:42 +0530
+Message-ID: <b668871c-2b54-0a2f-0d68-afaa50e17e63@ti.com>
+References: <1477925138-23457-1-git-send-email-bgolaszewski@baylibre.com>
+ <1477925138-23457-2-git-send-email-bgolaszewski@baylibre.com>
+ <a309a738-7fa7-3aab-4457-f7d693e6b37f@ti.com> <5833A2DA.40701@gmail.com>
+ <800171a8-2e2c-2afb-f96d-800a17eaa17a@ti.com> <58348CB8.7050304@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161123121209.3623e14b@xhacker>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <58348CB8.7050304@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-22 8:12 PM, Jisheng Zhang wrote:
-> On Tue, 22 Nov 2016 19:48:56 -0800 Jeremy McNicoll wrote:
->
->> On 2016-11-22 7:36 PM, Jisheng Zhang wrote:
->>> On Tue, 22 Nov 2016 17:09:48 -0800
->>> Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>
->>>> On msm8992 it has been observed that IRQs were not getting
->>>> ACK'd correctly when clocked at speeds greater than 400KHz.
->>>>
->>>> Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  drivers/mmc/host/sdhci-msm.c |  7 +++++++
->>>>  drivers/mmc/host/sdhci.c     | 12 ++++++++++--
->>>>  drivers/mmc/host/sdhci.h     |  2 ++
->>>>  3 files changed, 19 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>>> index 1fcda96..459003c 100644
->>>> --- a/drivers/mmc/host/sdhci-msm.c
->>>> +++ b/drivers/mmc/host/sdhci-msm.c
->>>> @@ -1303,6 +1303,13 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>>>  			       CORE_VENDOR_SPEC_CAPABILITIES0);
->>>>  	}
->>>>
->>>> +	/* Enable delayed IRQ handling workaround on 8992 */
->>>> +	if (core_major == 1 && core_minor == 0x3e) {
->>>> +		/* Add 40us delay in interrupt handler when operating
->>>> +		 * at initialization frequency of 400KHz. */
->>>> +		host->quirks2 |= SDHCI_QUIRK2_SLOW_INT_CLR;
->>>> +	}
->>>> +
->>>>  	/* Setup IRQ for handling power/voltage tasks with PMIC */
->>>>  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->>>>  	if (msm_host->pwr_irq < 0) {
->>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>>> index 5911f98..c1aae22 100644
->>>> --- a/drivers/mmc/host/sdhci.c
->>>> +++ b/drivers/mmc/host/sdhci.c
->>>> @@ -2703,11 +2703,19 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>>>  			result = IRQ_WAKE_THREAD;
->>>>  		}
->>>>
->>>> -		if (intmask & SDHCI_INT_CMD_MASK)
->>>> +		if (intmask & SDHCI_INT_CMD_MASK) {
->>>> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
->>>> +				udelay(40);
->>>> +			}
->>>>  			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK);
->>>> +		}
->>>>
->>>> -		if (intmask & SDHCI_INT_DATA_MASK)
->>>> +		if (intmask & SDHCI_INT_DATA_MASK) {
->>>> +			if ((host->quirks2 & SDHCI_QUIRK2_SLOW_INT_CLR) && (host->clock <= 400000)) {
->>>> +				udelay(40);
->>>> +			}
->>>>  			sdhci_data_irq(host, intmask & SDHCI_INT_DATA_MASK);
->>>> +		}
->>>>
->>>>  		if (intmask & SDHCI_INT_BUS_POWER)
->>>>  			pr_err("%s: Card is consuming too much power!\n",
->>>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->>>> index c055e24..5f8301e 100644
->>>> --- a/drivers/mmc/host/sdhci.h
->>>> +++ b/drivers/mmc/host/sdhci.h
->>>> @@ -24,6 +24,8 @@
->>>>   * Controller registers
->>>>   */
->>>>
->>>> +#define SDHCI_QUIRK2_SLOW_INT_CLR	(1<<5)
->>>
->>> IIRC, new quirk isn't allowed now.
->>>
->>
->> Why not?
->
-> IIRC, mmc subsystem will behave as a lib in the long run, so the community
-> and developers call for no new quirk. For your case, we may need to handle
-> the udelay in sdhci-msm.c, export sdhci_irq as a helper function?
->
-Thanks for the details and suggestions.  I am going to wait until the US
-Thanksgiving (and cyber Monday) is over before I do any more.
+On Tuesday 22 November 2016 11:51 PM, Frank Rowand wrote:
+> Please note that the compatible property might contain several strings, not just
+> a single string.
 
--jeremy
+So I guess the best thing to do is to use
+of_property_read_string_index() and print the sting at index 0.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
