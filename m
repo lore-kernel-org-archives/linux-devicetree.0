@@ -1,15 +1,18 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 7/7] add stm32 multi-functions timer driver in DT
-Date: Wed, 23 Nov 2016 09:53:17 +0000
-Message-ID: <20161123095317.GP10134@dell.home>
-References: <1479831207-32699-1-git-send-email-benjamin.gaignard@st.com>
- <1479831207-32699-8-git-send-email-benjamin.gaignard@st.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/3] of: base: add support to get machine compatible string
+Date: Wed, 23 Nov 2016 10:05:24 +0000
+Message-ID: <2a644b8c-d91e-5ab1-200b-00f749a36307@arm.com>
+References: <1479811311-3080-1-git-send-email-bgolaszewski@baylibre.com>
+ <1479811311-3080-2-git-send-email-bgolaszewski@baylibre.com>
+ <5ce9fb9f-459a-562b-2e9f-85d35f9ec035@arm.com>
+ <67a3c2c7-0cb9-9764-2710-6ee66fc4dde4@ti.com>
+ <fdb93150-9089-c7bb-2b0a-21ded241a647@arm.com>
+ <ae92e013-b41b-6caa-b32f-284ffb6f5aa0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1479831207-32699-8-git-send-email-benjamin.gaignard@st.com>
+In-Reply-To: <ae92e013-b41b-6caa-b32f-284ffb6f5aa0@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,160 +22,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linus.walleij@linaro.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, pmeerw@pmeerw.net, knaack.h@gmx.de, gerald.baeza@st.com, fabrice.gasnier@st.com, linaro-kernel@lists.linaro.org, jic23@kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, David Airlie <airlied@linux.ie>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMiBOb3YgMjAxNiwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6Cgo+IEFkZCB0aW1l
-cnMgTUZEIGFuZCBjaGlsZHMgaW50byBEVCBmb3Igc3RtMzJmNC4KPiBEZWZpbmUgYW5kIGVuYWJs
-ZSBwd20xIGFuZCBwd20zIGZvciBzdG0zMmY0NjkgZGlzY292ZXJ5IGJvYXJkCj4gCj4gU2lnbmVk
-LW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4KPiAt
-LS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LmR0c2kgICAgICB8IDI0NiArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQ2
-OS1kaXNjby5kdHMgfCAgMjkgKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDI3NSBpbnNlcnRpb25z
-KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5kdHNpIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LmR0c2kKPiBpbmRleCBiY2E0OTFkLi4yOGEwZmU5
-IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQyOS5kdHNpCj4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNDI5LmR0c2kKPiBAQCAtMzU1LDYgKzM1NSwyMSBAQAo+
-ICAJCQkJCXNsZXctcmF0ZSA9IDwyPjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gKwo+ICsJCQlwd20x
-X3BpbnM6IHB3bUAxIHsKPiArCQkJCXBpbnMgewo+ICsJCQkJCXBpbm11eCA9IDxTVE0zMkY0Mjlf
-UEE4X0ZVTkNfVElNMV9DSDE+LAo+ICsJCQkJCQkgPFNUTTMyRjQyOV9QQjEzX0ZVTkNfVElNMV9D
-SDFOPiwKPiArCQkJCQkJIDxTVE0zMkY0MjlfUEIxMl9GVU5DX1RJTTFfQktJTj47Cj4gKwkJCQl9
-Owo+ICsJCQl9Owo+ICsKPiArCQkJcHdtM19waW5zOiBwd21AMyB7Cj4gKwkJCQlwaW5zIHsKPiAr
-CQkJCQlwaW5tdXggPSA8U1RNMzJGNDI5X1BCNF9GVU5DX1RJTTNfQ0gxPiwKPiArCQkJCQkJIDxT
-VE0zMkY0MjlfUEI1X0ZVTkNfVElNM19DSDI+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiAgCQl9Owo+
-ICAKPiAgCQlyY2M6IHJjY0A0MDAyMzgxMCB7Cj4gQEAgLTQyNiw2ICs0NDEsMjM3IEBACj4gIAkJ
-CWludGVycnVwdHMgPSA8ODA+Owo+ICAJCQljbG9ja3MgPSA8JnJjYyAwIDM4PjsKPiAgCQl9Owo+
-ICsKPiArCQltZmRfdGltZXIxOiBtZmR0aW1lcjFANDAwMTAwMDAgewoKRG8geW91IHJlZmVyZW5j
-ZSB0aGlzIG5vZGU/CgpJZiBub3QsIGl0IHNob3VsZCByZWFkOgoKICBhZHZhbmNlZC1jb250cm9s
-QDQwMDEwMDAwCgo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLW1mZC10aW1lcjEiOwoKInN0
-LHN0bTMyLWFkdmFuY2VkLWNvbnRyb2wiCgo+ICsJCQlyZWcgPSA8MHg0MDAxMDAwMCAweDQwMD47
-Cj4gKwkJCWNsb2NrcyA9IDwmcmNjIDAgMTYwPjsKPiArCQkJY2xvY2stbmFtZXMgPSAibWZkX3Rp
-bWVyX2NsayI7CgoiY2xrX2ludCIKCj4gKwkJCWludGVycnVwdHMgPSA8Mjc+OwoKVGhpcyBpcyBh
-IHRpbWVyIHByb3BlcnR5LgoKQWxzbyBtb3ZlIHRoZSBhc3NvY2lhdGVkIHJlZ2lzdHJhdGlvbiBD
-IGNvZGUgaW50byB0aGUgdGltZXIgZHJpdmVyLgoKPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsK
-PiArCj4gKwkJCXB3bTE6IHB3bTFANDAwMTAwMDAgewoKICBwd21AMCB7Cgo+ICsJCQkJY29tcGF0
-aWJsZSA9ICJzdCxzdG0zMi1wd20xIjsKCnN0LHN0bTMyLWFkdmFuY2VkLWNvbnRyb2wtcHdtCgo+
-ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQkJfTsKPiArCj4gKwkJCWlpb3RpbWVyMTog
-aWlvdGltZXIxQDQwMDEwMDAwIHsKClNhbWUgaGVyZToKCiAgdGltZXJAMAoKPiArCQkJCWNvbXBh
-dGlibGUgPSAic3Qsc3RtMzItaWlvLXRpbWVyMSI7CgpzdCxzdG0zMi1hZHZhbmNlZC1jb250cm9s
-LXRpbWVyCgo+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQkJfTsKPiArCQl9Owo+ICsK
-PiArCQltZmRfdGltZXIyOiBtZmR0aW1lcjJANDAwMDAwMDAgewo+ICsJCQljb21wYXRpYmxlID0g
-InN0LHN0bTMyLW1mZC10aW1lcjIiOwo+ICsJCQlyZWcgPSA8MHg0MDAwMDAwMCAweDQwMD47Cj4g
-KwkJCWNsb2NrcyA9IDwmcmNjIDAgMTI4PjsKPiArCQkJY2xvY2stbmFtZXMgPSAibWZkX3RpbWVy
-X2NsayI7Cj4gKwkJCWludGVycnVwdHMgPSA8Mjg+Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ICsKPiArCQkJcHdtMjogcHdtMkA0MDAwMDAwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInN0
-LHN0bTMyLXB3bTIiOwo+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQkJfTsKPiArCQkJ
-aWlvdGltZXIyOiBpaW90aW1lcjJANDAwMDAwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJzdCxz
-dG0zMi1paW8tdGltZXIyIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJCX07Cj4g
-KwkJfTsKPiArCj4gKwkJbWZkX3RpbWVyMzogbWZkdGltZXIzQDQwMDAwNDAwIHsKPiArCQkJY29t
-cGF0aWJsZSA9ICJzdCxzdG0zMi1tZmQtdGltZXIzIjsKPiArCQkJcmVnID0gPDB4NDAwMDA0MDAg
-MHg0MDA+Owo+ICsJCQljbG9ja3MgPSA8JnJjYyAwIDEyOT47Cj4gKwkJCWNsb2NrLW5hbWVzID0g
-Im1mZF90aW1lcl9jbGsiOwo+ICsJCQlpbnRlcnJ1cHRzID0gPDI5PjsKPiArCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKPiArCj4gKwkJCXB3bTM6IHB3bTNANDAwMDA0MDAgewo+ICsJCQkJY29tcGF0
-aWJsZSA9ICJzdCxzdG0zMi1wd20zIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJ
-CX07Cj4gKwkJCWlpb3RpbWVyMzogaWlvdGltZXIzQDQwMDAwNDAwIHsKPiArCQkJCWNvbXBhdGli
-bGUgPSAic3Qsc3RtMzItaWlvLXRpbWVyMyI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+
-ICsJCQl9Owo+ICsJCX07Cj4gKwo+ICsJCW1mZF90aW1lcjQ6IG1mZHRpbWVyNEA0MDAwMDgwMCB7
-Cj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItbWZkLXRpbWVyNCI7Cj4gKwkJCXJlZyA9IDww
-eDQwMDAwODAwIDB4NDAwPjsKPiArCQkJY2xvY2tzID0gPCZyY2MgMCAxMzA+Owo+ICsJCQljbG9j
-ay1uYW1lcyA9ICJtZmRfdGltZXJfY2xrIjsKPiArCQkJaW50ZXJydXB0cyA9IDwzMD47Cj4gKwkJ
-CXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCQlwd200OiBwd200QDQwMDAwODAwIHsKPiAr
-CQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItcHdtNCI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJs
-ZWQiOwo+ICsJCQl9Owo+ICsJCQlpaW90aW1lcjQ6IGlpb3RpbWVyNEA0MDAwMDgwMCB7Cj4gKwkJ
-CQljb21wYXRpYmxlID0gInN0LHN0bTMyLWlpby10aW1lcjQiOwo+ICsJCQkJc3RhdHVzID0gImRp
-c2FibGVkIjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQltZmRfdGltZXI1OiBtZmR0aW1lcjVA
-NDAwMDBDMDAgewo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLW1mZC10aW1lcjUiOwo+ICsJ
-CQlyZWcgPSA8MHg0MDAwMEMwMCAweDQwMD47Cj4gKwkJCWNsb2NrcyA9IDwmcmNjIDAgMTMxPjsK
-PiArCQkJY2xvY2stbmFtZXMgPSAibWZkX3RpbWVyX2NsayI7Cj4gKwkJCWludGVycnVwdHMgPSA8
-NTA+Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsKPiArCQkJcHdtNTogcHdtNUA0MDAw
-MEMwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLXB3bTUiOwo+ICsJCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiArCQkJfTsKPiArCQkJaWlvdGltZXI1OiBpaW90aW1lcjVANDAwMDA4
-MDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1paW8tdGltZXI1IjsKPiArCQkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJbWZkX3RpbWVyNjog
-bWZkdGltZXI2QDQwMDAxMDAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1tZmQtdGlt
-ZXI2IjsKPiArCQkJcmVnID0gPDB4NDAwMDEwMDAgMHg0MDA+Owo+ICsJCQljbG9ja3MgPSA8JnJj
-YyAwIDEzMj47Cj4gKwkJCWNsb2NrLW5hbWVzID0gIm1mZF90aW1lcl9jbGsiOwo+ICsJCQlpbnRl
-cnJ1cHRzID0gPDU0PjsKPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCj4gKwkJCWlpb3Rp
-bWVyNjogaWlvdGltZXI2QDQwMDAxMDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzIt
-aWlvLXRpbWVyNiI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsJCX07
-Cj4gKwo+ICsJCW1mZF90aW1lcjc6IG1mZHRpbWVyN0A0MDAwMTQwMCB7Cj4gKwkJCWNvbXBhdGli
-bGUgPSAic3Qsc3RtMzItbWZkLXRpbWVyNyI7Cj4gKwkJCXJlZyA9IDwweDQwMDAxNDAwIDB4NDAw
-PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgMCAxMzM+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJtZmRf
-dGltZXJfY2xrIjsKPiArCQkJaW50ZXJydXB0cyA9IDw1NT47Cj4gKwkJCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7Cj4gKwo+ICsJCQlpaW90aW1lcjc6IGlpb3RpbWVyN0A0MDAwMTQwMCB7Cj4gKwkJCQlj
-b21wYXRpYmxlID0gInN0LHN0bTMyLWlpby10aW1lcjciOwo+ICsJCQkJc3RhdHVzID0gImRpc2Fi
-bGVkIjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQltZmRfdGltZXI4OiBtZmR0aW1lcjhANDAw
-MTA0MDAgewo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLW1mZC10aW1lcjgiOwo+ICsJCQly
-ZWcgPSA8MHg0MDAxMDQwMCAweDQwMD47Cj4gKwkJCWNsb2NrcyA9IDwmcmNjIDAgMTYxPjsKPiAr
-CQkJY2xvY2stbmFtZXMgPSAibWZkX3RpbWVyX2NsayI7Cj4gKwkJCWludGVycnVwdHMgPSA8NDY+
-Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsKPiArCQkJcHdtODogcHdtOEA0MDAxMDQw
-MCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLXB3bTgiOwo+ICsJCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKPiArCQkJfTsKPiArCj4gKwkJCWlpb3RpbWVyODogaWlvdGltZXI3QDQwMDEw
-NDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItaWlvLXRpbWVyOCI7Cj4gKwkJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsJCX07Cj4gKwo+ICsJCW1mZF90aW1lcjk6
-IG1mZHRpbWVyOUA0MDAxNDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItbWZkLXRp
-bWVyOSI7Cj4gKwkJCXJlZyA9IDwweDQwMDE0MDAwIDB4NDAwPjsKPiArCQkJY2xvY2tzID0gPCZy
-Y2MgMCAxNzY+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJtZmRfdGltZXJfY2xrIjsKPiArCQkJaW50
-ZXJydXB0cyA9IDwyND47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCQlwd205
-OiBwd205QDQwMDE0MDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItcHdtOSI7Cj4g
-KwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsKPiArCQkJaWlvdGltZXI5OiBp
-aW90aW1lcjlANDAwMTQwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1paW8tdGlt
-ZXI5IjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4g
-KwkJbWZkX3RpbWVyMTA6IG1mZHRpbWVyMTBANDAwMTQ0MDAgewo+ICsJCQljb21wYXRpYmxlID0g
-InN0LHN0bTMyLW1mZC10aW1lcjEwIjsKPiArCQkJcmVnID0gPDB4NDAwMTQ0MDAgMHg0MDA+Owo+
-ICsJCQljbG9ja3MgPSA8JnJjYyAwIDE3Nz47Cj4gKwkJCWNsb2NrLW5hbWVzID0gIm1mZF90aW1l
-cl9jbGsiOwo+ICsJCQlpbnRlcnJ1cHRzID0gPDI1PjsKPiArCQkJc3RhdHVzID0gImRpc2FibGVk
-IjsKPiArCj4gKwkJCXB3bTEwOiBwd20xMEA0MDAxNDQwMCB7Cj4gKwkJCQljb21wYXRpYmxlID0g
-InN0LHN0bTMyLXB3bTEwIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJCX07Cj4g
-KwkJfTsKPiArCj4gKwkJbWZkX3RpbWVyMTE6IG1mZHRpbWVyMTFANDAwMTQ4MDAgewo+ICsJCQlj
-b21wYXRpYmxlID0gInN0LHN0bTMyLW1mZC10aW1lcjExIjsKPiArCQkJcmVnID0gPDB4NDAwMTQ4
-MDAgMHg0MDA+Owo+ICsJCQljbG9ja3MgPSA8JnJjYyAwIDE3OD47Cj4gKwkJCWNsb2NrLW5hbWVz
-ID0gIm1mZF90aW1lcl9jbGsiOwo+ICsJCQlpbnRlcnJ1cHRzID0gPDI2PjsKPiArCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiArCj4gKwkJCXB3bTExOiBwd20xMUA0MDAxNDgwMCB7Cj4gKwkJCQlj
-b21wYXRpYmxlID0gInN0LHN0bTMyLXB3bTExIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7
-Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJbWZkX3RpbWVyMTI6IG1mZHRpbWVyMTJANDAwMDE4
-MDAgewo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLW1mZC10aW1lcjEyIjsKPiArCQkJcmVn
-ID0gPDB4NDAwMDE4MDAgMHg0MDA+Owo+ICsJCQljbG9ja3MgPSA8JnJjYyAwIDEzND47Cj4gKwkJ
-CWNsb2NrLW5hbWVzID0gIm1mZF90aW1lcl9jbGsiOwo+ICsJCQlpbnRlcnJ1cHRzID0gPDQzPjsK
-PiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCj4gKwkJCXB3bTEyOiBwd20xMkA0MDAwMTgw
-MCB7Cj4gKwkJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLXB3bTEyIjsKPiArCQkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7Cj4gKwkJCX07Cj4gKwkJCWlpb3RpbWVyMTI6IGlpb3RpbWVyMTJANDAwMDE4
-MDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1paW8tdGltZXIxMiI7Cj4gKwkJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsJCX07Cj4gKwo+ICsJCW1mZF90aW1lcjEz
-OiBtZmR0aW1lcjEzQDQwMDAxQzAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1tZmQt
-dGltZXIxMyI7Cj4gKwkJCXJlZyA9IDwweDQwMDAxQzAwIDB4NDAwPjsKPiArCQkJY2xvY2tzID0g
-PCZyY2MgMCAxMzU+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJtZmRfdGltZXJfY2xrIjsKPiArCQkJ
-aW50ZXJydXB0cyA9IDw0ND47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwo+ICsJCQlw
-d20xMzogcHdtMTNANDAwMDFDMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMi1wd20x
-MyI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsJCX07Cj4gKwo+ICsJ
-CW1mZF90aW1lcjE0OiBtZmR0aW1lcjE0QDQwMDAyMDAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICJz
-dCxzdG0zMi1tZmQtdGltZXIxNCI7Cj4gKwkJCXJlZyA9IDwweDQwMDAyMDAwIDB4NDAwPjsKPiAr
-CQkJY2xvY2tzID0gPCZyY2MgMCAxMzY+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJtZmRfdGltZXJf
-Y2xrIjsKPiArCQkJaW50ZXJydXB0cyA9IDw0NT47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7
-Cj4gKwo+ICsJCQlwd20xNDogcHdtMTRANDAwMDIwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJz
-dCxzdG0zMi1wd20xNCI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9Owo+ICsJ
-CX07Cj4gIAl9Owo+ICB9Owo+ICAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3Rt
-MzJmNDY5LWRpc2NvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjQ2OS1kaXNjby5kdHMK
-PiBpbmRleCA4YTE2M2Q3Li5hOGYxNzg4IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMyZjQ2OS1kaXNjby5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY0Njkt
-ZGlzY28uZHRzCj4gQEAgLTgxLDMgKzgxLDMyIEBACj4gICZ1c2FydDMgewo+ICAJc3RhdHVzID0g
-Im9rYXkiOwo+ICB9Owo+ICsKPiArJm1mZF90aW1lcjEgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+
-ICt9Owo+ICsKPiArJnB3bTEgewo+ICsJcGluY3RybC0wCT0gPCZwd20xX3BpbnM+Owo+ICsJcGlu
-Y3RybC1uYW1lcwk9ICJkZWZhdWx0IjsKPiArCXN0LGJyZWFraW5wdXQtcG9sYXJpdHkgPSA8MD47
-CgpJcyB0aGlzIGRvY3VtZW50ZWQ/CgpJJ20gc3VyZSB3ZSBoYXZlIGdlbmVyaWMgcG9sYXJpdHkg
-cHJvcGVydGllcyBzb21ld2hlcmUgYWxyZWFkeT8KCj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307
-Cj4gKwo+ICsmaWlvdGltZXIxIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gKyZt
-ZmRfdGltZXIzIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gKyZwd20zIHsKPiAr
-CXBpbmN0cmwtMAk9IDwmcHdtM19waW5zPjsKPiArCXBpbmN0cmwtbmFtZXMJPSAiZGVmYXVsdCI7
-Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+ICsmaWlvdGltZXIzIHsKPiArCXN0YXR1
-cyA9ICJva2F5IjsKPiArfTsKCkkndmUgYWx3YXlzIGRpc2xpa2VkIHRoaXMgd2F5IG9mIHJlZmVy
-ZW5jaW5nIG5vZGVzIQoKQW55IGNoYW5jZSB3ZSBjYW4gcmVwcmVzZW50IHRoZW0gaW4gYSBoaWVy
-YXJjaHksIHNvIHdlIGRvbid0IGxvc2UgdGhhdAppbmZvcm1hdGlvbiBhbmQgd2UgY2FuIGdldCBy
-aWQgb2YgYWxsIHRob3NlIGhvcnJpYmxlIGxhYmVscz8KCkknbSBoYXBweSB0byBkbyB0aGUgd29y
-ay4KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0g
-TGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9s
-bG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+On 23/11/16 07:49, Sekhar Nori wrote:
+> On Tuesday 22 November 2016 09:16 PM, Sudeep Holla wrote:
+>> Hi Sekhar,
+>>
+>> On 22/11/16 15:06, Sekhar Nori wrote:
+>>> Hi Sudeep,
+>>>
+>>> On Tuesday 22 November 2016 04:23 PM, Sudeep Holla wrote:
+>>>>
+>>>>
+>>>> On 22/11/16 10:41, Bartosz Golaszewski wrote:
+>>>>> Add a function allowing to retrieve the compatible string of the root
+>>>>> node of the device tree.
+>>>>>
+>>>>
+>>>> Rob has queued [1] and it's in -next today. You can reuse that if you
+>>>> are planning to target this for v4.11 or just use open coding in your
+>>>> driver for v4.10 and target this move for v4.11 to avoid cross tree
+>>>> dependencies as I already mentioned in your previous thread.
+>>>
+>>> I dont have your original patch in my mailbox, but I wonder if
+>>> returning a pointer to property string for a node whose reference has
+>>> already been released is safe to do? Probably not an issue for the root
+>>> node, but still feels counter-intuitive.
+>>>
+>>
+>> I am not sure if I understand the issue here. Are you referring a case
+>> where of_root is freed ?
+>
+> Yes, right, thats what I was hinting at. Since you are giving up the
+> reference to the device node before the function returns, the user can
+> be left with a dangling reference.
+>
+
+Yes I agree.
+
+>> Also I have seen drivers today just using this pointer directly, but
+>> it's better to copy the string(I just saw this done in one case)
+>
+> Hmm, the reference is given up before the API returns, so I doubt
+> copying it later is any additional benefit.
+>
+
+True.
+
+> I suspect this is a theoretical issue though since root device node is
+> probably never freed.
+>
+
+Indeed, not sure if it's worth adding additional code to release the nod
+at all call sites.
+
+-- 
+Regards,
+Sudeep
