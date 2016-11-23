@@ -1,58 +1,83 @@
-From: Rick Chang <rick.chang@mediatek.com>
-Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
- Decoder
-Date: Wed, 23 Nov 2016 09:54:14 +0800
-Message-ID: <1479866054.8964.21.camel@mtksdaap41>
-References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
-         <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
-         <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
-         <1479784905.8964.15.camel@mtksdaap41>
-         <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [RFC] Documentation: media,
+ leds: move IR LED remote controllers from media to LED
+Date: Wed, 23 Nov 2016 11:28:56 +0900
+Message-ID: <20161123022856.gliio3nyfclx6hj2@gangnam.samsung>
+References: <20161110132650.5109-1-andi.shyti@samsung.com>
+ <CGME20161122141450epcas4p4a07f3db61d459fe775cbad7048affe7a@epcas4p4.samsung.com>
+ <20161122121440.627f1c16@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <20161122121440.627f1c16@vento.lan>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Rob Herring <robh@kernel.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Mauro,
 
-On Tue, 2016-11-22 at 13:43 +0100, Hans Verkuil wrote:
-> On 22/11/16 04:21, Rick Chang wrote:
-> > Hi Hans,
-> >
-> > On Mon, 2016-11-21 at 15:51 +0100, Hans Verkuil wrote:
-> >> On 17/11/16 04:38, Rick Chang wrote:
-> >>> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
-> >>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> >>> ---
-> >>> This patch depends on:
-> >>>   CCF "Add clock support for Mediatek MT2701"[1]
-> >>>   iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
-> >>>
-> >>> [1] http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html
-> >>> [2] https://patchwork.kernel.org/patch/9164013/
-> >>
-> >> I assume that 1 & 2 will appear in 4.10? So this patch needs to go in
-> >> after the
-> >> other two are merged in 4.10?
-> >>
-> >> Regards,
-> >>
-> >> 	Hans
-> >
-> > [1] will appear in 4.10, but [2] will appear latter than 4.10.So this
-> > patch needs to go in after [1] & [2] will be merged in 4.11.
+> > this is purely a request for comments after a discussion had with
+> > Rob and Jacek [*] about where to place the ir leds binding. Rob wants
+> > the binding to be under led, while Jacek wants it in media...
+> > "Ubi maior minor cessat": it goes to LED and they can be organized
+> > in a subdirectory.
+> > 
+> > Standing to Rob "Bindings are grouped by types of h/w and IR LEDs
+> > are a type of LED": all remote controllers have an IR LED as core
+> > device, even though the framework is under drivers/media/rc/, thus
+> > they naturally belong to the LED binding group.
+> > 
+> > Please, let me know if this is the right approach.
 > 
-> So what should I do? Merge the driver for 4.11 and wait with this patch
-> until [2] is merged in 4.11? Does that sound reasonable?
+> IMHO, this is wrong. 
 > 
-> Regards,
+> Ok, if you look at just the diode, the physics of an IR Light-emitting Diode
+> (LED) is identical  to the one for a visible light LED, just like the physics
+> of the LED diodes inside a display. Btw, the physics of an IR detector
+> diode is almost identical to the physics of a LED.
 > 
-> 	Hans
+> Yet, the hardware where those diodes are connected are very different,
+> and so their purpose.
+> 
+> The same way I don't think it would make sense to represent a LED
+> display using the same approach as a flash light, I don't think we
+> should to it for IR LEDs.
+> 
+> A visible light LED is used either to work as a flash light for a camera
+> or as a way to indicate a status. No machine2machine protocol there.
+> The circuitry for them is usually just a gatway that will turn it on
+> or off.
+> 
+> With regards to the IR hardware, an IR LED is used for machine2machine
+> signaling. It is part of a modulator circuit that uses a carrier of about
+> 40kHz to modulate 16 or 32 bits words.
+> 
+> The IR device hardware usually also have another diode (the IR detector)
+> that receives IR rays. Visually, they look identical.
+> 
+> IMHO, it makes much more sense to keep both IR detector and light-emitting
+> diodes described together, as they are part of the same circuitry and
+> have a way more similarities than a flash light or a LED display.
 
-What do you think about this? You merge the driver first and I send this
-patch again after [1] & [2] is merged.
+thanks for the reply, I agree with you, that's why I first put
+the ir-spi of tm2 in the media directory where all the ir leds
+devices are. That's what Jacek recommended and what you are
+recommending (that's also why this is an RFC and not a patch).
+
+Rob, if I place the tm2 ir-spi in the led bindings in a
+sub-directory it will be the only device there for the time
+being. But the ir-spi it's not unique in its kind, there are many
+others and they are all under the media directory. My opinion is
+that all the ir-leds devices should be in the same place.
+
+Would, then, make sense to split the ir-leds devices in two
+different locations?
+
+Would it be a valid alternative to create instead an 'rc'
+directory for the ir-leds bindings that can either be under
+media or in the higher directory?
+
+Thanks,
+Andi
