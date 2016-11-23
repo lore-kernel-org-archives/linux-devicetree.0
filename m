@@ -1,52 +1,39 @@
-From: Nicolas Saenz Julienne <nicolas.saenz@prodys.net>
-Subject: [PATCH 2/2] dt-bindings: power: add bindings for sbs-charger
-Date: Wed, 23 Nov 2016 12:20:44 +0100
-Message-ID: <1479900044-19270-3-git-send-email-nicolas.saenz@prodys.net>
-References: <1479900044-19270-1-git-send-email-nicolas.saenz@prodys.net>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1479900044-19270-1-git-send-email-nicolas.saenz@prodys.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, nicolas.saenz@prodys.net
+From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mfd: Improve readability for TPS65217
+ interrupt sources
+Date: Wed, 23 Nov 2016 20:38:00 +0900
+Message-ID: <bd4944d8-3cef-b3f7-4fba-6de590493047@gmail.com>
+References: <20161121131515.8040-1-woogyom.kim@gmail.com>
+ <20161122155759.GG10134@dell.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161122155759.GG10134-Re9dqnLqz4GzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree documentation for SBS charger compilant devices as defined
-here: http://sbs-forum.org/specs/sbc110.pdf
+On 11/23/2016 12:57 AM, Lee Jones wrote:
+>>  	pwrbutton {
+>> > -		interrupts = <TPS65217_IRQ_PB>;
+>> > +		interrupts = <TPS65217_IRQ_PUSHBUTTON>;
+> Push button or power button?
+>
 
-Signed-off-by: Nicolas Saenz Julienne <nicolas.saenz@prodys.net>
----
- .../bindings/power/supply/sbs_sbs-charger.txt      | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+According to the datasheet, push button interrupt is correct.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
-new file mode 100644
-index 0000000..b18ee2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
-@@ -0,0 +1,22 @@
-+SBS sbs-charger
-+~~~~~~~~~~
-+
-+Required properties :
-+ - compatible : "sbs,sbs-charger"
-+
-+Optional properties :
-+- interrupt-parent: Should be the phandle for the interrupt controller. Use in
-+    conjunction with "interrupts".
-+- interrupts: Interrupt mapping for GPIO IRQ. Use in conjunction with
-+    "interrupt-parent". If an interrupt is not provided the driver will switch
-+    automatically to polling.
-+
-+Example:
-+
-+	ltc4100@9 {
-+		compatible = "sbs,sbs-charger";
-+		reg = <0x9>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
--- 
-2.7.4
+	http://www.ti.com/lit/ds/symlink/tps65217.pdf
 
+This is used for a power button input in Beaglebone boards. In other 
+words, the power button is one of push button usages.
+
+So, I'd like to keep general name for the interrupt.
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
