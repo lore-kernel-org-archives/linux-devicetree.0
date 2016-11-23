@@ -1,121 +1,127 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] mux controller abstraction and iio/i2c muxes
-Date: Wed, 23 Nov 2016 12:47:35 +0100
-Message-ID: <3870654b-8cf5-30cb-74cd-c5fb1559adba@axentia.se>
-References: <1479734235-18837-1-git-send-email-peda@axentia.se>
- <b132143c-259b-6ed2-58c5-b223cc2e72df@metafoo.de>
+From: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/1] of: of_reserved_mem: Ensure cma reserved region not cross the low/high memory
+Date: Wed, 23 Nov 2016 19:37:01 +0800
+Message-ID: <1479901021-25064-1-git-send-email-jason.hui.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b132143c-259b-6ed2-58c5-b223cc2e72df-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-22 21:58, Lars-Peter Clausen wrote:
-> On 11/21/2016 02:17 PM, Peter Rosin wrote:
-> [...]
->> I have a piece of hardware that is using the same 3 GPIO pins
->> to control four 8-way muxes. Three of them control ADC lines
->> to an ADS1015 chip with an iio driver, and the last one
->> controls the SDA line of an i2c bus. We have some deployed
->> code to handle this, but you do not want to see it or ever
->> hear about it. I'm not sure why I even mention it. Anyway,
->> the situation has nagged me to no end for quite some time.
->>
->> So, after first getting more intimate with the i2c muxing code
->> and later discovering the drivers/iio/inkern.c file and
->> writing a couple of drivers making use of it, I came up with
->> what I think is an acceptable solution; add a generic mux
->> controller driver (and subsystem) that is shared between all
->> instances, and combine that with an iio mux driver and a new
->> generic i2c mux driver. The new i2c mux I called "simple"
->> since it is only hooking the i2c muxing and the new mux
->> controller (much like the alsa simple card driver does for ASoC).
-> 
-> While abstracting this properly is all nice and good and the way it should
-> be done, but it also adds a lot of complexity and the devicetree adds a lot
-> of restrictions on what can actually be represented.
+Need ensure the cma reserved region not cross the low/high memory boundary
+when using the dynamic allocation methond through device-tree, otherwise,
+kernel will fail to boot up when cma reserved region cross how/high mem.
 
-This is a characterization without any specifics. But is the
-characterization true? You have two complaints, complexity
-and restrictions with bindings.
+Signed-off-by: Jason Liu <jason.hui.liu-3arQi8VN3Tc@public.gmane.org>
+Cc: Laura Abbott <labbott-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/of/of_reserved_mem.c    | 42 +++++++++++++++++++++++++++++++----------
+ include/linux/of_reserved_mem.h |  3 ++-
+ 2 files changed, 34 insertions(+), 11 deletions(-)
 
-> There is a certain point where the fabric on a PCB becomes so complex that
-> it deserves to be a device on its own (like the audio fabric drivers).
-> Especially when the hardware is built with a certain application in mind and
-> the driver is supposed to impose policy which reflects this application. The
-> latter can often not properly be described with the primitives the
-> devicetree can offer.
-> 
-> And I think your setup is very borderline what can be done in a declarative
-> way only and it adds a lot of complexity over a more imperative solution in
-> form of a driver. I think it is worth investigating about having a driver
-> that is specific to your fabric and handles the interdependencies of the
-> discrete components.
-
-So, there are three "new" concepts:
-
-1. Sticking a mux in front of an AD-converter. That's not all that
-novel, nor complex. Quite the opposite, I'd say. In fact, I find it
-a bit amazing that there is no in-kernel support for it.
-
-2. Reusing the same GPIO-pins to drive different muxes. There are
-obviously chips that work this way (as Jonathan pointed out) and
-these will at some point get used in Linux devices. I guess they
-already are used, but that people handle them in userspace. Or
-something? If this is complex, which I question, it will still need
-support at some point. At least that's what I believe.
-
-3. Using the same GPIO pins to mux things handled by different
-subsystems. Right, this is a bit crazy, and I'd rather not have this
-requirement, but this HW is what it is so I'll need to handle it in
-some way. It is also what stops me from falling back to a userspace
-solution, which is probably connected to why #1 and #2 is not supported
-by the kernel; everybody probably does muxing in userspace. Which is
-not necessarily a good idea, nor how it's supposed to be done...
-
-So, the only thing that's out of the ordinary (as I see it), is #3.
-The question that then needs an answer is how the in-kernel solution
-for #1 and #2 would look if we do not consider #3.
-
-And I claim that the desired solution to #1 and #2 is pretty close
-to my proposal.
-
-A. You do not want mux-controller drivers in every subsystem that
-needs them.
-
-B. You do not want every mux-consumer to know the specifics of how to
-operate every kind of mux; there are muxes that are not controlled
-with GPIO pins...
-
-C. When you implement muxing in a subsystem, there will in some cases
-be a need to handle parallel muxing, where there is a need to share
-mux-controllers.
-
-It just feels right to separate out the mux-controller and refer to
-it from where a mux is needed. It solves #1 and #2. And, of course,
-as a bonus #3 is also solved. But my bias is obvious.
-
-And that leads us to the restrictions with the bindings. And the same
-thing happens; the solution for #2 also solves #3.
-
-So how do you refer to a mux-controller from where it's needed? My
-first proposal used a dt phandle, for the second round I put them in
-the parent node. It would be super if it was possible for the mux-
-consumer to create the mux-controller device from the same dt
-node that is already bound to the mux-consumer. The problem is that
-the mux-consumer should not hard-code which mux-controller device it
-should create. The best I can think of is some kind of 'mux-compatible'
-attribute, that works like the standard 'compatible' attribute. That
-would simplify the bindings for the normal case (#1) where the mux-
-controller isn't shared (#2 and #3). Maybe it's possible to fix this
-issue somehow? I simply don't know?
-
-Cheers,
-Peter
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 366d8c3..852345a 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -31,11 +31,15 @@
+ 
+ #if defined(CONFIG_HAVE_MEMBLOCK)
+ #include <linux/memblock.h>
+-int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+-	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
+-	phys_addr_t *res_base)
++int __init __weak early_init_dt_alloc_reserved_memory_arch(unsigned long node,
++	phys_addr_t size, phys_addr_t align, phys_addr_t start, phys_addr_t end,
++	bool nomap, phys_addr_t *res_base)
+ {
+ 	phys_addr_t base;
++	phys_addr_t highmem_start;
++
++	highmem_start = __pa(high_memory - 1) + 1;
++
+ 	/*
+ 	 * We use __memblock_alloc_base() because memblock_alloc_base()
+ 	 * panic()s on allocation failure.
+@@ -53,15 +57,33 @@ int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ 		return -ENOMEM;
+ 	}
+ 
++	/*
++	 * Sanity check for the cma reserved region:If the reserved region
++	 * crosses the low/high memory boundary, try to fix it up and then
++	 * fall back to allocate the cma region from the low mememory space.
++	 */
++
++	if (IS_ENABLED(CONFIG_CMA)
++	    && of_flat_dt_is_compatible(node, "shared-dma-pool")
++	    && of_get_flat_dt_prop(node, "reusable", NULL) && !nomap) {
++		if (base < highmem_start && (base + size) > highmem_start) {
++			memblock_free(base, size);
++			base = memblock_alloc_range(size, align, start,
++						highmem_start, MEMBLOCK_NONE);
++			if (!base)
++				return -ENOMEM;
++		}
++	}
++
+ 	*res_base = base;
+ 	if (nomap)
+ 		return memblock_remove(base, size);
+ 	return 0;
+ }
+ #else
+-int __init __weak early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+-	phys_addr_t align, phys_addr_t start, phys_addr_t end, bool nomap,
+-	phys_addr_t *res_base)
++int __init __weak early_init_dt_alloc_reserved_memory_arch(unsigned long node,
++	phys_addr_t size, phys_addr_t align, phys_addr_t start, phys_addr_t end,
++	bool nomap, phys_addr_t *res_base)
+ {
+ 	pr_err("Reserved memory not supported, ignoring region 0x%llx%s\n",
+ 		  size, nomap ? " (nomap)" : "");
+@@ -155,8 +177,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 			end = start + dt_mem_next_cell(dt_root_size_cells,
+ 						       &prop);
+ 
+-			ret = early_init_dt_alloc_reserved_memory_arch(size,
+-					align, start, end, nomap, &base);
++			ret = early_init_dt_alloc_reserved_memory_arch(node,
++					size, align, start, end, nomap, &base);
+ 			if (ret == 0) {
+ 				pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
+ 					uname, &base,
+@@ -167,8 +189,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
+ 		}
+ 
+ 	} else {
+-		ret = early_init_dt_alloc_reserved_memory_arch(size, align,
+-							0, 0, nomap, &base);
++		ret = early_init_dt_alloc_reserved_memory_arch(node,
++					size, align, 0, 0, nomap, &base);
+ 		if (ret == 0)
+ 			pr_debug("allocated memory for '%s' node: base %pa, size %ld MiB\n",
+ 				uname, &base, (unsigned long)size / SZ_1M);
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+index f8e1992..a6ee451 100644
+--- a/include/linux/of_reserved_mem.h
++++ b/include/linux/of_reserved_mem.h
+@@ -34,7 +34,8 @@ int of_reserved_mem_device_init_by_idx(struct device *dev,
+ 				       struct device_node *np, int idx);
+ void of_reserved_mem_device_release(struct device *dev);
+ 
+-int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
++int early_init_dt_alloc_reserved_memory_arch(unsigned long node,
++					     phys_addr_t size,
+ 					     phys_addr_t align,
+ 					     phys_addr_t start,
+ 					     phys_addr_t end,
+-- 
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
