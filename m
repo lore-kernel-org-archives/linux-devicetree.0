@@ -1,63 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dt-bindings: mfd: Improve readability for TPS65217
- interrupt sources
-Date: Wed, 23 Nov 2016 12:51:27 +0100
-Message-ID: <33562327.jVWx4tN2gP@wuerfel>
-References: <20161121131515.8040-1-woogyom.kim@gmail.com>
- <20161122155759.GG10134@dell.home>
- <bd4944d8-3cef-b3f7-4fba-6de590493047@gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Wed, 23 Nov 2016 17:12:37 +0530
+Message-ID: <583580AD.60803@nvidia.com>
+References: <1479810013-29894-1-git-send-email-ldewangan@nvidia.com> <1479810013-29894-3-git-send-email-ldewangan@nvidia.com> <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bd4944d8-3cef-b3f7-4fba-6de590493047@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Robert Nelson <robertcnelson@gmail.com>, linux-kernel@vger.kernel.org, bcousson@baylibre.com, Milo Kim <woogyom.kim@gmail.com>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, November 23, 2016 8:38:00 PM CET Milo Kim wrote:
-> On 11/23/2016 12:57 AM, Lee Jones wrote:
-> >>      pwrbutton {
-> >> > -          interrupts = <TPS65217_IRQ_PB>;
-> >> > +          interrupts = <TPS65217_IRQ_PUSHBUTTON>;
-> > Push button or power button?
-> >
-> 
-> According to the datasheet, push button interrupt is correct.
-> 
->         http://www.ti.com/lit/ds/symlink/tps65217.pdf
-> 
-> This is used for a power button input in Beaglebone boards. In other 
-> words, the power button is one of push button usages.
-> 
-> So, I'd like to keep general name for the interrupt.
 
-Ah, the numbers come from the data sheet. Please just remove the
-header then, there is no need to keep them as an ABI, in particular
-when the driver doesn't even include that header today.
+On Tuesday 22 November 2016 06:28 PM, Linus Walleij wrote:
+> On Tue, Nov 22, 2016 at 11:20 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>> +               rinfo->regulator = devm_regulator_get_optional(dev,
+>> +                                               soc_data->cfg[i].vsupply);
+> Please just use devm_regulator_get().
+>
+> As has been discussed at lenth elsewhere "optional" in regulator_get_optional
+> does *not* mean "software optional", it means "hardware optional".
+>
+> Such as a terminal that may have a voltage connected or not be
+> connected to anything at all.
+>
+> If the system does not define a regulator you will anyway get a
+> dummy regulator.
+>
+The issue with dummy regulator is that the other regulator APIs with 
+dummy regulator fails.
+Once we get the dummy regulator, there is no way to know whether the 
+returned regulator is actual or dummy and when calling the 
+regulator_get_voltage() it failed.
 
-I see you even have names for them in the node:
+[    2.917176] pinctrl-t210-io-pad.0 supply vddio-audio-hv not found, 
+using dummy regulator
+[    2.925510] pinctrl-tegra-io-pad pinctrl-t210-io-pad.0: Failed to get 
+voltage for rail vddio-aud2
 
-        charger {
--               interrupts = <TPS65217_IRQ_AC>, <TPS65217_IRQ_USB>;
-+               interrupts = <TPS65217_IRQ_AC_POWER>, <TPS65217_IRQ_USB_POWER>;
-                interrupts-names = "AC", "USB";
-                status = "okay";
 
-What matters here is the binding documentation in
-Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
+Here, we need the regulator handle which can support the other regulator 
+APIs.
 
-Please fix that instead to mandate that the two interrupts are
-required, what their functions are, and what the interrupt-names
-(not interrupts-names) property must list.
+In some of platforms, we do not use some of the io-pins and on this 
+case, we do not connect the IO rail supply for these pins. So this is 
+like a hardware optional.
 
-	Arnd
+If the IO pins are used then it need to have the proper regulator handle.
+Missing regulator handle on DT will be like that IO pads are not used.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
