@@ -1,70 +1,57 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH] ARM: dts: Add support for Turris Omnia
-Date: Wed, 23 Nov 2016 01:35:05 +0100
-Message-ID: <20161123003505.GL2691@lunn.ch>
-References: <1479851991.26813.2@smtp.gmail.com>
- <1479859770-9375-1-git-send-email-tmshlvck@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479859770-9375-1-git-send-email-tmshlvck@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomas Hlavacek <tmshlvck@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx7d: fix LCDIF clock assignment
+Date: Tue, 22 Nov 2016 16:42:04 -0800
+Message-ID: <20161123004204.10851-1-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> @@ -0,0 +1,279 @@
-> +/*
-> + * Device Tree file for the Turris Omnia
-> + * Schematic available at https://www.turris.cz/doc/_media/rtrom01-schema.pdf
+The eLCDIF IP of the i.MX 7 SoC knows multiple clocks and lists them
+separately:
 
-Hi Tomas
+Clock      Clock Root              Description
+apb_clk    MAIN_AXI_CLK_ROOT       AXI clock
+pix_clk    LCDIF_PIXEL_CLK_ROOT    Pixel clock
+ipg_clk_s  MAIN_AXI_CLK_ROOT       Peripheral access clock
 
-Cool that there is a link to the schematics. But please could you put
-it lower down. It is more likely to be seen if it comes after the
-copyright and license section.
+All of them are switched by a single gate, which is part of the
+IMX7D_LCDIF_PIXEL_ROOT_CLK clock. Hence using that clock also for
+the AXI bus clock (clock-name "axi") makes sure the gate gets
+enabled when accessing registers.
 
-> +			sdhci@d8000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&sdhci_pins>;
-> +				status = "okay";
-> +
-> +				bus-width = <8>;
-> +				no-1-8-v;
-> +				non-removable;
-> +			};
+There seem to be no separate AXI display clock, and the clock is
+optional. Hence remove the dummy clock.
 
-> +&i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins>;
-> +	status = "okay";
-> +
-> +	i2cmux@70 {
-> +		compatible = "nxp,pca9547";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +		status = "okay";
-> +
-> +		/* Channel 1: Routed to PCIe0/mSATA connector (CN7A).
-> +		 * Channel 2: Routed to PCIe1/USB2 connector (CN61A).
-> +		 * Channel 3: Routed to PCIe2 connector (CN62A).
-> +		 * Channel 4: Routed to SFP+.
-> +		 * Channel 5: ATSHA204A at address 0x64.
-> +		 * Channel 6: Routed to user pin header CN11.
-> +		 */
+This fixes kernel freezes when starting the X-Server (which
+disables/re-enables the display controller).
 
-I've not looked at how the pca9547 works.... Will it instantiate a bus
-only if there is a node in the device tree with a reg property?
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-What i'm thinking is that it is possible to indicate to the i2c core
-that a device is on a bus using echo to a file. But this only works if
-the bus exists. You could for example say using echo that there is an
-at24 EEPROM on channel 4 and get access to the EEPROM inside the SFP
-module. But that only works if the i2c bus exists. Does it?
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 0d7d5ac..2b6cb05 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -643,9 +643,8 @@
+ 				reg = <0x30730000 0x10000>;
+ 				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX7D_LCDIF_PIXEL_ROOT_CLK>,
+-					<&clks IMX7D_CLK_DUMMY>,
+-					<&clks IMX7D_CLK_DUMMY>;
+-				clock-names = "pix", "axi", "disp_axi";
++					<&clks IMX7D_LCDIF_PIXEL_ROOT_CLK>;
++				clock-names = "pix", "axi";
+ 				status = "disabled";
+ 			};
+ 		};
+-- 
+2.10.2
 
-No leds? No buttons via gpio-keys?
-
-   Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
