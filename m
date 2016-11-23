@@ -1,76 +1,62 @@
-From: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv2 3/4] dt: bindings: add new dt entry for BTCOEX feature
- in qcom,ath10k.txt
-Date: Wed, 23 Nov 2016 15:50:17 +0530
-Message-ID: <df0313af8ab0ed1e7bddcfeca8429632@codeaurora.org>
-References: <1479383064-25718-1-git-send-email-c_traja@qti.qualcomm.com>
- <1479383064-25718-4-git-send-email-c_traja@qti.qualcomm.com>
- <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
+Date: Wed, 23 Nov 2016 11:27:42 +0100
+Message-ID: <CAMpxmJVqog0Fno_DO0NQKmVNvzu5d=3GOLk145wBmB-V70BLeg@mail.gmail.com>
+References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
+ <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161118144406.3se7gnckhcmwqytp@rob-hp-laptop>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments.
-
-On 2016-11-18 20:14, Rob Herring wrote:
-> On Thu, Nov 17, 2016 at 05:14:23PM +0530, c_traja-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org 
-> wrote:
->> From: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> 
->> There two things done in this patch.
->> 
->> 1) 'btcoex_support' flag for BTCOEX feature support by the hardware.
->> 2) 'wlan_btcoex_gpio' is used to fill wlan priority pin number for
->>    BTCOEX priority feature support.
->> 
->> Signed-off-by: Tamizh chelvam <tamizhchelvam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../bindings/net/wireless/qcom,ath10k.txt          |    4 ++++
->>  1 file changed, 4 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt 
->> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> index 74d7f0a..08150e2d 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->> @@ -46,6 +46,10 @@ Optional properties:
->>  				 hw versions.
->>  - qcom,ath10k-pre-calibration-data : pre calibration data as an 
->> array,
->>  				     the length can vary between hw versions.
->> +- btcoex_support  : should contain eithr "0" or "1" to indicate 
->> btcoex
->> +		    support by the hardware.
-> 
-> This is BT coexistence? Make this boolean and n
-
-Yes, this is BT coexistence. And I didn't get what are you trying to say 
-in this "Make this boolean and n"
-> 
->> +- btcoex_gpio_pin :  btcoex gpio pin number for the device which
->> +		     supports BTCOEX.
-> 
-> This is a pin number on the chip, not any pin number Linux GPIO subsys
-> cares about, right? Is there a connection to the host too, or this is
-> internal between BT and WiFi?
-
-This is internal between BT and wifi.
-> 
-> Do you really need 2 properties? Does supporting this feature require
-> the GPIO? If so, then the first property is redundant.
-> 
-Target/driver can hard copy this gpio pin for some chipsets and there we 
-will need btcoex_support flag to find the btcoex support.
-
-> Needs vendor prefix and don't use '_'. Should be something like
-> 'qcom,bt-coexist-gpio-pin'.
-> 
-Sure I'll update this and send in v3 patch
+MjAxNi0xMS0yMiAyMzoyMyBHTVQrMDE6MDAgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9n
+eS5jb20+Ogo+IE9uIDExLzE1LzIwMTYgMDU6MDAgQU0sIEJhcnRvc3ogR29sYXN6ZXdza2kgd3Jv
+dGU6Cj4+Cj4+IEFkZCB0aGUgbm9kZXMgZm9yIHRoZSBNU1RQUkkgY29uZmlndXJhdGlvbiBhbmQg
+RERSMi9tRERSIG1lbW9yeQo+PiBjb250cm9sbGVyIGRyaXZlcnMgdG8gZGE4NTAuZHRzaS4KPj4K
+Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxp
+YnJlLmNvbT4KPj4gLS0tCj4+IHYxIC0+IHYyOgo+PiAtIG1vdmVkIHRoZSBwcmlvcml0eSBjb250
+cm9sbGVyIG5vZGUgYWJvdmUgdGhlIGNmZ2NoaXAgbm9kZQo+PiAtIHJlbmFtZWQgYWRkZWQgbm9k
+ZXMgdG8gYmV0dGVyIHJlZmxlY3QgdGhlaXIgcHVycG9zZQo+Pgo+PiAgYXJjaC9hcm0vYm9vdC9k
+dHMvZGE4NTAuZHRzaSB8IDggKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
+bnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9h
+cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCj4+IGluZGV4IDFiYjFmNmQuLjQxMmVlYzYgMTAw
+NjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKPj4gKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+PiBAQCAtMjEwLDYgKzIxMCwxMCBAQAo+PiAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+Pgo+PiAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAg
+ICAgICAgIHByaWN0cmw6IHByaW9yaXR5LWNvbnRyb2xsZXJAMTQxMTAgewo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInRpLGRhODUwLW1zdHByaSI7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHJlZyA9IDwweDE0MTEwIDB4MGM+Owo+Cj4KPiBJIHRoaW5rIHdlIHNo
+b3VsZCBhZGQgc3RhdHVzID0gImRpc2FibGVkIjsgaGVyZSBhbmQgbGV0IGJvYXJkcyBvcHQgaW4u
+Cj4KPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICAgICAgICAgICAgICAgICBjZmdjaGlwOiBjaGlw
+LWNvbnRyb2xsZXJAMTQxN2Mgewo+PiAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
+ID0gInRpLGRhODMwLWNmZ2NoaXAiLCAic3lzY29uIiwKPj4gInNpbXBsZS1tZmQiOwo+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgxNDE3YyAweDE0PjsKPj4gQEAgLTQ1MSw0ICs0
+NTUsOCBAQAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgIDEgMCAweDY4MDAwMDAwIDB4MDAw
+MDgwMDA+Owo+PiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gICAgICAg
+ICB9Owo+PiArICAgICAgIG1lbWN0cmw6IG1lbW9yeS1jb250cm9sbGVyQGIwMDAwMDAwIHsKPj4g
+KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksZGE4NTAtZGRyLWNvbnRyb2xsZXIiOwo+
+PiArICAgICAgICAgICAgICAgcmVnID0gPDB4YjAwMDAwMDAgMHhlOD47Cj4KPgo+IHNhbWUgaGVy
+ZS4gc3RhdHVzID0gImRpc2FibGVkIjsKPgo+PiArICAgICAgIH07Cj4+ICB9Owo+PgoKSGkgRGF2
+aWQsCgpJIGRpZCB0aGF0IGluaXRpYWxseVsxXVsyXSBhbmQgaXQgd2FzIHJlamVjdGVkIGJ5IEtl
+dmluWzNdIGFuZCBMYXVyZW50WzRdLgoKRllJIHRoaXMgcGF0Y2ggaGFzIGFscmVhZHkgYmVlbiBx
+dWV1ZWQgYnkgU2VraGFyLgoKQmVzdCByZWdhcmRzLApCYXJ0b3N6IEdvbGFzemV3c2tpCgpbMV0g
+aHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c1Mzk2MzguaHRtbApb
+Ml0gaHR0cDovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kZXZpY2V0cmVlL21zZzE0ODU3NS5odG1s
+ClszXSBodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RldmljZXRyZWUvbXNnMTQ4NjY3Lmh0
+bWwKWzRdIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2cxNDg2NTUu
+aHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
