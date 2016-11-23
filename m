@@ -1,66 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: AM571x-IDK Initial Support
-Date: Wed, 23 Nov 2016 17:02:17 -0600
-Message-ID: <20161123230217.iq5fyyazgzdaccqv@rob-hp-laptop>
-References: <20161122041732.8385-1-lokeshvutla@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] dt-bindings: change hi6220-reset.txt according to
+ reset-hi6220.c
+Date: Wed, 23 Nov 2016 17:06:37 -0600
+Message-ID: <20161123230637.m4cvc2l4huxlf5dd@rob-hp-laptop>
+References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
+ <1479800961-6249-5-git-send-email-zhangfei.gao@linaro.org>
+ <2314383.qiZ3Cq7QsP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20161122041732.8385-1-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, spatton@ti.com, Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <2314383.qiZ3Cq7QsP@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xia Qing <saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 09:47:32AM +0530, Lokesh Vutla wrote:
-> From: Schuyler Patton <spatton@ti.com>
+On Tue, Nov 22, 2016 at 09:48:32AM +0100, Arnd Bergmann wrote:
+> On Tuesday, November 22, 2016 3:49:19 PM CET Zhangfei Gao wrote:
+> >  Required properties:
+> >  - compatible: should be one of the following:
+> > -  - "hisilicon,hi6220-sysctrl", "syscon" : For peripheral reset controller.
+> > -  - "hisilicon,hi6220-mediactrl", "syscon" : For media reset controller.
+> > -- reg: should be register base and length as documented in the
+> > -  datasheet
+> > +  - "hisilicon,hi6220-reset-sysctrl" : For peripheral reset controller.
+> > +  - "hisilicon,hi6220-reset-mediactrl" : For media reset controller.
+> > +- hisi,rst-syscon: phandle of the reset's syscon.
+> >  - #reset-cells: 1, see below
+> > 
 > 
-> The AM571x-IDK board is a board based on TI's AM5718 SOC
-> which has a single core 1.5GHz A15 processor. This board is a
-> development platform for the Industrial market with:
-> - 1GB of DDR3L
-> - Dual 1Gbps Ethernet
-> - HDMI,
-> - PRU-ICSS
-> - uSD
-> - 16GB eMMC
-> - CAN
-> - RS-485
-> - PCIe
-> - USB3.0
-> - Video Input Port
-> - Industrial IO port and expansion connector
-> 
-> The link to the data sheet and TRM can be found here:
-> 
-> http://www.ti.com/product/AM5718
-> 
-> Initial support is only for basic peripherals.
-> 
-> Signed-off-by: Schuyler Patton <spatton@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
-> Cahnges since v1:
-> - Dropped "ti,dra722", and "ti,dra72" from compatibles
-> - Fixes few node names as suggested by Rob.
-> Logs: http://pastebin.ubuntu.com/23515001/
-> 
->  .../devicetree/bindings/arm/omap/omap.txt          |  3 +
->  arch/arm/boot/dts/Makefile                         |  1 +
->  arch/arm/boot/dts/am571x-idk.dts                   | 81 ++++++++++++++++++++++
->  3 files changed, 85 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am571x-idk.dts
+> Please keep the old strings around for compatibility.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why are these even changing? The commit message should say why.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
