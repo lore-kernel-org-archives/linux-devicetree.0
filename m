@@ -1,58 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] mfd: cpcap: Add minimal support
-Date: Wed, 23 Nov 2016 07:03:01 -0800
-Message-ID: <20161123150300.GA4082@atomide.com>
-References: <20161119012748.17224-1-tony@atomide.com>
- <20161121114558.GJ32509@dell>
- <20161121163439.22ztjxnq535lo6dd@rob-hp-laptop>
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Subject: [PATCH 1/4] bindings: net: stmmac: correct note about TSO
+Date: Wed, 23 Nov 2016 15:24:25 +0100
+Message-ID: <1479911066-19752-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161121163439.22ztjxnq535lo6dd@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
+Cc: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh@kernel.org> [161121 08:34]:
-> On Mon, Nov 21, 2016 at 11:45:58AM +0000, Lee Jones wrote:
-> > On Fri, 18 Nov 2016, Tony Lindgren wrote:
-> > > +Example:
-> > > +
-> > > +&mcspi1 {
-> > > +	#address-cells = <1>;
-> > > +	#size-cells = <1>;
-> > > +	ranges;
-> > > +	cpcap: pmic@0 {
-> > > +		compatible = "motorola,cpcap", "st,6556002";
-> > > +		reg = <0 0>;	/* cs0, size 0 */
-> > 
-> > Is this really correct?
-> 
-> No, SPI devices are 1 cell and there shouldn't be a ranges prop.
-> 
-> > 
-> > How can ranges have a size of 0x8000 and this 0?
-> 
-> reg here doesn't affect ranges and address translation.
-> 
-> Perhaps this is trying to make address translation work, but if that 
-> does, it is by chance. Children of pmic addresses in the range of 
-> 0-0x8000 would get translated to "cpu address" 0-0x8000 as long as the 
-> DT has empty ranges up to the root. If the parent bus (i.e. SoC bus) has 
-> any base address, then that is going to get added which would not be 
-> good.
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 
-Yes I was thinking we can just get the register offset from the
-cpcap base from dts for children. So a range from 0-0x8000.
+snps,tso was previously placed under AXI BUS Mode parameters,
+suggesting that the property should be in the stmmac-axi-config node.
 
-Rob, do you have any better suggestions for doing that?
+TSO (TCP Segmentation Offloading) has nothing to do with AXI BUS Mode
+parameters, and the parser actually expects it to be in the root node,
+not in the stmmac-axi-config.
 
-Anyways, the children can just rely on regmap too, so I'll just
-drop the ranges here. If we ever come up with suitable ranges for
-cases like this we can change it later.
+Also added a note about snps,tso only being available on GMAC4 and newer.
 
-Regards,
+Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Tony
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 41b49e6075f5..b95ff998ba73 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -1,7 +1,7 @@
+ * STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
+ 
+ Required properties:
+-- compatible: Should be "snps,dwmac-<ip_version>" "snps,dwmac"
++- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
+ 	For backwards compatibility: "st,spear600-gmac" is also supported.
+ - reg: Address and length of the register set for the device
+ - interrupt-parent: Should be the phandle for the interrupt controller
+@@ -50,6 +50,8 @@ Optional properties:
+ - snps,ps-speed: port selection speed that can be passed to the core when
+ 		 PCS is supported. For example, this is used in case of SGMII
+ 		 and MAC2MAC connection.
++- snps,tso: this enables the TSO feature otherwise it will be managed by
++		 MAC HW capability register. Only for GMAC4 and newer.
+ - AXI BUS Mode parameters: below the list of all the parameters to program the
+ 			   AXI register inside the DMA module:
+ 	- snps,lpi_en: enable Low Power Interface
+@@ -62,8 +64,6 @@ Optional properties:
+ 	- snps,fb: fixed-burst
+ 	- snps,mb: mixed-burst
+ 	- snps,rb: rebuild INCRx Burst
+-	- snps,tso: this enables the TSO feature otherwise it will be managed by
+-	    MAC HW capability register.
+ - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+ 
+ Examples:
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
