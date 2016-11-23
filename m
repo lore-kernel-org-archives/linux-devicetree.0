@@ -1,164 +1,75 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: max77620: add support to configure MPOK" to the regulator tree
-Date: Wed, 23 Nov 2016 16:31:33 +0000
-Message-ID: <E1c9aSL-0006bY-FS@debutante>
+Subject: Re: [PATCH v2 1/2] regulator: max77620: add support to configure MPOK
+Date: Wed, 23 Nov 2016 16:40:53 +0000
+Message-ID: <20161123164053.444jmn7tsuhf5g64@sirena.org.uk>
 References: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
+ <20161121130948.GC3917@dell>
+ <20161121131121.GE3917@dell>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="odv3gqnskzih6fw4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479405276-26452-1-git-send-email-vreddytalla@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <20161121131121.GE3917@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>lee.jones@linaro.org, lgirdwood@gmail.combroonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, svelpula@nvidia.com, vreddytalla@nvidia.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Venkat Reddy Talla <vreddytalla@nvidia.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, svelpula@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   regulator: max77620: add support to configure MPOK
+--odv3gqnskzih6fw4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Mon, Nov 21, 2016 at 01:11:21PM +0000, Lee Jones wrote:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+> Mark if you want to take this patch, feel free.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+The following changes since commit 1001354ca34179f3db924eb66672442a173147dc:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+  Linux 4.9-rc1 (2016-10-15 12:17:50 -0700)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+are available in the git repository at:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/=
+regulator-max77620-mpok
 
-Thanks,
-Mark
+for you to fetch changes up to 983779235a4d08f94e8cda073200423e0ff01d2e:
 
->From 383d0fca7035a12f1201277d33e8fc87c9d60c9a Mon Sep 17 00:00:00 2001
-From: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Date: Thu, 17 Nov 2016 23:24:35 +0530
-Subject: [PATCH] regulator: max77620: add support to configure MPOK
+  regulator: max77620: add documentation for MPOK property (2016-11-23 16:2=
+7:42 +0000)
 
-Adding support to configure regulator POK mapping bit
-to control nRST_IO and GPIO1 POK function.
-In  tegra based platform which uses MAX20024 pmic, when
-some of regulators are configured FPS_NONE(flexible power sequencer)
-causes PMIC GPIO1 to go low which lead to various other rails turning off,
-to avoid this MPOK bit of those regulators need to be set to 0
-so that PMIC GPIO1 will not go low.
+----------------------------------------------------------------
+regulator: max77620: Implement support for MPOK bit
 
-Signed-off-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/max77620-regulator.c | 46 ++++++++++++++++++++++++++++++++++
- include/linux/mfd/max77620.h           |  2 ++
- 2 files changed, 48 insertions(+)
+Allow systems to configure the MPOK bit, controlling power OK signalling
+=66rom the device.
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index c39a56b41901..d088a7c79e60 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -80,6 +80,7 @@ struct max77620_regulator_pdata {
- 	int suspend_fps_pd_slot;
- 	int suspend_fps_pu_slot;
- 	int current_mode;
-+	int power_ok;
- 	int ramp_rate_setting;
- };
- 
-@@ -350,11 +351,48 @@ static int max77620_set_slew_rate(struct max77620_regulator *pmic, int id,
- 	return 0;
- }
- 
-+static int max77620_config_power_ok(struct max77620_regulator *pmic, int id)
-+{
-+	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
-+	struct max77620_regulator_info *rinfo = pmic->rinfo[id];
-+	struct max77620_chip *chip = dev_get_drvdata(pmic->dev->parent);
-+	u8 val, mask;
-+	int ret;
-+
-+	switch (chip->chip_id) {
-+	case MAX20024:
-+		if (rpdata->power_ok >= 0) {
-+			if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
-+				mask = MAX20024_SD_CFG1_MPOK_MASK;
-+			else
-+				mask = MAX20024_LDO_CFG2_MPOK_MASK;
-+
-+			val = rpdata->power_ok ? mask : 0;
-+
-+			ret = regmap_update_bits(pmic->rmap, rinfo->cfg_addr,
-+						 mask, val);
-+			if (ret < 0) {
-+				dev_err(pmic->dev, "Reg 0x%02x update failed %d\n",
-+					rinfo->cfg_addr, ret);
-+				return ret;
-+			}
-+		}
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static int max77620_init_pmic(struct max77620_regulator *pmic, int id)
- {
- 	struct max77620_regulator_pdata *rpdata = &pmic->reg_pdata[id];
- 	int ret;
- 
-+	max77620_config_power_ok(pmic, id);
-+
- 	/* Update power mode */
- 	ret = max77620_regulator_get_power_mode(pmic, id);
- 	if (ret < 0)
-@@ -594,6 +632,12 @@ static int max77620_of_parse_cb(struct device_node *np,
- 			np, "maxim,suspend-fps-power-down-slot", &pval);
- 	rpdata->suspend_fps_pd_slot = (!ret) ? pval : -1;
- 
-+	ret = of_property_read_u32(np, "maxim,power-ok-control", &pval);
-+	if (!ret)
-+		rpdata->power_ok = pval;
-+	else
-+		rpdata->power_ok = -1;
-+
- 	ret = of_property_read_u32(np, "maxim,ramp-rate-setting", &pval);
- 	rpdata->ramp_rate_setting = (!ret) ? pval : 0;
- 
-@@ -806,6 +850,8 @@ static int max77620_regulator_resume(struct device *dev)
- 	for (id = 0; id < MAX77620_NUM_REGS; id++) {
- 		reg_pdata = &pmic->reg_pdata[id];
- 
-+		max77620_config_power_ok(pmic, id);
-+
- 		max77620_regulator_set_fps_slots(pmic, id, false);
- 		if (reg_pdata->active_fps_src < 0)
- 			continue;
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-index 3ca0af07fc78..ad2a9a852aea 100644
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -180,6 +180,7 @@
- #define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
- #define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
- #define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
-+#define MAX20024_SD_CFG1_MPOK_MASK		BIT(1)
- #define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
- #define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
- #define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
-@@ -187,6 +188,7 @@
- /* LDO_CNFG2 */
- #define MAX77620_LDO_POWER_MODE_MASK		0xC0
- #define MAX77620_LDO_POWER_MODE_SHIFT		6
-+#define MAX20024_LDO_CFG2_MPOK_MASK		BIT(2)
- #define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
- #define MAX77620_LDO_CFG2_ADE_DISABLE		0
- #define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
--- 
-2.10.2
+----------------------------------------------------------------
+Venkat Reddy Talla (3):
+      regulator: max77620: remove unused variable
+      regulator: max77620: add support to configure MPOK
+      regulator: max77620: add documentation for MPOK property
+
+ Documentation/devicetree/bindings/mfd/max77620.txt | 12 ++++++
+ drivers/regulator/max77620-regulator.c             | 47 ++++++++++++++++++=
++++-
+ include/linux/mfd/max77620.h                       |  2 +
+ 3 files changed, 60 insertions(+), 1 deletion(-)
+
+--odv3gqnskzih6fw4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYNcaUAAoJECTWi3JdVIfQergH/0LFOemzsPt6E2hc/N8UGx+d
+8xR+84tItNnz3t58SoUGCXDgjxCJrYGdTF/tA6f4V5Dt9hsPQhgq1esEsUdaNwLd
+6q3DSUzoQ6QcHgwK1qL/9FD+WLXkdyCngTQQucGMVEsyvFMFEQuc4DrrxV2gPQZx
+9Wd9DAclCV+tMY5vB0nRgzr7ZlxTBh/8L0ih/N64pD1s1NVN4ulZ+uD+DWJsxlU+
+eMjN0+LLfVs/ilGr99QeO0ICM/HlF08yJKyJeKcSj5JeKXigUTtsgBRFqX624Q4i
+RRcNzKXIYPmAzVd1KLb7wdt3iGlBYizNW44wY5OKmMSW0uxFnd3YMjvw5Umm3pA=
+=8HLT
+-----END PGP SIGNATURE-----
+
+--odv3gqnskzih6fw4--
