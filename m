@@ -1,50 +1,94 @@
-From: Troy Jia <hongtao.jia@nxp.com>
-Subject: RE: [PATCH V3 1/2] powerpc/mpc85xx: Update TMU device tree node for
- T1040/T1042
-Date: Wed, 23 Nov 2016 07:14:30 +0000
-Message-ID: <AM4PR0401MB18433E61BF1550676423E255EBB70@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1477361742-589-1-git-send-email-hongtao.jia@nxp.com>
- <1479884833.21746.44.camel@buserror.net>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv0 1/1] fbdev: add Intel FPGA FRAME BUFFER driver
+Date: Wed, 23 Nov 2016 09:30:09 +0200
+Message-ID: <b38e19f1-0be9-37ea-94cd-d37d8b8aa7f3@ti.com>
+References: <1479287278-5192-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1479884833.21746.44.camel@buserror.net>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <oss@buserror.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Scott Wood <scott.wood@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="RiaiO3avIDPpgDtLHTOeP0299JGmbgVtI"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479287278-5192-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgTm92ZW1iZXIgMjMsIDIw
-MTYgMzowNyBQTQ0KPiBUbzogVHJveSBKaWEgPGhvbmd0YW8uamlhQG54cC5jb20+OyBydWkuemhh
-bmdAaW50ZWwuY29tOyBlZHViZXp2YWxAZ21haWwuY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7
-IFNjb3R0IFdvb2QgPHNjb3R0Lndvb2RAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmcNCj4g
-Q2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
-Lm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYzIDEvMl0gcG93ZXJw
-Yy9tcGM4NXh4OiBVcGRhdGUgVE1VIGRldmljZSB0cmVlIG5vZGUgZm9yDQo+IFQxMDQwL1QxMDQy
-DQo+IA0KPiBPbiBUdWUsIDIwMTYtMTAtMjUgYXQgMTA6MTUgKzA4MDAsIEppYSBIb25ndGFvIHdy
-b3RlOg0KPiA+IEZyb206IEhvbmd0YW8gSmlhIDxob25ndGFvLmppYUBueHAuY29tPg0KPiA+DQo+
-ID4gVXBkYXRlICN0aGVybWFsLXNlbnNvci1jZWxscyBmcm9tIDAgdG8gMSBhY2NvcmRpbmcgdG8g
-dGhlIG5ldyBiaW5kaW5nLg0KPiA+IFRoZSBzZW5zb3Igc3BlY2lmaWVyIGFkZGVkIGlzIHRoZSBt
-b25pdG9yaW5nIHNpdGUgSUQsIGFuZCByZXByZXNlbnRzDQo+ID4gdGhlICJuIiBpbiBUUklUU1Ju
-IGFuZCBUUkFUU1JuLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSmlhIEhvbmd0YW8gPGhvbmd0
-YW8uamlhQG54cC5jb20+DQo+IA0KPiBXaGVyZSBjYW4gSSBmaW5kIHRoaXMgbmV3IGJpbmRpbmc/
-IMKgQXMgb2YgdGhlIGN1cnJlbnQgbGludXgtbmV4dCBJIGRvbid0IHNlZSBhbnl0aGluZw0KPiBp
-biBxb3JpcS10aGVybWFsLnR4dCBhYm91dCB0aGlzLg0KDQpIaSBSdWkgWmhhbmcsDQoNCkFzIHdl
-IGRpc2N1c3NlZCBiZWZvcmUuIFRoZSB0aW1lIHdhcyBpbmFwcHJvcHJpYXRlIGFzIG1lcmdlIHdp
-bmRvdyB3YXMgYWJvdXQgdG8gY2xvc2UuDQpTbyBkbyB5b3UgaGF2ZSBhbnkgcGxhbiBmb3IgYXBw
-bHlpbmcgdGhlIGJpbmRpbmcgZmlsZSByZWNlbnRseT8NCg0KLUhvbmd0YW8uDQoNCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+--RiaiO3avIDPpgDtLHTOeP0299JGmbgVtI
+Content-Type: multipart/mixed; boundary="k6gLrQw114FfpIok4CKoETFAXWb5C8mNd";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: "Ong, Hean Loong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Message-ID: <b38e19f1-0be9-37ea-94cd-d37d8b8aa7f3-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv0 1/1] fbdev: add Intel FPGA FRAME BUFFER driver
+References: <1479287278-5192-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1479287278-5192-1-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+--k6gLrQw114FfpIok4CKoETFAXWb5C8mNd
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On 16/11/16 11:07, Ong, Hean Loong wrote:
+> From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>=20
+> 	This patch enables the display port IP driver for
+> 	Intel Arria 10 SOCFPGA Golden Hardware
+> 	Reference Design (GHRD).
+>=20
+> 	The driver requires enabling the options such as
+> 	Coheherent Memory Allocation,
+> 	Intel FPGA Frame Buffer, Frame Buffer Conasole
+>=20
+> Signed-off-by: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/intelfpgavipfb.txt   |   22 ++
+>  MAINTAINERS                                        |    6 +
+>  drivers/video/fbdev/Kconfig                        |   15 +
+>  drivers/video/fbdev/Makefile                       |    1 +
+>  drivers/video/fbdev/intelfpgavipfb.c               |  302 ++++++++++++=
+++++++++
+>  5 files changed, 346 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/intelfpgavi=
+pfb.txt
+>  create mode 100644 drivers/video/fbdev/intelfpgavipfb.c
+
+As mentioned by Rob and Alan, no new fbdev drivers please. Write a DRM
+driver for this.
+
+ Tomi
+
+
+--k6gLrQw114FfpIok4CKoETFAXWb5C8mNd--
+
+--RiaiO3avIDPpgDtLHTOeP0299JGmbgVtI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYNUWBAAoJEPo9qoy8lh71K6EP/RlD1wk8wfHdLftwMDToIAs7
+qEVRIYPsIrMo3vnuFUxAYt1YgqcCo4dmQewe7e4VLcnIOO3dX+W5hSWbz491rEDq
+ljnS6+uWhyC/QcPVssC7BXTjUQFn92ZON01p1OMplCo6GclKGyHs6nQXp5a3cM2h
+8NazCzpdvco+koKDwf700CUV/QLNKQ8KiIahc4zYgwqA87T92+gAEO7lumt1aF2F
+bfrApMLRmdAWsIWUxaaBwj9GjNBPyGUty+0RlWEjYUlS1Y6otQRjih3J7NlGcvUF
+O2+Js4BFBgX994dTeGuQ0dNeuwNUBlyUV4YDcbDV/rdDYLPlH23ihcS+lAdqfssQ
+feErwDwNd78qgo4GeA9UCIAzXmCBCdqL0dlMqFXtWIk3eEf0NvUfQFKVvANcSMur
+fFEvSmzTWyY6rkaBfjiNlxCHZW3/NnC4ZosmU+Vm9lPDAHkpYY8ZquYYEwGsqUTH
+dL9PlWjSCu+fyIObL7KYg8L3vex+RwinLV34jMfXQUgIDAeSTIR0CGU7qWg/F4G6
+H5xgkyywO+iLBF1l0KAWSxiOnJm4H62OrbPYYOCns6vH4B0paQHa6h0kKqq6vN5B
+U60pdATAXOiOiqgJ6uxSOr8JsFMD65UeL3vuuVjJrw+DfiKYUcHlssocvqem/k62
+kWcXl9PMd/dR/ZFvNHak
+=CCCx
+-----END PGP SIGNATURE-----
+
+--RiaiO3avIDPpgDtLHTOeP0299JGmbgVtI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
