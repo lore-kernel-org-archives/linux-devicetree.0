@@ -1,50 +1,80 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] drivers/of: Export phandle iterators
-Date: Wed, 23 Nov 2016 19:06:06 +0000
-Message-ID: <a1fa1157cab10f2a6f319d431d355cef79b91820.1479927866.git.robin.murphy@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [alsa-devel] [PATCH v2] clkdev: add devm_of_clk_get()
+Date: Wed, 23 Nov 2016 11:10:37 -0800
+Message-ID: <20161123191037.GE25626@codeaurora.org>
+References: <87wpl2yyuw.wl%kuninori.morimoto.gx@renesas.com>
+ <146785219147.73491.2827268663638530377@resonance>
+ <87ziptixv7.wl%kuninori.morimoto.gx@renesas.com>
+ <20160707122636.GP1041@n2100.armlinux.org.uk>
+ <8760shgfzu.wl%kuninori.morimoto.gx@renesas.com>
+ <146794140875.73491.7115209079607438738@resonance>
+ <871t34hlin.wl%kuninori.morimoto.gx@renesas.com>
+ <878twndi54.wl%kuninori.morimoto.gx@renesas.com>
+ <8737isvwc6.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8737isvwc6.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-Kernel <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux-ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Modular drivers may want to use of_for_each_phandle() - export its
-constituent functions.
+On 11/16, Kuninori Morimoto wrote:
+> 
+> Hi Rob, Michael, Russell
+> 
+> 
+> What is the conclusion of this patch ?
+> We shouldn't add devm_of_clk_get() ? or can I continue ?
+> 
+> The problem of current [devm_]clk_get() handles *dev only,
+> but I need to get clocks from DT node, not dev
+> 
+> 	sound_soc {
+> 		...
+> 		cpu {
+> 			...
+> =>			clocks = <&xxx>;
+> 		};
+> 		codec {
+> 			...
+> =>			clocks = <&xxx>;
+> 		};
+> 	};
+> 
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
+I've seen bindings that have the 'clocks' property at the top
+level and the appropriate 'clock-names' property to relate the
+clocks to a subnode.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index a0bccb54a9bd..92e35fe0189a 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1563,6 +1563,7 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_phandle_iterator_init);
- 
- int of_phandle_iterator_next(struct of_phandle_iterator *it)
- {
-@@ -1632,6 +1633,7 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
- 
- 	return -EINVAL;
- }
-+EXPORT_SYMBOL_GPL(of_phandle_iterator_next);
- 
- int of_phandle_iterator_args(struct of_phandle_iterator *it,
- 			     uint32_t *args,
-@@ -1649,6 +1651,7 @@ int of_phandle_iterator_args(struct of_phandle_iterator *it,
- 
- 	return count;
- }
-+EXPORT_SYMBOL_GPL(of_phandle_iterator_args);
- 
- static int __of_parse_phandle_with_args(const struct device_node *np,
- 					const char *list_name,
+ 	sound_soc {
+		clocks = <&xxx>, <&xxx>;
+		clock-names = "cpu", "codec";
+ 		...
+ 		cpu {
+ 			...
+ 		};
+ 		codec {
+ 			...
+ 		};
+ 	};
+
+Then the subnodes call clk_get() with the top level device and
+the name of their node and things match up. I suppose this
+binding is finalized though, so we can't really do that?
+
+I see that the gpio framework has a similar design called
+devm_get_gpiod_from_child(), so how about we add a
+devm_get_clk_from_child() API? That would more closely match the
+intent here, which is to restrict the clk_get() operation to
+child nodes of the device passed as the first argument.
+
+struct clk *devm_get_clk_from_child(struct device *dev,
+				    const char *con_id,
+				    struct device_node *child);
+
 -- 
-2.10.2.dirty
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
