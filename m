@@ -1,119 +1,142 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] v4l: async: make v4l2 coexists with devicetree nodes in a
- dt overlay
-Date: Wed, 23 Nov 2016 11:25:39 -0300
-Message-ID: <cf31105b-e8c1-4379-cd03-0bdcbdea64d6@osg.samsung.com>
-References: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
+Date: Wed, 23 Nov 2016 22:25:57 +0800
+Message-ID: <CAGb2v64taF9x9MDYW+KUEEUUoSx0bF68QNc7uZXQoNrsozMGtg@mail.gmail.com>
+References: <20161121162421.800-1-icenowy@aosc.xyz>
+ <20161121162421.800-3-icenowy@aosc.xyz>
+ <20161123075950.fjtplylunwale6j4@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javi Merino <javi.merino@kernel.org>, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161123075950.fjtplylunwale6j4@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Andre Przywara <andre.przywara@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Javi,
-
-On 11/23/2016 07:09 AM, Javi Merino wrote:
-> In asd's configured with V4L2_ASYNC_MATCH_OF, if the v4l2 subdev is in
-> a devicetree overlay, its of_node pointer will be different each time
-> the overlay is applied.  We are not interested in matching the
-> pointer, what we want to match is that the path is the one we are
-> expecting.  Change to use of_node_cmp() so that we continue matching
-> after the overlay has been removed and reapplied.
->
-
-I'm still not that familiar with DT overlays (and I guess others aren't
-either) so I think that including an example of a base tree and overlay
-DTS where this is an issue, could make things more clear in the commit.
-
-IIUC, it should be something like this?
-
--- base tree --
-
-&i2c1 {
-	camera: camera@10 {
-		reg = <0x10>;
-		port {
-			cam_ep: endpoint {
-				...
-			};
-		};
-	};
-};
-
-&media_bridge {
-	...
-	ports {
-		port@0 {
-			reg = <0>;
-			ep: endpoint {
-				remote-endpoint = <&cam_ep>;
-			};
-		};
-	};
-};
-
--- overlay --
-
-/plugin/;
-/ {
-	...
-	fragment@0 {
-		target = <&camera>;
-		__overlay__ {
-			compatible = "foo,bar";
-			...
-			port {
-				cam_ep: endpoint {
-					...
-				};
-			};
-		};
-	}
-}
-
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Signed-off-by: Javi Merino <javi.merino@kernel.org>
-> ---
+On Wed, Nov 23, 2016 at 3:59 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 > Hi,
-> 
-> I feel it is a bit of a hack, but I couldn't think of anything better.
-> I'm ccing devicetree@ and Pantelis because there may be a simpler
-> solution.
 >
+> On Tue, Nov 22, 2016 at 12:24:21AM +0800, Icenowy Zheng wrote:
+>> There's a Allwinner's XR819 SDIO Wi-Fi module soldered on the board of
+>> Orange Pi Zero, which used a dedicated regulator to power.
+>>
+>> Add the device tree node of the regulator, the enable gpio (with
+>> mmc-pwrseq) and the sdio controller.
+>>
+>> There's a out-of-tree driver tested to work with this device tree.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+>> ---
+>> New patch in the patchset, since a out-of-tree working xradio driver is done.
+>>
+>> If there is any problem in this patch, it can be omitted.
+>
+> No particular problem with this one, however it can and should be
+> merged with the previous one.
+>
+> Minor comments below though.
+>
+>>
+>>  arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts | 42 ++++++++++++++++++++++++
+>>  1 file changed, 42 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>> index b428e47..39cac26 100644
+>> --- a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>> +++ b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>> @@ -79,6 +79,24 @@
+>>                       gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
+>>               };
+>>       };
+>> +
+>> +     reg_vcc_wifi: reg_vcc_wifi {
+>> +             compatible = "regulator-fixed";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&vcc_wifi_pin_opi0>;
+>> +             regulator-min-microvolt = <3300000>;
+>> +             regulator-max-microvolt = <3300000>;
+>> +             regulator-name = "vcc-wifi";
+>> +             enable-active-high;
+>> +             gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
+>> +     };
+>> +
+>> +     wifi_pwrseq: wifi_pwrseq {
+>> +             compatible = "mmc-pwrseq-simple";
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&wifi_pwrseq_pin_opi0>;
+>> +             reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
+>> +     };
+>>  };
+>>
+>>  &ehci1 {
+>> @@ -95,6 +113,20 @@
+>>       status = "okay";
+>>  };
+>>
+>> +&mmc1 {
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc1_pins_a>;
+>> +     vmmc-supply = <&reg_vcc_wifi>;
+>> +     mmc-pwrseq = <&wifi_pwrseq>;
+>> +     bus-width = <4>;
+>> +     non-removable;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&mmc1_pins_a {
+>> +     allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+>
+> This should be bias-pull-up.
 
-I also couldn't think a better way to do this, since IIUC the node's name is
-the only thing that doesn't change, and is available at the time the bridge
-driver calls v4l2_async_notifier_register() when parsing the base tree.
+IIRC I already added this for _all_ existing mmc pinmux settings?
 
->  drivers/media/v4l2-core/v4l2-async.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 5bada20..d33a17c 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -42,7 +42,8 @@ static bool match_devname(struct v4l2_subdev *sd,
->  
->  static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
->  {
-> -	return sd->of_node == asd->match.of.node;
-> +	return !of_node_cmp(of_node_full_name(sd->of_node),
-> +			    of_node_full_name(asd->match.of.node));
->  }
->  
->  static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
-> 
+>
+>> +};
+>> +
+>>  &ohci1 {
+>>       status = "okay";
+>>  };
+>> @@ -104,6 +136,11 @@
+>>               pins = "PA17";
+>>               function = "gpio_out";
+>>       };
+>> +
+>> +     vcc_wifi_pin_opi0: vcc_wifi_pin@0 {
+>> +             allwinner,pins = "PA20";
+>
+> This should be pins
+>
+>> +             allwinner,function = "gpio_out";
+>
+> This should be function
+>
+>> +     };
+>>  };
+>>
+>>  &r_pio {
+>> @@ -111,6 +148,11 @@
+>>               pins = "PL10";
+>>               function = "gpio_out";
+>>       };
+>> +
+>> +     wifi_pwrseq_pin_opi0: wifi_pwrseq_pin@0 {
+>> +             allwinner,pins = "PL7";
+>> +             allwinner,function = "gpio_out";
+>
+> And same thing here.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Might we do away with the pinmux for gpio pins tradition?
+Recent patches I've sent all omit them.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+ChenYu
