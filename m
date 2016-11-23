@@ -1,66 +1,71 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH 1/4] bindings: net: stmmac: correct note about TSO
-Date: Wed, 23 Nov 2016 15:24:25 +0100
-Message-ID: <1479911066-19752-1-git-send-email-niklass@axis.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH] v4l: async: make v4l2 coexists with devicetree nodes in
+ a dt overlay
+Date: Wed, 23 Nov 2016 17:10:42 +0200
+Message-ID: <20161123151042.GD16630@valkosipuli.retiisi.org.uk>
+References: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>
-Cc: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Javi Merino <javi.merino@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Hi Javi,
 
-snps,tso was previously placed under AXI BUS Mode parameters,
-suggesting that the property should be in the stmmac-axi-config node.
+On Wed, Nov 23, 2016 at 10:09:57AM +0000, Javi Merino wrote:
+> In asd's configured with V4L2_ASYNC_MATCH_OF, if the v4l2 subdev is in
+> a devicetree overlay, its of_node pointer will be different each time
+> the overlay is applied.  We are not interested in matching the
+> pointer, what we want to match is that the path is the one we are
+> expecting.  Change to use of_node_cmp() so that we continue matching
+> after the overlay has been removed and reapplied.
+> 
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Javi Merino <javi.merino@kernel.org>
+> ---
+> Hi,
+> 
+> I feel it is a bit of a hack, but I couldn't think of anything better.
+> I'm ccing devicetree@ and Pantelis because there may be a simpler
+> solution.
 
-TSO (TCP Segmentation Offloading) has nothing to do with AXI BUS Mode
-parameters, and the parser actually expects it to be in the root node,
-not in the stmmac-axi-config.
+First I have to admit that I'm not an expert when it comes to DT overlays.
 
-Also added a note about snps,tso only being available on GMAC4 and newer.
+That said, my understanding is that the sub-device and the async sub-device
+are supposed to point to the exactly same DT node. I wonder if there's
+actually anything wrong in the current code.
 
-Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
----
- Documentation/devicetree/bindings/net/stmmac.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+If the overlay has changed between probing the driver for the async notifier
+and the async sub-device, there should be no match here, should there? The
+two nodes actually point to a node in a different overlay in that case.
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index 41b49e6075f5..b95ff998ba73 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -1,7 +1,7 @@
- * STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
- 
- Required properties:
--- compatible: Should be "snps,dwmac-<ip_version>" "snps,dwmac"
-+- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
- 	For backwards compatibility: "st,spear600-gmac" is also supported.
- - reg: Address and length of the register set for the device
- - interrupt-parent: Should be the phandle for the interrupt controller
-@@ -50,6 +50,8 @@ Optional properties:
- - snps,ps-speed: port selection speed that can be passed to the core when
- 		 PCS is supported. For example, this is used in case of SGMII
- 		 and MAC2MAC connection.
-+- snps,tso: this enables the TSO feature otherwise it will be managed by
-+		 MAC HW capability register. Only for GMAC4 and newer.
- - AXI BUS Mode parameters: below the list of all the parameters to program the
- 			   AXI register inside the DMA module:
- 	- snps,lpi_en: enable Low Power Interface
-@@ -62,8 +64,6 @@ Optional properties:
- 	- snps,fb: fixed-burst
- 	- snps,mb: mixed-burst
- 	- snps,rb: rebuild INCRx Burst
--	- snps,tso: this enables the TSO feature otherwise it will be managed by
--	    MAC HW capability register.
- - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
- 
- Examples:
+> 
+>  drivers/media/v4l2-core/v4l2-async.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 5bada20..d33a17c 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -42,7 +42,8 @@ static bool match_devname(struct v4l2_subdev *sd,
+>  
+>  static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>  {
+> -	return sd->of_node == asd->match.of.node;
+> +	return !of_node_cmp(of_node_full_name(sd->of_node),
+> +			    of_node_full_name(asd->match.of.node));
+>  }
+>  
+>  static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+
 -- 
-2.1.4
+Kind regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
