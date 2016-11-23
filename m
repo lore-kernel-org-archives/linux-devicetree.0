@@ -1,64 +1,83 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 3/3] ARM: dts: da850: Add node for pullup/pulldown pinconf
-Date: Wed, 23 Nov 2016 10:24:06 -0600
-Message-ID: <06bc8517-8c33-85a1-9d5a-29042c7281db@lechnology.com>
-References: <1479871767-20160-1-git-send-email-david@lechnology.com>
- <1479871767-20160-4-git-send-email-david@lechnology.com>
- <8c3e6535-4b79-9731-f801-c13f007e48ab@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8c3e6535-4b79-9731-f801-c13f007e48ab@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>
-Cc: devicetree@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regulator: max77620: add documentation for MPOK property" to the regulator tree
+Date: Wed, 23 Nov 2016 16:31:30 +0000
+Message-ID: <E1c9aSI-0006aD-Hf@debutante>
+References: <1479297161-7705-2-git-send-email-vreddytalla@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479297161-7705-2-git-send-email-vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, svelpula-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2016 05:12 AM, Sekhar Nori wrote:
-> On Wednesday 23 November 2016 08:59 AM, David Lechner wrote:
->> This SoC has a separate pin controller for configuring pullup/pulldown
->> bias on groups of pins.
->>
->> Signed-off-by: David Lechner <david@lechnology.com>
->> ---
->>  arch/arm/boot/dts/da850.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index 8945815..1c0224c 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -210,6 +210,11 @@
->>  			};
->>
->>  		};
->> +		pinconf: pin-controller@22c00c {
->> +			compatible = "ti,da850-pupd";
->> +			reg = <0x22c00c 0x8>;
->> +			status = "disabled";
->> +		};
->
-> Can you please place this below the i2c1 node. I am trying to keep the
-> nodes sorted by unit address. I know thats broken in many places today,
-> but lets add the new ones where they should eventually end up.
+The patch
 
-I can do this, but it seems that the predominant sorting pattern here is 
-to keep subsystems together (e.g. all i2c are together, all uart are 
-together, etc.)
+   regulator: max77620: add documentation for MPOK property
 
-Would a separate patch to sort everything by unit address to get this 
-cleaned up be acceptable?
+has been applied to the regulator tree at
 
->
-> Thanks,
-> Sekhar
->
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 983779235a4d08f94e8cda073200423e0ff01d2e Mon Sep 17 00:00:00 2001
+From: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Date: Thu, 17 Nov 2016 23:24:36 +0530
+Subject: [PATCH] regulator: max77620: add documentation for MPOK property
+
+Adding documentation for maxim,power-ok-control dts property
+
+Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/max77620.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+index 2ad44f7e4880..9c16d51cc15b 100644
+--- a/Documentation/devicetree/bindings/mfd/max77620.txt
++++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+@@ -106,6 +106,18 @@ Here supported time periods by device in microseconds are as follows:
+ MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
+ MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+ 
++-maxim,power-ok-control: configure map power ok bit
++			1: Enables POK(Power OK) to control nRST_IO and GPIO1
++			POK function.
++			0: Disables POK control.
++			if property missing, do not configure MPOK bit.
++			If POK mapping is enabled for GPIO1/nRST_IO then,
++			GPIO1/nRST_IO pins are HIGH only if all rails
++			that have POK control enabled are HIGH.
++			If any of the rails goes down(which are enabled for POK
++			control) then, GPIO1/nRST_IO goes LOW.
++			this property is valid for max20024 only.
++
+ For DT binding details of different sub modules like GPIO, pincontrol,
+ regulator, power, please refer respective device-tree binding document
+ under their respective sub-system directories.
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
