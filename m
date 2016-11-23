@@ -1,47 +1,89 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v6 7/8] drivers:input:ads7846(+tsc2046): fix spi module
- table
-Date: Wed, 23 Nov 2016 10:12:06 -0300
-Message-ID: <cc450963-16f9-10e6-a8c4-3b4e4771248e@osg.samsung.com>
-References: <cover.1477557860.git.hns@goldelico.com>
- <54f282e1adebeeb133687b6c430ecbb6f2fe6d5b.1477557860.git.hns@goldelico.com>
- <20161119181824.GB20446@dtor-ws>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+Date: Wed, 23 Nov 2016 14:18:13 +0100
+Message-ID: <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161119181824.GB20446@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sangwon Jee <jeesw-iQTvn4YitUrQT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel@pyra-handhel
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="5AWre6HoBj99473JvGJdx2ubEOfsJo6mf"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Chris Paterson <chris.paterson2@renesas.com>, Simon Horman <horms@verge.net.au>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--5AWre6HoBj99473JvGJdx2ubEOfsJo6mf
+Content-Type: multipart/mixed; boundary="1XSjpWkA0jnegLIwJasNRRk5U0uI8rTVu";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Chris Paterson <chris.paterson2@renesas.com>,
+ Simon Horman <horms@verge.net.au>
+Cc: Wolfgang Grandegger <wg@grandegger.com>,
+ Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org
+Message-ID: <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
+Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+In-Reply-To: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
 
-On 11/19/2016 03:18 PM, Dmitry Torokhov wrote:
-> On Thu, Oct 27, 2016 at 10:44:20AM +0200, H. Nikolaus Schaller wrote:
->> Fix module table so that the driver is loaded if compiled
->> as module and requested by DT.
-> 
-> We really need to fix it between spi/i23c core and module utils instead
-> of keeping adding duplicate IDs all over drivers. We already have OF
-> module device table containing the same data, we should be able to use
-> it.
-> 
+--1XSjpWkA0jnegLIwJasNRRk5U0uI8rTVu
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Agreed, unfortunately until the I2C and SPI core are changed to properly
-report OF modaliases, we will have to keep adding these duplicated IDs.
+On 11/23/2016 01:14 PM, Chris Paterson wrote:
+> This patch series adds CAN and CAN FD support to the r8a7796.
+>=20
+> Based on renesas-devel-20161122-v4.9-rc6.
+>=20
+> Chris Paterson (3):
+>   arm64: dts: r8a7796: Add CAN external clock support
+>   arm64: dts: r8a7796: Add CAN support
+>   arm64: dts: r8a7796: Add CAN FD support
+>=20
+>  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
+>  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61 ++++++++++++++=
+++++++++
+>  3 files changed, 75 insertions(+), 10 deletions(-)
 
-And changing the I2C and SPI core isn't trivial since it could break a
-lot of drivers that rely on a platform modalias being reported (i.e: no
-OF device IDs present in the drivers even when are registered via DT).
+For all three:
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+Who takes this series?
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--1XSjpWkA0jnegLIwJasNRRk5U0uI8rTVu--
+
+--5AWre6HoBj99473JvGJdx2ubEOfsJo6mf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEES2FAuYbJvAGobdVQPTuqJaypJWoFAlg1lxUACgkQPTuqJayp
+JWqV3Qf/UIxAPEdr16NQVBQGedsA0TU1be8nZp8v7mDblV4piUieSxAT00/NpRoC
+4UHb5qDYiB28/ezkYdD2FFqclFedEEVUmDuPv5wbFHEPM2DofVCbYRRmyxSDcntE
+vlZWV7Kxgn0peYjDk3Dlg+11EZXpxyL8jdkQTwRupBnk2kVFe7akgG2A/KHUBaH/
+gA3RnytWj9uh69QtbPmXlTBOFqrp02Qo64IO8xVayxw8d3PIQqPrNZ7Q8nsJrYd5
+Kg/ADMTOb76+YlLrVUmOU6BoeqF8dfnRW+vYpzy7NsngMKBI6QNtVEE2clMXak9+
+9BaVtqofZr7o8S7U3Og6barqANluPg==
+=a8NU
+-----END PGP SIGNATURE-----
+
+--5AWre6HoBj99473JvGJdx2ubEOfsJo6mf--
