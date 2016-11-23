@@ -1,40 +1,119 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH 2/4] ARM: dts: exynos: specify snps,dwmac in compatible string for gmac
-Date: Wed, 23 Nov 2016 15:24:51 +0100
-Message-ID: <1479911091-19812-1-git-send-email-niklass@axis.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH] v4l: async: make v4l2 coexists with devicetree nodes in a
+ dt overlay
+Date: Wed, 23 Nov 2016 11:25:39 -0300
+Message-ID: <cf31105b-e8c1-4379-cd03-0bdcbdea64d6@osg.samsung.com>
+References: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Niklas Cassel <niklass@axis.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479895797-7946-1-git-send-email-javi.merino@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javi Merino <javi.merino@kernel.org>, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+Hello Javi,
 
-devicetree binding for stmmac states:
-- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
-	For backwards compatibility: "st,spear600-gmac" is also supported.
+On 11/23/2016 07:09 AM, Javi Merino wrote:
+> In asd's configured with V4L2_ASYNC_MATCH_OF, if the v4l2 subdev is in
+> a devicetree overlay, its of_node pointer will be different each time
+> the overlay is applied.  We are not interested in matching the
+> pointer, what we want to match is that the path is the one we are
+> expecting.  Change to use of_node_cmp() so that we continue matching
+> after the overlay has been removed and reapplied.
+>
 
-No functional change intended.
+I'm still not that familiar with DT overlays (and I guess others aren't
+either) so I think that including an example of a base tree and overlay
+DTS where this is an issue, could make things more clear in the commit.
 
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
----
- arch/arm/boot/dts/exynos5440.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+IIUC, it should be something like this?
 
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 97c9f0e38526..2a2e570bbee6 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -197,7 +197,7 @@
- 	};
- 
- 	gmac: ethernet@00230000 {
--		compatible = "snps,dwmac-3.70a";
-+		compatible = "snps,dwmac-3.70a", "snps,dwmac";
- 		reg = <0x00230000 0x8000>;
- 		interrupt-parent = <&gic>;
- 		interrupts = <GIC_SPI 31 4>;
+-- base tree --
+
+&i2c1 {
+	camera: camera@10 {
+		reg = <0x10>;
+		port {
+			cam_ep: endpoint {
+				...
+			};
+		};
+	};
+};
+
+&media_bridge {
+	...
+	ports {
+		port@0 {
+			reg = <0>;
+			ep: endpoint {
+				remote-endpoint = <&cam_ep>;
+			};
+		};
+	};
+};
+
+-- overlay --
+
+/plugin/;
+/ {
+	...
+	fragment@0 {
+		target = <&camera>;
+		__overlay__ {
+			compatible = "foo,bar";
+			...
+			port {
+				cam_ep: endpoint {
+					...
+				};
+			};
+		};
+	}
+}
+
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Javi Merino <javi.merino@kernel.org>
+> ---
+> Hi,
+> 
+> I feel it is a bit of a hack, but I couldn't think of anything better.
+> I'm ccing devicetree@ and Pantelis because there may be a simpler
+> solution.
+>
+
+I also couldn't think a better way to do this, since IIUC the node's name is
+the only thing that doesn't change, and is available at the time the bridge
+driver calls v4l2_async_notifier_register() when parsing the base tree.
+
+>  drivers/media/v4l2-core/v4l2-async.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 5bada20..d33a17c 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -42,7 +42,8 @@ static bool match_devname(struct v4l2_subdev *sd,
+>  
+>  static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+>  {
+> -	return sd->of_node == asd->match.of.node;
+> +	return !of_node_cmp(of_node_full_name(sd->of_node),
+> +			    of_node_full_name(asd->match.of.node));
+>  }
+>  
+>  static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
+> 
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-2.1.4
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
