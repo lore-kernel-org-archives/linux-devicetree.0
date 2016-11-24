@@ -1,103 +1,209 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] dmaengine: allow sun6i-dma for more SoCs
-Date: Thu, 24 Nov 2016 21:44:15 +0100
-Message-ID: <20161124204415.6lw3knylft2hzrfc@lukather>
-References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
- <1479950235-26821-3-git-send-email-andre.przywara@arm.com>
- <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w@mail.gmail.com>
- <34b5e50f-a091-9bd8-7a74-96e538a7351d@arm.com>
- <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA@mail.gmail.com>
- <20161124105516.tv2ybfgka5teiv2h@lukather>
- <606230fd-37f6-e1ed-adc3-72f606fa944c@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 3/3] pinctrl: sx150x: add support for sx1501, sx1504, sx1505 and sx1507
+Date: Thu, 24 Nov 2016 21:45:20 +0100
+Message-ID: <1480020320-28354-4-git-send-email-peda@axentia.se>
+References: <1480020320-28354-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eqjvjutht2z4x6uj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIFC3XAQKGQEZBOTGHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <606230fd-37f6-e1ed-adc3-72f606fa944c-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480020320-28354-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Untested, register offsets carefully copied from datasheets.
 
---eqjvjutht2z4x6uj
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |  8 +-
+ drivers/pinctrl/pinctrl-sx150x.c                   | 98 ++++++++++++++++++++++
+ 2 files changed, 104 insertions(+), 2 deletions(-)
 
-On Thu, Nov 24, 2016 at 11:15:42AM +0000, Andre Przywara wrote:
-> On 24/11/16 10:55, Maxime Ripard wrote:
-> > On Thu, Nov 24, 2016 at 05:30:45PM +0800, Chen-Yu Tsai wrote:
-> >> On Thu, Nov 24, 2016 at 5:16 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>> Hi,
-> >>>
-> >>> On 24/11/16 04:16, Chen-Yu Tsai wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On Thu, Nov 24, 2016 at 9:17 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> >>>>> The sun6i DMA driver is used in the Allwinner A64 and H5 SoC, which
-> >>>>> have arm64 capable cores. Add the generic sunxi config symbol to allow
-> >>>>> the driver to be selected by arm64 Kconfigs, which don't feature
-> >>>>> SoC specific MACH_xxxx configs.
-> >>>>>
-> >>>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> >>>>> ---
-> >>>>>  drivers/dma/Kconfig | 2 +-
-> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> >>>>> index af63a6b..003c284 100644
-> >>>>> --- a/drivers/dma/Kconfig
-> >>>>> +++ b/drivers/dma/Kconfig
-> >>>>> @@ -157,7 +157,7 @@ config DMA_SUN4I
-> >>>>>
-> >>>>>  config DMA_SUN6I
-> >>>>>         tristate "Allwinner A31 SoCs DMA support"
-> >>>>> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
-> >>>>> +       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST || ARCH_SUNXI
-> >>>>
-> >>>> AFAIK ARCH_SUNXI encompasses/supersedes MACH_SUN*I.
-> >>>> (And I don't have to add MACH_SUN9I later :) )
-> >>>
-> >>> Sure, admittedly it was just a quick hack to get things going.
-> >>> Actually I don't know why we had a *depend* on those MACH_s before. I
-> >>> think technically it does not depend on a certain SoC (having the
-> >>> COMPILE_TEST in there hints on that). So what about:
-> >>
-> >> It was really because this DMA engine only comes with the later
-> >> SoCs. We have dma-sun4i for the older one.
-> > 
-> > Indeed.
-> > 
-> >> But yes, there's no reason why you can't build it for the earlier
-> >> SoC. It just doesn't get used.
-> > 
-> > I'm still in favor of keeping the depends on. There's no point of
-> > compiling something we know have zero chance of running.
-> > 
-> > (But that would be (ARCH_SUNXI && ARM64))
-> 
-> I am OK with that, just wondering if there is a definition of what
-> "depends" really means. My impression what that it's a about code
-> dependencies (requires a certain subsystem, for instance), not really if
-> it's useful in a particular configuration.
-
-My understanding is that it's a hard dependency that prevents
-configuration that make no sense, ie being able to compile a driver
-that has no chance of being useful in the system, or a driver missing
-its framework of choice.
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
+index 83f8d5c449ba..bf76867168e9 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
+@@ -6,9 +6,13 @@ pin controller, GPIO, and interrupt bindings.
+ 
+ Required properties:
+ - compatible: should be one of :
++			"semtech,sx1501q",
+ 			"semtech,sx1502q",
+ 			"semtech,sx1503q",
++			"semtech,sx1504q",
++			"semtech,sx1505q",
+ 			"semtech,sx1506q",
++			"semtech,sx1507q",
+ 			"semtech,sx1508q",
+ 			"semtech,sx1509q".
+ 
+@@ -28,7 +32,7 @@ Optional properties :
+ - interrupt-controller: Marks the device as a interrupt controller.
+ 
+ - semtech,probe-reset: Will trigger a reset of the GPIO expander on probe,
+-		only for sx1508q and sx1509q
++		only for sx1507q, sx1508q and sx1509q
+ 
+ The GPIO expander can optionally be used as an interrupt controller, in
+ which case it uses the default two cell specifier.
+@@ -43,7 +47,7 @@ Optional properties for pin configuration sub-nodes:
+  - bias-pull-down: pull down the pin, except the OSCIO pin
+  - bias-pull-pin-default: use pin-default pull state, except the OSCIO pin
+  - drive-push-pull: drive actively high and low
+- - drive-open-drain: drive with open drain only for sx1508q and sx1509q and except the OSCIO pin
++ - drive-open-drain: drive with open drain only for sx1507q, sx1508q and sx1509q and except the OSCIO pin
+  - output-low: set the pin to output mode with low level
+  - output-high: set the pin to output mode with high level
+ 
+diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
+index 97df9302e84b..eb6adbbd33f0 100644
+--- a/drivers/pinctrl/pinctrl-sx150x.c
++++ b/drivers/pinctrl/pinctrl-sx150x.c
+@@ -116,6 +116,14 @@ struct sx150x_pinctrl {
+ 	const struct sx150x_device_data *data;
+ };
+ 
++static const struct pinctrl_pin_desc sx150x_4_pins[] = {
++	PINCTRL_PIN(0, "gpio0"),
++	PINCTRL_PIN(1, "gpio1"),
++	PINCTRL_PIN(2, "gpio2"),
++	PINCTRL_PIN(3, "gpio3"),
++	PINCTRL_PIN(8, "oscio"),
++};
++
+ static const struct pinctrl_pin_desc sx150x_8_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+@@ -148,6 +156,26 @@ static const struct pinctrl_pin_desc sx150x_16_pins[] = {
+ 	PINCTRL_PIN(16, "oscio"),
+ };
+ 
++static const struct sx150x_device_data sx1501q_device_data = {
++	.model = SX150X_123,
++	.reg_pullup	= 0x02,
++	.reg_pulldn	= 0x03,
++	.reg_dir	= 0x01,
++	.reg_data	= 0x00,
++	.reg_irq_mask	= 0x05,
++	.reg_irq_src	= 0x08,
++	.reg_sense	= 0x07,
++	.pri.x123 = {
++		.reg_pld_mode	= 0x10,
++		.reg_pld_table0	= 0x11,
++		.reg_pld_table2	= 0x13,
++		.reg_advance	= 0xad,
++	},
++	.ngpios	= 4,
++	.pins = sx150x_4_pins,
++	.npins = 4, /* oscio not available */
++};
++
+ static const struct sx150x_device_data sx1502q_device_data = {
+ 	.model = SX150X_123,
+ 	.reg_pullup	= 0x02,
+@@ -194,6 +222,47 @@ static const struct sx150x_device_data sx1503q_device_data = {
+ 	.npins  = 16, /* oscio not available */
+ };
+ 
++static const struct sx150x_device_data sx1504q_device_data = {
++	.model = SX150X_456,
++	.reg_pullup	= 0x02,
++	.reg_pulldn	= 0x03,
++	.reg_dir	= 0x01,
++	.reg_data	= 0x00,
++	.reg_irq_mask	= 0x05,
++	.reg_irq_src	= 0x08,
++	.reg_sense	= 0x07,
++	.pri.x456 = {
++		.reg_pld_mode	= 0x10,
++		.reg_pld_table0	= 0x11,
++		.reg_pld_table2	= 0x13,
++	},
++	.ngpios	= 4,
++	.pins = sx150x_4_pins,
++	.npins = 4, /* oscio not available */
++};
++
++static const struct sx150x_device_data sx1505q_device_data = {
++	.model = SX150X_456,
++	.reg_pullup	= 0x02,
++	.reg_pulldn	= 0x03,
++	.reg_dir	= 0x01,
++	.reg_data	= 0x00,
++	.reg_irq_mask	= 0x05,
++	.reg_irq_src	= 0x08,
++	.reg_sense	= 0x06,
++	.pri.x456 = {
++		.reg_pld_mode	= 0x10,
++		.reg_pld_table0	= 0x11,
++		.reg_pld_table1	= 0x12,
++		.reg_pld_table2	= 0x13,
++		.reg_pld_table3	= 0x14,
++		.reg_pld_table4	= 0x15,
++	},
++	.ngpios	= 8,
++	.pins = sx150x_8_pins,
++	.npins = 8, /* oscio not available */
++};
++
+ static const struct sx150x_device_data sx1506q_device_data = {
+ 	.model = SX150X_456,
+ 	.reg_pullup	= 0x04,
+@@ -217,6 +286,27 @@ static const struct sx150x_device_data sx1506q_device_data = {
+ 	.npins = 16, /* oscio not available */
+ };
+ 
++static const struct sx150x_device_data sx1507q_device_data = {
++	.model = SX150X_789,
++	.reg_pullup	= 0x03,
++	.reg_pulldn	= 0x04,
++	.reg_dir	= 0x07,
++	.reg_data	= 0x08,
++	.reg_irq_mask	= 0x09,
++	.reg_irq_src	= 0x0b,
++	.reg_sense	= 0x0a,
++	.pri.x789 = {
++		.reg_drain	= 0x05,
++		.reg_polarity	= 0x06,
++		.reg_clock	= 0x0d,
++		.reg_misc	= 0x0e,
++		.reg_reset	= 0x7d,
++	},
++	.ngpios = 4,
++	.pins = sx150x_4_pins,
++	.npins = ARRAY_SIZE(sx150x_4_pins),
++};
++
+ static const struct sx150x_device_data sx1508q_device_data = {
+ 	.model = SX150X_789,
+ 	.reg_pullup	= 0x03,
+@@ -758,18 +848,26 @@ static const struct pinconf_ops sx150x_pinconf_ops = {
+ };
+ 
+ static const struct i2c_device_id sx150x_id[] = {
++	{"sx1501q", (kernel_ulong_t) &sx1501q_device_data },
+ 	{"sx1502q", (kernel_ulong_t) &sx1502q_device_data },
+ 	{"sx1503q", (kernel_ulong_t) &sx1503q_device_data },
++	{"sx1504q", (kernel_ulong_t) &sx1504q_device_data },
++	{"sx1505q", (kernel_ulong_t) &sx1505q_device_data },
+ 	{"sx1506q", (kernel_ulong_t) &sx1506q_device_data },
++	{"sx1507q", (kernel_ulong_t) &sx1507q_device_data },
+ 	{"sx1508q", (kernel_ulong_t) &sx1508q_device_data },
+ 	{"sx1509q", (kernel_ulong_t) &sx1509q_device_data },
+ 	{}
+ };
+ 
+ static const struct of_device_id sx150x_of_match[] = {
++	{ .compatible = "semtech,sx1501q", .data = &sx1501q_device_data },
+ 	{ .compatible = "semtech,sx1502q", .data = &sx1502q_device_data },
+ 	{ .compatible = "semtech,sx1503q", .data = &sx1503q_device_data },
++	{ .compatible = "semtech,sx1504q", .data = &sx1504q_device_data },
++	{ .compatible = "semtech,sx1505q", .data = &sx1505q_device_data },
+ 	{ .compatible = "semtech,sx1506q", .data = &sx1506q_device_data },
++	{ .compatible = "semtech,sx1507q", .data = &sx1507q_device_data },
+ 	{ .compatible = "semtech,sx1508q", .data = &sx1508q_device_data },
+ 	{ .compatible = "semtech,sx1509q", .data = &sx1509q_device_data },
+ 	{},
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---eqjvjutht2z4x6uj--
+2.1.4
