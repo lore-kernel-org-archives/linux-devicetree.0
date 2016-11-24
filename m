@@ -1,70 +1,43 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 3/5] arm64: defconfig: sunxi: include
- options for Allwinner H5 SoC
-Date: Thu, 24 Nov 2016 11:09:21 +0000
-Message-ID: <94faa7a4-1ccd-48b6-4983-53b9307c8c3f@arm.com>
-References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
- <1479950235-26821-4-git-send-email-andre.przywara@arm.com>
- <20161124105725.va6gf6b3min74occ@lukather>
- <CAGb2v67AntaTBCTzJf_-oUcAqaFsQv3t4pp-E6jzpkXLNctKww@mail.gmail.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
+ Xenon SDHC
+Date: Thu, 24 Nov 2016 12:09:41 +0100
+Message-ID: <23084629.DpfWxNEgoY@wuerfel>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+ <2204525.IWIYQVjIXl@wuerfel>
+ <f7334e41-39dd-f868-ff10-199afaebe926@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBOUU3PAQKGQE6ZMGMIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67AntaTBCTzJf_-oUcAqaFsQv3t4pp-E6jzpkXLNctKww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f7334e41-39dd-f868-ff10-199afaebe926@marvell.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Hilbert Zhang <zzhang@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Romain Perier <romain.perier@free-electrons.com>, Liuliu Zhao <zhaoliul@marvell.com>, Peng Zhu <zhupeng@marvell.com>, Adrian Hunter <adrian.hunter@intel.com>, Nadav Haklai <nadavh@marvell.com>, "Jack(SH) Zhu" <jmzhu@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Xueping Liu <xpliu@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Yu Cao <yucao@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Keji Zhang <keji@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday, November 24, 2016 6:57:18 PM CET Ziji Hu wrote:
+> > 
+> > Please explain in the changelog why this is not a generic
+> > phy driver (or three of them).
+> > 
+>         Actually we tried to put the PHY code into Linux PHY framework.
+>         But it cannot fit in Linux common PHY framework.
+> 
+>         Our Xenon SDHC PHY register is a part of Xenon SDHC register set.
+>         Besides, during MMC initialization, MMC sequence has to call several PHY functions to complete timing setting.
+>         In those PHY setting functions, they have to access SDHC register and know current MMC setting, such as bus width, clock frequency and speed mode.
+>         As a result, we have to implement PHY under MMC directory.
+> 
 
-On 24/11/16 11:01, Chen-Yu Tsai wrote:
-> On Thu, Nov 24, 2016 at 6:57 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Thu, Nov 24, 2016 at 01:17:13AM +0000, Andre Przywara wrote:
->>> The Allwinner H5 SoC is closely related to the H3 SoC, so select the
->>> basic pinctrl driver and the DMA driver to let a defconfig kernel boot
->>> on those boards.
->>>
->>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  arch/arm64/Kconfig.platforms | 6 +++++-
->>>  1 file changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>> index cfbdf02..8300677 100644
->>> --- a/arch/arm64/Kconfig.platforms
->>> +++ b/arch/arm64/Kconfig.platforms
->>> @@ -5,8 +5,12 @@ config ARCH_SUNXI
->>>       select GENERIC_IRQ_CHIP
->>>       select PINCTRL
->>>       select PINCTRL_SUN50I_A64
->>> +     select PINCTRL_SUN8I_H3
->>> +     select PINCTRL_SUN8I_H3_R
->>> +     select DMA_SUN6I
->>
->> I'm not sure I want to get an ever growing select which will be an
->> union of all the drivers that all the arm64 Allwinner SoCs will
->> require.
->>
->> Select leaves no option to disable that option, and we have defconfig
->> to deal with that nicely.
-> I have to agree. We should only select things that aren't selectable
-> by the user. In our case, that's only the pinctrl drivers.
+Ok, that makes sense, just put the same text in the changelog comment.
 
-Right, I missed that.
-
-> We should use default y (ARCH_SUNXI && ARM64) for every driver that
-> has a prompt entry in Kconfig.
-
-Sounds like a plan. I will look into this.
-
-Thanks,
-Andre.
+	Arnd
