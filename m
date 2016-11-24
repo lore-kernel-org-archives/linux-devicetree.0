@@ -1,117 +1,133 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] mfd: cpcap: Add minimal support
-Date: Thu, 24 Nov 2016 06:43:13 -0800
-Message-ID: <20161124144313.GN4082@atomide.com>
-References: <20161119012748.17224-1-tony@atomide.com>
- <20161121114558.GJ32509@dell>
- <20161123152652.GB4082@atomide.com>
- <20161124085926.GV10134@dell.home>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 1/9] clk: stm32f4: Update DT bindings documentation
+Date: Thu, 24 Nov 2016 15:45:41 +0100
+Message-ID: <1479998749-20358-2-git-send-email-gabriel.fernandez@st.com>
+References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161124085926.GV10134@dell.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479998749-20358-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [161124 00:56]:
-> On Wed, 23 Nov 2016, Tony Lindgren wrote:
-> 
-> > * Lee Jones <lee.jones@linaro.org> [161121 03:43]:
-> > > On Fri, 18 Nov 2016, Tony Lindgren wrote:
-> > > > --- a/drivers/mfd/Makefile
-> > > > +++ b/drivers/mfd/Makefile
-> > > > @@ -97,6 +97,7 @@ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
-> > > >  obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
-> > > >  
-> > > >  obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
-> > > > +obj-$(CONFIG_MFD_CPCAP)		+= cpcap.o
-> > > 
-> > > Who is the manufacturer?
-> > 
-> > Hmm that I don't know. There seems to be both ST and TI versions
-> > of this chip manufactured for Motorola. So my guess is that it
-> > should be Motorola unless there's some similar catalog part
-> > available from ST used by others. If anybody has more info
-> > on this please let me know :)
-> 
-> If this IP is shared amongst vendors, it usually means it was designed
-> by someone else?  Synopsis perhaps?
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 
-After searching around, many specs say "ST Ericsson CPCAP". So let's
-assume the manufacturer should be ste.
+Creation of dt include file for specific stm32f4 clocks.
+These specific clocks are not derived from system clock (SYSCLOCK)
+We should use index 1 to use these clocks in DT.
+e.g. <&rcc 1 CLK_LSI>
 
-> > > > +	cpcap->vendor = (val >> 6) & 0x0007;
-> > > > +	cpcap->revision = ((val >> 3) & 0x0007) | ((val << 3) & 0x0038);
-> > > 
-> > > Lots of magic numbers here.  I suggest you define them.
-> > 
-> > I'll check if some earlier code has these defined. Otherwise I'll
-> > just add a comment on the lack of available documentation.
-> 
-> *sad face*
-> 
-> Does that mean you don't even know what they're for?
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/clock/st,stm32-rcc.txt     |  8 ++++++
+ drivers/clk/clk-stm32f4.c                          |  9 +++++--
+ include/dt-bindings/clock/stm32f4-clock.h          | 31 ++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/clock/stm32f4-clock.h
 
-Luckily the Motorola driver folks documented all the registers.
-Unfortunately the register bits just have names. I need to
-check if we have names for these bits.
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+index 0532d81..18e05c2 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
++++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+@@ -17,6 +17,8 @@ Required properties:
+   property, containing a phandle to the clock device node, an index selecting
+   between gated clocks and other clocks and an index specifying the clock to
+   use.
++- clocks: External oscillator clock phandle
++  - high speed external clock signal (HSE)
+ 
+ Example:
+ 
+@@ -25,6 +27,7 @@ Example:
+ 		#clock-cells = <2>
+ 		compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
+ 		reg = <0x40023800 0x400>;
++		clocks = <&clk_hse>;
+ 	};
+ 
+ Specifying gated clocks
+@@ -66,6 +69,11 @@ The secondary index is bound with the following magic numbers:
+ 
+ 	0	SYSTICK
+ 	1	FCLK
++	2	CLK_LSI		(low-power clock source)
++	3	CLK_LSE		(generated from a 32.768 kHz low-speed external
++				 crystal or ceramic resonator)
++	4	CLK_HSE_RTC	(HSE division factor for RTC clock)
++	5	CLK_RTC		(real-time clock)
+ 
+ Example:
+ 
+diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
+index 5eb05db..39965ab 100644
+--- a/drivers/clk/clk-stm32f4.c
++++ b/drivers/clk/clk-stm32f4.c
+@@ -28,6 +28,13 @@
+ #include <linux/regmap.h>
+ #include <linux/mfd/syscon.h>
+ 
++/*
++ * Include list of clocks wich are not derived from system clock (SYSCLOCK)
++ * The index of these clocks is the secondary index of DT bindings
++ *
++ */
++#include <dt-bindings/clock/stm32f4-clock.h>
++
+ #define STM32F4_RCC_PLLCFGR		0x04
+ #define STM32F4_RCC_CFGR		0x08
+ #define STM32F4_RCC_AHB1ENR		0x30
+@@ -208,8 +215,6 @@ struct stm32f4_gate_data {
+ 	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
+ };
+ 
+-enum { SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC, END_PRIMARY_CLK };
+-
+ /*
+  * This bitmask tells us which bit offsets (0..192) on STM32F4[23]xxx
+  * have gate bits associated with them. Its combined hweight is 71.
+diff --git a/include/dt-bindings/clock/stm32f4-clock.h b/include/dt-bindings/clock/stm32f4-clock.h
+new file mode 100644
+index 0000000..3132b6a
+--- /dev/null
++++ b/include/dt-bindings/clock/stm32f4-clock.h
+@@ -0,0 +1,31 @@
++/*
++ * stm32f4-clock.h
++ *
++ * Copyright (C) 2016 STMicroelectronics
++ * Author: Gabriel Fernandez for STMicroelectronics.
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++/*
++ * List of clocks wich are not derived from system clock (SYSCLOCK)
++ *
++ * The index of these clocks is the secondary index of DT bindings
++ * (see Documentatoin/devicetree/bindings/clock/st,stm32-rcc.txt)
++ *
++ * e.g:
++	<assigned-clocks = <&rcc 1 CLK_LSE>;
++*/
++
++#ifndef _DT_BINDINGS_CLK_STMF4_H
++#define _DT_BINDINGS_CLK_STMF4_H
++
++#define SYSTICK			0
++#define FCLK			1
++#define CLK_LSI			2
++#define CLK_LSE			3
++#define CLK_HSE_RTC		4
++#define CLK_RTC			5
++
++#define END_PRIMARY_CLK		6
++
++#endif
+-- 
+1.9.1
 
-> > > > +	error = cpcap_init_irq_bank(cpcap, 0, 0, 16);
-> > > 
-> > > 'ret' is more traditional.
-> > 
-> > FYI error seems to be preferred over ret as it's meaning is
-> > clear, git grep "error =" drivers/input for example.
-> > I can of course change it if you prefer ret over error.
-> 
-> I'd prefer to stick to the conventions of *this* subsystem.
-> 
-> ... and the most common convention used kernel wide:
-> 
-> $ git grep "ret =" | wc -l
-> 117976
-> $ git grep "err =" | wc -l
-> 56708
-> $ git grep "error =" | wc -l
-> 14427
-
-OK sure will rename.
-
-> > > > +#define CPCAP_REG_LDEB		0x1270	/* LMR Debounce Settings */
-> > > > +#define CPCAP_REG_LGDET		0x1274	/* LMR GCAI Detach Detect */
-> > > > +#define CPCAP_REG_LMISC		0x1278	/* LMR Misc Bits */
-> > > > +#define CPCAP_REG_LMACE		0x127c	/* LMR Mace IC Support */
-> > > > +
-> > > > +#define CPCAP_REG_TEST		0x7c00	/* Test */
-> > > > +
-> > > > +#define CPCAP_REG_ST_TEST1	0x7d08	/* ST Test1 */
-> > > > +
-> > > > +#define CPCAP_REG_ST_TEST2	0x7d18	/* ST Test2 */
-> > > 
-> > > It would be nice to line up the entire file. #OCD
-> > 
-> > Hmm care to clarify what you mean here? I think it's lined up with
-> 
-> I'm missing context now you've <snip>ed.
-> 
-> These look straight, however is the whole file lined up (as much as
-> *practically* possible)?
-
-Yeah it should be, I'll check.
-
-> > tabs to line up. I left empty lines where the registers are not
-> > contiguous. What does #OCD mean, Obsessive Compulsive Disorder over
-> > header files maybe? :)
-> 
-> Yes, that's what it means.
-> 
-> /me likes straight lines. :)
-
-Sure nothing wrong with that ;)
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
