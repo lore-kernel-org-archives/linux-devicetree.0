@@ -1,182 +1,121 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4 1/2] pinctrl: tegra: Add DT binding for io pads control
-Date: Thu, 24 Nov 2016 14:08:53 +0530
-Message-ID: <1479976734-30498-2-git-send-email-ldewangan@nvidia.com>
-References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: cpcap: Add minimal support
+Date: Thu, 24 Nov 2016 08:59:26 +0000
+Message-ID: <20161124085926.GV10134@dell.home>
+References: <20161119012748.17224-1-tony@atomide.com>
+ <20161121114558.GJ32509@dell>
+ <20161123152652.GB4082@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <20161123152652.GB4082@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, jonathanh@nvidia.com, joe@perches.com
-Cc: yamada.masahiro@socionext.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Mark Rutland <mark.rutland@arm.com>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-NVIDIA Tegra124 and later SoCs support the multi-voltage level and
-low power state of some of its IO pads. The IO pads can work in
-the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
-sources. When IO interfaces are not used then IO pads can be
-configure in low power state to reduce the power consumption from
-that IO pads.
+On Wed, 23 Nov 2016, Tony Lindgren wrote:
 
-On Tegra124, the voltage level of IO power rail source is auto
-detected by hardware(SoC) and hence it is only require to configure
-in low power mode if IO pads are not used.
+> * Lee Jones <lee.jones@linaro.org> [161121 03:43]:
+> > On Fri, 18 Nov 2016, Tony Lindgren wrote:
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -97,6 +97,7 @@ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
+> > >  obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
+> > >  
+> > >  obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
+> > > +obj-$(CONFIG_MFD_CPCAP)		+= cpcap.o
+> > 
+> > Who is the manufacturer?
+> 
+> Hmm that I don't know. There seems to be both ST and TI versions
+> of this chip manufactured for Motorola. So my guess is that it
+> should be Motorola unless there's some similar catalog part
+> available from ST used by others. If anybody has more info
+> on this please let me know :)
 
-On T210 onwards, the auto-detection of voltage level from IO power
-rail is removed from SoC and hence SW need to configure the PMC
-register explicitly to set proper voltage in IO pads based on
-IO rail power source voltage.
+If this IP is shared amongst vendors, it usually means it was designed
+by someone else?  Synopsis perhaps?
 
-Add DT binding document for detailing the DT properties for
-configuring IO pads voltage levels and its power state.
+> > > +	cpcap->vendor = (val >> 6) & 0x0007;
+> > > +	cpcap->revision = ((val >> 3) & 0x0007) | ((val << 3) & 0x0038);
+> > 
+> > Lots of magic numbers here.  I suggest you define them.
+> 
+> I'll check if some earlier code has these defined. Otherwise I'll
+> just add a comment on the lack of available documentation.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+*sad face*
 
----
-Changes from V1:
- New in series based on pinctrl driver requirement.
+Does that mean you don't even know what they're for?
 
-Changes from V2:
- Updated the statement to say 1.8V and 3.3V as nominal voltage.
- Corrected DT example by adding -supply and taken care of V1 review
- from Rob.
+> > > +	error = cpcap_init_irq_bank(cpcap, 0, 0, 16);
+> > 
+> > 'ret' is more traditional.
+> 
+> FYI error seems to be preferred over ret as it's meaning is
+> clear, git grep "error =" drivers/input for example.
+> I can of course change it if you prefer ret over error.
 
- .../bindings/pinctrl/nvidia,tegra-io-pad.txt       | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
+I'd prefer to stick to the conventions of *this* subsystem.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-new file mode 100644
-index 0000000..a88c484
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
-@@ -0,0 +1,126 @@
-+NVIDIA Tegra PMC IO pad controller
-+
-+NVIDIA Tegra124 and later SoCs support the multi-voltage level and low power
-+state of some of its IO pads. When IO interface are not used then IO pads can
-+be configure in low power state to reduce the power from that IO pads. The IO
-+pads can work in the nominal IO voltage of 1.8V and 3.3V from power rail
-+sources.
-+
-+On Tegra124, the voltage of IO power rail source is auto detected by SoC and
-+hence it is only require to configure in low power mode if IO pads are not
-+used.
-+
-+On T210 onwards, the HW based auto-detection for IO voltage is removed and
-+hence SW need to configure the PMC register explicitly, to set proper voltage
-+in IO pads, based on IO rail power source voltage.
-+
-+The voltage configurations and low power state of IO pads should be done in
-+boot if it is not going to change otherwise dynamically based on IO rail
-+voltage on that IO pads and usage of IO pads
-+
-+The DT property of the IO pads must be under the node of pmc i.e.
-+pmc@7000e400 for Tegra124 onwards.
-+
-+Please refer to <pinctrl-bindings.txt> in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+Tegra's pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for an
-+IO pads, or a list of IO pads. This configuration can include the voltage and
-+power enable/disable control
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content. Each subnode only affects those
-+parameters that are explicitly listed. Unspecified is represented as an absent
-+property,
-+
-+See the TRM to determine which properties and values apply to each IO pads.
-+
-+Required subnode-properties:
-+==========================
-+- pins : An array of strings. Each string contains the name of an IO pads. Valid
-+	 values for these names are listed below.
-+
-+Optional subnode-properties:
-+==========================
-+Following properties are supported from generic pin configuration explained
-+in <dt-bindings/pinctrl/pinctrl-binding.txt>.
-+low-power-enable:		enable low power mode.
-+low-power-disable:		disable low power mode.
-+
-+Valid values for pin for T124 are:
-+	audio, bb, cam, comp, csia, csib, csie, dsi, dsib, dsic, dsid, hdmi,
-+	hsic, hv, lvds, mipi-bias, nand, pex-bias, pex-clk1, pex-clk2,
-+	pex-ctrl, sdmmc1, sdmmc3, sdmmc4, sys-ddc, uart, usb0, usb1, usb2,
-+	usb-bias
-+
-+Valid values for pin for T210 are:
-+	audio, audio-hv, cam, csia, csib, csic, csid, csie, csif,
-+	dbg, debug-nonao, dmic, dp, dsi, dsib, dsic, dsid, emmc, emmc2,
-+	gpio, hdmi, hsic, lvds, mipi-bias, pex-bias, pex-clk1, pex-clk2,
-+	pex-ctrl, sdmmc1, sdmmc3, spi, spi-hv, uart, usb-bias, usb0,
-+	usb1, usb2, usb3.
-+
-+To find out the IO rail voltage for setting the voltage of IO pad by SW,
-+the regulator supply handle must provided from the DT and it is explained
-+in the regulator DT binding document
-+	<devicetree/bindings/regulator/regulator.txt>.
-+For example, for GPIO rail the supply name is vddio-gpio and regulator
-+handle is supplied from DT as
-+	vddio-gpio-supply = <&regulator_xyz>;
-+
-+For T210, following IO pads support the 1.8V/3.3V and the corresponding
-+IO voltage pin names are as follows:
-+	audio -> vddio-audio
-+	audio-hv -> vddio-audio-hv
-+	cam ->vddio-cam
-+	dbg -> vddio-dbg
-+	dmic -> vddio-dmic
-+	gpio -> vddio-gpio
-+	pex-ctrl -> vddio-pex-ctrl
-+	sdmmc1 -> vddio-sdmmc1
-+	sdmmc3 -> vddio-sdmmc3
-+	spi -> vddio-spi
-+	spi-hv -> vddio-spi-hv
-+	uart -> vddio-uart
-+
-+Example:
-+	i2c@7000d000 {
-+		pmic@3c {
-+			regulators {
-+				vddio_sdmmc1: ldo2 {
-+					/* Regulator entries for LDO2 */
-+				};
-+
-+				vdd_cam: ldo3 {
-+					/* Regulator entries for LDO3 */
-+				};
-+			};
-+		};
-+	};
-+
-+	pmc@7000e400 {
-+		vddio-cam-supply = <&vdd_cam>;
-+		vddio-sdmmc1-supply = <&vddio_sdmmc1>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tegra_io_pad_volt_default>;
-+		tegra_io_pad_volt_default: common {
-+			audio-hv {
-+				pins = "audio-hv";
-+				low-power-disable;
-+			};
-+
-+			gpio {
-+				pins = "gpio";
-+				low-power-disable;
-+			};
-+
-+			audio {
-+				pins = "audio", "dmic", "sdmmc3";
-+				low-power-enable;
-+			};
-+		};
-+
-+	};
+... and the most common convention used kernel wide:
+
+$ git grep "ret =" | wc -l
+117976
+$ git grep "err =" | wc -l
+56708
+$ git grep "error =" | wc -l
+14427
+
+
+> > > +	error = cpcap_init_irq_bank(cpcap, 2, 32, 64);
+> > > +	if (error)
+> > > +		return error;
+> > 
+> > I don't think I've seen this method of adding bulk IRQ chips before.
+> > Isn't there a cleaner or generic way to do this?
+> 
+> I'll check.
+> 
+> ...
+> > > +#define CPCAP_REG_LDEB		0x1270	/* LMR Debounce Settings */
+> > > +#define CPCAP_REG_LGDET		0x1274	/* LMR GCAI Detach Detect */
+> > > +#define CPCAP_REG_LMISC		0x1278	/* LMR Misc Bits */
+> > > +#define CPCAP_REG_LMACE		0x127c	/* LMR Mace IC Support */
+> > > +
+> > > +#define CPCAP_REG_TEST		0x7c00	/* Test */
+> > > +
+> > > +#define CPCAP_REG_ST_TEST1	0x7d08	/* ST Test1 */
+> > > +
+> > > +#define CPCAP_REG_ST_TEST2	0x7d18	/* ST Test2 */
+> > 
+> > It would be nice to line up the entire file. #OCD
+> 
+> Hmm care to clarify what you mean here? I think it's lined up with
+
+I'm missing context now you've <snip>ed.
+
+These look straight, however is the whole file lined up (as much as
+*practically* possible)?
+
+> tabs to line up. I left empty lines where the registers are not
+> contiguous. What does #OCD mean, Obsessive Compulsive Disorder over
+> header files maybe? :)
+
+Yes, that's what it means.
+
+/me likes straight lines. :)
+
+> Anywys thanks for the review, the rest of the comments I will just
+> fix and repost.
+
+Welcome.
+
 -- 
-2.1.4
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
