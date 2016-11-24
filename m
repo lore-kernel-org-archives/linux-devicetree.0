@@ -1,52 +1,35 @@
-From: Ziji Hu <huziji@marvell.com>
-Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
- Xenon SDHC
-Date: Thu, 24 Nov 2016 18:57:18 +0800
-Message-ID: <f7334e41-39dd-f868-ff10-199afaebe926@marvell.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
- <2204525.IWIYQVjIXl@wuerfel>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 00/06] clocksource: sh_cmt: DT binding rework V4
+Date: Thu, 24 Nov 2016 11:58:43 +0100
+Message-ID: <20161124105843.GA26737@verge.net.au>
+References: <20160314142342.17180.21352.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2204525.IWIYQVjIXl@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, "Jack(SH) Zhu" <jmzhu@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Shiwu Zhang <zhangshw@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>, Xueping Liu <xpliu@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160314142342.17180.21352.sendpatchset@little-apple>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Magnus,
 
-On 2016/11/24 17:56, Arnd Bergmann wrote:
-> On Monday, October 31, 2016 12:09:56 PM CET Gregory CLEMENT wrote:
->> From: Ziji Hu <huziji@marvell.com>
->>
->> Marvell Xenon eMMC/SD/SDIO Host Controller contains PHY.
->> Three types of PHYs are supported.
->>
->> Add support to multiple types of PHYs init and configuration.
->> Add register definitions of PHYs.
->>
->> Signed-off-by: Hu Ziji <huziji@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->>
+On Mon, Mar 14, 2016 at 11:23:42PM +0900, Magnus Damm wrote:
+> clocksource: sh_cmt: DT binding rework V4
 > 
-> Please explain in the changelog why this is not a generic
-> phy driver (or three of them).
+> [PATCH v4 01/06] devicetree: bindings: Remove sh7372 CMT binding
+> [PATCH v4 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
+> [PATCH v4 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
+> [PATCH v4 04/06] devicetree: bindings: Deprecate property, update example
+> [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
+> [PATCH v4 06/06] devicetree: bindings: Remove deprecated properties
 > 
-	Actually we tried to put the PHY code into Linux PHY framework.
-	But it cannot fit in Linux common PHY framework.
+> Here is the latest and hopefully final take on updating the CMT DT
+> bindings for R-Car Gen2. In total there are 6 patches that have acks
+> and are ready to be picked up and merged. Other earlier posted changes
+> such as driver modification and SoC DTS bits depend on this series.
 
-	Our Xenon SDHC PHY register is a part of Xenon SDHC register set.
-	Besides, during MMC initialization, MMC sequence has to call several PHY functions to complete timing setting.
-	In those PHY setting functions, they have to access SDHC register and know current MMC setting, such as bus width, clock frequency and speed mode.
-	As a result, we have to implement PHY under MMC directory.
-
-	Thank you.
-
-Best regards,
-Hu Ziji
-
-> 	Arnd
-> 
+I am wondering what the state of this work is.
+I see only one minor review comment for this series.
+It would be great to see it merged.
