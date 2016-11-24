@@ -1,109 +1,51 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 7/9] clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
-Date: Thu, 24 Nov 2016 15:45:47 +0100
-Message-ID: <1479998749-20358-8-git-send-email-gabriel.fernandez@st.com>
-References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: Re: [PATCH v9 3/4] dtc: Plugin and fixup support
+Date: Thu, 24 Nov 2016 13:49:35 +0000
+Message-ID: <dab7f38a-89c3-adbc-07a5-8ef8669ded42@raspberrypi.org>
+References: <1479990693-14260-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1479990693-14260-4-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479990693-14260-4-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On 24/11/2016 12:31, Pantelis Antoniou wrote:
+> This patch enable the generation of symbols & local fixup information
+> for trees compiled with the -@ (--symbols) option.
+>
+> Using this patch labels in the tree and their users emit information
+> in __symbols__ and __local_fixups__ nodes.
+>
+> The __fixups__ node make possible the dynamic resolution of phandle
+> references which are present in the plugin tree but lie in the
+> tree that are applying the overlay against.
+>
+> While there is a new magic number for dynamic device tree/overlays blobs
+> it is by default disabled. This is in order to give time for DT blob
+> methods to be updated.
+>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+It's great to see this work about to come to fruition, but I have a
+reservation about this patch. Like previous versions, this
+implementation generates __fixups__, __local_fixups__  and __symbols__
+whenever the "-@" command line parameter is given; without it you get
+none. In my opinion, this logic causes the DTBs to be unnecessarily
+large with no obvious benefit.
 
-In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
-from pll-sai-p.
+You can divide the compiled outputs from DTC into two categories - fully
+resolved DTBs (what I would call base DTBs), and overlays. Base DTBs
+should include __symbols__ to allow overlays to be applied, and it is
+right that this should be controlled by the "-@" flag, but since base
+DTBs are fully resolved I think there is no reason to include either
+__fixups__ or __local_fixups__. Therefore I think both kinds of fixups
+should only be omitted when the "/plugin/ " directive is used. This was
+the purpose of one of the patches I provided you with.
 
-The SDIO clock could be also derived from 48Mhz or from sys clock.
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- drivers/clk/clk-stm32f4.c | 49 ++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index 02339d1..161449d 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -206,7 +206,7 @@ struct stm32f4_gate_data {
- 	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
--	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
-+	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"sdmux" },
- 	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
- 	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
-@@ -940,6 +940,10 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
- static const char *sai_parents[4] = { "pllsai-q-div", "plli2s-q-div", NULL,
- 	"no-clock" };
- 
-+static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
-+
-+static const char *sdmux_parents[2] = { "pll48", "sys" };
-+
- struct stm32_aux_clk {
- 	int idx;
- 	const char *name;
-@@ -994,6 +998,45 @@ struct stm32f4_clk_data {
- 	},
- };
- 
-+static const struct stm32_aux_clk stm32f469_aux_clk[] = {
-+	{
-+		CLK_LCD, "lcd-tft", lcd_parent, ARRAY_SIZE(lcd_parent),
-+		NO_MUX, 0, 0,
-+		STM32F4_RCC_APB2ENR, 26,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_I2S, "i2s", i2s_parents, ARRAY_SIZE(i2s_parents),
-+		STM32F4_RCC_CFGR, 23, 1,
-+		NO_GATE, 0,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI1, "sai1-a", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 20, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI2, "sai1-b", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 22, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		NO_IDX, "pll48", pll48_parents, ARRAY_SIZE(pll48_parents),
-+		STM32F4_RCC_DCKCFGR, 27, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+	{
-+		NO_IDX, "sdmux", sdmux_parents, ARRAY_SIZE(sdmux_parents),
-+		STM32F4_RCC_DCKCFGR, 28, 1,
-+		NO_GATE, 0,
-+		0
-+	},
-+};
-+
- static const struct stm32f4_clk_data stm32f429_clk_data = {
- 	.gates_data	= stm32f429_gates,
- 	.gates_map	= stm32f42xx_gate_map,
-@@ -1008,8 +1051,8 @@ struct stm32f4_clk_data {
- 	.gates_map	= stm32f46xx_gate_map,
- 	.gates_num	= ARRAY_SIZE(stm32f469_gates),
- 	.pll_data	= stm32f469_pll,
--	.aux_clk	= stm32f429_aux_clk,
--	.aux_clk_num	= ARRAY_SIZE(stm32f429_aux_clk),
-+	.aux_clk	= stm32f469_aux_clk,
-+	.aux_clk_num	= ARRAY_SIZE(stm32f469_aux_clk),
- };
- 
- static const struct of_device_id stm32f4_of_match[] = {
--- 
-1.9.1
+Phil Elwell, Raspberry Pi
