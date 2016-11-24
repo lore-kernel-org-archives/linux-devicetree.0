@@ -1,57 +1,42 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 4/6] dt-bindings: change hi6220-reset.txt according to
- reset-hi6220.c
-Date: Thu, 24 Nov 2016 08:41:19 +0800
-Message-ID: <b5451df3-2af5-1236-f1f4-a70ac2de9a3b@linaro.org>
-References: <1479800961-6249-1-git-send-email-zhangfei.gao@linaro.org>
- <1479800961-6249-5-git-send-email-zhangfei.gao@linaro.org>
- <2314383.qiZ3Cq7QsP@wuerfel> <20161123230637.m4cvc2l4huxlf5dd@rob-hp-laptop>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v4 1/2] i2c: aspeed: added driver for Aspeed I2C
+Date: Wed, 23 Nov 2016 16:45:05 -0800
+Message-ID: <CAFd5g47boqUMcmjPPwYw9aEhof-mjhjVKxA69UDQkC1vbn+xWQ@mail.gmail.com>
+References: <1478311099-6771-1-git-send-email-brendanhiggins@google.com>
+ <1478311099-6771-2-git-send-email-brendanhiggins@google.com>
+ <28078e6d-f5e4-da59-e226-baa9a60a4b19@kaod.org> <584151479839034@web17g.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161123230637.m4cvc2l4huxlf5dd@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Xinliang Liu <xinliang.liu@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, Philipp Zabel <p.zabel@pengutronix.de>, Jiancheng Xue <xuejiancheng@hisilicon.com>, linux-arm-kernel@lists.infradead.org, Xia Qing <saberlily.xia@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <584151479839034@web17g.yandex.ru>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Kachalov Anton <mouse@mayc.ru>
+Cc: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYgoKCk9uIDIwMTblubQxMeaciDI05pelIDA3OjA2LCBSb2IgSGVycmluZyB3cm90ZToK
-PiBPbiBUdWUsIE5vdiAyMiwgMjAxNiBhdCAwOTo0ODozMkFNICswMTAwLCBBcm5kIEJlcmdtYW5u
-IHdyb3RlOgo+PiBPbiBUdWVzZGF5LCBOb3ZlbWJlciAyMiwgMjAxNiAzOjQ5OjE5IFBNIENFVCBa
-aGFuZ2ZlaSBHYW8gd3JvdGU6Cj4+PiAgIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiAgIC0gY29t
-cGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgo+Pj4gLSAgLSAiaGlzaWxp
-Y29uLGhpNjIyMC1zeXNjdHJsIiwgInN5c2NvbiIgOiBGb3IgcGVyaXBoZXJhbCByZXNldCBjb250
-cm9sbGVyLgo+Pj4gLSAgLSAiaGlzaWxpY29uLGhpNjIyMC1tZWRpYWN0cmwiLCAic3lzY29uIiA6
-IEZvciBtZWRpYSByZXNldCBjb250cm9sbGVyLgo+Pj4gLS0gcmVnOiBzaG91bGQgYmUgcmVnaXN0
-ZXIgYmFzZSBhbmQgbGVuZ3RoIGFzIGRvY3VtZW50ZWQgaW4gdGhlCj4+PiAtICBkYXRhc2hlZXQK
-Pj4+ICsgIC0gImhpc2lsaWNvbixoaTYyMjAtcmVzZXQtc3lzY3RybCIgOiBGb3IgcGVyaXBoZXJh
-bCByZXNldCBjb250cm9sbGVyLgo+Pj4gKyAgLSAiaGlzaWxpY29uLGhpNjIyMC1yZXNldC1tZWRp
-YWN0cmwiIDogRm9yIG1lZGlhIHJlc2V0IGNvbnRyb2xsZXIuCj4+PiArLSBoaXNpLHJzdC1zeXNj
-b246IHBoYW5kbGUgb2YgdGhlIHJlc2V0J3Mgc3lzY29uLgo+Pj4gICAtICNyZXNldC1jZWxsczog
-MSwgc2VlIGJlbG93Cj4+Pgo+PiBQbGVhc2Uga2VlcCB0aGUgb2xkIHN0cmluZ3MgYXJvdW5kIGZv
-ciBjb21wYXRpYmlsaXR5Lgo+IFdoeSBhcmUgdGhlc2UgZXZlbiBjaGFuZ2luZz8gVGhlIGNvbW1p
-dCBtZXNzYWdlIHNob3VsZCBzYXkgd2h5LgpIYXZlIHNlbmQgW1JGQyBWMjpQQVRDSCAwLzJdIGFk
-ZCByZXNldC1oaTM2NjAKTm90IHRvdWNoaW5nIHRoaXMgZmlsZSBhbnkgbW9yZS4KT25seSBoYW5k
-bGUgaGkzNjYwLgoKQnV0IGhpNjIyMCBjYW4gZGlyZWN0bHkgdXNlIHRoZSBkcml2ZXIuCk9ubHkg
-bmVlZCBsaXN0IHJlc2V0IGluZm8gdG8gaGk2MjIwLmR0cywgc2FtZSBhcyBoaTM2NjAuCkxpa2UK
-KyAgICAgICBpb21jdV9yc3Q6IGlvbWN1X3JzdF9jb250cm9sbGVyIHsKKyAgICAgICAgICAgICAg
-IGNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhpMzY2MC1yZXNldCI7CisgICAgICAgICAgICAgICAj
-cmVzZXQtY2VsbHMgPSA8MT47CisgICAgICAgICAgICAgICBoaXNpLHJzdC1zeXNjb24gPSA8Jmlv
-bWN1PjsKKyAgICAgICAgICAgICAgIGhpc2kscmVzZXQtYml0cyA9IDwweDIwIDB4OCAgICAgICAg
-ICAgICAvKiAwOiBpMmMwICovCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgy
-MCAweDEwICAgICAgICAgICAgLyogMTogaTJjMSAqLworICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDB4MjAgMHgyMCAgICAgICAgICAgIC8qIDI6IGkyYzIgKi8KKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAweDIwIDB4ODAwMDAwMD47ICAgICAvKiAzOiBpMmM2ICov
-CisgICAgICAgfTsKClRoYW5rcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+> I would like to add my five cents here. Do not limit the bus_clk with 400kHz (FM) while HighSpeed is above
+> 1MHz (above FM+ devices). I've successfully tested FM+ (1Mhz) in a quite big i2c network (a number of
+> pca9600, pca9675, pca9848) with at least eight AST2150 SoCs on the common bus.
+
+Interesting point, on one hand I would argue that we should force
+people to use either FM or FM+ in a conformant manner. But on the
+other hand, I suppose a device may not support FM+'s electrical
+characteristics, but could run at a higher clock rate, and it is
+better to allow that than forcing FM+. Maybe I should remove any kind
+of restriction, and just allow the clock to be set to any conformant
+frequency and expose FM+ as a separate option in device tree.
+Thoughts?
+
+> BTW. Just a lame question. If the device isn't designed to work on the higher speed (like standard of FM)
+> while the bus selected as FM+, would those kind of devices just unoperate or may have undefined behavior
+> and disturb the SDA/SCL? Just wondering to dynamically slowdown down to 100Khz (if needed) for the
+> specific slave, but keep high rate (FM+) at the normal operation.
+
+I have never tried this myself, but I suspect there may be other
+issues with running an FM device on an FM+ bus: FM+ uses a higher
+current to make the rise times on the line faster. A bigger problem:
+if a master wanted to select a high speed capable slave, it could
+write the address at a high speed which might look like a different
+address to a low speed slave that is incapable of sampling the address
+properly. So I do not think that supporting dynamically slowing down
+an I2C bus makes much sense. An interesting idea, though.
