@@ -1,34 +1,31 @@
-From: "Mr. Piyush Gupta" <dsbbank-ytc+IHgoah0@public.gmane.org>
-Subject: GOOD DAY FRIEND
-Date: Thu, 24 Nov 2016 10:39:22 -0500
-Message-ID: <abe2752194efe4fb2384412989104387@localhost>
-Reply-To: infopiyush-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/3] sx150x update - bugfix, cleanup, last 4 chips
+Date: Thu, 24 Nov 2016 21:45:17 +0100
+Message-ID: <1480020320-28354-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
+Yet another sx150x update, only the first is critical.
+
+Cheers,
+Peter
+
+Peter Rosin (3):
+  pinctrl: sx150x: use correct registers for reg_sense (sx1502 and
+    sx1508)
+  pinctrl: sx150x: sort chips by part number
+  pinctrl: sx150x: add support for sx1501, sx1504, sx1505 and sx1507
+
+ .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |  14 +-
+ drivers/pinctrl/pinctrl-sx150x.c                   | 206 +++++++++++++++------
+ 2 files changed, 161 insertions(+), 59 deletions(-)
 
 -- 
-Dear Friend,
-
-Good Day, I am Mr. Piyush Gupta as a  (DBSHK) banker, I have funds worth 
-of $25.500,000.00 to secretly secure and transfer in to your account of 
-my late client who dead with next of kin, which i will like to invest in 
-profitable business in your country.
-
-Please if you are interested to help me without betrayed me, do and 
-write me for more details. Here is my Email: infopiyushg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
-Regards,
-Mr. Piyush Gupta.
-(DBSHK)
-Hong Kong.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
