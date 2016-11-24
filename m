@@ -1,64 +1,50 @@
-From: Jun Nie <jun.nie@linaro.org>
-Subject: Re: [PATCH v6 3/5] Documentation: synopsys-dw-mshc: add binding for
- fifo quirks
-Date: Thu, 24 Nov 2016 10:19:40 +0800
-Message-ID: <CABymUCN_+kJC2NZaPuqOg1C_Q2ASmiGwbwWCtfiLjGwSqPjgkQ@mail.gmail.com>
-References: <1479450555-19047-1-git-send-email-jun.nie@linaro.org> <1479450555-19047-4-git-send-email-jun.nie@linaro.org>
+From: Rick Chang <rick.chang@mediatek.com>
+Subject: Re: [PATCH v7 4/4] vcodec: mediatek: Add Maintainers entry for
+ Mediatek JPEG driver
+Date: Thu, 24 Nov 2016 10:53:48 +0800
+Message-ID: <1479956028.8964.33.camel@mtksdaap41>
+References: <1479786377-11567-1-git-send-email-rick.chang@mediatek.com>
+         <1479786377-11567-5-git-send-email-rick.chang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1479450555-19047-4-git-send-email-jun.nie@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Jason Liu <jason.liu@linaro.org>, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc <linux-mmc@vger.kernel.org>, Jun Nie <jun.nie@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1479786377-11567-5-git-send-email-rick.chang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-11-18 14:29 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
-> Add fifo-addr property and fifo-watermark-quirk property to
-> synopsys-dw-mshc bindings. It is intended to provide more
-> dt interface to support SoCs specific configuration.
->
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+Hi Hans,
+
+Is it possible to update this patch? or I should create another new one.
+
+I may need to update it.
+
+Sorry for the inconvenience.
+
+On Tue, 2016-11-22 at 11:46 +0800, Rick Chang wrote:
+> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> index 4e00e85..8bf2e41 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -76,6 +76,17 @@ Optional properties:
->
->  * broken-cd: as documented in mmc core bindings.
->
-> +* data-addr: Override fifo address with value provided by DT. The default FIFO reg
-> +  offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A) by
-> +  driver. If the controller does not follow this rule, please use this property
-> +  to set fifo address in device tree.
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 93e9f42..a9e7ee0 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7818,6 +7818,13 @@ L:	netdev@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/net/ethernet/mediatek/
+>  
+> +MEDIATEK JPEG DRIVER
+> +M:	Rick Chang <rick.chang@mediatek.com>
+> +M:	Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> +S:	Supported
+> +F:	drivers/media/platform/mtk-jpeg/
+> +F:	Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
 > +
-> +* fifo-watermark-aligned: Data done irq is expected if data length is less than
-> +  watermark in PIO mode. But fifo watermark is requested to be aligned with data
-> +  length in some SoC so that TX/RX irq can be generated with data done irq. Add this
-> +  watermark quirk to mark this requirement and force fifo watermark setting
-> +  accordingly.
-> +
->  * vmmc-supply: The phandle to the regulator to use for vmmc.  If this is
->    specified we'll defer probe until we can find this regulator.
->
-> @@ -103,6 +114,8 @@ board specific portions as listed below.
->                 interrupts = <0 75 0>;
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> +               data-addr = <0x200>;
-> +               fifo-watermark-aligned;
->         };
->
->  [board specific internal DMA resources]
-> --
-> 1.9.1
->
-Hi Rob & Mark,
-
-Could you help review and act this patch if you think it is OK? Thank you!
-
-Jun
+>  MEDIATEK MEDIA DRIVER
+>  M:	Tiffany Lin <tiffany.lin@mediatek.com>
+>  M:	Andrew-CT Chen <andrew-ct.chen@mediatek.com>
