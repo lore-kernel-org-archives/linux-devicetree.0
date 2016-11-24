@@ -1,41 +1,41 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH v2 1/5] Documentation: pinctrl: palmas: Add
- ti,palmas-powerhold-override property definition
-Date: Thu, 24 Nov 2016 10:58:39 +0530
-Message-ID: <23bf98ee-bcdc-e100-54ce-6f4b1e13ffcf@ti.com>
-References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
- <1478754560-27923-2-git-send-email-j-keerthy@ti.com>
- <20161115014352.5d3qwoonlo63mp5p@rob-hp-laptop>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/2] gpio: axp209: use correct register for GPIO input status
+Date: Thu, 24 Nov 2016 13:52:55 +0800
+Message-ID: <CAGb2v67h1kH9=MtvKTnzgTTbO6BK5Qb2sJ8uG5=mb1UWVBVSaQ@mail.gmail.com>
+References: <20161123132749.11666-1-quentin.schulz@free-electrons.com>
+ <20161123132749.11666-2-quentin.schulz@free-electrons.com> <20161123144532.3089ebfd@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161115014352.5d3qwoonlo63mp5p@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: tony@atomide.com, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161123144532.3089ebfd@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tuesday 15 November 2016 07:13 AM, Rob Herring wrote:
-> On Thu, Nov 10, 2016 at 10:39:16AM +0530, Keerthy wrote:
->> GPIO7 is configured in POWERHOLD mode which has higher priority
->> over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
->> bit is turned off. This property enables driver to over ride the
->> POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
->> scenarios.
+On Wed, Nov 23, 2016 at 9:45 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
+> Hello,
+>
+> On Wed, 23 Nov 2016 14:27:48 +0100, Quentin Schulz wrote:
+>> The GPIO input status was read from control register
+>> (AXP20X_GPIO[210]_CTRL) instead of status register (AXP20X_GPIO20_SS).
 >>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
->>  1 file changed, 9 insertions(+)
+>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> This smells like a bug fix, so perhaps Cc: stable?
 
-Tony,
+Presently there are no in-tree boards that use the GPIOs
+as input. And the only user I see is the CHIP, for the headphone
+jack detection. Again, not supported in mainline yet.
 
-Are you planning to pick this one as well?
+Not sure if there is value in sending it for stable.
 
-- Keerthy
+ChenYu
+
 >
+> Thomas
+> --
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
