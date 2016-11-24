@@ -1,133 +1,52 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 1/9] clk: stm32f4: Update DT bindings documentation
-Date: Thu, 24 Nov 2016 15:45:41 +0100
-Message-ID: <1479998749-20358-2-git-send-email-gabriel.fernandez@st.com>
-References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v2 0/9] STM32F4 missing clocks
+Date: Thu, 24 Nov 2016 15:45:40 +0100
+Message-ID: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479998749-20358-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Creation of dt include file for specific stm32f4 clocks.
-These specific clocks are not derived from system clock (SYSCLOCK)
-We should use index 1 to use these clocks in DT.
-e.g. <&rcc 1 CLK_LSI>
+v2:
+ - Put post divider in config structure
+ - Rework patch-set
+    - add update dt binding documentation
+    - add clock definition file
+ - Use composite for pll vco clocks
+ - For auxiliary clock, allow the possiblity to enable peripheral
+   clocks at same time (sugested by radek)
+ - Add vco_in clock (entry frequency for all pll) to simplify the code and clarify clock tree
+ - Fix missing end of divider tables
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/clock/st,stm32-rcc.txt     |  8 ++++++
- drivers/clk/clk-stm32f4.c                          |  9 +++++--
- include/dt-bindings/clock/stm32f4-clock.h          | 31 ++++++++++++++++++++++
- 3 files changed, 46 insertions(+), 2 deletions(-)
+This patch-set adds:
+ - I2S & SAI PLLs
+ - SDIO & 48 Mhz clocks
+ - LCD-TFT clock
+ - I2S & SAI clocks
+
+Gabriel Fernandez (9):
+  clk: stm32f4: Update DT bindings documentation
+  clk: stm32f4: Add PLL_I2S & PLL_SAI for STM32F429/469 boards
+  clk: stm32f4: Add post divisor for I2S & SAI PLLs
+  clk: stm32f4: Add lcd-tft clock
+  clk: stm32f4: Add I2S clock
+  clk: stm32f4: Add SAI clocks
+  clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
+  arm: dts: stm32f4: Add external I2S clock
+  arm: dts: stm32f4: Include auxiliary stm32f4 clock definition
+
+ .../devicetree/bindings/clock/st,stm32-rcc.txt     |  15 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |   9 +-
+ drivers/clk/clk-stm32f4.c                          | 585 ++++++++++++++++++++-
+ include/dt-bindings/clock/stm32f4-clock.h          |  37 ++
+ 4 files changed, 626 insertions(+), 20 deletions(-)
  create mode 100644 include/dt-bindings/clock/stm32f4-clock.h
 
-diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-index 0532d81..18e05c2 100644
---- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-+++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
-@@ -17,6 +17,8 @@ Required properties:
-   property, containing a phandle to the clock device node, an index selecting
-   between gated clocks and other clocks and an index specifying the clock to
-   use.
-+- clocks: External oscillator clock phandle
-+  - high speed external clock signal (HSE)
- 
- Example:
- 
-@@ -25,6 +27,7 @@ Example:
- 		#clock-cells = <2>
- 		compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
- 		reg = <0x40023800 0x400>;
-+		clocks = <&clk_hse>;
- 	};
- 
- Specifying gated clocks
-@@ -66,6 +69,11 @@ The secondary index is bound with the following magic numbers:
- 
- 	0	SYSTICK
- 	1	FCLK
-+	2	CLK_LSI		(low-power clock source)
-+	3	CLK_LSE		(generated from a 32.768 kHz low-speed external
-+				 crystal or ceramic resonator)
-+	4	CLK_HSE_RTC	(HSE division factor for RTC clock)
-+	5	CLK_RTC		(real-time clock)
- 
- Example:
- 
-diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index 5eb05db..39965ab 100644
---- a/drivers/clk/clk-stm32f4.c
-+++ b/drivers/clk/clk-stm32f4.c
-@@ -28,6 +28,13 @@
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
- 
-+/*
-+ * Include list of clocks wich are not derived from system clock (SYSCLOCK)
-+ * The index of these clocks is the secondary index of DT bindings
-+ *
-+ */
-+#include <dt-bindings/clock/stm32f4-clock.h>
-+
- #define STM32F4_RCC_PLLCFGR		0x04
- #define STM32F4_RCC_CFGR		0x08
- #define STM32F4_RCC_AHB1ENR		0x30
-@@ -208,8 +215,6 @@ struct stm32f4_gate_data {
- 	{ STM32F4_RCC_APB2ENR, 26,	"ltdc",		"apb2_div" },
- };
- 
--enum { SYSTICK, FCLK, CLK_LSI, CLK_LSE, CLK_HSE_RTC, CLK_RTC, END_PRIMARY_CLK };
--
- /*
-  * This bitmask tells us which bit offsets (0..192) on STM32F4[23]xxx
-  * have gate bits associated with them. Its combined hweight is 71.
-diff --git a/include/dt-bindings/clock/stm32f4-clock.h b/include/dt-bindings/clock/stm32f4-clock.h
-new file mode 100644
-index 0000000..3132b6a
---- /dev/null
-+++ b/include/dt-bindings/clock/stm32f4-clock.h
-@@ -0,0 +1,31 @@
-+/*
-+ * stm32f4-clock.h
-+ *
-+ * Copyright (C) 2016 STMicroelectronics
-+ * Author: Gabriel Fernandez for STMicroelectronics.
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+/*
-+ * List of clocks wich are not derived from system clock (SYSCLOCK)
-+ *
-+ * The index of these clocks is the secondary index of DT bindings
-+ * (see Documentatoin/devicetree/bindings/clock/st,stm32-rcc.txt)
-+ *
-+ * e.g:
-+	<assigned-clocks = <&rcc 1 CLK_LSE>;
-+*/
-+
-+#ifndef _DT_BINDINGS_CLK_STMF4_H
-+#define _DT_BINDINGS_CLK_STMF4_H
-+
-+#define SYSTICK			0
-+#define FCLK			1
-+#define CLK_LSI			2
-+#define CLK_LSE			3
-+#define CLK_HSE_RTC		4
-+#define CLK_RTC			5
-+
-+#define END_PRIMARY_CLK		6
-+
-+#endif
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
