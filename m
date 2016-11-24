@@ -1,221 +1,75 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH 2/3] pinctrl: sx150x: sort chips by part number
-Date: Thu, 24 Nov 2016 21:45:19 +0100
-Message-ID: <1480020320-28354-3-git-send-email-peda@axentia.se>
-References: <1480020320-28354-1-git-send-email-peda@axentia.se>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
+Date: Fri, 25 Nov 2016 01:26:48 +0200
+Message-ID: <4461318.dYHS3nW9CP@avalon>
+References: <2778019.JJI4Lz6scm@avalon>
+ <CAOMZO5CZ-c=1zos=6ovY9Tfkz-UeUq0c1sUQ_Fa8t-TjW6k6hw@mail.gmail.com>
+ <831329ae-1c16-07ba-3eca-95f6ff8dbae2@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480020320-28354-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <831329ae-1c16-07ba-3eca-95f6ff8dbae2@mentor.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |   6 +-
- drivers/pinctrl/pinctrl-sx150x.c                   | 142 ++++++++++-----------
- 2 files changed, 74 insertions(+), 74 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-index 25b4ec80c759..83f8d5c449ba 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-@@ -6,11 +6,11 @@ pin controller, GPIO, and interrupt bindings.
- 
- Required properties:
- - compatible: should be one of :
-+			"semtech,sx1502q",
-+			"semtech,sx1503q",
- 			"semtech,sx1506q",
- 			"semtech,sx1508q",
--			"semtech,sx1509q",
--			"semtech,sx1502q",
--			"semtech,sx1503q".
-+			"semtech,sx1509q".
- 
- - reg: The I2C slave address for this device.
- 
-diff --git a/drivers/pinctrl/pinctrl-sx150x.c b/drivers/pinctrl/pinctrl-sx150x.c
-index a19c814843aa..97df9302e84b 100644
---- a/drivers/pinctrl/pinctrl-sx150x.c
-+++ b/drivers/pinctrl/pinctrl-sx150x.c
-@@ -148,71 +148,6 @@ static const struct pinctrl_pin_desc sx150x_16_pins[] = {
- 	PINCTRL_PIN(16, "oscio"),
- };
- 
--static const struct sx150x_device_data sx1508q_device_data = {
--	.model = SX150X_789,
--	.reg_pullup	= 0x03,
--	.reg_pulldn	= 0x04,
--	.reg_dir	= 0x07,
--	.reg_data	= 0x08,
--	.reg_irq_mask	= 0x09,
--	.reg_irq_src	= 0x0c,
--	.reg_sense	= 0x0a,
--	.pri.x789 = {
--		.reg_drain	= 0x05,
--		.reg_polarity	= 0x06,
--		.reg_clock	= 0x0f,
--		.reg_misc	= 0x10,
--		.reg_reset	= 0x7d,
--	},
--	.ngpios = 8,
--	.pins = sx150x_8_pins,
--	.npins = ARRAY_SIZE(sx150x_8_pins),
--};
--
--static const struct sx150x_device_data sx1509q_device_data = {
--	.model = SX150X_789,
--	.reg_pullup	= 0x06,
--	.reg_pulldn	= 0x08,
--	.reg_dir	= 0x0e,
--	.reg_data	= 0x10,
--	.reg_irq_mask	= 0x12,
--	.reg_irq_src	= 0x18,
--	.reg_sense	= 0x14,
--	.pri.x789 = {
--		.reg_drain	= 0x0a,
--		.reg_polarity	= 0x0c,
--		.reg_clock	= 0x1e,
--		.reg_misc	= 0x1f,
--		.reg_reset	= 0x7d,
--	},
--	.ngpios	= 16,
--	.pins = sx150x_16_pins,
--	.npins = ARRAY_SIZE(sx150x_16_pins),
--};
--
--static const struct sx150x_device_data sx1506q_device_data = {
--	.model = SX150X_456,
--	.reg_pullup	= 0x04,
--	.reg_pulldn	= 0x06,
--	.reg_dir	= 0x02,
--	.reg_data	= 0x00,
--	.reg_irq_mask	= 0x08,
--	.reg_irq_src	= 0x0e,
--	.reg_sense	= 0x0a,
--	.pri.x456 = {
--		.reg_pld_mode	= 0x20,
--		.reg_pld_table0	= 0x22,
--		.reg_pld_table1	= 0x24,
--		.reg_pld_table2	= 0x26,
--		.reg_pld_table3	= 0x28,
--		.reg_pld_table4	= 0x2a,
--		.reg_advance	= 0xad,
--	},
--	.ngpios	= 16,
--	.pins = sx150x_16_pins,
--	.npins = 16, /* oscio not available */
--};
--
- static const struct sx150x_device_data sx1502q_device_data = {
- 	.model = SX150X_123,
- 	.reg_pullup	= 0x02,
-@@ -259,6 +194,71 @@ static const struct sx150x_device_data sx1503q_device_data = {
- 	.npins  = 16, /* oscio not available */
- };
- 
-+static const struct sx150x_device_data sx1506q_device_data = {
-+	.model = SX150X_456,
-+	.reg_pullup	= 0x04,
-+	.reg_pulldn	= 0x06,
-+	.reg_dir	= 0x02,
-+	.reg_data	= 0x00,
-+	.reg_irq_mask	= 0x08,
-+	.reg_irq_src	= 0x0e,
-+	.reg_sense	= 0x0a,
-+	.pri.x456 = {
-+		.reg_pld_mode	= 0x20,
-+		.reg_pld_table0	= 0x22,
-+		.reg_pld_table1	= 0x24,
-+		.reg_pld_table2	= 0x26,
-+		.reg_pld_table3	= 0x28,
-+		.reg_pld_table4	= 0x2a,
-+		.reg_advance	= 0xad,
-+	},
-+	.ngpios	= 16,
-+	.pins = sx150x_16_pins,
-+	.npins = 16, /* oscio not available */
-+};
-+
-+static const struct sx150x_device_data sx1508q_device_data = {
-+	.model = SX150X_789,
-+	.reg_pullup	= 0x03,
-+	.reg_pulldn	= 0x04,
-+	.reg_dir	= 0x07,
-+	.reg_data	= 0x08,
-+	.reg_irq_mask	= 0x09,
-+	.reg_irq_src	= 0x0c,
-+	.reg_sense	= 0x0a,
-+	.pri.x789 = {
-+		.reg_drain	= 0x05,
-+		.reg_polarity	= 0x06,
-+		.reg_clock	= 0x0f,
-+		.reg_misc	= 0x10,
-+		.reg_reset	= 0x7d,
-+	},
-+	.ngpios = 8,
-+	.pins = sx150x_8_pins,
-+	.npins = ARRAY_SIZE(sx150x_8_pins),
-+};
-+
-+static const struct sx150x_device_data sx1509q_device_data = {
-+	.model = SX150X_789,
-+	.reg_pullup	= 0x06,
-+	.reg_pulldn	= 0x08,
-+	.reg_dir	= 0x0e,
-+	.reg_data	= 0x10,
-+	.reg_irq_mask	= 0x12,
-+	.reg_irq_src	= 0x18,
-+	.reg_sense	= 0x14,
-+	.pri.x789 = {
-+		.reg_drain	= 0x0a,
-+		.reg_polarity	= 0x0c,
-+		.reg_clock	= 0x1e,
-+		.reg_misc	= 0x1f,
-+		.reg_reset	= 0x7d,
-+	},
-+	.ngpios	= 16,
-+	.pins = sx150x_16_pins,
-+	.npins = ARRAY_SIZE(sx150x_16_pins),
-+};
-+
- static int sx150x_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
- {
- 	return 0;
-@@ -758,20 +758,20 @@ static const struct pinconf_ops sx150x_pinconf_ops = {
- };
- 
- static const struct i2c_device_id sx150x_id[] = {
--	{"sx1508q", (kernel_ulong_t) &sx1508q_device_data },
--	{"sx1509q", (kernel_ulong_t) &sx1509q_device_data },
--	{"sx1506q", (kernel_ulong_t) &sx1506q_device_data },
- 	{"sx1502q", (kernel_ulong_t) &sx1502q_device_data },
- 	{"sx1503q", (kernel_ulong_t) &sx1503q_device_data },
-+	{"sx1506q", (kernel_ulong_t) &sx1506q_device_data },
-+	{"sx1508q", (kernel_ulong_t) &sx1508q_device_data },
-+	{"sx1509q", (kernel_ulong_t) &sx1509q_device_data },
- 	{}
- };
- 
- static const struct of_device_id sx150x_of_match[] = {
--	{ .compatible = "semtech,sx1508q", .data = &sx1508q_device_data },
--	{ .compatible = "semtech,sx1509q", .data = &sx1509q_device_data },
--	{ .compatible = "semtech,sx1506q", .data = &sx1506q_device_data },
- 	{ .compatible = "semtech,sx1502q", .data = &sx1502q_device_data },
- 	{ .compatible = "semtech,sx1503q", .data = &sx1503q_device_data },
-+	{ .compatible = "semtech,sx1506q", .data = &sx1506q_device_data },
-+	{ .compatible = "semtech,sx1508q", .data = &sx1508q_device_data },
-+	{ .compatible = "semtech,sx1509q", .data = &sx1509q_device_data },
- 	{},
- };
- 
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gRmFiaW8gYW5kIFZsYWRpbWlyLAoKVGhhbmsgeW91IGZvciB5b3VyIHF1aWNrIHJlc3Bv
+bnNlcy4KCk9uIEZyaWRheSAyNSBOb3YgMjAxNiAwMDoxNjowMCBWbGFkaW1pciBaYXBvbHNraXkg
+d3JvdGU6Cj4gT24gMTEvMjUvMjAxNiAxMjowNyBBTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+
+IE9uIFRodSwgTm92IDI0LCAyMDE2IGF0IDc6MTYgUE0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
+Cj4gPj4gSGkgQW5keSwKPiA+PiAKPiA+PiBBcyB0aGUgYXV0aG9yIG9mIHRoZSBEVy1IRE1JIERU
+IGJpbmRpbmdzIHRoaXMgcXVlc3Rpb24gaXMgYWRkcmVzc2VkIHRvCj4gPj4geW91LCBidXQgaW5m
+b3JtYXRpb24gZnJvbSBhbnlvbmUgaXMgbW9yZSB0aGFuIHdlbGNvbWUuCj4gPj4gCj4gPj4gVGhl
+IERUIGJpbmRpbmdzIHNwZWNpZnkgdHdvIGNsb2NrcyBuYW1lZCAiaWFoYiIgYW5kICJpc2ZyIiBi
+dXQgZG9uJ3QKPiA+PiBkZXNjcmliZSB0aGVtLiBXaGlsZSBJIGFzc3VtZSB0aGF0IHRoZSAiaXNm
+ciIgY2xvY2sgY29ycmVzcG9uZHMgdG8gdGhlCj4gPj4gImlzZnJjbGsiIGlucHV0IHNpZ25hbCBv
+ZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlhaGIiIGNsb2NrCj4gPj4gZGVzY3JpYmVkIGlu
+IHRoZSBJUCBjb3JlIGRhdGFzaGVldC4KPiA+IAo+ID4gaS5NWDZRIGhhcyBhIERXLUhETUkgSVAg
+YmxvY2suCj4gPiAKPiA+IFRoZSBuYW1lcyBpbiB0aGUgZGV2aWNldHJlZSBiaW5kaW5nIG1hdGNo
+ZXMgdGhlIG9uZXMgbGlzdGVkIGF0IHRoZQo+ID4gaS5NWDZRIFJlZmVyZW5jZSBNYW51YWwgLSBU
+YWJsZSAzMy0xLiBIRE1JIENsb2Nrcwo+Cj4gY29ycmVjdCwgZm9yIHlvdXIgY29udmVuaWVuY2Ug
+dGhlIHRhYmxlIGlzIGNvcGllZCBiZWxvdzoKPiAKPiBDbG9jayBuYW1lIHwgICAgIENsb2NrIFJv
+b3QgICAgIHwgRGVzY3JpcHRpb24KPiAtLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLSst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgICBpYWhiY2xrICB8IGFo
+Yl9jbGtfcm9vdCAgICAgICB8IEJ1cyBjbG9jawo+ICAgIGljZWNjbGsgIHwgY2tpbF9zeW5jX2Ns
+a19yb290IHwgQ0VDIGxvdy1mcmVxdWVuY3kgY2xvY2sgKDMya0haKQo+ICAgIGloY2xrICAgIHwg
+YWhiX2Nsa19yb290ICAgICAgIHwgTW9kdWxlIGNsb2NrCj4gICAgaXNmcmNsayAgfCB2aWRlb18y
+N21fY2xrX3Jvb3QgfCBJbnRlcm5hbCBTRlIgY2xvY2sgKHZpZGVvIGNsb2NrIDI3TUh6KQo+IAo+
+IEhlcmUgQUhCIHN0YW5kcyBmb3IgQVJNIEFkdmFuY2VkIEhpZ2gtcGVyZm9ybWFuY2UgQnVzLgoK
+VGhhdCdzIHdoYXQgSSBzdXNwZWN0ZWQuIEkgYmVsaWV2ZSB0aGUgImlhaGIiIG5hbWUgaXMgd3Jv
+bmcsIGFzIHRoZSBEVyBIRE1JIFRYIApJUCBjb3JlIGNsZWFybHkgZG9jdW1lbnRzIHRoZSBidXMg
+Y2xvY2sgYXMgYmVpbmcgY2FsbGVkICJpYXBiY2xrIi4gV2UgY291bGQgCnJlbmFtZSB0aGF0IGlu
+IHRoZSBEVCBiaW5kaW5ncyAod2l0aCBjb21wYXRpYmlsaXR5IGNvZGUgaW4gdGhlIGRyaXZlciB0
+byBrZWVwIApzdXBwb3J0aW5nIHRoZSBvbGQgbmFtZSkgYnV0IGl0IG1pZ2h0IG5vdCBiZSB3b3J0
+aCBpdC4gVGhlIGJpbmRpbmdzIHNob3VsZCAKaG93ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFo
+YiIgY2xvY2sgaXMgdGhlIElQIGNvcmUncyAiaWFwYmNsayIgYnVzIGNsb2NrLgoKQW5vdGhlciBx
+dWVzdGlvbiBJIGhhdmUgYWJvdXQgdGhlIGJ1cyBjbG9jayAoQ0MnaW5nIHRoZSBkZXZpY2V0cmVl
+IG1haWxpbmcgCmxpc3QgYXMgd2VsbCBhcyB0aGUgY2xvY2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRo
+ZXIgaXQgc2hvdWxkIGJlIG1hZGUgb3B0aW9uYWwuIApUaGUgY2xvY2sgaXMgb2J2aW91c2x5IG1h
+bmRhdG9yeSBmcm9tIGEgaGFyZHdhcmUgcG9pbnQgb2YgdmlldyAoZ2l2ZW4gdGhhdCBBUEIgCmlz
+IGEgc3luY2hyb25vdXMgYnVzIGFuZCB0aHVzIHJlcXVpcmVzIGEgY2xvY2spLCBidXQgaW4gc29t
+ZSBTb0NzIAooc3BlY2lmaWNhbGx5IGZvciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlz
+IGFsd2F5cyBvbiBhbmQgY2FuJ3QgYmUgCmNvbnRyb2xsZWQuIFdlIGFscmVhZHkgb21pdCBidXMg
+Y2xvY2tzIGluIERUIGZvciBtb3N0IElQIGNvcmVzIHdoZW4gdGhlIGNsb2NrIApjYW4gbmV2ZXIg
+YmUgY29udHJvbGxlZCAoYW5kIHdlIGFsc28gb21pdCBhIGJ1bmNoIG9mIG90aGVyIGNsb2NrcyB0
+aGF0IHdlIApkb24ndCBldmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNlIHRv
+IG1ha2UgdGhlIGNsb2NrIG9wdGlvbmFsLiAKT3RoZXJ3aXNlIHRoZXJlIHdvdWxkIGJlIHJ1bnRp
+bWUgb3ZlcmhlYWQgdHJ5aW5nIHRvIGhhbmRsZSBhIGNsb2NrIHRoYXQgY2FuJ3QgCmJlIGNvbnRy
+b2xsZWQuCgo+IEJ5IHRoZSB3YXkgd2hpbGUgd2UncmUgZGlzY3Vzc2luZyBEVyBIRE1JIGJpbmRp
+bmdzIHNwZWNpZmljIHRvIGlNWCwKPiBJIHdvdWxkIHJlY29tbWVuZCB0byByZW1vdmUgdXR0ZXJs
+eSBoYWNraXNoIGFuZCBpTVggb25seSAiZ3ByIgo+IHByb3BlcnR5IGZyb20gdGhlIGV4YW1wbGUg
+aW4gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfaGRtaS50eHQKCi0tIApSZWdhcmRzLAoKTGF1
+cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
