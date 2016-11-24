@@ -1,48 +1,90 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/2] ARM: dts: sun6i: Disable display pipeline
- by default
-Date: Thu, 24 Nov 2016 14:43:37 +0800
-Message-ID: <20161124064339.12615-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Yao Yuan <yao.yuan@nxp.com>
+Subject: RE: [PATCH][v2] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Thu, 24 Nov 2016 07:18:13 +0000
+Message-ID: <DB6PR0401MB2407706FA8B5874F36D6D74489B60@DB6PR0401MB2407.eurprd04.prod.outlook.com>
+References: <1479320647-24460-1-git-send-email-harninder.rai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBH4Y3LAQKGQEGBILI6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1479320647-24460-1-git-send-email-harninder.rai@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "oss@buserror.net" <oss@buserror.net>, Harninder Rai <harninder.rai@nxp.com>, Bhaskar U <bhaskar.upadhaya@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shawn and All,
 
-While we now support the internal display pipeline found on sun6i, it
-is possible that we are unable to enable the display for some boards,
-due to a lack of drivers for the panels or bridges found on them. If
-the display pipeline is enabled, the driver will try to enable, and
-possibly screw up the simple framebuffer U-boot had configured.
+Any comment for this LS1012A platform support patch?
 
-This series disables the display pipeline by default, and re-enables
-it for the A31 Hummingbird, which already had its display pipeline
-enabled.
+Is this a good enough base for consequence dts update patches?  
 
-The series can go in after 4.10-rc1, as a fix, but should not be delayed
-till the next release.
+If yes, I'd like to send some dts patches for DSPI and QSPI based on this patch. 
 
-Regards
-ChenYu
+Thanks.
+Yao
 
-Chen-Yu Tsai (2):
-  ARM: dts: sun6i: Disable display pipeline by default
-  ARM: dts: sun6i: hummingbird: Enable display engine again
-
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 4 ++++
- arch/arm/boot/dts/sun6i-a31.dtsi            | 1 +
- 2 files changed, 5 insertions(+)
-
--- 
-2.10.2
+On 11/17/2016 02:24 AM, Harninder Rai wrote:
+> LS1012A features an advanced 64-bit ARM v8 CortexA53 processor with 32 KB
+> of parity protected L1-I cache, 32 KB of ECC protected L1-D cache, as well as 256
+> KB of ECC protected L2 cache.
+> 
+> Features summary
+>  One 64-bit ARM-v8 Cortex-A53 core with the following capabilities
+>   - Arranged as a cluster of one core supporting a 256 KB L2 cache with ECC
+>     protection
+>   - Speed up to 800 MHz
+>   - Parity-protected 32 KB L1 instruction cache and 32 KB L1 data cache
+>   - Neon SIMD engine
+>   - ARM v8 cryptography extensions
+>  One 16-bit DDR3L SDRAM memory controller  ARM core-link CCI-400 cache
+> coherent interconnect  Cryptography acceleration (SEC)  One Configurable x3
+> SerDes  One PCI Express Gen2 controller, supporting x1 operation  One serial
+> ATA (SATA Gen 3.0) controller  One USB 3.0/2.0 controller with integrated PHY
+> 
+>  Following levels of DTSI/DTS files have been created for the LS1012A
+>    SoC family:
+> 
+>            - fsl-ls1012a.dtsi:
+>                    DTS-Include file for FSL LS1012A SoC.
+> 
+>            - fsl-ls1012a-frdm.dts:
+>                    DTS file for FSL LS1012A FRDM board.
+> 
+>            - fsl-ls1012a-qds.dts:
+>                    DTS file for FSL LS1012A QDS board.
+> 
+>            - fsl-ls1012a-rdb.dts:
+>                     DTS file for FSL LS1012A RDB board.
+> 
+> Signed-off-by: Harninder Rai <harninder.rai@nxp.com>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+> ---
+> Changes in v2: Incorporated Shawn's comments
+> - Brief introduction of the SoC in commit message
+> - Alphabetic ordering of labeled nodes
+> - Better naming to be used for regulator node
+> - Make timer node's comments more readable
+> - Sort nodes with unit-address in order of the address
+> 
+>  arch/arm64/boot/dts/freescale/Makefile             |   3 +
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 115 ++++++++++
+> arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts  | 128 +++++++++++
+> arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts  |  59 +++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 245
+> +++++++++++++++++++++
+>  5 files changed, 550 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> 
