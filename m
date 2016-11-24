@@ -1,111 +1,35 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Thu, 24 Nov 2016 10:50:17 +0100
-Message-ID: <1479981017.2472.14.camel@pengutronix.de>
-References: <Arnd Bergmann <arnd@arndb.de>
-         <1479888476-13138-1-git-send-email-zhangfei.gao@linaro.org>
-         <1479888476-13138-2-git-send-email-zhangfei.gao@linaro.org>
-         <1479979605.2472.4.camel@pengutronix.de>
-         <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell Xenon SDHC
+Date: Thu, 24 Nov 2016 10:56:04 +0100
+Message-ID: <2204525.IWIYQVjIXl@wuerfel>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com> <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Jack(SH) Zhu" <jmzhu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shiwu Zhang <zhangshw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xueping Liu <xpli>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 24.11.2016, 17:40 +0800 schrieb zhangfei:
+On Monday, October 31, 2016 12:09:56 PM CET Gregory CLEMENT wrote:
+> From: Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > 
-> On 2016年11月24日 17:26, Philipp Zabel wrote:
-> > Am Mittwoch, den 23.11.2016, 16:07 +0800 schrieb Zhangfei Gao:
-> >> Add DT bindings documentation for hi3660 SoC reset controller.
-> >>
-> >> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >>   .../bindings/reset/hisilicon,hi3660-reset.txt      | 51 ++++++++++++++++++++++
-> >>   1 file changed, 51 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> >> new file mode 100644
-> >> index 0000000..250daf2
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
-> >> @@ -0,0 +1,51 @@
-> >> +Hisilicon System Reset Controller
-> >> +======================================
-> >> +
-> >> +Please also refer to reset.txt in this directory for common reset
-> >> +controller binding usage.
-> >> +
-> >> +The reset controller registers are part of the system-ctl block on
-> >> +hi3660 SoC.
-> >> +
-> >> +Required properties:
-> >> +- compatible: should be
-> >> +		 "hisilicon,hi3660-reset"
-> >> +- #reset-cells: 1, see below
-> >> +- hisi,rst-syscon: phandle of the reset's syscon.
-> >> +- hisi,reset-bits: Contains the reset control register information
-> >> +		  Should contain 2 cells for each reset exposed to
-> >> +		  consumers, defined as:
-> >> +			Cell #1 : offset from the syscon register base
-> >> +			Cell #2 : bits position of the control register
-> >> +
-> >> +Example:
-> >> +	iomcu: iomcu@ffd7e000 {
-> >> +		compatible = "hisilicon,hi3660-iomcu", "syscon";
-> >> +		reg = <0x0 0xffd7e000 0x0 0x1000>;
-> >> +	};
-> >> +
-> >> +	iomcu_rst: iomcu_rst_controller {
-> > This should be
-> > 	iomcu_rst: reset-controller {
-> >
-> >> +		compatible = "hisilicon,hi3660-reset";
-> >> +		#reset-cells = <1>;
-> >> +		hisi,rst-syscon = <&iomcu>;
-> >> +		hisi,reset-bits = <0x20 0x8		/* 0: i2c0 */
-> >> +				   0x20 0x10		/* 1: i2c1 */
-> >> +				   0x20 0x20		/* 2: i2c2 */
-> >> +				   0x20 0x8000000>;	/* 3: i2c6 */
-> >> +	};
-> > The reset lines are controlled through iomcu bits, is there a reason not
-> > to put the iomcu_rst node inside the iomcu node? That way the
-> > hisi,rst-syscon property could be removed and the syscon could be
-> > retrieved via the reset-controller parent node.
-> iomcu is common registers, controls clock and reset, etc.
-> So we use syscon, without mapping the registers everywhere.
-> It is common case in hisilicon, same in hi6220.
->
-> Also the #clock-cells and #reset-cells can not be put in the same node,
-> if they are both using probe, since reset_probe will not be called.
+> Marvell Xenon eMMC/SD/SDIO Host Controller contains PHY.
+> Three types of PHYs are supported.
 > 
-> So we use hisi,rst-syscon as a general solution.
+> Add support to multiple types of PHYs init and configuration.
+> Add register definitions of PHYs.
+> 
+> Signed-off-by: Hu Ziji <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
 
-What I meant is this:
+Please explain in the changelog why this is not a generic
+phy driver (or three of them).
 
-	iomcu: iomcu@ffd7e000 {
-		compatible = "hisilicon,hi3660-iomcu", "syscon", "simple-mfd";
-		reg = <0x0 0xffd7e000 0x0 0x1000>;
-
-		iomcu_rst: reset-controller {
-			compatible = "hisilicon,hi3660-reset";
-			#reset-cells = <1>;
-			hisi,reset-bits = <0x20 0x8		/* 0: i2c0 */
-					   0x20 0x10		/* 1: i2c1 */
-					   0x20 0x20		/* 2: i2c2 */
-					   0x20 0x8000000>;	/* 3: i2c6 */
-		};
-	};
-
-regards
-Philipp
-
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
