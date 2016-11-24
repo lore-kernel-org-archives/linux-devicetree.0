@@ -1,77 +1,49 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [RFC v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Thu, 24 Nov 2016 17:40:23 +0800
-Message-ID: <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d@linaro.org>
-References: <Arnd Bergmann <arnd@arndb.de>
- <1479888476-13138-1-git-send-email-zhangfei.gao@linaro.org>
- <1479888476-13138-2-git-send-email-zhangfei.gao@linaro.org>
- <1479979605.2472.4.camel@pengutronix.de>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD
+ Host Controller
+Date: Thu, 24 Nov 2016 10:48:58 +0100
+Message-ID: <20161124104858.3604c11d@free-electrons.com>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+        <4031579.CBE32NHUoW@wuerfel>
+        <877f7tmduw.fsf@free-electrons.com>
+        <28082657.RK5ubAe11Q@wuerfel>
+        <8737ihmctr.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1479979605.2472.4.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8737ihmctr.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liuliu Zhao <zhaoliul-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peng Zhu <zhupeng-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Xueping Liu <xpliu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hilbert Zhang <zzhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shiwu Zhang <zhangshw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yu Cao <yucao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbart>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE25bm0MTHmnIgyNOaXpSAxNzoyNiwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiBBbSBN
-aXR0d29jaCwgZGVuIDIzLjExLjIwMTYsIDE2OjA3ICswODAwIHNjaHJpZWIgWmhhbmdmZWkgR2Fv
-Ogo+PiBBZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgaGkzNjYwIFNvQyByZXNldCBj
-b250cm9sbGVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBaaGFuZ2ZlaSBHYW8gPHpoYW5nZmVpLmdh
-b0BsaW5hcm8ub3JnPgo+PiAtLS0KPj4gICAuLi4vYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhp
-MzY2MC1yZXNldC50eHQgICAgICB8IDUxICsrKysrKysrKysrKysrKysrKysrKysKPj4gICAxIGZp
-bGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpMzY2MC1yZXNl
-dC50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9yZXNldC9oaXNpbGljb24saGkzNjYwLXJlc2V0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGkzNjYwLXJlc2V0LnR4dAo+PiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi4yNTBkYWYyCj4+IC0tLSAvZGV2L251bGwK
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L2hpc2lsaWNv
-bixoaTM2NjAtcmVzZXQudHh0Cj4+IEBAIC0wLDAgKzEsNTEgQEAKPj4gK0hpc2lsaWNvbiBTeXN0
-ZW0gUmVzZXQgQ29udHJvbGxlcgo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT0KPj4gKwo+PiArUGxlYXNlIGFsc28gcmVmZXIgdG8gcmVzZXQudHh0IGluIHRoaXMgZGly
-ZWN0b3J5IGZvciBjb21tb24gcmVzZXQKPj4gK2NvbnRyb2xsZXIgYmluZGluZyB1c2FnZS4KPj4g
-Kwo+PiArVGhlIHJlc2V0IGNvbnRyb2xsZXIgcmVnaXN0ZXJzIGFyZSBwYXJ0IG9mIHRoZSBzeXN0
-ZW0tY3RsIGJsb2NrIG9uCj4+ICtoaTM2NjAgU29DLgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUKPj4gKwkJICJoaXNpbGljb24saGkzNjYw
-LXJlc2V0Igo+PiArLSAjcmVzZXQtY2VsbHM6IDEsIHNlZSBiZWxvdwo+PiArLSBoaXNpLHJzdC1z
-eXNjb246IHBoYW5kbGUgb2YgdGhlIHJlc2V0J3Mgc3lzY29uLgo+PiArLSBoaXNpLHJlc2V0LWJp
-dHM6IENvbnRhaW5zIHRoZSByZXNldCBjb250cm9sIHJlZ2lzdGVyIGluZm9ybWF0aW9uCj4+ICsJ
-CSAgU2hvdWxkIGNvbnRhaW4gMiBjZWxscyBmb3IgZWFjaCByZXNldCBleHBvc2VkIHRvCj4+ICsJ
-CSAgY29uc3VtZXJzLCBkZWZpbmVkIGFzOgo+PiArCQkJQ2VsbCAjMSA6IG9mZnNldCBmcm9tIHRo
-ZSBzeXNjb24gcmVnaXN0ZXIgYmFzZQo+PiArCQkJQ2VsbCAjMiA6IGJpdHMgcG9zaXRpb24gb2Yg
-dGhlIGNvbnRyb2wgcmVnaXN0ZXIKPj4gKwo+PiArRXhhbXBsZToKPj4gKwlpb21jdTogaW9tY3VA
-ZmZkN2UwMDAgewo+PiArCQljb21wYXRpYmxlID0gImhpc2lsaWNvbixoaTM2NjAtaW9tY3UiLCAi
-c3lzY29uIjsKPj4gKwkJcmVnID0gPDB4MCAweGZmZDdlMDAwIDB4MCAweDEwMDA+Owo+PiArCX07
-Cj4+ICsKPj4gKwlpb21jdV9yc3Q6IGlvbWN1X3JzdF9jb250cm9sbGVyIHsKPiBUaGlzIHNob3Vs
-ZCBiZQo+IAlpb21jdV9yc3Q6IHJlc2V0LWNvbnRyb2xsZXIgewo+Cj4+ICsJCWNvbXBhdGlibGUg
-PSAiaGlzaWxpY29uLGhpMzY2MC1yZXNldCI7Cj4+ICsJCSNyZXNldC1jZWxscyA9IDwxPjsKPj4g
-KwkJaGlzaSxyc3Qtc3lzY29uID0gPCZpb21jdT47Cj4+ICsJCWhpc2kscmVzZXQtYml0cyA9IDww
-eDIwIDB4OAkJLyogMDogaTJjMCAqLwo+PiArCQkJCSAgIDB4MjAgMHgxMAkJLyogMTogaTJjMSAq
-Lwo+PiArCQkJCSAgIDB4MjAgMHgyMAkJLyogMjogaTJjMiAqLwo+PiArCQkJCSAgIDB4MjAgMHg4
-MDAwMDAwPjsJLyogMzogaTJjNiAqLwo+PiArCX07Cj4gVGhlIHJlc2V0IGxpbmVzIGFyZSBjb250
-cm9sbGVkIHRocm91Z2ggaW9tY3UgYml0cywgaXMgdGhlcmUgYSByZWFzb24gbm90Cj4gdG8gcHV0
-IHRoZSBpb21jdV9yc3Qgbm9kZSBpbnNpZGUgdGhlIGlvbWN1IG5vZGU/IFRoYXQgd2F5IHRoZQo+
-IGhpc2kscnN0LXN5c2NvbiBwcm9wZXJ0eSBjb3VsZCBiZSByZW1vdmVkIGFuZCB0aGUgc3lzY29u
-IGNvdWxkIGJlCj4gcmV0cmlldmVkIHZpYSB0aGUgcmVzZXQtY29udHJvbGxlciBwYXJlbnQgbm9k
-ZS4KaW9tY3UgaXMgY29tbW9uIHJlZ2lzdGVycywgY29udHJvbHMgY2xvY2sgYW5kIHJlc2V0LCBl
-dGMuClNvIHdlIHVzZSBzeXNjb24sIHdpdGhvdXQgbWFwcGluZyB0aGUgcmVnaXN0ZXJzIGV2ZXJ5
-d2hlcmUuCkl0IGlzIGNvbW1vbiBjYXNlIGluIGhpc2lsaWNvbiwgc2FtZSBpbiBoaTYyMjAuCgpB
-bHNvIHRoZSAjY2xvY2stY2VsbHMgYW5kICNyZXNldC1jZWxscyBjYW4gbm90IGJlIHB1dCBpbiB0
-aGUgc2FtZSBub2RlLAppZiB0aGV5IGFyZSBib3RoIHVzaW5nIHByb2JlLCBzaW5jZSByZXNldF9w
-cm9iZSB3aWxsIG5vdCBiZSBjYWxsZWQuCgpTbyB3ZSB1c2UgaGlzaSxyc3Qtc3lzY29uIGFzIGEg
-Z2VuZXJhbCBzb2x1dGlvbi4KClRoYW5rcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hello,
+
+On Thu, 24 Nov 2016 10:44:48 +0100, Gregory CLEMENT wrote:
+
+> "A single Xenon IP can support multiple slots.
+> Each slot acts as an independent SDHC. It owns independent resources, such
+> as register sets clock and PHY.
+> Each slot should have an independent device tree node."
+
+I think this wording is still very confusing, and continues to cause
+confusion.
+
+We should just state that each Xenon controller supports a single slot,
+and that's it.
+
+The text still says "a single Xenon IP can support multiple slots",
+which continues to cause confusion.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
