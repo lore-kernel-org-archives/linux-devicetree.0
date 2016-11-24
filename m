@@ -1,67 +1,54 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v3 4/7] clk: qcom: ipq4019: Added all the frequencies for
- apps cpu
-Date: Thu, 24 Nov 2016 18:16:02 +0530
-Message-ID: <356199897fb2022342a76bc872b703d5@codeaurora.org>
-References: <1474460512-31994-1-git-send-email-absahu@codeaurora.org>
- <1474460512-31994-5-git-send-email-absahu@codeaurora.org>
- <20161102012450.GD16026@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161102012450.GD16026@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH 0/2] OF phandle nexus support + GPIO nexus
+Date: Thu, 24 Nov 2016 14:47:03 +0200
+Message-ID: <59A46F04-80D5-4B9A-911D-C866C9B6755E@konsulko.com>
+References: <20161124102529.20212-1-stephen.boyd@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161124102529.20212-1-stephen.boyd@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-02 06:54, Stephen Boyd wrote:
-> On 09/21, Abhishek Sahu wrote:
->> The APPS CPU clock does not contain all the frequencies in its
->> frequency table so this patch adds the same.
->> 
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> ---
->>  drivers/clk/qcom/gcc-ipq4019.c | 12 +++++++++++-
->>  1 file changed, 11 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/clk/qcom/gcc-ipq4019.c 
->> b/drivers/clk/qcom/gcc-ipq4019.c
->> index 211c68c..160e0cf 100644
->> --- a/drivers/clk/qcom/gcc-ipq4019.c
->> +++ b/drivers/clk/qcom/gcc-ipq4019.c
->> @@ -565,10 +565,20 @@ static struct clk_rcg2  sdcc1_apps_clk_src = {
->>  };
->> 
->>  static const struct freq_tbl ftbl_gcc_apps_clk[] = {
->> -	F(48000000, P_XO,	   1, 0, 0),
->> +	F(48000000,  P_XO,         1, 0, 0),
->>  	F(200000000, P_FEPLL200,   1, 0, 0),
->> +	F(380000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(409000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(444000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(484000000, P_DDRPLLAPSS, 1, 0, 0),
->>  	F(500000000, P_FEPLL500,   1, 0, 0),
->> +	F(507000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(532000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(560000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(592000000, P_DDRPLLAPSS, 1, 0, 0),
->>  	F(626000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(666000000, P_DDRPLLAPSS, 1, 0, 0),
->> +	F(710000000, P_DDRPLLAPSS, 1, 0, 0),
->>  	{ }
->>  };
-> 
-> Can't we have the determine_rate callback know the speeds of the
-> "fixed" PLLs and use those first if the rate hits exactly? And
-> then if that doesn't happen go try ddrpllapps and set the rate on
-> it? I'm hoping we can get rid of this frequency table.
-This clock is being registered with QCOM clk_rcg2 operations which
-already has determine_rate callback based on this frequency table.
-Currently all the frequencies are being generated without HID
-divider but in future, we can have some frequency which will use
-dividers also.
--- 
-Abhishek Sahu
+SGkgU3RlcGhlbiwKCj4gT24gTm92IDI0LCAyMDE2LCBhdCAxMjoyNSAsIFN0ZXBoZW4gQm95ZCA8
+c3RlcGhlbi5ib3lkQGxpbmFyby5vcmc+IHdyb3RlOgo+IAo+IFRoaXMgaXMgb25lIHNtYWxsIGNo
+dW5rIG9mIHdvcmsgcmVsYXRlZCB0byBEVCBvdmVybGF5cyBmb3IgZXhwYW5zaW9uCj4gYm9hcmRz
+LiBJdCB3b3VsZCBiZSBnb29kIHRvIGhhdmUgYSB3YXkgdG8gZXhwb3NlICM8bGlzdD4tY2VsbHMg
+dHlwZXMgb2YKPiBwcm92aWRlcnMgdGhyb3VnaCBhIGNvbm5lY3RvciBpbiBhIHN0YW5kYXJkIHdh
+eS4gU28gd2UgaW50cm9kdWNlIGEgd2F5Cj4gdG8gbWFrZSAibmV4dXMiIG5vZGVzIGZvciB0aGVz
+ZSB0eXBlcyBvZiBwcm9wZXJ0aWVzIHRvIHJlbWFwIHRoZSBjb25zdW1lcgo+IG51bWJlciBzcGFj
+ZSB0byB0aGUgb3RoZXIgc2lkZSBvZiB0aGUgY29ubmVjdG9yJ3MgbnVtYmVyIHNwYWNlLiBJdCdz
+Cj4gYmFzaWNhbGx5IGEgY29weSBvZiB0aGUgaW50ZXJydXB0IG5leHVzIGltcGxlbWVudGF0aW9u
+LCBidXQgd2l0aG91dAo+IHRoZSBhZGRyZXNzIHNwYWNlIG1hdGNoaW5nIGRlc2lnbiBhbmQgaW50
+ZXJydXB0LXBhcmVudCB3YWxraW5nLgo+IAo+IFRoZSBmaXJzdCBwYXRjaCBpbXBsZW1lbnRzIGEg
+Z2VuZXJpYyBtZXRob2QgdG8gZG8gdGhpcywgYW5kIHRoZSBzZWNvbmQgcGF0Y2gKPiBhZGRzIGEg
+dW5pdCB0ZXN0IGZvciBpdC4gVGhlIHRoaXJkIHBhdGNoIGlzIG1vcmUgb2YgYW4gZXhhbXBsZSB0
+aGFuIGFueXRoaW5nCj4gZWxzZS4gSXQgc2hvd3MgaG93IHdlIHdvdWxkIG1vZGlmeSBmcmFtZXdv
+cmtzIHRvIHVzZSB0aGUgbmV3IEFQSS4KPiAKCkV4Y2VsbGVudC4gSXQgd2FzIGFib3V0IHRpbWUg
+dGhpcyBoYXBwZW5lZC4KCj4gU3RlcGhlbiBCb3lkICgzKToKPiAgb2Y6IFN1cHBvcnQgcGFyc2lu
+ZyBwaGFuZGxlIGFyZ3VtZW50IGxpc3RzIHRocm91Z2ggYSBuZXh1cyBub2RlCj4gIG9mOiB1bml0
+dGVzdDogQWRkIHBoYW5kbGUgcmVtYXBwaW5nIHRlc3QKPiAgZ3BpbzogU3VwcG9ydCBncGlvIG5l
+eHVzIGR0IGJpbmRpbmdzCj4gCj4gZHJpdmVycy9ncGlvL2dwaW9saWItb2YuYyAgICAgICAgICAg
+ICAgICAgICB8ICAgNSArLQo+IGRyaXZlcnMvb2YvYmFzZS5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAxNDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+IGRyaXZlcnMvb2YvdW5p
+dHRlc3QtZGF0YS90ZXN0Y2FzZXMuZHRzICAgICAgfCAgMTEgKysrCj4gZHJpdmVycy9vZi91bml0
+dGVzdC1kYXRhL3Rlc3RzLXBoYW5kbGUuZHRzaSB8ICAyNCArKysrKwo+IGRyaXZlcnMvb2YvdW5p
+dHRlc3QuYyAgICAgICAgICAgICAgICAgICAgICAgfCAxMjQgKysrKysrKysrKysrKysrKysrKysr
+KysKPiBpbmNsdWRlL2xpbnV4L29mLmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0ICsr
+Kwo+IDYgZmlsZXMgY2hhbmdlZCwgMzIyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4g
+Cj4gLS0gCj4gMi4xMC4wLjI5Ny5nZjY3MjdiMAo+IAoKQ29tbWVudHMgaW5saW5l4oCmCgpSZWdh
+cmRzCgrigJQgUGFudGVsaXMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
