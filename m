@@ -1,100 +1,89 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] dmaengine: allow sun6i-dma for more SoCs
-Date: Thu, 24 Nov 2016 10:12:15 +0000
-Message-ID: <15f511fd-ba0b-9b10-1650-d24e2d9e467e@arm.com>
-References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
- <1479950235-26821-3-git-send-email-andre.przywara@arm.com>
- <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w@mail.gmail.com>
- <34b5e50f-a091-9bd8-7a74-96e538a7351d@arm.com>
- <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA@mail.gmail.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+Date: Thu, 24 Nov 2016 11:17:37 +0100
+Message-ID: <20161124101733.GA18027@verge.net.au>
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+ <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
+ <20161123142938.GF9057@verge.net.au>
+ <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBX7Z3LAQKGQEA7RR6OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chris,
 
-On 24/11/16 09:30, Chen-Yu Tsai wrote:
-> On Thu, Nov 24, 2016 at 5:16 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi,
->>
->> On 24/11/16 04:16, Chen-Yu Tsai wrote:
->>> Hi,
->>>
->>> On Thu, Nov 24, 2016 at 9:17 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> The sun6i DMA driver is used in the Allwinner A64 and H5 SoC, which
->>>> have arm64 capable cores. Add the generic sunxi config symbol to allow
->>>> the driver to be selected by arm64 Kconfigs, which don't feature
->>>> SoC specific MACH_xxxx configs.
->>>>
->>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>  drivers/dma/Kconfig | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->>>> index af63a6b..003c284 100644
->>>> --- a/drivers/dma/Kconfig
->>>> +++ b/drivers/dma/Kconfig
->>>> @@ -157,7 +157,7 @@ config DMA_SUN4I
->>>>
->>>>  config DMA_SUN6I
->>>>         tristate "Allwinner A31 SoCs DMA support"
->>>> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->>>> +       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST || ARCH_SUNXI
->>>
->>> AFAIK ARCH_SUNXI encompasses/supersedes MACH_SUN*I.
->>> (And I don't have to add MACH_SUN9I later :) )
->>
->> Sure, admittedly it was just a quick hack to get things going.
->> Actually I don't know why we had a *depend* on those MACH_s before. I
->> think technically it does not depend on a certain SoC (having the
->> COMPILE_TEST in there hints on that). So what about:
+On Thu, Nov 24, 2016 at 10:05:08AM +0000, Chris Paterson wrote:
+> Hello Simon,
 > 
-> It was really because this DMA engine only comes with the later
-> SoCs. We have dma-sun4i for the older one. But yes, there's no
-> reason why you can't build it for the earlier SoC. It just doesn't
-> get used.
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 23 November 2016 14:30
+> > On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
+> > > On 11/23/2016 01:14 PM, Chris Paterson wrote:
+> > > > This patch series adds CAN and CAN FD support to the r8a7796.
+> > > >
+> > > > Based on renesas-devel-20161122-v4.9-rc6.
+> > > >
+> > > > Chris Paterson (3):
+> > > >   arm64: dts: r8a7796: Add CAN external clock support
+> > > >   arm64: dts: r8a7796: Add CAN support
+> > > >   arm64: dts: r8a7796: Add CAN FD support
+> > > >
+> > > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
+> > > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
+> > > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
+> > ++++++++++++++++++++++
+> > > >  3 files changed, 75 insertions(+), 10 deletions(-)
+> > >
+> > > For all three:
+> > >
+> > > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> > >
+> > > Who takes this series?
+> > 
+> > I would like to see these patches split up so that the .../devicetree/bindings/
+> > portions can go through you whole the arch/arm64/boot/dts/renesas/
+> > portions go thorugh my renesas tree.
 > 
->>
->>         depends on ARCH_SUNXI || COMPILE_TEST
->>
->> and maybe:
->>
->>         default y if MACH_SUN6I || MACH_SUN8I
->>
->> Though I see that both multi_v7_defconfig and sunxi_defconfig explicitly
->> set this, so this wouldn't be needed?
+> Okay, will do.
+
+Thanks.
+
+> > Regarding the arch/arm64/boot/dts/renesas/ portion, I would like some
+> > consideration given to what effect enabling memory above 4Gb (64bit
+> > addressing) would have.
 > 
-> I guess it's just nice to get stuff out of defconfig?
-> Why not go all the way and just have
-> 
->         default y if ARCH_SUNXI
+> Can you give me some guidance here? I'm not sure what you're referring
+> to. As far as I know the DT reg definition here is 64-bit, or are you
+> referring to DMA usage? If the later, neither CAN driver uses DMA.
 
-Well, I am all for it, but I had the impression that there is a lot of
-opposition against this approach. Apparently people still want to save
-some bytes by building a kernel tailored to one particular SoC.
-So I didn't dare to come up with this one.
-But it should work to use "# DMA_SUN6I is not selected" in a particular
-.config or defconfig to deselect it, right?
+Sorry for not being clearer.
 
-Waiting for Maxime's opinion here.
+What I would like to know is if there are any problems in the CAN driver
+or hardware that would prevent it from functioning with memory that
+requires 64bit addressing present.
 
-(And also need to check whether the DMA really works on ARM64.
-Surprisingly the code compiled cleanly, but I am wondering whether it
-properly deals with 32-bit limitation of this controller. I just needed
-it because the H3 DT references DMA for SPI and UART).
+If the CAN hardware cannot use DMA then DMA doesn't need to be taken into
+account. But if it DMA could be enabled in future for CAN, for example
+after some driver enhancements, then it would be good to know if 64bit
+memory can be supported - if not it would imply DMA cannot be enabled.
 
-Cheers,
-Andre.
+As for non-DMA mode, will this function if memory above 4G is present?
+If not then in theory such memory couldn't be enabled if the CAN driver
+is enabled. This is my main concern.
+
+Does the above help?
