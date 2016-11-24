@@ -1,133 +1,79 @@
-From: marcel@ziswiler.com
-Subject: [RESEND PATCH 4/6] apalis-tk1: adjust pin muxing for v1.1 hw
-Date: Thu, 24 Nov 2016 02:04:54 +0100
-Message-ID: <20161124010456.24604-5-marcel@ziswiler.com>
-References: <20161124010456.24604-1-marcel@ziswiler.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH 0/5] arm64: Allwinner H5 support
+Date: Thu, 24 Nov 2016 01:17:10 +0000
+Message-ID: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161124010456.24604-1-marcel@ziswiler.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBN4A3HAQKGQERN6EVMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+This series adds support for the recently released Allwinner H5 SoC [1] and
+the Orange Pi PC 2 board [2].
+This exercise is rather easy this time, since the new SoC is very similar
+to the existing H3 SoC and can thus share a lot of support.
+To express this, the first patch splits the H3 .dtsi to allow reusing
+it later. The last two patches add the H5 .dtsi and the .dts for the
+first available board featuring this chip, based on that shared base DT.
 
-Configure Apalis MMC1 D6 GPIO on SDMMC3_CLK_LB_IN as reserved function
-without any pull-up/down.
+This is some early version, it's based on a merge of various -for-4.10
+branches from Maxime's repository.
+I can boot this on the OPi board and MMC and USB seem to work fine.
+I haven't tested any other peripherals yet.
+Some open issues:
+- The naming: Following the Allwinner scheme this should be "sun50i-h5"
+(which I use in this series), but it shares so much with the H3 that
+"sun8i-h5" wouldn't be wrong either. It gets a bit weird with that shared
+.dtsi, which I call sun8i-h3-h5.dtsi for now.
+- The clocks and pinctrl look _almost_ similar. I may sound like a broken
+record, but our habit of requiring kernel support for those almost identical
+SoCs really bites us now. As the MMC got updated, I fear there is _one_
+additional pin that we need for the HS400 transfer mode. Also I am afraid
+the MMC clock may be slightly different due to the advanced MMC support.
+At the moment this is not an issue, as the driver only support DDR50 at
+most anyway, so we get away with it now.
+I wonder if it's feasible to add those things to the existing H3 clocks
+and pinctrl to avoid another set of drivers.
+- I just see that I missed those patches that add just the names to the
+binding docs. I will send them once we agreed on the naming.
 
-Configure GPIO_PV2 as SD1_CD# according to latest V1.1 HW.
+Let me know what you think.
 
-Leave SDMMC3_CLK_LB_OUT muxed as SDMMC3 with output driver enabled aka
-not tristated and input driver enabled as well as it features some
-magic properties even though the external loopback is disabled and the
-internal loopback used as per SDMMC_VENDOR_MISC_CNTRL_0 register's
-SDMMC_SPARE1 bits being set to 0xfffd according to the TRM! This pin is
-now a not-connect on V1.1 HW in order to avoid any interference.
+Cheers,
+Andre.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
----
+[1] http://linux-sunxi.org/images/d/de/Allwinner_H5_Datasheet_V1.0.pdf
+[2] http://linux-sunxi.org/Xunlong_Orange_Pi_PC_2
 
- arch/arm/boot/dts/tegra124-apalis.dtsi | 53 +++++++++++++++-------------------
- 1 file changed, 23 insertions(+), 30 deletions(-)
+Andre Przywara (5):
+  arm: dts: sun8i: split Allwinner H3 .dtsi
+  dmaengine: allow sun6i-dma for more SoCs
+  arm64: defconfig: sunxi: include options for Allwinner H5 SoC
+  arm64: dts: sunxi: add Allwinner H5 .dtsi
+  arm64: dts: sunxi: add support for the Orange Pi PC 2 board
 
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 747ce81..2bfc579 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -414,18 +414,10 @@
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
- 			};
--			/*
--			 * Don't use MMC1_D6 aka SDMMC3_CLK_LB_IN for now as it
--			 * features some magic properties even though the
--			 * external loopback is disabled and the internal
--			 * loopback used as per SDMMC_VENDOR_MISC_CNTRL_0
--			 * register's SDMMC_SPARE1 bits being set to 0xfffd
--			 * according to the TRM!
--			 */
- 			sdmmc3_clk_lb_in_pee5 { /* D6 GPIO */
- 				nvidia,pins = "sdmmc3_clk_lb_in_pee5";
--				nvidia,function = "sdmmc3";
--				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,function = "rsvd2";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
- 			};
-@@ -520,20 +512,12 @@
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
- 			};
--			/*
--			 * Don't use SD1_CD# aka SDMMC3_CLK_LB_OUT for now as it
--			 * features some magic properties even though the
--			 * external loopback is disabled and the internal
--			 * loopback used as per SDMMC_VENDOR_MISC_CNTRL_0
--			 * register's SDMMC_SPARE1 bits being set to 0xfffd
--			 * according to the TRM!
--			 */
--			sdmmc3_clk_lb_out_pee4 { /* CD# GPIO */
--				nvidia,pins = "sdmmc3_clk_lb_out_pee4";
--				nvidia,function = "rsvd2";
--				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+			sdmmc3_cd_n_pv2 { /* CD# GPIO */
-+				nvidia,pins = "sdmmc3_cd_n_pv2";
-+				nvidia,function = "rsvd3";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
- 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
- 			};
- 
- 			/* Apalis SPDIF */
-@@ -1512,13 +1496,6 @@
- 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
- 			};
--			sdmmc3_cd_n_pv2 { /* NC */
--				nvidia,pins = "sdmmc3_cd_n_pv2";
--				nvidia,function = "rsvd3";
--				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
--				nvidia,tristate = <TEGRA_PIN_ENABLE>;
--				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
--			};
- 			gpio_x1_aud_px1 { /* NC */
- 				nvidia,pins = "gpio_x1_aud_px1";
- 				nvidia,function = "rsvd2";
-@@ -1568,6 +1545,22 @@
- 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
- 				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
- 			};
-+			/*
-+			 * Leave SDMMC3_CLK_LB_OUT muxed as SDMMC3 with output
-+			 * driver enabled aka not tristated and input driver
-+			 * enabled as well as it features some magic properties
-+			 * even though the external loopback is disabled and the
-+			 * internal loopback used as per
-+			 * SDMMC_VENDOR_MISC_CNTRL_0 register's SDMMC_SPARE1
-+			 * bits being set to 0xfffd according to the TRM!
-+			 */
-+			sdmmc3_clk_lb_out_pee4 { /* NC */
-+				nvidia,pins = "sdmmc3_clk_lb_out_pee4";
-+				nvidia,function = "sdmmc3";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_ENABLE>;
-+			};
- 		};
- 	};
- 
+ arch/arm/boot/dts/sun8i-h3-h5.dtsi                 | 519 +++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 465 +-----------------
+ arch/arm64/Kconfig.platforms                       |   6 +-
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 183 ++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       | 165 +++++++
+ arch/arm64/boot/dts/allwinner/sun8i-h3-h5.dtsi     |   1 +
+ drivers/dma/Kconfig                                |   2 +-
+ 8 files changed, 876 insertions(+), 466 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-h5.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+ create mode 120000 arch/arm64/boot/dts/allwinner/sun8i-h3-h5.dtsi
+
 -- 
-2.9.3
+2.8.2
