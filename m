@@ -1,53 +1,69 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
-Date: Thu, 24 Nov 2016 10:11:19 +0100
-Message-ID: <4031579.CBE32NHUoW@wuerfel>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com> <87d1hno2d7.fsf@free-electrons.com> <CAPDyKFpoifsKkse7Fc-bbZAoa=QGT=9QOQ-4D=f60ptx0hzZsA@mail.gmail.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] dmaengine: allow sun6i-dma for more SoCs
+Date: Thu, 24 Nov 2016 09:16:28 +0000
+Message-ID: <34b5e50f-a091-9bd8-7a74-96e538a7351d@arm.com>
+References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
+ <1479950235-26821-3-git-send-email-andre.przywara@arm.com>
+ <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w@mail.gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFpoifsKkse7Fc-bbZAoa=QGT=9QOQ-4D=f60ptx0hzZsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Jack(SH) Zhu" <jmzhu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shiwu Zhang <zhangshw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Vi
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBSG73LAQKGQE72W4MSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, November 24, 2016 10:05:45 AM CET Ulf Hansson wrote:
-> > You also mentioned other bindings using child nodes, but for this one
-> > we have one controller with only one set of register with multiple slots
-> > (Atmel is an example). Here each slot have it own set of register.
-> >
-> > Actually giving the fact that each slot is controlled by a different set
-> > of register I wonder why the hardware can't also deduce the slot number
-> > from the address register. For me it looks like an hardware bug but we
-> > have to deal with it.
-> >
-> > Do you still think we needchild node here?
-> 
-> Using child-nodes for slots like what's done in the atmel case, is
-> currently broken. I would recommend to avoid using child-nodes for
-> slots, if possible.
-> 
-> To give you some more background, currently the mmc core treats child
-> nodes as embedded non-removable cards or SDIO funcs. However, we can
-> change to make child-nodes also allowed to describe slots, but it
-> requires a specific compatible for "slots" and of course then we also
-> need to update the DT parsing of the child-nodes in the mmc core.
-> 
-> Documentation/devicetree/bindings/mmc/mmc.txt
-> Documentation/devicetree/bindings/mmc/mmc-card.txt
+Hi,
 
-I don't see anything wrong with having child nodes for the slots
-even with the current binding, under one condition:
+On 24/11/16 04:16, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Thu, Nov 24, 2016 at 9:17 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+>> The sun6i DMA driver is used in the Allwinner A64 and H5 SoC, which
+>> have arm64 capable cores. Add the generic sunxi config symbol to allow
+>> the driver to be selected by arm64 Kconfigs, which don't feature
+>> SoC specific MACH_xxxx configs.
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/dma/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index af63a6b..003c284 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -157,7 +157,7 @@ config DMA_SUN4I
+>>
+>>  config DMA_SUN6I
+>>         tristate "Allwinner A31 SoCs DMA support"
+>> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+>> +       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST || ARCH_SUNXI
+> 
+> AFAIK ARCH_SUNXI encompasses/supersedes MACH_SUN*I.
+> (And I don't have to add MACH_SUN9I later :) )
 
-The mmc.txt binding above must refer only to the child node, while
-the parent node conceptually becomes a plain bus or MFD that
-happens to encapsulate multiple MMC host controllers, and possibly
-provides some shared registers to them.
+Sure, admittedly it was just a quick hack to get things going.
+Actually I don't know why we had a *depend* on those MACH_s before. I
+think technically it does not depend on a certain SoC (having the
+COMPILE_TEST in there hints on that). So what about:
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	depends on ARCH_SUNXI || COMPILE_TEST
+
+and maybe:
+
+	default y if MACH_SUN6I || MACH_SUN8I
+
+Though I see that both multi_v7_defconfig and sunxi_defconfig explicitly
+set this, so this wouldn't be needed?
+
+Cheers,
+Andre.
