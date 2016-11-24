@@ -1,83 +1,96 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun6i: hummingbird: Enable USB OTG
-Date: Thu, 24 Nov 2016 19:29:08 +0800
-Message-ID: <20161124112908.4796-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCM63PAQKGQEQ3WMNYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V4 00/10] PM / OPP: Multiple regulator support
+Date: Thu, 24 Nov 2016 17:06:09 +0530
+Message-ID: <cover.1479986491.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, nm@ti.com, sboyd@codeaurora.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 Hummingbird has a mini USB OTG port, and uses GPIO pins from the
-SoC for ID pin and VBUS detection and VBUS control. The PMIC can also do
-VBUS detection and control.
+Hi,
 
-Here we prefer to use the PMIC's DRIVEVBUS function to control VBUS for
-USB OTG, as that is the hardware default.
+Some platforms (like TI) have complex DVFS configuration for CPU
+devices, where multiple regulators are required to be configured to
+change DVFS state of the device. This was explained well by Nishanth
+earlier [1].
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+One of the major complaints around multiple regulators case was that the
+DT isn't responsible in any way to represent the order in which multiple
+supplies need to be programmed, before or after a frequency change. It
+was considered in this patch and such information is left for the
+platform specific OPP driver now, which can register its own
+opp_set_rate() callback with the OPP core and the OPP core will then
+call it during DVFS.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-index 83643bbd51dc..f094eeb6c499 100644
---- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
-@@ -248,6 +248,7 @@
- 		reg = <0x68>;
- 		interrupt-parent = <&nmi_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		x-powers,drive-vbus-en;
- 	};
- };
- 
-@@ -306,6 +307,11 @@
- 	regulator-name = "vcc-dram";
- };
- 
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
- &reg_usb1_vbus {
- 	gpio = <&pio 7 24 GPIO_ACTIVE_HIGH>; /* PH24 */
- 	status = "okay";
-@@ -330,12 +336,25 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
- &usb1_vbus_pin_a {
- 	/* different pin from sunxi-common-regulators */
- 	pins = "PH24";
- };
- 
- &usbphy {
-+	usb0_id_det-gpio = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
-+	usb0_vbus_det-gpio = <&pio 0 16 GPIO_ACTIVE_HIGH>; /* PA16 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_drivevbus>;
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	status = "okay";
- };
+The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
+and code to pass values for multiple regulators and verified that they
+are all properly read by the kernel (using debugfs interface).
+
+Dave Gerlach has already tested [2] it on the real TI platforms and it
+works well for him.
+
+This is rebased over: linux-next branch in the PM tree.
+
+V3->V4:
+- Separate out cpu-supply fix in the binding in a separate patch (Mark).
+- Add more documentation to the binding to explain that the relation to
+  the supplies and the order of programming them is left for the
+  platform specific bindings and that every platform using multiple
+  regulators for their devices needs to provide a separate binding
+  document explaining their implementation (Mark).
+- @Rob and Stephen: I have kept your Acks for the bindings as the
+  bindings only got a bit reworded (improved) since the time you guys
+  Acked them. Please let me know if you want more improvement in the
+  bindings now.
+- V4 for 10/10 was sent earlier, which added a missing
+  rcu_read_unlock(). Nothing else changed in it.
+- Added some missing Kernel documentation comments
+
+V2->V3:
+- The last patch is new
+- Removed a debug leftover pr_info() message
+- Renamed few names as s/set_rate/set_opp
+- Removed a TODO comment (as it is done now with this series)
+- created struct for min_uV and max_uV
+- kerneldoc comments for structures in pm_opp.h
+- s/const char */const char * const
+- use kasprintf()
+- Some more minor reformatting
+- More Ack/RBY tags added
+
+V1->V2:
+- Ack from Rob for 1st patch
+- Moved the supplies structure to pm_opp.h (Dave)
+- Fixed an compilation warning.
+
+--
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=145684495832764&w=2
+[2] https://marc.info/?l=linux-kernel&m=147924789305276&w=2
+
+Viresh Kumar (10):
+  PM / OPP: Fix incorrect cpu-supply property in binding
+  PM / OPP: Reword binding supporting multiple regulators per device
+  PM / OPP: Don't use OPP structure outside of rcu protected section
+  PM / OPP: Manage supply's voltage/current in a separate structure
+  PM / OPP: Pass struct dev_pm_opp_supply to _set_opp_voltage()
+  PM / OPP: Add infrastructure to manage multiple regulators
+  PM / OPP: Separate out _generic_opp_set_rate()
+  PM / OPP: Allow platform specific custom set_opp() callbacks
+  PM / OPP: Don't WARN on multiple calls to dev_pm_opp_set_regulators()
+  PM / OPP: Don't assume platform doesn't have regulators
+
+ Documentation/devicetree/bindings/opp/opp.txt |  27 +-
+ drivers/base/power/opp/core.c                 | 511 ++++++++++++++++++++------
+ drivers/base/power/opp/debugfs.c              |  52 ++-
+ drivers/base/power/opp/of.c                   | 105 ++++--
+ drivers/base/power/opp/opp.h                  |  22 +-
+ drivers/cpufreq/cpufreq-dt.c                  |   9 +-
+ include/linux/pm_opp.h                        |  67 +++-
+ 7 files changed, 612 insertions(+), 181 deletions(-)
+
 -- 
-2.10.2
+2.7.1.410.g6faf27b
+
