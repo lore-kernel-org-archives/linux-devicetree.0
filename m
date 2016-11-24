@@ -1,73 +1,110 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] arm64: arch_timer: Add device tree binding for
- hisilicon-161601 erratum
-Date: Thu, 24 Nov 2016 12:12:22 +0000
-Message-ID: <624c1751-9b66-1d10-78ae-8cb4edea6109@huawei.com>
-References: <1479212167-5812-1-git-send-email-dingtianhong@huawei.com>
- <c3020c0d-bc45-2bb1-f53a-c5e76ab45499@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v9 0/4] dtc: Dynamic DT support
+Date: Thu, 24 Nov 2016 14:31:29 +0200
+Message-ID: <1479990693-14260-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c3020c0d-bc45-2bb1-f53a-c5e76ab45499-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/11/2016 12:49, Ding Tianhong wrote:
-> Ping....
+This patchset adds Dynamic DT support in the DTC compiler
+as used in a number of boards like the beaglebone/rpi/chip and others.
 
-Hi,
+The first patch passes an extra boot_info argument to the check methods.
+The second patch documents the internals of overlay generation, while
+the third one adds dynamic object/overlay support proper.
 
-was there a cover letter for 0/6? I never saw it.
+The last patch simply adds a few overlay tests verifying operation.
 
-Thanks,
-John
+This patchset is against DTC mainline and is also available for a pull
+request from https://github.com/pantoniou/dtc/tree/overlays
 
->
-> On 2016/11/15 20:16, Ding Tianhong wrote:
->> This erratum describes a bug in logic outside the core, so MIDR can't be
->> used to identify its presence, and reading an SoC-specific revision
->> register from common arch timer code would be awkward.  So, describe it
->> in the device tree.
->>
->> v2: Use the new erratum name and update the description.
->>
->> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> index ef5fbe9..c27b2c4 100644
->> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
->> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
->> @@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
->>    This also affects writes to the tval register, due to the implicit
->>    counter read.
->>
->> +- hisilicon,erratum-161601 : A boolean property. Indicates the presence of
->> +  erratum 161601, which says that reading the counter is unreliable unless
->> +  reading twice on the register and the value of the second read is larger
->> +  than the first by less than 32. If the verification is unsuccessful, then
->> +  discard the value of this read and repeat this procedure until the verification
->> +  is successful.  This also affects writes to the tval register, due to the
->> +  implicit counter read.
->> +
->>  ** Optional properties:
->>
->>  - arm,cpu-registers-not-fw-configured : Firmware does not initialize
->>
->
-> _______________________________________________
-> linuxarm mailing list
-> linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
->
-> .
->
+Regards
 
+-- Pantelis
+
+Changes since v8:
+* Removed extra member of boot_info in each node; passing boot_info
+parameter to the check methods instead.
+* Reworked yacc syntax that supports both old and new plugin syntax
+* Added handling for new magic number (enabled by 'M' switch).
+* Dropped dtbo/asmo formats.
+* Added overlay testsuite.
+* Addressed last version maintainer comments.
+
+Changes since v7:
+* Dropped xasprintf & backward compatibility patch
+* Rebased against dgibson's overlay branch
+* Minor doc wording fixes.
+
+Changes since v6:
+* Introduced xasprintf
+* Added append_to_property and used it
+* Changed some die()'s to assert
+* Reordered node generation to respect sort
+* Addressed remaining maintainer changes from v6
+
+Changes since v5:
+* Rebase to latest dtc version.
+* Addressed all the maintainer requested changes from v5
+* Added new magic value for dynamic objects and new format
+
+Changes since v4:
+* Rebase to latest dtc version.
+* Completely redesigned the generation of resolution data.
+Now instead of being generated as part of blob generation
+they are created in the live tree.
+* Consequently the patchset is much smaller.
+* Added -A auto-label alias generation option.
+* Addressed maintainer comments.
+* Added syntactic sugar for overlays in the form of .dtsi
+* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+the previous form (although still works for backward compatibility)
+
+Changes since v3:
+* Rebase to latest dtc version.
+
+Changes since v2:
+* Split single patch to a patchset.
+* Updated to dtc mainline.
+* Changed __local_fixups__ format
+* Clean up for better legibility.
+
+Pantelis Antoniou (4):
+  checks: Pass boot_info to the check methods
+  dtc: Document the dynamic plugin internals
+  dtc: Plugin and fixup support
+  tests: Add overlay tests
+
+ Documentation/dt-object-internal.txt | 318 +++++++++++++++++++++++++++++++++++
+ Documentation/manual.txt             |  25 ++-
+ checks.c                             | 121 +++++++------
+ dtc-lexer.l                          |   5 +
+ dtc-parser.y                         |  49 +++++-
+ dtc.c                                |  39 ++++-
+ dtc.h                                |  20 ++-
+ fdtdump.c                            |   2 +-
+ flattree.c                           |  17 +-
+ fstree.c                             |   2 +-
+ libfdt/fdt.c                         |   2 +-
+ libfdt/fdt.h                         |   3 +-
+ livetree.c                           | 225 ++++++++++++++++++++++++-
+ tests/mangle-layout.c                |   7 +-
+ tests/overlay_overlay_dtc.dts        |  76 +--------
+ tests/overlay_overlay_dtc.dtsi       |  83 +++++++++
+ tests/overlay_overlay_new_dtc.dts    |  11 ++
+ tests/overlay_overlay_simple.dts     |  12 ++
+ tests/run_tests.sh                   |  20 +++
+ treesource.c                         |   7 +-
+ 20 files changed, 884 insertions(+), 160 deletions(-)
+ create mode 100644 Documentation/dt-object-internal.txt
+ create mode 100644 tests/overlay_overlay_dtc.dtsi
+ create mode 100644 tests/overlay_overlay_new_dtc.dts
+ create mode 100644 tests/overlay_overlay_simple.dts
+
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
