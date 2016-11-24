@@ -1,50 +1,65 @@
-From: Rick Chang <rick.chang@mediatek.com>
-Subject: Re: [PATCH v7 4/4] vcodec: mediatek: Add Maintainers entry for
- Mediatek JPEG driver
-Date: Thu, 24 Nov 2016 10:53:48 +0800
-Message-ID: <1479956028.8964.33.camel@mtksdaap41>
-References: <1479786377-11567-1-git-send-email-rick.chang@mediatek.com>
-         <1479786377-11567-5-git-send-email-rick.chang@mediatek.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v2 4/5] arm: dts: am57xx-beagle-x15-common: Add overide
+ powerhold property
+Date: Thu, 24 Nov 2016 09:15:01 +0530
+Message-ID: <07fe0118-d3c0-2d47-0642-ae90624c0ed0@ti.com>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-5-git-send-email-j-keerthy@ti.com>
+ <20161115000849.GD4082@atomide.com>
+ <6ac3b28e-4891-83bc-a2f7-c903541acc18@ti.com>
+ <20161123083327.GM10134@dell.home>
+ <3a05871c-0512-8a84-4ac3-889c661c8638@ti.com>
+ <20161123160841.GG4082@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1479786377-11567-5-git-send-email-rick.chang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161123160841.GG4082@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-Is it possible to update this patch? or I should create another new one.
 
-I may need to update it.
+On Wednesday 23 November 2016 09:38 PM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy@ti.com> [161123 00:33]:
+>> On Wednesday 23 November 2016 02:03 PM, Lee Jones wrote:
+>>> On Wed, 23 Nov 2016, Keerthy wrote:
+>>>> On Tuesday 15 November 2016 05:38 AM, Tony Lindgren wrote:
+>>>>> * Keerthy <j-keerthy@ti.com> [161109 21:10]:
+>>>>>> The PMICs have POWERHOLD set by default which prevents PMIC shutdown
+>>>>>> even on DEV_CTRL On bit set to 0 as the Powerhold has higher priority.
+>>>>>> So to enable pmic power off this property lets one over ride the default
+>>>>>> value and enable pmic power off.
+>>>>>
+>>>>> This should not cause merge conflicts so probably best to merge along
+>>>>> with the driver changes:
+>>>>>
+>>>>> Acked-by: Tony Lindgren <tony@atomide.com>
+>>>>>
+>>>>> If you guys want me to pick up this separately let me know.
+>>>>
+>>>> Hi Lee Jones,
+>>>>
+>>>> Are you planning to pull DT and Documentation patches as well?
+>>>
+>>> No need.  They can be safely applied to their own subsystems.
+>>
+>> Okay. Thanks for the response.
+>>
+>> Tony,
+>>
+>> Hope you can pull the DT patches.
+>
+> Applying both into omap-for-v4.10/dt thanks. Please send dts changes
+> seprately next time if there are no dependencies. This leaves out
+> the second guessing who should apply what.
 
-Sorry for the inconvenience.
+Sure Tony.
 
-On Tue, 2016-11-22 at 11:46 +0800, Rick Chang wrote:
-> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 93e9f42..a9e7ee0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7818,6 +7818,13 @@ L:	netdev@vger.kernel.org
->  S:	Maintained
->  F:	drivers/net/ethernet/mediatek/
->  
-> +MEDIATEK JPEG DRIVER
-> +M:	Rick Chang <rick.chang@mediatek.com>
-> +M:	Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> +S:	Supported
-> +F:	drivers/media/platform/mtk-jpeg/
-> +F:	Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.txt
-> +
->  MEDIATEK MEDIA DRIVER
->  M:	Tiffany Lin <tiffany.lin@mediatek.com>
->  M:	Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+>
+> Regards,
+>
+> Tony
+>
