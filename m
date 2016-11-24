@@ -1,84 +1,83 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] dmaengine: allow sun6i-dma for more SoCs
-Date: Thu, 24 Nov 2016 11:15:42 +0000
-Message-ID: <606230fd-37f6-e1ed-adc3-72f606fa944c@arm.com>
-References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
- <1479950235-26821-3-git-send-email-andre.przywara@arm.com>
- <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w@mail.gmail.com>
- <34b5e50f-a091-9bd8-7a74-96e538a7351d@arm.com>
- <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA@mail.gmail.com>
- <20161124105516.tv2ybfgka5teiv2h@lukather>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun6i: hummingbird: Enable USB OTG
+Date: Thu, 24 Nov 2016 19:29:08 +0800
+Message-ID: <20161124112908.4796-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBOEX3PAQKGQEZWHPKNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBCM63PAQKGQEQ3WMNYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161124105516.tv2ybfgka5teiv2h@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/11/16 10:55, Maxime Ripard wrote:
-> On Thu, Nov 24, 2016 at 05:30:45PM +0800, Chen-Yu Tsai wrote:
->> On Thu, Nov 24, 2016 at 5:16 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On 24/11/16 04:16, Chen-Yu Tsai wrote:
->>>> Hi,
->>>>
->>>> On Thu, Nov 24, 2016 at 9:17 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->>>>> The sun6i DMA driver is used in the Allwinner A64 and H5 SoC, which
->>>>> have arm64 capable cores. Add the generic sunxi config symbol to allow
->>>>> the driver to be selected by arm64 Kconfigs, which don't feature
->>>>> SoC specific MACH_xxxx configs.
->>>>>
->>>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->>>>> ---
->>>>>  drivers/dma/Kconfig | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->>>>> index af63a6b..003c284 100644
->>>>> --- a/drivers/dma/Kconfig
->>>>> +++ b/drivers/dma/Kconfig
->>>>> @@ -157,7 +157,7 @@ config DMA_SUN4I
->>>>>
->>>>>  config DMA_SUN6I
->>>>>         tristate "Allwinner A31 SoCs DMA support"
->>>>> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->>>>> +       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST || ARCH_SUNXI
->>>>
->>>> AFAIK ARCH_SUNXI encompasses/supersedes MACH_SUN*I.
->>>> (And I don't have to add MACH_SUN9I later :) )
->>>
->>> Sure, admittedly it was just a quick hack to get things going.
->>> Actually I don't know why we had a *depend* on those MACH_s before. I
->>> think technically it does not depend on a certain SoC (having the
->>> COMPILE_TEST in there hints on that). So what about:
->>
->> It was really because this DMA engine only comes with the later
->> SoCs. We have dma-sun4i for the older one.
-> 
-> Indeed.
-> 
->> But yes, there's no reason why you can't build it for the earlier
->> SoC. It just doesn't get used.
-> 
-> I'm still in favor of keeping the depends on. There's no point of
-> compiling something we know have zero chance of running.
-> 
-> (But that would be (ARCH_SUNXI && ARM64))
+The A31 Hummingbird has a mini USB OTG port, and uses GPIO pins from the
+SoC for ID pin and VBUS detection and VBUS control. The PMIC can also do
+VBUS detection and control.
 
-I am OK with that, just wondering if there is a definition of what
-"depends" really means. My impression what that it's a about code
-dependencies (requires a certain subsystem, for instance), not really if
-it's useful in a particular configuration.
+Here we prefer to use the PMIC's DRIVEVBUS function to control VBUS for
+USB OTG, as that is the hardware default.
 
-Cheers,
-Andre.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 83643bbd51dc..f094eeb6c499 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -248,6 +248,7 @@
+ 		reg = <0x68>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en;
+ 	};
+ };
+ 
+@@ -306,6 +307,11 @@
+ 	regulator-name = "vcc-dram";
+ };
+ 
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
+ &reg_usb1_vbus {
+ 	gpio = <&pio 7 24 GPIO_ACTIVE_HIGH>; /* PH24 */
+ 	status = "okay";
+@@ -330,12 +336,25 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usb_power_supply {
++	status = "okay";
++};
++
+ &usb1_vbus_pin_a {
+ 	/* different pin from sunxi-common-regulators */
+ 	pins = "PH24";
+ };
+ 
+ &usbphy {
++	usb0_id_det-gpio = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
++	usb0_vbus_det-gpio = <&pio 0 16 GPIO_ACTIVE_HIGH>; /* PA16 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_drivevbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	status = "okay";
+ };
+-- 
+2.10.2
