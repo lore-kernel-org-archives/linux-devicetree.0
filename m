@@ -1,35 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 00/06] clocksource: sh_cmt: DT binding rework V4
-Date: Thu, 24 Nov 2016 11:58:43 +0100
-Message-ID: <20161124105843.GA26737@verge.net.au>
-References: <20160314142342.17180.21352.sendpatchset@little-apple>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/5] arm64: Allwinner H5 support
+Date: Thu, 24 Nov 2016 11:59:58 +0100
+Message-ID: <20161124105958.xzp4fr2fs4p42upx@lukather>
+References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bcabunfmsc3wcso6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOUQ3PAQKGQE2RHLSGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20160314142342.17180.21352.sendpatchset@little-apple>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <1479950235-26821-1-git-send-email-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
 
-On Mon, Mar 14, 2016 at 11:23:42PM +0900, Magnus Damm wrote:
-> clocksource: sh_cmt: DT binding rework V4
-> 
-> [PATCH v4 01/06] devicetree: bindings: Remove sh7372 CMT binding
-> [PATCH v4 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-> [PATCH v4 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
-> [PATCH v4 04/06] devicetree: bindings: Deprecate property, update example
-> [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
-> [PATCH v4 06/06] devicetree: bindings: Remove deprecated properties
-> 
-> Here is the latest and hopefully final take on updating the CMT DT
-> bindings for R-Car Gen2. In total there are 6 patches that have acks
-> and are ready to be picked up and merged. Other earlier posted changes
-> such as driver modification and SoC DTS bits depend on this series.
+--bcabunfmsc3wcso6
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I am wondering what the state of this work is.
-I see only one minor review comment for this series.
-It would be great to see it merged.
+On Thu, Nov 24, 2016 at 01:17:10AM +0000, Andre Przywara wrote:
+> This series adds support for the recently released Allwinner H5 SoC [1] and
+> the Orange Pi PC 2 board [2].
+> This exercise is rather easy this time, since the new SoC is very similar
+> to the existing H3 SoC and can thus share a lot of support.
+> To express this, the first patch splits the H3 .dtsi to allow reusing
+> it later. The last two patches add the H5 .dtsi and the .dts for the
+> first available board featuring this chip, based on that shared base DT.
+> 
+> This is some early version, it's based on a merge of various -for-4.10
+> branches from Maxime's repository.
+> I can boot this on the OPi board and MMC and USB seem to work fine.
+> I haven't tested any other peripherals yet.
+> Some open issues:
+> - The naming: Following the Allwinner scheme this should be "sun50i-h5"
+> (which I use in this series), but it shares so much with the H3 that
+> "sun8i-h5" wouldn't be wrong either. It gets a bit weird with that shared
+> .dtsi, which I call sun8i-h3-h5.dtsi for now.
+> - The clocks and pinctrl look _almost_ similar. I may sound like a broken
+> record, but our habit of requiring kernel support for those almost identical
+> SoCs really bites us now. As the MMC got updated, I fear there is _one_
+> additional pin that we need for the HS400 transfer mode. Also I am afraid
+> the MMC clock may be slightly different due to the advanced MMC support.
+> At the moment this is not an issue, as the driver only support DDR50 at
+> most anyway, so we get away with it now.
+> I wonder if it's feasible to add those things to the existing H3 clocks
+> and pinctrl to avoid another set of drivers.
+> - I just see that I missed those patches that add just the names to the
+> binding docs. I will send them once we agreed on the naming.
+
+I don't have any major comments but I guess it all depends on the DT
+maintainers view on the symbolic link to share the DTSI.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--bcabunfmsc3wcso6--
