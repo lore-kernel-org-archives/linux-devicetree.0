@@ -1,75 +1,59 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Fri, 25 Nov 2016 01:26:48 +0200
-Message-ID: <4461318.dYHS3nW9CP@avalon>
-References: <2778019.JJI4Lz6scm@avalon>
- <CAOMZO5CZ-c=1zos=6ovY9Tfkz-UeUq0c1sUQ_Fa8t-TjW6k6hw@mail.gmail.com>
- <831329ae-1c16-07ba-3eca-95f6ff8dbae2@mentor.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: remove duplicate iomux entry
+Date: Fri, 25 Nov 2016 00:42:47 +0100
+Message-ID: <20161124234247.18397-1-gary.bisson@boundarydevices.com>
+References: <20161124231638.12840-1-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <831329ae-1c16-07ba-3eca-95f6ff8dbae2@mentor.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161124231638.12840-1-gary.bisson@boundarydevices.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gRmFiaW8gYW5kIFZsYWRpbWlyLAoKVGhhbmsgeW91IGZvciB5b3VyIHF1aWNrIHJlc3Bv
-bnNlcy4KCk9uIEZyaWRheSAyNSBOb3YgMjAxNiAwMDoxNjowMCBWbGFkaW1pciBaYXBvbHNraXkg
-d3JvdGU6Cj4gT24gMTEvMjUvMjAxNiAxMjowNyBBTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+
-IE9uIFRodSwgTm92IDI0LCAyMDE2IGF0IDc6MTYgUE0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
-Cj4gPj4gSGkgQW5keSwKPiA+PiAKPiA+PiBBcyB0aGUgYXV0aG9yIG9mIHRoZSBEVy1IRE1JIERU
-IGJpbmRpbmdzIHRoaXMgcXVlc3Rpb24gaXMgYWRkcmVzc2VkIHRvCj4gPj4geW91LCBidXQgaW5m
-b3JtYXRpb24gZnJvbSBhbnlvbmUgaXMgbW9yZSB0aGFuIHdlbGNvbWUuCj4gPj4gCj4gPj4gVGhl
-IERUIGJpbmRpbmdzIHNwZWNpZnkgdHdvIGNsb2NrcyBuYW1lZCAiaWFoYiIgYW5kICJpc2ZyIiBi
-dXQgZG9uJ3QKPiA+PiBkZXNjcmliZSB0aGVtLiBXaGlsZSBJIGFzc3VtZSB0aGF0IHRoZSAiaXNm
-ciIgY2xvY2sgY29ycmVzcG9uZHMgdG8gdGhlCj4gPj4gImlzZnJjbGsiIGlucHV0IHNpZ25hbCBv
-ZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlhaGIiIGNsb2NrCj4gPj4gZGVzY3JpYmVkIGlu
-IHRoZSBJUCBjb3JlIGRhdGFzaGVldC4KPiA+IAo+ID4gaS5NWDZRIGhhcyBhIERXLUhETUkgSVAg
-YmxvY2suCj4gPiAKPiA+IFRoZSBuYW1lcyBpbiB0aGUgZGV2aWNldHJlZSBiaW5kaW5nIG1hdGNo
-ZXMgdGhlIG9uZXMgbGlzdGVkIGF0IHRoZQo+ID4gaS5NWDZRIFJlZmVyZW5jZSBNYW51YWwgLSBU
-YWJsZSAzMy0xLiBIRE1JIENsb2Nrcwo+Cj4gY29ycmVjdCwgZm9yIHlvdXIgY29udmVuaWVuY2Ug
-dGhlIHRhYmxlIGlzIGNvcGllZCBiZWxvdzoKPiAKPiBDbG9jayBuYW1lIHwgICAgIENsb2NrIFJv
-b3QgICAgIHwgRGVzY3JpcHRpb24KPiAtLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLSst
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgICBpYWhiY2xrICB8IGFo
-Yl9jbGtfcm9vdCAgICAgICB8IEJ1cyBjbG9jawo+ICAgIGljZWNjbGsgIHwgY2tpbF9zeW5jX2Ns
-a19yb290IHwgQ0VDIGxvdy1mcmVxdWVuY3kgY2xvY2sgKDMya0haKQo+ICAgIGloY2xrICAgIHwg
-YWhiX2Nsa19yb290ICAgICAgIHwgTW9kdWxlIGNsb2NrCj4gICAgaXNmcmNsayAgfCB2aWRlb18y
-N21fY2xrX3Jvb3QgfCBJbnRlcm5hbCBTRlIgY2xvY2sgKHZpZGVvIGNsb2NrIDI3TUh6KQo+IAo+
-IEhlcmUgQUhCIHN0YW5kcyBmb3IgQVJNIEFkdmFuY2VkIEhpZ2gtcGVyZm9ybWFuY2UgQnVzLgoK
-VGhhdCdzIHdoYXQgSSBzdXNwZWN0ZWQuIEkgYmVsaWV2ZSB0aGUgImlhaGIiIG5hbWUgaXMgd3Jv
-bmcsIGFzIHRoZSBEVyBIRE1JIFRYIApJUCBjb3JlIGNsZWFybHkgZG9jdW1lbnRzIHRoZSBidXMg
-Y2xvY2sgYXMgYmVpbmcgY2FsbGVkICJpYXBiY2xrIi4gV2UgY291bGQgCnJlbmFtZSB0aGF0IGlu
-IHRoZSBEVCBiaW5kaW5ncyAod2l0aCBjb21wYXRpYmlsaXR5IGNvZGUgaW4gdGhlIGRyaXZlciB0
-byBrZWVwIApzdXBwb3J0aW5nIHRoZSBvbGQgbmFtZSkgYnV0IGl0IG1pZ2h0IG5vdCBiZSB3b3J0
-aCBpdC4gVGhlIGJpbmRpbmdzIHNob3VsZCAKaG93ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFo
-YiIgY2xvY2sgaXMgdGhlIElQIGNvcmUncyAiaWFwYmNsayIgYnVzIGNsb2NrLgoKQW5vdGhlciBx
-dWVzdGlvbiBJIGhhdmUgYWJvdXQgdGhlIGJ1cyBjbG9jayAoQ0MnaW5nIHRoZSBkZXZpY2V0cmVl
-IG1haWxpbmcgCmxpc3QgYXMgd2VsbCBhcyB0aGUgY2xvY2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRo
-ZXIgaXQgc2hvdWxkIGJlIG1hZGUgb3B0aW9uYWwuIApUaGUgY2xvY2sgaXMgb2J2aW91c2x5IG1h
-bmRhdG9yeSBmcm9tIGEgaGFyZHdhcmUgcG9pbnQgb2YgdmlldyAoZ2l2ZW4gdGhhdCBBUEIgCmlz
-IGEgc3luY2hyb25vdXMgYnVzIGFuZCB0aHVzIHJlcXVpcmVzIGEgY2xvY2spLCBidXQgaW4gc29t
-ZSBTb0NzIAooc3BlY2lmaWNhbGx5IGZvciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlz
-IGFsd2F5cyBvbiBhbmQgY2FuJ3QgYmUgCmNvbnRyb2xsZWQuIFdlIGFscmVhZHkgb21pdCBidXMg
-Y2xvY2tzIGluIERUIGZvciBtb3N0IElQIGNvcmVzIHdoZW4gdGhlIGNsb2NrIApjYW4gbmV2ZXIg
-YmUgY29udHJvbGxlZCAoYW5kIHdlIGFsc28gb21pdCBhIGJ1bmNoIG9mIG90aGVyIGNsb2NrcyB0
-aGF0IHdlIApkb24ndCBldmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNlIHRv
-IG1ha2UgdGhlIGNsb2NrIG9wdGlvbmFsLiAKT3RoZXJ3aXNlIHRoZXJlIHdvdWxkIGJlIHJ1bnRp
-bWUgb3ZlcmhlYWQgdHJ5aW5nIHRvIGhhbmRsZSBhIGNsb2NrIHRoYXQgY2FuJ3QgCmJlIGNvbnRy
-b2xsZWQuCgo+IEJ5IHRoZSB3YXkgd2hpbGUgd2UncmUgZGlzY3Vzc2luZyBEVyBIRE1JIGJpbmRp
-bmdzIHNwZWNpZmljIHRvIGlNWCwKPiBJIHdvdWxkIHJlY29tbWVuZCB0byByZW1vdmUgdXR0ZXJs
-eSBoYWNraXNoIGFuZCBpTVggb25seSAiZ3ByIgo+IHByb3BlcnR5IGZyb20gdGhlIGV4YW1wbGUg
-aW4gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfaGRtaS50eHQKCi0tIApSZWdhcmRzLAoKTGF1
-cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+The NANDF_CS2 pad is also part of the wlan-vmmcgrp iomux group.
+
+Removing is from the usdhc2grp group avoids the following error:
+imx6q-pinctrl 20e0000.iomuxc: pin MX6Q_PAD_NANDF_CS2 already requested
+by regulators:regulator@4; cannot claim for 2194000.usdhc
+imx6q-pinctrl 20e0000.iomuxc: pin-187 (2194000.usdhc) status -22
+imx6q-pinctrl 20e0000.iomuxc: could not request pin 187
+(MX6Q_PAD_NANDF_CS2) from group usdhc2grp on device 20e0000.iomuxc
+
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+---
+Hi all,
+
+Changelog v1->v2:
+- fix typo in patch title
+
+Regards,
+Gary
+---
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index e476d01..26d0604 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -533,7 +533,6 @@
+ 				MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17071
+ 				MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17071
+ 				MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17071
+-				MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x000b0
+ 			>;
+ 		};
+ 
+-- 
+2.9.3
