@@ -1,89 +1,122 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Thu, 24 Nov 2016 11:17:37 +0100
-Message-ID: <20161124101733.GA18027@verge.net.au>
-References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
- <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
- <20161123142938.GF9057@verge.net.au>
- <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
+ bindings
+Date: Thu, 24 Nov 2016 18:20:55 +0800
+Message-ID: <8328a235-faeb-2218-4c49-a3f282599e95@linaro.org>
+References: <Arnd Bergmann <arnd@arndb.de>
+ <1479888476-13138-1-git-send-email-zhangfei.gao@linaro.org>
+ <1479888476-13138-2-git-send-email-zhangfei.gao@linaro.org>
+ <1479979605.2472.4.camel@pengutronix.de>
+ <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d@linaro.org>
+ <1479981017.2472.14.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479981017.2472.14.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
 
-On Thu, Nov 24, 2016 at 10:05:08AM +0000, Chris Paterson wrote:
-> Hello Simon,
-> 
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 23 November 2016 14:30
-> > On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
-> > > On 11/23/2016 01:14 PM, Chris Paterson wrote:
-> > > > This patch series adds CAN and CAN FD support to the r8a7796.
-> > > >
-> > > > Based on renesas-devel-20161122-v4.9-rc6.
-> > > >
-> > > > Chris Paterson (3):
-> > > >   arm64: dts: r8a7796: Add CAN external clock support
-> > > >   arm64: dts: r8a7796: Add CAN support
-> > > >   arm64: dts: r8a7796: Add CAN FD support
-> > > >
-> > > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
-> > > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
-> > > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
-> > ++++++++++++++++++++++
-> > > >  3 files changed, 75 insertions(+), 10 deletions(-)
-> > >
-> > > For all three:
-> > >
-> > > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> > >
-> > > Who takes this series?
-> > 
-> > I would like to see these patches split up so that the .../devicetree/bindings/
-> > portions can go through you whole the arch/arm64/boot/dts/renesas/
-> > portions go thorugh my renesas tree.
-> 
-> Okay, will do.
 
-Thanks.
+On 2016年11月24日 17:50, Philipp Zabel wrote:
+> Am Donnerstag, den 24.11.2016, 17:40 +0800 schrieb zhangfei:
+>> On 2016年11月24日 17:26, Philipp Zabel wrote:
+>>> Am Mittwoch, den 23.11.2016, 16:07 +0800 schrieb Zhangfei Gao:
+>>>> Add DT bindings documentation for hi3660 SoC reset controller.
+>>>>
+>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>    .../bindings/reset/hisilicon,hi3660-reset.txt      | 51 ++++++++++++++++++++++
+>>>>    1 file changed, 51 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+>>>> new file mode 100644
+>>>> index 0000000..250daf2
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
+>>>> @@ -0,0 +1,51 @@
+>>>> +Hisilicon System Reset Controller
+>>>> +======================================
+>>>> +
+>>>> +Please also refer to reset.txt in this directory for common reset
+>>>> +controller binding usage.
+>>>> +
+>>>> +The reset controller registers are part of the system-ctl block on
+>>>> +hi3660 SoC.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: should be
+>>>> +		 "hisilicon,hi3660-reset"
+>>>> +- #reset-cells: 1, see below
+>>>> +- hisi,rst-syscon: phandle of the reset's syscon.
+>>>> +- hisi,reset-bits: Contains the reset control register information
+>>>> +		  Should contain 2 cells for each reset exposed to
+>>>> +		  consumers, defined as:
+>>>> +			Cell #1 : offset from the syscon register base
+>>>> +			Cell #2 : bits position of the control register
+>>>> +
+>>>> +Example:
+>>>> +	iomcu: iomcu@ffd7e000 {
+>>>> +		compatible = "hisilicon,hi3660-iomcu", "syscon";
+>>>> +		reg = <0x0 0xffd7e000 0x0 0x1000>;
+>>>> +	};
+>>>> +
+>>>> +	iomcu_rst: iomcu_rst_controller {
+>>> This should be
+>>> 	iomcu_rst: reset-controller {
+>>>
+>>>> +		compatible = "hisilicon,hi3660-reset";
+>>>> +		#reset-cells = <1>;
+>>>> +		hisi,rst-syscon = <&iomcu>;
+>>>> +		hisi,reset-bits = <0x20 0x8		/* 0: i2c0 */
+>>>> +				   0x20 0x10		/* 1: i2c1 */
+>>>> +				   0x20 0x20		/* 2: i2c2 */
+>>>> +				   0x20 0x8000000>;	/* 3: i2c6 */
+>>>> +	};
+>>> The reset lines are controlled through iomcu bits, is there a reason not
+>>> to put the iomcu_rst node inside the iomcu node? That way the
+>>> hisi,rst-syscon property could be removed and the syscon could be
+>>> retrieved via the reset-controller parent node.
+>> iomcu is common registers, controls clock and reset, etc.
+>> So we use syscon, without mapping the registers everywhere.
+>> It is common case in hisilicon, same in hi6220.
+>>
+>> Also the #clock-cells and #reset-cells can not be put in the same node,
+>> if they are both using probe, since reset_probe will not be called.
+>>
+>> So we use hisi,rst-syscon as a general solution.
+> What I meant is this:
+>
+> 	iomcu: iomcu@ffd7e000 {
+> 		compatible = "hisilicon,hi3660-iomcu", "syscon", "simple-mfd";
+> 		reg = <0x0 0xffd7e000 0x0 0x1000>;
+#clock-cells = <1>;
+In my test, if there add #clock-cells = <1>, reset_probe will not be 
+called any more.
+Since clk_probe is called first.
+No matter iomcu_rst is child node or not.
 
-> > Regarding the arch/arm64/boot/dts/renesas/ portion, I would like some
-> > consideration given to what effect enabling memory above 4Gb (64bit
-> > addressing) would have.
-> 
-> Can you give me some guidance here? I'm not sure what you're referring
-> to. As far as I know the DT reg definition here is 64-bit, or are you
-> referring to DMA usage? If the later, neither CAN driver uses DMA.
+Thanks
+>
+> 		iomcu_rst: reset-controller {
+> 			compatible = "hisilicon,hi3660-reset";
+> 			#reset-cells = <1>;
+> 			hisi,reset-bits = <0x20 0x8		/* 0: i2c0 */
+> 					   0x20 0x10		/* 1: i2c1 */
+> 					   0x20 0x20		/* 2: i2c2 */
+> 					   0x20 0x8000000>;	/* 3: i2c6 */
+> 		};
+> 	};
+>
+> regards
+> Philipp
+>
 
-Sorry for not being clearer.
-
-What I would like to know is if there are any problems in the CAN driver
-or hardware that would prevent it from functioning with memory that
-requires 64bit addressing present.
-
-If the CAN hardware cannot use DMA then DMA doesn't need to be taken into
-account. But if it DMA could be enabled in future for CAN, for example
-after some driver enhancements, then it would be good to know if 64bit
-memory can be supported - if not it would imply DMA cannot be enabled.
-
-As for non-DMA mode, will this function if memory above 4G is present?
-If not then in theory such memory couldn't be enabled if the CAN driver
-is enabled. This is my main concern.
-
-Does the above help?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
