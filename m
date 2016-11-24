@@ -1,46 +1,48 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: hummingbird: Enable USB OTG
-Date: Thu, 24 Nov 2016 21:04:07 +0100
-Message-ID: <20161124200407.soib3se5lp5vvkdo@lukather>
-References: <20161124112908.4796-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Thu, 24 Nov 2016 21:05:09 +0100
+Message-ID: <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
+References: <20161122170616.29557-1-manu@bidouilliste.com>
+        <20161124195517.qrq7briu3pwjnp4n@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jweyvqylmeecwwhw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOEP3XAQKGQERNPCSEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20161124112908.4796-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161124195517.qrq7briu3pwjnp4n@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 24 Nov 2016 20:55:17 +0100
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 
---jweyvqylmeecwwhw
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Thu, Nov 24, 2016 at 07:29:08PM +0800, Chen-Yu Tsai wrote:
-> The A31 Hummingbird has a mini USB OTG port, and uses GPIO pins from the
-> SoC for ID pin and VBUS detection and VBUS control. The PMIC can also do
-> VBUS detection and control.
+> On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
+> > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+> > others three only have 1.
+> > Add the num-cs property to each node.
+> > 
+> > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
 > 
-> Here we prefer to use the PMIC's DRIVEVBUS function to control VBUS for
-> USB OTG, as that is the hardware default.
+> I don't think we have any code that uses it at the moment. What is the
+> rationale behind this patch?
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
-Applied, thanks!
-Maxime
+ Hi Maxime,
+
+ If num-cs isn't present nothing prevent to start a transfer with a
+non-valid CS pin, resulting in an error.
+ num-cs are default property especially made for this and a SPI driver
+should try to get the property at probe/attach time.
+
+ Cheers,
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---jweyvqylmeecwwhw--
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
