@@ -1,105 +1,50 @@
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [RFC PATCH] ARM: dts: Add support for Turris Omnia
-Date: Thu, 24 Nov 2016 09:37:10 +0100
-Message-ID: <4e3f9628-dbf8-27c1-abea-d0ef58a67e51@kleine-koenig.org>
-References: <1479851991.26813.2@smtp.gmail.com>
- <1479859770-9375-1-git-send-email-tmshlvck@gmail.com>
- <20161123003505.GL2691@lunn.ch>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/5] Documentation: pinctrl: palmas: Add
+ ti,palmas-powerhold-override property definition
+Date: Thu, 24 Nov 2016 08:45:44 +0000
+Message-ID: <20161124084544.GS10134@dell.home>
+References: <1478754560-27923-1-git-send-email-j-keerthy@ti.com>
+ <1478754560-27923-2-git-send-email-j-keerthy@ti.com>
+ <20161115014352.5d3qwoonlo63mp5p@rob-hp-laptop>
+ <23bf98ee-bcdc-e100-54ce-6f4b1e13ffcf@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="Cea7dcGcnLamBd1PwHblQEnDcWoNEHhWv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161123003505.GL2691@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Tomas Hlavacek <tmshlvck@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <23bf98ee-bcdc-e100-54ce-6f4b1e13ffcf@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Rob Herring <robh@kernel.org>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Cea7dcGcnLamBd1PwHblQEnDcWoNEHhWv
-Content-Type: multipart/mixed; boundary="SFDuOflkinvnrFA2hqEdGQKde29gdtkGO";
- protected-headers="v1"
-From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Andrew Lunn <andrew@lunn.ch>, Tomas Hlavacek <tmshlvck@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Russell King <linux@armlinux.org.uk>, Jason Cooper <jason@lakedaemon.net>,
- Gregory Clement <gregory.clement@free-electrons.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Message-ID: <4e3f9628-dbf8-27c1-abea-d0ef58a67e51@kleine-koenig.org>
-Subject: Re: [RFC PATCH] ARM: dts: Add support for Turris Omnia
-References: <1479851991.26813.2@smtp.gmail.com>
- <1479859770-9375-1-git-send-email-tmshlvck@gmail.com>
- <20161123003505.GL2691@lunn.ch>
-In-Reply-To: <20161123003505.GL2691@lunn.ch>
+On Thu, 24 Nov 2016, Keerthy wrote:
 
---SFDuOflkinvnrFA2hqEdGQKde29gdtkGO
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+> 
+> 
+> On Tuesday 15 November 2016 07:13 AM, Rob Herring wrote:
+> > On Thu, Nov 10, 2016 at 10:39:16AM +0530, Keerthy wrote:
+> > > GPIO7 is configured in POWERHOLD mode which has higher priority
+> > > over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
+> > > bit is turned off. This property enables driver to over ride the
+> > > POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
+> > > scenarios.
+> > > 
+> > > Signed-off-by: Keerthy <j-keerthy@ti.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> 
+> Tony,
+> 
+> Are you planning to pick this one as well?
 
-On 11/23/2016 01:35 AM, Andrew Lunn wrote:
->> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
->> @@ -0,0 +1,279 @@
->> +/*
->> + * Device Tree file for the Turris Omnia
->> + * Schematic available at https://www.turris.cz/doc/_media/rtrom01-sc=
-hema.pdf
->
-> Cool that there is a link to the schematics. But please could you put
-> it lower down. It is more likely to be seen if it comes after the
-> copyright and license section.
+This should be taken by LinusW.
 
-I added to the top because that's where I would look. But checking other
-dts files it seems indeed to be more common after the copyright stuff.
-I'd suggest to even start a new comment (i.e.
-
-	 * last blabla of copyright
-	 */
-
-	/*
-	 * Schematic available at ...
-
-) to be more "loud".
-
-@Tomas: I think it doesn't make sense when we alternate sending patches
-without prior arrangement. Do you already work on a v5? If not I can do
-that to fix the last few comments. Not sure when a submission is too
-late to enter v4.10, but I think the window isn't that big any more.
-
-> No leds? No buttons via gpio-keys?
-
-The leds are controlled by a Cortex-M0 and without intervention blink
-according to a hardware function (network, power, pci). IMHO that's ok
-for an initial setup.
-
-And there are no buttons that are routed to the Armada CPU. Just a reset
-button (well, ok, this one is routed to the Armada CPU, but you cannot
-make this a gpio-key :-) and the other button is used to control the
-brightness of the LEDs and is only routed to the M0.
-
-Best regards
-Uwe
-
-
---SFDuOflkinvnrFA2hqEdGQKde29gdtkGO--
-
---Cea7dcGcnLamBd1PwHblQEnDcWoNEHhWv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAlg2prwACgkQwfwUeK3K
-7AlTqAgAmAVBCvE7VCQMJE1NqhXNhBs/lxwArY2aHJ1nO7wSnu0hWsXpHbGI7kkh
-mU3zncJZHQD/YnyHFfUr8HIz2LAUraM2Lg6JxTuGHqA+4o2Xet/cXq9OeVh7fxwq
-ttJcp1JdxV6UTZ2G53bSI6RrIIUYhn3YyDQwaPsOqTTrVXQc3bxycRuaixsxvdSb
-vjiiIBZp9SKr05SCHH7w21aq49t716H1DbLZcWcv2bTrNi42N0vuKz53qMk+FS4X
-scIZ5uGA0eV5W5hs1cCNn7fvW8EOWqDL+sIGSZH/JCgu3rZ7XDlHrIyJZwtk72Ab
-O5LBSJdYcAXENM52dzRsH4lfyHqO5A==
-=F0k/
------END PGP SIGNATURE-----
-
---Cea7dcGcnLamBd1PwHblQEnDcWoNEHhWv--
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
