@@ -1,96 +1,62 @@
-From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v28 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Thu, 24 Nov 2016 18:59:44 +0900
-Message-ID: <20161124095944.7167-1-takahiro.akashi@linaro.org>
-References: <20161124095523.6972-1-takahiro.akashi@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161124095523.6972-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+Date: Thu, 24 Nov 2016 10:05:08 +0000
+Message-ID: <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+ <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
+ <20161123142938.GF9057@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20161123142938.GF9057@verge.net.au>
+Content-Language: en-US
+Sender: linux-can-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Hello Simon,
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range
-	linux,elfcorehdr
-used by arm64 kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+From: Simon Horman [mailto:horms@verge.net.au]
+Sent: 23 November 2016 14:30
+> On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
+> > On 11/23/2016 01:14 PM, Chris Paterson wrote:
+> > > This patch series adds CAN and CAN FD support to the r8a7796.
+> > >
+> > > Based on renesas-devel-20161122-v4.9-rc6.
+> > >
+> > > Chris Paterson (3):
+> > >   arm64: dts: r8a7796: Add CAN external clock support
+> > >   arm64: dts: r8a7796: Add CAN support
+> > >   arm64: dts: r8a7796: Add CAN FD support
+> > >
+> > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
+> > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
+> > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
+> ++++++++++++++++++++++
+> > >  3 files changed, 75 insertions(+), 10 deletions(-)
+> >
+> > For all three:
+> >
+> > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> >
+> > Who takes this series?
+>=20
+> I would like to see these patches split up so that the .../devicetree/bin=
+dings/
+> portions can go through you whole the arch/arm64/boot/dts/renesas/
+> portions go thorugh my renesas tree.
 
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Okay, will do.
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..7b11516 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the base address and the size, which can be used as system ram on
-+the *current* kernel. Note that, if this property is present, any memory
-+regions under "memory" nodes in DT blob or ones marked as "conventional
-+memory" in EFI memory map should be ignored.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
--- 
-2.10.0
+>=20
+> Regarding the arch/arm64/boot/dts/renesas/ portion, I would like some
+> consideration given to what effect enabling memory above 4Gb (64bit
+> addressing) would have.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you give me some guidance here? I'm not sure what you're referring to. =
+As far as I know the DT reg definition here is 64-bit, or are you referring=
+ to DMA usage? If the later, neither CAN driver uses DMA.
+
+Kind regards, Chris
