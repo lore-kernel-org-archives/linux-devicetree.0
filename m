@@ -1,102 +1,109 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v2 3/9] clk: stm32f4: Add post divisor for I2S & SAI PLLs
-Date: Thu, 24 Nov 2016 15:45:43 +0100
-Message-ID: <1479998749-20358-4-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v2 7/9] clk: stm32f4: SDIO & 48Mhz clock management for STM32F469 board
+Date: Thu, 24 Nov 2016 15:45:47 +0100
+Message-ID: <1479998749-20358-8-git-send-email-gabriel.fernandez@st.com>
 References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, amelie.delaunay@st.com, kernel@stlinux.com, olivier.bideau@st.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch adds post dividers of I2S & SAI PLLs.
-These dividers are managed by a dedicated register (RCC_DCKCFGR).
-The PLL should be off before a set rate.
+In the stm32f469 soc, the 48Mhz clock could be derived from pll-q or
+from pll-sai-p.
+
+The SDIO clock could be also derived from 48Mhz or from sys clock.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32f4.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ drivers/clk/clk-stm32f4.c | 49 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index c2b62cc..3918305 100644
+index 02339d1..161449d 100644
 --- a/drivers/clk/clk-stm32f4.c
 +++ b/drivers/clk/clk-stm32f4.c
-@@ -357,6 +357,18 @@ struct stm32f4_pll {
+@@ -206,7 +206,7 @@ struct stm32f4_gate_data {
+ 	{ STM32F4_RCC_APB2ENR,  8,	"adc1",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR,  9,	"adc2",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 10,	"adc3",		"apb2_div" },
+-	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"pll48" },
++	{ STM32F4_RCC_APB2ENR, 11,	"sdio",		"sdmux" },
+ 	{ STM32F4_RCC_APB2ENR, 12,	"spi1",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 13,	"spi4",		"apb2_div" },
+ 	{ STM32F4_RCC_APB2ENR, 14,	"syscfg",	"apb2_div" },
+@@ -940,6 +940,10 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+ static const char *sai_parents[4] = { "pllsai-q-div", "plli2s-q-div", NULL,
+ 	"no-clock" };
  
- #define to_stm32f4_pll(_gate) container_of(_gate, struct stm32f4_pll, gate)
- 
-+struct stm32f4_pll_post_div_data {
-+	u8 pll_num;
-+	const char *name;
-+	const char *parent;
-+	u8 flag;
-+	u8 offset;
-+	u8 shift;
-+	u8 width;
-+	u8 flag_div;
-+	const struct clk_div_table *div_table;
-+};
++static const char *pll48_parents[2] = { "pll-q", "pllsai-p" };
 +
- struct stm32f4_vco_data {
- 	const char *vco_name;
- 	u8 offset;
-@@ -370,6 +382,18 @@ struct stm32f4_vco_data {
- 	{ "vco-sai", STM32F4_RCC_PLLSAICFGR, 28, 29 },
++static const char *sdmux_parents[2] = { "pll48", "sys" };
++
+ struct stm32_aux_clk {
+ 	int idx;
+ 	const char *name;
+@@ -994,6 +998,45 @@ struct stm32f4_clk_data {
+ 	},
  };
  
-+#define MAX_POST_DIV 3
-+static const struct stm32f4_pll_post_div_data  post_div_data[MAX_POST_DIV] = {
-+	{ PLL_I2S, "plli2s-q-div", "plli2s-q", CLK_SET_RATE_PARENT,
-+		STM32F4_RCC_DCKCFGR, 0, 5, 0, NULL},
-+
-+	{ PLL_SAI, "pllsai-q-div", "pllsai-q", CLK_SET_RATE_PARENT,
-+		STM32F4_RCC_DCKCFGR, 8, 5, 0, NULL },
-+
-+	{ PLL_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
-+		STM32F4_RCC_DCKCFGR, 16, 2, CLK_DIVIDER_POWER_OF_TWO},
++static const struct stm32_aux_clk stm32f469_aux_clk[] = {
++	{
++		CLK_LCD, "lcd-tft", lcd_parent, ARRAY_SIZE(lcd_parent),
++		NO_MUX, 0, 0,
++		STM32F4_RCC_APB2ENR, 26,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_I2S, "i2s", i2s_parents, ARRAY_SIZE(i2s_parents),
++		STM32F4_RCC_CFGR, 23, 1,
++		NO_GATE, 0,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_SAI1, "sai1-a", sai_parents, ARRAY_SIZE(sai_parents),
++		STM32F4_RCC_DCKCFGR, 20, 3,
++		STM32F4_RCC_APB2ENR, 22,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		CLK_SAI2, "sai1-b", sai_parents, ARRAY_SIZE(sai_parents),
++		STM32F4_RCC_DCKCFGR, 22, 3,
++		STM32F4_RCC_APB2ENR, 22,
++		CLK_SET_RATE_PARENT
++	},
++	{
++		NO_IDX, "pll48", pll48_parents, ARRAY_SIZE(pll48_parents),
++		STM32F4_RCC_DCKCFGR, 27, 1,
++		NO_GATE, 0,
++		0
++	},
++	{
++		NO_IDX, "sdmux", sdmux_parents, ARRAY_SIZE(sdmux_parents),
++		STM32F4_RCC_DCKCFGR, 28, 1,
++		NO_GATE, 0,
++		0
++	},
 +};
 +
- struct stm32f4_div_data {
- 	u8 shift;
- 	u8 width;
-@@ -996,6 +1020,23 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
- 			&data->pll_data[2], &stm32f4_clk_lock);
+ static const struct stm32f4_clk_data stm32f429_clk_data = {
+ 	.gates_data	= stm32f429_gates,
+ 	.gates_map	= stm32f42xx_gate_map,
+@@ -1008,8 +1051,8 @@ struct stm32f4_clk_data {
+ 	.gates_map	= stm32f46xx_gate_map,
+ 	.gates_num	= ARRAY_SIZE(stm32f469_gates),
+ 	.pll_data	= stm32f469_pll,
+-	.aux_clk	= stm32f429_aux_clk,
+-	.aux_clk_num	= ARRAY_SIZE(stm32f429_aux_clk),
++	.aux_clk	= stm32f469_aux_clk,
++	.aux_clk_num	= ARRAY_SIZE(stm32f469_aux_clk),
+ };
  
-+	for (n = 0; n < MAX_POST_DIV; n++) {
-+		const struct stm32f4_pll_post_div_data *post_div;
-+
-+		post_div = &post_div_data[n];
-+
-+		clk_register_pll_div(post_div->name,
-+				post_div->parent,
-+				post_div->flag,
-+				base + post_div->offset,
-+				post_div->shift,
-+				post_div->width,
-+				post_div->flag_div,
-+				post_div->div_table,
-+				clks[post_div->pll_num],
-+				&stm32f4_clk_lock);
-+	}
-+
- 	sys_parents[1] = hse_clk;
- 	clk_register_mux_table(
- 	    NULL, "sys", sys_parents, ARRAY_SIZE(sys_parents), 0,
+ static const struct of_device_id stm32f4_of_match[] = {
 -- 
 1.9.1
