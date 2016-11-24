@@ -1,66 +1,48 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/5] smd: Make packet size a constant
-Date: Wed, 23 Nov 2016 22:14:50 -0800
-Message-ID: <20161124061450.GV28340@tuxbot>
-References: <1479863388-23678-1-git-send-email-jeremymc@redhat.com>
- <1479863388-23678-3-git-send-email-jeremymc@redhat.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: sun6i: hummingbird: Enable
+ display engine again
+Date: Thu, 24 Nov 2016 14:43:39 +0800
+Message-ID: <20161124064339.12615-3-wens@csie.org>
+References: <20161124064339.12615-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479863388-23678-3-git-send-email-jeremymc@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, riteshh@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBH4Y3LAQKGQEGBILI6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161124064339.12615-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 22 Nov 17:09 PST 2016, Jeremy McNicoll wrote:
+Now that we disable the display engine by default, we need to re-enable
+it for the Hummingbird A31, which already had its display pipeline
+enabled.
 
-> Use a macro to define the maximum size of a RPM message.
-> 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-No thanks.
-
-> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> ---
->  drivers/soc/qcom/smd-rpm.c   | 2 +-
->  include/linux/soc/qcom/smd.h | 7 +++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-> index 6609d7e..b5a2836 100644
-> --- a/drivers/soc/qcom/smd-rpm.c
-> +++ b/drivers/soc/qcom/smd-rpm.c
-> @@ -114,7 +114,7 @@ int qcom_rpm_smd_write(struct qcom_smd_rpm *rpm,
->  	size_t size = sizeof(*pkt) + count;
->  
->  	/* SMD packets to the RPM may not exceed 256 bytes */
-> -	if (WARN_ON(size >= 256))
-> +	if (WARN_ON(size >= SMD_RPM_MAX_SIZE))
->  		return -EINVAL;
-
-The only thing you do is to change "oh, the max packet size is 256
-bytes" to "hmm, i wonder what SMD_RPM_MAX_SIZE is and if the comment is
-still valid".
-
->  
->  	pkt = kmalloc(size, GFP_KERNEL);
-> diff --git a/include/linux/soc/qcom/smd.h b/include/linux/soc/qcom/smd.h
-> index f148e0f..8039015 100644
-> --- a/include/linux/soc/qcom/smd.h
-> +++ b/include/linux/soc/qcom/smd.h
-> @@ -4,6 +4,13 @@
->  #include <linux/device.h>
->  #include <linux/mod_devicetable.h>
->  
-> +
-> +/*
-> + * SMD packets to the RPM may not exceed 256 bytes
-> + */
-> +#define SMD_RPM_MAX_SIZE 256
-> +
-
-And this has nothing to do with SMD, it's a limitation of RPM.
-
-Regards,
-Bjorn
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index b168d6df2b30..83643bbd51dc 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -140,6 +140,10 @@
+ 	cpu-supply = <&reg_dcdc3>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+-- 
+2.10.2
