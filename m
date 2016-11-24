@@ -1,109 +1,62 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Thu, 24 Nov 2016 14:25:06 +0000
-Message-ID: <HK2PR0601MB1329C747CA5C6B5222C02C3FB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
-References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
- <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
- <20161123142938.GF9057@verge.net.au>
- <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
- <20161124101733.GA18027@verge.net.au>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: AM571x-IDK Initial Support
+Date: Thu, 24 Nov 2016 06:29:10 -0800
+Message-ID: <20161124142910.GM4082@atomide.com>
+References: <20161122041732.8385-1-lokeshvutla@ti.com>
+ <CAL_JsqLv2t0qzJ1V6NGPj3iy9tOmMcnr3nsHxojb9aJxp9+8BQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20161124101733.GA18027@verge.net.au>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLv2t0qzJ1V6NGPj3iy9tOmMcnr3nsHxojb9aJxp9+8BQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spatton-l0cyMroinI0@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
-
-From: Simon Horman [mailto:horms@verge.net.au]
-Sent: 24 November 2016 10:18
-> Hi Chris,
->=20
-> On Thu, Nov 24, 2016 at 10:05:08AM +0000, Chris Paterson wrote:
-> > Hello Simon,
+* Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [161122 07:43]:
+> On Mon, Nov 21, 2016 at 10:17 PM, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> wrote:
+> > From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
 > >
-> > From: Simon Horman [mailto:horms@verge.net.au]
-> > Sent: 23 November 2016 14:30
-> > > On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
-> > > > On 11/23/2016 01:14 PM, Chris Paterson wrote:
-> > > > > This patch series adds CAN and CAN FD support to the r8a7796.
-> > > > >
-> > > > > Based on renesas-devel-20161122-v4.9-rc6.
-> > > > >
-> > > > > Chris Paterson (3):
-> > > > >   arm64: dts: r8a7796: Add CAN external clock support
-> > > > >   arm64: dts: r8a7796: Add CAN support
-> > > > >   arm64: dts: r8a7796: Add CAN FD support
-> > > > >
-> > > > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
-> > > > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
-> > > > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
-> > > ++++++++++++++++++++++
-> > > > >  3 files changed, 75 insertions(+), 10 deletions(-)
-> > > >
-> > > > For all three:
-> > > >
-> > > > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> > > >
-> > > > Who takes this series?
-> > >
-> > > I would like to see these patches split up so that the
-> > > .../devicetree/bindings/ portions can go through you whole the
-> > > arch/arm64/boot/dts/renesas/ portions go thorugh my renesas tree.
+> > The AM571x-IDK board is a board based on TI's AM5718 SOC
+> > which has a single core 1.5GHz A15 processor. This board is a
+> > development platform for the Industrial market with:
+> > - 1GB of DDR3L
+> > - Dual 1Gbps Ethernet
+> > - HDMI,
+> > - PRU-ICSS
+> > - uSD
+> > - 16GB eMMC
+> > - CAN
+> > - RS-485
+> > - PCIe
+> > - USB3.0
+> > - Video Input Port
+> > - Industrial IO port and expansion connector
 > >
-> > Okay, will do.
->=20
-> Thanks.
->=20
-> > > Regarding the arch/arm64/boot/dts/renesas/ portion, I would like
-> > > some consideration given to what effect enabling memory above 4Gb
-> > > (64bit
-> > > addressing) would have.
+> > The link to the data sheet and TRM can be found here:
 > >
-> > Can you give me some guidance here? I'm not sure what you're referring
-> > to. As far as I know the DT reg definition here is 64-bit, or are you
-> > referring to DMA usage? If the later, neither CAN driver uses DMA.
->=20
-> Sorry for not being clearer.
->=20
-> What I would like to know is if there are any problems in the CAN driver =
-or
-> hardware that would prevent it from functioning with memory that requires
-> 64bit addressing present.
->=20
-> If the CAN hardware cannot use DMA then DMA doesn't need to be taken
-> into account. But if it DMA could be enabled in future for CAN, for examp=
-le
-> after some driver enhancements, then it would be good to know if 64bit
-> memory can be supported - if not it would imply DMA cannot be enabled.
+> > http://www.ti.com/product/AM5718
+> >
+> > Initial support is only for basic peripherals.
+> >
+> > Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+> > ---
+> > Cahnges since v1:
+> > - Dropped "ti,dra722", and "ti,dra72" from compatibles
+> > - Fixes few node names as suggested by Rob.
+> > Logs: http://pastebin.ubuntu.com/23515001/
+> 
+> Please add acks when posting new versions.
 
-Thank you for the clarification.
+I applied this with your ack as I was aware of the
+context in this case :)
 
-The CAN interface for r8a7795/6 does not support DMA.
-
-With CAN FD there is currently a H/W issue that means DMA is unusable. Pote=
-ntially this issue could be fixed in the future and DMA support could be ad=
-ded to the driver. If this happens I can see no reason why the CAN FD IP wo=
-uldn't be able to handle DMA transfers when using 64bit addressing.
-
->=20
-> As for non-DMA mode, will this function if memory above 4G is present?
-> If not then in theory such memory couldn't be enabled if the CAN driver i=
-s
-> enabled. This is my main concern.
-
-Yes, it functions fine. We have already tested this with the Renesas v3.3.2=
- BSP with >4Gb memory.
-
-If this is explanation okay for you, I'll proceed with a v2 splitting off t=
-he DT bindings documentation.
-
-Kind regards, Chris
-
->=20
-> Does the above help?
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
