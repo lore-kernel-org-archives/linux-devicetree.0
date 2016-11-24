@@ -1,37 +1,33 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/3] pinctrl: New driver for TI DA8XX/OMAP-L138/AM18XX
- pinconf
-Date: Thu, 24 Nov 2016 15:05:43 +0100
-Message-ID: <CACRpkdYzJFdbEPON_TGDpzhNmA=e5O4XkhfYiWhgYj4p94=nHQ@mail.gmail.com>
-References: <1479871767-20160-1-git-send-email-david@lechnology.com>
- <1479871767-20160-3-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH V3 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Thu, 24 Nov 2016 15:11:04 +0100
+Message-ID: <CACRpkdbp8_eR7PLoaX4AJbhcx_tYQjcS5U_hR3EU7b4dar3ckg@mail.gmail.com>
+References: <1479810013-29894-1-git-send-email-ldewangan@nvidia.com>
+ <1479810013-29894-3-git-send-email-ldewangan@nvidia.com> <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw@mail.gmail.com>
+ <583580AD.60803@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1479871767-20160-3-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bgolaszewski@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <583580AD.60803@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 4:29 AM, David Lechner <david@lechnology.com> wrote:
+On Wed, Nov 23, 2016 at 12:42 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-> This adds a new driver for pinconf on TI DA8XX/OMAP-L138/AM18XX. These
-> SoCs have a separate controller for controlling pullup/pulldown groups.
+> Here, we need the regulator handle which can support the other regulator
+> APIs.
 >
-> Signed-off-by: David Lechner <david@lechnology.com>
+> In some of platforms, we do not use some of the io-pins and on this case, we
+> do not connect the IO rail supply for these pins. So this is like a hardware
+> optional.
+>
+> If the IO pins are used then it need to have the proper regulator handle.
+> Missing regulator handle on DT will be like that IO pads are not used.
 
-Nice and clean driver, resend with the minor fixes pointed out
-by Sekhar and I'll merge it.
+OK I buy that argument, unless Mark (Brown) has comments.
 
 Yours,
 Linus Walleij
