@@ -1,40 +1,100 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD
- Host Controller
-Date: Thu, 24 Nov 2016 11:10:29 +0100
-Message-ID: <20161124111029.035553ce@free-electrons.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
-        <4031579.CBE32NHUoW@wuerfel>
-        <877f7tmduw.fsf@free-electrons.com>
-        <28082657.RK5ubAe11Q@wuerfel>
-        <8737ihmctr.fsf@free-electrons.com>
-        <CAPv3WKddPHgpRU2_tVoDF=5Z-nqfFPxjgJ-+z9o-1tR2=fFvAA@mail.gmail.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] dmaengine: allow sun6i-dma for more SoCs
+Date: Thu, 24 Nov 2016 10:12:15 +0000
+Message-ID: <15f511fd-ba0b-9b10-1650-d24e2d9e467e@arm.com>
+References: <1479950235-26821-1-git-send-email-andre.przywara@arm.com>
+ <1479950235-26821-3-git-send-email-andre.przywara@arm.com>
+ <CAGb2v67M8DrPaf8GzSPEjekgV6cLcXXzO3tVUc9kjUDcM3BE_w@mail.gmail.com>
+ <34b5e50f-a091-9bd8-7a74-96e538a7351d@arm.com>
+ <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA@mail.gmail.com>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPv3WKddPHgpRU2_tVoDF=5Z-nqfFPxjgJ-+z9o-1tR2=fFvAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liuliu Zhao <zhaoliul-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peng Zhu <zhupeng-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xueping Liu <xpliu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hilbert Zhang <zzhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shiwu Zhang <zhangshw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>Yu Cao <y>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBX7Z3LAQKGQEA7RR6OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65G7=9ah+sEet=z5vss60kL5ZLSkNsAcGpwu8V6AWdEGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-On Thu, 24 Nov 2016 10:49:23 +0100, Marcin Wojtas wrote:
+On 24/11/16 09:30, Chen-Yu Tsai wrote:
+> On Thu, Nov 24, 2016 at 5:16 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On 24/11/16 04:16, Chen-Yu Tsai wrote:
+>>> Hi,
+>>>
+>>> On Thu, Nov 24, 2016 at 9:17 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>> The sun6i DMA driver is used in the Allwinner A64 and H5 SoC, which
+>>>> have arm64 capable cores. Add the generic sunxi config symbol to allow
+>>>> the driver to be selected by arm64 Kconfigs, which don't feature
+>>>> SoC specific MACH_xxxx configs.
+>>>>
+>>>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>>>> ---
+>>>>  drivers/dma/Kconfig | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>>>> index af63a6b..003c284 100644
+>>>> --- a/drivers/dma/Kconfig
+>>>> +++ b/drivers/dma/Kconfig
+>>>> @@ -157,7 +157,7 @@ config DMA_SUN4I
+>>>>
+>>>>  config DMA_SUN6I
+>>>>         tristate "Allwinner A31 SoCs DMA support"
+>>>> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+>>>> +       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST || ARCH_SUNXI
+>>>
+>>> AFAIK ARCH_SUNXI encompasses/supersedes MACH_SUN*I.
+>>> (And I don't have to add MACH_SUN9I later :) )
+>>
+>> Sure, admittedly it was just a quick hack to get things going.
+>> Actually I don't know why we had a *depend* on those MACH_s before. I
+>> think technically it does not depend on a certain SoC (having the
+>> COMPILE_TEST in there hints on that). So what about:
+> 
+> It was really because this DMA engine only comes with the later
+> SoCs. We have dma-sun4i for the older one. But yes, there's no
+> reason why you can't build it for the earlier SoC. It just doesn't
+> get used.
+> 
+>>
+>>         depends on ARCH_SUNXI || COMPILE_TEST
+>>
+>> and maybe:
+>>
+>>         default y if MACH_SUN6I || MACH_SUN8I
+>>
+>> Though I see that both multi_v7_defconfig and sunxi_defconfig explicitly
+>> set this, so this wouldn't be needed?
+> 
+> I guess it's just nice to get stuff out of defconfig?
+> Why not go all the way and just have
+> 
+>         default y if ARCH_SUNXI
 
-> How about to avoid confusion, by simply renaming this number to
-> port-id/xenon-id or anything else but slot? I guess this may allow to
-> avoid some misunderstandings.
+Well, I am all for it, but I had the impression that there is a lot of
+opposition against this approach. Apparently people still want to save
+some bytes by building a kernel tailored to one particular SoC.
+So I didn't dare to come up with this one.
+But it should work to use "# DMA_SUN6I is not selected" in a particular
+.config or defconfig to deselect it, right?
 
-Agreed.
+Waiting for Maxime's opinion here.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(And also need to check whether the DMA really works on ARM64.
+Surprisingly the code compiled cleanly, but I am wondering whether it
+properly deals with 32-bit limitation of this controller. I just needed
+it because the H3 DT references DMA for SPI and UART).
+
+Cheers,
+Andre.
