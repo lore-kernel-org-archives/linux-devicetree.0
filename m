@@ -1,75 +1,45 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v2 5/7] IIO: add bindings for stm32 IIO timer driver
-Date: Thu, 24 Nov 2016 16:14:21 +0100
-Message-ID: <1480000463-9625-6-git-send-email-benjamin.gaignard@st.com>
-References: <1480000463-9625-1-git-send-email-benjamin.gaignard@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480000463-9625-1-git-send-email-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, benjamin.gaignard@linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] OF phandle nexus support + GPIO nexus
+Date: Thu, 24 Nov 2016 16:27:05 +0100
+Message-ID: <CACRpkdZ4ceij+uvqFyfmgGwH9bGnJDn8jRr+0m8sCEYeexoz3g@mail.gmail.com>
+References: <20161124102529.20212-1-stephen.boyd@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161124102529.20212-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define bindings for stm32 IIO timer
+On Thu, Nov 24, 2016 at 11:25 AM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-version 2:
-- only keep one compatible
-- add DT parameters to set lists of the triggers:
-  one list describe the triggers created by the device
-  another one give the triggers accepted by the device
+> This is one small chunk of work related to DT overlays for expansion
+> boards. It would be good to have a way to expose #<list>-cells types of
+> providers through a connector in a standard way. So we introduce a way
+> to make "nexus" nodes for these types of properties to remap the consumer
+> number space to the other side of the connector's number space. It's
+> basically a copy of the interrupt nexus implementation, but without
+> the address space matching design and interrupt-parent walking.
+>
+> The first patch implements a generic method to do this, and the second patch
+> adds a unit test for it. The third patch is more of an example than anything
+> else. It shows how we would modify frameworks to use the new API.
+>
+> Stephen Boyd (3):
+>   of: Support parsing phandle argument lists through a nexus node
+>   of: unittest: Add phandle remapping test
+>   gpio: Support gpio nexus dt bindings
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- .../bindings/iio/timer/stm32-iio-timer.txt         | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
+Looks perfectly reasonable to me. But it's mainly for the DT people to review
+I guess.
 
-diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
-new file mode 100644
-index 0000000..840b417
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
-@@ -0,0 +1,41 @@
-+timer IIO trigger bindings for STM32
-+
-+Must be a sub-node of STM32 general purpose timer driver
-+
-+Required parameters:
-+- compatible:		must be "st,stm32-iio-timer"
-+- interrupts:		Interrupt for this device
-+			See ../interrupt-controller/st,stm32-exti.txt
-+
-+Optional parameters:
-+- st,input-triggers-names:	List of the possible input triggers for
-+				the device
-+- st,output-triggers-names:	List of the possible output triggers for
-+				the device
-+
-+Possible triggers are defined in include/dt-bindings/iio/timer/st,stm32-iio-timer.h
-+
-+Example:
-+	gptimer1: gptimer1@40010000 {
-+		compatible = "st,stm32-gptimer";
-+		reg = <0x40010000 0x400>;
-+		clocks = <&rcc 0 160>;
-+		clock-names = "clk_int";
-+
-+		pwm1@0 {
-+			compatible = "st,stm32-pwm";
-+			st,pwm-num-chan = <4>;
-+			st,breakinput;
-+			st,complementary;
-+		};
-+
-+		iiotimer1@0 {
-+			compatible = "st,stm32-iio-timer";
-+			interrupts = <27>;
-+			st,input-triggers-names = TIM5_TRGO,
-+						  TIM2_TRGO,
-+						  TIM4_TRGO,
-+						  TIM3_TRGO;
-+			st,output-triggers-names = TIM1_TRGO;
-+		};
-+	};
--- 
-1.9.1
+I have no idea about the eventual merge path though, I guess it needs to
+go through the OF tree with my ACK.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
