@@ -1,38 +1,39 @@
-From: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: da850-lcdk: Add ethernet0 alias to DT
-Date: Thu, 24 Nov 2016 15:35:45 +0100
-Message-ID: <20161124143545.12817-1-fparent@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V3 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Thu, 24 Nov 2016 19:49:54 +0530
+Message-ID: <5836F70A.9070109@nvidia.com>
+References: <1479810013-29894-1-git-send-email-ldewangan@nvidia.com> <1479810013-29894-3-git-send-email-ldewangan@nvidia.com> <CACRpkdZK34QfbSBJvshfZekk5TJBU5sZog-9uszLSmFPOGJgiw@mail.gmail.com> <583580AD.60803@nvidia.com> <CACRpkdbp8_eR7PLoaX4AJbhcx_tYQjcS5U_hR3EU7b4dar3ckg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbp8_eR7PLoaX4AJbhcx_tYQjcS5U_hR3EU7b4dar3ckg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to avoid Linux generating a random mac address on every boot,
-add an ethernet0 alias that will allow u-boot to patch the dtb with
-the MAC address programmed into the EEPROM.
 
-Signed-off-by: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/da850-lcdk.dts | 1 +
- 1 file changed, 1 insertion(+)
+On Thursday 24 November 2016 07:41 PM, Linus Walleij wrote:
+> On Wed, Nov 23, 2016 at 12:42 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>
+>> Here, we need the regulator handle which can support the other regulator
+>> APIs.
+>>
+>> In some of platforms, we do not use some of the io-pins and on this case, we
+>> do not connect the IO rail supply for these pins. So this is like a hardware
+>> optional.
+>>
+>> If the IO pins are used then it need to have the proper regulator handle.
+>> Missing regulator handle on DT will be like that IO pads are not used.
+> OK I buy that argument, unless Mark (Brown) has comments.
+>
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 7b8ab21..18dfec93 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -13,6 +13,7 @@
- 
- 	aliases {
- 		serial2 = &serial2;
-+		ethernet0 = &eth0;
- 	};
- 
- 	chosen {
--- 
-2.10.2
+BTW, I resolved this in different way in V4 which I sent today, if 
+regulator_get() succeed for dummy then regulator_get_voltage() failed 
+and if it failed then assume that it is dummy and just ignore the 
+further handling based on regulator.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So when we really need the configuration based on voltage, we must 
+supply the regulator handle.
