@@ -1,53 +1,109 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/2] gpio: axp209: add pinctrl support
-Date: Thu, 24 Nov 2016 15:17:36 +0100
-Message-ID: <CACRpkdb8cej=AMs2kO1Vks-WYeae+CtAW2YOCc+Pz3E49mcrDQ@mail.gmail.com>
-References: <20161123141151.25315-1-quentin.schulz@free-electrons.com> <20161123141151.25315-3-quentin.schulz@free-electrons.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
+Date: Thu, 24 Nov 2016 14:25:06 +0000
+Message-ID: <HK2PR0601MB1329C747CA5C6B5222C02C3FB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
+ <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
+ <20161123142938.GF9057@verge.net.au>
+ <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+ <20161124101733.GA18027@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161123141151.25315-3-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20161124101733.GA18027@verge.net.au>
+Content-Language: en-US
+Sender: linux-can-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 3:11 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hello Simon,
 
-> The GPIOs present in the AXP209 PMIC have multiple functions. They
-> typically allow a pin to be used as GPIO input or output and can also be
-> used as ADC or regulator for example.[1]
->
-> This adds the possibility to use all functions of the GPIOs present in
-> the AXP209 PMIC thanks to pinctrl subsystem.
->
-> [1] see registers 90H, 92H and 93H at
->     http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf
->
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Simon Horman [mailto:horms@verge.net.au]
+Sent: 24 November 2016 10:18
+> Hi Chris,
+>=20
+> On Thu, Nov 24, 2016 at 10:05:08AM +0000, Chris Paterson wrote:
+> > Hello Simon,
+> >
+> > From: Simon Horman [mailto:horms@verge.net.au]
+> > Sent: 23 November 2016 14:30
+> > > On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
+> > > > On 11/23/2016 01:14 PM, Chris Paterson wrote:
+> > > > > This patch series adds CAN and CAN FD support to the r8a7796.
+> > > > >
+> > > > > Based on renesas-devel-20161122-v4.9-rc6.
+> > > > >
+> > > > > Chris Paterson (3):
+> > > > >   arm64: dts: r8a7796: Add CAN external clock support
+> > > > >   arm64: dts: r8a7796: Add CAN support
+> > > > >   arm64: dts: r8a7796: Add CAN FD support
+> > > > >
+> > > > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
+> > > > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
+> > > > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
+> > > ++++++++++++++++++++++
+> > > > >  3 files changed, 75 insertions(+), 10 deletions(-)
+> > > >
+> > > > For all three:
+> > > >
+> > > > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> > > >
+> > > > Who takes this series?
+> > >
+> > > I would like to see these patches split up so that the
+> > > .../devicetree/bindings/ portions can go through you whole the
+> > > arch/arm64/boot/dts/renesas/ portions go thorugh my renesas tree.
+> >
+> > Okay, will do.
+>=20
+> Thanks.
+>=20
+> > > Regarding the arch/arm64/boot/dts/renesas/ portion, I would like
+> > > some consideration given to what effect enabling memory above 4Gb
+> > > (64bit
+> > > addressing) would have.
+> >
+> > Can you give me some guidance here? I'm not sure what you're referring
+> > to. As far as I know the DT reg definition here is 64-bit, or are you
+> > referring to DMA usage? If the later, neither CAN driver uses DMA.
+>=20
+> Sorry for not being clearer.
+>=20
+> What I would like to know is if there are any problems in the CAN driver =
+or
+> hardware that would prevent it from functioning with memory that requires
+> 64bit addressing present.
+>=20
+> If the CAN hardware cannot use DMA then DMA doesn't need to be taken
+> into account. But if it DMA could be enabled in future for CAN, for examp=
+le
+> after some driver enhancements, then it would be good to know if 64bit
+> memory can be supported - if not it would imply DMA cannot be enabled.
 
-I need Maxime's review on this patch.
+Thank you for the clarification.
 
->  .../devicetree/bindings/gpio/gpio-axp209.txt       |  28 +-
+The CAN interface for r8a7795/6 does not support DMA.
 
-Also move the bindings to pinctrl/pinctrl-axp209.txt
+With CAN FD there is currently a H/W issue that means DMA is unusable. Pote=
+ntially this issue could be fixed in the future and DMA support could be ad=
+ded to the driver. If this happens I can see no reason why the CAN FD IP wo=
+uldn't be able to handle DMA transfers when using 64bit addressing.
 
->  drivers/gpio/gpio-axp209.c                         | 551 ++++++++++++++++++---
+>=20
+> As for non-DMA mode, will this function if memory above 4G is present?
+> If not then in theory such memory couldn't be enabled if the CAN driver i=
+s
+> enabled. This is my main concern.
 
-Combined drivers should be in drivers/pinctrl/*.
+Yes, it functions fine. We have already tested this with the Renesas v3.3.2=
+ BSP with >4Gb memory.
 
-Make a separate patch moving the driver to
-drivers/pinctrl/pinctrl-axp209.c (remember -M to git format-patch)
-augment Kconfig and Makefile in both subsystems and make
-these patches on top of that.
+If this is explanation okay for you, I'll proceed with a v2 splitting off t=
+he DT bindings documentation.
 
-I will deal with cross-merging the result between the GPIO
-and pin control trees.
+Kind regards, Chris
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> Does the above help?
