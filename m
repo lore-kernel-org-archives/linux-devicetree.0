@@ -1,62 +1,48 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Thu, 24 Nov 2016 10:05:08 +0000
-Message-ID: <HK2PR0601MB132929329C3574A0B4D9A0EAB7B60@HK2PR0601MB1329.apcprd06.prod.outlook.com>
-References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
- <f358442c-8373-328c-1270-709498c133f5@pengutronix.de>
- <20161123142938.GF9057@verge.net.au>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/10] dt: bindings: Add bindings for Marvell Xenon SD Host Controller
+Date: Thu, 24 Nov 2016 11:04:36 +0100
+Message-ID: <8756050.yoKoJPCyHz@wuerfel>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com> <8737ihmctr.fsf@free-electrons.com> <20161124104858.3604c11d@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20161123142938.GF9057@verge.net.au>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161124104858.3604c11d-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liuliu Zhao <zhaoliul-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peng Zhu <zhupeng-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xueping Liu <xpliu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hilbert Zhang <zzhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shiwu Zhang <zhangshw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yu Cao <yucao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+On Thursday, November 24, 2016 10:48:58 AM CET Thomas Petazzoni wrote:
+> Hello,
+> 
+> On Thu, 24 Nov 2016 10:44:48 +0100, Gregory CLEMENT wrote:
+> 
+> > "A single Xenon IP can support multiple slots.
+> > Each slot acts as an independent SDHC. It owns independent resources, such
+> > as register sets clock and PHY.
+> > Each slot should have an independent device tree node."
+> 
+> I think this wording is still very confusing, and continues to cause
+> confusion.
+> 
+> We should just state that each Xenon controller supports a single slot,
+> and that's it.
+> 
+> The text still says "a single Xenon IP can support multiple slots",
+> which continues to cause confusion.
 
-From: Simon Horman [mailto:horms@verge.net.au]
-Sent: 23 November 2016 14:30
-> On Wed, Nov 23, 2016 at 02:18:13PM +0100, Marc Kleine-Budde wrote:
-> > On 11/23/2016 01:14 PM, Chris Paterson wrote:
-> > > This patch series adds CAN and CAN FD support to the r8a7796.
-> > >
-> > > Based on renesas-devel-20161122-v4.9-rc6.
-> > >
-> > > Chris Paterson (3):
-> > >   arm64: dts: r8a7796: Add CAN external clock support
-> > >   arm64: dts: r8a7796: Add CAN support
-> > >   arm64: dts: r8a7796: Add CAN FD support
-> > >
-> > >  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++--
-> > >  .../devicetree/bindings/net/can/rcar_canfd.txt     | 12 +++--
-> > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           | 61
-> ++++++++++++++++++++++
-> > >  3 files changed, 75 insertions(+), 10 deletions(-)
-> >
-> > For all three:
-> >
-> > Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> >
-> > Who takes this series?
->=20
-> I would like to see these patches split up so that the .../devicetree/bin=
-dings/
-> portions can go through you whole the arch/arm64/boot/dts/renesas/
-> portions go thorugh my renesas tree.
+Agreed. Ideally we'd find out why exactly the slot number must
+be used for accessing some of the registers to have a better
+explanation to put in there, aside from stating that only one
+slot is supported but the number must be set.
 
-Okay, will do.
+Could it be that this is some form of pinmuxing, i.e. that each
+controller could in theory be used for any of the slots but you
+have to pick one of them?
 
->=20
-> Regarding the arch/arm64/boot/dts/renesas/ portion, I would like some
-> consideration given to what effect enabling memory above 4Gb (64bit
-> addressing) would have.
-
-Can you give me some guidance here? I'm not sure what you're referring to. =
-As far as I know the DT reg definition here is 64-bit, or are you referring=
- to DMA usage? If the later, neither CAN driver uses DMA.
-
-Kind regards, Chris
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
