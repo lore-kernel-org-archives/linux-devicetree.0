@@ -1,34 +1,67 @@
-From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 0/3] arm64: dts: r8a7796: Add CAN/CAN FD support
-Date: Thu, 24 Nov 2016 16:13:38 +0000
-Message-ID: <1480004021-4037-1-git-send-email-chris.paterson2@renesas.com>
+From: Chris Paterson <chris.paterson2@renesas.com>
+Subject: [PATCH v2 2/3] arm64: dts: r8a7796: Add CAN support
+Date: Thu, 24 Nov 2016 16:13:40 +0000
+Message-ID: <1480004021-4037-3-git-send-email-chris.paterson2@renesas.com>
 References: <1479903243-1860-1-git-send-email-chris.paterson2@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479903243-1860-1-git-send-email-chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+ <1480004021-4037-1-git-send-email-chris.paterson2@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1480004021-4037-1-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds CAN and CAN FD support to the r8a7796.
+Adds CAN controller nodes for r8a7796.
 
-Changes since v1:
-- Split device tree changes from bindings documentation.
-- Rebased on renesas-devel-20161123v2-v4.9-rc6.
+Based on a patch for r8a7795 by Ramesh Shanmugasundaram.
 
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Chris Paterson (3):
-  arm64: dts: r8a7796: Add CAN external clock support
-  arm64: dts: r8a7796: Add CAN support
-  arm64: dts: r8a7796: Add CAN FD support
-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 61 ++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 61d165b..47fa29c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -362,6 +362,36 @@
+ 			status = "disabled";
+ 		};
+ 
++		can0: can@e6c30000 {
++			compatible = "renesas,can-r8a7796",
++				     "renesas,rcar-gen3-can";
++			reg = <0 0xe6c30000 0 0x1000>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++			       <&cpg CPG_CORE R8A7796_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A7796_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
++		can1: can@e6c38000 {
++			compatible = "renesas,can-r8a7796",
++				     "renesas,rcar-gen3-can";
++			reg = <0 0xe6c38000 0 0x1000>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++			       <&cpg CPG_CORE R8A7796_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A7796_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			status = "disabled";
++		};
++
+ 		scif2: serial@e6e88000 {
+ 			compatible = "renesas,scif-r8a7796",
+ 				     "renesas,rcar-gen3-scif", "renesas,scif";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
