@@ -1,64 +1,72 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 2/2] pinctrl: tegra: Add driver to configure voltage
- and power of io pads
-Date: Fri, 25 Nov 2016 23:19:28 +0530
-Message-ID: <583879A8.7020401@nvidia.com>
-References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com> <1479976734-30498-3-git-send-email-ldewangan@nvidia.com> <20161125095744.GB11512@ulmo.ba.sec> <583828D5.5060507@nvidia.com> <da7b815c-149c-6baf-6691-a038d3fe54bf@nvidia.com>
+From: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Fri, 25 Nov 2016 22:07:52 +0100
+Message-ID: <20161125220752.c989c85e01ed202be0485c78@bidouilliste.com>
+References: <20161122170616.29557-1-manu@bidouilliste.com>
+        <20161124195517.qrq7briu3pwjnp4n@lukather>
+        <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
+        <20161125152047.oadxi2xbgm4kdd7q@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <da7b815c-149c-6baf-6691-a038d3fe54bf-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161125152047.oadxi2xbgm4kdd7q@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 25 Nov 2016 16:20:47 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On Friday 25 November 2016 10:59 PM, Jon Hunter wrote:
-> On 25/11/16 12:04, Laxman Dewangan wrote:
->> Thanks Thierry for review.
->>
->> On Friday 25 November 2016 03:27 PM, Thierry Reding wrote:
->>> * PGP Signed by an unknown key
->>>
->>> On Thu, Nov 24, 2016 at 02:08:54PM +0530, Laxman Dewangan wrote:
->>>> +      NVIDIA Tegra124/210 SoC has IO pads which supports multi-voltage
->>>> +      level of interfacing and deep power down mode of IO pads. The
->>>> +      voltage of IO pads are SW configurable based on IO rail of that
->>>> +      pads on T210. This driver provides the interface to change IO pad
->>>> +      voltage and power state via pincontrol interface.
->>> This has a lot of chip-specific text. Will all of that have to be
->>> updated if support for new chips is added?
->> Then saying that Tegra124 and later..
->> Hoping, people know our chip releasing sequence as numbering are not in
->> sequence.
->>
->>>> +#include <linux/regulator/consumer.h>
->>>> +#include <soc/tegra/pmc.h>
->>> Have you considered moving this code into the PMC driver? It seems a
->>> little over the top to go through all of the platform device creation
->>> and driver registration dance only to call into a public API later on.
->> Yes, we had discussion on this and suggestion came to use the pinctrl
->> framework.
->> If we do in the pmc driver then we will need lots of DT processing for
->> getting information from DT which we can directly get from the pinctrl
->> core framework.
->> Also client driver may need to have the control dynamically and get the
->> IO pads from DT. So implementing all in pmc will be huge duplication
->> over already existing framework.
-> I don't follow. We already did something similar for the Tegra DPAUX
-> driver [0].
->
-> Cheers
-> Jon
->
-> [0]
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/tegra/dpaux.c?id=0751bb5c44fe1aa9494ce259d974c3d249b73a84
+> On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
+> > On Thu, 24 Nov 2016 20:55:17 +0100
+> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > 
+> > > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
+> > > > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+> > > > others three only have 1.
+> > > > Add the num-cs property to each node.
+> > > > 
+> > > > Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+> > > 
+> > > I don't think we have any code that uses it at the moment. What is the
+> > > rationale behind this patch?
+> > > 
+> > > Thanks!
+> > > Maxime
+> > > 
+> > > -- 
+> > > Maxime Ripard, Free Electrons
+> > > Embedded Linux and Kernel engineering
+> > > http://free-electrons.com
+> > 
+> >  Hi Maxime,
+> > 
+> >  If num-cs isn't present nothing prevent to start a transfer with a
+> > non-valid CS pin, resulting in an error.
+> >  num-cs are default property especially made for this and a SPI driver
+> > should try to get the property at probe/attach time.
+> 
+> Yes, but as far as I know, our driver doesn't. I'm all in for having
+> support for that in our driver, but without it, that patch is kind of
+> useless.
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
-In the above dpaux driver,  you used the pinctrl framework and its core 
-functionality for the device tree interfacing and client interfacing.
+ Yes the Linux driver doesn't use it but my upcoming one for FreeBSD
+uses it. So it is not useless for downstream user of DTS.
 
-The same thing I am saying here, we should not avoid the pinctrl 
-framework. The client driver will use the pinctrl framework for the IO 
-pad configurations, not direct PMC APIs.
+ Cheers,
+
+-- 
+Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
