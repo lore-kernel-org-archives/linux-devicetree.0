@@ -1,111 +1,88 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
-Date: Fri, 25 Nov 2016 16:20:47 +0100
-Message-ID: <20161125152047.oadxi2xbgm4kdd7q@lukather>
-References: <20161122170616.29557-1-manu@bidouilliste.com>
- <20161124195517.qrq7briu3pwjnp4n@lukather>
- <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
+Date: Fri, 25 Nov 2016 17:22:29 +0200
+Message-ID: <2404891.arL9itCrmb@avalon>
+References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
+ <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5415685063065624589=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Emmanuel Vadot <manu@bidouilliste.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, nickey.yang@rock-chips.com, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============5415685063065624589==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pc55j3vdb4tvo6q5"
-Content-Disposition: inline
-
-
---pc55j3vdb4tvo6q5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
-> On Thu, 24 Nov 2016 20:55:17 +0100
-> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
->=20
-> > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
-> > > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
-> > > others three only have 1.
-> > > Add the num-cs property to each node.
-> > >=20
-> > > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
-> >=20
-> > I don't think we have any code that uses it at the moment. What is the
-> > rationale behind this patch?
-> >=20
-> > Thanks!
-> > Maxime
-> >=20
-> > --=20
-> > Maxime Ripard, Free Electrons
-> > Embedded Linux and Kernel engineering
-> > http://free-electrons.com
->=20
->  Hi Maxime,
->=20
->  If num-cs isn't present nothing prevent to start a transfer with a
-> non-valid CS pin, resulting in an error.
->  num-cs are default property especially made for this and a SPI driver
-> should try to get the property at probe/attach time.
-
-Yes, but as far as I know, our driver doesn't. I'm all in for having
-support for that in our driver, but without it, that patch is kind of
-useless.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---pc55j3vdb4tvo6q5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYOFbPAAoJEBx+YmzsjxAgaP8P/28+ESng7Bz3M088iP09TH++
-XvIcDpcQcirOJ6Rex8RggUFZUPG70iQ3PHNFR2csoSqWgVSVvNatLASxfZ0C7jqj
-yaR4cnfavOSJgmS+9lv7C+Dqkn6lxkcadrF28UyiP2+AwiHQQG4S564IdSh02QNV
-V9UeJ4fGt33mYiPMsnieSGnmTiBtd54lvn/3WHbkA9myFNNkgt7qGNt0fase5Kog
-7MgUbuSK++oRTiIaSSUo2pV9tZEBBeClErSB4Pnlb036bBFh9+LON1W3ZUFnPoEJ
-kahntu0HHRVhS8VOj8HkwKKttydPzWN7tjTaKV5ad6eVewKCChgPb3YeWjPy1sZd
-6N/vq4+3wt8d/DHWWK68qVjzNLu12ioiHDdrj1JJAdTXwQevuVoBv16FQH62/T0c
-CnZ980isrHeWOxEM2pSEvfErjUInnZdwUX03EbeMNuaXJqjmsPkizN/tjGbHj/sV
-blicGqRbE8yctbzvqKQ1LkyC3XmfCOToBBjrZfsjehAFEygltPkYY8+LYTls2E96
-4SSt4OpV298CjGPxFJ+U/L9eoPgRwT47L8Bosre622GTsjX7PTy8eQG1usJTf98z
-yyTpCKcu1nqlhCUmmM0SqHssOUSeugQWqyCKoW3qgP89lDTUppbtxrvrGmv4fVs2
-g5wjjiZnOd115d6Kg6ho
-=7PZw
------END PGP SIGNATURE-----
-
---pc55j3vdb4tvo6q5--
-
-
---===============5415685063065624589==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5415685063065624589==--
+SGkgQW5keSwKCk9uIEZyaWRheSAyNSBOb3YgMjAxNiAxMDo1Njo1MyBBbmR5IFlhbiB3cm90ZToK
+PiBPbiAyMDE25bm0MTHmnIgyNeaXpSAwNzoyNiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+
+IE9uIEZyaWRheSAyNSBOb3YgMjAxNiAwMDoxNjowMCBWbGFkaW1pciBaYXBvbHNraXkgd3JvdGU6
+Cj4gPj4gT24gMTEvMjUvMjAxNiAxMjowNyBBTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+Pj4g
+T24gVGh1LCBOb3YgMjQsIDIwMTYgYXQgNzoxNiBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
+PiA+Pj4+IEhpIEFuZHksCj4gPj4+PiAKPiA+Pj4+IEFzIHRoZSBhdXRob3Igb2YgdGhlIERXLUhE
+TUkgRFQgYmluZGluZ3MgdGhpcyBxdWVzdGlvbiBpcyBhZGRyZXNzZWQgdG8KPiA+Pj4+IHlvdSwg
+YnV0IGluZm9ybWF0aW9uIGZyb20gYW55b25lIGlzIG1vcmUgdGhhbiB3ZWxjb21lLgo+ID4+Pj4g
+Cj4gPj4+PiBUaGUgRFQgYmluZGluZ3Mgc3BlY2lmeSB0d28gY2xvY2tzIG5hbWVkICJpYWhiIiBh
+bmQgImlzZnIiIGJ1dCBkb24ndAo+ID4+Pj4gZGVzY3JpYmUgdGhlbS4gV2hpbGUgSSBhc3N1bWUg
+dGhhdCB0aGUgImlzZnIiIGNsb2NrIGNvcnJlc3BvbmRzIHRvIHRoZQo+ID4+Pj4gImlzZnJjbGsi
+IGlucHV0IHNpZ25hbCBvZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlhaGIiIGNsb2NrCj4g
+Pj4+PiBkZXNjcmliZWQgaW4gdGhlIElQIGNvcmUgZGF0YXNoZWV0Lgo+ID4+PiAKPiA+Pj4gaS5N
+WDZRIGhhcyBhIERXLUhETUkgSVAgYmxvY2suCj4gPj4+IAo+ID4+PiBUaGUgbmFtZXMgaW4gdGhl
+IGRldmljZXRyZWUgYmluZGluZyBtYXRjaGVzIHRoZSBvbmVzIGxpc3RlZCBhdCB0aGUKPiA+Pj4g
+aS5NWDZRIFJlZmVyZW5jZSBNYW51YWwgLSBUYWJsZSAzMy0xLiBIRE1JIENsb2Nrcwo+ID4+IAo+
+ID4+IGNvcnJlY3QsIGZvciB5b3VyIGNvbnZlbmllbmNlIHRoZSB0YWJsZSBpcyBjb3BpZWQgYmVs
+b3c6Cj4gPj4gCj4gPj4gQ2xvY2sgbmFtZSB8ICAgICBDbG9jayBSb290ICAgICB8IERlc2NyaXB0
+aW9uCj4gPj4gLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4gICBpYWhiY2xrICB8IGFoYl9jbGtfcm9vdCAg
+ICAgICB8IEJ1cyBjbG9jawo+ID4+ICAgaWNlY2NsayAgfCBja2lsX3N5bmNfY2xrX3Jvb3QgfCBD
+RUMgbG93LWZyZXF1ZW5jeSBjbG9jayAoMzJrSFopCj4gPj4gICBpaGNsayAgICB8IGFoYl9jbGtf
+cm9vdCAgICAgICB8IE1vZHVsZSBjbG9jawo+ID4+ICAgaXNmcmNsayAgfCB2aWRlb18yN21fY2xr
+X3Jvb3QgfCBJbnRlcm5hbCBTRlIgY2xvY2sgKHZpZGVvIGNsb2NrCj4gPj4gICAyN01IeikKPiA+
+PiAKPiA+PiBIZXJlIEFIQiBzdGFuZHMgZm9yIEFSTSBBZHZhbmNlZCBIaWdoLXBlcmZvcm1hbmNl
+IEJ1cy4KPiA+IAo+ID4gVGhhdCdzIHdoYXQgSSBzdXNwZWN0ZWQuIEkgYmVsaWV2ZSB0aGUgImlh
+aGIiIG5hbWUgaXMgd3JvbmcsIGFzIHRoZSBEVwo+ID4gSERNSSBUWCBJUCBjb3JlIGNsZWFybHkg
+ZG9jdW1lbnRzIHRoZSBidXMgY2xvY2sgYXMgYmVpbmcgY2FsbGVkCj4gPiAiaWFwYmNsayIuIFdl
+IGNvdWxkIHJlbmFtZSB0aGF0IGluIHRoZSBEVCBiaW5kaW5ncyAod2l0aCBjb21wYXRpYmlsaXR5
+Cj4gPiBjb2RlIGluIHRoZSBkcml2ZXIgdG8ga2VlcCBzdXBwb3J0aW5nIHRoZSBvbGQgbmFtZSkg
+YnV0IGl0IG1pZ2h0IG5vdCBiZQo+ID4gd29ydGggaXQuIFRoZSBiaW5kaW5ncyBzaG91bGQgaG93
+ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFoYiIgY2xvY2sgaXMKPiA+IHRoZSBJUCBjb3JlJ3Mg
+ImlhcGJjbGsiIGJ1cyBjbG9jay4KPgo+IEkgZ290IHRoZSBjbG9jayBuYW1lIGZyb20gSS5NWDZR
+IFRSTSwgSSBhbHNvIGNoZWNrZWQgdGhlIG5hbWUgYWdhaW4KPiB3aXRoIFJvY2tjaGlwIElDIGRl
+c2lnbiB0ZWFtIG5vdywgaG9wZSB0byBnZXQgc29tZSBuZXcgaW5mb3JtYXRpb24gc29vbi4KClRo
+YW5rIHlvdS4gV2hpbGUgYXQgaXQsIGNvdWxkIHlvdSBhc2sgdGhlbSB3aGljaCB2ZXJzaW9uIG9m
+IHRoZSBEVyBIRE1JIElQIAp1c2VkIGluIHRoZSBTb0MgPwoKPiA+IEFub3RoZXIgcXVlc3Rpb24g
+SSBoYXZlIGFib3V0IHRoZSBidXMgY2xvY2sgKENDJ2luZyB0aGUgZGV2aWNldHJlZSBtYWlsaW5n
+Cj4gPiBsaXN0IGFzIHdlbGwgYXMgdGhlIGNsb2NrIG1haW50YWluZXJzKSBpcyB3aGV0aGVyIGl0
+IHNob3VsZCBiZSBtYWRlCj4gPiBvcHRpb25hbC4gVGhlIGNsb2NrIGlzIG9idmlvdXNseSBtYW5k
+YXRvcnkgZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9mIHZpZXcKPiA+IChnaXZlbiB0aGF0IEFQQiBp
+cyBhIHN5bmNocm9ub3VzIGJ1cyBhbmQgdGh1cyByZXF1aXJlcyBhIGNsb2NrKSwgYnV0IGluCj4g
+PiBzb21lIFNvQ3MgKHNwZWNpZmljYWxseSBmb3IgdGhlIFJlbmVzYXMgU29DcykgdGhhdCBjbG9j
+ayBpcyBhbHdheXMgb24gYW5kCj4gPiBjYW4ndCBiZSBjb250cm9sbGVkLiBXZSBhbHJlYWR5IG9t
+aXQgYnVzIGNsb2NrcyBpbiBEVCBmb3IgbW9zdCBJUCBjb3Jlcwo+ID4gd2hlbiB0aGUgY2xvY2sg
+Y2FuIG5ldmVyIGJlIGNvbnRyb2xsZWQgKGFuZCB3ZSBhbHNvIG9taXQgYSBidW5jaCBvZiBvdGhl
+cgo+ID4gY2xvY2tzIHRoYXQgd2UgZG9uJ3QgZXZlbiBrbm93IGV4aXN0KSwgc28gaXQgY291bGQg
+bWFrZSBzZW5zZSB0byBtYWtlIHRoZQo+ID4gY2xvY2sgb3B0aW9uYWwuIE90aGVyd2lzZSB0aGVy
+ZSB3b3VsZCBiZSBydW50aW1lIG92ZXJoZWFkIHRyeWluZyB0byBoYW5kbGUKPiA+IGEgY2xvY2sg
+dGhhdCBjYW4ndCBiZSBjb250cm9sbGVkLgo+IAo+IElmIHRoaXMgaXMgdGhlIGNhc2Ugb24gUmVu
+ZXNhcyBTT0NzLCB3ZSBjYW4gY29uc2lkZXIgbWFrZSB0aGUgY2xvY2sgYXMKPiBvcHRpb25hbC4g
+T3IgbW92ZSBhbGwgdGhlIGNsb2NrIG9wZXJhdGlvbnMgdG8gcGxhdGZvcm0gc3BlY2lmaWMKPiBj
+b2RlKGR3X2hkbWktcm9ja2NoaXAuYy9kd19oZG1pLWlteC5jKT8KCkknZCBwcmVmZXIga2VlcGlu
+ZyB0aGUgY29kZSBnZW5lcmljLCBvdGhlcndpc2Ugd2UnZCBlbmQgdXAgd2l0aCBwbGF0Zm9ybS0K
+c3BlY2lmaWMgY29kZSB0aGF0IHdvdWxkIHBlcmZvcm0gdGhlIHNhbWUgb3BlcmF0aW9ucyBvbiBt
+b3N0IHBsYXRmb3Jtcy4gSSdsbCAKc3VibWl0IGEgcGF0Y2ggc29vbiB0byBtYWtlIHRoZSBjbG9j
+ayBvcHRpb25hbCwgd2UgY2FuIGRpc2N1c3MgaXQgdGhlbi4KCj4gPj4gQnkgdGhlIHdheSB3aGls
+ZSB3ZSdyZSBkaXNjdXNzaW5nIERXIEhETUkgYmluZGluZ3Mgc3BlY2lmaWMgdG8gaU1YLAo+ID4+
+IEkgd291bGQgcmVjb21tZW5kIHRvIHJlbW92ZSB1dHRlcmx5IGhhY2tpc2ggYW5kIGlNWCBvbmx5
+ICJncHIiCj4gPj4gcHJvcGVydHkgZnJvbSB0aGUgZXhhbXBsZSBpbiBiaW5kaW5ncy9kaXNwbGF5
+L2JyaWRnZS9kd19oZG1pLnR4dAoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
