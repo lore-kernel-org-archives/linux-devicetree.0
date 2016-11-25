@@ -1,91 +1,47 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH 2/2] dt-bindings: Add DT bindings info for FlexRM mailbox driver
-Date: Fri, 25 Nov 2016 10:05:51 +0530
-Message-ID: <1480048551-3285-3-git-send-email-anup.patel@broadcom.com>
-References: <1480048551-3285-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480048551-3285-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v2 0/3] increase TSCADC clock to 24MHz and fix
+ ti,charge-delay to represent in nS
+Date: Fri, 25 Nov 2016 10:27:09 +0530
+Message-ID: <71482721-fd60-65b2-d601-f1698ce5fa0a@ti.com>
+References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20161110163515.27598-1-mugunthanvnm@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree bindings document for the FlexRM
-mailbox driver.
+Hi Dmitry Torokhov,
 
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
----
- .../bindings/mailbox/brcm,flexrm-mbox.txt          | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
+On Thursday 10 November 2016 10:05 PM, Mugunthan V N wrote:
+> This patch series enables ADC to be clocked at 24MHz as the
+> TI AM335x ADC driver has already adopted to use DMA to transfer
+> ADC samples. Now ADC can generated upto 800K Samples per second
+> with the patch [1] on AM335x BBB and AM437x GP EVM.
+> 
+> when ADC ref clock is set at 24MHz, I am seeing some issue with
+> touch screen pointer as the pointer jumps to random locations
+> with free draw application. The issue is due to increase in ADC
+> clock and charge delay for the touchscreen ADC line duration
+> reduced.
+> 
+> So the notation of ti,charge-delay in terms of ADC clock is
+> wrong, it has to be represented in time and driver has to convert
+> the charge delay time to ADC clocks based on what ADC clock
+> frequency is set.
+> 
+> Measured the performance with the iio_generic_buffer with the
+> patch [2] applied
+> 
+> Verified the touch screen on AM335x GP EVM and AM335x BBB LCD7
+> cape with [3] dts for display and touch screen to work.
+> 
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
-new file mode 100644
-index 0000000..7969b1c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
-@@ -0,0 +1,60 @@
-+Broadcom FlexRM Mailbox Driver
-+===============================
-+The Broadcom FlexRM ring manager provides a set of rings which can be
-+used to submit work to offload engines. An SoC may have multiple FlexRM
-+hardware blocks. There is one device tree entry per block. The FlexRM
-+mailbox drivers creates a mailbox instance using FlexRM rings where
-+each mailbox channel is a separate FlexRM ring.
-+
-+Required properties:
-+--------------------
-+- compatible:	Should be "brcm,flexrm-mbox"
-+- reg:		Specifies base physical address and size of the FlexRM
-+		ring registers
-+- msi-parent:	Phandles (and potential Device IDs) to MSI controllers
-+		The FlexRM engine will send MSIs (instead of wired
-+		interrupts) to CPU. There is one MSI for each FlexRM ring.
-+		Refer devicetree/bindings/interrupt-controller/msi.txt
-+- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
-+		channel. This should be 3.
-+
-+		The 1st cell is the mailbox channel number.
-+
-+		The 2nd cell contains MSI completion threshold. This is the
-+		number of completion messages for which FlexRM will inject
-+		one MSI interrupt to CPU.
-+
-+		The 3nd cell contains MSI timer value representing time for
-+		which FlexRM will wait to accumulate N completion messages
-+		where N is the value specified by 2nd cell above. If FlexRM
-+		does not get required number of completion messages in time
-+		specified by this cell then it will inject one MSI interrupt
-+		to CPU provided atleast one completion message is available.
-+
-+Optional properties:
-+--------------------
-+- dma-coherent:	Present if DMA operations made by the FlexRM engine (such
-+		as DMA descriptor access, access to buffers pointed by DMA
-+		descriptors and read/write pointer updates to DDR) are
-+		cache coherent with the CPU.
-+
-+Example:
-+--------
-+crypto_mbox: mbox@67000000 {
-+	compatible = "brcm,flexrm-mbox";
-+	reg = <0x67000000 0x200000>;
-+	msi-parent = <&gic_its 0x7f00>;
-+	#mbox-cells = <3>;
-+};
-+
-+crypto_client {
-+	...
-+	mboxes = <&crypto_mbox 0 0x1 0xffff>,
-+		 <&crypto_mbox 1 0x1 0xffff>,
-+		 <&crypto_mbox 16 0x1 0xffff>,
-+		 <&crypto_mbox 17 0x1 0xffff>,
-+		 <&crypto_mbox 30 0x1 0xffff>,
-+		 <&crypto_mbox 31 0x1 0xffff>;
-+	};
-+	...
-+};
--- 
-2.7.4
+Since there are acks from DT and MFD maintainers, can you pull the patch
+series if you do not have any more comments.
+
+Regards
+Mugunthan V N
