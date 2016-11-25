@@ -1,11 +1,13 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v6 0/2] DW DMAC: update device tree
-Date: Fri, 25 Nov 2016 17:59:05 +0300
-Message-ID: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v6 1/2] DW DMAC: enable memory-to-memory transfers support
+Date: Fri, 25 Nov 2016 17:59:06 +0300
+Message-ID: <1480085947-31273-2-git-send-email-Eugeniy.Paltsev@synopsys.com>
+References: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
  <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
@@ -19,56 +21,32 @@ To: devicetree@vger.kernel.org
 Cc: mark.rutland@arm.com, linux-snps-arc@lists.infradead.org, christian.ruppert@alitech.com, arnd@arndb.de, vinod.koul@intel.com, vireshk@kernel.org, linux-kernel@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, robh+dt@kernel.org, dmaengine@vger.kernel.org, andriy.shevchenko@linux.intel.com, shiraz.linux.kernel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-It wasn't possible to enable some features like
-memory-to-memory transfers or multi block transfers via DT.
-It is fixed by these patches.
+All known devices, which use DT for configuration, support
+memory-to-memory transfers. So enable it by default, if we read
+configuration from DT.
 
-Changes for v6:
- * Use "supported" as default state for "multi-block" property,
-   to keep old DTBs working. Pointed by Andy Shevchenko. 
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ drivers/dma/dw/platform.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Changes for v5:
- * Update existing DTS. Pointed by Andy Shevchenko. 
- * Read multi-block per chanel instead of per master (Move 
-   DW_DMA_MAX_NR_CHANNELS define from regs.h to dma-dw.h to
-   implement this) Pointed by Andy Shevchenko.
-
-Changes for v4:
- * Fix setting inverted value to "dwc->nollp". My fault - I 
-   tested with wrong DTS, so DMAC was configured from autoconfig
-   instead of device tree. Pointed by Andy Shevchenko.
- * Update "multi-block" diescription in documentation to be more 
-   clear. Pointed by Arnd Bergmann.
-
-Changes for v3:
- * Update existing platform data.
-   We don't need to update existing DTS because default logic 
-   wasn't change: we don't set "is_nollp" if we read 
-   configuration from DT before. And we don't set it now if
-   "multi-block" property doesn't exist in DTS.
-
-Changes for v2:
- * I thought about is_memcpy DT property: all known devices, which 
-   use DT for configuration, support memory-to-memory transfers. 
-   So we don't need to read it from DT. So enable it by default, 
-   if we read configuration from DT.
- * Use "multi-block" instead of "hw-llp" name to be more clear.
- * Move adding DT property and adding documentation for this
-   property to one patch.
-
-Eugeniy Paltsev (2):
-  DW DMAC: enable memory-to-memory transfers support
-  DW DMAC: add multi-block property to device tree
-
- Documentation/devicetree/bindings/dma/snps-dma.txt |  2 ++
- arch/arc/boot/dts/abilis_tb10x.dtsi                |  1 +
- arch/arm/boot/dts/spear13xx.dtsi                   |  2 ++
- drivers/dma/dw/core.c                              |  2 +-
- drivers/dma/dw/platform.c                          | 18 +++++++++++++++++-
- drivers/dma/dw/regs.h                              |  3 ++-
- drivers/tty/serial/8250/8250_lpss.c                |  2 +-
- include/linux/platform_data/dma-dw.h               |  5 +++--
- 8 files changed, 29 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 5bda0eb..aa7a5c1 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -129,6 +129,12 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 	if (of_property_read_bool(np, "is_private"))
+ 		pdata->is_private = true;
+ 
++	/*
++	 * All known devices, which use DT for configuration, support
++	 * memory-to-memory transfers. So enable it by default.
++	 */
++	pdata->is_memcpy = true;
++
+ 	if (!of_property_read_u32(np, "chan_allocation_order", &tmp))
+ 		pdata->chan_allocation_order = (unsigned char)tmp;
+ 
 -- 
 2.5.5
