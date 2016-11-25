@@ -1,13 +1,14 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH RESEND 2/2] gpio: axp209: add pinctrl support
-Date: Fri, 25 Nov 2016 16:17:04 +0100
-Message-ID: <20161125151704.3am7wyqrlz767dvc@lukather>
-References: <20161123141151.25315-1-quentin.schulz@free-electrons.com>
- <20161123141151.25315-3-quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Fri, 25 Nov 2016 16:20:47 +0100
+Message-ID: <20161125152047.oadxi2xbgm4kdd7q@lukather>
+References: <20161122170616.29557-1-manu@bidouilliste.com>
+ <20161124195517.qrq7briu3pwjnp4n@lukather>
+ <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0195527841009247813=="
+Content-Type: multipart/mixed; boundary="===============5415685063065624589=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161123141151.25315-3-quentin.schulz@free-electrons.com>
+In-Reply-To: <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,44 +18,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, gnurou@gmail.com, devicetree@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0195527841009247813==
+--===============5415685063065624589==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q7zkz75dpw73y3wm"
+	protocol="application/pgp-signature"; boundary="pc55j3vdb4tvo6q5"
 Content-Disposition: inline
 
 
---q7zkz75dpw73y3wm
+--pc55j3vdb4tvo6q5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Nov 23, 2016 at 03:11:51PM +0100, Quentin Schulz wrote:
-> The GPIOs present in the AXP209 PMIC have multiple functions. They
-> typically allow a pin to be used as GPIO input or output and can also be
-> used as ADC or regulator for example.[1]
+On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
+> On Thu, 24 Nov 2016 20:55:17 +0100
+> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
 >=20
-> This adds the possibility to use all functions of the GPIOs present in
-> the AXP209 PMIC thanks to pinctrl subsystem.
+> > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
+> > > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+> > > others three only have 1.
+> > > Add the num-cs property to each node.
+> > >=20
+> > > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+> >=20
+> > I don't think we have any code that uses it at the moment. What is the
+> > rationale behind this patch?
+> >=20
+> > Thanks!
+> > Maxime
+> >=20
+> > --=20
+> > Maxime Ripard, Free Electrons
+> > Embedded Linux and Kernel engineering
+> > http://free-electrons.com
 >=20
-> [1] see registers 90H, 92H and 93H at
->     http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf
+>  Hi Maxime,
 >=20
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>  If num-cs isn't present nothing prevent to start a transfer with a
+> non-valid CS pin, resulting in an error.
+>  num-cs are default property especially made for this and a SPI driver
+> should try to get the property at probe/attach time.
 
-I've said it already face to face, but ideally you should split that
-patch into logical changes.
-
-I can see here at least three:
-  - Adding the pinctrl features
-  - Renaming the structure and functions
-  - Removal of a few functions
+Yes, but as far as I know, our driver doesn't. I'm all in for having
+support for that in our driver, but without it, that patch is kind of
+useless.
 
 Maxime
 
@@ -63,30 +74,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---q7zkz75dpw73y3wm
+--pc55j3vdb4tvo6q5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYOFXrAAoJEBx+YmzsjxAgp4EQAKYR94eDwq3THuZlI/vwVbA7
-Cz8yS/SSD+fek6uw30EwvJFupsO8J5YiaNGb3g6W35y956IrguQuokqPfAf+2tR9
-ZgCpwFgUE/0BZKEaPDqPaaXHV4xEKfBynC84A5DxrrF9G7v1xkxrx6C1nRdEhIeo
-USLU+xkKWveY0QH74bcEtG/iBui+1KipE79Y2os58MsY3Iq+RMVtSIR+U0IGSeEI
-Ny9jF4an4A5z6Lp6xHh7RxXsRWGkvVSCYteqMxSnSjEqvekyTP+L9zjpYBCAiPS6
-VjJreq7nnye1EGaGkdE6XmI+WJEI5wH61h3ZcjCFYkNm90lEeKsgN6A2nDeiFOou
-nazpSW0ixI64LUncbmFd0YmQmv2TgjQjB7o4Ozu/c+UPEZXj3vFf3eapDqdsSKjf
-b6uhCpRj5Y4inomrkt6IRlD3V6Vxu3tvjSzMjAEpro384nreKnk/u7a4XEzbzOKO
-fb+Z9Kp32Qjr6ZiSD1+wpduUgaQswk2fG1A1xPngw1rMus8omYUiNcQJ/hZCxj+0
-ITlZRdQS3o2JiVrlW2jjEAPHCIs7vZUxgH+yu5nJtzN3aaUz5vNzWkPUmKgRjdt+
-a9Odo+Tunvss46eoZOoplUBYJ7G2AZI+Ozxmv9oyGsvzCKI3jKWSX34WDJNXr/TH
-3dewDGICgG7u7ZqfePw6
-=zC3k
+iQIcBAEBCAAGBQJYOFbPAAoJEBx+YmzsjxAgaP8P/28+ESng7Bz3M088iP09TH++
+XvIcDpcQcirOJ6Rex8RggUFZUPG70iQ3PHNFR2csoSqWgVSVvNatLASxfZ0C7jqj
+yaR4cnfavOSJgmS+9lv7C+Dqkn6lxkcadrF28UyiP2+AwiHQQG4S564IdSh02QNV
+V9UeJ4fGt33mYiPMsnieSGnmTiBtd54lvn/3WHbkA9myFNNkgt7qGNt0fase5Kog
+7MgUbuSK++oRTiIaSSUo2pV9tZEBBeClErSB4Pnlb036bBFh9+LON1W3ZUFnPoEJ
+kahntu0HHRVhS8VOj8HkwKKttydPzWN7tjTaKV5ad6eVewKCChgPb3YeWjPy1sZd
+6N/vq4+3wt8d/DHWWK68qVjzNLu12ioiHDdrj1JJAdTXwQevuVoBv16FQH62/T0c
+CnZ980isrHeWOxEM2pSEvfErjUInnZdwUX03EbeMNuaXJqjmsPkizN/tjGbHj/sV
+blicGqRbE8yctbzvqKQ1LkyC3XmfCOToBBjrZfsjehAFEygltPkYY8+LYTls2E96
+4SSt4OpV298CjGPxFJ+U/L9eoPgRwT47L8Bosre622GTsjX7PTy8eQG1usJTf98z
+yyTpCKcu1nqlhCUmmM0SqHssOUSeugQWqyCKoW3qgP89lDTUppbtxrvrGmv4fVs2
+g5wjjiZnOd115d6Kg6ho
+=7PZw
 -----END PGP SIGNATURE-----
 
---q7zkz75dpw73y3wm--
+--pc55j3vdb4tvo6q5--
 
 
---===============0195527841009247813==
+--===============5415685063065624589==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -97,4 +108,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0195527841009247813==--
+--===============5415685063065624589==--
