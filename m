@@ -1,47 +1,158 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v2 0/3] increase TSCADC clock to 24MHz and fix
- ti,charge-delay to represent in nS
-Date: Fri, 25 Nov 2016 10:27:09 +0530
-Message-ID: <71482721-fd60-65b2-d601-f1698ce5fa0a@ti.com>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
+ soc
+Date: Thu, 24 Nov 2016 21:20:15 -0800
+Message-ID: <20161125052008.GA8342@localhost.localdomain>
+References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
+ <1478081906-12009-3-git-send-email-kernel@martin.sperl.org>
+ <20161117021107.GA2647@localhost.localdomain>
+ <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
+ <20161117151019.GA3115@localhost.localdomain>
+ <7957B3CC-0E18-4B27-82EB-EF88B7695E28@martin.sperl.org>
+ <20161119042224.GA25063@localhost.localdomain>
+ <28F93ABE-8210-4389-AE77-4D5E830E669B@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20161110163515.27598-1-mugunthanvnm@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <28F93ABE-8210-4389-AE77-4D5E830E669B-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry Torokhov,
+Hello,
 
-On Thursday 10 November 2016 10:05 PM, Mugunthan V N wrote:
-> This patch series enables ADC to be clocked at 24MHz as the
-> TI AM335x ADC driver has already adopted to use DMA to transfer
-> ADC samples. Now ADC can generated upto 800K Samples per second
-> with the patch [1] on AM335x BBB and AM437x GP EVM.
+On Tue, Nov 22, 2016 at 03:28:04PM +0100, Martin Sperl wrote:
+> Hi Eduardo!
 > 
-> when ADC ref clock is set at 24MHz, I am seeing some issue with
-> touch screen pointer as the pointer jumps to random locations
-> with free draw application. The issue is due to increase in ADC
-> clock and charge delay for the touchscreen ADC line duration
-> reduced.
+> On 19.11.2016 05:22, Eduardo Valentin wrote:
+> > Hello Martin,
+
+<cut>
+
 > 
-> So the notation of ti,charge-delay in terms of ADC clock is
-> wrong, it has to be represented in time and driver has to convert
-> the charge delay time to ADC clocks based on what ADC clock
-> frequency is set.
+> I was asked to implement the "initialize" case just in case FW ever
+> stopped setting up the device itself, so that is why this code is
+> included.
+
+OK. Looks like we (like, we in the Linux side) do not understand the
+conditions that firmware fails to initialize the thermal device, but we
+still want to force an initialization, hoping to get the device in a sane
+state, even if we do not know if the firmware is correctly booted or
+not. And that is done silently, with no notification to user. I see.
+
 > 
-> Measured the performance with the iio_generic_buffer with the
-> patch [2] applied
+> > 
+> > Who has the ownership of this device?
 > 
-> Verified the touch screen on AM335x GP EVM and AM335x BBB LCD7
-> cape with [3] dts for display and touch screen to work.
+> Joined ownership I suppose...
 > 
 
-Since there are acks from DT and MFD maintainers, can you pull the patch
-series if you do not have any more comments.
+with no synchronization mechanism?
 
-Regards
-Mugunthan V N
+> > 
+> >> The above mentioned “configuration if not running” reflect the values that
+> >> the FW is currently setting. We should not change those values as long as the
+> >> Firmware is also reading the temperature on its own.
+> > 
+> > hmm.. that looks like racy to me. Again, How do you synchronize accesses to
+> > this device? What if you configure the device and right after the
+> > firmware updates the configs? How do you make sure the configs you are
+> > writing here are the same used by the firmware? What if the firmware
+> > version changes? What versions of the firmware does this driver support?
+> > 
+> > Would it make sense to simply always initialize the device? Do you have
+> > a way to tell the firmware that it should not use the device?
+> > 
+> > Or, if you want to keep the device driver simply being a dummy reader,
+> > would it make sense to simply avoid writing configurations to the
+> > device, and simply retry to check if the firmware gets the device
+> > initialized?
+> 
+> Again: the device registers are only ever written if the device is not started
+> already. Otherwise the driver only reads for the ADC register, so there
+> is no real race here.
+> 
+
+and no race?
+
+To me, there is a race when you write to the config of this device,
+given that there is no sync between the two. We do not know if the
+firmware would be still attempting to initialize the device or not, do
+we? 
+
+> > 
+> >> 
+> >>> 
+> >>>> So do you need another version of the patchset that uses that new API?
+> >>> 
+> >>> I think the API usage is change that can be done together with
+> >>> clarification for the above questions too: on hardware state,
+> >>> firmware loading, maybe a master driver dependency, and the ADC
+> >>> conversion sequence, which are not well clear to me on this driver. As long as
+> >>> this is clarified and documented in the code (can be simple comments so
+> >>> it is clear to whoever reads in the future), then I would be OK with
+> >>> this driver.
+> >> 
+> >> So how do you want this to get “documented” in the driver?
+> >> The setup and Firmware is a generic feature of the SOC, so if we would put
+> >> some clarifications in this driver, then we would need to put it in every
+> >> bcm283X driver (which seems unreasonable).
+> >> 
+> > 
+> > I think a simple comment explaining the firmware dependency and the
+> > expected pre-conditions to get this driver working in a sane state would
+> > do it.
+> > 
+> > A better device initialization would also be appreciated. Based on my
+> > limited understanding of this platform, and your explanations, this
+> > device seams to have a serious race condition with firmware while
+> > accessing this device.
+> 
+> Again: the firmware runs before the ARM is started and for all practical
+> purposes the firmware is (as of now) configuring the thermal device.
+> 
+
+Oh, OK, we know the firmware wont touch the thermal device, right?
+
+Then, If that is the case, what is still not clear is in which conditions
+the firmware would leave the thermal device uninitialized.
+
+This driver seams to be only concerned of critical temperature. The
+concern I see with this code, and the explanations I heard, is a side
+effect of seeing spurious thermal shutdown, or even worse, getting the
+device booted hot and never shutting down, due to (possible) race
+between the two systems.
+
+Besides, if the firmware would not touch the thermal device when ARM is
+running, why not always writing to the device a configuration that you
+know is your sane starting point? Just do not rely on what was
+previously set. How do you know it is a sane configuration? Have you
+done sensor calibration exercise to confirm temperature reads are
+correct?
+
+> As for the use of thermal_zone_get_offset/slope: looking into the code
+> it looks like this actually blows up the code, as we now would need to
+> allocate thermal_zone_params and preset it with the “correct” values.
+> 
+> So more code to maintain and more memory consumed.
+> The only advantage I would see is that it would allow to set offset and
+> slope directly in the device tree.
+> 
+
+Any specific reason not to use of-thermal, then?
+
+
+> Thanks,
+> 		Martin
+
+BR,
+
+Eduardo Valentin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
