@@ -1,11 +1,13 @@
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Subject: [PATCH v5 0/2] ARM: dts: add support for Turris Omnia
-Date: Fri, 25 Nov 2016 15:26:56 +0100
-Message-ID: <20161125142658.21690-1-uwe@kleine-koenig.org>
+Subject: [PATCH v5 1/2] devicetree: Add vendor prefix for CZ.NIC
+Date: Fri, 25 Nov 2016 15:26:57 +0100
+Message-ID: <20161125142658.21690-2-uwe@kleine-koenig.org>
+References: <20161125142658.21690-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161125142658.21690-1-uwe@kleine-koenig.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,21 +21,20 @@ To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory C
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tomas Hlavacek <tomas.hlavacek@nic.cz>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Bed=C5=99icha=20Ko=C5=A1atu?= <bedrich.kosata@nic.cz>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpUaGlzIGlzIGJhc2ljbHkgbXkgdjMgcGx1cyBzb21lIG9mIHRoZSBjaGFuZ2VzIHRo
-YXQgVG9tYXMgY2hhbmdlZCBmb3IKaGlzIFJGQyBwYXRjaCAoaW1wbGljaXRseSAidjQiKS4gU28g
-Y29tcGFyZWQgdG8gdjMgdGhlIGZvbGxvd2luZwpjaGFuZ2VkOgoKIC0gQWRkIG1vcmUgZG9jdW1l
-bnRhdGlvbiAobW9zdGx5IGZyb20gVG9tYXMpCiAtIEFkZCBtb3JlIG1idXMgcmFuZ2VzIChieSBU
-b21hcykKIC0gTW92ZSBsaW5rIHRvIHNjaGVtYXRpYyBiZWxvdyBjb3B5cmlnaHQgaGVhZGVyIChz
-dWdnZXN0ZWQgYnkgQW5kcmV3KQogLSByZWVuYWJsZSBydGMgYXMgdGhpcyBpcyBub3QgdGhhdCBi
-cm9rZW4gb24gcHJvZHVjdGlvbiBib2FyZAogLSBmaXggc3BpIGNoaXAgc2VsZWN0IHBpbm11eGlu
-ZwoKVXdlIEtsZWluZS1Lw7ZuaWcgKDIpOgogIGRldmljZXRyZWU6IEFkZCB2ZW5kb3IgcHJlZml4
-IGZvciBDWi5OSUMKICBBUk06IGR0czogYWRkIHN1cHBvcnQgZm9yIFR1cnJpcyBPbW5pYQoKIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgICAxICsK
-IGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zODUtdHVycmlzLW9tbmlhLmR0cyAgICAgIHwg
-MzM0ICsrKysrKysrKysrKysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAzMzYgaW5zZXJ0aW9u
-cygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zODUtdHVy
-cmlzLW9tbmlhLmR0cwoKLS0gCjIuMTAuMgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHV3ZUBrbGVpbmUta29lbmlnLm9yZz4K
+LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4
+dCB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAppbmRleCBm
+MGE0OGVhNzg2NTkuLmFlOWZjZTlmZWQwMyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKQEAgLTY3LDYgKzY3LDcgQEAg
+Y3JlYXRpdmUJQ3JlYXRpdmUgVGVjaG5vbG9neSBMdGQKIGNyeXN0YWxmb250eglDcnlzdGFsZm9u
+dHogQW1lcmljYSwgSW5jLgogY3ViaWV0ZWNoCUN1YmlldGVjaCwgTHRkLgogY3lwcmVzcwlDeXBy
+ZXNzIFNlbWljb25kdWN0b3IgQ29ycG9yYXRpb24KK2N6bmljCUNaLk5JQywgei5zLnAuby4KIGRh
+bGxhcwlNYXhpbSBJbnRlZ3JhdGVkIFByb2R1Y3RzIChmb3JtZXJseSBEYWxsYXMgU2VtaWNvbmR1
+Y3RvcikKIGRhdmljb20JREFWSUNPTSBTZW1pY29uZHVjdG9yLCBJbmMuCiBkZWx0YQlEZWx0YSBF
+bGVjdHJvbmljcywgSW5jLgotLSAKMi4xMC4yCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
