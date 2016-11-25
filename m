@@ -1,53 +1,117 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 8/8] ARM: dts: sun8i-h3: orange-pi-pc: Enable audio codec
-Date: Fri, 25 Nov 2016 20:34:42 +0800
-Message-ID: <20161125123442.28410-9-wens@csie.org>
-References: <20161125123442.28410-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161125123442.28410-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v10 0/4] dtc: Dynamic DT support
+Date: Fri, 25 Nov 2016 14:32:07 +0200
+Message-ID: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Orange Pi PC routes the LINEOUT pins to the audio out jack on the
-board. The onboard microphone is routed to MIC1, with MBIAS providing
-power.
+This patchset adds Dynamic DT support in the DTC compiler
+as used in a number of boards like the beaglebone/rpi/chip and others.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The first patch passes a boot_info argument instead of the root node
+to the check methods.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index 98b85be61e17..d43978d3294e 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -90,6 +90,14 @@
- 	};
- };
- 
-+&codec {
-+	allwinner,audio-routing =
-+		"Line Out", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
+The second patch documents the internals of overlay generation, while
+the third one adds dynamic object/overlay support proper.
+
+The last patch simply adds a few overlay tests verifying operation.
+
+This patchset is against DTC mainline and is also available for a pull
+request from https://github.com/pantoniou/dtc/tree/overlays
+
+Regards
+
+-- Pantelis
+
+Changes since v9:
+* Reversed -M switch to by default use new DTBO magic value.
+* Removed global versionflags in the parser by using inherited
+attributes.
+* build_node instead of malloc at add_orphan_node().
+* Do not use escape for path copy
+* Do not generate /plugin/ when generating a dts file even when
+the plugin flag is set..
+
+Changes since v8:
+* Removed extra member of boot_info in each node; passing boot_info
+parameter to the check methods instead.
+* Reworked yacc syntax that supports both old and new plugin syntax
+* Added handling for new magic number (enabled by 'M' switch).
+* Dropped dtbo/asmo formats.
+* Added overlay testsuite.
+* Addressed last version maintainer comments.
+
+Changes since v7:
+* Dropped xasprintf & backward compatibility patch
+* Rebased against dgibson's overlay branch
+* Minor doc wording fixes.
+
+Changes since v6:
+* Introduced xasprintf
+* Added append_to_property and used it
+* Changed some die()'s to assert
+* Reordered node generation to respect sort
+* Addressed remaining maintainer changes from v6
+
+Changes since v5:
+* Rebase to latest dtc version.
+* Addressed all the maintainer requested changes from v5
+* Added new magic value for dynamic objects and new format
+
+Changes since v4:
+* Rebase to latest dtc version.
+* Completely redesigned the generation of resolution data.
+Now instead of being generated as part of blob generation
+they are created in the live tree.
+* Consequently the patchset is much smaller.
+* Added -A auto-label alias generation option.
+* Addressed maintainer comments.
+* Added syntactic sugar for overlays in the form of .dtsi
+* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
+the previous form (although still works for backward compatibility)
+
+Changes since v3:
+* Rebase to latest dtc version.
+
+Changes since v2:
+* Split single patch to a patchset.
+* Updated to dtc mainline.
+* Changed __local_fixups__ format
+* Clean up for better legibility.
+
+Pantelis Antoniou (4):
+  checks: Pass boot_info instead of root node
+  dtc: Document the dynamic plugin internals
+  dtc: Plugin and fixup support
+  tests: Add overlay tests
+
+ Documentation/dt-object-internal.txt | 318 +++++++++++++++++++++++++++++++++++
+ Documentation/manual.txt             |  25 ++-
+ checks.c                             |  86 +++++-----
+ dtc-lexer.l                          |   5 +
+ dtc-parser.y                         |  50 +++++-
+ dtc.c                                |  39 ++++-
+ dtc.h                                |  20 ++-
+ fdtdump.c                            |   2 +-
+ flattree.c                           |  17 +-
+ fstree.c                             |   2 +-
+ libfdt/fdt.c                         |   2 +-
+ libfdt/fdt.h                         |   3 +-
+ livetree.c                           | 225 ++++++++++++++++++++++++-
+ tests/mangle-layout.c                |   7 +-
+ tests/overlay_overlay_dtc.dts        |  76 +--------
+ tests/overlay_overlay_dtc.dtsi       |  83 +++++++++
+ tests/overlay_overlay_new_dtc.dts    |  11 ++
+ tests/overlay_overlay_simple.dts     |  12 ++
+ tests/run_tests.sh                   |  20 +++
+ 19 files changed, 862 insertions(+), 141 deletions(-)
+ create mode 100644 Documentation/dt-object-internal.txt
+ create mode 100644 tests/overlay_overlay_dtc.dtsi
+ create mode 100644 tests/overlay_overlay_new_dtc.dts
+ create mode 100644 tests/overlay_overlay_simple.dts
+
 -- 
-2.10.2
+2.1.4
