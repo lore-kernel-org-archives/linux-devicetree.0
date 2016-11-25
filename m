@@ -1,161 +1,151 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Fri, 25 Nov 2016 20:08:49 +0800
-Message-ID: <bec21998-b30c-4076-62bf-6b24c9dd1dd6@linaro.org>
-References: <Arnd Bergmann <arnd@arndb.de>
- <1479888476-13138-1-git-send-email-zhangfei.gao@linaro.org>
- <1479888476-13138-2-git-send-email-zhangfei.gao@linaro.org>
- <1479979605.2472.4.camel@pengutronix.de>
- <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d@linaro.org>
- <1479981017.2472.14.camel@pengutronix.de>
- <8328a235-faeb-2218-4c49-a3f282599e95@linaro.org>
- <1480069523.4058.17.camel@pengutronix.de>
- <e71cfe28-cd31-828f-8c7f-b4faeed5d27f@linaro.org>
- <1480071241.4058.23.camel@pengutronix.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V4 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Fri, 25 Nov 2016 17:34:37 +0530
+Message-ID: <583828D5.5060507@nvidia.com>
+References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com> <1479976734-30498-3-git-send-email-ldewangan@nvidia.com> <20161125095744.GB11512@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480071241.4058.23.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20161125095744.GB11512@ulmo.ba.sec>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, swarren@wwwdotorg.org, gnurou@gmail.com, jonathanh@nvidia.com, joe@perches.com, yamada.masahiro@socionext.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Thanks Thierry for review.
+
+On Friday 25 November 2016 03:27 PM, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+>
+> On Thu, Nov 24, 2016 at 02:08:54PM +0530, Laxman Dewangan wrote:
+>> +	  NVIDIA Tegra124/210 SoC has IO pads which supports multi-voltage
+>> +	  level of interfacing and deep power down mode of IO pads. The
+>> +	  voltage of IO pads are SW configurable based on IO rail of that
+>> +	  pads on T210. This driver provides the interface to change IO pad
+>> +	  voltage and power state via pincontrol interface.
+> This has a lot of chip-specific text. Will all of that have to be
+> updated if support for new chips is added?
+
+Then saying that Tegra124 and later..
+Hoping, people know our chip releasing sequence as numbering are not in 
+sequence.
+
+>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <soc/tegra/pmc.h>
+> Have you considered moving this code into the PMC driver? It seems a
+> little over the top to go through all of the platform device creation
+> and driver registration dance only to call into a public API later on.
+
+Yes, we had discussion on this and suggestion came to use the pinctrl 
+framework.
+If we do in the pmc driver then we will need lots of DT processing for 
+getting information from DT which we can directly get from the pinctrl 
+core framework.
+Also client driver may need to have the control dynamically and get the 
+IO pads from DT. So implementing all in pmc will be huge duplication 
+over already existing framework.
 
 
-On 2016年11月25日 18:54, Philipp Zabel wrote:
-> Am Freitag, den 25.11.2016, 18:42 +0800 schrieb zhangfei:
->> On 2016年11月25日 18:25, Philipp Zabel wrote:
->>> Am Donnerstag, den 24.11.2016, 18:20 +0800 schrieb zhangfei:
->>>> On 2016年11月24日 17:50, Philipp Zabel wrote:
->>>>> Am Donnerstag, den 24.11.2016, 17:40 +0800 schrieb zhangfei:
->>>>>> On 2016年11月24日 17:26, Philipp Zabel wrote:
->>>>>>> Am Mittwoch, den 23.11.2016, 16:07 +0800 schrieb Zhangfei Gao:
->>>>>>>> Add DT bindings documentation for hi3660 SoC reset controller.
->>>>>>>>
->>>>>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>>>> ---
->>>>>>>>      .../bindings/reset/hisilicon,hi3660-reset.txt      | 51 ++++++++++++++++++++++
->>>>>>>>      1 file changed, 51 insertions(+)
->>>>>>>>      create mode 100644 Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 0000000..250daf2
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/reset/hisilicon,hi3660-reset.txt
->>>>>>>> @@ -0,0 +1,51 @@
->>>>>>>> +Hisilicon System Reset Controller
->>>>>>>> +======================================
->>>>>>>> +
->>>>>>>> +Please also refer to reset.txt in this directory for common reset
->>>>>>>> +controller binding usage.
->>>>>>>> +
->>>>>>>> +The reset controller registers are part of the system-ctl block on
->>>>>>>> +hi3660 SoC.
->>>>>>>> +
->>>>>>>> +Required properties:
->>>>>>>> +- compatible: should be
->>>>>>>> +		 "hisilicon,hi3660-reset"
->>>>>>>> +- #reset-cells: 1, see below
->>>>>>>> +- hisi,rst-syscon: phandle of the reset's syscon.
->>>>>>>> +- hisi,reset-bits: Contains the reset control register information
->>>>>>>> +		  Should contain 2 cells for each reset exposed to
->>>>>>>> +		  consumers, defined as:
->>>>>>>> +			Cell #1 : offset from the syscon register base
->>>>>>>> +			Cell #2 : bits position of the control register
->>>>>>>> +
->>>>>>>> +Example:
->>>>>>>> +	iomcu: iomcu@ffd7e000 {
->>>>>>>> +		compatible = "hisilicon,hi3660-iomcu", "syscon";
->>>>>>>> +		reg = <0x0 0xffd7e000 0x0 0x1000>;
->>>>>>>> +	};
->>>>>>>> +
->>>>>>>> +	iomcu_rst: iomcu_rst_controller {
->>>>>>> This should be
->>>>>>> 	iomcu_rst: reset-controller {
->>>>>>>
->>>>>>>> +		compatible = "hisilicon,hi3660-reset";
->>>>>>>> +		#reset-cells = <1>;
->>>>>>>> +		hisi,rst-syscon = <&iomcu>;
->>>>>>>> +		hisi,reset-bits = <0x20 0x8		/* 0: i2c0 */
->>>>>>>> +				   0x20 0x10		/* 1: i2c1 */
->>>>>>>> +				   0x20 0x20		/* 2: i2c2 */
->>>>>>>> +				   0x20 0x8000000>;	/* 3: i2c6 */
->>>>>>>> +	};
->>>>>>> The reset lines are controlled through iomcu bits, is there a reason not
->>>>>>> to put the iomcu_rst node inside the iomcu node? That way the
->>>>>>> hisi,rst-syscon property could be removed and the syscon could be
->>>>>>> retrieved via the reset-controller parent node.
->>>>>> iomcu is common registers, controls clock and reset, etc.
->>>>>> So we use syscon, without mapping the registers everywhere.
->>>>>> It is common case in hisilicon, same in hi6220.
->>>>>>
->>>>>> Also the #clock-cells and #reset-cells can not be put in the same node,
->>>>>> if they are both using probe, since reset_probe will not be called.
->>>>>>
->>>>>> So we use hisi,rst-syscon as a general solution.
->>>>> What I meant is this:
->>>>>
->>>>> 	iomcu: iomcu@ffd7e000 {
->>>>> 		compatible = "hisilicon,hi3660-iomcu", "syscon", "simple-mfd";
->>>>> 		reg = <0x0 0xffd7e000 0x0 0x1000>;
->>>> #clock-cells = <1>;
->>>>
->>>> In my test, if there add #clock-cells = <1>, reset_probe will not be
->>>> called any more.
->>>> Since clk_probe is called first.
->>>> No matter iomcu_rst is child node or not.
->>> I don't understand this, does the clock driver bind to the iomcu node
->>> using CLK_OF_DECLARE_DRIVER(..., "hisilicon,hi3660-iomcu", ...)?
->> This method:CLK_OF_DECLARE_DRIVER is not prefered in clock,
->> and we have to use probe instead, to make all driver build as modules as
->> possible.
+
+>
+>> +#include "../core.h"
+>> +#include "../pinconf.h"
+>> +#include "../pinctrl-utils.h"
+>> +
+>> +#define TEGRA_IO_RAIL_1800000UV 1800000
+>> +#define TEGRA_IO_RAIL_3300000UV 3300000
+> Is there really a point in having these defines? They are really long
+> and effectively don't carry more information than just the plain
+> numbers.
+
+
+using macros is always good instead of magic number in code and hence it 
+is there.
+
+>
+>
+>> +#define tegra_io_uv_to_io_pads_uv(io_uv)				\
+>> +		(((io_uv) == TEGRA_IO_RAIL_1800000UV) ?			\
+>> +		  TEGRA_IO_PAD_1800000UV : TEGRA_IO_PAD_3300000UV)
+>> +
+>> +#define tegra_io_voltage_is_valid(io_uv)			\
+>> +	({ typeof(io_uv) io_uv_ = (io_uv);			\
+>> +	    ((io_uv_ == TEGRA_IO_RAIL_1800000UV) ||		\
+>> +	     (io_uv_ == TEGRA_IO_RAIL_3300000UV)); })
 >>
->> For example hi3660.
->> static struct platform_driver hi3660_clk_driver = {
->>           .probe          = hi3660_clk_probe,
->>           .driver         = {
->>                   .name   = "hi3660-clk",
->>                   .of_match_table = hi3660_clk_match_table,
->>           },
->> };
-> hi3660_clk_match_table contains the "hisilicon,hi3660-iomcu" compatible?
-> If so, you could call
-> 	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> from hi3660_clk_probe instead of using "simple-mfd" to probe the iomcu
-> node's children.
+> Maybe make both of these static inline functions to improve readability?
+> I find the above very hard to read.
 
-Not using simple-mfd:
+OK, will convert to the inline but dont think it will be less complex.
+>> +	enum tegra_io_pad_voltage pad_volt;
+>>
+>> +
+>>
+>> +
+>> +#define TEGRA_IO_PAD_INFO(_pin, _name, _id, _lpstate, _vsupply)	\
+>> +	{							\
+>> +		.name = _name,					\
+>> +		.pins = {(_pin)},				\
+>> +		.id = TEGRA_IO_PAD_##_id,			\
+>> +		.vsupply = (_vsupply),				\
+>> +		.supports_low_power = (_lpstate),		\
+>> +	}
+>> +
+>> +static const struct tegra_io_pads_cfg tegra124_io_pads_cfg_info[] = {
+>> +	TEGRA124_PAD_INFO_TABLE(TEGRA_IO_PAD_INFO),
+>> +};
+>> +
+>> +static const struct tegra_io_pads_cfg tegra210_io_pads_cfg_info[] = {
+>> +	TEGRA210_PAD_INFO_TABLE(TEGRA_IO_PAD_INFO),
+>> +};
+> That's a weird way of writing these tables. Why not do something simpler
+> and much more common such as:
+>
+> 	#define TEGRA_IO_PAD_INFO(...) ...
+>
+> 	static const struct tegra_io_pads_cfg tegra124_io_pads_cfgs[] = {
+> 		TEGRA_IO_PAD_INFO(...),
+> 		...
+> 	};
+>
+> 	static const struct tegra_io_pads_cfg tegra210_io_pad_cfgs[] = {
+> 		TEGRA_IO_PAD_INFO(...),
+> 		...
+> 	};
 
-Like
-static const struct of_device_id hi3660_clk_match_table[] = {
-         { .compatible = "hisilicon,hi3660-iomcu", },
-         { }
-};
-MODULE_DEVICE_TABLE(of, hi3660_clk_match_table);
+This is done to use the same table for initialing two different 
+structure. If we go as above  then we will endup with the two tables.
 
-static int hi3660_clk_probe(struct platform_device *pdev)
-{
-         struct device *dev = &pdev->dev;
-         struct device_node *np = pdev->dev.of_node;
-         const struct of_device_id *of_id;
-         enum hi3660_clk_type type;
+or define and then redefine the TEGRA_IO_PAD_INFO.
 
-         of_id = of_match_device(hi3660_clk_match_table, dev);
-         if (!of_id)
-                 return -EINVAL;
-~
-}
 
-If put iomcu_rst as child node, and set #clock-cells = <1> to iomcu,
-then hi3660_clk_probe is called, hi3660_reset_probe will not be called.
-So using "hisi,rst-syscon" as pointer does not have the issue.
+>
+>> +
+>>
+>> +
+>> +module_platform_driver(tegra_io_pads_pinctrl_driver);
+>> +
+>> +MODULE_DESCRIPTION("NVIDIA TEGRA IO pad Control Driver");
+>> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+>> +MODULE_LICENSE("GPL v2");
+> Like I said above, I think there's a lot of boilerplate in here that's
+> simply there to create a virtual device and bind a driver to it. All of
+> that comes with very little to no benefit. I think this could all just
+> be moved into the PMC driver and be simplified quite a bit.
+>
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What did you not like here?
+Let me specific to my query to get idea about your view:
+1. Do you agree for the interface as pinctrl here?
+2. Do you want to call the probe() function implemented here as simple 
+function call from pmc's probe?
+3. If (2) is yes then how do you want to differentiate T124 or T210? Via 
+argument?
+
+It will be really help if you can provide the pseudo code from PMC and 
+this driver so that I can implement the same in the next patch.
+
+
