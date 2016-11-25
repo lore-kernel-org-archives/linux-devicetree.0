@@ -1,30 +1,26 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: add support for Turris Omnia
-Date: Fri, 25 Nov 2016 15:32:43 +0100
-Message-ID: <20161125143243.GE26806@lunn.ch>
-References: <20161125142658.21690-1-uwe@kleine-koenig.org>
- <20161125142658.21690-3-uwe@kleine-koenig.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161125142658.21690-3-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bed??icha Ko??atu <bedrich.kosata-x+rMaJPWets@public.gmane.org>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH 0/2] usb: ohci: s3c2410: add device tree support
+Date: Fri, 25 Nov 2016 12:47:27 -0200
+Message-ID: <1480085249-25014-1-git-send-email-sergio.prado@e-labworks.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, stern@rowland.harvard.edu, kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 03:26:58PM +0100, Uwe Kleine-König wrote:
-> This machine is an open hardware router by cz.nic driven by a
-> Marvell Armada 385.
-> 
-> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+This series adds support for configuring Samsung's s3c2410 and
+compatible USB OHCI controller via devicetree.
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Tested on FriendlyARM mini2440, based on s3c2440 SoC.
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sergio Prado (2):
+  dt-bindings: usb: add DT binding for s3c2410 USB OHCI controller
+  usb: ohci: s3c2410: allow probing from device tree
+
+ .../devicetree/bindings/usb/s3c2410-usb.txt        | 22 ++++++++++++++++++++++
+ drivers/usb/host/ohci-s3c2410.c                    |  8 ++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/s3c2410-usb.txt
+
+-- 
+1.9.1
