@@ -1,38 +1,56 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
-Date: Fri, 25 Nov 2016 16:37:25 +0100
-Message-ID: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH v4 0/6] Patches for QCOM IPQ4019 clock driver
+Date: Fri, 25 Nov 2016 21:11:27 +0530
+Message-ID: <1480088493-4590-1-git-send-email-absahu@codeaurora.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, varada@codeaurora.org, pradeepb@codeaurora.org, snlakshm@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SXQgaGFzIGJlZW4gZGV0ZXJtaW5lZCB0aGF0IHRoZSBtYXhpbXVtIHJlc29sdXRpb24gc3VwcG9y
-dGVkIGNvcnJlY3RseQpieSB0aWxjZGMgcmV2MSBvbiBkYTg1MCBTb0NzIGlzIDgwMHg2MDBANjAu
-IER1ZSB0byBtZW1vcnkgdGhyb3VnaHB1dApjb25zdHJhaW50cyB3ZSBtdXN0IGZpbHRlciBvdXQg
-aGlnaGVyIG1vZGVzLgoKU3BlY2lmeSB0aGUgbWF4LWJhbmR3aWR0aCBwcm9wZXJ0eSBmb3IgdGhl
-IGRpc3BsYXkgbm9kZSBmb3IKZGE4NTAtYmFzZWQgYm9hcmRzLgoKU2lnbmVkLW9mZi1ieTogQmFy
-dG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC5kdHNpIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZGE4NTAuZHRzaQppbmRleCA4ZTMwZDliLi45YjdjNDQ0IDEwMDY0NAotLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUw
-LmR0c2kKQEAgLTQ1Miw2ICs0NTIsNyBAQAogCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC10aWxj
-ZGMiOwogCQkJcmVnID0gPDB4MjEzMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDUyPjsK
-KwkJCW1heC1iYW5kd2lkdGggPSA8Mjg4MDAwMDA+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsK
-IAogCQkJcG9ydHMgewotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+These patches are related to Qualcomm IPQ4019 GCC (Global Clock
+Controller) driver code mainly adding the nodes for clock marked
+as fixed in current IPQ4019 clock driver and support for multiple
+CPU frequencies.
+
+[V4]
+
+   1. Addressed the review comments given in v3 patches.
+   2. Removed the intermediate VCO clocks and make VCO as
+      part of final divider clock.
+   3. Changed some variable and structure names.
+   4. Removed intermediate frequency change patch and merged
+      in the main patch itself.
+   5. Added the APSS CPU frequency change notifier patch
+   6. Removed i2c node frequency table which is already reviewed.
+
+[V3]
+
+   1. Addressed the review comments given in v2 patches.
+   2. Replaced the do_div with normal division.
+   3. Marked the PCNOC node as critical.
+   4. Modified the frequency values for the recent change done
+      in IPQ4019 bootloader.
+   5. Changed the i2c node frequency table for 19.05 MHz clock.
+
+[V2]
+
+   1. Removed the fixed clock references and add the same as clock nodes
+   with recalc_rate operation.
+
+Abhishek Sahu (6):
+  clk: qcom: ipq4019: remove fixed clocks and add pll clocks
+  clk: qcom: ipq4019: Add the apss cpu pll divider clock node
+  clk: qcom: ipq4019: Add the nodes for pcnoc
+  clk: qcom: ipq4019: correct sdcc frequency and parent name
+  clk: qcom: ipq4019: Add all the frequencies for apss cpu
+  clk: qcom: ipq4019: Add the cpu clock frequency change notifier
+
+ drivers/clk/qcom/gcc-ipq4019.c               | 484 ++++++++++++++++++++++++++-
+ include/dt-bindings/clock/qcom,gcc-ipq4019.h |  11 +
+ 2 files changed, 481 insertions(+), 14 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
