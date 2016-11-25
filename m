@@ -1,55 +1,101 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 5/6] clk: qcom: ipq4019: Add all the frequencies for apss cpu
-Date: Fri, 25 Nov 2016 21:11:32 +0530
-Message-ID: <1480088493-4590-6-git-send-email-absahu@codeaurora.org>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH v4 6/6] clk: qcom: ipq4019: Add the cpu clock frequency change notifier
+Date: Fri, 25 Nov 2016 21:11:33 +0530
+Message-ID: <1480088493-4590-7-git-send-email-absahu@codeaurora.org>
 References: <1480088493-4590-1-git-send-email-absahu@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480088493-4590-1-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pradeepb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, snlakshm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1480088493-4590-1-git-send-email-absahu@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, varada@codeaurora.org, pradeepb@codeaurora.org, snlakshm@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The APSS CPU clock does not contain all the frequencies in its
-frequency table so this patch adds the same.
+The current driver code gives the crash or gets hang while switching
+the CPU frequency some time. The APSS CPU Clock divider is not glitch
+free so it the APPS clock need to be switched for stable clock during
+the change.
 
-Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This patch adds the frequency change notifier for APSS CPU clock. It
+changes the parent of this clock to stable PLL FEPLL500 when it gets
+for PRE_RATE_CHANGE event. This event will be generated before actual
+clock set operations. The clock set operation will again change its
+corresponding parent by getting the same from frequency table.
+
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/clk/qcom/gcc-ipq4019.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-ipq4019.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
-index 320750c..eeafca2 100644
+index eeafca2..94df10d 100644
 --- a/drivers/clk/qcom/gcc-ipq4019.c
 +++ b/drivers/clk/qcom/gcc-ipq4019.c
-@@ -569,10 +569,20 @@ struct clk_fepll {
- };
+@@ -22,6 +22,7 @@
+ #include <linux/reset-controller.h>
+ #include <linux/math64.h>
+ #include <linux/delay.h>
++#include <linux/clk.h>
  
- static const struct freq_tbl ftbl_gcc_apps_clk[] = {
--	F(48000000, P_XO,	   1, 0, 0),
-+	F(48000000,  P_XO,         1, 0, 0),
- 	F(200000000, P_FEPLL200,   1, 0, 0),
-+	F(384000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(413000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(448000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(488000000, P_DDRPLLAPSS, 1, 0, 0),
- 	F(500000000, P_FEPLL500,   1, 0, 0),
--	F(626000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(512000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(537000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(565000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(597000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(632000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(672000000, P_DDRPLLAPSS, 1, 0, 0),
-+	F(716000000, P_DDRPLLAPSS, 1, 0, 0),
- 	{ }
- };
+ #include <dt-bindings/clock/qcom,gcc-ipq4019.h>
  
+@@ -1736,13 +1737,55 @@ static int clk_cpu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+ };
+ MODULE_DEVICE_TABLE(of, gcc_ipq4019_match_table);
+ 
++/* Contains index for safe clock during APSS freq change */
++static int gcc_ipq4019_cpu_safe_parent;
++static int
++gcc_ipq4019_cpu_clk_notifier_fn(struct notifier_block *nb,
++				unsigned long action, void *data)
++{
++	int err = 0;
++
++	if (action == PRE_RATE_CHANGE)
++		err = clk_rcg2_ops.set_parent(&apps_clk_src.clkr.hw,
++					      gcc_ipq4019_cpu_safe_parent);
++
++	return notifier_from_errno(err);
++}
++
++static struct notifier_block gcc_ipq4019_cpu_clk_notifier = {
++	.notifier_call = gcc_ipq4019_cpu_clk_notifier_fn,
++};
++
+ static int gcc_ipq4019_probe(struct platform_device *pdev)
+ {
+-	return qcom_cc_probe(pdev, &gcc_ipq4019_desc);
++	int err;
++
++	err = qcom_cc_probe(pdev, &gcc_ipq4019_desc);
++	if (err)
++		return err;
++
++	gcc_ipq4019_cpu_safe_parent = qcom_find_src_index(&apps_clk_src.clkr.hw,
++						apps_clk_src.parent_map,
++						P_FEPLL500);
++	if (gcc_ipq4019_cpu_safe_parent < 0)
++		err = gcc_ipq4019_cpu_safe_parent;
++
++	if (!err)
++		err = clk_notifier_register(apps_clk_src.clkr.hw.clk,
++				      &gcc_ipq4019_cpu_clk_notifier);
++
++	return err;
++}
++
++static int gcc_ipq4019_remove(struct platform_device *pdev)
++{
++	return clk_notifier_unregister(apps_clk_src.clkr.hw.clk,
++					&gcc_ipq4019_cpu_clk_notifier);
+ }
+ 
+ static struct platform_driver gcc_ipq4019_driver = {
+ 	.probe		= gcc_ipq4019_probe,
++	.remove		= gcc_ipq4019_remove,
+ 	.driver		= {
+ 		.name	= "qcom,gcc-ipq4019",
+ 		.of_match_table = gcc_ipq4019_match_table,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
