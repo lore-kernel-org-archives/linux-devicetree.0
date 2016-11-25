@@ -1,93 +1,146 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 2/4] mfd: pv88080: MFD core support
-Date: Fri, 25 Nov 2016 08:34:47 +0000
-Message-ID: <20161125083447.GY10134@dell.home>
-References: <cover.1479429347.git.eric.jeong@diasemi.com>
- <d5a2f377ee9ea7a7b68c9545ada0405b8134a9f4.1479429347.git.eric.jeong@diasemi.com>
- <20161121130919.GB3917@dell>
- <8FA4409277D6E54680546B8811D8541002A088125C@NB-EX-MBX01.diasemi.com>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [net-next PATCH v1 0/2] stmmac: dwmac-meson8b: configurable RGMII
+ TX delay
+Date: Fri, 25 Nov 2016 09:59:33 +0100
+Message-ID: <d14f43e6-73f7-665f-28f4-cbe6e762cab0@st.com>
+References: <20161124143417.10178-1-martin.blumenstingl@googlemail.com>
+ <1480003681.17538.142.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8FA4409277D6E54680546B8811D8541002A088125C@NB-EX-MBX01.diasemi.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, LINUX-GPIO <linux-gpio@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480003681.17538.142.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Nov 2016, Eric Hyeung Dong Jeong wrote:
-> On Monday, November 21, 2016 10:09 PM, Lee Jones Wrote:
-> > On Fri, 18 Nov 2016, Eric Jeong wrote:
-> > 
-> > >
-> > > From: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> > >
-> > > This patch adds supports for PV88080 MFD core device.
-> > >
-> > > It provides communication through the I2C interface.
-> > > It contains the following components:
-> > >     - Regulators
-> > >     - Configurable GPIOs
-> > >
-> > > Kconfig and Makefile are updated to reflect support for PV88080 PMIC.
-> > >
-> > > Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
-> > >
-> > > ---
-> > > This patch applies against linux-next and next-20161117
-> > >
-> > > Hi,
-> > >
-> > > This patch adds MFD core driver for PV88080 PMIC.
-> > > This is done as part of the existing PV88080 regulator driver by
-> > > expending the driver for GPIO function support.
-> > >
-> > > Change since PATCH V2
-> > >  - Make one file insted of usging core and i2c file
-> > >  - Use devm_ function to be managed resource automatically
-> > >  - Separated mfd_cell and regmap_irq_chip declaration for clarification.
-> > >  - Updated Kconfig to use OF and assign yes to I2C
-> > >
-> > > Change since PATCH V1
-> > >  - Patch separated from PATCH V1
-> > >
-> > > Regards,
-> > > Eric Jeong, Dialog Semiconductor Ltd.
-> > >
-> > >
-> > >  drivers/mfd/Kconfig         |   12 ++
-> > >  drivers/mfd/Makefile        |    1 +
-> > >  drivers/mfd/pv88080.c       |  331 +++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/mfd/pv88080.h |  222 +++++++++++++++++++++++++++++
-> > >  4 files changed, 566 insertions(+)
-> > >  create mode 100644 drivers/mfd/pv88080.c  create mode 100644
-> > > include/linux/mfd/pv88080.h
+On 11/24/2016 5:08 PM, Jerome Brunet wrote:
+> On Thu, 2016-11-24 at 15:34 +0100, Martin Blumenstingl wrote:
+>> Currently the dwmac-meson8b stmmac glue driver uses a hardcoded 1/4
+>> cycle TX clock delay. This seems to work fine for many boards (for
+>> example Odroid-C2 or Amlogic's reference boards) but there are some
+>> others where TX traffic is simply broken.
+>> There are probably multiple reasons why it's working on some boards
+>> while it's broken on others:
+>> - some of Amlogic's reference boards are using a Micrel PHY
+>> - hardware circuit design
+>> - maybe more...
+>>
+>> This raises a question though:
+>> Which device is supposed to enable the TX delay when both MAC and PHY
+>> support it? And should we implement it for each PHY / MAC separately
+>> or should we think about a more generic solution (currently it's not
+>> possible to disable the TX delay generated by the RTL8211F PHY via
+>> devicetree when using phy-mode "rgmii")?
+>>
+>> iperf3 results on my Mecool BB2 board (Meson GXM, RTL8211F PHY) with
+>> TX clock delay disabled on the MAC (as it's enabled in the PHY
+>> driver).
+>> TX throughput was virtually zero before:
+>> $ iperf3 -c 192.168.1.100 -R
+>> Connecting to host 192.168.1.100, port 5201
+>> Reverse mode, remote host 192.168.1.100 is sending
+>> [  4] local 192.168.1.206 port 52828 connected to 192.168.1.100 port
+>> 5201
+>> [ ID] Interval           Transfer     Bandwidth
+>> [  4]   0.00-1.00   sec   108 MBytes   901
+>> Mbits/sec
+>> [  4]   1.00-2.00   sec  94.2 MBytes   791
+>> Mbits/sec
+>> [  4]   2.00-3.00   sec  96.5 MBytes   810
+>> Mbits/sec
+>> [  4]   3.00-4.00   sec  96.2 MBytes   808
+>> Mbits/sec
+>> [  4]   4.00-5.00   sec  96.6 MBytes   810
+>> Mbits/sec
+>> [  4]   5.00-6.00   sec  96.5 MBytes   810
+>> Mbits/sec
+>> [  4]   6.00-7.00   sec  96.6 MBytes   810
+>> Mbits/sec
+>> [  4]   7.00-8.00   sec  96.5 MBytes   809
+>> Mbits/sec
+>> [  4]   8.00-9.00   sec   105 MBytes   884
+>> Mbits/sec
+>> [  4]   9.00-10.00  sec   111 MBytes   934
+>> Mbits/sec
+>> - - - - - - - - - - - - - - - - - - - - - - - - -
+>> [ ID] Interval           Transfer     Bandwidth       Retr
+>> [  4]   0.00-10.00  sec  1000 MBytes   839
+>> Mbits/sec    0             sender
+>> [  4]   0.00-10.00  sec   998 MBytes   837
+>> Mbits/sec                  receiver
+>>
+>> iperf Done.
+>> $ iperf3 -c 192.168.1.100
+>> Connecting to host 192.168.1.100, port 5201
+>> [  4] local 192.168.1.206 port 52832 connected to 192.168.1.100 port
+>> 5201
+>> [ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+>> [  4]   0.00-1.01   sec  99.5 MBytes   829 Mbits/sec  117    139
+>> KBytes
+>> [  4]   1.01-2.00   sec   105 MBytes   884 Mbits/sec  129   70.7
+>> KBytes
+>> [  4]   2.00-3.01   sec   107 MBytes   889 Mbits/sec  106    187
+>> KBytes
+>> [  4]   3.01-4.01   sec   105 MBytes   878 Mbits/sec   92    143
+>> KBytes
+>> [  4]   4.01-5.00   sec   105 MBytes   882 Mbits/sec  140    129
+>> KBytes
+>> [  4]   5.00-6.01   sec   106 MBytes   883 Mbits/sec  115    195
+>> KBytes
+>> [  4]   6.01-7.00   sec   102 MBytes   863 Mbits/sec  133   70.7
+>> KBytes
+>> [  4]   7.00-8.01   sec   106 MBytes   884 Mbits/sec  143   97.6
+>> KBytes
+>> [  4]   8.01-9.01   sec   104 MBytes   875 Mbits/sec  124    107
+>> KBytes
+>> [  4]   9.01-10.01  sec   105 MBytes   876 Mbits/sec   90    139
+>> KBytes
+>> - - - - - - - - - - - - - - - - - - - - - - - - -
+>> [ ID] Interval           Transfer     Bandwidth       Retr
+>> [  4]   0.00-10.01  sec  1.02 GBytes   874
+>> Mbits/sec  1189             sender
+>> [  4]   0.00-10.01  sec  1.02 GBytes   873
+>> Mbits/sec                  receiver
+>>
+>
+> Cool, one more board working ;)
+> I tried your patch on another board (MXQ_V2.1, with sheep printed on
+> the PCB). It 's not improving the situation for this one unfortunately.
+> Actually I already tried playing with the TX delay on the MAC and PHY
+> but I could get any good results with the boards I have.
+>
+> It is strange that we can adjust the delay by 2ns steps, when delay
+> seens by the phy should be 2ns ...
+>
 
-It's a good idea to cut out all of the code/comments that is either
-not relevant, or you are not providing comment (besides "will do")
-on.
+Ok, as said, I could expect that extra delay was needed on GiGa.
+FYI, on ST platforms, this extra delay was added in the pintctrl
+dtsi. I mean, in some way, ad-hoc setup was solved at device-tree
+level. Usually, extra delay could depend on the PCB.
 
-> > > +struct pv88080 {
-> > > +	struct device *dev;
-> > > +	struct regmap *regmap;
-> > > +	unsigned long type;
-> > 
-> > Does this really need to be in here?
-> 
-> The *type* member is used for separating silicon type.  
-> And, regulator and gpio driver also use the member to check the type 
-> for proper configuration without additional code. 
-> That is the reason that the member is added in the structure.
+peppe
 
-I don't see how this is being used, so assuming the other Maintainers
-are happy with the implementation it's okay for this to live here.
-However, please consider changing to something better than "value" or
-"type".  Perhaps "varian"t or "model" or similar would be better?
+>> iperf Done.
+>>
+>>
+>> Martin Blumenstingl (2):
+>>   net: dt-bindings: add RGMII TX delay configuration to meson8b-dwmac
+>>   net: stmmac: dwmac-meson8b: make the RGMII TX delay configurable
+>>
+>>  Documentation/devicetree/bindings/net/meson-dwmac.txt | 11
+>> +++++++++++
+>>  drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c   | 16
+>> +++++++++++-----
+>>  include/dt-bindings/net/dwmac-meson8b.h               | 18
+>> ++++++++++++++++++
+>>  3 files changed, 40 insertions(+), 5 deletions(-)
+>>  create mode 100644 include/dt-bindings/net/dwmac-meson8b.h
+>>
+>
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
