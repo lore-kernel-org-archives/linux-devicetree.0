@@ -1,66 +1,193 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/3] ARM: da850-lcdk: add the dumb-vga-dac node
-Date: Fri, 25 Nov 2016 17:03:13 +0100
-Message-ID: <1480089795-29811-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1480089795-29811-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1480089795-29811-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC PATCH 2/3] ARM64: dts: meson-gx: Add Graphic Controller nodes
+Date: Fri, 25 Nov 2016 17:03:10 +0100
+Message-ID: <1480089791-12517-3-git-send-email-narmstrong@baylibre.com>
+References: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: airlied@linux.ie, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, victor.wan@amlogic.com, jerry.cao@amlogic.com, Xing.Xu@amlogic.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBkdW1iLXZnYS1kYWMgbm9kZSB0byB0aGUgYm9hcmQgRFQgdG9nZXRoZXIgd2l0aCBj
-b3JyZXNwb25kaW5nCnBvcnRzIGFuZCB2Z2EgY29ubmVjdG9yLiBUaGlzIGFsbG93cyB0byByZXRy
-aWV2ZSB0aGUgZWRpZCBpbmZvIGZyb20KdGhlIGRpc3BsYXkgYXV0b21hdGljYWxseS4KClNpZ25l
-ZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+
-Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgfCA1OCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
-ICAgICB8IDE3ICsrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgYi9hcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwppbmRleCA4NDExYTkxLi42OTUyYzY4IDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9kYTg1MC1sY2RrLmR0cwpAQCAtNTAsNiArNTAsNTMgQEAKIAkJCXN5c3RlbS1jbG9jay1m
-cmVxdWVuY3kgPSA8MjQ1NzYwMDA+OwogCQl9OwogCX07CisKKwl2Z2FfYnJpZGdlIHsKKwkJY29t
-cGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
-CQlwaW5jdHJsLTAgPSA8JmxjZF9waW5zPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNz
-aXplLWNlbGxzID0gPDA+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJcmVnID0gPDA+OworCisJCQkJdmdh
-X2JyaWRnZV9pbjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZkaXNwbGF5X291dF92Z2E+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEg
-eworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJ
-CXJlZyA9IDwxPjsKKworCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVn
-ID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9jb25faW4+OworCQkJCX07CisJ
-CQl9OworCQl9OworCX07CisKKwl2Z2EgeworCQljb21wYXRpYmxlID0gInZnYS1jb25uZWN0b3Ii
-OworCisJCWRkYy1pMmMtYnVzID0gPCZpMmMwPjsKKworCQlwb3J0IHsKKwkJCXZnYV9jb25faW46
-IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2Vfb3V0PjsKKwkJ
-CX07CisJCX07CisJfTsKIH07CiAKICZwbXhfY29yZSB7CkBAIC0yMjcsMyArMjc0LDE0IEBACiAJ
-CX07CiAJfTsKIH07CisKKyZkaXNwbGF5IHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismZGlz
-cGxheV9vdXQgeworCWRpc3BsYXlfb3V0X3ZnYTogZW5kcG9pbnRAMCB7CisJCXJlZyA9IDwwPjsK
-KwkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfYnJpZGdlX2luPjsKKwl9OworfTsKZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1
-MC5kdHNpCmluZGV4IGZmMTNlOTUuLjhlMzBkOWIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2RhODUwLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQpAQCAtNDUz
-LDYgKzQ1MywyMyBAQAogCQkJcmVnID0gPDB4MjEzMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRz
-ID0gPDUyPjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisKKwkJCXBvcnRzIHsKKwkJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCWRpc3BsYXlf
-aW46IHBvcnRAMCB7CisJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsKKwkJCQkJcmVnID0gPDA+OworCQkJCX07CisKKwkJCQlkaXNwbGF5X291dDogcG9y
-dEAxIHsKKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJCSNzaXplLWNlbGxzID0gPDA+
-OworCQkJCQlyZWcgPSA8MT47CisJCQkJfTsKKwkJCX07CiAJCX07CiAJfTsKIAlhZW1pZjogYWVt
-aWZANjgwMDAwMDAgewotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Add Video Processing Unit and CVBS Output nodes, and enable CVBS on selected
+boards.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 46 ++++++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 12 ++++++
+ .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  8 ++++
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  9 +++++
+ 8 files changed, 91 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index fc033c0..bcc1d1f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -153,6 +153,27 @@
+ 		};
+ 	};
+ 
++	venc_cvbs: venc-cvbs {
++		compatible = "amlogic,meson-gx-venc-cvbs";
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			enc_cvbs_in: port@0 {
++				 #address-cells = <1>;
++				 #size-cells = <0>;
++				 reg = <0>;
++
++				 venc_cvbs_in_vpu: endpoint@0 {
++					 reg = <0>;
++					 remote-endpoint = <&vpu_out_venc_cvbs>;
++				};
++			};
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -356,5 +377,30 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		vpu: vpu@d0100000 {
++			compatible = "amlogic,meson-gx-vpu";
++			reg = <0x0 0xd0100000 0x0 0x100000>,
++			      <0x0 0xc883c000 0x0 0x1000>,
++			      <0x0 0xc8838000 0x0 0x1000>;
++			reg-names = "base", "hhi", "dmc";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				vpu_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
++
++					vpu_out_venc_cvbs: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&venc_cvbs_in_vpu>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 9696820..a55d1cf 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -229,3 +229,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 5e5e2de..3c09bd1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -266,3 +266,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index ac5ad3b..99ff37c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -506,3 +506,15 @@
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxbb-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+index e99101a..2a9b46f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+@@ -203,3 +203,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 3af54dc..98b8118 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -299,3 +299,11 @@
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxl-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index d320727..1ae2451 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -167,3 +167,7 @@
+ 		max-speed = <1000>;
+ 	};
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+index c1974bb..7bf2d6e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+@@ -112,3 +112,12 @@
+ 		};
+ 	};
+ };
++
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxm-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
++};
+-- 
+1.9.1
