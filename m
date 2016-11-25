@@ -1,221 +1,141 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v6 2/2] DW DMAC: add multi-block property to device tree
-Date: Fri, 25 Nov 2016 17:59:07 +0300
-Message-ID: <1480085947-31273-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
-References: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
+Date: Fri, 25 Nov 2016 16:01:13 +0100
+Message-ID: <b9d8ba33-2bb9-cb93-d833-89ddd8cfd7f9@kaod.org>
+References: <1478688149-4554-1-git-send-email-clg@kaod.org>
+ <bc14b6ba-800c-bf69-763e-65ead8d4efa7@gmail.com>
+ <CACPK8Xc7Dy=4oaZ_+j3hCEkMY+sqZ_-QkCQ9okmUoOjTpuZvvA@mail.gmail.com>
+ <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, linux-snps-arc@lists.infradead.org, christian.ruppert@alitech.com, arnd@arndb.de, vinod.koul@intel.com, vireshk@kernel.org, linux-kernel@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, robh+dt@kernel.org, dmaengine@vger.kernel.org, andriy.shevchenko@linux.intel.com, shiraz.linux.kernel@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Several versions of DW DMAC have multi block transfers hardware
-support. Hardware support of multi block transfers is disabled
-by default if we use DT to configure DMAC and software emulation
-of multi block transfers used instead.
-Add multi-block property, so it is possible to enable hardware
-multi block transfers (if present) via DT.
-
-Switch from per device is_nollp variable to multi_block array
-to be able enable/disable multi block transfers separately per
-channel.
-
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Also:
-   Update DT documentation.
-   Update existing platform data and DTS.
-
- Documentation/devicetree/bindings/dma/snps-dma.txt |  2 ++
- arch/arc/boot/dts/abilis_tb10x.dtsi                |  1 +
- arch/arm/boot/dts/spear13xx.dtsi                   |  2 ++
- drivers/dma/dw/core.c                              |  2 +-
- drivers/dma/dw/platform.c                          | 12 +++++++++++-
- drivers/dma/dw/regs.h                              |  3 ++-
- drivers/tty/serial/8250/8250_lpss.c                |  2 +-
- include/linux/platform_data/dma-dw.h               |  5 +++--
- 8 files changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
-index 0f55832..4775c66f 100644
---- a/Documentation/devicetree/bindings/dma/snps-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
-@@ -27,6 +27,8 @@ Optional properties:
-   that services interrupts for this device
- - is_private: The device channels should be marked as private and not for by the
-   general purpose DMA channel allocator. False if not passed.
-+- multi-block: Multi block transfers supported by hardware. Array property with
-+  one cell per channel. 0: not supported, 1 (default): supported.
- 
- Example:
- 
-diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
-index de53f5c..3121536 100644
---- a/arch/arc/boot/dts/abilis_tb10x.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
-@@ -129,6 +129,7 @@
- 			data-width = <4>;
- 			clocks = <&ahb_clk>;
- 			clock-names = "hclk";
-+			multi-block = <1 1 1 1 1 1>;
- 		};
- 
- 		i2c0: i2c@FF120000 {
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index 449acf0..17ea0ab 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -118,6 +118,7 @@
- 			block_size = <0xfff>;
- 			dma-masters = <2>;
- 			data-width = <8 8>;
-+			multi-block = <1 1 1 1 1 1 1 1>;
- 		};
- 
- 		dma@eb000000 {
-@@ -134,6 +135,7 @@
- 			chan_priority = <1>;
- 			block_size = <0xfff>;
- 			data-width = <8 8>;
-+			multi-block = <1 1 1 1 1 1 1 1>;
- 		};
- 
- 		fsmc: flash@b0000000 {
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index c2c0a61..e5adf5d 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1569,7 +1569,7 @@ int dw_dma_probe(struct dw_dma_chip *chip)
- 				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
- 		} else {
- 			dwc->block_size = pdata->block_size;
--			dwc->nollp = pdata->is_nollp;
-+			dwc->nollp = !pdata->multi_block[i];
- 		}
- 	}
- 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index aa7a5c1..b1655e4 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -102,7 +102,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct dw_dma_platform_data *pdata;
--	u32 tmp, arr[DW_DMA_MAX_NR_MASTERS];
-+	u32 tmp, arr[DW_DMA_MAX_NR_MASTERS], mb[DW_DMA_MAX_NR_CHANNELS];
- 	u32 nr_masters;
- 	u32 nr_channels;
- 
-@@ -118,6 +118,8 @@ dw_dma_parse_dt(struct platform_device *pdev)
- 
- 	if (of_property_read_u32(np, "dma-channels", &nr_channels))
- 		return NULL;
-+	if (nr_channels > DW_DMA_MAX_NR_CHANNELS)
-+		return NULL;
- 
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
-@@ -152,6 +154,14 @@ dw_dma_parse_dt(struct platform_device *pdev)
- 			pdata->data_width[tmp] = BIT(arr[tmp] & 0x07);
- 	}
- 
-+	if (!of_property_read_u32_array(np, "multi-block", mb, nr_channels)) {
-+		for (tmp = 0; tmp < nr_channels; tmp++)
-+			pdata->multi_block[tmp] = mb[tmp];
-+	} else {
-+		for (tmp = 0; tmp < nr_channels; tmp++)
-+			pdata->multi_block[tmp] = 1;
-+	}
-+
- 	return pdata;
- }
- #else
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index f65dd10..4e0128c 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -12,7 +12,8 @@
- #include <linux/interrupt.h>
- #include <linux/dmaengine.h>
- 
--#define DW_DMA_MAX_NR_CHANNELS	8
-+#include "internal.h"
-+
- #define DW_DMA_MAX_NR_REQUESTS	16
- 
- /* flow controller */
-diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-index f607946..58cbb30 100644
---- a/drivers/tty/serial/8250/8250_lpss.c
-+++ b/drivers/tty/serial/8250/8250_lpss.c
-@@ -157,12 +157,12 @@ static int byt_serial_setup(struct lpss8250 *lpss, struct uart_port *port)
- static const struct dw_dma_platform_data qrk_serial_dma_pdata = {
- 	.nr_channels = 2,
- 	.is_private = true,
--	.is_nollp = true,
- 	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
- 	.chan_priority = CHAN_PRIORITY_ASCENDING,
- 	.block_size = 4095,
- 	.nr_masters = 1,
- 	.data_width = {4},
-+	.multi_block = {0},
- };
- 
- static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index 5f0e11e..e69e415 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -14,6 +14,7 @@
- #include <linux/device.h>
- 
- #define DW_DMA_MAX_NR_MASTERS	4
-+#define DW_DMA_MAX_NR_CHANNELS	8
- 
- /**
-  * struct dw_dma_slave - Controller-specific information about a slave
-@@ -40,19 +41,18 @@ struct dw_dma_slave {
-  * @is_private: The device channels should be marked as private and not for
-  *	by the general purpose DMA channel allocator.
-  * @is_memcpy: The device channels do support memory-to-memory transfers.
-- * @is_nollp: The device channels does not support multi block transfers.
-  * @chan_allocation_order: Allocate channels starting from 0 or 7
-  * @chan_priority: Set channel priority increasing from 0 to 7 or 7 to 0.
-  * @block_size: Maximum block size supported by the controller
-  * @nr_masters: Number of AHB masters supported by the controller
-  * @data_width: Maximum data width supported by hardware per AHB master
-  *		(in bytes, power of 2)
-+ * @multi_block: Multi block transfers supported by hardware per channel.
-  */
- struct dw_dma_platform_data {
- 	unsigned int	nr_channels;
- 	bool		is_private;
- 	bool		is_memcpy;
--	bool		is_nollp;
- #define CHAN_ALLOCATION_ASCENDING	0	/* zero to seven */
- #define CHAN_ALLOCATION_DESCENDING	1	/* seven to zero */
- 	unsigned char	chan_allocation_order;
-@@ -62,6 +62,7 @@ struct dw_dma_platform_data {
- 	unsigned int	block_size;
- 	unsigned char	nr_masters;
- 	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
-+	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
- };
- 
- #endif /* _PLATFORM_DATA_DMA_DW_H */
--- 
-2.5.5
+SGVsbG8gTWFyZWssCgpTb3JyeSBmb3IgdGhlIGxhdGUgYW5zd2VyLiBIZXJlIGFyZSBhIGNvdXBs
+ZSBvZiBhbnN3ZXJzIHRvIHRoZSBuYW1pbmcgCnByb2JsZW0gCgpPbiAxMS8yNS8yMDE2IDAyOjU3
+IFBNLCBNYXJlayBWYXN1dCB3cm90ZToKPiBPbiAxMS8yMS8yMDE2IDA1OjQ1IEFNLCBKb2VsIFN0
+YW5sZXkgd3JvdGU6Cj4+IEhlbGxvIE1hcmVrLAo+IAo+IEhpIQo+IAo+PiBUaGFuayB5b3UgZm9y
+IHRoZSByZXZpZXcuIEkgaGF2ZSBhbnN3ZXJlZCBhIGZldyBvZiB5b3VyIHF1ZXN0aW9uczsKPj4g
+SSdsbCBsZWF2ZSB0aGUgcmVzdCB0byBDZWRyaWMuCj4+Cj4+IE9uIE1vbiwgTm92IDIxLCAyMDE2
+IGF0IDg6MTMgQU0sIE1hcmVrIFZhc3V0IDxtYXJlay52YXN1dEBnbWFpbC5jb20+IHdyb3RlOgo+
+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcgYi9kcml2ZXJzL210
+ZC9zcGktbm9yL0tjb25maWcKPj4+PiBpbmRleCA0YTY4MmVlMGY2MzIuLjk2MTQ4NjAwZmRhYiAx
+MDA2NDQKPj4+PiAtLS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcKPj4+PiArKysgYi9k
+cml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcKPj4+PiBAQCAtNzYsNCArNzYsMTYgQEAgY29uZmln
+IFNQSV9OWFBfU1BJRkkKPj4+PiAgICAgICAgIEZsYXNoLiBFbmFibGUgdGhpcyBvcHRpb24gaWYg
+eW91IGhhdmUgYSBkZXZpY2Ugd2l0aCBhIFNQSUZJCj4+Pj4gICAgICAgICBjb250cm9sbGVyIGFu
+ZCB3YW50IHRvIGFjY2VzcyB0aGUgRmxhc2ggYXMgYSBtdGQgZGV2aWNlLgo+Pj4+Cj4+Pj4gK2Nv
+bmZpZyBBU1BFRURfRkxBU0hfU1BJCj4+Pgo+Pj4gU2hvdWxkIGJlIFNQSV9BU1BFRUQgLCBzZWUg
+dGhlIG90aGVyIGNvbnRyb2xsZXJzIGFuZCBrZWVwIHRoZSBsaXN0IHNvcnRlZC4KPj4KPj4gUGVy
+aGFwcyBTUElfTk9SX0FTUEVFRCBzbyBpdCdzIGNsZWFyIGl0J3Mgbm90IGEgZHJpdmVyIGZvciBh
+IGdlbmVyaWMgU1BJIGJ1cz8KPiAKPiBCdXQgaXQncyBub3QgYSBkcml2ZXIgZm9yIFNQSS1OT1Ig
+b25seSBlaXRoZXIsIGl0IHNlZW1zIGl0J3MgYSBkcml2ZXIKPiBmb3IgbXVsdGlwbGUgZGlzdGlu
+Y3QgZGV2aWNlcy4KCnllcyBhbmQgSSB0aGluayBpdCB3YXMgYSBtaXN0YWtlIHRvIHNlbmQgdGhl
+IHdob2xlIGF0IG9uY2UuIFdlIGhhdmUgCmFkZGVkIHRoZSBzdXBwb3J0IGluIHFlbXUgY29udHJv
+bGxlciBieSBjb250cm9sbGVyIGFuZCBpdCB3YXMgZWFzaWVyIAp0byB1bmRlcnN0YW5kLiBJIG5l
+ZWQgdG8gc3BsaXQgdGhlIHBhdGNoc2V0IGluIHRoZSBuZXh0IHZlcnNpb24uIAoKPj4+PiArICAg
+ICB0cmlzdGF0ZSAiQXNwZWVkIGZsYXNoIGNvbnRyb2xsZXJzIGluIFNQSSBtb2RlIgo+Pj4+ICsg
+ICAgIGRlcGVuZHMgb24gSEFTX0lPTUVNICYmIE9GCj4+Pj4gKyAgICAgZGVwZW5kcyBvbiBBUkNI
+X0FTUEVFRCB8fCBDT01QSUxFX1RFU1QKPj4+PiArICAgICAjIElPX1NQQUNFX0xJTUlUIG11c3Qg
+YmUgZXF1aXZhbGVudCB0byAofjBVTCkKPj4+PiArICAgICBkZXBlbmRzIG9uICFORUVEX01BQ0hf
+SU9fSAo+Pj4KPj4+IFdoeT8KPj4+Cj4+Pj4gKyAgICAgaGVscAo+Pj4+ICsgICAgICAgVGhpcyBl
+bmFibGVzIHN1cHBvcnQgZm9yIHRoZSBOZXcgU3RhdGljIE1lbW9yeSBDb250cm9sbGVyCj4+Pj4g
+KyAgICAgICAoRk1DKSBpbiB0aGUgQXNwZWVkIFNvQ3MgKEFTVDI0MDAgYW5kIEFTVDI1MDApIHdo
+ZW4gYXR0YWNoZWQKPj4+PiArICAgICAgIHRvIFNQSSBub3IgY2hpcHMsIGFuZCBzdXBwb3J0IGZv
+ciB0aGUgU1BJIE1lbW9yeSBjb250cm9sbGVyCj4+Pj4gKyAgICAgICAoU1BJKSBmb3IgdGhlIEJJ
+T1MuCj4+Pgo+Pj4gSSB0aGluayB0aGVyZSBpcyBhIG5hbWluZyBjaGFvcyBiZXR3ZWVuIEZNQywg
+U01DIChhcyBpbiBTdGF0aWMgTUMpIGFuZAo+Pj4gU01DIChhcyBpbiBTUEkgTUMpLgo+Pgo+PiBZ
+ZXMsIHlvdSdyZSBzcG90IG9uLiBUaGlzIG5hbWluZyBjaGFvcyBjb21lcyBmb3JtIHRoZSB2ZW5k
+b3IncyBkb2N1bWVudGF0aW9uLgo+Pgo+PiBJIHRoaW5rIHdlIGNvdWxkIHJlLXdvcmsgdGhpcyBz
+ZW50ZW5jZSB0byBtYWtlIGl0IGNsZWFyZXIuCj4gCj4gUGxlYXNlIGRvIGJlZm9yZSBzb21lb25l
+J3MgaGVhZCBleHBsb2RlcyBmcm9tIHRoaXMgOikKCkluZGVlZCAuLiA6KSBJIHdpbGwgZ2l2ZSBh
+IHRyeS4gSGVyZSBpcyB0aGUgc3RhdHVzIDoKCkFzcGVlZCBTb0MgQVNUMjQwMCBoYXMgYSBzZXQg
+b2YgU01DIChTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIpIApjb250cm9sbGVycyBpbiB3aGljaCB5
+b3UgZmluZCA6CgotIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxlZCBTTUMg
+aW4gdGhlIHNwZWMpICAKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MDAwMDAwCiAgLiBCTUMgZmly
+bXdhcmUKICAuIG9sZCByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFORCBm
+bGFzaCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gQWxsIGJvb3RhYmxlLgogIC4gMSBjaGlwIHNlbGVj
+dCBwaW4gKENFMCkKCi0gTmV3IFN0YXRpYyBNZW1vcnkgQ29udHJvbGxlciAoY2FsbGVkIEZNQyBp
+biB0aGUgc3BlYykKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MjAwMDAwCiAgLiBCTUMgZmlybXdh
+cmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFORCBmbGFz
+aCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gCiAgLiA1IGNoaXAgc2VsZWN0IHBpbnMgKENFMCDiiLwg
+Q0U0KQoKLSBTUEkgRmxhc2ggQ29udHJvbGxlciAoY2FsbGVkIFNQSSBpbiB0aGUgc3BlYykgIAog
+IC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYzMDAwMDAKICAuIGhvc3QgRmlybXdhcmUKICAuIGV4b3Rp
+YyByZWdpc3RlciBzZXQsIGJldHdlZW4gb2xkIGFuZCBuZXcgLi4uCiAgLiBzdXBwb3J0cyBTUEkg
+Zmxhc2ggbWVtb3J5CiAgLiAxIGNoaXAgc2VsZWN0IHBpbiAoQ0UwKQoKCkFzcGVlZCBTb0MgQVNU
+MjUwMCBkZWZpbmVzIGhhcyBhIHNpbWlsYXIgc2V0IG9mIFNNQyAoU3RhdGljIE1lbW9yeSAKQ29u
+dHJvbGxlcikgY29udHJvbGxlcnMsIG1vcmUgaW4gdGhlIHZlaW4gb2YgdGhlIEFTVDI0MDAgRk1D
+ICA6CgotIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgaXMgZ29uZSwgTk9SIGFuZCBO
+QU5EIHN1cHBvcnQgYWxzbwoKLSBGaXJtd2FyZSBTUEkgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxl
+ZCBGTUMgaW4gdGhlIHNwZWMpICAKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MjAwMDAwCiAgLiBC
+TUMgZmlybXdhcmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIFNQSSBmbGFzaCBt
+ZW1vcnkuCiAgLiAzIGNoaXAgc2VsZWN0IHBpbnMgKENFMCB+IENFMikKCi0gU1BJIEZsYXNoIENv
+bnRyb2xsZXIgKGNhbGxlZCBTUEkxIGluIHRoZSBzcGVjKSBmaXJzdAogIC4gYmFzZSBhZGRyZXNz
+IGF0IDB4MTYzMDAwMDAKICAuIGhvc3QgZmlybXdhcmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAu
+IHN1cHBvcnRzIFNQSSBmbGFzaCBtZW1vcnkuCiAgLiAyIGNoaXAgc2VsZWN0IHBpbnMgKENFMCB+
+IENFMSkKCi0gU1BJIEZsYXNoIENvbnRyb2xsZXIgKGNhbGxlZCBTUEkyIGluIHRoZSBzcGVjKSBz
+ZWNvbmQKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MzEwMDAwCiAgLiBob3N0IGZpcm13YXJlCiAg
+LiBuZXcgcmVnaXN0ZXIgc2V0CiAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVtb3J5LgogIC4gMiBj
+aGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCgoKU28sIHRoZXNlIGFyZSB0aGUgcmVhc29ucyBi
+ZWhpbmQgdGhlIG5hbWluZyBtZXNzLiBBZGRlZCB0byB0aGF0IHRoZSAKZHJpdmVyIGNvbnNpZGVy
+cyB0aGUgYWNyb255bSBTTUMgdG8gc3RhbmQgZm9yIFNQSSBNZW1vcnkgQ29udHJvbGxlciwgCndo
+aWNoIGlzIHdyb25nLiBJIHRyaWVkIHRvIHJlZHVjZSB0aGUgY29uZnVzaW9uIHdpdGggc29tZSBj
+b21tZW50cyBidXQgCnRoYXQgd2FzIGEgZmFpbHVyZSA6KQoKSW4gcWVtdSwgd2UgaGF2ZSB1c2Vk
+IEZNQyAoRmlybXdhcmUgLi4uKSBhbmQgU1BJIHRvIG5hbWUgdGhlIGNvbnRyb2xsZXJzIAphbmQg
+d2UganVzdCBkcm9wcGVkIHRoZSBsZWdhY3kgU01DLiBJIHRoaW5rIHVzaW5nIHRoZSBzYW1lIG5h
+bWluZyBzY2hlbWUKaXMgYSBnb29kIGlkZWEuIFdlIGRvbid0IHN1cHBvcnQgYW55dGhpbmcgZWxz
+ZSB0aGFuIFNQSSBlaXRoZXIgc28gd2UgY2FuIApkcm9wIHRoZSBvdGhlciB0eXBlcyBmb3IgdGhl
+IG1vbWVudC4KCj4+Pj4gK3N0YXRpYyBpbnQgYXNwZWVkX3NtY19yZWFkX2Zyb21fYWhiKHZvaWQg
+KmJ1ZiwgY29uc3Qgdm9pZCBfX2lvbWVtICpzcmMsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHNpemVfdCBsZW4pCj4+Pj4gK3sKPj4+Cj4+PiBXaGF0IGlmIHN0YXJ0IG9m
+IGJ1ZiBpcyB1bmFsaWduZWQgPwo+Pj4KPj4+PiArICAgICBpZiAoKCgodW5zaWduZWQgbG9uZylz
+cmMgfCAodW5zaWduZWQgbG9uZylidWYgfCBsZW4pICYgMykgPT0gMCkgewo+Pj4KPj4+IFVoLCBz
+aG91bGQgdXNlIGJvb2xlYW4gT1IsIG5vdCBiaXR3aXNlIG9yLiBBbHNvLCBpZiB5b3UncmUgdGVz
+dGluZwo+Pj4gcG9pbnRlciBmb3IgTlVMTCwgZG8gaWYgKCFwdHIpIC4KPj4+Cj4+PiBpZiAoIXNy
+YyB8fCAhYnVmIHx8ICFsZW4pCj4+PiAgICByZXR1cm47Cj4+Cj4+IFRoYXQncyBhIGRpZmZlcmVu
+dCB0ZXN0LiBXZSdyZSB0ZXN0aW5nIGhlcmUgdGhhdCB0aGUgYnVmZmVycyBhcmUKPj4gYWxpZ25l
+ZCB0byBzZWUgaWYgd2UgY2FuIGRvIGEgd29yZC1hdC1hLXRpbWUgY29weS4KPj4KPj4gSWYgbm90
+LCBpdCBmYWxscyB0aHJvdWdoIHRvIGRvIGEgYnl0ZS1hdC1hLXRpbWUgY29weS4gSSB0aGluayB0
+aGlzCj4+IGNvdmVycyB5b3VyIGZpcnN0IHF1ZXN0aW9uIGFib3V0IGJ1ZiBiZWluZyB1bmFsaWdu
+ZWQuCj4gCj4gQWgsIEkgc2VlLCB0aGFua3MgZm9yIGNsYXJpZnlpbmcuIENvbW1lbnQgaW4gdGhl
+IGNvZGUgd291bGQgYmUgaGVscGZ1bAo+IGZvciB3aHkgd2hhdCB5b3UncmUgZG9pbmcgaXMgT0su
+IEFuZCBJIHRoaW5rIHlvdSB3YW50IHRvIGNhc3QgdG8KPiB1aW50cHRyX3QgaW5zdGVhZCB0byBt
+YWtlIHRoaXMgd29yayBvbiA2NGJpdC4KCnllcwoKPj4gQ2VkcmljLCBwZXJoYXBzIHlvdSBjb3Vs
+ZCBjcmVhdGUgYSBtYWNybyBjYWxsZWQgSVNfQUxMSUdORUQgdG8gbWFrZSBpdAo+PiBjbGVhciB3
+aGF0IHRoaXMgaXMgZG9pbmc/Cj4gCj4gWXVwLCB0aGFua3MhCgpzdXJlLiBJIHN0aWxsIG5lZWQg
+dG8gZ28gdGhyb3VnaCBNYXJlaydzIGNvbW1lbnRzIGluIHRoZSBpbml0aWFsIGVtYWlsLCAKSSB3
+aWxsIHNwbGl0IHRoZSBwYWNoc2V0IGFuZCBmaXggdGhlIG5hbWluZyBpbiBuZXh0IHZlcnNpb24u
+CgpUaGFua3MsCgpDLiAKIAo+Pj4KPj4+IHdoaWxlICguLi4pCj4+Pgo+Pj4+ICsgICAgICAgICAg
+ICAgd2hpbGUgKGxlbiA+IDMpIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgKih1MzIgKili
+dWYgPSByZWFkbChzcmMpOwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBidWYgKz0gNDsKPj4+
+PiArICAgICAgICAgICAgICAgICAgICAgc3JjICs9IDQ7Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
+ICAgIGxlbiAtPSA0Owo+Pj4+ICsgICAgICAgICAgICAgfQo+Pj4+ICsgICAgIH0KPj4+PiArCj4+
+Pj4gKyAgICAgd2hpbGUgKGxlbi0tKSB7Cj4+Pj4gKyAgICAgICAgICAgICAqKHU4ICopYnVmID0g
+cmVhZGIoc3JjKTsKPj4+PiArICAgICAgICAgICAgIGJ1ZiArPSAxOwo+Pj4+ICsgICAgICAgICAg
+ICAgc3JjICs9IDE7Cj4+Pj4gKyAgICAgfQo+Pj4+ICsgICAgIHJldHVybiAwOwo+Pj4+ICt9Cj4+
+Pj4gKy8qCj4+Pj4gKyAqIFNQSSBGbGFzaCBDb25maWd1cmF0aW9uIFJlZ2lzdGVyIChBU1QyNDAw
+IFNQSSkKPj4+PiArICovCj4+Pj4gKyNkZWZpbmUgQ09ORklHX1JFRyAgICAgICAgICAgICAgICAg
+ICAweDAKPj4+PiArI2RlZmluZSAgICBDT05GSUdfRU5BQkxFX0NFX0lOQUNUSVZFICAgICBCSVQo
+MSkKPj4+PiArI2RlZmluZSAgICBDT05GSUdfV1JJVEUgICAgICAgICAgICAgICAgICAgICAgICAg
+IEJJVCgwKQo+Pj4KPj4+ICNkZWZpbmVbc3BhY2VdRk9PW3RhYl1CSVQoYmFyKQo+Pgo+PiBUaGVz
+ZSBhcmUgYml0cyB3aXRoaW4gdGhlIENPTkZJR19SRUcuIEl0IGZvbGxvd3MgdGhlIHNhbWUgc3R5
+bGUgYXMKPj4gb3RoZXIgc3BpLW5vciBkcml2ZXJzLCBlZy4gbnhwLXNwaWZpLgo+Pgo+PiBJIHRo
+aW5rIGl0J3Mgc29tZXdoYXQgY2xlYXJlciwgYnV0IGlmIHlvdSBoYXZlIGEgc3Ryb25nIHByZWZl
+cmVuY2UKPj4gYWdhaW5zdCB0aGVuIGZhaXIgZW5vdWdoLgo+IAo+IEl0IHRyaWdnZXJzIG15IE9D
+RCwgYnV0IEkgdGhpbmsgaXQncyBhIG1hdHRlciBvZiB0YXN0ZSwgc28gSSBkb24ndCBjYXJlCj4g
+dGhhdCBtdWNoLgo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
