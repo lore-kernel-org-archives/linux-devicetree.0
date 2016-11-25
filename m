@@ -1,88 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Fri, 25 Nov 2016 17:22:29 +0200
-Message-ID: <2404891.arL9itCrmb@avalon>
-References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
- <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] pinctrl: sx150x: add support for sx1501, sx1504,
+ sx1505 and sx1507
+Date: Fri, 25 Nov 2016 16:24:42 +0100
+Message-ID: <2612aff9-d7cf-e026-35ab-1b76c7bd9135@baylibre.com>
+References: <1480020320-28354-1-git-send-email-peda@axentia.se>
+ <1480020320-28354-4-git-send-email-peda@axentia.se>
+ <CACRpkdZb5Tsbet994UNhQfPw3bojtisU0CC-RWw4DBuK79HzLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, nickey.yang@rock-chips.com, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZb5Tsbet994UNhQfPw3bojtisU0CC-RWw4DBuK79HzLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5keSwKCk9uIEZyaWRheSAyNSBOb3YgMjAxNiAxMDo1Njo1MyBBbmR5IFlhbiB3cm90ZToK
-PiBPbiAyMDE25bm0MTHmnIgyNeaXpSAwNzoyNiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+
-IE9uIEZyaWRheSAyNSBOb3YgMjAxNiAwMDoxNjowMCBWbGFkaW1pciBaYXBvbHNraXkgd3JvdGU6
-Cj4gPj4gT24gMTEvMjUvMjAxNiAxMjowNyBBTSwgRmFiaW8gRXN0ZXZhbSB3cm90ZToKPiA+Pj4g
-T24gVGh1LCBOb3YgMjQsIDIwMTYgYXQgNzoxNiBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-PiA+Pj4+IEhpIEFuZHksCj4gPj4+PiAKPiA+Pj4+IEFzIHRoZSBhdXRob3Igb2YgdGhlIERXLUhE
-TUkgRFQgYmluZGluZ3MgdGhpcyBxdWVzdGlvbiBpcyBhZGRyZXNzZWQgdG8KPiA+Pj4+IHlvdSwg
-YnV0IGluZm9ybWF0aW9uIGZyb20gYW55b25lIGlzIG1vcmUgdGhhbiB3ZWxjb21lLgo+ID4+Pj4g
-Cj4gPj4+PiBUaGUgRFQgYmluZGluZ3Mgc3BlY2lmeSB0d28gY2xvY2tzIG5hbWVkICJpYWhiIiBh
-bmQgImlzZnIiIGJ1dCBkb24ndAo+ID4+Pj4gZGVzY3JpYmUgdGhlbS4gV2hpbGUgSSBhc3N1bWUg
-dGhhdCB0aGUgImlzZnIiIGNsb2NrIGNvcnJlc3BvbmRzIHRvIHRoZQo+ID4+Pj4gImlzZnJjbGsi
-IGlucHV0IHNpZ25hbCBvZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlhaGIiIGNsb2NrCj4g
-Pj4+PiBkZXNjcmliZWQgaW4gdGhlIElQIGNvcmUgZGF0YXNoZWV0Lgo+ID4+PiAKPiA+Pj4gaS5N
-WDZRIGhhcyBhIERXLUhETUkgSVAgYmxvY2suCj4gPj4+IAo+ID4+PiBUaGUgbmFtZXMgaW4gdGhl
-IGRldmljZXRyZWUgYmluZGluZyBtYXRjaGVzIHRoZSBvbmVzIGxpc3RlZCBhdCB0aGUKPiA+Pj4g
-aS5NWDZRIFJlZmVyZW5jZSBNYW51YWwgLSBUYWJsZSAzMy0xLiBIRE1JIENsb2Nrcwo+ID4+IAo+
-ID4+IGNvcnJlY3QsIGZvciB5b3VyIGNvbnZlbmllbmNlIHRoZSB0YWJsZSBpcyBjb3BpZWQgYmVs
-b3c6Cj4gPj4gCj4gPj4gQ2xvY2sgbmFtZSB8ICAgICBDbG9jayBSb290ICAgICB8IERlc2NyaXB0
-aW9uCj4gPj4gLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gPj4gICBpYWhiY2xrICB8IGFoYl9jbGtfcm9vdCAg
-ICAgICB8IEJ1cyBjbG9jawo+ID4+ICAgaWNlY2NsayAgfCBja2lsX3N5bmNfY2xrX3Jvb3QgfCBD
-RUMgbG93LWZyZXF1ZW5jeSBjbG9jayAoMzJrSFopCj4gPj4gICBpaGNsayAgICB8IGFoYl9jbGtf
-cm9vdCAgICAgICB8IE1vZHVsZSBjbG9jawo+ID4+ICAgaXNmcmNsayAgfCB2aWRlb18yN21fY2xr
-X3Jvb3QgfCBJbnRlcm5hbCBTRlIgY2xvY2sgKHZpZGVvIGNsb2NrCj4gPj4gICAyN01IeikKPiA+
-PiAKPiA+PiBIZXJlIEFIQiBzdGFuZHMgZm9yIEFSTSBBZHZhbmNlZCBIaWdoLXBlcmZvcm1hbmNl
-IEJ1cy4KPiA+IAo+ID4gVGhhdCdzIHdoYXQgSSBzdXNwZWN0ZWQuIEkgYmVsaWV2ZSB0aGUgImlh
-aGIiIG5hbWUgaXMgd3JvbmcsIGFzIHRoZSBEVwo+ID4gSERNSSBUWCBJUCBjb3JlIGNsZWFybHkg
-ZG9jdW1lbnRzIHRoZSBidXMgY2xvY2sgYXMgYmVpbmcgY2FsbGVkCj4gPiAiaWFwYmNsayIuIFdl
-IGNvdWxkIHJlbmFtZSB0aGF0IGluIHRoZSBEVCBiaW5kaW5ncyAod2l0aCBjb21wYXRpYmlsaXR5
-Cj4gPiBjb2RlIGluIHRoZSBkcml2ZXIgdG8ga2VlcCBzdXBwb3J0aW5nIHRoZSBvbGQgbmFtZSkg
-YnV0IGl0IG1pZ2h0IG5vdCBiZQo+ID4gd29ydGggaXQuIFRoZSBiaW5kaW5ncyBzaG91bGQgaG93
-ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFoYiIgY2xvY2sgaXMKPiA+IHRoZSBJUCBjb3JlJ3Mg
-ImlhcGJjbGsiIGJ1cyBjbG9jay4KPgo+IEkgZ290IHRoZSBjbG9jayBuYW1lIGZyb20gSS5NWDZR
-IFRSTSwgSSBhbHNvIGNoZWNrZWQgdGhlIG5hbWUgYWdhaW4KPiB3aXRoIFJvY2tjaGlwIElDIGRl
-c2lnbiB0ZWFtIG5vdywgaG9wZSB0byBnZXQgc29tZSBuZXcgaW5mb3JtYXRpb24gc29vbi4KClRo
-YW5rIHlvdS4gV2hpbGUgYXQgaXQsIGNvdWxkIHlvdSBhc2sgdGhlbSB3aGljaCB2ZXJzaW9uIG9m
-IHRoZSBEVyBIRE1JIElQIAp1c2VkIGluIHRoZSBTb0MgPwoKPiA+IEFub3RoZXIgcXVlc3Rpb24g
-SSBoYXZlIGFib3V0IHRoZSBidXMgY2xvY2sgKENDJ2luZyB0aGUgZGV2aWNldHJlZSBtYWlsaW5n
-Cj4gPiBsaXN0IGFzIHdlbGwgYXMgdGhlIGNsb2NrIG1haW50YWluZXJzKSBpcyB3aGV0aGVyIGl0
-IHNob3VsZCBiZSBtYWRlCj4gPiBvcHRpb25hbC4gVGhlIGNsb2NrIGlzIG9idmlvdXNseSBtYW5k
-YXRvcnkgZnJvbSBhIGhhcmR3YXJlIHBvaW50IG9mIHZpZXcKPiA+IChnaXZlbiB0aGF0IEFQQiBp
-cyBhIHN5bmNocm9ub3VzIGJ1cyBhbmQgdGh1cyByZXF1aXJlcyBhIGNsb2NrKSwgYnV0IGluCj4g
-PiBzb21lIFNvQ3MgKHNwZWNpZmljYWxseSBmb3IgdGhlIFJlbmVzYXMgU29DcykgdGhhdCBjbG9j
-ayBpcyBhbHdheXMgb24gYW5kCj4gPiBjYW4ndCBiZSBjb250cm9sbGVkLiBXZSBhbHJlYWR5IG9t
-aXQgYnVzIGNsb2NrcyBpbiBEVCBmb3IgbW9zdCBJUCBjb3Jlcwo+ID4gd2hlbiB0aGUgY2xvY2sg
-Y2FuIG5ldmVyIGJlIGNvbnRyb2xsZWQgKGFuZCB3ZSBhbHNvIG9taXQgYSBidW5jaCBvZiBvdGhl
-cgo+ID4gY2xvY2tzIHRoYXQgd2UgZG9uJ3QgZXZlbiBrbm93IGV4aXN0KSwgc28gaXQgY291bGQg
-bWFrZSBzZW5zZSB0byBtYWtlIHRoZQo+ID4gY2xvY2sgb3B0aW9uYWwuIE90aGVyd2lzZSB0aGVy
-ZSB3b3VsZCBiZSBydW50aW1lIG92ZXJoZWFkIHRyeWluZyB0byBoYW5kbGUKPiA+IGEgY2xvY2sg
-dGhhdCBjYW4ndCBiZSBjb250cm9sbGVkLgo+IAo+IElmIHRoaXMgaXMgdGhlIGNhc2Ugb24gUmVu
-ZXNhcyBTT0NzLCB3ZSBjYW4gY29uc2lkZXIgbWFrZSB0aGUgY2xvY2sgYXMKPiBvcHRpb25hbC4g
-T3IgbW92ZSBhbGwgdGhlIGNsb2NrIG9wZXJhdGlvbnMgdG8gcGxhdGZvcm0gc3BlY2lmaWMKPiBj
-b2RlKGR3X2hkbWktcm9ja2NoaXAuYy9kd19oZG1pLWlteC5jKT8KCkknZCBwcmVmZXIga2VlcGlu
-ZyB0aGUgY29kZSBnZW5lcmljLCBvdGhlcndpc2Ugd2UnZCBlbmQgdXAgd2l0aCBwbGF0Zm9ybS0K
-c3BlY2lmaWMgY29kZSB0aGF0IHdvdWxkIHBlcmZvcm0gdGhlIHNhbWUgb3BlcmF0aW9ucyBvbiBt
-b3N0IHBsYXRmb3Jtcy4gSSdsbCAKc3VibWl0IGEgcGF0Y2ggc29vbiB0byBtYWtlIHRoZSBjbG9j
-ayBvcHRpb25hbCwgd2UgY2FuIGRpc2N1c3MgaXQgdGhlbi4KCj4gPj4gQnkgdGhlIHdheSB3aGls
-ZSB3ZSdyZSBkaXNjdXNzaW5nIERXIEhETUkgYmluZGluZ3Mgc3BlY2lmaWMgdG8gaU1YLAo+ID4+
-IEkgd291bGQgcmVjb21tZW5kIHRvIHJlbW92ZSB1dHRlcmx5IGhhY2tpc2ggYW5kIGlNWCBvbmx5
-ICJncHIiCj4gPj4gcHJvcGVydHkgZnJvbSB0aGUgZXhhbXBsZSBpbiBiaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS9kd19oZG1pLnR4dAoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 11/25/2016 02:45 PM, Linus Walleij wrote:
+> On Thu, Nov 24, 2016 at 9:45 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+> 
+>> Untested, register offsets carefully copied from datasheets.
+>>
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> 
+> Why not. Nice to support all of them.
+> 
+> Patch applied, fixing the typ you mentioned in the follow
+> up in the process.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Thanks peter,
+
+Semtech should definitely provide some samples to test these variants !
+I had a very hard time to find a (cheap) breakout board for one of these chips...
+
+But it's better than nothing to have them supported by the kernel even if some bug may appear.
+
+Neil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
