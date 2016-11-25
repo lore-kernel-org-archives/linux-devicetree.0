@@ -1,100 +1,210 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 1/2] pinctrl: tegra: Add DT binding for io pads control
-Date: Fri, 25 Nov 2016 17:10:26 +0530
-Message-ID: <5838232A.7040702@nvidia.com>
-References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com> <1479976734-30498-2-git-send-email-ldewangan@nvidia.com> <20161125091354.GA11512@ulmo.ba.sec>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 3/3] ARM64 LPC: LPC driver implementation on Hip06
+Date: Fri, 25 Nov 2016 13:03:33 +0100
+Message-ID: <107039805.6PaPa1fbx1@wuerfel>
+References: <1478576829-112707-1-git-send-email-yuanzhichang@hisilicon.com> <4675465.4Qhqy6WU4X@wuerfel> <EE11001F9E5DDD47B7634E2F8A612F2E1F939E0A@lhreml507-mbx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161125091354.GA11512-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E1F939E0A@lhreml507-mbx>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, Linuxarm <linuxarm@huawei.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, T homas Petazzoni <thomas.petazzo.ni@free-electrons.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "minyard@acm.org" <minyard@acm.org>, "will.deacon@arm.com" <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, November 25, 2016 8:46:11 AM CET Gabriele Paoloni wrote:
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > 
+> > On Wednesday, November 23, 2016 6:07:11 PM CET Arnd Bergmann wrote:
+> > > On Wednesday, November 23, 2016 3:22:33 PM CET Gabriele Paoloni
+> > wrote:
+> > > > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > > > > On Friday, November 18, 2016 5:03:11 PM CET Gabriele Paoloni
+> >  /*
+> > @@ -549,9 +548,14 @@ static int of_translate_one(struct device_node
+> > *parent, struct of_bus *bus,
+> >   * that translation is impossible (that is we are not dealing with a
+> > value
+> >   * that can be mapped to a cpu physical address). This is not really
+> > specified
+> >   * that way, but this is traditionally the way IBM at least do things
+> > + *
+> > + * Whenever the translation fails, the *host pointer will be set to
+> > the
+> > + * device that lacks a tranlation, and the return code is relative to
+> > + * that node.
+> 
+> This seems to be wrong to me. We are abusing of the error conditions.
+> So effectively if there is a buggy DT for an IO resource we end up
+> assuming that we are using a special IO device with unmapped addresses.
+> 
+> The patch at the bottom apply on top of this one and I think is a more
+> reasonable approach
 
-On Friday 25 November 2016 02:43 PM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
->
-> On Thu, Nov 24, 2016 at 02:08:53PM +0530, Laxman Dewangan wrote:
->> +
->> +The DT property of the IO pads must be under the node of pmc i.e.
->> +pmc@7000e400 for Tegra124 onwards.
-> The PMC is at a different address on Tegra186, so I think we should just
-> drop this to avoid having to update it whenever a new chip relocates it
-> to a different address.
+It was meant as a logical extension to the existing interface,
+translating the address as far as we can, and reporting back
+how far we got.
 
-I wanted to provide the example. So let me say that "i.e. pmc@7000e400 
-for Tegra124". In this way we will not need to update for every chips 
-and also give idea bout the node.
+Maybe we can return 'of_root' by instead of NULL to signify
+that we have converted all the way to the root of the DT?
+That would make it more consistent, but slightly more complicated
+for the common case.
 
->
-> Come to think of it, if these I/O pads are represented as subnodes in
-> the PMC device tree node, perhaps this should be merged into the PMC
-> documentation?
+> >   */
+> >  static u64 __of_translate_address(struct device_node *dev,
+> > -				  const __be32 *in_addr, const char *rprop)
+> > +				  const __be32 *in_addr, const char *rprop,
+> > +				  struct device_node **host)
+> >  {
+> >  	struct device_node *parent = NULL;
+> >  	struct of_bus *bus, *pbus;
+> > @@ -564,6 +568,7 @@ static u64 __of_translate_address(struct
+> > device_node *dev,
+> >  	/* Increase refcount at current level */
+> >  	of_node_get(dev);
+> > 
+> > +	*host = NULL;
+> >  	/* Get parent & match bus type */
+> >  	parent = of_get_parent(dev);
+> >  	if (parent == NULL)
+> > @@ -600,8 +605,9 @@ static u64 __of_translate_address(struct
+> > device_node *dev,
+> >  		pbus = of_match_bus(parent);
+> >  		pbus->count_cells(dev, &pna, &pns);
+> >  		if (!OF_CHECK_COUNTS(pna, pns)) {
+> > -			pr_err("Bad cell count for %s\n",
+> > -			       of_node_full_name(dev));
+> > +			pr_debug("Bad cell count for %s\n",
+> > +				 of_node_full_name(dev));
+> > +			*host = of_node_get(parent);
+> >  			break;
+> >  		}
+> > 
+> > @@ -609,7 +615,9 @@ static u64 __of_translate_address(struct
+> > device_node *dev,
+> >  		    pbus->name, pna, pns, of_node_full_name(parent));
+> > 
+> >  		/* Apply bus translation */
+> > -		if (of_translate_one(dev, bus, pbus, addr, na, ns, pna,
+> > rprop))
+> > +		result = of_translate_one(dev, bus, pbus, addr, na, ns,
+> > +					  pna, rprop);
+> > +		if (result == OF_BAD_ADDR)
+> 
+> It seems to me that here you missed "*host = of_node_get(parent);"..?
+> 
 
-Based on my MFD and sub devices experience, maintainers prefer to have  
-different DT binding document for subsystem child devices.
-So if we say the io-pad is sub device of pmc then it will be in 
-respective subsystem dt binding.
->
->> +
->> +See the TRM to determine which properties and values apply to each IO pads.
-> Perhaps give a reference to where in the TRM this can be found?
-Do we have fixed link for the TRM? and do we really need to provide the 
-link here? If link get changed then we will need to change all places.
+Yes, Zhichang also pointed out the same thing, this is not
+right yet. My thought was that we need to check the #address-cells
+and #size-cells of the parent node and return if they are not set,
+but the bus should really have those.
+
+What we need to do instead is check the "ranges" of the parent
+and fail if there is no translation. Simply setting the host
+here however won't work either because that leads to returning
+OF_BAD_ADDR.
 
 
->
->> +low-power-enable:		enable low power mode.
->> +low-power-disable:		disable low power mode.
-> Why the extra padding with tabs? I find that difficult to read. Also, no
-> need for a fullstop since it's not a proper sentence.
+> >  		/* Complete the move up one level */
+> > @@ -628,13 +636,32 @@ static u64 __of_translate_address(struct
+> > device_node *dev,
+> > 
+> >  u64 of_translate_address(struct device_node *dev, const __be32
+> > *in_addr)
+> >  {
+> > -	return __of_translate_address(dev, in_addr, "ranges");
+> > +	struct device_node *host;
+...
+> > +
+> >  phys_addr_t pci_pio_to_address(unsigned long pio)
+> >  {
+> >  	phys_addr_t address = (phys_addr_t)OF_BAD_ADDR;
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 6bd94a803e8f..b7a8fa3da3ca 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1192,7 +1192,8 @@ int __must_check pci_bus_alloc_resource(struct
+> > pci_bus *bus,
+> >  			void *alignf_data);
 
-Just to make proper alignment. Regular typing is not preferred in general.
+[Many lines of reply trimmed here, please make sure you don't quote too
+much context when you reply, it's really annoying to read through
+it otherwise]
 
->> +IO voltage pin names are as follows:
->> +	audio -> vddio-audio
->> +	audio-hv -> vddio-audio-hv
->> +	cam ->vddio-cam
->> +	dbg -> vddio-dbg
->> +	dmic -> vddio-dmic
->> +	gpio -> vddio-gpio
->> +	pex-ctrl -> vddio-pex-ctrl
->> +	sdmmc1 -> vddio-sdmmc1
->> +	sdmmc3 -> vddio-sdmmc3
->> +	spi -> vddio-spi
->> +	spi-hv -> vddio-spi-hv
->> +	uart -> vddio-uart
-> It's slightly confusing to only have this list for Tegra210. I assume
-> that is because on Tegra124 there is no way to control the voltage of
-> the pins, but I think that could be made clearer.
+>  /*
+> + * of_isa_indirect_io - get the IO address from some isa reg property value.
+> + *	For some isa/lpc devices, no ranges property in ancestor node.
+> + *	The device addresses are described directly in their regs property.
+> + *	This fixup function will be called to get the IO address of isa/lpc
+> + *	devices when the normal of_translation failed.
+> + *
+> + * @parent:	points to the parent dts node;
+> + * @bus:		points to the of_bus which can be used to parse address;
+> + * @addr:	the address from reg property;
+> + * @na:		the address cell counter of @addr;
+> + * @presult:	store the address paresed from @addr;
+> + *
+> + * return 1 when successfully get the I/O address;
+> + * 0 will return for some failures.
+> + */
+> +static int of_get_isa_indirect_io(struct device_node *parent,
+> +				struct of_bus *bus, __be32 *addr,
+> +				int na, u64 *presult)
+> +{
+> +	unsigned int flags;
+> +	unsigned int rlen;
+> +
+> +	/* whether support indirectIO */
+> +	if (!indirect_io_enabled())
+> +		return 0;
+> +
+> +	if (!of_bus_isa_match(parent))
+> +		return 0;
+> +
+> +	flags = bus->get_flags(addr);
+> +	if (!(flags & IORESOURCE_IO))
+> +		return 0;
+> +
+> +	/* there is ranges property, apply the normal translation directly. */
+> +	if (of_get_property(parent, "ranges", &rlen))
+> +		return 0;
+> +
+> +	*presult = of_read_number(addr + 1, na - 1);
+> +	/* this fixup is only valid for specific I/O range. */
+> +	return addr_is_indirect_io(*presult);
+> +}
 
-I think I made it in first few paragraph of this document but will add 
-here also.
+Right, this would work. The reason I didn't go down this route is
+that I wanted to keep it generic enough to allow doing the same
+for PCI host bridges with a nonlinear mapping of the I/O space.
 
->   Also, it might be
-> worth explicitly mentioning that this is a subset of the list of pins
-> given above and that the other pins (those not in this list) don't
-> support 1.8/3.3 V control, but only the low power state.
-ok.
+There isn't really anything special about ISA here, other than the
+fact that the one driver that needs it happens to be for ISA rather
+than PCI.
 
->
-> +			audio-hv {
-> +				pins = "audio-hv";
-> +				low-power-disable;
-> +			};
-> I wonder if this is at all useful. Shouldn't we rather put all pads into
-> a low-power state by default and only take them out of the low-power
-> state when the driver decides to do so?
->
+> +/*
+>   * Translate an address from the device-tree into a CPU physical address,
+>   * this walks up the tree and applies the various bus mappings on the
+>   * way.
+> @@ -600,14 +643,23 @@ static u64 __of_translate_address(struct device_node *dev,
+>  			result = of_read_number(addr, na);
+>  			break;
+>  		}
+> +		/*
+> +		 * For indirectIO device which has no ranges property, get
+> +		 * the address from reg directly.
+> +		 */
+> +		if (of_get_isa_indirect_io(dev, bus, addr, na, &result)) {
+> +			pr_debug("isa indirectIO matched(%s)..addr = 0x%llx\n",
+> +				of_node_full_name(dev), result);
+> +			*host = of_node_get(parent);
+> +			break;
+> +		}
+>  
 
-We can not do this all disable by default and enable by driver. it may 
-be possible that some of io-pads need to be enable during boot.
+If we do the special case for ISA as you suggest above, I would still want
+to keep it in of_translate_ioport(), I think that's a useful change by
+itself in my patch.
 
-We need to only depends on platform specific data provided from DT here 
-for configurations.
-
-However, for dynamic control, driver can use pinctrl framework for 
-optimizing the power.
+	Arnde
