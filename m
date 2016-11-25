@@ -1,117 +1,178 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v10 0/4] dtc: Dynamic DT support
-Date: Fri, 25 Nov 2016 14:32:07 +0200
-Message-ID: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 6/8] ASoC: sun4i-codec: Add support for H3 codec
+Date: Fri, 25 Nov 2016 20:34:40 +0800
+Message-ID: <20161125123442.28410-7-wens@csie.org>
+References: <20161125123442.28410-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161125123442.28410-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds Dynamic DT support in the DTC compiler
-as used in a number of boards like the beaglebone/rpi/chip and others.
+The codec on the H3 is similar to the one found on the A31. One key
+difference is the analog path controls are routed through the PRCM
+block. This is supported by the sun8i-codec-analog driver, and tied
+into this codec driver with the audio card's aux_dev.
 
-The first patch passes a boot_info argument instead of the root node
-to the check methods.
+In addition, the H3 has no HP (headphone) and HBIAS support, and no
+MIC3 input. The FIFO related registers are slightly rearranged.
 
-The second patch documents the internals of overlay generation, while
-the third one adds dynamic object/overlay support proper.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/sound/sun4i-codec.txt      |  3 +
+ sound/soc/sunxi/sun4i-codec.c                      | 71 ++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
 
-The last patch simply adds a few overlay tests verifying operation.
-
-This patchset is against DTC mainline and is also available for a pull
-request from https://github.com/pantoniou/dtc/tree/overlays
-
-Regards
-
--- Pantelis
-
-Changes since v9:
-* Reversed -M switch to by default use new DTBO magic value.
-* Removed global versionflags in the parser by using inherited
-attributes.
-* build_node instead of malloc at add_orphan_node().
-* Do not use escape for path copy
-* Do not generate /plugin/ when generating a dts file even when
-the plugin flag is set..
-
-Changes since v8:
-* Removed extra member of boot_info in each node; passing boot_info
-parameter to the check methods instead.
-* Reworked yacc syntax that supports both old and new plugin syntax
-* Added handling for new magic number (enabled by 'M' switch).
-* Dropped dtbo/asmo formats.
-* Added overlay testsuite.
-* Addressed last version maintainer comments.
-
-Changes since v7:
-* Dropped xasprintf & backward compatibility patch
-* Rebased against dgibson's overlay branch
-* Minor doc wording fixes.
-
-Changes since v6:
-* Introduced xasprintf
-* Added append_to_property and used it
-* Changed some die()'s to assert
-* Reordered node generation to respect sort
-* Addressed remaining maintainer changes from v6
-
-Changes since v5:
-* Rebase to latest dtc version.
-* Addressed all the maintainer requested changes from v5
-* Added new magic value for dynamic objects and new format
-
-Changes since v4:
-* Rebase to latest dtc version.
-* Completely redesigned the generation of resolution data.
-Now instead of being generated as part of blob generation
-they are created in the live tree.
-* Consequently the patchset is much smaller.
-* Added -A auto-label alias generation option.
-* Addressed maintainer comments.
-* Added syntactic sugar for overlays in the form of .dtsi
-* Added /dts-v1/ /plugin/ preferred plugin form and deprecate
-the previous form (although still works for backward compatibility)
-
-Changes since v3:
-* Rebase to latest dtc version.
-
-Changes since v2:
-* Split single patch to a patchset.
-* Updated to dtc mainline.
-* Changed __local_fixups__ format
-* Clean up for better legibility.
-
-Pantelis Antoniou (4):
-  checks: Pass boot_info instead of root node
-  dtc: Document the dynamic plugin internals
-  dtc: Plugin and fixup support
-  tests: Add overlay tests
-
- Documentation/dt-object-internal.txt | 318 +++++++++++++++++++++++++++++++++++
- Documentation/manual.txt             |  25 ++-
- checks.c                             |  86 +++++-----
- dtc-lexer.l                          |   5 +
- dtc-parser.y                         |  50 +++++-
- dtc.c                                |  39 ++++-
- dtc.h                                |  20 ++-
- fdtdump.c                            |   2 +-
- flattree.c                           |  17 +-
- fstree.c                             |   2 +-
- libfdt/fdt.c                         |   2 +-
- libfdt/fdt.h                         |   3 +-
- livetree.c                           | 225 ++++++++++++++++++++++++-
- tests/mangle-layout.c                |   7 +-
- tests/overlay_overlay_dtc.dts        |  76 +--------
- tests/overlay_overlay_dtc.dtsi       |  83 +++++++++
- tests/overlay_overlay_new_dtc.dts    |  11 ++
- tests/overlay_overlay_simple.dts     |  12 ++
- tests/run_tests.sh                   |  20 +++
- 19 files changed, 862 insertions(+), 141 deletions(-)
- create mode 100644 Documentation/dt-object-internal.txt
- create mode 100644 tests/overlay_overlay_dtc.dtsi
- create mode 100644 tests/overlay_overlay_new_dtc.dts
- create mode 100644 tests/overlay_overlay_simple.dts
-
+diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+index f7a548b604fc..3033bd8aab0f 100644
+--- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
++++ b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 		- "allwinner,sun6i-a31-codec"
+ 		- "allwinner,sun7i-a20-codec"
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - reg: must contain the registers location and length
+ - interrupts: must contain the codec interrupt
+ - dmas: DMA channels for tx and rx dma. See the DMA client binding,
+@@ -23,6 +24,7 @@ Optional properties:
+ Required properties for the following compatibles:
+ 		- "allwinner,sun6i-a31-codec"
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - resets: phandle to the reset control for this device
+ - allwinner,audio-routing: A list of the connections between audio components.
+ 			   Each entry is a pair of strings, the first being the
+@@ -52,6 +54,7 @@ Required properties for the following compatibles:
+ 
+ Required properties for the following compatibles:
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - allwinner,codec-analog-controls: A phandle to the codec analog controls
+ 				   block in the PRCM.
+ 
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index ada5fa055950..848af01692a0 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -217,6 +217,13 @@
+ #define SUN8I_A23_CODEC_DAC_TXCNT		(0x1c)
+ #define SUN8I_A23_CODEC_ADC_RXCNT		(0x20)
+ 
++/* TX FIFO moved on H3 */
++#define SUN8I_H3_CODEC_DAC_TXDATA		(0x20)
++#define SUN8I_H3_CODEC_DAC_DBG			(0x48)
++#define SUN8I_H3_CODEC_ADC_DBG			(0x4c)
++
++/* TODO H3 DAP (Digital Audio Processing) bits */
++
+ struct sun4i_codec {
+ 	struct device	*dev;
+ 	struct regmap	*regmap;
+@@ -1293,6 +1300,44 @@ static struct snd_soc_card *sun8i_a23_codec_create_card(struct device *dev)
+ 	return card;
+ };
+ 
++static struct snd_soc_card *sun8i_h3_codec_create_card(struct device *dev)
++{
++	struct snd_soc_card *card;
++	int ret;
++
++	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
++	if (!card)
++		return ERR_PTR(-ENOMEM);
++
++	aux_dev.codec_of_node = of_parse_phandle(dev->of_node,
++						 "allwinner,codec-analog-controls",
++						 0);
++	if (!aux_dev.codec_of_node) {
++		dev_err(dev, "Can't find analog controls for codec.\n");
++		return ERR_PTR(-EINVAL);
++	};
++
++	card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
++	if (!card->dai_link)
++		return ERR_PTR(-ENOMEM);
++
++	card->dev		= dev;
++	card->name		= "H3 Audio Codec";
++	card->dapm_widgets	= sun6i_codec_card_dapm_widgets;
++	card->num_dapm_widgets	= ARRAY_SIZE(sun6i_codec_card_dapm_widgets);
++	card->dapm_routes	= sun8i_codec_card_routes;
++	card->num_dapm_routes	= ARRAY_SIZE(sun8i_codec_card_routes);
++	card->aux_dev		= &aux_dev;
++	card->num_aux_devs	= 1;
++	card->fully_routed	= true;
++
++	ret = snd_soc_of_parse_audio_routing(card, "allwinner,audio-routing");
++	if (ret)
++		dev_warn(dev, "failed to parse audio-routing: %d\n", ret);
++
++	return card;
++};
++
+ static const struct regmap_config sun4i_codec_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.reg_stride	= 4,
+@@ -1321,6 +1366,13 @@ static const struct regmap_config sun8i_a23_codec_regmap_config = {
+ 	.max_register	= SUN8I_A23_CODEC_ADC_RXCNT,
+ };
+ 
++static const struct regmap_config sun8i_h3_codec_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= SUN8I_H3_CODEC_ADC_DBG,
++};
++
+ struct sun4i_codec_quirks {
+ 	const struct regmap_config *regmap_config;
+ 	const struct snd_soc_codec_driver *codec;
+@@ -1369,6 +1421,21 @@ static const struct sun4i_codec_quirks sun8i_a23_codec_quirks = {
+ 	.has_reset	= true,
+ };
+ 
++static const struct sun4i_codec_quirks sun8i_h3_codec_quirks = {
++	.regmap_config	= &sun8i_h3_codec_regmap_config,
++	/*
++	 * TODO Share the codec structure with A23 for now.
++	 * This should be split out when adding digital audio
++	 * processing support for the H3.
++	 */
++	.codec		= &sun8i_a23_codec_codec,
++	.create_card	= sun8i_h3_codec_create_card,
++	.reg_adc_fifoc	= REG_FIELD(SUN6I_CODEC_ADC_FIFOC, 0, 31),
++	.reg_dac_txdata	= SUN8I_H3_CODEC_DAC_TXDATA,
++	.reg_adc_rxdata	= SUN6I_CODEC_ADC_RXDATA,
++	.has_reset	= true,
++};
++
+ static const struct of_device_id sun4i_codec_of_match[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-codec",
+@@ -1386,6 +1453,10 @@ static const struct of_device_id sun4i_codec_of_match[] = {
+ 		.compatible = "allwinner,sun8i-a23-codec",
+ 		.data = &sun8i_a23_codec_quirks,
+ 	},
++	{
++		.compatible = "allwinner,sun8i-h3-codec",
++		.data = &sun8i_h3_codec_quirks,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_codec_of_match);
 -- 
-2.1.4
+2.10.2
