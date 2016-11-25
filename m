@@ -1,64 +1,148 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] ARM: da850-lcdk: add the dumb-vga-dac node
-Date: Fri, 25 Nov 2016 10:11:53 +0100
-Message-ID: <1480065113-2443-1-git-send-email-bgolaszewski@baylibre.com>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH 02/10] power: supply: axp20x_usb_power: set min voltage and
+ max current from sysfs
+Date: Fri, 25 Nov 2016 10:09:13 +0100
+Message-ID: <20161125090921.23138-3-quentin.schulz@free-electrons.com>
+References: <20161125090921.23138-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161125090921.23138-1-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBkdW1iLXZnYS1kYWMgbm9kZSB0byB0aGUgYm9hcmQgRFQgdG9nZXRoZXIgd2l0aCBj
-b3JyZXNwb25kaW5nCnBvcnRzIGFuZCB2Z2EgY29ubmVjdG9yLiBUaGlzIGFsbG93cyB0byByZXRy
-aWV2ZSB0aGUgZWRpZCBpbmZvIGZyb20KdGhlIGRpc3BsYXkgYXV0b21hdGljYWxseS4KClNpZ25l
-ZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+
-Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgfCA1OCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
-ICAgICB8IDE3ICsrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgYi9hcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwppbmRleCA3YjhhYjIxLi5jNWQzYTJiIDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9kYTg1MC1sY2RrLmR0cwpAQCAtNTAsNiArNTAsNTMgQEAKIAkJCXN5c3RlbS1jbG9jay1m
-cmVxdWVuY3kgPSA8MjQ1NzYwMDA+OwogCQl9OwogCX07CisKKwl2Z2FfYnJpZGdlIHsKKwkJY29t
-cGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
-CQlwaW5jdHJsLTAgPSA8JmxjZF9waW5zPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNz
-aXplLWNlbGxzID0gPDA+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJcmVnID0gPDA+OworCisJCQkJdmdh
-X2JyaWRnZV9pbjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZkaXNwbGF5X291dF92Z2E+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEg
-eworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJ
-CXJlZyA9IDwxPjsKKworCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVn
-ID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9jb25faW4+OworCQkJCX07CisJ
-CQl9OworCQl9OworCX07CisKKwl2Z2EgeworCQljb21wYXRpYmxlID0gInZnYS1jb25uZWN0b3Ii
-OworCisJCWRkYy1pMmMtYnVzID0gPCZpMmMwPjsKKworCQlwb3J0IHsKKwkJCXZnYV9jb25faW46
-IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2Vfb3V0PjsKKwkJ
-CX07CisJCX07CisJfTsKIH07CiAKICZwbXhfY29yZSB7CkBAIC0yMTksMyArMjY2LDE0IEBACiAJ
-CX07CiAJfTsKIH07CisKKyZkaXNwbGF5IHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismZGlz
-cGxheV9vdXQgeworCWRpc3BsYXlfb3V0X3ZnYTogZW5kcG9pbnRAMCB7CisJCXJlZyA9IDwwPjsK
-KwkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2FfYnJpZGdlX2luPjsKKwl9OworfTsKZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1
-MC5kdHNpCmluZGV4IDM2MDY2ZmEuLjZhYjhkZjEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2RhODUwLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQpAQCAtNDQy
-LDYgKzQ0MiwyMyBAQAogCQkJcmVnID0gPDB4MjEzMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRz
-ID0gPDUyPjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisKKwkJCXBvcnRzIHsKKwkJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCWRpc3BsYXlf
-aW46IHBvcnRAMCB7CisJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCQkjc2l6ZS1jZWxs
-cyA9IDwwPjsKKwkJCQkJcmVnID0gPDA+OworCQkJCX07CisKKwkJCQlkaXNwbGF5X291dDogcG9y
-dEAxIHsKKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkJCSNzaXplLWNlbGxzID0gPDA+
-OworCQkJCQlyZWcgPSA8MT47CisJCQkJfTsKKwkJCX07CiAJCX07CiAJfTsKIAlhZW1pZjogYWVt
-aWZANjgwMDAwMDAgewotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+AXP20X and AXP22X PMICs allow setting the min voltage and max current of
+VBUS power supply. This adds entries in sysfs to allow to do so.
+
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+---
+ drivers/power/supply/axp20x_usb_power.c | 72 +++++++++++++++++++++++++++++++++
+ include/linux/mfd/axp20x.h              |  3 ++
+ 2 files changed, 75 insertions(+)
+
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index b19754e..638cb52 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -155,6 +155,74 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 	return 0;
+ }
+ 
++static int axp20x_usb_power_set_property(struct power_supply *psy,
++					 enum power_supply_property psp,
++					 const union power_supply_propval *val)
++{
++	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
++	int ret, val1;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
++		switch (val->intval) {
++		case 4000000:
++		case 4100000:
++		case 4200000:
++		case 4300000:
++		case 4400000:
++		case 4500000:
++		case 4600000:
++		case 4700000:
++			val1 = (val->intval - 4000000) / 100000;
++			ret = regmap_update_bits(power->regmap,
++						 AXP20X_VBUS_IPSOUT_MGMT,
++						 AXP20X_VBUS_VHOLD_MASK,
++						 val1 << 3);
++			if (ret)
++				return ret;
++
++			return 0;
++		default:
++			return -EINVAL;
++		}
++
++		return 0;
++
++	case POWER_SUPPLY_PROP_CURRENT_MAX:
++		switch (val->intval) {
++		case 100000:
++			if (power->axp20x_id == AXP221_ID)
++				return -EINVAL;
++		case 500000:
++		case 900000:
++			val1 = (900000 - val->intval) / 400000;
++			ret = regmap_update_bits(power->regmap,
++						 AXP20X_VBUS_IPSOUT_MGMT,
++						 AXP20X_VBUS_CLIMIT_MASK, val1);
++			if (ret)
++				return ret;
++
++			return 0;
++		default:
++			return -EINVAL;
++		}
++
++		return 0;
++
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
++					   enum power_supply_property psp)
++{
++	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
++	       psp == POWER_SUPPLY_PROP_CURRENT_MAX;
++}
++
+ static enum power_supply_property axp20x_usb_power_properties[] = {
+ 	POWER_SUPPLY_PROP_HEALTH,
+ 	POWER_SUPPLY_PROP_PRESENT,
+@@ -178,7 +246,9 @@ static const struct power_supply_desc axp20x_usb_power_desc = {
+ 	.type = POWER_SUPPLY_TYPE_USB,
+ 	.properties = axp20x_usb_power_properties,
+ 	.num_properties = ARRAY_SIZE(axp20x_usb_power_properties),
++	.property_is_writeable = axp20x_usb_power_prop_writeable,
+ 	.get_property = axp20x_usb_power_get_property,
++	.set_property = axp20x_usb_power_set_property,
+ };
+ 
+ static const struct power_supply_desc axp22x_usb_power_desc = {
+@@ -186,7 +256,9 @@ static const struct power_supply_desc axp22x_usb_power_desc = {
+ 	.type = POWER_SUPPLY_TYPE_USB,
+ 	.properties = axp22x_usb_power_properties,
+ 	.num_properties = ARRAY_SIZE(axp22x_usb_power_properties),
++	.property_is_writeable = axp20x_usb_power_prop_writeable,
+ 	.get_property = axp20x_usb_power_get_property,
++	.set_property = axp20x_usb_power_set_property,
+ };
+ 
+ static const struct of_device_id axp20x_usb_power_match[] = {
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index fec597f..8883595 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -56,6 +56,9 @@ enum {
+ #define AXP20X_LDO24_V_OUT		0x28
+ #define AXP20X_LDO3_V_OUT		0x29
+ #define AXP20X_VBUS_IPSOUT_MGMT		0x30
++
++#define AXP20X_VBUS_VHOLD_MASK		GENMASK(5, 3)
++
+ #define AXP20X_V_OFF			0x31
+ #define AXP20X_OFF_CTRL			0x32
+ #define AXP20X_CHRG_CTRL1		0x33
+-- 
+2.9.3
