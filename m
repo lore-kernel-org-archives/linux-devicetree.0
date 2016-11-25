@@ -1,75 +1,93 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL]: ARM ARTPEC changes for 4.10
-Date: Sat, 26 Nov 2016 00:16:20 +0100
-Message-ID: <5317474.MXurzNW7Do@wuerfel>
-References: <20161110150930.GB19804@axis.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
+Date: Sat, 26 Nov 2016 00:49:14 +0100
+Message-ID: <CAFBinCC2r6zHJA15CaEDrMYJKPcaE6NfPXctOb3zYmnPctX8JA@mail.gmail.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+ <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
+ <87insxg0yc.fsf@kamboji.qca.qualcomm.com> <871sxza9al.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161110150930.GB19804-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:ARM/ARTPEC MACHINE SUPPORT" <linux-arm-kernel-VrBV9hrLPhE@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <871sxza9al.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, November 10, 2016 4:09:31 PM CET Jesper Nilsson wrote:
-> Please pull the below signed tag for a trio of minor changes
-> adding PCIe for the ARM ARTPEC SoC.
-> 
-> Thanks!
-> 
-> /Jesper
-> 
-> The following changes since commit bc33b0ca11e3df467777a4fa7639ba488c9d4911:
-> 
->   Linux 4.9-rc4 (2016-11-05 16:23:36 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/jesper/artpec.git tags/artpec-for-4.10
-> 
-> for you to fetch changes up to fa5541fc806771a108cd2a48245a229f1ba539ea:
-> 
->   ARM: dts: artpec: add pcie support (2016-11-10 15:51:10 +0100)
-> 
-> ----------------------------------------------------------------
-> ARTPEC changes for 4.10
-> 
-> ----------------------------------------------------------------
-> Niklas Cassel (3):
->       ARM: ARTPEC-6: add select MFD_SYSCON to MACH_ARTPEC6
->       ARM: ARTPEC-6: add pcie related options
->       ARM: dts: artpec: add pcie support
-> 
-> 
+On Fri, Nov 25, 2016 at 4:06 PM, Valo, Kalle <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org> wrote:
+> Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>
+>> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>>
+>>> There are two types of swapping the EEPROM data in the ath9k driver.
+>>> Before this series one type of swapping could not be used without the
+>>> other.
+>>>
+>>> The first type of swapping looks at the "magic bytes" at the start of
+>>> the EEPROM data and performs swab16 on the EEPROM contents if needed.
+>>> The second type of swapping is EEPROM format specific and swaps
+>>> specific fields within the EEPROM itself (swab16, swab32 - depends on
+>>> the EEPROM format).
+>>>
+>>> With this series the second part now looks at the EEPMISC register
+>>> inside the EEPROM, which uses a bit to indicate if the EEPROM data
+>>> is Big Endian (this is also done by the FreeBSD kernel).
+>>> This has a nice advantage: currently there are some out-of-tree hacks
+>>> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
+>>> Big Endian system (= no swab16 is performed) but the EEPROM itself
+>>> indicates that it's data is Little Endian. Until now the out-of-tree
+>>> code simply did a swab16 before passing the data to ath9k, so ath9k
+>>> first did the swab16 - this also enabled the format specific swapping.
+>>> These out-of-tree hacks are still working with the new logic, but it
+>>> is recommended to remove them. This implementation is based on a
+>>> discussion with Arnd Bergmann who raised concerns about the
+>>> robustness and portability of the swapping logic in the original OF
+>>> support patch review, see [0].
+>>>
+>>> After a second round of patches (= v1 of this series) neither Arnd
+>>> Bergmann nor I were really happy with the complexity of the EEPROM
+>>> swapping logic. Based on a discussion (see [1] and [2]) we decided
+>>> that ath9k should use a defined format (specifying the endianness
+>>> of the data - I went with __le16 and __le32) when accessing the
+>>> EEPROM fields. A benefit of this is that we enable the EEPMISC based
+>>> swapping logic by default, just like the FreeBSD driver, see [3]. On
+>>> the devices which I have tested (see below) ath9k now works without
+>>> having to specify the "endian_check" field in ath9k_platform_data (or
+>>> a similar logic which could provide this via devicetree) as ath9k now
+>>> detects the endianness automatically. Only EEPROMs which are mangled
+>>> by some out-of-tree code still need the endian_check flag (or one can
+>>> simply remove that mangling from the out-of-tree code).
+>>>
+>>> Testing:
+>>> - tested by myself on AR9287 with Big Endian EEPROM
+>>> - tested by myself on AR9227 with Little Endian EEPROM
+>>> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
+>>>   which did not suffer from this whole problem)
+>>> - how do we proceed with testing? maybe we could keep this in a
+>>>   feature-branch and add these patches to LEDE once we have an ACK to
+>>>   get more people to test this
+>>>
+>>> This series depends on my other series (v7):
+>>> "add devicetree support to ath9k" - see [4]
+>>
+>> I think this looks pretty good. If there's a bug somewhere it should be
+>> quite easy to fix so I'm not that worried and would be willing to take
+>> these as soon as I have applied the dependency series. IIRC your
+>> devicetree patches will have at least one more review round so that will
+>> take some time still. In the meantime it would be great if LEDE folks
+>> could take a look at these and comment (or test).
+>
+> So are everyone happy with this? I haven't seen any comments. If I don't
+> here anything I'm planning to take these, most likely for 4.11.
+after being busy due to <daytime job and other things in life> I'm
+currently trying to get the patches into LEDE: [0] (so far there are
+no major objections)
+once we get this into LEDE we'll see pretty soon if there are any
+problems or not -> 4.11 sounds good to me!
 
-Hi Jesper and Niklas,
 
-I just found the old pull request while going through my mail backlog.
+Regards,
+Martin
 
-A few things for you to remember for next time:
 
-- please send pull requests "To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" so we know they
-  are destined for arm-soc
-
-- please split up changes to the platform code from dts changes,
-  defconfig changes and driver changes. Each of them gets sent
-  to Linus in a separate arm-soc branch, so we have to pull them
-  in separately too
-
-- For the signed tag, please put in a cleartext description of
-  the branch, just like you describe each commit in its changelog
-  text. The tag comment becomes the merge commit text.
-
-- I've looked at the three patches individually and cherry-picked
-  the first into next/soc and the third into next/dt. The patch
-  "ARM: ARTPEC-6: add pcie related options" is no longer needed
-  after commit e13688f ("ARM: select PCI_DOMAINS config from
-  ARCH_MULTIPLATFORM"), so I dropped that.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0] http://lists.infradead.org/pipermail/lede-dev/2016-November/004231.html
