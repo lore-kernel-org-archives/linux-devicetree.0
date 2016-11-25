@@ -1,222 +1,74 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH 01/10] doc: DT: camss: Binding document for Qualcomm Camera subsystem driver
-Date: Fri, 25 Nov 2016 16:56:53 +0200
-Message-ID: <1480085813-28235-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, javier@osg.samsung.com, s.nawrocki@samsung.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, Todor Tomov <todor.tomov@linaro.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v6 0/2] DW DMAC: update device tree
+Date: Fri, 25 Nov 2016 17:59:05 +0300
+Message-ID: <1480085947-31273-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-snps-arc@lists.infradead.org, christian.ruppert@alitech.com, arnd@arndb.de, vinod.koul@intel.com, vireshk@kernel.org, linux-kernel@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, robh+dt@kernel.org, dmaengine@vger.kernel.org, andriy.shevchenko@linux.intel.com, shiraz.linux.kernel@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding document for Qualcomm Camera subsystem driver.
+It wasn't possible to enable some features like
+memory-to-memory transfers or multi block transfers via DT.
+It is fixed by these patches.
 
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- .../devicetree/bindings/media/qcom,camss.txt       | 196 +++++++++++++++++++++
- 1 file changed, 196 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+Changes for v6:
+ * Use "supported" as default state for "multi-block" property,
+   to keep old DTBs working. Pointed by Andy Shevchenko. 
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-new file mode 100644
-index 0000000..76ad89a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -0,0 +1,196 @@
-+Qualcomm Camera Subsystem
-+
-+* Properties
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain:
-+		- "qcom,8x16-camss"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property.
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "csiphy0"
-+		- "csiphy0_clk_mux"
-+		- "csiphy1"
-+		- "csiphy1_clk_mux"
-+		- "csid0"
-+		- "csid1"
-+		- "ispif"
-+		- "csi_clk_mux"
-+		- "vfe0"
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Interrupts as listed in the interrupt-names property.
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "csiphy0"
-+		- "csiphy1"
-+		- "csid0"
-+		- "csid1"
-+		- "ispif"
-+		- "vfe0"
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "camss_top_ahb_clk"
-+		- "ispif_ahb_clk"
-+		- "csiphy0_timer_clk"
-+		- "csiphy1_timer_clk"
-+		- "csi0_ahb_clk"
-+		- "csi0_clk"
-+		- "csi0_phy_clk"
-+		- "csi0_pix_clk"
-+		- "csi0_rdi_clk"
-+		- "csi1_ahb_clk"
-+		- "csi1_clk"
-+		- "csi1_phy_clk"
-+		- "csi1_pix_clk"
-+		- "csi1_rdi_clk"
-+		- "camss_ahb_clk"
-+		- "camss_vfe_vfe_clk"
-+		- "camss_csi_vfe_clk"
-+		- "iface_clk"
-+		- "bus_clk"
-+- vdda-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: A phandle to voltage supply for CSI2.
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
-+* Nodes
-+
-+- ports:
-+	Usage: required
-+	Definition: As described in video-interfaces.txt in same directory.
-+	Properties:
-+		- reg:
-+			Usage: required
-+			Value type: <u32>
-+			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
-+	Endpoint node properties:
-+		- clock-lanes:
-+			Usage: required
-+			Value type: <u32>
-+			Definition: The clock lane.
-+		- data-lanes:
-+			Usage: required
-+			Value type: <prop-encoded-array>
-+			Definition: An array of data lanes.
-+		- qcom,settle-cnt:
-+			Usage: required
-+			Value type: <u32>
-+			Definition: The settle count parameter for CSI PHY.
-+
-+* An Example
-+
-+	camss: camss@1b00000 {
-+		compatible = "qcom,8x16-camss";
-+		reg = <0x1b0ac00 0x200>,
-+			<0x1b00030 0x4>,
-+			<0x1b0b000 0x200>,
-+			<0x1b00038 0x4>,
-+			<0x1b08000 0x100>,
-+			<0x1b08400 0x100>,
-+			<0x1b0a000 0x500>,
-+			<0x1b00020 0x10>,
-+			<0x1b10000 0x1000>;
-+		reg-names = "csiphy0",
-+			"csiphy0_clk_mux",
-+			"csiphy1",
-+			"csiphy1_clk_mux",
-+			"csid0",
-+			"csid1",
-+			"ispif",
-+			"csi_clk_mux",
-+			"vfe0";
-+		interrupts = <GIC_SPI 78 0>,
-+			<GIC_SPI 79 0>,
-+			<GIC_SPI 51 0>,
-+			<GIC_SPI 52 0>,
-+			<GIC_SPI 55 0>,
-+			<GIC_SPI 57 0>;
-+		interrupt-names = "csiphy0",
-+			"csiphy1",
-+			"csid0",
-+			"csid1",
-+			"ispif",
-+			"vfe0";
-+		power-domains = <&gcc VFE_GDSC>;
-+		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
-+			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
-+			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI0_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
-+			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
-+			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI1_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
-+			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
-+			<&gcc GCC_CAMSS_AHB_CLK>,
-+			<&gcc GCC_CAMSS_VFE0_CLK>,
-+			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
-+			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
-+			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
-+		clock-names = "camss_top_ahb_clk",
-+			"ispif_ahb_clk",
-+			"csiphy0_timer_clk",
-+			"csiphy1_timer_clk",
-+			"csi0_ahb_clk",
-+			"csi0_clk",
-+			"csi0_phy_clk",
-+			"csi0_pix_clk",
-+			"csi0_rdi_clk",
-+			"csi1_ahb_clk",
-+			"csi1_clk",
-+			"csi1_phy_clk",
-+			"csi1_pix_clk",
-+			"csi1_rdi_clk",
-+			"camss_ahb_clk",
-+			"camss_vfe_vfe_clk",
-+			"camss_csi_vfe_clk",
-+			"iface_clk",
-+			"bus_clk";
-+		vdda-supply = <&pm8916_l2>;
-+		iommus = <&apps_iommu 3>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				csiphy0_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0 2>;
-+					qcom,settle-cnt = <0xe>;
-+					remote-endpoint = <&ov5645_ep>;
-+				};
-+			};
-+		};
-+	};
+Changes for v5:
+ * Update existing DTS. Pointed by Andy Shevchenko. 
+ * Read multi-block per chanel instead of per master (Move 
+   DW_DMA_MAX_NR_CHANNELS define from regs.h to dma-dw.h to
+   implement this) Pointed by Andy Shevchenko.
+
+Changes for v4:
+ * Fix setting inverted value to "dwc->nollp". My fault - I 
+   tested with wrong DTS, so DMAC was configured from autoconfig
+   instead of device tree. Pointed by Andy Shevchenko.
+ * Update "multi-block" diescription in documentation to be more 
+   clear. Pointed by Arnd Bergmann.
+
+Changes for v3:
+ * Update existing platform data.
+   We don't need to update existing DTS because default logic 
+   wasn't change: we don't set "is_nollp" if we read 
+   configuration from DT before. And we don't set it now if
+   "multi-block" property doesn't exist in DTS.
+
+Changes for v2:
+ * I thought about is_memcpy DT property: all known devices, which 
+   use DT for configuration, support memory-to-memory transfers. 
+   So we don't need to read it from DT. So enable it by default, 
+   if we read configuration from DT.
+ * Use "multi-block" instead of "hw-llp" name to be more clear.
+ * Move adding DT property and adding documentation for this
+   property to one patch.
+
+Eugeniy Paltsev (2):
+  DW DMAC: enable memory-to-memory transfers support
+  DW DMAC: add multi-block property to device tree
+
+ Documentation/devicetree/bindings/dma/snps-dma.txt |  2 ++
+ arch/arc/boot/dts/abilis_tb10x.dtsi                |  1 +
+ arch/arm/boot/dts/spear13xx.dtsi                   |  2 ++
+ drivers/dma/dw/core.c                              |  2 +-
+ drivers/dma/dw/platform.c                          | 18 +++++++++++++++++-
+ drivers/dma/dw/regs.h                              |  3 ++-
+ drivers/tty/serial/8250/8250_lpss.c                |  2 +-
+ include/linux/platform_data/dma-dw.h               |  5 +++--
+ 8 files changed, 29 insertions(+), 6 deletions(-)
+
 -- 
-1.9.1
+2.5.5
