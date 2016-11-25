@@ -1,35 +1,38 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Fri, 25 Nov 2016 13:29:37 -0200
-Message-ID: <CAOMZO5CJTu7jzCb-iVLe2wt8VjyzWq-oYaC2Jw34V8SgaqrGkw@mail.gmail.com>
-References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
- <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com> <2404891.arL9itCrmb@avalon>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
+Date: Fri, 25 Nov 2016 16:37:25 +0100
+Message-ID: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2404891.arL9itCrmb@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-cGfAhawkTDLHbOjZJNBcug@public.gmane.org>, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 1:22 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-
->> I got the clock name from I.MX6Q TRM, I also checked the name again
->> with Rockchip IC design team now, hope to get some new information soon.
->
-> Thank you. While at it, could you ask them which version of the DW HDMI IP
-> used in the SoC ?
-
-DW HDMI IP used in Rockchip is:
-dwhdmi-rockchip ff980000.hdmi: Detected HDMI controller 0x20:0xa:0xa0:0xc1
-
-as shown at https://storage.kernelci.org/mainline/v4.9-rc6-157-g16ae16c6e561/arm-multi_v7_defconfig/lab-collabora/boot-rk3288-rock2-square_rootfs:nfs.html
-
-DW HDMI IP used  on mx6q is:
-dwhdmi-imx 120000.hdmi: Detected HDMI controller 0x13:0xa:0xa0:0xc1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SXQgaGFzIGJlZW4gZGV0ZXJtaW5lZCB0aGF0IHRoZSBtYXhpbXVtIHJlc29sdXRpb24gc3VwcG9y
+dGVkIGNvcnJlY3RseQpieSB0aWxjZGMgcmV2MSBvbiBkYTg1MCBTb0NzIGlzIDgwMHg2MDBANjAu
+IER1ZSB0byBtZW1vcnkgdGhyb3VnaHB1dApjb25zdHJhaW50cyB3ZSBtdXN0IGZpbHRlciBvdXQg
+aGlnaGVyIG1vZGVzLgoKU3BlY2lmeSB0aGUgbWF4LWJhbmR3aWR0aCBwcm9wZXJ0eSBmb3IgdGhl
+IGRpc3BsYXkgbm9kZSBmb3IKZGE4NTAtYmFzZWQgYm9hcmRzLgoKU2lnbmVkLW9mZi1ieTogQmFy
+dG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4KLS0tCiBhcmNoL2Fy
+bS9ib290L2R0cy9kYTg1MC5kdHNpIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvZGE4NTAuZHRzaQppbmRleCA4ZTMwZDliLi45YjdjNDQ0IDEwMDY0NAotLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUw
+LmR0c2kKQEAgLTQ1Miw2ICs0NTIsNyBAQAogCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTg1MC10aWxj
+ZGMiOwogCQkJcmVnID0gPDB4MjEzMDAwIDB4MTAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDUyPjsK
+KwkJCW1heC1iYW5kd2lkdGggPSA8Mjg4MDAwMDA+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsK
+IAogCQkJcG9ydHMgewotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
