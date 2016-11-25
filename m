@@ -1,27 +1,36 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 10/10] ARM: dtsi: sun8i-reference-design-tablet: use
- AXP223 DTSI
-Date: Fri, 25 Nov 2016 18:06:13 +0800
-Message-ID: <CAGb2v667+RaspdFv5enrOdZRZs4wwJaSdSGntekrfYoYJJNE2g@mail.gmail.com>
-References: <20161125090921.23138-1-quentin.schulz@free-electrons.com> <20161125090921.23138-11-quentin.schulz@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20161125090921.23138-11-quentin.schulz@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] devicetree: bindings: Add vendor prefix for Oki
+Date: Fri, 25 Nov 2016 11:15:45 +0100
+Message-ID: <1480068945-29822-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 5:09 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> Previously, the sun8i tablets used everything declared in AXP221 DTSI
-> while they have an AXP223 PMIC.
->
-> This corrects that so the sun8i tablets can get some features the AXP223
-> has (at the moment, ability to have 100mA as maximal current on VBUS
-> power supply).
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Already in use for "oki,ml86v7667".
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index dc7d5998d0abc632..2868be624c0e3f75 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -198,6 +198,7 @@ nuvoton	Nuvoton Technology Corporation
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ okaya	Okaya Electric America, Inc.
++oki	Oki Electric Industry Co., Ltd.
+ olimex	OLIMEX Ltd.
+ onion	Onion Corporation
+ onnn	ON Semiconductor Corp.
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
