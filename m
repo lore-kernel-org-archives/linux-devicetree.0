@@ -1,156 +1,83 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: [RFC] New Device Tree property - "bonding"
-Date: Fri, 25 Nov 2016 16:55:05 +0000
-Message-ID: <KL1PR06MB1031872E5DC2C65F2A490D6BC3890@KL1PR06MB1031.apcprd06.prod.outlook.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 1/2] pinctrl: tegra: Add DT binding for io pads control
+Date: Fri, 25 Nov 2016 17:19:51 +0000
+Message-ID: <71fe4550-52ac-d176-b1c5-fe64083a95e7@nvidia.com>
+References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com>
+ <1479976734-30498-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1479976734-30498-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
+Cc: yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello DT maintainers,
 
-In one of the Renesas SoCs we have a device called DRIF (Digital Radio Inte=
-rface) controller. A DRIF channel contains 4 external pins - SCK, SYNC, Dat=
-a pins D0 & D1.=20
+On 24/11/16 08:38, Laxman Dewangan wrote:
+> NVIDIA Tegra124 and later SoCs support the multi-voltage level and
+> low power state of some of its IO pads. The IO pads can work in
+> the voltage of the 1.8V and 3.3V of IO voltage from IO power rail
+> sources.
 
-Internally a DRIF channel is made up of two SPI slave devices (also called =
-sub-channels here) that share common CLK & SYNC signals but have their own =
-resource set. The DRIF channel can have either one of the sub-channel activ=
-e at a time or both. When both sub-channels are active, they need to be man=
-aged together as one device as they share same CLK & SYNC. We plan to tie t=
-hese two sub-channels together with a new property called "renesas,bonding"=
-.
+Can you fix the above sentence?
 
-We would appreciate your feedback on this regard. Below is an example usage=
- of this property.=20
+> When IO interfaces are not used then IO pads can be
+> configure in low power state to reduce the power consumption from
+> that IO pads.
+> 
+> On Tegra124, the voltage level of IO power rail source is auto
+> detected by hardware(SoC) and hence it is only require to configure
+> in low power mode if IO pads are not used.
+> 
+> On T210 onwards, the auto-detection of voltage level from IO power
+> rail is removed from SoC and hence SW need to configure the PMC
+> register explicitly to set proper voltage in IO pads based on
+> IO rail power source voltage.
+> 
+> Add DT binding document for detailing the DT properties for
+> configuring IO pads voltage levels and its power state.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> ---
+> Changes from V1:
+>  New in series based on pinctrl driver requirement.
+> 
+> Changes from V2:
+>  Updated the statement to say 1.8V and 3.3V as nominal voltage.
+>  Corrected DT example by adding -supply and taken care of V1 review
+>  from Rob.
+> 
+>  .../bindings/pinctrl/nvidia,tegra-io-pad.txt       | 126 +++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
+> new file mode 100644
+> index 0000000..a88c484
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra-io-pad.txt
+> @@ -0,0 +1,126 @@
+> +NVIDIA Tegra PMC IO pad controller
+> +
+> +NVIDIA Tegra124 and later SoCs support the multi-voltage level and low power
+> +state of some of its IO pads. When IO interface are not used then IO pads can
+> +be configure in low power state to reduce the power from that IO pads. The IO
+> +pads can work in the nominal IO voltage of 1.8V and 3.3V from power rail
+> +sources.
 
-SoC common dtsi file:
----------------------
-"renesas,bonding" - phandles to similar devices that are part of the bond. =
-A bond between devices implies that they need to be managed together and ca=
-nnot operate independently when more than one member of the bond needs to b=
-e active.=20
+I would replace the above sentence with ...
 
-                drif00: rif@e6f40000 {
-                        compatible =3D "renesas,r8a7795-drif",
-                                     "renesas,rcar-gen3-drif";
-                        reg =3D <0 0xe6f40000 0 0x64>;
-                        interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-                        clocks =3D <&cpg CPG_MOD 515>;
-                        clock-names =3D "fck";
-                        dmas =3D <&dmac1 0x20>, <&dmac2 0x20>;
-                        dma-names =3D "rx", "rx";
-                        renesas,bonding =3D <&drif01>;
-                        power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
-                        status =3D "disabled";
+"The IO pads can operate at the nominal IO voltage of either 1.8V or 3.3V".
 
-                };
+Cheers
+Jon
 
-                drif01: rif@e6f50000 {
-                        compatible =3D "renesas,r8a7795-drif",
-                                     "renesas,rcar-gen3-drif";
-                        reg =3D <0 0xe6f50000 0 0x64>;
-                        interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-                        clocks =3D <&cpg CPG_MOD 514>;
-                        clock-names =3D "fck";
-                        dmas =3D <&dmac1 0x22>, <&dmac2 0x22>;
-                        dma-names =3D "rx", "rx";
-                        renesas,bonding =3D <&drif00>;
-                        power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
-                        status =3D "disabled";
-                };
-
-Board specific dts file:
--------------------------
-- When more than one member of the "bonding" property are available, anothe=
-r keyword ("primary" or "bonded" or ??) is expected on any one of the membe=
-rs. This "primary" member controls/accepts properties common to all members=
-.
-
-- When only a single member of the bond needs to be active, the "bonding" p=
-roperty has no effect.
-
-Note: "primary" keyword is found in "http://elinux.org/images/c/cf/Power_eP=
-APR_APPROVED_v1.1.pdf" Page 103, Line 10. It looks like a generic property =
-but documentation is not available.=20
-
-E.g.
-1) Both channels enabled case:
-------------------------------------
-&drif00 {
-        pinctrl-0 =3D <&drif0_pins>;
-        pinctrl-names =3D "default";
-        renesas,syncac-pol-high;
-        status =3D "okay";
-
-        primary; /* This can be changed to "renesas,primary or renesas,bond=
-ed or ??" */
-
-        port {
-                drif0_ep: endpoint {
-                     remote-endpoint =3D <&tuner_ep>;
-                }; =20
-        }; =20
-};
-
-&drif01 {
-        status =3D "okay";
-};
-
-2) Single channel enabled case:
--------------------------------
-&drif01 {
-        pinctrl-0 =3D <&drif0_pins>;
-        pinctrl-names =3D "default";
-        status =3D "okay";
-
-        port {
-                drif0_ep: endpoint {
-                     remote-endpoint =3D <&tuner_ep>;
-                }; =20
-        }; =20
-};
-
-
-Thanks,
-Ramesh.
-
-Note 1:
---------
-Below is a pictorial representation of E.g. (1) and (2)
-
-A DRIF channel can interface with a Master device like this
-
-1) Master with two data pins - both sub-channels used
-+---------------------+                +---------------------+
-|                     |-----SCK------->|CLK                  |  =20
-|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-|                     |-----SD0------->|D0                   |  =20
-|                     |-----SD1------->|D1                   |  =20
-+---------------------+                +---------------------+
-
-2) Master with one data pin - sub-channel0 or 1 can be used based on the bo=
-ard.
-Below is e.g. where sub-channel1 alone is used. D0 pin is unused.
-
-+---------------------+                +---------------------+
-|                     |-----SCK------->|CLK                  |  =20
-|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-|                     |-----SD0------->|D1                   |  =20
-|                     |                |                     |  =20
-+---------------------+                +---------------------+
-
-Note 2:
---------
-This topic is discussed as part of the driver submission. The latest on tha=
-t is here -=20
-https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg09037.htm=
-l
-
-None of the models discussed are convincing. This new property proposal is =
-closest to option 3 discussed in the thread.
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
