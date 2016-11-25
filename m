@@ -1,141 +1,87 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
-Date: Fri, 25 Nov 2016 16:01:13 +0100
-Message-ID: <b9d8ba33-2bb9-cb93-d833-89ddd8cfd7f9@kaod.org>
-References: <1478688149-4554-1-git-send-email-clg@kaod.org>
- <bc14b6ba-800c-bf69-763e-65ead8d4efa7@gmail.com>
- <CACPK8Xc7Dy=4oaZ_+j3hCEkMY+sqZ_-QkCQ9okmUoOjTpuZvvA@mail.gmail.com>
- <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
+From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] ath9k: EEPROM swapping improvements
+Date: Fri, 25 Nov 2016 15:06:27 +0000
+Message-ID: <871sxza9al.fsf@kamboji.qca.qualcomm.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+        <20161002222913.12223-1-martin.blumenstingl@googlemail.com>
+        <87insxg0yc.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87insxg0yc.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org> (Kalle Valo's message
+        of "Wed, 12 Oct 2016 16:18:35 +0300")
+Content-Language: en-US
+Content-ID: <7C97C1483A0FDF4AB06D54D769D09149-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: ath9k-devel <ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org" <ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "nbd-Vt+b4OUoWG0@public.gmane.org" <nbd-Vt+b4OUoWG0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyZWssCgpTb3JyeSBmb3IgdGhlIGxhdGUgYW5zd2VyLiBIZXJlIGFyZSBhIGNvdXBs
-ZSBvZiBhbnN3ZXJzIHRvIHRoZSBuYW1pbmcgCnByb2JsZW0gCgpPbiAxMS8yNS8yMDE2IDAyOjU3
-IFBNLCBNYXJlayBWYXN1dCB3cm90ZToKPiBPbiAxMS8yMS8yMDE2IDA1OjQ1IEFNLCBKb2VsIFN0
-YW5sZXkgd3JvdGU6Cj4+IEhlbGxvIE1hcmVrLAo+IAo+IEhpIQo+IAo+PiBUaGFuayB5b3UgZm9y
-IHRoZSByZXZpZXcuIEkgaGF2ZSBhbnN3ZXJlZCBhIGZldyBvZiB5b3VyIHF1ZXN0aW9uczsKPj4g
-SSdsbCBsZWF2ZSB0aGUgcmVzdCB0byBDZWRyaWMuCj4+Cj4+IE9uIE1vbiwgTm92IDIxLCAyMDE2
-IGF0IDg6MTMgQU0sIE1hcmVrIFZhc3V0IDxtYXJlay52YXN1dEBnbWFpbC5jb20+IHdyb3RlOgo+
-Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcgYi9kcml2ZXJzL210
-ZC9zcGktbm9yL0tjb25maWcKPj4+PiBpbmRleCA0YTY4MmVlMGY2MzIuLjk2MTQ4NjAwZmRhYiAx
-MDA2NDQKPj4+PiAtLS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcKPj4+PiArKysgYi9k
-cml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcKPj4+PiBAQCAtNzYsNCArNzYsMTYgQEAgY29uZmln
-IFNQSV9OWFBfU1BJRkkKPj4+PiAgICAgICAgIEZsYXNoLiBFbmFibGUgdGhpcyBvcHRpb24gaWYg
-eW91IGhhdmUgYSBkZXZpY2Ugd2l0aCBhIFNQSUZJCj4+Pj4gICAgICAgICBjb250cm9sbGVyIGFu
-ZCB3YW50IHRvIGFjY2VzcyB0aGUgRmxhc2ggYXMgYSBtdGQgZGV2aWNlLgo+Pj4+Cj4+Pj4gK2Nv
-bmZpZyBBU1BFRURfRkxBU0hfU1BJCj4+Pgo+Pj4gU2hvdWxkIGJlIFNQSV9BU1BFRUQgLCBzZWUg
-dGhlIG90aGVyIGNvbnRyb2xsZXJzIGFuZCBrZWVwIHRoZSBsaXN0IHNvcnRlZC4KPj4KPj4gUGVy
-aGFwcyBTUElfTk9SX0FTUEVFRCBzbyBpdCdzIGNsZWFyIGl0J3Mgbm90IGEgZHJpdmVyIGZvciBh
-IGdlbmVyaWMgU1BJIGJ1cz8KPiAKPiBCdXQgaXQncyBub3QgYSBkcml2ZXIgZm9yIFNQSS1OT1Ig
-b25seSBlaXRoZXIsIGl0IHNlZW1zIGl0J3MgYSBkcml2ZXIKPiBmb3IgbXVsdGlwbGUgZGlzdGlu
-Y3QgZGV2aWNlcy4KCnllcyBhbmQgSSB0aGluayBpdCB3YXMgYSBtaXN0YWtlIHRvIHNlbmQgdGhl
-IHdob2xlIGF0IG9uY2UuIFdlIGhhdmUgCmFkZGVkIHRoZSBzdXBwb3J0IGluIHFlbXUgY29udHJv
-bGxlciBieSBjb250cm9sbGVyIGFuZCBpdCB3YXMgZWFzaWVyIAp0byB1bmRlcnN0YW5kLiBJIG5l
-ZWQgdG8gc3BsaXQgdGhlIHBhdGNoc2V0IGluIHRoZSBuZXh0IHZlcnNpb24uIAoKPj4+PiArICAg
-ICB0cmlzdGF0ZSAiQXNwZWVkIGZsYXNoIGNvbnRyb2xsZXJzIGluIFNQSSBtb2RlIgo+Pj4+ICsg
-ICAgIGRlcGVuZHMgb24gSEFTX0lPTUVNICYmIE9GCj4+Pj4gKyAgICAgZGVwZW5kcyBvbiBBUkNI
-X0FTUEVFRCB8fCBDT01QSUxFX1RFU1QKPj4+PiArICAgICAjIElPX1NQQUNFX0xJTUlUIG11c3Qg
-YmUgZXF1aXZhbGVudCB0byAofjBVTCkKPj4+PiArICAgICBkZXBlbmRzIG9uICFORUVEX01BQ0hf
-SU9fSAo+Pj4KPj4+IFdoeT8KPj4+Cj4+Pj4gKyAgICAgaGVscAo+Pj4+ICsgICAgICAgVGhpcyBl
-bmFibGVzIHN1cHBvcnQgZm9yIHRoZSBOZXcgU3RhdGljIE1lbW9yeSBDb250cm9sbGVyCj4+Pj4g
-KyAgICAgICAoRk1DKSBpbiB0aGUgQXNwZWVkIFNvQ3MgKEFTVDI0MDAgYW5kIEFTVDI1MDApIHdo
-ZW4gYXR0YWNoZWQKPj4+PiArICAgICAgIHRvIFNQSSBub3IgY2hpcHMsIGFuZCBzdXBwb3J0IGZv
-ciB0aGUgU1BJIE1lbW9yeSBjb250cm9sbGVyCj4+Pj4gKyAgICAgICAoU1BJKSBmb3IgdGhlIEJJ
-T1MuCj4+Pgo+Pj4gSSB0aGluayB0aGVyZSBpcyBhIG5hbWluZyBjaGFvcyBiZXR3ZWVuIEZNQywg
-U01DIChhcyBpbiBTdGF0aWMgTUMpIGFuZAo+Pj4gU01DIChhcyBpbiBTUEkgTUMpLgo+Pgo+PiBZ
-ZXMsIHlvdSdyZSBzcG90IG9uLiBUaGlzIG5hbWluZyBjaGFvcyBjb21lcyBmb3JtIHRoZSB2ZW5k
-b3IncyBkb2N1bWVudGF0aW9uLgo+Pgo+PiBJIHRoaW5rIHdlIGNvdWxkIHJlLXdvcmsgdGhpcyBz
-ZW50ZW5jZSB0byBtYWtlIGl0IGNsZWFyZXIuCj4gCj4gUGxlYXNlIGRvIGJlZm9yZSBzb21lb25l
-J3MgaGVhZCBleHBsb2RlcyBmcm9tIHRoaXMgOikKCkluZGVlZCAuLiA6KSBJIHdpbGwgZ2l2ZSBh
-IHRyeS4gSGVyZSBpcyB0aGUgc3RhdHVzIDoKCkFzcGVlZCBTb0MgQVNUMjQwMCBoYXMgYSBzZXQg
-b2YgU01DIChTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIpIApjb250cm9sbGVycyBpbiB3aGljaCB5
-b3UgZmluZCA6CgotIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxlZCBTTUMg
-aW4gdGhlIHNwZWMpICAKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MDAwMDAwCiAgLiBCTUMgZmly
-bXdhcmUKICAuIG9sZCByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFORCBm
-bGFzaCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gQWxsIGJvb3RhYmxlLgogIC4gMSBjaGlwIHNlbGVj
-dCBwaW4gKENFMCkKCi0gTmV3IFN0YXRpYyBNZW1vcnkgQ29udHJvbGxlciAoY2FsbGVkIEZNQyBp
-biB0aGUgc3BlYykKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MjAwMDAwCiAgLiBCTUMgZmlybXdh
-cmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFORCBmbGFz
-aCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gCiAgLiA1IGNoaXAgc2VsZWN0IHBpbnMgKENFMCDiiLwg
-Q0U0KQoKLSBTUEkgRmxhc2ggQ29udHJvbGxlciAoY2FsbGVkIFNQSSBpbiB0aGUgc3BlYykgIAog
-IC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYzMDAwMDAKICAuIGhvc3QgRmlybXdhcmUKICAuIGV4b3Rp
-YyByZWdpc3RlciBzZXQsIGJldHdlZW4gb2xkIGFuZCBuZXcgLi4uCiAgLiBzdXBwb3J0cyBTUEkg
-Zmxhc2ggbWVtb3J5CiAgLiAxIGNoaXAgc2VsZWN0IHBpbiAoQ0UwKQoKCkFzcGVlZCBTb0MgQVNU
-MjUwMCBkZWZpbmVzIGhhcyBhIHNpbWlsYXIgc2V0IG9mIFNNQyAoU3RhdGljIE1lbW9yeSAKQ29u
-dHJvbGxlcikgY29udHJvbGxlcnMsIG1vcmUgaW4gdGhlIHZlaW4gb2YgdGhlIEFTVDI0MDAgRk1D
-ICA6CgotIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgaXMgZ29uZSwgTk9SIGFuZCBO
-QU5EIHN1cHBvcnQgYWxzbwoKLSBGaXJtd2FyZSBTUEkgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxl
-ZCBGTUMgaW4gdGhlIHNwZWMpICAKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MjAwMDAwCiAgLiBC
-TUMgZmlybXdhcmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAuIHN1cHBvcnRzIFNQSSBmbGFzaCBt
-ZW1vcnkuCiAgLiAzIGNoaXAgc2VsZWN0IHBpbnMgKENFMCB+IENFMikKCi0gU1BJIEZsYXNoIENv
-bnRyb2xsZXIgKGNhbGxlZCBTUEkxIGluIHRoZSBzcGVjKSBmaXJzdAogIC4gYmFzZSBhZGRyZXNz
-IGF0IDB4MTYzMDAwMDAKICAuIGhvc3QgZmlybXdhcmUKICAuIG5ldyByZWdpc3RlciBzZXQKICAu
-IHN1cHBvcnRzIFNQSSBmbGFzaCBtZW1vcnkuCiAgLiAyIGNoaXAgc2VsZWN0IHBpbnMgKENFMCB+
-IENFMSkKCi0gU1BJIEZsYXNoIENvbnRyb2xsZXIgKGNhbGxlZCBTUEkyIGluIHRoZSBzcGVjKSBz
-ZWNvbmQKICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MzEwMDAwCiAgLiBob3N0IGZpcm13YXJlCiAg
-LiBuZXcgcmVnaXN0ZXIgc2V0CiAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVtb3J5LgogIC4gMiBj
-aGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCgoKU28sIHRoZXNlIGFyZSB0aGUgcmVhc29ucyBi
-ZWhpbmQgdGhlIG5hbWluZyBtZXNzLiBBZGRlZCB0byB0aGF0IHRoZSAKZHJpdmVyIGNvbnNpZGVy
-cyB0aGUgYWNyb255bSBTTUMgdG8gc3RhbmQgZm9yIFNQSSBNZW1vcnkgQ29udHJvbGxlciwgCndo
-aWNoIGlzIHdyb25nLiBJIHRyaWVkIHRvIHJlZHVjZSB0aGUgY29uZnVzaW9uIHdpdGggc29tZSBj
-b21tZW50cyBidXQgCnRoYXQgd2FzIGEgZmFpbHVyZSA6KQoKSW4gcWVtdSwgd2UgaGF2ZSB1c2Vk
-IEZNQyAoRmlybXdhcmUgLi4uKSBhbmQgU1BJIHRvIG5hbWUgdGhlIGNvbnRyb2xsZXJzIAphbmQg
-d2UganVzdCBkcm9wcGVkIHRoZSBsZWdhY3kgU01DLiBJIHRoaW5rIHVzaW5nIHRoZSBzYW1lIG5h
-bWluZyBzY2hlbWUKaXMgYSBnb29kIGlkZWEuIFdlIGRvbid0IHN1cHBvcnQgYW55dGhpbmcgZWxz
-ZSB0aGFuIFNQSSBlaXRoZXIgc28gd2UgY2FuIApkcm9wIHRoZSBvdGhlciB0eXBlcyBmb3IgdGhl
-IG1vbWVudC4KCj4+Pj4gK3N0YXRpYyBpbnQgYXNwZWVkX3NtY19yZWFkX2Zyb21fYWhiKHZvaWQg
-KmJ1ZiwgY29uc3Qgdm9pZCBfX2lvbWVtICpzcmMsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHNpemVfdCBsZW4pCj4+Pj4gK3sKPj4+Cj4+PiBXaGF0IGlmIHN0YXJ0IG9m
-IGJ1ZiBpcyB1bmFsaWduZWQgPwo+Pj4KPj4+PiArICAgICBpZiAoKCgodW5zaWduZWQgbG9uZylz
-cmMgfCAodW5zaWduZWQgbG9uZylidWYgfCBsZW4pICYgMykgPT0gMCkgewo+Pj4KPj4+IFVoLCBz
-aG91bGQgdXNlIGJvb2xlYW4gT1IsIG5vdCBiaXR3aXNlIG9yLiBBbHNvLCBpZiB5b3UncmUgdGVz
-dGluZwo+Pj4gcG9pbnRlciBmb3IgTlVMTCwgZG8gaWYgKCFwdHIpIC4KPj4+Cj4+PiBpZiAoIXNy
-YyB8fCAhYnVmIHx8ICFsZW4pCj4+PiAgICByZXR1cm47Cj4+Cj4+IFRoYXQncyBhIGRpZmZlcmVu
-dCB0ZXN0LiBXZSdyZSB0ZXN0aW5nIGhlcmUgdGhhdCB0aGUgYnVmZmVycyBhcmUKPj4gYWxpZ25l
-ZCB0byBzZWUgaWYgd2UgY2FuIGRvIGEgd29yZC1hdC1hLXRpbWUgY29weS4KPj4KPj4gSWYgbm90
-LCBpdCBmYWxscyB0aHJvdWdoIHRvIGRvIGEgYnl0ZS1hdC1hLXRpbWUgY29weS4gSSB0aGluayB0
-aGlzCj4+IGNvdmVycyB5b3VyIGZpcnN0IHF1ZXN0aW9uIGFib3V0IGJ1ZiBiZWluZyB1bmFsaWdu
-ZWQuCj4gCj4gQWgsIEkgc2VlLCB0aGFua3MgZm9yIGNsYXJpZnlpbmcuIENvbW1lbnQgaW4gdGhl
-IGNvZGUgd291bGQgYmUgaGVscGZ1bAo+IGZvciB3aHkgd2hhdCB5b3UncmUgZG9pbmcgaXMgT0su
-IEFuZCBJIHRoaW5rIHlvdSB3YW50IHRvIGNhc3QgdG8KPiB1aW50cHRyX3QgaW5zdGVhZCB0byBt
-YWtlIHRoaXMgd29yayBvbiA2NGJpdC4KCnllcwoKPj4gQ2VkcmljLCBwZXJoYXBzIHlvdSBjb3Vs
-ZCBjcmVhdGUgYSBtYWNybyBjYWxsZWQgSVNfQUxMSUdORUQgdG8gbWFrZSBpdAo+PiBjbGVhciB3
-aGF0IHRoaXMgaXMgZG9pbmc/Cj4gCj4gWXVwLCB0aGFua3MhCgpzdXJlLiBJIHN0aWxsIG5lZWQg
-dG8gZ28gdGhyb3VnaCBNYXJlaydzIGNvbW1lbnRzIGluIHRoZSBpbml0aWFsIGVtYWlsLCAKSSB3
-aWxsIHNwbGl0IHRoZSBwYWNoc2V0IGFuZCBmaXggdGhlIG5hbWluZyBpbiBuZXh0IHZlcnNpb24u
-CgpUaGFua3MsCgpDLiAKIAo+Pj4KPj4+IHdoaWxlICguLi4pCj4+Pgo+Pj4+ICsgICAgICAgICAg
-ICAgd2hpbGUgKGxlbiA+IDMpIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgKih1MzIgKili
-dWYgPSByZWFkbChzcmMpOwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBidWYgKz0gNDsKPj4+
-PiArICAgICAgICAgICAgICAgICAgICAgc3JjICs9IDQ7Cj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgIGxlbiAtPSA0Owo+Pj4+ICsgICAgICAgICAgICAgfQo+Pj4+ICsgICAgIH0KPj4+PiArCj4+
-Pj4gKyAgICAgd2hpbGUgKGxlbi0tKSB7Cj4+Pj4gKyAgICAgICAgICAgICAqKHU4ICopYnVmID0g
-cmVhZGIoc3JjKTsKPj4+PiArICAgICAgICAgICAgIGJ1ZiArPSAxOwo+Pj4+ICsgICAgICAgICAg
-ICAgc3JjICs9IDE7Cj4+Pj4gKyAgICAgfQo+Pj4+ICsgICAgIHJldHVybiAwOwo+Pj4+ICt9Cj4+
-Pj4gKy8qCj4+Pj4gKyAqIFNQSSBGbGFzaCBDb25maWd1cmF0aW9uIFJlZ2lzdGVyIChBU1QyNDAw
-IFNQSSkKPj4+PiArICovCj4+Pj4gKyNkZWZpbmUgQ09ORklHX1JFRyAgICAgICAgICAgICAgICAg
-ICAweDAKPj4+PiArI2RlZmluZSAgICBDT05GSUdfRU5BQkxFX0NFX0lOQUNUSVZFICAgICBCSVQo
-MSkKPj4+PiArI2RlZmluZSAgICBDT05GSUdfV1JJVEUgICAgICAgICAgICAgICAgICAgICAgICAg
-IEJJVCgwKQo+Pj4KPj4+ICNkZWZpbmVbc3BhY2VdRk9PW3RhYl1CSVQoYmFyKQo+Pgo+PiBUaGVz
-ZSBhcmUgYml0cyB3aXRoaW4gdGhlIENPTkZJR19SRUcuIEl0IGZvbGxvd3MgdGhlIHNhbWUgc3R5
-bGUgYXMKPj4gb3RoZXIgc3BpLW5vciBkcml2ZXJzLCBlZy4gbnhwLXNwaWZpLgo+Pgo+PiBJIHRo
-aW5rIGl0J3Mgc29tZXdoYXQgY2xlYXJlciwgYnV0IGlmIHlvdSBoYXZlIGEgc3Ryb25nIHByZWZl
-cmVuY2UKPj4gYWdhaW5zdCB0aGVuIGZhaXIgZW5vdWdoLgo+IAo+IEl0IHRyaWdnZXJzIG15IE9D
-RCwgYnV0IEkgdGhpbmsgaXQncyBhIG1hdHRlciBvZiB0YXN0ZSwgc28gSSBkb24ndCBjYXJlCj4g
-dGhhdCBtdWNoLgo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+
+> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>
+>> There are two types of swapping the EEPROM data in the ath9k driver.
+>> Before this series one type of swapping could not be used without the
+>> other.
+>>
+>> The first type of swapping looks at the "magic bytes" at the start of
+>> the EEPROM data and performs swab16 on the EEPROM contents if needed.
+>> The second type of swapping is EEPROM format specific and swaps
+>> specific fields within the EEPROM itself (swab16, swab32 - depends on
+>> the EEPROM format).
+>>
+>> With this series the second part now looks at the EEPMISC register
+>> inside the EEPROM, which uses a bit to indicate if the EEPROM data
+>> is Big Endian (this is also done by the FreeBSD kernel).
+>> This has a nice advantage: currently there are some out-of-tree hacks
+>> (in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
+>> Big Endian system (=3D no swab16 is performed) but the EEPROM itself
+>> indicates that it's data is Little Endian. Until now the out-of-tree
+>> code simply did a swab16 before passing the data to ath9k, so ath9k
+>> first did the swab16 - this also enabled the format specific swapping.
+>> These out-of-tree hacks are still working with the new logic, but it
+>> is recommended to remove them. This implementation is based on a
+>> discussion with Arnd Bergmann who raised concerns about the
+>> robustness and portability of the swapping logic in the original OF
+>> support patch review, see [0].
+>>
+>> After a second round of patches (=3D v1 of this series) neither Arnd
+>> Bergmann nor I were really happy with the complexity of the EEPROM
+>> swapping logic. Based on a discussion (see [1] and [2]) we decided
+>> that ath9k should use a defined format (specifying the endianness
+>> of the data - I went with __le16 and __le32) when accessing the
+>> EEPROM fields. A benefit of this is that we enable the EEPMISC based
+>> swapping logic by default, just like the FreeBSD driver, see [3]. On
+>> the devices which I have tested (see below) ath9k now works without
+>> having to specify the "endian_check" field in ath9k_platform_data (or
+>> a similar logic which could provide this via devicetree) as ath9k now
+>> detects the endianness automatically. Only EEPROMs which are mangled
+>> by some out-of-tree code still need the endian_check flag (or one can
+>> simply remove that mangling from the out-of-tree code).
+>>
+>> Testing:
+>> - tested by myself on AR9287 with Big Endian EEPROM
+>> - tested by myself on AR9227 with Little Endian EEPROM
+>> - tested by myself on AR9381 (using the ar9003_eeprom implementation,
+>>   which did not suffer from this whole problem)
+>> - how do we proceed with testing? maybe we could keep this in a
+>>   feature-branch and add these patches to LEDE once we have an ACK to
+>>   get more people to test this
+>>
+>> This series depends on my other series (v7):
+>> "add devicetree support to ath9k" - see [4]
+>
+> I think this looks pretty good. If there's a bug somewhere it should be
+> quite easy to fix so I'm not that worried and would be willing to take
+> these as soon as I have applied the dependency series. IIRC your
+> devicetree patches will have at least one more review round so that will
+> take some time still. In the meantime it would be great if LEDE folks
+> could take a look at these and comment (or test).
+
+So are everyone happy with this? I haven't seen any comments. If I don't
+here anything I'm planning to take these, most likely for 4.11.
+
+--=20
+Kalle Valo=
