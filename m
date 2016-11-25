@@ -1,124 +1,50 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 6/10] mmc: sdhci-xenon: Add Marvell Xenon SDHC core functionality
-Date: Fri, 25 Nov 2016 14:06:17 +0100
-Message-ID: <CAPDyKFoqyF5QkJy+PmGa-b8JhaUmVXeoqBfv+pdupFiJBgyiLg@mail.gmail.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- <0390e7a05b6163deabb545f93729ea615eeaaee2.1477911954.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFpqPSqiEi=0UW5LoZmy+y-KHm9nbcGKBSy3RzchdLU9cA@mail.gmail.com>
- <dd230463-04f6-df31-7056-1a185eb6cfc7@marvell.com> <CAPDyKFr9uEjVQmTNP0KK8Zj9mxCW3i564E=47vTK0RLvXCjw3Q@mail.gmail.com>
- <76ce72f8-4b86-3b83-544f-b9a7ef871393@marvell.com> <07e71ce4-a78e-750c-6325-0a88891519d5@marvell.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
+Date: Fri, 25 Nov 2016 15:25 +0200
+Message-ID: <1543509.CFZUmxu4GH@avalon>
+References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
+ <CAOMZO5CgUm39E1hhLrs5SX9ALMj9BGiRKaY874exNWoQhH2AWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <07e71ce4-a78e-750c-6325-0a88891519d5@marvell.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ziji Hu <huziji@marvell.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAOMZO5CgUm39E1hhLrs5SX9ALMj9BGiRKaY874exNWoQhH2AWQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Andy Yan <andy.yan@rock-chips.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
->>>>>> +
->>>>>> +       /*
->>>>>> +        * Xenon Specific property:
->>>>>> +        * emmc: explicitly indicate whether this slot is for eMMC
->>>>>> +        * slotno: the index of slot. Refer to SDHC_SYS_CFG_INFO register
->>>>>> +        * tun-count: the interval between re-tuning
->>>>>> +        * PHY type: "sdhc phy", "emmc phy 5.0" or "emmc phy 5.1"
->>>>>> +        */
->>>>>> +       if (of_property_read_bool(np, "marvell,xenon-emmc"))
->>>>>> +               priv->emmc_slot = true;
->>>>>
->>>>> So, you need this because of the eMMC voltage switch behaviour, right?
->>>>>
->>>>> Then I would rather like to describe this a generic DT bindings for
->>>>> the eMMC voltage level support. There have acutally been some earlier
->>>>> discussions for this, but we haven't yet made some changes.
->>>>>
->>>>> I think what is missing is a mmc-ddr-3_3v DT binding, which when set,
->>>>> allows the host driver to accept I/O voltage switches to 3.3V. If not
->>>>> supported the  ->start_signal_voltage_switch() ops may return -EINVAL.
->>>>> This would inform the mmc core to move on to the next supported
->>>>> voltage level. There might be some minor additional changes to the mmc
->>>>> card initialization sequence, but those should be simple.
->>>>>
->>>>> I can help out to look into this, unless you want to do it yourself of course!?
->>>>>
->>>>    Yes. One of the reasons is to provide eMMC specific voltage setting.
->>>>    But in my very own opinion, it should be irrelevant to voltage level.
->>>>    The eMMC voltage setting on our SDHC is different from SD/SDIO voltage switch.
->>>>    It will become more complex with different SOC implementation details.
->>>
->>> Got it. Although I think we can cope with that fine just by using the
->>> different SD/eMMC speed modes settings defined in DT (or from the
->>> SDHCI caps register)
->>>
->>     In my very opinion, I'm not sure if there is any corner case that driver cannot
->>     determine the eMMC card type from DT and SDHC caps.
->>
->>>>    Unfortunately, MMC driver cannot determine the card type yet when eMMC voltage
->>>>    setting should be executed.
->>>>    Thus an flag is required here to tell driver to execute eMMC voltage setting.
->>>>
->>>>    Besides, additional eMMC specific settings might be implemented in future, besides
->>>>    voltage setting. Most of them should be completed before MMC driver recognizes the
->>>>    card type. Thus I have to keep this flag to indicate current SDHC is for eMMC.
->>>
->>> I doubt you will need a generic "eMMC" flag, but let's see when we go forward.
->>>
->>> Currently it's clear you don't need such a flag, so I will submit a
->>> change adding a DT binding for "mmc-ddr-3_3v" then we can take it from
->>> there, to see if it suits your needs.
->>>
->
->     Another reason for a special "xenon-emmc" property is that our host IP usually can
->     support both eMMC and SD. Whether a host is used as eMMC or SD depends on the
->     final implementation of the actual product.
->     Thus our host driver needs to know whether current SDHC is fixed as eMMC or SD.
->     So far, It can only get the information from DT.
-
-As a matter of fact for mounted non-removable cards, such as eMMC, we
-already have the option to describe some of their characteristics in
-DT. Perhaps that's what you need?
-
-Please have a look at:
-Documentation/devicetree/bindings/mmc/mmc-card.txt
-
->
->     After out host driver get the card type information from DT, it can prepare eMMC
->     specific voltage, set eMMC specific mmc->caps/caps2 flags and do other
->     vendor specific init, before card init procedure.
->     Otherwise, our host driver has to wait until card type is determined in mmc_rescan().
->
->     A generic "eMMC" flag is unnecessary. I just require a private property,
->     which is only used in our host driver and DT.
->
->     Thank you.
->
-> Best regards,
-> Hu Ziji
->
->>
->>     Actually, our eMMC is usually fixed as 1.8V.
->>
->>     The pair "no-sd" + "no-sdio" can provide the similar information.
->>     But I'm not sure if it is proper to use those two property in such a way.
->>
->>     Thank you.
->>
->> Best regards
->> Hu Ziji
->>
->>> [...]
->>>
->>> Kind regards
->>> Uffe
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-
-Kind regards
-Uffe
+SGkgRmFiaW8sCgpPbiBGcmlkYXkgMjUgTm92IDIwMTYgMTA6NDM6MDQgRmFiaW8gRXN0ZXZhbSB3
+cm90ZToKPiBPbiBUaHUsIE5vdiAyNCwgMjAxNiBhdCA5OjI2IFBNLCBMYXVyZW50IFBpbmNoYXJ0
+IHdyb3RlOgo+ID4gQW5vdGhlciBxdWVzdGlvbiBJIGhhdmUgYWJvdXQgdGhlIGJ1cyBjbG9jayAo
+Q0MnaW5nIHRoZSBkZXZpY2V0cmVlIG1haWxpbmcKPiA+IGxpc3QgYXMgd2VsbCBhcyB0aGUgY2xv
+Y2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRoZXIgaXQgc2hvdWxkIGJlIG1hZGUKPiA+IG9wdGlvbmFs
+LiBUaGUgY2xvY2sgaXMgb2J2aW91c2x5IG1hbmRhdG9yeSBmcm9tIGEgaGFyZHdhcmUgcG9pbnQg
+b2Ygdmlldwo+ID4gKGdpdmVuIHRoYXQgQVBCIGlzIGEgc3luY2hyb25vdXMgYnVzIGFuZCB0aHVz
+IHJlcXVpcmVzIGEgY2xvY2spLCBidXQgaW4KPiA+IHNvbWUgU29DcyAoc3BlY2lmaWNhbGx5IGZv
+ciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlzIGFsd2F5cyBvbiBhbmQKPiA+IGNhbid0
+IGJlIGNvbnRyb2xsZWQuIFdlIGFscmVhZHkgb21pdCBidXMgY2xvY2tzIGluIERUIGZvciBtb3N0
+IElQIGNvcmVzCj4gPiB3aGVuIHRoZSBjbG9jayBjYW4gbmV2ZXIgYmUgY29udHJvbGxlZCAoYW5k
+IHdlIGFsc28gb21pdCBhIGJ1bmNoIG9mIG90aGVyCj4gPiBjbG9ja3MgdGhhdCB3ZSBkb24ndCBl
+dmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNlIHRvIG1ha2UgdGhlCj4gPiBj
+bG9jayBvcHRpb25hbC4gT3RoZXJ3aXNlIHRoZXJlIHdvdWxkIGJlIHJ1bnRpbWUgb3ZlcmhlYWQg
+dHJ5aW5nIHRvIGhhbmRsZQo+ID4gYSBjbG9jayB0aGF0IGNhbid0IGJlIGNvbnRyb2xsZWQuCj4g
+Cj4gV2hhdCBpZiB5b3UgcmVnaXN0ZXIgdGhlIGNsb2NrIGFzIGEgImR1bW15IiBjbG9jayBpbnN0
+ZWFkPwoKSW4gdGhhdCBjYXNlIEkgY2FuIGFzIHdlbGwgc3BlY2lmeSB0aGUgY29ycmVjdCBjbG9j
+ay4gTXkgcG9pbnQgd2FzIHRoYXQsIGZvciAKY2xvY2tzIHRoYXQgd2Uga25vdyBhcmUgYWx3YXlz
+IG9uLCBzcGVjaWZ5aW5nIHRoZW0gaW4gRFQgd2lsbCBsZWFkIHRvIHJ1bnRpbWUgCm92ZXJoZWFk
+IChyZWdpc3RyYXRpb24gb2YgdGhlIGNsb2NrLCBsb29rdXAsIHJ1bnRpbWUgaGFuZGxpbmcsIC4u
+LikgdGhhdCB3ZSAKY291bGQgYXMgd2VsbCBhdm9pZC4gSSB0aGluayB0aGUgcXVlc3Rpb24gaGFz
+IGEgYnJvYWRlciBzY29wZSB0aGFuIGp1c3QgdGhlIApkdy1oZG1pIGRyaXZlciwgaGVuY2UgdGhl
+IHdpZGVuZWQgYXVkaWVuY2UgaW4gQ0MuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
