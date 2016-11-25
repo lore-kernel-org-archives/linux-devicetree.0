@@ -1,56 +1,27 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/3] increase TSCADC clock to 24MHz and fix
- ti,charge-delay to represent in nS
-Date: Fri, 25 Nov 2016 09:59:18 +0000
-Message-ID: <20161125095918.GZ10134@dell.home>
-References: <20161110163515.27598-1-mugunthanvnm@ti.com>
- <71482721-fd60-65b2-d601-f1698ce5fa0a@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 04/10] power: supply: axp20x_usb_power: add 100mA max
+ current limit for AXP223
+Date: Fri, 25 Nov 2016 17:56:56 +0800
+Message-ID: <CAGb2v66WZCR3afRk6e03gs4RqUPbV4ixb_6=T3=qSMWgcscX3w@mail.gmail.com>
+References: <20161125090921.23138-1-quentin.schulz@free-electrons.com> <20161125090921.23138-5-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <71482721-fd60-65b2-d601-f1698ce5fa0a@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20161125090921.23138-5-quentin.schulz@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Nov 2016, Mugunthan V N wrote:
+On Fri, Nov 25, 2016 at 5:09 PM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> The X-Powers AXP223 shares most of its behaviour with the AXP221 PMIC
+> but allows the VBUS power supply max current to be set to 100mA (like
+> the AXP209 PMIC).
+>
+> This basically adds a new compatible to the VBUS power supply driver and
+> adds a check on the compatible when setting current max limit.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 
-> Hi Dmitry Torokhov,
-> 
-> On Thursday 10 November 2016 10:05 PM, Mugunthan V N wrote:
-> > This patch series enables ADC to be clocked at 24MHz as the
-> > TI AM335x ADC driver has already adopted to use DMA to transfer
-> > ADC samples. Now ADC can generated upto 800K Samples per second
-> > with the patch [1] on AM335x BBB and AM437x GP EVM.
-> > 
-> > when ADC ref clock is set at 24MHz, I am seeing some issue with
-> > touch screen pointer as the pointer jumps to random locations
-> > with free draw application. The issue is due to increase in ADC
-> > clock and charge delay for the touchscreen ADC line duration
-> > reduced.
-> > 
-> > So the notation of ti,charge-delay in terms of ADC clock is
-> > wrong, it has to be represented in time and driver has to convert
-> > the charge delay time to ADC clocks based on what ADC clock
-> > frequency is set.
-> > 
-> > Measured the performance with the iio_generic_buffer with the
-> > patch [2] applied
-> > 
-> > Verified the touch screen on AM335x GP EVM and AM335x BBB LCD7
-> > cape with [3] dts for display and touch screen to work.
-> > 
-> 
-> Since there are acks from DT and MFD maintainers, can you pull the patch
-> series if you do not have any more comments.
-
-Cant do anything without *all* Acks.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Acked-by: Chen-Yu Tsai <wens@csie.org>
