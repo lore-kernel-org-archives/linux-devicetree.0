@@ -1,158 +1,95 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
- soc
-Date: Thu, 24 Nov 2016 21:20:15 -0800
-Message-ID: <20161125052008.GA8342@localhost.localdomain>
-References: <1478081906-12009-1-git-send-email-kernel@martin.sperl.org>
- <1478081906-12009-3-git-send-email-kernel@martin.sperl.org>
- <20161117021107.GA2647@localhost.localdomain>
- <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
- <20161117151019.GA3115@localhost.localdomain>
- <7957B3CC-0E18-4B27-82EB-EF88B7695E28@martin.sperl.org>
- <20161119042224.GA25063@localhost.localdomain>
- <28F93ABE-8210-4389-AE77-4D5E830E669B@martin.sperl.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] ARM: dts: sun8i-h3: add HDMI video nodes
+Date: Fri, 25 Nov 2016 13:27:20 +0800
+Message-ID: <6896101480051640@web28h.yandex.ru>
+References: <cover.1479641523.git.moinejf@free.fr> <cdf50b8433e2d9a053e35f8788bfcd5d41504312.1479641523.git.moinejf@free.fr>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <28F93ABE-8210-4389-AE77-4D5E830E669B-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBPEX37AQKGQETRBKJ5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cdf50b8433e2d9a053e35f8788bfcd5d41504312.1479641523.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: "moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, Nov 22, 2016 at 03:28:04PM +0100, Martin Sperl wrote:
-> Hi Eduardo!
-> 
-> On 19.11.2016 05:22, Eduardo Valentin wrote:
-> > Hello Martin,
-
-<cut>
-
-> 
-> I was asked to implement the "initialize" case just in case FW ever
-> stopped setting up the device itself, so that is why this code is
-> included.
-
-OK. Looks like we (like, we in the Linux side) do not understand the
-conditions that firmware fails to initialize the thermal device, but we
-still want to force an initialization, hoping to get the device in a sane
-state, even if we do not know if the firmware is correctly booted or
-not. And that is done silently, with no notification to user. I see.
-
-> 
-> > 
-> > Who has the ownership of this device?
-> 
-> Joined ownership I suppose...
-> 
-
-with no synchronization mechanism?
-
-> > 
-> >> The above mentioned “configuration if not running” reflect the values that
-> >> the FW is currently setting. We should not change those values as long as the
-> >> Firmware is also reading the temperature on its own.
-> > 
-> > hmm.. that looks like racy to me. Again, How do you synchronize accesses to
-> > this device? What if you configure the device and right after the
-> > firmware updates the configs? How do you make sure the configs you are
-> > writing here are the same used by the firmware? What if the firmware
-> > version changes? What versions of the firmware does this driver support?
-> > 
-> > Would it make sense to simply always initialize the device? Do you have
-> > a way to tell the firmware that it should not use the device?
-> > 
-> > Or, if you want to keep the device driver simply being a dummy reader,
-> > would it make sense to simply avoid writing configurations to the
-> > device, and simply retry to check if the firmware gets the device
-> > initialized?
-> 
-> Again: the device registers are only ever written if the device is not started
-> already. Otherwise the driver only reads for the ADC register, so there
-> is no real race here.
-> 
-
-and no race?
-
-To me, there is a race when you write to the config of this device,
-given that there is no sync between the two. We do not know if the
-firmware would be still attempting to initialize the device or not, do
-we? 
-
-> > 
-> >> 
-> >>> 
-> >>>> So do you need another version of the patchset that uses that new API?
-> >>> 
-> >>> I think the API usage is change that can be done together with
-> >>> clarification for the above questions too: on hardware state,
-> >>> firmware loading, maybe a master driver dependency, and the ADC
-> >>> conversion sequence, which are not well clear to me on this driver. As long as
-> >>> this is clarified and documented in the code (can be simple comments so
-> >>> it is clear to whoever reads in the future), then I would be OK with
-> >>> this driver.
-> >> 
-> >> So how do you want this to get “documented” in the driver?
-> >> The setup and Firmware is a generic feature of the SOC, so if we would put
-> >> some clarifications in this driver, then we would need to put it in every
-> >> bcm283X driver (which seems unreasonable).
-> >> 
-> > 
-> > I think a simple comment explaining the firmware dependency and the
-> > expected pre-conditions to get this driver working in a sane state would
-> > do it.
-> > 
-> > A better device initialization would also be appreciated. Based on my
-> > limited understanding of this platform, and your explanations, this
-> > device seams to have a serious race condition with firmware while
-> > accessing this device.
-> 
-> Again: the firmware runs before the ARM is started and for all practical
-> purposes the firmware is (as of now) configuring the thermal device.
-> 
-
-Oh, OK, we know the firmware wont touch the thermal device, right?
-
-Then, If that is the case, what is still not clear is in which conditions
-the firmware would leave the thermal device uninitialized.
-
-This driver seams to be only concerned of critical temperature. The
-concern I see with this code, and the explanations I heard, is a side
-effect of seeing spurious thermal shutdown, or even worse, getting the
-device booted hot and never shutting down, due to (possible) race
-between the two systems.
-
-Besides, if the firmware would not touch the thermal device when ARM is
-running, why not always writing to the device a configuration that you
-know is your sane starting point? Just do not rely on what was
-previously set. How do you know it is a sane configuration? Have you
-done sensor calibration exercise to confirm temperature reads are
-correct?
-
-> As for the use of thermal_zone_get_offset/slope: looking into the code
-> it looks like this actually blows up the code, as we now would need to
-> allocate thermal_zone_params and preset it with the “correct” values.
-> 
-> So more code to maintain and more memory consumed.
-> The only advantage I would see is that it would allow to set offset and
-> slope directly in the device tree.
-> 
-
-Any specific reason not to use of-thermal, then?
-
-
-> Thanks,
-> 		Martin
-
-BR,
-
-Eduardo Valentin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCjIwLjExLjIwMTYsIDIwOjA3LCAiSmVhbi1GcmFuY29pcyBNb2luZSIgPG1vaW5lamZAZnJl
+ZS5mcj46DQo+IFNpZ25lZC1vZmYtYnk6IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5lamZAZnJl
+ZS5mcj4NCj4gLS0tDQo+IMKgYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaSB8IDUxICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+IMKgMSBmaWxlIGNoYW5n
+ZWQsIDUxIGluc2VydGlvbnMoKykNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L3N1bjhpLWgzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMy5kdHNpDQo+IGluZGV4
+IDQxNmI4MjUuLjdjNmIxZDUgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhp
+LWgzLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaQ0KPiBAQCAt
+MTQwLDYgKzE0MCwxNiBAQA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3Np
+emUtY2VsbHMgPSA8MT47DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByYW5n
+ZXM7DQo+DQo+ICsgZGU6IGRlLWNvbnRyb2xsZXJAMDEwMDAwMDAgew0KPiArIGNvbXBhdGlibGUg
+PSAiYWxsd2lubmVyLHN1bjhpLWgzLWRpc3BsYXktZW5naW5lIjsNCj4gKyByZWcgPSA8MHgwMTAw
+MDAwMCAweDQwMDAwMD47DQo+ICsgY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19ERT4sIDwmY2N1IENM
+S19ERT47DQo+ICsgY2xvY2stbmFtZXMgPSAiYnVzIiwgImNsb2NrIjsNCj4gKyByZXNldHMgPSA8
+JmNjdSBSU1RfQlVTX0RFPjsNCj4gKyBwb3J0cyA9IDwmbGNkMF9wPjsNCj4gKyBzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KPiArIH07DQo+ICsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoGRtYTogZG1hLWNvbnRyb2xsZXJAMDFjMDIwMDAgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1
+bjhpLWgzLWRtYSI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgcmVnID0gPDB4MDFjMDIwMDAgMHgxMDAwPjsNCj4gQEAgLTE0OSw2ICsxNTksMjMg
+QEANCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAj
+ZG1hLWNlbGxzID0gPDE+Ow0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsN
+Cj4NCj4gKyBsY2QwOiBsY2QtY29udHJvbGxlckAwMWMwYzAwMCB7DQo+ICsgY29tcGF0aWJsZSA9
+ICJhbGx3aW5uZXIsc3VuOGktYTgzdC10Y29uIjsNCj4gKyByZWcgPSA8MHgwMWMwYzAwMCAweDQw
+MD47DQo+ICsgY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19UQ09OMD4sIDwmY2N1IENMS19UQ09OMD47
+DQo+ICsgY2xvY2stbmFtZXMgPSAiYnVzIiwgImNsb2NrIjsNCj4gKyByZXNldHMgPSA8JmNjdSBS
+U1RfQlVTX1RDT04wPjsNCj4gKyBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODYgSVJRX1RZUEVfTEVW
+RUxfSElHSD47DQo+ICsgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gKyAjYWRkcmVzcy1jZWxscyA9
+IDwxPjsNCj4gKyAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKyBsY2QwX3A6IHBvcnQgew0KPiArIGxj
+ZDBfaGRtaTogZW5kcG9pbnQgew0KPiArIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9sY2QwPjsN
+Cj4gKyB9Ow0KPiArIH07DQo+ICsgfTsNCj4gKw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgbW1jMDogbW1jQDAxYzBmMDAwIHsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW43aS1h
+MjAtbW1jIjsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqByZWcgPSA8MHgwMWMwZjAwMCAweDEwMDA+Ow0KPiBAQCAtMzE0LDYgKzM0MSwxMSBAQA0K
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2Nr
+LW5hbWVzID0gImhvc2MiLCAibG9zYyI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNyZXNldC1jZWxscyA9IDwxPjsN
+Cj4gKw0KPiArIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2N1IENMS19QTExfREU+LA0KDQpDYW5ub3Qg
+Z2V0IHRoZSBwYXRjaCBidWlsdCBvbiA0LjktcmMsIGFzIENMS19QTExfREUgaXMgbm90IGFuIGV4
+cG9ydGVkIGNsb2NrLg0KDQpPbmx5IENMS19ERSBpcyBleHBvcnRlZC4NCg0KPiArIDwmY2N1IENM
+S19ERT47DQo+ICsgYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8ODY0MDAwMDAwPiwNCj4gKyA8NDMy
+MDAwMDAwPjsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+DQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwaW86IHBpbmN0cmxAMDFjMjA4MDAgew0K
+PiBAQCAtNTY0LDYgKzU5NiwyNSBAQA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVwdHMgPSA8R0lDX1BQSSA5IChHSUNfQ1BVX01BU0tf
+U0lNUExFKDQpIHwgSVJRX1RZUEVfTEVWRUxfSElHSCk+Ow0KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgfTsNCj4NCj4gKyBoZG1pOiBoZG1pQDAxZWUwMDAwIHsNCj4gKyBjb21w
+YXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1oMy1oZG1pIjsNCj4gKyByZWcgPSA8MHgwMWVlMDAw
+MCAweDIwMDAwPjsNCj4gKyBjbG9ja3MgPSA8JmNjdSBDTEtfQlVTX0hETUk+LCA8JmNjdSBDTEtf
+SERNST4sDQo+ICsgPCZjY3UgQ0xLX0hETUlfRERDPjsNCj4gKyBjbG9jay1uYW1lcyA9ICJidXMi
+LCAiY2xvY2siLCAiZGRjLWNsb2NrIjsNCj4gKyByZXNldHMgPSA8JmNjdSBSU1RfQlVTX0hETUkw
+PiwgPCZjY3UgUlNUX0JVU19IRE1JMT47DQo+ICsgcmVzZXQtbmFtZXMgPSAiaGRtaTAiLCAiaGRt
+aTEiOw0KPiArIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ICsgI3NpemUtY2VsbHMgPSA8MD47DQo+ICsgcG9ydEAwIHsgLyogdmlkZW8gKi8NCj4gKyBy
+ZWcgPSA8MD47DQo+ICsgaGRtaV9sY2QwOiBlbmRwb2ludCB7DQo+ICsgcmVtb3RlLWVuZHBvaW50
+ID0gPCZsY2QwX2hkbWk+Ow0KPiArIH07DQo+ICsgfTsNCj4gKyB9Ow0KPiArDQo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBydGM6IHJ0Y0AwMWYwMDAwMCB7DQo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJh
+bGx3aW5uZXIsc3VuNmktYTMxLXJ0YyI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDB4MDFmMDAwMDAgMHg1ND47DQo+IC0tDQo+IDIu
+MTAuMg0KPg0KPiAtLQ0KPiBZb3UgcmVjZWl2ZWQgdGhpcyBtZXNzYWdlIGJlY2F1c2UgeW91IGFy
+ZSBzdWJzY3JpYmVkIHRvIHRoZSBHb29nbGUgR3JvdXBzICJsaW51eC1zdW54aSIgZ3JvdXAuDQo+
+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cCBhbmQgc3RvcCByZWNlaXZpbmcgZW1haWxz
+IGZyb20gaXQsIHNlbmQgYW4gZW1haWwgdG8gbGludXgtc3VueGkrdW5zdWJzY3JpYmVAZ29vZ2xl
+Z3JvdXBzLmNvbS4NCj4gRm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29v
+Z2xlLmNvbS9kL29wdG91dC4NCg0KLS0gCllvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVz
+ZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBn
+cm91cC4KVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBl
+bWFpbHMgZnJvbSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBn
+b29nbGVncm91cHMuY29tLgpGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5n
+b29nbGUuY29tL2Qvb3B0b3V0Lgo=
