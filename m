@@ -1,107 +1,162 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] ARM: dts: sun8i-h3: add HDMI video nodes
-Date: Fri, 25 Nov 2016 17:41:51 +0800
-Message-ID: <3188681480066911@web3h.yandex.ru>
-References: <cover.1479641523.git.moinejf@free.fr> <cdf50b8433e2d9a053e35f8788bfcd5d41504312.1479641523.git.moinejf@free.fr>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 02/10] power: supply: axp20x_usb_power: set min voltage
+ and max current from sysfs
+Date: Fri, 25 Nov 2016 17:42:26 +0800
+Message-ID: <CAGb2v67H7guQQg6cHM7fzLNbegNWsJv=BUDAmxuPNSVXkDcnWA@mail.gmail.com>
+References: <20161125090921.23138-1-quentin.schulz@free-electrons.com>
+ <20161125090921.23138-3-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBYUO4DAQKGQEF7Z5BWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cdf50b8433e2d9a053e35f8788bfcd5d41504312.1479641523.git.moinejf-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161125090921.23138-3-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCjIwLjExLjIwMTYsIDIwOjEyLCAiSmVhbi1GcmFuY29pcyBNb2luZSIgPG1vaW5lamZAZnJl
-ZS5mcj46DQo+IFNpZ25lZC1vZmYtYnk6IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5lamZAZnJl
-ZS5mcj4NCj4gLS0tDQo+IMKgYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaSB8IDUxICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+IMKgMSBmaWxlIGNoYW5n
-ZWQsIDUxIGluc2VydGlvbnMoKykNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjhpLWgzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMy5kdHNpDQo+IGluZGV4
-IDQxNmI4MjUuLjdjNmIxZDUgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhp
-LWgzLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMuZHRzaQ0KPiBAQCAt
-MTQwLDYgKzE0MCwxNiBAQA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3Np
-emUtY2VsbHMgPSA8MT47DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByYW5n
-ZXM7DQo+DQo+ICsgZGU6IGRlLWNvbnRyb2xsZXJAMDEwMDAwMDAgew0KPiArIGNvbXBhdGlibGUg
-PSAiYWxsd2lubmVyLHN1bjhpLWgzLWRpc3BsYXktZW5naW5lIjsNCj4gKyByZWcgPSA8MHgwMTAw
-MDAwMCAweDQwMDAwMD47DQo+ICsgY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19ERT4sIDwmY2N1IENM
-S19ERT47DQo+ICsgY2xvY2stbmFtZXMgPSAiYnVzIiwgImNsb2NrIjsNCj4gKyByZXNldHMgPSA8
-JmNjdSBSU1RfQlVTX0RFPjsNCj4gKyBwb3J0cyA9IDwmbGNkMF9wPjsNCj4gKyBzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KPiArIH07DQo+ICsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGRtYTogZG1hLWNvbnRyb2xsZXJAMDFjMDIwMDAgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1
-bjhpLWgzLWRtYSI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmVnID0gPDB4MDFjMDIwMDAgMHgxMDAwPjsNCj4gQEAgLTE0OSw2ICsxNTksMjMg
-QEANCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAj
-ZG1hLWNlbGxzID0gPDE+Ow0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsN
-Cj4NCj4gKyBsY2QwOiBsY2QtY29udHJvbGxlckAwMWMwYzAwMCB7DQo+ICsgY29tcGF0aWJsZSA9
-ICJhbGx3aW5uZXIsc3VuOGktYTgzdC10Y29uIjsNCj4gKyByZWcgPSA8MHgwMWMwYzAwMCAweDQw
-MD47DQo+ICsgY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19UQ09OMD4sIDwmY2N1IENMS19UQ09OMD47
-DQo+ICsgY2xvY2stbmFtZXMgPSAiYnVzIiwgImNsb2NrIjsNCj4gKyByZXNldHMgPSA8JmNjdSBS
-U1RfQlVTX1RDT04wPjsNCj4gKyBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODYgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQo+ICsgc3RhdHVzID0gImRpc2FibGVkIjsNCj4gKyAjYWRkcmVzcy1jZWxscyA9
-IDwxPjsNCj4gKyAjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKyBsY2QwX3A6IHBvcnQgew0KPiArIGxj
-ZDBfaGRtaTogZW5kcG9pbnQgew0KPiArIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9sY2QwPjsN
-Cj4gKyB9Ow0KPiArIH07DQo+ICsgfTsNCj4gKw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgbW1jMDogbW1jQDAxYzBmMDAwIHsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW43aS1h
-MjAtbW1jIjsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqByZWcgPSA8MHgwMWMwZjAwMCAweDEwMDA+Ow0KPiBAQCAtMzE0LDYgKzM0MSwxMSBAQA0K
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2Nr
-LW5hbWVzID0gImhvc2MiLCAibG9zYyI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNyZXNldC1jZWxscyA9IDwxPjsN
-Cj4gKw0KPiArIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2N1IENMS19QTExfREU+LA0KPiArIDwmY2N1
-IENMS19ERT47DQo+ICsgYXNzaWduZWQtY2xvY2stcmF0ZXMgPSA8ODY0MDAwMDAwPiwNCj4gKyA8
-NDMyMDAwMDAwPjsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+DQo+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwaW86IHBpbmN0cmxAMDFjMjA4MDAg
-ew0KPiBAQCAtNTY0LDYgKzU5NiwyNSBAQA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVwdHMgPSA8R0lDX1BQSSA5IChHSUNfQ1BVX01B
-U0tfU0lNUExFKDQpIHwgSVJRX1RZUEVfTEVWRUxfSElHSCk+Ow0KPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4NCj4gKyBoZG1pOiBoZG1pQDAxZWUwMDAwIHsNCj4gKyBj
-b21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1oMy1oZG1pIjsNCj4gKyByZWcgPSA8MHgwMWVl
-MDAwMCAweDIwMDAwPjsNCj4gKyBjbG9ja3MgPSA8JmNjdSBDTEtfQlVTX0hETUk+LCA8JmNjdSBD
-TEtfSERNST4sDQo+ICsgPCZjY3UgQ0xLX0hETUlfRERDPjsNCj4gKyBjbG9jay1uYW1lcyA9ICJi
-dXMiLCAiY2xvY2siLCAiZGRjLWNsb2NrIjsNCj4gKyByZXNldHMgPSA8JmNjdSBSU1RfQlVTX0hE
-TUkwPiwgPCZjY3UgUlNUX0JVU19IRE1JMT47DQo+ICsgcmVzZXQtbmFtZXMgPSAiaGRtaTAiLCAi
-aGRtaTEiOw0KPiArIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsgI2FkZHJlc3MtY2VsbHMgPSA8
-MT47DQo+ICsgI3NpemUtY2VsbHMgPSA8MD47DQo+ICsgcG9ydEAwIHsgLyogdmlkZW8gKi8NCj4g
-KyByZWcgPSA8MD47DQo+ICsgaGRtaV9sY2QwOiBlbmRwb2ludCB7DQo+ICsgcmVtb3RlLWVuZHBv
-aW50ID0gPCZsY2QwX2hkbWk+Ow0KPiArIH07DQo+ICsgfTsNCj4gKyB9Ow0KPiArDQo+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBydGM6IHJ0Y0AwMWYwMDAwMCB7DQo+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9
-ICJhbGx3aW5uZXIsc3VuNmktYTMxLXJ0YyI7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDB4MDFmMDAwMDAgMHg1ND47DQoNCkFmdGVy
-IHJlbW92aW5nIENMS19QTExfREUncyBhc3NpZ25lZC1jbG9jaywgdGhlIGtlcm5lbCBwYXNzZXMg
-Y29tcGlsYXRpb24uDQoNCkhvd2V2ZXIsIGl0IGNhbm5vdCByZWNvZ25pemUgYW55IEhETUkgc2Ny
-ZWVuLi4uDQoNCihNeSBib2FyZCBpcyBPcmFuZ2UgUGkgT25lLCBhbmQgSSBtYW51YWxseSBhZGRl
-ZCBzdGF0dXM9Im9rYXkiOyB0byAmbGNkMCwgJmRlLCAmaGRtaSkNCg0KWyAgIDE2LjUwNzgwMl0g
-c3VuOGktZGUyIDEwMDAwMDAuZGUtY29udHJvbGxlcjogYm91bmQgMWMwYzAwMC5sY2QtY29udHJv
-bGxlciAob3BzIGRlMl9sY2Rfb3BzIFtzdW44aV9kZTJfZHJtXSkNClsgICAxNi42NzU5NDhdIHN1
-bjhpLWRlMiAxMDAwMDAwLmRlLWNvbnRyb2xsZXI6IGJvdW5kIDFlZTAwMDAuaGRtaSAob3BzIGRl
-Ml9oZG1pX2ZpbmkgW3N1bjhpX2RlMl9oZG1pXSkNClsgICAxNi42ODUxMjBdIFtkcm1dIFN1cHBv
-cnRzIHZibGFuayB0aW1lc3RhbXAgY2FjaGluZyBSZXYgMiAoMjEuMTAuMjAxMykuDQpbICAgMTYu
-Njk1ODc2XSBbZHJtXSBObyBkcml2ZXIgc3VwcG9ydCBmb3IgdmJsYW5rIHRpbWVzdGFtcCBxdWVy
-eS4NClsgICAxNi43MDE4NjJdIHN1bjhpLWRlMiAxMDAwMDAwLmRlLWNvbnRyb2xsZXI6IE5vIGNv
-bm5lY3RvcnMgcmVwb3J0ZWQgY29ubmVjdGVkIHdpdGggbW9kZXMNClsgICAxNi43MTMwNjFdIFtk
-cm1dIENhbm5vdCBmaW5kIGFueSBjcnRjIG9yIHNpemVzIC0gZ29pbmcgMTAyNHg3NjgNClsgICAx
-Ni43MzQyMTRdIENvbnNvbGU6IHN3aXRjaGluZyB0byBjb2xvdXIgZnJhbWUgYnVmZmVyIGRldmlj
-ZSAxMjh4NDgNClsgICAxNi43NTEwMjJdIHN1bjhpLWRlMiAxMDAwMDAwLmRlLWNvbnRyb2xsZXI6
-IGZiMDogIGZyYW1lIGJ1ZmZlciBkZXZpY2UNCg0KPiAtLQ0KPiAyLjEwLjINCj4NCj4gX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbA0KDQotLSAKWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUg
-c3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3VwLgpUbyB1
-bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9t
-IGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vw
-cy5jb20uCkZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20v
-ZC9vcHRvdXQuCg==
+On Fri, Nov 25, 2016 at 5:09 PM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> AXP20X and AXP22X PMICs allow setting the min voltage and max current of
+> VBUS power supply. This adds entries in sysfs to allow to do so.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> ---
+>  drivers/power/supply/axp20x_usb_power.c | 72 +++++++++++++++++++++++++++++++++
+>  include/linux/mfd/axp20x.h              |  3 ++
+>  2 files changed, 75 insertions(+)
+>
+> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+> index b19754e..638cb52 100644
+> --- a/drivers/power/supply/axp20x_usb_power.c
+> +++ b/drivers/power/supply/axp20x_usb_power.c
+> @@ -155,6 +155,74 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+>         return 0;
+>  }
+>
+> +static int axp20x_usb_power_set_property(struct power_supply *psy,
+> +                                        enum power_supply_property psp,
+> +                                        const union power_supply_propval *val)
+> +{
+> +       struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
+> +       int ret, val1;
+> +
+> +       switch (psp) {
+> +       case POWER_SUPPLY_PROP_VOLTAGE_MIN:
+> +               switch (val->intval) {
+> +               case 4000000:
+> +               case 4100000:
+> +               case 4200000:
+> +               case 4300000:
+> +               case 4400000:
+> +               case 4500000:
+> +               case 4600000:
+> +               case 4700000:
+> +                       val1 = (val->intval - 4000000) / 100000;
+> +                       ret = regmap_update_bits(power->regmap,
+> +                                                AXP20X_VBUS_IPSOUT_MGMT,
+> +                                                AXP20X_VBUS_VHOLD_MASK,
+> +                                                val1 << 3);
+
+Please also define the shift offset.
+
+> +                       if (ret)
+> +                               return ret;
+> +
+> +                       return 0;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +
+> +               return 0;
+> +
+> +       case POWER_SUPPLY_PROP_CURRENT_MAX:
+> +               switch (val->intval) {
+> +               case 100000:
+> +                       if (power->axp20x_id == AXP221_ID)
+> +                               return -EINVAL;
+> +               case 500000:
+> +               case 900000:
+> +                       val1 = (900000 - val->intval) / 400000;
+> +                       ret = regmap_update_bits(power->regmap,
+> +                                                AXP20X_VBUS_IPSOUT_MGMT,
+> +                                                AXP20X_VBUS_CLIMIT_MASK, val1);
+> +                       if (ret)
+> +                               return ret;
+> +
+> +                       return 0;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +
+> +               return 0;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
+> +                                          enum power_supply_property psp)
+> +{
+> +       return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
+> +              psp == POWER_SUPPLY_PROP_CURRENT_MAX;
+> +}
+> +
+>  static enum power_supply_property axp20x_usb_power_properties[] = {
+>         POWER_SUPPLY_PROP_HEALTH,
+>         POWER_SUPPLY_PROP_PRESENT,
+> @@ -178,7 +246,9 @@ static const struct power_supply_desc axp20x_usb_power_desc = {
+>         .type = POWER_SUPPLY_TYPE_USB,
+>         .properties = axp20x_usb_power_properties,
+>         .num_properties = ARRAY_SIZE(axp20x_usb_power_properties),
+> +       .property_is_writeable = axp20x_usb_power_prop_writeable,
+>         .get_property = axp20x_usb_power_get_property,
+> +       .set_property = axp20x_usb_power_set_property,
+>  };
+>
+>  static const struct power_supply_desc axp22x_usb_power_desc = {
+> @@ -186,7 +256,9 @@ static const struct power_supply_desc axp22x_usb_power_desc = {
+>         .type = POWER_SUPPLY_TYPE_USB,
+>         .properties = axp22x_usb_power_properties,
+>         .num_properties = ARRAY_SIZE(axp22x_usb_power_properties),
+> +       .property_is_writeable = axp20x_usb_power_prop_writeable,
+>         .get_property = axp20x_usb_power_get_property,
+> +       .set_property = axp20x_usb_power_set_property,
+>  };
+>
+>  static const struct of_device_id axp20x_usb_power_match[] = {
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index fec597f..8883595 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -56,6 +56,9 @@ enum {
+>  #define AXP20X_LDO24_V_OUT             0x28
+>  #define AXP20X_LDO3_V_OUT              0x29
+>  #define AXP20X_VBUS_IPSOUT_MGMT                0x30
+> +
+> +#define AXP20X_VBUS_VHOLD_MASK         GENMASK(5, 3)
+> +
+
+For the AXP drivers, we keep the per register bit field
+definitions in the drivers that use them.
+
+Regards
+ChenYu
+
+>  #define AXP20X_V_OFF                   0x31
+>  #define AXP20X_OFF_CTRL                        0x32
+>  #define AXP20X_CHRG_CTRL1              0x33
+> --
+> 2.9.3
+>
