@@ -1,50 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Fri, 25 Nov 2016 15:25 +0200
-Message-ID: <1543509.CFZUmxu4GH@avalon>
-References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
- <CAOMZO5CgUm39E1hhLrs5SX9ALMj9BGiRKaY874exNWoQhH2AWQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAOMZO5CgUm39E1hhLrs5SX9ALMj9BGiRKaY874exNWoQhH2AWQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Andy Yan <andy.yan@rock-chips.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/2] net: phy: realtek: fix enabling of the TX-delay for RTL8211F
+Date: Fri, 25 Nov 2016 14:12:01 +0100
+Message-ID: <20161125131201.19994-3-martin.blumenstingl@googlemail.com>
+References: <20161125131201.19994-1-martin.blumenstingl@googlemail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161125131201.19994-1-martin.blumenstingl@googlemail.com>
+Sender: netdev-owner@vger.kernel.org
+To: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, sean.wang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFiaW8sCgpPbiBGcmlkYXkgMjUgTm92IDIwMTYgMTA6NDM6MDQgRmFiaW8gRXN0ZXZhbSB3
-cm90ZToKPiBPbiBUaHUsIE5vdiAyNCwgMjAxNiBhdCA5OjI2IFBNLCBMYXVyZW50IFBpbmNoYXJ0
-IHdyb3RlOgo+ID4gQW5vdGhlciBxdWVzdGlvbiBJIGhhdmUgYWJvdXQgdGhlIGJ1cyBjbG9jayAo
-Q0MnaW5nIHRoZSBkZXZpY2V0cmVlIG1haWxpbmcKPiA+IGxpc3QgYXMgd2VsbCBhcyB0aGUgY2xv
-Y2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRoZXIgaXQgc2hvdWxkIGJlIG1hZGUKPiA+IG9wdGlvbmFs
-LiBUaGUgY2xvY2sgaXMgb2J2aW91c2x5IG1hbmRhdG9yeSBmcm9tIGEgaGFyZHdhcmUgcG9pbnQg
-b2Ygdmlldwo+ID4gKGdpdmVuIHRoYXQgQVBCIGlzIGEgc3luY2hyb25vdXMgYnVzIGFuZCB0aHVz
-IHJlcXVpcmVzIGEgY2xvY2spLCBidXQgaW4KPiA+IHNvbWUgU29DcyAoc3BlY2lmaWNhbGx5IGZv
-ciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlzIGFsd2F5cyBvbiBhbmQKPiA+IGNhbid0
-IGJlIGNvbnRyb2xsZWQuIFdlIGFscmVhZHkgb21pdCBidXMgY2xvY2tzIGluIERUIGZvciBtb3N0
-IElQIGNvcmVzCj4gPiB3aGVuIHRoZSBjbG9jayBjYW4gbmV2ZXIgYmUgY29udHJvbGxlZCAoYW5k
-IHdlIGFsc28gb21pdCBhIGJ1bmNoIG9mIG90aGVyCj4gPiBjbG9ja3MgdGhhdCB3ZSBkb24ndCBl
-dmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNlIHRvIG1ha2UgdGhlCj4gPiBj
-bG9jayBvcHRpb25hbC4gT3RoZXJ3aXNlIHRoZXJlIHdvdWxkIGJlIHJ1bnRpbWUgb3ZlcmhlYWQg
-dHJ5aW5nIHRvIGhhbmRsZQo+ID4gYSBjbG9jayB0aGF0IGNhbid0IGJlIGNvbnRyb2xsZWQuCj4g
-Cj4gV2hhdCBpZiB5b3UgcmVnaXN0ZXIgdGhlIGNsb2NrIGFzIGEgImR1bW15IiBjbG9jayBpbnN0
-ZWFkPwoKSW4gdGhhdCBjYXNlIEkgY2FuIGFzIHdlbGwgc3BlY2lmeSB0aGUgY29ycmVjdCBjbG9j
-ay4gTXkgcG9pbnQgd2FzIHRoYXQsIGZvciAKY2xvY2tzIHRoYXQgd2Uga25vdyBhcmUgYWx3YXlz
-IG9uLCBzcGVjaWZ5aW5nIHRoZW0gaW4gRFQgd2lsbCBsZWFkIHRvIHJ1bnRpbWUgCm92ZXJoZWFk
-IChyZWdpc3RyYXRpb24gb2YgdGhlIGNsb2NrLCBsb29rdXAsIHJ1bnRpbWUgaGFuZGxpbmcsIC4u
-LikgdGhhdCB3ZSAKY291bGQgYXMgd2VsbCBhdm9pZC4gSSB0aGluayB0aGUgcXVlc3Rpb24gaGFz
-IGEgYnJvYWRlciBzY29wZSB0aGFuIGp1c3QgdGhlIApkdy1oZG1pIGRyaXZlciwgaGVuY2UgdGhl
-IHdpZGVuZWQgYXVkaWVuY2UgaW4gQ0MuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The old logic always enabled the TX-delay when the phy-mode was set to
+PHY_INTERFACE_MODE_RGMII. There are dedicated phy-modes which tell the
+PHY driver to enable the RX and/or TX delays:
+- PHY_INTERFACE_MODE_RGMII should disable the RX and TX delay in the
+  PHY (if required, the MAC should add the delays in this case)
+- PHY_INTERFACE_MODE_RGMII_ID should enable RX and TX delay in the PHY
+- PHY_INTERFACE_MODE_RGMII_TXID should enable the TX delay in the PHY
+- PHY_INTERFACE_MODE_RGMII_RXID should enable the RX delay in the PHY
+  (currently not supported by RTL8211F)
+
+With this patch we enable the TX delay for PHY_INTERFACE_MODE_RGMII_ID
+and PHY_INTERFACE_MODE_RGMII_TXID.
+Additionally we now explicity disable the TX-delay, which seems to be
+enabled automatically after a hard-reset of the PHY (by triggering it's
+reset pin) to get a consistent state (as defined by the phy-mode).
+
+This fixes a compatibility problem with some SoCs where the TX-delay was
+also added by the MAC. With the TX-delay being applied twice the TX
+clock was off and TX traffic was broken or very slow (<10Mbit/s) on
+1000Mbit/s links.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/net/phy/realtek.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index aadd6e9..9cbe645 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -102,15 +102,19 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (phydev->interface == PHY_INTERFACE_MODE_RGMII) {
+-		/* enable TXDLY */
+-		phy_write(phydev, RTL8211F_PAGE_SELECT, 0xd08);
+-		reg = phy_read(phydev, 0x11);
++	phy_write(phydev, RTL8211F_PAGE_SELECT, 0xd08);
++	reg = phy_read(phydev, 0x11);
++
++	/* enable TX-delay for rgmii-id and rgmii-txid, otherwise disable it */
++	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++	    phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 		reg |= RTL8211F_TX_DELAY;
+-		phy_write(phydev, 0x11, reg);
+-		/* restore to default page 0 */
+-		phy_write(phydev, RTL8211F_PAGE_SELECT, 0x0);
+-	}
++	else
++		reg &= ~RTL8211F_TX_DELAY;
++
++	phy_write(phydev, 0x11, reg);
++	/* restore to default page 0 */
++	phy_write(phydev, RTL8211F_PAGE_SELECT, 0x0);
+ 
+ 	return 0;
+ }
+-- 
+2.10.2
