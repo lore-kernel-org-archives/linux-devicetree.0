@@ -1,193 +1,165 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC PATCH 2/3] ARM64: dts: meson-gx: Add Graphic Controller nodes
-Date: Fri, 25 Nov 2016 17:03:10 +0100
-Message-ID: <1480089791-12517-3-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [RFC PATCH 3/3] dt-bindings: display: add Amlogic Meson DRM Bindings
+Date: Fri, 25 Nov 2016 17:03:11 +0100
+Message-ID: <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
 References: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, victor.wan@amlogic.com, jerry.cao@amlogic.com, Xing.Xu@amlogic.com, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480089791-12517-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add Video Processing Unit and CVBS Output nodes, and enable CVBS on selected
-boards.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 46 ++++++++++++++++++++++
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  4 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 12 ++++++
- .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  4 ++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  8 ++++
- .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  4 ++
- arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  9 +++++
- 8 files changed, 91 insertions(+)
+ .../bindings/display/meson/meson-drm.txt           | 134 +++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/meson/meson-drm.txt
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index fc033c0..bcc1d1f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -153,6 +153,27 @@
- 		};
- 	};
- 
-+	venc_cvbs: venc-cvbs {
-+		compatible = "amlogic,meson-gx-venc-cvbs";
-+		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/display/meson/meson-drm.txt b/Documentation/devicetree/bindings/display/meson/meson-drm.txt
+new file mode 100644
+index 0000000..89c1b5f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/meson/meson-drm.txt
+@@ -0,0 +1,134 @@
++Amlogic Meson Display Controller
++================================
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++The Amlogic Meson Display controller is composed of several components
++that are going to be documented below:
 +
-+			enc_cvbs_in: port@0 {
-+				 #address-cells = <1>;
-+				 #size-cells = <0>;
++DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
++   | vd1   _______     _____________    _________________     |               |
++D  |-------|      |----|            |   |                |    |   HDMI PLL    |
++D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
++R  |-------|      |----| Processing |   |                |    |               |
++   | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
++R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
++A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
++M  |-------|______|----|____________|   |________________|    |               |
++___|__________________________________________________________|_______________|
++
++
++VIU: Video Input Unit
++---------------------
++
++The Video Input Unit is in charge of the pixel scanout from the DDR memory.
++It fetches the frames addresses, stride and parameters from the "Canvas" memory.
++This part is also in charge of the CSC (Colorspace Conversion).
++It can handle 2 OSD Planes and 2 Video Planes.
++
++VPP: Video Processing Unit
++--------------------------
++
++The Video Processing Unit is in charge if the scaling and blending of the
++various planes into a single pixel stream.
++There is a special "pre-blending" used by the video planes with a dedicated
++scaler and a "post-blending" to merge with the OSD Planes.
++The OSD planes also have a dedicated scaler for one of the OSD.
++
++VENC: Video Encoders
++--------------------
++
++The VENC is composed of the multiple pixel encoders :
++ - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
++ - ENCP : Progressive Video Encoder for HDMI
++ - ENCL : LCD LVDS Encoder
++The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
++tree and provides the scanout clock to the VPP and VIU.
++The ENCI is connected to a single VDAC for Composite Output.
++The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
++
++Device Tree Bindings:
++---------------------
++
++VPU: Video Processing Unit
++--------------------------
++
++Required properties:
++ - compatible: value should be different for each SoC family as :
++ 	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
++ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
++ 	- GXM (S912) : "amlogic,meson-gxm-vpu"
++	followed by the common "amlogic,meson-gx-vpu"
++ - reg: base address and size of he following memory-mapped regions :
++	- vpu
++	- hhi
++	- dmc
++ - reg-names: should contain the names of the previous memory regions
++ - interrupts: should contain the VENC Vsync interrupt number
++
++- ports: A ports node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt. The
++  second port should be the output endpoints for VENC connectors.
++
++VENC CBVS Output
++----------------------
++
++The VENC can output Composite/CVBS output via a decicated VDAC.
++
++Required properties:
++  - compatible: value must be one of:
++ - compatible: value should be different for each SoC family as :
++ 	- GXBB (S905) : "amlogic,meson-gxbb-venc-cvbs"
++ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-venc-cvbs"
++ 	- GXM (S912) : "amlogic,meson-gxm-venc-cvbs"
++	followed by the common "amlogic,meson-gx-venc-cvbs"
++
++- ports: A ports node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt. The
++  first port should be the input endpoints, connected ot the VPU node.
++
++Example:
++
++venc_cvbs: venc-cvbs {
++	compatible = "amlogic,meson-gxbb-venc-cvbs";
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		enc_cvbs_in: port@0 {
++			 #address-cells = <1>;
++			 #size-cells = <0>;
++			 reg = <0>;
++
++			 venc_cvbs_in_vpu: endpoint@0 {
 +				 reg = <0>;
-+
-+				 venc_cvbs_in_vpu: endpoint@0 {
-+					 reg = <0>;
-+					 remote-endpoint = <&vpu_out_venc_cvbs>;
-+				};
++				 remote-endpoint = <&vpu_out_venc_cvbs>;
 +			};
 +		};
 +	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
-@@ -356,5 +377,30 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		vpu: vpu@d0100000 {
-+			compatible = "amlogic,meson-gx-vpu";
-+			reg = <0x0 0xd0100000 0x0 0x100000>,
-+			      <0x0 0xc883c000 0x0 0x1000>,
-+			      <0x0 0xc8838000 0x0 0x1000>;
-+			reg-names = "base", "hhi", "dmc";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				vpu_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+
-+					vpu_out_venc_cvbs: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&venc_cvbs_in_vpu>;
-+					};
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 9696820..a55d1cf 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -229,3 +229,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
-+
-+&venc_cvbs {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 5e5e2de..3c09bd1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -266,3 +266,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
-+
-+&venc_cvbs {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index ac5ad3b..99ff37c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -506,3 +506,15 @@
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
-+
-+&venc_cvbs {
-+	status = "okay";
 +};
 +
-+&venc_cvbs {
-+	compatible = "amlogic,meson-gxbb-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
-+};
++vpu: vpu@d0100000 {
++	compatible = "amlogic,meson-gxbb-vpu";
++	reg = <0x0 0xd0100000 0x0 0x100000>,
++	      <0x0 0xc883c000 0x0 0x1000>,
++	      <0x0 0xc8838000 0x0 0x1000>;
++	reg-names = "base", "hhi", "dmc";
++	interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
 +
-+&vpu {
-+	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-index e99101a..2a9b46f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-@@ -203,3 +203,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+&venc_cvbs {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 3af54dc..98b8118 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -299,3 +299,11 @@
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
++		vpu_out: port@1 {
++			 #address-cells = <1>;
++			 #size-cells = <0>;
++			 reg = <1>;
 +
-+&venc_cvbs {
-+	compatible = "amlogic,meson-gxl-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
-+};
-+
-+&vpu {
-+	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index d320727..1ae2451 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -167,3 +167,7 @@
- 		max-speed = <1000>;
- 	};
- };
-+
-+&venc_cvbs {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-index c1974bb..7bf2d6e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-@@ -112,3 +112,12 @@
- 		};
- 	};
- };
-+
-+
-+&venc_cvbs {
-+	compatible = "amlogic,meson-gxm-venc-cvbs", "amlogic,meson-gx-venc-cvbs";
-+};
-+
-+&vpu {
-+	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
++			 vpu_out_venc_cvbs: endpoint@0 {
++				 reg = <0>;
++				 remote-endpoint = <&venc_cvbs_in_vpu>;
++			 };
++		 };
++	};
 +};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
