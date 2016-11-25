@@ -1,86 +1,41 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 02/10] power: supply: axp20x_usb_power: set min voltage
- and max current from sysfs
-Date: Fri, 25 Nov 2016 10:48:18 +0100
-Message-ID: <20161125104818.597c0718@free-electrons.com>
-References: <20161125090921.23138-1-quentin.schulz@free-electrons.com>
- <20161125090921.23138-3-quentin.schulz@free-electrons.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH mmc/next] mmc: sh_mmcif: Document r8a73a4, r8a7778 and
+ sh73a0 DT bindings
+Date: Fri, 25 Nov 2016 09:58:00 +0100
+Message-ID: <CAMuHMdU=AeEmLVWjj_=rUMt8WX-ZJebDGJ7gGDBFa6UbJRqc1A@mail.gmail.com>
+References: <20161125075614.GB14431@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161125090921.23138-3-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, maxime.ripard@free-electrons.com, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161125075614.GB14431-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quentin,
+On Fri, Nov 25, 2016 at 8:56 AM, Simon Horman
+<horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> Simply document new compatibility strings as the driver is already
+> activated using a fallback compatibility string.
+>
+> These compat strings are in keeping with those for all other
+> Renesas ARM based SoCs with sh_mmcif enabled in mainline.
+>
+> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 
-On Fri, 25 Nov 2016 10:09:13 +0100, Quentin Schulz wrote:
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-> +static int axp20x_usb_power_set_property(struct power_supply *psy,
-> +					 enum power_supply_property psp,
-> +					 const union power_supply_propval *val)
-> +{
-> +	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
-> +	int ret, val1;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-> +		switch (val->intval) {
+Gr{oetje,eeting}s,
 
-This nested switch construct doesn't look very pretty. What about
-instead:
+                        Geert
 
-	switch(psp) {
-	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-		return axp20x_usb_power_set_prop_voltage_min(...);
-	case POWER_SUPPLY_PROP_CURRENT_MAX:
-		return axp20x_usb_power_set_prop_current_max(...);
-	default:
-		return -EINVAL;
-	}
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> +		case 4000000:
-> +		case 4100000:
-> +		case 4200000:
-> +		case 4300000:
-> +		case 4400000:
-> +		case 4500000:
-> +		case 4600000:
-> +		case 4700000:
-> +			val1 = (val->intval - 4000000) / 100000;
-> +			ret = regmap_update_bits(power->regmap,
-> +						 AXP20X_VBUS_IPSOUT_MGMT,
-> +						 AXP20X_VBUS_VHOLD_MASK,
-> +						 val1 << 3);
-> +			if (ret)
-> +				return ret;
-> +
-> +			return 0;
-
-Just do:
-
-			return regmap_update_bits(...);
-
-The dance to test ret is useless, since you anyway return ret when
-non-zero, or return zero when ret was zero.
-
-While you're at it, maybe make val1 a u32, since I guess it's written
-to a 32-bit register (unless u32 is not commonly used in this driver
-already, of course).
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
