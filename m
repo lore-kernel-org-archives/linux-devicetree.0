@@ -1,16 +1,17 @@
-From: Chen-Yu Tsai <wens@csie.org>
+From: Icenowy Zheng <icenowy@aosc.xyz>
 Subject: Re: [PATCH 02/10] ASoC: sunxi: Add support for A23/A33/H3 codec's
  analog path controls
-Date: Fri, 25 Nov 2016 13:45:37 +0800
-Message-ID: <CAGb2v66Zb9-UdimKDn5tq9UPRY7wBZNNCCn-52bf=evP914sPg@mail.gmail.com>
+Date: Fri, 25 Nov 2016 13:51:26 +0800
+Message-ID: <924811480053086@web1j.yandex.ru>
 References: <20161112064648.26779-1-wens@csie.org>
  <20161112064648.26779-3-wens@csie.org>
  <901011480052591@web1j.yandex.ru>
+ <CAGb2v66Zb9-UdimKDn5tq9UPRY7wBZNNCCn-52bf=evP914sPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <901011480052591@web1j.yandex.ru>
+In-Reply-To: <CAGb2v66Zb9-UdimKDn5tq9UPRY7wBZNNCCn-52bf=evP914sPg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,755 +21,532 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 1:43 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
->
->
-> 12.11.2016, 14:57, "Chen-Yu Tsai" <wens@csie.org>:
->> The internal codec on A23/A33/H3 is split into 2 parts. The
->> analog path controls are routed through an embedded custom register
->> bus accessed through the PRCM block.
->>
->> The SoCs share a common set of inputs, outputs, and audio paths.
->> The following table lists the differences.
->>
->>     ----------------------------------------
->>     | Feature \ SoC | A23 | A33 | H3 |
->>     ----------------------------------------
->>     | Headphone | v | v | |
->>     ----------------------------------------
->>     | Line Out | | | v |
->>     ----------------------------------------
->>     | Phone In/Out | v | v | |
->>     ----------------------------------------
->>
->> Add an ASoC component driver for it. This should be tied to the codec
->> audio card as an auxiliary device. This patch adds the commont paths
->> and controls, and variant specific headphone out and line out.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->>  sound/soc/sunxi/Kconfig | 8 +
->>  sound/soc/sunxi/Makefile | 1 +
->>  sound/soc/sunxi/sun8i-codec-analog.c | 665 +++++++++++++++++++++++++++++++++++
->>  3 files changed, 674 insertions(+)
->>  create mode 100644 sound/soc/sunxi/sun8i-codec-analog.c
->>
->> diff --git a/sound/soc/sunxi/Kconfig b/sound/soc/sunxi/Kconfig
->> index dd2368297fd3..6c344e16aca4 100644
->> --- a/sound/soc/sunxi/Kconfig
->> +++ b/sound/soc/sunxi/Kconfig
->> @@ -9,6 +9,14 @@ config SND_SUN4I_CODEC
->>            Select Y or M to add support for the Codec embedded in the Allwinner
->>            A10 and affiliated SoCs.
->>
->> +config SND_SUN8I_CODEC_ANALOG
->> + tristate "Allwinner sun8i Codec Analog Controls Support"
->> + depends on MACH_SUN8I || COMPILE_TEST
->
-> sun50i-a64 has a similar (or the same?) codec to A33.
->
-
-I think the register offsets/fields were moved around again.
-Why does Allwinner always do that... :/
-
-ChenYu
-
->> + select REGMAP
->> + help
->> + Say Y or M if you want to add support for the analog controls for
->> + the codec embedded in newer Allwinner SoCs.
->> +
->>  config SND_SUN4I_I2S
->>          tristate "Allwinner A10 I2S Support"
->>          select SND_SOC_GENERIC_DMAENGINE_PCM
->> diff --git a/sound/soc/sunxi/Makefile b/sound/soc/sunxi/Makefile
->> index 604c7b842837..241c0df9ca0c 100644
->> --- a/sound/soc/sunxi/Makefile
->> +++ b/sound/soc/sunxi/Makefile
->> @@ -1,3 +1,4 @@
->>  obj-$(CONFIG_SND_SUN4I_CODEC) += sun4i-codec.o
->>  obj-$(CONFIG_SND_SUN4I_I2S) += sun4i-i2s.o
->>  obj-$(CONFIG_SND_SUN4I_SPDIF) += sun4i-spdif.o
->> +obj-$(CONFIG_SND_SUN8I_CODEC_ANALOG) += sun8i-codec-analog.o
->> diff --git a/sound/soc/sunxi/sun8i-codec-analog.c b/sound/soc/sunxi/sun8i-codec-analog.c
->> new file mode 100644
->> index 000000000000..222bbd440b1e
->> --- /dev/null
->> +++ b/sound/soc/sunxi/sun8i-codec-analog.c
->> @@ -0,0 +1,665 @@
->> +/*
->> + * This driver supports the analog controls for the internal codec
->> + * found in Allwinner's A31s, A23, A33 and H3 SoCs.
->> + *
->> + * Copyright 2016 Chen-Yu Tsai <wens@csie.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <sound/soc.h>
->> +#include <sound/soc-dapm.h>
->> +#include <sound/tlv.h>
->> +
->> +/* Codec analog control register offsets and bit fields */
->> +#define SUN8I_ADDA_HP_VOLC 0x00
->> +#define SUN8I_ADDA_HP_VOLC_PA_CLK_GATE 7
->> +#define SUN8I_ADDA_HP_VOLC_HP_VOL 0
->> +#define SUN8I_ADDA_LOMIXSC 0x01
->> +#define SUN8I_ADDA_LOMIXSC_MIC1 6
->> +#define SUN8I_ADDA_LOMIXSC_MIC2 5
->> +#define SUN8I_ADDA_LOMIXSC_PHONE 4
->> +#define SUN8I_ADDA_LOMIXSC_PHONEN 3
->> +#define SUN8I_ADDA_LOMIXSC_LINEINL 2
->> +#define SUN8I_ADDA_LOMIXSC_DACL 1
->> +#define SUN8I_ADDA_LOMIXSC_DACR 0
->> +#define SUN8I_ADDA_ROMIXSC 0x02
->> +#define SUN8I_ADDA_ROMIXSC_MIC1 6
->> +#define SUN8I_ADDA_ROMIXSC_MIC2 5
->> +#define SUN8I_ADDA_ROMIXSC_PHONE 4
->> +#define SUN8I_ADDA_ROMIXSC_PHONEP 3
->> +#define SUN8I_ADDA_ROMIXSC_LINEINR 2
->> +#define SUN8I_ADDA_ROMIXSC_DACR 1
->> +#define SUN8I_ADDA_ROMIXSC_DACL 0
->> +#define SUN8I_ADDA_DAC_PA_SRC 0x03
->> +#define SUN8I_ADDA_DAC_PA_SRC_DACAREN 7
->> +#define SUN8I_ADDA_DAC_PA_SRC_DACALEN 6
->> +#define SUN8I_ADDA_DAC_PA_SRC_RMIXEN 5
->> +#define SUN8I_ADDA_DAC_PA_SRC_LMIXEN 4
->> +#define SUN8I_ADDA_DAC_PA_SRC_RHPPAMUTE 3
->> +#define SUN8I_ADDA_DAC_PA_SRC_LHPPAMUTE 2
->> +#define SUN8I_ADDA_DAC_PA_SRC_RHPIS 1
->> +#define SUN8I_ADDA_DAC_PA_SRC_LHPIS 0
->> +#define SUN8I_ADDA_PHONEIN_GCTRL 0x04
->> +#define SUN8I_ADDA_PHONEIN_GCTRL_PHONEPG 4
->> +#define SUN8I_ADDA_PHONEIN_GCTRL_PHONENG 0
->> +#define SUN8I_ADDA_LINEIN_GCTRL 0x05
->> +#define SUN8I_ADDA_LINEIN_GCTRL_LINEING 4
->> +#define SUN8I_ADDA_LINEIN_GCTRL_PHONEG 0
->> +#define SUN8I_ADDA_MICIN_GCTRL 0x06
->> +#define SUN8I_ADDA_MICIN_GCTRL_MIC1G 4
->> +#define SUN8I_ADDA_MICIN_GCTRL_MIC2G 0
->> +#define SUN8I_ADDA_PAEN_HP_CTRL 0x07
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN 7
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_LINEOUTEN 7 /* H3 specific */
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_HPCOM_FC 5
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_COMPTEN 4
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_PA_ANTI_POP_CTRL 2
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_LTRNMUTE 1
->> +#define SUN8I_ADDA_PAEN_HP_CTRL_RTLNMUTE 0
->> +#define SUN8I_ADDA_PHONEOUT_CTRL 0x08
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUTG 5
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUTEN 4
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUT_MIC1 3
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUT_MIC2 2
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUT_RMIX 1
->> +#define SUN8I_ADDA_PHONEOUT_CTRL_PHONEOUT_LMIX 0
->> +#define SUN8I_ADDA_PHONE_GAIN_CTRL 0x09
->> +#define SUN8I_ADDA_PHONE_GAIN_CTRL_LINEOUT_VOL 3
->> +#define SUN8I_ADDA_PHONE_GAIN_CTRL_PHONEPREG 0
->> +#define SUN8I_ADDA_MIC2G_CTRL 0x0a
->> +#define SUN8I_ADDA_MIC2G_CTRL_MIC2AMPEN 7
->> +#define SUN8I_ADDA_MIC2G_CTRL_MIC2BOOST 4
->> +#define SUN8I_ADDA_MIC2G_CTRL_LINEOUTLEN 3
->> +#define SUN8I_ADDA_MIC2G_CTRL_LINEOUTREN 2
->> +#define SUN8I_ADDA_MIC2G_CTRL_LINEOUTLSRC 1
->> +#define SUN8I_ADDA_MIC2G_CTRL_LINEOUTRSRC 0
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL 0x0b
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL_HMICBIASEN 7
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MMICBIASEN 6
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL_HMICBIAS_MODE 5
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1AMPEN 3
->> +#define SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1BOOST 0
->> +#define SUN8I_ADDA_LADCMIXSC 0x0c
->> +#define SUN8I_ADDA_LADCMIXSC_MIC1 6
->> +#define SUN8I_ADDA_LADCMIXSC_MIC2 5
->> +#define SUN8I_ADDA_LADCMIXSC_PHONE 4
->> +#define SUN8I_ADDA_LADCMIXSC_PHONEN 3
->> +#define SUN8I_ADDA_LADCMIXSC_LINEINL 2
->> +#define SUN8I_ADDA_LADCMIXSC_OMIXRL 1
->> +#define SUN8I_ADDA_LADCMIXSC_OMIXRR 0
->> +#define SUN8I_ADDA_RADCMIXSC 0x0d
->> +#define SUN8I_ADDA_RADCMIXSC_MIC1 6
->> +#define SUN8I_ADDA_RADCMIXSC_MIC2 5
->> +#define SUN8I_ADDA_RADCMIXSC_PHONE 4
->> +#define SUN8I_ADDA_RADCMIXSC_PHONEP 3
->> +#define SUN8I_ADDA_RADCMIXSC_LINEINR 2
->> +#define SUN8I_ADDA_RADCMIXSC_OMIXR 1
->> +#define SUN8I_ADDA_RADCMIXSC_OMIXL 0
->> +#define SUN8I_ADDA_RES 0x0e
->> +#define SUN8I_ADDA_RES_MMICBIAS_SEL 4
->> +#define SUN8I_ADDA_RES_PA_ANTI_POP_CTRL 0
->> +#define SUN8I_ADDA_ADC_AP_EN 0x0f
->> +#define SUN8I_ADDA_ADC_AP_EN_ADCREN 7
->> +#define SUN8I_ADDA_ADC_AP_EN_ADCLEN 6
->> +#define SUN8I_ADDA_ADC_AP_EN_ADCG 0
->> +
->> +/* Analog control register access bits */
->> +#define ADDA_PR 0x0 /* PRCM base + 0x1c0 */
->> +#define ADDA_PR_RESET BIT(28)
->> +#define ADDA_PR_WRITE BIT(24)
->> +#define ADDA_PR_ADDR_SHIFT 16
->> +#define ADDA_PR_ADDR_MASK GENMASK(4, 0)
->> +#define ADDA_PR_DATA_IN_SHIFT 8
->> +#define ADDA_PR_DATA_IN_MASK GENMASK(7, 0)
->> +#define ADDA_PR_DATA_OUT_SHIFT 0
->> +#define ADDA_PR_DATA_OUT_MASK GENMASK(7, 0)
->> +
->> +/* regmap access bits */
->> +static int adda_reg_read(void *context, unsigned int reg, unsigned int *val)
->> +{
->> + void __iomem *base = (void __iomem *)context;
->> + u32 tmp;
->> +
->> + /* De-assert reset */
->> + writel(readl(base) | ADDA_PR_RESET, base);
->> +
->> + /* Clear write bit */
->> + writel(readl(base) & ~ADDA_PR_WRITE, base);
->> +
->> + /* Set register address */
->> + tmp = readl(base);
->> + tmp &= ~(ADDA_PR_ADDR_MASK << ADDA_PR_ADDR_SHIFT);
->> + tmp |= (reg & ADDA_PR_ADDR_MASK) << ADDA_PR_ADDR_SHIFT;
->> + writel(tmp, base);
->> +
->> + /* Read back value */
->> + *val = readl(base) & ADDA_PR_DATA_OUT_MASK;
->> +
->> + return 0;
->> +}
->> +
->> +static int adda_reg_write(void *context, unsigned int reg, unsigned int val)
->> +{
->> + void __iomem *base = (void __iomem *)context;
->> + u32 tmp;
->> +
->> + /* De-assert reset */
->> + writel(readl(base) | ADDA_PR_RESET, base);
->> +
->> + /* Set register address */
->> + tmp = readl(base);
->> + tmp &= ~(ADDA_PR_ADDR_MASK << ADDA_PR_ADDR_SHIFT);
->> + tmp |= (reg & ADDA_PR_ADDR_MASK) << ADDA_PR_ADDR_SHIFT;
->> + writel(tmp, base);
->> +
->> + /* Set data to write */
->> + tmp = readl(base);
->> + tmp &= ~(ADDA_PR_DATA_IN_MASK << ADDA_PR_DATA_IN_SHIFT);
->> + tmp |= (val & ADDA_PR_DATA_IN_MASK) << ADDA_PR_DATA_IN_SHIFT;
->> + writel(tmp, base);
->> +
->> + /* Set write bit to signal a write */
->> + writel(readl(base) | ADDA_PR_WRITE, base);
->> +
->> + /* Clear write bit */
->> + writel(readl(base) & ~ADDA_PR_WRITE, base);
->> +
->> + return 0;
->> +}
->> +
->> +static const struct regmap_config adda_pr_regmap_cfg = {
->> + .name = "adda-pr",
->> + .reg_bits = 5,
->> + .reg_stride = 1,
->> + .val_bits = 8,
->> + .reg_read = adda_reg_read,
->> + .reg_write = adda_reg_write,
->> + .fast_io = true,
->> + .max_register = 24,
->> +};
->> +
->> +/* mixer controls */
->> +static const struct snd_kcontrol_new sun8i_codec_mixer_controls[] = {
->> + SOC_DAPM_DOUBLE_R("DAC Playback Switch",
->> + SUN8I_ADDA_LOMIXSC,
->> + SUN8I_ADDA_ROMIXSC,
->> + SUN8I_ADDA_LOMIXSC_DACL, 1, 0),
->> + SOC_DAPM_DOUBLE_R("DAC Reversed Playback Switch",
->> + SUN8I_ADDA_LOMIXSC,
->> + SUN8I_ADDA_ROMIXSC,
->> + SUN8I_ADDA_LOMIXSC_DACR, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Line In Playback Switch",
->> + SUN8I_ADDA_LOMIXSC,
->> + SUN8I_ADDA_ROMIXSC,
->> + SUN8I_ADDA_LOMIXSC_LINEINL, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Mic1 Playback Switch",
->> + SUN8I_ADDA_LOMIXSC,
->> + SUN8I_ADDA_ROMIXSC,
->> + SUN8I_ADDA_LOMIXSC_MIC1, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Mic2 Playback Switch",
->> + SUN8I_ADDA_LOMIXSC,
->> + SUN8I_ADDA_ROMIXSC,
->> + SUN8I_ADDA_LOMIXSC_MIC2, 1, 0),
->> +};
->> +
->> +/* ADC mixer controls */
->> +static const struct snd_kcontrol_new sun8i_codec_adc_mixer_controls[] = {
->> + SOC_DAPM_DOUBLE_R("Mixer Capture Switch",
->> + SUN8I_ADDA_LADCMIXSC,
->> + SUN8I_ADDA_RADCMIXSC,
->> + SUN8I_ADDA_LADCMIXSC_OMIXRL, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Mixer Reversed Capture Switch",
->> + SUN8I_ADDA_LADCMIXSC,
->> + SUN8I_ADDA_RADCMIXSC,
->> + SUN8I_ADDA_LADCMIXSC_OMIXRR, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Line In Capture Switch",
->> + SUN8I_ADDA_LADCMIXSC,
->> + SUN8I_ADDA_RADCMIXSC,
->> + SUN8I_ADDA_LADCMIXSC_LINEINL, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Mic1 Capture Switch",
->> + SUN8I_ADDA_LADCMIXSC,
->> + SUN8I_ADDA_RADCMIXSC,
->> + SUN8I_ADDA_LADCMIXSC_MIC1, 1, 0),
->> + SOC_DAPM_DOUBLE_R("Mic2 Capture Switch",
->> + SUN8I_ADDA_LADCMIXSC,
->> + SUN8I_ADDA_RADCMIXSC,
->> + SUN8I_ADDA_LADCMIXSC_MIC2, 1, 0),
->> +};
->> +
->> +/* volume / mute controls */
->> +static const DECLARE_TLV_DB_SCALE(sun8i_codec_out_mixer_pregain_scale,
->> + -450, 150, 0);
->> +static const DECLARE_TLV_DB_RANGE(sun8i_codec_mic_gain_scale,
->> + 0, 0, TLV_DB_SCALE_ITEM(0, 0, 0),
->> + 1, 7, TLV_DB_SCALE_ITEM(2400, 300, 0),
->> +);
->> +
->> +static const struct snd_kcontrol_new sun8i_codec_common_controls[] = {
->> + /* Mixer pre-gains */
->> + SOC_SINGLE_TLV("Line In Playback Volume", SUN8I_ADDA_LINEIN_GCTRL,
->> + SUN8I_ADDA_LINEIN_GCTRL_LINEING,
->> + 0x7, 0, sun8i_codec_out_mixer_pregain_scale),
->> + SOC_SINGLE_TLV("Mic1 Playback Volume", SUN8I_ADDA_MICIN_GCTRL,
->> + SUN8I_ADDA_MICIN_GCTRL_MIC1G,
->> + 0x7, 0, sun8i_codec_out_mixer_pregain_scale),
->> + SOC_SINGLE_TLV("Mic2 Playback Volume",
->> + SUN8I_ADDA_MICIN_GCTRL, SUN8I_ADDA_MICIN_GCTRL_MIC2G,
->> + 0x7, 0, sun8i_codec_out_mixer_pregain_scale),
->> +
->> + /* Microphone Amp boost gains */
->> + SOC_SINGLE_TLV("Mic1 Boost Volume", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
->> + SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1BOOST, 0x7, 0,
->> + sun8i_codec_mic_gain_scale),
->> + SOC_SINGLE_TLV("Mic2 Boost Volume", SUN8I_ADDA_MIC2G_CTRL,
->> + SUN8I_ADDA_MIC2G_CTRL_MIC2BOOST, 0x7, 0,
->> + sun8i_codec_mic_gain_scale),
->> +
->> + /* ADC */
->> + SOC_SINGLE_TLV("ADC Gain Capture Volume", SUN8I_ADDA_ADC_AP_EN,
->> + SUN8I_ADDA_ADC_AP_EN_ADCG, 0x7, 0,
->> + sun8i_codec_out_mixer_pregain_scale),
->> +};
->> +
->> +static const struct snd_soc_dapm_widget sun8i_codec_common_widgets[] = {
->> + /* ADC */
->> + SND_SOC_DAPM_ADC("Left ADC", NULL, SUN8I_ADDA_ADC_AP_EN,
->> + SUN8I_ADDA_ADC_AP_EN_ADCLEN, 0),
->> + SND_SOC_DAPM_ADC("Right ADC", NULL, SUN8I_ADDA_ADC_AP_EN,
->> + SUN8I_ADDA_ADC_AP_EN_ADCREN, 0),
->> +
->> + /* DAC */
->> + SND_SOC_DAPM_DAC("Left DAC", NULL, SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_DACALEN, 0),
->> + SND_SOC_DAPM_DAC("Right DAC", NULL, SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_DACAREN, 0),
->> + /*
->> + * Due to this component and the codec belonging to separate DAPM
->> + * contexts, we need to manually link the above widgets to their
->> + * stream widgets at the card level.
->> + */
->> +
->> + /* Line In */
->> + SND_SOC_DAPM_INPUT("LINEIN"),
->> +
->> + /* Microphone inputs */
->> + SND_SOC_DAPM_INPUT("MIC1"),
->> + SND_SOC_DAPM_INPUT("MIC2"),
->> +
->> + /* Microphone Bias */
->> + SND_SOC_DAPM_SUPPLY("MBIAS", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
->> + SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MMICBIASEN,
->> + 0, NULL, 0),
->> +
->> + /* Mic input path */
->> + SND_SOC_DAPM_PGA("Mic1 Amplifier", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
->> + SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1AMPEN, 0, NULL, 0),
->> + SND_SOC_DAPM_PGA("Mic2 Amplifier", SUN8I_ADDA_MIC2G_CTRL,
->> + SUN8I_ADDA_MIC2G_CTRL_MIC2AMPEN, 0, NULL, 0),
->> +
->> + /* Mixers */
->> + SND_SOC_DAPM_MIXER("Left Mixer", SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_LMIXEN, 0,
->> + sun8i_codec_mixer_controls,
->> + ARRAY_SIZE(sun8i_codec_mixer_controls)),
->> + SND_SOC_DAPM_MIXER("Right Mixer", SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_RMIXEN, 0,
->> + sun8i_codec_mixer_controls,
->> + ARRAY_SIZE(sun8i_codec_mixer_controls)),
->> + SND_SOC_DAPM_MIXER("Left ADC Mixer", SUN8I_ADDA_ADC_AP_EN,
->> + SUN8I_ADDA_ADC_AP_EN_ADCLEN, 0,
->> + sun8i_codec_adc_mixer_controls,
->> + ARRAY_SIZE(sun8i_codec_adc_mixer_controls)),
->> + SND_SOC_DAPM_MIXER("Right ADC Mixer", SUN8I_ADDA_ADC_AP_EN,
->> + SUN8I_ADDA_ADC_AP_EN_ADCREN, 0,
->> + sun8i_codec_adc_mixer_controls,
->> + ARRAY_SIZE(sun8i_codec_adc_mixer_controls)),
->> +};
->> +
->> +static const struct snd_soc_dapm_route sun8i_codec_common_routes[] = {
->> + /* Microphone Routes */
->> + { "Mic1 Amplifier", NULL, "MIC1"},
->> + { "Mic2 Amplifier", NULL, "MIC2"},
->> +
->> + /* Left Mixer Routes */
->> + { "Left Mixer", "DAC Playback Switch", "Left DAC" },
->> + { "Left Mixer", "DAC Reversed Playback Switch", "Right DAC" },
->> + { "Left Mixer", "Line In Playback Switch", "LINEIN" },
->> + { "Left Mixer", "Mic1 Playback Switch", "Mic1 Amplifier" },
->> + { "Left Mixer", "Mic2 Playback Switch", "Mic2 Amplifier" },
->> +
->> + /* Right Mixer Routes */
->> + { "Right Mixer", "DAC Playback Switch", "Right DAC" },
->> + { "Right Mixer", "DAC Reversed Playback Switch", "Left DAC" },
->> + { "Right Mixer", "Line In Playback Switch", "LINEIN" },
->> + { "Right Mixer", "Mic1 Playback Switch", "Mic1 Amplifier" },
->> + { "Right Mixer", "Mic2 Playback Switch", "Mic2 Amplifier" },
->> +
->> + /* Left ADC Mixer Routes */
->> + { "Left ADC Mixer", "Mixer Capture Switch", "Left Mixer" },
->> + { "Left ADC Mixer", "Mixer Reversed Capture Switch", "Right Mixer" },
->> + { "Left ADC Mixer", "Line In Capture Switch", "LINEIN" },
->> + { "Left ADC Mixer", "Mic1 Capture Switch", "Mic1 Amplifier" },
->> + { "Left ADC Mixer", "Mic2 Capture Switch", "Mic2 Amplifier" },
->> +
->> + /* Right ADC Mixer Routes */
->> + { "Right ADC Mixer", "Mixer Capture Switch", "Right Mixer" },
->> + { "Right ADC Mixer", "Mixer Reversed Capture Switch", "Left Mixer" },
->> + { "Right ADC Mixer", "Line In Capture Switch", "LINEIN" },
->> + { "Right ADC Mixer", "Mic1 Capture Switch", "Mic1 Amplifier" },
->> + { "Right ADC Mixer", "Mic2 Capture Switch", "Mic2 Amplifier" },
->> +
->> + /* ADC Routes */
->> + { "Left ADC", NULL, "Left ADC Mixer" },
->> + { "Right ADC", NULL, "Right ADC Mixer" },
->> +};
->> +
->> +/* headphone specific controls, widgets, and routes */
->> +static const DECLARE_TLV_DB_SCALE(sun8i_codec_hp_vol_scale, -6300, 100, 1);
->> +static const struct snd_kcontrol_new sun8i_codec_headphone_controls[] = {
->> + SOC_SINGLE_TLV("Headphone Playback Volume",
->> + SUN8I_ADDA_HP_VOLC,
->> + SUN8I_ADDA_HP_VOLC_HP_VOL, 0x3f, 0,
->> + sun8i_codec_hp_vol_scale),
->> + SOC_DOUBLE("Headphone Playback Switch",
->> + SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_LHPPAMUTE,
->> + SUN8I_ADDA_DAC_PA_SRC_RHPPAMUTE, 1, 0),
->> +};
->> +
->> +static const char * const sun8i_codec_hp_src_enum_text[] = {
->> + "DAC", "Mixer",
->> +};
->> +
->> +static SOC_ENUM_DOUBLE_DECL(sun8i_codec_hp_src_enum,
->> + SUN8I_ADDA_DAC_PA_SRC,
->> + SUN8I_ADDA_DAC_PA_SRC_LHPIS,
->> + SUN8I_ADDA_DAC_PA_SRC_RHPIS,
->> + sun8i_codec_hp_src_enum_text);
->> +
->> +static const struct snd_kcontrol_new sun8i_codec_hp_src[] = {
->> + SOC_DAPM_ENUM("Headphone Source Playback Route",
->> + sun8i_codec_hp_src_enum),
->> +};
->> +
->> +static const struct snd_soc_dapm_widget sun8i_codec_headphone_widgets[] = {
->> + SND_SOC_DAPM_MUX("Headphone Source Playback Route",
->> + SND_SOC_NOPM, 0, 0, sun8i_codec_hp_src),
->> + SND_SOC_DAPM_OUT_DRV("Headphone Amp", SUN8I_ADDA_PAEN_HP_CTRL,
->> + SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN, 0, NULL, 0),
->> + SND_SOC_DAPM_SUPPLY("HPCOM Protection", SUN8I_ADDA_PAEN_HP_CTRL,
->> + SUN8I_ADDA_PAEN_HP_CTRL_COMPTEN, 0, NULL, 0),
->> + SND_SOC_DAPM_REG(snd_soc_dapm_supply, "HPCOM", SUN8I_ADDA_PAEN_HP_CTRL,
->> + SUN8I_ADDA_PAEN_HP_CTRL_HPCOM_FC, 0x3, 0x3, 0),
->> + SND_SOC_DAPM_OUTPUT("HP"),
->> +};
->> +
->> +static const struct snd_soc_dapm_route sun8i_codec_headphone_routes[] = {
->> + { "Headphone Source Playback Route", "DAC", "Left DAC" },
->> + { "Headphone Source Playback Route", "DAC", "Right DAC" },
->> + { "Headphone Source Playback Route", "Mixer", "Left Mixer" },
->> + { "Headphone Source Playback Route", "Mixer", "Right Mixer" },
->> + { "Headphone Amp", NULL, "Headphone Source Playback Route" },
->> + { "HPCOM", NULL, "HPCOM Protection" },
->> + { "HP", NULL, "Headphone Amp" },
->> +};
->> +
->> +static int sun8i_codec_add_headphone(struct snd_soc_component *cmpnt)
->> +{
->> + struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(cmpnt);
->> + struct device *dev = cmpnt->dev;
->> + int ret;
->> +
->> + ret = snd_soc_add_component_controls(cmpnt,
->> + sun8i_codec_headphone_controls,
->> + ARRAY_SIZE(sun8i_codec_headphone_controls));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Headphone controls: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + ret = snd_soc_dapm_new_controls(dapm, sun8i_codec_headphone_widgets,
->> + ARRAY_SIZE(sun8i_codec_headphone_widgets));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Headphone DAPM widgets: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + ret = snd_soc_dapm_add_routes(dapm, sun8i_codec_headphone_routes,
->> + ARRAY_SIZE(sun8i_codec_headphone_routes));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Headphone DAPM routes: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + return 0;
->> +}
->> +
->> +/* hmic specific widget */
->> +static const struct snd_soc_dapm_widget sun8i_codec_hmic_widgets[] = {
->> + SND_SOC_DAPM_SUPPLY("HBIAS", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
->> + SUN8I_ADDA_MIC1G_MICBIAS_CTRL_HMICBIASEN,
->> + 0, NULL, 0),
->> +};
->> +
->> +static int sun8i_codec_add_hmic(struct snd_soc_component *cmpnt)
->> +{
->> + struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(cmpnt);
->> + struct device *dev = cmpnt->dev;
->> + int ret;
->> +
->> + ret = snd_soc_dapm_new_controls(dapm, sun8i_codec_hmic_widgets,
->> + ARRAY_SIZE(sun8i_codec_hmic_widgets));
->> + if (ret)
->> + dev_err(dev, "Failed to add Mic3 DAPM widgets: %d\n", ret);
->> +
->> + return ret;
->> +}
->> +
->> +/* line out specific controls, widgets and routes */
->> +static const DECLARE_TLV_DB_RANGE(sun8i_codec_lineout_vol_scale,
->> + 0, 1, TLV_DB_SCALE_ITEM(TLV_DB_GAIN_MUTE, 0, 1),
->> + 2, 31, TLV_DB_SCALE_ITEM(-4350, 150, 0),
->> +);
->> +static const struct snd_kcontrol_new sun8i_codec_lineout_controls[] = {
->> + SOC_SINGLE_TLV("Line Out Playback Volume",
->> + SUN8I_ADDA_PHONE_GAIN_CTRL,
->> + SUN8I_ADDA_PHONE_GAIN_CTRL_LINEOUT_VOL, 0x1f, 0,
->> + sun8i_codec_lineout_vol_scale),
->> + SOC_DOUBLE("Line Out Playback Switch",
->> + SUN8I_ADDA_MIC2G_CTRL,
->> + SUN8I_ADDA_MIC2G_CTRL_LINEOUTLEN,
->> + SUN8I_ADDA_MIC2G_CTRL_LINEOUTREN, 1, 0),
->> +};
->> +
->> +static const char * const sun8i_codec_lineout_src_enum_text[] = {
->> + "Stereo", "Mono Differential",
->> +};
->> +
->> +static SOC_ENUM_DOUBLE_DECL(sun8i_codec_lineout_src_enum,
->> + SUN8I_ADDA_MIC2G_CTRL,
->> + SUN8I_ADDA_MIC2G_CTRL_LINEOUTLSRC,
->> + SUN8I_ADDA_MIC2G_CTRL_LINEOUTRSRC,
->> + sun8i_codec_lineout_src_enum_text);
->> +
->> +static const struct snd_kcontrol_new sun8i_codec_lineout_src[] = {
->> + SOC_DAPM_ENUM("Line Out Source Playback Route",
->> + sun8i_codec_lineout_src_enum),
->> +};
->> +
->> +static const struct snd_soc_dapm_widget sun8i_codec_lineout_widgets[] = {
->> + SND_SOC_DAPM_MUX("Line Out Source Playback Route",
->> + SND_SOC_NOPM, 0, 0, sun8i_codec_lineout_src),
->> + /* It is unclear if this is a buffer or gate, model it as a supply */
->> + SND_SOC_DAPM_SUPPLY("Line Out Enable", SUN8I_ADDA_PAEN_HP_CTRL,
->> + SUN8I_ADDA_PAEN_HP_CTRL_LINEOUTEN, 0, NULL, 0),
->> + SND_SOC_DAPM_OUTPUT("LINEOUT"),
->> +};
->> +
->> +static const struct snd_soc_dapm_route sun8i_codec_lineout_routes[] = {
->> + { "Line Out Source Playback Route", "Stereo", "Left Mixer" },
->> + { "Line Out Source Playback Route", "Stereo", "Right Mixer" },
->> + { "Line Out Source Playback Route", "Mono Differential", "Left Mixer" },
->> + { "Line Out Source Playback Route", "Mono Differential", "Right Mixer" },
->> + { "LINEOUT", NULL, "Line Out Source Playback Route" },
->> + { "LINEOUT", NULL, "Line Out Enable", },
->> +};
->> +
->> +static int sun8i_codec_add_lineout(struct snd_soc_component *cmpnt)
->> +{
->> + struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(cmpnt);
->> + struct device *dev = cmpnt->dev;
->> + int ret;
->> +
->> + ret = snd_soc_add_component_controls(cmpnt,
->> + sun8i_codec_lineout_controls,
->> + ARRAY_SIZE(sun8i_codec_lineout_controls));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Line Out controls: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + ret = snd_soc_dapm_new_controls(dapm, sun8i_codec_lineout_widgets,
->> + ARRAY_SIZE(sun8i_codec_lineout_widgets));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Line Out DAPM widgets: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + ret = snd_soc_dapm_add_routes(dapm, sun8i_codec_lineout_routes,
->> + ARRAY_SIZE(sun8i_codec_lineout_routes));
->> + if (ret) {
->> + dev_err(dev, "Failed to add Line Out DAPM routes: %d\n", ret);
->> + return ret;
->> + }
->> +
->> + return 0;
->> +}
->> +
->> +struct sun8i_codec_analog_quirks {
->> + bool has_headphone;
->> + bool has_hmic;
->> + bool has_lineout;
->> +};
->> +
->> +static const struct sun8i_codec_analog_quirks sun8i_a23_quirks = {
->> + .has_headphone = true,
->> + .has_hmic = true,
->> +};
->> +
->> +static const struct sun8i_codec_analog_quirks sun8i_h3_quirks = {
->> + .has_lineout = true,
->> +};
->> +
->> +static int sun8i_codec_analog_cmpnt_probe(struct snd_soc_component *cmpnt)
->> +{
->> + struct device *dev = cmpnt->dev;
->> + const struct sun8i_codec_analog_quirks *quirks;
->> + int ret;
->> +
->> + /*
->> + * This would never return NULL unless someone directly registers a
->> + * platform device matching this driver's name, without specifying a
->> + * device tree node.
->> + */
->> + quirks = of_device_get_match_data(dev);
->> +
->> + /* Add controls, widgets, and routes for individual features */
->> +
->> + if (quirks->has_headphone) {
->> + ret = sun8i_codec_add_headphone(cmpnt);
->> + if (ret)
->> + return ret;
->> + }
->> +
->> + if (quirks->has_hmic) {
->> + sun8i_codec_add_hmic(cmpnt);
->> + if (ret)
->> + return ret;
->> + }
->> +
->> + if (quirks->has_lineout) {
->> + ret = sun8i_codec_add_lineout(cmpnt);
->> + if (ret)
->> + return ret;
->> + }
->> +
->> + return 0;
->> +}
->> +
->> +static const struct snd_soc_component_driver sun8i_codec_analog_cmpnt_drv = {
->> + .controls = sun8i_codec_common_controls,
->> + .num_controls = ARRAY_SIZE(sun8i_codec_common_controls),
->> + .dapm_widgets = sun8i_codec_common_widgets,
->> + .num_dapm_widgets = ARRAY_SIZE(sun8i_codec_common_widgets),
->> + .dapm_routes = sun8i_codec_common_routes,
->> + .num_dapm_routes = ARRAY_SIZE(sun8i_codec_common_routes),
->> + .probe = sun8i_codec_analog_cmpnt_probe,
->> +};
->> +
->> +static const struct of_device_id sun8i_codec_analog_of_match[] = {
->> + {
->> + .compatible = "allwinner,sun8i-a23-codec-analog",
->> + .data = &sun8i_a23_quirks,
->> + },
->> + {
->> + .compatible = "allwinner,sun8i-h3-codec-analog",
->> + .data = &sun8i_h3_quirks,
->> + },
->> + {}
->> +};
->> +MODULE_DEVICE_TABLE(of, sun8i_codec_analog_of_match);
->> +
->> +static int sun8i_codec_analog_probe(struct platform_device *pdev)
->> +{
->> + struct resource *res;
->> + struct regmap *regmap;
->> + void __iomem *base;
->> +
->> + res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> + base = devm_ioremap_resource(&pdev->dev, res);
->> + if (IS_ERR(base)) {
->> + dev_err(&pdev->dev, "Failed to map the registers\n");
->> + return PTR_ERR(base);
->> + }
->> +
->> + regmap = devm_regmap_init(&pdev->dev, NULL, base, &adda_pr_regmap_cfg);
->> + if (IS_ERR(regmap)) {
->> + dev_err(&pdev->dev, "Failed to create regmap\n");
->> + return PTR_ERR(regmap);
->> + }
->> +
->> + return devm_snd_soc_register_component(&pdev->dev,
->> + &sun8i_codec_analog_cmpnt_drv,
->> + NULL, 0);
->> +}
->> +
->> +static struct platform_driver sun8i_codec_analog_driver = {
->> + .driver = {
->> + .name = "sun8i-codec-analog",
->> + .of_match_table = sun8i_codec_analog_of_match,
->> + },
->> + .probe = sun8i_codec_analog_probe,
->> +};
->> +module_platform_driver(sun8i_codec_analog_driver);
->> +
->> +MODULE_DESCRIPTION("Allwinner internal codec analog controls driver");
->> +MODULE_AUTHOR("Chen-Yu Tsai <wens@csie.org>");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:sun8i-codec-analog");
->> --
->> 2.10.2
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+CgoyNS4xMS4yMDE2LCAxMzo0NiwgIkNoZW4tWXUgVHNhaSIgPHdlbnNAY3NpZS5vcmc+Ogo+IE9u
+IEZyaSwgTm92IDI1LCAyMDE2IGF0IDE6NDMgUE0sIEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9z
+Yy54eXo+IHdyb3RlOgo+PiDCoDEyLjExLjIwMTYsIDE0OjU3LCAiQ2hlbi1ZdSBUc2FpIiA8d2Vu
+c0Bjc2llLm9yZz46Cj4+PiDCoFRoZSBpbnRlcm5hbCBjb2RlYyBvbiBBMjMvQTMzL0gzIGlzIHNw
+bGl0IGludG8gMiBwYXJ0cy4gVGhlCj4+PiDCoGFuYWxvZyBwYXRoIGNvbnRyb2xzIGFyZSByb3V0
+ZWQgdGhyb3VnaCBhbiBlbWJlZGRlZCBjdXN0b20gcmVnaXN0ZXIKPj4+IMKgYnVzIGFjY2Vzc2Vk
+IHRocm91Z2ggdGhlIFBSQ00gYmxvY2suCj4+Pgo+Pj4gwqBUaGUgU29DcyBzaGFyZSBhIGNvbW1v
+biBzZXQgb2YgaW5wdXRzLCBvdXRwdXRzLCBhbmQgYXVkaW8gcGF0aHMuCj4+PiDCoFRoZSBmb2xs
+b3dpbmcgdGFibGUgbGlzdHMgdGhlIGRpZmZlcmVuY2VzLgo+Pj4KPj4+IMKgwqDCoMKgwqAtLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+PiDCoMKgwqDCoMKgfCBGZWF0
+dXJlIFwgU29DIHwgQTIzIHwgQTMzIHwgSDMgfAo+Pj4gwqDCoMKgwqDCoC0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+IMKgwqDCoMKgwqB8IEhlYWRwaG9uZSB8IHYg
+fCB2IHwgfAo+Pj4gwqDCoMKgwqDCoC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KPj4+IMKgwqDCoMKgwqB8IExpbmUgT3V0IHwgfCB8IHYgfAo+Pj4gwqDCoMKgwqDCoC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+IMKgwqDCoMKgwqB8IFBo
+b25lIEluL091dCB8IHYgfCB2IHwgfAo+Pj4gwqDCoMKgwqDCoC0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+Cj4+PiDCoEFkZCBhbiBBU29DIGNvbXBvbmVudCBkcml2
+ZXIgZm9yIGl0LiBUaGlzIHNob3VsZCBiZSB0aWVkIHRvIHRoZSBjb2RlYwo+Pj4gwqBhdWRpbyBj
+YXJkIGFzIGFuIGF1eGlsaWFyeSBkZXZpY2UuIFRoaXMgcGF0Y2ggYWRkcyB0aGUgY29tbW9udCBw
+YXRocwo+Pj4gwqBhbmQgY29udHJvbHMsIGFuZCB2YXJpYW50IHNwZWNpZmljIGhlYWRwaG9uZSBv
+dXQgYW5kIGxpbmUgb3V0Lgo+Pj4KPj4+IMKgU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3
+ZW5zQGNzaWUub3JnPgo+Pj4gwqAtLS0KPj4+IMKgwqBzb3VuZC9zb2Mvc3VueGkvS2NvbmZpZyB8
+IDggKwo+Pj4gwqDCoHNvdW5kL3NvYy9zdW54aS9NYWtlZmlsZSB8IDEgKwo+Pj4gwqDCoHNvdW5k
+L3NvYy9zdW54aS9zdW44aS1jb2RlYy1hbmFsb2cuYyB8IDY2NSArKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+Pj4gwqDCoDMgZmlsZXMgY2hhbmdlZCwgNjc0IGluc2VydGlvbnMo
+KykKPj4+IMKgwqBjcmVhdGUgbW9kZSAxMDA2NDQgc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVj
+LWFuYWxvZy5jCj4+Pgo+Pj4gwqBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N1bnhpL0tjb25maWcg
+Yi9zb3VuZC9zb2Mvc3VueGkvS2NvbmZpZwo+Pj4gwqBpbmRleCBkZDIzNjgyOTdmZDMuLjZjMzQ0
+ZTE2YWNhNCAxMDA2NDQKPj4+IMKgLS0tIGEvc291bmQvc29jL3N1bnhpL0tjb25maWcKPj4+IMKg
+KysrIGIvc291bmQvc29jL3N1bnhpL0tjb25maWcKPj4+IMKgQEAgLTksNiArOSwxNCBAQCBjb25m
+aWcgU05EX1NVTjRJX0NPREVDCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTZWxlY3QgWSBv
+ciBNIHRvIGFkZCBzdXBwb3J0IGZvciB0aGUgQ29kZWMgZW1iZWRkZWQgaW4gdGhlIEFsbHdpbm5l
+cgo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQTEwIGFuZCBhZmZpbGlhdGVkIFNvQ3MuCj4+
+Pgo+Pj4gwqArY29uZmlnIFNORF9TVU44SV9DT0RFQ19BTkFMT0cKPj4+IMKgKyB0cmlzdGF0ZSAi
+QWxsd2lubmVyIHN1bjhpIENvZGVjIEFuYWxvZyBDb250cm9scyBTdXBwb3J0Igo+Pj4gwqArIGRl
+cGVuZHMgb24gTUFDSF9TVU44SSB8fCBDT01QSUxFX1RFU1QKPj4KPj4gwqBzdW41MGktYTY0IGhh
+cyBhIHNpbWlsYXIgKG9yIHRoZSBzYW1lPykgY29kZWMgdG8gQTMzLgo+Cj4gSSB0aGluayB0aGUg
+cmVnaXN0ZXIgb2Zmc2V0cy9maWVsZHMgd2VyZSBtb3ZlZCBhcm91bmQgYWdhaW4uCj4gV2h5IGRv
+ZXMgQWxsd2lubmVyIGFsd2F5cyBkbyB0aGF0Li4uIDovCgpZZXMsIG1vdmVkIGFyb3VuZCA6LSgK
+Ck9yIG1heWJlIEkgc2hvdWxkIHNheSAidGhlcmUncyBtb3JlIHJlZ2lzdGVycyBvbiBBNjQiLgoK
+Pgo+IENoZW5ZdQo+Cj4+PiDCoCsgc2VsZWN0IFJFR01BUAo+Pj4gwqArIGhlbHAKPj4+IMKgKyBT
+YXkgWSBvciBNIGlmIHlvdSB3YW50IHRvIGFkZCBzdXBwb3J0IGZvciB0aGUgYW5hbG9nIGNvbnRy
+b2xzIGZvcgo+Pj4gwqArIHRoZSBjb2RlYyBlbWJlZGRlZCBpbiBuZXdlciBBbGx3aW5uZXIgU29D
+cy4KPj4+IMKgKwo+Pj4gwqDCoGNvbmZpZyBTTkRfU1VONElfSTJTCj4+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHRyaXN0YXRlICJBbGx3aW5uZXIgQTEwIEkyUyBTdXBwb3J0Igo+Pj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqBzZWxlY3QgU05EX1NPQ19HRU5FUklDX0RNQUVOR0lORV9QQ00KPj4+IMKgZGlm
+ZiAtLWdpdCBhL3NvdW5kL3NvYy9zdW54aS9NYWtlZmlsZSBiL3NvdW5kL3NvYy9zdW54aS9NYWtl
+ZmlsZQo+Pj4gwqBpbmRleCA2MDRjN2I4NDI4MzcuLjI0MWMwZGY5Y2EwYyAxMDA2NDQKPj4+IMKg
+LS0tIGEvc291bmQvc29jL3N1bnhpL01ha2VmaWxlCj4+PiDCoCsrKyBiL3NvdW5kL3NvYy9zdW54
+aS9NYWtlZmlsZQo+Pj4gwqBAQCAtMSwzICsxLDQgQEAKPj4+IMKgwqBvYmotJChDT05GSUdfU05E
+X1NVTjRJX0NPREVDKSArPSBzdW40aS1jb2RlYy5vCj4+PiDCoMKgb2JqLSQoQ09ORklHX1NORF9T
+VU40SV9JMlMpICs9IHN1bjRpLWkycy5vCj4+PiDCoMKgb2JqLSQoQ09ORklHX1NORF9TVU40SV9T
+UERJRikgKz0gc3VuNGktc3BkaWYubwo+Pj4gwqArb2JqLSQoQ09ORklHX1NORF9TVU44SV9DT0RF
+Q19BTkFMT0cpICs9IHN1bjhpLWNvZGVjLWFuYWxvZy5vCj4+PiDCoGRpZmYgLS1naXQgYS9zb3Vu
+ZC9zb2Mvc3VueGkvc3VuOGktY29kZWMtYW5hbG9nLmMgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGkt
+Y29kZWMtYW5hbG9nLmMKPj4+IMKgbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IMKgaW5kZXggMDAw
+MDAwMDAwMDAwLi4yMjJiYmQ0NDBiMWUKPj4+IMKgLS0tIC9kZXYvbnVsbAo+Pj4gwqArKysgYi9z
+b3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMtYW5hbG9nLmMKPj4+IMKgQEAgLTAsMCArMSw2NjUg
+QEAKPj4+IMKgKy8qCj4+PiDCoCsgKiBUaGlzIGRyaXZlciBzdXBwb3J0cyB0aGUgYW5hbG9nIGNv
+bnRyb2xzIGZvciB0aGUgaW50ZXJuYWwgY29kZWMKPj4+IMKgKyAqIGZvdW5kIGluIEFsbHdpbm5l
+cidzIEEzMXMsIEEyMywgQTMzIGFuZCBIMyBTb0NzLgo+Pj4gwqArICoKPj4+IMKgKyAqIENvcHly
+aWdodCAyMDE2IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPj4+IMKgKyAqCj4+PiDCoCsg
+KiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQg
+YW5kL29yIG1vZGlmeQo+Pj4gwqArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkKPj4+IMKgKyAqIHRoZSBGcmVlIFNv
+ZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yCj4+
+PiDCoCsgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+Pj4gwqArICoKPj4+
+IMKgKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdp
+bGwgYmUgdXNlZnVsLAo+Pj4gwqArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0
+IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKPj4+IMKgKyAqIE1FUkNIQU5UQUJJTElUWSBv
+ciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gU2VlIHRoZQo+Pj4gwqArICogR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4+IMKgKyAqLwo+Pj4g
+wqArCj4+PiDCoCsjaW5jbHVkZSA8bGludXgvaW8uaD4KPj4+IMKgKyNpbmNsdWRlIDxsaW51eC9r
+ZXJuZWwuaD4KPj4+IMKgKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4+IMKgKyNpbmNsdWRl
+IDxsaW51eC9vZi5oPgo+Pj4gwqArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPgo+Pj4gwqAr
+I2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+Pj4gwqArI2luY2x1ZGUgPGxpbnV4
+L3JlZ21hcC5oPgo+Pj4gwqArCj4+PiDCoCsjaW5jbHVkZSA8c291bmQvc29jLmg+Cj4+PiDCoCsj
+aW5jbHVkZSA8c291bmQvc29jLWRhcG0uaD4KPj4+IMKgKyNpbmNsdWRlIDxzb3VuZC90bHYuaD4K
+Pj4+IMKgKwo+Pj4gwqArLyogQ29kZWMgYW5hbG9nIGNvbnRyb2wgcmVnaXN0ZXIgb2Zmc2V0cyBh
+bmQgYml0IGZpZWxkcyAqLwo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0hQX1ZPTEMgMHgwMAo+
+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0hQX1ZPTENfUEFfQ0xLX0dBVEUgNwo+Pj4gwqArI2Rl
+ZmluZSBTVU44SV9BRERBX0hQX1ZPTENfSFBfVk9MIDAKPj4+IMKgKyNkZWZpbmUgU1VOOElfQURE
+QV9MT01JWFNDIDB4MDEKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9MT01JWFNDX01JQzEgNgo+
+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0xPTUlYU0NfTUlDMiA1Cj4+PiDCoCsjZGVmaW5lIFNV
+TjhJX0FEREFfTE9NSVhTQ19QSE9ORSA0Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTE9NSVhT
+Q19QSE9ORU4gMwo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0xPTUlYU0NfTElORUlOTCAyCj4+
+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTE9NSVhTQ19EQUNMIDEKPj4+IMKgKyNkZWZpbmUgU1VO
+OElfQUREQV9MT01JWFNDX0RBQ1IgMAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JPTUlYU0Mg
+MHgwMgo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JPTUlYU0NfTUlDMSA2Cj4+PiDCoCsjZGVm
+aW5lIFNVTjhJX0FEREFfUk9NSVhTQ19NSUMyIDUKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9S
+T01JWFNDX1BIT05FIDQKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9ST01JWFNDX1BIT05FUCAz
+Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfUk9NSVhTQ19MSU5FSU5SIDIKPj4+IMKgKyNkZWZp
+bmUgU1VOOElfQUREQV9ST01JWFNDX0RBQ1IgMQo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JP
+TUlYU0NfREFDTCAwCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfREFDX1BBX1NSQyAweDAzCj4+
+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfREFDX1BBX1NSQ19EQUNBUkVOIDcKPj4+IMKgKyNkZWZp
+bmUgU1VOOElfQUREQV9EQUNfUEFfU1JDX0RBQ0FMRU4gNgo+Pj4gwqArI2RlZmluZSBTVU44SV9B
+RERBX0RBQ19QQV9TUkNfUk1JWEVOIDUKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9EQUNfUEFf
+U1JDX0xNSVhFTiA0Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfREFDX1BBX1NSQ19SSFBQQU1V
+VEUgMwo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0RBQ19QQV9TUkNfTEhQUEFNVVRFIDIKPj4+
+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9EQUNfUEFfU1JDX1JIUElTIDEKPj4+IMKgKyNkZWZpbmUg
+U1VOOElfQUREQV9EQUNfUEFfU1JDX0xIUElTIDAKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9Q
+SE9ORUlOX0dDVFJMIDB4MDQKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9QSE9ORUlOX0dDVFJM
+X1BIT05FUEcgNAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1BIT05FSU5fR0NUUkxfUEhPTkVO
+RyAwCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTElORUlOX0dDVFJMIDB4MDUKPj4+IMKgKyNk
+ZWZpbmUgU1VOOElfQUREQV9MSU5FSU5fR0NUUkxfTElORUlORyA0Cj4+PiDCoCsjZGVmaW5lIFNV
+TjhJX0FEREFfTElORUlOX0dDVFJMX1BIT05FRyAwCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFf
+TUlDSU5fR0NUUkwgMHgwNgo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX01JQ0lOX0dDVFJMX01J
+QzFHIDQKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9NSUNJTl9HQ1RSTF9NSUMyRyAwCj4+PiDC
+oCsjZGVmaW5lIFNVTjhJX0FEREFfUEFFTl9IUF9DVFJMIDB4MDcKPj4+IMKgKyNkZWZpbmUgU1VO
+OElfQUREQV9QQUVOX0hQX0NUUkxfSFBQQUVOIDcKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9Q
+QUVOX0hQX0NUUkxfTElORU9VVEVOIDcgLyogSDMgc3BlY2lmaWMgKi8KPj4+IMKgKyNkZWZpbmUg
+U1VOOElfQUREQV9QQUVOX0hQX0NUUkxfSFBDT01fRkMgNQo+Pj4gwqArI2RlZmluZSBTVU44SV9B
+RERBX1BBRU5fSFBfQ1RSTF9DT01QVEVOIDQKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9QQUVO
+X0hQX0NUUkxfUEFfQU5USV9QT1BfQ1RSTCAyCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfUEFF
+Tl9IUF9DVFJMX0xUUk5NVVRFIDEKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9QQUVOX0hQX0NU
+UkxfUlRMTk1VVEUgMAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1BIT05FT1VUX0NUUkwgMHgw
+OAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1BIT05FT1VUX0NUUkxfUEhPTkVPVVRHIDUKPj4+
+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9QSE9ORU9VVF9DVFJMX1BIT05FT1VURU4gNAo+Pj4gwqAr
+I2RlZmluZSBTVU44SV9BRERBX1BIT05FT1VUX0NUUkxfUEhPTkVPVVRfTUlDMSAzCj4+PiDCoCsj
+ZGVmaW5lIFNVTjhJX0FEREFfUEhPTkVPVVRfQ1RSTF9QSE9ORU9VVF9NSUMyIDIKPj4+IMKgKyNk
+ZWZpbmUgU1VOOElfQUREQV9QSE9ORU9VVF9DVFJMX1BIT05FT1VUX1JNSVggMQo+Pj4gwqArI2Rl
+ZmluZSBTVU44SV9BRERBX1BIT05FT1VUX0NUUkxfUEhPTkVPVVRfTE1JWCAwCj4+PiDCoCsjZGVm
+aW5lIFNVTjhJX0FEREFfUEhPTkVfR0FJTl9DVFJMIDB4MDkKPj4+IMKgKyNkZWZpbmUgU1VOOElf
+QUREQV9QSE9ORV9HQUlOX0NUUkxfTElORU9VVF9WT0wgMwo+Pj4gwqArI2RlZmluZSBTVU44SV9B
+RERBX1BIT05FX0dBSU5fQ1RSTF9QSE9ORVBSRUcgMAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERB
+X01JQzJHX0NUUkwgMHgwYQo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX01JQzJHX0NUUkxfTUlD
+MkFNUEVOIDcKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9NSUMyR19DVFJMX01JQzJCT09TVCA0
+Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTUlDMkdfQ1RSTF9MSU5FT1VUTEVOIDMKPj4+IMKg
+KyNkZWZpbmUgU1VOOElfQUREQV9NSUMyR19DVFJMX0xJTkVPVVRSRU4gMgo+Pj4gwqArI2RlZmlu
+ZSBTVU44SV9BRERBX01JQzJHX0NUUkxfTElORU9VVExTUkMgMQo+Pj4gwqArI2RlZmluZSBTVU44
+SV9BRERBX01JQzJHX0NUUkxfTElORU9VVFJTUkMgMAo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERB
+X01JQzFHX01JQ0JJQVNfQ1RSTCAweDBiCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTUlDMUdf
+TUlDQklBU19DVFJMX0hNSUNCSUFTRU4gNwo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX01JQzFH
+X01JQ0JJQVNfQ1RSTF9NTUlDQklBU0VOIDYKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9NSUMx
+R19NSUNCSUFTX0NUUkxfSE1JQ0JJQVNfTU9ERSA1Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFf
+TUlDMUdfTUlDQklBU19DVFJMX01JQzFBTVBFTiAzCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFf
+TUlDMUdfTUlDQklBU19DVFJMX01JQzFCT09TVCAwCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFf
+TEFEQ01JWFNDIDB4MGMKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9MQURDTUlYU0NfTUlDMSA2
+Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTEFEQ01JWFNDX01JQzIgNQo+Pj4gwqArI2RlZmlu
+ZSBTVU44SV9BRERBX0xBRENNSVhTQ19QSE9ORSA0Cj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFf
+TEFEQ01JWFNDX1BIT05FTiAzCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfTEFEQ01JWFNDX0xJ
+TkVJTkwgMgo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX0xBRENNSVhTQ19PTUlYUkwgMQo+Pj4g
+wqArI2RlZmluZSBTVU44SV9BRERBX0xBRENNSVhTQ19PTUlYUlIgMAo+Pj4gwqArI2RlZmluZSBT
+VU44SV9BRERBX1JBRENNSVhTQyAweDBkCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfUkFEQ01J
+WFNDX01JQzEgNgo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JBRENNSVhTQ19NSUMyIDUKPj4+
+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9SQURDTUlYU0NfUEhPTkUgNAo+Pj4gwqArI2RlZmluZSBT
+VU44SV9BRERBX1JBRENNSVhTQ19QSE9ORVAgMwo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JB
+RENNSVhTQ19MSU5FSU5SIDIKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9SQURDTUlYU0NfT01J
+WFIgMQo+Pj4gwqArI2RlZmluZSBTVU44SV9BRERBX1JBRENNSVhTQ19PTUlYTCAwCj4+PiDCoCsj
+ZGVmaW5lIFNVTjhJX0FEREFfUkVTIDB4MGUKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9SRVNf
+TU1JQ0JJQVNfU0VMIDQKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9SRVNfUEFfQU5USV9QT1Bf
+Q1RSTCAwCj4+PiDCoCsjZGVmaW5lIFNVTjhJX0FEREFfQURDX0FQX0VOIDB4MGYKPj4+IMKgKyNk
+ZWZpbmUgU1VOOElfQUREQV9BRENfQVBfRU5fQURDUkVOIDcKPj4+IMKgKyNkZWZpbmUgU1VOOElf
+QUREQV9BRENfQVBfRU5fQURDTEVOIDYKPj4+IMKgKyNkZWZpbmUgU1VOOElfQUREQV9BRENfQVBf
+RU5fQURDRyAwCj4+PiDCoCsKPj4+IMKgKy8qIEFuYWxvZyBjb250cm9sIHJlZ2lzdGVyIGFjY2Vz
+cyBiaXRzICovCj4+PiDCoCsjZGVmaW5lIEFEREFfUFIgMHgwIC8qIFBSQ00gYmFzZSArIDB4MWMw
+ICovCj4+PiDCoCsjZGVmaW5lIEFEREFfUFJfUkVTRVQgQklUKDI4KQo+Pj4gwqArI2RlZmluZSBB
+RERBX1BSX1dSSVRFIEJJVCgyNCkKPj4+IMKgKyNkZWZpbmUgQUREQV9QUl9BRERSX1NISUZUIDE2
+Cj4+PiDCoCsjZGVmaW5lIEFEREFfUFJfQUREUl9NQVNLIEdFTk1BU0soNCwgMCkKPj4+IMKgKyNk
+ZWZpbmUgQUREQV9QUl9EQVRBX0lOX1NISUZUIDgKPj4+IMKgKyNkZWZpbmUgQUREQV9QUl9EQVRB
+X0lOX01BU0sgR0VOTUFTSyg3LCAwKQo+Pj4gwqArI2RlZmluZSBBRERBX1BSX0RBVEFfT1VUX1NI
+SUZUIDAKPj4+IMKgKyNkZWZpbmUgQUREQV9QUl9EQVRBX09VVF9NQVNLIEdFTk1BU0soNywgMCkK
+Pj4+IMKgKwo+Pj4gwqArLyogcmVnbWFwIGFjY2VzcyBiaXRzICovCj4+PiDCoCtzdGF0aWMgaW50
+IGFkZGFfcmVnX3JlYWQodm9pZCAqY29udGV4dCwgdW5zaWduZWQgaW50IHJlZywgdW5zaWduZWQg
+aW50ICp2YWwpCj4+PiDCoCt7Cj4+PiDCoCsgdm9pZCBfX2lvbWVtICpiYXNlID0gKHZvaWQgX19p
+b21lbSAqKWNvbnRleHQ7Cj4+PiDCoCsgdTMyIHRtcDsKPj4+IMKgKwo+Pj4gwqArIC8qIERlLWFz
+c2VydCByZXNldCAqLwo+Pj4gwqArIHdyaXRlbChyZWFkbChiYXNlKSB8IEFEREFfUFJfUkVTRVQs
+IGJhc2UpOwo+Pj4gwqArCj4+PiDCoCsgLyogQ2xlYXIgd3JpdGUgYml0ICovCj4+PiDCoCsgd3Jp
+dGVsKHJlYWRsKGJhc2UpICYgfkFEREFfUFJfV1JJVEUsIGJhc2UpOwo+Pj4gwqArCj4+PiDCoCsg
+LyogU2V0IHJlZ2lzdGVyIGFkZHJlc3MgKi8KPj4+IMKgKyB0bXAgPSByZWFkbChiYXNlKTsKPj4+
+IMKgKyB0bXAgJj0gfihBRERBX1BSX0FERFJfTUFTSyA8PCBBRERBX1BSX0FERFJfU0hJRlQpOwo+
+Pj4gwqArIHRtcCB8PSAocmVnICYgQUREQV9QUl9BRERSX01BU0spIDw8IEFEREFfUFJfQUREUl9T
+SElGVDsKPj4+IMKgKyB3cml0ZWwodG1wLCBiYXNlKTsKPj4+IMKgKwo+Pj4gwqArIC8qIFJlYWQg
+YmFjayB2YWx1ZSAqLwo+Pj4gwqArICp2YWwgPSByZWFkbChiYXNlKSAmIEFEREFfUFJfREFUQV9P
+VVRfTUFTSzsKPj4+IMKgKwo+Pj4gwqArIHJldHVybiAwOwo+Pj4gwqArfQo+Pj4gwqArCj4+PiDC
+oCtzdGF0aWMgaW50IGFkZGFfcmVnX3dyaXRlKHZvaWQgKmNvbnRleHQsIHVuc2lnbmVkIGludCBy
+ZWcsIHVuc2lnbmVkIGludCB2YWwpCj4+PiDCoCt7Cj4+PiDCoCsgdm9pZCBfX2lvbWVtICpiYXNl
+ID0gKHZvaWQgX19pb21lbSAqKWNvbnRleHQ7Cj4+PiDCoCsgdTMyIHRtcDsKPj4+IMKgKwo+Pj4g
+wqArIC8qIERlLWFzc2VydCByZXNldCAqLwo+Pj4gwqArIHdyaXRlbChyZWFkbChiYXNlKSB8IEFE
+REFfUFJfUkVTRVQsIGJhc2UpOwo+Pj4gwqArCj4+PiDCoCsgLyogU2V0IHJlZ2lzdGVyIGFkZHJl
+c3MgKi8KPj4+IMKgKyB0bXAgPSByZWFkbChiYXNlKTsKPj4+IMKgKyB0bXAgJj0gfihBRERBX1BS
+X0FERFJfTUFTSyA8PCBBRERBX1BSX0FERFJfU0hJRlQpOwo+Pj4gwqArIHRtcCB8PSAocmVnICYg
+QUREQV9QUl9BRERSX01BU0spIDw8IEFEREFfUFJfQUREUl9TSElGVDsKPj4+IMKgKyB3cml0ZWwo
+dG1wLCBiYXNlKTsKPj4+IMKgKwo+Pj4gwqArIC8qIFNldCBkYXRhIHRvIHdyaXRlICovCj4+PiDC
+oCsgdG1wID0gcmVhZGwoYmFzZSk7Cj4+PiDCoCsgdG1wICY9IH4oQUREQV9QUl9EQVRBX0lOX01B
+U0sgPDwgQUREQV9QUl9EQVRBX0lOX1NISUZUKTsKPj4+IMKgKyB0bXAgfD0gKHZhbCAmIEFEREFf
+UFJfREFUQV9JTl9NQVNLKSA8PCBBRERBX1BSX0RBVEFfSU5fU0hJRlQ7Cj4+PiDCoCsgd3JpdGVs
+KHRtcCwgYmFzZSk7Cj4+PiDCoCsKPj4+IMKgKyAvKiBTZXQgd3JpdGUgYml0IHRvIHNpZ25hbCBh
+IHdyaXRlICovCj4+PiDCoCsgd3JpdGVsKHJlYWRsKGJhc2UpIHwgQUREQV9QUl9XUklURSwgYmFz
+ZSk7Cj4+PiDCoCsKPj4+IMKgKyAvKiBDbGVhciB3cml0ZSBiaXQgKi8KPj4+IMKgKyB3cml0ZWwo
+cmVhZGwoYmFzZSkgJiB+QUREQV9QUl9XUklURSwgYmFzZSk7Cj4+PiDCoCsKPj4+IMKgKyByZXR1
+cm4gMDsKPj4+IMKgK30KPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBf
+Y29uZmlnIGFkZGFfcHJfcmVnbWFwX2NmZyA9IHsKPj4+IMKgKyAubmFtZSA9ICJhZGRhLXByIiwK
+Pj4+IMKgKyAucmVnX2JpdHMgPSA1LAo+Pj4gwqArIC5yZWdfc3RyaWRlID0gMSwKPj4+IMKgKyAu
+dmFsX2JpdHMgPSA4LAo+Pj4gwqArIC5yZWdfcmVhZCA9IGFkZGFfcmVnX3JlYWQsCj4+PiDCoCsg
+LnJlZ193cml0ZSA9IGFkZGFfcmVnX3dyaXRlLAo+Pj4gwqArIC5mYXN0X2lvID0gdHJ1ZSwKPj4+
+IMKgKyAubWF4X3JlZ2lzdGVyID0gMjQsCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCsvKiBtaXhl
+ciBjb250cm9scyAqLwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3
+IHN1bjhpX2NvZGVjX21peGVyX2NvbnRyb2xzW10gPSB7Cj4+PiDCoCsgU09DX0RBUE1fRE9VQkxF
+X1IoIkRBQyBQbGF5YmFjayBTd2l0Y2giLAo+Pj4gwqArIFNVTjhJX0FEREFfTE9NSVhTQywKPj4+
+IMKgKyBTVU44SV9BRERBX1JPTUlYU0MsCj4+PiDCoCsgU1VOOElfQUREQV9MT01JWFNDX0RBQ0ws
+IDEsIDApLAo+Pj4gwqArIFNPQ19EQVBNX0RPVUJMRV9SKCJEQUMgUmV2ZXJzZWQgUGxheWJhY2sg
+U3dpdGNoIiwKPj4+IMKgKyBTVU44SV9BRERBX0xPTUlYU0MsCj4+PiDCoCsgU1VOOElfQUREQV9S
+T01JWFNDLAo+Pj4gwqArIFNVTjhJX0FEREFfTE9NSVhTQ19EQUNSLCAxLCAwKSwKPj4+IMKgKyBT
+T0NfREFQTV9ET1VCTEVfUigiTGluZSBJbiBQbGF5YmFjayBTd2l0Y2giLAo+Pj4gwqArIFNVTjhJ
+X0FEREFfTE9NSVhTQywKPj4+IMKgKyBTVU44SV9BRERBX1JPTUlYU0MsCj4+PiDCoCsgU1VOOElf
+QUREQV9MT01JWFNDX0xJTkVJTkwsIDEsIDApLAo+Pj4gwqArIFNPQ19EQVBNX0RPVUJMRV9SKCJN
+aWMxIFBsYXliYWNrIFN3aXRjaCIsCj4+PiDCoCsgU1VOOElfQUREQV9MT01JWFNDLAo+Pj4gwqAr
+IFNVTjhJX0FEREFfUk9NSVhTQywKPj4+IMKgKyBTVU44SV9BRERBX0xPTUlYU0NfTUlDMSwgMSwg
+MCksCj4+PiDCoCsgU09DX0RBUE1fRE9VQkxFX1IoIk1pYzIgUGxheWJhY2sgU3dpdGNoIiwKPj4+
+IMKgKyBTVU44SV9BRERBX0xPTUlYU0MsCj4+PiDCoCsgU1VOOElfQUREQV9ST01JWFNDLAo+Pj4g
+wqArIFNVTjhJX0FEREFfTE9NSVhTQ19NSUMyLCAxLCAwKSwKPj4+IMKgK307Cj4+PiDCoCsKPj4+
+IMKgKy8qIEFEQyBtaXhlciBjb250cm9scyAqLwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBz
+bmRfa2NvbnRyb2xfbmV3IHN1bjhpX2NvZGVjX2FkY19taXhlcl9jb250cm9sc1tdID0gewo+Pj4g
+wqArIFNPQ19EQVBNX0RPVUJMRV9SKCJNaXhlciBDYXB0dXJlIFN3aXRjaCIsCj4+PiDCoCsgU1VO
+OElfQUREQV9MQURDTUlYU0MsCj4+PiDCoCsgU1VOOElfQUREQV9SQURDTUlYU0MsCj4+PiDCoCsg
+U1VOOElfQUREQV9MQURDTUlYU0NfT01JWFJMLCAxLCAwKSwKPj4+IMKgKyBTT0NfREFQTV9ET1VC
+TEVfUigiTWl4ZXIgUmV2ZXJzZWQgQ2FwdHVyZSBTd2l0Y2giLAo+Pj4gwqArIFNVTjhJX0FEREFf
+TEFEQ01JWFNDLAo+Pj4gwqArIFNVTjhJX0FEREFfUkFEQ01JWFNDLAo+Pj4gwqArIFNVTjhJX0FE
+REFfTEFEQ01JWFNDX09NSVhSUiwgMSwgMCksCj4+PiDCoCsgU09DX0RBUE1fRE9VQkxFX1IoIkxp
+bmUgSW4gQ2FwdHVyZSBTd2l0Y2giLAo+Pj4gwqArIFNVTjhJX0FEREFfTEFEQ01JWFNDLAo+Pj4g
+wqArIFNVTjhJX0FEREFfUkFEQ01JWFNDLAo+Pj4gwqArIFNVTjhJX0FEREFfTEFEQ01JWFNDX0xJ
+TkVJTkwsIDEsIDApLAo+Pj4gwqArIFNPQ19EQVBNX0RPVUJMRV9SKCJNaWMxIENhcHR1cmUgU3dp
+dGNoIiwKPj4+IMKgKyBTVU44SV9BRERBX0xBRENNSVhTQywKPj4+IMKgKyBTVU44SV9BRERBX1JB
+RENNSVhTQywKPj4+IMKgKyBTVU44SV9BRERBX0xBRENNSVhTQ19NSUMxLCAxLCAwKSwKPj4+IMKg
+KyBTT0NfREFQTV9ET1VCTEVfUigiTWljMiBDYXB0dXJlIFN3aXRjaCIsCj4+PiDCoCsgU1VOOElf
+QUREQV9MQURDTUlYU0MsCj4+PiDCoCsgU1VOOElfQUREQV9SQURDTUlYU0MsCj4+PiDCoCsgU1VO
+OElfQUREQV9MQURDTUlYU0NfTUlDMiwgMSwgMCksCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCsv
+KiB2b2x1bWUgLyBtdXRlIGNvbnRyb2xzICovCj4+PiDCoCtzdGF0aWMgY29uc3QgREVDTEFSRV9U
+TFZfREJfU0NBTEUoc3VuOGlfY29kZWNfb3V0X21peGVyX3ByZWdhaW5fc2NhbGUsCj4+PiDCoCsg
+LTQ1MCwgMTUwLCAwKTsKPj4+IMKgK3N0YXRpYyBjb25zdCBERUNMQVJFX1RMVl9EQl9SQU5HRShz
+dW44aV9jb2RlY19taWNfZ2Fpbl9zY2FsZSwKPj4+IMKgKyAwLCAwLCBUTFZfREJfU0NBTEVfSVRF
+TSgwLCAwLCAwKSwKPj4+IMKgKyAxLCA3LCBUTFZfREJfU0NBTEVfSVRFTSgyNDAwLCAzMDAsIDAp
+LAo+Pj4gwqArKTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRy
+b2xfbmV3IHN1bjhpX2NvZGVjX2NvbW1vbl9jb250cm9sc1tdID0gewo+Pj4gwqArIC8qIE1peGVy
+IHByZS1nYWlucyAqLwo+Pj4gwqArIFNPQ19TSU5HTEVfVExWKCJMaW5lIEluIFBsYXliYWNrIFZv
+bHVtZSIsIFNVTjhJX0FEREFfTElORUlOX0dDVFJMLAo+Pj4gwqArIFNVTjhJX0FEREFfTElORUlO
+X0dDVFJMX0xJTkVJTkcsCj4+PiDCoCsgMHg3LCAwLCBzdW44aV9jb2RlY19vdXRfbWl4ZXJfcHJl
+Z2Fpbl9zY2FsZSksCj4+PiDCoCsgU09DX1NJTkdMRV9UTFYoIk1pYzEgUGxheWJhY2sgVm9sdW1l
+IiwgU1VOOElfQUREQV9NSUNJTl9HQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX01JQ0lOX0dDVFJM
+X01JQzFHLAo+Pj4gwqArIDB4NywgMCwgc3VuOGlfY29kZWNfb3V0X21peGVyX3ByZWdhaW5fc2Nh
+bGUpLAo+Pj4gwqArIFNPQ19TSU5HTEVfVExWKCJNaWMyIFBsYXliYWNrIFZvbHVtZSIsCj4+PiDC
+oCsgU1VOOElfQUREQV9NSUNJTl9HQ1RSTCwgU1VOOElfQUREQV9NSUNJTl9HQ1RSTF9NSUMyRywK
+Pj4+IMKgKyAweDcsIDAsIHN1bjhpX2NvZGVjX291dF9taXhlcl9wcmVnYWluX3NjYWxlKSwKPj4+
+IMKgKwo+Pj4gwqArIC8qIE1pY3JvcGhvbmUgQW1wIGJvb3N0IGdhaW5zICovCj4+PiDCoCsgU09D
+X1NJTkdMRV9UTFYoIk1pYzEgQm9vc3QgVm9sdW1lIiwgU1VOOElfQUREQV9NSUMxR19NSUNCSUFT
+X0NUUkwsCj4+PiDCoCsgU1VOOElfQUREQV9NSUMxR19NSUNCSUFTX0NUUkxfTUlDMUJPT1NULCAw
+eDcsIDAsCj4+PiDCoCsgc3VuOGlfY29kZWNfbWljX2dhaW5fc2NhbGUpLAo+Pj4gwqArIFNPQ19T
+SU5HTEVfVExWKCJNaWMyIEJvb3N0IFZvbHVtZSIsIFNVTjhJX0FEREFfTUlDMkdfQ1RSTCwKPj4+
+IMKgKyBTVU44SV9BRERBX01JQzJHX0NUUkxfTUlDMkJPT1NULCAweDcsIDAsCj4+PiDCoCsgc3Vu
+OGlfY29kZWNfbWljX2dhaW5fc2NhbGUpLAo+Pj4gwqArCj4+PiDCoCsgLyogQURDICovCj4+PiDC
+oCsgU09DX1NJTkdMRV9UTFYoIkFEQyBHYWluIENhcHR1cmUgVm9sdW1lIiwgU1VOOElfQUREQV9B
+RENfQVBfRU4sCj4+PiDCoCsgU1VOOElfQUREQV9BRENfQVBfRU5fQURDRywgMHg3LCAwLAo+Pj4g
+wqArIHN1bjhpX2NvZGVjX291dF9taXhlcl9wcmVnYWluX3NjYWxlKSwKPj4+IMKgK307Cj4+PiDC
+oCsKPj4+IMKgK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9j
+b2RlY19jb21tb25fd2lkZ2V0c1tdID0gewo+Pj4gwqArIC8qIEFEQyAqLwo+Pj4gwqArIFNORF9T
+T0NfREFQTV9BREMoIkxlZnQgQURDIiwgTlVMTCwgU1VOOElfQUREQV9BRENfQVBfRU4sCj4+PiDC
+oCsgU1VOOElfQUREQV9BRENfQVBfRU5fQURDTEVOLCAwKSwKPj4+IMKgKyBTTkRfU09DX0RBUE1f
+QURDKCJSaWdodCBBREMiLCBOVUxMLCBTVU44SV9BRERBX0FEQ19BUF9FTiwKPj4+IMKgKyBTVU44
+SV9BRERBX0FEQ19BUF9FTl9BRENSRU4sIDApLAo+Pj4gwqArCj4+PiDCoCsgLyogREFDICovCj4+
+PiDCoCsgU05EX1NPQ19EQVBNX0RBQygiTGVmdCBEQUMiLCBOVUxMLCBTVU44SV9BRERBX0RBQ19Q
+QV9TUkMsCj4+PiDCoCsgU1VOOElfQUREQV9EQUNfUEFfU1JDX0RBQ0FMRU4sIDApLAo+Pj4gwqAr
+IFNORF9TT0NfREFQTV9EQUMoIlJpZ2h0IERBQyIsIE5VTEwsIFNVTjhJX0FEREFfREFDX1BBX1NS
+QywKPj4+IMKgKyBTVU44SV9BRERBX0RBQ19QQV9TUkNfREFDQVJFTiwgMCksCj4+PiDCoCsgLyoK
+Pj4+IMKgKyAqIER1ZSB0byB0aGlzIGNvbXBvbmVudCBhbmQgdGhlIGNvZGVjIGJlbG9uZ2luZyB0
+byBzZXBhcmF0ZSBEQVBNCj4+PiDCoCsgKiBjb250ZXh0cywgd2UgbmVlZCB0byBtYW51YWxseSBs
+aW5rIHRoZSBhYm92ZSB3aWRnZXRzIHRvIHRoZWlyCj4+PiDCoCsgKiBzdHJlYW0gd2lkZ2V0cyBh
+dCB0aGUgY2FyZCBsZXZlbC4KPj4+IMKgKyAqLwo+Pj4gwqArCj4+PiDCoCsgLyogTGluZSBJbiAq
+Lwo+Pj4gwqArIFNORF9TT0NfREFQTV9JTlBVVCgiTElORUlOIiksCj4+PiDCoCsKPj4+IMKgKyAv
+KiBNaWNyb3Bob25lIGlucHV0cyAqLwo+Pj4gwqArIFNORF9TT0NfREFQTV9JTlBVVCgiTUlDMSIp
+LAo+Pj4gwqArIFNORF9TT0NfREFQTV9JTlBVVCgiTUlDMiIpLAo+Pj4gwqArCj4+PiDCoCsgLyog
+TWljcm9waG9uZSBCaWFzICovCj4+PiDCoCsgU05EX1NPQ19EQVBNX1NVUFBMWSgiTUJJQVMiLCBT
+VU44SV9BRERBX01JQzFHX01JQ0JJQVNfQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX01JQzFHX01J
+Q0JJQVNfQ1RSTF9NTUlDQklBU0VOLAo+Pj4gwqArIDAsIE5VTEwsIDApLAo+Pj4gwqArCj4+PiDC
+oCsgLyogTWljIGlucHV0IHBhdGggKi8KPj4+IMKgKyBTTkRfU09DX0RBUE1fUEdBKCJNaWMxIEFt
+cGxpZmllciIsIFNVTjhJX0FEREFfTUlDMUdfTUlDQklBU19DVFJMLAo+Pj4gwqArIFNVTjhJX0FE
+REFfTUlDMUdfTUlDQklBU19DVFJMX01JQzFBTVBFTiwgMCwgTlVMTCwgMCksCj4+PiDCoCsgU05E
+X1NPQ19EQVBNX1BHQSgiTWljMiBBbXBsaWZpZXIiLCBTVU44SV9BRERBX01JQzJHX0NUUkwsCj4+
+PiDCoCsgU1VOOElfQUREQV9NSUMyR19DVFJMX01JQzJBTVBFTiwgMCwgTlVMTCwgMCksCj4+PiDC
+oCsKPj4+IMKgKyAvKiBNaXhlcnMgKi8KPj4+IMKgKyBTTkRfU09DX0RBUE1fTUlYRVIoIkxlZnQg
+TWl4ZXIiLCBTVU44SV9BRERBX0RBQ19QQV9TUkMsCj4+PiDCoCsgU1VOOElfQUREQV9EQUNfUEFf
+U1JDX0xNSVhFTiwgMCwKPj4+IMKgKyBzdW44aV9jb2RlY19taXhlcl9jb250cm9scywKPj4+IMKg
+KyBBUlJBWV9TSVpFKHN1bjhpX2NvZGVjX21peGVyX2NvbnRyb2xzKSksCj4+PiDCoCsgU05EX1NP
+Q19EQVBNX01JWEVSKCJSaWdodCBNaXhlciIsIFNVTjhJX0FEREFfREFDX1BBX1NSQywKPj4+IMKg
+KyBTVU44SV9BRERBX0RBQ19QQV9TUkNfUk1JWEVOLCAwLAo+Pj4gwqArIHN1bjhpX2NvZGVjX21p
+eGVyX2NvbnRyb2xzLAo+Pj4gwqArIEFSUkFZX1NJWkUoc3VuOGlfY29kZWNfbWl4ZXJfY29udHJv
+bHMpKSwKPj4+IMKgKyBTTkRfU09DX0RBUE1fTUlYRVIoIkxlZnQgQURDIE1peGVyIiwgU1VOOElf
+QUREQV9BRENfQVBfRU4sCj4+PiDCoCsgU1VOOElfQUREQV9BRENfQVBfRU5fQURDTEVOLCAwLAo+
+Pj4gwqArIHN1bjhpX2NvZGVjX2FkY19taXhlcl9jb250cm9scywKPj4+IMKgKyBBUlJBWV9TSVpF
+KHN1bjhpX2NvZGVjX2FkY19taXhlcl9jb250cm9scykpLAo+Pj4gwqArIFNORF9TT0NfREFQTV9N
+SVhFUigiUmlnaHQgQURDIE1peGVyIiwgU1VOOElfQUREQV9BRENfQVBfRU4sCj4+PiDCoCsgU1VO
+OElfQUREQV9BRENfQVBfRU5fQURDUkVOLCAwLAo+Pj4gwqArIHN1bjhpX2NvZGVjX2FkY19taXhl
+cl9jb250cm9scywKPj4+IMKgKyBBUlJBWV9TSVpFKHN1bjhpX2NvZGVjX2FkY19taXhlcl9jb250
+cm9scykpLAo+Pj4gwqArfTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRf
+c29jX2RhcG1fcm91dGUgc3VuOGlfY29kZWNfY29tbW9uX3JvdXRlc1tdID0gewo+Pj4gwqArIC8q
+IE1pY3JvcGhvbmUgUm91dGVzICovCj4+PiDCoCsgeyAiTWljMSBBbXBsaWZpZXIiLCBOVUxMLCAi
+TUlDMSJ9LAo+Pj4gwqArIHsgIk1pYzIgQW1wbGlmaWVyIiwgTlVMTCwgIk1JQzIifSwKPj4+IMKg
+Kwo+Pj4gwqArIC8qIExlZnQgTWl4ZXIgUm91dGVzICovCj4+PiDCoCsgeyAiTGVmdCBNaXhlciIs
+ICJEQUMgUGxheWJhY2sgU3dpdGNoIiwgIkxlZnQgREFDIiB9LAo+Pj4gwqArIHsgIkxlZnQgTWl4
+ZXIiLCAiREFDIFJldmVyc2VkIFBsYXliYWNrIFN3aXRjaCIsICJSaWdodCBEQUMiIH0sCj4+PiDC
+oCsgeyAiTGVmdCBNaXhlciIsICJMaW5lIEluIFBsYXliYWNrIFN3aXRjaCIsICJMSU5FSU4iIH0s
+Cj4+PiDCoCsgeyAiTGVmdCBNaXhlciIsICJNaWMxIFBsYXliYWNrIFN3aXRjaCIsICJNaWMxIEFt
+cGxpZmllciIgfSwKPj4+IMKgKyB7ICJMZWZ0IE1peGVyIiwgIk1pYzIgUGxheWJhY2sgU3dpdGNo
+IiwgIk1pYzIgQW1wbGlmaWVyIiB9LAo+Pj4gwqArCj4+PiDCoCsgLyogUmlnaHQgTWl4ZXIgUm91
+dGVzICovCj4+PiDCoCsgeyAiUmlnaHQgTWl4ZXIiLCAiREFDIFBsYXliYWNrIFN3aXRjaCIsICJS
+aWdodCBEQUMiIH0sCj4+PiDCoCsgeyAiUmlnaHQgTWl4ZXIiLCAiREFDIFJldmVyc2VkIFBsYXli
+YWNrIFN3aXRjaCIsICJMZWZ0IERBQyIgfSwKPj4+IMKgKyB7ICJSaWdodCBNaXhlciIsICJMaW5l
+IEluIFBsYXliYWNrIFN3aXRjaCIsICJMSU5FSU4iIH0sCj4+PiDCoCsgeyAiUmlnaHQgTWl4ZXIi
+LCAiTWljMSBQbGF5YmFjayBTd2l0Y2giLCAiTWljMSBBbXBsaWZpZXIiIH0sCj4+PiDCoCsgeyAi
+UmlnaHQgTWl4ZXIiLCAiTWljMiBQbGF5YmFjayBTd2l0Y2giLCAiTWljMiBBbXBsaWZpZXIiIH0s
+Cj4+PiDCoCsKPj4+IMKgKyAvKiBMZWZ0IEFEQyBNaXhlciBSb3V0ZXMgKi8KPj4+IMKgKyB7ICJM
+ZWZ0IEFEQyBNaXhlciIsICJNaXhlciBDYXB0dXJlIFN3aXRjaCIsICJMZWZ0IE1peGVyIiB9LAo+
+Pj4gwqArIHsgIkxlZnQgQURDIE1peGVyIiwgIk1peGVyIFJldmVyc2VkIENhcHR1cmUgU3dpdGNo
+IiwgIlJpZ2h0IE1peGVyIiB9LAo+Pj4gwqArIHsgIkxlZnQgQURDIE1peGVyIiwgIkxpbmUgSW4g
+Q2FwdHVyZSBTd2l0Y2giLCAiTElORUlOIiB9LAo+Pj4gwqArIHsgIkxlZnQgQURDIE1peGVyIiwg
+Ik1pYzEgQ2FwdHVyZSBTd2l0Y2giLCAiTWljMSBBbXBsaWZpZXIiIH0sCj4+PiDCoCsgeyAiTGVm
+dCBBREMgTWl4ZXIiLCAiTWljMiBDYXB0dXJlIFN3aXRjaCIsICJNaWMyIEFtcGxpZmllciIgfSwK
+Pj4+IMKgKwo+Pj4gwqArIC8qIFJpZ2h0IEFEQyBNaXhlciBSb3V0ZXMgKi8KPj4+IMKgKyB7ICJS
+aWdodCBBREMgTWl4ZXIiLCAiTWl4ZXIgQ2FwdHVyZSBTd2l0Y2giLCAiUmlnaHQgTWl4ZXIiIH0s
+Cj4+PiDCoCsgeyAiUmlnaHQgQURDIE1peGVyIiwgIk1peGVyIFJldmVyc2VkIENhcHR1cmUgU3dp
+dGNoIiwgIkxlZnQgTWl4ZXIiIH0sCj4+PiDCoCsgeyAiUmlnaHQgQURDIE1peGVyIiwgIkxpbmUg
+SW4gQ2FwdHVyZSBTd2l0Y2giLCAiTElORUlOIiB9LAo+Pj4gwqArIHsgIlJpZ2h0IEFEQyBNaXhl
+ciIsICJNaWMxIENhcHR1cmUgU3dpdGNoIiwgIk1pYzEgQW1wbGlmaWVyIiB9LAo+Pj4gwqArIHsg
+IlJpZ2h0IEFEQyBNaXhlciIsICJNaWMyIENhcHR1cmUgU3dpdGNoIiwgIk1pYzIgQW1wbGlmaWVy
+IiB9LAo+Pj4gwqArCj4+PiDCoCsgLyogQURDIFJvdXRlcyAqLwo+Pj4gwqArIHsgIkxlZnQgQURD
+IiwgTlVMTCwgIkxlZnQgQURDIE1peGVyIiB9LAo+Pj4gwqArIHsgIlJpZ2h0IEFEQyIsIE5VTEws
+ICJSaWdodCBBREMgTWl4ZXIiIH0sCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCsvKiBoZWFkcGhv
+bmUgc3BlY2lmaWMgY29udHJvbHMsIHdpZGdldHMsIGFuZCByb3V0ZXMgKi8KPj4+IMKgK3N0YXRp
+YyBjb25zdCBERUNMQVJFX1RMVl9EQl9TQ0FMRShzdW44aV9jb2RlY19ocF92b2xfc2NhbGUsIC02
+MzAwLCAxMDAsIDEpOwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3
+IHN1bjhpX2NvZGVjX2hlYWRwaG9uZV9jb250cm9sc1tdID0gewo+Pj4gwqArIFNPQ19TSU5HTEVf
+VExWKCJIZWFkcGhvbmUgUGxheWJhY2sgVm9sdW1lIiwKPj4+IMKgKyBTVU44SV9BRERBX0hQX1ZP
+TEMsCj4+PiDCoCsgU1VOOElfQUREQV9IUF9WT0xDX0hQX1ZPTCwgMHgzZiwgMCwKPj4+IMKgKyBz
+dW44aV9jb2RlY19ocF92b2xfc2NhbGUpLAo+Pj4gwqArIFNPQ19ET1VCTEUoIkhlYWRwaG9uZSBQ
+bGF5YmFjayBTd2l0Y2giLAo+Pj4gwqArIFNVTjhJX0FEREFfREFDX1BBX1NSQywKPj4+IMKgKyBT
+VU44SV9BRERBX0RBQ19QQV9TUkNfTEhQUEFNVVRFLAo+Pj4gwqArIFNVTjhJX0FEREFfREFDX1BB
+X1NSQ19SSFBQQU1VVEUsIDEsIDApLAo+Pj4gwqArfTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNv
+bnN0IGNoYXIgKiBjb25zdCBzdW44aV9jb2RlY19ocF9zcmNfZW51bV90ZXh0W10gPSB7Cj4+PiDC
+oCsgIkRBQyIsICJNaXhlciIsCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCtzdGF0aWMgU09DX0VO
+VU1fRE9VQkxFX0RFQ0woc3VuOGlfY29kZWNfaHBfc3JjX2VudW0sCj4+PiDCoCsgU1VOOElfQURE
+QV9EQUNfUEFfU1JDLAo+Pj4gwqArIFNVTjhJX0FEREFfREFDX1BBX1NSQ19MSFBJUywKPj4+IMKg
+KyBTVU44SV9BRERBX0RBQ19QQV9TUkNfUkhQSVMsCj4+PiDCoCsgc3VuOGlfY29kZWNfaHBfc3Jj
+X2VudW1fdGV4dCk7Cj4+PiDCoCsKPj4+IMKgK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250
+cm9sX25ldyBzdW44aV9jb2RlY19ocF9zcmNbXSA9IHsKPj4+IMKgKyBTT0NfREFQTV9FTlVNKCJI
+ZWFkcGhvbmUgU291cmNlIFBsYXliYWNrIFJvdXRlIiwKPj4+IMKgKyBzdW44aV9jb2RlY19ocF9z
+cmNfZW51bSksCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCtzdGF0aWMgY29uc3Qgc3RydWN0IHNu
+ZF9zb2NfZGFwbV93aWRnZXQgc3VuOGlfY29kZWNfaGVhZHBob25lX3dpZGdldHNbXSA9IHsKPj4+
+IMKgKyBTTkRfU09DX0RBUE1fTVVYKCJIZWFkcGhvbmUgU291cmNlIFBsYXliYWNrIFJvdXRlIiwK
+Pj4+IMKgKyBTTkRfU09DX05PUE0sIDAsIDAsIHN1bjhpX2NvZGVjX2hwX3NyYyksCj4+PiDCoCsg
+U05EX1NPQ19EQVBNX09VVF9EUlYoIkhlYWRwaG9uZSBBbXAiLCBTVU44SV9BRERBX1BBRU5fSFBf
+Q1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX1BBRU5fSFBfQ1RSTF9IUFBBRU4sIDAsIE5VTEwsIDAp
+LAo+Pj4gwqArIFNORF9TT0NfREFQTV9TVVBQTFkoIkhQQ09NIFByb3RlY3Rpb24iLCBTVU44SV9B
+RERBX1BBRU5fSFBfQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX1BBRU5fSFBfQ1RSTF9DT01QVEVO
+LCAwLCBOVUxMLCAwKSwKPj4+IMKgKyBTTkRfU09DX0RBUE1fUkVHKHNuZF9zb2NfZGFwbV9zdXBw
+bHksICJIUENPTSIsIFNVTjhJX0FEREFfUEFFTl9IUF9DVFJMLAo+Pj4gwqArIFNVTjhJX0FEREFf
+UEFFTl9IUF9DVFJMX0hQQ09NX0ZDLCAweDMsIDB4MywgMCksCj4+PiDCoCsgU05EX1NPQ19EQVBN
+X09VVFBVVCgiSFAiKSwKPj4+IMKgK307Cj4+PiDCoCsKPj4+IMKgK3N0YXRpYyBjb25zdCBzdHJ1
+Y3Qgc25kX3NvY19kYXBtX3JvdXRlIHN1bjhpX2NvZGVjX2hlYWRwaG9uZV9yb3V0ZXNbXSA9IHsK
+Pj4+IMKgKyB7ICJIZWFkcGhvbmUgU291cmNlIFBsYXliYWNrIFJvdXRlIiwgIkRBQyIsICJMZWZ0
+IERBQyIgfSwKPj4+IMKgKyB7ICJIZWFkcGhvbmUgU291cmNlIFBsYXliYWNrIFJvdXRlIiwgIkRB
+QyIsICJSaWdodCBEQUMiIH0sCj4+PiDCoCsgeyAiSGVhZHBob25lIFNvdXJjZSBQbGF5YmFjayBS
+b3V0ZSIsICJNaXhlciIsICJMZWZ0IE1peGVyIiB9LAo+Pj4gwqArIHsgIkhlYWRwaG9uZSBTb3Vy
+Y2UgUGxheWJhY2sgUm91dGUiLCAiTWl4ZXIiLCAiUmlnaHQgTWl4ZXIiIH0sCj4+PiDCoCsgeyAi
+SGVhZHBob25lIEFtcCIsIE5VTEwsICJIZWFkcGhvbmUgU291cmNlIFBsYXliYWNrIFJvdXRlIiB9
+LAo+Pj4gwqArIHsgIkhQQ09NIiwgTlVMTCwgIkhQQ09NIFByb3RlY3Rpb24iIH0sCj4+PiDCoCsg
+eyAiSFAiLCBOVUxMLCAiSGVhZHBob25lIEFtcCIgfSwKPj4+IMKgK307Cj4+PiDCoCsKPj4+IMKg
+K3N0YXRpYyBpbnQgc3VuOGlfY29kZWNfYWRkX2hlYWRwaG9uZShzdHJ1Y3Qgc25kX3NvY19jb21w
+b25lbnQgKmNtcG50KQo+Pj4gwqArewo+Pj4gwqArIHN0cnVjdCBzbmRfc29jX2RhcG1fY29udGV4
+dCAqZGFwbSA9IHNuZF9zb2NfY29tcG9uZW50X2dldF9kYXBtKGNtcG50KTsKPj4+IMKgKyBzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSBjbXBudC0+ZGV2Owo+Pj4gwqArIGludCByZXQ7Cj4+PiDCoCsKPj4+
+IMKgKyByZXQgPSBzbmRfc29jX2FkZF9jb21wb25lbnRfY29udHJvbHMoY21wbnQsCj4+PiDCoCsg
+c3VuOGlfY29kZWNfaGVhZHBob25lX2NvbnRyb2xzLAo+Pj4gwqArIEFSUkFZX1NJWkUoc3VuOGlf
+Y29kZWNfaGVhZHBob25lX2NvbnRyb2xzKSk7Cj4+PiDCoCsgaWYgKHJldCkgewo+Pj4gwqArIGRl
+dl9lcnIoZGV2LCAiRmFpbGVkIHRvIGFkZCBIZWFkcGhvbmUgY29udHJvbHM6ICVkXG4iLCByZXQp
+Owo+Pj4gwqArIHJldHVybiByZXQ7Cj4+PiDCoCsgfQo+Pj4gwqArCj4+PiDCoCsgcmV0ID0gc25k
+X3NvY19kYXBtX25ld19jb250cm9scyhkYXBtLCBzdW44aV9jb2RlY19oZWFkcGhvbmVfd2lkZ2V0
+cywKPj4+IMKgKyBBUlJBWV9TSVpFKHN1bjhpX2NvZGVjX2hlYWRwaG9uZV93aWRnZXRzKSk7Cj4+
+PiDCoCsgaWYgKHJldCkgewo+Pj4gwqArIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGFkZCBIZWFk
+cGhvbmUgREFQTSB3aWRnZXRzOiAlZFxuIiwgcmV0KTsKPj4+IMKgKyByZXR1cm4gcmV0Owo+Pj4g
+wqArIH0KPj4+IMKgKwo+Pj4gwqArIHJldCA9IHNuZF9zb2NfZGFwbV9hZGRfcm91dGVzKGRhcG0s
+IHN1bjhpX2NvZGVjX2hlYWRwaG9uZV9yb3V0ZXMsCj4+PiDCoCsgQVJSQVlfU0laRShzdW44aV9j
+b2RlY19oZWFkcGhvbmVfcm91dGVzKSk7Cj4+PiDCoCsgaWYgKHJldCkgewo+Pj4gwqArIGRldl9l
+cnIoZGV2LCAiRmFpbGVkIHRvIGFkZCBIZWFkcGhvbmUgREFQTSByb3V0ZXM6ICVkXG4iLCByZXQp
+Owo+Pj4gwqArIHJldHVybiByZXQ7Cj4+PiDCoCsgfQo+Pj4gwqArCj4+PiDCoCsgcmV0dXJuIDA7
+Cj4+PiDCoCt9Cj4+PiDCoCsKPj4+IMKgKy8qIGhtaWMgc3BlY2lmaWMgd2lkZ2V0ICovCj4+PiDC
+oCtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV93aWRnZXQgc3VuOGlfY29kZWNfaG1p
+Y193aWRnZXRzW10gPSB7Cj4+PiDCoCsgU05EX1NPQ19EQVBNX1NVUFBMWSgiSEJJQVMiLCBTVU44
+SV9BRERBX01JQzFHX01JQ0JJQVNfQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX01JQzFHX01JQ0JJ
+QVNfQ1RSTF9ITUlDQklBU0VOLAo+Pj4gwqArIDAsIE5VTEwsIDApLAo+Pj4gwqArfTsKPj4+IMKg
+Kwo+Pj4gwqArc3RhdGljIGludCBzdW44aV9jb2RlY19hZGRfaG1pYyhzdHJ1Y3Qgc25kX3NvY19j
+b21wb25lbnQgKmNtcG50KQo+Pj4gwqArewo+Pj4gwqArIHN0cnVjdCBzbmRfc29jX2RhcG1fY29u
+dGV4dCAqZGFwbSA9IHNuZF9zb2NfY29tcG9uZW50X2dldF9kYXBtKGNtcG50KTsKPj4+IMKgKyBz
+dHJ1Y3QgZGV2aWNlICpkZXYgPSBjbXBudC0+ZGV2Owo+Pj4gwqArIGludCByZXQ7Cj4+PiDCoCsK
+Pj4+IMKgKyByZXQgPSBzbmRfc29jX2RhcG1fbmV3X2NvbnRyb2xzKGRhcG0sIHN1bjhpX2NvZGVj
+X2htaWNfd2lkZ2V0cywKPj4+IMKgKyBBUlJBWV9TSVpFKHN1bjhpX2NvZGVjX2htaWNfd2lkZ2V0
+cykpOwo+Pj4gwqArIGlmIChyZXQpCj4+PiDCoCsgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gYWRk
+IE1pYzMgREFQTSB3aWRnZXRzOiAlZFxuIiwgcmV0KTsKPj4+IMKgKwo+Pj4gwqArIHJldHVybiBy
+ZXQ7Cj4+PiDCoCt9Cj4+PiDCoCsKPj4+IMKgKy8qIGxpbmUgb3V0IHNwZWNpZmljIGNvbnRyb2xz
+LCB3aWRnZXRzIGFuZCByb3V0ZXMgKi8KPj4+IMKgK3N0YXRpYyBjb25zdCBERUNMQVJFX1RMVl9E
+Ql9SQU5HRShzdW44aV9jb2RlY19saW5lb3V0X3ZvbF9zY2FsZSwKPj4+IMKgKyAwLCAxLCBUTFZf
+REJfU0NBTEVfSVRFTShUTFZfREJfR0FJTl9NVVRFLCAwLCAxKSwKPj4+IMKgKyAyLCAzMSwgVExW
+X0RCX1NDQUxFX0lURU0oLTQzNTAsIDE1MCwgMCksCj4+PiDCoCspOwo+Pj4gwqArc3RhdGljIGNv
+bnN0IHN0cnVjdCBzbmRfa2NvbnRyb2xfbmV3IHN1bjhpX2NvZGVjX2xpbmVvdXRfY29udHJvbHNb
+XSA9IHsKPj4+IMKgKyBTT0NfU0lOR0xFX1RMVigiTGluZSBPdXQgUGxheWJhY2sgVm9sdW1lIiwK
+Pj4+IMKgKyBTVU44SV9BRERBX1BIT05FX0dBSU5fQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX1BI
+T05FX0dBSU5fQ1RSTF9MSU5FT1VUX1ZPTCwgMHgxZiwgMCwKPj4+IMKgKyBzdW44aV9jb2RlY19s
+aW5lb3V0X3ZvbF9zY2FsZSksCj4+PiDCoCsgU09DX0RPVUJMRSgiTGluZSBPdXQgUGxheWJhY2sg
+U3dpdGNoIiwKPj4+IMKgKyBTVU44SV9BRERBX01JQzJHX0NUUkwsCj4+PiDCoCsgU1VOOElfQURE
+QV9NSUMyR19DVFJMX0xJTkVPVVRMRU4sCj4+PiDCoCsgU1VOOElfQUREQV9NSUMyR19DVFJMX0xJ
+TkVPVVRSRU4sIDEsIDApLAo+Pj4gwqArfTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNvbnN0IGNo
+YXIgKiBjb25zdCBzdW44aV9jb2RlY19saW5lb3V0X3NyY19lbnVtX3RleHRbXSA9IHsKPj4+IMKg
+KyAiU3RlcmVvIiwgIk1vbm8gRGlmZmVyZW50aWFsIiwKPj4+IMKgK307Cj4+PiDCoCsKPj4+IMKg
+K3N0YXRpYyBTT0NfRU5VTV9ET1VCTEVfREVDTChzdW44aV9jb2RlY19saW5lb3V0X3NyY19lbnVt
+LAo+Pj4gwqArIFNVTjhJX0FEREFfTUlDMkdfQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX01JQzJH
+X0NUUkxfTElORU9VVExTUkMsCj4+PiDCoCsgU1VOOElfQUREQV9NSUMyR19DVFJMX0xJTkVPVVRS
+U1JDLAo+Pj4gwqArIHN1bjhpX2NvZGVjX2xpbmVvdXRfc3JjX2VudW1fdGV4dCk7Cj4+PiDCoCsK
+Pj4+IMKgK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX2tjb250cm9sX25ldyBzdW44aV9jb2RlY19s
+aW5lb3V0X3NyY1tdID0gewo+Pj4gwqArIFNPQ19EQVBNX0VOVU0oIkxpbmUgT3V0IFNvdXJjZSBQ
+bGF5YmFjayBSb3V0ZSIsCj4+PiDCoCsgc3VuOGlfY29kZWNfbGluZW91dF9zcmNfZW51bSksCj4+
+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV93
+aWRnZXQgc3VuOGlfY29kZWNfbGluZW91dF93aWRnZXRzW10gPSB7Cj4+PiDCoCsgU05EX1NPQ19E
+QVBNX01VWCgiTGluZSBPdXQgU291cmNlIFBsYXliYWNrIFJvdXRlIiwKPj4+IMKgKyBTTkRfU09D
+X05PUE0sIDAsIDAsIHN1bjhpX2NvZGVjX2xpbmVvdXRfc3JjKSwKPj4+IMKgKyAvKiBJdCBpcyB1
+bmNsZWFyIGlmIHRoaXMgaXMgYSBidWZmZXIgb3IgZ2F0ZSwgbW9kZWwgaXQgYXMgYSBzdXBwbHkg
+Ki8KPj4+IMKgKyBTTkRfU09DX0RBUE1fU1VQUExZKCJMaW5lIE91dCBFbmFibGUiLCBTVU44SV9B
+RERBX1BBRU5fSFBfQ1RSTCwKPj4+IMKgKyBTVU44SV9BRERBX1BBRU5fSFBfQ1RSTF9MSU5FT1VU
+RU4sIDAsIE5VTEwsIDApLAo+Pj4gwqArIFNORF9TT0NfREFQTV9PVVRQVVQoIkxJTkVPVVQiKSwK
+Pj4+IMKgK307Cj4+PiDCoCsKPj4+IMKgK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBt
+X3JvdXRlIHN1bjhpX2NvZGVjX2xpbmVvdXRfcm91dGVzW10gPSB7Cj4+PiDCoCsgeyAiTGluZSBP
+dXQgU291cmNlIFBsYXliYWNrIFJvdXRlIiwgIlN0ZXJlbyIsICJMZWZ0IE1peGVyIiB9LAo+Pj4g
+wqArIHsgIkxpbmUgT3V0IFNvdXJjZSBQbGF5YmFjayBSb3V0ZSIsICJTdGVyZW8iLCAiUmlnaHQg
+TWl4ZXIiIH0sCj4+PiDCoCsgeyAiTGluZSBPdXQgU291cmNlIFBsYXliYWNrIFJvdXRlIiwgIk1v
+bm8gRGlmZmVyZW50aWFsIiwgIkxlZnQgTWl4ZXIiIH0sCj4+PiDCoCsgeyAiTGluZSBPdXQgU291
+cmNlIFBsYXliYWNrIFJvdXRlIiwgIk1vbm8gRGlmZmVyZW50aWFsIiwgIlJpZ2h0IE1peGVyIiB9
+LAo+Pj4gwqArIHsgIkxJTkVPVVQiLCBOVUxMLCAiTGluZSBPdXQgU291cmNlIFBsYXliYWNrIFJv
+dXRlIiB9LAo+Pj4gwqArIHsgIkxJTkVPVVQiLCBOVUxMLCAiTGluZSBPdXQgRW5hYmxlIiwgfSwK
+Pj4+IMKgK307Cj4+PiDCoCsKPj4+IMKgK3N0YXRpYyBpbnQgc3VuOGlfY29kZWNfYWRkX2xpbmVv
+dXQoc3RydWN0IHNuZF9zb2NfY29tcG9uZW50ICpjbXBudCkKPj4+IMKgK3sKPj4+IMKgKyBzdHJ1
+Y3Qgc25kX3NvY19kYXBtX2NvbnRleHQgKmRhcG0gPSBzbmRfc29jX2NvbXBvbmVudF9nZXRfZGFw
+bShjbXBudCk7Cj4+PiDCoCsgc3RydWN0IGRldmljZSAqZGV2ID0gY21wbnQtPmRldjsKPj4+IMKg
+KyBpbnQgcmV0Owo+Pj4gwqArCj4+PiDCoCsgcmV0ID0gc25kX3NvY19hZGRfY29tcG9uZW50X2Nv
+bnRyb2xzKGNtcG50LAo+Pj4gwqArIHN1bjhpX2NvZGVjX2xpbmVvdXRfY29udHJvbHMsCj4+PiDC
+oCsgQVJSQVlfU0laRShzdW44aV9jb2RlY19saW5lb3V0X2NvbnRyb2xzKSk7Cj4+PiDCoCsgaWYg
+KHJldCkgewo+Pj4gwqArIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGFkZCBMaW5lIE91dCBjb250
+cm9sczogJWRcbiIsIHJldCk7Cj4+PiDCoCsgcmV0dXJuIHJldDsKPj4+IMKgKyB9Cj4+PiDCoCsK
+Pj4+IMKgKyByZXQgPSBzbmRfc29jX2RhcG1fbmV3X2NvbnRyb2xzKGRhcG0sIHN1bjhpX2NvZGVj
+X2xpbmVvdXRfd2lkZ2V0cywKPj4+IMKgKyBBUlJBWV9TSVpFKHN1bjhpX2NvZGVjX2xpbmVvdXRf
+d2lkZ2V0cykpOwo+Pj4gwqArIGlmIChyZXQpIHsKPj4+IMKgKyBkZXZfZXJyKGRldiwgIkZhaWxl
+ZCB0byBhZGQgTGluZSBPdXQgREFQTSB3aWRnZXRzOiAlZFxuIiwgcmV0KTsKPj4+IMKgKyByZXR1
+cm4gcmV0Owo+Pj4gwqArIH0KPj4+IMKgKwo+Pj4gwqArIHJldCA9IHNuZF9zb2NfZGFwbV9hZGRf
+cm91dGVzKGRhcG0sIHN1bjhpX2NvZGVjX2xpbmVvdXRfcm91dGVzLAo+Pj4gwqArIEFSUkFZX1NJ
+WkUoc3VuOGlfY29kZWNfbGluZW91dF9yb3V0ZXMpKTsKPj4+IMKgKyBpZiAocmV0KSB7Cj4+PiDC
+oCsgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gYWRkIExpbmUgT3V0IERBUE0gcm91dGVzOiAlZFxu
+IiwgcmV0KTsKPj4+IMKgKyByZXR1cm4gcmV0Owo+Pj4gwqArIH0KPj4+IMKgKwo+Pj4gwqArIHJl
+dHVybiAwOwo+Pj4gwqArfQo+Pj4gwqArCj4+PiDCoCtzdHJ1Y3Qgc3VuOGlfY29kZWNfYW5hbG9n
+X3F1aXJrcyB7Cj4+PiDCoCsgYm9vbCBoYXNfaGVhZHBob25lOwo+Pj4gwqArIGJvb2wgaGFzX2ht
+aWM7Cj4+PiDCoCsgYm9vbCBoYXNfbGluZW91dDsKPj4+IMKgK307Cj4+PiDCoCsKPj4+IMKgK3N0
+YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuOGlfY29kZWNfYW5hbG9nX3F1aXJrcyBzdW44aV9hMjNfcXVp
+cmtzID0gewo+Pj4gwqArIC5oYXNfaGVhZHBob25lID0gdHJ1ZSwKPj4+IMKgKyAuaGFzX2htaWMg
+PSB0cnVlLAo+Pj4gwqArfTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGNvbnN0IHN0cnVjdCBzdW44
+aV9jb2RlY19hbmFsb2dfcXVpcmtzIHN1bjhpX2gzX3F1aXJrcyA9IHsKPj4+IMKgKyAuaGFzX2xp
+bmVvdXQgPSB0cnVlLAo+Pj4gwqArfTsKPj4+IMKgKwo+Pj4gwqArc3RhdGljIGludCBzdW44aV9j
+b2RlY19hbmFsb2dfY21wbnRfcHJvYmUoc3RydWN0IHNuZF9zb2NfY29tcG9uZW50ICpjbXBudCkK
+Pj4+IMKgK3sKPj4+IMKgKyBzdHJ1Y3QgZGV2aWNlICpkZXYgPSBjbXBudC0+ZGV2Owo+Pj4gwqAr
+IGNvbnN0IHN0cnVjdCBzdW44aV9jb2RlY19hbmFsb2dfcXVpcmtzICpxdWlya3M7Cj4+PiDCoCsg
+aW50IHJldDsKPj4+IMKgKwo+Pj4gwqArIC8qCj4+PiDCoCsgKiBUaGlzIHdvdWxkIG5ldmVyIHJl
+dHVybiBOVUxMIHVubGVzcyBzb21lb25lIGRpcmVjdGx5IHJlZ2lzdGVycyBhCj4+PiDCoCsgKiBw
+bGF0Zm9ybSBkZXZpY2UgbWF0Y2hpbmcgdGhpcyBkcml2ZXIncyBuYW1lLCB3aXRob3V0IHNwZWNp
+ZnlpbmcgYQo+Pj4gwqArICogZGV2aWNlIHRyZWUgbm9kZS4KPj4+IMKgKyAqLwo+Pj4gwqArIHF1
+aXJrcyA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOwo+Pj4gwqArCj4+PiDCoCsgLyog
+QWRkIGNvbnRyb2xzLCB3aWRnZXRzLCBhbmQgcm91dGVzIGZvciBpbmRpdmlkdWFsIGZlYXR1cmVz
+ICovCj4+PiDCoCsKPj4+IMKgKyBpZiAocXVpcmtzLT5oYXNfaGVhZHBob25lKSB7Cj4+PiDCoCsg
+cmV0ID0gc3VuOGlfY29kZWNfYWRkX2hlYWRwaG9uZShjbXBudCk7Cj4+PiDCoCsgaWYgKHJldCkK
+Pj4+IMKgKyByZXR1cm4gcmV0Owo+Pj4gwqArIH0KPj4+IMKgKwo+Pj4gwqArIGlmIChxdWlya3Mt
+Pmhhc19obWljKSB7Cj4+PiDCoCsgc3VuOGlfY29kZWNfYWRkX2htaWMoY21wbnQpOwo+Pj4gwqAr
+IGlmIChyZXQpCj4+PiDCoCsgcmV0dXJuIHJldDsKPj4+IMKgKyB9Cj4+PiDCoCsKPj4+IMKgKyBp
+ZiAocXVpcmtzLT5oYXNfbGluZW91dCkgewo+Pj4gwqArIHJldCA9IHN1bjhpX2NvZGVjX2FkZF9s
+aW5lb3V0KGNtcG50KTsKPj4+IMKgKyBpZiAocmV0KQo+Pj4gwqArIHJldHVybiByZXQ7Cj4+PiDC
+oCsgfQo+Pj4gwqArCj4+PiDCoCsgcmV0dXJuIDA7Cj4+PiDCoCt9Cj4+PiDCoCsKPj4+IMKgK3N0
+YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnRfZHJpdmVyIHN1bjhpX2NvZGVjX2Fu
+YWxvZ19jbXBudF9kcnYgPSB7Cj4+PiDCoCsgLmNvbnRyb2xzID0gc3VuOGlfY29kZWNfY29tbW9u
+X2NvbnRyb2xzLAo+Pj4gwqArIC5udW1fY29udHJvbHMgPSBBUlJBWV9TSVpFKHN1bjhpX2NvZGVj
+X2NvbW1vbl9jb250cm9scyksCj4+PiDCoCsgLmRhcG1fd2lkZ2V0cyA9IHN1bjhpX2NvZGVjX2Nv
+bW1vbl93aWRnZXRzLAo+Pj4gwqArIC5udW1fZGFwbV93aWRnZXRzID0gQVJSQVlfU0laRShzdW44
+aV9jb2RlY19jb21tb25fd2lkZ2V0cyksCj4+PiDCoCsgLmRhcG1fcm91dGVzID0gc3VuOGlfY29k
+ZWNfY29tbW9uX3JvdXRlcywKPj4+IMKgKyAubnVtX2RhcG1fcm91dGVzID0gQVJSQVlfU0laRShz
+dW44aV9jb2RlY19jb21tb25fcm91dGVzKSwKPj4+IMKgKyAucHJvYmUgPSBzdW44aV9jb2RlY19h
+bmFsb2dfY21wbnRfcHJvYmUsCj4+PiDCoCt9Owo+Pj4gwqArCj4+PiDCoCtzdGF0aWMgY29uc3Qg
+c3RydWN0IG9mX2RldmljZV9pZCBzdW44aV9jb2RlY19hbmFsb2dfb2ZfbWF0Y2hbXSA9IHsKPj4+
+IMKgKyB7Cj4+PiDCoCsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWEyMy1jb2RlYy1h
+bmFsb2ciLAo+Pj4gwqArIC5kYXRhID0gJnN1bjhpX2EyM19xdWlya3MsCj4+PiDCoCsgfSwKPj4+
+IMKgKyB7Cj4+PiDCoCsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhpLWgzLWNvZGVjLWFu
+YWxvZyIsCj4+PiDCoCsgLmRhdGEgPSAmc3VuOGlfaDNfcXVpcmtzLAo+Pj4gwqArIH0sCj4+PiDC
+oCsge30KPj4+IMKgK307Cj4+PiDCoCtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBzdW44aV9jb2Rl
+Y19hbmFsb2dfb2ZfbWF0Y2gpOwo+Pj4gwqArCj4+PiDCoCtzdGF0aWMgaW50IHN1bjhpX2NvZGVj
+X2FuYWxvZ19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+Pj4gwqArewo+Pj4g
+wqArIHN0cnVjdCByZXNvdXJjZSAqcmVzOwo+Pj4gwqArIHN0cnVjdCByZWdtYXAgKnJlZ21hcDsK
+Pj4+IMKgKyB2b2lkIF9faW9tZW0gKmJhc2U7Cj4+PiDCoCsKPj4+IMKgKyByZXMgPSBwbGF0Zm9y
+bV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+Pj4gwqArIGJhc2UgPSBk
+ZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsKPj4+IMKgKyBpZiAoSVNfRVJS
+KGJhc2UpKSB7Cj4+PiDCoCsgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIG1hcCB0aGUg
+cmVnaXN0ZXJzXG4iKTsKPj4+IMKgKyByZXR1cm4gUFRSX0VSUihiYXNlKTsKPj4+IMKgKyB9Cj4+
+PiDCoCsKPj4+IMKgKyByZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0KCZwZGV2LT5kZXYsIE5VTEws
+IGJhc2UsICZhZGRhX3ByX3JlZ21hcF9jZmcpOwo+Pj4gwqArIGlmIChJU19FUlIocmVnbWFwKSkg
+ewo+Pj4gwqArIGRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0byBjcmVhdGUgcmVnbWFwXG4i
+KTsKPj4+IMKgKyByZXR1cm4gUFRSX0VSUihyZWdtYXApOwo+Pj4gwqArIH0KPj4+IMKgKwo+Pj4g
+wqArIHJldHVybiBkZXZtX3NuZF9zb2NfcmVnaXN0ZXJfY29tcG9uZW50KCZwZGV2LT5kZXYsCj4+
+PiDCoCsgJnN1bjhpX2NvZGVjX2FuYWxvZ19jbXBudF9kcnYsCj4+PiDCoCsgTlVMTCwgMCk7Cj4+
+PiDCoCt9Cj4+PiDCoCsKPj4+IMKgK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHN1bjhp
+X2NvZGVjX2FuYWxvZ19kcml2ZXIgPSB7Cj4+PiDCoCsgLmRyaXZlciA9IHsKPj4+IMKgKyAubmFt
+ZSA9ICJzdW44aS1jb2RlYy1hbmFsb2ciLAo+Pj4gwqArIC5vZl9tYXRjaF90YWJsZSA9IHN1bjhp
+X2NvZGVjX2FuYWxvZ19vZl9tYXRjaCwKPj4+IMKgKyB9LAo+Pj4gwqArIC5wcm9iZSA9IHN1bjhp
+X2NvZGVjX2FuYWxvZ19wcm9iZSwKPj4+IMKgK307Cj4+PiDCoCttb2R1bGVfcGxhdGZvcm1fZHJp
+dmVyKHN1bjhpX2NvZGVjX2FuYWxvZ19kcml2ZXIpOwo+Pj4gwqArCj4+PiDCoCtNT0RVTEVfREVT
+Q1JJUFRJT04oIkFsbHdpbm5lciBpbnRlcm5hbCBjb2RlYyBhbmFsb2cgY29udHJvbHMgZHJpdmVy
+Iik7Cj4+PiDCoCtNT0RVTEVfQVVUSE9SKCJDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Iik7
+Cj4+PiDCoCtNT0RVTEVfTElDRU5TRSgiR1BMIik7Cj4+PiDCoCtNT0RVTEVfQUxJQVMoInBsYXRm
+b3JtOnN1bjhpLWNvZGVjLWFuYWxvZyIpOwo+Pj4gwqAtLQo+Pj4gwqAyLjEwLjIKPj4+Cj4+PiDC
+oF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+PiDCoGxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4+PiDCoGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwo+Pj4gwqBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
