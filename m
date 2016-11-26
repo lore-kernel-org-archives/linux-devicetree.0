@@ -1,41 +1,64 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] mux controller abstraction and iio/i2c muxes
-Date: Sat, 26 Nov 2016 19:38:09 +0100
-Message-ID: <8e4c6895-c06f-3412-26ea-dfb02d52d328@axentia.se>
-References: <1480000687-5630-1-git-send-email-peda@axentia.se>
+From: "Rosia, Nicolae" <Nicolae_Rosia@mentor.com>
+Subject: Re: [PATCH 4/5] regulator: Add support for TI TWL6032
+Date: Sat, 26 Nov 2016 20:24:10 +0000
+Message-ID: <1480191847.18423.1.camel@mentor.com>
+References: <201611270236.UFgW5zDA%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480000687-5630-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201611270236.UFgW5zDA%fengguang.wu@intel.com>
+Content-Language: en-US
+Content-ID: <89D839F4FDDFDE43B67082DFE4914196@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "lkp@intel.com" <lkp@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-11-24 16:18, Peter Rosin wrote:
-> v3 -> v4 changes
-> - added support for having the mux-controller in a child node of a
->   mux-consumer if it is a sole consumer, to hopefully even further satisfy
->   the complaint from Rob (and later Lars-Peter) about dt complexity.
-> - the above came at the cost of some rather horrible refcounting code,
->   please review and suggest how it should be done...
-> 
-> v2 -> v3 changes
-> - have the mux-controller in the parent node of any mux-controller consumer,
->   to hopefully satisfy complaint from Rob about dt complexity.
-
-I did some further tests and both of these attempts to support fancier
-devicetree bindings have severe problems. I will remove them for v5 and
-go back to having a phandle reference to the mux-controller from the
-consumer (unless I get some revelation of course and just get it). I'm
-simply not yet understanding the driver model well enough to pull this
-off at the moment...
-
-Cheers,
-Peter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksDQoNCk9uIFN1biwgMjAxNi0xMS0yNyBhdCAwMjo1NSArMDgwMCwga2J1aWxkIHRlc3Qgcm9i
+b3Qgd3JvdGU6DQo+IEhpIE5pY29sYWUsDQo+IA0KPiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9u
+IG9tYXAvZm9yLW5leHRdDQo+IFthbHNvIGJ1aWxkIHRlc3QgRVJST1Igb24gdjQuOS1yYzZdDQo+
+IFtjYW5ub3QgYXBwbHkgdG8gbmV4dC0yMDE2MTEyNV0NCj4gW2lmIHlvdXIgcGF0Y2ggaXMgYXBw
+bGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzIGENCj4gbm90ZSB0byBo
+ZWxwIGltcHJvdmUgdGhlIHN5c3RlbV0NCj4gDQo+IHVybDrCoMKgwqDCoGh0dHBzOi8vZ2l0aHVi
+LmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvTmljb2xhZS1Sb3NpYS9tZmQtdHcNCj4gbC1pbXBy
+b3ZlbWVudHMtYW5kLW5ldy1yZWd1bGF0b3ItZHJpdmVyLzIwMTYxMTI3LTAyMjIwMQ0KPiBiYXNl
+OsKgwqDCoGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Rt
+bGluZC9saW51eC0NCj4gb21hcC5naXQgZm9yLW5leHQNCj4gY29uZmlnOiBpMzg2LWFsbG1vZGNv
+bmZpZyAoYXR0YWNoZWQgYXMgLmNvbmZpZykNCj4gY29tcGlsZXI6IGdjYy02IChEZWJpYW4gNi4y
+LjAtMykgNi4yLjAgMjAxNjA5MDENCj4gcmVwcm9kdWNlOg0KPiDCoMKgwqDCoMKgwqDCoMKgIyBz
+YXZlIHRoZSBhdHRhY2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gwqDCoMKgwqDC
+oMKgwqDCoG1ha2UgQVJDSD1pMzg2wqANCj4gDQo+IEFsbCBlcnJvci93YXJuaW5ncyAobmV3IG9u
+ZXMgcHJlZml4ZWQgYnkgPj4pOg0KPiANCj4gwqDCoMKgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGRy
+aXZlcnMvcmVndWxhdG9yL3R3bDYwMzItcmVndWxhdG9yLmM6MTE6MDoNCj4gPiA+IGRyaXZlcnMv
+cmVndWxhdG9yL3R3bDYwMzItcmVndWxhdG9yLmM6NTU3OjMxOiBlcnJvcjoNCj4gPiA+ICd0d2w2
+MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRzJyB1bmRlY2xhcmVkIGhlcmUgKG5vdCBpbiBhDQo+ID4g
+PiBmdW5jdGlvbikNCj4gDQo+IMKgwqDCoMKgTU9EVUxFX0RFVklDRV9UQUJMRShwbGF0Zm9ybSwg
+dHdsNjAzMl9yZWd1bGF0b3JfZHJpdmVyX2lkcyk7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXg0KPiDCoMKgwqBp
+bmNsdWRlL2xpbnV4L21vZHVsZS5oOjIxMzoyMTogbm90ZTogaW4gZGVmaW5pdGlvbiBvZiBtYWNy
+bw0KPiAnTU9EVUxFX0RFVklDRV9UQUJMRScNCj4gwqDCoMKgwqBleHRlcm4gY29uc3QgdHlwZW9m
+KG5hbWUpDQo+IF9fbW9kXyMjdHlwZSMjX18jI25hbWUjI19kZXZpY2VfdGFibGXCoMKgXA0KPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBefn5+DQo+ID4g
+PiBpbmNsdWRlL2xpbnV4L21vZHVsZS5oOjIxMzoyNzogZXJyb3I6DQo+ID4gPiAnX19tb2RfcGxh
+dGZvcm1fX3R3bDYwMzJfcmVndWxhdG9yX2RyaXZlcl9pZHNfZGV2aWNlX3RhYmxlJw0KPiA+ID4g
+YWxpYXNlZCB0byB1bmRlZmluZWQgc3ltYm9sICd0d2w2MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRz
+Jw0KPiANCj4gwqDCoMKgwqBleHRlcm4gY29uc3QgdHlwZW9mKG5hbWUpDQo+IF9fbW9kXyMjdHlw
+ZSMjX18jI25hbWUjI19kZXZpY2VfdGFibGXCoMKgXA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBeDQo+ID4gPiBkcml2ZXJzL3Jl
+Z3VsYXRvci90d2w2MDMyLXJlZ3VsYXRvci5jOjU1NzoxOiBub3RlOiBpbiBleHBhbnNpb24NCj4g
+PiA+IG9mIG1hY3JvICdNT0RVTEVfREVWSUNFX1RBQkxFJw0KPiANCj4gwqDCoMKgwqBNT0RVTEVf
+REVWSUNFX1RBQkxFKHBsYXRmb3JtLCB0d2w2MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRzKTsNCj4g
+wqDCoMKgwqBefn5+fn5+fn5+fn5+fn5+fn5+DQo+IA0KPiB2aW0gKy90d2w2MDMyX3JlZ3VsYXRv
+cl9kcml2ZXJfaWRzICs1NTcgZHJpdmVycy9yZWd1bGF0b3IvdHdsNjAzMi0NCj4gcmVndWxhdG9y
+LmMNCj4gDQo+IMKgwqDCoDU1MQkNCj4gwqDCoMKgNTUyCXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
+ZGV2aWNlX2lkIHR3bDYwMzJfZHRfbWF0Y2hbXSA9IHsNCj4gwqDCoMKgNTUzCQl7IC5jb21wYXRp
+YmxlID0gInRpLHR3bDYwMzItcmVndWxhdG9yIiB9LA0KPiDCoMKgwqA1NTQJCXsgLyogbGFzdCBl
+bnRyeSAqLyB9DQo+IMKgwqDCoDU1NQl9Ow0KPiDCoMKgwqA1NTYJDQo+IMKgPiA1NTcJTU9EVUxF
+X0RFVklDRV9UQUJMRShwbGF0Zm9ybSwNCj4gdHdsNjAzMl9yZWd1bGF0b3JfZHJpdmVyX2lkcyk7
+DQo+IMKgwqDCoDU1OAkNCj4gwqDCoMKgNTU5CXN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IHR3bDYwMzJfcmVndWxhdG9yX2RyaXZlcg0KPiA9IHsNCj4gwqDCoMKgNTYwCQkuZHJpdmVyID0g
+ew0KDQpUaGFua3MsIEkgZGlkIG5vdCBub3RpY2UgdGhpcyBzaW5jZSBJIHdhcyBvbmx5IHRlc3Rp
+bmcgdXNpbmcgYnVpbHQtaW4NCm1vZHVsZS4NCkkgd2lsbCB3YWl0IGZvciBjb21tZW50cyBiZWZv
+cmUgc2VuZGluZyBWMiwgdW50aWxsIHRoZW4gaGVyZSdzIGFuDQppbmxpbmUgcGF0Y2ggd2l0aCB0
+aGUgZml4Lg0KDQoNCkJlc3QgcmVnYXJkcywNCk5pY29sYWUNCg0K
