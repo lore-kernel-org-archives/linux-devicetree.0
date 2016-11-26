@@ -1,64 +1,97 @@
-From: "Rosia, Nicolae" <Nicolae_Rosia@mentor.com>
-Subject: Re: [PATCH 4/5] regulator: Add support for TI TWL6032
-Date: Sat, 26 Nov 2016 20:24:10 +0000
-Message-ID: <1480191847.18423.1.camel@mentor.com>
-References: <201611270236.UFgW5zDA%fengguang.wu@intel.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Fix issue where code would fall through to error
+ case.
+Date: Sat, 26 Nov 2016 13:39:28 -0800
+Message-ID: <583A0110.4090603@gmail.com>
+References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
+ <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com>
+ <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
+ <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201611270236.UFgW5zDA%fengguang.wu@intel.com>
-Content-Language: en-US
-Content-ID: <89D839F4FDDFDE43B67082DFE4914196@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "lkp@intel.com" <lkp@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCk9uIFN1biwgMjAxNi0xMS0yNyBhdCAwMjo1NSArMDgwMCwga2J1aWxkIHRlc3Qgcm9i
-b3Qgd3JvdGU6DQo+IEhpIE5pY29sYWUsDQo+IA0KPiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9u
-IG9tYXAvZm9yLW5leHRdDQo+IFthbHNvIGJ1aWxkIHRlc3QgRVJST1Igb24gdjQuOS1yYzZdDQo+
-IFtjYW5ub3QgYXBwbHkgdG8gbmV4dC0yMDE2MTEyNV0NCj4gW2lmIHlvdXIgcGF0Y2ggaXMgYXBw
-bGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzIGENCj4gbm90ZSB0byBo
-ZWxwIGltcHJvdmUgdGhlIHN5c3RlbV0NCj4gDQo+IHVybDrCoMKgwqDCoGh0dHBzOi8vZ2l0aHVi
-LmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvTmljb2xhZS1Sb3NpYS9tZmQtdHcNCj4gbC1pbXBy
-b3ZlbWVudHMtYW5kLW5ldy1yZWd1bGF0b3ItZHJpdmVyLzIwMTYxMTI3LTAyMjIwMQ0KPiBiYXNl
-OsKgwqDCoGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Rt
-bGluZC9saW51eC0NCj4gb21hcC5naXQgZm9yLW5leHQNCj4gY29uZmlnOiBpMzg2LWFsbG1vZGNv
-bmZpZyAoYXR0YWNoZWQgYXMgLmNvbmZpZykNCj4gY29tcGlsZXI6IGdjYy02IChEZWJpYW4gNi4y
-LjAtMykgNi4yLjAgMjAxNjA5MDENCj4gcmVwcm9kdWNlOg0KPiDCoMKgwqDCoMKgwqDCoMKgIyBz
-YXZlIHRoZSBhdHRhY2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gwqDCoMKgwqDC
-oMKgwqDCoG1ha2UgQVJDSD1pMzg2wqANCj4gDQo+IEFsbCBlcnJvci93YXJuaW5ncyAobmV3IG9u
-ZXMgcHJlZml4ZWQgYnkgPj4pOg0KPiANCj4gwqDCoMKgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGRy
-aXZlcnMvcmVndWxhdG9yL3R3bDYwMzItcmVndWxhdG9yLmM6MTE6MDoNCj4gPiA+IGRyaXZlcnMv
-cmVndWxhdG9yL3R3bDYwMzItcmVndWxhdG9yLmM6NTU3OjMxOiBlcnJvcjoNCj4gPiA+ICd0d2w2
-MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRzJyB1bmRlY2xhcmVkIGhlcmUgKG5vdCBpbiBhDQo+ID4g
-PiBmdW5jdGlvbikNCj4gDQo+IMKgwqDCoMKgTU9EVUxFX0RFVklDRV9UQUJMRShwbGF0Zm9ybSwg
-dHdsNjAzMl9yZWd1bGF0b3JfZHJpdmVyX2lkcyk7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXg0KPiDCoMKgwqBp
-bmNsdWRlL2xpbnV4L21vZHVsZS5oOjIxMzoyMTogbm90ZTogaW4gZGVmaW5pdGlvbiBvZiBtYWNy
-bw0KPiAnTU9EVUxFX0RFVklDRV9UQUJMRScNCj4gwqDCoMKgwqBleHRlcm4gY29uc3QgdHlwZW9m
-KG5hbWUpDQo+IF9fbW9kXyMjdHlwZSMjX18jI25hbWUjI19kZXZpY2VfdGFibGXCoMKgXA0KPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBefn5+DQo+ID4g
-PiBpbmNsdWRlL2xpbnV4L21vZHVsZS5oOjIxMzoyNzogZXJyb3I6DQo+ID4gPiAnX19tb2RfcGxh
-dGZvcm1fX3R3bDYwMzJfcmVndWxhdG9yX2RyaXZlcl9pZHNfZGV2aWNlX3RhYmxlJw0KPiA+ID4g
-YWxpYXNlZCB0byB1bmRlZmluZWQgc3ltYm9sICd0d2w2MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRz
-Jw0KPiANCj4gwqDCoMKgwqBleHRlcm4gY29uc3QgdHlwZW9mKG5hbWUpDQo+IF9fbW9kXyMjdHlw
-ZSMjX18jI25hbWUjI19kZXZpY2VfdGFibGXCoMKgXA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBeDQo+ID4gPiBkcml2ZXJzL3Jl
-Z3VsYXRvci90d2w2MDMyLXJlZ3VsYXRvci5jOjU1NzoxOiBub3RlOiBpbiBleHBhbnNpb24NCj4g
-PiA+IG9mIG1hY3JvICdNT0RVTEVfREVWSUNFX1RBQkxFJw0KPiANCj4gwqDCoMKgwqBNT0RVTEVf
-REVWSUNFX1RBQkxFKHBsYXRmb3JtLCB0d2w2MDMyX3JlZ3VsYXRvcl9kcml2ZXJfaWRzKTsNCj4g
-wqDCoMKgwqBefn5+fn5+fn5+fn5+fn5+fn5+DQo+IA0KPiB2aW0gKy90d2w2MDMyX3JlZ3VsYXRv
-cl9kcml2ZXJfaWRzICs1NTcgZHJpdmVycy9yZWd1bGF0b3IvdHdsNjAzMi0NCj4gcmVndWxhdG9y
-LmMNCj4gDQo+IMKgwqDCoDU1MQkNCj4gwqDCoMKgNTUyCXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIHR3bDYwMzJfZHRfbWF0Y2hbXSA9IHsNCj4gwqDCoMKgNTUzCQl7IC5jb21wYXRp
-YmxlID0gInRpLHR3bDYwMzItcmVndWxhdG9yIiB9LA0KPiDCoMKgwqA1NTQJCXsgLyogbGFzdCBl
-bnRyeSAqLyB9DQo+IMKgwqDCoDU1NQl9Ow0KPiDCoMKgwqA1NTYJDQo+IMKgPiA1NTcJTU9EVUxF
-X0RFVklDRV9UQUJMRShwbGF0Zm9ybSwNCj4gdHdsNjAzMl9yZWd1bGF0b3JfZHJpdmVyX2lkcyk7
-DQo+IMKgwqDCoDU1OAkNCj4gwqDCoMKgNTU5CXN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
-IHR3bDYwMzJfcmVndWxhdG9yX2RyaXZlcg0KPiA9IHsNCj4gwqDCoMKgNTYwCQkuZHJpdmVyID0g
-ew0KDQpUaGFua3MsIEkgZGlkIG5vdCBub3RpY2UgdGhpcyBzaW5jZSBJIHdhcyBvbmx5IHRlc3Rp
-bmcgdXNpbmcgYnVpbHQtaW4NCm1vZHVsZS4NCkkgd2lsbCB3YWl0IGZvciBjb21tZW50cyBiZWZv
-cmUgc2VuZGluZyBWMiwgdW50aWxsIHRoZW4gaGVyZSdzIGFuDQppbmxpbmUgcGF0Y2ggd2l0aCB0
-aGUgZml4Lg0KDQoNCkJlc3QgcmVnYXJkcywNCk5pY29sYWUNCg0K
+On 11/23/16 13:58, Rob Herring wrote:
+> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
+> <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On 11/17/16 15:40, Frank Rowand wrote:
+>>>> On 11/17/16 15:25, Moritz Fischer wrote:
+>>>>> No longer fall through into the error case that prints out
+>>>>> an error if no error (err = 0) occurred.
+>>>>>
+>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
+>>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/of/resolver.c | 6 +++++-
+>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>>>>> index 783bd09..785076d 100644
+>>>>> --- a/drivers/of/resolver.c
+>>>>> +++ b/drivers/of/resolver.c
+>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
+>>>>>
+>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+>>>>>              if (err)
+>>>>> -                    break;
+>>>>> +                    goto err_out;
+>>>>>      }
+>>>>>
+>>>>> +    of_node_put(tree_symbols);
+>>>>> +
+>>>>> +    return 0;
+>>>>> +
+>>>>>  err_out:
+>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
+>>>>>  out:
+>>>>
+>>>> Thanks for catching that.
+>>>>
+>>>> Rob, please apply.
+>>>>
+>>>> Reviewed-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> -Frank
+>>>
+>>> On second thought, isn't the common pattern when clean up is needed for
+>>> both the no-error path and the error path something like:
+>>>
+>>>
+>>>         out:
+>>>                 of_node_put(tree_symbols);
+>>>                 return err;
+>>>
+>>>         err_out:
+>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
+>>>                 goto out;
+>>>         }
+>>>
+>>>
+>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
+>>
+>> Same here. I tried to avoid the jumping back part, but if that's the
+>> common pattern,
+>> I can submit a v2 doing that instead.
+> 
+> Both are ugly. Just do:
+> 
+> if (err)
+>   pr_err(...);
+> 
+> Rob
+
+Agreed.  Thanks for the touch of sanity Rob.
+
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
