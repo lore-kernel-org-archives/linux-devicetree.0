@@ -1,49 +1,103 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: add support for Turris Omnia
-Date: Sun, 27 Nov 2016 17:20:45 +0100
-Message-ID: <9ecdf89e-b1f9-63c1-fce8-65d921d2290c@suse.de>
-References: <20161125142658.21690-1-uwe@kleine-koenig.org>
- <20161125142658.21690-3-uwe@kleine-koenig.org>
- <87lgw7ilg9.fsf@free-electrons.com>
- <a7f47999-ec83-6cc8-8119-0087dee17bac@suse.de>
- <20161127160731.GD4574@lunn.ch>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/39] mtd: nand: denali: 2nd round of Denali NAND IP
+ patch bomb
+Date: Sun, 27 Nov 2016 17:31:58 +0100
+Message-ID: <20161127173158.57ceb4f6@bbrezillon>
+References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161127160731.GD4574-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1480183585-592-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bed??icha Ko??atu <bedrich.kosata-x+rMaJPWets@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Hrusecky <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, 27 Nov 2016 03:05:46 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 
-Am 27.11.2016 um 17:07 schrieb Andrew Lunn:
->> @Uwe: Note that I had already told CZ.NIC's Michal ~two weeks ago that I
->> have a WIP .dts for the Omnia - looks like no one knows what the other
->> is doing.
+> As I said in the 1st round series, I am tackling on this driver
+> to use it for my SoCs.
 > 
-> Hi Andreas
+> The previous series was just cosmetic things, but this series
+> includes *real* changes.
 > 
-> Did you post to the list? Comment on the earlier versions of the
-> patches? The list is the please to coordinate these activities.
+> After some more cleanups, I will start to add changes that
+> are really necessary.
+> One of the biggest problems I want to solve is a bunch of
+> hard-coded parameters that prevent me from using this driver for
+> my SoCs.
+> 
+> I will introduce capability flags that are associated with DT
+> compatible and make platform-dependent parameters overridable.
+> 
+> I still have lots of reworks to get done (so probably 3rd round
+> series will come), but I hope it is getting better and
+> I am showing a big picture now.
+> 
 
-No, it was not yet fully working (only WAN NIC) and I don't have a habit
-of spamming the list with RFCs. Also I was away the last two weekends.
+I still need to carefully review some of those patches, but I must
+admit I like some of the cleanups/rework you're doing here.
 
-I would've expected to get CC'ed for review though, since CZ.NIC
-should've been aware of my work.
+Thanks for all your work.
 
-https://lists.opensuse.org/opensuse-arm/2016-11/msg00005.html
+Boris
 
-Cheers,
-Andreas
+> 
+> 
+> Masahiro Yamada (39):
+>   mtd: nand: allow to set only one of ECC size and ECC strength from DT
+>   mtd: nand: denali: remove unused CONFIG option and macros
+>   mtd: nand: denali: remove redundant define of BANK(x)
+>   mtd: nand: denali: remove more unused struct members
+>   mtd: nand: denali: fix comment of denali_nand_info::flash_mem
+>   mtd: nand: denali: fix write_oob_data() function
+>   mtd: nand: denali: transfer OOB only when oob_required is set
+>   mtd: nand: denali: introduce capability flag
+>   mtd: nand: denali: fix erased page check code
+>   mtd: nand: denali: remove redundant if conditional of erased_check
+>   mtd: nand: denali: increment ecc_stats.failed by one per error
+>   mtd: nand: denali: return 0 for uncorrectable ECC error
+>   mtd: nand: denali: increment ecc_stats->corrected
+>   mtd: nand: denali: replace uint{8/16/32}_t with u{8/16/32}
+>   mtd: nand: denali: improve readability of handle_ecc()
+>   mtd: nand: denali: rename handle_ecc() to denali_sw_ecc_fixup()
+>   mtd: nand: denali: support HW_ECC_FIXUP capability
+>   mtd: nand: denali: move denali_read_page_raw() above
+>     denali_read_page()
+>   mtd: nand: denali: perform erased check against raw transferred page
+>   mtd: nand: denali_dt: enable HW_ECC_FIXUP capability for DT platform
+>   mtd: nand: denali: support 64bit capable DMA engine
+>   mtd: nand: denali_dt: remove dma-mask DT property
+>   mtd: nand: denali_dt: use pdev instead of ofdev for platform_device
+>   mtd: nand: denali: add NEW_N_BANKS_FORMAT capability
+>   mtd: nand: denali: use nand_chip to hold frequently accessed data
+>   mtd: nand: denali: call nand_set_flash_node() to set DT node
+>   mtd: nand: denali: do not set mtd->name
+>   mtd: nand: denali: move multi NAND fixup code to a helper function
+>   mtd: nand: denali: refactor multi NAND fixup code in more generic way
+>   mtd: nand: denali: set DEVICES_CONNECTED 1 if not set
+>   mtd: nand: denali: remove meaningless writes to read-only registers
+>   mtd: nand: denali: remove unnecessary writes to ECC_CORRECTION
+>   mtd: nand: denali: support 1024 byte ECC step size
+>   mtd: nand: denali: fix the condition for 15 bit ECC strength
+>   mtd: nand: denali: calculate ecc.strength and ecc.bytes generically
+>   mtd: nand: denali: allow to use SoC-specific ECC strength
+>   mtd: nand: denali: support "nand-ecc-strength" DT property
+>   mtd: nand: denali: remove Toshiba, Hynix specific fixup code
+>   mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+> 
+>  .../devicetree/bindings/mtd/denali-nand.txt        |  19 +-
+>  drivers/mtd/nand/Kconfig                           |  11 -
+>  drivers/mtd/nand/denali.c                          | 740 ++++++++++++---------
+>  drivers/mtd/nand/denali.h                          |  84 +--
+>  drivers/mtd/nand/denali_dt.c                       |  95 ++-
+>  drivers/mtd/nand/denali_pci.c                      |   2 +
+>  drivers/mtd/nand/nand_base.c                       |   6 -
+>  7 files changed, 515 insertions(+), 442 deletions(-)
+> 
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
