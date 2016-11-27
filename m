@@ -1,68 +1,35 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] of: resolver: Fix checkpatch warnings
-Date: Sun, 27 Nov 2016 12:20:58 -0800
-Message-ID: <1480278058-19688-2-git-send-email-moritz.fischer@ettus.com>
-References: <1480278058-19688-1-git-send-email-moritz.fischer@ettus.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 1/2] Documentation: net: dsa: marvell: Add 88E6176
+Date: Sun, 27 Nov 2016 21:57:58 +0100
+Message-ID: <1480280279-9552-1-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480278058-19688-1-git-send-email-moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Michal Hrusecki <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, =?UTF-8?q?Bed=C5=99icha=20Ko=C5=A1atu?= <bedrich.kosata-x+rMaJPWets@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix two line over 80 character warnings that checkpatch spit out:
-
-Before:
-total: 0 errors, 2 warnings, 374 lines checked
-drivers/of/resolver.c has style problems, please review.
-
-After:
-total: 0 errors, 0 warnings, 376 lines checked
-
-Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
-Hi,
+ Documentation/devicetree/bindings/net/dsa/marvell.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-this one just silences two checkpatch warnings that I ran
-into when running checkpatch against my patches.
-
-There's a bunch of 'CHECK' level things in this file that
-I could address in a follow up patch if desired.
-
-Cheers,
-
-Moritz
----
-
- drivers/of/resolver.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 5f51a4a..71f98dc 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -311,7 +311,8 @@ int of_resolve_phandles(struct device_node *overlay)
- 		if (!of_node_cmp(local_fixups->name, "__local_fixups__"))
- 			break;
+diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+index b3dd6b40e0de..000bc3b16edd 100644
+--- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
++++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+@@ -15,6 +15,7 @@ Additional required and optional properties can be found in dsa.txt.
  
--	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
-+	err = adjust_local_phandle_references(local_fixups, overlay,
-+					      phandle_delta);
- 	if (err) {
- 		pr_err("overlay phandle fixup failed: %d\n", err);
- 		return err;
-@@ -356,7 +357,8 @@ int of_resolve_phandles(struct device_node *overlay)
- 		phandle = refnode->phandle;
- 		of_node_put(refnode);
+ Required properties:
+ - compatible	       : Should be one of "marvell,mv88e6085" or
++			 "marvell,mv88e6176" or
+ 			 "marvell,mv88e6190"
+ - reg                  : Address on the MII bus for the switch.
  
--		err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
-+		err = update_usages_of_a_phandle_reference(overlay, prop,
-+							   phandle);
- 		if (err)
- 			break;
- 	}
 -- 
-2.7.4
+2.6.6
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
