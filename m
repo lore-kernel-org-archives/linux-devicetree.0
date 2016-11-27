@@ -1,580 +1,151 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 3/8] drivers:input:tsc2007: add iio interface to read
- external ADC input and temperature
-Date: Sun, 27 Nov 2016 11:02:30 +0000
-Message-ID: <8d3fc752-e69c-f568-4f71-4f1768a3fffe@kernel.org>
-References: <cover.1479823354.git.hns@goldelico.com>
- <cover.1479823354.git.hns@goldelico.com>
- <99f236df48b03b3188e12f94a20097f8440db7a5.1479823354.git.hns@goldelico.com>
- <E42B1EF7-222E-46D6-878B-30C789CFBBC5@jic23.retrosnub.co.uk>
- <811B6F6A-2E3D-45B4-A984-74ABE0E37192@goldelico.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [RFC PATCH v2 5/7] iio: multiplexer: new iio category and iio-mux
+ driver
+Date: Sun, 27 Nov 2016 11:42:41 +0000
+Message-ID: <0426b13d-2f7e-9c58-fca7-8dc150221d6f@kernel.org>
+References: <1479419289-17553-1-git-send-email-peda@axentia.se>
+ <1479419289-17553-6-git-send-email-peda@axentia.se>
+ <e462780e-305b-2cb9-1acd-c66dee312fac@kernel.org>
+ <365eb334-d27a-e91b-7ca7-9e10c7ede9a6@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <811B6F6A-2E3D-45B4-A984-74ABE0E37192-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Denis
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <365eb334-d27a-e91b-7ca7-9e10c7ede9a6@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/11/16 18:05, H. Nikolaus Schaller wrote:
+On 19/11/16 22:08, Peter Rosin wrote:
+> On 2016-11-19 16:49, Jonathan Cameron wrote:
+>> On 17/11/16 21:48, Peter Rosin wrote:
+>>> When a multiplexer changes how an iio device behaves (for example
+>>> by feeding different signals to an ADC), this driver can be used
+>>> create one virtual iio channel for each multiplexer state.
+>>>
+>>> Depends on the generic multiplexer driver.
+>> I'm not really following what all the ext info stuff in here is about.
+>> Could you add a little more description of that?
 > 
->> Am 24.11.2016 um 18:38 schrieb Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>:
->>
->>
->>
->> On 22 November 2016 14:02:30 GMT+00:00, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
->>> The tsc2007 chip not only has a resistive touch screen controller but
->>> also an external AUX adc imput which can be used for an ambient
->>> light sensor, battery voltage monitoring or any general purpose.
->>>
->>> Additionally it can measure the chip temperature.
->>>
->>> This extension provides an iio interface for these adc channels.
->>>
->>> Since it is not wasting much resources and is very straightforward,
->>> we simply provide all other adc channels as optional iio interfaces
->>> as weel. This can be used for debugging or special applications.
->>>
->>> This patch also splits the tsc2007 driver in several source files:
->>> tsc2007.h -- constants, structs and stubs
->>> tsc2007_core.c -- functional parts of the original driver
->>> tsc2007_iio.c -- the optional iio stuff
->>>
->>> Makefile magic allows to conditionally link the iio stuff
->>> if CONFIG_IIO=y or =m in a way that it works with
->>> CONFIG_TOUCHSCREEN_TSC2007=m.
->>>
->>> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
->>> Reviewed-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>> drivers/input/touchscreen/Makefile                 |   7 +
->>> drivers/input/touchscreen/tsc2007.h                | 116
->>> ++++++++++++++++
->>> .../touchscreen/{tsc2007.c => tsc2007_core.c}      |  95 +++----------
->>> drivers/input/touchscreen/tsc2007_iio.c            | 150
->>> +++++++++++++++++++++
->>> 4 files changed, 294 insertions(+), 74 deletions(-)
->>> create mode 100644 drivers/input/touchscreen/tsc2007.h
->>> rename drivers/input/touchscreen/{tsc2007.c => tsc2007_core.c} (86%)
->>> create mode 100644 drivers/input/touchscreen/tsc2007_iio.c
->>>
->>> diff --git a/drivers/input/touchscreen/Makefile
->>> b/drivers/input/touchscreen/Makefile
->>> index 81b8645..3be0d19 100644
->>> --- a/drivers/input/touchscreen/Makefile
->>> +++ b/drivers/input/touchscreen/Makefile
->>> @@ -80,6 +80,13 @@ obj-$(CONFIG_TOUCHSCREEN_TSC_SERIO)	+= tsc40.o
->>> obj-$(CONFIG_TOUCHSCREEN_TSC200X_CORE)	+= tsc200x-core.o
->>> obj-$(CONFIG_TOUCHSCREEN_TSC2004)	+= tsc2004.o
->>> obj-$(CONFIG_TOUCHSCREEN_TSC2005)	+= tsc2005.o
->>> +tsc2007-y				:= tsc2007_core.o
->>> +ifeq ($(CONFIG_IIO),y)
->>> +tsc2007-y				+= tsc2007_iio.o
->>> +endif
->>> +ifeq ($(CONFIG_IIO),m)
->>> +tsc2007-y				+= tsc2007_iio.o
->>
->> Not tsc2007-m ?
->>
->> I don't follow how this works!
+> Certainly. I have two needs for this series. The first one is simple
+> when it comes to the iio part and complex because the mux is shared
+> between three 8-way muxes on three of the inputs to an ADS-1015 ADC.
+> The forth ADC line to the ADS-1015 is not muxed. Those three muxes
+> are of course GPIO-controlled and share GPIO pins. And the GPIO
+> pins also control an i2c bus that is muxed 8-ways as well. There are
+> eight (possible) batteries, and we monitor voltage/current/temp with
+> the 3 muxed ADC lines, and 8 chargers sit on i2c behind the i2c mux.
+> I guess it felt natural for the HW designer to select battery with
+> the GPIO lines, but that do not fit too well with the code as it
+> is without this series...
 > 
-> I guess tsc2007-y is an internal collector variable name
-> for multiple .o components. Sort of a "library" object.
+> For this first need, the iio mux does not need ext_info.
 > 
-> While
+> The second need is simple in the mux part but worse in the iio
+> department. It's another 8-way mux that simply muxes an ADC line,
+> so that is simple. However, the ADC line is the envelope detector
+> that just got added to linux-next, and it has two ext_info
+> attributes that needs to be set differently for different mux
+> states. Two of the states need "invert" to be false, the rest need
+> "invert" to be true. And it is also preferable to have different
+> values for "compare_interval" for different mux states since the
+> signals on the diffrent mux states have the different frequency
+> characteristics.
 > 
-> obj-y += tsc2007.o adds it to the kernel
-> obj-m += tsc2007.o adds it to the modules
+> True, I could have the ext-info attributes go straight through
+> the mux, and just start by writing values to "invert"
+> and "compare_interval", and only then read a sample. But then I
+> would need to lock out other users during the duration of this
+> transaction. I believe that the best place to put that lock is
+> in the iio mux (when it locks its control-mux) and not leave it
+> to userspace to solve this in some brittle cooperative manner.
 > 
-> I am not sure if my explanation is correct but it appears
-> to work that way.
+>> Perhaps an example of how it is used and what the resulting interface
+>> looks like?
 > 
-> Anyways what shall we do? If CONFIG_TOUCHSCREEN_TSC2007=y
-> and IIO=m we have a problem that we need dynamic binding.
-Yes, we just need to block that particular combination. Only build in the IIO support
-if it is also built in.  That's way I thought we'd want to add it tsc2007-m which would
-only be used if tsc2007 as a whole was built as a module.
-Otherwise it would be ignored (I think!)
+> The resulting interface is just a copy of the (ext_info) interface
+> exposed by the parent channel (with a cache that is rewritten to
+> the parent on every iio mux state change). I have plans to add code
+> to not rewrite ext_info attributes that have never been changed in
+> any mux state.
+> 
+> Below I have an example file listing.
+> 
+> device0 is a dpot (mcp4561).
+> device1 is a dac  (dpot-dac, wrapping the above dpot).
+> device2 is an adc (envelope-detector, wrapping the above dac)
+> device3 is a mux  (iio-mux, wrapping the above adc)
+> 
+> The 8-way iio-mux have no signals attached on mux states 0 and 1, which
+> is why the first channel for device 3 is in_altvoltage2.
+> 
+> Ultimately, I would like some knob to hide devices 0, 1 and 2 from
+> userspace. They need/should only be visible to in-kernel users. Or
+> is there such a knob already?
+> 
+There isn't and this feeds into what Lars was suggesting with a fabric
+driver.  The complexity of the description in device tree is getting really
+very nasty indeed, perhaps we are better off allowing for complex cases
+to have a driver that directly hooks into all the relevant elements and
+can do magic channel remapping etc.
 
-I'm not seeing this structure anywhere else in kernel - hence cc'd Yann and the Kbuild list
-to see if they can offer some advices.
+That could then register the 3 muxes and acquire all the chanenls required
+to build a single many channel device that hides all the complexity from userspace.
 
-As a quick summary, we are looking to add IIO support to this driver in the following circumstances.
+I've considered working out how to do an IIO multiplexer before in software which would
+allow us to make 'fake' devices that wrap multiple physical devices.  In the general
+case it has always felt to complex as we'd want it to handle triggered and buffered
+data flows.  That brings all sorts of nasty data alignment problems with it as there
+is no guarantee the devices are producing aligned data at all.
 
-IIO and this driver are modules.  (ideally handling the dependencies nicely)
-IIO and this driver are both built in.
+In the specific case though a driver can bundle up everything it needs to create
+a pseudo device (for triggered flows we'd probably need a little magic to hold off the
+trigger but that's not hard).  With sysfs only access it would be simple to do but
+hard to describe.  Hence bringing us back to fabric drivers.
 
-Problem case is driver built in and IIO as a module.
+Thanks for the description. Good to understand what you are trying to handle.
 
 Jonathan
+> Cheers,
+> Peter
 > 
->>> +endif
->>> obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+= tsc2007.o
->>> obj-$(CONFIG_TOUCHSCREEN_UCB1400)	+= ucb1400_ts.o
->>> obj-$(CONFIG_TOUCHSCREEN_WACOM_W8001)	+= wacom_w8001.o
->>> diff --git a/drivers/input/touchscreen/tsc2007.h
->>> b/drivers/input/touchscreen/tsc2007.h
->>> new file mode 100644
->>> index 0000000..c25932f
->>> --- /dev/null
->>> +++ b/drivers/input/touchscreen/tsc2007.h
->>> @@ -0,0 +1,116 @@
->>> +/*
->>> + * Copyright (c) 2008 MtekVision Co., Ltd.
->>> + *	Kwangwoo Lee <kwlee-ec7hoAtq5SbSUeElwK9/Pw@public.gmane.org>
->>> + *
->>> + * Using code from:
->>> + *  - ads7846.c
->>> + *	Copyright (c) 2005 David Brownell
->>> + *	Copyright (c) 2006 Nokia Corporation
->>> + *  - corgi_ts.c
->>> + *	Copyright (C) 2004-2005 Richard Purdie
->>> + *  - omap_ts.[hc], ads7846.h, ts_osk.c
->>> + *	Copyright (C) 2002 MontaVista Software
->>> + *	Copyright (C) 2004 Texas Instruments
->>> + *	Copyright (C) 2005 Dirk Behme
->>> + *
->>> + *  This program is free software; you can redistribute it and/or
->>> modify
->>> + *  it under the terms of the GNU General Public License version 2 as
->>> + *  published by the Free Software Foundation.
->>> + */
->>> +
->>> +#include <linux/input/touchscreen.h>
->>> +
->>> +#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->>> +#define TSC2007_MEASURE_AUX		(0x2 << 4)
->>> +#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->>> +#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->>> +#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->>> +#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->>> +#define TSC2007_SETUP			(0xb << 4)
->>> +#define TSC2007_MEASURE_X		(0xc << 4)
->>> +#define TSC2007_MEASURE_Y		(0xd << 4)
->>> +#define TSC2007_MEASURE_Z1		(0xe << 4)
->>> +#define TSC2007_MEASURE_Z2		(0xf << 4)
->>> +
->>> +#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->>> +#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->>> +#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->>> +#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->>> +
->>> +#define TSC2007_12BIT			(0x0 << 1)
->>> +#define TSC2007_8BIT			(0x1 << 1)
->>> +
->>> +#define	MAX_12BIT			((1 << 12) - 1)
->>> +
->>> +#define ADC_ON_12BIT	(TSC2007_12BIT | TSC2007_ADC_ON_IRQ_DIS0)
->>> +
->>> +#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->>> +#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->>> +#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->>> +#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->>> +#define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
->>> +
->>> +struct ts_event {
->>> +	u16	x;
->>> +	u16	y;
->>> +	u16	z1, z2;
->>> +};
->>> +
->>> +struct tsc2007 {
->>> +	struct input_dev	*input;
->>> +	char			phys[32];
->>> +
->>> +	struct i2c_client	*client;
->>> +
->>> +	u16			model;
->>> +	u16			x_plate_ohms;
->>> +
->>> +	struct touchscreen_properties prop;
->>> +
->>> +	bool			report_resistance;
->>> +	u16			min_x;
->>> +	u16			min_y;
->>> +	u16			max_x;
->>> +	u16			max_y;
->>> +	u16			max_rt;
->>> +	unsigned long		poll_period; /* in jiffies */
->>> +	int			fuzzx;
->>> +	int			fuzzy;
->>> +	int			fuzzz;
->>> +
->>> +	unsigned int		gpio;
->>> +	int			irq;
->>> +
->>> +	wait_queue_head_t	wait;
->>> +	bool			stopped;
->>> +	bool			pendown;
->>> +
->>> +	int			(*get_pendown_state)(struct device *);
->>> +	void			(*clear_penirq)(void);
->>> +
->>> +	struct mutex		mlock;
->>> +	struct iio_dev		*iio_dev;	/* optional */
->>> +};
->>> +
->>> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd);
->>> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->>> +					struct ts_event *tc);
->>> +bool tsc2007_is_pen_down(struct tsc2007 *ts);
->>> +
->>> +#if IS_ENABLED(CONFIG_IIO)
->>> +
->>> +/* defined in tsc2007_iio.c */
->>> +int tsc2007_iio_configure(struct tsc2007 *ts);
->>> +void tsc2007_iio_unconfigure(struct tsc2007 *ts);
->>> +
->>> +#else /* CONFIG_IIO */
->>> +
->>> +static inline int tsc2007_iio_configure(struct tsc2007 *ts)
->>> +{
->>> +	return 0;
->>> +}
->>> +static inline void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->>> +{
->>> +}
->>> +
->>> +#endif /* CONFIG_IIO */
->>> diff --git a/drivers/input/touchscreen/tsc2007.c
->>> b/drivers/input/touchscreen/tsc2007_core.c
->>> similarity index 86%
->>> rename from drivers/input/touchscreen/tsc2007.c
->>> rename to drivers/input/touchscreen/tsc2007_core.c
->>> index 76b462b..812ded8 100644
->>> --- a/drivers/input/touchscreen/tsc2007.c
->>> +++ b/drivers/input/touchscreen/tsc2007_core.c
->>> @@ -27,79 +27,11 @@
->>> #include <linux/i2c.h>
->>> #include <linux/i2c/tsc2007.h>
->>> #include <linux/of_device.h>
->>> -#include <linux/of.h>
->>> #include <linux/of_gpio.h>
->>> -#include <linux/input/touchscreen.h>
->>> -
->>> -#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->>> -#define TSC2007_MEASURE_AUX		(0x2 << 4)
->>> -#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->>> -#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->>> -#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->>> -#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->>> -#define TSC2007_SETUP			(0xb << 4)
->>> -#define TSC2007_MEASURE_X		(0xc << 4)
->>> -#define TSC2007_MEASURE_Y		(0xd << 4)
->>> -#define TSC2007_MEASURE_Z1		(0xe << 4)
->>> -#define TSC2007_MEASURE_Z2		(0xf << 4)
->>> -
->>> -#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->>> -#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->>> -#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->>> -#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->>> -
->>> -#define TSC2007_12BIT			(0x0 << 1)
->>> -#define TSC2007_8BIT			(0x1 << 1)
->>> -
->>> -#define	MAX_12BIT			((1 << 12) - 1)
->>> -
->>> -#define ADC_ON_12BIT	(TSC2007_12BIT | TSC2007_ADC_ON_IRQ_DIS0)
->>> -
->>> -#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->>> -#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->>> -#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->>> -#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->>> -#define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
->>> -
->>> -struct ts_event {
->>> -	u16	x;
->>> -	u16	y;
->>> -	u16	z1, z2;
->>> -};
->>> -
->>> -struct tsc2007 {
->>> -	struct input_dev	*input;
->>> -	char			phys[32];
->>> -
->>> -	struct i2c_client	*client;
->>> -
->>> -	u16			model;
->>> -	u16			x_plate_ohms;
->>> -
->>> -	struct touchscreen_properties prop;
->>> -
->>> -	bool			report_resistance;
->>> -	u16			min_x;
->>> -	u16			min_y;
->>> -	u16			max_x;
->>> -	u16			max_y;
->>> -	u16			max_rt;
->>> -	unsigned long		poll_period; /* in jiffies */
->>> -	int			fuzzx;
->>> -	int			fuzzy;
->>> -	int			fuzzz;
->>> -
->>> -	unsigned		gpio;
->>> -	int			irq;
->>> -
->>> -	wait_queue_head_t	wait;
->>> -	bool			stopped;
->>> +#include "tsc2007.h"
->>>
->>> -	int			(*get_pendown_state)(struct device *);
->>> -	void			(*clear_penirq)(void);
->>> -};
->>>
->>> -static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->>> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->>> {
->>> 	s32 data;
->>> 	u16 val;
->>> @@ -137,7 +69,7 @@ static void tsc2007_read_values(struct tsc2007 *tsc,
->>> struct ts_event *tc)
->>> 	tsc2007_xfer(tsc, PWRDOWN);
->>> }
->>>
->>> -static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->>> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->>> 					struct ts_event *tc)
->>> {
->>> 	u32 rt = 0;
->>> @@ -158,7 +90,7 @@ static u32 tsc2007_calculate_resistance(struct
->>> tsc2007 *tsc,
->>> 	return rt;
->>> }
->>>
->>> -static bool tsc2007_is_pen_down(struct tsc2007 *ts)
->>> +bool tsc2007_is_pen_down(struct tsc2007 *ts)
->>> {
->>> 	/*
->>> 	 * NOTE: We can't rely on the pressure to determine the pen down
->>> @@ -191,7 +123,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, void
->>> *handle)
->>> 	while (!ts->stopped && tsc2007_is_pen_down(ts)) {
->>>
->>> 		/* pen is down, continue with the measurement */
->>> +
->>> +		mutex_lock(&ts->mlock);
->>> 		tsc2007_read_values(ts, &tc);
->>> +		mutex_unlock(&ts->mlock);
->>>
->>> 		rt = tsc2007_calculate_resistance(ts, &tc);
->>>
->>> @@ -441,7 +376,8 @@ static void tsc2007_call_exit_platform_hw(void
->>> *data)
->>> static int tsc2007_probe(struct i2c_client *client,
->>> 			 const struct i2c_device_id *id)
->>> {
->>> -	const struct tsc2007_platform_data *pdata =
->>> dev_get_platdata(&client->dev);
->>> +	const struct tsc2007_platform_data *pdata =
->>> +		dev_get_platdata(&client->dev);
->>> 	struct tsc2007 *ts;
->>> 	struct input_dev *input_dev;
->>> 	int err;
->>> @@ -463,7 +399,9 @@ static int tsc2007_probe(struct i2c_client *client,
->>> 	ts->client = client;
->>> 	ts->irq = client->irq;
->>> 	ts->input = input_dev;
->>> +
->>> 	init_waitqueue_head(&ts->wait);
->>> +	mutex_init(&ts->mlock);
->>>
->>> 	snprintf(ts->phys, sizeof(ts->phys),
->>> 		 "%s/input0", dev_name(&client->dev));
->>> @@ -534,7 +472,7 @@ static int tsc2007_probe(struct i2c_client *client,
->>> 	if (err < 0) {
->>> 		dev_err(&client->dev,
->>> 			"Failed to setup chip: %d\n", err);
->>> -		return err;	/* usually, chip does not respond */
->>> +		return err;	/* chip does not respond */
->>> 	}
->>>
->>> 	err = input_register_device(input_dev);
->>> @@ -544,6 +482,14 @@ static int tsc2007_probe(struct i2c_client
->>> *client,
->>> 		return err;
->>> 	}
->>>
->>> +	return tsc2007_iio_configure(ts);
->>> +}
->>> +
->>> +static int tsc2007_remove(struct i2c_client *client)
->>> +{
->>> +	struct tsc2007 *ts = i2c_get_clientdata(client);
->>> +
->>> +	tsc2007_iio_unconfigure(ts);
->>> 	return 0;
->>> }
->>>
->>> @@ -569,6 +515,7 @@ static struct i2c_driver tsc2007_driver = {
->>> 	},
->>> 	.id_table	= tsc2007_idtable,
->>> 	.probe		= tsc2007_probe,
->>> +	.remove		= tsc2007_remove,
->>> };
->>>
->>> module_i2c_driver(tsc2007_driver);
->>> diff --git a/drivers/input/touchscreen/tsc2007_iio.c
->>> b/drivers/input/touchscreen/tsc2007_iio.c
->>> new file mode 100644
->>> index 0000000..ed79944
->>> --- /dev/null
->>> +++ b/drivers/input/touchscreen/tsc2007_iio.c
->>> @@ -0,0 +1,150 @@
->>> +/*
->>> + * Copyright (c) 2016 Golden Delicious Comp. GmbH&Co. KG
->>> + *	Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
->>> + *
->>> + *  This program is free software; you can redistribute it and/or
->>> modify
->>> + *  it under the terms of the GNU General Public License version 2 as
->>> + *  published by the Free Software Foundation.
->>> + */
->>> +
->>> +#include <linux/i2c.h>
->>> +#include <linux/iio/iio.h>
->>> +#include "tsc2007.h"
->>> +
->>> +struct tsc2007_iio {
->>> +	struct tsc2007 *ts;
->>> +};
->>> +
->>> +#define TSC2007_CHAN_IIO(_chan, _name, _type, _chan_info) \
->>> +{ \
->>> +	.datasheet_name = _name, \
->>> +	.type = _type, \
->>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
->>> +			BIT(_chan_info), \
->>> +	.indexed = 1, \
->>> +	.channel = _chan, \
->>> +}
->>> +
->>> +static const struct iio_chan_spec tsc2007_iio_channel[] = {
->>> +	TSC2007_CHAN_IIO(0, "x", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(1, "y", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(2, "z1", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(3, "z2", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(4, "adc", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(5, "rt", IIO_VOLTAGE, IIO_CHAN_INFO_RAW), /* Ohms?
->>> */
->>> +	TSC2007_CHAN_IIO(6, "pen", IIO_PRESSURE, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(7, "temp0", IIO_TEMP, IIO_CHAN_INFO_RAW),
->>> +	TSC2007_CHAN_IIO(8, "temp1", IIO_TEMP, IIO_CHAN_INFO_RAW),
->>> +};
->>> +
->>> +static int tsc2007_read_raw(struct iio_dev *indio_dev,
->>> +	struct iio_chan_spec const *chan, int *val, int *val2, long mask)
->>> +{
->>> +	struct tsc2007_iio *iio = iio_priv(indio_dev);
->>> +	struct tsc2007 *tsc = iio->ts;
->>> +	int adc_chan = chan->channel;
->>> +	int ret = 0;
->>> +
->>> +	if (adc_chan >= ARRAY_SIZE(tsc2007_iio_channel))
->>> +		return -EINVAL;
->>> +
->>> +	if (mask != IIO_CHAN_INFO_RAW)
->>> +		return -EINVAL;
->>> +
->>> +	mutex_lock(&tsc->mlock);
->>> +
->>> +	switch (chan->channel) {
->>> +	case 0:
->>> +		*val = tsc2007_xfer(tsc, READ_X);
->>> +		break;
->>> +	case 1:
->>> +		*val = tsc2007_xfer(tsc, READ_Y);
->>> +		break;
->>> +	case 2:
->>> +		*val = tsc2007_xfer(tsc, READ_Z1);
->>> +		break;
->>> +	case 3:
->>> +		*val = tsc2007_xfer(tsc, READ_Z2);
->>> +		break;
->>> +	case 4:
->>> +		*val = tsc2007_xfer(tsc, (ADC_ON_12BIT | TSC2007_MEASURE_AUX));
->>> +		break;
->>> +	case 5: {
->>> +		struct ts_event tc;
->>> +
->>> +		tc.x = tsc2007_xfer(tsc, READ_X);
->>> +		tc.z1 = tsc2007_xfer(tsc, READ_Z1);
->>> +		tc.z2 = tsc2007_xfer(tsc, READ_Z2);
->>> +		*val = tsc2007_calculate_resistance(tsc, &tc);
->>> +		break;
->>> +	}
->>> +	case 6:
->>> +		*val = tsc2007_is_pen_down(tsc);
->>> +		break;
->>> +	case 7:
->>> +		*val = tsc2007_xfer(tsc,
->>> +				    (ADC_ON_12BIT | TSC2007_MEASURE_TEMP0));
->>> +		break;
->>> +	case 8:
->>> +		*val = tsc2007_xfer(tsc,
->>> +				    (ADC_ON_12BIT | TSC2007_MEASURE_TEMP1));
->>> +		break;
->>> +	}
->>> +
->>> +	/* Prepare for next touch reading - power down ADC, enable PENIRQ */
->>> +	tsc2007_xfer(tsc, PWRDOWN);
->>> +
->>> +	mutex_unlock(&tsc->mlock);
->>> +
->>> +	ret = IIO_VAL_INT;
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +static const struct iio_info tsc2007_iio_info = {
->>> +	.read_raw = tsc2007_read_raw,
->>> +	.driver_module = THIS_MODULE,
->>> +};
->>> +
->>> +int tsc2007_iio_configure(struct tsc2007 *ts)
->>> +{
->>> +	int err;
->>> +	struct iio_dev *indio_dev;
->>> +	struct tsc2007_iio *iio;
->>> +
->>> +	indio_dev = devm_iio_device_alloc(&ts->client->dev,
->>> +		sizeof(struct tsc2007_iio));
->>> +	if (!indio_dev) {
->>> +		dev_err(&ts->client->dev, "iio_device_alloc failed\n");
->>> +		return -ENOMEM;
->>> +	}
->>> +
->>> +	iio = iio_priv(indio_dev);
->>> +	iio->ts = ts;
->>> +	ts->iio_dev = (void *) indio_dev;
->>> +
->>> +	indio_dev->name = "tsc2007";
->>> +	indio_dev->dev.parent = &ts->client->dev;
->>> +	indio_dev->info = &tsc2007_iio_info;
->>> +	indio_dev->modes = INDIO_DIRECT_MODE;
->>> +	indio_dev->channels = tsc2007_iio_channel;
->>> +	indio_dev->num_channels = ARRAY_SIZE(tsc2007_iio_channel);
->>> +
->>> +	err = iio_device_register(indio_dev);
->>> +	if (err < 0) {
->>> +		dev_err(&ts->client->dev, "iio_device_register() failed: %d\n",
->>> +			err);
->>> +		return err;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL(tsc2007_iio_configure);
->>> +
->>> +void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->>> +{
->>> +	struct iio_dev *indio_dev = ts->iio_dev;
->>> +
->>> +	iio_device_unregister(indio_dev);
->>> +}
->>> +EXPORT_SYMBOL(tsc2007_iio_unconfigure);
->>
->> -- 
->> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+> $ ls /sys/bus/iio/devices/iio\:device*
+> /sys/bus/iio/devices/iio:device0:
+> dev                           out_resistance_raw_available
+> name                          out_resistance_scale
+> of_node                       power
+> out_resistance0_raw           subsystem
+> out_resistance1_raw           uevent
+> 
+> /sys/bus/iio/devices/iio:device1:
+> dev                         out_voltage0_scale
+> name                        power
+> of_node                     subsystem
+> out_voltage0_raw            uevent
+> out_voltage0_raw_available
+> 
+> /sys/bus/iio/devices/iio:device2:
+> dev                              name
+> in_altvoltage0_compare_interval  of_node
+> in_altvoltage0_invert            power
+> in_altvoltage0_raw               subsystem
+> in_altvoltage0_scale             uevent
+> 
+> /sys/bus/iio/devices/iio:device3:
+> dev                              in_altvoltage5_raw
+> in_altvoltage2_compare_interval  in_altvoltage5_scale
+> in_altvoltage2_invert            in_altvoltage6_compare_interval
+> in_altvoltage2_raw               in_altvoltage6_invert
+> in_altvoltage2_scale             in_altvoltage6_raw
+> in_altvoltage3_compare_interval  in_altvoltage6_scale
+> in_altvoltage3_invert            in_altvoltage7_compare_interval
+> in_altvoltage3_raw               in_altvoltage7_invert
+> in_altvoltage3_scale             in_altvoltage7_raw
+> in_altvoltage4_compare_interval  in_altvoltage7_scale
+> in_altvoltage4_invert            name
+> in_altvoltage4_raw               of_node
+> in_altvoltage4_scale             power
+> in_altvoltage5_compare_interval  subsystem
+> in_altvoltage5_invert            uevent
 > 
