@@ -1,44 +1,90 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Add missing newline
-Date: Sun, 27 Nov 2016 22:35:16 +0100
-Message-ID: <20161127213516.GF13318@lunn.ch>
-References: <1480276484-5482-1-git-send-email-afaerber@suse.de>
- <20161127211727.GB13318@lunn.ch>
- <e9336935-264e-5d1c-656e-a48f89d1b015@suse.de>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: mvebu: Fix armada-385-turris-omnia stdout-path
+Date: Sun, 27 Nov 2016 23:14:37 +0100
+Message-ID: <0f51c7a1-6d52-3e3e-edfe-e7b10917ecab@suse.de>
+References: <71af60f5-b657-cab4-32a8-00a604fc656e@suse.de>
+ <1480275444-4220-1-git-send-email-afaerber@suse.de>
+ <20161127212528.wmqbwciz5ltnfws3@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e9336935-264e-5d1c-656e-a48f89d1b015-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20161127212528.wmqbwciz5ltnfws3-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QmVkxZlpY2hhIEtvxaFhdHU=?= <bedrich.kosata-x+rMaJPWets@public.gmane.org>, Michal Hrusecki <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 27, 2016 at 10:30:54PM +0100, Andreas Färber wrote:
-> Hi,
+Am 27.11.2016 um 22:25 schrieb Uwe Kleine-König:
+> On Sun, Nov 27, 2016 at 08:37:24PM +0100, Andreas Färber wrote:
+>> Specify the baudrate.
+>>
+>> Fixes: 26ca8b52d6e1 ("ARM: dts: add support for Turris Omnia")
+>> Cc: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+>> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > 
-> Am 27.11.2016 um 22:17 schrieb Andrew Lunn:
-> > On Sun, Nov 27, 2016 at 08:54:44PM +0100, Andreas Färber wrote:
-> >> Found while reviewing Marvell dsa bindings usage.
-> > 
-> > Hi Andreas
-> > 
-> > It is good practice to put the maintainer you expect to accept the
-> > patch on the To: line. You have at least two different maintainers on
-> > Cc: so it is currently ambiguous. And these lists can be high volume,
-> > so without a copy in the maintainers inbox, patches can be overlooked.
+> You said with plain &uart0 the kernel uses a wrong baud rate? That's
+> strange. For me it works and I think it's the intended behaviour to
+> dermine the baud rate setup by the bootloader and use this.
+
+IIRC the 8250 driver defaults to 9600n8 if unspecified.
+
+Kernel tested: 4.9.0-rc2-next-20161028-00010-g4fb44d9-dirty
+
+Maybe you used some console= argument overriding it?
+
+> I'd prefer it this way over hard coding the baud rate.
 > 
-> As a vf610 DT patch with LAKML in To I am expecting it to be handled by
-> Shawn or anyone from the NXP/ARM side.
+>>  arch/arm/boot/dts/armada-385-turris-omnia.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts b/arch/arm/boot/dts/armada-385-turris-omnia.dts
+>> index f53cb8b73610..2eff012287d4 100644
+>> --- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
+>> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
+>> @@ -52,7 +52,7 @@
+>>  	compatible = "cznic,turris-omnia", "marvell,armada385", "marvell,armada380";
+>>  
+>>  	chosen {
+>> -		stdout-path = &uart0;
+>> +		stdout-path = "serial0:115200n8";
+>>  	};
+>>  
+>>  	memory {
+> 
+> This has the downside to depend on the alias. Not sure this is
+> considered modern. An alternative would be:
+> 
+> 	stdout-path = "/soc/internal-regs/serial@12000:115200n8";
 
-So please have Shawn as To:
+Please don't unroll the path I'm trying to abstract elsewhere.
 
-The patch you are fixing went through Dave Miller, who is also on Cc:,
-hence the ambiguity.
+Like I said, the "serialX:115200n8" syntax is what all other Armada 38x
+boards use:
 
-      Andrew
+git grep stdout-path -- arch/arm/boot/dts/ | grep armada-38
+arch/arm/boot/dts/armada-385-db-ap.dts:		stdout-path = "serial1:115200n8";
+arch/arm/boot/dts/armada-385-linksys.dtsi:		stdout-path =
+"serial0:115200n8";
+arch/arm/boot/dts/armada-388-clearfog.dts:		stdout-path =
+"serial0:115200n8";
+arch/arm/boot/dts/armada-388-db.dts:		stdout-path = "serial0:115200n8";
+arch/arm/boot/dts/armada-388-gp.dts:		stdout-path = "serial0:115200n8";
+arch/arm/boot/dts/armada-388-rd.dts:		stdout-path = "serial0:115200n8";
+
+The alias is needed to reliably determine the tty device number and is
+set "globally" in armada-38x.dtsi, so why is it a problem to rely on?
+
+Regards,
+Andreas
+
+> 
+> (maybe there even exists syntactic sugar to express this using &uart0?)
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
