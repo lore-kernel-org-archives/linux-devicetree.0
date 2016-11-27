@@ -1,44 +1,130 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] ARM: dts: vf610-zii-dev-rev-b: Add missing newline
-Date: Sun, 27 Nov 2016 20:54:44 +0100
-Message-ID: <1480276484-5482-1-git-send-email-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCH v3 1/2] of: Fix issue where code would fall through to error case.
+Date: Sun, 27 Nov 2016 12:20:57 -0800
+Message-ID: <1480278058-19688-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, frowand.list@gmail.com, robh+dt@kernel.org, pantelis.antoniou@konsulko.com, mdf@kernel.org, Moritz Fischer <moritz.fischer@ettus.com>
 List-Id: devicetree@vger.kernel.org
 
-Found while reviewing Marvell dsa bindings usage.
+No longer fall through into the error case that prints out
+an error if no error (err = 0) occurred.
 
-Fixes: f283745b3caf ("arm: vf610: zii devel b: Add support for switch interrupts")
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Rework error handling to print error where it occured instead
+of having a global catch-all at the end of the function.
+
+Fixes d9181b20a83(of: Add back an error message, restructured)
+Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
+Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
 ---
- arch/arm/boot/dts/vf610-zii-dev-rev-b.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Rob, Frank
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-index 7ea617e47fe4..958b4c42d320 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-b.dts
-@@ -153,7 +153,8 @@
- 					switch0phy1: switch1phy0@1 {
- 						reg = <1>;
- 						interrupt-parent = <&switch0>;
--						interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;					};
-+						interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+					};
- 					switch0phy2: switch1phy0@2 {
- 						reg = <2>;
- 						interrupt-parent = <&switch0>;
+this has already Frank's Reviewed-by: tag on it, but since I changed around the
+earlier part (before tree_node gets assigned) Frank might wanna take another look
+at this.
+
+Changes from v2:
+* Change error printouts to print error where it's produced
+* Before tree_symbols gets assigned a non-NULL value, directly return error
+  instead of goto out, since of_put_node will be a no-op for !tree_symbols
+
+Changes from  v1:
+* Implemented Frank's suggestion
+
+Cheers,
+
+Moritz
+---
+
+ drivers/of/resolver.c | 38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 783bd09..5f51a4a 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -296,14 +296,12 @@ int of_resolve_phandles(struct device_node *overlay)
+ 	tree_symbols = NULL;
+ 
+ 	if (!overlay) {
+-		pr_err("null overlay\n");
+-		err = -EINVAL;
+-		goto err_out;
++		pr_err("overlay phandle fixup failed: null overlay\n");
++		return -EINVAL;
+ 	}
+ 	if (!of_node_check_flag(overlay, OF_DETACHED)) {
+-		pr_err("overlay not detached\n");
+-		err = -EINVAL;
+-		goto err_out;
++		pr_err("overlay phandle fixup failed: overlay not detached\n");
++		return -EINVAL;
+ 	}
+ 
+ 	phandle_delta = live_tree_max_phandle() + 1;
+@@ -314,8 +312,10 @@ int of_resolve_phandles(struct device_node *overlay)
+ 			break;
+ 
+ 	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
+-	if (err)
+-		goto err_out;
++	if (err) {
++		pr_err("overlay phandle fixup failed: %d\n", err);
++		return err;
++	}
+ 
+ 	overlay_fixups = NULL;
+ 
+@@ -324,16 +324,13 @@ int of_resolve_phandles(struct device_node *overlay)
+ 			overlay_fixups = child;
+ 	}
+ 
+-	if (!overlay_fixups) {
+-		err = 0;
+-		goto out;
+-	}
++	if (!overlay_fixups)
++		return 0;
+ 
+ 	tree_symbols = of_find_node_by_path("/__symbols__");
+ 	if (!tree_symbols) {
+-		pr_err("no symbols in root of device tree.\n");
+-		err = -EINVAL;
+-		goto err_out;
++		pr_err("overlay phandle fixup failed: no symbols in root\n");
++		return -EINVAL;
+ 	}
+ 
+ 	for_each_property_of_node(overlay_fixups, prop) {
+@@ -344,13 +341,16 @@ int of_resolve_phandles(struct device_node *overlay)
+ 
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+-		if (err)
+-			goto err_out;
++		if (err) {
++			pr_err("overlay phandle fixup failed: %d\n", err);
++			goto out;
++		}
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
+ 			err = -ENOENT;
+-			goto err_out;
++			pr_err("overlay phandle fixup failed: !refnode\n");
++			goto out;
+ 		}
+ 
+ 		phandle = refnode->phandle;
+@@ -361,8 +361,6 @@ int of_resolve_phandles(struct device_node *overlay)
+ 			break;
+ 	}
+ 
+-err_out:
+-	pr_err("overlay phandle fixup failed: %d\n", err);
+ out:
+ 	of_node_put(tree_symbols);
+ 
 -- 
-2.6.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
