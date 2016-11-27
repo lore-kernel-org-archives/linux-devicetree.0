@@ -1,106 +1,163 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: mvebu: Fix armada-385-turris-omnia stdout-path
-Date: Sun, 27 Nov 2016 23:30:43 +0100
-Message-ID: <20161127223043.2a3wpteentjosjce@pengutronix.de>
-References: <71af60f5-b657-cab4-32a8-00a604fc656e@suse.de>
- <1480275444-4220-1-git-send-email-afaerber@suse.de>
- <20161127212528.wmqbwciz5ltnfws3@pengutronix.de>
- <0f51c7a1-6d52-3e3e-edfe-e7b10917ecab@suse.de>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 0/5] Meson GXL and GXM USB support
+Date: Sun, 27 Nov 2016 23:42:02 +0100
+Message-ID: <CAFBinCAA_JEtr_0Ze0thoRaEKMnWQMKcPxJ8y88zkWAAhuxsMw@mail.gmail.com>
+References: <20161126145635.24488-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0f51c7a1-6d52-3e3e-edfe-e7b10917ecab-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20161126145635.24488-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?QmVkxZlpY2hhIEtvxaFhdHU=?= <bedrich.kosata-x+rMaJPWets@public.gmane.org>, Michal Hrusecki <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello Kishon,
 
-On Sun, Nov 27, 2016 at 11:14:37PM +0100, Andreas Färber wrote:
-> Am 27.11.2016 um 22:25 schrieb Uwe Kleine-König:
-> > On Sun, Nov 27, 2016 at 08:37:24PM +0100, Andreas Färber wrote:
-> >> Specify the baudrate.
-> >>
-> >> Fixes: 26ca8b52d6e1 ("ARM: dts: add support for Turris Omnia")
-> >> Cc: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-> >> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> > 
-> > You said with plain &uart0 the kernel uses a wrong baud rate? That's
-> > strange. For me it works and I think it's the intended behaviour to
-> > dermine the baud rate setup by the bootloader and use this.
-> 
-> IIRC the 8250 driver defaults to 9600n8 if unspecified.
-> 
-> Kernel tested: 4.9.0-rc2-next-20161028-00010-g4fb44d9-dirty
-> 
-> Maybe you used some console= argument overriding it?
+On Sat, Nov 26, 2016 at 3:56 PM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> USB support on GXL and GXM differs a lot from Meson8b and GXBB:
+> The most obvious change is that GXL and GXM now have one dwc3
+> controller and one dwc2 controller (instead of two dwc2 controllers).
+> With that there are also new USB PHYs.
+>
+> Due to lack of hardware I was only able to test this on a board with
+> GXM, but as far as I understand the hardware my preparations should be
+> correct (so it should also work on GXL).
+>
+> dwc2 will probably stay unused on most GXM devices since it's limited
+> to device mode via some dwc2 hardware configuration register.
+>
+> dwc3 is probably used on all devices, even if there is more than just
+> one USB port. dwc3 has a built-in USB2 hub - on GXL this hub has two
+> ports enabled, while on GXM there are three ports enabled (see below
+> for lsusb output). There are no USB3 ports enabled in the dwc3 hardware
+> configuration, meaning that the SoC is limited to high-speed mode.
+> On my GXM device the dwc3 hardware configuration forces it into "host
+> only" mode.
+>
+> The SoCs contain two PHY blocks: one USB3 PHY and up to four USB2 PHYs
+> (on GXM there are only three enabled, but the registers should support
+> up to four).
+> The USB3 PHY also handles the OTG interrupts, but since dwc3's hardware
+> configuration enforces "host only" mode I was not able to test this. It
+> simply takes care of an interrupt and then notifies all related PHYs
+> about the new mode.
+> The USB2 PHY block is a bit different: I created one PHY driver which
+> spans all "PHY ports" because the handling is a bit tricky. It turns
+> out that for each available USB port in dwc3's hub the corresponding
+> PHY must be enabled (even if there is no physical port - in my case
+> port 3 is not connected to anything, but disabling the PHY breaks
+> ports 1 and 2 as well).
+> I decided not not pass the USB2 PHYs directly to dwc3 due to three
+> reasons: 1. the USB3 PHY (which holds a reference to all relevant
+> USB2 PHY ports) controls the mode of the USB2 PHY ports (since both
+> are used with the same controller and thus it makes sense to keep the
+> mode consistent across all ports) 2. the dwc3 driver does not support
+> passing multiple USB2 PHYs (only one USB2 and one USB3 PHY can be
+> passed to it) 3. it is similar to how the vendor reference driver
+> manages the PHYs. Please note that this coupling is not a fixed, this
+> is all configurable via devicetree (so if the third USB2 PHY has to
+> be passed two the dwc2 controller then this is still possible by
+> just moving on PHY reference in the .dts).
+after not staring at my own code for 24 hours I realized this:
+(I went through quite a few iterations before getting these drivers to work)
+I'm basically re-modelling an "USB PHY hub" with my USB3 PHY driver
+(there's one "upstream" PHY interface which is passed to dwc3 and
+multiple downstream PHYs, each for one port on dwc3's internal hub).
+With this approach I could split each of the the USB2s into separate
+nodes again (instead of one devicetree node with #phy-cells = <1>) as
+the USB3 PHY is taking care of that special "we have to enable all
+ports or no port will be usable".
 
-Yes, you're right.
+We could go even one step further: why implement this in the Meson GXL
+specific PHY driver - why not implement a generic "phy-hub" driver
+(which would be valid whenever the PHY controller has to manage
+multiple PHYs at once, but wants to keep them all in a consistent
+state).
+The devicetree could look like this:
+    usb2_phy_hub: phy@0 {
+        compatible = "phy-hub";
+        phys = <&other_phy1>, <&other_phy 2>;
+    };
 
-> > I'd prefer it this way over hard coding the baud rate.
-> > 
-> >>  arch/arm/boot/dts/armada-385-turris-omnia.dts | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> >> index f53cb8b73610..2eff012287d4 100644
-> >> --- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> >> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> >> @@ -52,7 +52,7 @@
-> >>  	compatible = "cznic,turris-omnia", "marvell,armada385", "marvell,armada380";
-> >>  
-> >>  	chosen {
-> >> -		stdout-path = &uart0;
-> >> +		stdout-path = "serial0:115200n8";
-> >>  	};
-> >>  
-> >>  	memory {
-> > 
-> > This has the downside to depend on the alias. Not sure this is
-> > considered modern. An alternative would be:
-> > 
-> > 	stdout-path = "/soc/internal-regs/serial@12000:115200n8";
-> 
-> Please don't unroll the path I'm trying to abstract elsewhere.
+&dwc3 {
+     phys = <&usb2_phy_hub>, <&usb3_phy0>;
+     phy-names = "usb2-phy", "usb3-phy";
+};
 
-Yeah, specifying the path isn't nice.
+The generic phy-hub driver would then implement all phy_ops callbacks
+and pass then to each of it's downstream PHYs.
 
-> Like I said, the "serialX:115200n8" syntax is what all other Armada 38x
-> boards use:
+That's just what came into my head - please let me know what you think
+of this or share your ideas on how to approach this!
 
-This isn't a reason to not think about better alternatives. An if
-something like:
-
-	stdout-path = &uart0 + ":115200n8";
-
-would be possible, I'd definitely prefer it over "serial0:115200n8".
-
-> git grep stdout-path -- arch/arm/boot/dts/ | grep armada-38
-> arch/arm/boot/dts/armada-385-db-ap.dts:		stdout-path = "serial1:115200n8";
-> arch/arm/boot/dts/armada-385-linksys.dtsi:		stdout-path =
-> "serial0:115200n8";
-> arch/arm/boot/dts/armada-388-clearfog.dts:		stdout-path =
-> "serial0:115200n8";
-> arch/arm/boot/dts/armada-388-db.dts:		stdout-path = "serial0:115200n8";
-> arch/arm/boot/dts/armada-388-gp.dts:		stdout-path = "serial0:115200n8";
-> arch/arm/boot/dts/armada-388-rd.dts:		stdout-path = "serial0:115200n8";
-> 
-> The alias is needed to reliably determine the tty device number and is
-> set "globally" in armada-38x.dtsi, so why is it a problem to rely on?
-
-AFAIK aliases are seen as (still necessary) evil by the dt people. So if
-you can stop making use of them, that would be nice.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> The coupling of the USB2 and USB3 PHYs is the reason why I sent the
+> two drivers in one patch, even though they are handling different IP
+> blocks (different registers, etc.).
+>
+> Unfortunately there are no datasheets available for any of these PHYs.
+> Both drivers were written by reading the reference drivers provided by
+> Amlogic and analyzing the registers on the kernel that was shipped with
+> my board.
+>
+> As a last note: the dwc3 driver currently only explicitly enables the
+> first USB port "DWC3_GUSB2PHYCFG(0)" in the internal hub. The hardware
+> seems to enable the other two (DWC3_GUSB2PHYCFG(1) and
+> DWC3_GUSB2PHYCFG(2)) automatically. I will ask the dwc3 maintainers if
+> changes to dwc3 are desired any how these should look like, but for now
+> it's working fine even without changes there.
+>
+> lsusb output on GXM for the dwc3 hub:
+> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> ...
+>  Hub Port Status:
+>    Port 1: 0000.0100 power
+>    Port 2: 0000.0100 power
+>    Port 3: 0000.0100 power
+>
+> NOTE: The devicetree changes depend on my previous series:
+> "[PATCH 0/2] minor GXL and GXM improvements" - see [0]
+>
+> NOTE2: This series depends on an upstream dwc3/xhci-plat DMA fix
+> (special thanks to Arnd Bergmann and Sriram Dash for fixing that):
+> "[PATCH v5 0/6] inherit dma configuration from parent dev" - see [1]
+>
+> I have a tree with all dependencies applied available at [2] if
+> someone wants a quick way to test this (I don't take any responsibility
+> if anything explodes though).
+>
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001665.html
+> [1] http://marc.info/?l=linux-usb&m=147938307209685&w=2
+> [2] https://github.com/xdarklight/linux/commits/meson-gx-integration-4.10-20161126
+>
+> Martin Blumenstingl (5):
+>   Documentation: dt-bindings: Add documentation for Meson GXL USB2/3
+>     PHYs
+>   phy: meson: add USB2 and USB3 PHY support for Meson GXL
+>   arm64: dts: meson-gxl: add USB support
+>   ARM64: dts: meson-gxm: add GXM specific USB configuration
+>   ARM64: dts: meson-gx-p23x-q20x: enable USB on P23x and Q20x boards
+>
+>  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  25 ++
+>  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  27 ++
+>  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  12 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  49 +++
+>  .../arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts |  17 +
+>  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  10 +
+>  drivers/phy/Kconfig                                |  13 +
+>  drivers/phy/Makefile                               |   2 +
+>  drivers/phy/phy-meson-gxl-usb2.c                   | 374 ++++++++++++++++++++
+>  drivers/phy/phy-meson-gxl-usb3.c                   | 377 +++++++++++++++++++++
+>  10 files changed, 906 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+>  create mode 100644 drivers/phy/phy-meson-gxl-usb2.c
+>  create mode 100644 drivers/phy/phy-meson-gxl-usb3.c
+>
+> --
+> 2.10.2
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
