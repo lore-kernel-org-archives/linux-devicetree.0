@@ -1,13 +1,15 @@
-From: Guy Shapiro <guy.shapiro@mobi-wize.com>
-Subject: [PATCH 2/2] input: touchscreen: sample averaging for imx6ul_tsc
-Date: Sun, 27 Nov 2016 09:44:58 +0200
-Message-ID: <1480232698-23075-2-git-send-email-guy.shapiro@mobi-wize.com>
-References: <1480232698-23075-1-git-send-email-guy.shapiro@mobi-wize.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
+ board
+Date: Sun, 27 Nov 2016 17:36:48 +0800
+Message-ID: <5373671480239408@web31m.yandex.ru>
+References: <20161121162421.800-1-icenowy@aosc.xyz>
+ <20161121162421.800-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480232698-23075-1-git-send-email-guy.shapiro@mobi-wize.com>
+In-Reply-To: <20161121162421.800-2-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,84 +19,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmitry.torokhov@gmail.com
-Cc: fabio.estevam@freescale.com, mark.rutland@arm.com, Guy Shapiro <guy.shapiro@mobi-wize.com>, devicetree@vger.kernel.org, haibo.chen@freescale.com, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jonathan Corbet <corbet@lwn.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX6UL internal touchscreen controller contains an option to
-average upon samples. This feature reduces noise from the produced
-touch locations.
-
-This patch adds sample averaging support to the imx6ul_tsc device
-driver.
-
-Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
----
- drivers/input/touchscreen/imx6ul_tsc.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/input/touchscreen/imx6ul_tsc.c b/drivers/input/touchscreen/imx6ul_tsc.c
-index 8275267..31724d9 100644
---- a/drivers/input/touchscreen/imx6ul_tsc.c
-+++ b/drivers/input/touchscreen/imx6ul_tsc.c
-@@ -25,6 +25,7 @@
- /* ADC configuration registers field define */
- #define ADC_AIEN		(0x1 << 7)
- #define ADC_CONV_DISABLE	0x1F
-+#define ADC_AVGE		(0x1 << 5)
- #define ADC_CAL			(0x1 << 7)
- #define ADC_CALF		0x2
- #define ADC_12BIT_MODE		(0x2 << 2)
-@@ -32,6 +33,7 @@
- #define ADC_CLK_DIV_8		(0x03 << 5)
- #define ADC_SHORT_SAMPLE_MODE	(0x0 << 4)
- #define ADC_HARDWARE_TRIGGER	(0x1 << 13)
-+#define ADC_AVGS_SHIFT		14
- #define SELECT_CHANNEL_4	0x04
- #define SELECT_CHANNEL_1	0x01
- #define DISABLE_CONVERSION_INT	(0x0 << 7)
-@@ -86,6 +88,7 @@ struct imx6ul_tsc {
- 
- 	int measure_delay_time;
- 	int pre_charge_time;
-+	int average_samples;
- 
- 	struct completion completion;
- };
-@@ -107,6 +110,8 @@ static int imx6ul_adc_init(struct imx6ul_tsc *tsc)
- 	adc_cfg = readl(tsc->adc_regs + REG_ADC_CFG);
- 	adc_cfg |= ADC_12BIT_MODE | ADC_IPG_CLK;
- 	adc_cfg |= ADC_CLK_DIV_8 | ADC_SHORT_SAMPLE_MODE;
-+	if (tsc->average_samples)
-+		adc_cfg |= (tsc->average_samples - 1) << ADC_AVGS_SHIFT;
- 	adc_cfg &= ~ADC_HARDWARE_TRIGGER;
- 	writel(adc_cfg, tsc->adc_regs + REG_ADC_CFG);
- 
-@@ -118,6 +123,8 @@ static int imx6ul_adc_init(struct imx6ul_tsc *tsc)
- 	/* start ADC calibration */
- 	adc_gc = readl(tsc->adc_regs + REG_ADC_GC);
- 	adc_gc |= ADC_CAL;
-+	if (tsc->average_samples)
-+		adc_gc |= ADC_AVGE;
- 	writel(adc_gc, tsc->adc_regs + REG_ADC_GC);
- 
- 	timeout = wait_for_completion_timeout
-@@ -450,6 +457,16 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
- 	if (err)
- 		tsc->pre_charge_time = 0xfff;
- 
-+	err = of_property_read_u32(np, "average-samples",
-+				   &tsc->average_samples);
-+	if (err)
-+		tsc->average_samples = 0;
-+	if (tsc->average_samples > 4) {
-+		dev_err(&pdev->dev, "average-samples (%u) must be [0-4]\n",
-+			tsc->average_samples);
-+		return -EINVAL;
-+	}
-+
- 	err = input_register_device(tsc->input);
- 	if (err) {
- 		dev_err(&pdev->dev,
--- 
-2.1.4
+CgoyMi4xMS4yMDE2LCAwMDoyNiwgIkljZW5vd3kgWmhlbmciIDxpY2Vub3d5QGFvc2MueHl6PjoK
+PiBPcmFuZ2UgUGkgWmVybyBpcyBhIGJvYXJkIHRoYXQgY2FtZSB3aXRoIHRoZSBuZXcgQWxsd2lu
+bmVyIEgyKyBTb0MuCj4KPiBBZGQgYSBkZXZpY2UgdHJlZSBmaWxlIGZvciBpdC4KPgo+IFNpZ25l
+ZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4gLS0tCj4gQ2hhbmdl
+cyBzaW5jZSB2MjoKPiAtIFVzZSBnZW5lcmljIHBpbmNvbmYgYmluZGluZyBpbnN0ZWFkIG9mIGxl
+Z2FjeSBhbGx3aW5uZXIgcGluY3RybCBiaW5kaW5nLgo+IC0gcmVtb3ZlZCB1YXJ0Mywgd2hpY2gg
+aXMgbm90IGFjY2Vzc2libGUgb24gT3JhbmdlIFBpIFplcm8uCj4gLSBSZW1vdmVkIHN1bjhpLWgy
+cGx1cy5kdHNpIGFuZCBtYWtlIE9yYW5nZSBQaSBaZXJvIGR0cyBkaXJlY3RseSBpbmNsdWRlCj4g
+wqDCoHN1bjhpLWgzLmR0c2kuCj4gLSBSZW1vdmVkIGFsbHdpbm5lcixzdW44aS1oMyBjb21wYXRp
+YmxlLgo+Cj4gwqBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSB8IDEgKwo+IMKgYXJjaC9hcm0v
+Ym9vdC9kdHMvc3VuOGktaDJwbHVzLW9yYW5nZXBpLXplcm8uZHRzIHwgMTM3ICsrKysrKysrKysr
+KysrKysrKysrKysrCj4gwqAyIGZpbGVzIGNoYW5nZWQsIDEzOCBpbnNlcnRpb25zKCspCj4gwqBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDJwbHVzLW9yYW5nZXBp
+LXplcm8uZHRzCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9h
+cmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQo+IGluZGV4IDgwMmExMGQuLjUxYTFkZDcgMTAwNjQ0
+Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9NYWtlZmlsZQo+IEBAIC04MzQsNiArODM0LDcgQEAgZHRiLSQoQ09ORklHX01BQ0hfU1VO
+OEkpICs9IFwKPiDCoMKgwqDCoMKgwqDCoMKgwqBzdW44aS1hMzMtc2lubGlueC1zaW5hMzMuZHRi
+IFwKPiDCoMKgwqDCoMKgwqDCoMKgwqBzdW44aS1hODN0LWFsbHdpbm5lci1oOGhvbWxldC12Mi5k
+dGIgXAo+IMKgwqDCoMKgwqDCoMKgwqDCoHN1bjhpLWE4M3QtY3ViaWV0cnVjay1wbHVzLmR0YiBc
+Cj4gKyBzdW44aS1oMnBsdXMtb3JhbmdlcGktemVyby5kdGIgXAo+IMKgwqDCoMKgwqDCoMKgwqDC
+oHN1bjhpLWgzLWJhbmFuYXBpLW0yLXBsdXMuZHRiIFwKPiDCoMKgwqDCoMKgwqDCoMKgwqBzdW44
+aS1oMy1uYW5vcGktbmVvLmR0YiBcCj4gwqDCoMKgwqDCoMKgwqDCoMKgc3VuOGktaDMtb3Jhbmdl
+cGktMi5kdGIgXAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMnBsdXMt
+b3JhbmdlcGktemVyby5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1oMnBsdXMtb3Jhbmdl
+cGktemVyby5kdHMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmI0Mjhl
+NDcKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDJwbHVz
+LW9yYW5nZXBpLXplcm8uZHRzCj4gQEAgLTAsMCArMSwxMzcgQEAKPiArLyoKPiArICogQ29weXJp
+Z2h0IChDKSAyMDE2IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4gKyAqCj4gKyAq
+IEJhc2VkIG9uIHN1bjhpLWgzLW9yYW5nZXBpLW9uZS5kdHMsIHdoaWNoIGlzOgo+ICsgKiBDb3B5
+cmlnaHQgKEMpIDIwMTYgSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KPiArICoK
+PiArICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1
+bmRlciB0aGUgdGVybXMKPiArICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlv
+dXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCj4gKyAqIGxpY2Vuc2luZyBvbmx5IGFwcGxp
+ZXMgdG8gdGhpcyBmaWxlLCBhbmQgbm90IHRoaXMgcHJvamVjdCBhcyBhCj4gKyAqIHdob2xlLgo+
+ICsgKgo+ICsgKiBhKSBUaGlzIGZpbGUgaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3Ry
+aWJ1dGUgaXQgYW5kL29yCj4gKyAqIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
+VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzCj4gKyAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBT
+b2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZQo+ICsgKiBMaWNlbnNl
+LCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+ICsgKgo+ICsgKiBUaGlz
+IGZpbGUgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwK
+PiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQg
+d2FycmFudHkgb2YKPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElD
+VUxBUiBQVVJQT1NFLiBTZWUgdGhlCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZv
+ciBtb3JlIGRldGFpbHMuCj4gKyAqCj4gKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAo+ICsgKgo+ICsg
+KiBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJnZSwgdG8gYW55
+IHBlcnNvbgo+ICsgKiBvYnRhaW5pbmcgYSBjb3B5IG9mIHRoaXMgc29mdHdhcmUgYW5kIGFzc29j
+aWF0ZWQgZG9jdW1lbnRhdGlvbgo+ICsgKiBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBkZWFs
+IGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0Cj4gKyAqIHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0
+aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNlLAo+ICsgKiBjb3B5LCBtb2RpZnksIG1l
+cmdlLCBwdWJsaXNoLCBkaXN0cmlidXRlLCBzdWJsaWNlbnNlLCBhbmQvb3IKPiArICogc2VsbCBj
+b3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUK
+PiArICogU29mdHdhcmUgaXMgZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xs
+b3dpbmcKPiArICogY29uZGl0aW9uczoKPiArICoKPiArICogVGhlIGFib3ZlIGNvcHlyaWdodCBu
+b3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUKPiArICogaW5jbHVkZWQg
+aW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUuCj4g
+KyAqCj4gKyAqIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJB
+TlRZIE9GIEFOWSBLSU5ELAo+ICsgKiBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQg
+Tk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKPiArICogT0YgTUVSQ0hBTlRBQklMSVRZLCBG
+SVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQKPiArICogTk9OSU5GUklOR0VNRU5U
+LiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQKPiArICogSE9MREVS
+UyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCj4g
+KyAqIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNULCBUT1JUIE9SIE9USEVSV0lTRSwg
+QVJJU0lORwo+ICsgKiBGUk9NLCBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZU
+V0FSRSBPUiBUSEUgVVNFIE9SCj4gKyAqIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4K
+PiArICovCj4gKwo+ICsvZHRzLXYxLzsKPiArI2luY2x1ZGUgInN1bjhpLWgzLmR0c2kiCj4gKyNp
+bmNsdWRlICJzdW54aS1jb21tb24tcmVndWxhdG9ycy5kdHNpIgo+ICsKPiArI2luY2x1ZGUgPGR0
+LWJpbmRpbmdzL2dwaW8vZ3Bpby5oPgo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW5wdXQvaW5w
+dXQuaD4KPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwvc3VuNGktYTEwLmg+Cj4gKwo+
+ICsvIHsKPiArIG1vZGVsID0gIlh1bmxvbmcgT3JhbmdlIFBpIFplcm8iOwo+ICsgY29tcGF0aWJs
+ZSA9ICJ4dW5sb25nLG9yYW5nZXBpLXplcm8iLCAiYWxsd2lubmVyLHN1bjhpLWgycGx1cyI7Cj4g
+Kwo+ICsgYWxpYXNlcyB7Cj4gKyBzZXJpYWwwID0gJnVhcnQwOwo+ICsgfTsKPiArCj4gKyBjaG9z
+ZW4gewo+ICsgc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7Cj4gKyB9Owo+ICsKPiAr
+IGxlZHMgewo+ICsgY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOwo+ICsgcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsKPiArIHBpbmN0cmwtMCA9IDwmbGVkc19vcGkwPiwgPCZsZWRzX3Jfb3BpMD47
+Cj4gKwo+ICsgcHdyX2xlZCB7Cj4gKyBsYWJlbCA9ICJvcmFuZ2VwaTpncmVlbjpwd3IiOwo+ICsg
+Z3Bpb3MgPSA8JnJfcGlvIDAgMTAgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyBkZWZhdWx0LXN0YXRl
+ID0gIm9uIjsKPiArIH07Cj4gKwo+ICsgc3RhdHVzX2xlZCB7Cj4gKyBsYWJlbCA9ICJvcmFuZ2Vw
+aTpyZWQ6c3RhdHVzIjsKPiArIGdwaW9zID0gPCZwaW8gMCAxNyBHUElPX0FDVElWRV9ISUdIPjsK
+PiArIH07Cj4gKyB9Owo+ICt9Owo+ICsKPiArJmVoY2kxIHsKPiArIHN0YXR1cyA9ICJva2F5IjsK
+PiArfTsKPiArCj4gKyZtbWMwIHsKPiArIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKyBw
+aW5jdHJsLTAgPSA8Jm1tYzBfcGluc19hPiwgPCZtbWMwX2NkX3Bpbj47Cj4gKyB2bW1jLXN1cHBs
+eSA9IDwmcmVnX3ZjYzN2Mz47Cj4gKyBidXMtd2lkdGggPSA8ND47Cj4gKyBjZC1ncGlvcyA9IDwm
+cGlvIDUgNiBHUElPX0FDVElWRV9ISUdIPjsgLyogUEY2ICovCj4gKyBjZC1pbnZlcnRlZDsKPiAr
+IHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gKyZvaGNpMSB7Cj4gKyBzdGF0dXMgPSAib2th
+eSI7Cj4gK307Cj4gKwo+ICsmcGlvIHsKPiArIGxlZHNfb3BpMDogbGVkX3BpbnNAMCB7Cj4gKyBw
+aW5zID0gIlBBMTciOwo+ICsgZnVuY3Rpb24gPSAiZ3Bpb19vdXQiOwo+ICsgfTsKPiArfTsKPiAr
+Cj4gKyZyX3BpbyB7Cj4gKyBsZWRzX3Jfb3BpMDogbGVkX3BpbnNAMCB7Cj4gKyBwaW5zID0gIlBM
+MTAiOwo+ICsgZnVuY3Rpb24gPSAiZ3Bpb19vdXQiOwo+ICsgfTsKPiArfTsKPiArCj4gKyZ1YXJ0
+MCB7Cj4gKyBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsgcGluY3RybC0wID0gPCZ1YXJ0
+MF9waW5zX2E+Owo+ICsgc3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+ICsKPiArJnVhcnQxIHsKPiAr
+IHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKyBwaW5jdHJsLTAgPSA8JnVhcnQxX3BpbnM+
+Owo+ICsgc3RhdHVzID0gImRpc2FibGVkIjsKPiArfTsKPiArCj4gKyZ1YXJ0MiB7Cj4gKyBwaW5j
+dHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsgcGluY3RybC0wID0gPCZ1YXJ0Ml9waW5zPjsKPiAr
+IHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gK307Cj4gKwo+ICsmdXNicGh5IHsKPiArIC8qIFVTQiBW
+QlVTIGlzIGFsd2F5cyBvbiAqLwo+ICsgc3RhdHVzID0gIm9rYXkiOwo+ICt9OwoKU29tZXRoaW5n
+IG1vcmUgaW50ZXJlc3RpbmcgaGFwcGVuZWQuCgpYdW5sb25nIG1hZGUgYSBhZGQtb24gYm9hcmQg
+Zm9yIE9yYW5nZSBQaSBaZXJvLCB3aGljaCBleHBvc2VzIHRoZSB0d28gVVNCIENvbnRyb2xsZXJz
+IGV4cG9ydGVkIGF0IGV4cGFuc2lvbiBidXMgYXMgVVNCIFR5cGUtQSBjb25uZWN0b3JzLgoKQWxz
+byBpdCBleHBvc2VzIGEgYW5hbG9nIEEvViBqYWNrIGFuZCBhIG1pY3JvcGhvbmUuCgpTaG91bGQg
+SSBlbmFibGUge2Usb31oY2l7Mi4zfSBpbiB0aGUgZGV2aWNlIHRyZWU/Cgo+IC0tCj4gMi4xMC4y
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
