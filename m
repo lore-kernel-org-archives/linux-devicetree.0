@@ -1,112 +1,89 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] IIO: add bindings for stm32 IIO timer driver
-Date: Sun, 27 Nov 2016 15:51:01 +0000
-Message-ID: <7ed9fe79-55bf-4085-d416-d793a2692a62@kernel.org>
-References: <1480000463-9625-1-git-send-email-benjamin.gaignard@st.com>
- <1480000463-9625-6-git-send-email-benjamin.gaignard@st.com>
- <b2002a81-49fe-af2a-f13a-9f09831aa530@kernel.org>
- <CA+M3ks6LC5M3B01nRWh-bO79OOE11QcsypDXGpFAPzZ7Goc=Fw@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] ARM: dts: add support for Turris Omnia
+Date: Sun, 27 Nov 2016 17:00:33 +0100
+Message-ID: <a7f47999-ec83-6cc8-8119-0087dee17bac@suse.de>
+References: <20161125142658.21690-1-uwe@kleine-koenig.org>
+ <20161125142658.21690-3-uwe@kleine-koenig.org>
+ <87lgw7ilg9.fsf@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+M3ks6LC5M3B01nRWh-bO79OOE11QcsypDXGpFAPzZ7Goc=Fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linaro Kernel Mailman List <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87lgw7ilg9.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?QmVkxZlpY2hhIEtvxaFhdHU=?= <bedrich.kosata-x+rMaJPWets@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Hrusecky <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/11/16 15:45, Benjamin Gaignard wrote:
-> 2016-11-27 15:25 GMT+01:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On 24/11/16 15:14, Benjamin Gaignard wrote:
->>> Define bindings for stm32 IIO timer
->>>
->>> version 2:
->>> - only keep one compatible
->>> - add DT parameters to set lists of the triggers:
->>>   one list describe the triggers created by the device
->>>   another one give the triggers accepted by the device
->>>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
->>> ---
->>>  .../bindings/iio/timer/stm32-iio-timer.txt         | 41 ++++++++++++++++++++++
->>>  1 file changed, 41 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
->>> new file mode 100644
->>> index 0000000..840b417
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/timer/stm32-iio-timer.txt
->>> @@ -0,0 +1,41 @@
->>> +timer IIO trigger bindings for STM32
->>> +
->>> +Must be a sub-node of STM32 general purpose timer driver
->> Add a cross reference...
-> 
-> I will add it in v3
-> 
->>> +
->>> +Required parameters:
->>> +- compatible:                must be "st,stm32-iio-timer"
->> st,stm32-adc-timer or something like that.
-> 
-> I would prefer use st,stm32-timer-trigger because triggers can be used
-> for multiple other devices (dac, adc, timers)
-> 
->>> +- interrupts:                Interrupt for this device
->>> +                     See ../interrupt-controller/st,stm32-exti.txt
->>> +
->>> +Optional parameters:
->>> +- st,input-triggers-names:   List of the possible input triggers for
->>> +                             the device
->>> +- st,output-triggers-names:  List of the possible output triggers for
->>> +                             the device
->> What are input / output triggers?
-> 
-> each hardware block can be the source of triggers (output triggers) or customer
-> of some other trigger (input triggers).That what I have tried to
-> describe in those two
-> parameters
-So this is really about using one timer as a prescaler for another?
-
-I'd be tempted in the first instance to drop that functionality and just
-describe the ones that drive the device sampling.
-
-It's complex to describe and there is enough complexity in here already
-to keep things busy for a while!
-> 
->>> +
->>> +Possible triggers are defined in include/dt-bindings/iio/timer/st,stm32-iio-timer.h
->>> +
->>> +Example:
->>> +     gptimer1: gptimer1@40010000 {
->>> +             compatible = "st,stm32-gptimer";
->>> +             reg = <0x40010000 0x400>;
->>> +             clocks = <&rcc 0 160>;
->>> +             clock-names = "clk_int";
->>> +
->>> +             pwm1@0 {
->>> +                     compatible = "st,stm32-pwm";
->>> +                     st,pwm-num-chan = <4>;
->>> +                     st,breakinput;
->>> +                     st,complementary;
->>> +             };
->>> +
->>> +             iiotimer1@0 {
->>> +                     compatible = "st,stm32-iio-timer";
->>> +                     interrupts = <27>;
->>> +                     st,input-triggers-names = TIM5_TRGO,
->>> +                                               TIM2_TRGO,
->>> +                                               TIM4_TRGO,
->>> +                                               TIM3_TRGO;
->>> +                     st,output-triggers-names = TIM1_TRGO;
->>> +             };
->>> +     };
->>>
+Am 25.11.2016 um 17:16 schrieb Gregory CLEMENT:
+> On ven., nov. 25 2016, Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> wrote:
+>> This machine is an open hardware router by cz.nic driven by a
+>> Marvell Armada 385.
 >>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 > 
+> Applied on mvebu/dt with few changes:
+[...]
+>> +&spi0 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&spi0_pins &spi0cs0_pins>;
+>> +	status = "okay";
+>> +
+>> +	spi-nor@0 {
+>> +		compatible = "spansion,s25fl164k", "jedec,spi-nor";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		reg = <0>;
+>> +		spi-max-frequency = <40000000>;
+>> +
+> 
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> it is mandatory since v4.4 to use this pattern for partitions.
+> 
+> 
+>> +		partition@0 {
+>> +			reg = <0x0 0x00100000>;
+>> +			label = "U-Boot";
+>> +		};
+>> +
+>> +		partition@1 {
+>                          @0x100000
+> We should use the reg value here ^
+
+The unit name should be without 0x though. In your tree you seem to have
+it correctly.
+
+@Uwe: Note that I had already told CZ.NIC's Michal ~two weeks ago that I
+have a WIP .dts for the Omnia - looks like no one knows what the other
+is doing. :( My branch includes cleanups for 385 .dtsi and bug fixes for
+the switch that I am not seeing in your series:
+
+https://github.com/afaerber/linux/commits/omnia-next
+
+I am still looking into phy backtraces when the network interfaces go down.
+
+@Gregory: Can we please follow up with cleaning up these ugly
+internal-regs and pcie-controller nodes for consistency?
+
+Regards,
+Andreas
+
+>> +			reg = <0x00100000 0x00700000>;
+>> +			label = "Rescue system";
+>> +		};
+> 
+> + };
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
