@@ -1,92 +1,131 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCH 2/2] net: dsa: mv88e6xxx: Add 88E6176 device tree support
-Date: Mon, 28 Nov 2016 09:09:40 +0100
-Message-ID: <20161128080939.ippqlytvojitefkp@perseus.defre.kleine-koenig.org>
-References: <1480280279-9552-1-git-send-email-afaerber@suse.de>
- <1480280279-9552-2-git-send-email-afaerber@suse.de>
- <20161127212709.GD13318@lunn.ch>
- <9500470d-09c3-3ecb-994b-3d108bffc99e@suse.de>
- <20161127220846.GH13318@lunn.ch>
- <e5d45b55-a4c1-3b5e-0bdc-a5e340b072d0@suse.de>
- <20161127231009.GA17704@lunn.ch>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 3/3] dt-bindings: display: add Amlogic Meson DRM
+ Bindings
+Date: Mon, 28 Nov 2016 10:33:07 +0200
+Message-ID: <3721857.XEGXu9B51N@avalon>
+References: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
+ <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f5cgf4jnlrji24wl"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161127231009.GA17704@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michal Hrusecki <Michal.Hrusecky@nic.cz>, Tomas Hlavacek <tomas.hlavacek@nic.cz>, Bed??icha Ko??atu <bedrich.kosata@nic.cz>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Xing.Xu@amlogic.com, victor.wan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, carlo@caione.org, jerry.cao@amlogic.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---f5cgf4jnlrji24wl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Andrew,
-
-On Mon, Nov 28, 2016 at 12:10:09AM +0100, Andrew Lunn wrote:
-> > Try to see it from my perspective: I see that some vf610 device I don't
-> > have (found via `git grep marvell,mv88e6` or so) uses
-> > "marvell,mv88e6085". I then assume it has that device on board. How
-> > would I know it doesn't? Same for the other boards you mention.
-> >=20
-> > Unfortunately some of your replies are slightly cryptic. Had you simply
-> > replied 'please just use "marvell,mv88e6085" instead', it would've been
-> > much more clear what you want. (Same for extending the subject instead
-> > of just pointing to some FAQ.)
->=20
-> By reading the FAQ you have learnt more than me saying put the correct
-> tree in the subject line. By asking you to explain why you need a
-> compatible string, i'm trying to make you think, look at the code and
-> understand it. In the future, you might think and understand the code
-> before posting a patch, and then we all save time.
-
-I agree to Andreas though, that it makes an school teacher impression.
-Something like:
-
-	Please fix the subject. Check the FAQ for the details, which btw
-	is worth a read completely.
-
-is IMHO better in this regard and once you found the problem there you
-don't need to ask back if it's that what was meant.
-
-> > So are you okay with patch 1/2 documenting the compatible? Then we could
-> > drop 2/2 and use "marvell,mv88e6176", "marvell,mv88e6085" instead of
-> > just the latter. Or would you rather drop both and keep the actual chip
-> > a comment?
->=20
-> A comment only please.
-
-I still wonder (and didn't get an answer back when I asked about this)
-why a comment is preferred here. For other devices I know it's usual and
-requested by the maintainers to use:
-
-	compatible =3D "exact name", "earlyer device to match driver";
-
-=2E This is more robust, documents the situation more formally and makes
-it better greppable. The price to pay is only a few bytes in the dtb
-which IMO is ok.
-
-Best regards
-Uwe
-
---f5cgf4jnlrji24wl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAlg75kAACgkQwfwUeK3K
-7Amp1Af8Djhoytsdm7xFsAHwRRAmvzasbH0hBOEkn1cRn8GWH6J58pFJs9qyAMZY
-C+9apAJW+CaEp4dONvDBvx8oHegxwK7MQIkjhOmo0rnx7Kw54m7bcdFIGsNbdyI5
-ZifbKVVIlKrC5grulckNRWsvOJJaxc44zFVI9yg+okQIZEPv1Xtu0HWvp3Xc8ORA
-7W31OolUYPdtguiw9Xh59P+/85ob1akxb+cC7+19hhrMCFF6WbIjXdAs596lc1Rj
-HcyEfmyLhpZFodQC5YDIWqe/Y0H+pC4FF6H7B2PWab/6FshzklssYda29D2oYdG2
-obHoL1O4X3Ipr2dDw+QLVcobyQ2nyA==
-=KSyR
------END PGP SIGNATURE-----
-
---f5cgf4jnlrji24wl--
+SGkgTmVpbCwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gRnJpZGF5IDI1IE5vdiAyMDE2
+IDE3OjAzOjExIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJt
+c3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rp
+c3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dCAgICAgICAgICAgfCAxMzQgKysrKysrKysrKysrKysr
+KysKPiAgMSBmaWxlIGNoYW5nZWQsIDEzNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lc29uL21l
+c29uLWRybS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dCBuZXcgZmlsZQo+IG1v
+ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uODljMWI1Zgo+IC0tLSAvZGV2L251bGwKPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZXNvbi9tZXNvbi1k
+cm0udHh0Cj4gQEAgLTAsMCArMSwxMzQgQEAKPiArQW1sb2dpYyBNZXNvbiBEaXNwbGF5IENvbnRy
+b2xsZXIKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBBbWxv
+Z2ljIE1lc29uIERpc3BsYXkgY29udHJvbGxlciBpcyBjb21wb3NlZCBvZiBzZXZlcmFsIGNvbXBv
+bmVudHMKPiArdGhhdCBhcmUgZ29pbmcgdG8gYmUgZG9jdW1lbnRlZCBiZWxvdzoKPiArCj4gK0RN
+Q3wtLS0tLS0tLS0tLS0tLS1WUFUgKFZpZGVvIFByb2Nlc3NpbmcgVW5pdCktLS0tLS0tLS0tLS18
+LS0tLS0tSEhJLS0tLS0tfAo+ICsgICB8IHZkMSAgIF9fX19fX18gICAgIF9fX19fX19fX19fX18g
+ICAgX19fX19fX19fX19fXyAgICAgfCAgICAgICAgICAgICAgIHwKPiArRCAgfC0tLS0tLS18ICAg
+ICAgfC0tLS18ICAgICAgICAgICAgfCAgIHwgICAgICAgICAgICB8ICAgIHwgICBIRE1JIFBMTCAg
+ICB8Cj4gK0QgIHwgdmQyICAgfCBWSVUgIHwgICAgfCBWaWRlbyBQb3N0IHwgICB8IFZpZGVvIEVu
+Y3MgfDwtLS18LS0tLS1WQ0xLICAgICAgfAo+ICtSICB8LS0tLS0tLXwgICAgICB8LS0tLXwgUHJv
+Y2Vzc2luZyB8ICAgfCAgICAgICAgICAgIHwgICAgfCAgICAgICAgICAgICAgIHwKPiArICAgfCBv
+c2QyICB8ICAgICAgfCAgICB8ICAgICAgICAgICAgfC0tLXwgRW5jaSAtLS0tLS18LS0tLXwtLS0t
+LVZEQUMtLS0tLS18Cj4gK1IgIHwtLS0tLS0tfCBDU0MgIHwtLS0tfCBTY2FsZXJzICAgIHwgICB8
+IEVuY3AgLS0tLS0tfC0tLS18LS0tLUhETUktVFgtLS0tfAo+ICtBICB8IG9zZDEgIHwgICAgICB8
+ICAgIHwgQmxlbmRlcnMgICB8ICAgfCBFbmNsLS0tLS0tLXwtLS0tfC0tLS0tLS0tLS0tLS0tLXwK
+PiArTSAgfC0tLS0tLS18X19fX19ffC0tLS18X19fX19fX19fX19ffCAgIHxfX19fX19fX19fX198
+ICAgIHwgICAgICAgICAgICAgICB8Cj4gK19fX3xfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX198X19fX19fX19fX19fX19ffAo+ICsKPiArCj4gK1ZJ
+VTogVmlkZW8gSW5wdXQgVW5pdAo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBW
+aWRlbyBJbnB1dCBVbml0IGlzIGluIGNoYXJnZSBvZiB0aGUgcGl4ZWwgc2Nhbm91dCBmcm9tIHRo
+ZSBERFIgbWVtb3J5Lgo+ICtJdCBmZXRjaGVzIHRoZSBmcmFtZXMgYWRkcmVzc2VzLCBzdHJpZGUg
+YW5kIHBhcmFtZXRlcnMgZnJvbSB0aGUgIkNhbnZhcyIKPiBtZW1vcnkuCj4gK1RoaXMgcGFydCBp
+cyBhbHNvIGluIGNoYXJnZSBvZiB0aGUgQ1NDIChDb2xvcnNwYWNlIENvbnZlcnNpb24pLgo+ICtJ
+dCBjYW4gaGFuZGxlIDIgT1NEIFBsYW5lcyBhbmQgMiBWaWRlbyBQbGFuZXMuCj4gKwo+ICtWUFA6
+IFZpZGVvIFByb2Nlc3NpbmcgVW5pdAoKRG8geW91IG1lYW4gIlZpZGVvIFBvc3QgUHJvY2Vzc2lu
+ZyIgPyBJbiB5b3VyIGRpYWdyYW0gYWJvdmUgVmlkZW8gUHJvY2Vzc2luZyAKVW5pdCBpcyBhYmJy
+ZXZpYXRlZCBWUFUgYW5kIGNvdmVycyB0aGUgVklVLCBWUFAgYW5kIGVuY29kZXJzLgoKPiArLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWaWRlbyBQcm9jZXNzaW5nIFVuaXQg
+aXMgaW4gY2hhcmdlIGlmIHRoZSBzY2FsaW5nIGFuZCBibGVuZGluZyBvZiB0aGUKPiArdmFyaW91
+cyBwbGFuZXMgaW50byBhIHNpbmdsZSBwaXhlbCBzdHJlYW0uCj4gK1RoZXJlIGlzIGEgc3BlY2lh
+bCAicHJlLWJsZW5kaW5nIiB1c2VkIGJ5IHRoZSB2aWRlbyBwbGFuZXMgd2l0aCBhIGRlZGljYXRl
+ZAo+ICtzY2FsZXIgYW5kIGEgInBvc3QtYmxlbmRpbmciIHRvIG1lcmdlIHdpdGggdGhlIE9TRCBQ
+bGFuZXMuCj4gK1RoZSBPU0QgcGxhbmVzIGFsc28gaGF2ZSBhIGRlZGljYXRlZCBzY2FsZXIgZm9y
+IG9uZSBvZiB0aGUgT1NELgo+ICsKPiArVkVOQzogVmlkZW8gRW5jb2RlcnMKPiArLS0tLS0tLS0t
+LS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWRU5DIGlzIGNvbXBvc2VkIG9mIHRoZSBtdWx0aXBsZSBw
+aXhlbCBlbmNvZGVycyA6Cj4gKyAtIEVOQ0kgOiBJbnRlcmxhY2UgVmlkZW8gZW5jb2RlciBmb3Ig
+Q1ZCUyBhbmQgSW50ZXJsYWNlIEhETUkKPiArIC0gRU5DUCA6IFByb2dyZXNzaXZlIFZpZGVvIEVu
+Y29kZXIgZm9yIEhETUkKPiArIC0gRU5DTCA6IExDRCBMVkRTIEVuY29kZXIKPiArVGhlIFZFTkMg
+VW5pdCBnZXRzIGEgUGl4ZWwgQ2xvY2tzIChWQ0xLKSBmcm9tIGEgZGVkaWNhdGVkIEhETUkgUExM
+IGFuZAo+IGNsb2NrCj4gK3RyZWUgYW5kIHByb3ZpZGVzIHRoZSBzY2Fub3V0IGNsb2NrIHRvIHRo
+ZSBWUFAgYW5kIFZJVS4KPiArVGhlIEVOQ0kgaXMgY29ubmVjdGVkIHRvIGEgc2luZ2xlIFZEQUMg
+Zm9yIENvbXBvc2l0ZSBPdXRwdXQuCj4gK1RoZSBFTkNJIGFuZCBFTkNQIGFyZSBjb25uZWN0ZWQg
+dG8gYW4gb24tY2hpcCBIRE1JIFRyYW5zY2VpdmVyLgo+ICsKPiArRGV2aWNlIFRyZWUgQmluZGlu
+Z3M6Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVlBVOiBWaWRlbyBQcm9jZXNzaW5n
+IFVuaXQKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4gKyAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBkaWZmZXJlbnQgZm9yIGVh
+Y2ggU29DIGZhbWlseSBhcyA6Cj4gKyAJLSBHWEJCIChTOTA1KSA6ICJhbWxvZ2ljLG1lc29uLWd4
+YmItdnB1Igo+ICsgCS0gR1hMIChTOTA1WCwgUzkwNUQpIDogImFtbG9naWMsbWVzb24tZ3hsLXZw
+dSIKPiArIAktIEdYTSAoUzkxMikgOiAiYW1sb2dpYyxtZXNvbi1neG0tdnB1Igo+ICsJZm9sbG93
+ZWQgYnkgdGhlIGNvbW1vbiAiYW1sb2dpYyxtZXNvbi1neC12cHUiCj4gKyAtIHJlZzogYmFzZSBh
+ZGRyZXNzIGFuZCBzaXplIG9mIGhlIGZvbGxvd2luZyBtZW1vcnktbWFwcGVkIHJlZ2lvbnMgOgo+
+ICsJLSB2cHUKPiArCS0gaGhpCj4gKwktIGRtYwo+ICsgLSByZWctbmFtZXM6IHNob3VsZCBjb250
+YWluIHRoZSBuYW1lcyBvZiB0aGUgcHJldmlvdXMgbWVtb3J5IHJlZ2lvbnMKPiArIC0gaW50ZXJy
+dXB0czogc2hvdWxkIGNvbnRhaW4gdGhlIFZFTkMgVnN5bmMgaW50ZXJydXB0IG51bWJlcgo+ICsK
+PiArLSBwb3J0czogQSBwb3J0cyBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVm
+aW5lZCBpbgo+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRl
+by1pbnRlcmZhY2VzLnR4dC4gVGhlCj4gKyAgc2Vjb25kIHBvcnQgc2hvdWxkIGJlIHRoZSBvdXRw
+dXQgZW5kcG9pbnRzIGZvciBWRU5DIGNvbm5lY3RvcnMuCj4gKwo+ICtWRU5DIENCVlMgT3V0cHV0
+Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWRU5DIGNhbiBvdXRwdXQgQ29t
+cG9zaXRlL0NWQlMgb3V0cHV0IHZpYSBhIGRlY2ljYXRlZCBWREFDLgo+ICsKPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgb25lIG9mOgo+ICsg
+LSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgZGlmZmVyZW50IGZvciBlYWNoIFNvQyBmYW1p
+bHkgYXMgOgoKT25lIG9mIHRob3NlIHR3byBsaW5lcyBpcyByZWR1bmRhbnQuCgo+ICsgCS0gR1hC
+QiAoUzkwNSkgOiAiYW1sb2dpYyxtZXNvbi1neGJiLXZlbmMtY3ZicyIKPiArIAktIEdYTCAoUzkw
+NVgsIFM5MDVEKSA6ICJhbWxvZ2ljLG1lc29uLWd4bC12ZW5jLWN2YnMiCj4gKyAJLSBHWE0gKFM5
+MTIpIDogImFtbG9naWMsbWVzb24tZ3htLXZlbmMtY3ZicyIKPiArCWZvbGxvd2VkIGJ5IHRoZSBj
+b21tb24gImFtbG9naWMsbWVzb24tZ3gtdmVuYy1jdmJzIgo+ICsKCk5vIHJlZ2lzdGVycyA/IEFy
+ZSB0aGUgZW5jb2RlcnMgcmVnaXN0ZXJzIHBhcnQgb2YgdGhlIFZQVSByZWdpc3RlciBzcGFjZSwg
+CmludGVydHdpbmVkIGluIGEgd2F5IHRoYXQgdGhleSBjYW4ndCBiZSBzcGVjaWZpZWQgc2VwYXJh
+dGVseSBoZXJlID8KCj4gKy0gcG9ydHM6IEEgcG9ydHMgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmlu
+aXRpb25zIGFzIGRlZmluZWQgaW4KPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoZQo+ICsgIGZpcnN0IHBvcnQgc2hvdWxk
+IGJlIHRoZSBpbnB1dCBlbmRwb2ludHMsIGNvbm5lY3RlZCBvdCB0aGUgVlBVIG5vZGUuCj4gKwo+
+ICtFeGFtcGxlOgo+ICsKPiArdmVuY19jdmJzOiB2ZW5jLWN2YnMgewo+ICsJY29tcGF0aWJsZSA9
+ICJhbWxvZ2ljLG1lc29uLWd4YmItdmVuYy1jdmJzIjsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiAr
+Cj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMg
+PSA8MD47Cj4gKwo+ICsJCWVuY19jdmJzX2luOiBwb3J0QDAgewo+ICsJCQkgI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4gKwkJCSAjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQkJIHJlZyA9IDwwPjsKPiAr
+Cj4gKwkJCSB2ZW5jX2N2YnNfaW5fdnB1OiBlbmRwb2ludEAwIHsKPiArCQkJCSByZWcgPSA8MD47
+Cj4gKwkJCQkgcmVtb3RlLWVuZHBvaW50ID0gPCZ2cHVfb3V0X3ZlbmNfY3Zicz47Cj4gKwkJCX07
+Cj4gKwkJfTsKPiArCX07Cj4gK307Cj4gKwo+ICt2cHU6IHZwdUBkMDEwMDAwMCB7Cj4gKwljb21w
+YXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3hiYi12cHUiOwo+ICsJcmVnID0gPDB4MCAweGQwMTAw
+MDAwIDB4MCAweDEwMDAwMD4sCj4gKwkgICAgICA8MHgwIDB4Yzg4M2MwMDAgMHgwIDB4MTAwMD4s
+Cj4gKwkgICAgICA8MHgwIDB4Yzg4MzgwMDAgMHgwIDB4MTAwMD47Cj4gKwlyZWctbmFtZXMgPSAi
+YmFzZSIsICJoaGkiLCAiZG1jIjsKPiArCWludGVycnVwdHMgPSA8R0lDX1NQSSAzIElSUV9UWVBF
+X0VER0VfUklTSU5HPjsKPiArCj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCXZwdV9vdXQ6IHBvcnRAMSB7Cj4gKwkJ
+CSAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJICNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkg
+cmVnID0gPDE+Owo+ICsKPiArCQkJIHZwdV9vdXRfdmVuY19jdmJzOiBlbmRwb2ludEAwIHsKPiAr
+CQkJCSByZWcgPSA8MD47Cj4gKwkJCQkgcmVtb3RlLWVuZHBvaW50ID0gPCZ2ZW5jX2N2YnNfaW5f
+dnB1PjsKPiArCQkJIH07Cj4gKwkJIH07Cj4gKwl9Owo+ICt9OwoKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
