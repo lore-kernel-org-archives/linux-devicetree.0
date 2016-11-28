@@ -1,113 +1,73 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Mon, 28 Nov 2016 15:19:26 -0800
-Message-ID: <20161128231925.GO6095@codeaurora.org>
-References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
- <1479816163-5260-4-git-send-email-vivek.gautam@codeaurora.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add symlinks for cros-ec-keyboard and
+ cros-ec-sbs
+Date: Mon, 28 Nov 2016 15:51:35 -0800
+Message-ID: <20161128235132.GA71295@google.com>
+References: <1463090530-21864-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479816163-5260-4-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1463090530-21864-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/22, Vivek Gautam wrote:
-> Qualcomm chipsets have QMP phy controller that provides
-> support to a number of controller, viz. PCIe, UFS, and USB.
-> Adding dt binding information for the same.
+Hi Olof, Arnd,
+
+On Thu, May 12, 2016 at 03:02:10PM -0700, Doug Anderson wrote:
+> We'd like to be able to use the cros-ec-keyboard.dtsi and
+> cros-ec-sbs.dtsi snippets for arm64 devices.  Currently those files live
+> in the arm/boot/dts directory.
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Let's follow the convention set by commit 8ee57b8182c4 ("ARM64: dts:
+> vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm") and use
+> a symlink.  Note that in this case we put the files in a new
+> "include/common" directory since these snippets may need to be
+> referenced by dts files in many different subdirectories.
+> 
+> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
+> Note that, as of right now, there are no users of this.  However, given
+> development happening it is almost 100% certain that users will arrive
+> soon.  If we need to wait for the first user before landing this we can
+> leave this on the back burner.  If it's OK to have no users (yet), let's
+> land.
+
+This may not fit your definition of "soon", but I'm looking to start
+using these files in arch/arm64/. I'll probably carry along this patch
+and resend when I'm ready, but it'd be just as well if you'd merge it
+now (or express a preference for a different directory structure).
+
+>  arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi | 1 +
+>  arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi      | 1 +
+>  2 files changed, 2 insertions(+)
+>  create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+>  create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
 > 
-> Changes since v1:
->  - New patch, forked out of the original driver patch:
->    "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
->  - updated bindings to include mem resource as a list of
->    offset - length pair for serdes block and for each lane.
->  - added a new binding for 'lane-offsets' that contains offsets
->    to tx, rx and pcs blocks from each lane base address.
+> \ No newline at end of file
 > 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 74 ++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> new file mode 100644
-> index 0000000..ffb173b
+> diff --git a/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+> new file mode 120000
+> index 000000000000..1c1889f0a791
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -0,0 +1,74 @@
-> +Qualcomm QMP PHY
-> +----------------
-> +
-> +QMP phy controller supports physical layer functionality for a number of
-> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> +
-> +Required properties:
-> + - compatible: compatible list, contains:
-> +	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-> +	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
-> + - reg: list of offset and length pair of the PHY register sets.
-> +	at index 0: offset and length of register set for PHY common
-> +		    serdes block.
-> +	from index 1 - N: offset and length of register set for each lane,
-> +			  for N number of phy lanes (ports).
-> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
-> + - #phy-cells: must be 1
-> +    - Cell after phy phandle should be the port (lane) number.
-> + - clocks: a list of phandles and clock-specifier pairs,
-> +	   one for each entry in clock-names.
-> + - clock-names: must be "cfg_ahb" for phy config clock,
-> +			"aux" for phy aux clock,
-> +			"ref_clk" for 19.2 MHz ref clk,
-> +			"ref_clk_src" for reference clock source,
-> +			"pipe<port-number>" for pipe clock specific to
-> +			each port/lane (Optional).
-> + - resets: a list of phandles and reset controller specifier pairs,
-> +	   one for each entry in reset-names.
-> + - reset-names: must be "phy" for reset of phy block,
-> +			"common" for phy common block reset,
-> +			"cfg" for phy's ahb cfg block reset (Optional).
-> +			"port<port-number>" for reset specific to
-> +			each port/lane (Optional).
-> + - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +Optional properties:
-> + - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
-> +			pll block.
-> +
-> +Example:
-> +	pcie_phy: pciephy@34000 {
-> +		compatible = "qcom,msm8996-qmp-pcie-phy";
-> +		reg = <0x034000 0x48f>,
-> +			<0x035000 0x5bf>,
-> +			<0x036000 0x5bf>,
-> +			<0x037000 0x5bf>;
-> +				/* tx, rx, pcs */
-> +		lane-offsets = <0x0 0x200 0x400>;
-> +		#phy-cells = <1>;
-> +
-> +		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-> +			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-> +			<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>,
-> +			<&gcc GCC_PCIE_CLKREF_CLK>,
-> +			<&gcc GCC_PCIE_0_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_1_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_2_PIPE_CLK>;
-> +		clock-names = "aux", "cfg_ahb",
-> +				"ref_clk_src", "ref_clk",
+> +++ b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+> @@ -0,0 +1 @@
+> +../../../../../arm/boot/dts/cros-ec-keyboard.dtsi
+> \ No newline at end of file
+> diff --git a/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
+> new file mode 120000
+> index 000000000000..3d7ae9c88bcd
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
+> @@ -0,0 +1 @@
+> +../../../../../arm/boot/dts/cros-ec-sbs.dtsi
 
-Does MSM8996_RPM_SMD_LN_BB_CLK supply the clock source for
-GCC_PCIE_CLKREF_CLK? Did we mess up the parent/child relationship
-in the GCC driver? We may want to fix that so that this node
-only references clocks that actually go into the device, instead
-of clock parents.
+FWIW:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
