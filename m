@@ -1,7 +1,7 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v3 4/4] [media] dt-bindings: add TI VPIF documentation
-Date: Mon, 28 Nov 2016 14:16:01 -0800
-Message-ID: <m2y403s126.fsf@baylibre.com>
+Date: Mon, 28 Nov 2016 14:30:01 -0800
+Message-ID: <m2shqbs0eu.fsf@baylibre.com>
 References: <20161122155244.802-1-khilman@baylibre.com>
         <20161122155244.802-5-khilman@baylibre.com>
         <20161128213822.26oeyzkht5jz5gd3@rob-hp-laptop>
@@ -14,6 +14,8 @@ Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
+
+Hi Rob,
 
 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
@@ -55,22 +57,12 @@ Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 >> +I2C-connected TVP5147 decoder:
 >> +
 >> +	vpif_capture: video-capture@0x00217000 {
->
-> Drop the 0x00.
->
->> +		compatible = "ti,da850-vpif-capture";
 >> +		reg = <0x00217000 0x1000>;
 >> +		interrupts = <92>;
 >> +
 >> +		port {
 >> +			vpif_ch0: endpoint@0 {
 >> +				  reg = <0>;
->
-> This is missing #size-cells and #addr-cells.
->
-
-Yup.
-
 >> +				  bus-width = <8>;
 >> +				  remote-endpoint = <&composite>;
 >> +			};
@@ -81,66 +73,16 @@ Yup.
 > AIUI, having multiple endpoints is for cases like a mux or 1 to many 
 > connections. There's only one data flow, but multiple sources or sinks.
 
-OK.
+Looking at this closer... , I used an endpoint because it's bascially a
+16-bit parallel bus, that can be configured as (up to) 2 8-bit
+"channels.  So, based on the video-interfaces.txt doc, I configured this
+as a single port, with (up to) 2 endpoints.  That also allows me to
+connect output of the decoder directly, using the remote-endpoint
+property.
 
->> +				  reg = <1>;
->> +				  bus-width = <8>;
->> +				  data-shift = <8>;
->> +			};
->> +		};
->> +	};
->> +
->> +[ ... ]
->> +
->> +&i2c0 {
->> +
->> +	tvp5147@5d {
->> +		compatible = "ti,tvp5147";
->> +		reg = <0x5d>;
->> +		status = "okay";
->> +
->> +		port {
->> +			composite: endpoint {
->> +				hsync-active = <1>;
->> +				vsync-active = <1>;
->> +				pclk-sample = <0>;
->> +
->> +				/* VPIF channel 0 (lower 8-bits) */
->> +				remote-endpoint = <&vpif_ch0>;
->> +				bus-width = <8>;
->> +			};
->> +		};
->> +	};
->> +
->> +};
->> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->> new file mode 100644
->> index 000000000000..d004e600aabe
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->> @@ -0,0 +1,8 @@
->> +Texas Instruments VPIF
->> +----------------------
->> +
->> +The Video Port InterFace (VPIF) is the core component for video output
->> +and capture on DA850 TI Davinci SoCs.
->> +
->> +- compatible: must be "ti,da850-vpif"
->> +- reg: physical base address and length of the registers set for the device;
->
-> That's it? How does this block relate to the capture block?
-
-I separated them because the current legacy drivers are separated into 3
-different platform drivers.
-
-However, after some discussions with Laurent, I'm going to just create a
-single VPIF node with input (capture) and output (display) ports, and
-then have to tweak the existing drivers a bit more than I had wanted to.
-
-IOW, I was lazy.
+So I guess I'm not fully understanding your suggestion.
 
 Kevin
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
