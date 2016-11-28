@@ -1,103 +1,32 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: add the mstpri and ddrctl nodes
-Date: Sun, 27 Nov 2016 22:16:42 -0800
-Message-ID: <CAOi56cUThoLar53p0eeun5xE6BUsVV7aiW7jQ5G6troq+bZ7eQ@mail.gmail.com>
-References: <1479207611-18028-1-git-send-email-bgolaszewski@baylibre.com>
- <a39b9276-865b-6382-574e-a5ef040a452f@lechnology.com>
- <CAMpxmJVqog0Fno_DO0NQKmVNvzu5d=3GOLk145wBmB-V70BLeg@mail.gmail.com>
- <5e647eb0-2f8a-b46b-2048-7616bfb54ad7@lechnology.com>
- <m2bmx5x1y2.fsf@baylibre.com>
- <f88df859-3c0f-38f2-275d-ce6a9996fb6e@lechnology.com>
- <20fbc946-d56c-31a3-4ae7-cf61df96a3c3@ti.com>
+From: coral-Yvmzju5463hBWQWeTLFoew@public.gmane.org
+Subject: RE: BALANCE PAYMENT
+Date: Mon, 28 Nov 2016 19:03:29 +1300
+Message-ID: <20161128190329.73523v7tu3895cq8@webmail.quickstart.net.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20fbc946-d56c-31a3-4ae7-cf61df96a3c3@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain;
+        charset=ISO-8859-1;
+        DelSp="Yes";
+        format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMjMsIDIwMTYgYXQgOTowMyBQTSwgU2VraGFyIE5vcmkgPG5zZWtoYXJAdGku
-Y29tPiB3cm90ZToKPiBPbiBUaHVyc2RheSAyNCBOb3ZlbWJlciAyMDE2IDA0OjE4IEFNLCBEYXZp
-ZCBMZWNobmVyIHdyb3RlOgo+PiBPbiAxMS8yMy8yMDE2IDA0OjMyIFBNLCBLZXZpbiBIaWxtYW4g
-d3JvdGU6Cj4+PiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4gd3JpdGVzOgo+
-Pj4KPj4+PiBPbiAxMS8yMy8yMDE2IDA0OjI3IEFNLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3Rl
-Ogo+Pj4+PiAyMDE2LTExLTIyIDIzOjIzIEdNVCswMTowMCBEYXZpZCBMZWNobmVyIDxkYXZpZEBs
-ZWNobm9sb2d5LmNvbT46Cj4+Pj4+PiBPbiAxMS8xNS8yMDE2IDA1OjAwIEFNLCBCYXJ0b3N6IEdv
-bGFzemV3c2tpIHdyb3RlOgo+Pj4+Pj4+Cj4+Pj4+Pj4gQWRkIHRoZSBub2RlcyBmb3IgdGhlIE1T
-VFBSSSBjb25maWd1cmF0aW9uIGFuZCBERFIyL21ERFIgbWVtb3J5Cj4+Pj4+Pj4gY29udHJvbGxl
-ciBkcml2ZXJzIHRvIGRhODUwLmR0c2kuCj4+Pj4+Pj4KPj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBC
-YXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+Pj4+Pj4+IC0t
-LQo+Pj4+Pj4+IHYxIC0+IHYyOgo+Pj4+Pj4+IC0gbW92ZWQgdGhlIHByaW9yaXR5IGNvbnRyb2xs
-ZXIgbm9kZSBhYm92ZSB0aGUgY2ZnY2hpcCBub2RlCj4+Pj4+Pj4gLSByZW5hbWVkIGFkZGVkIG5v
-ZGVzIHRvIGJldHRlciByZWZsZWN0IHRoZWlyIHB1cnBvc2UKPj4+Pj4+Pgo+Pj4+Pj4+ICBhcmNo
-L2FybS9ib290L2R0cy9kYTg1MC5kdHNpIHwgOCArKysrKysrKwo+Pj4+Pj4+ICAxIGZpbGUgY2hh
-bmdlZCwgOCBpbnNlcnRpb25zKCspCj4+Pj4+Pj4KPj4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+Pj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAu
-ZHRzaQo+Pj4+Pj4+IGluZGV4IDFiYjFmNmQuLjQxMmVlYzYgMTAwNjQ0Cj4+Pj4+Pj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2RhODUwLmR0c2kKPj4+Pj4+PiBAQCAtMjEwLDYgKzIxMCwxMCBAQAo+Pj4+Pj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIH07Cj4+Pj4+Pj4KPj4+Pj4+PiAgICAgICAgICAgICAgICAgfTsK
-Pj4+Pj4+PiArICAgICAgICAgICAgICAgcHJpY3RybDogcHJpb3JpdHktY29udHJvbGxlckAxNDEx
-MCB7Cj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ0aSxkYTg1
-MC1tc3RwcmkiOwo+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDE0MTEw
-IDB4MGM+Owo+Pj4+Pj4KPj4+Pj4+Cj4+Pj4+PiBJIHRoaW5rIHdlIHNob3VsZCBhZGQgc3RhdHVz
-ID0gImRpc2FibGVkIjsgaGVyZSBhbmQgbGV0IGJvYXJkcyBvcHQgaW4uCj4+Pj4+Pgo+Pj4+Pj4+
-ICsgICAgICAgICAgICAgICB9Owo+Pj4+Pj4+ICAgICAgICAgICAgICAgICBjZmdjaGlwOiBjaGlw
-LWNvbnRyb2xsZXJAMTQxN2Mgewo+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAidGksZGE4MzAtY2ZnY2hpcCIsICJzeXNjb24iLAo+Pj4+Pj4+ICJzaW1wbGUtbWZk
-IjsKPj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgxNDE3YyAweDE0PjsK
-Pj4+Pj4+PiBAQCAtNDUxLDQgKzQ1NSw4IEBACj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAxIDAgMHg2ODAwMDAwMCAweDAwMDA4MDAwPjsKPj4+Pj4+PiAgICAgICAgICAgICAgICAg
-c3RhdHVzID0gImRpc2FibGVkIjsKPj4+Pj4+PiAgICAgICAgIH07Cj4+Pj4+Pj4gKyAgICAgICBt
-ZW1jdHJsOiBtZW1vcnktY29udHJvbGxlckBiMDAwMDAwMCB7Cj4+Pj4+Pj4gKyAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAidGksZGE4NTAtZGRyLWNvbnRyb2xsZXIiOwo+Pj4+Pj4+ICsgICAg
-ICAgICAgICAgICByZWcgPSA8MHhiMDAwMDAwMCAweGU4PjsKPj4+Pj4+Cj4+Pj4+Pgo+Pj4+Pj4g
-c2FtZSBoZXJlLiBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Pj4+Pj4KPj4+Pj4+PiArICAgICAgIH07
-Cj4+Pj4+Pj4gIH07Cj4+Pj4+Pj4KPj4+Pj4KPj4+Pj4gSGkgRGF2aWQsCj4+Pj4+Cj4+Pj4+IEkg
-ZGlkIHRoYXQgaW5pdGlhbGx5WzFdWzJdIGFuZCBpdCB3YXMgcmVqZWN0ZWQgYnkgS2V2aW5bM10g
-YW5kCj4+Pj4+IExhdXJlbnRbNF0uCj4+Pj4+Cj4+Pj4+IEZZSSB0aGlzIHBhdGNoIGhhcyBhbHJl
-YWR5IGJlZW4gcXVldWVkIGJ5IFNla2hhci4KPj4+Pgo+Pj4+IFRoYW5rcy4gSSBkaWQgbm90IHNl
-ZSB0aG9zZSB0aHJlYWRzLgo+Pj4+Cj4+Pj4gRllJIHRvIG1haW50YWluZXJzLCBoYXZpbmcgdGhl
-c2UgZW5hYmxlZCBieSBkZWZhdWx0IGNhdXNlcyBlcnJvcgo+Pj4+IG1lc3NhZ2VzIGluIHRoZSBr
-ZXJuZWwgbG9nIGZvciBvdGhlciBib2FyZHMgdGhhdCBhcmUgbm90IHN1cHBvcnRlZCBieQo+Pj4+
-IHRoZSBkcml2ZXJzLgo+Pj4KPj4+IFRoZW4gdGhlIGRyaXZlciBpcyB0b28gbm9pc3kgYW5kIHNo
-b3VsZCBiZSBjbGVhbmVkIHVwLgo+Pj4KPj4+PiBTaW5jZSB0aGVyZSBpcyBvbmx5IG9uZSBib2Fy
-ZCB0aGF0IGlzIHN1cHBvcnRlZCBhbmQgc29vbgo+Pj4+IHRvIGJlIDIgdGhhdCBhcmUgbm90LCBJ
-IHdvdWxkIHJhdGhlciBoYXZlIHRoaXMgZGlzYWJsZWQgYnkgZGVmYXVsdCB0bwo+Pj4+IGF2b2lk
-IHRoZSBlcnJvciBtZXNzYWdlcy4KPj4+Cj4+PiBJTU8sIHdoYXQgZXhhY3RseSBhcmUgdGhlIGVy
-cm9yIG1lc3NhZ2VzPyBTb3VuZHMgbGlrZSB0aGUgZHJpdmVyIGlzCj4+PiBiZWluZyB0b28gdmVy
-Ym9zZSwgYW5kIGNhbGxpbmcgdGhpbmdzIGVycm9ycyB0aGF0IGFyZSBub3QgcmVhbGx5IGVycm9y
-cy4KPj4KPj4gSXQgaXMganVzdCBvbmUgbGluZSBwZXIgZHJpdmVyLgo+Pgo+PiAgICAgZGV2X2Vy
-cihkZXYsICJubyBtYXN0ZXIgcHJpb3JpdGllcyBkZWZpbmVkIGZvciB0aGlzIGJvYXJkXG4iKTsK
-Pj4KPj4gYW5kCj4+Cj4+ICAgICBkZXZfZXJyKGRldiwgIm5vIHNldHRpbmdzIGRlZmluZWQgZm9y
-IHRoaXMgYm9hcmRcbiIpOwo+Pgo+Pgo+PiBTaW5jZSAidGksZGE4NTAtbGNkayIgaXMgdGhlIG9u
-bHkgYm9hcmQgc3VwcG9ydGVkIGluIHRoZXNlIGRyaXZlcnMsIGFsbAo+PiBvdGhlciBib2FyZHMg
-d2lsbCBzZWUgdGhlc2UgZXJyb3IgbWVzc2FnZXMuCj4KPiBUaGF0cyBwcmV0dHkgYmFkLiBTb3Jy
-eSBhYm91dCB0aGF0LiBUaGUgb3JpZ2luYWwganVzdGlmaWNhdGlvbiBmb3IKPiBrZWVwaW5nIHRo
-ZW0gZW5hYmxlZCBhbGwgdGhlIHRpbWUgd2FzIHRoYXQgdGhleSBhcmUgaW4tU29DIG1vZHVsZXMg
-d2l0aAo+IG5vIGV4dGVybmFsIGRlcGVuZGVuY2llcyAobGlrZSBJTyBsaW5lcyBvciB2b2x0YWdl
-IHJhaWxzKSBzbyB0aGV5IGNhbiBiZQo+IGVuYWJsZWQgb24gYWxsIGJvYXJkcyB0aGF0IHVzZSBE
-QTg1MC4gV2hpbGUgdGhhdCByZW1haW5zIHRydWUsIHRoZQo+IGNvbmZpZ3VyYXRpb24gaXRzZWxm
-IGlzIGJvYXJkIHNwZWNpZmljLgo+Cj4gSSB0aGluayB0aGUgZXJyb3IgbWVzc2FnZXMgYXJlIHN0
-aWxsIHVzZWZ1bCwgc28gaW5zdGVhZCBvZiBzaWxlbmNpbmcKPiB0aGVtLCBJIHRoaW5rIHdlIHNo
-b3VsZCBnbyBiYWNrIHRvIGtlZXBpbmcgdGhlc2Ugbm9kZXMgZGlzYWJsZWQgYnkKPiBkZWZhdWx0
-IGFuZCBlbmFibGluZyBvbmx5IG9uIGJvYXJkcyB3aGljaCBoYXZlIHN1cHBvcnQgZm9yIGl0IGlu
-IHRoZSBkcml2ZXIuCgpJIGRvbid0IGhhdmUgYSBzdHJvbmcgcHJlZmVyZW5jZSBmb3IgdGhlIGVu
-YWJsZWQvZGlzYWJsZWQgYnkgZGVmYXVsdCwKYnV0IEkgdGhpbmsgdGhlIGVycm9yIG1lc3NhZ2Vz
-IGFyZSBub3QgZXJyb3IgbWVzc2FnZXMuICBJdCBzZWVtcwpwZXJmZWN0bHkgcmVhc29uYWJsZSBm
-b3IgYm9hcmRzIHRvIGFjY2VwdCB0aGUgcmVzZXQgKG9yIGJvb3Rsb2FkZXIpCmNvbmZpZ3VyYXRp
-b24gb2YgdGhlc2UgcmVnaXN0ZXJzLCBhbmQgbm90IGNvbnNpZGVyIHRoYXQgYW4gZXJyb3IuCgpL
-ZXZpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Dear Sir/s,
+
+Please see attached.
+
+
+Thanks and regards,
+
+Accounts Department
+Al Omraniya Trading Co. LLC
+P.O. Box: 10757, Al Khabaisi Area,
+Deira 2, Dubai, U.A.E.
+Tel: +971 4 268 2730 / Fax: +971 4 268 4117
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
