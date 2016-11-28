@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v11 5/7] overlay: Documentation for the overlay sugar syntax
-Date: Mon, 28 Nov 2016 18:05:39 +0200
-Message-ID: <1480349141-14145-6-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v11 7/7] tests: Add a test for overlays syntactic sugar
+Date: Mon, 28 Nov 2016 18:05:41 +0200
+Message-ID: <1480349141-14145-8-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1480349141-14145-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
@@ -10,39 +10,27 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There exists a syntactic sugar version of overlays which
-make them simpler to write for the trivial case of a single target.
-
-Document it in the device tree object internals.
+Add a single test makeing sure the &foo { }; syntax works.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/dt-object-internal.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tests/run_tests.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-object-internal.txt
-index 026d4ee..d5b841e 100644
---- a/Documentation/dt-object-internal.txt
-+++ b/Documentation/dt-object-internal.txt
-@@ -300,3 +300,19 @@ local reference is being made. No matter how phandles are allocated from dtc
- the run time loader must apply an offset to each phandle in every dynamic
- DT object loaded. The __local_fixups__ node records the place of every
- local reference so that the loader can apply the offset.
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 74af0ff..e6b687a 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -222,6 +222,10 @@ overlay_tests () {
+ 	run_test check_path overlay_overlay_with_aliases.dtb exists "/__symbols__"
+ 	run_test check_path overlay_overlay_with_aliases.dtb exists "/__fixups__"
+ 	run_test check_path overlay_overlay_with_aliases.dtb exists "/__local_fixups__"
 +
-+There is an alternative syntax to the expanded form for overlays with phandle
-+targets which makes the format similar to the one using in .dtsi include files.
++	# test simplified plugin syntax
++        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_simple.dtb overlay_overlay_simple.dts
 +
-+So for the &ocp target example above one can simply write:
-+
-+/dts-v1/ /plugin/;
-+&ocp {
-+	/* bar peripheral */
-+	bar {
-+		compatible = "corp,bar";
-+		... /* various properties and child nodes */
-+	}
-+};
-+
-+The resulting dtb object is identical.
+     fi
+ 
+     # Bad fixup tests
 -- 
 2.1.4
