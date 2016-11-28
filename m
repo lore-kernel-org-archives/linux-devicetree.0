@@ -1,37 +1,77 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [RFC PATCH 0/2] Multi phy management
-Date: Mon, 28 Nov 2016 15:19:01 +0530
-Message-ID: <1480326541-5947-1-git-send-email-harinik@xilinx.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node for H3
+Date: Mon, 28 Nov 2016 18:06:33 +0800
+Message-ID: <CAGb2v67akcT6z-xOdCzpLQRZbgNGh3E5akYEs1BvFNP1rH8UeA@mail.gmail.com>
+References: <20161128095900.27615-1-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, michals@xilinx.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQUD6DAQKGQEUTHN4XY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161128095900.27615-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series is to add support for the hardware with multiple ethernet
-MAC controllers and a single MDIO bus connected to multiple PHY devices.
-MDIO lines are connected to any one of the ethernet MAC controllers and
-all the PHY devices will be accessed using the PHY maintenance interface
-in that MAC controller.
-This handling along with PHY functionality is moved to macb_mdio.c
-within the macb driver space.
-This is because of the phy maintenance register is within the MAC.
-Please advise on how to proceed with handling such a requirement.
+On Mon, Nov 28, 2016 at 5:59 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> As there's currently a fork of U-Boot which provides simplefb support
 
-Harini Katakam (2):
-  net: macb: Add MDIO driver for accessing multiple PHY devices
-  Documentation: devictree: Add macb mdio bindings
+Please add it when its finalized...
 
- .../devicetree/bindings/net/macb-mdio.txt          |  31 +++
- drivers/net/ethernet/cadence/Makefile              |   2 +-
- drivers/net/ethernet/cadence/macb.c                | 169 ++-----------
- drivers/net/ethernet/cadence/macb.h                |   2 +
- drivers/net/ethernet/cadence/macb_mdio.c           | 266 +++++++++++++++++++++
- 5 files changed, 325 insertions(+), 145 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/macb-mdio.txt
- create mode 100644 drivers/net/ethernet/cadence/macb_mdio.c
+> for H3, a simplefb node can be added to the device tree.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>
+> I'm still not sure which pipeline should I use.
 
--- 
-2.7.4
+You are supposed to add _all_ the pipelines that are available and
+supported by U-boot. U-boot is then supposed to enable and update
+the one it set up.
+
+ChenYu
+
+>
+> And, it seems that HDMI Slow Clock is not needed?
+>
+> (seems that it's only for EDID, but simplefb won't use EDID)
+>
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index 75a8654..cacc8dd 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -50,6 +50,22 @@
+>  / {
+>         interrupt-parent = <&gic>;
+>
+> +       chosen {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               simplefb_hdmi: framebuffer@0 {
+> +                       compatible = "allwinner,simple-framebuffer",
+> +                                    "simple-framebuffer";
+> +                       allwinner,pipeline = "de0-lcd0-hdmi";
+> +                       clocks = <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_DE>,
+> +                                <&ccu CLK_BUS_HDMI>, <&ccu CLK_DE>,
+> +                                <&ccu CLK_TCON0>, <&ccu CLK_HDMI>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> +
+>         cpus {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> --
+> 2.10.2
+>
