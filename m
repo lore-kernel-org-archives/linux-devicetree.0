@@ -1,164 +1,220 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 0/5] Meson GXL and GXM USB support
-Date: Sun, 27 Nov 2016 23:42:02 +0100
-Message-ID: <CAFBinCAA_JEtr_0Ze0thoRaEKMnWQMKcPxJ8y88zkWAAhuxsMw@mail.gmail.com>
-References: <20161126145635.24488-1-martin.blumenstingl@googlemail.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
+ board
+Date: Mon, 28 Nov 2016 00:29:07 +0000
+Message-ID: <cdfd3c65-d473-badb-ea6a-035f7ab79217@arm.com>
+References: <20161121162421.800-1-icenowy@aosc.xyz>
+ <20161121162421.800-2-icenowy@aosc.xyz> <5373671480239408@web31m.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161126145635.24488-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5373671480239408@web31m.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Jonathan Corbet <corbet@lwn.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Kishon,
+On 27/11/16 09:36, Icenowy Zheng wrote:
 
-On Sat, Nov 26, 2016 at 3:56 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> USB support on GXL and GXM differs a lot from Meson8b and GXBB:
-> The most obvious change is that GXL and GXM now have one dwc3
-> controller and one dwc2 controller (instead of two dwc2 controllers).
-> With that there are also new USB PHYs.
->
-> Due to lack of hardware I was only able to test this on a board with
-> GXM, but as far as I understand the hardware my preparations should be
-> correct (so it should also work on GXL).
->
-> dwc2 will probably stay unused on most GXM devices since it's limited
-> to device mode via some dwc2 hardware configuration register.
->
-> dwc3 is probably used on all devices, even if there is more than just
-> one USB port. dwc3 has a built-in USB2 hub - on GXL this hub has two
-> ports enabled, while on GXM there are three ports enabled (see below
-> for lsusb output). There are no USB3 ports enabled in the dwc3 hardware
-> configuration, meaning that the SoC is limited to high-speed mode.
-> On my GXM device the dwc3 hardware configuration forces it into "host
-> only" mode.
->
-> The SoCs contain two PHY blocks: one USB3 PHY and up to four USB2 PHYs
-> (on GXM there are only three enabled, but the registers should support
-> up to four).
-> The USB3 PHY also handles the OTG interrupts, but since dwc3's hardware
-> configuration enforces "host only" mode I was not able to test this. It
-> simply takes care of an interrupt and then notifies all related PHYs
-> about the new mode.
-> The USB2 PHY block is a bit different: I created one PHY driver which
-> spans all "PHY ports" because the handling is a bit tricky. It turns
-> out that for each available USB port in dwc3's hub the corresponding
-> PHY must be enabled (even if there is no physical port - in my case
-> port 3 is not connected to anything, but disabling the PHY breaks
-> ports 1 and 2 as well).
-> I decided not not pass the USB2 PHYs directly to dwc3 due to three
-> reasons: 1. the USB3 PHY (which holds a reference to all relevant
-> USB2 PHY ports) controls the mode of the USB2 PHY ports (since both
-> are used with the same controller and thus it makes sense to keep the
-> mode consistent across all ports) 2. the dwc3 driver does not support
-> passing multiple USB2 PHYs (only one USB2 and one USB3 PHY can be
-> passed to it) 3. it is similar to how the vendor reference driver
-> manages the PHYs. Please note that this coupling is not a fixed, this
-> is all configurable via devicetree (so if the third USB2 PHY has to
-> be passed two the dwc2 controller then this is still possible by
-> just moving on PHY reference in the .dts).
-after not staring at my own code for 24 hours I realized this:
-(I went through quite a few iterations before getting these drivers to work)
-I'm basically re-modelling an "USB PHY hub" with my USB3 PHY driver
-(there's one "upstream" PHY interface which is passed to dwc3 and
-multiple downstream PHYs, each for one port on dwc3's internal hub).
-With this approach I could split each of the the USB2s into separate
-nodes again (instead of one devicetree node with #phy-cells = <1>) as
-the USB3 PHY is taking care of that special "we have to enable all
-ports or no port will be usable".
+Hi,
 
-We could go even one step further: why implement this in the Meson GXL
-specific PHY driver - why not implement a generic "phy-hub" driver
-(which would be valid whenever the PHY controller has to manage
-multiple PHYs at once, but wants to keep them all in a consistent
-state).
-The devicetree could look like this:
-    usb2_phy_hub: phy@0 {
-        compatible = "phy-hub";
-        phys = <&other_phy1>, <&other_phy 2>;
-    };
+> 22.11.2016, 00:26, "Icenowy Zheng" <icenowy@aosc.xyz>:
+>> Orange Pi Zero is a board that came with the new Allwinner H2+ SoC.
+>>
+>> Add a device tree file for it.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+>> ---
+>> Changes since v2:
+>> - Use generic pinconf binding instead of legacy allwinner pinctrl binding.
+>> - removed uart3, which is not accessible on Orange Pi Zero.
+>> - Removed sun8i-h2plus.dtsi and make Orange Pi Zero dts directly include
+>>   sun8i-h3.dtsi.
+>> - Removed allwinner,sun8i-h3 compatible.
+>>
+>>  arch/arm/boot/dts/Makefile | 1 +
+>>  arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts | 137 +++++++++++++++++++++++
+>>  2 files changed, 138 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 802a10d..51a1dd7 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -834,6 +834,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>          sun8i-a33-sinlinx-sina33.dtb \
+>>          sun8i-a83t-allwinner-h8homlet-v2.dtb \
+>>          sun8i-a83t-cubietruck-plus.dtb \
+>> + sun8i-h2plus-orangepi-zero.dtb \
+>>          sun8i-h3-bananapi-m2-plus.dtb \
+>>          sun8i-h3-nanopi-neo.dtb \
+>>          sun8i-h3-orangepi-2.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>> new file mode 100644
+>> index 0000000..b428e47
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-h2plus-orangepi-zero.dts
+>> @@ -0,0 +1,137 @@
+>> +/*
+>> + * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+>> + *
+>> + * Based on sun8i-h3-orangepi-one.dts, which is:
+>> + * Copyright (C) 2016 Hans de Goede <hdegoede@redhat.com>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + * a) This file is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation; either version 2 of the
+>> + * License, or (at your option) any later version.
+>> + *
+>> + * This file is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + * b) Permission is hereby granted, free of charge, to any person
+>> + * obtaining a copy of this software and associated documentation
+>> + * files (the "Software"), to deal in the Software without
+>> + * restriction, including without limitation the rights to use,
+>> + * copy, modify, merge, publish, distribute, sublicense, and/or
+>> + * sell copies of the Software, and to permit persons to whom the
+>> + * Software is furnished to do so, subject to the following
+>> + * conditions:
+>> + *
+>> + * The above copyright notice and this permission notice shall be
+>> + * included in all copies or substantial portions of the Software.
+>> + *
+>> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + * OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun8i-h3.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> + model = "Xunlong Orange Pi Zero";
+>> + compatible = "xunlong,orangepi-zero", "allwinner,sun8i-h2plus";
+>> +
+>> + aliases {
+>> + serial0 = &uart0;
+>> + };
+>> +
+>> + chosen {
+>> + stdout-path = "serial0:115200n8";
+>> + };
+>> +
+>> + leds {
+>> + compatible = "gpio-leds";
+>> + pinctrl-names = "default";
+>> + pinctrl-0 = <&leds_opi0>, <&leds_r_opi0>;
+>> +
+>> + pwr_led {
+>> + label = "orangepi:green:pwr";
+>> + gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
+>> + default-state = "on";
+>> + };
+>> +
+>> + status_led {
+>> + label = "orangepi:red:status";
+>> + gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
+>> + };
+>> + };
+>> +};
+>> +
+>> +&ehci1 {
+>> + status = "okay";
+>> +};
+>> +
+>> +&mmc0 {
+>> + pinctrl-names = "default";
+>> + pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+>> + vmmc-supply = <&reg_vcc3v3>;
+>> + bus-width = <4>;
+>> + cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+>> + cd-inverted;
+>> + status = "okay";
+>> +};
+>> +
+>> +&ohci1 {
+>> + status = "okay";
+>> +};
+>> +
+>> +&pio {
+>> + leds_opi0: led_pins@0 {
+>> + pins = "PA17";
+>> + function = "gpio_out";
+>> + };
+>> +};
+>> +
+>> +&r_pio {
+>> + leds_r_opi0: led_pins@0 {
+>> + pins = "PL10";
+>> + function = "gpio_out";
+>> + };
+>> +};
+>> +
+>> +&uart0 {
+>> + pinctrl-names = "default";
+>> + pinctrl-0 = <&uart0_pins_a>;
+>> + status = "okay";
+>> +};
+>> +
+>> +&uart1 {
+>> + pinctrl-names = "default";
+>> + pinctrl-0 = <&uart1_pins>;
+>> + status = "disabled";
+>> +};
+>> +
+>> +&uart2 {
+>> + pinctrl-names = "default";
+>> + pinctrl-0 = <&uart2_pins>;
+>> + status = "disabled";
+>> +};
+>> +
+>> +&usbphy {
+>> + /* USB VBUS is always on */
+>> + status = "okay";
+>> +};
+> 
+> Something more interesting happened.
+> 
+> Xunlong made a add-on board for Orange Pi Zero, which exposes the two USB Controllers exported at expansion bus as USB Type-A connectors.
+> 
+> Also it exposes a analog A/V jack and a microphone.
+> 
+> Should I enable {e,o}hci{2.3} in the device tree?
 
-&dwc3 {
-     phys = <&usb2_phy_hub>, <&usb3_phy0>;
-     phy-names = "usb2-phy", "usb3-phy";
-};
+Actually we should do this regardless of this extension board. The USB
+pins are not multiplexed and are exposed on user accessible pins (just
+not soldered, but that's a detail), so I think they qualify for DT
+enablement. And even if a user can't use them, it doesn't hurt to have
+them (since they are not multiplexed).
 
-The generic phy-hub driver would then implement all phy_ops callbacks
-and pass then to each of it's downstream PHYs.
-
-That's just what came into my head - please let me know what you think
-of this or share your ideas on how to approach this!
-
-> The coupling of the USB2 and USB3 PHYs is the reason why I sent the
-> two drivers in one patch, even though they are handling different IP
-> blocks (different registers, etc.).
->
-> Unfortunately there are no datasheets available for any of these PHYs.
-> Both drivers were written by reading the reference drivers provided by
-> Amlogic and analyzing the registers on the kernel that was shipped with
-> my board.
->
-> As a last note: the dwc3 driver currently only explicitly enables the
-> first USB port "DWC3_GUSB2PHYCFG(0)" in the internal hub. The hardware
-> seems to enable the other two (DWC3_GUSB2PHYCFG(1) and
-> DWC3_GUSB2PHYCFG(2)) automatically. I will ask the dwc3 maintainers if
-> changes to dwc3 are desired any how these should look like, but for now
-> it's working fine even without changes there.
->
-> lsusb output on GXM for the dwc3 hub:
-> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-> ...
->  Hub Port Status:
->    Port 1: 0000.0100 power
->    Port 2: 0000.0100 power
->    Port 3: 0000.0100 power
->
-> NOTE: The devicetree changes depend on my previous series:
-> "[PATCH 0/2] minor GXL and GXM improvements" - see [0]
->
-> NOTE2: This series depends on an upstream dwc3/xhci-plat DMA fix
-> (special thanks to Arnd Bergmann and Sriram Dash for fixing that):
-> "[PATCH v5 0/6] inherit dma configuration from parent dev" - see [1]
->
-> I have a tree with all dependencies applied available at [2] if
-> someone wants a quick way to test this (I don't take any responsibility
-> if anything explodes though).
->
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001665.html
-> [1] http://marc.info/?l=linux-usb&m=147938307209685&w=2
-> [2] https://github.com/xdarklight/linux/commits/meson-gx-integration-4.10-20161126
->
-> Martin Blumenstingl (5):
->   Documentation: dt-bindings: Add documentation for Meson GXL USB2/3
->     PHYs
->   phy: meson: add USB2 and USB3 PHY support for Meson GXL
->   arm64: dts: meson-gxl: add USB support
->   ARM64: dts: meson-gxm: add GXM specific USB configuration
->   ARM64: dts: meson-gx-p23x-q20x: enable USB on P23x and Q20x boards
->
->  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  25 ++
->  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  27 ++
->  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  12 +
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  49 +++
->  .../arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts |  17 +
->  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  10 +
->  drivers/phy/Kconfig                                |  13 +
->  drivers/phy/Makefile                               |   2 +
->  drivers/phy/phy-meson-gxl-usb2.c                   | 374 ++++++++++++++++++++
->  drivers/phy/phy-meson-gxl-usb3.c                   | 377 +++++++++++++++++++++
->  10 files changed, 906 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
->  create mode 100644 drivers/phy/phy-meson-gxl-usb2.c
->  create mode 100644 drivers/phy/phy-meson-gxl-usb3.c
->
-> --
-> 2.10.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Andre.
