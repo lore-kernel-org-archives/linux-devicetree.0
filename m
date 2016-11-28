@@ -1,103 +1,37 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net-next v3 4/4] ARM64: dts: meson: odroidc2: disable
- advertisement EEE for GbE.
-Date: Mon, 28 Nov 2016 13:40:33 +0100
-Message-ID: <1480336833.17538.164.camel@baylibre.com>
-References: <1480326409-25419-1-git-send-email-jbrunet@baylibre.com>
-         <1480326409-25419-5-git-send-email-jbrunet@baylibre.com>
-         <9709dd57-e536-9281-6b56-5ff5f9e8035c@suse.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [GIT PULL]: ARM ARTPEC changes for 4.10
+Date: Mon, 28 Nov 2016 13:57:10 +0100
+Message-ID: <10339600.mZlnsf0Sve@wuerfel>
+References: <20161110150930.GB19804@axis.com> <5317474.MXurzNW7Do@wuerfel> <20161128123331.GO19016@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9709dd57-e536-9281-6b56-5ff5f9e8035c-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20161128123331.GO19016-VrBV9hrLPhE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:ARM/ARTPEC MACHINE SUPPORT" <linux-arm-kernel-VrBV9hrLPhE@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-11-28 at 13:31 +0100, Andreas Färber wrote:
-> Am 28.11.2016 um 10:46 schrieb Jerome Brunet:
+On Monday, November 28, 2016 1:33:31 PM CET Jesper Nilsson wrote:
+> > Hi Jesper and Niklas,
 > > 
-> > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 16
-> > ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
+> > I just found the old pull request while going through my mail backlog.
 > > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > index e6e3491d48a5..5624714d2b16 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > @@ -46,6 +46,7 @@
-> >  
-> >  #include "meson-gxbb.dtsi"
-> >  #include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/net/mdio.h>
-> >  
-> >  / {
-> >  	compatible = "hardkernel,odroid-c2", "amlogic,meson-gxbb";
-> > @@ -98,3 +99,18 @@
-> >  	pinctrl-0 = <&i2c_a_pins>;
-> >  	pinctrl-names = "default";
-> >  };
-> > +
-> > +&ethmac {
-> > +	phy-handle = <&eth_phy0>;
-> > +
-> > +	mdio {
-> > +		compatible = "snps,dwmac-mdio";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		eth_phy0: ethernet-phy@0 {
-> > +			reg = <0>;
-> > +			eee-broken-modes = <MDIO_EEE_1000T>;
-> > +		};
-> > +	};
-> > +};
+> > A few things for you to remember for next time:
+> > 
+> > - please send pull requests "To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" so we know they
+> >   are destined for arm-soc
 > 
-6I've tested this hand-applied because it applies to neither amlogic
-> v4.10/integ nor linux-next.git and will conflict if applied through
-> the
-> net-next tree.
+> Ok, should we add that in the MAINTAINERS file so we can
+> get it automatically from get_maintainer?
 
-I've rebased on net-next this morning. I just checked again and now
-there is a conflict indeed. Something got applied between in the last 6
-ours which conflict with patch 4.
+No, we don't want to get every single patch that people submit to
+platform maintainers, only the consolidated pull requests that you
+send.
 
-> 
-> Note that there already is an &ethmac node that you should be
-> extending
-> rather than duplicating:
-> 
-> &ethmac {
-> 	status = "okay";
-> 	pinctrl-0 = <&eth_rgmii_pins>;
-> 	pinctrl-names = "default";
-> };
-> 
-> If you or your colleagues could please fix the sort order of the
-> nodes
-> to be alphabetical again (ethmac after i2c_A here; between uart_A and
-> ir
-> in-tree) this wouldn't happen so easily again.
+	Arnd
 
-OK
-
-> 
-> I therefore suggest to not apply this patch 4/4 through net-next but
-> through the amlogic tree instead.
-
-Agreed. The change is provided here so people can test.
-If the other patches get accepted, I'll submit the dts change through
-the amlogic tree.
-
-> 
-> Thanks,
-> Andreas
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
