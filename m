@@ -1,80 +1,116 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
-Date: Mon, 28 Nov 2016 19:09:36 +0100
-Message-ID: <9ad102a7-8d78-efef-8adb-62cad75f0034@kaod.org>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed
+ SoCs
+Date: Mon, 28 Nov 2016 19:21:19 +0100
+Message-ID: <b5aabac4-ddd2-38c3-a5a7-d1b56274230d@gmail.com>
 References: <1478688149-4554-1-git-send-email-clg@kaod.org>
  <bc14b6ba-800c-bf69-763e-65ead8d4efa7@gmail.com>
  <CACPK8Xc7Dy=4oaZ_+j3hCEkMY+sqZ_-QkCQ9okmUoOjTpuZvvA@mail.gmail.com>
  <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
  <b9d8ba33-2bb9-cb93-d833-89ddd8cfd7f9@kaod.org>
  <c35d6a7a-1c77-1884-4ed4-aee161bd0e43@gmail.com>
+ <9ad102a7-8d78-efef-8adb-62cad75f0034@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <c35d6a7a-1c77-1884-4ed4-aee161bd0e43@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>, Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9ad102a7-8d78-efef-8adb-62cad75f0034-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgo+PiBBc3BlZWQgU29DIEFTVDI0MDAgaGFzIGEgc2V0IG9mIFNNQyAoU3RhdGljIE1l
-bW9yeSBDb250cm9sbGVyKSAKPj4gY29udHJvbGxlcnMgaW4gd2hpY2ggeW91IGZpbmQgOgo+Pgo+
-PiAtIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxlZCBTTUMgaW4gdGhlIHNw
-ZWMpICAKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MDAwMDAwCj4+ICAgLiBCTUMgZmlybXdh
-cmUKPj4gICAuIG9sZCByZWdpc3RlciBzZXQKPj4gICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFO
-RCBmbGFzaCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gQWxsIGJvb3RhYmxlLgo+PiAgIC4gMSBjaGlw
-IHNlbGVjdCBwaW4gKENFMCkKPj4KPj4gLSBOZXcgU3RhdGljIE1lbW9yeSBDb250cm9sbGVyIChj
-YWxsZWQgRk1DIGluIHRoZSBzcGVjKQo+PiAgIC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYyMDAwMDAK
-Pj4gICAuIEJNQyBmaXJtd2FyZQo+PiAgIC4gbmV3IHJlZ2lzdGVyIHNldAo+PiAgIC4gc3VwcG9y
-dHMgTk9SIGZsYXNoLCBOQU5EIGZsYXNoIGFuZCBTUEkgZmxhc2ggbWVtb3J5LiAKPj4gICAuIDUg
-Y2hpcCBzZWxlY3QgcGlucyAoQ0UwIOKIvCBDRTQpCj4+Cj4+IC0gU1BJIEZsYXNoIENvbnRyb2xs
-ZXIgKGNhbGxlZCBTUEkgaW4gdGhlIHNwZWMpICAKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2
-MzAwMDAwCj4+ICAgLiBob3N0IEZpcm13YXJlCj4+ICAgLiBleG90aWMgcmVnaXN0ZXIgc2V0LCBi
-ZXR3ZWVuIG9sZCBhbmQgbmV3IC4uLgo+PiAgIC4gc3VwcG9ydHMgU1BJIGZsYXNoIG1lbW9yeQo+
-PiAgIC4gMSBjaGlwIHNlbGVjdCBwaW4gKENFMCkKPiAKPiBUaGlzIHNob3VsZCBiZSAoZXhjZXB0
-IGZvciB0aGUgYmFzZSBhZGRyZXNzKSBiZSBpbiBzb21lIGRvY3VtZW50YXRpb24sCj4gaXQgaGVs
-cHMuCgpTdXJlLiBJIHdpbGwgYWRkIHRoYXQuCgo+PiBBc3BlZWQgU29DIEFTVDI1MDAgZGVmaW5l
-cyBoYXMgYSBzaW1pbGFyIHNldCBvZiBTTUMgKFN0YXRpYyBNZW1vcnkgCj4+IENvbnRyb2xsZXIp
-IGNvbnRyb2xsZXJzLCBtb3JlIGluIHRoZSB2ZWluIG9mIHRoZSBBU1QyNDAwIEZNQyAgOgo+Pgo+
-PiAtIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgaXMgZ29uZSwgTk9SIGFuZCBOQU5E
-IHN1cHBvcnQgYWxzbwo+Pgo+PiAtIEZpcm13YXJlIFNQSSBNZW1vcnkgQ29udHJvbGxlciAoY2Fs
-bGVkIEZNQyBpbiB0aGUgc3BlYykgIAo+PiAgIC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYyMDAwMDAK
-Pj4gICAuIEJNQyBmaXJtd2FyZQo+PiAgIC4gbmV3IHJlZ2lzdGVyIHNldAo+PiAgIC4gc3VwcG9y
-dHMgU1BJIGZsYXNoIG1lbW9yeS4KPj4gICAuIDMgY2hpcCBzZWxlY3QgcGlucyAoQ0UwIH4gQ0Uy
-KQo+Pgo+PiAtIFNQSSBGbGFzaCBDb250cm9sbGVyIChjYWxsZWQgU1BJMSBpbiB0aGUgc3BlYykg
-Zmlyc3QKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MzAwMDAwCj4+ICAgLiBob3N0IGZpcm13
-YXJlCj4+ICAgLiBuZXcgcmVnaXN0ZXIgc2V0Cj4+ICAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVt
-b3J5Lgo+PiAgIC4gMiBjaGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCj4+Cj4+IC0gU1BJIEZs
-YXNoIENvbnRyb2xsZXIgKGNhbGxlZCBTUEkyIGluIHRoZSBzcGVjKSBzZWNvbmQKPj4gICAuIGJh
-c2UgYWRkcmVzcyBhdCAweDE2MzEwMDAwCj4+ICAgLiBob3N0IGZpcm13YXJlCj4+ICAgLiBuZXcg
-cmVnaXN0ZXIgc2V0Cj4+ICAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVtb3J5Lgo+PiAgIC4gMiBj
-aGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCj4+Cj4+Cj4+IFNvLCB0aGVzZSBhcmUgdGhlIHJl
-YXNvbnMgYmVoaW5kIHRoZSBuYW1pbmcgbWVzcy4gQWRkZWQgdG8gdGhhdCB0aGUgCj4+IGRyaXZl
-ciBjb25zaWRlcnMgdGhlIGFjcm9ueW0gU01DIHRvIHN0YW5kIGZvciBTUEkgTWVtb3J5IENvbnRy
-b2xsZXIsIAo+PiB3aGljaCBpcyB3cm9uZy4gSSB0cmllZCB0byByZWR1Y2UgdGhlIGNvbmZ1c2lv
-biB3aXRoIHNvbWUgY29tbWVudHMgYnV0IAo+PiB0aGF0IHdhcyBhIGZhaWx1cmUgOikKPiAKPiBU
-aGUgZXhwbGFuYXRpb24gYWJvdmUgaXMgYXdlc29tZSB0aG91Z2guCj4gCj4+IEluIHFlbXUsIHdl
-IGhhdmUgdXNlZCBGTUMgKEZpcm13YXJlIC4uLikgYW5kIFNQSSB0byBuYW1lIHRoZSBjb250cm9s
-bGVycyAKPj4gYW5kIHdlIGp1c3QgZHJvcHBlZCB0aGUgbGVnYWN5IFNNQy4gSSB0aGluayB1c2lu
-ZyB0aGUgc2FtZSBuYW1pbmcgc2NoZW1lCj4+IGlzIGEgZ29vZCBpZGVhLiBXZSBkb24ndCBzdXBw
-b3J0IGFueXRoaW5nIGVsc2UgdGhhbiBTUEkgZWl0aGVyIHNvIHdlIGNhbiAKPj4gZHJvcCB0aGUg
-b3RoZXIgdHlwZXMgZm9yIHRoZSBtb21lbnQuCj4gCj4gT25lIHRoaW5nIHdoaWNoIEkgc3RpbGwg
-cG9uZGVyIGFib3V0IGlzIGhvdyBkbyB5b3Ugc3VwcG9ydCB0aG9zZQo+IGNvbnRyb2xsZXJzIHdo
-aWNoIHN1cHBvcnQgTk9SIGFuZCBOQU5EIGZsYXNoIGFuZCBTUEksIGRvIHlvdSB0YXAKPiBpbnRv
-IGFsbCBzdWJzeXN0ZW1zID8KCkFzcGVlZCBkcm9wcGVkIHN1cHBvcnQgZm9yIE5BTkQgYW5kIE5P
-UiBmbGFzaCBpbiB0aGUgQVNUMjUwMCBTb0MsIAphbGwgY29udHJvbGxlcnMgYXJlIFNQSSBvbmx5
-IGFuZCB0aGUgQVNUMjQwMCBib2FyZHMgd2UgaGF2ZSBhbHNvIApvbmx5IHVzZSBTUEkuIFNvIHdl
-IGRpZCBub3QgY29uc2lkZXIgdGhlIG90aGVyIGZsYXNoIGZsYXZvcnMgZm9yIAp0aGUgZHJpdmVy
-IGV2ZW4gdGhvdWdoIHNvbWUgYm9hcmQgbWlnaHQgdXNlIGl0LCBidXQgSSBkb24ndCBrbm93CnRo
-YXQuCgpDaGVlcnMsCgpDLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+On 11/28/2016 07:09 PM, Cédric Le Goater wrote:
+> Hello,
+> 
+>>> Aspeed SoC AST2400 has a set of SMC (Static Memory Controller) 
+>>> controllers in which you find :
+>>>
+>>> - Legacy Static Memory Controller (called SMC in the spec)  
+>>>   . base address at 0x16000000
+>>>   . BMC firmware
+>>>   . old register set
+>>>   . supports NOR flash, NAND flash and SPI flash memory. All bootable.
+>>>   . 1 chip select pin (CE0)
+>>>
+>>> - New Static Memory Controller (called FMC in the spec)
+>>>   . base address at 0x16200000
+>>>   . BMC firmware
+>>>   . new register set
+>>>   . supports NOR flash, NAND flash and SPI flash memory. 
+>>>   . 5 chip select pins (CE0 ∼ CE4)
+>>>
+>>> - SPI Flash Controller (called SPI in the spec)  
+>>>   . base address at 0x16300000
+>>>   . host Firmware
+>>>   . exotic register set, between old and new ...
+>>>   . supports SPI flash memory
+>>>   . 1 chip select pin (CE0)
+>>
+>> This should be (except for the base address) be in some documentation,
+>> it helps.
+> 
+> Sure. I will add that.
+> 
+>>> Aspeed SoC AST2500 defines has a similar set of SMC (Static Memory 
+>>> Controller) controllers, more in the vein of the AST2400 FMC  :
+>>>
+>>> - Legacy Static Memory Controller is gone, NOR and NAND support also
+>>>
+>>> - Firmware SPI Memory Controller (called FMC in the spec)  
+>>>   . base address at 0x16200000
+>>>   . BMC firmware
+>>>   . new register set
+>>>   . supports SPI flash memory.
+>>>   . 3 chip select pins (CE0 ~ CE2)
+>>>
+>>> - SPI Flash Controller (called SPI1 in the spec) first
+>>>   . base address at 0x16300000
+>>>   . host firmware
+>>>   . new register set
+>>>   . supports SPI flash memory.
+>>>   . 2 chip select pins (CE0 ~ CE1)
+>>>
+>>> - SPI Flash Controller (called SPI2 in the spec) second
+>>>   . base address at 0x16310000
+>>>   . host firmware
+>>>   . new register set
+>>>   . supports SPI flash memory.
+>>>   . 2 chip select pins (CE0 ~ CE1)
+>>>
+>>>
+>>> So, these are the reasons behind the naming mess. Added to that the 
+>>> driver considers the acronym SMC to stand for SPI Memory Controller, 
+>>> which is wrong. I tried to reduce the confusion with some comments but 
+>>> that was a failure :)
+>>
+>> The explanation above is awesome though.
+>>
+>>> In qemu, we have used FMC (Firmware ...) and SPI to name the controllers 
+>>> and we just dropped the legacy SMC. I think using the same naming scheme
+>>> is a good idea. We don't support anything else than SPI either so we can 
+>>> drop the other types for the moment.
+>>
+>> One thing which I still ponder about is how do you support those
+>> controllers which support NOR and NAND flash and SPI, do you tap
+>> into all subsystems ?
+> 
+> Aspeed dropped support for NAND and NOR flash in the AST2500 SoC, 
+> all controllers are SPI only and the AST2400 boards we have also 
+> only use SPI. So we did not consider the other flash flavors for 
+> the driver even though some board might use it, but I don't know
+> that.
+
+So we cross that bridge when we come to it ? Hm, that could work.
+Please be sure to explicitly state you only support the SPI mode
+of operation in documentation.
+
+Thanks!
+
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
