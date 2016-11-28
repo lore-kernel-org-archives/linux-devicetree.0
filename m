@@ -1,55 +1,65 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node for H3
-Date: Mon, 28 Nov 2016 11:42:18 +0100
-Message-ID: <20161128114218.14d2ed434802a20fa6b62023@free.fr>
-References: <20161128095900.27615-1-icenowy@aosc.xyz>
-Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
+Date: Mon, 28 Nov 2016 11:43:59 +0100
+Message-ID: <CAMpxmJXwq-w4WXwh+oF0_NACfcu4nE4n6MZPA19oMpt8j1Hdog@mail.gmail.com>
+References: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
+ <8829c208-0674-43c0-8449-ef764071583f@ti.com>
+ <953743fb-54f9-fa6f-bfdd-43d92271864f@ti.com>
+ <86f2b643-c270-1483-4f35-5bdf399a5919@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBD4U6DAQKGQECALQQSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161128095900.27615-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <86f2b643-c270-1483-4f35-5bdf399a5919@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-drm <dri-devel@lists.freedesktop.org>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Nov 2016 17:59:00 +0800
-Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-
-> As there's currently a fork of U-Boot which provides simplefb support
-> for H3, a simplefb node can be added to the device tree.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->=20
-> I'm still not sure which pipeline should I use.
->=20
-> And, it seems that HDMI Slow Clock is not needed?
->=20
-> (seems that it's only for EDID, but simplefb won't use EDID)
-
-So, I don't see how this may work.
-How can the u-boot know the resolutions of the HDMI display device?
-
-In other words: I have a new H3 board with the last u-boot and kernel.
-I plug my (rather old or brand new) HDMI display device.
-After powering on the system, I hope to get something on the screen.
-How?
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+MjAxNi0xMS0yOCA4OjU4IEdNVCswMTowMCBTZWtoYXIgTm9yaSA8bnNla2hhckB0aS5jb20+Ogo+
+IE9uIE1vbmRheSAyOCBOb3ZlbWJlciAyMDE2IDAxOjEyIFBNLCBUb21pIFZhbGtlaW5lbiB3cm90
+ZToKPj4gT24gMjgvMTEvMTYgMDc6MjQsIFNla2hhciBOb3JpIHdyb3RlOgo+Pj4gT24gRnJpZGF5
+IDI1IE5vdmVtYmVyIDIwMTYgMDk6MDcgUE0sIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4+
+Pj4gSXQgaGFzIGJlZW4gZGV0ZXJtaW5lZCB0aGF0IHRoZSBtYXhpbXVtIHJlc29sdXRpb24gc3Vw
+cG9ydGVkIGNvcnJlY3RseQo+Pj4+IGJ5IHRpbGNkYyByZXYxIG9uIGRhODUwIFNvQ3MgaXMgODAw
+eDYwMEA2MC4gRHVlIHRvIG1lbW9yeSB0aHJvdWdocHV0Cj4+Pj4gY29uc3RyYWludHMgd2UgbXVz
+dCBmaWx0ZXIgb3V0IGhpZ2hlciBtb2Rlcy4KPj4+Pgo+Pj4+IFNwZWNpZnkgdGhlIG1heC1iYW5k
+d2lkdGggcHJvcGVydHkgZm9yIHRoZSBkaXNwbGF5IG5vZGUgZm9yCj4+Pj4gZGE4NTAtYmFzZWQg
+Ym9hcmRzLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8Ymdv
+bGFzemV3c2tpQGJheWxpYnJlLmNvbT4KPj4+PiAtLS0KPj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMv
+ZGE4NTAuZHRzaSB8IDEgKwo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4+
+Pgo+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+IGluZGV4IDhlMzBkOWIuLjliN2M0NDQgMTAwNjQ0
+Cj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKPj4+PiBAQCAtNDUyLDYgKzQ1Miw3IEBACj4+Pj4gICAg
+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInRpLGRhODUwLXRpbGNkYyI7Cj4+Pj4gICAg
+ICAgICAgICAgICAgICAgICByZWcgPSA8MHgyMTMwMDAgMHgxMDAwPjsKPj4+PiAgICAgICAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8NTI+Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAgbWF4
+LWJhbmR3aWR0aCA9IDwyODgwMDAwMD47Cj4+Pgo+Pj4gSWYgdGhpcyBpcyBlZmZlY3RpdmVseSB0
+aGUgbWF4IHBpeGVsIGNsb2NrIHRoYXQgdGhlIGRldmljZSBzdXBwb3J0cywKPj4+IHRoZW4gd2h5
+IG5vdCB1c2UgdGhlIGRhdGFzaGVldCBzcGVjaWZpZWQgdmFsdWUgb2YgMzcuNSBNSHogKFRjID0g
+MjYuNjYgbnMpLgo+Pgo+PiBUaGVyZSdzIGEgc2VwYXJhdGUgcHJvcGVydHkgZm9yIG1heC1waXhl
+bGNsb2NrLiBUaGlzIG9uZSBpcyBtYXhpbXVtCj4+IHBpeGVscyBwZXIgc2Vjb25kICh3aGljaCBk
+b2VzIHNvdW5kIGFsbW9zdCB0aGUgc2FtZSksIGJ1dCB0aGUgZG9jIHNheXMKPj4gaXQncyBhYm91
+dCB0aGUgcGFydGljdWxhciBtZW1vcnkgaW50ZXJmYWNlICsgTENEQyBjb21iaW5hdGlvbi4KPgo+
+IERBODUwIHN1cHBvcnRzIGJvdGggbUREUiBhbmQgRERSMiwgYXQgc2xpZ2h0bHkgZGlmZmVyZW50
+IHNwZWVkcy4gU28KPiBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24gaXMgYWxzbyBib2FyZCBz
+cGVjaWZpYy4gVGhpcyBzaG91bGQgcHJvYmFibHkKPiBtb3ZlIHRvIGJvYXJkIGZpbGUuCj4KPiBC
+dXQgSSB3b3VsZCBsaWtlIHRvIGtub3cgd2h5IHVzaW5nIG1heC1waXhlbGNsb2NrIGlzIG5vdCBn
+b29kIGVub3VnaC4KPiBIYXZlIGV4cGVyaW1lbnRzIHNob3duIHRoYXQgTENEQyBvbiBEQTg1MCBM
+Q0RLIHVuZGVyZmxvd3MgZXZlbiBpZiBwaXhlbAo+IGNsb2NrIGlzIGJlbG93IHRoZSBkYXRhc2hl
+ZXQgcmVjb21tZW5kYXRpb24/Cj4KCkhpIFNla2hhciwKCkkndmUganVzdCB0ZXN0ZWQgMTAyNHg3
+NjggYXQgMzcwMDAgS0h6IC0gaW5kZWVkIHNlZW1zIGxpa2UgdGhlCnVuZGVyZmxvd3MgYXJlIGdv
+bmUgYXMgc29vbiBhcyB3ZSBnbyBiZWxvdyAzNzUwMCBLSHouIEknbGwgc3VibWl0IGEKbmV3IHBh
+dGNoIHVzaW5nIHRoZSBtYXgtcGl4ZWxjbG9jayBwcm9wZXJ0eS4KClRoYW5rcywKQmFydG9zeiBH
+b2xhc3pld3NraQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
