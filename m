@@ -1,32 +1,28 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] minor GXL and GXM improvements
-Date: Mon, 28 Nov 2016 11:08:48 -0800
-Message-ID: <m28ts3toan.fsf@baylibre.com>
-References: <20161123162040.24843-1-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: NS2: Add GICv2m and PAXC
+Date: Mon, 28 Nov 2016 14:31:29 -0500
+Message-ID: <1480361491-22221-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161123162040.24843-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Wed, 23 Nov 2016 17:20:38 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Add support for GICv2m and PAXC.  GICv2m was tested on an e1000e
+adapter, with some hacking of the driver to verify MSI and legacy
+interrupts work.
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+Jon Mason (2):
+  arm64: dts: NS2: enable GICv2m for PAXB/PAXC interfaces
+  arm64: dts: NS2: enable PAXC on NS2 SVK
 
-> This series adds SCPI support to GXL and GXM SoCs by moving the nodes
-> to meson-gx.dtsi. Additionally this updates the compatible string to
-> match the recent changes, see [0]
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts |   4 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    | 121 +++++++++++++++++++++++++------
+ 2 files changed, 101 insertions(+), 24 deletions(-)
 
-Can you rebase onto my current v4.10/dt64 branch please?  I have updated
-the compatible string there.
+-- 
+2.7.4
 
-Thanks,
-
-Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
