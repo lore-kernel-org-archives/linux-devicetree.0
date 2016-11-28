@@ -1,104 +1,73 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Enable UEXT related nodes for Olimex
- A20 SOM EVB
-Date: Mon, 28 Nov 2016 12:19:18 +0100
-Message-ID: <20161128111918.kbkfmn554rlgeiem@lukather>
-References: <20161121164911.76900-1-manu@bidouilliste.com>
- <20161123080350.fstwdfndghk7c5xx@lukather>
- <20161123181610.cae67ad53f5f69246d341b30@bidouilliste.com>
- <20161124210834.a7da24a53b09364e8ab391d6@bidouilliste.com>
+From: Ziji Hu <huziji@marvell.com>
+Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
+ Xenon SDHC
+Date: Mon, 28 Nov 2016 19:38:11 +0800
+Message-ID: <10a885f0-82e9-a35c-f62f-3fc4518ea8b4@marvell.com>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+ <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFpkcoVMKbVOwjX1WDyNgc1vvUX60D6XRX6=YHGvkvHvnA@mail.gmail.com>
+ <3cd05a26-d340-476e-bab1-8be9d5446f47@marvell.com>
+ <CAPDyKFrskyZvMwhmj8ioyaowU8GL5=d-6ipGQcmmig_a9E9AQQ@mail.gmail.com>
+ <436c6925-cb0d-afe7-e3a2-384eca15ff42@marvell.com>
+ <8359307d-5f44-3db9-aae1-eb1fe8e1141d@marvell.com>
+ <CAPDyKFo3ezYOywtSZ8GGQ1XK9KPsxCgQNbaiz45EVgbgtnUxjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zhfijqfwtsplydcw"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161124210834.a7da24a53b09364e8ab391d6-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo3ezYOywtSZ8GGQ1XK9KPsxCgQNbaiz45EVgbgtnUxjg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
---zhfijqfwtsplydcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2016/11/28 19:13, Ulf Hansson wrote:
+>>
+>>     As you suggest, I replace mmc_wait_for_cmd() with mmc_send_tuning(), to
+>>     send commands for testing current sampling point set in our host PHY.
+>>
+>>     According to my test result, it shows that mmc_send_tuning() can only support
+>>     tuning command (CMD21/CMD19).
+>>     As a result, we cannot use mmc_send_tuning() when card is in the speed modes
+>>     which doesn't support tuning, such as eMMC HS SDR, eMMC HS DRR and
+>>     SD SDR 12/SDR25/DDR50. Card will not response to tuning commands in those
+>>     speed modes.
+>>
+>>     Could you please provide suggestions for the speed mode in which tuning is
+>>     not available?
+>>
+> 
+> Normally the mmc host driver shouldn't have to care about what the
+> card supports, as that is the responsibility of the mmc core to
+> manage.
+> 
+> The host should only need to implement the ->execute_tuning() ops,
+> which gets called when the card supports tuning (CMD19/21). Does it
+> make sense?
+> 
+   I think it is irrelevant to tuning procedure.
 
-On Thu, Nov 24, 2016 at 09:08:34PM +0100, Emmanuel Vadot wrote:
-> On Wed, 23 Nov 2016 18:16:10 +0100
-> Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
->=20
-> > On Wed, 23 Nov 2016 09:03:50 +0100
-> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >=20
-> > > On Mon, Nov 21, 2016 at 05:49:11PM +0100, Emmanuel Vadot wrote:
-> > > > UEXT are Universal EXTension connector from Olimex. They embed i2c,=
- spi
-> > > > and uart pins along power in one connector and are found on most,
-> > > > if not all, Olimex boards.
-> > > > The Olimex A20 SOM EVB have two UEXT connector so enable the nodes =
-found on
-> > > > those two connectors.
-> > > >=20
-> > > > Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-> > >=20
-> > > Fixed the indentation of the spi pinctrl cells, and applied.
-> > >=20
-> > > Please note that I'm note planning to send any new pull request, so
-> > > this will likely end up in 4.11.
-> > >=20
-> > > Thanks!
-> > > Maxime
-> > >=20
-> > > --=20
-> > > Maxime Ripard, Free Electrons
-> > > Embedded Linux and Kernel engineering
-> > > http://free-electrons.com
-> >=20
-> >  Sorry about the indentation, I'll be more carefull next time.
-> >=20
-> >  Thank you.
-> >=20
-> > --=20
-> > Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-> >=20
->=20
->  Hi Maxime,
->=20
->  Re-reading the patch I've seen that I've not enabled the SPI nodes, I
-> guess it's easier if you revert my patch and that I send a new one ?
+   Our host requires to adjust PHY setting after each time ios setting
+   (SDCLK/bus width/speed mode) is changed.
+   The simplified sequence is:
+   mmc change ios --> mmc_set_ios() --> ->set_ios() --> after sdhci_set_ios(),
+   adjust PHY setting.
+   During PHY setting adjustment, out host driver has to send commands to
+   test current sampling point. Tuning is another independent step.
 
-Just send the missing nodes, I'll squash the two commits.
+   Thus our host needs a valid command in PHY setting adjustment. Tuning command
+   can be borrowed to complete this task in SD SDR50. But for other speed mode,
+   we have to find out a valid command.
 
-Maxime
+   Any suggestion please?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+   Thank you.
 
---zhfijqfwtsplydcw
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+Hu Ziji
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYPBKyAAoJEBx+YmzsjxAg1N8P/32OeLqY7kikwgBKNceCV0HP
-q2+doIefszvscNI5dHll/qL3HoZBwqd1KLzWfpRivnAk9oPxCqwecpiF0Udq/+Yk
-81Knopm/hjxIF2C/I93d1tYjNvaZGCRSTO2MmJaoHhA0vl1HoEk5q08RkcAoxV8d
-hmoD0iEg3ceecPrwdAEoEtGIYWo3XmRmy4r/Ou6Za4AVjHcxfcdyTKtCmdJgPeGg
-4x+nOLq68eL+Pm0hLekY+ZE6Sq9lVFC0K1Pc55vsgK929+hUkqc+gVCenp93jBba
-7fB/nM3r9YWMsXnCJ+zXt1ehT9kaU2Zp98JYIYsLVZRHEJsT/FcyBkdrB55b8vZG
-qnqlV1Ty4Jd4boSDqtgODcFqMKXs4LO4sz7iO8uCiofjGOtdn8z9Huyp0kWnXGMs
-7flIJ5qDOlbEqi+HHqABZlp1PPx/ou9YfTAi8qqdp+dFmNJ+IWtEicKG1y83wo9Y
-3GP1tXqIFSHMAKHd8OLa8MdOR2wJOnf87c8lEODNJ2fcc88jz4+e47HSDjw72Ygf
-Y+YBh5H7ZAfjNRp34DsNjaBxKsnEDYUv64F4xO38UjZeQpkjnX5wrde1b+SA65Lz
-Z/ySHtDuaub0APtL7HYn4tbyJRnG12F1phpXYfitRtf4R1mrp+5Km8AqSmBrXzJu
-CECqdDoSmwPq6u2F4Ejn
-=PJuU
------END PGP SIGNATURE-----
-
---zhfijqfwtsplydcw--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Kind regards
+> Uffe
+> 
