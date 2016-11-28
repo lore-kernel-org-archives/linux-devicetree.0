@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v11 4/7] tests: Add overlay tests
-Date: Mon, 28 Nov 2016 18:05:38 +0200
-Message-ID: <1480349141-14145-5-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v11 3/7] tests: Add check_path test
+Date: Mon, 28 Nov 2016 18:05:37 +0200
+Message-ID: <1480349141-14145-4-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1480349141-14145-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
@@ -10,281 +10,131 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a number of tests for dynamic objects/overlays.
-
-Re-use the original test by moving the contents to a .dtsi include
+Add a test that checks for existence or not of a node.
+It is useful for testing the various cases when generating
+symbols and fixups for dynamic device tree objects.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- tests/overlay_overlay_dtc.dts     | 76 +----------------------------------
- tests/overlay_overlay_dtc.dtsi    | 83 +++++++++++++++++++++++++++++++++++++++
- tests/overlay_overlay_new_dtc.dts | 11 ++++++
- tests/overlay_overlay_simple.dts  | 12 ++++++
- tests/run_tests.sh                | 41 +++++++++++++++++++
- 5 files changed, 148 insertions(+), 75 deletions(-)
- create mode 100644 tests/overlay_overlay_dtc.dtsi
- create mode 100644 tests/overlay_overlay_new_dtc.dts
- create mode 100644 tests/overlay_overlay_simple.dts
+ tests/.gitignore     |  1 +
+ tests/Makefile.tests |  3 +-
+ tests/check_path.c   | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 85 insertions(+), 1 deletion(-)
+ create mode 100644 tests/check_path.c
 
-diff --git a/tests/overlay_overlay_dtc.dts b/tests/overlay_overlay_dtc.dts
-index 30d2362..ca943ea 100644
---- a/tests/overlay_overlay_dtc.dts
-+++ b/tests/overlay_overlay_dtc.dts
-@@ -8,78 +8,4 @@
- /dts-v1/;
- /plugin/;
+diff --git a/tests/.gitignore b/tests/.gitignore
+index 354b565..9e209d5 100644
+--- a/tests/.gitignore
++++ b/tests/.gitignore
+@@ -8,6 +8,7 @@ tmp.*
+ /asm_tree_dump
+ /boot-cpuid
+ /char_literal
++/check_path
+ /del_node
+ /del_property
+ /dtbs_equal_ordered
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index eb039c5..3d7a4f8 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -25,7 +25,8 @@ LIB_TESTS_L = get_mem_rsv \
+ 	integer-expressions \
+ 	property_iterate \
+ 	subnode_iterate \
+-	overlay overlay_bad_fixup
++	overlay overlay_bad_fixup \
++	check_path
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
  
--/ {
--	/* Test that we can change an int by another */
--	fragment@0 {
--		target = <&test>;
--
--		__overlay__ {
--			test-int-property = <43>;
--		};
--	};
--
--	/* Test that we can replace a string by a longer one */
--	fragment@1 {
--		target = <&test>;
--
--		__overlay__ {
--			test-str-property = "foobar";
--		};
--	};
--
--	/* Test that we add a new property */
--	fragment@2 {
--		target = <&test>;
--
--		__overlay__ {
--			test-str-property-2 = "foobar2";
--		};
--	};
--
--	/* Test that we add a new node (by phandle) */
--	fragment@3 {
--		target = <&test>;
--
--		__overlay__ {
--			new-node {
--				new-property;
--			};
--		};
--	};
--
--	fragment@5 {
--		target = <&test>;
--
--		__overlay__ {
--			local: new-local-node {
--				new-property;
--			};
--		};
--	};
--
--	fragment@6 {
--		target = <&test>;
--
--		__overlay__ {
--			test-phandle = <&test>, <&local>;
--		};
--	};
--
--	fragment@7 {
--		target = <&test>;
--
--		__overlay__ {
--			test-several-phandle = <&local>, <&local>;
--		};
--	};
--
--	fragment@8 {
--		target = <&test>;
--
--		__overlay__ {
--			sub-test-node {
--				new-sub-test-property;
--			};
--		};
--	};
--};
-+/include/ "overlay_overlay_dtc.dtsi"
-diff --git a/tests/overlay_overlay_dtc.dtsi b/tests/overlay_overlay_dtc.dtsi
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/check_path.c b/tests/check_path.c
 new file mode 100644
-index 0000000..8ea8d5d
+index 0000000..0d6a73b
 --- /dev/null
-+++ b/tests/overlay_overlay_dtc.dtsi
-@@ -0,0 +1,83 @@
++++ b/tests/check_path.c
+@@ -0,0 +1,82 @@
 +/*
-+ * Copyright (c) 2016 NextThing Co
-+ * Copyright (c) 2016 Free Electrons
-+ * Copyright (c) 2016 Konsulko Inc.
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for node existence
++ * Copyright (C) 2016 Konsulko Inc.
 + *
-+ * SPDX-License-Identifier:	GPL-2.0+
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 + */
 +
-+/ {
-+	/* Test that we can change an int by another */
-+	fragment@0 {
-+		target = <&test>;
++#include <stdio.h>
 +
-+		__overlay__ {
-+			test-int-property = <43>;
-+		};
-+	};
++#include <libfdt.h>
 +
-+	/* Test that we can replace a string by a longer one */
-+	fragment@1 {
-+		target = <&test>;
++#include "tests.h"
 +
-+		__overlay__ {
-+			test-str-property = "foobar";
-+		};
-+	};
++#define CHECK(code) \
++	{ \
++		if (code) \
++			FAIL(#code ": %s", fdt_strerror(code)); \
++	}
 +
-+	/* Test that we add a new property */
-+	fragment@2 {
-+		target = <&test>;
++/* 4k ought to be enough for anybody */
++#define FDT_COPY_SIZE	(4 * 1024)
 +
-+		__overlay__ {
-+			test-str-property-2 = "foobar2";
-+		};
-+	};
++static void *open_dt(char *path)
++{
++	void *dt, *copy;
 +
-+	/* Test that we add a new node (by phandle) */
-+	fragment@3 {
-+		target = <&test>;
++	dt = load_blob(path);
++	copy = xmalloc(FDT_COPY_SIZE);
 +
-+		__overlay__ {
-+			new-node {
-+				new-property;
-+			};
-+		};
-+	};
++	/*
++	 * Resize our DTs to 4k so that we have room to operate on
++	 */
++	CHECK(fdt_open_into(dt, copy, FDT_COPY_SIZE));
 +
-+	fragment@5 {
-+		target = <&test>;
++	return copy;
++}
 +
-+		__overlay__ {
-+			local: new-local-node {
-+				new-property;
-+			};
-+		};
-+	};
++int main(int argc, char *argv[])
++{
++	void *fdt_base;
++	int fail_config, exists, check_exists;
 +
-+	fragment@6 {
-+		target = <&test>;
++	test_init(argc, argv);
++	fail_config = 0;
 +
-+		__overlay__ {
-+			test-phandle = <&test>, <&local>;
-+		};
-+	};
++	if (argc != 4)
++		fail_config = 1;
 +
-+	fragment@7 {
-+		target = <&test>;
++	if (!fail_config) {
++		if (!strcmp(argv[2], "exists"))
++			check_exists = 1;
++		else if (!strcmp(argv[2], "not-exists"))
++			check_exists = 0;
++		else
++			fail_config = 1;
++	}
 +
-+		__overlay__ {
-+			test-several-phandle = <&local>, <&local>;
-+		};
-+	};
++	if (fail_config)
++		CONFIG("Usage: %s <base dtb> <[exists|not-exists]> <node-path>", argv[0]);
 +
-+	fragment@8 {
-+		target = <&test>;
++	fdt_base = open_dt(argv[1]);
 +
-+		__overlay__ {
-+			sub-test-node {
-+				new-sub-test-property;
-+			};
-+		};
-+	};
-+};
-diff --git a/tests/overlay_overlay_new_dtc.dts b/tests/overlay_overlay_new_dtc.dts
-new file mode 100644
-index 0000000..14d3f54
---- /dev/null
-+++ b/tests/overlay_overlay_new_dtc.dts
-@@ -0,0 +1,11 @@
-+/*
-+ * Copyright (c) 2016 NextThing Co
-+ * Copyright (c) 2016 Free Electrons
-+ * Copyright (c) 2016 Konsulko Inc.
-+ *
-+ * SPDX-License-Identifier:	GPL-2.0+
-+ */
++	exists = fdt_path_offset(fdt_base, argv[3]) >= 0;
 +
-+/dts-v1/ /plugin/;
-+
-+/include/ "overlay_overlay_dtc.dtsi"
-diff --git a/tests/overlay_overlay_simple.dts b/tests/overlay_overlay_simple.dts
-new file mode 100644
-index 0000000..8657e1e
---- /dev/null
-+++ b/tests/overlay_overlay_simple.dts
-@@ -0,0 +1,12 @@
-+/*
-+ * Copyright (c) 2016 Konsulko Inc.
-+ *
-+ * SPDX-License-Identifier:	GPL-2.0+
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&test {
-+	test-int-property = <43>;
-+};
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index e4139dd..74af0ff 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -181,6 +181,47 @@ overlay_tests () {
-         run_dtc_test -@ -I dts -O dtb -o overlay_base_with_symbols.test.dtb overlay_base.dts
-         run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols.test.dtb overlay_overlay_dtc.dts
-         run_test overlay overlay_base_with_symbols.test.dtb overlay_overlay_with_symbols.test.dtb
-+
-+        # new /plugin/ format
-+        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_new_with_symbols.test.dtb overlay_overlay_new_dtc.dts
-+	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/__symbols__"
-+	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/__fixups__"
-+	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/__local_fixups__"
-+
-+        # test new magic option
-+        run_dtc_test -M@ -I dts -O dtb -o overlay_overlay_with_symbols_new_magic.test.dtb overlay_overlay_dtc.dts
-+	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exists "/__symbols__"
-+	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exists "/__fixups__"
-+	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exists "/__local_fixups__"
-+
-+        # test plugin source to dtb and back
-+        run_dtc_test -@ -I dtb -O dts -o overlay_overlay_dtc.test.dts overlay_overlay_with_symbols.test.dtb
-+        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols.test.test.dtb overlay_overlay_dtc.test.dts
-+        run_test dtbs_equal_ordered overlay_overlay_with_symbols.test.dtb overlay_overlay_with_symbols.test.test.dtb
-+
-+	# test plugin source to dtb and back (with new magic)
-+        run_dtc_test -@ -I dtb -O dts -o overlay_overlay_dtc_new_magic.test.dts overlay_overlay_with_symbols_new_magic.test.dtb
-+        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols_new_magic.test.test.dtb overlay_overlay_dtc_new_magic.test.dts
-+        run_test dtbs_equal_ordered overlay_overlay_with_symbols_new_magic.test.dtb overlay_overlay_with_symbols_new_magic.test.test.dtb
-+
-+        # test plugin auto-generation without using -@
-+        run_dtc_test -I dts -O dtb -o overlay_overlay_new_with_symbols_auto.test.dtb overlay_overlay_dtc.dts
-+	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exists "/__symbols__"
-+	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exists "/__fixups__"
-+	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exists "/__local_fixups__"
-+
-+        # Test suppression of fixups
-+        run_dtc_test -F -@ -I dts -O dtb -o overlay_base_with_symbols_no_fixups.test.dtb overlay_base.dts
-+	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb exists "/__symbols__"
-+	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb not-exists "/__fixups__"
-+	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb not-exists "/__local_fixups__"
-+
-+        # Test generation of aliases insted of symbols
-+        run_dtc_test -A -I dts -O dtb -o overlay_overlay_with_aliases.dtb overlay_overlay_dtc.dts
-+	run_test check_path overlay_overlay_with_aliases.dtb exists "/aliases"
-+	run_test check_path overlay_overlay_with_aliases.dtb exists "/__symbols__"
-+	run_test check_path overlay_overlay_with_aliases.dtb exists "/__fixups__"
-+	run_test check_path overlay_overlay_with_aliases.dtb exists "/__local_fixups__"
-     fi
- 
-     # Bad fixup tests
++	if (exists == check_exists)
++		PASS();
++	else
++		FAIL();
++}
 -- 
 2.1.4
