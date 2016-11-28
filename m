@@ -1,71 +1,66 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: NS2: enable PAXC on NS2 SVK
-Date: Mon, 28 Nov 2016 14:31:31 -0500
-Message-ID: <1480361491-22221-3-git-send-email-jon.mason@broadcom.com>
-References: <1480361491-22221-1-git-send-email-jon.mason@broadcom.com>
+From: Leo Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH][v2] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Mon, 28 Nov 2016 13:53:02 -0600
+Message-ID: <CADRPPNThW4Ac8PwO1n2hDAPR6J0+8gd9k-VJ4DvOC3phk-BmeA@mail.gmail.com>
+References: <1479320647-24460-1-git-send-email-harninder.rai@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480361491-22221-1-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1479320647-24460-1-git-send-email-harninder.rai-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the PAXC based PCIe root complex on NS2 SVK. The PAXC based
-root complex is connected to internally emulated PCIe endpoints
+On Wed, Nov 16, 2016 at 12:24 PM, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org> wrote:
+> LS1012A features an advanced 64-bit ARM v8 CortexA53 processor
+> with 32 KB of parity protected L1-I cache, 32 KB of ECC protected
+> L1-D cache, as well as 256 KB of ECC protected L2 cache.
+>
+> Features summary
+>  One 64-bit ARM-v8 Cortex-A53 core with the following capabilities
+>   - Arranged as a cluster of one core supporting a 256 KB L2 cache with ECC
+>     protection
+>   - Speed up to 800 MHz
+>   - Parity-protected 32 KB L1 instruction cache and 32 KB L1 data cache
+>   - Neon SIMD engine
+>   - ARM v8 cryptography extensions
+>  One 16-bit DDR3L SDRAM memory controller
+>  ARM core-link CCI-400 cache coherent interconnect
+>  Cryptography acceleration (SEC)
+>  One Configurable x3 SerDes
+>  One PCI Express Gen2 controller, supporting x1 operation
+>  One serial ATA (SATA Gen 3.0) controller
+>  One USB 3.0/2.0 controller with integrated PHY
+>
+>  Following levels of DTSI/DTS files have been created for the LS1012A
+>    SoC family:
+>
+>            - fsl-ls1012a.dtsi:
+>                    DTS-Include file for FSL LS1012A SoC.
+>
+>            - fsl-ls1012a-frdm.dts:
+>                    DTS file for FSL LS1012A FRDM board.
+>
+>            - fsl-ls1012a-qds.dts:
+>                    DTS file for FSL LS1012A QDS board.
+>
+>            - fsl-ls1012a-rdb.dts:
+>                     DTS file for FSL LS1012A RDB board.
+>
+> Signed-off-by: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
 
-Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts |  4 ++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 17 +++++++++++++++++
- 2 files changed, 21 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index de8d379..5ae0816 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -76,6 +76,10 @@
- 	status = "ok";
- };
- 
-+&pcie8 {
-+	status = "ok";
-+};
-+
- &i2c0 {
- 	status = "ok";
- };
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 69775a8..96ed47b 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -169,6 +169,23 @@
- 		msi-parent = <&v2m0>;
- 	};
- 
-+	pcie8: pcie@60c00000 {
-+		compatible = "brcm,iproc-pcie-paxc";
-+		reg = <0 0x60c00000 0 0x1000>;
-+		linux,pci-domain = <8>;
-+
-+		bus-range = <0x0 0x1>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x83000000 0 0x00000000 0 0x60000000 0 0x00c00000>;
-+
-+		status = "disabled";
-+
-+		msi-parent = <&v2m0>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
--- 
-2.7.4
+Hi Shawn,
 
+Any feedback on this version?  Is it still possible for having it in
+4.9?  It will be perfect that we can finalize this base platform
+device tree soon so that driver developers can work on on-chip device
+specific changes on top of it.
+
+Regards,
+Leo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
