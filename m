@@ -1,209 +1,83 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: display: add Amlogic Meson DRM
- Bindings
-Date: Mon, 28 Nov 2016 10:23:43 +0100
-Message-ID: <9f32e3bd-531b-0be7-8579-3af52469c421@baylibre.com>
-References: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
- <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
- <3721857.XEGXu9B51N@avalon>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 2/2] pinctrl: tegra: Add driver to configure voltage
+ and power of io pads
+Date: Mon, 28 Nov 2016 09:26:32 +0000
+Message-ID: <4d255a3e-0816-498c-a280-6d29ca880e13@nvidia.com>
+References: <1479976734-30498-1-git-send-email-ldewangan@nvidia.com>
+ <1479976734-30498-3-git-send-email-ldewangan@nvidia.com>
+ <20161125095744.GB11512@ulmo.ba.sec> <583828D5.5060507@nvidia.com>
+ <da7b815c-149c-6baf-6691-a038d3fe54bf@nvidia.com>
+ <583879A8.7020401@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3721857.XEGXu9B51N@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <583879A8.7020401-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-On 11/28/2016 09:33 AM, Laurent Pinchart wrote:
-> Hi Neil,
+
+On 25/11/16 17:49, Laxman Dewangan wrote:
 > 
-> Thank you for the patch.
-> 
-> On Friday 25 Nov 2016 17:03:11 Neil Armstrong wrote:
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../bindings/display/meson/meson-drm.txt           | 134 +++++++++++++++++
->>  1 file changed, 134 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/display/meson/meson-drm.txt
+> On Friday 25 November 2016 10:59 PM, Jon Hunter wrote:
+>> On 25/11/16 12:04, Laxman Dewangan wrote:
+>>> Thanks Thierry for review.
+>>>
+>>> On Friday 25 November 2016 03:27 PM, Thierry Reding wrote:
+>>>> * PGP Signed by an unknown key
+>>>>
+>>>> On Thu, Nov 24, 2016 at 02:08:54PM +0530, Laxman Dewangan wrote:
+>>>>> +      NVIDIA Tegra124/210 SoC has IO pads which supports
+>>>>> multi-voltage
+>>>>> +      level of interfacing and deep power down mode of IO pads. The
+>>>>> +      voltage of IO pads are SW configurable based on IO rail of that
+>>>>> +      pads on T210. This driver provides the interface to change
+>>>>> IO pad
+>>>>> +      voltage and power state via pincontrol interface.
+>>>> This has a lot of chip-specific text. Will all of that have to be
+>>>> updated if support for new chips is added?
+>>> Then saying that Tegra124 and later..
+>>> Hoping, people know our chip releasing sequence as numbering are not in
+>>> sequence.
+>>>
+>>>>> +#include <linux/regulator/consumer.h>
+>>>>> +#include <soc/tegra/pmc.h>
+>>>> Have you considered moving this code into the PMC driver? It seems a
+>>>> little over the top to go through all of the platform device creation
+>>>> and driver registration dance only to call into a public API later on.
+>>> Yes, we had discussion on this and suggestion came to use the pinctrl
+>>> framework.
+>>> If we do in the pmc driver then we will need lots of DT processing for
+>>> getting information from DT which we can directly get from the pinctrl
+>>> core framework.
+>>> Also client driver may need to have the control dynamically and get the
+>>> IO pads from DT. So implementing all in pmc will be huge duplication
+>>> over already existing framework.
+>> I don't follow. We already did something similar for the Tegra DPAUX
+>> driver [0].
 >>
->> diff --git a/Documentation/devicetree/bindings/display/meson/meson-drm.txt
->> b/Documentation/devicetree/bindings/display/meson/meson-drm.txt new file
->> mode 100644
->> index 0000000..89c1b5f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/meson/meson-drm.txt
->> @@ -0,0 +1,134 @@
->> +Amlogic Meson Display Controller
->> +================================
->> +
->> +The Amlogic Meson Display controller is composed of several components
->> +that are going to be documented below:
->> +
->> +DMC|---------------VPU (Video Processing Unit)------------|------HHI------|
->> +   | vd1   _______     _____________    _____________     |               |
->> +D  |-------|      |----|            |   |            |    |   HDMI PLL    |
->> +D  | vd2   | VIU  |    | Video Post |   | Video Encs |<---|-----VCLK      |
->> +R  |-------|      |----| Processing |   |            |    |               |
->> +   | osd2  |      |    |            |---| Enci ------|----|-----VDAC------|
->> +R  |-------| CSC  |----| Scalers    |   | Encp ------|----|----HDMI-TX----|
->> +A  | osd1  |      |    | Blenders   |   | Encl-------|----|---------------|
->> +M  |-------|______|----|____________|   |____________|    |               |
->> +___|______________________________________________________|_______________|
->> +
->> +
->> +VIU: Video Input Unit
->> +---------------------
->> +
->> +The Video Input Unit is in charge of the pixel scanout from the DDR memory.
->> +It fetches the frames addresses, stride and parameters from the "Canvas"
->> memory.
->> +This part is also in charge of the CSC (Colorspace Conversion).
->> +It can handle 2 OSD Planes and 2 Video Planes.
->> +
->> +VPP: Video Processing Unit
+>> Cheers
+>> Jon
+>>
+>> [0]
+>> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/tegra/dpaux.c?id=0751bb5c44fe1aa9494ce259d974c3d249b73a84
+>>
 > 
-> Do you mean "Video Post Processing" ? In your diagram above Video Processing 
-> Unit is abbreviated VPU and covers the VIU, VPP and encoders.
-
-Exact, I meant VPP here.
-
+> In the above dpaux driver,  you used the pinctrl framework and its core
+> functionality for the device tree interfacing and client interfacing.
 > 
->> +--------------------------
->> +
->> +The Video Processing Unit is in charge if the scaling and blending of the
->> +various planes into a single pixel stream.
->> +There is a special "pre-blending" used by the video planes with a dedicated
->> +scaler and a "post-blending" to merge with the OSD Planes.
->> +The OSD planes also have a dedicated scaler for one of the OSD.
->> +
->> +VENC: Video Encoders
->> +--------------------
->> +
->> +The VENC is composed of the multiple pixel encoders :
->> + - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
->> + - ENCP : Progressive Video Encoder for HDMI
->> + - ENCL : LCD LVDS Encoder
->> +The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and
->> clock
->> +tree and provides the scanout clock to the VPP and VIU.
->> +The ENCI is connected to a single VDAC for Composite Output.
->> +The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
->> +
->> +Device Tree Bindings:
->> +---------------------
->> +
->> +VPU: Video Processing Unit
->> +--------------------------
->> +
->> +Required properties:
->> + - compatible: value should be different for each SoC family as :
->> + 	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
->> + 	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
->> + 	- GXM (S912) : "amlogic,meson-gxm-vpu"
->> +	followed by the common "amlogic,meson-gx-vpu"
->> + - reg: base address and size of he following memory-mapped regions :
->> +	- vpu
->> +	- hhi
->> +	- dmc
->> + - reg-names: should contain the names of the previous memory regions
->> + - interrupts: should contain the VENC Vsync interrupt number
->> +
->> +- ports: A ports node with endpoint definitions as defined in
->> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +  second port should be the output endpoints for VENC connectors.
->> +
->> +VENC CBVS Output
->> +----------------------
->> +
->> +The VENC can output Composite/CVBS output via a decicated VDAC.
->> +
->> +Required properties:
->> +  - compatible: value must be one of:
->> + - compatible: value should be different for each SoC family as :
-> 
-> One of those two lines is redundant.
+> The same thing I am saying here, we should not avoid the pinctrl
+> framework. The client driver will use the pinctrl framework for the IO
+> pad configurations, not direct PMC APIs.
 
-Will fix.
+Exactly, so why are you saying that by moving the code into the PMC
+driver this will "need lots of DT processing for getting information
+from DT"? By moving the code, we are not suggesting we don't use the
+pinctrl framework, we are just suggesting we move the code. That's all.
 
-> 
->> + 	- GXBB (S905) : "amlogic,meson-gxbb-venc-cvbs"
->> + 	- GXL (S905X, S905D) : "amlogic,meson-gxl-venc-cvbs"
->> + 	- GXM (S912) : "amlogic,meson-gxm-venc-cvbs"
->> +	followed by the common "amlogic,meson-gx-venc-cvbs"
->> +
-> 
-> No registers ? Are the encoders registers part of the VPU register space, 
-> intertwined in a way that they can't be specified separately here ?
+Jon
 
-Exact, all the video registers on the Amlogic SoC are part of a long history of fixup/enhance from very old SoCs, it's
-quite hard to distinguish a Venc registers array since they are mixed with the multiple encoders registers...
-
-The only separate registers are the VDAC and HDMI PHY, I may move them to these separate nodes since they are part of the HHI register space.
-
-It is a problem if I move them in the next release ? Next release will certainly have HDMI support, and will have these refactorings.
-
-> 
->> +- ports: A ports node with endpoint definitions as defined in
->> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +  first port should be the input endpoints, connected ot the VPU node.
->> +
->> +Example:
->> +
->> +venc_cvbs: venc-cvbs {
->> +	compatible = "amlogic,meson-gxbb-venc-cvbs";
->> +	status = "okay";
->> +
->> +	ports {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		enc_cvbs_in: port@0 {
->> +			 #address-cells = <1>;
->> +			 #size-cells = <0>;
->> +			 reg = <0>;
->> +
->> +			 venc_cvbs_in_vpu: endpoint@0 {
->> +				 reg = <0>;
->> +				 remote-endpoint = <&vpu_out_venc_cvbs>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +vpu: vpu@d0100000 {
->> +	compatible = "amlogic,meson-gxbb-vpu";
->> +	reg = <0x0 0xd0100000 0x0 0x100000>,
->> +	      <0x0 0xc883c000 0x0 0x1000>,
->> +	      <0x0 0xc8838000 0x0 0x1000>;
->> +	reg-names = "base", "hhi", "dmc";
->> +	interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
->> +
->> +	ports {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		vpu_out: port@1 {
->> +			 #address-cells = <1>;
->> +			 #size-cells = <0>;
->> +			 reg = <1>;
->> +
->> +			 vpu_out_venc_cvbs: endpoint@0 {
->> +				 reg = <0>;
->> +				 remote-endpoint = <&venc_cvbs_in_vpu>;
->> +			 };
->> +		 };
->> +	};
->> +};
-> 
-
-Thanks for the review !
-
-Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+nvpublic
