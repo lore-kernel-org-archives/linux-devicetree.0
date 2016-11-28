@@ -1,28 +1,105 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] devicetree: bindings: pinctrl: Add binding for
- ti,da850-pupd
-Date: Mon, 28 Nov 2016 15:54:34 -0600
-Message-ID: <20161128215434.2fxp7zjszj2sq3an@rob-hp-laptop>
-References: <1479871767-20160-1-git-send-email-david@lechnology.com>
- <1479871767-20160-2-git-send-email-david@lechnology.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
+Date: Mon, 28 Nov 2016 13:56:11 -0800
+Message-ID: <CAEG3pNDtMY+Pf1_w6vQEswaMVZ=jOC69R749jSFwB2NiU8r58Q@mail.gmail.com>
+References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
+ <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
+ <2404891.arL9itCrmb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1479871767-20160-2-git-send-email-david@lechnology.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Axel Haslam <ahaslam@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2404891.arL9itCrmb@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Linux-DT <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, nickey.yang@rock-chips.com, Andy Yan <andy.yan@rock-chips.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2016 at 09:29:25PM -0600, David Lechner wrote:
-> Device-tree bindings for TI DA8XX/OMAP-L138/AM18XX pullup/pulldown
-> pinconf controller.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->  .../devicetree/bindings/pinctrl/ti,da850-pupd.txt  | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/ti,da850-pupd.txt
-
-Acked-by: Rob Herring <robh@kernel.org>
+SGkgTGF1cmVudCwgYWxsLAoKT24gRnJpLCBOb3YgMjUsIDIwMTYgYXQgNzoyMiBBTSwgTGF1cmVu
+dCBQaW5jaGFydAo8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBI
+aSBBbmR5LAo+Cj4gT24gRnJpZGF5IDI1IE5vdiAyMDE2IDEwOjU2OjUzIEFuZHkgWWFuIHdyb3Rl
+Ogo+PiBPbiAyMDE25bm0MTHmnIgyNeaXpSAwNzoyNiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
+Pj4gPiBPbiBGcmlkYXkgMjUgTm92IDIwMTYgMDA6MTY6MDAgVmxhZGltaXIgWmFwb2xza2l5IHdy
+b3RlOgo+PiA+PiBPbiAxMS8yNS8yMDE2IDEyOjA3IEFNLCBGYWJpbyBFc3RldmFtIHdyb3RlOgo+
+PiA+Pj4gT24gVGh1LCBOb3YgMjQsIDIwMTYgYXQgNzoxNiBQTSwgTGF1cmVudCBQaW5jaGFydCB3
+cm90ZToKPj4gPj4+PiBIaSBBbmR5LAo+PiA+Pj4+Cj4+ID4+Pj4gQXMgdGhlIGF1dGhvciBvZiB0
+aGUgRFctSERNSSBEVCBiaW5kaW5ncyB0aGlzIHF1ZXN0aW9uIGlzIGFkZHJlc3NlZCB0bwo+PiA+
+Pj4+IHlvdSwgYnV0IGluZm9ybWF0aW9uIGZyb20gYW55b25lIGlzIG1vcmUgdGhhbiB3ZWxjb21l
+Lgo+PiA+Pj4+Cj4+ID4+Pj4gVGhlIERUIGJpbmRpbmdzIHNwZWNpZnkgdHdvIGNsb2NrcyBuYW1l
+ZCAiaWFoYiIgYW5kICJpc2ZyIiBidXQgZG9uJ3QKPj4gPj4+PiBkZXNjcmliZSB0aGVtLiBXaGls
+ZSBJIGFzc3VtZSB0aGF0IHRoZSAiaXNmciIgY2xvY2sgY29ycmVzcG9uZHMgdG8gdGhlCj4+ID4+
+Pj4gImlzZnJjbGsiIGlucHV0IHNpZ25hbCBvZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlh
+aGIiIGNsb2NrCj4+ID4+Pj4gZGVzY3JpYmVkIGluIHRoZSBJUCBjb3JlIGRhdGFzaGVldC4KPj4g
+Pj4+Cj4+ID4+PiBpLk1YNlEgaGFzIGEgRFctSERNSSBJUCBibG9jay4KPj4gPj4+Cj4+ID4+PiBU
+aGUgbmFtZXMgaW4gdGhlIGRldmljZXRyZWUgYmluZGluZyBtYXRjaGVzIHRoZSBvbmVzIGxpc3Rl
+ZCBhdCB0aGUKPj4gPj4+IGkuTVg2USBSZWZlcmVuY2UgTWFudWFsIC0gVGFibGUgMzMtMS4gSERN
+SSBDbG9ja3MKPj4gPj4KPj4gPj4gY29ycmVjdCwgZm9yIHlvdXIgY29udmVuaWVuY2UgdGhlIHRh
+YmxlIGlzIGNvcGllZCBiZWxvdzoKPj4gPj4KPj4gPj4gQ2xvY2sgbmFtZSB8ICAgICBDbG9jayBS
+b290ICAgICB8IERlc2NyaXB0aW9uCj4+ID4+IC0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiA+PiAgIGlhaGJj
+bGsgIHwgYWhiX2Nsa19yb290ICAgICAgIHwgQnVzIGNsb2NrCj4+ID4+ICAgaWNlY2NsayAgfCBj
+a2lsX3N5bmNfY2xrX3Jvb3QgfCBDRUMgbG93LWZyZXF1ZW5jeSBjbG9jayAoMzJrSFopCj4+ID4+
+ICAgaWhjbGsgICAgfCBhaGJfY2xrX3Jvb3QgICAgICAgfCBNb2R1bGUgY2xvY2sKPj4gPj4gICBp
+c2ZyY2xrICB8IHZpZGVvXzI3bV9jbGtfcm9vdCB8IEludGVybmFsIFNGUiBjbG9jayAodmlkZW8g
+Y2xvY2sKPj4gPj4gICAyN01IeikKPj4gPj4KPj4gPj4gSGVyZSBBSEIgc3RhbmRzIGZvciBBUk0g
+QWR2YW5jZWQgSGlnaC1wZXJmb3JtYW5jZSBCdXMuCj4+ID4KPj4gPiBUaGF0J3Mgd2hhdCBJIHN1
+c3BlY3RlZC4gSSBiZWxpZXZlIHRoZSAiaWFoYiIgbmFtZSBpcyB3cm9uZywgYXMgdGhlIERXCj4+
+ID4gSERNSSBUWCBJUCBjb3JlIGNsZWFybHkgZG9jdW1lbnRzIHRoZSBidXMgY2xvY2sgYXMgYmVp
+bmcgY2FsbGVkCj4+ID4gImlhcGJjbGsiLiBXZSBjb3VsZCByZW5hbWUgdGhhdCBpbiB0aGUgRFQg
+YmluZGluZ3MgKHdpdGggY29tcGF0aWJpbGl0eQo+PiA+IGNvZGUgaW4gdGhlIGRyaXZlciB0byBr
+ZWVwIHN1cHBvcnRpbmcgdGhlIG9sZCBuYW1lKSBidXQgaXQgbWlnaHQgbm90IGJlCj4+ID4gd29y
+dGggaXQuIFRoZSBiaW5kaW5ncyBzaG91bGQgaG93ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFo
+YiIgY2xvY2sgaXMKPj4gPiB0aGUgSVAgY29yZSdzICJpYXBiY2xrIiBidXMgY2xvY2suCj4+Cj4+
+IEkgZ290IHRoZSBjbG9jayBuYW1lIGZyb20gSS5NWDZRIFRSTSwgSSBhbHNvIGNoZWNrZWQgdGhl
+IG5hbWUgYWdhaW4KPj4gd2l0aCBSb2NrY2hpcCBJQyBkZXNpZ24gdGVhbSBub3csIGhvcGUgdG8g
+Z2V0IHNvbWUgbmV3IGluZm9ybWF0aW9uIHNvb24uCj4KPiBUaGFuayB5b3UuIFdoaWxlIGF0IGl0
+LCBjb3VsZCB5b3UgYXNrIHRoZW0gd2hpY2ggdmVyc2lvbiBvZiB0aGUgRFcgSERNSSBJUAo+IHVz
+ZWQgaW4gdGhlIFNvQyA/Cj4KPj4gPiBBbm90aGVyIHF1ZXN0aW9uIEkgaGF2ZSBhYm91dCB0aGUg
+YnVzIGNsb2NrIChDQydpbmcgdGhlIGRldmljZXRyZWUgbWFpbGluZwo+PiA+IGxpc3QgYXMgd2Vs
+bCBhcyB0aGUgY2xvY2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRoZXIgaXQgc2hvdWxkIGJlIG1hZGUK
+Pj4gPiBvcHRpb25hbC4gVGhlIGNsb2NrIGlzIG9idmlvdXNseSBtYW5kYXRvcnkgZnJvbSBhIGhh
+cmR3YXJlIHBvaW50IG9mIHZpZXcKPj4gPiAoZ2l2ZW4gdGhhdCBBUEIgaXMgYSBzeW5jaHJvbm91
+cyBidXMgYW5kIHRodXMgcmVxdWlyZXMgYSBjbG9jayksIGJ1dCBpbgo+PiA+IHNvbWUgU29DcyAo
+c3BlY2lmaWNhbGx5IGZvciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlzIGFsd2F5cyBv
+biBhbmQKPj4gPiBjYW4ndCBiZSBjb250cm9sbGVkLiBXZSBhbHJlYWR5IG9taXQgYnVzIGNsb2Nr
+cyBpbiBEVCBmb3IgbW9zdCBJUCBjb3Jlcwo+PiA+IHdoZW4gdGhlIGNsb2NrIGNhbiBuZXZlciBi
+ZSBjb250cm9sbGVkIChhbmQgd2UgYWxzbyBvbWl0IGEgYnVuY2ggb2Ygb3RoZXIKPj4gPiBjbG9j
+a3MgdGhhdCB3ZSBkb24ndCBldmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNl
+IHRvIG1ha2UgdGhlCj4+ID4gY2xvY2sgb3B0aW9uYWwuIE90aGVyd2lzZSB0aGVyZSB3b3VsZCBi
+ZSBydW50aW1lIG92ZXJoZWFkIHRyeWluZyB0byBoYW5kbGUKPj4gPiBhIGNsb2NrIHRoYXQgY2Fu
+J3QgYmUgY29udHJvbGxlZC4KPj4KPj4gSWYgdGhpcyBpcyB0aGUgY2FzZSBvbiBSZW5lc2FzIFNP
+Q3MsIHdlIGNhbiBjb25zaWRlciBtYWtlIHRoZSBjbG9jayBhcwo+PiBvcHRpb25hbC4gT3IgbW92
+ZSBhbGwgdGhlIGNsb2NrIG9wZXJhdGlvbnMgdG8gcGxhdGZvcm0gc3BlY2lmaWMKPj4gY29kZShk
+d19oZG1pLXJvY2tjaGlwLmMvZHdfaGRtaS1pbXguYyk/Cj4KPiBJJ2QgcHJlZmVyIGtlZXBpbmcg
+dGhlIGNvZGUgZ2VuZXJpYywgb3RoZXJ3aXNlIHdlJ2QgZW5kIHVwIHdpdGggcGxhdGZvcm0tCj4g
+c3BlY2lmaWMgY29kZSB0aGF0IHdvdWxkIHBlcmZvcm0gdGhlIHNhbWUgb3BlcmF0aW9ucyBvbiBt
+b3N0IHBsYXRmb3Jtcy4gSSdsbAo+IHN1Ym1pdCBhIHBhdGNoIHNvb24gdG8gbWFrZSB0aGUgY2xv
+Y2sgb3B0aW9uYWwsIHdlIGNhbiBkaXNjdXNzIGl0IHRoZW4uCgpZZXMsIGxldCdzIGtlZXAgdGhl
+IGNvZGUgZ2VuZXJpYy4gQWJzZW5jZSBvZiBhICJzdGFuZGFyZCcgY2xvY2sgaXMgT0sKYW5kIHdl
+IHNob3VsZCBhY2NlcHQgdGhlIHNtYWxsIG92ZXJoZWFkIGluY3VycmVkIGluIHByb3ZpZGluZyBh
+CnNvbHV0aW9uIHRoYXQgd29ya3MgZm9yIGV2ZXJ5b25lLiBUaGlzIHByZXZlbnRzIGhhcmR3YXJl
+LXNwZWNpZmljCmhhY2tzIGluIHRoZSBkcml2ZXIuCgpSZWxhdGVkOiB3ZSByZWFsbHkgc2hvdWxk
+IG1vZGVsIGJ1cyBjbG9ja3Mgd2hlbmV2ZXIgcG9zc2libGUuIEkndmUKc2VlbiBvdGhlciBhdHRl
+bXB0cyB0byBtZXJnZSBmdW5jdGlvbmFsL2xvZ2ljIGFuZCBidXMgY2xvY2tzIGludG8gYQpzaW5n
+bGUgZW50aXR5IChlLmcuIGEgc2luZ2xlIHN0cnVjdCBjbGtfaHcvY2xrX2NvcmUgdGhhdCB0dXJu
+cyBib3RoCmNsb2NrcyBvbiBhbmQgb2ZmKSBhbmQgdGhpcyBkZWZlYXRzIHNvbWUgZmluZS1ncmFp
+bmVkIHBvd2VyIG1hbmFnZW1lbnQKc2NlbmFyaW9zIHRoYXQgdGhlIGhhcmR3YXJlIGRlc2lnbmVy
+cyBoYWQgaW4gbWluZCB3aGVuIGNyZWF0aW5nCnNlcGFyYXRlIGNvbnRyb2xzIGZvciB0aGUgY2xv
+Y2tzLgoKUmVnYXJkcywKTWlrZQoKPgo+PiA+PiBCeSB0aGUgd2F5IHdoaWxlIHdlJ3JlIGRpc2N1
+c3NpbmcgRFcgSERNSSBiaW5kaW5ncyBzcGVjaWZpYyB0byBpTVgsCj4+ID4+IEkgd291bGQgcmVj
+b21tZW5kIHRvIHJlbW92ZSB1dHRlcmx5IGhhY2tpc2ggYW5kIGlNWCBvbmx5ICJncHIiCj4+ID4+
+IHByb3BlcnR5IGZyb20gdGhlIGV4YW1wbGUgaW4gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdf
+aGRtaS50eHQKPgo+IC0tCj4gUmVnYXJkcywKPgo+IExhdXJlbnQgUGluY2hhcnQKPgoKCgotLSAK
+TWljaGFlbCBUdXJxdWV0dGUKQ0VPCkJheUxpYnJlIC0gQXQgdGhlIEhlYXJ0IG9mIEVtYmVkZGVk
+IExpbnV4Cmh0dHA6Ly9iYXlsaWJyZS5jb20vCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
