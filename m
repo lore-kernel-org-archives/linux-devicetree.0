@@ -1,66 +1,59 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
-Date: Mon, 28 Nov 2016 13:15:27 +0100
-Message-ID: <1480335328-4010-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1480335328-4010-1-git-send-email-bgolaszewski@baylibre.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH net-next v3 1/4] net: phy: add an option to disable EEE
+ advertisement
+Date: Mon, 28 Nov 2016 13:20:50 +0100
+Message-ID: <34d6415d-aea9-6e92-cb3d-898ebe01202f@suse.de>
+References: <1480326409-25419-1-git-send-email-jbrunet@baylibre.com>
+ <1480326409-25419-2-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1480335328-4010-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480326409-25419-2-git-send-email-jbrunet@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, netdev@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Andre Roth <neolynx@gmail.com>, linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBkdW1iLXZnYS1kYWMgbm9kZSB0byB0aGUgYm9hcmQgRFQgdG9nZXRoZXIgd2l0aCBj
-b3JyZXNwb25kaW5nCnBvcnRzIGFuZCB2Z2EgY29ubmVjdG9yLiBUaGlzIGFsbG93cyB0byByZXRy
-aWV2ZSB0aGUgZWRpZCBpbmZvIGZyb20KdGhlIGRpc3BsYXkgYXV0b21hdGljYWxseS4KClNpZ25l
-ZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+
-Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgfCA1OCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
-ICAgICB8IDE3ICsrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgYi9hcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwppbmRleCA3MTFiOWFkLi5kODY0ZjExIDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9kYTg1MC1sY2RrLmR0cwpAQCAtNTAsNiArNTAsNTMgQEAKIAkJCXN5c3RlbS1jbG9jay1m
-cmVxdWVuY3kgPSA8MjQ1NzYwMDA+OwogCQl9OwogCX07CisKKwl2Z2FfYnJpZGdlIHsKKwkJY29t
-cGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
-CQlwaW5jdHJsLTAgPSA8JmxjZF9waW5zPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNz
-aXplLWNlbGxzID0gPDA+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJcmVnID0gPDA+OworCisJCQkJdmdh
-X2JyaWRnZV9pbjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZkaXNwbGF5X291dF92Z2E+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEg
-eworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJ
-CXJlZyA9IDwxPjsKKworCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVn
-ID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9jb25faW4+OworCQkJCX07CisJ
-CQl9OworCQl9OworCX07CisKKwl2Z2EgeworCQljb21wYXRpYmxlID0gInZnYS1jb25uZWN0b3Ii
-OworCisJCWRkYy1pMmMtYnVzID0gPCZpMmMwPjsKKworCQlwb3J0IHsKKwkJCXZnYV9jb25faW46
-IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2Vfb3V0PjsKKwkJ
-CX07CisJCX07CisJfTsKIH07CiAKICZwbXhfY29yZSB7CkBAIC0yMzUsMyArMjgyLDE0IEBACiAm
-bWVtY3RybCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKKworJmRpc3BsYXkgeworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKKyZkaXNwbGF5X291dCB7CisJZGlzcGxheV9vdXRfdmdhOiBlbmRwb2lu
-dEAwIHsKKwkJcmVnID0gPDA+OworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2VfaW4+
-OworCX07Cit9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKaW5kZXggNDA3MDYxOS4uNWY0YmEyZSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0
-cy9kYTg1MC5kdHNpCkBAIC00NTQsNiArNDU0LDIzIEBACiAJCQlyZWcgPSA8MHgyMTMwMDAgMHgx
-MDAwPjsKIAkJCWludGVycnVwdHMgPSA8NTI+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwor
-CQkJcG9ydHMgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0g
-PDA+OworCisJCQkJZGlzcGxheV9pbjogcG9ydEAwIHsKKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47CisJCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJCQlyZWcgPSA8MD47CisJCQkJfTsKKwor
-CQkJCWRpc3BsYXlfb3V0OiBwb3J0QDEgeworCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJCXJlZyA9IDwxPjsKKwkJCQl9OworCQkJfTsKIAkJ
-fTsKIAl9OwogCWFlbWlmOiBhZW1pZkA2ODAwMDAwMCB7Ci0tIAoyLjkuMwoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Am 28.11.2016 um 10:46 schrieb Jerome Brunet:
+> This patch adds an option to disable EEE advertisement in the generic PHY
+> by providing a mask of prohibited modes corresponding to the value found =
+in
+> the MDIO_AN_EEE_ADV register.
+> =
+
+> On some platforms, PHY Low power idle seems to be causing issues, even
+> breaking the link some cases. The patch provides a convenient way for the=
+se
+> platforms to disable EEE advertisement and work around the issue.
+> =
+
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/net/phy/phy.c        |  3 ++
+>  drivers/net/phy/phy_device.c | 80 ++++++++++++++++++++++++++++++++++++++=
++-----
+>  include/linux/phy.h          |  3 ++
+>  3 files changed, 77 insertions(+), 9 deletions(-)
+
+Tested-by: Andreas F=E4rber <afaerber@suse.de>
+
+With this and the corresponding .dts change, Odroid-C2 survived a
+317-package zypper update for me.
+
+Thanks,
+Andreas
+
+-- =
+
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG N=FCrnberg)
