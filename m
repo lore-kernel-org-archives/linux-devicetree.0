@@ -1,197 +1,83 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCHv2 11/11] clocksource/drivers/rockchip_timer: implement clocksource timer
-Date: Mon, 28 Nov 2016 17:31:26 +0300
-Message-ID: <1480343486-25539-12-git-send-email-al.kochet@gmail.com>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
+ Xenon SDHC
+Date: Mon, 28 Nov 2016 16:16:34 +0100
+Message-ID: <CAPDyKFr8rX04iY92OeQpSkS+3HN2-FxijCCiDb2sSKvP+TZPog@mail.gmail.com>
+References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
+ <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFpkcoVMKbVOwjX1WDyNgc1vvUX60D6XRX6=YHGvkvHvnA@mail.gmail.com>
+ <3cd05a26-d340-476e-bab1-8be9d5446f47@marvell.com> <CAPDyKFrskyZvMwhmj8ioyaowU8GL5=d-6ipGQcmmig_a9E9AQQ@mail.gmail.com>
+ <436c6925-cb0d-afe7-e3a2-384eca15ff42@marvell.com> <8359307d-5f44-3db9-aae1-eb1fe8e1141d@marvell.com>
+ <CAPDyKFo3ezYOywtSZ8GGQ1XK9KPsxCgQNbaiz45EVgbgtnUxjg@mail.gmail.com> <10a885f0-82e9-a35c-f62f-3fc4518ea8b4@marvell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480343486-25539-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <10a885f0-82e9-a35c-f62f-3fc4518ea8b4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock supplying the arm-global-timer on the rk3188 is coming from the
-the cpu clock itself and thus changes its rate everytime cpufreq adjusts
-the cpu frequency making this timer unsuitable as a stable clocksource.
+On 28 November 2016 at 12:38, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Ulf,
+>
+> On 2016/11/28 19:13, Ulf Hansson wrote:
+>>>
+>>>     As you suggest, I replace mmc_wait_for_cmd() with mmc_send_tuning(), to
+>>>     send commands for testing current sampling point set in our host PHY.
+>>>
+>>>     According to my test result, it shows that mmc_send_tuning() can only support
+>>>     tuning command (CMD21/CMD19).
+>>>     As a result, we cannot use mmc_send_tuning() when card is in the speed modes
+>>>     which doesn't support tuning, such as eMMC HS SDR, eMMC HS DRR and
+>>>     SD SDR 12/SDR25/DDR50. Card will not response to tuning commands in those
+>>>     speed modes.
+>>>
+>>>     Could you please provide suggestions for the speed mode in which tuning is
+>>>     not available?
+>>>
+>>
+>> Normally the mmc host driver shouldn't have to care about what the
+>> card supports, as that is the responsibility of the mmc core to
+>> manage.
+>>
+>> The host should only need to implement the ->execute_tuning() ops,
+>> which gets called when the card supports tuning (CMD19/21). Does it
+>> make sense?
+>>
+>    I think it is irrelevant to tuning procedure.
+>
+>    Our host requires to adjust PHY setting after each time ios setting
+>    (SDCLK/bus width/speed mode) is changed.
+>    The simplified sequence is:
+>    mmc change ios --> mmc_set_ios() --> ->set_ios() --> after sdhci_set_ios(),
+>    adjust PHY setting.
+>    During PHY setting adjustment, out host driver has to send commands to
+>    test current sampling point. Tuning is another independent step.
 
-The rk3188, rk3288 and following socs share a separate timer block already
-handled by the rockchip-timer driver. Therefore adapt this driver to also
-be able to act as clocksource on rk3188.
+For those speed modes (or other ios changes) that *don't* requires
+tuning, then what will you do when you send the command to confirm the
+change of PHY setting and it fails?
 
-In order to test clocksource you can run following commands and check
-how much time it take in real. On rk3188 it take about ~45 seconds.
-Such error cannot be fixed using NTP. Haven't test clocksource
-on rk3288 and onwards. Guess they can also have unstable clocksource.
+My assumption is that you will fail anyway, by propagating the error
+to the mmc core. At least that what was my understanding from your
+earlier replies, right!?
 
-    cpufreq-set -f 1.6GHZ
-    date; sleep 60; date
+Then, I think there are no point having the host driver sending a
+command to confirm the PHY settings, as the mmc core will anyway
+discover if something goes wrong when the next command is sent.
 
-In order to use the patch you need to declare two timers in the dts
-file. The first timer will be initialized as clockevent provider
-and the second one as clocksource. The clockevent must be from
-alive subsystem as it used as backup for the local timers at sleep
-time.
+Please correct me if I am wrong!
 
-In order to resolve ambiguity between timers in the device tree,
-it is possible to correctly number the timers using "aliases" node.
+>
+>    Thus our host needs a valid command in PHY setting adjustment. Tuning command
+>    can be borrowed to complete this task in SD SDR50. But for other speed mode,
+>    we have to find out a valid command.
 
-The patch does not break compatibility with older device tree files.
-The older device tree files contain only one timer. The timer
-will be initialized as clockevent, as expected.
+I thought we agreed on this wasn't necessary? Please see my upper response.
 
-Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/clocksource/rockchip_timer.c |  101 ++++++++++++++++++++++++++++------
- 1 file changed, 85 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-index 6224aa9..430b182 100644
---- a/drivers/clocksource/rockchip_timer.c
-+++ b/drivers/clocksource/rockchip_timer.c
-@@ -11,6 +11,7 @@
- #include <linux/clockchips.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-@@ -42,7 +43,19 @@ struct rk_clock_event_device {
- 	struct rk_timer timer;
- };
- 
-+struct rk_clocksource {
-+	struct clocksource cs;
-+	struct rk_timer timer;
-+};
-+
-+enum {
-+	ROCKCHIP_CLKSRC_CLOCKEVENT = 0,
-+	ROCKCHIP_CLKSRC_CLOCKSOURCE = 1,
-+};
-+
- static struct rk_clock_event_device bc_timer;
-+static struct rk_clocksource cs_timer;
-+static int rk_next_clksrc = ROCKCHIP_CLKSRC_CLOCKEVENT;
- 
- static inline struct rk_clock_event_device*
- rk_clock_event_device(struct clock_event_device *ce)
-@@ -143,13 +156,46 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static cycle_t rk_timer_clocksource_read(struct clocksource *cs)
-+{
-+	struct rk_clocksource *_cs =
-+		container_of(cs, struct rk_clocksource, cs);
-+
-+	return ~rk_timer_counter_read(&_cs->timer);
-+}
-+
-+static u64 notrace rk_timer_sched_clock_read(void)
-+{
-+	struct rk_clocksource *_cs = &cs_timer;
-+
-+	return ~rk_timer_counter_read(&_cs->timer);
-+}
-+
- static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- {
--	struct clock_event_device *ce = &bc_timer.ce;
--	struct rk_timer *timer = &bc_timer.timer;
-+	struct clock_event_device *ce = NULL;
-+	struct clocksource *cs = NULL;
-+	struct rk_timer *timer = NULL;
- 	struct clk *timer_clk;
- 	struct clk *pclk;
- 	int ret = -EINVAL, irq;
-+	int clksrc;
-+
-+	clksrc = rk_next_clksrc;
-+	rk_next_clksrc++;
-+
-+	switch (clksrc) {
-+	case ROCKCHIP_CLKSRC_CLOCKEVENT:
-+		ce = &bc_timer.ce;
-+		timer = &bc_timer.timer;
-+		break;
-+	case ROCKCHIP_CLKSRC_CLOCKSOURCE:
-+		cs = &cs_timer.cs;
-+		timer = &cs_timer.timer;
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
- 
- 	timer->base = of_iomap(np, 0);
- 	if (!timer->base) {
-@@ -193,26 +239,49 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- 		goto out_irq;
- 	}
- 
--	ce->name = TIMER_NAME;
--	ce->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT |
--		       CLOCK_EVT_FEAT_DYNIRQ;
--	ce->set_next_event = rk_timer_set_next_event;
--	ce->set_state_shutdown = rk_timer_shutdown;
--	ce->set_state_periodic = rk_timer_set_periodic;
--	ce->irq = irq;
--	ce->cpumask = cpu_possible_mask;
--	ce->rating = 250;
-+	if (ce) {
-+		ce->name = TIMER_NAME;
-+		ce->features = CLOCK_EVT_FEAT_PERIODIC |
-+			       CLOCK_EVT_FEAT_ONESHOT |
-+			       CLOCK_EVT_FEAT_DYNIRQ;
-+		ce->set_next_event = rk_timer_set_next_event;
-+		ce->set_state_shutdown = rk_timer_shutdown;
-+		ce->set_state_periodic = rk_timer_set_periodic;
-+		ce->irq = irq;
-+		ce->cpumask = cpu_possible_mask;
-+		ce->rating = 250;
-+	}
-+
-+	if (cs) {
-+		cs->name = TIMER_NAME;
-+		cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+		cs->mask = CLOCKSOURCE_MASK(64);
-+		cs->read = rk_timer_clocksource_read;
-+		cs->rating = 350;
-+	}
- 
- 	rk_timer_interrupt_clear(timer);
- 	rk_timer_disable(timer);
- 
--	ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER, TIMER_NAME, ce);
--	if (ret) {
--		pr_err("Failed to initialize '%s': %d\n", TIMER_NAME, ret);
--		goto out_irq;
-+	if (ce) {
-+		ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER,
-+				  TIMER_NAME, ce);
-+		if (ret) {
-+			pr_err("Failed to initialize '%s': %d\n",
-+				TIMER_NAME, ret);
-+			goto out_irq;
-+		}
-+
-+		clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
- 	}
- 
--	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
-+	if (cs) {
-+		rk_timer_update_counter(U64_MAX, timer);
-+		rk_timer_enable(timer, 0);
-+		clocksource_register_hz(cs, timer->freq);
-+		sched_clock_register(rk_timer_sched_clock_read, 64,
-+				     timer->freq);
-+	}
- 
- 	return 0;
- 
--- 
-1.7.9.5
-
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
