@@ -1,131 +1,107 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 3/3] dt-bindings: display: add Amlogic Meson DRM
- Bindings
-Date: Mon, 28 Nov 2016 10:33:07 +0200
-Message-ID: <3721857.XEGXu9B51N@avalon>
-References: <1480089791-12517-1-git-send-email-narmstrong@baylibre.com>
- <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2] clkdev: add devm_of_clk_get()
+Date: Mon, 28 Nov 2016 09:14:56 +0000
+Message-ID: <20161128091456.GR14217@n2100.armlinux.org.uk>
+References: <8737icayac.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1480089791-12517-4-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Xing.Xu@amlogic.com, victor.wan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, carlo@caione.org, jerry.cao@amlogic.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8737icayac.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-DT <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org, Linux-ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmVpbCwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gRnJpZGF5IDI1IE5vdiAyMDE2
-IDE3OjAzOjExIE5laWwgQXJtc3Ryb25nIHdyb3RlOgo+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJt
-c3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rp
-c3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dCAgICAgICAgICAgfCAxMzQgKysrKysrKysrKysrKysr
-KysKPiAgMSBmaWxlIGNoYW5nZWQsIDEzNCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NAo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lc29uL21l
-c29uLWRybS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVzb24vbWVzb24tZHJtLnR4dCBuZXcgZmlsZQo+IG1v
-ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uODljMWI1Zgo+IC0tLSAvZGV2L251bGwKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZXNvbi9tZXNvbi1k
-cm0udHh0Cj4gQEAgLTAsMCArMSwxMzQgQEAKPiArQW1sb2dpYyBNZXNvbiBEaXNwbGF5IENvbnRy
-b2xsZXIKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBBbWxv
-Z2ljIE1lc29uIERpc3BsYXkgY29udHJvbGxlciBpcyBjb21wb3NlZCBvZiBzZXZlcmFsIGNvbXBv
-bmVudHMKPiArdGhhdCBhcmUgZ29pbmcgdG8gYmUgZG9jdW1lbnRlZCBiZWxvdzoKPiArCj4gK0RN
-Q3wtLS0tLS0tLS0tLS0tLS1WUFUgKFZpZGVvIFByb2Nlc3NpbmcgVW5pdCktLS0tLS0tLS0tLS18
-LS0tLS0tSEhJLS0tLS0tfAo+ICsgICB8IHZkMSAgIF9fX19fX18gICAgIF9fX19fX19fX19fX18g
-ICAgX19fX19fX19fX19fXyAgICAgfCAgICAgICAgICAgICAgIHwKPiArRCAgfC0tLS0tLS18ICAg
-ICAgfC0tLS18ICAgICAgICAgICAgfCAgIHwgICAgICAgICAgICB8ICAgIHwgICBIRE1JIFBMTCAg
-ICB8Cj4gK0QgIHwgdmQyICAgfCBWSVUgIHwgICAgfCBWaWRlbyBQb3N0IHwgICB8IFZpZGVvIEVu
-Y3MgfDwtLS18LS0tLS1WQ0xLICAgICAgfAo+ICtSICB8LS0tLS0tLXwgICAgICB8LS0tLXwgUHJv
-Y2Vzc2luZyB8ICAgfCAgICAgICAgICAgIHwgICAgfCAgICAgICAgICAgICAgIHwKPiArICAgfCBv
-c2QyICB8ICAgICAgfCAgICB8ICAgICAgICAgICAgfC0tLXwgRW5jaSAtLS0tLS18LS0tLXwtLS0t
-LVZEQUMtLS0tLS18Cj4gK1IgIHwtLS0tLS0tfCBDU0MgIHwtLS0tfCBTY2FsZXJzICAgIHwgICB8
-IEVuY3AgLS0tLS0tfC0tLS18LS0tLUhETUktVFgtLS0tfAo+ICtBICB8IG9zZDEgIHwgICAgICB8
-ICAgIHwgQmxlbmRlcnMgICB8ICAgfCBFbmNsLS0tLS0tLXwtLS0tfC0tLS0tLS0tLS0tLS0tLXwK
-PiArTSAgfC0tLS0tLS18X19fX19ffC0tLS18X19fX19fX19fX19ffCAgIHxfX19fX19fX19fX198
-ICAgIHwgICAgICAgICAgICAgICB8Cj4gK19fX3xfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX198X19fX19fX19fX19fX19ffAo+ICsKPiArCj4gK1ZJ
-VTogVmlkZW8gSW5wdXQgVW5pdAo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBW
-aWRlbyBJbnB1dCBVbml0IGlzIGluIGNoYXJnZSBvZiB0aGUgcGl4ZWwgc2Nhbm91dCBmcm9tIHRo
-ZSBERFIgbWVtb3J5Lgo+ICtJdCBmZXRjaGVzIHRoZSBmcmFtZXMgYWRkcmVzc2VzLCBzdHJpZGUg
-YW5kIHBhcmFtZXRlcnMgZnJvbSB0aGUgIkNhbnZhcyIKPiBtZW1vcnkuCj4gK1RoaXMgcGFydCBp
-cyBhbHNvIGluIGNoYXJnZSBvZiB0aGUgQ1NDIChDb2xvcnNwYWNlIENvbnZlcnNpb24pLgo+ICtJ
-dCBjYW4gaGFuZGxlIDIgT1NEIFBsYW5lcyBhbmQgMiBWaWRlbyBQbGFuZXMuCj4gKwo+ICtWUFA6
-IFZpZGVvIFByb2Nlc3NpbmcgVW5pdAoKRG8geW91IG1lYW4gIlZpZGVvIFBvc3QgUHJvY2Vzc2lu
-ZyIgPyBJbiB5b3VyIGRpYWdyYW0gYWJvdmUgVmlkZW8gUHJvY2Vzc2luZyAKVW5pdCBpcyBhYmJy
-ZXZpYXRlZCBWUFUgYW5kIGNvdmVycyB0aGUgVklVLCBWUFAgYW5kIGVuY29kZXJzLgoKPiArLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWaWRlbyBQcm9jZXNzaW5nIFVuaXQg
-aXMgaW4gY2hhcmdlIGlmIHRoZSBzY2FsaW5nIGFuZCBibGVuZGluZyBvZiB0aGUKPiArdmFyaW91
-cyBwbGFuZXMgaW50byBhIHNpbmdsZSBwaXhlbCBzdHJlYW0uCj4gK1RoZXJlIGlzIGEgc3BlY2lh
-bCAicHJlLWJsZW5kaW5nIiB1c2VkIGJ5IHRoZSB2aWRlbyBwbGFuZXMgd2l0aCBhIGRlZGljYXRl
-ZAo+ICtzY2FsZXIgYW5kIGEgInBvc3QtYmxlbmRpbmciIHRvIG1lcmdlIHdpdGggdGhlIE9TRCBQ
-bGFuZXMuCj4gK1RoZSBPU0QgcGxhbmVzIGFsc28gaGF2ZSBhIGRlZGljYXRlZCBzY2FsZXIgZm9y
-IG9uZSBvZiB0aGUgT1NELgo+ICsKPiArVkVOQzogVmlkZW8gRW5jb2RlcnMKPiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWRU5DIGlzIGNvbXBvc2VkIG9mIHRoZSBtdWx0aXBsZSBw
-aXhlbCBlbmNvZGVycyA6Cj4gKyAtIEVOQ0kgOiBJbnRlcmxhY2UgVmlkZW8gZW5jb2RlciBmb3Ig
-Q1ZCUyBhbmQgSW50ZXJsYWNlIEhETUkKPiArIC0gRU5DUCA6IFByb2dyZXNzaXZlIFZpZGVvIEVu
-Y29kZXIgZm9yIEhETUkKPiArIC0gRU5DTCA6IExDRCBMVkRTIEVuY29kZXIKPiArVGhlIFZFTkMg
-VW5pdCBnZXRzIGEgUGl4ZWwgQ2xvY2tzIChWQ0xLKSBmcm9tIGEgZGVkaWNhdGVkIEhETUkgUExM
-IGFuZAo+IGNsb2NrCj4gK3RyZWUgYW5kIHByb3ZpZGVzIHRoZSBzY2Fub3V0IGNsb2NrIHRvIHRo
-ZSBWUFAgYW5kIFZJVS4KPiArVGhlIEVOQ0kgaXMgY29ubmVjdGVkIHRvIGEgc2luZ2xlIFZEQUMg
-Zm9yIENvbXBvc2l0ZSBPdXRwdXQuCj4gK1RoZSBFTkNJIGFuZCBFTkNQIGFyZSBjb25uZWN0ZWQg
-dG8gYW4gb24tY2hpcCBIRE1JIFRyYW5zY2VpdmVyLgo+ICsKPiArRGV2aWNlIFRyZWUgQmluZGlu
-Z3M6Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArVlBVOiBWaWRlbyBQcm9jZXNzaW5n
-IFVuaXQKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gKyAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBkaWZmZXJlbnQgZm9yIGVh
-Y2ggU29DIGZhbWlseSBhcyA6Cj4gKyAJLSBHWEJCIChTOTA1KSA6ICJhbWxvZ2ljLG1lc29uLWd4
-YmItdnB1Igo+ICsgCS0gR1hMIChTOTA1WCwgUzkwNUQpIDogImFtbG9naWMsbWVzb24tZ3hsLXZw
-dSIKPiArIAktIEdYTSAoUzkxMikgOiAiYW1sb2dpYyxtZXNvbi1neG0tdnB1Igo+ICsJZm9sbG93
-ZWQgYnkgdGhlIGNvbW1vbiAiYW1sb2dpYyxtZXNvbi1neC12cHUiCj4gKyAtIHJlZzogYmFzZSBh
-ZGRyZXNzIGFuZCBzaXplIG9mIGhlIGZvbGxvd2luZyBtZW1vcnktbWFwcGVkIHJlZ2lvbnMgOgo+
-ICsJLSB2cHUKPiArCS0gaGhpCj4gKwktIGRtYwo+ICsgLSByZWctbmFtZXM6IHNob3VsZCBjb250
-YWluIHRoZSBuYW1lcyBvZiB0aGUgcHJldmlvdXMgbWVtb3J5IHJlZ2lvbnMKPiArIC0gaW50ZXJy
-dXB0czogc2hvdWxkIGNvbnRhaW4gdGhlIFZFTkMgVnN5bmMgaW50ZXJydXB0IG51bWJlcgo+ICsK
-PiArLSBwb3J0czogQSBwb3J0cyBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVm
-aW5lZCBpbgo+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRl
-by1pbnRlcmZhY2VzLnR4dC4gVGhlCj4gKyAgc2Vjb25kIHBvcnQgc2hvdWxkIGJlIHRoZSBvdXRw
-dXQgZW5kcG9pbnRzIGZvciBWRU5DIGNvbm5lY3RvcnMuCj4gKwo+ICtWRU5DIENCVlMgT3V0cHV0
-Cj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoZSBWRU5DIGNhbiBvdXRwdXQgQ29t
-cG9zaXRlL0NWQlMgb3V0cHV0IHZpYSBhIGRlY2ljYXRlZCBWREFDLgo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgb25lIG9mOgo+ICsg
-LSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgZGlmZmVyZW50IGZvciBlYWNoIFNvQyBmYW1p
-bHkgYXMgOgoKT25lIG9mIHRob3NlIHR3byBsaW5lcyBpcyByZWR1bmRhbnQuCgo+ICsgCS0gR1hC
-QiAoUzkwNSkgOiAiYW1sb2dpYyxtZXNvbi1neGJiLXZlbmMtY3ZicyIKPiArIAktIEdYTCAoUzkw
-NVgsIFM5MDVEKSA6ICJhbWxvZ2ljLG1lc29uLWd4bC12ZW5jLWN2YnMiCj4gKyAJLSBHWE0gKFM5
-MTIpIDogImFtbG9naWMsbWVzb24tZ3htLXZlbmMtY3ZicyIKPiArCWZvbGxvd2VkIGJ5IHRoZSBj
-b21tb24gImFtbG9naWMsbWVzb24tZ3gtdmVuYy1jdmJzIgo+ICsKCk5vIHJlZ2lzdGVycyA/IEFy
-ZSB0aGUgZW5jb2RlcnMgcmVnaXN0ZXJzIHBhcnQgb2YgdGhlIFZQVSByZWdpc3RlciBzcGFjZSwg
-CmludGVydHdpbmVkIGluIGEgd2F5IHRoYXQgdGhleSBjYW4ndCBiZSBzcGVjaWZpZWQgc2VwYXJh
-dGVseSBoZXJlID8KCj4gKy0gcG9ydHM6IEEgcG9ydHMgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmlu
-aXRpb25zIGFzIGRlZmluZWQgaW4KPiArICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoZQo+ICsgIGZpcnN0IHBvcnQgc2hvdWxk
-IGJlIHRoZSBpbnB1dCBlbmRwb2ludHMsIGNvbm5lY3RlZCBvdCB0aGUgVlBVIG5vZGUuCj4gKwo+
-ICtFeGFtcGxlOgo+ICsKPiArdmVuY19jdmJzOiB2ZW5jLWN2YnMgewo+ICsJY29tcGF0aWJsZSA9
-ICJhbWxvZ2ljLG1lc29uLWd4YmItdmVuYy1jdmJzIjsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiAr
-Cj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJI3NpemUtY2VsbHMg
-PSA8MD47Cj4gKwo+ICsJCWVuY19jdmJzX2luOiBwb3J0QDAgewo+ICsJCQkgI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4gKwkJCSAjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQkJIHJlZyA9IDwwPjsKPiAr
-Cj4gKwkJCSB2ZW5jX2N2YnNfaW5fdnB1OiBlbmRwb2ludEAwIHsKPiArCQkJCSByZWcgPSA8MD47
-Cj4gKwkJCQkgcmVtb3RlLWVuZHBvaW50ID0gPCZ2cHVfb3V0X3ZlbmNfY3Zicz47Cj4gKwkJCX07
-Cj4gKwkJfTsKPiArCX07Cj4gK307Cj4gKwo+ICt2cHU6IHZwdUBkMDEwMDAwMCB7Cj4gKwljb21w
-YXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3hiYi12cHUiOwo+ICsJcmVnID0gPDB4MCAweGQwMTAw
-MDAwIDB4MCAweDEwMDAwMD4sCj4gKwkgICAgICA8MHgwIDB4Yzg4M2MwMDAgMHgwIDB4MTAwMD4s
-Cj4gKwkgICAgICA8MHgwIDB4Yzg4MzgwMDAgMHgwIDB4MTAwMD47Cj4gKwlyZWctbmFtZXMgPSAi
-YmFzZSIsICJoaGkiLCAiZG1jIjsKPiArCWludGVycnVwdHMgPSA8R0lDX1NQSSAzIElSUV9UWVBF
-X0VER0VfUklTSU5HPjsKPiArCj4gKwlwb3J0cyB7Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCXZwdV9vdXQ6IHBvcnRAMSB7Cj4gKwkJ
-CSAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJICNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQkg
-cmVnID0gPDE+Owo+ICsKPiArCQkJIHZwdV9vdXRfdmVuY19jdmJzOiBlbmRwb2ludEAwIHsKPiAr
-CQkJCSByZWcgPSA8MD47Cj4gKwkJCQkgcmVtb3RlLWVuZHBvaW50ID0gPCZ2ZW5jX2N2YnNfaW5f
-dnB1PjsKPiArCQkJIH07Cj4gKwkJIH07Cj4gKwl9Owo+ICt9OwoKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Mon, Nov 28, 2016 at 06:56:52AM +0000, Kuninori Morimoto wrote:
+> Current Linux has of_clk_get(), but doesn't have devm_of_clk_get().
+> This patch adds it. This is based on devm_clk_get()
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+
+Please put this in drivers/clk/clk-devres.c, where you'll find that
+we have devm_clk_release() which is identical to your
+devm_of_clk_release().  It'll also not need the dummy definition of
+devm_of_clk_get().
+
+Thanks.
+
+> ---
+> v1 -> v2
+> 
+>  - update git log
+> 
+>  drivers/clk/clkdev.c | 26 ++++++++++++++++++++++++++
+>  include/linux/clk.h  |  7 +++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+> index 89cc700..93a613b 100644
+> --- a/drivers/clk/clkdev.c
+> +++ b/drivers/clk/clkdev.c
+> @@ -55,6 +55,32 @@ struct clk *of_clk_get(struct device_node *np, int index)
+>  }
+>  EXPORT_SYMBOL(of_clk_get);
+>  
+> +static void devm_of_clk_release(struct device *dev, void *res)
+> +{
+> +	clk_put(*(struct clk **)res);
+> +}
+> +
+> +struct clk *devm_of_clk_get(struct device *dev,
+> +			    struct device_node *np, int index)
+> +{
+> +	struct clk **ptr, *clk;
+> +
+> +	ptr = devres_alloc(devm_of_clk_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	clk = of_clk_get(np, index);
+> +	if (!IS_ERR(clk)) {
+> +		*ptr = clk;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return clk;
+> +}
+> +EXPORT_SYMBOL(devm_of_clk_get);
+> +
+>  static struct clk *__of_clk_get_by_name(struct device_node *np,
+>  					const char *dev_id,
+>  					const char *name)
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index a89ba4e..33cd540 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -502,6 +502,8 @@ struct of_phandle_args;
+>  
+>  #if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+>  struct clk *of_clk_get(struct device_node *np, int index);
+> +struct clk *devm_of_clk_get(struct device *dev,
+> +			    struct device_node *np, int index);
+>  struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
+>  struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
+>  #else
+> @@ -509,6 +511,11 @@ static inline struct clk *of_clk_get(struct device_node *np, int index)
+>  {
+>  	return ERR_PTR(-ENOENT);
+>  }
+> +static inline struct clk *devm_of_clk_get(struct device *dev,
+> +			    struct device_node *np, int index)
+> +{
+> +	return ERR_PTR(-ENOENT);
+> +}
+>  static inline struct clk *of_clk_get_by_name(struct device_node *np,
+>  					     const char *name)
+>  {
+> -- 
+> 1.9.1
+> 
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
