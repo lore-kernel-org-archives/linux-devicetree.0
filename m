@@ -1,59 +1,67 @@
-From: Harini Katakam <harini.katakam@xilinx.com>
-Subject: [RFC PATCH 2/2] Documentation: devictree: Add macb mdio bindings
-Date: Mon, 28 Nov 2016 15:19:27 +0530
-Message-ID: <1480326567-6132-1-git-send-email-harinik@xilinx.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] mmc: core: add DT binding for CMD23
+Date: Mon, 28 Nov 2016 18:40:28 +0900
+Message-ID: <8af2b7b1-7473-e048-87b7-4acf7e2ba014@samsung.com>
+References: <20161125065215.10833-1-jh80.chung@samsung.com>
+ <CGME20161125082443epcas2p2c0f10ecaf32225c09747a7736b1bb7cc@epcas2p2.samsung.com>
+ <CAPDyKFr3CMeqDpQxf13Z1Ae5W_Q3X75if4fK9eYstXaVeTTVwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, harinikatakamlinux@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, harinik@xilinx.com, michals@xilinx.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAPDyKFr3CMeqDpQxf13Z1Ae5W_Q3X75if4fK9eYstXaVeTTVwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentations for macb mdio driver.
+On 11/25/2016 05:19 PM, Ulf Hansson wrote:
+> On 25 November 2016 at 07:52, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Provide the option to configure one type of multiple block read/wrte
+>> transatction (CMD23 - it's optional.)
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  drivers/mmc/core/host.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+>> index 98f25ff..9bdc369 100644
+>> --- a/drivers/mmc/core/host.c
+>> +++ b/drivers/mmc/core/host.c
+>> @@ -321,6 +321,8 @@ int mmc_of_parse(struct mmc_host *host)
+>>                 host->caps2 |= MMC_CAP2_NO_SD;
+>>         if (of_property_read_bool(np, "no-mmc"))
+>>                 host->caps2 |= MMC_CAP2_NO_MMC;
+>> +       if (of_property_read_bool(np, "cap-mmc-cmd23"))
+>> +               host->caps |= MMC_CAP_CMD23;
+>>
+>>         host->dsr_req = !of_property_read_u32(np, "dsr", &host->dsr);
+>>         if (host->dsr_req && (host->dsr & ~0xffff)) {
+>> --
+>> 2.10.1
+>>
+> 
+> I don't think this as HW configuration, but more a SW configuration.
+> Thus we don't need a DT binding for it, right?
 
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
----
- .../devicetree/bindings/net/macb-mdio.txt          | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/macb-mdio.txt
+Got it. Then discard these patches.
 
-diff --git a/Documentation/devicetree/bindings/net/macb-mdio.txt b/Documentation/devicetree/bindings/net/macb-mdio.txt
-new file mode 100644
-index 0000000..014cedf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/macb-mdio.txt
-@@ -0,0 +1,31 @@
-+* Cadence MACB MDIO controller
-+
-+Required properties:
-+- compatible: Should be "cdns,macb-mdio"
-+- reg: Address and length of the register set of MAC to be used
-+- clock-names: Tuple listing input clock names.
-+	Required elements: 'pclk', 'hclk'
-+	Optional elements: 'tx_clk'
-+- clocks: Phandles to input clocks.
-+
-+Examples:
-+
-+	mdio {
-+		compatible = "cdns,macb-mdio";
-+		reg = <0x0 0xff0b0000 0x0 0x1000>;
-+		clocks = <&clk125>, <&clk125>, <&clk125>;
-+		clock-names = "pclk", "hclk", "tx_clk";
-+		ethernet_phyC: ethernet-phy@C {
-+			reg = <0xC>;
-+		};
-+		ethernet_phy7: ethernet-phy@7 {
-+			reg = <0x7>;
-+		};
-+		ethernet_phy3: ethernet-phy@3 {
-+			reg = <0x3>;
-+		};
-+		ethernet_phy8: ethernet-phy@8 {
-+			reg = <0x8>;
-+		};
-+	};
-+
--- 
-2.7.4
+Best Regards,
+Jaehoon Chung
+
+> 
+> Kind regards
+> Uffe
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
