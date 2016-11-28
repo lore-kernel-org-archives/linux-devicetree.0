@@ -1,104 +1,94 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: fwd, Re: [PATCH v3] cpufreq: brcmstb-cpufreq: CPUfreq driver for older
- Broadcom STB SoCs
-Date: Mon, 28 Nov 2016 11:16:48 +0100
-Message-ID: <5336918.eLmd7pA3eN@wuerfel>
-References: <20161122213245.17955-1-code@mmayer.net>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node for H3
+Date: Mon, 28 Nov 2016 18:19:50 +0800
+Message-ID: <496171480328390@web15g.yandex.ru>
+References: <20161128095900.27615-1-icenowy@aosc.xyz> <CAGb2v67akcT6z-xOdCzpLQRZbgNGh3E5akYEs1BvFNP1rH8UeA@mail.gmail.com>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161122213245.17955-1-code@mmayer.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Mayer <code@mmayer.net>
-Cc: Device Tree <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Markus Mayer <mmayer@broadcom.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBSEJ6DAQKGQESDAHLMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67akcT6z-xOdCzpLQRZbgNGh3E5akYEs1BvFNP1rH8UeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[resending my mail, this time with devicetree, linux-clk, and linux-arm-kernel
-on cc]
 
-On Tuesday, November 22, 2016 1:32:45 PM CET Markus Mayer wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
-> 
-> This CPUfreq driver provides basic frequency scaling for older Broadcom
-> STB SoCs that do not use AVS firmware with DVFS support. There is no
-> support for voltage scaling.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-This causes multiple build errors in linux-next, please fix asap or
-drop the patch again. My feeling is that it's probably too late to
-fix it for v4.10, but that's up to Viresh and Rafael of course.
+28.11.2016, 18:07, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
+> On Mon, Nov 28, 2016 at 5:59 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+>> =C2=A0As there's currently a fork of U-Boot which provides simplefb supp=
+ort
+>
+> Please add it when its finalized...
+>
+>> =C2=A0for H3, a simplefb node can be added to the device tree.
+>>
+>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0---
+>>
+>> =C2=A0I'm still not sure which pipeline should I use.
+>
+> You are supposed to add _all_ the pipelines that are available and
+> supported by U-boot. U-boot is then supposed to enable and update
+> the one it set up.
 
-> +#define BRCMSTB_CPUFREQ_PREFIX	"brcmstb"
-> +#define BRCMSTB_CPUFREQ_NAME	BRCMSTB_CPUFREQ_PREFIX "-cpufreq"
-> +
-> +/* We search for these compatible strings. */
-> +#define BRCMSTB_DT_CPU_CLK_CTRL	"brcm,brcmstb-cpu-clk-div"
-> +#define BRCMSTB_DT_MEMC_DDR	"brcm,brcmstb-memc-ddr"
-> +#define BRCM_AVS_CPU_DATA	"brcm,avs-cpu-data-mem"
-> +
-> +/* We also need a few clocks in device tree. These are node names. */
-> +#define BRCMSTB_CLK_MDIV_CH0	"cpu_mdiv_ch0"
-> +#define BRCMSTB_CLK_NDIV_INT	"cpu_ndiv_int"
-> +#define BRCMSTB_CLK_SW_SCB	"sw_scb"
+I mean the pipeline string ;-)
 
-Not critical but the use of those macros obfuscates the DT interfaces
-here and made it harder to analyse what was going on.
+>
+> ChenYu
+>
+>> =C2=A0And, it seems that HDMI Slow Clock is not needed?
+>>
+>> =C2=A0(seems that it's only for EDID, but simplefb won't use EDID)
+>>
+>> =C2=A0=C2=A0arch/arm/boot/dts/sun8i-h3.dtsi | 16 ++++++++++++++++
+>> =C2=A0=C2=A01 file changed, 16 insertions(+)
+>>
+>> =C2=A0diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/s=
+un8i-h3.dtsi
+>> =C2=A0index 75a8654..cacc8dd 100644
+>> =C2=A0--- a/arch/arm/boot/dts/sun8i-h3.dtsi
+>> =C2=A0+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+>> =C2=A0@@ -50,6 +50,22 @@
+>> =C2=A0=C2=A0/ {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0interrupt-parent =
+=3D <&gic>;
+>>
+>> =C2=A0+ chosen {
+>> =C2=A0+ #address-cells =3D <1>;
+>> =C2=A0+ #size-cells =3D <1>;
+>> =C2=A0+ ranges;
+>> =C2=A0+
+>> =C2=A0+ simplefb_hdmi: framebuffer@0 {
+>> =C2=A0+ compatible =3D "allwinner,simple-framebuffer",
+>> =C2=A0+ "simple-framebuffer";
+>> =C2=A0+ allwinner,pipeline =3D "de0-lcd0-hdmi";
+>> =C2=A0+ clocks =3D <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_DE>,
+>> =C2=A0+ <&ccu CLK_BUS_HDMI>, <&ccu CLK_DE>,
+>> =C2=A0+ <&ccu CLK_TCON0>, <&ccu CLK_HDMI>;
+>> =C2=A0+ status =3D "disabled";
+>> =C2=A0+ };
+>> =C2=A0+ };
+>> =C2=A0+
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpus {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0#address-cells =3D <1>;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0#size-cells =3D <0>;
+>> =C2=A0--
+>> =C2=A02.10.2
 
-Also, a couple of them are lacking a DT binding.
-
-> +static int get_frequencies(const struct cpufreq_policy *policy,
-> +			   unsigned int *vco_freq, unsigned int *cpu_freq,
-> +			   unsigned int *scb_freq)
-> +{
-> +	struct clk *cpu_ndiv_int, *sw_scb;
-> +
-> +	cpu_ndiv_int = __clk_lookup(BRCMSTB_CLK_NDIV_INT);
-> +	if (!cpu_ndiv_int)
-> +		return -ENODEV;
-> +
-> +	sw_scb = __clk_lookup(BRCMSTB_CLK_SW_SCB);
-> +	if (!sw_scb)
-> +		return -ENODEV;
-> +
-> +	/* return frequencies in kHz */
-> +	*vco_freq = clk_get_rate(cpu_ndiv_int) / 1000;
-> +	*cpu_freq = clk_get_rate(policy->clk) / 1000;
-> +	*scb_freq = clk_get_rate(sw_scb) / 1000;
-> +
-> +	return 0;
-> +}
-
-You really can't do this: 
-
-../drivers/cpufreq/brcmstb-cpufreq.c: In function 'get_frequencies':
-../drivers/cpufreq/brcmstb-cpufreq.c:71:17: error: implicit declaration of function '__clk_lookup';did you mean 'key_lookup'? [-Werror=implicit-function-declaration]
-  cpu_ndiv_int = __clk_lookup(BRCMSTB_CLK_NDIV_INT);
-                 ^~~~~~~~~~~~
-
-__clk_lookup is an internal API for the clk providers.
-
-In particular, relying on undocumented internal names of the
-clk provider in a device driver is inappropriate.
-
-> +static const struct of_device_id brcmstb_cpufreq_match[] = {
-> +	{ .compatible = BRCMSTB_DT_CPU_CLK_CTRL },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, brcmstb_cpufreq_match);
-
-This is a simple typo, also causing the build to fail:
-
-    FATAL: drivers/cpufreq/brcmstb-cpufreq: sizeof(struct platform_device_id)=24 is not a modulo of the size of section __mod_platform__<identifier>_device_table=392.
-
-	Arnd
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
