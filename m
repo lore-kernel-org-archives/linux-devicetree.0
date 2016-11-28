@@ -1,52 +1,80 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next v4 0/4] Fix OdroidC2 Gigabit Tx link issue
-Date: Mon, 28 Nov 2016 09:54:28 -0800
-Message-ID: <049b1efc-3bad-92e0-45ef-0563dc5d81de@gmail.com>
-References: <1480348229-25672-1-git-send-email-jbrunet@baylibre.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2] mtd/spi-nor: Add SPI memory controllers for Aspeed SoCs
+Date: Mon, 28 Nov 2016 19:09:36 +0100
+Message-ID: <9ad102a7-8d78-efef-8adb-62cad75f0034@kaod.org>
+References: <1478688149-4554-1-git-send-email-clg@kaod.org>
+ <bc14b6ba-800c-bf69-763e-65ead8d4efa7@gmail.com>
+ <CACPK8Xc7Dy=4oaZ_+j3hCEkMY+sqZ_-QkCQ9okmUoOjTpuZvvA@mail.gmail.com>
+ <9569aaca-5748-e82d-20e1-ed846fb762f6@gmail.com>
+ <b9d8ba33-2bb9-cb93-d833-89ddd8cfd7f9@kaod.org>
+ <c35d6a7a-1c77-1884-4ed4-aee161bd0e43@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480348229-25672-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Andre Roth <neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <c35d6a7a-1c77-1884-4ed4-aee161bd0e43@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2016 07:50 AM, Jerome Brunet wrote:
-> This patchset fixes an issue with the OdroidC2 board (DWMAC + RTL8211F).
-> The platform seems to enter LPI on the Rx path too often while performing
-> relatively high TX transfer. This eventually break the link (both Tx and
-> Rx), and require to bring the interface down and up again to get the Rx
-> path working again.
-> 
-> The root cause of this issue is not fully understood yet but disabling EEE
-> advertisement on the PHY prevent this feature to be negotiated.
-> With this change, the link is stable and reliable, with the expected
-> throughput performance.
-> 
-> The patchset adds options in the generic phy driver to disable EEE
-> advertisement, through device tree. The way it is done is very similar
-> to the handling of the max-speed property.
-> 
-> Patch 4 is provided here for testing purpose only. Please don't merge
-> patch 4, this change will go through the amlogic's tree.
-
-Sorry, but I really don't like the route this is going, and I should
-have made myself clearer before on that, I really think utilizing a PHY
-fixup is more appropriate here than an extremely generic DT property.
-The fixup code can be in the affected PHY driver, or it can be somewhere
-else, your call. There is no shortage of option on how to implement it,
-and this would be something easy to enable/disable for known good
-configurations (ala PCI/USB fixups).
-
-If we start supporting generic "enable", "disable" type of properties
-with values that map directly to register definitions of the HW, we
-leave too much room for these properties to be utilized to implement a
-specific policy, and this is not acceptable.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sCgo+PiBBc3BlZWQgU29DIEFTVDI0MDAgaGFzIGEgc2V0IG9mIFNNQyAoU3RhdGljIE1l
+bW9yeSBDb250cm9sbGVyKSAKPj4gY29udHJvbGxlcnMgaW4gd2hpY2ggeW91IGZpbmQgOgo+Pgo+
+PiAtIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgKGNhbGxlZCBTTUMgaW4gdGhlIHNw
+ZWMpICAKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MDAwMDAwCj4+ICAgLiBCTUMgZmlybXdh
+cmUKPj4gICAuIG9sZCByZWdpc3RlciBzZXQKPj4gICAuIHN1cHBvcnRzIE5PUiBmbGFzaCwgTkFO
+RCBmbGFzaCBhbmQgU1BJIGZsYXNoIG1lbW9yeS4gQWxsIGJvb3RhYmxlLgo+PiAgIC4gMSBjaGlw
+IHNlbGVjdCBwaW4gKENFMCkKPj4KPj4gLSBOZXcgU3RhdGljIE1lbW9yeSBDb250cm9sbGVyIChj
+YWxsZWQgRk1DIGluIHRoZSBzcGVjKQo+PiAgIC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYyMDAwMDAK
+Pj4gICAuIEJNQyBmaXJtd2FyZQo+PiAgIC4gbmV3IHJlZ2lzdGVyIHNldAo+PiAgIC4gc3VwcG9y
+dHMgTk9SIGZsYXNoLCBOQU5EIGZsYXNoIGFuZCBTUEkgZmxhc2ggbWVtb3J5LiAKPj4gICAuIDUg
+Y2hpcCBzZWxlY3QgcGlucyAoQ0UwIOKIvCBDRTQpCj4+Cj4+IC0gU1BJIEZsYXNoIENvbnRyb2xs
+ZXIgKGNhbGxlZCBTUEkgaW4gdGhlIHNwZWMpICAKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2
+MzAwMDAwCj4+ICAgLiBob3N0IEZpcm13YXJlCj4+ICAgLiBleG90aWMgcmVnaXN0ZXIgc2V0LCBi
+ZXR3ZWVuIG9sZCBhbmQgbmV3IC4uLgo+PiAgIC4gc3VwcG9ydHMgU1BJIGZsYXNoIG1lbW9yeQo+
+PiAgIC4gMSBjaGlwIHNlbGVjdCBwaW4gKENFMCkKPiAKPiBUaGlzIHNob3VsZCBiZSAoZXhjZXB0
+IGZvciB0aGUgYmFzZSBhZGRyZXNzKSBiZSBpbiBzb21lIGRvY3VtZW50YXRpb24sCj4gaXQgaGVs
+cHMuCgpTdXJlLiBJIHdpbGwgYWRkIHRoYXQuCgo+PiBBc3BlZWQgU29DIEFTVDI1MDAgZGVmaW5l
+cyBoYXMgYSBzaW1pbGFyIHNldCBvZiBTTUMgKFN0YXRpYyBNZW1vcnkgCj4+IENvbnRyb2xsZXIp
+IGNvbnRyb2xsZXJzLCBtb3JlIGluIHRoZSB2ZWluIG9mIHRoZSBBU1QyNDAwIEZNQyAgOgo+Pgo+
+PiAtIExlZ2FjeSBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgaXMgZ29uZSwgTk9SIGFuZCBOQU5E
+IHN1cHBvcnQgYWxzbwo+Pgo+PiAtIEZpcm13YXJlIFNQSSBNZW1vcnkgQ29udHJvbGxlciAoY2Fs
+bGVkIEZNQyBpbiB0aGUgc3BlYykgIAo+PiAgIC4gYmFzZSBhZGRyZXNzIGF0IDB4MTYyMDAwMDAK
+Pj4gICAuIEJNQyBmaXJtd2FyZQo+PiAgIC4gbmV3IHJlZ2lzdGVyIHNldAo+PiAgIC4gc3VwcG9y
+dHMgU1BJIGZsYXNoIG1lbW9yeS4KPj4gICAuIDMgY2hpcCBzZWxlY3QgcGlucyAoQ0UwIH4gQ0Uy
+KQo+Pgo+PiAtIFNQSSBGbGFzaCBDb250cm9sbGVyIChjYWxsZWQgU1BJMSBpbiB0aGUgc3BlYykg
+Zmlyc3QKPj4gICAuIGJhc2UgYWRkcmVzcyBhdCAweDE2MzAwMDAwCj4+ICAgLiBob3N0IGZpcm13
+YXJlCj4+ICAgLiBuZXcgcmVnaXN0ZXIgc2V0Cj4+ICAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVt
+b3J5Lgo+PiAgIC4gMiBjaGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCj4+Cj4+IC0gU1BJIEZs
+YXNoIENvbnRyb2xsZXIgKGNhbGxlZCBTUEkyIGluIHRoZSBzcGVjKSBzZWNvbmQKPj4gICAuIGJh
+c2UgYWRkcmVzcyBhdCAweDE2MzEwMDAwCj4+ICAgLiBob3N0IGZpcm13YXJlCj4+ICAgLiBuZXcg
+cmVnaXN0ZXIgc2V0Cj4+ICAgLiBzdXBwb3J0cyBTUEkgZmxhc2ggbWVtb3J5Lgo+PiAgIC4gMiBj
+aGlwIHNlbGVjdCBwaW5zIChDRTAgfiBDRTEpCj4+Cj4+Cj4+IFNvLCB0aGVzZSBhcmUgdGhlIHJl
+YXNvbnMgYmVoaW5kIHRoZSBuYW1pbmcgbWVzcy4gQWRkZWQgdG8gdGhhdCB0aGUgCj4+IGRyaXZl
+ciBjb25zaWRlcnMgdGhlIGFjcm9ueW0gU01DIHRvIHN0YW5kIGZvciBTUEkgTWVtb3J5IENvbnRy
+b2xsZXIsIAo+PiB3aGljaCBpcyB3cm9uZy4gSSB0cmllZCB0byByZWR1Y2UgdGhlIGNvbmZ1c2lv
+biB3aXRoIHNvbWUgY29tbWVudHMgYnV0IAo+PiB0aGF0IHdhcyBhIGZhaWx1cmUgOikKPiAKPiBU
+aGUgZXhwbGFuYXRpb24gYWJvdmUgaXMgYXdlc29tZSB0aG91Z2guCj4gCj4+IEluIHFlbXUsIHdl
+IGhhdmUgdXNlZCBGTUMgKEZpcm13YXJlIC4uLikgYW5kIFNQSSB0byBuYW1lIHRoZSBjb250cm9s
+bGVycyAKPj4gYW5kIHdlIGp1c3QgZHJvcHBlZCB0aGUgbGVnYWN5IFNNQy4gSSB0aGluayB1c2lu
+ZyB0aGUgc2FtZSBuYW1pbmcgc2NoZW1lCj4+IGlzIGEgZ29vZCBpZGVhLiBXZSBkb24ndCBzdXBw
+b3J0IGFueXRoaW5nIGVsc2UgdGhhbiBTUEkgZWl0aGVyIHNvIHdlIGNhbiAKPj4gZHJvcCB0aGUg
+b3RoZXIgdHlwZXMgZm9yIHRoZSBtb21lbnQuCj4gCj4gT25lIHRoaW5nIHdoaWNoIEkgc3RpbGwg
+cG9uZGVyIGFib3V0IGlzIGhvdyBkbyB5b3Ugc3VwcG9ydCB0aG9zZQo+IGNvbnRyb2xsZXJzIHdo
+aWNoIHN1cHBvcnQgTk9SIGFuZCBOQU5EIGZsYXNoIGFuZCBTUEksIGRvIHlvdSB0YXAKPiBpbnRv
+IGFsbCBzdWJzeXN0ZW1zID8KCkFzcGVlZCBkcm9wcGVkIHN1cHBvcnQgZm9yIE5BTkQgYW5kIE5P
+UiBmbGFzaCBpbiB0aGUgQVNUMjUwMCBTb0MsIAphbGwgY29udHJvbGxlcnMgYXJlIFNQSSBvbmx5
+IGFuZCB0aGUgQVNUMjQwMCBib2FyZHMgd2UgaGF2ZSBhbHNvIApvbmx5IHVzZSBTUEkuIFNvIHdl
+IGRpZCBub3QgY29uc2lkZXIgdGhlIG90aGVyIGZsYXNoIGZsYXZvcnMgZm9yIAp0aGUgZHJpdmVy
+IGV2ZW4gdGhvdWdoIHNvbWUgYm9hcmQgbWlnaHQgdXNlIGl0LCBidXQgSSBkb24ndCBrbm93CnRo
+YXQuCgpDaGVlcnMsCgpDLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
