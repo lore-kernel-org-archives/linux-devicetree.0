@@ -1,105 +1,83 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
-Date: Mon, 28 Nov 2016 13:56:11 -0800
-Message-ID: <CAEG3pNDtMY+Pf1_w6vQEswaMVZ=jOC69R749jSFwB2NiU8r58Q@mail.gmail.com>
-References: <2778019.JJI4Lz6scm@avalon> <4461318.dYHS3nW9CP@avalon>
- <0bd7dab3-b51c-2c88-dacf-24ba588349bc@rock-chips.com>
- <2404891.arL9itCrmb@avalon>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ALSA SoC MAX98927 driver - Initial release
+Date: Mon, 28 Nov 2016 16:01:53 -0600
+Message-ID: <20161128220153.7ccbt4p3wy2fomis@rob-hp-laptop>
+References: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2404891.arL9itCrmb@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Linux-DT <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeauraro.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, nickey.yang@rock-chips.com, Andy Yan <andy.yan@rock-chips.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1479877026-5172-1-git-send-email-RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryan Lee <RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwgYWxsLAoKT24gRnJpLCBOb3YgMjUsIDIwMTYgYXQgNzoyMiBBTSwgTGF1cmVu
-dCBQaW5jaGFydAo8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBI
-aSBBbmR5LAo+Cj4gT24gRnJpZGF5IDI1IE5vdiAyMDE2IDEwOjU2OjUzIEFuZHkgWWFuIHdyb3Rl
-Ogo+PiBPbiAyMDE25bm0MTHmnIgyNeaXpSAwNzoyNiwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToK
-Pj4gPiBPbiBGcmlkYXkgMjUgTm92IDIwMTYgMDA6MTY6MDAgVmxhZGltaXIgWmFwb2xza2l5IHdy
-b3RlOgo+PiA+PiBPbiAxMS8yNS8yMDE2IDEyOjA3IEFNLCBGYWJpbyBFc3RldmFtIHdyb3RlOgo+
-PiA+Pj4gT24gVGh1LCBOb3YgMjQsIDIwMTYgYXQgNzoxNiBQTSwgTGF1cmVudCBQaW5jaGFydCB3
-cm90ZToKPj4gPj4+PiBIaSBBbmR5LAo+PiA+Pj4+Cj4+ID4+Pj4gQXMgdGhlIGF1dGhvciBvZiB0
-aGUgRFctSERNSSBEVCBiaW5kaW5ncyB0aGlzIHF1ZXN0aW9uIGlzIGFkZHJlc3NlZCB0bwo+PiA+
-Pj4+IHlvdSwgYnV0IGluZm9ybWF0aW9uIGZyb20gYW55b25lIGlzIG1vcmUgdGhhbiB3ZWxjb21l
-Lgo+PiA+Pj4+Cj4+ID4+Pj4gVGhlIERUIGJpbmRpbmdzIHNwZWNpZnkgdHdvIGNsb2NrcyBuYW1l
-ZCAiaWFoYiIgYW5kICJpc2ZyIiBidXQgZG9uJ3QKPj4gPj4+PiBkZXNjcmliZSB0aGVtLiBXaGls
-ZSBJIGFzc3VtZSB0aGF0IHRoZSAiaXNmciIgY2xvY2sgY29ycmVzcG9uZHMgdG8gdGhlCj4+ID4+
-Pj4gImlzZnJjbGsiIGlucHV0IHNpZ25hbCBvZiB0aGUgRFcgSERNSSwgdGhlcmUgaXMgbm8gImlh
-aGIiIGNsb2NrCj4+ID4+Pj4gZGVzY3JpYmVkIGluIHRoZSBJUCBjb3JlIGRhdGFzaGVldC4KPj4g
-Pj4+Cj4+ID4+PiBpLk1YNlEgaGFzIGEgRFctSERNSSBJUCBibG9jay4KPj4gPj4+Cj4+ID4+PiBU
-aGUgbmFtZXMgaW4gdGhlIGRldmljZXRyZWUgYmluZGluZyBtYXRjaGVzIHRoZSBvbmVzIGxpc3Rl
-ZCBhdCB0aGUKPj4gPj4+IGkuTVg2USBSZWZlcmVuY2UgTWFudWFsIC0gVGFibGUgMzMtMS4gSERN
-SSBDbG9ja3MKPj4gPj4KPj4gPj4gY29ycmVjdCwgZm9yIHlvdXIgY29udmVuaWVuY2UgdGhlIHRh
-YmxlIGlzIGNvcGllZCBiZWxvdzoKPj4gPj4KPj4gPj4gQ2xvY2sgbmFtZSB8ICAgICBDbG9jayBS
-b290ICAgICB8IERlc2NyaXB0aW9uCj4+ID4+IC0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiA+PiAgIGlhaGJj
-bGsgIHwgYWhiX2Nsa19yb290ICAgICAgIHwgQnVzIGNsb2NrCj4+ID4+ICAgaWNlY2NsayAgfCBj
-a2lsX3N5bmNfY2xrX3Jvb3QgfCBDRUMgbG93LWZyZXF1ZW5jeSBjbG9jayAoMzJrSFopCj4+ID4+
-ICAgaWhjbGsgICAgfCBhaGJfY2xrX3Jvb3QgICAgICAgfCBNb2R1bGUgY2xvY2sKPj4gPj4gICBp
-c2ZyY2xrICB8IHZpZGVvXzI3bV9jbGtfcm9vdCB8IEludGVybmFsIFNGUiBjbG9jayAodmlkZW8g
-Y2xvY2sKPj4gPj4gICAyN01IeikKPj4gPj4KPj4gPj4gSGVyZSBBSEIgc3RhbmRzIGZvciBBUk0g
-QWR2YW5jZWQgSGlnaC1wZXJmb3JtYW5jZSBCdXMuCj4+ID4KPj4gPiBUaGF0J3Mgd2hhdCBJIHN1
-c3BlY3RlZC4gSSBiZWxpZXZlIHRoZSAiaWFoYiIgbmFtZSBpcyB3cm9uZywgYXMgdGhlIERXCj4+
-ID4gSERNSSBUWCBJUCBjb3JlIGNsZWFybHkgZG9jdW1lbnRzIHRoZSBidXMgY2xvY2sgYXMgYmVp
-bmcgY2FsbGVkCj4+ID4gImlhcGJjbGsiLiBXZSBjb3VsZCByZW5hbWUgdGhhdCBpbiB0aGUgRFQg
-YmluZGluZ3MgKHdpdGggY29tcGF0aWJpbGl0eQo+PiA+IGNvZGUgaW4gdGhlIGRyaXZlciB0byBr
-ZWVwIHN1cHBvcnRpbmcgdGhlIG9sZCBuYW1lKSBidXQgaXQgbWlnaHQgbm90IGJlCj4+ID4gd29y
-dGggaXQuIFRoZSBiaW5kaW5ncyBzaG91bGQgaG93ZXZlciBkb2N1bWVudCB0aGF0IHRoZSAiaWFo
-YiIgY2xvY2sgaXMKPj4gPiB0aGUgSVAgY29yZSdzICJpYXBiY2xrIiBidXMgY2xvY2suCj4+Cj4+
-IEkgZ290IHRoZSBjbG9jayBuYW1lIGZyb20gSS5NWDZRIFRSTSwgSSBhbHNvIGNoZWNrZWQgdGhl
-IG5hbWUgYWdhaW4KPj4gd2l0aCBSb2NrY2hpcCBJQyBkZXNpZ24gdGVhbSBub3csIGhvcGUgdG8g
-Z2V0IHNvbWUgbmV3IGluZm9ybWF0aW9uIHNvb24uCj4KPiBUaGFuayB5b3UuIFdoaWxlIGF0IGl0
-LCBjb3VsZCB5b3UgYXNrIHRoZW0gd2hpY2ggdmVyc2lvbiBvZiB0aGUgRFcgSERNSSBJUAo+IHVz
-ZWQgaW4gdGhlIFNvQyA/Cj4KPj4gPiBBbm90aGVyIHF1ZXN0aW9uIEkgaGF2ZSBhYm91dCB0aGUg
-YnVzIGNsb2NrIChDQydpbmcgdGhlIGRldmljZXRyZWUgbWFpbGluZwo+PiA+IGxpc3QgYXMgd2Vs
-bCBhcyB0aGUgY2xvY2sgbWFpbnRhaW5lcnMpIGlzIHdoZXRoZXIgaXQgc2hvdWxkIGJlIG1hZGUK
-Pj4gPiBvcHRpb25hbC4gVGhlIGNsb2NrIGlzIG9idmlvdXNseSBtYW5kYXRvcnkgZnJvbSBhIGhh
-cmR3YXJlIHBvaW50IG9mIHZpZXcKPj4gPiAoZ2l2ZW4gdGhhdCBBUEIgaXMgYSBzeW5jaHJvbm91
-cyBidXMgYW5kIHRodXMgcmVxdWlyZXMgYSBjbG9jayksIGJ1dCBpbgo+PiA+IHNvbWUgU29DcyAo
-c3BlY2lmaWNhbGx5IGZvciB0aGUgUmVuZXNhcyBTb0NzKSB0aGF0IGNsb2NrIGlzIGFsd2F5cyBv
-biBhbmQKPj4gPiBjYW4ndCBiZSBjb250cm9sbGVkLiBXZSBhbHJlYWR5IG9taXQgYnVzIGNsb2Nr
-cyBpbiBEVCBmb3IgbW9zdCBJUCBjb3Jlcwo+PiA+IHdoZW4gdGhlIGNsb2NrIGNhbiBuZXZlciBi
-ZSBjb250cm9sbGVkIChhbmQgd2UgYWxzbyBvbWl0IGEgYnVuY2ggb2Ygb3RoZXIKPj4gPiBjbG9j
-a3MgdGhhdCB3ZSBkb24ndCBldmVuIGtub3cgZXhpc3QpLCBzbyBpdCBjb3VsZCBtYWtlIHNlbnNl
-IHRvIG1ha2UgdGhlCj4+ID4gY2xvY2sgb3B0aW9uYWwuIE90aGVyd2lzZSB0aGVyZSB3b3VsZCBi
-ZSBydW50aW1lIG92ZXJoZWFkIHRyeWluZyB0byBoYW5kbGUKPj4gPiBhIGNsb2NrIHRoYXQgY2Fu
-J3QgYmUgY29udHJvbGxlZC4KPj4KPj4gSWYgdGhpcyBpcyB0aGUgY2FzZSBvbiBSZW5lc2FzIFNP
-Q3MsIHdlIGNhbiBjb25zaWRlciBtYWtlIHRoZSBjbG9jayBhcwo+PiBvcHRpb25hbC4gT3IgbW92
-ZSBhbGwgdGhlIGNsb2NrIG9wZXJhdGlvbnMgdG8gcGxhdGZvcm0gc3BlY2lmaWMKPj4gY29kZShk
-d19oZG1pLXJvY2tjaGlwLmMvZHdfaGRtaS1pbXguYyk/Cj4KPiBJJ2QgcHJlZmVyIGtlZXBpbmcg
-dGhlIGNvZGUgZ2VuZXJpYywgb3RoZXJ3aXNlIHdlJ2QgZW5kIHVwIHdpdGggcGxhdGZvcm0tCj4g
-c3BlY2lmaWMgY29kZSB0aGF0IHdvdWxkIHBlcmZvcm0gdGhlIHNhbWUgb3BlcmF0aW9ucyBvbiBt
-b3N0IHBsYXRmb3Jtcy4gSSdsbAo+IHN1Ym1pdCBhIHBhdGNoIHNvb24gdG8gbWFrZSB0aGUgY2xv
-Y2sgb3B0aW9uYWwsIHdlIGNhbiBkaXNjdXNzIGl0IHRoZW4uCgpZZXMsIGxldCdzIGtlZXAgdGhl
-IGNvZGUgZ2VuZXJpYy4gQWJzZW5jZSBvZiBhICJzdGFuZGFyZCcgY2xvY2sgaXMgT0sKYW5kIHdl
-IHNob3VsZCBhY2NlcHQgdGhlIHNtYWxsIG92ZXJoZWFkIGluY3VycmVkIGluIHByb3ZpZGluZyBh
-CnNvbHV0aW9uIHRoYXQgd29ya3MgZm9yIGV2ZXJ5b25lLiBUaGlzIHByZXZlbnRzIGhhcmR3YXJl
-LXNwZWNpZmljCmhhY2tzIGluIHRoZSBkcml2ZXIuCgpSZWxhdGVkOiB3ZSByZWFsbHkgc2hvdWxk
-IG1vZGVsIGJ1cyBjbG9ja3Mgd2hlbmV2ZXIgcG9zc2libGUuIEkndmUKc2VlbiBvdGhlciBhdHRl
-bXB0cyB0byBtZXJnZSBmdW5jdGlvbmFsL2xvZ2ljIGFuZCBidXMgY2xvY2tzIGludG8gYQpzaW5n
-bGUgZW50aXR5IChlLmcuIGEgc2luZ2xlIHN0cnVjdCBjbGtfaHcvY2xrX2NvcmUgdGhhdCB0dXJu
-cyBib3RoCmNsb2NrcyBvbiBhbmQgb2ZmKSBhbmQgdGhpcyBkZWZlYXRzIHNvbWUgZmluZS1ncmFp
-bmVkIHBvd2VyIG1hbmFnZW1lbnQKc2NlbmFyaW9zIHRoYXQgdGhlIGhhcmR3YXJlIGRlc2lnbmVy
-cyBoYWQgaW4gbWluZCB3aGVuIGNyZWF0aW5nCnNlcGFyYXRlIGNvbnRyb2xzIGZvciB0aGUgY2xv
-Y2tzLgoKUmVnYXJkcywKTWlrZQoKPgo+PiA+PiBCeSB0aGUgd2F5IHdoaWxlIHdlJ3JlIGRpc2N1
-c3NpbmcgRFcgSERNSSBiaW5kaW5ncyBzcGVjaWZpYyB0byBpTVgsCj4+ID4+IEkgd291bGQgcmVj
-b21tZW5kIHRvIHJlbW92ZSB1dHRlcmx5IGhhY2tpc2ggYW5kIGlNWCBvbmx5ICJncHIiCj4+ID4+
-IHByb3BlcnR5IGZyb20gdGhlIGV4YW1wbGUgaW4gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdf
-aGRtaS50eHQKPgo+IC0tCj4gUmVnYXJkcywKPgo+IExhdXJlbnQgUGluY2hhcnQKPgoKCgotLSAK
-TWljaGFlbCBUdXJxdWV0dGUKQ0VPCkJheUxpYnJlIC0gQXQgdGhlIEhlYXJ0IG9mIEVtYmVkZGVk
-IExpbnV4Cmh0dHA6Ly9iYXlsaWJyZS5jb20vCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Nov 23, 2016 at 01:57:06PM +0900, Ryan Lee wrote:
+> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/max98927.txt         |   32 +
+>  sound/soc/codecs/Kconfig                           |    5 +
+>  sound/soc/codecs/Makefile                          |    2 +
+>  sound/soc/codecs/max98927.c                        |  954 +++++++++++++++
+>  sound/soc/codecs/max98927.h                        | 1253 ++++++++++++++++++++
+>  5 files changed, 2246 insertions(+)
+>  create mode 100755 Documentation/devicetree/bindings/sound/max98927.txt
+>  mode change 100644 => 100755 sound/soc/codecs/Kconfig
+>  mode change 100644 => 100755 sound/soc/codecs/Makefile
+>  create mode 100755 sound/soc/codecs/max98927.c
+>  create mode 100755 sound/soc/codecs/max98927.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/max98927.txt b/Documentation/devicetree/bindings/sound/max98927.txt
+> new file mode 100755
+> index 0000000..ddcd332
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/max98927.txt
+> @@ -0,0 +1,32 @@
+> +max98927 audio CODEC
+> +
+> +This device supports I2C.
+> +
+> +Required properties:
+> +
+> +  - compatible : "maxim,max98927"
+> +
+> +  - vmon-slot-no : slot number used to send voltage information
+> +                   or in inteleave mode this will be used as
+
+s/inteleave/interleave/
+
+What is the range of values?
+
+> +                   interleave slot.
+> +
+> +  - imon-slot-no : slot number used to send current information
+
+Range?
+
+> +
+> +  - interleave-mode : When using two MAX98927 in a system it is
+
+These all need vendor prefix.
+
+> +                      possible to create ADC data that that will
+> +                      overflow the frame size. Digital Audio Interleave
+> +                      mode provides a means to output VMON and IMON data
+> +                      from two devices on a single DOUT line when running
+> +                      smaller frames sizes such as 32 BCLKS per LRCLK or
+> +                      48 BCLKS per LRCLK.
+> +
+> +  - reg : the I2C address of the device for I2C
+> +
+> +Example:
+> +
+> +codec: max98927@3a {
+> +   compatible = "maxim,max98927";
+> +   vmon-slot-no = <1>;
+> +   imon-slot-no = <0>;
+> +   reg = <0x3a>;
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
