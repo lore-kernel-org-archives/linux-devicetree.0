@@ -1,63 +1,133 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] Initial Tegra186 support
-Date: Mon, 28 Nov 2016 08:33:15 +0100
-Message-ID: <20161128073315.GA18805@ulmo.ba.sec>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20161126133927.GE20568@xo-6d-61-c0.localdomain>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
+Date: Mon, 28 Nov 2016 09:42:30 +0200
+Message-ID: <953743fb-54f9-fa6f-bfdd-43d92271864f@ti.com>
+References: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
+ <8829c208-0674-43c0-8449-ef764071583f@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161126133927.GE20568-5NIqAleC692hcjWhqY66xCZi+YwRKgec@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1626934730=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8829c208-0674-43c0-8449-ef764071583f@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+--===============1626934730==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="aFlArdT1oK6BTNeWpIsbSr2XA629M7xWp"
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--aFlArdT1oK6BTNeWpIsbSr2XA629M7xWp
+Content-Type: multipart/mixed; boundary="55DF03eiPiRtXN53exhMi6ntA26p7LfrP";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Sekhar Nori <nsekhar@ti.com>,
+ Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring
+ <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ arm-soc <linux-arm-kernel@lists.infradead.org>,
+ linux-drm <dri-devel@lists.freedesktop.org>,
+ linux-devicetree <devicetree@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>,
+ David Airlie <airlied@linux.ie>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Message-ID: <953743fb-54f9-fa6f-bfdd-43d92271864f@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
+References: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
+ <8829c208-0674-43c0-8449-ef764071583f@ti.com>
+In-Reply-To: <8829c208-0674-43c0-8449-ef764071583f@ti.com>
+
+--55DF03eiPiRtXN53exhMi6ntA26p7LfrP
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 26, 2016 at 02:39:27PM +0100, Pavel Machek wrote:
-> Hi!
+On 28/11/16 07:24, Sekhar Nori wrote:
+> On Friday 25 November 2016 09:07 PM, Bartosz Golaszewski wrote:
+>> It has been determined that the maximum resolution supported correctly=
+
+>> by tilcdc rev1 on da850 SoCs is 800x600@60. Due to memory throughput
+>> constraints we must filter out higher modes.
+>>
+>> Specify the max-bandwidth property for the display node for
+>> da850-based boards.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> ---
+>>  arch/arm/boot/dts/da850.dtsi | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dt=
+si
+>> index 8e30d9b..9b7c444 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -452,6 +452,7 @@
+>>  			compatible =3D "ti,da850-tilcdc";
+>>  			reg =3D <0x213000 0x1000>;
+>>  			interrupts =3D <52>;
+>> +			max-bandwidth =3D <28800000>;
 >=20
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Hi everyone,
-> >=20
-> > This is a set of patches to add initial support for Tegra186. It is
-> > based on Joseph's patches but I rewrote some of the drivers to be a
-> > little easier to comprehend and maintain (hopefully). I've also
-> > included clock and reset drivers as a proof of concept.
->=20
-> Is there any phone/tablet on the market with this chipset?
+> If this is effectively the max pixel clock that the device supports,
+> then why not use the datasheet specified value of 37.5 MHz (Tc =3D 26.6=
+6 ns).
 
-I'm not aware of any. The chip is primarily targetted at automotive
-use-cases and probably not suited for phones or tablets.
+There's a separate property for max-pixelclock. This one is maximum
+pixels per second (which does sound almost the same), but the doc says
+it's about the particular memory interface + LCDC combination.
 
-Thierry
+But this 'max-bandwidth' does sound quite odd, as the it really should
+be bytes, not pixels... Bad bindings again, which we just have to use.
 
---vkogqOf2sHV7VnPd
+ Tomi
+
+
+--55DF03eiPiRtXN53exhMi6ntA26p7LfrP--
+
+--aFlArdT1oK6BTNeWpIsbSr2XA629M7xWp
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-iQIcBAABCAAGBQJYO922AAoJEN0jrNd/PrOhO0oP/1TN9yID0rD2xOwWhpz3Pesy
-lUtHboHlVTsttsjgVdDhNNKL8nGu3d2d/fqh3O48h/k/1sKrJ29nIQ6IOx5PeMPs
-qeDh6u404PdxI8ZDdxbMPgdvGhHE1LwtNs80LJo46VypcDBEAQegDYWdvlkn9pfB
-VJMLsNCjL/K3VVihjhiCYNt855URC9FWwKafSLEw+5QwhB9ZKxB/DyQCB3NHKEAS
-pdD993o2Pa2MY3sfnWVfsBuBNEgA8L6HLcdPiOq6pJZKcalDxiz+f77QWNKgQtf3
-ncVOGcEan1l5aqnxn8ejyePqhGW3gERqRylQamLJH2rUq0wTIpC/Jou6fPDOUtSv
-eTKoauP2R/2WSv0J1+ORGBOz8SfSumXAgQ9Qh9N9XGDEnHVmT8cNrYZyCW31yDkS
-2YPMH+xLcvFIRgH00/rs2MdPNoADsFPtX3s/oQJAIOTyExs0+xErtKYX497XXAIF
-SNIO4cu98K+qsJanhDCSfuSpOnyUfPF8gE8c7Kl3j6d+mza0787RkatSQDaL6ijn
-clYq4Tg6dRQaVwUhspbuOH4T14SRJwWQl5lETiCSQPIZ0x2VV1PpAReDidxLPKGU
-IdloWznUecJTGWd5bytSrx6MK8MYG4leR+QqAZBOAk49icQFUzdDPGje1NxffptK
-wriit1Afwx3I3JT2FlN1
-=P/EM
+iQIcBAEBCAAGBQJYO9/mAAoJEPo9qoy8lh71+tIP/0qlxMzBHQ0HPKZct+9vg+pQ
+q7rMegqXHj4ngIXcrOKayt+/VYdzUJvgt7lUZZaqiW+QtS5CNA/IkQOCjPRQUBrD
+mjHLKMAt0MinwF4MDjbiQXKjs+g/KGEldw7LNqGD5xeHGTumKvpf/kSzDypilUed
+oO18vwVfKxpPSjUcQa0M36sekF3uX4+pr/19ZRg/fK3yz5c7FLcnOChJ0q7V+SHN
+3RrVO6rj9Mi0FahY7yufcVskF6EWoSuDpCFiaxcHJcRXq0g8JTKcHYX+REBYl75m
+un3FJqu1yU6gM0u1GblD8in8drhAqdqzfr+Km3u1HgYBMoLrIBpVxaOSF3qPDTV9
+Fz1DQCf1gFzoNmQvH9PR/M/WvJ2rdHj5Bbbphi8L/yYHdi9lUBUq7awXgX5O9Uxt
+wWo/IrbN4xbGfDtZHkGFl6xVSB1Oqh9+rXGA+7jrioBC6GmTCQtZkHlGouNdoxqO
+S87PN2NbTDiGKqhbXj+hkc44i30b3x2+ICiXb8UoFragZFnWZVnkt51dCW4Qks7T
+4gEul6HhGkqDWqc8TbZT+9s38xd51yQbO3TRreD6yCz1VxF6hlc2swYNHzSkZaJQ
+fC5Q1W8esFMJ6QLEHjO40cUgJuHucv4kuQT2iIOu7fap1Jm56wMjekMTns5xYd9y
+6kOPWHEu/ggHbG/dP3lW
+=GJrJ
 -----END PGP SIGNATURE-----
 
---vkogqOf2sHV7VnPd--
+--aFlArdT1oK6BTNeWpIsbSr2XA629M7xWp--
+
+--===============1626934730==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1626934730==--
