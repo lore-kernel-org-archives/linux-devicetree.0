@@ -1,46 +1,263 @@
-From: Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [GIT PULL]: ARM ARTPEC changes for 4.10
-Date: Mon, 28 Nov 2016 14:51:11 +0100
-Message-ID: <20161128135111.GP19016@axis.com>
-References: <20161110150930.GB19804@axis.com>
- <5317474.MXurzNW7Do@wuerfel>
- <20161128123331.GO19016@axis.com>
- <10339600.mZlnsf0Sve@wuerfel>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: BCM5301X: Enable UART by default for BCM4708(1) and BCM4709(4)
+Date: Mon, 28 Nov 2016 15:01:34 +0100
+Message-ID: <20161128140134.25128-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <10339600.mZlnsf0Sve@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:ARM/ARTPEC MACHINE SUPPORT" <linux-arm-kernel-VrBV9hrLPhE@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 01:57:10PM +0100, Arnd Bergmann wrote:
-> On Monday, November 28, 2016 1:33:31 PM CET Jesper Nilsson wrote:
-> > > Hi Jesper and Niklas,
-> > > 
-> > > I just found the old pull request while going through my mail backlog.
-> > > 
-> > > A few things for you to remember for next time:
-> > > 
-> > > - please send pull requests "To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" so we know they
-> > >   are destined for arm-soc
-> > 
-> > Ok, should we add that in the MAINTAINERS file so we can
-> > get it automatically from get_maintainer?
-> 
-> No, we don't want to get every single patch that people submit to
-> platform maintainers, only the consolidated pull requests that you
-> send.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Right, sounds reasonable, will do.
+Every device tested so far got UART0 (at 0x18000300) working as serial
+console. It's most likely part of reference design and all vendors use
+it that way.
 
-> 	Arnd
+It seems to be easier to enable it by default and just disable it if we
+ever see a device with different hardware design.
 
-/^JN - Jesper Nilsson
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  | 4 ----
+ arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts       | 4 ----
+ arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts       | 4 ----
+ arch/arm/boot/dts/bcm4708-netgear-r6250.dts        | 4 ----
+ arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      | 4 ----
+ arch/arm/boot/dts/bcm4708.dtsi                     | 4 ++++
+ arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts | 4 ----
+ arch/arm/boot/dts/bcm47081.dtsi                    | 4 ++++
+ arch/arm/boot/dts/bcm4709-netgear-r7000.dts        | 4 ----
+ arch/arm/boot/dts/bcm4709-netgear-r8000.dts        | 4 ----
+ arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts  | 4 ----
+ arch/arm/boot/dts/bcm4709.dtsi                     | 1 +
+ arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts      | 4 ----
+ arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts      | 4 ----
+ arch/arm/boot/dts/bcm47094-netgear-r8500.dts       | 4 ----
+ arch/arm/boot/dts/bcm47094.dtsi                    | 1 +
+ 16 files changed, 10 insertions(+), 48 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+index 9cb186e..d49afec0 100644
+--- a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
++++ b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+@@ -136,10 +136,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+index 35e6ed6..f591b0f 100644
+--- a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
++++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+@@ -55,10 +55,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+index 1c7e53d..50d65d8 100644
+--- a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
++++ b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+@@ -56,10 +56,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+index 8ce39d5..8519548 100644
+--- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
++++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+@@ -83,10 +83,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+index 70f4bb9..74cfcd3 100644
+--- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
++++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+@@ -119,10 +119,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+index eed4dd1..d0eec09 100644
+--- a/arch/arm/boot/dts/bcm4708.dtsi
++++ b/arch/arm/boot/dts/bcm4708.dtsi
+@@ -34,3 +34,7 @@
+ 	};
+ 
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+index a9c8def..2922536 100644
+--- a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
++++ b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+@@ -122,7 +122,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm47081.dtsi b/arch/arm/boot/dts/bcm47081.dtsi
+index f720012..c5f7619 100644
+--- a/arch/arm/boot/dts/bcm47081.dtsi
++++ b/arch/arm/boot/dts/bcm47081.dtsi
+@@ -24,3 +24,7 @@
+ 		};
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
+index fd38d2a..0225d82 100644
+--- a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
++++ b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
+@@ -100,7 +100,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+index 92f8a72..56d38a3 100644
+--- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
++++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+@@ -107,10 +107,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+index 9a92c24..c67bfaa 100644
+--- a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
++++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+@@ -97,10 +97,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
+index f039765..c645fea 100644
+--- a/arch/arm/boot/dts/bcm4709.dtsi
++++ b/arch/arm/boot/dts/bcm4709.dtsi
+@@ -8,4 +8,5 @@
+ 
+ &uart0 {
+ 	clock-frequency = <125000000>;
++	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+index 661348d..7fb9270 100644
+--- a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
++++ b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+@@ -105,10 +105,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+index 169b35f..2f4a651 100644
+--- a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+@@ -98,10 +98,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-netgear-r8500.dts b/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
+index 521b415..7ecd57c 100644
+--- a/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
++++ b/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
+@@ -97,7 +97,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm47094.dtsi b/arch/arm/boot/dts/bcm47094.dtsi
+index 4f09aa0..4840a78 100644
+--- a/arch/arm/boot/dts/bcm47094.dtsi
++++ b/arch/arm/boot/dts/bcm47094.dtsi
+@@ -14,4 +14,5 @@
+ 
+ &uart0 {
+ 	clock-frequency = <125000000>;
++	status = "okay";
+ };
 -- 
-               Jesper Nilsson -- jesper.nilsson-VrBV9hrLPhE@public.gmane.org
+2.10.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
