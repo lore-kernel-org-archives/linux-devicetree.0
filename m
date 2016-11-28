@@ -1,7 +1,7 @@
 From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCHv2 05/11] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
-Date: Mon, 28 Nov 2016 17:31:20 +0300
-Message-ID: <1480343486-25539-6-git-send-email-al.kochet@gmail.com>
+Subject: [PATCHv2 04/11] ARM: dts: rockchip: add timer entries to rk3188 dtsi
+Date: Mon, 28 Nov 2016 17:31:19 +0300
+Message-ID: <1480343486-25539-5-git-send-email-al.kochet@gmail.com>
 References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1480343486-25539-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,102 +10,48 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY
 Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch move ce field out of struct bc_timer into struct
-rk_clock_event_device and rename struct bc_timer to struct rk_timer.
+The patch add two timers to all rk3188 based boards.
 
-This is refactoring step without functional changes.
+The first timer is from alive subsystem and it act as a backup
+for the local timers at sleep time. It act the same as timers
+on other rockchip chips already present in kernel.
+
+The second timer is from CPU subsystem and act as replacement
+for the arm-global-timer clocksource. It run as stable frequency
+24MHz.
 
 Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clocksource/rockchip_timer.c |   33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-index 23e267a..6d68d4c 100644
---- a/drivers/clocksource/rockchip_timer.c
-+++ b/drivers/clocksource/rockchip_timer.c
-@@ -29,18 +29,28 @@
- #define TIMER_MODE_USER_DEFINED_COUNT		(1 << 1)
- #define TIMER_INT_UNMASK			(1 << 2)
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 31f81b2..0dc52fe 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -106,6 +106,22 @@
+ 		};
+ 	};
  
--struct bc_timer {
--	struct clock_event_device ce;
-+struct rk_timer {
- 	void __iomem *base;
- 	void __iomem *ctrl;
- 	u32 freq;
- };
- 
--static struct bc_timer bc_timer;
-+struct rk_clock_event_device {
-+	struct clock_event_device ce;
-+	struct rk_timer timer;
-+};
++	timer3: timer@2000e000 {
++		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
++		reg = <0x2000e000 0x20>;
++		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
++		clock-names = "timer", "pclk";
++	};
 +
-+static struct rk_clock_event_device bc_timer;
++	timer6: timer@200380a0 {
++		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
++		reg = <0x200380a0 0x20>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
++		clock-names = "timer", "pclk";
++	};
 +
-+static inline struct rk_clock_event_device*
-+rk_clock_event_device(struct clock_event_device *ce)
-+{
-+	return container_of(ce, struct rk_clock_event_device, ce);
-+}
- 
--static inline struct bc_timer *rk_timer(struct clock_event_device *ce)
-+static inline struct rk_timer *rk_timer(struct clock_event_device *ce)
- {
--	return container_of(ce, struct bc_timer, ce);
-+	return &rk_clock_event_device(ce)->timer;
- }
- 
- static inline void __iomem *rk_base(struct clock_event_device *ce)
-@@ -116,16 +126,17 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
- static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- {
- 	struct clock_event_device *ce = &bc_timer.ce;
-+	struct rk_timer *timer = &bc_timer.timer;
- 	struct clk *timer_clk;
- 	struct clk *pclk;
- 	int ret = -EINVAL, irq;
- 
--	bc_timer.base = of_iomap(np, 0);
--	if (!bc_timer.base) {
-+	timer->base = of_iomap(np, 0);
-+	if (!timer->base) {
- 		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
- 		return -ENXIO;
- 	}
--	bc_timer.ctrl = bc_timer.base + ctrl_reg;
-+	timer->ctrl = timer->base + ctrl_reg;
- 
- 	pclk = of_clk_get_by_name(np, "pclk");
- 	if (IS_ERR(pclk)) {
-@@ -153,7 +164,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- 		goto out_timer_clk;
- 	}
- 
--	bc_timer.freq = clk_get_rate(timer_clk);
-+	timer->freq = clk_get_rate(timer_clk);
- 
- 	irq = irq_of_parse_and_map(np, 0);
- 	if (!irq) {
-@@ -181,7 +192,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- 		goto out_irq;
- 	}
- 
--	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
-+	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
- 
- 	return 0;
- 
-@@ -190,7 +201,7 @@ out_irq:
- out_timer_clk:
- 	clk_disable_unprepare(pclk);
- out_unmap:
--	iounmap(bc_timer.base);
-+	iounmap(timer->base);
- 
- 	return ret;
- }
+ 	i2s0: i2s@1011a000 {
+ 		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
+ 		reg = <0x1011a000 0x2000>;
 -- 
 1.7.9.5
 
