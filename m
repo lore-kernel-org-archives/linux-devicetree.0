@@ -1,65 +1,55 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: da850: specify the maximum bandwidth for tilcdc
-Date: Mon, 28 Nov 2016 11:43:59 +0100
-Message-ID: <CAMpxmJXwq-w4WXwh+oF0_NACfcu4nE4n6MZPA19oMpt8j1Hdog@mail.gmail.com>
-References: <1480088245-8368-1-git-send-email-bgolaszewski@baylibre.com>
- <8829c208-0674-43c0-8449-ef764071583f@ti.com>
- <953743fb-54f9-fa6f-bfdd-43d92271864f@ti.com>
- <86f2b643-c270-1483-4f35-5bdf399a5919@ti.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH] ARM: dts: mvebu: Add Armada 38x labels and clean up
+ Turris Omnia
+Date: Mon, 28 Nov 2016 11:52:26 +0100
+Message-ID: <4ad1108a-43c4-46f8-4683-1c4b89996036@suse.de>
+References: <1fc18002-0144-8300-1888-09f456860ef0@kleine-koenig.org>
+ <1480272700-28888-1-git-send-email-afaerber@suse.de>
+ <20161128103738.GT14217@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <86f2b643-c270-1483-4f35-5bdf399a5919@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Jyri Sarha <jsarha@ti.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-drm <dri-devel@lists.freedesktop.org>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161128103738.GT14217@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Tomas Hlavacek <tomas.hlavacek@nic.cz>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?UTF-8?B?QmVkxZlpY2hhIEtvxaFhdHU=?= <bedrich.kosata@nic.cz>, Michal Hrusecki <Michal.Hrusecky@nic.cz>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNi0xMS0yOCA4OjU4IEdNVCswMTowMCBTZWtoYXIgTm9yaSA8bnNla2hhckB0aS5jb20+Ogo+
-IE9uIE1vbmRheSAyOCBOb3ZlbWJlciAyMDE2IDAxOjEyIFBNLCBUb21pIFZhbGtlaW5lbiB3cm90
-ZToKPj4gT24gMjgvMTEvMTYgMDc6MjQsIFNla2hhciBOb3JpIHdyb3RlOgo+Pj4gT24gRnJpZGF5
-IDI1IE5vdmVtYmVyIDIwMTYgMDk6MDcgUE0sIEJhcnRvc3ogR29sYXN6ZXdza2kgd3JvdGU6Cj4+
-Pj4gSXQgaGFzIGJlZW4gZGV0ZXJtaW5lZCB0aGF0IHRoZSBtYXhpbXVtIHJlc29sdXRpb24gc3Vw
-cG9ydGVkIGNvcnJlY3RseQo+Pj4+IGJ5IHRpbGNkYyByZXYxIG9uIGRhODUwIFNvQ3MgaXMgODAw
-eDYwMEA2MC4gRHVlIHRvIG1lbW9yeSB0aHJvdWdocHV0Cj4+Pj4gY29uc3RyYWludHMgd2UgbXVz
-dCBmaWx0ZXIgb3V0IGhpZ2hlciBtb2Rlcy4KPj4+Pgo+Pj4+IFNwZWNpZnkgdGhlIG1heC1iYW5k
-d2lkdGggcHJvcGVydHkgZm9yIHRoZSBkaXNwbGF5IG5vZGUgZm9yCj4+Pj4gZGE4NTAtYmFzZWQg
-Ym9hcmRzLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8Ymdv
-bGFzemV3c2tpQGJheWxpYnJlLmNvbT4KPj4+PiAtLS0KPj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMv
-ZGE4NTAuZHRzaSB8IDEgKwo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4+
-Pgo+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+IGluZGV4IDhlMzBkOWIuLjliN2M0NDQgMTAwNjQ0
-Cj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQo+Pj4+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKPj4+PiBAQCAtNDUyLDYgKzQ1Miw3IEBACj4+Pj4gICAg
-ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInRpLGRhODUwLXRpbGNkYyI7Cj4+Pj4gICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8MHgyMTMwMDAgMHgxMDAwPjsKPj4+PiAgICAgICAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8NTI+Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAgbWF4
-LWJhbmR3aWR0aCA9IDwyODgwMDAwMD47Cj4+Pgo+Pj4gSWYgdGhpcyBpcyBlZmZlY3RpdmVseSB0
-aGUgbWF4IHBpeGVsIGNsb2NrIHRoYXQgdGhlIGRldmljZSBzdXBwb3J0cywKPj4+IHRoZW4gd2h5
-IG5vdCB1c2UgdGhlIGRhdGFzaGVldCBzcGVjaWZpZWQgdmFsdWUgb2YgMzcuNSBNSHogKFRjID0g
-MjYuNjYgbnMpLgo+Pgo+PiBUaGVyZSdzIGEgc2VwYXJhdGUgcHJvcGVydHkgZm9yIG1heC1waXhl
-bGNsb2NrLiBUaGlzIG9uZSBpcyBtYXhpbXVtCj4+IHBpeGVscyBwZXIgc2Vjb25kICh3aGljaCBk
-b2VzIHNvdW5kIGFsbW9zdCB0aGUgc2FtZSksIGJ1dCB0aGUgZG9jIHNheXMKPj4gaXQncyBhYm91
-dCB0aGUgcGFydGljdWxhciBtZW1vcnkgaW50ZXJmYWNlICsgTENEQyBjb21iaW5hdGlvbi4KPgo+
-IERBODUwIHN1cHBvcnRzIGJvdGggbUREUiBhbmQgRERSMiwgYXQgc2xpZ2h0bHkgZGlmZmVyZW50
-IHNwZWVkcy4gU28KPiBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24gaXMgYWxzbyBib2FyZCBz
-cGVjaWZpYy4gVGhpcyBzaG91bGQgcHJvYmFibHkKPiBtb3ZlIHRvIGJvYXJkIGZpbGUuCj4KPiBC
-dXQgSSB3b3VsZCBsaWtlIHRvIGtub3cgd2h5IHVzaW5nIG1heC1waXhlbGNsb2NrIGlzIG5vdCBn
-b29kIGVub3VnaC4KPiBIYXZlIGV4cGVyaW1lbnRzIHNob3duIHRoYXQgTENEQyBvbiBEQTg1MCBM
-Q0RLIHVuZGVyZmxvd3MgZXZlbiBpZiBwaXhlbAo+IGNsb2NrIGlzIGJlbG93IHRoZSBkYXRhc2hl
-ZXQgcmVjb21tZW5kYXRpb24/Cj4KCkhpIFNla2hhciwKCkkndmUganVzdCB0ZXN0ZWQgMTAyNHg3
-NjggYXQgMzcwMDAgS0h6IC0gaW5kZWVkIHNlZW1zIGxpa2UgdGhlCnVuZGVyZmxvd3MgYXJlIGdv
-bmUgYXMgc29vbiBhcyB3ZSBnbyBiZWxvdyAzNzUwMCBLSHouIEknbGwgc3VibWl0IGEKbmV3IHBh
-dGNoIHVzaW5nIHRoZSBtYXgtcGl4ZWxjbG9jayBwcm9wZXJ0eS4KClRoYW5rcywKQmFydG9zeiBH
-b2xhc3pld3NraQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Russell,
+
+Am 28.11.2016 um 11:37 schrieb Russell King - ARM Linux:
+> On Sun, Nov 27, 2016 at 07:51:39PM +0100, Andreas F=E4rber wrote:
+>> To more consistently reference nodes by label, add labels for sata,
+>> usb2, sdhci and usb3 nodes.
+>>
+>> Convert all other 38x boards for consistency. Add labels for nfc and rtc.
+> =
+
+> Please don't do this for clearfog - there's changes in the pipeline which
+> completely replace armada-388-clearfog.dts because there's a "base" and
+> "pro" versions of this hardware now, and making such a huge change will
+> effectively mean we have to start over with the DT files.
+
+Would it help to split it back up into a series of add-labels,
+use-labels like I had originally? Then you could start using them in
+your refactoring as soon as the add-labels patch gets applied. Or are
+you completely against this style?
+
+Thanks for pointing this out,
+
+Andreas
+
+-- =
+
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG N=FCrnberg)
