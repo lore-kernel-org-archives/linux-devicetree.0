@@ -1,54 +1,43 @@
 From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 0/3][v2] Add QorIQ LS2088A platform support
-Date: Mon, 28 Nov 2016 15:07:01 +0530
-Message-ID: <1480325824-14649-1-git-send-email-abhimanyu.saini@nxp.com>
+Subject: [PATCH 1/3][v2] dt-bindings: Add compatible for LS2088A QDS and RDB boards
+Date: Mon, 28 Nov 2016 15:07:02 +0530
+Message-ID: <1480325824-14649-2-git-send-email-abhimanyu.saini@nxp.com>
+References: <1480325824-14649-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480325824-14649-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the QorIQ LS2088A SoC.
-LS2088A SoC is similar to LS2080A SoC with a few differences
-like it has A72 cores.
+Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-This patchset
-        - reorganize LS2088A DTS/DTSI for code reuseability
-        - adds LS2088A device dtsi and dts files.
-
-Abhimanyu Saini (3):
-  dt-bindings: Add compatible for LS2088A QDS and RDB boards
-  arm64: freescale: ls2080a: Split devicetree for code resuability
-  arm64: Add DTS support for FSL's LS2088A SoC
-
-Changes for v2:
-	- reorganize LS2088A device tree to use common
-	  nodes from LS2080A device trees.
-	- Both LS2080A and LS2088A have same hardware
-	  controllers, so separate dt-binding patches for
-	  pcie, gpio, dspi, qspi are not required.
-
- Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
- arch/arm64/boot/dts/freescale/Makefile             |   2 +
- .../boot/dts/freescale/fsl-ls2080a-ls2088a-qds.dts | 196 ++++++
- .../boot/dts/freescale/fsl-ls2080a-ls2088a-rdb.dts | 152 +++++
- .../boot/dts/freescale/fsl-ls2080a-ls2088a.dtsi    | 727 +++++++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 154 +----
- arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +---
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 706 +-------------------
- arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  65 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  65 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 162 +++++
- 11 files changed, 1405 insertions(+), 945 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2080a-ls2088a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2080a-ls2088a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2080a-ls2088a.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index d6ee9c6..75ad8c5 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -179,3 +179,14 @@ LS2080A ARMv8 based RDB Board
+ Required root node properties:
+     - compatible = "fsl,ls2080a-rdb", "fsl,ls2080a";
+ 
++LS2088A SoC
++Required root node properties:
++    - compatible = "fsl,ls2088a";
++
++LS2088A ARMv8 based QDS Board
++Required root node properties:
++    - compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
++
++LS2088A ARMv8 based RDB Board
++Required root node properties:
++    - compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
 -- 
 1.9.1
 
