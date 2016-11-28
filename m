@@ -1,43 +1,55 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: dts: mvebu: Add Armada 38x labels and clean up
- Turris Omnia
-Date: Mon, 28 Nov 2016 10:37:38 +0000
-Message-ID: <20161128103738.GT14217@n2100.armlinux.org.uk>
-References: <1fc18002-0144-8300-1888-09f456860ef0@kleine-koenig.org>
- <1480272700-28888-1-git-send-email-afaerber@suse.de>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node for H3
+Date: Mon, 28 Nov 2016 11:42:18 +0100
+Message-ID: <20161128114218.14d2ed434802a20fa6b62023@free.fr>
+References: <20161128095900.27615-1-icenowy@aosc.xyz>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1480272700-28888-1-git-send-email-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, devicetree@vger.kernel.org, Tomas Hlavacek <tomas.hlavacek@nic.cz>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?utf-8?B?QmVkxZlpY2hhIEtvxaFhdHU=?= <bedrich.kosata@nic.cz>, Michal Hrusecki <Michal.Hrusecky@nic.cz>
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBD4U6DAQKGQECALQQSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161128095900.27615-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 27, 2016 at 07:51:39PM +0100, Andreas F=E4rber wrote:
-> To more consistently reference nodes by label, add labels for sata,
-> usb2, sdhci and usb3 nodes.
-> =
+On Mon, 28 Nov 2016 17:59:00 +0800
+Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
 
-> Convert all other 38x boards for consistency. Add labels for nfc and rtc.
+> As there's currently a fork of U-Boot which provides simplefb support
+> for H3, a simplefb node can be added to the device tree.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>=20
+> I'm still not sure which pipeline should I use.
+>=20
+> And, it seems that HDMI Slow Clock is not needed?
+>=20
+> (seems that it's only for EDID, but simplefb won't use EDID)
 
-Please don't do this for clearfog - there's changes in the pipeline which
-completely replace armada-388-clearfog.dts because there's a "base" and
-"pro" versions of this hardware now, and making such a huge change will
-effectively mean we have to start over with the DT files.
+So, I don't see how this may work.
+How can the u-boot know the resolutions of the HDMI display device?
 
--- =
+In other words: I have a new H3 board with the last u-boot and kernel.
+I plug my (rather old or brand new) HDMI display device.
+After powering on the system, I hope to get something on the screen.
+How?
 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
