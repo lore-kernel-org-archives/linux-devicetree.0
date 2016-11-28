@@ -1,82 +1,146 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ALSA SoC MAX98927 driver - Initial release
-Date: Mon, 28 Nov 2016 16:01:53 -0600
-Message-ID: <20161128220153.7ccbt4p3wy2fomis@rob-hp-laptop>
-References: <1479877026-5172-1-git-send-email-RyanS.Lee@maximintegrated.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] [media] dt-bindings: add TI VPIF documentation
+Date: Mon, 28 Nov 2016 14:16:01 -0800
+Message-ID: <m2y403s126.fsf@baylibre.com>
+References: <20161122155244.802-1-khilman@baylibre.com>
+        <20161122155244.802-5-khilman@baylibre.com>
+        <20161128213822.26oeyzkht5jz5gd3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1479877026-5172-1-git-send-email-RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <20161128213822.26oeyzkht5jz5gd3@rob-hp-laptop> (Rob Herring's
+        message of "Mon, 28 Nov 2016 15:38:22 -0600")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Lee <RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 23, 2016 at 01:57:06PM +0900, Ryan Lee wrote:
-> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/max98927.txt         |   32 +
->  sound/soc/codecs/Kconfig                           |    5 +
->  sound/soc/codecs/Makefile                          |    2 +
->  sound/soc/codecs/max98927.c                        |  954 +++++++++++++++
->  sound/soc/codecs/max98927.h                        | 1253 ++++++++++++++++++++
->  5 files changed, 2246 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/sound/max98927.txt
->  mode change 100644 => 100755 sound/soc/codecs/Kconfig
->  mode change 100644 => 100755 sound/soc/codecs/Makefile
->  create mode 100755 sound/soc/codecs/max98927.c
->  create mode 100755 sound/soc/codecs/max98927.h
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/max98927.txt b/Documentation/devicetree/bindings/sound/max98927.txt
-> new file mode 100755
-> index 0000000..ddcd332
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/max98927.txt
-> @@ -0,0 +1,32 @@
-> +max98927 audio CODEC
-> +
-> +This device supports I2C.
-> +
-> +Required properties:
-> +
-> +  - compatible : "maxim,max98927"
-> +
-> +  - vmon-slot-no : slot number used to send voltage information
-> +                   or in inteleave mode this will be used as
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-s/inteleave/interleave/
+> On Tue, Nov 22, 2016 at 07:52:44AM -0800, Kevin Hilman wrote:
+>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
+>>  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
+>>  2 files changed, 73 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> new file mode 100644
+>> index 000000000000..c447ac482c1d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> @@ -0,0 +1,65 @@
+>> +Texas Instruments VPIF Capture
+>> +------------------------------
+>> +
+>> +The TI Video Port InterFace (VPIF) capture component is the primary
+>> +component for video capture on the DA850 family of TI DaVinci SoCs.
+>> +
+>> +TI Document number reference: SPRUH82C
+>> +
+>> +Required properties:
+>> +- compatible: must be "ti,da850-vpif-capture"
+>> +- reg: physical base address and length of the registers set for the device;
+>> +- interrupts: should contain IRQ line for the VPIF
+>> +
+>> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
+>> +channels or a single 16-bit channel.  It should contain at least one
+>> +port child node with child 'endpoint' node. Please refer to the
+>> +bindings defined in
+>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +Example using 2 8-bit input channels, one of which is connected to an
+>> +I2C-connected TVP5147 decoder:
+>> +
+>> +	vpif_capture: video-capture@0x00217000 {
+>
+> Drop the 0x00.
+>
+>> +		compatible = "ti,da850-vpif-capture";
+>> +		reg = <0x00217000 0x1000>;
+>> +		interrupts = <92>;
+>> +
+>> +		port {
+>> +			vpif_ch0: endpoint@0 {
+>> +				  reg = <0>;
+>
+> This is missing #size-cells and #addr-cells.
+>
 
-What is the range of values?
+Yup.
 
-> +                   interleave slot.
-> +
-> +  - imon-slot-no : slot number used to send current information
+>> +				  bus-width = <8>;
+>> +				  remote-endpoint = <&composite>;
+>> +			};
+>> +
+>> +			vpif_ch1: endpoint@1 {
+>
+> I think probably channels here should be ports rather than endpoints. 
+> AIUI, having multiple endpoints is for cases like a mux or 1 to many 
+> connections. There's only one data flow, but multiple sources or sinks.
 
-Range?
+OK.
 
-> +
-> +  - interleave-mode : When using two MAX98927 in a system it is
+>> +				  reg = <1>;
+>> +				  bus-width = <8>;
+>> +				  data-shift = <8>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +[ ... ]
+>> +
+>> +&i2c0 {
+>> +
+>> +	tvp5147@5d {
+>> +		compatible = "ti,tvp5147";
+>> +		reg = <0x5d>;
+>> +		status = "okay";
+>> +
+>> +		port {
+>> +			composite: endpoint {
+>> +				hsync-active = <1>;
+>> +				vsync-active = <1>;
+>> +				pclk-sample = <0>;
+>> +
+>> +				/* VPIF channel 0 (lower 8-bits) */
+>> +				remote-endpoint = <&vpif_ch0>;
+>> +				bus-width = <8>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +};
+>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> new file mode 100644
+>> index 000000000000..d004e600aabe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> @@ -0,0 +1,8 @@
+>> +Texas Instruments VPIF
+>> +----------------------
+>> +
+>> +The Video Port InterFace (VPIF) is the core component for video output
+>> +and capture on DA850 TI Davinci SoCs.
+>> +
+>> +- compatible: must be "ti,da850-vpif"
+>> +- reg: physical base address and length of the registers set for the device;
+>
+> That's it? How does this block relate to the capture block?
 
-These all need vendor prefix.
+I separated them because the current legacy drivers are separated into 3
+different platform drivers.
 
-> +                      possible to create ADC data that that will
-> +                      overflow the frame size. Digital Audio Interleave
-> +                      mode provides a means to output VMON and IMON data
-> +                      from two devices on a single DOUT line when running
-> +                      smaller frames sizes such as 32 BCLKS per LRCLK or
-> +                      48 BCLKS per LRCLK.
-> +
-> +  - reg : the I2C address of the device for I2C
-> +
-> +Example:
-> +
-> +codec: max98927@3a {
-> +   compatible = "maxim,max98927";
-> +   vmon-slot-no = <1>;
-> +   imon-slot-no = <0>;
-> +   reg = <0x3a>;
-> +};
+However, after some discussions with Laurent, I'm going to just create a
+single VPIF node with input (capture) and output (display) ports, and
+then have to tweak the existing drivers a bit more than I had wanted to.
+
+IOW, I was lazy.
+
+Kevin
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
