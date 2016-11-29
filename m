@@ -1,66 +1,109 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node
- for H3
-Date: Tue, 29 Nov 2016 22:43:23 +0100
-Message-ID: <20161129214323.rsi7xyghffrkwyjd@lukather>
-References: <20161128095900.27615-1-icenowy@aosc.xyz>
- <CAGb2v67akcT6z-xOdCzpLQRZbgNGh3E5akYEs1BvFNP1rH8UeA@mail.gmail.com>
- <496171480328390@web15g.yandex.ru>
- <CAGb2v66yQ2d=12P_MYyQXTfcZnNAMcb+0i=NEab4sNcJZUyL-w@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
+Date: Wed, 30 Nov 2016 00:45:11 +0300
+Message-ID: <20161129214511.GC9146@mobilestation>
+References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
+ <20161129193750.GD20341@kroah.com>
+ <20161129211625.GB9146@mobilestation>
+ <20161129212412.GA20334@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xmmyt5t54pstfsmp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBXN67AQKGQEM3P6MCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v66yQ2d=12P_MYyQXTfcZnNAMcb+0i=NEab4sNcJZUyL-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20161129212412.GA20334@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---xmmyt5t54pstfsmp
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Nov 28, 2016 at 06:24:24PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Nov 28, 2016 at 6:19 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> >
-> >
-> > 28.11.2016, 18:07, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
-> >> On Mon, Nov 28, 2016 at 5:59 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> >>>  As there's currently a fork of U-Boot which provides simplefb support
-> >>
-> >> Please add it when its finalized...
-> >>
-> >>>  for H3, a simplefb node can be added to the device tree.
-> >>>
-> >>>  Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >>>  ---
-> >>>
-> >>>  I'm still not sure which pipeline should I use.
-> >>
-> >> You are supposed to add _all_ the pipelines that are available and
-> >> supported by U-boot. U-boot is then supposed to enable and update
-> >> the one it set up.
-> >
-> > I mean the pipeline string ;-)
+On Tue, Nov 29, 2016 at 10:24:12PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Wed, Nov 30, 2016 at 12:16:25AM +0300, Serge Semin wrote:
+> > On Tue, Nov 29, 2016 at 08:37:50PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
+> > > > +struct idt_89hpesx_dev {
+> > > > +	u32 eesize;
+> > > > +	bool eero;
+> > > > +	u8 eeaddr;
+> > > > +
+> > > > +	u8 inieecmd;
+> > > > +	u8 inicsrcmd;
+> > > > +	u8 iniccode;
+> > > > +
+> > > > +	atomic_t csr;
+> > > > +
+> > > > +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
+> > > > +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
+> > > > +	struct mutex smb_mtx;
+> > > > +
+> > > > +	struct i2c_client *client;
+> > > > +
+> > > > +	struct bin_attribute *ee_file;
+> > > > +	struct dentry *csr_dir;
+> > > > +	struct dentry *csr_file;
+> > > > +};
+> > > > +#define to_pdev_kobj(__kobj) \
+> > > > +	dev_get_drvdata(container_of(__kobj, struct device, kobj))
+> > > 
+> > > Is it a struct device, or a kobject?  This is totally confusing to me.
+> > > 
+> > > And can't you just use kobj_to_dev()?
+> > > 
+> > 
+> > I just didn't know about kobj_to_dev() inline function. Totally agree that
+> > container_of() should be replaced with it.
+> > What does look confusing to you? Do you mean the name "to_pdev_kobj" of the
+> > macro?
 > 
-> Looks good to me. There's no separate frontend/backend in DE 2.0.
+> Yes, the macro is odd.  As you are doing two different things here, just
+> spell it out in the code and use kobj_to_dev() to make it easier to
+> read please.
+> 
+> > > > +/*
+> > > > + * eeprom_attribute - EEPROM sysfs-node attributes
+> > > > + *
+> > > > + * NOTE Size will be changed in compliance with OF node. EEPROM attribute will
+> > > > + * be read-only as well if the corresponding flag is specified in OF node.
+> > > > + */
+> > > > +BIN_ATTR(eeprom, 0644, idt_sysfs_eeprom_read, idt_sysfs_eeprom_write,
+> > > > +	 EEPROM_DEF_SIZE);
+> > > 
+> > > static?
+> > > 
+> > > And BIN_ATTR_RW()?
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > 
+> > Of course it should be static. Thanks for noticing that.
+> > But I intentionally utilized BIN_ATTR() instead of BIN_ATTR_RW(), because
+> > the last one implies to define the read/write methods with names
+> > "_name##_read"/"_name##_write", which totally get out of naming within the
+> > driver source code.
+> 
+> That's ok, use the names the macro wants you to, that's the best way,
+> and it ensures that I don't have to audit your permissions are correct
+> for the file.
+> 
+> > To tell the truth macro BIN_ATTR_RW() isn't that popular in the
+> > kernel.
+> 
+> Yes, but it should be, I have patches floating around somewhere to fix
+> almost all of these up.
+> 
+> > Neither is BIN_ATTR() macro, but it suites my driver better than the
+> > another one.
+> 
+> a "raw" BIN_ATTR() shouldn't be used either, please use the _RW()
+> variant.
+> 
+> thanks,
+> 
+> greg k-h
 
-It looks good to me too.
+Agreed with all the notes. I will send patchset v3 within next hour.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---xmmyt5t54pstfsmp--
+Thanks,
+-Sergey
