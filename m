@@ -1,59 +1,51 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 5/9] ARM: dts: rockchip: disable arm-global-timer for rk3188
-Date: Tue, 29 Nov 2016 19:14:48 +0300
-Message-ID: <1480436092-10728-6-git-send-email-al.kochet@gmail.com>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
- <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 12/13] net: ethernet: ti: cpts: calc mult and shift
+ from refclk freq
+Date: Tue, 29 Nov 2016 10:22:21 -0600
+Message-ID: <cfa767c3-9ff4-d1b3-14a2-2f2118356bf1@ti.com>
+References: <20161128230337.6731-1-grygorii.strashko@ti.com>
+ <20161128230337.6731-13-grygorii.strashko@ti.com>
+ <20161129103453.GJ3110@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1480436092-10728-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161129103453.GJ3110@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-arm-global-timer can provide clockevents, clocksource and shed_clock. But
-on rk3188 platform it provide only clocksource and shed_clock. clockevents
-from  arm-global-timer is not used by kernel because there is another
-clockevent provider with higher rating (smp-twd).
 
-My commit from the series implement clocksource and shed_clock using
-rockchip_timer. But sched clock from rk_timer is not selected by kernel
-due to lower frequency than arm-global-timer, and clocksource from
-rk_timer is not selected by kernel due to lower rating than
-arm-global-timer. And I don't want to increase clocksource rating
-because ratings greater 300 used for high frequency clocksources.
 
-clocksource and shed_clock is quite unstable, because their rate depends
-on cpu frequency. So disable arm-global-timer and use clocksource and
-sched_clock from rockchip_timer.
+On 11/29/2016 04:34 AM, Richard Cochran wrote:
+> On Mon, Nov 28, 2016 at 05:03:36PM -0600, Grygorii Strashko wrote:
+>> +static void cpts_calc_mult_shift(struct cpts *cpts)
+>> +{
+>> +	u64 frac, maxsec, ns;
+>> +	u32 freq, mult, shift;
+>> +
+>> +	freq = clk_get_rate(cpts->refclk);
+>> +
+>> +	/* Calc the maximum number of seconds which we can run before
+>> +	 * wrapping around.
+>> +	 */
+>> +	maxsec = cpts->cc.mask;
+>> +	do_div(maxsec, freq);
+>> +	if (maxsec > 600 && cpts->cc.mask > UINT_MAX)
+>> +		maxsec = 600;
+> 
+> The reason for this test is not obvious.  Why check cc.mask against
+> UINT_MAX?  Please use the comment to explain it.
+> 
 
-Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3188.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+Yeah. This is copy paste from __clocksource_update_freq_scale(), but
+I'm going to limit it to 10 sec for now, because otherwise it will result in too small
+mult in case of 64bit counter.
 
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 0dc52fe..44da3d42 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -546,6 +546,7 @@
- 
- &global_timer {
- 	interrupts = <GIC_PPI 11 0xf04>;
-+	status = "disabled";
- };
- 
- &local_timer {
+if (maxsec > 10)
+	maxsec = 10;
+
 -- 
-1.7.9.5
+regards,
+-grygorii
