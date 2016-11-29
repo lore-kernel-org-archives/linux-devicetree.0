@@ -1,60 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Tue, 29 Nov 2016 08:51:22 -0600
-Message-ID: <CAL_Jsq+80LAkCGEdP5T0AWFV2nRtZ8nrkBoNRB47CR9JN=9dog@mail.gmail.com>
-References: <1479434109-8745-1-git-send-email-matt@ranostay.consulting>
- <20161128141513.agnkyz6ronigbukn@rob-hp-laptop> <CAPDyKFr=TE+EuZ9rZV3ygsjBFN_mRrE2imkFa-wQs_ykM5d+cQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 13/13] clocksource/drivers/rockchip_timer: Prevent ftrace recursion
+Date: Tue, 29 Nov 2016 16:01:09 +0100
+Message-ID: <7837485.H9nfDmPu0F@diego>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <1480427118-5126-1-git-send-email-al.kochet@gmail.com> <1480427118-5126-14-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFr=TE+EuZ9rZV3ygsjBFN_mRrE2imkFa-wQs_ykM5d+cQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1480427118-5126-14-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 9:54 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> [...]
->
->>> +
->>> +Example:
->>> +
->>> +     wifi_pwrseq: wifi_pwrseq {
->>> +             compatible = "mmc-pwrseq-sd8787";
->>> +             pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
->>> +             reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
->>> +     }
->>> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>> index c421aba0a5bc..08fd65d35725 100644
->>> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>> @@ -32,6 +32,9 @@ Optional properties:
->>>                so that the wifi chip can wakeup host platform under certain condition.
->>>                during system resume, the irq will be disabled to make sure
->>>                unnecessary interrupt is not received.
->>> +  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
->>
->> This is why pwrseq is wrong. You have some properties in the card node
->> and some in pwrseq node. Everything should be in the card node.
->
-> Put "all" in the card node, just doesn't work for MMC. Particular in
-> cases when we have removable cards, as then it would be wrong to have
-> a card node.
+Am Dienstag, 29. November 2016, 16:45:18 schrieb Alexander Kochetkov:
+> Currently rockchip_timer can be used as a scheduler clock. We properly
+> marked rk_timer_sched_clock_read() as notrace but we then call another
+> function rk_timer_counter_read() that _wasn't_ notrace.
+> 
+> Having a traceable function in the sched_clock() path leads to a recursion
+> within ftrace and a kernel crash.
+> 
+> Fix this by adding an extra notrace function to keep other users of
+> rk_timer_counter_read() traceable.
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-When is there a problem with removable cards? The connector is
-standard and everything needed (CD, VMMC, VDDIO, etc.) is defined in
-the host controller node. If that isn't sufficient, then we should
-start defining a connector node.
+you introduced the issue yourself in patch 11/13. In general any patch should 
+never leave the kernel in a worse state than it was before, so no patch should 
+ever introduce known issues itself.
 
-> The mmc pwrseq DT bindings just follows the legacy approach for MMC
-> and that's why the pwrseq handle is at the controller node. Yes, would
-> could have done it differently, but this is the case now, so we will
-> have to accept that.
+In that line of thought, don't patches 10+11 introduce warnings about unused 
+functions as well when applied without patch 12?
 
-We're stuck with supporting the existing cases. That doesn't mean
-we're stuck with the same thing for new cases.
+Maybe merge them?
 
-Rob
+
+Heiko
+
+> ---
+>  drivers/clocksource/rockchip_timer.c |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clocksource/rockchip_timer.c
+> b/drivers/clocksource/rockchip_timer.c index 1af80a0..a127822 100644
+> --- a/drivers/clocksource/rockchip_timer.c
+> +++ b/drivers/clocksource/rockchip_timer.c
+> @@ -87,7 +87,7 @@ static void rk_timer_update_counter(u64 cycles, struct
+> rk_timer *timer) writel_relaxed(upper, timer->base + TIMER_LOAD_COUNT1);
+>  }
+> 
+> -static u64 rk_timer_counter_read(struct rk_timer *timer)
+> +static u64 notrace _rk_timer_counter_read(struct rk_timer *timer)
+>  {
+>  	u64 counter;
+>  	u32 lower;
+> @@ -106,6 +106,11 @@ static u64 rk_timer_counter_read(struct rk_timer
+> *timer) return counter;
+>  }
+> 
+> +static u64 rk_timer_counter_read(struct rk_timer *timer)
+> +{
+> +	return _rk_timer_counter_read(timer);
+> +}
+> +
+>  static void rk_timer_interrupt_clear(struct rk_timer *timer)
+>  {
+>  	writel_relaxed(1, timer->base + TIMER_INT_STATUS);
+> @@ -168,7 +173,7 @@ static u64 notrace rk_timer_sched_clock_read(void)
+>  {
+>  	struct rk_clocksource *_cs = &cs_timer;
+> 
+> -	return ~rk_timer_counter_read(&_cs->timer);
+> +	return ~_rk_timer_counter_read(&_cs->timer);
+>  }
+> 
+>  static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
