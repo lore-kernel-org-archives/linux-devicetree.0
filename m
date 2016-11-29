@@ -1,109 +1,85 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Wed, 30 Nov 2016 00:45:11 +0300
-Message-ID: <20161129214511.GC9146@mobilestation>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
- <20161129193750.GD20341@kroah.com>
- <20161129211625.GB9146@mobilestation>
- <20161129212412.GA20334@kroah.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] ARM: dts: sun8i-h3: add HDMI video nodes
+Date: Tue, 29 Nov 2016 22:57:58 +0100
+Message-ID: <20161129215758.u6vx3mfbya73ne43@lukather>
+References: <cover.1479641523.git.moinejf@free.fr>
+ <cdf50b8433e2d9a053e35f8788bfcd5d41504312.1479641523.git.moinejf@free.fr>
+ <3188681480066911@web3h.yandex.ru>
+ <20161125112213.83420594eb435b6bb1a4d164@free.fr>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="muyu3qmecff4abkd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4PT67AQKGQEE5FVVSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20161129212412.GA20334@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20161125112213.83420594eb435b6bb1a4d164-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 10:24:12PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Wed, Nov 30, 2016 at 12:16:25AM +0300, Serge Semin wrote:
-> > On Tue, Nov 29, 2016 at 08:37:50PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
-> > > > +struct idt_89hpesx_dev {
-> > > > +	u32 eesize;
-> > > > +	bool eero;
-> > > > +	u8 eeaddr;
-> > > > +
-> > > > +	u8 inieecmd;
-> > > > +	u8 inicsrcmd;
-> > > > +	u8 iniccode;
-> > > > +
-> > > > +	atomic_t csr;
-> > > > +
-> > > > +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
-> > > > +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
-> > > > +	struct mutex smb_mtx;
-> > > > +
-> > > > +	struct i2c_client *client;
-> > > > +
-> > > > +	struct bin_attribute *ee_file;
-> > > > +	struct dentry *csr_dir;
-> > > > +	struct dentry *csr_file;
-> > > > +};
-> > > > +#define to_pdev_kobj(__kobj) \
-> > > > +	dev_get_drvdata(container_of(__kobj, struct device, kobj))
-> > > 
-> > > Is it a struct device, or a kobject?  This is totally confusing to me.
-> > > 
-> > > And can't you just use kobj_to_dev()?
-> > > 
-> > 
-> > I just didn't know about kobj_to_dev() inline function. Totally agree that
-> > container_of() should be replaced with it.
-> > What does look confusing to you? Do you mean the name "to_pdev_kobj" of the
-> > macro?
-> 
-> Yes, the macro is odd.  As you are doing two different things here, just
-> spell it out in the code and use kobj_to_dev() to make it easier to
-> read please.
-> 
-> > > > +/*
-> > > > + * eeprom_attribute - EEPROM sysfs-node attributes
-> > > > + *
-> > > > + * NOTE Size will be changed in compliance with OF node. EEPROM attribute will
-> > > > + * be read-only as well if the corresponding flag is specified in OF node.
-> > > > + */
-> > > > +BIN_ATTR(eeprom, 0644, idt_sysfs_eeprom_read, idt_sysfs_eeprom_write,
-> > > > +	 EEPROM_DEF_SIZE);
-> > > 
-> > > static?
-> > > 
-> > > And BIN_ATTR_RW()?
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > 
-> > Of course it should be static. Thanks for noticing that.
-> > But I intentionally utilized BIN_ATTR() instead of BIN_ATTR_RW(), because
-> > the last one implies to define the read/write methods with names
-> > "_name##_read"/"_name##_write", which totally get out of naming within the
-> > driver source code.
-> 
-> That's ok, use the names the macro wants you to, that's the best way,
-> and it ensures that I don't have to audit your permissions are correct
-> for the file.
-> 
-> > To tell the truth macro BIN_ATTR_RW() isn't that popular in the
-> > kernel.
-> 
-> Yes, but it should be, I have patches floating around somewhere to fix
-> almost all of these up.
-> 
-> > Neither is BIN_ATTR() macro, but it suites my driver better than the
-> > another one.
-> 
-> a "raw" BIN_ATTR() shouldn't be used either, please use the _RW()
-> variant.
-> 
-> thanks,
-> 
-> greg k-h
 
-Agreed with all the notes. I will send patchset v3 within next hour.
+--muyu3qmecff4abkd
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thanks,
--Sergey
+On Fri, Nov 25, 2016 at 11:22:13AM +0100, Jean-Francois Moine wrote:
+> On Fri, 25 Nov 2016 17:41:51 +0800
+> Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> 
+> > After removing CLK_PLL_DE's assigned-clock, the kernel passes compilation.
+> 
+> The 'pll-de' and 'de' must have a fixed rate. Otherwise, if you do not
+> use the legacy u-boot, I don't know which can be the rate of the DE.
+> 
+> > However, it cannot recognize any HDMI screen...
+> > 
+> > (My board is Orange Pi One, and I manually added status="okay"; to &lcd0, &de, &hdmi)
+> > 
+> > [   16.507802] sun8i-de2 1000000.de-controller: bound 1c0c000.lcd-controller (ops de2_lcd_ops [sun8i_de2_drm])
+> > [   16.675948] sun8i-de2 1000000.de-controller: bound 1ee0000.hdmi (ops de2_hdmi_fini [sun8i_de2_hdmi])
+> > [   16.685120] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> > [   16.695876] [drm] No driver support for vblank timestamp query.
+> > [   16.701862] sun8i-de2 1000000.de-controller: No connectors reported connected with modes
+> > [   16.713061] [drm] Cannot find any crtc or sizes - going 1024x768
+> > [   16.734214] Console: switching to colour frame buffer device 128x48
+> > [   16.751022] sun8i-de2 1000000.de-controller: fb0:  frame buffer device
+> 
+> I put a 'pr_warn' message is case the EDID cannot be read.
+> Have you this message?
+> 
+> Anyway, there is a problem with the EDID:
+> - my Orange Pi 2 (H3) randomly fails to read it. But this succeeds after
+>   rebooting once or twice.
+> - my Banana Pi M2+ (H3) reads it correctly each time.
+> - my Banana Pi M3 (A83T) can never read it.
+> 
+> BTW, on first tries, I was forcing a CEA mode thru the kernel command
+> line. This was working with the OPi2 and BPiM3, but there was no sound.
+> In the last version, I use a EDID in edid_firmware for having sound
+> with the BPiM3. This works fine.
+> But, forcing a CEA mode is no more possible, so, when the OPi2 cannot
+> read the EDID, the system switches to a VGA mode (default 1024x768)
+> which is not supported. It seems that this is your case.
+> 
+> So, in brief, if your board cannot read the EDID, put a EDID somewhere
+> and its path in /sys/module/drm_kms_helper/parameters/edid_firmware.
+> There will be no console, but X11 will work correctly.
+
+This is one of the things that are usually very helpful to put in a
+cover letter. This is obviously also a blocker for the merge of the
+driver, and should be dealt with.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--muyu3qmecff4abkd--
