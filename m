@@ -1,7 +1,7 @@
 From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 09/13] clocksource/drivers/rockchip_timer: move TIMER_INT_UNMASK out of rk_timer_enable()
-Date: Tue, 29 Nov 2016 16:45:14 +0300
-Message-ID: <1480427118-5126-10-git-send-email-al.kochet@gmail.com>
+Subject: [PATCH v3 06/13] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
+Date: Tue, 29 Nov 2016 16:45:11 +0300
+Message-ID: <1480427118-5126-7-git-send-email-al.kochet@gmail.com>
 References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
  <1480427118-5126-1-git-send-email-al.kochet@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,49 +11,102 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY
 Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This allow to enable timer without enabling interrupts from it.
-As that mode will be used in clocksource implementation.
+The patch move ce field out of struct bc_timer into struct
+rk_clock_event_device and rename struct bc_timer to struct rk_timer.
 
 This is refactoring step without functional changes.
 
 Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clocksource/rockchip_timer.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clocksource/rockchip_timer.c |   33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-index a17dc61..61c3bb1 100644
+index 23e267a..6d68d4c 100644
 --- a/drivers/clocksource/rockchip_timer.c
 +++ b/drivers/clocksource/rockchip_timer.c
-@@ -60,8 +60,7 @@ static inline void rk_timer_disable(struct rk_timer *timer)
+@@ -29,18 +29,28 @@
+ #define TIMER_MODE_USER_DEFINED_COUNT		(1 << 1)
+ #define TIMER_INT_UNMASK			(1 << 2)
  
- static inline void rk_timer_enable(struct rk_timer *timer, u32 flags)
+-struct bc_timer {
+-	struct clock_event_device ce;
++struct rk_timer {
+ 	void __iomem *base;
+ 	void __iomem *ctrl;
+ 	u32 freq;
+ };
+ 
+-static struct bc_timer bc_timer;
++struct rk_clock_event_device {
++	struct clock_event_device ce;
++	struct rk_timer timer;
++};
++
++static struct rk_clock_event_device bc_timer;
++
++static inline struct rk_clock_event_device*
++rk_clock_event_device(struct clock_event_device *ce)
++{
++	return container_of(ce, struct rk_clock_event_device, ce);
++}
+ 
+-static inline struct bc_timer *rk_timer(struct clock_event_device *ce)
++static inline struct rk_timer *rk_timer(struct clock_event_device *ce)
  {
--	writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
--		       timer->ctrl);
-+	writel_relaxed(TIMER_ENABLE | flags, timer->ctrl);
+-	return container_of(ce, struct bc_timer, ce);
++	return &rk_clock_event_device(ce)->timer;
  }
  
- static void rk_timer_update_counter(unsigned long cycles,
-@@ -83,7 +82,8 @@ static inline int rk_timer_set_next_event(unsigned long cycles,
+ static inline void __iomem *rk_base(struct clock_event_device *ce)
+@@ -116,16 +126,17 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
+ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+ {
+ 	struct clock_event_device *ce = &bc_timer.ce;
++	struct rk_timer *timer = &bc_timer.timer;
+ 	struct clk *timer_clk;
+ 	struct clk *pclk;
+ 	int ret = -EINVAL, irq;
  
- 	rk_timer_disable(timer);
- 	rk_timer_update_counter(cycles, timer);
--	rk_timer_enable(timer, TIMER_MODE_USER_DEFINED_COUNT);
-+	rk_timer_enable(timer, TIMER_MODE_USER_DEFINED_COUNT |
-+			       TIMER_INT_UNMASK);
+-	bc_timer.base = of_iomap(np, 0);
+-	if (!bc_timer.base) {
++	timer->base = of_iomap(np, 0);
++	if (!timer->base) {
+ 		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
+ 		return -ENXIO;
+ 	}
+-	bc_timer.ctrl = bc_timer.base + ctrl_reg;
++	timer->ctrl = timer->base + ctrl_reg;
+ 
+ 	pclk = of_clk_get_by_name(np, "pclk");
+ 	if (IS_ERR(pclk)) {
+@@ -153,7 +164,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+ 		goto out_timer_clk;
+ 	}
+ 
+-	bc_timer.freq = clk_get_rate(timer_clk);
++	timer->freq = clk_get_rate(timer_clk);
+ 
+ 	irq = irq_of_parse_and_map(np, 0);
+ 	if (!irq) {
+@@ -181,7 +192,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+ 		goto out_irq;
+ 	}
+ 
+-	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
++	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
+ 
  	return 0;
+ 
+@@ -190,7 +201,7 @@ out_irq:
+ out_timer_clk:
+ 	clk_disable_unprepare(pclk);
+ out_unmap:
+-	iounmap(bc_timer.base);
++	iounmap(timer->base);
+ 
+ 	return ret;
  }
- 
-@@ -101,7 +101,7 @@ static int rk_timer_set_periodic(struct clock_event_device *ce)
- 
- 	rk_timer_disable(timer);
- 	rk_timer_update_counter(timer->freq / HZ - 1, timer);
--	rk_timer_enable(timer, TIMER_MODE_FREE_RUNNING);
-+	rk_timer_enable(timer, TIMER_MODE_FREE_RUNNING | TIMER_INT_UNMASK);
- 	return 0;
- }
- 
 -- 
 1.7.9.5
 
