@@ -1,128 +1,267 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Subject: Re: [PATCH 2/4] ARM64: dts: meson-gx: Add Graphic Controller nodes
-Date: Tue, 29 Nov 2016 21:16:17 +0200
-Message-ID: <1812737.pZP73QSyU1@avalon>
-References: <1480416469-9655-1-git-send-email-narmstrong@baylibre.com>
- <1480416469-9655-3-git-send-email-narmstrong@baylibre.com>
+Date: Tue, 29 Nov 2016 21:19:48 +0200
+Message-ID: <2512132.nlEddb7eKN@avalon>
+References: <1480416469-9655-1-git-send-email-narmstrong@baylibre.com> <1480416469-9655-3-git-send-email-narmstrong@baylibre.com> <1812737.pZP73QSyU1@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1480416469-9655-3-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, Xing.Xu@amlogic.com, victor.wan@amlogic.com, khilman@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jerry.cao@amlogic.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1812737.pZP73QSyU1@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmVpbCwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVHVlc2RheSAyOSBOb3YgMjAx
-NiAxMTo0Nzo0NyBOZWlsIEFybXN0cm9uZyB3cm90ZToKPiBBZGQgVmlkZW8gUHJvY2Vzc2luZyBV
-bml0IGFuZCBDVkJTIE91dHB1dCBub2RlcywgYW5kIGVuYWJsZSBDVkJTIG9uIHNlbGVjdGVkCj4g
-Ym9hcmRzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJh
-eWxpYnJlLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4
-LmR0c2kgICAgICAgICAgfCA0NiArKysrKysrKysrKysrKysrKysrCj4gIC4uLi9ib290L2R0cy9h
-bWxvZ2ljL21lc29uLWd4YmItbmV4Ym94LWE5NXguZHRzICAgIHwgIDQgKysKPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItcDIweC5kdHNpICAgfCAgNCArKwo+ICBhcmNo
-L2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5kdHNpICAgICAgICB8ICA4ICsrKysK
-PiAgLi4uL2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLW5leGJveC1hOTV4LmR0cyAgICAgfCAg
-NCArKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kgICAgICAg
-ICB8ICA4ICsrKysKPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3htLW5leGJv
-eC1hMS5kdHMgfCAgNCArKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3ht
-LmR0c2kgICAgICAgICB8ICA4ICsrKysKPiAgOCBmaWxlcyBjaGFuZ2VkLCA4NiBpbnNlcnRpb25z
-KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1n
-eC5kdHNpCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3guZHRzaSBpbmRl
-eCBmYzAzM2MwLi42NDRkNWY2IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1s
-b2dpYy9tZXNvbi1neC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21l
-c29uLWd4LmR0c2kKPiBAQCAtMTUzLDYgKzE1MywyNyBAQAo+ICAJCX07Cj4gIAl9Owo+IAo+ICsJ
-dmVuY19jdmJzOiB2ZW5jLWN2YnMgewo+ICsJCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1n
-eC1jdmJzIjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwoKU3RpbGwgbm8gcmVnaXN0ZXJzIGhl
-cmUgPwoKPiArCj4gKwkJcG9ydHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJ
-I3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQl2ZW5jX2N2YnNfaW46IHBvcnRAMCB7CgpOaXRw
-aWNraW5nLCB5b3UgZG9uJ3QgbmVlZCBhIGxhYmVsIGhlcmUgYXMgcG9ydHMgYXJlIG5ldmVyIHJl
-ZmVyZW5jZWQgYnkgCnBoYW5kbGUuIFNhbWUgZm9yIHRoZSB2cHUgbm9kZSBiZWxvdy4KCj4gKwkJ
-CQkgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJ
-CQkgcmVnID0gPDA+Owo+ICsKPiArCQkJCSB2ZW5jX2N2YnNfaW5fdnB1OiBlbmRwb2ludEAwIHsK
-PiArCQkJCQkgcmVnID0gPDA+OwoKQW5kIHRoZXJlJ3Mgbm8gcmVxdWlyZW1lbnQgdG8gbnVtYmVy
-IHRoZSBlbmRwb2ludCBpZiB0aGVyZSdzIGEgc2luZ2xlIG9uZSBvZiAKdGhlbSAoYnV0IGl0J3Mg
-bm90IGZvcmJpZGRlbiBlaXRoZXIpLgoKPiArCQkJCQkgcmVtb3RlLWVuZHBvaW50ID0gCjwmdnB1
-X291dF92ZW5jX2N2YnM+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArCj4g
-IAlzb2Mgewo+ICAJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gIAkJI2FkZHJlc3MtY2Vs
-bHMgPSA8Mj47Cj4gQEAgLTM1Niw1ICszNzcsMzAgQEAKPiAgCQkJCXN0YXR1cyA9ICJkaXNhYmxl
-ZCI7Cj4gIAkJCX07Cj4gIAkJfTsKPiArCj4gKwkJdnB1OiB2cHVAZDAxMDAwMDAgewo+ICsJCQlj
-b21wYXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArCQkJcmVnID0gPDB4MCAweGQw
-MTAwMDAwIDB4MCAweDEwMDAwMD4sCj4gKwkJCSAgICAgIDwweDAgMHhjODgzYzAwMCAweDAgMHgx
-MDAwPiwKPiArCQkJICAgICAgPDB4MCAweGM4ODM4MDAwIDB4MCAweDEwMDA+Owo+ICsJCQlyZWct
-bmFtZXMgPSAiYmFzZSIsICJoaGkiLCAiZG1jIjsKPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDMgSVJRX1RZUEVfRURHRV9SSVNJTkc+Owo+ICsKPiArCQkJcG9ydHMgewo+ICsJCQkJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQl2cHVf
-b3V0OiBwb3J0QDEgewo+ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkJCSNzaXpl
-LWNlbGxzID0gPDA+Owo+ICsJCQkJCXJlZyA9IDwxPjsKPiArCj4gKwkJCQkJdnB1X291dF92ZW5j
-X2N2YnM6IGVuZHBvaW50QDAgewo+ICsJCQkJCQlyZWcgPSA8MD47Cj4gKwkJCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IAo8JnZlbmNfY3Zic19pbl92cHU+Owo+ICsJCQkJCX07Cj4gKwkJCQl9Owo+ICsJ
-CQl9Owo+ICsJCX07Cj4gIAl9Owo+ICB9Owo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1uZXhib3gtYTk1eC5kdHMKPiBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5leGJveC1hOTV4LmR0cyBpbmRleAo+IDk2OTY4MjAu
-LmE1NWQxY2YgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
-LWd4YmItbmV4Ym94LWE5NXguZHRzCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2lj
-L21lc29uLWd4YmItbmV4Ym94LWE5NXguZHRzCj4gQEAgLTIyOSwzICsyMjksNyBAQAo+ICAJY2xv
-Y2tzID0gPCZjbGtjIENMS0lEX0ZDTEtfRElWND47Cj4gIAljbG9jay1uYW1lcyA9ICJjbGtpbjAi
-Owo+ICB9Owo+ICsKPiArJnZlbmNfY3ZicyB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAyMHgu
-ZHRzaQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItcDIweC5kdHNp
-IGluZGV4IDVlNWUyZGUuLjNjMDliZDEKPiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kKPiBAQCAtMjY2LDMgKzI2Niw3IEBACj4g
-IAljbG9ja3MgPSA8JmNsa2MgQ0xLSURfRkNMS19ESVY0PjsKPiAgCWNsb2NrLW5hbWVzID0gImNs
-a2luMCI7Cj4gIH07Cj4gKwo+ICsmdmVuY19jdmJzIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiAr
-fTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIu
-ZHRzaQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIuZHRzaSBpbmRl
-eCBhYzVhZDNiLi4xYTMyMWM4Zgo+IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-YW1sb2dpYy9tZXNvbi1neGJiLmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
-aWMvbWVzb24tZ3hiYi5kdHNpCj4gQEAgLTUwNiwzICs1MDYsMTEgQEAKPiAgCQkgPCZjbGtjIENM
-S0lEX0ZDTEtfRElWMj47Cj4gIAljbG9jay1uYW1lcyA9ICJjb3JlIiwgImNsa2luMCIsICJjbGtp
-bjEiOwo+ICB9Owo+ICsKPiArJnZlbmNfY3ZicyB7Cj4gKwljb21wYXRpYmxlID0gImFtbG9naWMs
-bWVzb24tZ3hiYi1jdmJzIiwgImFtbG9naWMsbWVzb24tZ3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsm
-dnB1IHsKPiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1neGJiLXZwdSIsICJhbWxvZ2lj
-LG1lc29uLWd4LXZwdSI7Cj4gK307Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-YW1sb2dpYy9tZXNvbi1neGwtbmV4Ym94LWE5NXguZHRzCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2FtbG9naWMvbWVzb24tZ3hsLW5leGJveC1hOTV4LmR0cyBpbmRleAo+IGU5OTEwMWEuLjJhOWI0
-NmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1u
-ZXhib3gtYTk1eC5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24t
-Z3hsLW5leGJveC1hOTV4LmR0cwo+IEBAIC0yMDMsMyArMjAzLDcgQEAKPiAgCWNsb2NrcyA9IDwm
-Y2xrYyBDTEtJRF9GQ0xLX0RJVjQ+Owo+ICAJY2xvY2stbmFtZXMgPSAiY2xraW4wIjsKPiAgfTsK
-PiArCj4gKyZ2ZW5jX2N2YnMgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kKPiBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaSBpbmRleCAzYWY1NGRjLi5iNjBj
-NWNlIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwu
-ZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaQo+
-IEBAIC0yOTksMyArMjk5LDExIEBACj4gIAkJIDwmY2xrYyBDTEtJRF9GQ0xLX0RJVjI+Owo+ICAJ
-Y2xvY2stbmFtZXMgPSAiY29yZSIsICJjbGtpbjAiLCAiY2xraW4xIjsKPiAgfTsKPiArCj4gKyZ2
-ZW5jX2N2YnMgewo+ICsJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bC1jdmJzIiwgImFt
-bG9naWMsbWVzb24tZ3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsmdnB1IHsKPiArCWNvbXBhdGlibGUg
-PSAiYW1sb2dpYyxtZXNvbi1neGwtdnB1IiwgImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArfTsK
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS1uZXhi
-b3gtYTEuZHRzCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3htLW5leGJv
-eC1hMS5kdHMgaW5kZXgKPiBkMzIwNzI3Li4xYWUyNDUxIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0tbmV4Ym94LWExLmR0cwo+ICsrKyBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0tbmV4Ym94LWExLmR0cwo+IEBAIC0xNjcs
-MyArMTY3LDcgQEAKPiAgCQltYXgtc3BlZWQgPSA8MTAwMD47Cj4gIAl9Owo+ICB9Owo+ICsKPiAr
-JnZlbmNfY3ZicyB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0uZHRzaQo+IGIvYXJjaC9hcm02NC9i
-b290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpIGluZGV4IGMxOTc0YmIuLmZlY2Q4YzIgMTAw
-NjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpCj4g
-KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpCj4gQEAgLTEx
-MiwzICsxMTIsMTEgQEAKPiAgCQl9Owo+ICAJfTsKPiAgfTsKPiArCj4gKyZ2ZW5jX2N2YnMgewo+
-ICsJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bS1jdmJzIiwgImFtbG9naWMsbWVzb24t
-Z3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsmdnB1IHsKPiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxt
-ZXNvbi1neG0tdnB1IiwgImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArfTsKCi0tIApSZWdhcmRz
-LAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+Hi Neil,
+
+On Tuesday 29 Nov 2016 21:16:17 Laurent Pinchart wrote:
+> On Tuesday 29 Nov 2016 11:47:47 Neil Armstrong wrote:
+> > Add Video Processing Unit and CVBS Output nodes, and enable CVBS on
+> > selected boards.
+> > 
+> > Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> > 
+> >  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 46 +++++++++++++++++
+> >  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++
+> >  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  4 ++
+> >  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  8 ++++
+> >  .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  4 ++
+> >  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  8 ++++
+> >  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  4 ++
+> >  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  8 ++++
+> >  8 files changed, 86 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi index fc033c0..644d5f6 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> > @@ -153,6 +153,27 @@
+> >  		};
+> >  	};
+> > 
+> > +	venc_cvbs: venc-cvbs {
+> > +		compatible = "amlogic,meson-gx-cvbs";
+> > +		status = "disabled";
+> 
+> Still no registers here ?
+
+Or is this the internal video encoder, not the HHI VDAC ? If so, haven't we 
+decided when discussing the previous version that there's no need for a DT 
+node to model the video encoder as it's part of the VPU ?
+
+> > +
+> > +		ports {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			venc_cvbs_in: port@0 {
+> 
+> Nitpicking, you don't need a label here as ports are never referenced by
+> phandle. Same for the vpu node below.
+> 
+> > +				 #address-cells = <1>;
+> > +				 #size-cells = <0>;
+> > +				 reg = <0>;
+> > +
+> > +				 venc_cvbs_in_vpu: endpoint@0 {
+> > +					 reg = <0>;
+> 
+> And there's no requirement to number the endpoint if there's a single one of
+> them (but it's not forbidden either).
+> 
+> > +					 remote-endpoint =
+> 
+> <&vpu_out_venc_cvbs>;
+> 
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > 
+> >  	soc {
+
+Shouldn't the above node be placed inside the soc ?
+
+> >  		compatible = "simple-bus";
+> >  		#address-cells = <2>;
+> > 
+> > @@ -356,5 +377,30 @@
+> > 
+> >  				status = "disabled";
+> >  			
+> >  			};
+> >  		
+> >  		};
+> > 
+> > +
+> > +		vpu: vpu@d0100000 {
+> > +			compatible = "amlogic,meson-gx-vpu";
+> > +			reg = <0x0 0xd0100000 0x0 0x100000>,
+> > +			      <0x0 0xc883c000 0x0 0x1000>,
+> > +			      <0x0 0xc8838000 0x0 0x1000>;
+> > +			reg-names = "base", "hhi", "dmc";
+> > +			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
+> > +
+> > +			ports {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +
+> > +				vpu_out: port@1 {
+> > +					#address-cells = <1>;
+> > +					#size-cells = <0>;
+> > +					reg = <1>;
+> > +
+> > +					vpu_out_venc_cvbs: endpoint@0 {
+> > +						reg = <0>;
+> > +						remote-endpoint =
+> 
+> <&venc_cvbs_in_vpu>;
+> 
+> > +					};
+> > +				};
+> > +			};
+> > +		};
+> > 
+> >  	};
+> >  
+> >  };
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> > b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts index
+> > 9696820..a55d1cf 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> > @@ -229,3 +229,7 @@
+> > 
+> >  	clocks = <&clkc CLKID_FCLK_DIV4>;
+> >  	clock-names = "clkin0";
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi index 5e5e2de..3c09bd1
+> > 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> > @@ -266,3 +266,7 @@
+> > 
+> >  	clocks = <&clkc CLKID_FCLK_DIV4>;
+> >  	clock-names = "clkin0";
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi index ac5ad3b..1a321c8f
+> > 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> > @@ -506,3 +506,11 @@
+> > 
+> >  		 <&clkc CLKID_FCLK_DIV2>;
+> >  	
+> >  	clock-names = "core", "clkin0", "clkin1";
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	compatible = "amlogic,meson-gxbb-cvbs", "amlogic,meson-gx-cvbs";
+> > +};
+> > +
+> > +&vpu {
+> > +	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+> > b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts index
+> > e99101a..2a9b46f 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+> > @@ -203,3 +203,7 @@
+> > 
+> >  	clocks = <&clkc CLKID_FCLK_DIV4>;
+> >  	clock-names = "clkin0";
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi index 3af54dc..b60c5ce 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> > @@ -299,3 +299,11 @@
+> > 
+> >  		 <&clkc CLKID_FCLK_DIV2>;
+> >  	
+> >  	clock-names = "core", "clkin0", "clkin1";
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	compatible = "amlogic,meson-gxl-cvbs", "amlogic,meson-gx-cvbs";
+> > +};
+> > +
+> > +&vpu {
+> > +	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> > b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts index
+> > d320727..1ae2451 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> > @@ -167,3 +167,7 @@
+> > 
+> >  		max-speed = <1000>;
+> >  	
+> >  	};
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi index c1974bb..fecd8c2 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+> > @@ -112,3 +112,11 @@
+> > 
+> >  		};
+> >  	
+> >  	};
+> >  
+> >  };
+> > 
+> > +
+> > +&venc_cvbs {
+> > +	compatible = "amlogic,meson-gxm-cvbs", "amlogic,meson-gx-cvbs";
+> > +};
+> > +
+> > +&vpu {
+> > +	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
+> > +};
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
