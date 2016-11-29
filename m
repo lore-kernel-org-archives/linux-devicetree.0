@@ -1,101 +1,87 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v3 05/13] drm: bridge: Add LVDS encoder DT bindings
-Date: Tue, 29 Nov 2016 11:04:35 +0200
-Message-ID: <1480410283-28698-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1480410283-28698-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480410283-28698-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 29 Nov 2016 11:11:03 +0200
+Message-ID: <3929994.7YhJtsl9c3@avalon>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <2390919.s2CzTWN1li@avalon>
+ <b779c014-fc20-1fbc-dea9-cb90dbde5b71@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <b779c014-fc20-1fbc-dea9-cb90dbde5b71@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The DT bindings support parallel to LVDS encoders that don't require any
-configuration, similarly to the dumb VGA DAC DT bindings.
-
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../bindings/display/bridge/lvds-transmitter.txt   | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-new file mode 100644
-index 000000000000..fd39ad34c383
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-@@ -0,0 +1,64 @@
-+Parallel to LVDS Encoder
-+------------------------
-+
-+This binding supports the parallel to LVDS encoders that don't require any
-+configuration.
-+
-+LVDS is a physical layer specification defined in ANSI/TIA/EIA-644-A. Multiple
-+incompatible data link layers have been used over time to transmit image data
-+to LVDS panels. This binding targets devices compatible with the following
-+specifications only.
-+
-+[JEIDA] "Digital Interface Standards for Monitor", JEIDA-59-1999, February
-+1999 (Version 1.0), Japan Electronic Industry Development Association (JEIDA)
-+[LDI] "Open LVDS Display Interface", May 1999 (Version 0.95), National
-+Semiconductor
-+[VESA] "VESA Notebook Panel Standard", October 2007 (Version 1.0), Video
-+Electronics Standards Association (VESA)
-+
-+Those devices have been marketed under the FPD-Link and FlatLink brand names
-+among others.
-+
-+
-+Required properties:
-+
-+- compatible: Must be "lvds-encoder"
-+
-+Required nodes:
-+
-+This device has two video ports. Their connections are modeled using the OF
-+graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+- Video port 0 for parallel input
-+- Video port 1 for LVDS output
-+
-+
-+Example
-+-------
-+
-+lvds-encoder {
-+	compatible = "lvds-encoder";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			lvds_enc_in: endpoint {
-+				remote-endpoint = <&display_out_rgb>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lvds_enc_out: endpoint {
-+				remote-endpoint = <&lvds_panel_in>;
-+			};
-+		};
-+	};
-+};
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQXJjaGl0LAoKKENDJ2luZyBNYXJrIEJyb3duKQoKT24gVHVlc2RheSAyOSBOb3YgMjAxNiAx
+Mzo0MTozMyBBcmNoaXQgVGFuZWphIHdyb3RlOgo+IE9uIDExLzI5LzIwMTYgMTI6MDMgUE0sIExh
+dXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBPbiBUdWVzZGF5IDI5IE5vdiAyMDE2IDExOjM3OjQx
+IEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4gPj4gQWRkIHRoZSByZWd1bGF0b3Igc3VwcGx5IHByb3Bl
+cnRpZXMgbmVlZGVkIGJ5IEFEVjc1MTEgYW5kIEFEVjc1MzMuCj4gPj4gCj4gPj4gVGhlIHJlZ3Vs
+YXRvcnMgYXJlIHNwZWNpZmllZCBhcyBvcHRpb25hbCBwcm9wZXJ0aWVzIHNpbmNlIHRoZXJlIGNh
+bgo+ID4+IGJlIGJvYXJkcyB3aGljaCBoYXZlIGEgZml4ZWQgc3VwcGx5IGRpcmVjdGx5IHJvdXRl
+ZCB0byB0aGUgcGlucywgYW5kCj4gPj4gdGhlc2UgbWF5IG5vdCBiZSBtb2RlbGxlZCBhcyByZWd1
+bGF0b3Igc3VwcGxpZXMuCj4gPiAKPiA+IFRoYXQncyB3aHkgd2UgaGF2ZSBzdXBwb3J0IGZvciBk
+dW1teSBzdXBwbGllcyBpbiB0aGUga2VybmVsLCBpc24ndCBpdCA/Cj4gPiBJc24ndCBpdCBiZXR0
+ZXIgdG8gbWFrZSB0aGUgc3VwcGxpZXMgbWFuZGF0b3J5IGluIHRoZSBiaW5kaW5ncyAoYW5kCj4g
+PiBvYnZpb3VzbHkgaGFuZGxpbmcgdGhlbSBhcyBvcHRpb25hbCBpbiB0aGUgZHJpdmVyIGZvcgo+
+ID4gYmFja3dhcmQtY29tcGF0aWJpbGl0eSkgPwo+Cj4gSSdtIGEgYml0IHVuY2xlYXIgb24gdGhp
+cy4KPiAKPiBJIHRob3VnaHQgd2UgY291bGRuJ3QgYWRkIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIG9u
+Y2UgdGhlIGRldmljZSBpcyBhbHJlYWR5Cj4gcHJlc2VudCBpbiBEVCBmb3Igb25lIG9yIG1vcmUg
+cGxhdGZvcm1zLgoKWW91IGNhbiwgYXMgbG9uZyBhcyB5b3UgdHJlYXQgdGhlbSBhcyBvcHRpb25h
+bCBpbiB0aGUgZHJpdmVyIHRvIHJldGFpbiAKYmFja3dhcmQgY29tcGF0aWJpbGl0eS4gVGhlIERU
+IGJpbmRpbmdzIHNob3VsZCBkb2N1bWVudCB0aGUgcHJvcGVydGllcyAKZXhwZWN0ZWQgZnJvbSBh
+IG5ldyBwbGF0Zm9ybSAob2xkZXIgdmVyc2lvbnMgb2YgdGhlIGJpbmRpbmdzIHdpbGwgYWx3YXlz
+IGJlIAphdmFpbGFibGUgaW4gdGhlIGdpdCBoaXN0b3J5KS4KCj4gU2F5LCBpZiB3ZSBkbyBtYWtl
+IGl0IG1hbmRhdG9yeSBmb3IgZnV0dXJlIGFkZGl0aW9ucywgd2Ugd291bGQgbmVlZCB0byBoYXZl
+Cj4gRFQgcHJvcGVydHkgZm9yIHRoZSBzdXBwbGllcyBmb3IgdGhlIG5ldyBwbGF0Zm9ybXMuIElm
+IHRoZSByZWd1bGF0b3JzIG9uCj4gdGhlc2UgYm9hcmRzIGFyZSBmaXhlZCBzdXBwbGllcywgdGhl
+eSB3b3VsZCBiZSBuZWVkIHRvIGJlIG1vZGVsZWQKPiB1c2luZyAicmVndWxhdG9yLWZpeGVkIiwg
+cG9zc2libHkgd2l0aG91dCBhbnkgaW5wdXQgc3VwcGx5LiBJcyB0aGF0Cj4gd2hhdCB5b3UncmUg
+c3VnZ2VzdGluZz8KClRoYXQncyB0aGUgaWRlYSwgeWVzLiBDbG9jayBtYWludGFpbmVycyBoYXZl
+IGEgc2ltaWxhciBvcGluaW9uIHJlZ2FyZGluZyB0aGUgCmNsb2NrIGJpbmRpbmdzLCB3aGVyZSBh
+IGNsb2NrIHRoYXQgaXMgbm90IG9wdGlvbmFsIGF0IHRoZSBoYXJkd2FyZSBsZXZlbCAKc2hvdWxk
+IGJlIHNwZWNpZmllZCBpbiBEVCBldmVuIGlmIGl0J3MgYWx3YXlzIHByZXNlbnQuCgpNYXJrLCBh
+bnkgb3BpbmlvbiA/Cgo+ID4gQXBhcnQgZnJvbSB0aGF0LAo+ID4gCj4gPiBBY2tlZC1ieTogTGF1
+cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+ID4gCj4g
+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gPj4gQWNrZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gPj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8
+YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPiA+PiAtLS0KPiA+PiB2MzoKPiA+PiAtIFJldmVydCBi
+YWNrIHRvIGhhdmluZyBhIGNvbW1vbiBhdmRkLXN1cHBseSBwcm9wZXJ0eSBmb3IgdGhlIDEuOFYK
+PiA+PiAgIHN1cHBsaWVzCj4gPj4gCj4gPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dCB8IDkgKysrKwo+ID4+IDEgZmlsZSBj
+aGFuZ2VkLCA5IGluc2VydGlvbnMoKykKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0Cj4gPj4gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvYWRpLGFkdjc1MTEu
+dHh0Cj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2UvYWRpLGFkdjc1MTEudHh0IGluZGV4Cj4gPj4gNjUzMmE1OS4uMTNkNTNiYyAxMDA2NDQKPiA+
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+YWRpLGFkdjc1MTEudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL2FkaSxhZHY3NTExLnR4dAo+ID4+IAo+ID4+IEBAIC01Niw2ICs1
+NiwxNSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4+ICAtIGFkaSxkaXNhYmxlLXRpbWluZy1n
+ZW5lcmF0b3I6IE9ubHkgZm9yIEFEVjc1MzMuIERpc2FibGVzIHRoZSBpbnRlcm5hbAo+ID4+IAo+
+ID4+IHRpbWluZyBnZW5lcmF0b3IuIFRoZSBjaGlwIHdpbGwgcmVseSBvbiB0aGUgc3luYyBzaWdu
+YWxzIGluIHRoZSBEU0kgZGF0YQo+ID4+IGxhbmVzLCByYXRoZXIgdGhhbiBnZW5lcmF0ZSBpdHMg
+b3duIHRpbWluZ3MgZm9yIEhETUkgb3V0cHV0Lgo+ID4+ICstIGF2ZGQtc3VwcGx5OiBBIGNvbW1v
+biAxLjhWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUgQVZERCwgRFZERCBhbmQKPiA+PiBQVkRE
+Cj4gPj4gKyAgcGlucy4gT24gQURWNzUxMSwgaXQgYWxzbyBmZWVkcyB0byB0aGUgQkdWREQgcGlu
+LiBPbiBBRFY3NTMzLCBpdCBhbHNvCj4gPj4gcG93ZXJzCj4gPj4gKyAgdXAgdGhlIEEyVkREIHBp
+bi4KPiA+PiArLSB2M3AzLXN1cHBseTogQSAzLjNWIHN1cHBseSB0aGF0IHBvd2VycyB1cCB0aGUg
+cGluIGNhbGxlZCBEVkREXzNWIG9uCj4gPj4gKyAgQURWNzUxMSBhbmQgVjNQMyBvbiBBRFY3NTMz
+Lgo+ID4+ICsKPiA+PiArQURWNzUzMyBzcGVjaWZpYyBzdXBwbGllczoKPiA+PiArLSB2MXAyLXN1
+cHBseTogQSBzdXBwbHkgdGhhdCBwb3dlcnMgdXAgdGhlIFYxUDIgcGluIG9uIHRoZSBjaGlwLiBJ
+dCBjYW4KPiA+PiBiZQo+ID4+ICsgIGVpdGhlciAxLjJWIG9yIDEuOFYuCj4gPj4gCj4gPj4gIFJl
+cXVpcmVkIG5vZGVzOgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
