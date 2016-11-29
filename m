@@ -1,122 +1,84 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: Fix issue where code would fall through to error
- case.
-Date: Tue, 29 Nov 2016 08:52:57 -0800
-Message-ID: <583DB269.9070208@gmail.com>
-References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
- <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com>
- <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
- <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
- <583A0110.4090603@gmail.com> <583C4D83.6040800@gmail.com>
- <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: pwrseq: add support for Marvell SD8787 chip
+Date: Tue, 29 Nov 2016 17:53:26 +0100
+Message-ID: <CAPDyKFrCYX=d9ZhNzwT5CVbeGRcxfh9PYfn_Vwf8OopfQ2ZKKA@mail.gmail.com>
+References: <1479434109-8745-1-git-send-email-matt@ranostay.consulting>
+ <20161128141513.agnkyz6ronigbukn@rob-hp-laptop> <CAPDyKFr=TE+EuZ9rZV3ygsjBFN_mRrE2imkFa-wQs_ykM5d+cQ@mail.gmail.com>
+ <CAL_Jsq+80LAkCGEdP5T0AWFV2nRtZ8nrkBoNRB47CR9JN=9dog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+80LAkCGEdP5T0AWFV2nRtZ8nrkBoNRB47CR9JN=9dog@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Moritz Fischer <moritz.fischer.private@gmail.com>, Moritz Fischer <moritz.fischer@ettus.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, moritz@pure-entropy.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Matt Ranostay <matt@ranostay.consulting>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/16 07:06, Rob Herring wrote:
-> On Mon, Nov 28, 2016 at 9:30 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 11/26/16 13:39, Frank Rowand wrote:
->>> On 11/23/16 13:58, Rob Herring wrote:
->>>> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
->>>> <moritz.fischer.private@gmail.com> wrote:
->>>>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>>>> On 11/17/16 15:40, Frank Rowand wrote:
->>>>>>> On 11/17/16 15:25, Moritz Fischer wrote:
->>>>>>>> No longer fall through into the error case that prints out
->>>>>>>> an error if no error (err = 0) occurred.
->>>>>>>>
->>>>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
->>>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer@ettus.com>
->>>>>>>> ---
->>>>>>>>  drivers/of/resolver.c | 6 +++++-
->>>>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
->>>>>>>> index 783bd09..785076d 100644
->>>>>>>> --- a/drivers/of/resolver.c
->>>>>>>> +++ b/drivers/of/resolver.c
->>>>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
->>>>>>>>
->>>>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
->>>>>>>>              if (err)
->>>>>>>> -                    break;
->>>>>>>> +                    goto err_out;
->>>>>>>>      }
->>>>>>>>
->>>>>>>> +    of_node_put(tree_symbols);
->>>>>>>> +
->>>>>>>> +    return 0;
->>>>>>>> +
->>>>>>>>  err_out:
->>>>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
->>>>>>>>  out:
->>>>>>>
->>>>>>> Thanks for catching that.
->>>>>>>
->>>>>>> Rob, please apply.
->>>>>>>
->>>>>>> Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
->>>>>>>
->>>>>>> -Frank
->>>>>>
->>>>>> On second thought, isn't the common pattern when clean up is needed for
->>>>>> both the no-error path and the error path something like:
->>>>>>
->>>>>>
->>>>>>         out:
->>>>>>                 of_node_put(tree_symbols);
->>>>>>                 return err;
->>>>>>
->>>>>>         err_out:
->>>>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
->>>>>>                 goto out;
->>>>>>         }
->>>>>>
->>>>>>
->>>>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
->>>>>
->>>>> Same here. I tried to avoid the jumping back part, but if that's the
->>>>> common pattern,
->>>>> I can submit a v2 doing that instead.
->>>>
->>>> Both are ugly. Just do:
->>>>
->>>> if (err)
->>>>   pr_err(...);
->>>>
->>>> Rob
->>>
->>> Agreed.  Thanks for the touch of sanity Rob.
->>>
->>> -Frank
+On 29 November 2016 at 15:51, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Nov 28, 2016 at 9:54 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> [...]
 >>
->> I succumbed to looking only at the few lines of code above and not the
->> fuller context of the file that the patch applies to.
+>>>> +
+>>>> +Example:
+>>>> +
+>>>> +     wifi_pwrseq: wifi_pwrseq {
+>>>> +             compatible = "mmc-pwrseq-sd8787";
+>>>> +             pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+>>>> +             reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
+>>>> +     }
+>>>> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>>>> index c421aba0a5bc..08fd65d35725 100644
+>>>> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>>>> @@ -32,6 +32,9 @@ Optional properties:
+>>>>                so that the wifi chip can wakeup host platform under certain condition.
+>>>>                during system resume, the irq will be disabled to make sure
+>>>>                unnecessary interrupt is not received.
+>>>> +  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
+>>>
+>>> This is why pwrseq is wrong. You have some properties in the card node
+>>> and some in pwrseq node. Everything should be in the card node.
 >>
->> The proposed patch was fixing the problem that a normal completion
->> of the for loop was falling through into the err_out label.  So what
->> looks cleaner ("if (err) pr_err(...)") is actually not correct.
-> 
-> What!? The *only* problem was printing the error message in the err=0
-> case. All that needs to be fixed is not doing that. If we do that,
-> then we really only need 1 goto label.
-> 
-> Rob
+>> Put "all" in the card node, just doesn't work for MMC. Particular in
+>> cases when we have removable cards, as then it would be wrong to have
+>> a card node.
+>
+> When is there a problem with removable cards? The connector is
+> standard and everything needed (CD, VMMC, VDDIO, etc.) is defined in
+> the host controller node. If that isn't sufficient, then we should
+> start defining a connector node.
 
-I misread your original suggestion to mean to put the "if (err) pr_err(...)"
-inside the for loop, where Moritz had made his changes.
+I probably didn't get your point. Anyway, let's try again.
 
-Now I understand what you really meant, to put the "if (err) pr_err(...)"
-after the for loop.
+I don't see any problems with removable cards and neither with
+non-removable cards.
 
-Yes, that is a good way to do it.
+Normally, we don't need a connector node, but instead we put the
+related properties/phandles in the host controller node. This works
+fine!
 
-Sorry for the extra noise....
+For SDIO func devices, sometimes we need a child node of the host
+controller node, as to be able to describe certain characteristics of
+the SDIO func device. So this case is kind of a special type of card
+node (because one can have several SDIO func devices attached, even if
+this isn't used).
 
--Frank
+Now, to follow the current bindings, we must not put connector related
+bindings in the card node, like the vmmc-supply, perhaps that is what
+causes confusion here?
+
+>
+>> The mmc pwrseq DT bindings just follows the legacy approach for MMC
+>> and that's why the pwrseq handle is at the controller node. Yes, would
+>> could have done it differently, but this is the case now, so we will
+>> have to accept that.
+>
+> We're stuck with supporting the existing cases. That doesn't mean
+> we're stuck with the same thing for new cases.
+
+Agree!
+
+But I think there is nothing to improve in this case, or am I wrong?
+
+Kind regards
+Uffe
