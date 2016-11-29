@@ -1,102 +1,104 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Tue, 29 Nov 2016 22:24:12 +0100
-Message-ID: <20161129212412.GA20334@kroah.com>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
- <20161129193750.GD20341@kroah.com>
- <20161129211625.GB9146@mobilestation>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4] clkdev: add devm_of_clk_get()
+Date: Tue, 29 Nov 2016 13:26:00 -0800
+Message-ID: <20161129212600.GH6095@codeaurora.org>
+References: <87zikjw08i.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161129211625.GB9146@mobilestation>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <87zikjw08i.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Linux-DT <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Linux-Kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org, Linux-ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 12:16:25AM +0300, Serge Semin wrote:
-> On Tue, Nov 29, 2016 at 08:37:50PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
-> > > +struct idt_89hpesx_dev {
-> > > +	u32 eesize;
-> > > +	bool eero;
-> > > +	u8 eeaddr;
-> > > +
-> > > +	u8 inieecmd;
-> > > +	u8 inicsrcmd;
-> > > +	u8 iniccode;
-> > > +
-> > > +	atomic_t csr;
-> > > +
-> > > +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
-> > > +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
-> > > +	struct mutex smb_mtx;
-> > > +
-> > > +	struct i2c_client *client;
-> > > +
-> > > +	struct bin_attribute *ee_file;
-> > > +	struct dentry *csr_dir;
-> > > +	struct dentry *csr_file;
-> > > +};
-> > > +#define to_pdev_kobj(__kobj) \
-> > > +	dev_get_drvdata(container_of(__kobj, struct device, kobj))
-> > 
-> > Is it a struct device, or a kobject?  This is totally confusing to me.
-> > 
-> > And can't you just use kobj_to_dev()?
-> > 
+On 11/29, Kuninori Morimoto wrote:
 > 
-> I just didn't know about kobj_to_dev() inline function. Totally agree that
-> container_of() should be replaced with it.
-> What does look confusing to you? Do you mean the name "to_pdev_kobj" of the
-> macro?
-
-Yes, the macro is odd.  As you are doing two different things here, just
-spell it out in the code and use kobj_to_dev() to make it easier to
-read please.
-
-> > > +/*
-> > > + * eeprom_attribute - EEPROM sysfs-node attributes
-> > > + *
-> > > + * NOTE Size will be changed in compliance with OF node. EEPROM attribute will
-> > > + * be read-only as well if the corresponding flag is specified in OF node.
-> > > + */
-> > > +BIN_ATTR(eeprom, 0644, idt_sysfs_eeprom_read, idt_sysfs_eeprom_write,
-> > > +	 EEPROM_DEF_SIZE);
-> > 
-> > static?
-> > 
-> > And BIN_ATTR_RW()?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> Of course it should be static. Thanks for noticing that.
-> But I intentionally utilized BIN_ATTR() instead of BIN_ATTR_RW(), because
-> the last one implies to define the read/write methods with names
-> "_name##_read"/"_name##_write", which totally get out of naming within the
-> driver source code.
+> Current Linux has of_clk_get(), but doesn't have devm_of_clk_get().
+> This patch adds it. It is implemeted in clk-devres.c to share
+> devm_clk_release().
 
-That's ok, use the names the macro wants you to, that's the best way,
-and it ensures that I don't have to audit your permissions are correct
-for the file.
+Please add an explanation of why we want this sort of API. The
+example you gave for audio sound card is useful. We're not going
+to remember 5 months from now why we did something, so we should
+put that here instead of digging through mailing list archives.
 
-> To tell the truth macro BIN_ATTR_RW() isn't that popular in the
-> kernel.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+> index 8f57154..2449b25 100644
+> --- a/drivers/clk/clk-devres.c
+> +++ b/drivers/clk/clk-devres.c
+> @@ -53,3 +53,24 @@ void devm_clk_put(struct device *dev, struct clk *clk)
+>  	WARN_ON(ret);
+>  }
+>  EXPORT_SYMBOL(devm_clk_put);
+> +
+> +struct clk *devm_of_clk_get(struct device *dev,
+> +			    struct device_node *np, int index)
 
-Yes, but it should be, I have patches floating around somewhere to fix
-almost all of these up.
+Please call this devm_get_clk_from_child() instead. Also, replace
+the index argument with a string called con_id. Then call
+of_clk_get_by_name() instead of of_clk_get().
 
-> Neither is BIN_ATTR() macro, but it suites my driver better than the
-> another one.
+> +{
+> +	struct clk **ptr, *clk;
+> +
+> +	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	clk = of_clk_get(np, index);
+> +	if (!IS_ERR(clk)) {
+> +		*ptr = clk;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return clk;
+> +}
+> +EXPORT_SYMBOL(devm_of_clk_get);
+> diff --git a/include/linux/clk.h b/include/linux/clk.h
+> index 123c027..7f50c5f 100644
+> --- a/include/linux/clk.h
+> +++ b/include/linux/clk.h
+> @@ -17,8 +17,9 @@
+>  #include <linux/notifier.h>
+>  
+>  struct device;
+> -
+>  struct clk;
+> +struct device_node;
+> +struct of_phandle_args;
+>  
+>  /**
+>   * DOC: clk notifier callback types
+> @@ -249,6 +250,21 @@ static inline void clk_unprepare(struct clk *clk)
+>  struct clk *devm_clk_get(struct device *dev, const char *id);
+>  
+>  /**
+> + * devm_clk_get - lookup and obtain a managed reference to a clock producer.
 
-a "raw" BIN_ATTR() shouldn't be used either, please use the _RW()
-variant.
+That doesn't even match the name of the function.
 
-thanks,
+> + * @dev: device for clock "consumer"
+> + * @np: pointer to clock consumer node
+> + * @index: clock index
+> + *
+> + * This function parses the clocks, and uses them to look up the
+> + * struct clk from the registered list of clock providers by using
+> + * @np and @index.
+> + *
+> + * The clock will automatically be freed when the device is unbound
+> + * from the bus.
+> + */
+> +struct clk *devm_of_clk_get(struct device *dev, struct device_node *np, int index);
 
-greg k-h
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
