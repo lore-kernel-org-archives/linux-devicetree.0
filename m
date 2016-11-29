@@ -1,14 +1,16 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 2/2] ARM: dts: da850: specify the maximum pixel clock rate
- for tilcdc
-Date: Tue, 29 Nov 2016 12:57:04 +0100
-Message-ID: <1480420624-23544-3-git-send-email-bgolaszewski@baylibre.com>
-References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: da850-lcdk: specify the maximum pixel
+ clock rate for tilcdc
+Date: Tue, 29 Nov 2016 12:57:50 +0100
+Message-ID: <CAMpxmJVN08Xw8AYeAxhgGj+XQnk60Wm1O+re_tfftYwwjKcQPQ@mail.gmail.com>
+References: <1480335328-4010-1-git-send-email-bgolaszewski@baylibre.com>
+ <1480335328-4010-3-git-send-email-bgolaszewski@baylibre.com>
+ <4f2a02c4-062f-6faf-1024-2a8718a9701f@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+In-Reply-To: <4f2a02c4-062f-6faf-1024-2a8718a9701f@ti.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,26 +20,34 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-drm <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Frank Rowand <frowand.list@gmail.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-QXQgbWF4aW11bSBDUFUgZnJlcXVlbmN5IG9mIDMwMCBNSHogdGhlIG1heGltdW0gcGl4ZWwgY2xv
-Y2sgZnJlcXVlbmN5CmlzIDM3LjUgTUh6WzFdLiBXZSBtdXN0IGZpbHRlciBvdXQgYW55IG1vZGUg
-Zm9yIHdoaWNoIHRoZSBjYWxjdWxhdGVkCnBpeGVsIGNsb2NrIHJhdGUgd291bGQgZXhjZWVkIHRo
-aXMgdmFsdWUuCgpTcGVjaWZ5IHRoZSBtYXgtcGl4ZWxjbG9jayBwcm9wZXJ0eSBmb3IgdGhlIGRp
-c3BsYXkgbm9kZSBmb3IKZGE4NTAtbGNkay4KClsxXSBodHRwOi8vcHJvY2Vzc29ycy53aWtpLnRp
-LmNvbS9pbmRleC5waHAvT01BUC1MMXgvQzY3NHgvQU0xeF9MQ0RfQ29udHJvbGxlcl8oTENEQylf
-VGhyb3VnaHB1dF9hbmRfT3B0aW1pemF0aW9uX1RlY2huaXF1ZXMKClNpZ25lZC1vZmYtYnk6IEJh
-cnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+Ci0tLQogYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAuZHRzaSB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2RhODUwLmR0c2kKaW5kZXggNWY0YmEyZS4uMDA2OTJkMyAxMDA2NDQKLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1
-MC5kdHNpCkBAIC00NTMsNiArNDUzLDcgQEAKIAkJCWNvbXBhdGlibGUgPSAidGksZGE4NTAtdGls
-Y2RjIjsKIAkJCXJlZyA9IDwweDIxMzAwMCAweDEwMDA+OwogCQkJaW50ZXJydXB0cyA9IDw1Mj47
-CisJCQltYXgtcGl4ZWxjbG9jayA9IDwzNzUwMD47CiAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwog
-CiAJCQlwb3J0cyB7Ci0tIAoyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+MjAxNi0xMS0yOSAxMTo1MyBHTVQrMDE6MDAgU2VraGFyIE5vcmkgPG5zZWtoYXJAdGkuY29tPjoK
+PiBPbiBNb25kYXkgMjggTm92ZW1iZXIgMjAxNiAwNTo0NSBQTSwgQmFydG9zeiBHb2xhc3pld3Nr
+aSB3cm90ZToKPj4gRHVlIHRvIG1lbW9yeSB0aHJvdWdocHV0IGNvbnN0cmFpbnRzIGFueSBkaXNw
+bGF5IG1vZGUgZm9yIHdoaWNoIHRoZQo+PiBwaXhlbCBjbG9jayByYXRlIGV4Y2VlZHMgdGhlIHJl
+Y29tbWVuZGVkIHZhbHVlIG9mIDM3NTAwIEtIeiBtdXN0IGJlCj4+IGZpbHRlcmVkIG91dC4KPgo+
+IEkgdGhpbmsgdGhlcmUgbWlnaHQgYmUgbW9yZSByZWFzb25zIHRoYW4gbWVtb3J5IHRocm91Z2hw
+dXQgY29uc3RyYWludHMKPiBmb3IgdGhlIHJlYXNvbmluZyBiZWhpbmQgMzcuNU1oeiBjYXAgb24g
+cGl4ZWwgY2xvY2suIFdoeSBub3QganVzdCByZWZlcgo+IHRvIHRoZSBkYXRhc2hlZXQgc2VjdGlv
+biB0aGF0IHBsYWNlcyB0aGlzIGNvbnN0cmFpbnQgc28gd2Uga25vdyBpdHMgYQo+IGhhcmR3YXJl
+IHJlc3RyaWN0aW9uLgo+Cj4+Cj4+IFNwZWNpZnkgdGhlIG1heC1waXhlbGNsb2NrIHByb3BlcnR5
+IGZvciB0aGUgZGlzcGxheSBub2RlIGZvcgo+PiBkYTg1MC1sY2RrLgo+Pgo+PiBTaWduZWQtb2Zm
+LWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPgo+PiAt
+LS0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzIHwgMSArCj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2RhODUwLWxjZGsuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMKPj4g
+aW5kZXggZDg2NGYxMS4uMTI4MzI2MyAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+ZGE4NTAtbGNkay5kdHMKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMK
+Pj4gQEAgLTI4NSw2ICsyODUsNyBAQAo+Pgo+PiAgJmRpc3BsYXkgewo+PiAgICAgICBzdGF0dXMg
+PSAib2theSI7Cj4+ICsgICAgIG1heC1waXhlbGNsb2NrID0gPDM3NTAwPjsKPgo+IFNob3VsZCB0
+aGlzIG5vdCBiZSBpbiBkYTg1MC5kdHNpIHNpbmNlIGl0cyBhbiBTb0MgaW1wb3NlZCBjb25zdHJh
+aW50PyBJZgo+IGEgYm9hcmQgbmVlZHMgbmFycm93ZXIgY29uc3RyYWludCwgaXQgY2FuIG92ZXJy
+aWRlIGl0LiBCdXQgSSBndWVzcyBtb3N0Cj4gd2VsbCBkZXNpZ25lZCBib2FyZHMgd2lsbCBqdXN0
+IGhpdCB0aGUgU29DIGNvbnN0cmFpbnQuCj4KCkJvdGggaXNzdWVzIGZpeGVkIGluIHYzLgoKVGhh
+bmtzLApCYXJ0b3N6IEdvbGFzemV3c2tpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
