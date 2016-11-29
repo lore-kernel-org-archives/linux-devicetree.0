@@ -1,118 +1,87 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 3/4] dtc: Plugin and fixup support
-Date: Tue, 29 Nov 2016 12:55:14 +0200
-Message-ID: <1F9EDF06-98B1-4270-AA58-1A9D9A9F9803@konsulko.com>
-References: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com> <1480077131-14526-4-git-send-email-pantelis.antoniou@konsulko.com> <20161128041228.GJ30927@umbus.fritz.box> <D69908BD-B243-4AEE-B6BA-80B94AFE4B6A@konsulko.com> <4672e164-aae0-6306-fe70-146a1f930cf7@raspberrypi.org> <20161129021131.GD13307@umbus.fritz.box> <b7ff53f6-6481-e3f1-e3b5-d0b04e563e83@raspberrypi.org> <D3BFA6AB-21C1-451B-ACF5-32EA5E615275@konsulko.com> <66c7f8c5-94e9-a6ca-4402-fa0ccf2a6ac0@raspberrypi.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <66c7f8c5-94e9-a6ca-4402-fa0ccf2a6ac0-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 29 Nov 2016 11:01:25 +0000
+Message-ID: <20161129110125.sksjxfy56ofzyxw3@sirena.org.uk>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <2390919.s2CzTWN1li@avalon>
+ <b779c014-fc20-1fbc-dea9-cb90dbde5b71@codeaurora.org>
+ <3929994.7YhJtsl9c3@avalon>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fdcknrxhzbrgaso3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3929994.7YhJtsl9c3@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
 
-> On Nov 29, 2016, at 12:50 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> wrote:
->=20
-> On 29/11/2016 10:39, Pantelis Antoniou wrote:
->> Hi Phil,
->>=20
->>> On Nov 29, 2016, at 12:32 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> =
-wrote:
->>>=20
->>> On 29/11/2016 02:11, David Gibson wrote:
->>>> On Mon, Nov 28, 2016 at 12:24:20PM +0000, Phil Elwell wrote:
->>>>> On 28/11/2016 12:10, Pantelis Antoniou wrote:
->>>>>> For plugins we need the __symbols__ node to support stacked =
-overlays, i.e.
->>>>>> overlays referring label that were introduced by a previous =
-overlay.
->>>>> Although it is arguably useful to be able to refer to symbols =
-created by
->>>>> one overlay from within another, do we really want all symbols to =
-be
->>>>> global? Isn't there a call for a new syntax or usage pattern to =
-indicate
->>>>> either that a symbol should be local to the overlay or, my =
-preferred
->>>>> option, global?
->>>> So, this is back to a design question about the overlay format.  As
->>>> noted in the initial discussions about possible "connector" =
-formats, I
->>>> think we will want some sort of local symbols.  But the current
->>>> overlay format with all global symbols is out there and we need to
->>>> support it.
->>> The overlay format we have does not dictate the scope of the =
-symbols.
->>>=20
->>> In all implementations I know of - the Raspberry Pi loader, the =
-current
->>> Linux kernel, the latest dtc patch set - there is a completely
->>> asymmetric relationship between the base DTB and an overlay:
->>> * the base DTB exports __symbols__ to resolve the overlays =
-unresolved
->>> label references, as recorded by the __fixups__ node
->>> * the overlay's phandles are renumbered so as not to clash with the =
-base
->>> tree using the __local_fixups__
->>> * the contents of the __overlay__ nodes are applied to the base =
-tree, as
->>> directed by the "target" or "target-path=94 properties
->>>=20
->> Yes
->>=20
->>> The __symbols__ node of the overlay is ignored and discarded. The
->>> __fixups__ and __local_fixups__ in the base DTB (if present - the =
-RPi
->>> dtc only generates them for /plugins/) are ignored.
->>>=20
->> That was a limitation that no-longer applies. Overlay symbols can be =
-added
->> to the base tree symbol list with a small patch I have already =
-posted.
-> The fact that they can doesn't mean they necessarily should.
->>=20
->>> In the set of RPi overlays only one exports a global symbol, which =
-it
->>> achieves with an overlay aimed at target-path =3D "/__symbols__" =
-that adds
->>> a new symbol (in this case "i2c_gpio").
->>>=20
->>> If the __symbols__ in an overlay are automatically merged with the =
-base
->>> symbols, that is a significant change in semantics which needs to be
->>> discussed.
->>>=20
->> You no longer need to do this anymore. Hope this helps :)
->=20
-> Not really, no. With the current scheme we have control over the =
-scope,
-> but now there is none.
->=20
+--fdcknrxhzbrgaso3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Manually adding symbols by targeting __symbols__ is just bad. There is =
-absolutely
-no guarantee that the symbol/fixup node(s) will still be there in =
-following iterations
-of the patches.
+On Tue, Nov 29, 2016 at 11:11:03AM +0200, Laurent Pinchart wrote:
+> On Tuesday 29 Nov 2016 13:41:33 Archit Taneja wrote:
 
-I am thinking of parsing them, recording the information in kernel =
-structures and then
-deleting them altogether.
+> > I thought we couldn't add mandatory properties once the device is alrea=
+dy
+> > present in DT for one or more platforms.
 
-> How does your patch handle duplicate symbols?
->=20
+> You can, as long as you treat them as optional in the driver to retain=20
+> backward compatibility. The DT bindings should document the properties=20
+> expected from a new platform (older versions of the bindings will always =
+be=20
+> available in the git history).
 
-It doesn=92t. Having duplicate global symbols is bad.=20
+The device probably never worked without power...  note that the kernel
+will substitute in dummy regulators for anything that isn't explicitly
+mapped so it won't actually break anything.
 
-It appears you want scoping rules instead. Care to paste a concrete =
-example?
+> > Say, if we do make it mandatory for future additions, we would need to =
+have
+> > DT property for the supplies for the new platforms. If the regulators on
+> > these boards are fixed supplies, they would be need to be modeled
+> > using "regulator-fixed", possibly without any input supply. Is that
+> > what you're suggesting?
 
-> Phil
+> That's the idea, yes. Clock maintainers have a similar opinion regarding =
+the=20
+> clock bindings, where a clock that is not optional at the hardware level=
+=20
+> should be specified in DT even if it's always present.
 
-Regards
+> Mark, any opinion ?
 
-=97 Pantelis
+It's best practice to always describe the power.  The kernel will cope
+if people don't but it's not unknown for drivers to discover a reason
+for wanting information about their power and hard to retrofit that if
+it's not been in there from the get go.
+
+Please note that if you're going to CC me into a graphics thread there's
+a good chance I will miss it, I get copied on quite a lot of graphics
+related mail that's not really relevant so I often skip it.  Changing
+the subject line would help with that.
+
+--fdcknrxhzbrgaso3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYPWABAAoJECTWi3JdVIfQcTMH/Ao8AthR+NJVKimYTO6m42NI
+KFGwMc8tsFig+KYHJi3iBhrBY0zB9H3B7BY2VovY/Epz28jrIkCEClafZqZzKha0
+dGnuTY2n0VfS7t8FLUimV/AajQ3oT0iCc7PeH7L1VXGTh9otgpZHmTO3wsbbGoD6
+w7CNxULa7xN/5FhrGDRN20RbcHzPh+k9IW73frDdVaz7o6HqFehIvW7LtbC6cKDc
+AugA1Di4pCplE8zHW9x7sVGM+1AJdWnKYkQElU9Ccus67l9RMFCaOHRzUW2RSjoc
+NesibPlYqQhIjN3t0zoIZGZtxUD0CIzAQkwUJs3MphP1xYtkg000TOIOfMlDG7I=
+=K9VT
+-----END PGP SIGNATURE-----
+
+--fdcknrxhzbrgaso3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
