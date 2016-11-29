@@ -1,111 +1,59 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v4 6/9] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
-Date: Tue, 29 Nov 2016 19:14:49 +0300
-Message-ID: <1480436092-10728-7-git-send-email-al.kochet@gmail.com>
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 5/9] ARM: dts: rockchip: disable arm-global-timer for rk3188
+Date: Tue, 29 Nov 2016 19:14:48 +0300
+Message-ID: <1480436092-10728-6-git-send-email-al.kochet@gmail.com>
 References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
  <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Alexander Kochetkov <al.kochet@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1480436092-10728-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch move ce field out of struct bc_timer into struct
-rk_clock_event_device and rename struct bc_timer to struct rk_timer.
+arm-global-timer can provide clockevents, clocksource and shed_clock. But
+on rk3188 platform it provide only clocksource and shed_clock. clockevents
+from  arm-global-timer is not used by kernel because there is another
+clockevent provider with higher rating (smp-twd).
 
-This is refactoring step without functional changes.
+My commit from the series implement clocksource and shed_clock using
+rockchip_timer. But sched clock from rk_timer is not selected by kernel
+due to lower frequency than arm-global-timer, and clocksource from
+rk_timer is not selected by kernel due to lower rating than
+arm-global-timer. And I don't want to increase clocksource rating
+because ratings greater 300 used for high frequency clocksources.
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+clocksource and shed_clock is quite unstable, because their rate depends
+on cpu frequency. So disable arm-global-timer and use clocksource and
+sched_clock from rockchip_timer.
+
+Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clocksource/rockchip_timer.c |   33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/rk3188.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-index 23e267a..6d68d4c 100644
---- a/drivers/clocksource/rockchip_timer.c
-+++ b/drivers/clocksource/rockchip_timer.c
-@@ -29,18 +29,28 @@
- #define TIMER_MODE_USER_DEFINED_COUNT		(1 << 1)
- #define TIMER_INT_UNMASK			(1 << 2)
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 0dc52fe..44da3d42 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -546,6 +546,7 @@
  
--struct bc_timer {
--	struct clock_event_device ce;
-+struct rk_timer {
- 	void __iomem *base;
- 	void __iomem *ctrl;
- 	u32 freq;
+ &global_timer {
+ 	interrupts = <GIC_PPI 11 0xf04>;
++	status = "disabled";
  };
  
--static struct bc_timer bc_timer;
-+struct rk_clock_event_device {
-+	struct clock_event_device ce;
-+	struct rk_timer timer;
-+};
-+
-+static struct rk_clock_event_device bc_timer;
-+
-+static inline struct rk_clock_event_device*
-+rk_clock_event_device(struct clock_event_device *ce)
-+{
-+	return container_of(ce, struct rk_clock_event_device, ce);
-+}
- 
--static inline struct bc_timer *rk_timer(struct clock_event_device *ce)
-+static inline struct rk_timer *rk_timer(struct clock_event_device *ce)
- {
--	return container_of(ce, struct bc_timer, ce);
-+	return &rk_clock_event_device(ce)->timer;
- }
- 
- static inline void __iomem *rk_base(struct clock_event_device *ce)
-@@ -116,16 +126,17 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
- static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- {
- 	struct clock_event_device *ce = &bc_timer.ce;
-+	struct rk_timer *timer = &bc_timer.timer;
- 	struct clk *timer_clk;
- 	struct clk *pclk;
- 	int ret = -EINVAL, irq;
- 
--	bc_timer.base = of_iomap(np, 0);
--	if (!bc_timer.base) {
-+	timer->base = of_iomap(np, 0);
-+	if (!timer->base) {
- 		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
- 		return -ENXIO;
- 	}
--	bc_timer.ctrl = bc_timer.base + ctrl_reg;
-+	timer->ctrl = timer->base + ctrl_reg;
- 
- 	pclk = of_clk_get_by_name(np, "pclk");
- 	if (IS_ERR(pclk)) {
-@@ -153,7 +164,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- 		goto out_timer_clk;
- 	}
- 
--	bc_timer.freq = clk_get_rate(timer_clk);
-+	timer->freq = clk_get_rate(timer_clk);
- 
- 	irq = irq_of_parse_and_map(np, 0);
- 	if (!irq) {
-@@ -181,7 +192,7 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
- 		goto out_irq;
- 	}
- 
--	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
-+	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
- 
- 	return 0;
- 
-@@ -190,7 +201,7 @@ out_irq:
- out_timer_clk:
- 	clk_disable_unprepare(pclk);
- out_unmap:
--	iounmap(bc_timer.base);
-+	iounmap(timer->base);
- 
- 	return ret;
- }
+ &local_timer {
 -- 
 1.7.9.5
