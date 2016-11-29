@@ -1,68 +1,90 @@
-From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 5/5] arm64: dts: marvell: Enable spi0 on the board Armada-3720-db
-Date: Tue, 29 Nov 2016 15:39:39 +0100
-Message-ID: <20161129143939.3191-6-romain.perier@free-electrons.com>
-References: <20161129143939.3191-1-romain.perier@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] [media] dt-bindings: add TI VPIF documentation
+Date: Tue, 29 Nov 2016 08:41:44 -0600
+Message-ID: <CAL_JsqJ3wJnNa=bVN+UT4A-J5XC0jdyGAgWzROScRDLy6T8xHw@mail.gmail.com>
+References: <20161122155244.802-1-khilman@baylibre.com> <20161122155244.802-5-khilman@baylibre.com>
+ <20161128213822.26oeyzkht5jz5gd3@rob-hp-laptop> <m2shqbs0eu.fsf@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161129143939.3191-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <m2shqbs0eu.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit enables the device node spi0 on the official development
-board for the Marvell Armada 3700. It also adds sub-node for the 128Mb
-SPI-NOR present on the board.
+On Mon, Nov 28, 2016 at 4:30 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Rob,
+>
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>
+>> On Tue, Nov 22, 2016 at 07:52:44AM -0800, Kevin Hilman wrote:
+>>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
+>>>  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
+>>>  2 files changed, 73 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>>> new file mode 100644
+>>> index 000000000000..c447ac482c1d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>>> @@ -0,0 +1,65 @@
+>>> +Texas Instruments VPIF Capture
+>>> +------------------------------
+>>> +
+>>> +The TI Video Port InterFace (VPIF) capture component is the primary
+>>> +component for video capture on the DA850 family of TI DaVinci SoCs.
+>>> +
+>>> +TI Document number reference: SPRUH82C
+>>> +
+>>> +Required properties:
+>>> +- compatible: must be "ti,da850-vpif-capture"
+>>> +- reg: physical base address and length of the registers set for the device;
+>>> +- interrupts: should contain IRQ line for the VPIF
+>>> +
+>>> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
+>>> +channels or a single 16-bit channel.  It should contain at least one
+>>> +port child node with child 'endpoint' node. Please refer to the
+>>> +bindings defined in
+>>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>>> +
+>>> +Example using 2 8-bit input channels, one of which is connected to an
+>>> +I2C-connected TVP5147 decoder:
+>>> +
+>>> +    vpif_capture: video-capture@0x00217000 {
+>>> +            reg = <0x00217000 0x1000>;
+>>> +            interrupts = <92>;
+>>> +
+>>> +            port {
+>>> +                    vpif_ch0: endpoint@0 {
+>>> +                              reg = <0>;
+>>> +                              bus-width = <8>;
+>>> +                              remote-endpoint = <&composite>;
+>>> +                    };
+>>> +
+>>> +                    vpif_ch1: endpoint@1 {
+>>
+>> I think probably channels here should be ports rather than endpoints.
+>> AIUI, having multiple endpoints is for cases like a mux or 1 to many
+>> connections. There's only one data flow, but multiple sources or sinks.
+>
+> Looking at this closer... , I used an endpoint because it's bascially a
+> 16-bit parallel bus, that can be configured as (up to) 2 8-bit
+> "channels.  So, based on the video-interfaces.txt doc, I configured this
+> as a single port, with (up to) 2 endpoints.  That also allows me to
+> connect output of the decoder directly, using the remote-endpoint
+> property.
+>
+> So I guess I'm not fully understanding your suggestion.
 
-Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-3720-db.dts | 30 ++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+NM, looks like video-interfaces.txt actually spells out this case and
+defines doing it as you did.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-index 1372e9a6..0c4eb98 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -67,6 +67,36 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	status = "okay";
-+
-+	m25p80@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <108000000>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			partition@0 {
-+				label = "bootloader";
-+				reg = <0x0 0x200000>;
-+			};
-+			partition@200000 {
-+				label = "U-boot Env";
-+				reg = <0x200000 0x10000>;
-+			};
-+			partition@210000 {
-+				label = "Linux";
-+				reg = <0x210000 0xDF0000>;
-+			};
-+		};
-+	};
-+};
-+
- /* Exported on the micro USB connector CON32 through an FTDI */
- &uart0 {
- 	status = "okay";
--- 
-2.9.3
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
