@@ -1,62 +1,63 @@
-From: Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [PATCH 4/5] arm64: dts: marvell: Add definition of SPI controller
- for Armada 3700
-Date: Tue, 29 Nov 2016 16:08:08 +0100
-Message-ID: <0120e795-f1bb-6614-bdc7-22dbb9ab9f35@free-electrons.com>
-References: <20161129143939.3191-1-romain.perier@free-electrons.com>
- <20161129143939.3191-5-romain.perier@free-electrons.com>
- <20161129155129.6f3c76b6@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 29 Nov 2016 09:14:09 -0600
+Message-ID: <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20161121164815.bxca4rfvifloizdh@rob-hp-laptop> <2307840.2mk6E40XHl@avalon>
+ <2454182.olmziLZUmD@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161129155129.6f3c76b6@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2454182.olmziLZUmD@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-Le 29/11/2016 =E0 15:51, Thomas Petazzoni a =E9crit :
-
->
->> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/b=
-oot/dts/marvell/armada-37xx.dtsi
->> index e9bd587..84e4f57 100644
->> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
->> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
->> @@ -98,6 +98,19 @@
->>  			/* 32M internal register @ 0xd000_0000 */
->>  			ranges =3D <0x0 0x0 0xd0000000 0x2000000>;
->>
->> +			spi0: spi@10600 {
->> +				compatible =3D "marvell,armada-3700-spi";
->> +				#address-cells =3D <1>;
->> +				#size-cells =3D <0>;
->> +				reg =3D <0x10600 0x5d>;
->> +				clocks =3D <&nb_periph_clk 7>;
->> +				clock-frequency =3D <200000000>;
->
-> This property.
->
->> +				interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> +				max-frequency =3D <66000000>;
->
-> And this one no longer exist in your DT binding, so I guess they should
-> be removed from here as well.
->
-
-Good point, I was pretty sure that I have removed these.
-I probably did something wrong with my rebase.
-
-Thanks,
-Romain
+T24gVHVlLCBOb3YgMjksIDIwMTYgYXQgMjoyNyBBTSwgTGF1cmVudCBQaW5jaGFydAo8bGF1cmVu
+dC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBIaSBSb2IsCj4KPiBPbiBUdWVz
+ZGF5IDIyIE5vdiAyMDE2IDExOjM2OjU1IExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+IE9uIE1v
+bmRheSAyMSBOb3YgMjAxNiAxMDo0ODoxNSBSb2IgSGVycmluZyB3cm90ZToKPj4gPiBPbiBTYXQs
+IE5vdiAxOSwgMjAxNiBhdCAwNToyODowMUFNICswMjAwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3Rl
+Ogo+PiA+PiBEb2N1bWVudCBwcm9wZXJ0aWVzIGNvbW1vbiB0byBzZXZlcmFsIGRpc3BsYXkgcGFu
+ZWxzIGluIGEgY2VudHJhbAo+PiA+PiBsb2NhdGlvbiB0aGF0IGNhbiBiZSByZWZlcmVuY2VkIGJ5
+IHRoZSBwYW5lbCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPj4gPgo+PiA+IExvb2tzIGdvb2QuIEp1
+c3Qgb25lIGNvbW1lbnQuLi4KPj4gPgo+PiA+IFsuLi5dCj4+ID4KPj4gPj4gK0Nvbm5lY3Rpdml0
+eQo+PiA+PiArLS0tLS0tLS0tLS0tCj4+ID4+ICsKPj4gPj4gKy0gcG9ydHM6IFBhbmVscyByZWNl
+aXZlIHZpZGVvIGRhdGEgdGhyb3VnaCBvbmUgb3IgbXVsdGlwbGUgY29ubmVjdGlvbnMuCj4+ID4+
+IFdoaWxlCj4+ID4+ICsgIHRoZSBuYXR1cmUgb2YgdGhvc2UgY29ubmVjdGlvbnMgaXMgc3BlY2lm
+aWMgdG8gdGhlIHBhbmVsIHR5cGUsIHRoZQo+PiA+PiArICBjb25uZWN0aXZpdHkgaXMgZXhwcmVz
+c2VkIGluIGEgc3RhbmRhcmQgZmFzaGlvbiB1c2luZyBwb3J0cyBhcwo+PiA+PiBzcGVjaWZpZWQg
+aW4KPj4gPj4gKyAgdGhlIGRldmljZSBncmFwaCBiaW5kaW5ncyBkZWZpbmVkIGluCj4+ID4+ICsg
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+ID4KPj4gPiBX
+ZSBhbGxvdyBwYW5lbHMgdG8gZWl0aGVyIHVzZSBncmFwaCBiaW5kaW5nIG9yIGJlIGEgY2hpbGQg
+b2YgdGhlIGRpc3BsYXkKPj4gPiBjb250cm9sbGVyLgo+Pgo+PiBJIGtuZXcgdGhhdCBzb21lIGRp
+c3BsYXkgY29udHJvbGxlcnMgdXNlIGEgcGhhbmRsZSB0byB0aGUgcGFuZWwgKHNlZSB0aGUKPj4g
+ZnNsLHBhbmVsIGFuZCBudmlkaWEscGFuZWwgcHJvcGVydGllcyksIGJ1dCBJIGRpZG4ndCBrbm93
+IHdlIGhhZCBwYW5lbHMgYXMKPj4gY2hpbGRyZW4gb2YgZGlzcGxheSBjb250cm9sbGVyIG5vZGVz
+LiBJIGRvbid0IHRoaW5rIHdlIHNob3VsZCBhbGxvdyB0aGF0IGZvcgo+PiBhbnl0aGluZyBidXQg
+RFNJIHBhbmVscywgYXMgdGhlIERUIGhpZXJhcmNoeSBpcyBiYXNlZCBvbiBjb250cm9sIGJ1c2Vz
+LiBBcmUKPj4geW91IHN1cmUgd2UgaGF2ZSBvdGhlciBwYW5lbHMgaW5zdGFudGlhdGVkIHRocm91
+Z2ggdGhhdCBtZWNoYW5pc20gPwoKU29tZSBwYW5lbHMgaGF2ZSBubyBjb250cm9sIGJ1cywgc28g
+d2VyZSBkbyB3ZSBwbGFjZSB0aGVtPyBJIHdvdWxkIHNheQp0aGUgaGllcmFyY2h5IGlzIGJhc2Vk
+IG9uIGJ1c2VzIHdpdGggYSBwcmVmZXJlbmNlIGZvciB0aGUgY29udHJvbCBidXMKd2hlbiB0aGVy
+ZSBhcmUgbXVsdGlwbGUgYnVzZXMuIEknbSBub3QgYSBmYW4gb2YganVzdCBzdGlja2luZyB0aGlu
+Z3MKYXJlIHRoZSB0b3AgbGV2ZWwuCgo+IFBpbmcgPwo+Cj4gUGxlYXNlIG5vdGUgdGhhdCB0aGlz
+IGZpbGUgZG9jdW1lbnRzIHByb3BlcnRpZXMgY29tbW9uIHRvIG11bHRpcGxlIHBhbmVsIERUCj4g
+YmluZGluZ3MsIGJ1dCBpbiBubyB3YXkgbWFrZXMgaXQgbWFuZGF0b3J5IHRvIHVzZSB0aGUgT0Yg
+Z3JhcGggYmluZGluZ3MgZm9yCj4gcGFuZWxzLiBUaGUgZGVjaXNpb24gaXMgbGVmdCB0byBpbmRp
+dmlkdWFsIGJpbmRpbmdzLgoKSXQgaXMgbWFuZGF0b3J5IGluIHRoZSBzZW5zZSB0aGF0IHdlIGRv
+bid0IHdhbnQgbW9yZSBjYXNlcyBvZiAiZnNsLHBhbmVsIi4KClJvYgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
