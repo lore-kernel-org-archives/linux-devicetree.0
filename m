@@ -1,118 +1,94 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
- Xenon SDHC
-Date: Tue, 29 Nov 2016 08:49:00 +0100
-Message-ID: <CAPDyKFqjNy2oJiHHt+8CkTaiiExFKaR0i4GXGKdOMMRX-swPRg@mail.gmail.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFpkcoVMKbVOwjX1WDyNgc1vvUX60D6XRX6=YHGvkvHvnA@mail.gmail.com>
- <3cd05a26-d340-476e-bab1-8be9d5446f47@marvell.com> <CAPDyKFrskyZvMwhmj8ioyaowU8GL5=d-6ipGQcmmig_a9E9AQQ@mail.gmail.com>
- <436c6925-cb0d-afe7-e3a2-384eca15ff42@marvell.com> <8359307d-5f44-3db9-aae1-eb1fe8e1141d@marvell.com>
- <CAPDyKFo3ezYOywtSZ8GGQ1XK9KPsxCgQNbaiz45EVgbgtnUxjg@mail.gmail.com>
- <10a885f0-82e9-a35c-f62f-3fc4518ea8b4@marvell.com> <CAPDyKFr8rX04iY92OeQpSkS+3HN2-FxijCCiDb2sSKvP+TZPog@mail.gmail.com>
- <c30cead8-17b6-48b0-7355-cd82268842e1@marvell.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 29 Nov 2016 13:41:33 +0530
+Message-ID: <b779c014-fc20-1fbc-dea9-cb90dbde5b71@codeaurora.org>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <1480399662-8858-1-git-send-email-architt@codeaurora.org>
+ <1480399662-8858-2-git-send-email-architt@codeaurora.org>
+ <2390919.s2CzTWN1li@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c30cead8-17b6-48b0-7355-cd82268842e1-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan Gao <ygao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Doug Jones <dougj-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "Wei(SOCP) Liu" <liuw-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <2390919.s2CzTWN1li@avalon>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-arm-msm@vger.kernel.org, robh@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 November 2016 at 03:53, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Ulf,
+
+
+On 11/29/2016 12:03 PM, Laurent Pinchart wrote:
+> Hi Archit,
 >
-> On 2016/11/28 23:16, Ulf Hansson wrote:
->> On 28 November 2016 at 12:38, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
->>> Hi Ulf,
->>>
->>> On 2016/11/28 19:13, Ulf Hansson wrote:
->>>>>
->>>>>     As you suggest, I replace mmc_wait_for_cmd() with mmc_send_tuning(), to
->>>>>     send commands for testing current sampling point set in our host PHY.
->>>>>
->>>>>     According to my test result, it shows that mmc_send_tuning() can only support
->>>>>     tuning command (CMD21/CMD19).
->>>>>     As a result, we cannot use mmc_send_tuning() when card is in the speed modes
->>>>>     which doesn't support tuning, such as eMMC HS SDR, eMMC HS DRR and
->>>>>     SD SDR 12/SDR25/DDR50. Card will not response to tuning commands in those
->>>>>     speed modes.
->>>>>
->>>>>     Could you please provide suggestions for the speed mode in which tuning is
->>>>>     not available?
->>>>>
->>>>
->>>> Normally the mmc host driver shouldn't have to care about what the
->>>> card supports, as that is the responsibility of the mmc core to
->>>> manage.
->>>>
->>>> The host should only need to implement the ->execute_tuning() ops,
->>>> which gets called when the card supports tuning (CMD19/21). Does it
->>>> make sense?
->>>>
->>>    I think it is irrelevant to tuning procedure.
->>>
->>>    Our host requires to adjust PHY setting after each time ios setting
->>>    (SDCLK/bus width/speed mode) is changed.
->>>    The simplified sequence is:
->>>    mmc change ios --> mmc_set_ios() --> ->set_ios() --> after sdhci_set_ios(),
->>>    adjust PHY setting.
->>>    During PHY setting adjustment, out host driver has to send commands to
->>>    test current sampling point. Tuning is another independent step.
->>
->> For those speed modes (or other ios changes) that *don't* requires
->> tuning, then what will you do when you send the command to confirm the
->> change of PHY setting and it fails?
->>
->> My assumption is that you will fail anyway, by propagating the error
->> to the mmc core. At least that what was my understanding from your
->> earlier replies, right!?
->>
->> Then, I think there are no point having the host driver sending a
->> command to confirm the PHY settings, as the mmc core will anyway
->> discover if something goes wrong when the next command is sent.
->>
->> Please correct me if I am wrong!
->>
+> Thank you for the patch.
 >
->    Sorry that I didn't make myself clear.
+> On Tuesday 29 Nov 2016 11:37:41 Archit Taneja wrote:
+>> Add the regulator supply properties needed by ADV7511 and ADV7533.
+>>
+>> The regulators are specified as optional properties since there can
+>> be boards which have a fixed supply directly routed to the pins, and
+>> these may not be modelled as regulator supplies.
 >
->    Our host PHY delay line consists of hundreds of sampling points.
->    Each sampling point represents a different phase shift.
+> That's why we have support for dummy supplies in the kernel, isn't it ? Isn't
+> it better to make the supplies mandatory in the bindings (and obviously
+> handling them as optional in the driver for backward-compatibility) ?
+
+I'm a bit unclear on this.
+
+I thought we couldn't add mandatory properties once the device is already
+present in DT for one or more platforms.
+
+Say, if we do make it mandatory for future additions, we would need to have
+DT property for the supplies for the new platforms. If the regulators on
+these boards are fixed supplies, they would be need to be modeled
+using "regulator-fixed", possibly without any input supply. Is that
+what you're suggesting?
+
+Thanks,
+Archit
+
 >
->    In lower speed mode, our host driver will scan the delay line.
->    It will select and test multiple sampling points, other than testing
->    only single sampling point.
+> Apart from that,
 >
->    If a sampling point fails to transfer cmd/data, our host driver will
->    move to test next sampling point, until we find out a group of successful
->    sampling points which can transfer cmd/data. At last we will select
->    a perfect one from them.
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+>> Cc: devicetree@vger.kernel.org
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>> v3:
+>> - Revert back to having a common avdd-supply property for the 1.8V
+>>   supplies
+>>
+>> Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 9 ++++++
+>> 1 file changed, 9 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
+>> 6532a59..13d53bc 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+>> @@ -56,6 +56,15 @@ Optional properties:
+>>  - adi,disable-timing-generator: Only for ADV7533. Disables the internal
+>> timing generator. The chip will rely on the sync signals in the DSI data
+>> lanes, rather than generate its own timings for HDMI output.
+>> +- avdd-supply: A common 1.8V supply that powers up the AVDD, DVDD and PVDD
+>> +  pins. On ADV7511, it also feeds to the BGVDD pin. On ADV7533, it also
+>> powers
+>> +  up the A2VDD pin.
+>> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
+>> +  ADV7511 and V3P3 on ADV7533.
+>> +
+>> +ADV7533 specific supplies:
+>> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
+>> +  either 1.2V or 1.8V.
+>>
+>>  Required nodes:
+>
 
-Ahh, I see. Unfortunate, this is going to be very hard to implement properly.
-
-The main problem is that the host driver has *no* knowledge about the
-internal state of the card, as that is the responsibility of the mmc
-core to keep track of.
-
-If the host driver would send a command during every update of the
-"ios" setting, from ->set_ios(), for sure it would lead to commands
-being sent that are "forbidden" in the current internal state of the
-card.
-This would lead to that the card initialization sequence fails,
-because the card may move to an unknown internal state and the mmc
-core would have no knowledge about what happened.
-
-Hmm..
-
-Can you specify, *exactly*, under which "ios updates" you need to
-verify updated PHY setting changes by sending a cmd/data? Also, please
-specify if it's enough to only test the CMD line or also DATA lines.
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
