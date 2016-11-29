@@ -1,112 +1,148 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 7/10] mmc: sdhci-xenon: Add support to PHYs of Marvell
- Xenon SDHC
-Date: Tue, 29 Nov 2016 12:11:39 +0100
-Message-ID: <CAPDyKFp=KHYogJE9WkJUYKphJhsrMfLjxxvNKmiAB+35bER4FQ@mail.gmail.com>
-References: <cover.86006f271b60cf7c0b4c5a51762a9dacca4c4718.1477911954.git-series.gregory.clement@free-electrons.com>
- <a05ffd140f4edc02fc3128db8445b2264cf38723.1477911954.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFpkcoVMKbVOwjX1WDyNgc1vvUX60D6XRX6=YHGvkvHvnA@mail.gmail.com>
- <3cd05a26-d340-476e-bab1-8be9d5446f47@marvell.com> <CAPDyKFrskyZvMwhmj8ioyaowU8GL5=d-6ipGQcmmig_a9E9AQQ@mail.gmail.com>
- <436c6925-cb0d-afe7-e3a2-384eca15ff42@marvell.com> <8359307d-5f44-3db9-aae1-eb1fe8e1141d@marvell.com>
- <CAPDyKFo3ezYOywtSZ8GGQ1XK9KPsxCgQNbaiz45EVgbgtnUxjg@mail.gmail.com>
- <10a885f0-82e9-a35c-f62f-3fc4518ea8b4@marvell.com> <CAPDyKFr8rX04iY92OeQpSkS+3HN2-FxijCCiDb2sSKvP+TZPog@mail.gmail.com>
- <c30cead8-17b6-48b0-7355-cd82268842e1@marvell.com> <CAPDyKFqjNy2oJiHHt+8CkTaiiExFKaR0i4GXGKdOMMRX-swPRg@mail.gmail.com>
- <02725a0f-c061-e7f2-9a01-8975c62ab5a7@marvell.com>
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V2 09/10] thermal: da9062/61: Thermal junction
+ temperature monitoring driver
+Date: Tue, 29 Nov 2016 11:11:59 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CCEC2F8@SW-EX-MBX02.diasemi.com>
+References: <cover.1477501000.git.stwiss.opensource@diasemi.com>
+ <20fefc922818ab0511101f73b1a4d3468c9a8ed3.1477501000.git.stwiss.opensource@diasemi.com>
+ <20161129012409.GA2813@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <02725a0f-c061-e7f2-9a01-8975c62ab5a7@marvell.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ziji Hu <huziji@marvell.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan Gao <ygao@marvell.com>, Doug Jones <dougj@marvell.com>, Victor Gu <xigu@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, Wilson Ding <dingwei@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161129012409.GA2813-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LINUX-KERNEL <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, DEVICETREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, LINUX-INPUT <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Eduardo,
+
+Thanks for your response.
+
+On 29 November 2016 01:24, Eduardo Valentin, wrote:
+
+> On Wed, Oct 26, 2016 at 05:56:39PM +0100, Steve Twiss wrote:
+> > +config DA9062_THERMAL
+> > +	tristate "DA9062/DA9061 Dialog Semiconductor thermal driver"
+> > +	depends on MFD_DA9062
+> > +	depends on OF
+> > +	help
+> > +	  Enable this for the Dialog Semiconductor thermal sensor driver.
+> > +	  This will report PMIC junction over-temperature for one thermal trip
+> > +	  zone.
+> > +	  Compatible with the DA9062 and DA9061 PMICs.
+> 
+> Is there any hardware documentation available for this chip that can be
+> pointed out?
+
+As part of this patch set, I added a link to the the datasheet into the top-level MFD
+component of the device tree binding: https://patchwork.kernel.org/patch/9426791/
+You can get all the information for DA9062 and DA9061 from the patch update in that
+link.
+
 [...]
+> > +	/* Now read E_TEMP again: it is acting like a status bit.
+> > +	 * If over-temperature, then this status will be true.
+> > +	 * If not over-temperature, this status will be false.
+> > +	 */
+> > +	ret = regmap_read(thermal->hw->regmap,
+> > +			  DA9062AA_EVENT_B,
+> > +			  &val);
+> > +	if (ret < 0) {
+> > +		dev_err(thermal->dev,
+> > +			"Cannot check the TJUNC temperature status\n");
+> > +		goto err_enable_irq;
+> > +	} else {
+> > +		if (val & DA9062AA_E_TEMP_MASK) {
+> > +			mutex_lock(&thermal->lock);
+> > +			thermal->temperature = DA9062_MILLI_CELSIUS(125);
+> 
+> Does this mean that the chip temperature is above or equal to 125C, is
+> this really a safe temperature to keep it running?
 
->>>>
->>>
->>>    Sorry that I didn't make myself clear.
->>>
->>>    Our host PHY delay line consists of hundreds of sampling points.
->>>    Each sampling point represents a different phase shift.
->>>
->>>    In lower speed mode, our host driver will scan the delay line.
->>>    It will select and test multiple sampling points, other than testing
->>>    only single sampling point.
->>>
->>>    If a sampling point fails to transfer cmd/data, our host driver will
->>>    move to test next sampling point, until we find out a group of successful
->>>    sampling points which can transfer cmd/data. At last we will select
->>>    a perfect one from them.
->>
->> Ahh, I see. Unfortunate, this is going to be very hard to implement properly.
->>
->> The main problem is that the host driver has *no* knowledge about the
->> internal state of the card, as that is the responsibility of the mmc
->> core to keep track of.
->>
->> If the host driver would send a command during every update of the
->> "ios" setting, from ->set_ios(), for sure it would lead to commands
->> being sent that are "forbidden" in the current internal state of the
->> card.
->> This would lead to that the card initialization sequence fails,
->> because the card may move to an unknown internal state and the mmc
->> core would have no knowledge about what happened.
->>
->
->    Yes. In theory, host layer should not initiate a command by itself.
->
->    We assume that bus is idle and card is stable in Tran state, when core layer
->    asks host to switch "ios".
+There is more information in the datasheet under the section titles "Junction
+temperature supervision". The value of 125 degC comes from the "warning
+temperature threshold" and the event is triggered when "the junction temperature
+rises above the first threshold (TEMP_WARN), the event E_TEMP is asserted".
 
-Understand, but this is a wrong assumption. The card may very well in
-another state than Tran state.
+This suggests strictly greater than 125. However, there is no way for the chip to
+know the exact temperature. The mechanism is interrupt based and triggering
+only happens when the temperature rises above the threshold level.
 
->    Besides, we only select the commands which is valid in the whole procedure,
->    such as CMD8 for eMMC.
->    Those test commands are actually like read operations to card registers.
->    The card will return to Tran state even if transfer fails. It is also easy
->    for host to recover.
+[...]
+> > +static irqreturn_t da9062_thermal_irq_handler(int irq, void *data)
+> > +{
+> > +	struct da9062_thermal *thermal = data;
+> > +
+> > +	disable_irq_nosync(thermal->irq);
+> > +	schedule_delayed_work(&thermal->work, 0);
+> 
+> Can you please elaborate a little on why you have an one shot threaded IRQ
+> handler that is only disabling the IRQ then, scheduling a work with delay of 0?
+> 
+> To my understanding, this is exactly what you get when you run your
+> threaded IRQ handler, when you configure it as one shot.
+> 
+> Have you tried simply handling the same work done in your workqueue
+> handler in your threaded IRQ? That should simplify your code and get the
+> same result you are expecting.
+> 
+> If you are not getting the IRQ disabled on the threaded IRQ when
+> configured as one shot, something else seams to be broken.
 
-For example, I would recommend you to investigate in detail the
-sequence for when a CMD6 command is sent to the card.
-The host must *not* start sending commands from ->set_ios() during a
-CMD6 sequence. For example a CMD8 is not allowed.
+Over-temperature triggering is event based: an interrupt happens when the
+temperature rises above 125 degC. However, this event based system changes into
+a polling operation to detect when the temperature falls below the threshold
+level again. This asymmetry in the chip's behaviour is the reasoning behind
+why I am not using the thermal core's built-in polling functionality.
 
-Moreover, due to this, I wonder if it is even possible to get this HW
-to work properly.
+When over-temperature is reached, the interrupt from the DA9061/2 will be
+repeatedly triggered. The IRQ is disabled when the first over-temperature event
+happens and the status bit is polled using the work-queue until it becomes false.
+After that, the IRQ is re-enabled again so a new critical temperature event can
+be detected.
 
->
->> Hmm..
->>
->> Can you specify, *exactly*, under which "ios updates" you need to
->> verify updated PHY setting changes by sending a cmd/data? Also, please
->> specify if it's enough to only test the CMD line or also DATA lines.
->>
->
->    When one of the three parameters in below changes, our host driver needs
->    to adjust PHY in lower speed mode.
->    1. Speed Mode (timing): like legacy mode --> HS DDR
->    2. Bus Clock: like 400KHz --> 50MHz
->    3. Bus Width: like 1-bit --> 4-bit/8-bit
->
->    For eMMC, we use CMD8 to test sampling point.
->    For SD, we use CMD13.
->    For SDIO, currently CMD52 is used to read a register from CCCR.
->    Those commands in above are all valid during the whole procedure to switch
->    to high speed mode from legacy mode.
->
->    It is the best case if the test command can transfer both on CMD and DAT lines.
->    CMD8 for eMMC can test both CMD line and DAT lines. CMD13 and CMD52 only test
->    CMD line. We might use ACMD51 for SD and CMD53 for SDIO later thus DAT lines
->    are also under test.
+After the interrupt has happened, event bit for the interrupt switches into a status
+bit and is used for polling and detecting when the temperature drops below the
+threshold.
 
-Thanks for sharing these details!
+https://lkml.org/lkml/2016/10/20/372
+https://lkml.org/lkml/2016/10/20/433
 
-So, if possible, I would recommend you to discuss these issues with
-some of the HW designers. Perhaps you can figure out an alternative
-method of confirming/testing PHY setting changes? Sending commands to
-the card just doesn't work well for all cases.
+[...]
+> > +	thermal->zone = thermal_zone_device_register(thermal->config->name,
+> > +					1, 0, thermal,
+> > +					&da9062_thermal_ops, NULL, 0,
+> > +					0);
+> 
+> Did you try using of-thermal?
+> 
+> So you would avoid having specific DT properties for something that
+> there is already a defined property?
 
-Kind regards
-Uffe
+In an earlier RFC, I examined a work-around by hijacking and toggling the
+thermal core's built-in polling function when I needed to poll the temperature
+through get_temp(). However I thought this was quite dangerous, since it would
+not be using a formal thermal core interface.
+
+https://patchwork.kernel.org/patch/9387241/
+
+[...]
+> > +	ret = request_threaded_irq(thermal->irq, NULL,
+> > +				   da9062_thermal_irq_handler,
+> > +				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+> > +				   "THERMAL", thermal);
+> 
+> How about using the devm_ version?
+
+I wanted to explicitly free_irq() before calling thermal_zone_device_unregister()
+in the remove function.
+
+Regards,
+Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
