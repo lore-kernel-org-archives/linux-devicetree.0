@@ -1,60 +1,81 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common panel properties
-Date: Tue, 29 Nov 2016 10:27:58 +0200
-Message-ID: <2454182.olmziLZUmD@avalon>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20161121164815.bxca4rfvifloizdh@rob-hp-laptop> <2307840.2mk6E40XHl@avalon>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Tue, 29 Nov 2016 09:47:03 +0100
+Message-ID: <CAPDyKFqFnk6+Rfdzp-4wzEy8KNkq=03q5qfbkQD4pPNF0Pc6ww@mail.gmail.com>
+References: <1478210075-92045-1-git-send-email-lina.iyer@linaro.org>
+ <1478210075-92045-2-git-send-email-lina.iyer@linaro.org> <CAPDyKFoCjf1qSBDWUY_wNx21_78fRrFqcqrFbsSmabzAZJxQAQ@mail.gmail.com>
+ <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2307840.2mk6E40XHl@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Rob Herring <robh@kernel.org>, linux-renesas-soc@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161110195832.4nz7lxlmshaemcbb@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 10 November 2016 at 20:58, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Nov 07, 2016 at 12:14:28PM +0100, Ulf Hansson wrote:
+>> On 3 November 2016 at 22:54, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > Re-using idle state definition provided by arm,idle-state for domain
+>> > idle states creates a lot of confusion and limits further evolution of
+>> > the domain idle definition. To keep things clear and simple, define a
+>> > idle states for domain using a new compatible "domain-idle-state".
+>> >
+>> > Fix existing PM domains code to look for the newly defined compatible.
+>> >
+>> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Signed-off-by: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+>> >  .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+>> >  drivers/base/power/domain.c                        |  2 +-
+>> >  3 files changed, 38 insertions(+), 5 deletions(-)
+>> >  create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> > new file mode 100644
+>> > index 0000000..eefc7ed
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>> > @@ -0,0 +1,33 @@
+>> > +PM Domain Idle State Node:
+>> > +
+>> > +A domain idle state node represents the state parameters that will be used to
+>> > +select the state when there are no active components in the domain.
+>> > +
+>> > +The state node has the following parameters -
+>> > +
+>> > +- compatible:
+>> > +       Usage: Required
+>> > +       Value type: <string>
+>> > +       Definition: Must be "domain-idle-state".
+>> > +
+>> > +- entry-latency-us
+>> > +       Usage: Required
+>> > +       Value type: <prop-encoded-array>
+>> > +       Definition: u32 value representing worst case latency in
+>> > +                   microseconds required to enter the idle state.
+>> > +                   The exit-latency-us duration may be guaranteed
+>> > +                   only after entry-latency-us has passed.
+>>
+>> As we anyway are going to change this, why not use an u64 and have the
+>> value in ns instead of us?
+>
+> I can't imagine that you would need more resolution or range. For times
+> less than 1us, s/w and register access times are going to dominate the
+> time.
+>
+> Unless there is a real need, I'd keep alignment with the existing
+> binding.
 
-On Tuesday 22 Nov 2016 11:36:55 Laurent Pinchart wrote:
-> On Monday 21 Nov 2016 10:48:15 Rob Herring wrote:
-> > On Sat, Nov 19, 2016 at 05:28:01AM +0200, Laurent Pinchart wrote:
-> >> Document properties common to several display panels in a central
-> >> location that can be referenced by the panel device tree bindings.
-> > 
-> > Looks good. Just one comment...
-> > 
-> > [...]
-> > 
-> >> +Connectivity
-> >> +------------
-> >> +
-> >> +- ports: Panels receive video data through one or multiple connections.
-> >> While
-> >> +  the nature of those connections is specific to the panel type, the
-> >> +  connectivity is expressed in a standard fashion using ports as
-> >> specified in
-> >> +  the device graph bindings defined in
-> >> +  Documentation/devicetree/bindings/graph.txt.
-> > 
-> > We allow panels to either use graph binding or be a child of the display
-> > controller.
-> 
-> I knew that some display controllers use a phandle to the panel (see the
-> fsl,panel and nvidia,panel properties), but I didn't know we had panels as
-> children of display controller nodes. I don't think we should allow that for
-> anything but DSI panels, as the DT hierarchy is based on control buses. Are
-> you sure we have other panels instantiated through that mechanism ?
+Rob, are you fine with this? I thought it would be great to get this
+in for 4.10 rc1.
 
-Ping ?
-
-Please note that this file documents properties common to multiple panel DT 
-bindings, but in no way makes it mandatory to use the OF graph bindings for 
-panels. The decision is left to individual bindings.
-
-> > Using the graph is preferred, but in the simple cases just a child node is
-> > sufficient. This should be described here or somewhere in this doc.
-
--- 
-Regards,
-
-Laurent Pinchart
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
