@@ -1,87 +1,33 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
- documentation of Allwinner HDMI
-Date: Tue, 29 Nov 2016 21:33 +0200
-Message-ID: <6356753.Ekaj7GdA0W@avalon>
-References: <cover.1480414715.git.moinejf@free.fr> <5996605.Gh0PjPIAcn@avalon> <20161129202751.e94f72a1b9e2c2fb064e9933@free.fr>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] eeprom: Add IDT 89HPESx driver bindings file
+Date: Tue, 29 Nov 2016 20:34:36 +0100
+Message-ID: <20161129193436.GB20341@kroah.com>
+References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-3-git-send-email-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBXVP67AQKGQECUBR7FI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161129202751.e94f72a1b9e2c2fb064e9933-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1480372701-30560-3-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Fran=C3=A7ois,
+On Tue, Nov 29, 2016 at 01:38:21AM +0300, Serge Semin wrote:
+> See cover-letter for changelog
 
-On Tuesday 29 Nov 2016 20:27:51 Jean-Francois Moine wrote:
-> On Tue, 29 Nov 2016 20:46:22 +0200 Laurent Pinchart wrote:
-> [snip]
->=20
-> >> +Example:
-> >> +
-> >> +	hdmi: hdmi@01ee0000 {
-> >> +		compatible =3D "allwinner,sun8i-a83t-hdmi";
-> >> +		reg =3D <0x01ee0000 0x20000>;
-> >> +		clocks =3D <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI>,
-> >> +			 <&ccu CLK_HDMI_DDC>;
-> >> +		clock-names =3D "bus", "clock", "ddc-clock";
-> >> +		resets =3D <&ccu RST_HDMI0>, <&ccu RST_HDMI1>;
-> >> +		reset-names =3D "hdmi0", "hdmi1";
-> >> +		pinctrl-names =3D "default";
-> >> +		pinctrl-0 =3D <&hdmi_pins_a>;
-> >> +		status =3D "disabled";
-> >> +		#address-cells =3D <1>;
-> >> +		#size-cells =3D <0>;
-> >> +		port@0 {			/* video */
-> >> +			reg =3D <0>;
-> >> +			hdmi_tcon1: endpoint {
-> >> +				remote-endpoint =3D <&tcon1_hdmi>;
-> >> +			};
-> >> +		};
-> >> +		port@1 {			/* audio */
-> >> +			reg =3D <1>;
-> >> +			hdmi_i2s2: endpoint {
-> >> +				remote-endpoint =3D <&i2s2_hdmi>;
-> >> +			};
-> >> +		};
-> >=20
-> > You need a third port for the HDMI encoder output, connected to an HDMI
-> > connector DT node.
->=20
-> I don't see what you mean. The HDMI device is both the encoder
-> and connector (as the TDA998x):
+There is no cover letter in an individual patch when it gets committed
+to the tree...
 
-The driver might create both an encoder and a connector, but I very much do=
-ubt=20
-that the "allwinner,sun8i-a83t-hdmi" hardware contains a connector, unless =
-the=20
-SoC package has an HDMI connector coming out of it :-)
+So please fix, personally, I never read cover letters, each patch should
+be "obvious" on it's own :)
 
-> plane -> DE2 mixer ---> TCON -----> HDMI -----> display device
-> ----- plane ------    - CRTC -   - encoder  \
->                                    connector -- (HDMI cable)
->          audio-controller -   - audio-codec /
->=20
-> > > +	};
+thanks,
 
---=20
-Regards,
-
-Laurent Pinchart
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
