@@ -1,41 +1,189 @@
-From: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/1] scripts: Fixing NULL pointer dereference when pos->file is
- NULL
-Date: Tue, 29 Nov 2016 16:04:59 +0530
-Message-ID: <1480415699-35335-1-git-send-email-maninder1.s@samsung.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/4] ARM64: dts: meson-gx: Add Graphic Controller nodes
+Date: Tue, 29 Nov 2016 11:47:47 +0100
+Message-ID: <1480416469-9655-3-git-send-email-narmstrong@baylibre.com>
+References: <1480416469-9655-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480416469-9655-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.m-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajeet.y-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes NULL pointer dereference when pos->file is NULL.
+Add Video Processing Unit and CVBS Output nodes, and enable CVBS on selected
+boards.
 
-caught with static analysis tool.
-Signed-off-by: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vaneet Narang <v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- scripts/dtc/srcpos.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          | 46 ++++++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  8 ++++
+ .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  8 ++++
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  8 ++++
+ 8 files changed, 86 insertions(+)
 
-diff --git a/scripts/dtc/srcpos.c b/scripts/dtc/srcpos.c
-index f534c22..360fd14 100644
---- a/scripts/dtc/srcpos.c
-+++ b/scripts/dtc/srcpos.c
-@@ -252,12 +252,11 @@ struct srcpos *
- srcpos_dump(struct srcpos *pos)
- {
- 	printf("file        : \"%s\"\n",
--	       pos->file ? (char *) pos->file : "<no file>");
-+	       pos->file ?  pos->file->name : "<no file>");
- 	printf("first_line  : %d\n", pos->first_line);
- 	printf("first_column: %d\n", pos->first_column);
- 	printf("last_line   : %d\n", pos->last_line);
- 	printf("last_column : %d\n", pos->last_column);
--	printf("file        : %s\n", pos->file->name);
- }
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index fc033c0..644d5f6 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -153,6 +153,27 @@
+ 		};
+ 	};
  
- 
++	venc_cvbs: venc-cvbs {
++		compatible = "amlogic,meson-gx-cvbs";
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			venc_cvbs_in: port@0 {
++				 #address-cells = <1>;
++				 #size-cells = <0>;
++				 reg = <0>;
++
++				 venc_cvbs_in_vpu: endpoint@0 {
++					 reg = <0>;
++					 remote-endpoint = <&vpu_out_venc_cvbs>;
++				};
++			};
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -356,5 +377,30 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		vpu: vpu@d0100000 {
++			compatible = "amlogic,meson-gx-vpu";
++			reg = <0x0 0xd0100000 0x0 0x100000>,
++			      <0x0 0xc883c000 0x0 0x1000>,
++			      <0x0 0xc8838000 0x0 0x1000>;
++			reg-names = "base", "hhi", "dmc";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				vpu_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
++
++					vpu_out_venc_cvbs: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&venc_cvbs_in_vpu>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 9696820..a55d1cf 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -229,3 +229,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 5e5e2de..3c09bd1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -266,3 +266,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index ac5ad3b..1a321c8f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -506,3 +506,11 @@
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxbb-cvbs", "amlogic,meson-gx-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+index e99101a..2a9b46f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
+@@ -203,3 +203,7 @@
+ 	clocks = <&clkc CLKID_FCLK_DIV4>;
+ 	clock-names = "clkin0";
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 3af54dc..b60c5ce 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -299,3 +299,11 @@
+ 		 <&clkc CLKID_FCLK_DIV2>;
+ 	clock-names = "core", "clkin0", "clkin1";
+ };
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxl-cvbs", "amlogic,meson-gx-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index d320727..1ae2451 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -167,3 +167,7 @@
+ 		max-speed = <1000>;
+ 	};
+ };
++
++&venc_cvbs {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+index c1974bb..fecd8c2 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
+@@ -112,3 +112,11 @@
+ 		};
+ 	};
+ };
++
++&venc_cvbs {
++	compatible = "amlogic,meson-gxm-cvbs", "amlogic,meson-gx-cvbs";
++};
++
++&vpu {
++	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
++};
 -- 
 1.9.1
 
