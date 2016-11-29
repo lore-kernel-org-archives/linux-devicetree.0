@@ -1,66 +1,64 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Tue, 29 Nov 2016 20:37:50 +0100
-Message-ID: <20161129193750.GD20341@kroah.com>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
+ documentation of Allwinner HDMI
+Date: Tue, 29 Nov 2016 21:04:55 +0100
+Message-ID: <20161129210455.d0c8450d3ceb83c1abe521b0@free.fr>
+References: <cover.1480414715.git.moinejf@free.fr>
+	<5996605.Gh0PjPIAcn@avalon>
+	<20161129202751.e94f72a1b9e2c2fb064e9933@free.fr>
+	<6356753.Ekaj7GdA0W@avalon>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480372701-30560-2-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBB3N667AQKGQEY7ZIOMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <6356753.Ekaj7GdA0W@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
-> +struct idt_89hpesx_dev {
-> +	u32 eesize;
-> +	bool eero;
-> +	u8 eeaddr;
-> +
-> +	u8 inieecmd;
-> +	u8 inicsrcmd;
-> +	u8 iniccode;
-> +
-> +	atomic_t csr;
-> +
-> +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
-> +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
-> +	struct mutex smb_mtx;
-> +
-> +	struct i2c_client *client;
-> +
-> +	struct bin_attribute *ee_file;
-> +	struct dentry *csr_dir;
-> +	struct dentry *csr_file;
-> +};
-> +#define to_pdev_kobj(__kobj) \
-> +	dev_get_drvdata(container_of(__kobj, struct device, kobj))
+On Tue, 29 Nov 2016 21:33 +0200
+Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-Is it a struct device, or a kobject?  This is totally confusing to me.
+> > > You need a third port for the HDMI encoder output, connected to an HD=
+MI
+> > > connector DT node.
+> >=20
+> > I don't see what you mean. The HDMI device is both the encoder
+> > and connector (as the TDA998x):
+>=20
+> The driver might create both an encoder and a connector, but I very much =
+doubt=20
+> that the "allwinner,sun8i-a83t-hdmi" hardware contains a connector, unles=
+s the=20
+> SoC package has an HDMI connector coming out of it :-)
+>=20
+> > plane -> DE2 mixer ---> TCON -----> HDMI -----> display device
+> > ----- plane ------    - CRTC -   - encoder  \
+> >                                    connector -- (HDMI cable)
+> >          audio-controller -   - audio-codec /
 
-And can't you just use kobj_to_dev()?
+The schema is the same as the Dove Cubox: the TDA998x is just a chip
+with some wires going out and the physical connector is supposed to be
+at the end of the wires.
 
-> +/*
-> + * eeprom_attribute - EEPROM sysfs-node attributes
-> + *
-> + * NOTE Size will be changed in compliance with OF node. EEPROM attribute will
-> + * be read-only as well if the corresponding flag is specified in OF node.
-> + */
-> +BIN_ATTR(eeprom, 0644, idt_sysfs_eeprom_read, idt_sysfs_eeprom_write,
-> +	 EEPROM_DEF_SIZE);
+Here, the HDMI pins of the SoC go to a pure hardware chip and then to
+the physical connector. Which software entity do you want to add?
 
-static?
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 
-And BIN_ATTR_RW()?
-
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
