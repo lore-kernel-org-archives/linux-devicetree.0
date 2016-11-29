@@ -1,57 +1,56 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] scripts: Fixing NULL pointer dereference when
- pos->file is NULL
-Date: Tue, 29 Nov 2016 11:08:55 -0800
-Message-ID: <583DD247.3000506@gmail.com>
-References: <1480415699-35335-1-git-send-email-maninder1.s@samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2] mfd: cpcap: Add minimal support
+Date: Tue, 29 Nov 2016 11:12:56 -0800
+Message-ID: <20161129191255.GB3430@atomide.com>
+References: <20161129164702.5334-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480415699-35335-1-git-send-email-maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161129164702.5334-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.m-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajeet.y-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/16 02:34, Maninder Singh wrote:
-> This patch fixes NULL pointer dereference when pos->file is NULL.
-> 
-> caught with static analysis tool.
-> Signed-off-by: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vaneet Narang <v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  scripts/dtc/srcpos.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/scripts/dtc/srcpos.c b/scripts/dtc/srcpos.c
-> index f534c22..360fd14 100644
-> --- a/scripts/dtc/srcpos.c
-> +++ b/scripts/dtc/srcpos.c
-> @@ -252,12 +252,11 @@ struct srcpos *
->  srcpos_dump(struct srcpos *pos)
->  {
->  	printf("file        : \"%s\"\n",
-> -	       pos->file ? (char *) pos->file : "<no file>");
-> +	       pos->file ?  pos->file->name : "<no file>");
->  	printf("first_line  : %d\n", pos->first_line);
->  	printf("first_column: %d\n", pos->first_column);
->  	printf("last_line   : %d\n", pos->last_line);
->  	printf("last_column : %d\n", pos->last_column);
-> -	printf("file        : %s\n", pos->file->name);
->  }
->  
->  
-> 
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161129 08:48]:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
+> @@ -0,0 +1,31 @@
+> +Motorola CPCAP PMIC device tree binding
+> +
+> +Required properties:
+> +- compatible		: One or both of "motorola,cpcap" or "ste,6556002"
+> +- reg			: SPI chip select
+> +- interrupt-parent	: The parent interrupt controller
+> +- interrupts		: The interrupt line the device is connected to
+> +- interrupt-controller	: Marks the device node as an interrupt controller
+> +- #interrupt-cells	: The number of cells to describe an IRQ, should be 2
+> +- #address-cells	: Child device offset number of cells, typically 1
+> +- #size-cells		: Child device size number of cells, typically 1
+> +- spi-max-frequency	: Typically set to 3000000
+> +- spi-cs_high		: SPI chip select direction
+> +
+> +Example:
+> +
+> +&mcspi1 {
+> +	cpcap: pmic@0 {
+> +		compatible = "motorola,cpcap", "ste,6556002";
+> +		reg = <0>;	/* cs0 */
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <7 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <3000000>;
+> +		spi-cs-high;
+> +	};
+> +};
 
-Hi Maninder,
+The #address-cells should be 0 instead of 1 above.
 
-Please send any patches for dtc to the devicetree-compiler
-mail list.  For details, see:
-
-   http://vger.kernel.org/vger-lists.html#devicetree-compiler
-
--Frank
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
