@@ -1,38 +1,66 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/2] ARM: dts: da850: tilcdc related DT changes
-Date: Tue, 29 Nov 2016 12:57:02 +0100
-Message-ID: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-drm <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3 1/2] ARM: dts: da850-lcdk: add the dumb-vga-dac node
+Date: Tue, 29 Nov 2016 12:57:03 +0100
+Message-ID: <1480420624-23544-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1480420624-23544-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-drm <dri-devel@lists.freedesktop.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-his series contains the last DT changes required for LCDC support
-on da850-lcdk. The first one adds the dumb-vga-dac nodes, the second
-limits the maximum pixel clock rate.
-
-v1 -> v2:
-- drop patch 3/3 (already merged)
-- use max-pixelclock instead of max-bandwidth for display mode limiting
-
-v2 -> v3:
-- make the commit message in patch [2/2] more detailed
-- move the max-pixelclock property to da850.dtsi as the limit
-  affects all da850-based boards
-
-Bartosz Golaszewski (2):
-  ARM: dts: da850-lcdk: add the dumb-vga-dac node
-  ARM: dts: da850: specify the maximum pixel clock rate for tilcdc
-
- arch/arm/boot/dts/da850-lcdk.dts | 58 ++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/da850.dtsi     | 18 +++++++++++++
- 2 files changed, 76 insertions(+)
-
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHRoZSBkdW1iLXZnYS1kYWMgbm9kZSB0byB0aGUgYm9hcmQgRFQgdG9nZXRoZXIgd2l0aCBj
+b3JyZXNwb25kaW5nCnBvcnRzIGFuZCB2Z2EgY29ubmVjdG9yLiBUaGlzIGFsbG93cyB0byByZXRy
+aWV2ZSB0aGUgZWRpZCBpbmZvIGZyb20KdGhlIGRpc3BsYXkgYXV0b21hdGljYWxseS4KClNpZ25l
+ZC1vZmYtYnk6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXlsaWJyZS5jb20+
+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgfCA1OCArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNp
+ICAgICB8IDE3ICsrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA3NSBpbnNlcnRpb25zKCsp
+CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgYi9hcmNoL2Fy
+bS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwppbmRleCA3MTFiOWFkLi5kODY0ZjExIDEwMDY0NAot
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cworKysgYi9hcmNoL2FybS9ib290
+L2R0cy9kYTg1MC1sY2RrLmR0cwpAQCAtNTAsNiArNTAsNTMgQEAKIAkJCXN5c3RlbS1jbG9jay1m
+cmVxdWVuY3kgPSA8MjQ1NzYwMDA+OwogCQl9OwogCX07CisKKwl2Z2FfYnJpZGdlIHsKKwkJY29t
+cGF0aWJsZSA9ICJkdW1iLXZnYS1kYWMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
+CQlwaW5jdHJsLTAgPSA8JmxjZF9waW5zPjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNz
+aXplLWNlbGxzID0gPDA+OworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJcmVnID0gPDA+OworCisJCQkJdmdh
+X2JyaWRnZV9pbjogZW5kcG9pbnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZkaXNwbGF5X291dF92Z2E+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEg
+eworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJ
+CXJlZyA9IDwxPjsKKworCQkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVn
+ID0gPDA+OworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9jb25faW4+OworCQkJCX07CisJ
+CQl9OworCQl9OworCX07CisKKwl2Z2EgeworCQljb21wYXRpYmxlID0gInZnYS1jb25uZWN0b3Ii
+OworCisJCWRkYy1pMmMtYnVzID0gPCZpMmMwPjsKKworCQlwb3J0IHsKKwkJCXZnYV9jb25faW46
+IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2Vfb3V0PjsKKwkJ
+CX07CisJCX07CisJfTsKIH07CiAKICZwbXhfY29yZSB7CkBAIC0yMzUsMyArMjgyLDE0IEBACiAm
+bWVtY3RybCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKKworJmRpc3BsYXkgeworCXN0YXR1cyA9
+ICJva2F5IjsKK307CisKKyZkaXNwbGF5X291dCB7CisJZGlzcGxheV9vdXRfdmdhOiBlbmRwb2lu
+dEAwIHsKKwkJcmVnID0gPDA+OworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2VfaW4+
+OworCX07Cit9OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kKaW5kZXggNDA3MDYxOS4uNWY0YmEyZSAxMDA2NDQK
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0
+cy9kYTg1MC5kdHNpCkBAIC00NTQsNiArNDU0LDIzIEBACiAJCQlyZWcgPSA8MHgyMTMwMDAgMHgx
+MDAwPjsKIAkJCWludGVycnVwdHMgPSA8NTI+OwogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwor
+CQkJcG9ydHMgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJCSNzaXplLWNlbGxzID0g
+PDA+OworCisJCQkJZGlzcGxheV9pbjogcG9ydEAwIHsKKwkJCQkJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47CisJCQkJCSNzaXplLWNlbGxzID0gPDA+OworCQkJCQlyZWcgPSA8MD47CisJCQkJfTsKKwor
+CQkJCWRpc3BsYXlfb3V0OiBwb3J0QDEgeworCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJ
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQkJCXJlZyA9IDwxPjsKKwkJCQl9OworCQkJfTsKIAkJ
+fTsKIAl9OwogCWFlbWlmOiBhZW1pZkA2ODAwMDAwMCB7Ci0tIAoyLjkuMwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
