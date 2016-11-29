@@ -1,77 +1,86 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2] clkdev: add devm_of_clk_get()
-Date: Tue, 29 Nov 2016 13:05:56 -0800
-Message-ID: <20161129210556.GC6095@codeaurora.org>
-References: <87ziptixv7.wl%kuninori.morimoto.gx@renesas.com>
- <20160707122636.GP1041@n2100.armlinux.org.uk>
- <8760shgfzu.wl%kuninori.morimoto.gx@renesas.com>
- <146794140875.73491.7115209079607438738@resonance>
- <871t34hlin.wl%kuninori.morimoto.gx@renesas.com>
- <878twndi54.wl%kuninori.morimoto.gx@renesas.com>
- <8737isvwc6.wl%kuninori.morimoto.gx@renesas.com>
- <20161123191037.GE25626@codeaurora.org>
- <87a8cpejn5.wl%kuninori.morimoto.gx@renesas.com>
- <87y409cw71.wl%kuninori.morimoto.gx@renesas.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] Input: ti_am335x_tsc: Add support for
+ ti,charge-delay-ns
+Date: Tue, 29 Nov 2016 13:09:17 -0800
+Message-ID: <20161129210917.GA20680@dtor-ws>
+References: <20161110163515.27598-1-mugunthanvnm@ti.com>
+ <20161111075819.5760-1-mugunthanvnm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87y409cw71.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20161111075819.5760-1-mugunthanvnm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/24, Kuninori Morimoto wrote:
+On Fri, Nov 11, 2016 at 01:28:19PM +0530, Mugunthan V N wrote:
+> ti,charge-delay will be deprecated as it represents number of
+> clock cycles and the DT entries are done in assumption of 3MHz
+> TSCADC clock, but clock can be set upto 24MHz. So driver add
+> support for ti,charge-delay-ns and do not drop support for
+> ti,charge-delay to support old dtbs and it will be assumed that
+> it is for 3MHz TSCADC clock and will be calculated as per current
+> clock speed.
 > 
-> Hi Stephen, again
-> 
-> > > I've seen bindings that have the 'clocks' property at the top
-> > > level and the appropriate 'clock-names' property to relate the
-> > > clocks to a subnode.
-> > > 
-> > >  	sound_soc {
-> > > 		clocks = <&xxx>, <&xxx>;
-> > > 		clock-names = "cpu", "codec";
-> > >  		...
-> > >  		cpu {
-> > >  			...
-> > >  		};
-> > >  		codec {
-> > >  			...
-> > >  		};
-> > >  	};
-> > > 
-> > > Then the subnodes call clk_get() with the top level device and
-> > > the name of their node and things match up. I suppose this
-> > > binding is finalized though, so we can't really do that?
-> > > 
-> > > I see that the gpio framework has a similar design called
-> > > devm_get_gpiod_from_child(), so how about we add a
-> > > devm_get_clk_from_child() API? That would more closely match the
-> > > intent here, which is to restrict the clk_get() operation to
-> > > child nodes of the device passed as the first argument.
-> > > 
-> > > struct clk *devm_get_clk_from_child(struct device *dev,
-> > > 				    const char *con_id,
-> > > 				    struct device_node *child);
-> 
-> Thanks, but, my point is that Linux already have "of_clk_get()",
-> but we don't have its devm_ version.
-> The point is that of_clk_get() can get clock from "device_node".
-> Why having devm_ version become so problem ?
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 
-The problem is that it encourages the use of of_clk_get() when
-clk_get() is more desirable. Ideally of_clk_get() is never used
-when a device exists. In this case, it seems like we need to
-support it though, hence the suggestion of having a
-devm_get_clk_from_child() API, that explicitly reads as "get a
-clock from a child node of this device". The distinction is
-important, because of_clk_get() should rarely be used.
+Acked-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> ---
+>  drivers/input/touchscreen/ti_am335x_tsc.c | 31 +++++++++++++++++++++++--------
+>  1 file changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> index 7953381d939a..104b3640f728 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -379,15 +379,30 @@ static int titsc_parse_dt(struct platform_device *pdev,
+>  		ts_dev->coordinate_readouts = 5;
+>  	}
+>  
+> -	err = of_property_read_u32(node, "ti,charge-delay",
+> +	err = of_property_read_u32(node, "ti,charge-delay-ns",
+>  				   &ts_dev->charge_delay);
+> -	/*
+> -	 * If ti,charge-delay value is not specified, then use
+> -	 * CHARGEDLY_OPENDLY as the default value.
+> -	 */
+> -	if (err < 0) {
+> -		ts_dev->charge_delay = CHARGEDLY_OPENDLY;
+> -		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
+> +	if (err >= 0) {
+> +		u64 charge_delay = ts_dev->charge_delay;
+> +
+> +		charge_delay *= ADC_CLK;
+> +		do_div(charge_delay, 1E9);
+> +		ts_dev->charge_delay = (u32)charge_delay;
+> +	} else {
+> +		err = of_property_read_u32(node, "ti,charge-delay",
+> +					   &ts_dev->charge_delay);
+> +		/*
+> +		 * If ti,charge-delay value is not specified, then use
+> +		 * CHARGEDLY_OPENDLY as the default value.
+> +		 */
+> +		if (err < 0) {
+> +			ts_dev->charge_delay = CHARGEDLY_OPENDLY;
+> +			dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
+> +		}
+> +		/*
+> +		 * ti,charge-delay is specified with referrence to 3MHz,
+> +		 * so convert it to in referrence to current clock
+> +		 */
+> +		ts_dev->charge_delay *= ADC_CLK / 3000000;
+>  	}
+>  
+>  	return of_property_read_u32_array(node, "ti,wire-config",
+> -- 
+> 2.11.0.rc0.7.gbe5a750
+> 
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
