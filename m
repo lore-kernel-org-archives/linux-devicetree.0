@@ -1,75 +1,103 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator bindings
-Date: Tue, 29 Nov 2016 08:33:47 +0200
-Message-ID: <2390919.s2CzTWN1li@avalon>
-References: <1474622430-6704-1-git-send-email-architt@codeaurora.org> <1480399662-8858-1-git-send-email-architt@codeaurora.org> <1480399662-8858-2-git-send-email-architt@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V5 00/10] PM / OPP: Multiple regulator support
+Date: Tue, 29 Nov 2016 12:06:47 +0530
+Message-ID: <cover.1480401041.git.viresh.kumar@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480399662-8858-2-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+Hi,
 
-Thank you for the patch.
+Some platforms (like TI) have complex DVFS configuration for CPU
+devices, where multiple regulators are required to be configured to
+change DVFS state of the device. This was explained well by Nishanth
+earlier [1].
 
-On Tuesday 29 Nov 2016 11:37:41 Archit Taneja wrote:
-> Add the regulator supply properties needed by ADV7511 and ADV7533.
-> 
-> The regulators are specified as optional properties since there can
-> be boards which have a fixed supply directly routed to the pins, and
-> these may not be modelled as regulator supplies.
+One of the major complaints around multiple regulators case was that the
+DT isn't responsible in any way to represent the order in which multiple
+supplies need to be programmed, before or after a frequency change. It
+was considered in this patch and such information is left for the
+platform specific OPP driver now, which can register its own
+opp_set_rate() callback with the OPP core and the OPP core will then
+call it during DVFS.
 
-That's why we have support for dummy supplies in the kernel, isn't it ? Isn't 
-it better to make the supplies mandatory in the bindings (and obviously 
-handling them as optional in the driver for backward-compatibility) ?
+The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
+and code to pass values for multiple regulators and verified that they
+are all properly read by the kernel (using debugfs interface).
 
-Apart from that,
+Dave Gerlach has already tested [2] it on the real TI platforms and it
+works well for him.
 
-Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+This is rebased over: linux-next branch in the PM tree.
 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-> v3:
-> - Revert back to having a common avdd-supply property for the 1.8V
->   supplies
-> 
-> Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 9 ++++++
-> 1 file changed, 9 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt index
-> 6532a59..13d53bc 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
-> @@ -56,6 +56,15 @@ Optional properties:
->  - adi,disable-timing-generator: Only for ADV7533. Disables the internal
-> timing generator. The chip will rely on the sync signals in the DSI data
-> lanes, rather than generate its own timings for HDMI output.
-> +- avdd-supply: A common 1.8V supply that powers up the AVDD, DVDD and PVDD
-> +  pins. On ADV7511, it also feeds to the BGVDD pin. On ADV7533, it also
-> powers
-> +  up the A2VDD pin.
-> +- v3p3-supply: A 3.3V supply that powers up the pin called DVDD_3V on
-> +  ADV7511 and V3P3 on ADV7533.
-> +
-> +ADV7533 specific supplies:
-> +- v1p2-supply: A supply that powers up the V1P2 pin on the chip. It can be
-> +  either 1.2V or 1.8V.
-> 
->  Required nodes:
+V4->V5:
+- Stephen boyd had some minor review comments and gave his Reviewed-by
+  tag for the rest. Only 2 patches don't have his RBY tag.
+- Individual patches contain the version history from V4 to V5.
+
+V3->V4:
+- Separate out cpu-supply fix in the binding in a separate patch (Mark).
+- Add more documentation to the binding to explain that the relation to
+  the supplies and the order of programming them is left for the
+  platform specific bindings and that every platform using multiple
+  regulators for their devices needs to provide a separate binding
+  document explaining their implementation (Mark).
+- @Rob and Stephen: I have kept your Acks for the bindings as the
+  bindings only got a bit reworded (improved) since the time you guys
+  Acked them. Please let me know if you want more improvement in the
+  bindings now.
+- V4 for 10/10 was sent earlier, which added a missing
+  rcu_read_unlock(). Nothing else changed in it.
+- Added some missing Kernel documentation comments
+
+V2->V3:
+- The last patch is new
+- Removed a debug leftover pr_info() message
+- Renamed few names as s/set_rate/set_opp
+- Removed a TODO comment (as it is done now with this series)
+- created struct for min_uV and max_uV
+- kerneldoc comments for structures in pm_opp.h
+- s/const char */const char * const
+- use kasprintf()
+- Some more minor reformatting
+- More Ack/RBY tags added
+
+V1->V2:
+- Ack from Rob for 1st patch
+- Moved the supplies structure to pm_opp.h (Dave)
+- Fixed an compilation warning.
+
+--
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=145684495832764&w=2
+[2] https://marc.info/?l=linux-kernel&m=147924789305276&w=2
+
+Viresh Kumar (10):
+  PM / OPP: Fix incorrect cpu-supply property in binding
+  PM / OPP: Reword binding supporting multiple regulators per device
+  PM / OPP: Don't use OPP structure outside of rcu protected section
+  PM / OPP: Manage supply's voltage/current in a separate structure
+  PM / OPP: Pass struct dev_pm_opp_supply to _set_opp_voltage()
+  PM / OPP: Add infrastructure to manage multiple regulators
+  PM / OPP: Separate out _generic_set_opp()
+  PM / OPP: Allow platform specific custom set_opp() callbacks
+  PM / OPP: Don't WARN on multiple calls to dev_pm_opp_set_regulators()
+  PM / OPP: Don't assume platform doesn't have regulators
+
+ Documentation/devicetree/bindings/opp/opp.txt |  27 +-
+ drivers/base/power/opp/core.c                 | 536 ++++++++++++++++++++------
+ drivers/base/power/opp/debugfs.c              |  52 ++-
+ drivers/base/power/opp/of.c                   | 105 +++--
+ drivers/base/power/opp/opp.h                  |  22 +-
+ drivers/cpufreq/cpufreq-dt.c                  |   9 +-
+ include/linux/pm_opp.h                        |  69 +++-
+ 7 files changed, 634 insertions(+), 186 deletions(-)
 
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.1.410.g6faf27b
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
