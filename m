@@ -1,255 +1,60 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v5 7/9] i2c: i2c-mux-simple: new driver
-Date: Tue, 29 Nov 2016 11:10:43 +0100
-Message-ID: <1480414245-14034-8-git-send-email-peda@axentia.se>
-References: <1480414245-14034-1-git-send-email-peda@axentia.se>
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: Re: [PATCH v10 3/4] dtc: Plugin and fixup support
+Date: Tue, 29 Nov 2016 10:32:28 +0000
+Message-ID: <b7ff53f6-6481-e3f1-e3b5-d0b04e563e83@raspberrypi.org>
+References: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1480077131-14526-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <20161128041228.GJ30927@umbus.fritz.box>
+ <D69908BD-B243-4AEE-B6BA-80B94AFE4B6A@konsulko.com>
+ <4672e164-aae0-6306-fe70-146a1f930cf7@raspberrypi.org>
+ <20161129021131.GD13307@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480414245-14034-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161129021131.GD13307-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a generic simple i2c mux that uses the generic multiplexer
-subsystem to do the muxing.
+On 29/11/2016 02:11, David Gibson wrote:
+> On Mon, Nov 28, 2016 at 12:24:20PM +0000, Phil Elwell wrote:
+>> On 28/11/2016 12:10, Pantelis Antoniou wrote:
+>>> For plugins we need the __symbols__ node to support stacked overlays, i.e.
+>>> overlays referring label that were introduced by a previous overlay.
+>> Although it is arguably useful to be able to refer to symbols created by
+>> one overlay from within another, do we really want all symbols to be
+>> global? Isn't there a call for a new syntax or usage pattern to indicate
+>> either that a symbol should be local to the overlay or, my preferred
+>> option, global?
+> So, this is back to a design question about the overlay format.  As
+> noted in the initial discussions about possible "connector" formats, I
+> think we will want some sort of local symbols.  But the current
+> overlay format with all global symbols is out there and we need to
+> support it.
+The overlay format we have does not dictate the scope of the symbols.
 
-The user can select if the mux is to be mux-locked and parent-locked
-as described in Documentation/i2c/i2c-topology.
+In all implementations I know of - the Raspberry Pi loader, the current
+Linux kernel, the latest dtc patch set - there is a completely
+asymmetric relationship between the base DTB and an overlay:
+* the base DTB exports __symbols__ to resolve the overlays unresolved
+label references, as recorded by the __fixups__ node
+* the overlay's phandles are renumbered so as not to clash with the base
+tree using the __local_fixups__
+* the contents of the __overlay__ nodes are applied to the base tree, as
+directed by the "target" or "target-path" properties
 
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- drivers/i2c/muxes/Kconfig          |  13 +++
- drivers/i2c/muxes/Makefile         |   1 +
- drivers/i2c/muxes/i2c-mux-simple.c | 179 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 193 insertions(+)
- create mode 100644 drivers/i2c/muxes/i2c-mux-simple.c
+The __symbols__ node of the overlay is ignored and discarded. The
+__fixups__ and __local_fixups__ in the base DTB (if present - the RPi
+dtc only generates them for /plugins/) are ignored.
 
-diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-index 10b3d17ae3ea..565921e09a96 100644
---- a/drivers/i2c/muxes/Kconfig
-+++ b/drivers/i2c/muxes/Kconfig
-@@ -73,6 +73,19 @@ config I2C_MUX_REG
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-mux-reg.
- 
-+config I2C_MUX_SIMPLE
-+	tristate "Simple I2C multiplexer"
-+	select MULTIPLEXER
-+	depends on OF
-+	help
-+	  If you say yes to this option, support will be included for a
-+	  simple generic I2C multiplexer. This driver provides access to
-+	  I2C busses connected through a MUX, which is controlled
-+	  by a generic MUX controller.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-mux-simple.
-+
- config I2C_DEMUX_PINCTRL
- 	tristate "pinctrl-based I2C demultiplexer"
- 	depends on PINCTRL && OF
-diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
-index 9948fa45037f..6821d95c92a3 100644
---- a/drivers/i2c/muxes/Makefile
-+++ b/drivers/i2c/muxes/Makefile
-@@ -11,5 +11,6 @@ obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
- obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
- obj-$(CONFIG_I2C_MUX_PINCTRL)	+= i2c-mux-pinctrl.o
- obj-$(CONFIG_I2C_MUX_REG)	+= i2c-mux-reg.o
-+obj-$(CONFIG_I2C_MUX_SIMPLE)	+= i2c-mux-simple.o
- 
- ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
-diff --git a/drivers/i2c/muxes/i2c-mux-simple.c b/drivers/i2c/muxes/i2c-mux-simple.c
-new file mode 100644
-index 000000000000..4a03493e1ad7
---- /dev/null
-+++ b/drivers/i2c/muxes/i2c-mux-simple.c
-@@ -0,0 +1,179 @@
-+/*
-+ * Generic simple I2C multiplexer
-+ *
-+ * Copyright (C) 2016 Axentia Technologies AB
-+ *
-+ * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/i2c-mux.h>
-+#include <linux/module.h>
-+#include <linux/mux.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+struct mux {
-+	struct mux_control *control;
-+
-+	bool do_not_deselect;
-+};
-+
-+static int i2c_mux_select(struct i2c_mux_core *muxc, u32 chan)
-+{
-+	struct mux *mux = i2c_mux_priv(muxc);
-+	int ret;
-+
-+	ret = mux_control_select(mux->control, chan);
-+	mux->do_not_deselect = ret < 0;
-+
-+	return ret;
-+}
-+
-+static int i2c_mux_deselect(struct i2c_mux_core *muxc, u32 chan)
-+{
-+	struct mux *mux = i2c_mux_priv(muxc);
-+
-+	if (mux->do_not_deselect)
-+		return 0;
-+
-+	return mux_control_deselect(mux->control);
-+}
-+
-+static struct i2c_adapter *mux_parent_adapter(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct device_node *parent_np;
-+	struct i2c_adapter *parent;
-+
-+	parent_np = of_parse_phandle(np, "i2c-parent", 0);
-+	if (!parent_np) {
-+		dev_err(dev, "Cannot parse i2c-parent\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+	parent = of_find_i2c_adapter_by_node(parent_np);
-+	of_node_put(parent_np);
-+	if (!parent)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return parent;
-+}
-+
-+static const struct of_device_id i2c_mux_of_match[] = {
-+	{ .compatible = "i2c-mux-simple,parent-locked",
-+	  .data = (void *)0, },
-+	{ .compatible = "i2c-mux-simple,mux-locked",
-+	  .data = (void *)1, },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, i2c_mux_of_match);
-+
-+static int i2c_mux_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *child;
-+	const struct of_device_id *match;
-+	struct i2c_mux_core *muxc;
-+	struct mux *mux;
-+	struct i2c_adapter *parent;
-+	int children;
-+	int ret;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return -ENOMEM;
-+
-+	mux->control = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(mux->control)) {
-+		if (PTR_ERR(mux->control) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get control-mux\n");
-+		return PTR_ERR(mux->control);
-+	}
-+
-+	parent = mux_parent_adapter(dev);
-+	if (IS_ERR(parent)) {
-+		if (PTR_ERR(parent) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get i2c-parent adapter\n");
-+		return PTR_ERR(parent);
-+	}
-+
-+	children = of_get_child_count(np);
-+
-+	muxc = i2c_mux_alloc(parent, dev, children, 0, 0,
-+			     i2c_mux_select, i2c_mux_deselect);
-+	if (!muxc) {
-+		ret = -ENOMEM;
-+		goto err_parent;
-+	}
-+	muxc->priv = mux;
-+
-+	platform_set_drvdata(pdev, muxc);
-+
-+	match = of_match_device(of_match_ptr(i2c_mux_of_match), dev);
-+	if (match)
-+		muxc->mux_locked = !!of_device_get_match_data(dev);
-+
-+	for_each_child_of_node(np, child) {
-+		u32 chan;
-+
-+		ret = of_property_read_u32(child, "reg", &chan);
-+		if (ret < 0) {
-+			dev_err(dev, "no reg property for node '%s'\n",
-+				child->name);
-+			goto err_children;
-+		}
-+
-+		if (chan >= mux->control->states) {
-+			dev_err(dev, "invalid reg %u\n", chan);
-+			ret = -EINVAL;
-+			goto err_children;
-+		}
-+
-+		ret = i2c_mux_add_adapter(muxc, 0, chan, 0);
-+		if (ret)
-+			goto err_children;
-+	}
-+
-+	dev_info(dev, "%d-port mux on %s adapter\n", children, parent->name);
-+
-+	return 0;
-+
-+err_children:
-+	i2c_mux_del_adapters(muxc);
-+err_parent:
-+	i2c_put_adapter(parent);
-+
-+	return ret;
-+}
-+
-+static int i2c_mux_remove(struct platform_device *pdev)
-+{
-+	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
-+
-+	i2c_mux_del_adapters(muxc);
-+	i2c_put_adapter(muxc->parent);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver i2c_mux_driver = {
-+	.probe	= i2c_mux_probe,
-+	.remove	= i2c_mux_remove,
-+	.driver	= {
-+		.name	= "i2c-mux-simple",
-+		.of_match_table = i2c_mux_of_match,
-+	},
-+};
-+module_platform_driver(i2c_mux_driver);
-+
-+MODULE_DESCRIPTION("Simple I2C multiplexer driver");
-+MODULE_AUTHOR("Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+In the set of RPi overlays only one exports a global symbol, which it
+achieves with an overlay aimed at target-path = "/__symbols__" that adds
+a new symbol (in this case "i2c_gpio").
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If the __symbols__ in an overlay are automatically merged with the base
+symbols, that is a significant change in semantics which needs to be
+discussed.
+
+Phil
