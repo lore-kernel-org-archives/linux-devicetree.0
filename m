@@ -1,84 +1,84 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] net: dsa: mv88e6xxx: Add 88E6176 device tree support
-Date: Tue, 29 Nov 2016 19:20:02 +0100
-Message-ID: <20161129182002.GB21645@lunn.ch>
-References: <1480280279-9552-2-git-send-email-afaerber@suse.de>
- <20161127212709.GD13318@lunn.ch>
- <9500470d-09c3-3ecb-994b-3d108bffc99e@suse.de>
- <20161127220846.GH13318@lunn.ch>
- <e5d45b55-a4c1-3b5e-0bdc-a5e340b072d0@suse.de>
- <20161127231009.GA17704@lunn.ch>
- <20161128080939.ippqlytvojitefkp@perseus.defre.kleine-koenig.org>
- <20161128131735.GA4379@lunn.ch>
- <2c59cc79-b6dc-9920-1725-a7785ff3b6bf@kleine-koenig.org>
- <87oa0yb29b.fsf@ketchup.i-did-not-set--mail-host-address--so-tickle-me>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
+ panel properties
+Date: Tue, 29 Nov 2016 20:23:41 +0200
+Message-ID: <2064799.n5laApbQHL@avalon>
+References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <2454182.olmziLZUmD@avalon>
+ <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87oa0yb29b.fsf-BOtmAI95c/+pXNIQCVAXCG0Lkn3mC4nZ0tOlhedn3YvkypF1WZHjJXhe7Zk3YmMvjmZSf7Nhrd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michal Hrusecki <Michal.Hrusecky-x+rMaJPWets@public.gmane.org>, Tomas Hlavacek <tomas.hlavacek-x+rMaJPWets@public.gmane.org>, Bed??icha Ko??atu <bedrich.kosata-x+rMaJPWets@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 12:54:24PM -0500, Vivien Didelot wrote:
-> Hi,
-> 
-> Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> writes:
-> 
-> > Also it seems wrong to write "marvell,mv88e6085" (only) if I know the
-> > hardware is really a "marvell,mv88e6176".
-> 
-> I agree. It might be complex for a user to dig into the driver in order
-> to figure out how the switch ID is read and which compatible to choose.
-> 
-> I've sent a patch to change this https://lkml.org/lkml/2016/6/8/1198 but
-> Andrew had a stronger opinion on compatible strings, which makes sense.
-> 
-> >> Linus has said he does not like ARM devices because of all the busses
-> >> which are not enumerable. Here we have a device which with a little
-> >> bit of help we can enumerate. So we should. 
-> >
-> > If you write
-> >
-> > 	compatible = "marvell,mv88e6176", "marvell,mv88e6085";
-> >
-> > you can still enumerate in the same way as before.
-> 
-> So we don't break the existing DTS files, I like this.
-> 
-> The driver already prints info about the detected switch. Instead of
-> failing at probe, which seems against the notion of compatible and
-> breaks the existing behavior, it could report the eventual mismatch?
-
-I'm still against it.
-
-Say we let the driver probe and warn when the compatible string is
-wrong. Is this likely to get fixed? Probably not, it is just a
-warning, people ignore them.
-
-A few years later, we have accumulated a number of broken device
-trees. And suddenly we really do have a Marvell device with a broken
-ID in its port register, or more likely, the revision number was not
-incremented but there was incompatible register changes. We suddenly
-do have to look at the compatible string. But we know many are actually
-wrong. How do we know which to trust? We basically have to say, if the
-compatible is "marvell,mv88e6042" we trust it, all the others we don't
-trust and ignore.
-
-Isn't that madness?
-
-What we have today is verified correct. If this hypothetical
-"marvell,mv88e6042" does happen, then no problems, we add a compatible
-string for it, and it works.
-
-We should probably add a comment to the mv88e6xxx_of_match array,
-explaining how it currently works.
-
-      Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKT24gVHVlc2RheSAyOSBOb3YgMjAxNiAwOToxNDowOSBSb2IgSGVycmluZyB3cm90
+ZToKPiBPbiBUdWUsIE5vdiAyOSwgMjAxNiBhdCAyOjI3IEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdy
+b3RlOgo+ID4gT24gVHVlc2RheSAyMiBOb3YgMjAxNiAxMTozNjo1NSBMYXVyZW50IFBpbmNoYXJ0
+IHdyb3RlOgo+ID4+IE9uIE1vbmRheSAyMSBOb3YgMjAxNiAxMDo0ODoxNSBSb2IgSGVycmluZyB3
+cm90ZToKPiA+Pj4gT24gU2F0LCBOb3YgMTksIDIwMTYgYXQgMDU6Mjg6MDFBTSArMDIwMCwgTGF1
+cmVudCBQaW5jaGFydCB3cm90ZToKPiA+Pj4+IERvY3VtZW50IHByb3BlcnRpZXMgY29tbW9uIHRv
+IHNldmVyYWwgZGlzcGxheSBwYW5lbHMgaW4gYSBjZW50cmFsCj4gPj4+PiBsb2NhdGlvbiB0aGF0
+IGNhbiBiZSByZWZlcmVuY2VkIGJ5IHRoZSBwYW5lbCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiA+
+Pj4gCj4gPj4+IExvb2tzIGdvb2QuIEp1c3Qgb25lIGNvbW1lbnQuLi4KPiA+Pj4gCj4gPj4+IFsu
+Li5dCj4gPj4+IAo+ID4+Pj4gK0Nvbm5lY3Rpdml0eQo+ID4+Pj4gKy0tLS0tLS0tLS0tLQo+ID4+
+Pj4gKwo+ID4+Pj4gKy0gcG9ydHM6IFBhbmVscyByZWNlaXZlIHZpZGVvIGRhdGEgdGhyb3VnaCBv
+bmUgb3IgbXVsdGlwbGUKPiA+Pj4+IGNvbm5lY3Rpb25zLiBXaGlsZQo+ID4+Pj4gKyAgdGhlIG5h
+dHVyZSBvZiB0aG9zZSBjb25uZWN0aW9ucyBpcyBzcGVjaWZpYyB0byB0aGUgcGFuZWwgdHlwZSwg
+dGhlCj4gPj4+PiArICBjb25uZWN0aXZpdHkgaXMgZXhwcmVzc2VkIGluIGEgc3RhbmRhcmQgZmFz
+aGlvbiB1c2luZyBwb3J0cyBhcwo+ID4+Pj4gc3BlY2lmaWVkIGluCj4gPj4+PiArICB0aGUgZGV2
+aWNlIGdyYXBoIGJpbmRpbmdzIGRlZmluZWQgaW4KPiA+Pj4+ICsgIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gPj4+IAo+ID4+PiBXZSBhbGxvdyBwYW5lbHMg
+dG8gZWl0aGVyIHVzZSBncmFwaCBiaW5kaW5nIG9yIGJlIGEgY2hpbGQgb2YgdGhlCj4gPj4+IGRp
+c3BsYXkgY29udHJvbGxlci4KPiA+PiAKPiA+PiBJIGtuZXcgdGhhdCBzb21lIGRpc3BsYXkgY29u
+dHJvbGxlcnMgdXNlIGEgcGhhbmRsZSB0byB0aGUgcGFuZWwgKHNlZSB0aGUKPiA+PiBmc2wscGFu
+ZWwgYW5kIG52aWRpYSxwYW5lbCBwcm9wZXJ0aWVzKSwgYnV0IEkgZGlkbid0IGtub3cgd2UgaGFk
+IHBhbmVscwo+ID4+IGFzIGNoaWxkcmVuIG9mIGRpc3BsYXkgY29udHJvbGxlciBub2Rlcy4gSSBk
+b24ndCB0aGluayB3ZSBzaG91bGQgYWxsb3cKPiA+PiB0aGF0IGZvciBhbnl0aGluZyBidXQgRFNJ
+IHBhbmVscywgYXMgdGhlIERUIGhpZXJhcmNoeSBpcyBiYXNlZCBvbiBjb250cm9sCj4gPj4gYnVz
+ZXMuIEFyZSB5b3Ugc3VyZSB3ZSBoYXZlIG90aGVyIHBhbmVscyBpbnN0YW50aWF0ZWQgdGhyb3Vn
+aCB0aGF0Cj4gPj4gbWVjaGFuaXNtID8KPgo+IFNvbWUgcGFuZWxzIGhhdmUgbm8gY29udHJvbCBi
+dXMsIHNvIHdlcmUgZG8gd2UgcGxhY2UgdGhlbT8KCkknZCBzYXkgdW5kZXIgdGhlIHJvb3Qgbm9k
+ZSwgbGlrZSBhbGwgc2ltaWxhciBjb250cm9sLWxlc3MgZGV2aWNlcy4KCj4gSSB3b3VsZCBzYXkg
+dGhlIGhpZXJhcmNoeSBpcyBiYXNlZCBvbiBidXNlcyB3aXRoIGEgcHJlZmVyZW5jZSBmb3IgdGhl
+Cj4gY29udHJvbCBidXMgd2hlbiB0aGVyZSBhcmUgbXVsdGlwbGUgYnVzZXMuIEknbSBub3QgYSBm
+YW4gb2YganVzdCBzdGlja2luZwo+IHRoaW5ncyBhcmUgdGhlIHRvcCBsZXZlbC4KCk9LLCBzbyBt
+dWNoIGZvciBteSBjb21tZW50IGEgZmV3IGxpbmVzIHVwIDotKQoKVGhlIHByb2JsZW0gd2l0aCBw
+bGFjaW5nIG5vbi1EU0kgcGFuZWxzIGFzIGNoaWxkcmVuIG9mIHRoZSBkaXNwbGF5IGNvbnRyb2xs
+ZXIgCmFuZCBub3QgdXNpbmcgT0YgZ3JhcGggaXMgdGhhdCB0aGUgcGFuZWwgYmluZGluZ3MgYmVj
+b21lIGRlcGVuZGVudCBvZiB0aGUgCmRpc3BsYXkgY29udHJvbGxlciBiZWluZyB1c2VkLiBBIGRp
+c3BsYXkgY29udHJvbGxlciB1c2luZyBPRiBncmFwaCB3b3VsZCAKcmVxdWlyZSB0aGUgcGFuZWwg
+dG8gZG8gdGhlIHNhbWUsIHdoaWxlIGEgZGlzcGxheSBjb250cm9sbGVyIGV4cGVjdGluZyBhIHBh
+bmVsIApjaGlsZCBub2RlICh3aXRoIGEgc3BlY2lmaWMgbmFtZSkgd291bGQgcmVxdWlyZSBEVCBw
+cm9wZXJ0aWVzIGZvciB0aGUgcGFuZWwgCm5vZGUuCgpJJ20gYWxzbyBub3Qgc3VyZSB0aGUgY29t
+cGxleGl0eSBvZiBPRiBncmFwaCBpcyByZWFsbHkgdGhhdCBwcm9oaWJpdGl2ZSBpZiB5b3UgCmNv
+bXBhcmUgaXQgdG8gcGFuZWxzIGFzIGNoaWxkIG5vZGVzLiBUbyBnZXQgdGhlIHBhbmVsIGRyaXZl
+ciB0byBiaW5kIHRvIHRoZSAKcGFuZWwgRFQgbm9kZSB0aGUgZGlzcGxheSBjb250cm9sbGVyIGRy
+aXZlciB3b3VsZCBuZWVkIHRvIGNyZWF0ZSBhIHBsYXRmb3JtIApkZXZpY2UgZm9yIHRoZSBwYW5l
+bCBhbmQgcmVnaXN0ZXIgaXQuIFRoYXQncyBub3QgdmVyeSBkaWZmaWN1bHQsIGJ1dCBwYXJzaW5n
+IGEgCnNpbmdsZSBwb3J0IGFuZCBlbmRwb2ludCBpc24ndCBlaXRoZXIgKGFuZCB3ZSBjb3VsZCBl
+dmVuIHByb3ZpZGUgYSBoZWxwZXIgCmZ1bmN0aW9uIGZvciB0aGF0LCBhIHZlcnNpb24gb2Ygb2Zf
+ZHJtX2ZpbmRfcGFuZWwoKSB0aGF0IHdvdWxkIHRha2UgYXMgYW4gCmFyZ3VtZW50IHRoZSBkaXNw
+bGF5IGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUgaW5zdGVhZCBvZiB0aGUgcGFuZWwgZGV2aWNlIG5v
+ZGUpLgoKPiA+IFBpbmcgPwo+ID4gCj4gPiBQbGVhc2Ugbm90ZSB0aGF0IHRoaXMgZmlsZSBkb2N1
+bWVudHMgcHJvcGVydGllcyBjb21tb24gdG8gbXVsdGlwbGUgcGFuZWwKPiA+IERUIGJpbmRpbmdz
+LCBidXQgaW4gbm8gd2F5IG1ha2VzIGl0IG1hbmRhdG9yeSB0byB1c2UgdGhlIE9GIGdyYXBoIGJp
+bmRpbmdzCj4gPiBmb3IgcGFuZWxzLiBUaGUgZGVjaXNpb24gaXMgbGVmdCB0byBpbmRpdmlkdWFs
+IGJpbmRpbmdzLgo+IAo+IEl0IGlzIG1hbmRhdG9yeSBpbiB0aGUgc2Vuc2UgdGhhdCB3ZSBkb24n
+dCB3YW50IG1vcmUgY2FzZXMgb2YgImZzbCxwYW5lbCIuCgpUaGF0IEkgYWdyZWUgd2l0aCA6LSkK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
