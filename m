@@ -1,93 +1,97 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Tue, 29 Nov 2016 10:55:11 +0530
-Message-ID: <CAFp+6iGeNQKuP=WmshPG0088CNy8hosdfN+unuS6bhYqJJaKRQ@mail.gmail.com>
-References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
- <1479816163-5260-4-git-send-email-vivek.gautam@codeaurora.org> <20161128225543.GM6095@codeaurora.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v11 5/7] overlay: Documentation for the overlay sugar
+ syntax
+Date: Tue, 29 Nov 2016 16:10:42 +1100
+Message-ID: <20161129051042.GO13307@umbus.fritz.box>
+References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1480349141-14145-6-git-send-email-pantelis.antoniou@konsulko.com>
+ <20161129031054.GI13307@umbus.fritz.box>
+ <583D05B7.4040109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20161128225543.GM6095@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="E187YRO8KGM40JwS"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <583D05B7.4040109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
+--E187YRO8KGM40JwS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 29, 2016 at 4:25 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 11/22, Vivek Gautam wrote:
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> new file mode 100644
->> index 0000000..ffb173b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> @@ -0,0 +1,74 @@
->> +Qualcomm QMP PHY
->> +----------------
->> +
->> +QMP phy controller supports physical layer functionality for a number of
->> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
->> +
->> +Required properties:
->> + - compatible: compatible list, contains:
->> +            "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->> +            "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
->> + - reg: list of offset and length pair of the PHY register sets.
->> +     at index 0: offset and length of register set for PHY common
->> +                 serdes block.
->> +     from index 1 - N: offset and length of register set for each lane,
->> +                       for N number of phy lanes (ports).
->> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
->> + - #phy-cells: must be 1
->> +    - Cell after phy phandle should be the port (lane) number.
->> + - clocks: a list of phandles and clock-specifier pairs,
->> +        one for each entry in clock-names.
->> + - clock-names: must be "cfg_ahb" for phy config clock,
->> +                     "aux" for phy aux clock,
->> +                     "ref_clk" for 19.2 MHz ref clk,
->> +                     "ref_clk_src" for reference clock source,
->
-> We typically leave "clk" out of clk names because it's redundant.
+On Mon, Nov 28, 2016 at 08:36:07PM -0800, Frank Rowand wrote:
+> On 11/28/16 19:10, David Gibson wrote:
+> > On Mon, Nov 28, 2016 at 06:05:39PM +0200, Pantelis Antoniou wrote:
+> >> There exists a syntactic sugar version of overlays which
+> >> make them simpler to write for the trivial case of a single target.
+>=20
+> It also works for multiple targets.  (See the example I provided in
+> my comment to v10.)
+>=20
+>=20
+> >>
+> >> Document it in the device tree object internals.
+> >>
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >=20
+> > I'm with Frank that I think this, rather than being regarded mere
+> > syntactic sugar, should be considered the primary way of describing
+> > overlays.
+> >=20
+> > Obviously we need to support the fully written out version as well.
+>=20
+> If we need to support the fully written out version, can we make that
+> a discouraged, non-preferred method?  Maybe require an option to
+> enable compiling this style of dts?
 
-Right, will drop 'clk' from these names.
+Yeah.  To avoid further proliferation of options, I'm thinking a
+single "backwards compat" option which would:
+	- Use the dtb magic instead of dtb magic
+	- Disable checks which would reject explicit creation of
+	  __overlay__ / __symbols__ / __fixups__ nodes
+	- Anything other special behaviour we need
+=09
+> I can imagine some reasons to support the fully written out version,
+> but can we document what those reasons are?
 
->
->> +                     "pipe<port-number>" for pipe clock specific to
->> +                     each port/lane (Optional).
->
-> The pipe clocks are orphaned right now. We should add an output
-> clock from the phy to go into the controller and back into the
-> phy if I recall correctly. The phy should be a clock provider
-> itself so it can output the pipe clock source into GCC and back
-> into the phy and controller.
->
->> + - resets: a list of phandles and reset controller specifier pairs,
->> +        one for each entry in reset-names.
->> + - reset-names: must be "phy" for reset of phy block,
->> +                     "common" for phy common block reset,
->> +                     "cfg" for phy's ahb cfg block reset (Optional).
->> +                     "port<port-number>" for reset specific to
->> +                     each port/lane (Optional).
->> + - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
->> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
->> +
->> +Optional properties:
->> + - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
->> +                     pll block.
->> +
->> +Example:
->> +     pcie_phy: pciephy@34000 {
->
-> pcie-phy or just phy as the node name?
+I believe the main one is the dts files in this format out in the
+field.  Mind you, I guess we're already requiring them to tweak how
+they declare the /plugin/ option.
 
-How about just 'phy'? The label pcie_phy anyways explains the use.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
+--E187YRO8KGM40JwS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks
-Vivek
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+iQIcBAEBCAAGBQJYPQ3SAAoJEGw4ysog2bOS37IQAK/LfAQLbwhaO2Z7qs1yehiP
+ctT1Nujy2zUAdOGGWL/uF1+FNxPQ0pj5M47mnD/pm/ep7eWQLet8SwsNxbTELeKj
+sm0nMAydU3vmlAvzpp4MfKRXLgvbCzNl2s2QBzfmUTu/rFDjJqrdCqt4czgwJcrl
+vWb4J7+6QPAJqkfCRlRLQYm0h9uaFWivg/eOWv9IMGQGSFkXpjb/rf35/CPN8ToU
+QeiWTPAdBVI2b42q7l5vE69V8hLLN9TcePEfxCYCOnN2skxrWL7UMYu+3QUVHkRS
+8fVL7+s9qQl/3m1hCCPiVO6jph/HY1B9zPi6Gc+SMqJrqW2vuNAwc4mMoiIQdu/9
+5QowFHa9mEA/8GquQhDlu4EbS0UuFC7yt1Tft0F7Hnk3nyk2dBItw878+OUj1B43
+lSSnDVaeYg0+IZ++uQll6UhICy6SGU4iU5jUNVLtBKxM+8AZgzpOh6M2gUMd2XGu
+aoG4bCj8eGLEw4xwCd3ufQEl35iPCPeLEjiMdizLP4az4juE/+m2rneRYhZwlSn8
+6yW+GwT2OOu2lV8JwyoFtCLmPW/oLr6aD4kyyO8J2MxLMXgzZO9iVWHx2ZUUw6UN
+MbY88umUK0462/dkFwenxMrp94GmPnBr9T0hAr9ZXkKLxg5CQuVa4ZYtGQk7wstX
+q8bRIfvGR69K2cHf5PTE
+=rEIx
+-----END PGP SIGNATURE-----
+
+--E187YRO8KGM40JwS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
