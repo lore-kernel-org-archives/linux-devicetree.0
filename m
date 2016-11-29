@@ -1,57 +1,128 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2] mfd: cpcap: Add minimal support
-Date: Tue, 29 Nov 2016 11:12:56 -0800
-Message-ID: <20161129191255.GB3430@atomide.com>
-References: <20161129164702.5334-1-tony@atomide.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] ARM64: dts: meson-gx: Add Graphic Controller nodes
+Date: Tue, 29 Nov 2016 21:16:17 +0200
+Message-ID: <1812737.pZP73QSyU1@avalon>
+References: <1480416469-9655-1-git-send-email-narmstrong@baylibre.com>
+ <1480416469-9655-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161129164702.5334-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1480416469-9655-3-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Xing.Xu@amlogic.com, victor.wan@amlogic.com, khilman@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jerry.cao@amlogic.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161129 08:48]:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
-> @@ -0,0 +1,31 @@
-> +Motorola CPCAP PMIC device tree binding
-> +
-> +Required properties:
-> +- compatible		: One or both of "motorola,cpcap" or "ste,6556002"
-> +- reg			: SPI chip select
-> +- interrupt-parent	: The parent interrupt controller
-> +- interrupts		: The interrupt line the device is connected to
-> +- interrupt-controller	: Marks the device node as an interrupt controller
-> +- #interrupt-cells	: The number of cells to describe an IRQ, should be 2
-> +- #address-cells	: Child device offset number of cells, typically 1
-> +- #size-cells		: Child device size number of cells, typically 1
-> +- spi-max-frequency	: Typically set to 3000000
-> +- spi-cs_high		: SPI chip select direction
-> +
-> +Example:
-> +
-> +&mcspi1 {
-> +	cpcap: pmic@0 {
-> +		compatible = "motorola,cpcap", "ste,6556002";
-> +		reg = <0>;	/* cs0 */
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_EDGE_RISING>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		spi-max-frequency = <3000000>;
-> +		spi-cs-high;
-> +	};
-> +};
-
-The #address-cells should be 0 instead of 1 above.
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTmVpbCwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVHVlc2RheSAyOSBOb3YgMjAx
+NiAxMTo0Nzo0NyBOZWlsIEFybXN0cm9uZyB3cm90ZToKPiBBZGQgVmlkZW8gUHJvY2Vzc2luZyBV
+bml0IGFuZCBDVkJTIE91dHB1dCBub2RlcywgYW5kIGVuYWJsZSBDVkJTIG9uIHNlbGVjdGVkCj4g
+Ym9hcmRzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJh
+eWxpYnJlLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4
+LmR0c2kgICAgICAgICAgfCA0NiArKysrKysrKysrKysrKysrKysrCj4gIC4uLi9ib290L2R0cy9h
+bWxvZ2ljL21lc29uLWd4YmItbmV4Ym94LWE5NXguZHRzICAgIHwgIDQgKysKPiAgYXJjaC9hcm02
+NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItcDIweC5kdHNpICAgfCAgNCArKwo+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi5kdHNpICAgICAgICB8ICA4ICsrKysK
+PiAgLi4uL2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLW5leGJveC1hOTV4LmR0cyAgICAgfCAg
+NCArKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kgICAgICAg
+ICB8ICA4ICsrKysKPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3htLW5leGJv
+eC1hMS5kdHMgfCAgNCArKwo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3ht
+LmR0c2kgICAgICAgICB8ICA4ICsrKysKPiAgOCBmaWxlcyBjaGFuZ2VkLCA4NiBpbnNlcnRpb25z
+KCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1n
+eC5kdHNpCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3guZHRzaSBpbmRl
+eCBmYzAzM2MwLi42NDRkNWY2IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1s
+b2dpYy9tZXNvbi1neC5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21l
+c29uLWd4LmR0c2kKPiBAQCAtMTUzLDYgKzE1MywyNyBAQAo+ICAJCX07Cj4gIAl9Owo+IAo+ICsJ
+dmVuY19jdmJzOiB2ZW5jLWN2YnMgewo+ICsJCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1n
+eC1jdmJzIjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwoKU3RpbGwgbm8gcmVnaXN0ZXJzIGhl
+cmUgPwoKPiArCj4gKwkJcG9ydHMgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJ
+I3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQl2ZW5jX2N2YnNfaW46IHBvcnRAMCB7CgpOaXRw
+aWNraW5nLCB5b3UgZG9uJ3QgbmVlZCBhIGxhYmVsIGhlcmUgYXMgcG9ydHMgYXJlIG5ldmVyIHJl
+ZmVyZW5jZWQgYnkgCnBoYW5kbGUuIFNhbWUgZm9yIHRoZSB2cHUgbm9kZSBiZWxvdy4KCj4gKwkJ
+CQkgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJ
+CQkgcmVnID0gPDA+Owo+ICsKPiArCQkJCSB2ZW5jX2N2YnNfaW5fdnB1OiBlbmRwb2ludEAwIHsK
+PiArCQkJCQkgcmVnID0gPDA+OwoKQW5kIHRoZXJlJ3Mgbm8gcmVxdWlyZW1lbnQgdG8gbnVtYmVy
+IHRoZSBlbmRwb2ludCBpZiB0aGVyZSdzIGEgc2luZ2xlIG9uZSBvZiAKdGhlbSAoYnV0IGl0J3Mg
+bm90IGZvcmJpZGRlbiBlaXRoZXIpLgoKPiArCQkJCQkgcmVtb3RlLWVuZHBvaW50ID0gCjwmdnB1
+X291dF92ZW5jX2N2YnM+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArCj4g
+IAlzb2Mgewo+ICAJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gIAkJI2FkZHJlc3MtY2Vs
+bHMgPSA8Mj47Cj4gQEAgLTM1Niw1ICszNzcsMzAgQEAKPiAgCQkJCXN0YXR1cyA9ICJkaXNhYmxl
+ZCI7Cj4gIAkJCX07Cj4gIAkJfTsKPiArCj4gKwkJdnB1OiB2cHVAZDAxMDAwMDAgewo+ICsJCQlj
+b21wYXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArCQkJcmVnID0gPDB4MCAweGQw
+MTAwMDAwIDB4MCAweDEwMDAwMD4sCj4gKwkJCSAgICAgIDwweDAgMHhjODgzYzAwMCAweDAgMHgx
+MDAwPiwKPiArCQkJICAgICAgPDB4MCAweGM4ODM4MDAwIDB4MCAweDEwMDA+Owo+ICsJCQlyZWct
+bmFtZXMgPSAiYmFzZSIsICJoaGkiLCAiZG1jIjsKPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
+IDMgSVJRX1RZUEVfRURHRV9SSVNJTkc+Owo+ICsKPiArCQkJcG9ydHMgewo+ICsJCQkJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47Cj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCQl2cHVf
+b3V0OiBwb3J0QDEgewo+ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkJCSNzaXpl
+LWNlbGxzID0gPDA+Owo+ICsJCQkJCXJlZyA9IDwxPjsKPiArCj4gKwkJCQkJdnB1X291dF92ZW5j
+X2N2YnM6IGVuZHBvaW50QDAgewo+ICsJCQkJCQlyZWcgPSA8MD47Cj4gKwkJCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IAo8JnZlbmNfY3Zic19pbl92cHU+Owo+ICsJCQkJCX07Cj4gKwkJCQl9Owo+ICsJ
+CQl9Owo+ICsJCX07Cj4gIAl9Owo+ICB9Owo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1uZXhib3gtYTk1eC5kdHMKPiBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLW5leGJveC1hOTV4LmR0cyBpbmRleAo+IDk2OTY4MjAu
+LmE1NWQxY2YgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
+LWd4YmItbmV4Ym94LWE5NXguZHRzCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2lj
+L21lc29uLWd4YmItbmV4Ym94LWE5NXguZHRzCj4gQEAgLTIyOSwzICsyMjksNyBAQAo+ICAJY2xv
+Y2tzID0gPCZjbGtjIENMS0lEX0ZDTEtfRElWND47Cj4gIAljbG9jay1uYW1lcyA9ICJjbGtpbjAi
+Owo+ICB9Owo+ICsKPiArJnZlbmNfY3ZicyB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAyMHgu
+ZHRzaQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItcDIweC5kdHNp
+IGluZGV4IDVlNWUyZGUuLjNjMDliZDEKPiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjB4LmR0c2kKPiBAQCAtMjY2LDMgKzI2Niw3IEBACj4g
+IAljbG9ja3MgPSA8JmNsa2MgQ0xLSURfRkNMS19ESVY0PjsKPiAgCWNsb2NrLW5hbWVzID0gImNs
+a2luMCI7Cj4gIH07Cj4gKwo+ICsmdmVuY19jdmJzIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiAr
+fTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIu
+ZHRzaQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmIuZHRzaSBpbmRl
+eCBhYzVhZDNiLi4xYTMyMWM4Zgo+IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+YW1sb2dpYy9tZXNvbi1neGJiLmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
+aWMvbWVzb24tZ3hiYi5kdHNpCj4gQEAgLTUwNiwzICs1MDYsMTEgQEAKPiAgCQkgPCZjbGtjIENM
+S0lEX0ZDTEtfRElWMj47Cj4gIAljbG9jay1uYW1lcyA9ICJjb3JlIiwgImNsa2luMCIsICJjbGtp
+bjEiOwo+ICB9Owo+ICsKPiArJnZlbmNfY3ZicyB7Cj4gKwljb21wYXRpYmxlID0gImFtbG9naWMs
+bWVzb24tZ3hiYi1jdmJzIiwgImFtbG9naWMsbWVzb24tZ3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsm
+dnB1IHsKPiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxtZXNvbi1neGJiLXZwdSIsICJhbWxvZ2lj
+LG1lc29uLWd4LXZwdSI7Cj4gK307Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+YW1sb2dpYy9tZXNvbi1neGwtbmV4Ym94LWE5NXguZHRzCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2FtbG9naWMvbWVzb24tZ3hsLW5leGJveC1hOTV4LmR0cyBpbmRleAo+IGU5OTEwMWEuLjJhOWI0
+NmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1u
+ZXhib3gtYTk1eC5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24t
+Z3hsLW5leGJveC1hOTV4LmR0cwo+IEBAIC0yMDMsMyArMjAzLDcgQEAKPiAgCWNsb2NrcyA9IDwm
+Y2xrYyBDTEtJRF9GQ0xLX0RJVjQ+Owo+ICAJY2xvY2stbmFtZXMgPSAiY2xraW4wIjsKPiAgfTsK
+PiArCj4gKyZ2ZW5jX2N2YnMgewo+ICsJc3RhdHVzID0gIm9rYXkiOwo+ICt9Owo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hsLmR0c2kKPiBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaSBpbmRleCAzYWY1NGRjLi5iNjBj
+NWNlIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwu
+ZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwuZHRzaQo+
+IEBAIC0yOTksMyArMjk5LDExIEBACj4gIAkJIDwmY2xrYyBDTEtJRF9GQ0xLX0RJVjI+Owo+ICAJ
+Y2xvY2stbmFtZXMgPSAiY29yZSIsICJjbGtpbjAiLCAiY2xraW4xIjsKPiAgfTsKPiArCj4gKyZ2
+ZW5jX2N2YnMgewo+ICsJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bC1jdmJzIiwgImFt
+bG9naWMsbWVzb24tZ3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsmdnB1IHsKPiArCWNvbXBhdGlibGUg
+PSAiYW1sb2dpYyxtZXNvbi1neGwtdnB1IiwgImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArfTsK
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS1uZXhi
+b3gtYTEuZHRzCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3htLW5leGJv
+eC1hMS5kdHMgaW5kZXgKPiBkMzIwNzI3Li4xYWUyNDUxIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0tbmV4Ym94LWExLmR0cwo+ICsrKyBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0tbmV4Ym94LWExLmR0cwo+IEBAIC0xNjcs
+MyArMTY3LDcgQEAKPiAgCQltYXgtc3BlZWQgPSA8MTAwMD47Cj4gIAl9Owo+ICB9Owo+ICsKPiAr
+JnZlbmNfY3ZicyB7Cj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neG0uZHRzaQo+IGIvYXJjaC9hcm02NC9i
+b290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpIGluZGV4IGMxOTc0YmIuLmZlY2Q4YzIgMTAw
+NjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpCj4g
+KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bS5kdHNpCj4gQEAgLTEx
+MiwzICsxMTIsMTEgQEAKPiAgCQl9Owo+ICAJfTsKPiAgfTsKPiArCj4gKyZ2ZW5jX2N2YnMgewo+
+ICsJY29tcGF0aWJsZSA9ICJhbWxvZ2ljLG1lc29uLWd4bS1jdmJzIiwgImFtbG9naWMsbWVzb24t
+Z3gtY3ZicyI7Cj4gK307Cj4gKwo+ICsmdnB1IHsKPiArCWNvbXBhdGlibGUgPSAiYW1sb2dpYyxt
+ZXNvbi1neG0tdnB1IiwgImFtbG9naWMsbWVzb24tZ3gtdnB1IjsKPiArfTsKCi0tIApSZWdhcmRz
+LAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
