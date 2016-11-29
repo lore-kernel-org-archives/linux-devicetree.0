@@ -1,165 +1,80 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/4] dt-bindings: display: add Amlogic Meson DRM Bindings
-Date: Tue, 29 Nov 2016 11:47:48 +0100
-Message-ID: <1480416469-9655-4-git-send-email-narmstrong@baylibre.com>
-References: <1480416469-9655-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480416469-9655-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: Re: [PATCH v10 3/4] dtc: Plugin and fixup support
+Date: Tue, 29 Nov 2016 10:50:53 +0000
+Message-ID: <66c7f8c5-94e9-a6ca-4402-fa0ccf2a6ac0@raspberrypi.org>
+References: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1480077131-14526-4-git-send-email-pantelis.antoniou@konsulko.com>
+ <20161128041228.GJ30927@umbus.fritz.box>
+ <D69908BD-B243-4AEE-B6BA-80B94AFE4B6A@konsulko.com>
+ <4672e164-aae0-6306-fe70-146a1f930cf7@raspberrypi.org>
+ <20161129021131.GD13307@umbus.fritz.box>
+ <b7ff53f6-6481-e3f1-e3b5-d0b04e563e83@raspberrypi.org>
+ <D3BFA6AB-21C1-451B-ACF5-32EA5E615275@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <D3BFA6AB-21C1-451B-ACF5-32EA5E615275-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- .../bindings/display/meson/meson-drm.txt           | 134 +++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/meson/meson-drm.txt
+On 29/11/2016 10:39, Pantelis Antoniou wrote:
+> Hi Phil,
+>
+>> On Nov 29, 2016, at 12:32 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> wrote:
+>>
+>> On 29/11/2016 02:11, David Gibson wrote:
+>>> On Mon, Nov 28, 2016 at 12:24:20PM +0000, Phil Elwell wrote:
+>>>> On 28/11/2016 12:10, Pantelis Antoniou wrote:
+>>>>> For plugins we need the __symbols__ node to support stacked overlays, i.e.
+>>>>> overlays referring label that were introduced by a previous overlay.
+>>>> Although it is arguably useful to be able to refer to symbols created by
+>>>> one overlay from within another, do we really want all symbols to be
+>>>> global? Isn't there a call for a new syntax or usage pattern to indicate
+>>>> either that a symbol should be local to the overlay or, my preferred
+>>>> option, global?
+>>> So, this is back to a design question about the overlay format.  As
+>>> noted in the initial discussions about possible "connector" formats, I
+>>> think we will want some sort of local symbols.  But the current
+>>> overlay format with all global symbols is out there and we need to
+>>> support it.
+>> The overlay format we have does not dictate the scope of the symbols.
+>>
+>> In all implementations I know of - the Raspberry Pi loader, the current
+>> Linux kernel, the latest dtc patch set - there is a completely
+>> asymmetric relationship between the base DTB and an overlay:
+>> * the base DTB exports __symbols__ to resolve the overlays unresolved
+>> label references, as recorded by the __fixups__ node
+>> * the overlay's phandles are renumbered so as not to clash with the base
+>> tree using the __local_fixups__
+>> * the contents of the __overlay__ nodes are applied to the base tree, as
+>> directed by the "target" or "target-path” properties
+>>
+> Yes
+>
+>> The __symbols__ node of the overlay is ignored and discarded. The
+>> __fixups__ and __local_fixups__ in the base DTB (if present - the RPi
+>> dtc only generates them for /plugins/) are ignored.
+>>
+> That was a limitation that no-longer applies. Overlay symbols can be added
+> to the base tree symbol list with a small patch I have already posted.
+The fact that they can doesn't mean they necessarily should.
+>
+>> In the set of RPi overlays only one exports a global symbol, which it
+>> achieves with an overlay aimed at target-path = "/__symbols__" that adds
+>> a new symbol (in this case "i2c_gpio").
+>>
+>> If the __symbols__ in an overlay are automatically merged with the base
+>> symbols, that is a significant change in semantics which needs to be
+>> discussed.
+>>
+> You no longer need to do this anymore. Hope this helps :)
 
-diff --git a/Documentation/devicetree/bindings/display/meson/meson-drm.txt b/Documentation/devicetree/bindings/display/meson/meson-drm.txt
-new file mode 100644
-index 0000000..cf241be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/meson/meson-drm.txt
-@@ -0,0 +1,134 @@
-+Amlogic Meson Display Controller
-+================================
-+
-+The Amlogic Meson Display controller is composed of several components
-+that are going to be documented below:
-+
-+DMC|---------------VPU (Video Processing Unit)----------------|------HHI------|
-+   | vd1   _______     _____________    _________________     |               |
-+D  |-------|      |----|            |   |                |    |   HDMI PLL    |
-+D  | vd2   | VIU  |    | Video Post |   | Video Encoders |<---|-----VCLK      |
-+R  |-------|      |----| Processing |   |                |    |               |
-+   | osd2  |      |    |            |---| Enci ----------|----|-----VDAC------|
-+R  |-------| CSC  |----| Scalers    |   | Encp ----------|----|----HDMI-TX----|
-+A  | osd1  |      |    | Blenders   |   | Encl ----------|----|---------------|
-+M  |-------|______|----|____________|   |________________|    |               |
-+___|__________________________________________________________|_______________|
-+
-+
-+VIU: Video Input Unit
-+---------------------
-+
-+The Video Input Unit is in charge of the pixel scanout from the DDR memory.
-+It fetches the frames addresses, stride and parameters from the "Canvas" memory.
-+This part is also in charge of the CSC (Colorspace Conversion).
-+It can handle 2 OSD Planes and 2 Video Planes.
-+
-+VPP: Video Post Processing
-+--------------------------
-+
-+The Video Post Processing is in charge of the scaling and blending of the
-+various planes into a single pixel stream.
-+There is a special "pre-blending" used by the video planes with a dedicated
-+scaler and a "post-blending" to merge with the OSD Planes.
-+The OSD planes also have a dedicated scaler for one of the OSD.
-+
-+VENC: Video Encoders
-+--------------------
-+
-+The VENC is composed of the multiple pixel encoders :
-+ - ENCI : Interlace Video encoder for CVBS and Interlace HDMI
-+ - ENCP : Progressive Video Encoder for HDMI
-+ - ENCL : LCD LVDS Encoder
-+The VENC Unit gets a Pixel Clocks (VCLK) from a dedicated HDMI PLL and clock
-+tree and provides the scanout clock to the VPP and VIU.
-+The ENCI is connected to a single VDAC for Composite Output.
-+The ENCI and ENCP are connected to an on-chip HDMI Transceiver.
-+
-+Device Tree Bindings:
-+---------------------
-+
-+VPU: Video Processing Unit
-+--------------------------
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
-+	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
-+	- GXM (S912) : "amlogic,meson-gxm-vpu"
-+	followed by the common "amlogic,meson-gx-vpu"
-+- reg: base address and size of he following memory-mapped regions :
-+	- vpu
-+	- hhi
-+	- dmc
-+- reg-names: should contain the names of the previous memory regions
-+- interrupts: should contain the VENC Vsync interrupt number
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  second port should be the output endpoints for VENC connectors.
-+
-+CBVS Output
-+-----------
-+
-+The VENC can output Composite/CVBS output via a dedicated VDAC, usage of such
-+Composite output is optional.
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+ 	- GXBB (S905) : "amlogic,meson-gxbb-cvbs"
-+ 	- GXL (S905X, S905D) : "amlogic,meson-gxl-cvbs"
-+ 	- GXM (S912) : "amlogic,meson-gxm-cvbs"
-+	followed by the common "amlogic,meson-gx-cvbs"
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoints, connected ot the VPU node.
-+
-+Example:
-+
-+venc_cvbs: venc-cvbs {
-+	compatible = "amlogic,meson-gxbb-cvbs";
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		enc_cvbs_in: port@0 {
-+			 #address-cells = <1>;
-+			 #size-cells = <0>;
-+			 reg = <0>;
-+
-+			 venc_cvbs_in_vpu: endpoint@0 {
-+				 reg = <0>;
-+				 remote-endpoint = <&vpu_out_venc_cvbs>;
-+			};
-+		};
-+	};
-+};
-+
-+vpu: vpu@d0100000 {
-+	compatible = "amlogic,meson-gxbb-vpu";
-+	reg = <0x0 0xd0100000 0x0 0x100000>,
-+	      <0x0 0xc883c000 0x0 0x1000>,
-+	      <0x0 0xc8838000 0x0 0x1000>;
-+	reg-names = "base", "hhi", "dmc";
-+	interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vpu_out: port@1 {
-+			 #address-cells = <1>;
-+			 #size-cells = <0>;
-+			 reg = <1>;
-+
-+			 vpu_out_venc_cvbs: endpoint@0 {
-+				 reg = <0>;
-+				 remote-endpoint = <&venc_cvbs_in_vpu>;
-+			 };
-+		 };
-+	};
-+};
--- 
-1.9.1
+Not really, no. With the current scheme we have control over the scope,
+but now there is none.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How does your patch handle duplicate symbols?
+
+Phil
