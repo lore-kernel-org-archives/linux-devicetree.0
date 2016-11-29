@@ -1,109 +1,62 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Fix issue where code would fall through to error case.
-Date: Tue, 29 Nov 2016 09:06:08 -0600
-Message-ID: <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
-References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
- <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com> <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
- <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
- <583A0110.4090603@gmail.com> <583C4D83.6040800@gmail.com>
+From: Romain Perier <romain.perier@free-electrons.com>
+Subject: Re: [PATCH 4/5] arm64: dts: marvell: Add definition of SPI controller
+ for Armada 3700
+Date: Tue, 29 Nov 2016 16:08:08 +0100
+Message-ID: <0120e795-f1bb-6614-bdc7-22dbb9ab9f35@free-electrons.com>
+References: <20161129143939.3191-1-romain.perier@free-electrons.com>
+ <20161129143939.3191-5-romain.perier@free-electrons.com>
+ <20161129155129.6f3c76b6@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <583C4D83.6040800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161129155129.6f3c76b6@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 9:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/26/16 13:39, Frank Rowand wrote:
->> On 11/23/16 13:58, Rob Herring wrote:
->>> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
->>> <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> On 11/17/16 15:40, Frank Rowand wrote:
->>>>>> On 11/17/16 15:25, Moritz Fischer wrote:
->>>>>>> No longer fall through into the error case that prints out
->>>>>>> an error if no error (err = 0) occurred.
->>>>>>>
->>>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
->>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->>>>>>> ---
->>>>>>>  drivers/of/resolver.c | 6 +++++-
->>>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
->>>>>>> index 783bd09..785076d 100644
->>>>>>> --- a/drivers/of/resolver.c
->>>>>>> +++ b/drivers/of/resolver.c
->>>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
->>>>>>>
->>>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
->>>>>>>              if (err)
->>>>>>> -                    break;
->>>>>>> +                    goto err_out;
->>>>>>>      }
->>>>>>>
->>>>>>> +    of_node_put(tree_symbols);
->>>>>>> +
->>>>>>> +    return 0;
->>>>>>> +
->>>>>>>  err_out:
->>>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
->>>>>>>  out:
->>>>>>
->>>>>> Thanks for catching that.
->>>>>>
->>>>>> Rob, please apply.
->>>>>>
->>>>>> Reviewed-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
->>>>>>
->>>>>> -Frank
->>>>>
->>>>> On second thought, isn't the common pattern when clean up is needed for
->>>>> both the no-error path and the error path something like:
->>>>>
->>>>>
->>>>>         out:
->>>>>                 of_node_put(tree_symbols);
->>>>>                 return err;
->>>>>
->>>>>         err_out:
->>>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
->>>>>                 goto out;
->>>>>         }
->>>>>
->>>>>
->>>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
->>>>
->>>> Same here. I tried to avoid the jumping back part, but if that's the
->>>> common pattern,
->>>> I can submit a v2 doing that instead.
->>>
->>> Both are ugly. Just do:
->>>
->>> if (err)
->>>   pr_err(...);
->>>
->>> Rob
->>
->> Agreed.  Thanks for the touch of sanity Rob.
->>
->> -Frank
->
-> I succumbed to looking only at the few lines of code above and not the
-> fuller context of the file that the patch applies to.
->
-> The proposed patch was fixing the problem that a normal completion
-> of the for loop was falling through into the err_out label.  So what
-> looks cleaner ("if (err) pr_err(...)") is actually not correct.
+Hello,
 
-What!? The *only* problem was printing the error message in the err=0
-case. All that needs to be fixed is not doing that. If we do that,
-then we really only need 1 goto label.
+Le 29/11/2016 =E0 15:51, Thomas Petazzoni a =E9crit :
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/b=
+oot/dts/marvell/armada-37xx.dtsi
+>> index e9bd587..84e4f57 100644
+>> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+>> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+>> @@ -98,6 +98,19 @@
+>>  			/* 32M internal register @ 0xd000_0000 */
+>>  			ranges =3D <0x0 0x0 0xd0000000 0x2000000>;
+>>
+>> +			spi0: spi@10600 {
+>> +				compatible =3D "marvell,armada-3700-spi";
+>> +				#address-cells =3D <1>;
+>> +				#size-cells =3D <0>;
+>> +				reg =3D <0x10600 0x5d>;
+>> +				clocks =3D <&nb_periph_clk 7>;
+>> +				clock-frequency =3D <200000000>;
+>
+> This property.
+>
+>> +				interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>> +				max-frequency =3D <66000000>;
+>
+> And this one no longer exist in your DT binding, so I guess they should
+> be removed from here as well.
+>
+
+Good point, I was pretty sure that I have removed these.
+I probably did something wrong with my rebase.
+
+Thanks,
+Romain
