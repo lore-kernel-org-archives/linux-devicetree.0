@@ -1,84 +1,212 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 01/13] devicetree/bindings: display: Document common
- panel properties
-Date: Tue, 29 Nov 2016 20:23:41 +0200
-Message-ID: <2064799.n5laApbQHL@avalon>
-References: <1479526093-7014-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2454182.olmziLZUmD@avalon>
- <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v7 2/8] drm/sun8i: Add DT bindings
+ documentation of Allwinner DE2
+Date: Tue, 29 Nov 2016 20:41:30 +0200
+Message-ID: <36111311.d8ul9hQ2CU@avalon>
+References: <cover.1480414715.git.moinejf@free.fr> <92fc53084274d5ab04fe28f2dc0b16cf5d94481e.1480414715.git.moinejf@free.fr>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqL0+4--nE1UDHWzqS-s18A+q2i76S8=woCb5huV3jUMew@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBBTEX67AQKGQEFL62VTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <92fc53084274d5ab04fe28f2dc0b16cf5d94481e.1480414715.git.moinejf-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVHVlc2RheSAyOSBOb3YgMjAxNiAwOToxNDowOSBSb2IgSGVycmluZyB3cm90
-ZToKPiBPbiBUdWUsIE5vdiAyOSwgMjAxNiBhdCAyOjI3IEFNLCBMYXVyZW50IFBpbmNoYXJ0IHdy
-b3RlOgo+ID4gT24gVHVlc2RheSAyMiBOb3YgMjAxNiAxMTozNjo1NSBMYXVyZW50IFBpbmNoYXJ0
-IHdyb3RlOgo+ID4+IE9uIE1vbmRheSAyMSBOb3YgMjAxNiAxMDo0ODoxNSBSb2IgSGVycmluZyB3
-cm90ZToKPiA+Pj4gT24gU2F0LCBOb3YgMTksIDIwMTYgYXQgMDU6Mjg6MDFBTSArMDIwMCwgTGF1
-cmVudCBQaW5jaGFydCB3cm90ZToKPiA+Pj4+IERvY3VtZW50IHByb3BlcnRpZXMgY29tbW9uIHRv
-IHNldmVyYWwgZGlzcGxheSBwYW5lbHMgaW4gYSBjZW50cmFsCj4gPj4+PiBsb2NhdGlvbiB0aGF0
-IGNhbiBiZSByZWZlcmVuY2VkIGJ5IHRoZSBwYW5lbCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiA+
-Pj4gCj4gPj4+IExvb2tzIGdvb2QuIEp1c3Qgb25lIGNvbW1lbnQuLi4KPiA+Pj4gCj4gPj4+IFsu
-Li5dCj4gPj4+IAo+ID4+Pj4gK0Nvbm5lY3Rpdml0eQo+ID4+Pj4gKy0tLS0tLS0tLS0tLQo+ID4+
-Pj4gKwo+ID4+Pj4gKy0gcG9ydHM6IFBhbmVscyByZWNlaXZlIHZpZGVvIGRhdGEgdGhyb3VnaCBv
-bmUgb3IgbXVsdGlwbGUKPiA+Pj4+IGNvbm5lY3Rpb25zLiBXaGlsZQo+ID4+Pj4gKyAgdGhlIG5h
-dHVyZSBvZiB0aG9zZSBjb25uZWN0aW9ucyBpcyBzcGVjaWZpYyB0byB0aGUgcGFuZWwgdHlwZSwg
-dGhlCj4gPj4+PiArICBjb25uZWN0aXZpdHkgaXMgZXhwcmVzc2VkIGluIGEgc3RhbmRhcmQgZmFz
-aGlvbiB1c2luZyBwb3J0cyBhcwo+ID4+Pj4gc3BlY2lmaWVkIGluCj4gPj4+PiArICB0aGUgZGV2
-aWNlIGdyYXBoIGJpbmRpbmdzIGRlZmluZWQgaW4KPiA+Pj4+ICsgIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gPj4+IAo+ID4+PiBXZSBhbGxvdyBwYW5lbHMg
-dG8gZWl0aGVyIHVzZSBncmFwaCBiaW5kaW5nIG9yIGJlIGEgY2hpbGQgb2YgdGhlCj4gPj4+IGRp
-c3BsYXkgY29udHJvbGxlci4KPiA+PiAKPiA+PiBJIGtuZXcgdGhhdCBzb21lIGRpc3BsYXkgY29u
-dHJvbGxlcnMgdXNlIGEgcGhhbmRsZSB0byB0aGUgcGFuZWwgKHNlZSB0aGUKPiA+PiBmc2wscGFu
-ZWwgYW5kIG52aWRpYSxwYW5lbCBwcm9wZXJ0aWVzKSwgYnV0IEkgZGlkbid0IGtub3cgd2UgaGFk
-IHBhbmVscwo+ID4+IGFzIGNoaWxkcmVuIG9mIGRpc3BsYXkgY29udHJvbGxlciBub2Rlcy4gSSBk
-b24ndCB0aGluayB3ZSBzaG91bGQgYWxsb3cKPiA+PiB0aGF0IGZvciBhbnl0aGluZyBidXQgRFNJ
-IHBhbmVscywgYXMgdGhlIERUIGhpZXJhcmNoeSBpcyBiYXNlZCBvbiBjb250cm9sCj4gPj4gYnVz
-ZXMuIEFyZSB5b3Ugc3VyZSB3ZSBoYXZlIG90aGVyIHBhbmVscyBpbnN0YW50aWF0ZWQgdGhyb3Vn
-aCB0aGF0Cj4gPj4gbWVjaGFuaXNtID8KPgo+IFNvbWUgcGFuZWxzIGhhdmUgbm8gY29udHJvbCBi
-dXMsIHNvIHdlcmUgZG8gd2UgcGxhY2UgdGhlbT8KCkknZCBzYXkgdW5kZXIgdGhlIHJvb3Qgbm9k
-ZSwgbGlrZSBhbGwgc2ltaWxhciBjb250cm9sLWxlc3MgZGV2aWNlcy4KCj4gSSB3b3VsZCBzYXkg
-dGhlIGhpZXJhcmNoeSBpcyBiYXNlZCBvbiBidXNlcyB3aXRoIGEgcHJlZmVyZW5jZSBmb3IgdGhl
-Cj4gY29udHJvbCBidXMgd2hlbiB0aGVyZSBhcmUgbXVsdGlwbGUgYnVzZXMuIEknbSBub3QgYSBm
-YW4gb2YganVzdCBzdGlja2luZwo+IHRoaW5ncyBhcmUgdGhlIHRvcCBsZXZlbC4KCk9LLCBzbyBt
-dWNoIGZvciBteSBjb21tZW50IGEgZmV3IGxpbmVzIHVwIDotKQoKVGhlIHByb2JsZW0gd2l0aCBw
-bGFjaW5nIG5vbi1EU0kgcGFuZWxzIGFzIGNoaWxkcmVuIG9mIHRoZSBkaXNwbGF5IGNvbnRyb2xs
-ZXIgCmFuZCBub3QgdXNpbmcgT0YgZ3JhcGggaXMgdGhhdCB0aGUgcGFuZWwgYmluZGluZ3MgYmVj
-b21lIGRlcGVuZGVudCBvZiB0aGUgCmRpc3BsYXkgY29udHJvbGxlciBiZWluZyB1c2VkLiBBIGRp
-c3BsYXkgY29udHJvbGxlciB1c2luZyBPRiBncmFwaCB3b3VsZCAKcmVxdWlyZSB0aGUgcGFuZWwg
-dG8gZG8gdGhlIHNhbWUsIHdoaWxlIGEgZGlzcGxheSBjb250cm9sbGVyIGV4cGVjdGluZyBhIHBh
-bmVsIApjaGlsZCBub2RlICh3aXRoIGEgc3BlY2lmaWMgbmFtZSkgd291bGQgcmVxdWlyZSBEVCBw
-cm9wZXJ0aWVzIGZvciB0aGUgcGFuZWwgCm5vZGUuCgpJJ20gYWxzbyBub3Qgc3VyZSB0aGUgY29t
-cGxleGl0eSBvZiBPRiBncmFwaCBpcyByZWFsbHkgdGhhdCBwcm9oaWJpdGl2ZSBpZiB5b3UgCmNv
-bXBhcmUgaXQgdG8gcGFuZWxzIGFzIGNoaWxkIG5vZGVzLiBUbyBnZXQgdGhlIHBhbmVsIGRyaXZl
-ciB0byBiaW5kIHRvIHRoZSAKcGFuZWwgRFQgbm9kZSB0aGUgZGlzcGxheSBjb250cm9sbGVyIGRy
-aXZlciB3b3VsZCBuZWVkIHRvIGNyZWF0ZSBhIHBsYXRmb3JtIApkZXZpY2UgZm9yIHRoZSBwYW5l
-bCBhbmQgcmVnaXN0ZXIgaXQuIFRoYXQncyBub3QgdmVyeSBkaWZmaWN1bHQsIGJ1dCBwYXJzaW5n
-IGEgCnNpbmdsZSBwb3J0IGFuZCBlbmRwb2ludCBpc24ndCBlaXRoZXIgKGFuZCB3ZSBjb3VsZCBl
-dmVuIHByb3ZpZGUgYSBoZWxwZXIgCmZ1bmN0aW9uIGZvciB0aGF0LCBhIHZlcnNpb24gb2Ygb2Zf
-ZHJtX2ZpbmRfcGFuZWwoKSB0aGF0IHdvdWxkIHRha2UgYXMgYW4gCmFyZ3VtZW50IHRoZSBkaXNw
-bGF5IGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUgaW5zdGVhZCBvZiB0aGUgcGFuZWwgZGV2aWNlIG5v
-ZGUpLgoKPiA+IFBpbmcgPwo+ID4gCj4gPiBQbGVhc2Ugbm90ZSB0aGF0IHRoaXMgZmlsZSBkb2N1
-bWVudHMgcHJvcGVydGllcyBjb21tb24gdG8gbXVsdGlwbGUgcGFuZWwKPiA+IERUIGJpbmRpbmdz
-LCBidXQgaW4gbm8gd2F5IG1ha2VzIGl0IG1hbmRhdG9yeSB0byB1c2UgdGhlIE9GIGdyYXBoIGJp
-bmRpbmdzCj4gPiBmb3IgcGFuZWxzLiBUaGUgZGVjaXNpb24gaXMgbGVmdCB0byBpbmRpdmlkdWFs
-IGJpbmRpbmdzLgo+IAo+IEl0IGlzIG1hbmRhdG9yeSBpbiB0aGUgc2Vuc2UgdGhhdCB3ZSBkb24n
-dCB3YW50IG1vcmUgY2FzZXMgb2YgImZzbCxwYW5lbCIuCgpUaGF0IEkgYWdyZWUgd2l0aCA6LSkK
-Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Jean-Fran=C3=A7ois,
+
+Thank you for the patch.
+
+On Monday 28 Nov 2016 19:02:39 Jean-Francois Moine wrote:
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+>  .../bindings/display/sunxi/sun8i-de2.txt           | 121 +++++++++++++++=
++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/display/sunxi/sun8i-de2.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun8i-de2.tx=
+t
+> b/Documentation/devicetree/bindings/display/sunxi/sun8i-de2.txt new file
+> mode 100644
+> index 0000000..edf38b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun8i-de2.txt
+> @@ -0,0 +1,121 @@
+> +Allwinner sun8i Display Engine 2 subsystem
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +The Allwinner DE2 subsystem contains a display controller (DE2),
+> +one or two LCD controllers (Timing CONtrollers) and their external
+> +interfaces (encoders/connectors).
+> +
+> +          +-----------+
+> +          | DE2       |
+> +          |           |
+> +          | +-------+ |
+> +  plane --->|       | |   +------+
+> +          | | mixer |---->| TCON |---> encoder  ---> display
+> +  plane --->|       | |   +------+     connector     device
+> +          | +-------+ |
+> +          |           |
+> +          | +-------+ |
+> +  plane --->|       | |   +------+
+> +          | | mixer |---->| TCON |---> encoder  ---> display
+> +  plane --->|       | |   +------+     connector     device
+> +          | +-------+ |
+> +          +-----------+
+> +
+> +The DE2 contains a processor which mixes the input planes and creates
+> +the images which are sent to the TCONs.
+> +From the software point of vue, there are 2 independent real-time
+> +mixers, each one being statically associated to one TCON.
+> +
+> +The TCONs adjust the image format to the one of the display device.
+> +
+> +Display controller (DE2)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +
+> +- compatible: value should be one of the following
+> +		"allwinner,sun8i-a83t-display-engine"
+> +		"allwinner,sun8i-h3-display-engine"
+> +
+> +- reg: base address and size of the I/O memory
+> +
+> +- clocks: must include clock specifiers corresponding to entries in the
+> +		clock-names property.
+> +
+> +- clock-names: must contain
+> +		"bus": bus gate
+> +		"clock": clock
+> +
+> +- resets: phandle to the reset of the device
+> +
+> +- ports: must contain a list of 2 phandles, indexed by mixer number,
+> +	and pointing to display interface ports of TCONs
+> +
+> +LCD controller (TCON)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +
+> +- compatible: should be
+> +		"allwinner,sun8i-a83t-tcon"
+> +
+> +- reg: base address and size of the I/O memory
+> +
+> +- clocks: must include clock specifiers corresponding to entries in the
+> +		clock-names property.
+> +
+> +- clock-names: must contain
+> +		"bus": bus gate
+> +		"clock": pixel clock
+> +
+> +- resets: phandle to the reset of the device
+> +
+> +- interrupts: interrupt number for the TCON
+> +
+> +- port: port node with endpoint definitions as defined in
+> +	Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +	de: de-controller@01000000 {
+> +		compatible =3D "allwinner,sun8i-h3-display-engine";
+> +		reg =3D <0x01000000 0x400000>;
+> +		clocks =3D <&ccu CLK_BUS_DE>, <&ccu CLK_DE>;
+> +		clock-names =3D "bus", "clock";
+> +		resets =3D <&ccu RST_BUS_DE>;
+> +		ports =3D <&tcon0_p>, <&tcon1_p>;
+
+This isn't how the OF graph DT bindings are used. You should instead have
+
+	ports {
+		#address-cells =3D <1>;
+		#size-cells =3D <0>;
+		port@0 {
+			de_out_0: endpoint {
+				remote_endpoint =3D <&tcon0_hdmi>;
+			};
+		};
+		port@1 {
+			/* No endpoint as the port is not connected */
+		};
+	};
+
+> +	};
+> +
+> +	tcon0: lcd-controller@01c0c000 {
+> +		compatible =3D "allwinner,sun8i-a83t-tcon";
+> +		reg =3D <0x01c0c000 0x400>;
+> +		clocks =3D <&ccu CLK_BUS_TCON0>, <&ccu CLK_TCON0>;
+> +		clock-names =3D "bus", "clock";
+> +		resets =3D <&ccu RST_BUS_TCON0>;
+> +		interrupts =3D <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		tcon0_p: port {
+> +			tcon0_hdmi: endpoint {
+> +				remote-endpoint =3D <&hdmi_tcon0>;
+> +			};
+> +		};
+
+and here
+
+	port {
+		tcon0_hdmi: endpoint {
+			remote-endpoint =3D <&de_out_0>;
+		};
+	};
+
+> +	};
+> +
+> +	/* not used */
+> +	tcon1: lcd-controller@01c0d000 {
+> +		compatible =3D "allwinner,sun8i-h3-tcon";
+> +		reg =3D <0x01c0d000 0x400>;
+> +		clocks =3D <&ccu CLK_BUS_TCON1>,
+> +			 <&ccu CLK_TCON0>;	/* no clock */
+> +		clock-names =3D "bus", "clock";
+> +		interrupts =3D <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> +		status =3D "disabled";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		tcon1_p: port {
+> +			endpoint {
+> +				/* empty */
+> +			};
+> +		};
+
+and here
+
+	port {
+		/* No endpoint as the port is not connected */
+	};
+
+(although I'm not sure why you don't connect it)
+
+> +	};
+
+--=20
+Regards,
+
+Laurent Pinchart
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
