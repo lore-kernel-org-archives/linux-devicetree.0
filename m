@@ -1,21 +1,68 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
-Date: Tue, 29 Nov 2016 20:34:49 +0100
-Message-ID: <20161129193449.GC20341@kroah.com>
-References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
- <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Tue, 29 Nov 2016 21:37:31 +0200
+Message-ID: <1557992.zAjuUn6zCK@avalon>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <3929994.7YhJtsl9c3@avalon> <20161129110125.sksjxfy56ofzyxw3@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20161129110125.sksjxfy56ofzyxw3@sirena.org.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
-> See cover-letter for changelog
-
-Same here.
+SGkgTWFyaywKCk9uIFR1ZXNkYXkgMjkgTm92IDIwMTYgMTE6MDE6MjUgTWFyayBCcm93biB3cm90
+ZToKPiBPbiBUdWUsIE5vdiAyOSwgMjAxNiBhdCAxMToxMTowM0FNICswMjAwLCBMYXVyZW50IFBp
+bmNoYXJ0IHdyb3RlOgo+ID4gT24gVHVlc2RheSAyOSBOb3YgMjAxNiAxMzo0MTozMyBBcmNoaXQg
+VGFuZWphIHdyb3RlOgo+ID4+IEkgdGhvdWdodCB3ZSBjb3VsZG4ndCBhZGQgbWFuZGF0b3J5IHBy
+b3BlcnRpZXMgb25jZSB0aGUgZGV2aWNlIGlzCj4gPj4gYWxyZWFkeSBwcmVzZW50IGluIERUIGZv
+ciBvbmUgb3IgbW9yZSBwbGF0Zm9ybXMuCj4gPiAKPiA+IFlvdSBjYW4sIGFzIGxvbmcgYXMgeW91
+IHRyZWF0IHRoZW0gYXMgb3B0aW9uYWwgaW4gdGhlIGRyaXZlciB0byByZXRhaW4KPiA+IGJhY2t3
+YXJkIGNvbXBhdGliaWxpdHkuIFRoZSBEVCBiaW5kaW5ncyBzaG91bGQgZG9jdW1lbnQgdGhlIHBy
+b3BlcnRpZXMKPiA+IGV4cGVjdGVkIGZyb20gYSBuZXcgcGxhdGZvcm0gKG9sZGVyIHZlcnNpb25z
+IG9mIHRoZSBiaW5kaW5ncyB3aWxsIGFsd2F5cwo+ID4gYmUgYXZhaWxhYmxlIGluIHRoZSBnaXQg
+aGlzdG9yeSkuCj4gCj4gVGhlIGRldmljZSBwcm9iYWJseSBuZXZlciB3b3JrZWQgd2l0aG91dCBw
+b3dlci4uLiAgbm90ZSB0aGF0IHRoZSBrZXJuZWwKPiB3aWxsIHN1YnN0aXR1dGUgaW4gZHVtbXkg
+cmVndWxhdG9ycyBmb3IgYW55dGhpbmcgdGhhdCBpc24ndCBleHBsaWNpdGx5Cj4gbWFwcGVkIHNv
+IGl0IHdvbid0IGFjdHVhbGx5IGJyZWFrIGFueXRoaW5nLgo+IAo+ID4+IFNheSwgaWYgd2UgZG8g
+bWFrZSBpdCBtYW5kYXRvcnkgZm9yIGZ1dHVyZSBhZGRpdGlvbnMsIHdlIHdvdWxkIG5lZWQgdG8K
+PiA+PiBoYXZlIERUIHByb3BlcnR5IGZvciB0aGUgc3VwcGxpZXMgZm9yIHRoZSBuZXcgcGxhdGZv
+cm1zLiBJZiB0aGUKPiA+PiByZWd1bGF0b3JzIG9uIHRoZXNlIGJvYXJkcyBhcmUgZml4ZWQgc3Vw
+cGxpZXMsIHRoZXkgd291bGQgYmUgbmVlZCB0byBiZQo+ID4+IG1vZGVsZWQgdXNpbmcgInJlZ3Vs
+YXRvci1maXhlZCIsIHBvc3NpYmx5IHdpdGhvdXQgYW55IGlucHV0IHN1cHBseS4gSXMKPiA+PiB0
+aGF0IHdoYXQgeW91J3JlIHN1Z2dlc3Rpbmc/Cj4gPiAKPiA+IFRoYXQncyB0aGUgaWRlYSwgeWVz
+LiBDbG9jayBtYWludGFpbmVycyBoYXZlIGEgc2ltaWxhciBvcGluaW9uIHJlZ2FyZGluZwo+ID4g
+dGhlIGNsb2NrIGJpbmRpbmdzLCB3aGVyZSBhIGNsb2NrIHRoYXQgaXMgbm90IG9wdGlvbmFsIGF0
+IHRoZSBoYXJkd2FyZQo+ID4gbGV2ZWwgc2hvdWxkIGJlIHNwZWNpZmllZCBpbiBEVCBldmVuIGlm
+IGl0J3MgYWx3YXlzIHByZXNlbnQuCj4gPiAKPiA+IE1hcmssIGFueSBvcGluaW9uID8KPiAKPiBJ
+dCdzIGJlc3QgcHJhY3RpY2UgdG8gYWx3YXlzIGRlc2NyaWJlIHRoZSBwb3dlci4gIFRoZSBrZXJu
+ZWwgd2lsbCBjb3BlCj4gaWYgcGVvcGxlIGRvbid0IGJ1dCBpdCdzIG5vdCB1bmtub3duIGZvciBk
+cml2ZXJzIHRvIGRpc2NvdmVyIGEgcmVhc29uCj4gZm9yIHdhbnRpbmcgaW5mb3JtYXRpb24gYWJv
+dXQgdGhlaXIgcG93ZXIgYW5kIGhhcmQgdG8gcmV0cm9maXQgdGhhdCBpZgo+IGl0J3Mgbm90IGJl
+ZW4gaW4gdGhlcmUgZnJvbSB0aGUgZ2V0IGdvLgoKU291bmRzIGdvb2QgdG8gbWUsIHRoYW5rcy4K
+Cj4gUGxlYXNlIG5vdGUgdGhhdCBpZiB5b3UncmUgZ29pbmcgdG8gQ0MgbWUgaW50byBhIGdyYXBo
+aWNzIHRocmVhZCB0aGVyZSdzCj4gYSBnb29kIGNoYW5jZSBJIHdpbGwgbWlzcyBpdCwgSSBnZXQg
+Y29waWVkIG9uIHF1aXRlIGEgbG90IG9mIGdyYXBoaWNzCj4gcmVsYXRlZCBtYWlsIHRoYXQncyBu
+b3QgcmVhbGx5IHJlbGV2YW50IHNvIEkgb2Z0ZW4gc2tpcCBpdC4gIENoYW5naW5nCj4gdGhlIHN1
+YmplY3QgbGluZSB3b3VsZCBoZWxwIHdpdGggdGhhdC4KCkkgdHJ5IHRvIGFkZCBhIChDQydpbmcg
+eHh4KSBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSBlLW1haWwgdG8gZHJhdyBhdHRlbnRpb24gCndo
+ZW4gYSBxdWVzdGlvbiBpcyB0YXJnZXR0ZWQgYXQgYSBwYXJ0aWN1bGFyIHBlcnNvbi4gSWYgdGhh
+dCdzIG5vdCBlbm91Z2ggSSAKY2FuIGNoYW5nZSB0aGUgc3ViamVjdCwgYnV0IG1pZ2h0IGZvcmdl
+dCB0byBkbyBzbyBmcm9tIHRpbWUgdG8gdGltZS4gT3IgeW91IApjb3VsZCB3aGl0ZWxpc3QgbWUs
+IHVubGVzcyBJJ20gYWxyZWFkeSBibGFja2xpc3RlZCA7LSkKCi0tIApSZWdhcmRzLAoKTGF1cmVu
+dCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
