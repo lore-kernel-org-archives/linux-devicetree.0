@@ -1,52 +1,108 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 08/13] clocksource/drivers/rockchip_timer: drop unused rk_base() and rk_ctrl()
-Date: Tue, 29 Nov 2016 16:03:30 +0100
-Message-ID: <4764744.Q8IDkmDPk7@diego>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <1480427118-5126-1-git-send-email-al.kochet@gmail.com> <1480427118-5126-9-git-send-email-al.kochet@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Fix issue where code would fall through to error case.
+Date: Tue, 29 Nov 2016 09:06:08 -0600
+Message-ID: <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
+References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
+ <582E3FFC.80305@gmail.com> <582E452E.3080909@gmail.com> <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
+ <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
+ <583A0110.4090603@gmail.com> <583C4D83.6040800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480427118-5126-9-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <583C4D83.6040800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 29. November 2016, 16:45:13 schrieb Alexander Kochetkov:
-> Use of functions has been ceased by previous commit.
+On Mon, Nov 28, 2016 at 9:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 11/26/16 13:39, Frank Rowand wrote:
+>> On 11/23/16 13:58, Rob Herring wrote:
+>>> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
+>>> <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On 11/17/16 15:40, Frank Rowand wrote:
+>>>>>> On 11/17/16 15:25, Moritz Fischer wrote:
+>>>>>>> No longer fall through into the error case that prints out
+>>>>>>> an error if no error (err = 0) occurred.
+>>>>>>>
+>>>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
+>>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  drivers/of/resolver.c | 6 +++++-
+>>>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>>>>>>> index 783bd09..785076d 100644
+>>>>>>> --- a/drivers/of/resolver.c
+>>>>>>> +++ b/drivers/of/resolver.c
+>>>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
+>>>>>>>
+>>>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+>>>>>>>              if (err)
+>>>>>>> -                    break;
+>>>>>>> +                    goto err_out;
+>>>>>>>      }
+>>>>>>>
+>>>>>>> +    of_node_put(tree_symbols);
+>>>>>>> +
+>>>>>>> +    return 0;
+>>>>>>> +
+>>>>>>>  err_out:
+>>>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
+>>>>>>>  out:
+>>>>>>
+>>>>>> Thanks for catching that.
+>>>>>>
+>>>>>> Rob, please apply.
+>>>>>>
+>>>>>> Reviewed-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+>>>>>>
+>>>>>> -Frank
+>>>>>
+>>>>> On second thought, isn't the common pattern when clean up is needed for
+>>>>> both the no-error path and the error path something like:
+>>>>>
+>>>>>
+>>>>>         out:
+>>>>>                 of_node_put(tree_symbols);
+>>>>>                 return err;
+>>>>>
+>>>>>         err_out:
+>>>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
+>>>>>                 goto out;
+>>>>>         }
+>>>>>
+>>>>>
+>>>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
+>>>>
+>>>> Same here. I tried to avoid the jumping back part, but if that's the
+>>>> common pattern,
+>>>> I can submit a v2 doing that instead.
+>>>
+>>> Both are ugly. Just do:
+>>>
+>>> if (err)
+>>>   pr_err(...);
+>>>
+>>> Rob
+>>
+>> Agreed.  Thanks for the touch of sanity Rob.
+>>
+>> -Frank
+>
+> I succumbed to looking only at the few lines of code above and not the
+> fuller context of the file that the patch applies to.
+>
+> The proposed patch was fixing the problem that a normal completion
+> of the for loop was falling through into the err_out label.  So what
+> looks cleaner ("if (err) pr_err(...)") is actually not correct.
 
-Then why do you need another patch to remove them and don't do that in the 
-patch removing their respective usage?
+What!? The *only* problem was printing the error message in the err=0
+case. All that needs to be fixed is not doing that. If we do that,
+then we really only need 1 goto label.
 
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/clocksource/rockchip_timer.c |   10 ----------
->  1 file changed, 10 deletions(-)
-> 
-> diff --git a/drivers/clocksource/rockchip_timer.c
-> b/drivers/clocksource/rockchip_timer.c index aa9ccd1..a17dc61 100644
-> --- a/drivers/clocksource/rockchip_timer.c
-> +++ b/drivers/clocksource/rockchip_timer.c
-> @@ -53,16 +53,6 @@ static inline struct rk_timer *rk_timer(struct
-> clock_event_device *ce) return &rk_clock_event_device(ce)->timer;
->  }
-> 
-> -static inline void __iomem *rk_base(struct clock_event_device *ce)
-> -{
-> -	return rk_timer(ce)->base;
-> -}
-> -
-> -static inline void __iomem *rk_ctrl(struct clock_event_device *ce)
-> -{
-> -	return rk_timer(ce)->ctrl;
-> -}
-> -
->  static inline void rk_timer_disable(struct rk_timer *timer)
->  {
->  	writel_relaxed(TIMER_DISABLE, timer->ctrl);
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
