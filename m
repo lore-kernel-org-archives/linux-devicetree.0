@@ -1,136 +1,78 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Fix issue where code would fall through to error
- case.
-Date: Tue, 29 Nov 2016 07:55:17 -0800
-Message-ID: <20161129155517.GA23667@live.com>
-References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
- <582E3FFC.80305@gmail.com>
- <582E452E.3080909@gmail.com>
- <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
- <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
- <583A0110.4090603@gmail.com>
- <583C4D83.6040800@gmail.com>
- <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v5 4/9] dt-bindings: iio: iio-mux: document iio-mux
+ bindings
+Date: Tue, 29 Nov 2016 16:56:37 +0100
+Message-ID: <b00ae997-4466-29b8-b484-3a0970e65386@axentia.se>
+References: <1480414245-14034-1-git-send-email-peda@axentia.se>
+ <1480414245-14034-5-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1480414245-14034-5-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 2016-11-29 11:10, Peter Rosin wrote:
+> +Example:
+> +	mux: mux-controller {
+> +		compatible = "mux-gpio";
+> +		#mux-control-cells = <0>;
+> +
+> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	adc-mux {
+> +		compatible = "iio-mux";
+> +		io-channels = <&adc 0>;
+> +		io-channel-names = "parent";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		mux-controls = <&mux>;
+> +
+> +		sync@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		in@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		system-regulator@2 {
+> +			reg = <2>;
+> +		};
+> +	};
 
-On Tue, Nov 29, 2016 at 09:06:08AM -0600, Rob Herring wrote:
-> On Mon, Nov 28, 2016 at 9:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On 11/26/16 13:39, Frank Rowand wrote:
-> >> On 11/23/16 13:58, Rob Herring wrote:
-> >>> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
-> >>> <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>>> On 11/17/16 15:40, Frank Rowand wrote:
-> >>>>>> On 11/17/16 15:25, Moritz Fischer wrote:
-> >>>>>>> No longer fall through into the error case that prints out
-> >>>>>>> an error if no error (err = 0) occurred.
-> >>>>>>>
-> >>>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
-> >>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> >>>>>>> ---
-> >>>>>>>  drivers/of/resolver.c | 6 +++++-
-> >>>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> >>>>>>> index 783bd09..785076d 100644
-> >>>>>>> --- a/drivers/of/resolver.c
-> >>>>>>> +++ b/drivers/of/resolver.c
-> >>>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
-> >>>>>>>
-> >>>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
-> >>>>>>>              if (err)
-> >>>>>>> -                    break;
-> >>>>>>> +                    goto err_out;
-> >>>>>>>      }
-> >>>>>>>
-> >>>>>>> +    of_node_put(tree_symbols);
-> >>>>>>> +
-> >>>>>>> +    return 0;
-> >>>>>>> +
-> >>>>>>>  err_out:
-> >>>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
-> >>>>>>>  out:
-> >>>>>>
-> >>>>>> Thanks for catching that.
-> >>>>>>
-> >>>>>> Rob, please apply.
-> >>>>>>
-> >>>>>> Reviewed-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
-> >>>>>>
-> >>>>>> -Frank
-> >>>>>
-> >>>>> On second thought, isn't the common pattern when clean up is needed for
-> >>>>> both the no-error path and the error path something like:
-> >>>>>
-> >>>>>
-> >>>>>         out:
-> >>>>>                 of_node_put(tree_symbols);
-> >>>>>                 return err;
-> >>>>>
-> >>>>>         err_out:
-> >>>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
-> >>>>>                 goto out;
-> >>>>>         }
-> >>>>>
-> >>>>>
-> >>>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
-> >>>>
-> >>>> Same here. I tried to avoid the jumping back part, but if that's the
-> >>>> common pattern,
-> >>>> I can submit a v2 doing that instead.
-> >>>
-> >>> Both are ugly. Just do:
-> >>>
-> >>> if (err)
-> >>>   pr_err(...);
-> >>>
-> >>> Rob
-> >>
-> >> Agreed.  Thanks for the touch of sanity Rob.
-> >>
-> >> -Frank
-> >
-> > I succumbed to looking only at the few lines of code above and not the
-> > fuller context of the file that the patch applies to.
-> >
-> > The proposed patch was fixing the problem that a normal completion
-> > of the for loop was falling through into the err_out label.  So what
-> > looks cleaner ("if (err) pr_err(...)") is actually not correct.
-> 
-> What!? The *only* problem was printing the error message in the err=0
-> case. All that needs to be fixed is not doing that. If we do that,
-> then we really only need 1 goto label.
+Hmmm, a more compact binding would be to just use an array of strings
+instead of a list of children for the mux channels, and use the array
+index as channel number, like so:
 
-I think you're right. Can you look at my v3 that I sent. I also tried to
-fix cases where we can just do
+	adc-mux {
+		compatible = "iio-mux";
+		io-channels = <&adc 0>;
+		io-channel-names = "parent";
 
-return 0;
+		mux-controls = <&mux>;
 
-vs.
+		channels = "sync", "in", "system-regulator";
+	};
 
-err = 0;
-goto err
+If you need to skip a low-number channel, you'd just put an empty string
+for that channel. If you need to skip channels at the end, just stop
+short.
 
-...
+Can anyone think of any reason to add anything to the channel nodes
+that makes the string-array ineffective? If so, or if that comes up
+later, it could be optional and in that case you could look for the
+channels property first and then, if not present, iterate over child
+nodes.
 
-err:
-	of_node_put(NULL /*tree_symbols is NULL*/);
-	return err;
+Opinions? I like it, it's a lot more compact...
 
-Thanks,
-
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Peter
