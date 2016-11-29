@@ -1,51 +1,71 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 12/13] net: ethernet: ti: cpts: calc mult and shift
- from refclk freq
-Date: Tue, 29 Nov 2016 10:22:21 -0600
-Message-ID: <cfa767c3-9ff4-d1b3-14a2-2f2118356bf1@ti.com>
-References: <20161128230337.6731-1-grygorii.strashko@ti.com>
- <20161128230337.6731-13-grygorii.strashko@ti.com>
- <20161129103453.GJ3110@localhost.localdomain>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 5/7] overlay: Documentation for the overlay sugar
+ syntax
+Date: Tue, 29 Nov 2016 08:45:16 -0800
+Message-ID: <583DB09C.7060105@gmail.com>
+References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1480349141-14145-6-git-send-email-pantelis.antoniou@konsulko.com>
+ <20161129031054.GI13307@umbus.fritz.box> <583D05B7.4040109@gmail.com>
+ <20161129051042.GO13307@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161129103453.GJ3110@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161129051042.GO13307-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/29/2016 04:34 AM, Richard Cochran wrote:
-> On Mon, Nov 28, 2016 at 05:03:36PM -0600, Grygorii Strashko wrote:
->> +static void cpts_calc_mult_shift(struct cpts *cpts)
->> +{
->> +	u64 frac, maxsec, ns;
->> +	u32 freq, mult, shift;
->> +
->> +	freq = clk_get_rate(cpts->refclk);
->> +
->> +	/* Calc the maximum number of seconds which we can run before
->> +	 * wrapping around.
->> +	 */
->> +	maxsec = cpts->cc.mask;
->> +	do_div(maxsec, freq);
->> +	if (maxsec > 600 && cpts->cc.mask > UINT_MAX)
->> +		maxsec = 600;
+On 11/28/16 21:10, David Gibson wrote:
+> On Mon, Nov 28, 2016 at 08:36:07PM -0800, Frank Rowand wrote:
+>> On 11/28/16 19:10, David Gibson wrote:
+>>> On Mon, Nov 28, 2016 at 06:05:39PM +0200, Pantelis Antoniou wrote:
+>>>> There exists a syntactic sugar version of overlays which
+>>>> make them simpler to write for the trivial case of a single target.
+>>
+>> It also works for multiple targets.  (See the example I provided in
+>> my comment to v10.)
+>>
+>>
+>>>>
+>>>> Document it in the device tree object internals.
+>>>>
+>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>
+>>> I'm with Frank that I think this, rather than being regarded mere
+>>> syntactic sugar, should be considered the primary way of describing
+>>> overlays.
+>>>
+>>> Obviously we need to support the fully written out version as well.
+>>
+>> If we need to support the fully written out version, can we make that
+>> a discouraged, non-preferred method?  Maybe require an option to
+>> enable compiling this style of dts?
 > 
-> The reason for this test is not obvious.  Why check cc.mask against
-> UINT_MAX?  Please use the comment to explain it.
+> Yeah.  To avoid further proliferation of options, I'm thinking a
+> single "backwards compat" option which would:
+> 	- Use the dtb magic instead of dtb magic
+> 	- Disable checks which would reject explicit creation of
+> 	  __overlay__ / __symbols__ / __fixups__ nodes
+> 	- Anything other special behaviour we need
+> 	
+>> I can imagine some reasons to support the fully written out version,
+>> but can we document what those reasons are?
 > 
+> I believe the main one is the dts files in this format out in the
+> field.  Mind you, I guess we're already requiring them to tweak how
+> they declare the /plugin/ option.
 
-Yeah. This is copy paste from __clocksource_update_freq_scale(), but
-I'm going to limit it to 10 sec for now, because otherwise it will result in too small
-mult in case of 64bit counter.
+It might be easy to write a program that transforms the expanded
+format to the simple format.  I'll try to make some time to see
+how difficult it is.  The transformation is relatively easy to
+do manually, but I don't know how many dts files would need to
+be converted.
 
-if (maxsec > 10)
-	maxsec = 10;
+-Frank
 
--- 
-regards,
--grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
