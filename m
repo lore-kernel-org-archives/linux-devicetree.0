@@ -1,85 +1,187 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add symlinks for cros-ec-keyboard and cros-ec-sbs
-Date: Tue, 29 Nov 2016 10:16:44 +0100
-Message-ID: <3849737.6EZ01tNVi6@diego>
-References: <1463090530-21864-1-git-send-email-dianders@chromium.org> <20161128235132.GA71295@google.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: Question regarding clocks in the DW-HDMI DT bindings
+Date: Tue, 29 Nov 2016 11:18:03 +0200
+Message-ID: <1670305.5iv2J65bic@avalon>
+References: <2778019.JJI4Lz6scm@avalon> <1938338.cMuGjElf2l@avalon> <CAEG3pNCTH5YUjO8m-jd1rfRRKRus7c39W4rYK56c6NdfQsOcyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161128235132.GA71295-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAEG3pNCTH5YUjO8m-jd1rfRRKRus7c39W4rYK56c6NdfQsOcyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 28. November 2016, 15:51:35 schrieb Brian Norris:
-> Hi Olof, Arnd,
-> 
-> On Thu, May 12, 2016 at 03:02:10PM -0700, Doug Anderson wrote:
-> > We'd like to be able to use the cros-ec-keyboard.dtsi and
-> > cros-ec-sbs.dtsi snippets for arm64 devices.  Currently those files live
-> > in the arm/boot/dts directory.
-> > 
-> > Let's follow the convention set by commit 8ee57b8182c4 ("ARM64: dts:
-> > vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm") and use
-> > a symlink.  Note that in this case we put the files in a new
-> > "include/common" directory since these snippets may need to be
-> > referenced by dts files in many different subdirectories.
-> > 
-> > Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > Note that, as of right now, there are no users of this.  However, given
-> > development happening it is almost 100% certain that users will arrive
-> > soon.  If we need to wait for the first user before landing this we can
-> > leave this on the back burner.  If it's OK to have no users (yet), let's
-> > land.
-> 
-> This may not fit your definition of "soon", but I'm looking to start
-> using these files in arch/arm64/. I'll probably carry along this patch
-> and resend when I'm ready, but it'd be just as well if you'd merge it
-> now (or express a preference for a different directory structure).
+Hi Mike,
 
-Till now I was expecting to just pick up this patch as well once the first 
-(rk3399-)users arrived. But of course it could also be picked up separately.
+On Monday 28 Nov 2016 22:27:01 Michael Turquette wrote:
+> On Mon, Nov 28, 2016 at 10:04 PM, Laurent Pinchart wrote:
+> > On Monday 28 Nov 2016 13:56:11 Michael Turquette wrote:
+> >> On Fri, Nov 25, 2016 at 7:22 AM, Laurent Pinchart wrote:
+> >>> On Friday 25 Nov 2016 10:56:53 Andy Yan wrote:
+> >>>> On 2016=E5=B9=B411=E6=9C=8825=E6=97=A5 07:26, Laurent Pinchart w=
+rote:
+> >>>>> On Friday 25 Nov 2016 00:16:00 Vladimir Zapolskiy wrote:
+> >>>>>> On 11/25/2016 12:07 AM, Fabio Estevam wrote:
+> >>>>>>> On Thu, Nov 24, 2016 at 7:16 PM, Laurent Pinchart wrote:
+> >>>>>>>> Hi Andy,
+> >>>>>>>>=20
+> >>>>>>>> As the author of the DW-HDMI DT bindings this question is
+> >>>>>>>> addressed to you, but information from anyone is more than w=
+elcome.
+> >>>>>>>>=20
+> >>>>>>>> The DT bindings specify two clocks named "iahb" and "isfr" b=
+ut
+> >>>>>>>> don't describe them. While I assume that the "isfr" clock
+> >>>>>>>> corresponds to the "isfrclk" input signal of the DW HDMI, th=
+ere is
+> >>>>>>>> no "iahb" clock described in the IP core datasheet.
+> >>>>>>>=20
+> >>>>>>> i.MX6Q has a DW-HDMI IP block.
+> >>>>>>>=20
+> >>>>>>> The names in the devicetree binding matches the ones listed a=
+t the
+> >>>>>>> i.MX6Q Reference Manual - Table 33-1. HDMI Clocks
+> >>>>>>=20
+> >>>>>> correct, for your convenience the table is copied below:
+> >>>>>>=20
+> >>>>>> Clock name |     Clock Root     | Description
+> >>>>>> -----------+--------------------+-----------------------------=
+------
+> >>>>>>   iahbclk  | ahb_clk_root       | Bus clock
+> >>>>>>   icecclk  | ckil_sync_clk_root | CEC low-frequency clock (32k=
+HZ)
+> >>>>>>   ihclk    | ahb_clk_root       | Module clock
+> >>>>>>   isfrclk  | video_27m_clk_root | Internal SFR clock (video cl=
+ock
+> >>>>>>   27MHz)
+> >>>>>>=20
+> >>>>>> Here AHB stands for ARM Advanced High-performance Bus.
+> >>>>>=20
+> >>>>> That's what I suspected. I believe the "iahb" name is wrong, as=
+ the
+> >>>>> DW HDMI TX IP core clearly documents the bus clock as being cal=
+led
+> >>>>> "iapbclk". We could rename that in the DT bindings (with
+> >>>>> compatibility code in the driver to keep supporting the old nam=
+e) but
+> >>>>> it might not be worth it. The bindings should however document =
+that
+> >>>>> the "iahb" clock is the IP core's "iapbclk" bus clock.
+> >>>>=20
+> >>>> I got the clock name from I.MX6Q TRM, I also checked the name ag=
+ain
+> >>>> with Rockchip IC design team now, hope to get some new informati=
+on
+> >>>> soon.
+> >>>=20
+> >>> Thank you. While at it, could you ask them which version of the D=
+W HDMI
+> >>> IP used in the SoC ?
+> >>>=20
+> >>>>> Another question I have about the bus clock (CC'ing the devicet=
+ree
+> >>>>> mailing list as well as the clock maintainers) is whether it sh=
+ould
+> >>>>> be made optional. The clock is obviously mandatory from a hardw=
+are
+> >>>>> point of view (given that APB is a synchronous bus and thus req=
+uires a
+> >>>>> clock), but in some SoCs (specifically for the Renesas SoCs) th=
+at
+> >>>>> clock is always on and can't be controlled. We already omit bus=
+ clocks
+> >>>>> in DT for most IP cores when the clock can never be controlled =
+(and we
+> >>>>> also omit a bunch of other clocks that we don't even know exist=
+), so
+> >>>>> it could make sense to make the clock optional. Otherwise there=
+ would
+> >>>>> be runtime overhead trying to handle a clock that can't be cont=
+rolled.
+> >>>>=20
+> >>>> If this is the case on Renesas SOCs, we can consider make the cl=
+ock as
+> >>>> optional. Or move all the clock operations to platform specific
+> >>>> code(dw_hdmi-rockchip.c/dw_hdmi-imx.c)?
+> >>>=20
+> >>> I'd prefer keeping the code generic, otherwise we'd end up with
+> >>> platform-specific code that would perform the same operations on =
+most
+> >>> platforms. I'll submit a patch soon to make the clock optional, w=
+e can
+> >>> discuss it then.
+> >>=20
+> >> Yes, let's keep the code generic. Absence of a "standard' clock is=
+ OK
+> >> and we should accept the small overhead incurred in providing a
+> >> solution that works for everyone. This prevents hardware-specific
+> >> hacks in the driver.
+> >>=20
+> >> Related: we really should model bus clocks whenever possible. I've=
 
+> >> seen other attempts to merge functional/logic and bus clocks into =
+a
+> >> single entity (e.g. a single struct clk_hw/clk_core that turns bot=
+h
+> >> clocks on and off) and this defeats some fine-grained power manage=
+ment
+> >> scenarios that the hardware designers had in mind when creating
+> >> separate controls for the clocks.
+> >=20
+> > Sure, but that wasn't really the question :-) When the bus clock is=
 
-> >  arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi | 1 +
-> >  arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi      | 1 +
-> >  2 files changed, 2 insertions(+)
-> >  create mode 120000
-> >  arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
-> >  create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
-> > 
-> > \ No newline at end of file
-> > 
-> > diff --git a/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
-> > b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi new file mode
-> > 120000
-> > index 000000000000..1c1889f0a791
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
-> > @@ -0,0 +1 @@
-> > +../../../../../arm/boot/dts/cros-ec-keyboard.dtsi
-> > \ No newline at end of file
-> > diff --git a/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
-> > b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi new file mode
-> > 120000
-> > index 000000000000..3d7ae9c88bcd
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
-> > @@ -0,0 +1 @@
-> > +../../../../../arm/boot/dts/cros-ec-sbs.dtsi
-> 
-> FWIW:
-> 
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > separately controllable then I agree it should be modelled separate=
+ly in
+> > DT. In my case the bus clock is always on, and I'm thus wondering w=
+hether
+> > it would be better to make it optional in DT to reduce the runtime
+> > overhead incurred by trying to control something that can't be
+> > controlled.
+>=20
+> I thought I answered this, but maybe not directly enough :-)
+>=20
+> We should make the clock mandatory in DT if the physical line must be=
 
-I'm also running with this on my rk3399-gru and it sucessfully enables the 
-cros-ec keyboard :-) ,so if anyone picks it up before me they can add
+> there. This is regardless of whether a given chip/IP variant has
+> control over that clock; so long as the physical clock line always
+> exists then it is not really "optional".
+>=20
+> In the case where there is an absence of the physical clock line, the=
+n
+> making it optional in DT makes sense.
+>=20
+> As an aside, we did discuss the fact that the vast majority of clocks=
 
-Reviewed-by: Heiko Stueber <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> are not modeled in DT, and I'm not saying that we transcribe the RTL
+> into DT. I'm just saying that if there is a debate over whether or no=
+t
+> to make a clock optional in DT, when it is always physically there,
+> then don't make it optional. Whether or not the control is exposed on=
+
+> a particular chip is less important.
+>=20
+> Anyways, this is more DT ridiculousness and I won't block either
+> method getting merged. I'm just picking my favorite color to paint th=
+e
+> bikeshed.
+
+Thanks for sharing your opinion. I'll keep the clock mandatory and spec=
+ify it=20
+in DT.
+
+> >>>>>> By the way while we're discussing DW HDMI bindings specific to=
+ iMX,
+> >>>>>> I would recommend to remove utterly hackish and iMX only "gpr"=
+
+> >>>>>> property from the example in bindings/display/bridge/dw_hdmi.t=
+xt
+
+--=20
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
