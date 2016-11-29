@@ -1,7 +1,7 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 1/4] [media] davinci: vpif_capture: don't lock over s_stream
-Date: Tue, 29 Nov 2016 15:57:09 -0800
-Message-ID: <20161129235712.29846-2-khilman@baylibre.com>
+Subject: [PATCH v4 3/4] [media] davinci: vpif_capture: get subdevs from DT
+Date: Tue, 29 Nov 2016 15:57:11 -0800
+Message-ID: <20161129235712.29846-4-khilman@baylibre.com>
 References: <20161129235712.29846-1-khilman@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,240 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Video capture subdevs may be over I2C and may sleep during xfer, so we
-cannot do IRQ-disabled locking when calling the subdev.
+Allow getting of subdevs from DT ports and endpoints.
+
+The _get_pdata() function was larely inspired by (i.e. stolen from)
+am437x-vpfe.c
 
 Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/media/platform/davinci/vpif_capture.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/davinci/vpif_capture.c | 138 +++++++++++++++++++++++++-
+ include/media/davinci/vpif_types.h            |   9 +-
+ 2 files changed, 141 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-index 5104cc0ee40e..9f8f41c0f251 100644
+index a83df07e4051..4e363da2c21f 100644
 --- a/drivers/media/platform/davinci/vpif_capture.c
 +++ b/drivers/media/platform/davinci/vpif_capture.c
-@@ -193,7 +193,10 @@ static int vpif_start_streaming(struct vb2_queue *vq, unsigned int count)
- 		}
+@@ -26,6 +26,8 @@
+ #include <linux/slab.h>
+ 
+ #include <media/v4l2-ioctl.h>
++#include <media/v4l2-of.h>
++#include <media/i2c/tvp514x.h>
+ 
+ #include "vpif.h"
+ #include "vpif_capture.h"
+@@ -651,6 +653,10 @@ static int vpif_input_to_subdev(
+ 
+ 	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
+ 
++	if (!chan_cfg)
++		return -1;
++	if (input_index >= chan_cfg->input_count)
++		return -1;
+ 	subdev_name = chan_cfg->inputs[input_index].subdev_name;
+ 	if (subdev_name == NULL)
+ 		return -1;
+@@ -658,7 +664,7 @@ static int vpif_input_to_subdev(
+ 	/* loop through the sub device list to get the sub device info */
+ 	for (i = 0; i < vpif_cfg->subdev_count; i++) {
+ 		subdev_info = &vpif_cfg->subdev_info[i];
+-		if (!strcmp(subdev_info->name, subdev_name))
++		if (subdev_info && !strcmp(subdev_info->name, subdev_name))
+ 			return i;
+ 	}
+ 	return -1;
+@@ -1328,6 +1334,21 @@ static int vpif_async_bound(struct v4l2_async_notifier *notifier,
+ {
+ 	int i;
+ 
++	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
++		struct v4l2_async_subdev *_asd = vpif_obj.config->asd[i];
++		const struct device_node *node = _asd->match.of.node;
++
++		if (node == subdev->of_node) {
++			vpif_obj.sd[i] = subdev;
++			vpif_obj.config->chan_config->inputs[i].subdev_name =
++				(char *)subdev->of_node->full_name;
++			vpif_dbg(2, debug,
++				 "%s: setting input %d subdev_name = %s\n",
++				 __func__, i, subdev->of_node->full_name);
++			return 0;
++		}
++	}
++
+ 	for (i = 0; i < vpif_obj.config->subdev_count; i++)
+ 		if (!strcmp(vpif_obj.config->subdev_info[i].name,
+ 			    subdev->name)) {
+@@ -1423,6 +1444,118 @@ static int vpif_async_complete(struct v4l2_async_notifier *notifier)
+ 	return vpif_probe_complete();
+ }
+ 
++static struct vpif_capture_config *
++vpif_capture_get_pdata(struct platform_device *pdev)
++{
++	struct device_node *endpoint = NULL;
++	struct v4l2_of_endpoint bus_cfg;
++	struct vpif_capture_config *pdata;
++	struct vpif_subdev_info *sdinfo;
++	struct vpif_capture_chan_config *chan;
++	unsigned int i;
++
++	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
++
++	/*
++	 * DT boot: OF node from parent device contains
++	 * video ports & endpoints data.
++	 */
++	if (pdev->dev.parent && pdev->dev.parent->of_node)
++		pdev->dev.of_node = pdev->dev.parent->of_node;
++	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
++		return pdev->dev.platform_data;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++	pdata->subdev_info =
++		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
++			     VPIF_CAPTURE_NUM_CHANNELS, GFP_KERNEL);
++
++	if (!pdata->subdev_info)
++		return NULL;
++
++	for (i = 0; i < VPIF_CAPTURE_NUM_CHANNELS; i++) {
++		struct device_node *rem;
++		unsigned int flags;
++		int err;
++
++		endpoint = of_graph_get_next_endpoint(pdev->dev.of_node,
++						      endpoint);
++		if (!endpoint)
++			break;
++
++		sdinfo = &pdata->subdev_info[i];
++		chan = &pdata->chan_config[i];
++		chan->inputs = devm_kzalloc(&pdev->dev,
++					    sizeof(*chan->inputs) *
++					    VPIF_CAPTURE_NUM_CHANNELS,
++					    GFP_KERNEL);
++
++		chan->input_count++;
++		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
++		chan->inputs[i].input.std = V4L2_STD_ALL;
++		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
++
++		/*
++		 * FIXME: need a new property for input/output routing?
++		 * All known boards are using ch0:composite ch1: s-video.
++		 */
++		if (i == 0)
++			chan->inputs[i].input_route = INPUT_CVBS_VI2B;
++		else
++			chan->inputs[i].input_route = INPUT_SVIDEO_VI2C_VI1C;
++		chan->inputs[i].output_route = OUTPUT_10BIT_422_EMBEDDED_SYNC;
++
++		err = v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++		if (err) {
++			dev_err(&pdev->dev, "Could not parse the endpoint\n");
++			goto done;
++		}
++		dev_dbg(&pdev->dev, "Endpoint %s, bus_width = %d\n",
++			endpoint->full_name, bus_cfg.bus.parallel.bus_width);
++		flags = bus_cfg.bus.parallel.flags;
++
++		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++			chan->vpif_if.hd_pol = 1;
++
++		if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++			chan->vpif_if.vd_pol = 1;
++
++		chan->vpif_if.if_type = VPIF_IF_BT656;
++		rem = of_graph_get_remote_port_parent(endpoint);
++		if (!rem) {
++			dev_dbg(&pdev->dev, "Remote device at %s not found\n",
++				endpoint->full_name);
++			goto done;
++		}
++
++		dev_dbg(&pdev->dev, "Remote device %s, %s found\n",
++			rem->name, rem->full_name);
++		sdinfo->name = rem->full_name;
++
++		pdata->asd[i] = devm_kzalloc(&pdev->dev,
++					     sizeof(struct v4l2_async_subdev),
++					     GFP_KERNEL);
++		if (!pdata->asd[i]) {
++			of_node_put(rem);
++			pdata = NULL;
++			goto done;
++		}
++
++		pdata->asd[i]->match_type = V4L2_ASYNC_MATCH_OF;
++		pdata->asd[i]->match.of.node = rem;
++		of_node_put(rem);
++	}
++
++done:
++	pdata->asd_sizes[0] = i;
++	pdata->subdev_count = i;
++	pdata->card_name = "DA850/OMAP-L138 Video Capture";
++
++	return pdata;
++}
++
+ /**
+  * vpif_probe : This function probes the vpif capture driver
+  * @pdev: platform device pointer
+@@ -1439,6 +1572,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	int res_idx = 0;
+ 	int i, err;
+ 
++	pdev->dev.platform_data = vpif_capture_get_pdata(pdev);
+ 	if (!pdev->dev.platform_data) {
+ 		dev_warn(&pdev->dev, "Missing platform data.  Giving up.\n");
+ 		return -EINVAL;
+@@ -1481,7 +1615,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 		goto vpif_unregister;
  	}
  
-+	spin_unlock_irqrestore(&common->irqlock, flags);
- 	ret = v4l2_subdev_call(ch->sd, video, s_stream, 1);
-+	spin_lock_irqsave(&common->irqlock, flags);
+-	if (!vpif_obj.config->asd_sizes) {
++	if (!vpif_obj.config->asd_sizes[0]) {
+ 		i2c_adap = i2c_get_adapter(1);
+ 		for (i = 0; i < subdev_count; i++) {
+ 			subdevdata = &vpif_obj.config->subdev_info[i];
+diff --git a/include/media/davinci/vpif_types.h b/include/media/davinci/vpif_types.h
+index 3cb1704a0650..4ee3b41975db 100644
+--- a/include/media/davinci/vpif_types.h
++++ b/include/media/davinci/vpif_types.h
+@@ -65,14 +65,14 @@ struct vpif_display_config {
+ 
+ struct vpif_input {
+ 	struct v4l2_input input;
+-	const char *subdev_name;
++	char *subdev_name;
+ 	u32 input_route;
+ 	u32 output_route;
+ };
+ 
+ struct vpif_capture_chan_config {
+ 	struct vpif_interface vpif_if;
+-	const struct vpif_input *inputs;
++	struct vpif_input *inputs;
+ 	int input_count;
+ };
+ 
+@@ -83,7 +83,8 @@ struct vpif_capture_config {
+ 	struct vpif_subdev_info *subdev_info;
+ 	int subdev_count;
+ 	const char *card_name;
+-	struct v4l2_async_subdev **asd;	/* Flat array, arranged in groups */
+-	int *asd_sizes;		/* 0-terminated array of asd group sizes */
 +
- 	if (ret && ret != -ENOIOCTLCMD && ret != -ENODEV) {
- 		vpif_dbg(1, debug, "stream on failed in subdev\n");
- 		goto err;
++	struct v4l2_async_subdev *asd[VPIF_CAPTURE_MAX_CHANNELS];
++	int asd_sizes[VPIF_CAPTURE_MAX_CHANNELS];
+ };
+ #endif /* _VPIF_TYPES_H */
 -- 
 2.9.3
 
