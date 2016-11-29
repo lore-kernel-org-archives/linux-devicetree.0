@@ -1,99 +1,118 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v11 5/7] overlay: Documentation for the overlay sugar
- syntax
-Date: Tue, 29 Nov 2016 14:10:54 +1100
-Message-ID: <20161129031054.GI13307@umbus.fritz.box>
-References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1480349141-14145-6-git-send-email-pantelis.antoniou@konsulko.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
+Date: Mon, 28 Nov 2016 19:32:20 -0800
+Message-ID: <dab2e32a-1bd0-2aa5-5a7a-61f2201786b4@synopsys.com>
+References: <cover.1479339900.git.johnyoun@synopsys.com>
+ <2016796.9qgSSGQn9z@debian64>
+ <0677657e-043d-c6d4-783e-9b471d12afcb@synopsys.com>
+ <1495076.fZ1uLW9fli@debian64>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/GPgYEyhnw15BExa"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480349141-14145-6-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495076.fZ1uLW9fli@debian64>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/22/2016 12:51 PM, Christian Lamparter wrote:
+> On Monday, November 21, 2016 7:32:30 PM CET John Youn wrote:
+>> On 11/21/2016 1:10 PM, Christian Lamparter wrote:
+>>> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
+>>>> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
+>>>>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
+>>>>>> Also, perhaps you should allow that the compatible string can define the 
+>>>>>> default.
+>>>>>>
+>>>>> I hoped you would say that :).
+>>>>>
+>>>>> I've attached a patch (on top of John Youn changes) [...]
+>>>>> ---
+>>>>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
+>>>>> [...]
+>>>>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
+>>>>> +/* [...] */
+>>>>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
+>>>>> +	{
+>>>>> +		.compatible = "amcc,dwc-otg",
+>>>>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
+>>>>> +	},
+>>>>> +};
+>> [...]
+>>>>>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
+>>>>>  	ret = device_property_read_string(hsotg->dev, "snps,ahb-burst", &str);
+>>>>>  	if (ret < 0) {
+>>>>> +		const struct of_device_id *match;
+>>>>> +
+>>>>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
+>>>>> +		if (match)
+>>>>> +			ret = (int)match->data;
+>>>>> +
+>> [...]
+>>>> I'd prefer if you use the binding which requires no extra code in
+>>>> dwc2.
+>>> I'm fine with either option. However it think that this would require
+>>> that either Mark or Rob would allow an exception to the "keep existing
+>>> dts the way they are) and ack the following change to the canyonlands.dts. 
+>>
+>> I don't know about that. Under what circumstance can the dts change?
+> As far as I know, the justification for not changing the DTS is that a
+> compiled DTB might be stored in an read-only ROM on a board. So it would
+> be impossible to update it. Hence, the driver have work with the existing
+> (and sometimes buggy or incomplete) information to stay compatible.
+> 
+> (Note: Thankfully, the canyonlands dtb is stored in flash, it's possible
+> to update it. But it is an extra step that's not done automatically
+> with make install). 
+> 
+>> The canyonlands dts was binding to an external vendor driver. So it
+>> wasn't documented nor expected to work with dwc2 until your recent
+>> patch adding the compatible string.
+> 
+> Oh, no that's not what happend. Let me explain why there was no "external 
+> vendor driver": AMCC/APM were planing to upstream their hole platform. And
+> in fact, the devs tried very hard to include their driver back in 2011 [0].
+> But this driver was denied inclusion back then due to:
+> 
+> "[...]
+> I would also like to point out that the same Synopsys USB controller
+> is used in a number of other SoCs (especially ARM chips), and
+> supported by other drivers, some of these even in mainline.
+> 
+> See http://thread.gmane.org/gmane.linux.usb.general/61714/focus=62139
+> for a related thread.
+> 
+> Instead of trying to add a completely new driver to mainline (and one
+> which has been repeatedly been rejected), I vote for focusing on the
+> existing driver code that is already in mainline, and testing and
+> improving this so we can use a single implementation of this driver
+> code for all SoCs that use the same IP block." [1]
+> 
+> Of course: The listed link goes the "USB Host driver for i.MX28" driver.
+> And this is an ehci-hcd like driver... Which is as you are well aware not
+> that similar to the dwc2 OTG. And as far as I can tell: AMCC abandoned
+> the patch series right there. 
+> 
+> Note: AMCC did however succeed in pushing your employer's Synopsys
+> DesignWare SATA and DMA drivers to the kernel back then. And I'm happy
+> to report that both drivers are still around and working fine for the 460EX 
+> (sata_dwc_460ex.c[2] and the DW AHB DMA [3]). (The drivers also work for
+> different platforms than the original PPC. I know that because I helped
+> Andy Shevchenko with testing and pushing some fixes to it when he was
+> adding support for the Intel Quark SoC, which uses the DWC SATA and DMA).
 
---/GPgYEyhnw15BExa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok thanks for clearing that up. I understand.
 
-On Mon, Nov 28, 2016 at 06:05:39PM +0200, Pantelis Antoniou wrote:
-> There exists a syntactic sugar version of overlays which
-> make them simpler to write for the trivial case of a single target.
->=20
-> Document it in the device tree object internals.
->=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+For now we can just set the property to "INCR16" based on the
+compatible string. Perhaps in the future do this from a glue-layer
+driver which binds to all compatible strings other than "snps,dwc2".
 
-I'm with Frank that I think this, rather than being regarded mere
-syntactic sugar, should be considered the primary way of describing
-overlays.
+I won't be able to do anything with this until next week though.
 
-Obviously we need to support the fully written out version as well.
-
-> ---
->  Documentation/dt-object-internal.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-obje=
-ct-internal.txt
-> index 026d4ee..d5b841e 100644
-> --- a/Documentation/dt-object-internal.txt
-> +++ b/Documentation/dt-object-internal.txt
-> @@ -300,3 +300,19 @@ local reference is being made. No matter how phandle=
-s are allocated from dtc
->  the run time loader must apply an offset to each phandle in every dynamic
->  DT object loaded. The __local_fixups__ node records the place of every
->  local reference so that the loader can apply the offset.
-> +
-> +There is an alternative syntax to the expanded form for overlays with ph=
-andle
-> +targets which makes the format similar to the one using in .dtsi include=
- files.
-> +
-> +So for the &ocp target example above one can simply write:
-> +
-> +/dts-v1/ /plugin/;
-> +&ocp {
-> +	/* bar peripheral */
-> +	bar {
-> +		compatible =3D "corp,bar";
-> +		... /* various properties and child nodes */
-> +	}
-> +};
-> +
-> +The resulting dtb object is identical.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---/GPgYEyhnw15BExa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYPPG9AAoJEGw4ysog2bOS8fQQANxy8f5fI+cV97rpdbO/Akbj
-O0yS7sKBuMEVqVVRVQOG+LGQI7zwBqIuA8v/t0hi0FrugMcH0djuZ90V9tw9ZpMf
-cp8//gjFucbLllvRNTaTyoSw97uPRnKcn3RHZggtiP7ZRe8rLf8vcmJxS4khHgBs
-7ehTyI/xjCh1DN4pe/N5iZbO45u65oMiz4vNoLxYO2f1ZUtXkzKYm5Fh05LMWy1B
-t89yfRUbiy3hXvsE56kYUX8618dBDTLHQHmuic1Z560F5PAss0bummB0D6k3DzfL
-Iip6vvMh7nM0oChnJKD31jx6kvy1xcplK+f5wNIo1eWv8KLakpcsregYP9jDbMkx
-qUca+Jx0CdxHgg41D4gzKRtGNWzJag52eTu373lfd/H4GqpiS5ho3S5R5Jy+raMY
-4X/gMCeXfBTNPRtZ2+bgHKlKdZVfHIah0R7hKNcA19MU00uN0QN0xBv6T5RdfOSn
-AbbWs+ajyb9+/0SZL8IHllXx7O1O7g8NFN6pxTtWvlD2EtDtxvNRzH03wbcuX7r3
-JjXZXIyo2Ud4dH1ndtRhC2XMQH0Uujp1LrTVeUJuuRizmSgAu/dJBrUPPhl/PQHC
-qwHwhn8wJgTk1GmRya/wFORBfd2e8rIjBV/yWk11/bFTW7JhOC8rel4+XHZouZw0
-JRHrlzmcvYSc1uIkCBGM
-=o6Qv
------END PGP SIGNATURE-----
-
---/GPgYEyhnw15BExa--
+Regards,
+John
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
