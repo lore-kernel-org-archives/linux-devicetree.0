@@ -1,85 +1,102 @@
-From: Wolfram Sang <wsa-dev@sang-engineering.com>
-Subject: Re: [PATCH v5 1/3] i2c: pxa: Add support for the I2C units found in
- Armada 3700
-Date: Tue, 29 Nov 2016 22:17:16 +0100
-Message-ID: <20161129211716.GA15594@katana>
-References: <20161121133247.29889-1-romain.perier@free-electrons.com>
- <20161121133247.29889-2-romain.perier@free-electrons.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 1/2] eeprom: Add IDT 89HPESx EEPROM/CSR driver
+Date: Tue, 29 Nov 2016 22:24:12 +0100
+Message-ID: <20161129212412.GA20334@kroah.com>
+References: <1475450025-29507-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-1-git-send-email-fancer.lancer@gmail.com>
+ <1480372701-30560-2-git-send-email-fancer.lancer@gmail.com>
+ <20161129193750.GD20341@kroah.com>
+ <20161129211625.GB9146@mobilestation>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20161121133247.29889-2-romain.perier@free-electrons.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+In-Reply-To: <20161129211625.GB9146@mobilestation>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: srinivas.kandagatla@linaro.org, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 30, 2016 at 12:16:25AM +0300, Serge Semin wrote:
+> On Tue, Nov 29, 2016 at 08:37:50PM +0100, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Tue, Nov 29, 2016 at 01:38:20AM +0300, Serge Semin wrote:
+> > > +struct idt_89hpesx_dev {
+> > > +	u32 eesize;
+> > > +	bool eero;
+> > > +	u8 eeaddr;
+> > > +
+> > > +	u8 inieecmd;
+> > > +	u8 inicsrcmd;
+> > > +	u8 iniccode;
+> > > +
+> > > +	atomic_t csr;
+> > > +
+> > > +	int (*smb_write)(struct idt_89hpesx_dev *, const struct idt_smb_seq *);
+> > > +	int (*smb_read)(struct idt_89hpesx_dev *, struct idt_smb_seq *);
+> > > +	struct mutex smb_mtx;
+> > > +
+> > > +	struct i2c_client *client;
+> > > +
+> > > +	struct bin_attribute *ee_file;
+> > > +	struct dentry *csr_dir;
+> > > +	struct dentry *csr_file;
+> > > +};
+> > > +#define to_pdev_kobj(__kobj) \
+> > > +	dev_get_drvdata(container_of(__kobj, struct device, kobj))
+> > 
+> > Is it a struct device, or a kobject?  This is totally confusing to me.
+> > 
+> > And can't you just use kobj_to_dev()?
+> > 
+> 
+> I just didn't know about kobj_to_dev() inline function. Totally agree that
+> container_of() should be replaced with it.
+> What does look confusing to you? Do you mean the name "to_pdev_kobj" of the
+> macro?
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, the macro is odd.  As you are doing two different things here, just
+spell it out in the code and use kobj_to_dev() to make it easier to
+read please.
 
-> +	if (of_device_is_compatible(np, "marvell,armada-3700-i2c")) {
-> +		i2c->fm_mask =3D ICR_BUSMODE_FM;
-> +		i2c->hs_mask =3D ICR_BUSMODE_HS;
-> +	} else {
-> +		i2c->fm_mask =3D ICR_FM;
-> +		i2c->hs_mask =3D ICR_HS;
-> +	}
-> =20
->  	*i2c_types =3D (enum pxa_i2c_types)(of_id->data);
-> =20
-> @@ -1181,6 +1194,13 @@ static int i2c_pxa_probe_pdata(struct platform_dev=
-ice *pdev,
->  			i2c->master_code =3D 0xe;
->  		i2c->rate =3D plat->rate;
->  	}
-> +	if (!strcmp(id->name, "armada-3700-i2c")) {
-> +		i2c->fm_mask =3D ICR_BUSMODE_FM;
-> +		i2c->hs_mask =3D ICR_BUSMODE_HS;
-> +	} else {
-> +		i2c->fm_mask =3D ICR_FM;
-> +		i2c->hs_mask =3D ICR_HS;
-> +	}
+> > > +/*
+> > > + * eeprom_attribute - EEPROM sysfs-node attributes
+> > > + *
+> > > + * NOTE Size will be changed in compliance with OF node. EEPROM attribute will
+> > > + * be read-only as well if the corresponding flag is specified in OF node.
+> > > + */
+> > > +BIN_ATTR(eeprom, 0644, idt_sysfs_eeprom_read, idt_sysfs_eeprom_write,
+> > > +	 EEPROM_DEF_SIZE);
+> > 
+> > static?
+> > 
+> > And BIN_ATTR_RW()?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Of course it should be static. Thanks for noticing that.
+> But I intentionally utilized BIN_ATTR() instead of BIN_ATTR_RW(), because
+> the last one implies to define the read/write methods with names
+> "_name##_read"/"_name##_write", which totally get out of naming within the
+> driver source code.
 
-Okay, having the same code twice is not nice as well.
+That's ok, use the names the macro wants you to, that's the best way,
+and it ensures that I don't have to audit your permissions are correct
+for the file.
 
-Sorry for missing this in the first review and going a step back, but I
-think now the best solution is to have again a REGS_A3700 struct, but we
-should extend it with new entries for the shifted bits. Then in the init
-code, you can do something like:
+> To tell the truth macro BIN_ATTR_RW() isn't that popular in the
+> kernel.
 
-	i2c->fm_mask =3D pxa_reg_layout[i2c_type].fm_mask ?: ICR_FM;
+Yes, but it should be, I have patches floating around somewhere to fix
+almost all of these up.
 
-Makes sense?
+> Neither is BIN_ATTR() macro, but it suites my driver better than the
+> another one.
 
-Thanks,
+a "raw" BIN_ATTR() shouldn't be used either, please use the _RW()
+variant.
 
-   Wolfram
+thanks,
 
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYPfBcAAoJEBQN5MwUoCm2zMYP/2zZPBjuw4m9kSms/yU1/i4v
-bkSKOLUk+DK5ZTGFOHCvsJSmmQNQkeRFudYtqU/tZLFeQwha5MRbn+4piBIc9Pc+
-YiaAQzB8zQkJug5/50yU4YiMvpy7r2Kz4jFHIN/r+SlVNrWbOjL6ugJ53SxZfi7G
-wEHK4qFfzse11unrvqg8caA7Hp8skmuExvTI7DIWEyJIu91bjYnMakI30e0tUa5f
-6DFKrISc6FrhbZmKv7/odJLivWws32qbb096WMoCinsAj5KLupW8PHfYaCTrXa+d
-GE4Ym7vO15PYYFRWopBnUzCwyfp+AeejsWc6lS0I6PCQy2W3yLdSV4XovoHIqMGK
-/CbkzWvBRaczXvHUvfjalwaMBmJXj2wymOBnhhI1+nMT5tJuGr7B4gDeH5IoP0Ot
-1uYWO8KDePoHmDbnTwObtR+ZtU3HNTvA7uRlFN14mLzfehB25aRuSP7dbVTKnoAI
-j8iJPyLTBL0TOosURUcwmkS0qi/W6JIv6C2mMW1YBmdDykpc/KOswElgVZn4EXLj
-wAe7z3PjWJ8NMa0AseaGZWU/H3D1EM+5oa7lOqIr/9kca6p/RaV4gcLfGJk+LKE1
-9RQKKZV4WDVqIEV4uAuLzlJCs1IqUXugaMTWAy34RjKH+KxyLeQy11fgY9UCg/iR
-2BBsZNew+3A9ZKH+b98D
-=WuGT
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
+greg k-h
