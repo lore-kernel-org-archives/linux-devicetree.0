@@ -1,33 +1,101 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 3/4] dtc: Plugin and fixup support
-Date: Tue, 29 Nov 2016 15:11:51 +0200
-Message-ID: <CA7DF461-8077-4B11-BDEC-0451C08C0FF6@konsulko.com>
-References: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com> <1480077131-14526-4-git-send-email-pantelis.antoniou@konsulko.com> <20161128041228.GJ30927@umbus.fritz.box> <D69908BD-B243-4AEE-B6BA-80B94AFE4B6A@konsulko.com> <4672e164-aae0-6306-fe70-146a1f930cf7@raspberrypi.org> <20161129021131.GD13307@umbus.fritz.box> <b7ff53f6-6481-e3f1-e3b5-d0b04e563e83@raspberrypi.org> <D3BFA6AB-21C1-451B-ACF5-32EA5E615275@konsulko.com> <66c7f8c5-94e9-a6ca-4402-fa0ccf2a6ac0@raspberrypi.org> <1F9EDF06-98B1-4270-AA58-1A9D9A9F9803@konsulko.com> <ba8e2ed3-9798-3074-1167-3f6851321a25@raspberrypi.org> <96BE1B80-0843-4981-AA2A-E89EA6A02600@konsulko.com> <a1ba4783-2a3b-eefd-9c41-2f33524472fe@raspberrypi.org> <27651F03-6E8F-4C76-A0E4-0DFBEC40277C@konsulko.com> <dbcfc090-43e2-d6f8-6f35-2761bc4d3da1
- @raspberrypi.org> <C5CD81E3-A9FF-4C23-A7A5-7E2A4E80E193@konsulko.com> <c06f9906-6089-c145-3b36-c410d88c786d@raspberrypi.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c06f9906-6089-c145-3b36-c410d88c786d-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 00/13] Implement clocksource for rockchip SoC using rockchip timer
+Date: Tue, 29 Nov 2016 16:45:05 +0300
+Message-ID: <1480427118-5126-1-git-send-email-al.kochet@gmail.com>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480343486-25539-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Hello,
 
-> On Nov 29, 2016, at 15:11 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> wrote:
->=20
-> On 29/11/2016 13:08, Pantelis Antoniou wrote:
->> There=92s no difference; you can cpp -IFOO_VALUE=3Dfoo in.dts | dtc | =
-cat >/config/foo/dtb in a nutshell.
->>=20
->> And have foo-property =3D FOO_VALUE; in in.dts.
-> In a boot loader?
->=20
+This patch series contain:
+- devicetree bindings clarification for rockchip timers
+- dts files fixes for rk3228-evb, rk3229-evb and rk3188
+- implementation of clocksource for rockchip SoC
 
-Ah, that why you don=92t do that in the bootloader :)
+The clock supplying the arm-global-timer on the rk3188 is coming from the
+the cpu clock itself and thus changes its rate everytime cpufreq adjusts
+the cpu frequency making this timer unsuitable as a stable clocksource.
 
-Regards
+The rk3188, rk3288 and following socs share a separate timer block already
+handled by the rockchip-timer driver. Therefore adapt this driver to also
+be able to act as clocksource on rk3188.
 
-=97 Pantelis
+In order to test clocksource you can run following commands and check
+how much time it take in real. On rk3188 it take about ~45 seconds.
+Such error cannot be fixed using NTP. Haven't test clocksource
+on rk3288 and onwards. Guess they can also have unstable clocksource.
+
+       cpufreq-set -f 1.6GHZ
+       date; sleep 60; date
+
+Regards,
+Alexander.
+
+Changes in v3:
+added patches:
+ARM: dts: rockchip: disable arm-global-timer for rk3188
+clocksource/drivers/rockchip_timer: Prevent ftrace recursion
+
+This is try 3. Please discard all v1 patches:
+
+devicetree:
+https://patchwork.ozlabs.org/patch/699019/
+https://patchwork.ozlabs.org/patch/699020/
+
+kernel:
+https://patchwork.kernel.org/patch/9443975/
+https://patchwork.kernel.org/patch/9443971/
+https://patchwork.kernel.org/patch/9443959/
+https://patchwork.kernel.org/patch/9443963/
+https://patchwork.kernel.org/patch/9443979/
+https://patchwork.kernel.org/patch/9443989/
+https://patchwork.kernel.org/patch/9443987/
+https://patchwork.kernel.org/patch/9443977/
+https://patchwork.kernel.org/patch/9443991/
+
+Old thread:
+http://lists.infradead.org/pipermail/linux-rockchip/2016-November/013147.html
+
+Alexander Kochetkov (13):
+  dt-bindings: clarify compatible property for rockchip timers
+  ARM: dts: rockchip: update compatible property for rk3228 timer
+  ARM: dts: rockchip: update compatible property for rk3229 timer
+  ARM: dts: rockchip: add timer entries to rk3188 dtsi
+  ARM: dts: rockchip: disable arm-global-timer for rk3188
+  clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and
+    rk_clock_event_device
+  clocksource/drivers/rockchip_timer: low level routines take rk_timer
+    as parameter
+  clocksource/drivers/rockchip_timer: drop unused rk_base() and
+    rk_ctrl()
+  clocksource/drivers/rockchip_timer: move TIMER_INT_UNMASK out of
+    rk_timer_enable()
+  clocksource/drivers/rockchip_timer: implement loading 64bit value
+    into timer
+  clocksource/drivers/rockchip_timer: implement reading 64bit value
+    from timer
+  clocksource/drivers/rockchip_timer: implement clocksource timer
+  clocksource/drivers/rockchip_timer: Prevent ftrace recursion
+
+ .../bindings/timer/rockchip,rk-timer.txt           |   12 +-
+ arch/arm/boot/dts/rk3188.dtsi                      |   17 ++
+ arch/arm/boot/dts/rk3228-evb.dts                   |    4 +
+ arch/arm/boot/dts/rk3229-evb.dts                   |    4 +
+ drivers/clocksource/rockchip_timer.c               |  207 +++++++++++++++-----
+ 5 files changed, 190 insertions(+), 54 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
