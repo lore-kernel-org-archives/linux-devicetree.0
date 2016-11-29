@@ -1,118 +1,376 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] usb: dwc2: Add binding for AHB burst
-Date: Mon, 28 Nov 2016 19:32:20 -0800
-Message-ID: <dab2e32a-1bd0-2aa5-5a7a-61f2201786b4@synopsys.com>
-References: <cover.1479339900.git.johnyoun@synopsys.com>
- <2016796.9qgSSGQn9z@debian64>
- <0677657e-043d-c6d4-783e-9b471d12afcb@synopsys.com>
- <1495076.fZ1uLW9fli@debian64>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v11 4/7] tests: Add overlay tests
+Date: Tue, 29 Nov 2016 14:08:07 +1100
+Message-ID: <20161129030807.GH13307@umbus.fritz.box>
+References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1480349141-14145-5-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495076.fZ1uLW9fli@debian64>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Uu2n37VG4rOBDVuR"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1480349141-14145-5-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2016 12:51 PM, Christian Lamparter wrote:
-> On Monday, November 21, 2016 7:32:30 PM CET John Youn wrote:
->> On 11/21/2016 1:10 PM, Christian Lamparter wrote:
->>> On Monday, November 21, 2016 12:16:31 PM CET John Youn wrote:
->>>> On 11/18/2016 12:18 PM, Christian Lamparter wrote:
->>>>> On Friday, November 18, 2016 8:16:08 AM CET Rob Herring wrote:
->>>>>> Also, perhaps you should allow that the compatible string can define the 
->>>>>> default.
->>>>>>
->>>>> I hoped you would say that :).
->>>>>
->>>>> I've attached a patch (on top of John Youn changes) [...]
->>>>> ---
->>>>> Subject: [PATCH] usb: dwc2: add a default ahb-burst setting for amcc,dwc-otg
->>>>> [...]
->>>>> @@ -1097,6 +1097,22 @@ static const char *const ahb_bursts[] = {
->>>>> +/* [...] */
->>>>> +static const struct of_device_id dwc2_compat_ahb_bursts[] = {
->>>>> +	{
->>>>> +		.compatible = "amcc,dwc-otg",
->>>>> +		.data = (void *) GAHBCFG_HBSTLEN_INCR16,
->>>>> +	},
->>>>> +};
->> [...]
->>>>>> @@ -1107,6 +1123,12 @@ static int dwc2_get_property_ahb_burst(struct dwc2_hsotg *hsotg)
->>>>>  	ret = device_property_read_string(hsotg->dev, "snps,ahb-burst", &str);
->>>>>  	if (ret < 0) {
->>>>> +		const struct of_device_id *match;
->>>>> +
->>>>> +		match = of_match_node(dwc2_compat_ahb_bursts, node);
->>>>> +		if (match)
->>>>> +			ret = (int)match->data;
->>>>> +
->> [...]
->>>> I'd prefer if you use the binding which requires no extra code in
->>>> dwc2.
->>> I'm fine with either option. However it think that this would require
->>> that either Mark or Rob would allow an exception to the "keep existing
->>> dts the way they are) and ack the following change to the canyonlands.dts. 
->>
->> I don't know about that. Under what circumstance can the dts change?
-> As far as I know, the justification for not changing the DTS is that a
-> compiled DTB might be stored in an read-only ROM on a board. So it would
-> be impossible to update it. Hence, the driver have work with the existing
-> (and sometimes buggy or incomplete) information to stay compatible.
-> 
-> (Note: Thankfully, the canyonlands dtb is stored in flash, it's possible
-> to update it. But it is an extra step that's not done automatically
-> with make install). 
-> 
->> The canyonlands dts was binding to an external vendor driver. So it
->> wasn't documented nor expected to work with dwc2 until your recent
->> patch adding the compatible string.
-> 
-> Oh, no that's not what happend. Let me explain why there was no "external 
-> vendor driver": AMCC/APM were planing to upstream their hole platform. And
-> in fact, the devs tried very hard to include their driver back in 2011 [0].
-> But this driver was denied inclusion back then due to:
-> 
-> "[...]
-> I would also like to point out that the same Synopsys USB controller
-> is used in a number of other SoCs (especially ARM chips), and
-> supported by other drivers, some of these even in mainline.
-> 
-> See http://thread.gmane.org/gmane.linux.usb.general/61714/focus=62139
-> for a related thread.
-> 
-> Instead of trying to add a completely new driver to mainline (and one
-> which has been repeatedly been rejected), I vote for focusing on the
-> existing driver code that is already in mainline, and testing and
-> improving this so we can use a single implementation of this driver
-> code for all SoCs that use the same IP block." [1]
-> 
-> Of course: The listed link goes the "USB Host driver for i.MX28" driver.
-> And this is an ehci-hcd like driver... Which is as you are well aware not
-> that similar to the dwc2 OTG. And as far as I can tell: AMCC abandoned
-> the patch series right there. 
-> 
-> Note: AMCC did however succeed in pushing your employer's Synopsys
-> DesignWare SATA and DMA drivers to the kernel back then. And I'm happy
-> to report that both drivers are still around and working fine for the 460EX 
-> (sata_dwc_460ex.c[2] and the DW AHB DMA [3]). (The drivers also work for
-> different platforms than the original PPC. I know that because I helped
-> Andy Shevchenko with testing and pushing some fixes to it when he was
-> adding support for the Intel Quark SoC, which uses the DWC SATA and DMA).
 
-Ok thanks for clearing that up. I understand.
+--Uu2n37VG4rOBDVuR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For now we can just set the property to "INCR16" based on the
-compatible string. Perhaps in the future do this from a glue-layer
-driver which binds to all compatible strings other than "snps,dwc2".
-
-I won't be able to do anything with this until next week though.
-
-Regards,
-John
+On Mon, Nov 28, 2016 at 06:05:38PM +0200, Pantelis Antoniou wrote:
+> Add a number of tests for dynamic objects/overlays.
+>=20
+> Re-use the original test by moving the contents to a .dtsi include
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  tests/overlay_overlay_dtc.dts     | 76 +--------------------------------=
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>  tests/overlay_overlay_dtc.dtsi    | 83 +++++++++++++++++++++++++++++++++=
+++++++
+>  tests/overlay_overlay_new_dtc.dts | 11 ++++++
+>  tests/overlay_overlay_simple.dts  | 12 ++++++
+>  tests/run_tests.sh                | 41 +++++++++++++++++++
+>  5 files changed, 148 insertions(+), 75 deletions(-)
+>  create mode 100644 tests/overlay_overlay_dtc.dtsi
+>  create mode 100644 tests/overlay_overlay_new_dtc.dts
+>  create mode 100644 tests/overlay_overlay_simple.dts
+>=20
+> diff --git a/tests/overlay_overlay_dtc.dts b/tests/overlay_overlay_dtc.dts
+> index 30d2362..ca943ea 100644
+> --- a/tests/overlay_overlay_dtc.dts
+> +++ b/tests/overlay_overlay_dtc.dts
+> @@ -8,78 +8,4 @@
+>  /dts-v1/;
+>  /plugin/;
+> =20
+> -/ {
+> -	/* Test that we can change an int by another */
+> -	fragment@0 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			test-int-property =3D <43>;
+> -		};
+> -	};
+> -
+> -	/* Test that we can replace a string by a longer one */
+> -	fragment@1 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			test-str-property =3D "foobar";
+> -		};
+> -	};
+> -
+> -	/* Test that we add a new property */
+> -	fragment@2 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			test-str-property-2 =3D "foobar2";
+> -		};
+> -	};
+> -
+> -	/* Test that we add a new node (by phandle) */
+> -	fragment@3 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			new-node {
+> -				new-property;
+> -			};
+> -		};
+> -	};
+> -
+> -	fragment@5 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			local: new-local-node {
+> -				new-property;
+> -			};
+> -		};
+> -	};
+> -
+> -	fragment@6 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			test-phandle =3D <&test>, <&local>;
+> -		};
+> -	};
+> -
+> -	fragment@7 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			test-several-phandle =3D <&local>, <&local>;
+> -		};
+> -	};
+> -
+> -	fragment@8 {
+> -		target =3D <&test>;
+> -
+> -		__overlay__ {
+> -			sub-test-node {
+> -				new-sub-test-property;
+> -			};
+> -		};
+> -	};
+> -};
+> +/include/ "overlay_overlay_dtc.dtsi"
+
+Don't duplicate this, just replace it with the new style.  This only
+existed as essentially documentation for the libfdt overlay
+application stuff.  Since the new dtc won't support the old tag
+format, there's no point having a test for it.
+
+> diff --git a/tests/overlay_overlay_dtc.dtsi b/tests/overlay_overlay_dtc.d=
+tsi
+> new file mode 100644
+> index 0000000..8ea8d5d
+> --- /dev/null
+> +++ b/tests/overlay_overlay_dtc.dtsi
+> @@ -0,0 +1,83 @@
+> +/*
+> + * Copyright (c) 2016 NextThing Co
+> + * Copyright (c) 2016 Free Electrons
+> + * Copyright (c) 2016 Konsulko Inc.
+> + *
+> + * SPDX-License-Identifier:	GPL-2.0+
+> + */
+> +
+> +/ {
+> +	/* Test that we can change an int by another */
+> +	fragment@0 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			test-int-property =3D <43>;
+> +		};
+> +	};
+> +
+> +	/* Test that we can replace a string by a longer one */
+> +	fragment@1 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			test-str-property =3D "foobar";
+> +		};
+> +	};
+> +
+> +	/* Test that we add a new property */
+> +	fragment@2 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			test-str-property-2 =3D "foobar2";
+> +		};
+> +	};
+> +
+> +	/* Test that we add a new node (by phandle) */
+> +	fragment@3 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			new-node {
+> +				new-property;
+> +			};
+> +		};
+> +	};
+> +
+> +	fragment@5 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			local: new-local-node {
+> +				new-property;
+> +			};
+> +		};
+> +	};
+> +
+> +	fragment@6 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			test-phandle =3D <&test>, <&local>;
+> +		};
+> +	};
+> +
+> +	fragment@7 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			test-several-phandle =3D <&local>, <&local>;
+> +		};
+> +	};
+> +
+> +	fragment@8 {
+> +		target =3D <&test>;
+> +
+> +		__overlay__ {
+> +			sub-test-node {
+> +				new-sub-test-property;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/tests/overlay_overlay_new_dtc.dts b/tests/overlay_overlay_ne=
+w_dtc.dts
+> new file mode 100644
+> index 0000000..14d3f54
+> --- /dev/null
+> +++ b/tests/overlay_overlay_new_dtc.dts
+> @@ -0,0 +1,11 @@
+> +/*
+> + * Copyright (c) 2016 NextThing Co
+> + * Copyright (c) 2016 Free Electrons
+> + * Copyright (c) 2016 Konsulko Inc.
+> + *
+> + * SPDX-License-Identifier:	GPL-2.0+
+> + */
+> +
+> +/dts-v1/ /plugin/;
+> +
+> +/include/ "overlay_overlay_dtc.dtsi"
+> diff --git a/tests/overlay_overlay_simple.dts b/tests/overlay_overlay_sim=
+ple.dts
+> new file mode 100644
+> index 0000000..8657e1e
+> --- /dev/null
+> +++ b/tests/overlay_overlay_simple.dts
+> @@ -0,0 +1,12 @@
+> +/*
+> + * Copyright (c) 2016 Konsulko Inc.
+> + *
+> + * SPDX-License-Identifier:	GPL-2.0+
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +&test {
+> +	test-int-property =3D <43>;
+> +};
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index e4139dd..74af0ff 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -181,6 +181,47 @@ overlay_tests () {
+>          run_dtc_test -@ -I dts -O dtb -o overlay_base_with_symbols.test.=
+dtb overlay_base.dts
+>          run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols.te=
+st.dtb overlay_overlay_dtc.dts
+>          run_test overlay overlay_base_with_symbols.test.dtb overlay_over=
+lay_with_symbols.test.dtb
+> +
+> +        # new /plugin/ format
+> +        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_new_with_symbol=
+s.test.dtb overlay_overlay_new_dtc.dts
+> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/=
+__symbols__"
+> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/=
+__fixups__"
+> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb exists "/=
+__local_fixups__"
+
+Looks like you're mixing tabs and spaces here.  I don't really mind
+which, but keep it consistent at least at the same indentation level.
+
+> +        # test new magic option
+> +        run_dtc_test -M@ -I dts -O dtb -o overlay_overlay_with_symbols_n=
+ew_magic.test.dtb overlay_overlay_dtc.dts
+> +	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exi=
+sts "/__symbols__"
+> +	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exi=
+sts "/__fixups__"
+> +	run_test check_path overlay_overlay_with_symbols_new_magic.test.dtb exi=
+sts "/__local_fixups__"
+> +
+> +        # test plugin source to dtb and back
+> +        run_dtc_test -@ -I dtb -O dts -o overlay_overlay_dtc.test.dts ov=
+erlay_overlay_with_symbols.test.dtb
+> +        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols.te=
+st.test.dtb overlay_overlay_dtc.test.dts
+> +        run_test dtbs_equal_ordered overlay_overlay_with_symbols.test.dt=
+b overlay_overlay_with_symbols.test.test.dtb
+> +
+> +	# test plugin source to dtb and back (with new magic)
+> +        run_dtc_test -@ -I dtb -O dts -o overlay_overlay_dtc_new_magic.t=
+est.dts overlay_overlay_with_symbols_new_magic.test.dtb
+> +        run_dtc_test -@ -I dts -O dtb -o overlay_overlay_with_symbols_ne=
+w_magic.test.test.dtb overlay_overlay_dtc_new_magic.test.dts
+> +        run_test dtbs_equal_ordered overlay_overlay_with_symbols_new_mag=
+ic.test.dtb overlay_overlay_with_symbols_new_magic.test.test.dtb
+> +
+> +        # test plugin auto-generation without using -@
+> +        run_dtc_test -I dts -O dtb -o overlay_overlay_new_with_symbols_a=
+uto.test.dtb overlay_overlay_dtc.dts
+> +	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exis=
+ts "/__symbols__"
+> +	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exis=
+ts "/__fixups__"
+> +	run_test check_path overlay_overlay_new_with_symbols_auto.test.dtb exis=
+ts "/__local_fixups__"
+> +
+> +        # Test suppression of fixups
+> +        run_dtc_test -F -@ -I dts -O dtb -o overlay_base_with_symbols_no=
+_fixups.test.dtb overlay_base.dts
+> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb exists=
+ "/__symbols__"
+> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb not-ex=
+ists "/__fixups__"
+> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb not-ex=
+ists "/__local_fixups__"
+> +
+> +        # Test generation of aliases insted of symbols
+> +        run_dtc_test -A -I dts -O dtb -o overlay_overlay_with_aliases.dt=
+b overlay_overlay_dtc.dts
+> +	run_test check_path overlay_overlay_with_aliases.dtb exists "/aliases"
+> +	run_test check_path overlay_overlay_with_aliases.dtb exists "/__symbols=
+__"
+> +	run_test check_path overlay_overlay_with_aliases.dtb exists "/__fixups_=
+_"
+> +	run_test check_path overlay_overlay_with_aliases.dtb exists "/__local_f=
+ixups__"
+>      fi
+> =20
+>      # Bad fixup tests
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Uu2n37VG4rOBDVuR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYPPEUAAoJEGw4ysog2bOSf3wQAN82vYieClP1gIhfc2NWstej
+yvBYa6kuDqwpqfAzUJnXRnZuq0eeBQqUyuw67qPHJsTbtsMxIqoreakuRr/1UJ6t
+feuGvnw+rFFhCwuvZj5tvn8Jb7W31GKK61va5Wjq6xZuTU4EOpfQ4qxHXHhdgvYD
+NjfR1eyJJSQbdGBlhTKHVR3nbxpRKsdU1WW73S1PmBuygdQJgswJCraXPUOz4DNW
+Y2Z+Q7vTH+ff+qQTTB9+hUOSqkLlG+UP0klsD75g2UJOboVu1HK8HWGX+1ra7aLs
+JlDTNTIpdz5r5xTKdfF34SsXLnuC0rQFNoOUHTgVmYB56oLskoo1vZxGqA2Rf6CN
+hbRvwJnbxq/hZyEjQVaM2VfKnHiYx6jDuihuLvDyES66kLd49DdxCLKDr3KkGJr3
+uWr7yfH7yfwLS1R/Q6fYQZV9hU3ZHvUWiHBC8pCT1DktvmvU+NHtFCJefuCIJQAl
+k0O3k/zQ89NFdC8QdUZR8I0UHJFy7xJKHNU1y/4mpu5YnPIM2MUihDrMJZ2qBdrB
+jDfw5E/yV6jQ/9CJlrZ8XFlR1tph+oRcFv+61Rvk+4ThzCsx8jGpEk6il/eBHhL+
+xdfLDWYH2D7s37aGphXnilZ6j3E2MStIwq5SBiAvJcFyDuF6UcHb/Qj659AknwN0
+lDm0cxsjnL8hTUt4XAbm
+=RjyD
+-----END PGP SIGNATURE-----
+
+--Uu2n37VG4rOBDVuR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
