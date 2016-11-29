@@ -1,35 +1,58 @@
 From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v4 2/9] ARM: dts: rockchip: update compatible property for rk3228 timer
-Date: Tue, 29 Nov 2016 19:14:45 +0300
-Message-ID: <1480436092-10728-3-git-send-email-al.kochet@gmail.com>
+Subject: [PATCH v4 1/9] dt-bindings: clarify compatible property for rockchip
+ timers
+Date: Tue, 29 Nov 2016 19:14:44 +0300
+Message-ID: <1480436092-10728-2-git-send-email-al.kochet@gmail.com>
 References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
  <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Huang Tao <huangtao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Alexander Kochetkov <al.kochet@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Property set to '"rockchip,rk3228-timer", "rockchip,rk3288-timer"'
-to match devicetree bindings.
-
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- arch/arm/boot/dts/rk3228-evb.dts |    4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
-index 904668e..38eab87 100644
---- a/arch/arm/boot/dts/rk3228-evb.dts
-+++ b/arch/arm/boot/dts/rk3228-evb.dts
-@@ -70,3 +70,7 @@
- &uart2 {
- 	status = "okay";
- };
-+
-+&timer {
-+	compatible = "rockchip,rk3228-timer", "rockchip,rk3288-timer";
-+};
--- 
-1.7.9.5
+TWFrZSBhbGwgcHJvcGVydGllcyBkZXNjcmlwdGlvbiBpbiBmb3JtICcicm9ja2NoaXAsPGNoaXA+
+LXRpbWVyIiwKInJvY2tjaGlwLHJrMzI4OC10aW1lciInIGZvciBhbGwgY2hpcHMgZm91bmQgaW4g
+bGludXgga2VybmVsLgoKU3VnZ2VzdGVkLWJ5OiBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250ZWNo
+LmRlPgpTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgS29jaGV0a292IDxhbC5rb2NoZXRAZ21haWwu
+Y29tPgotLS0KIC4uLi9iaW5kaW5ncy90aW1lci9yb2NrY2hpcCxyay10aW1lci50eHQgICAgICAg
+ICAgIHwgICAxMiArKysrKysrKystLS0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyks
+IDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RpbWVyL3JvY2tjaGlwLHJrLXRpbWVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy90aW1lci9yb2NrY2hpcCxyay10aW1lci50eHQKaW5kZXggYTQxYjE4NC4u
+MTZhNWY0NSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Rp
+bWVyL3JvY2tjaGlwLHJrLXRpbWVyLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdGltZXIvcm9ja2NoaXAscmstdGltZXIudHh0CkBAIC0xLDkgKzEsMTUgQEAKIFJv
+Y2tjaGlwIHJrIHRpbWVyCiAKIFJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGlibGU6IHNo
+YWxsIGJlIG9uZSBvZjoKLSAgInJvY2tjaGlwLHJrMzI4OC10aW1lciIgLSBmb3IgcmszMDY2LCBy
+azMwMzYsIHJrMzE4OCwgcmszMjJ4LCByazMyODgsIHJrMzM2OAotICAicm9ja2NoaXAscmszMzk5
+LXRpbWVyIiAtIGZvciByazMzOTkKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlOgorICAicm9ja2No
+aXAscmszMDM2LXRpbWVyIiwgInJvY2tjaGlwLHJrMzI4OC10aW1lciI6IGZvciBSb2NrY2hpcCBS
+SzMwMzYKKyAgInJvY2tjaGlwLHJrMzA2Ni10aW1lciIsICJyb2NrY2hpcCxyazMyODgtdGltZXIi
+OiBmb3IgUm9ja2NoaXAgUkszMDY2CisgICJyb2NrY2hpcCxyazMxODgtdGltZXIiLCAicm9ja2No
+aXAscmszMjg4LXRpbWVyIjogZm9yIFJvY2tjaGlwIFJLMzE4OAorICAicm9ja2NoaXAscmszMjI4
+LXRpbWVyIiwgInJvY2tjaGlwLHJrMzI4OC10aW1lciI6IGZvciBSb2NrY2hpcCBSSzMyMjgKKyAg
+InJvY2tjaGlwLHJrMzIyOS10aW1lciIsICJyb2NrY2hpcCxyazMyODgtdGltZXIiOiBmb3IgUm9j
+a2NoaXAgUkszMjI5CisgICJyb2NrY2hpcCxyazMyODgtdGltZXIiOiBmb3IgUm9ja2NoaXAgUksz
+Mjg4CisgICJyb2NrY2hpcCxyazMzNjgtdGltZXIiLCAicm9ja2NoaXAscmszMjg4LXRpbWVyIjog
+Zm9yIFJvY2tjaGlwIFJLMzM2OAorICAicm9ja2NoaXAscmszMzk5LXRpbWVyIjogZm9yIFJvY2tj
+aGlwIFJLMzM5OQogLSByZWc6IGJhc2UgYWRkcmVzcyBvZiB0aGUgdGltZXIgcmVnaXN0ZXIgc3Rh
+cnRpbmcgd2l0aCBUSU1FUlMgQ09OVFJPTCByZWdpc3RlcgogLSBpbnRlcnJ1cHRzOiBzaG91bGQg
+Y29udGFpbiB0aGUgaW50ZXJydXB0cyBmb3IgVGltZXIwCiAtIGNsb2NrcyA6IG11c3QgY29udGFp
+biBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcwotLSAKMS43LjkuNQoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
