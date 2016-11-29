@@ -1,55 +1,136 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 08/13] net: ethernet: ti: cpts: move dt props parsing
- to cpts driver
-Date: Tue, 29 Nov 2016 09:54:26 -0600
-Message-ID: <b4503f15-6927-9b09-7cb0-ce1c8a8c4f59@ti.com>
-References: <20161128230337.6731-1-grygorii.strashko@ti.com>
- <20161128230337.6731-9-grygorii.strashko@ti.com>
- <20161129101112.GG3110@localhost.localdomain>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Fix issue where code would fall through to error
+ case.
+Date: Tue, 29 Nov 2016 07:55:17 -0800
+Message-ID: <20161129155517.GA23667@live.com>
+References: <1479425157-6235-1-git-send-email-moritz.fischer@ettus.com>
+ <582E3FFC.80305@gmail.com>
+ <582E452E.3080909@gmail.com>
+ <CAJYdmeNnKtecshe3QSZCPnwEuNUFAW9cUsNS-Z1Chw7OPUJ2jQ@mail.gmail.com>
+ <CAL_JsqJK=Jf7JCmqD8EgEg3ngONWz=1Fu-Jj5h6-wkskTk_iXw@mail.gmail.com>
+ <583A0110.4090603@gmail.com>
+ <583C4D83.6040800@gmail.com>
+ <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161129101112.GG3110@localhost.localdomain>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+eQYGq7ZtiQaerBk1SP=K1Wgd+b_2UGKFoRS4_s_8Fvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, moritz-62aBmqa6xEOcmJEhUYGoYg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-
-On 11/29/2016 04:11 AM, Richard Cochran wrote:
-> On Mon, Nov 28, 2016 at 05:03:32PM -0600, Grygorii Strashko wrote:
->> +static int cpts_of_parse(struct cpts *cpts, struct device_node *node)
->> +{
->> +	int ret = -EINVAL;
->> +	u32 prop;
->> +
->> +	if (of_property_read_u32(node, "cpts_clock_mult", &prop))
->> +		goto  of_error;
->> +	cpts->cc_mult = prop;
+On Tue, Nov 29, 2016 at 09:06:08AM -0600, Rob Herring wrote:
+> On Mon, Nov 28, 2016 at 9:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On 11/26/16 13:39, Frank Rowand wrote:
+> >> On 11/23/16 13:58, Rob Herring wrote:
+> >>> On Thu, Nov 17, 2016 at 6:10 PM, Moritz Fischer
+> >>> <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>> On Thu, Nov 17, 2016 at 4:02 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>>> On 11/17/16 15:40, Frank Rowand wrote:
+> >>>>>> On 11/17/16 15:25, Moritz Fischer wrote:
+> >>>>>>> No longer fall through into the error case that prints out
+> >>>>>>> an error if no error (err = 0) occurred.
+> >>>>>>>
+> >>>>>>> Fixes d9181b20a83(of: Add back an error message, restructured)
+> >>>>>>> Signed-off-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> >>>>>>> ---
+> >>>>>>>  drivers/of/resolver.c | 6 +++++-
+> >>>>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> >>>>>>> index 783bd09..785076d 100644
+> >>>>>>> --- a/drivers/of/resolver.c
+> >>>>>>> +++ b/drivers/of/resolver.c
+> >>>>>>> @@ -358,9 +358,13 @@ int of_resolve_phandles(struct device_node *overlay)
+> >>>>>>>
+> >>>>>>>              err = update_usages_of_a_phandle_reference(overlay, prop, phandle);
+> >>>>>>>              if (err)
+> >>>>>>> -                    break;
+> >>>>>>> +                    goto err_out;
+> >>>>>>>      }
+> >>>>>>>
+> >>>>>>> +    of_node_put(tree_symbols);
+> >>>>>>> +
+> >>>>>>> +    return 0;
+> >>>>>>> +
+> >>>>>>>  err_out:
+> >>>>>>>      pr_err("overlay phandle fixup failed: %d\n", err);
+> >>>>>>>  out:
+> >>>>>>
+> >>>>>> Thanks for catching that.
+> >>>>>>
+> >>>>>> Rob, please apply.
+> >>>>>>
+> >>>>>> Reviewed-by: Frank Rowand <frank.rowand-mEdOJwZ7QcZBDgjK7y7TUQ@public.gmane.org>
+> >>>>>>
+> >>>>>> -Frank
+> >>>>>
+> >>>>> On second thought, isn't the common pattern when clean up is needed for
+> >>>>> both the no-error path and the error path something like:
+> >>>>>
+> >>>>>
+> >>>>>         out:
+> >>>>>                 of_node_put(tree_symbols);
+> >>>>>                 return err;
+> >>>>>
+> >>>>>         err_out:
+> >>>>>                 pr_err("overlay phandle fixup failed: %d\n", err);
+> >>>>>                 goto out;
+> >>>>>         }
+> >>>>>
+> >>>>>
+> >>>>> I don't have a strong opinion, whatever Rob wants to take is fine with me.
+> >>>>
+> >>>> Same here. I tried to avoid the jumping back part, but if that's the
+> >>>> common pattern,
+> >>>> I can submit a v2 doing that instead.
+> >>>
+> >>> Both are ugly. Just do:
+> >>>
+> >>> if (err)
+> >>>   pr_err(...);
+> >>>
+> >>> Rob
+> >>
+> >> Agreed.  Thanks for the touch of sanity Rob.
+> >>
+> >> -Frank
+> >
+> > I succumbed to looking only at the few lines of code above and not the
+> > fuller context of the file that the patch applies to.
+> >
+> > The proposed patch was fixing the problem that a normal completion
+> > of the for loop was falling through into the err_out label.  So what
+> > looks cleaner ("if (err) pr_err(...)") is actually not correct.
 > 
-> Why not set cc.mult here at the same time?
+> What!? The *only* problem was printing the error message in the err=0
+> case. All that needs to be fixed is not doing that. If we do that,
+> then we really only need 1 goto label.
 
-The same reason as in prev patch - cpts->cc_mult is original/initial mult
-value loaded from DT (or calculated), while cc.mult is dynamic value
-which can be changed as part of freq adjustment.
+I think you're right. Can you look at my v3 that I sent. I also tried to
+fix cases where we can just do
 
-> 
->> +
->> +	if (of_property_read_u32(node, "cpts_clock_shift", &prop))
->> +		goto  of_error;
->> +	cpts->cc.shift = prop;
->> +
->> +	return 0;
->> +
->> +of_error:
->> +	dev_err(cpts->dev, "CPTS: Missing property in the DT.\n");
->> +	return ret;
->> +}
-> 
+return 0;
 
+vs.
 
--- 
-regards,
--grygorii
+err = 0;
+goto err
+
+...
+
+err:
+	of_node_put(NULL /*tree_symbols is NULL*/);
+	return err;
+
+Thanks,
+
+Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
