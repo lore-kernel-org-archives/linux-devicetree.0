@@ -1,59 +1,121 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/9] clk: stm32f4: Add lcd-tft clock
-Date: Wed, 30 Nov 2016 14:53:33 -0600
-Message-ID: <20161130205333.tiukcjbspuqmedgw@rob-hp-laptop>
-References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
- <1479998749-20358-5-git-send-email-gabriel.fernandez@st.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
+Date: Wed, 30 Nov 2016 22:01:52 +0100
+Message-ID: <20161130210152.hiyfa3srismgvtj5@piout.net>
+References: <1472396118-13424-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBQP47TAQKGQEZPGO2JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1479998749-20358-5-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gabriel.fernandez@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+In-Reply-To: <1472396118-13424-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2016 at 03:45:44PM +0100, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> This patch introduces lcd-tft clock for stm32f4 soc.
-> 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> ---
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     |   1 +
->  drivers/clk/clk-stm32f4.c                          | 118 +++++++++++++++++++++
->  include/dt-bindings/clock/stm32f4-clock.h          |   3 +-
->  3 files changed, 121 insertions(+), 1 deletion(-)
+Hi,
+
+Sorry for the very late review!
+
+It seems mostly fine for me, two small comments:
+
+On 28/08/2016 at 23:55:18 +0900, Akinobu Mita wrote :
+> diff --git a/drivers/rtc/rtc-r7301.c b/drivers/rtc/rtc-r7301.c
+> new file mode 100644
+> index 0000000..b1be281
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-r7301.c
+> @@ -0,0 +1,458 @@
+> +/*
+> + * EPSON TOYOCOM RTC-7301SF/DG Driver
+> + *
+> + * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * Based on rtc-rp5c01.c
+> + *
+> + * Datasheet: http://www5.epsondevice.com/en/products/parallel/rtc7301sf.html
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/regmap.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define DRV_NAME "rtc-r7301"
+> +
+> +enum {
+> +	RTC7301_1_SEC		= 0x0,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_SEC		= 0x1,	/* Bank 0 and Band 1 */
+> +	RTC7301_AE		= BIT(3),
+> +	RTC7301_1_MIN		= 0x2,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_MIN		= 0x3,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_HOUR		= 0x4,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_HOUR		= 0x5,	/* Bank 0 and Band 1 */
+> +	RTC7301_DAY_OF_WEEK	= 0x6,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_DAY		= 0x7,	/* Bank 0 and Band 1 */
+> +	RTC7301_10_DAY		= 0x8,	/* Bank 0 and Band 1 */
+> +	RTC7301_1_MONTH		= 0x9,	/* Bank 0 */
+> +	RTC7301_10_MONTH	= 0xa,	/* Bank 0 */
+> +	RTC7301_1_YEAR		= 0xb,	/* Bank 0 */
+> +	RTC7301_10_YEAR		= 0xc,	/* Bank 0 */
+> +	RTC7301_100_YEAR	= 0xd,	/* Bank 0 */
+> +	RTC7301_1000_YEAR	= 0xe,	/* Bank 0 */
+> +	RTC7301_ALARM_CONTROL	= 0xe,	/* Bank 1 */
+> +	RTC7301_ALARM_CONTROL_AIE	= BIT(0),
+> +	RTC7301_ALARM_CONTROL_AF	= BIT(1),
+> +	RTC7301_TIMER_CONTROL	= 0xe,	/* Bank 2 */
+> +	RTC7301_ALARM_CONTROL_TIE	= BIT(0),
+> +	RTC7301_ALARM_CONTROL_TF	= BIT(1),
+> +	RTC7301_CONTROL		= 0xf,	/* All banks */
+> +	RTC7301_CONTROL_BUSY		= BIT(0),
+> +	RTC7301_CONTROL_STOP		= BIT(1),
+> +	RTC7301_CONTROL_BANK_SEL_0	= BIT(2),
+> +	RTC7301_CONTROL_BANK_SEL_1	= BIT(3),
+> +};
+> +
+
+Any particular reason why you use an enum instead of the usual #define?
+
+[...]
+
+> +static void rtc7301_init(struct rtc7301_priv *priv)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&priv->lock, flags);
+> +
+> +	rtc7301_select_bank(priv, 1);
+> +	rtc7301_alarm_irq(priv, false);
+> +
+
+If the RTC is battery backed, it may still run with the core power off
+and maybe someone will actually expect the alarm to trigger at a later
+time.
+
+I don't mind much as you are probably the only user anyway.
 
 
-> diff --git a/include/dt-bindings/clock/stm32f4-clock.h b/include/dt-bindings/clock/stm32f4-clock.h
-> index 56b8e10..1be4a3a 100644
-> --- a/include/dt-bindings/clock/stm32f4-clock.h
-> +++ b/include/dt-bindings/clock/stm32f4-clock.h
-> @@ -27,7 +27,8 @@
->  #define CLK_RTC			5
->  #define PLL_VCO_I2S		6
->  #define PLL_VCO_SAI		7
-> +#define CLK_LCD			8
->  
-> -#define END_PRIMARY_CLK		8
-> +#define END_PRIMARY_CLK		9
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Do you really need this? Having this change could cause compatibility 
-problems between dtb and kernel versions.
-
-Please restructure the patch series and put all of the binding changes 
-including this header into a single patch. Incrementally add s/w 
-features, not h/w.
-
-Rob
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
