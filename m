@@ -1,115 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add DT bindings info for FlexRM mailbox
- driver
-Date: Wed, 30 Nov 2016 15:38:54 -0600
-Message-ID: <20161130213854.jmjwcis2zid6busv@rob-hp-laptop>
-References: <1480048551-3285-1-git-send-email-anup.patel@broadcom.com>
- <1480048551-3285-3-git-send-email-anup.patel@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alexander Kochetkov <al.kochet@gmail.com>
+Subject: Re: [PATCH] dt-bindings: document how to setup rockchip timers as clocksource
+Date: Thu, 1 Dec 2016 00:40:22 +0300
+Message-ID: <F0C2F3CA-7A29-46B5-B420-A672696236BF@gmail.com>
+References: <1480025536-6837-1-git-send-email-al.kochet@gmail.com> <20161130213006.p6totahjga7546s6@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480048551-3285-3-git-send-email-anup.patel@broadcom.com>
+In-Reply-To: <20161130213006.p6totahjga7546s6@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, wxt@rock-chips.com, daniel.lezcano@linaro.org, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2016 at 10:05:51AM +0530, Anup Patel wrote:
-> This patch adds device tree bindings document for the FlexRM
-> mailbox driver.
 
-Bindings document h/w, not drivers.
+> 1 =D0=B4=D0=B5=D0=BA. 2016 =D0=B3., =D0=B2 0:30, Rob Herring =
+<robh@kernel.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0):
+>=20
+> 1st and 2nd are ambiguous. Plus this is an OS implementation detail =
+that=20
+> doesn't belong in the binding.
+>=20
+>> +If you want to bind specific timer as clockevent (i.e. one from =
+alive subsystem)
+>> +and specific timer as clocksource, you can number the timers in =
+"aliases" node.
+>=20
+> No.=20
+>=20
+> Use and/or describe what are the features of a timer to make the=20
+> decision. There has to be some reason you care which one. One has an=20=
 
-> 
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> ---
->  .../bindings/mailbox/brcm,flexrm-mbox.txt          | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
-> new file mode 100644
-> index 0000000..7969b1c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
-> @@ -0,0 +1,60 @@
-> +Broadcom FlexRM Mailbox Driver
+> interrupt and the other doesn't. One is always on. Etc.
 
-h/w
+Thank you, Rob.
 
-> +===============================
-> +The Broadcom FlexRM ring manager provides a set of rings which can be
-> +used to submit work to offload engines. An SoC may have multiple FlexRM
-> +hardware blocks. There is one device tree entry per block. The FlexRM
-> +mailbox drivers creates a mailbox instance using FlexRM rings where
-> +each mailbox channel is a separate FlexRM ring.
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:	Should be "brcm,flexrm-mbox"
+Eventually I abandoned this decision.
+I left only one patch, which you confirmed recently.
 
-Sounds generic. Add SoC specific compatible strings please.
+And sorry for making noise with duplicate patches.
 
-> +- reg:		Specifies base physical address and size of the FlexRM
-> +		ring registers
-> +- msi-parent:	Phandles (and potential Device IDs) to MSI controllers
-> +		The FlexRM engine will send MSIs (instead of wired
-> +		interrupts) to CPU. There is one MSI for each FlexRM ring.
-
-One ring is one h/w block, right? How many instances is not really 
-relevant.
-
-> +		Refer devicetree/bindings/interrupt-controller/msi.txt
-> +- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
-> +		channel. This should be 3.
-> +
-> +		The 1st cell is the mailbox channel number.
-> +
-> +		The 2nd cell contains MSI completion threshold. This is the
-> +		number of completion messages for which FlexRM will inject
-> +		one MSI interrupt to CPU.
-> +
-> +		The 3nd cell contains MSI timer value representing time for
-> +		which FlexRM will wait to accumulate N completion messages
-> +		where N is the value specified by 2nd cell above. If FlexRM
-> +		does not get required number of completion messages in time
-> +		specified by this cell then it will inject one MSI interrupt
-> +		to CPU provided atleast one completion message is available.
-> +
-> +Optional properties:
-> +--------------------
-> +- dma-coherent:	Present if DMA operations made by the FlexRM engine (such
-> +		as DMA descriptor access, access to buffers pointed by DMA
-> +		descriptors and read/write pointer updates to DDR) are
-> +		cache coherent with the CPU.
-> +
-> +Example:
-> +--------
-> +crypto_mbox: mbox@67000000 {
-> +	compatible = "brcm,flexrm-mbox";
-> +	reg = <0x67000000 0x200000>;
-> +	msi-parent = <&gic_its 0x7f00>;
-> +	#mbox-cells = <3>;
-> +};
-> +
-> +crypto_client {
-
-Is this a h/w block or purely a driver on top of the mailbox? The latter 
-doesn't belong in DT.
-
-> +	...
-> +	mboxes = <&crypto_mbox 0 0x1 0xffff>,
-> +		 <&crypto_mbox 1 0x1 0xffff>,
-> +		 <&crypto_mbox 16 0x1 0xffff>,
-> +		 <&crypto_mbox 17 0x1 0xffff>,
-> +		 <&crypto_mbox 30 0x1 0xffff>,
-> +		 <&crypto_mbox 31 0x1 0xffff>;
-> +	};
-> +	...
-> +};
-> -- 
-> 2.7.4
-> 
+Alexander.
