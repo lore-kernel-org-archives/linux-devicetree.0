@@ -1,45 +1,92 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next v3 0/4] Fix OdroidC2 Gigabit Tx link issue
-Date: Tue, 29 Nov 2016 16:43:20 -0800
-Message-ID: <e14a3b0c-dc34-be14-48b3-518a0ad0c080@gmail.com>
-References: <1480326409-25419-1-git-send-email-jbrunet@baylibre.com>
- <20161129.193853.827524417068912706.davem@davemloft.net>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: Bindings for Rockchip serial flash
+ controller
+Date: Wed, 30 Nov 2016 08:55:23 +0800
+Message-ID: <a5f13048-fbfa-7988-659a-0223b767ddf3@rock-chips.com>
+References: <1479437945-27918-1-git-send-email-shawn.lin@rock-chips.com>
+ <1479437945-27918-2-git-send-email-shawn.lin@rock-chips.com>
+ <7fd2cdc0-2103-d254-c7b2-d2552a32a738@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161129.193853.827524417068912706.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <7fd2cdc0-2103-d254-c7b2-d2552a32a738-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2016 04:38 PM, David Miller wrote:
-> From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Date: Mon, 28 Nov 2016 10:46:45 +0100
-> 
->> This patchset fixes an issue with the OdroidC2 board (DWMAC + RTL8211F).
->> The platform seems to enter LPI on the Rx path too often while performing
->> relatively high TX transfer. This eventually break the link (both Tx and
->> Rx), and require to bring the interface down and up again to get the Rx
->> path working again.
+On 2016/11/25 21:30, Marek Vasut wrote:
+> On 11/18/2016 03:59 AM, Shawn Lin wrote:
+>> Add binding document for the Rockchip serial flash controller.
 >>
->> The root cause of this issue is not fully understood yet but disabling EEE
->> advertisement on the PHY prevent this feature to be negotiated.
->> With this change, the link is stable and reliable, with the expected
->> throughput performance.
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
 >>
->> The patchset adds options in the generic phy driver to disable EEE
->> advertisement, through device tree. The way it is done is very similar
->> to the handling of the max-speed property.
-> 
-> Patches 1-3 applied to net-next, thanks.
+>> Changes in v2: None
+>>
+>>  .../devicetree/bindings/mtd/rockchip-sfc.txt       | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>> new file mode 100644
+>> index 0000000..28430ce
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>> @@ -0,0 +1,31 @@
+>> +Rockchip Serial Flash Controller
+>> +
+>> +Required properties:
+>> +- compatible : Should be
+>> +		"rockchip,rk1108-sfc", "rockchip,sfc" for ROCKCHIP RK1108.
+>> +- address-cells : Should be 1.
+>> +- size-cells : Should be 0.
+>
+> Shouldn't these two props have a # prefix ? I'm not sure they should
+> even be part of this binding document at all.
+>
+>> +- clocks: Must contain two entries for each entry in clock-names.
+>> +- clock-names: Shall be "sfc" for the transfer-clock, and "hsfc" for
+>> +		the peripheral clock.
+>> +- interrupts : Should contain the interrupt for the device.
+>> +- reg: Physical base address of the controller and length of memory mapped.
+>> +
+>> +Optional properties:
+>> +- rockchip,sfc-no-dma: Indicate the controller doesn't support dma transfer.
+>
+> DMA should be in capital letters.
 
-Meh, there was a v4 submitted shortly after, and I objected to the whole
-idea of using that kind of Device Tree properties to disable EEE, we can
-send reverts though..
+Both of DMA or dma could be found by grepping the
+Documentation/devicetree/bindings/, so I think it
+isn't a big deal for this. :)
+
+>
+>> +Example:
+>> +nor_flash: sfc@301c0000 {
+>> +	compatible = "rockchip,rk1108-sfc", "rockchip,sfc";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
+>> +	clock-names = "sfc", "hsfc";
+>> +	interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+>> +	reg = <0x301c0000 0x1000>;
+>> +	spi-nor@0 {
+>> +		compatible = "jedec,spi-nor";
+>> +		spi-max-frequency = <12000000>;
+>> +		reg = <0>;
+>> +	};
+>> +};
+>>
+>
+>
+
+
 -- 
-Florian
+Best Regards
+Shawn Lin
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
