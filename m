@@ -1,60 +1,124 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH V8 2/6] thermal: bcm2835: add thermal driver for bcm2835
- soc
-Date: Tue, 29 Nov 2016 22:39:51 -0800
-Message-ID: <20161130063951.GA28700@localhost.localdomain>
-References: <20161117021107.GA2647@localhost.localdomain>
- <766e1b70-d83a-eb52-fa2b-aec435e85673@martin.sperl.org>
- <20161117151019.GA3115@localhost.localdomain>
- <7957B3CC-0E18-4B27-82EB-EF88B7695E28@martin.sperl.org>
- <20161119042224.GA25063@localhost.localdomain>
- <28F93ABE-8210-4389-AE77-4D5E830E669B@martin.sperl.org>
- <20161125052008.GA8342@localhost.localdomain>
- <87twarz6s1.fsf@eliezer.anholt.net>
- <20161129013436.GA3080@localhost.localdomain>
- <87lgw2lyu9.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87lgw2lyu9.fsf@eliezer.anholt.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Martin Sperl <kernel@martin.sperl.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: add zx296718's topcrm node
+Date: Wed, 30 Nov 2016 15:33:57 +0800
+Message-ID: <1480491237-5169-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Enable topcrm clock node for zx296718, which is used for
+CPU's frequency change.
 
-On Tue, Nov 29, 2016 at 02:12:46PM -0800, Eric Anholt wrote:
-> Eduardo Valentin <edubezval@gmail.com> writes:
-> 
-> > Hello Eric, Martin,
-> >
-> > On Mon, Nov 28, 2016 at 12:30:38PM -0800, Eric Anholt wrote:
-> >> Either the device was initialized by the firmware before handing off to
-> >> ARM (today's firmware) or it never will be (potential future firmware).
-> >
-> > And do you have a way to check if the firmware has the initialization
-> > code or not? By firmware version, for example. Or even, chip version,
-> > maybe?
-> 
-> We would know if it's not present because the register would be in its
-> power-on reset state, which is what the code is checking for.
+Furthermore, this patch adds the CPU clock phandle in CPU's node
+and uses operating-points-v2 to register operating points.
 
-This just looks odd for a driver, in its probe, to check if device is in
-reset state, only then initializes it. if not, it assumes everything is fine.
+So it can be used by cpufreq-dt driver.
 
-Besides that, as described in the code, sounds like a quirk.
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/zte/zx296718.dtsi | 48 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-+        * right now the FW does set up the HW-block, so we are not
-+        * touching the configuration registers.
-+        * But if the HW is not enabled, then set it up
-+        * using "sane" values used by the firmware right now.
+diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
+index 6b239a3..f9eb37d 100644
+--- a/arch/arm64/boot/dts/zte/zx296718.dtsi
++++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+@@ -44,6 +44,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/zx296718-clock.h>
+ 
+ / {
+ 	compatible = "zte,zx296718";
+@@ -81,6 +82,8 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -88,6 +91,7 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -95,6 +99,7 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -102,6 +107,43 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
++		};
++	};
++
++	cluster0_opp: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <857000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1100000000 {
++			opp-hz = /bits/ 64 <648000000>;
++			opp-microvolt = <857000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1200000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <882000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1300000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <892000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1400000000 {
++			opp-hz = /bits/ 64 <1188000000>;
++			opp-microvolt = <1009000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1500000000 {
++			opp-hz = /bits/ 64 <1312000000>;
++			opp-microvolt = <1052000>;
++			clock-latency-ns = <500000>;
+ 		};
+ 	};
+ 
+@@ -279,6 +321,12 @@
+ 			dma-requests = <32>;
+ 		};
+ 
++		topcrm: clock-controller@01461000 {
++			compatible = "zte,zx296718-topcrm";
++			reg = <0x01461000 0x1000>;
++			#clock-cells = <1>;
++		};
++
+ 		sysctrl: sysctrl@1463000 {
+ 			compatible = "zte,zx296718-sysctrl", "syscon";
+ 			reg = <0x1463000 0x1000>;
+-- 
+2.7.4
 
-
-And based on what you are describing now, it is not a quirk, but it is by  design (??)
-
-Again, does it hurt to always initialize the device to a *sane* config?
-
-BR,
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
