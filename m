@@ -1,50 +1,38 @@
-From: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2] scripts: printing file name correctly
-Date: Wed, 30 Nov 2016 10:25:34 +0530
-Message-ID: <1480481734-45286-1-git-send-email-maninder1.s@samsung.com>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] Support for USB DRD Phy driver for NS2
+Date: Wed, 30 Nov 2016 11:25:35 +0530
+Message-ID: <1480485338-23451-1-git-send-email-raviteja.garimella@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.m-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajeet.y-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently we are printing file name wrongly.
-pos->file ? (char *) pos->file : "<no file>")
+This patch adds support for USB Dual Role Device Phy for Broadcom
+Northstar2 SoC. Apart from the new phy driver, this patchset contains
+changes to Kconfig, Makefile, and Device tree files.
 
-It should be pos->file->name, and secondly if we got NULL
-file struture,we will anyway derefer it in last printf.
+This patchset is tested on Broadcom NS2 BCM958712K reference board.
 
-So, Fixing the same.
+Repo: https://github.com/Broadcom/arm64-linux.git
+Branch: ns2_drdphy
 
-caught with static analysis tool.
-Signed-off-by: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vaneet Narang <v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-v1 -> v2: changing description of patch.
+Raviteja Garimella (3):
+  Add DT bindings documentation for NS2 USB DRD phy
+  Broadcom USB DRD Phy driver for Northstar2
+  DT nodes for Broadcom Northstar2 USB DRD Phy
 
- scripts/dtc/srcpos.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  40 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
+ drivers/phy/Kconfig                                |  13 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-usbdrd.c                   | 587 +++++++++++++++++++++
+ 5 files changed, 655 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
 
-diff --git a/scripts/dtc/srcpos.c b/scripts/dtc/srcpos.c
-index f534c22..360fd14 100644
---- a/scripts/dtc/srcpos.c
-+++ b/scripts/dtc/srcpos.c
-@@ -252,12 +252,11 @@ struct srcpos *
- srcpos_dump(struct srcpos *pos)
- {
- 	printf("file        : \"%s\"\n",
--	       pos->file ? (char *) pos->file : "<no file>");
-+	       pos->file ?  pos->file->name : "<no file>");
- 	printf("first_line  : %d\n", pos->first_line);
- 	printf("first_column: %d\n", pos->first_column);
- 	printf("last_line   : %d\n", pos->last_line);
- 	printf("last_column : %d\n", pos->last_column);
--	printf("file        : %s\n", pos->file->name);
- }
- 
- 
 -- 
-1.9.1
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
