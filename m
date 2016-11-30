@@ -1,110 +1,116 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Wed, 30 Nov 2016 10:11:20 -0300
-Message-ID: <CABxcv=nc1qjtSjzfcuGTo-zUpuWdRT6OR7MZCCWaoeq4Co3Uew@mail.gmail.com>
-References: <1479434109-8745-1-git-send-email-matt@ranostay.consulting>
- <CABxcv=nEih8xX4fM0eqjkqprdt1uGTEyx5tzK04GuSgsHc=Haw@mail.gmail.com> <CAJ_EiST_bpBm+spPuWH-a+47t4qVsDVFjUm=a+TtL-BWN3DHdw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAJ_EiST_bpBm+spPuWH-a+47t4qVsDVFjUm=a+TtL-BWN3DHdw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 2/4] i2c: pxa: Add support for the I2C units found in Armada 3700
+Date: Wed, 30 Nov 2016 15:00:15 +0100
+Message-ID: <20161130140017.26307-3-romain.perier@free-electrons.com>
+References: <20161130140017.26307-1-romain.perier@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130140017.26307-1-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw>
 List-Id: devicetree@vger.kernel.org
 
-Hello Matt,
+The Armada 3700 has two I2C controllers that is compliant with the I2C
+Bus Specificiation 2.1, supports multi-master and different bus speed:
+Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
+High speed mode (up to 3.4 Mhz).
 
-On Tue, Nov 29, 2016 at 10:20 PM, Matt Ranostay
-<matt@ranostay.consulting> wrote:
-> On Tue, Nov 29, 2016 at 9:13 AM, Javier Martinez Canillas
+This IP block has a lot of similarity with the PXA, except some register
+offsets and bitfield. This commits adds a basic support for this I2C
+unit.
 
-[snip]
+Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Tested-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
 
->
->
->>> +- pwndn-gpio: contains a power down GPIO specifier.
->>> +- reset-gpio: contains a reset GPIO specifier.
->>> +
->>
->> I wonder if we really need a custom power sequence provider for just
->> this SDIO WiFI chip though. AFAICT the only missing piece in
->> mmc-pwrseq-simple is the power down GPIO property, so maybe
->> mmc-pwrseq-simple could be extended instead to have an optional
->> powerdown-gpios property and instead in the Marvell SD8787 DT binding
->> can be mentioned which mmc-pwrseq-simple properties are required for
->> the device.
->>
->
-> The reason we didn't do that is we need delay between the two
-> assertions/desertions of GPIOs. It wouldn't seems good practice to
-> hack the pwrseq-simple for this...
->
+Changes in v6:
+ - Revert back A3700_REGS, as asked by Wolfram and define fm_mask
+   and hs_mask in the register layout. I moved the generic code
+   for fm_mask and hs_mask to a seperated commit (1/4)
 
-Yes, I noticed that. I wouldn't say that it would be a hack for the
-pwrseq-simple since it already has a "post-power-on-delay-ms" DT
-property, so AFAICT it would just be adding a "pre-power-on-delay-ms"
-property for your use case.
+Changes in v5:
+ - Don't define registers for armada-3700, we can re-use the ones
+   for PXA3XX.
+ - Define registers mask when OF is not used, in probe_pdata. 
 
-It would also be more consistent since it would support a delay for
-pre and post power callbacks. It would also make you avoid hardcoding
-the 300 msec wait, in case other device has a similar need but with a
-different wait time.
+Changes in v4:
+ - Replaced the type of hs_mask and fm_mask by u32, instead of
+   unsigned int, As writel() take an u32 as first argument...
 
-In summary, I think that devices having a power (or power down) and
-enable GPIO, and needing to wait between the GPIO toggling are common.
-So I would prefer to make pwrseq-simple usable for these instead of
-adding device specific power sequence providers. But it's just my
-opinion and not my call :-)
+Changes in v3:
+ - Replaced the type of hs_mask and fm_mask by unsigned int,
+   instead of unsigned long.
 
->>> +Example:
->>> +
->>> +       wifi_pwrseq: wifi_pwrseq {
->>> +               compatible = "mmc-pwrseq-sd8787";
->>> +               pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
->>> +               reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
->>> +       }
->>> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>
->> Does this patch depend on a previous posted series? I don't see this
->> file in today's linux-next...
->
-> Got renamed to ->
-> Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt it
-> seems very recently.
->
+ drivers/i2c/busses/Kconfig   |  2 +-
+ drivers/i2c/busses/i2c-pxa.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-I see, that's what I thought but I wasn't able to find the commit /
-patch that did it.
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index d252276..2f56a26 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -763,7 +763,7 @@ config I2C_PUV3
+ 
+ config I2C_PXA
+ 	tristate "Intel PXA2XX I2C adapter"
+-	depends on ARCH_PXA || ARCH_MMP || (X86_32 && PCI && OF)
++	depends on ARCH_PXA || ARCH_MMP || ARCH_MVEBU || (X86_32 && PCI && OF)
+ 	help
+ 	  If you have devices in the PXA I2C bus, say yes to this option.
+ 	  This driver can also be built as a module.  If so, the module
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index dc9d0a6..0ded4bc 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -57,8 +57,12 @@ enum pxa_i2c_types {
+ 	REGS_PXA3XX,
+ 	REGS_CE4100,
+ 	REGS_PXA910,
++	REGS_A3700,
+ };
+ 
++#define ICR_BUSMODE_FM	(1 << 16)	   /* shifted fast mode for armada-3700 */
++#define ICR_BUSMODE_HS	(1 << 17)	   /* shifted high speed mode for armada-3700 */
++
+ /*
+  * I2C registers definitions
+  */
+@@ -93,6 +97,15 @@ static struct pxa_reg_layout pxa_reg_layout[] = {
+ 		.ilcr = 0x28,
+ 		.iwcr = 0x30,
+ 	},
++	[REGS_A3700] = {
++		.ibmr =	0x00,
++		.idbr =	0x04,
++		.icr =	0x08,
++		.isr =	0x0c,
++		.isar =	0x10,
++		.fm = ICR_BUSMODE_FM,
++		.hs = ICR_BUSMODE_HS,
++	},
+ };
+ 
+ static const struct platform_device_id i2c_pxa_id_table[] = {
+@@ -100,6 +113,7 @@ static const struct platform_device_id i2c_pxa_id_table[] = {
+ 	{ "pxa3xx-pwri2c",	REGS_PXA3XX },
+ 	{ "ce4100-i2c",		REGS_CE4100 },
+ 	{ "pxa910-i2c",		REGS_PXA910 },
++	{ "armada-3700-i2c",	REGS_A3700  },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
+@@ -1141,6 +1155,7 @@ static const struct of_device_id i2c_pxa_dt_ids[] = {
+ 	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
+ 	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
+ 	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
++	{ .compatible = "marvell,armada-3700-i2c", .data = (void *)REGS_A3700 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
+-- 
+2.9.3
 
->>
->>> index c421aba0a5bc..08fd65d35725 100644
->>> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->>> @@ -32,6 +32,9 @@ Optional properties:
->>>                  so that the wifi chip can wakeup host platform under certain condition.
->>>                  during system resume, the irq will be disabled to make sure
->>>                  unnecessary interrupt is not received.
->>> +  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
->>> +  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
->>> +                for documentation of MMC power sequence bindings.
->>>
->>>  Example:
->>>
->>> @@ -44,6 +47,7 @@ so that firmware can wakeup host using this device side pin.
->>>  &mmc3 {
->>>         status = "okay";
->>>         vmmc-supply = <&wlan_en_reg>;
->>> +       mmc-pwrseq = <&wifi_pwrseq>;
->>>         bus-width = <4>;
->>>         cap-power-off-card;
->>>         keep-power-in-suspend;
->>
->> I think this change should be split in a separate patch as well.
->>
-
-You didn't answer about this, but I guess you agree it should be in a
-separate patch.
-
-Best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
