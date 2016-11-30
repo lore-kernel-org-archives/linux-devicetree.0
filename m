@@ -1,102 +1,101 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
-Date: Wed, 30 Nov 2016 10:05:45 +0100
-Message-ID: <20161130100545.44546ed28896cdb9768f68cd@free.fr>
-References: <cover.1480414715.git.moinejf@free.fr>
-	<20161129213650.uqcgekodq77wlmxs@lukather>
-Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v11 5/7] overlay: Documentation for the overlay sugar syntax
+Date: Wed, 30 Nov 2016 11:07:39 +0200
+Message-ID: <57596646-6DB0-4C5F-BEB8-8453AE5633DC@konsulko.com>
+References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com> <1480349141-14145-6-git-send-email-pantelis.antoniou@konsulko.com> <20161129031054.GI13307@umbus.fritz.box> <583D05B7.4040109@gmail.com> <20161129051042.GO13307@umbus.fritz.box> <583DB09C.7060105@gmail.com> <20161130003900.GC19891@umbus>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBB35M7LAQKGQEVKTFFYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161129213650.uqcgekodq77wlmxs@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130003900.GC19891@umbus>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Nov 2016 22:36:50 +0100
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi David,
 
-> On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Francois Moine wrote:
-> > This patchset series adds HDMI video support to the Allwinner
-> > sun8i SoCs which include the display engine 2 (DE2).
-> > The driver contains the code for the A83T and H3 SoCs, and
-> > some H3 boards, but it could be used/extended for other SoCs
-> > (A64, H2, H5) and boards (Banana PIs, Orange PIs).
+> On Nov 30, 2016, at 02:39 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
+wrote:
 >=20
-> Honestly, I'm getting a bit worried by the fact that you ignore
-> reviews.
+> On Tue, Nov 29, 2016 at 08:45:16AM -0800, Frank Rowand wrote:
+>> On 11/28/16 21:10, David Gibson wrote:
+>>> On Mon, Nov 28, 2016 at 08:36:07PM -0800, Frank Rowand wrote:
+>>>> On 11/28/16 19:10, David Gibson wrote:
+>>>>> On Mon, Nov 28, 2016 at 06:05:39PM +0200, Pantelis Antoniou wrote:
+>>>>>> There exists a syntactic sugar version of overlays which
+>>>>>> make them simpler to write for the trivial case of a single =
+target.
+>>>>=20
+>>>> It also works for multiple targets.  (See the example I provided in
+>>>> my comment to v10.)
+>>>>=20
+>>>>=20
+>>>>>>=20
+>>>>>> Document it in the device tree object internals.
+>>>>>>=20
+>>>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>>>>>=20
+>>>>> I'm with Frank that I think this, rather than being regarded mere
+>>>>> syntactic sugar, should be considered the primary way of =
+describing
+>>>>> overlays.
+>>>>>=20
+>>>>> Obviously we need to support the fully written out version as =
+well.
+>>>>=20
+>>>> If we need to support the fully written out version, can we make =
+that
+>>>> a discouraged, non-preferred method?  Maybe require an option to
+>>>> enable compiling this style of dts?
+>>>=20
+>>> Yeah.  To avoid further proliferation of options, I'm thinking a
+>>> single "backwards compat" option which would:
+>>> 	- Use the dtb magic instead of dtb magic
+>>> 	- Disable checks which would reject explicit creation of
+>>> 	  __overlay__ / __symbols__ / __fixups__ nodes
+>>> 	- Anything other special behaviour we need
+>>> =09
+>>>> I can imagine some reasons to support the fully written out =
+version,
+>>>> but can we document what those reasons are?
+>>>=20
+>>> I believe the main one is the dts files in this format out in the
+>>> field.  Mind you, I guess we're already requiring them to tweak how
+>>> they declare the /plugin/ option.
+>>=20
+>> It might be easy to write a program that transforms the expanded
+>> format to the simple format.  I'll try to make some time to see
+>> how difficult it is.  The transformation is relatively easy to
+>> do manually, but I don't know how many dts files would need to
+>> be converted.
 >=20
-> On the important reviews that you got that are to be seen as major
-> issues that block the inclusion, we have:
->   - The fact that the HDMI driver is actually just a designware IP,
->     and while you should use the driver that already exists, you just
->     duplicated all that code.
+> It's not totally trivial, because such a program would basically need
+> a full dts parser.  But.. if we change the dtc internals to work with
+> a list of overlays rather than a single tree, there's a relatively
+> obvious path to it: we can implement parsing a dtbo input into a set
+> of fragments rather than an assembled overlay and dts output in
+> fragment form.  Then converting from old-dts to dtb and back to dts
+> would pretty much do what's needed.  At the cost of losing comments,
+> though :/.
+>=20
 
-The DW registers in the A83T and H3 are obfuscated, so, the code in
-bridge/DW cannot be used as it is. There should be either a translation
-table or a function to compute the register addresses.
+It=E2=80=99s not just the comments. New style dts=E2=80=99es in the =
+kernel now use CPP
+pre-processed input which make the dts more readable.
 
-More, it is not sure that the bridge/DW code would work with
-Allwinner's SoCs. It seems that they got some schematics from
-DesignWare, but, is it really the same hardware? Also, if some changes
-had to be done in the bridge code, I could not check if this would
-break or not the other SoCs.
+Converting back to dts is not even close to the original source.
 
-Eventually, I went the same way as omap/hdmi5: different driver.
+You might as well use fdtdump instead.
 
->   - The fact that you ignored Rob (v6) and I (v5) comment on using OF
->     graph to model the connection between the display engine and the
->     TCON. Something that Laurent also pointed out in this version.
+> --=20
+> David Gibson			| I'll have my music baroque, and my =
+code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
+_the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
 
-I simply use the drm function drm_of_component_probe().
-If this one is in the DRM core, why should I not use it?
-If it must not be used, it would be nice to mark it as deprecated and
-to update the code of the drivers which are using it.
+Regards
 
->   - The fact that you ignored that you needed an HDMI connector node
->     as a child of the HDMI controller. This has been reported by Rob
->     (v6) and yet again in this version by Laurent.
-
-As I don't know what is a DT 'connector', I cannot go further.
-I hope Laurent will give me clearer explanations and a real example.
-
->   - And finally the fact that we can't have several display engine in
->     parallel, if needs be. This has happened in the past already on
->     Allwinner SoCs, so it's definitely something we should consider in
->     the DT bindings, since we can't break them.
-
-IIRC, I proposed my driver before yours, and the DE2 is completely
-different from the other display engines.
-What you are telling is "add more code to already complex code and have
-a big driver for all SoCs in each kernels".
-I think it should be better to have small modules, each one treating
-specific hardware, and to let only the needed code in the kernel memory
-at startup time.
-
-> Until those are fixed, I cannot see how this driver can be merged,
-> unfortunately.
-
-No problem. I just wanted to help people by giving the job I did on the
-boards I have. My boards are working for almost one year, fine enough
-for I use them as daily desktop computers. I don't want to spend one
-more year for having my code in the Linux kernel: there are so much
-other exciting things to do...
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+=E2=80=94 Pantelis
