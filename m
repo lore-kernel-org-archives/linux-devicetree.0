@@ -1,127 +1,129 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v3 3/3] fpga manager: Add cyclone-ps-spi driver for Altera
- FPGAs
-Date: Wed, 30 Nov 2016 13:23:06 -0600
-Message-ID: <alpine.DEB.2.10.1611301320440.2617@atull-730U3E-740U3E>
-References: <cover.1480467185.git.stillcompiling@gmail.com>
- <e193572d7746e6f6b8666da7ac0f54031fed5214.1480467185.git.stillcompiling@gmail.com>
- <alpine.DEB.2.10.1611301122470.2617@atull-730U3E-740U3E>
- <6989b2ee-9caf-81b3-2328-9d4e287794cb@gmail.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node
+ for H3
+Date: Wed, 30 Nov 2016 20:37:24 +0100
+Message-ID: <20161130203724.a390595df0199ed19069f91d@free.fr>
+References: <20161130220324.3Kg4VPEw@smtp1m.mail.yandex.net>
+	<2717236.xBNAaGdqdc@jernej-laptop>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6989b2ee-9caf-81b3-2328-9d4e287794cb@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBB6GU7TAQKGQERTEOIGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <2717236.xBNAaGdqdc@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Nov 2016, Joshua Clayton wrote:
+On Wed, 30 Nov 2016 20:14:11 +0100
+Jernej =C5=A0krabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Hi Joshua,
+> Dne =C4=8Detrtek, 01. december 2016 ob 03:03:14 CET je Icenowy Zheng napi=
+sal(a):
+> > 2016=E5=B9=B412=E6=9C=881=E6=97=A5 02:49=E4=BA=8E Jernej Skrabec <jerne=
+j.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+> >=20
+> > > Hi Jean-Fran=C3=A7ois,
+> > >=20
+> > > Dne sreda, 30. november 2016 10.35.08 UTC+1 je oseba Jean-Fran=C3=A7o=
+is Moine=20
+> napisala:
+> > >> On Tue, 29 Nov 2016 22:59:32 +0100
+> > >>=20
+> > >> Maxime Ripard <maxime...-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > >> > > > I'm still not sure which pipeline should I use.
+> > >> > > >=20
+> > >> > > > And, it seems that HDMI Slow Clock is not needed?
+> > >> > > >=20
+> > >> > > > (seems that it's only for EDID, but simplefb won't use EDID)
+> > >> > >=20
+> > >> > > So, I don't see how this may work.
+> > >> > > How can the u-boot know the resolutions of the HDMI display devi=
+ce?
+> > >> > >=20
+> > >> > > In other words: I have a new H3 board with the last u-boot and
+> > >> > > kernel.
+> > >> > > I plug my (rather old or brand new) HDMI display device.
+> > >> > > After powering on the system, I hope to get something on the scr=
+een.
+> > >> > > How?
+> > >> >=20
+> > >> > If it works like the driver for the first display engine in U-Boot=
+, it
+> > >> > will use the preferred mode reported by the EDID, and will fallbac=
+k to
+> > >> > 1024x768 if it cannot access it.
+> > >>=20
+> > >> Icenowy wrote: "simplefb won't use EDID"
+> > >>=20
+> > >> Then, if it is like in the kernel, the 1024x768 mode is VGA. It does
+> > >> not work with HDMI (different timings).
+> > >=20
+> > > U-Boot driver now accept any timings recommended by EDID. So far it
+> > > was tested with at least following resolutions:
+> > > - 1920x1080 @ 60 Hz
+> > > - 1280x1024 @ 60 Hz
+> > > - 1280x800 @ 60 Hz (slight clock difference)
+> > > - 800x480 (not sure about frame rate)
+> > > - 3840x2160 @ 30 Hz (4K)
+> >=20
+> > I tested on 1024x600 (If my memory is right, it's @ 60Hz)
+> >=20
+> > > and nobody complained so far. I'm pretty sure 1024x768 would work.
 
-> Hi Alan,
-> 
-> On 11/30/2016 09:45 AM, atull wrote:
-> > On Wed, 30 Nov 2016, Joshua Clayton wrote:
-> >
-> > Hi Clayton,
-> >
-> > I just have a few minor one line changes below.  Only one
-> > is operational, I should have caught that earlier.
-> >
-> Thanks for the speedy review.
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, of_ef_match);
-> >> +
-> >> +static enum fpga_mgr_states cyclonespi_state(struct fpga_manager *mgr)
-> >> +{
-> >> +	return mgr->state;
-> >> +}
-> > This function gets called once to initialize mgr->state in
-> > fpga_mgr_register().  So it should at least return the state the FPGA
-> > is at then.  If it is unknown, it can just return
-> > FPGA_MGR_STATE_UNKNOWN.
-> >
-> I guess I didn't understand the purpose of this function.
-> The driver has access to the status pin at this phase, so I can return
-> FPGA_MGR_STATE_UNKNOWN or FPGA_MGR_STATE_RESET depending
-> on the state of that pin.
-> 
-> >> +
-> >> +static int cyclonespi_write_init(struct fpga_manager *mgr, u32 flags,
-> >> +				 const char *buf, size_t count)
-> > Minor, but please fix the indentation of 'const' to match that of
-> > 'struct' above.  checkpatch.pl is probably issuing warnings
-> > about that.
-> I double checked. The indentation is correct here. It only has
-> The appearance of being off by one due to the diff format.
+Check the timings offered by the DRM core.
 
-Yes, I understand.
+> > >=20
+> > >> > Maybe it would be worth exchanging on the EDID code that has been =
+done
+> > >> > for the u-boot driver too, so that it can be fixed in your driver.
+> > >>=20
+> > >> The u-boot got my code, and, up to now, I could not fix the random o=
+r
+> > >> permanent failures of EDID reading in some boards.
+> > >=20
+> > > I only have one OPi2, but as I said, EDID always worked for me.
 
-> >> +{
-> >> +	struct cyclonespi_conf *conf = (struct cyclonespi_conf *)mgr->priv;
-> >> +	int i;
-> >> +
-> >> +	if (flags & FPGA_MGR_PARTIAL_RECONFIG) {
-> >> +		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	gpiod_set_value(conf->config, 0);
-> >> +	usleep_range(FPGA_RESET_TIME, FPGA_RESET_TIME + 20);
-> >> +	if (gpiod_get_value(conf->status) == 1) {
-> >> +		dev_err(&mgr->dev, "Status pin should be low.\n");
-> >> +		return -EIO;
-> >> +	}
-> >> +
-> >> +	gpiod_set_value(conf->config, 1);
-> >> +	for (i = 0; i < (FPGA_MAX_DELAY / FPGA_MIN_DELAY); i++) {
-> >> +		usleep_range(FPGA_MIN_DELAY, FPGA_MIN_DELAY + 20);
-> >> +		if (gpiod_get_value(conf->status))
-> >> +			return 0;
-> >> +	}
-> >> +
-> >> +	dev_err(&mgr->dev, "Status pin not ready.\n");
-> >> +	return -EIO;
-> >> +}
-> >> +
-> >> +static void rev_buf(void *buf, size_t len)
-> >> +{
-> >> +	u32 *fw32 = (u32 *)buf;
-> >> +	const u32 *fw_end = (u32 *)(buf + len);
-> >> +
-> >> +	/* set buffer to lsb first */
-> >> +	while (fw32 < fw_end) {
-> >> +		*fw32 = bitrev8x4(*fw32);
-> >> +		fw32++;
-> >> +	}
-> >> +}
-> >> +
-> >> +static int cyclonespi_write(struct fpga_manager *mgr, const char *buf,
-> >> +			    size_t count)
-> > Please fix alignment here also.
-> Same as above. Indentation is OK.
-> 
-> 
-> I'll get a v4 turned around soon.
+Happy guy!
 
-No rush since the other two patches need acks from
-their respective maintainers and this won't be able
-to go in without them.  But with that one change
-it looks good to me.
+> > > The only
+> > > code left from you is for DE2. HDMI stuff is basically copied from Ro=
+ckhip
+> > > driver (including EDID reading), TCON code is now reverted to the sam=
+e as
+> > > it is in sunxi_display.c. I think it is worth to take a look at EDID =
+code
+> > > and compare it.
+> >=20
+> > So is the TCON of DE 2.0 identical to the original TCON?
+> >=20
+> > If so, we should reuse sun4i-tcon ...
+>=20
+> Well, TCON is splitted in two parts (two base addresses), one for HDMI an=
+d one=20
+> for TV. However, register offsets are same as before, so I guess driver=
+=20
+> reusage make sense. I think that there are few additional registers, but =
+they=20
+> can be ignored for simplefb.
 
-Alan
+The TCON1 of the H3 is not usable (no ckock). Analog TV has its own
+clock and I/O area.
 
-> Thanks,
-> Joshua
-> 
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
