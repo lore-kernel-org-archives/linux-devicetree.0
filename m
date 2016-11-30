@@ -1,56 +1,107 @@
-From: Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: exynos: Add flash led dt node for TM2 board
-Date: Wed, 30 Nov 2016 13:48:57 +0900
-Message-ID: <1480481337-3941-1-git-send-email-sw0312.kim@samsung.com>
-References: <1480480062-3472-1-git-send-email-sw0312.kim@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1480480062-3472-1-git-send-email-sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V6 00/10] PM / OPP: Multiple regulator support
+Date: Wed, 30 Nov 2016 10:44:03 +0530
+Message-ID: <cover.1480481312.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, nm@ti.com, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Hi,
 
-This patch adds Kinetic ktd2692 flash led device node for TM2 board.
+Some platforms (like TI) have complex DVFS configuration for CPU
+devices, where multiple regulators are required to be configured to
+change DVFS state of the device. This was explained well by Nishanth
+earlier [1].
 
-Signed-off-by: Ingi Kim <ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-Change from v1:
-- gpio active value is set with defined macro instead of value.
----
- arch/arm64/boot/dts/exynos/exynos5433-tm2.dts |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
+One of the major complaints around multiple regulators case was that the
+DT isn't responsible in any way to represent the order in which multiple
+supplies need to be programmed, before or after a frequency change. It
+was considered in this patch and such information is left for the
+platform specific OPP driver now, which can register its own
+opp_set_rate() callback with the OPP core and the OPP core will then
+call it during DVFS.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-index f21bdc2..0d454aa 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-@@ -58,6 +58,19 @@
- 		reg = <0x0 0x20000000 0x0 0xc0000000>;
- 	};
- 
-+	camera-flash {
-+		compatible = "kinetic,ktd2692";
-+		ctrl-gpios = <&gpc0 1 GPIO_ACTIVE_HIGH>;
-+		aux-gpios = <&gpc0 2 GPIO_ACTIVE_HIGH>;
-+
-+		flash-led {
-+			label = "ktd2692-flash";
-+			led-max-microamp = <300000>;
-+			flash-max-microamp = <1500000>;
-+			flash-max-timeout-us = <1835000>;
-+		};
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 
--- 
-1.7.4.1
+The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
+and code to pass values for multiple regulators and verified that they
+are all properly read by the kernel (using debugfs interface).
+
+Dave Gerlach has already tested [2] it on the real TI platforms and it
+works well for him.
+
+This is rebased over: linux-next branch in the PM tree.
+
+V5->V6:
+- Rebased over a recent fix (and resolved rebase conflicts) that will
+  get applied before this series:
+
+  https://marc.info/?l=linux-kernel&m=148047843010418&w=2
+
+V4->V5:
+- Stephen boyd had some minor review comments and gave his Reviewed-by
+  tag for the rest. Only 2 patches don't have his RBY tag.
+- Individual patches contain the version history from V4 to V5.
+
+V3->V4:
+- Separate out cpu-supply fix in the binding in a separate patch (Mark).
+- Add more documentation to the binding to explain that the relation to
+  the supplies and the order of programming them is left for the
+  platform specific bindings and that every platform using multiple
+  regulators for their devices needs to provide a separate binding
+  document explaining their implementation (Mark).
+- @Rob and Stephen: I have kept your Acks for the bindings as the
+  bindings only got a bit reworded (improved) since the time you guys
+  Acked them. Please let me know if you want more improvement in the
+  bindings now.
+- V4 for 10/10 was sent earlier, which added a missing
+  rcu_read_unlock(). Nothing else changed in it.
+- Added some missing Kernel documentation comments
+
+V2->V3:
+- The last patch is new
+- Removed a debug leftover pr_info() message
+- Renamed few names as s/set_rate/set_opp
+- Removed a TODO comment (as it is done now with this series)
+- created struct for min_uV and max_uV
+- kerneldoc comments for structures in pm_opp.h
+- s/const char */const char * const
+- use kasprintf()
+- Some more minor reformatting
+- More Ack/RBY tags added
+
+V1->V2:
+- Ack from Rob for 1st patch
+- Moved the supplies structure to pm_opp.h (Dave)
+- Fixed an compilation warning.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=145684495832764&w=2
+[2] https://marc.info/?l=linux-kernel&m=147924789305276&w=2
+
+Viresh Kumar (10):
+  PM / OPP: Fix incorrect cpu-supply property in binding
+  PM / OPP: Reword binding supporting multiple regulators per device
+  PM / OPP: Don't use OPP structure outside of rcu protected section
+  PM / OPP: Manage supply's voltage/current in a separate structure
+  PM / OPP: Pass struct dev_pm_opp_supply to _set_opp_voltage()
+  PM / OPP: Add infrastructure to manage multiple regulators
+  PM / OPP: Separate out _generic_set_opp()
+  PM / OPP: Allow platform specific custom set_opp() callbacks
+  PM / OPP: Don't WARN on multiple calls to dev_pm_opp_set_regulators()
+  PM / OPP: Don't assume platform doesn't have regulators
+
+ Documentation/devicetree/bindings/opp/opp.txt |  27 +-
+ drivers/base/power/opp/core.c                 | 535 ++++++++++++++++++++------
+ drivers/base/power/opp/debugfs.c              |  52 ++-
+ drivers/base/power/opp/of.c                   | 105 +++--
+ drivers/base/power/opp/opp.h                  |  22 +-
+ drivers/cpufreq/cpufreq-dt.c                  |   9 +-
+ include/linux/pm_opp.h                        |  69 +++-
+ 7 files changed, 635 insertions(+), 184 deletions(-)
+
+-- 
+2.7.1.410.g6faf27b
+
