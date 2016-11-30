@@ -1,30 +1,26 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] devicetree: bindings: pinctrl: Add binding for ti,da850-pupd
-Date: Wed, 30 Nov 2016 13:59:05 +0100
-Message-ID: <CACRpkdbdaLFmF2J3VOCErNjrX_e+Q4nMmrJiBbJADk0wrTJ40A@mail.gmail.com>
-References: <1480351226-3332-1-git-send-email-david@lechnology.com> <1480351226-3332-2-git-send-email-david@lechnology.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/3] pinctrl: New driver for TI DA850/OMAP-L138/AM18XX pinconf
+Date: Wed, 30 Nov 2016 14:00:54 +0100
+Message-ID: <CACRpkdYbBsUSN8f6-bmN-qkGciJOKVDn44P-e5FZaLWXm3azFg@mail.gmail.com>
+References: <1480351226-3332-1-git-send-email-david@lechnology.com> <1480351226-3332-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480351226-3332-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1480351226-3332-3-git-send-email-david@lechnology.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Axel Haslam <ahaslam@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 5:40 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+On Mon, Nov 28, 2016 at 5:40 PM, David Lechner <david@lechnology.com> wrote:
 
-> Device-tree bindings for TI DA850/OMAP-L138/AM18XX pullup/pulldown
-> pinconf controller.
+> This adds a new driver for pinconf on TI DA850/OMAP-L138/AM18XX. These
+> SoCs have a separate controller for controlling pullup/pulldown groups.
 >
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> Reviewed-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: David Lechner <david@lechnology.com>
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 
-Totally uncontroversial standard bindings so patch applied.
+Patch applied.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
