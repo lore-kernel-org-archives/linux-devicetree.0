@@ -1,53 +1,81 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: display: add Amlogic Meson DRM
- Bindings
-Date: Wed, 30 Nov 2016 17:22:02 +0100
-Message-ID: <6d0450dd-eb7c-a422-ec97-376c1f5fb6c6@baylibre.com>
-References: <1480520625-13269-1-git-send-email-narmstrong@baylibre.com>
- <1480520625-13269-4-git-send-email-narmstrong@baylibre.com>
- <2734274.BAOZxRirYz@avalon>
- <2e1b16c6-eec5-8cf3-5795-d6de02f36570@baylibre.com>
- <m21sxtkkg1.fsf@baylibre.com>
+From: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] i2c: Add STM32F4 I2C driver
+Date: Wed, 30 Nov 2016 17:23:53 +0100
+Message-ID: <20161130162353.GC1441@katana>
+References: <1466439771-2741-1-git-send-email-cedric.madianga@gmail.com>
+ <1466439771-2741-3-git-send-email-cedric.madianga@gmail.com>
+ <20160722070219.GB1605@katana>
+ <CAOAejn0BZNH82kY_7UR1EjV7M1G+9jGihGb4-uCs9=XiPHUYxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m21sxtkkg1.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOAejn0BZNH82kY_7UR1EjV7M1G+9jGihGb4-uCs9=XiPHUYxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
+To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2016 05:21 PM, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
-> 
->> Hi Laurent,
->> On 11/30/2016 04:58 PM, Laurent Pinchart wrote:
->>> Hi Neil,
->>>
->>> On Wednesday 30 Nov 2016 16:43:44 Neil Armstrong wrote:
->>>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>>  .../bindings/display/meson/meson-drm.txt           | 101 ++++++++++++++++++
->>>
->>> I forgot to mention that the file should not be named meson-drm.txt as DRM is 
->>> a Linux-specific concept. You can name it meson.txt, but a better option would 
->>> be amlogic,meson.txt. By the way does it really need a subdirectory ?
->>
->> I took example of the sun4i layout the naming, and no it does not need a subdirector..
->>
->> I will move it to amlogic,meson.txt, seems far better.
->>
-> 
-> To me, amlogic,meson is redundant.  Probably should be amlogic,vpu.txt?
-> 
-> Kevin
-> 
 
-Yes, seems more coherent.
+--uXxzq0nDebZQVNAZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Neil
+Hi,
+
+> I was too busy in another project but now I am ready to complete the
+> upstream of the STM32F4 I2C driver.
+
+Nice.
+
+> >> +static void stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
+> >> +{
+> >> +     u32 clk_rate, cr2, freq;
+> >> +
+> >> +     cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
+> >> +     cr2 &= ~STM32F4_I2C_CR2_FREQ_MASK;
+> >> +
+> >> +     clk_rate = clk_get_rate(i2c_dev->clk);
+> >> +     freq = clk_rate / MHZ_TO_HZ;
+> >> +
+> >> +     if (freq > STM32F4_I2C_MAX_FREQ)
+> >> +             freq = STM32F4_I2C_MAX_FREQ;
+> >> +     if (freq < STM32F4_I2C_MIN_FREQ)
+> >> +             freq = STM32F4_I2C_MIN_FREQ;
+> >
+> > clamp() to enforce the range?
+> Sorry but what do you mean by "clamp()" ?
+
+The kernel has a clamp() function which would fit this purpose, I think.
+
+Regards,
+
+   Wolfram
+
+
+--uXxzq0nDebZQVNAZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYPv0ZAAoJEBQN5MwUoCm2SZIQAJTE3hJprlSgsvvRWdPtE9MW
+4hwhZ22xtAvGEcPyZZdQdYAR6KR0zYqc2o7PHi9rFcF0RExJ4kKdKRJW+81+toHa
+utVYhwEDtRSdcvoeJhslNlXS2RXIUGKJu/xKp8bNCmvqlF4tLUvBdRk7N8DoBhjK
+1eTiYmei7d9cqY4vB8Fb/TJ/Jr59CNtN/1DFexznuG3Lmv6ZaDc4kdZTCauQLnoY
+kJtZmGxweXKJW3JWRxstiKAylmG3NGJp9Fo70XR9r+T0kqlndqe4M8rGtxlLRUWA
+hal08rqInImkrdVsExCQlXGtPfdNu15KhY4XLrABA03z1Vr1Bhkt1B4NUm6OaQ9y
+1GPTzxSIb5TfRnNxq2d6IF++9cPYR7V5HoCntnc6nH9vk4/RupUDITTSpI39UGGp
+YfKnkW7oKra3+M11GXeNfTnfSjJXlMCeSXtvyIwwGiOwRHzPLbE9JUWVCqkyKd1j
+7S1P6J+tQgyNQ/HelBckdQNgE8a9K1XClzOtZFf2yFaBETyUJGQjyYOcMYz7E41e
+BFkXa72sYAVR62e6xtbht1kAZAb3u6gysaj3Py0PpPls0bjbf+JGX84S7PQAYO7g
+qo/aqGSwkuDnsFYeCBqbJrXvhZS6Mrx/ihoD1bXwhCLA5Bnpwho7yNprTazaSmf8
+MPNsuER2yyjZ0MdYnRAR
+=g3Ap
+-----END PGP SIGNATURE-----
+
+--uXxzq0nDebZQVNAZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
