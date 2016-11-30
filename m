@@ -1,119 +1,168 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: zx: add zx296718's topcrm node
-Date: Wed, 30 Nov 2016 17:50:18 +0800
-Message-ID: <1480499418-13905-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
+ documentation of Allwinner HDMI
+Date: Wed, 30 Nov 2016 11:52:25 +0200
+Message-ID: <3478036.d2UQM8n6lv@avalon>
+References: <cover.1480414715.git.moinejf@free.fr> <4614815.L3DQhhBy6d@avalon> <20161130102757.9eec1f7f3377d0f4787e3829@free.fr>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBBS6C7LAQKGQEWRRELLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161130102757.9eec1f7f3377d0f4787e3829-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable topcrm clock node for zx296718, which is used for
-CPU's frequency change.
+Hi Jean-Fran=C3=A7ois,
 
-Furthermore, this patch adds the CPU clock phandle in CPU's node
-and uses operating-points-v2 to register operating points.
+On Wednesday 30 Nov 2016 10:27:57 Jean-Francois Moine wrote:
+> On Wed, 30 Nov 2016 10:20:21 +0200 Laurent Pinchart wrote:
+> >> Well, I don't see what this connector can be.
+> >> May you give me a DT example?
+> >=20
+> > Sure.
+> >=20
+> > arch/arm/boot/dts/r8a7791-koelsch.dts
+> >=20
+> >         /* HDMI encoder */
+> >        =20
+> >         hdmi@39 {
+> >                 compatible =3D "adi,adv7511w";
+> >                 reg =3D <0x39>;
+> >                 interrupt-parent =3D <&gpio3>;
+> >                 interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>;
+> >                =20
+> >                 adi,input-depth =3D <8>;
+> >                 adi,input-colorspace =3D "rgb";
+> >                 adi,input-clock =3D "1x";
+> >                 adi,input-style =3D <1>;
+> >                 adi,input-justification =3D "evenly";
+> >                =20
+> >                 ports {
+> >                         #address-cells =3D <1>;
+> >                         #size-cells =3D <0>;
+> >                        =20
+> >                         port@0 {
+> >                                 reg =3D <0>;
+> >                                 adv7511_in: endpoint {
+> >                                         remote-endpoint =3D <&du_out_rg=
+b>;
+> >                                 };
+> >                         };
+> >                        =20
+> >                         port@1 {
+> >                                 reg =3D <1>;
+> >                                 adv7511_out: endpoint {
+> >                                         remote-endpoint =3D <&hdmi_con>=
+;
+> >                                 };
+> >                         };
+> >                 };
+> >        =20
+> >         };
+> >        =20
+> >         /* HDMI connector */
+> >        =20
+> >         hdmi-out {
+> >                 compatible =3D "hdmi-connector";
+> >                 type =3D "a";
+> >                =20
+> >                 port {
+> >                         hdmi_con: endpoint {
+> >                                 remote-endpoint =3D <&adv7511_out>;
+> >                         };
+> >                 };
+> >         };
+>=20
+> Hi Laurent,
+>=20
+> Sorry for I don't see the interest:
+> - it is obvious that the HDMI connector is a 'hdmi-connector'!
 
-So it can be used by cpufreq-dt driver.
+It still has to be told to the drivers, they don't know how to identify a=
+=20
+connector by looking at it :-)
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/zte/zx296718.dtsi | 43 +++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+> - the physical connector type may be changed on any board by a soldering
+>   iron or a connector to connector cable.
 
-diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-index 6b239a3..992158a 100644
---- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-+++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/zx296718-clock.h>
- 
- / {
- 	compatible = "zte,zx296718";
-@@ -81,6 +82,8 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&topcrm A53_GATE>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -88,6 +91,7 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -95,6 +99,7 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -102,6 +107,38 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cluster0_opp>;
-+		};
-+	};
-+
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <857000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp@648000000 {
-+			opp-hz = /bits/ 64 <648000000>;
-+			opp-microvolt = <857000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp@800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <882000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp@1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <892000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp@1188000000 {
-+			opp-hz = /bits/ 64 <1188000000>;
-+			opp-microvolt = <1009000>;
-+			clock-latency-ns = <500000>;
- 		};
- 	};
- 
-@@ -279,6 +316,12 @@
- 			dma-requests = <32>;
- 		};
- 
-+		topcrm: clock-controller@1461000 {
-+			compatible = "zte,zx296718-topcrm";
-+			reg = <0x01461000 0x1000>;
-+			#clock-cells = <1>;
-+		};
-+
- 		sysctrl: sysctrl@1463000 {
- 			compatible = "zte,zx296718-sysctrl", "syscon";
- 			reg = <0x1463000 0x1000>;
--- 
-2.7.4
+Which is also true for any other component on the board. DT (and for that=
+=20
+matter any firmware description of the platform) isn't soldering-proof.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> - what does the software do with the connector type?
+
+That's up to the software to decide, the DT bindings should describe the=20
+hardware in the most accurate and usable way for the OS as possible. One of=
+ my=20
+longer term goals is to add connector drivers to handle DDC and HPD when=20
+they're not handled by the encoder (they are in the above example).
+
+If the DDC was connected to a general-purpose I2C bus of the SoC, and the H=
+PD=20
+to a GPIO, we would have
+
+	hdmi-out {
+		compatible =3D "hdmi-connector";
+		type =3D "a";
+		/* I2C bus and GPIO references are made up for the example */
+		ddc-i2c-bus =3D <&i2c4>;
+		hpd-gpios =3D <&gpio4 7 GPIO_ACTIVE_HIGH>
+
+		port {
+			hdmi_con: endpoint {
+				remote-endpoint =3D <&adv7511_out>;
+			};
+		};
+	};
+
+and both HPD and EDID reading should be handled by the connector driver.
+
+> - why not to put the connector information in the HDMI device?
+
+Because the connector is separate from the encoder. It's not uncommon=20
+(depending on the encoder type) to have the encoder output connected to a n=
+on-
+connector entity such as another chained encoder.
+
+For example most LVDS encoders are connected to a panel, but I have a board=
+=20
+with the following encoders chain.
+
+CRTC -- parallel RGB --> on-SoC LVDS encoder -- LVDS --> on-board LVDS deco=
+der=20
+-- parallel RGB --> HDMI encoder -- HDMI --> HDMI connector
+
+I can't support that if the LVDS encoder driver hardcodes the assumption th=
+at=20
+the encoder output is connected to a panel. This kind of usage might be les=
+s=20
+common for HDMI but is certainly not inconceivable.
+
+> And, if I follow you, the graph of ports could also be used to describe
+> the way the various parts of the SoCs are powered, to describe the pin
+> connections, to describe the USB connectors, to describe the board
+> internal hubs and bridges...
+
+It should be used where applicable, it's not meant as the only possible=20
+hardware description for all pieces of the system.
+
+--=20
+Regards,
+
+Laurent Pinchart
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
