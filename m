@@ -1,33 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/9] clk: stm32f4: Update DT bindings documentation
-Date: Wed, 30 Nov 2016 14:47:13 -0600
-Message-ID: <20161130204713.bu6ig3z6n6dx47z7@rob-hp-laptop>
+Subject: Re: [PATCH v2 2/9] clk: stm32f4: Add PLL_I2S & PLL_SAI for
+ STM32F429/469 boards
+Date: Wed, 30 Nov 2016 14:48:59 -0600
+Message-ID: <20161130204859.gfqw6wdbq4repcje@rob-hp-laptop>
 References: <1479998749-20358-1-git-send-email-gabriel.fernandez@st.com>
- <1479998749-20358-2-git-send-email-gabriel.fernandez@st.com>
+ <1479998749-20358-3-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1479998749-20358-2-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1479998749-20358-3-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: gabriel.fernandez@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2016 at 03:45:41PM +0100, gabriel.fernandez@st.com wrote:
+On Thu, Nov 24, 2016 at 03:45:42PM +0100, gabriel.fernandez@st.com wrote:
 > From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> Creation of dt include file for specific stm32f4 clocks.
-> These specific clocks are not derived from system clock (SYSCLOCK)
-> We should use index 1 to use these clocks in DT.
-> e.g. <&rcc 1 CLK_LSI>
+> This patch introduces PLL_I2S and PLL_SAI.
+> Vco clock of these PLLs can be modify by DT (only n multiplicator,
+> m divider is still fixed by the boot-loader).
+> Each PLL has 3 dividers. PLL should be off when we modify the rate.
 > 
 > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 > ---
->  .../devicetree/bindings/clock/st,stm32-rcc.txt     |  8 ++++++
->  drivers/clk/clk-stm32f4.c                          |  9 +++++--
->  include/dt-bindings/clock/stm32f4-clock.h          | 31 ++++++++++++++++++++++
->  3 files changed, 46 insertions(+), 2 deletions(-)
->  create mode 100644 include/dt-bindings/clock/stm32f4-clock.h
+>  .../devicetree/bindings/clock/st,stm32-rcc.txt     |   2 +
+>  drivers/clk/clk-stm32f4.c                          | 342 ++++++++++++++++++++-
+>  include/dt-bindings/clock/stm32f4-clock.h          |   4 +-
+>  3 files changed, 332 insertions(+), 16 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
