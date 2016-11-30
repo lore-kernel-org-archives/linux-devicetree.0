@@ -1,20 +1,41 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: arm64: renesas: r8a7796/salvator-x: Add board part number to DT
- bindings
-Date: Wed, 30 Nov 2016 11:05:25 +0100
-Message-ID: <20161130100525.GA20767@verge.net.au>
-References: <1472635054-24372-1-git-send-email-geert+renesas@glider.be>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Wed, 30 Nov 2016 11:05:19 +0100
+Message-ID: <20161130100519.GD28680@localhost.localdomain>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1472635054-24372-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20161128230428.6872-5-grygorii.strashko@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 11:17:34AM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Mon, Nov 28, 2016 at 05:04:26PM -0600, Grygorii Strashko wrote:
+> The TS_COMP output in the CPSW CPTS module is asserted for
+> ts_comp_length[15:0] RCLK periods when the time_stamp value compares
+> with the ts_comp_val[31:0] and the length value is non-zero. The
+> TS_COMP pulse edge occurs three RCLK periods after the values
+> compare. A timestamp compare event is pushed into the event FIFO when
+> TS_COMP is asserted.
+> 
+> This patch adds support of Pulse-Per-Second (PPS) by using the
+> timestamp compare output. The CPTS driver adds one second of counter
+> value to the ts_comp_val register after each assertion of the TS_COMP
+> output. The TS_COMP pulse polarity and width are configurable in DT.
 
-Thanks, queued up for v4.11.
+I really dislike this patch.  You go through contortions to get from
+the timecounter back to the raw HW counter.  That is rather ugly.
+
+Can you adjust the frequency of the keystone devices in hardware?  If
+so, then please implement it, and just disable PPS for the CPSW.
+
+The only reason I used the timecounter for frequency adjustment was
+because the am335x HW is broken.  But this shouldn't hold back other
+newer HW without the same silicon flaws.
+
+Thanks,
+Richard
