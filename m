@@ -1,82 +1,66 @@
-From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Subject: Re: Overlays and boolean properties
-Date: Wed, 30 Nov 2016 09:29:22 +0000
-Message-ID: <5f4b9a49-8e63-5542-b00a-f415d2b4af6d@raspberrypi.org>
-References: <a02487bb-6f79-fe4d-8180-86375b9413b9@raspberrypi.org>
- <BDABA9C0-FDBE-4B2E-97AE-D3684D2A68BA@konsulko.com>
- <20161130034733.GH19891@umbus>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [RFC PATCH] ARM: dts: sun8i: add simplefb node for H3
+Date: Wed, 30 Nov 2016 10:35:03 +0100
+Message-ID: <20161130103503.01061303ace71c74e1cac66f@free.fr>
+References: <20161128095900.27615-1-icenowy@aosc.xyz>
+	<20161128114218.14d2ed434802a20fa6b62023@free.fr>
+	<20161129215932.kmk6qodthicadpyb@lukather>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161130034733.GH19891@umbus>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBS527LAQKGQEITBQ5MQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161129215932.kmk6qodthicadpyb@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Tue, 29 Nov 2016 22:59:32 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On 30/11/2016 03:47, David Gibson wrote:
-> On Tue, Nov 29, 2016 at 03:10:40PM +0200, Pantelis Antoniou wrote:
->> Hi Phil,
->>
->>> On Nov 29, 2016, at 15:06 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> wrote:
->>>
->>> Boolean properties are defined as being properties with no content, that
->>> are true if present and false if absent. They pose a problem for DT
->>> overlays, since the proposed (and widely used) overlay mechanism does
->>> not allow for properties (or nodes) to be deleted; overlays can only
->>> make a false property true, so boolean properties are effectively
->>> monostable - once true they become immutable.
->>>
->>> The standard DT syntax includes /delete-property/ and /delete-node/
->>> directives that do what you would expect from their names, but that
->>> facility is not available to overlays. There is no FDT node that
->>> represents the deletion - the directives are acted on immediately
-> Uh.. only partially true.  They're acted on during the compile run,
-> but not during the parse.  dtc does have an internal representation of
-> node or property deletions that gets resolved when we combine the
-> fragments in the source file.
->>> - so
->>> we would need some extra markup - say __delete_property__ and
->>> __delete_node__ - to hold the names of items to be deleted.
-> So, in principle this wouldn't be that hard - we'd just need to
-> translate dtc's internal representation into a representation in the
-> dtb.  That could be done with special properties, or with new opcodes
-> at the dtb encoding level.
->
->>> Before I take this further, does anybody have any thoughts on the idea?
-> So.. the first question, is do we have a pressing use case for this?
-> dtbos can (apart from this) alter anything in a base tree, but doing
-> so isn't often a good idea.  Usually they'll just add new nodes and
-> properties.
+> > > I'm still not sure which pipeline should I use.
+> > >=20
+> > > And, it seems that HDMI Slow Clock is not needed?
+> > >=20
+> > > (seems that it's only for EDID, but simplefb won't use EDID)
+> >=20
+> > So, I don't see how this may work.
+> > How can the u-boot know the resolutions of the HDMI display device?
+> >=20
+> > In other words: I have a new H3 board with the last u-boot and kernel.
+> > I plug my (rather old or brand new) HDMI display device.
+> > After powering on the system, I hope to get something on the screen.
+> > How?
+>=20
+> If it works like the driver for the first display engine in U-Boot, it
+> will use the preferred mode reported by the EDID, and will fallback to
+> 1024x768 if it cannot access it.
 
-This is more of a real world example than a pressing use case, since the
-number of people affected is small and there is workaround, albeit an
-ugly one.
+Icenowy wrote: "simplefb won't use EDID"
 
-The Raspberry Pi SoCs have two SD interfaces - one SDIO-capable and one
-not. On the Pi3B the SDIO-capable interface is used to drive the WiFi
-interface. This WiFi interface doesn't like being continuously prodded
-to see if it is still there, so the base DTB sets the "non-removable"
-boolean property. Not all Pi3 users want WiFi, preferring instead to
-wire up an MMC device or second SD slot via the expansion header. A DT
-overlay allows them to modify the pin functions to achieve this, but the
-overlay can't (easily) remove the aptly-named "non-removable". The ugly
-workaround is to disable the original MMC node and create a clone with a
-different name and without the unwanted property.
+Then, if it is like in the kernel, the 1024x768 mode is VGA. It does
+not work with HDMI (different timings).
 
->> The original patchset did support removing properties (by prefixing them with -).
->>
->> I can revive that if we have consensus about the format/method.
-> On the whole, I'd prefer not to see extensions of the existing overlay
-> format - instead I'd like to see focus on a new and better thought out
-> connector format.
-Will this connector mechanism allow a populated DT to be modified, or
-would you always have to start with an "empty" board and only add that
-which you want? I like the flexibility to be able to perform arbitrary
-DT modifications (except deletions) - it has been very useful for
-testing and performing staggered rollouts of new functionality.
+> Maybe it would be worth exchanging on the EDID code that has been done
+> for the u-boot driver too, so that it can be fixed in your driver.
 
-Phil
+The u-boot got my code, and, up to now, I could not fix the random or
+permanent failures of EDID reading in some boards.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
