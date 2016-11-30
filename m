@@ -1,41 +1,62 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V6 08/10] PM / OPP: Allow platform specific custom
- set_opp() callbacks
-Date: Wed, 30 Nov 2016 14:04:19 -0800
-Message-ID: <20161130220419.GL6095@codeaurora.org>
-References: <cover.1480481312.git.viresh.kumar@linaro.org>
- <152e4a2c876449f3e47c206f5120cafdfd48b976.1480481312.git.viresh.kumar@linaro.org>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Wed, 30 Nov 2016 23:17:38 +0100
+Message-ID: <20161130221738.GA13099@localhost.localdomain>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
+ <20161130184511.GB8209@netboy>
+ <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <152e4a2c876449f3e47c206f5120cafdfd48b976.1480481312.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30, Viresh Kumar wrote:
-> The generic set_opp() handler isn't sufficient for platforms with
-> complex DVFS.  For example, some TI platforms have multiple regulators
-> for a CPU device. The order in which various supplies need to be
-> programmed is only known to the platform code and its best to leave it
-> to it.
+On Wed, Nov 30, 2016 at 02:43:57PM -0600, Grygorii Strashko wrote:
+> > In order to produce the PPS edge correctly, you would have to adjust
+> > the comparison value whenever cc.mult changes, 
 > 
-> This patch implements APIs to register platform specific set_opp()
-> callback.
+> yes. And that is done in cpts_ptp_adjfreq()
+> 	if (cpts->ts_comp_enabled)
+> 		cpts->ts_comp_one_sec_cycs = cpts_cc_ns2cyc(cpts, NSEC_PER_SEC);
+> 	^^^ re-calculate reload value for 
+>  
+> 	cpts_ts_comp_settime(cpts, ns);
+> 	^^^ adjust the ts_comp
+
+And it races with the pulse itself.  You forgot about this part:
+
+> @@ -172,14 +232,31 @@ static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
+>  	adj *= ppb;
+>  	diff = div_u64(adj, 1000000000ULL);
+>  
+> +	mutex_lock(&cpts->ptp_clk_mutex);
+> +
+>  	spin_lock_irqsave(&cpts->lock, flags);
+> +	if (cpts->ts_comp_enabled) {
+> +		cpts_ts_comp_disable(cpts);
+
+Sorry, but this is a train wreck.
+
+> > but of course this is unworkable.
+> > 
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Tested-by: Dave Gerlach <d-gerlach@ti.com>
-> 
-> ---
+> Sry, but this is questionable - code for pps comes from TI internal
+> branches (SDK releases) where it survived for a pretty long time.
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+That doesn't mean the code is any good.  If you adjust at the right
+moment, then no pulse occurs at all!
 
-So this one has the same set/put problem the other APIs has?
-Presumably we're going to need to fix and change the API that is
-introduced here. Wouldn't it be better to do that first though?
+> I'm, of course, agree that without HW support for freq adjustment
+> this PPS feature is not super precise and has some limitation,
+> but that is what we agree to live with. 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I do NOT agree to live with this.  I am one who is going to have to
+explain to the world why their beagle bone PPS sucks.
+ 
+Thanks,
+Richard
