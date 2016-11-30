@@ -1,448 +1,71 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v10 3/4] dtc: Plugin and fixup support
-Date: Wed, 30 Nov 2016 12:50:07 +1100
-Message-ID: <20161130015007.GG19891@umbus>
-References: <1480077131-14526-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1480077131-14526-4-git-send-email-pantelis.antoniou@konsulko.com>
- <20161128041228.GJ30927@umbus.fritz.box>
- <D69908BD-B243-4AEE-B6BA-80B94AFE4B6A@konsulko.com>
- <20161129021028.GC13307@umbus.fritz.box>
- <CC3401F7-9DE7-4913-8FE6-DB1E89E20A3A@konsulko.com>
+Subject: Re: Overlays and boolean properties
+Date: Wed, 30 Nov 2016 14:47:33 +1100
+Message-ID: <20161130034733.GH19891@umbus>
+References: <a02487bb-6f79-fe4d-8180-86375b9413b9@raspberrypi.org>
+ <BDABA9C0-FDBE-4B2E-97AE-D3684D2A68BA@konsulko.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QWpDgw58+k1mSFBj"
+        protocol="application/pgp-signature"; boundary="SUk9VBj82R8Xhb8H"
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CC3401F7-9DE7-4913-8FE6-DB1E89E20A3A-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <BDABA9C0-FDBE-4B2E-97AE-D3684D2A68BA-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---QWpDgw58+k1mSFBj
-Content-Type: text/plain; charset=utf-8
+--SUk9VBj82R8Xhb8H
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 29, 2016 at 01:09:11PM +0200, Pantelis Antoniou wrote:
-> Hi David,
+On Tue, Nov 29, 2016 at 03:10:40PM +0200, Pantelis Antoniou wrote:
+> Hi Phil,
 >=20
-> > On Nov 29, 2016, at 04:10 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
+> > On Nov 29, 2016, at 15:06 , Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> wrote:
 > >=20
-> > On Mon, Nov 28, 2016 at 02:10:35PM +0200, Pantelis Antoniou wrote:
-> >>=20
-> >>> On Nov 28, 2016, at 06:12 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org=
-> wrote:
-> >>>=20
-> >>> On Fri, Nov 25, 2016 at 02:32:10PM +0200, Pantelis Antoniou wrote:
-> >>>> This patch enable the generation of symbols & local fixup information
-> >>>> for trees compiled with the -@ (--symbols) option.
-> >>>>=20
-> >>>> Using this patch labels in the tree and their users emit information
-> >>>> in __symbols__ and __local_fixups__ nodes.
-> >>>>=20
-> >>>> The __fixups__ node make possible the dynamic resolution of phandle
-> >>>> references which are present in the plugin tree but lie in the
-> >>>> tree that are applying the overlay against.
-> >>>>=20
-> >>>> While there is a new magic number for dynamic device tree/overlays b=
-lobs
-> >>>> it is by default enabled. Remember to use -M to generate compatible
-> >>>> blobs.
-> >>>>=20
-> >>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> >>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>> ---
-> >>>> Documentation/manual.txt |  25 +++++-
-> >>>> checks.c                 |   8 +-
-> >>>> dtc-lexer.l              |   5 ++
-> >>>> dtc-parser.y             |  50 +++++++++--
-> >>>> dtc.c                    |  39 +++++++-
-> >>>> dtc.h                    |  20 ++++-
-> >>>> fdtdump.c                |   2 +-
-> >>>> flattree.c               |  17 ++--
-> >>>> fstree.c                 |   2 +-
-> >>>> libfdt/fdt.c             |   2 +-
-> >>>> libfdt/fdt.h             |   3 +-
-> >>>> livetree.c               | 225 +++++++++++++++++++++++++++++++++++++=
-+++++++++-
-> >>>> tests/mangle-layout.c    |   7 +-
-> >>>> 13 files changed, 375 insertions(+), 30 deletions(-)
-> >>>>=20
-> >>>> diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-> >>>> index 398de32..094893b 100644
-> >>>> --- a/Documentation/manual.txt
-> >>>> +++ b/Documentation/manual.txt
-> >>>> @@ -119,6 +119,24 @@ Options:
-> >>>> 	Make space for <number> reserve map entries
-> >>>> 	Relevant for dtb and asm output only.
-> >>>>=20
-> >>>> +    -@
-> >>>> +	Generates a __symbols__ node at the root node of the resulting blob
-> >>>> +	for any node labels used, and for any local references using phand=
-les
-> >>>> +	it also generates a __local_fixups__ node that tracks them.
-> >>>> +
-> >>>> +	When using the /plugin/ tag all unresolved label references to
-> >>>> +	be tracked in the __fixups__ node, making dynamic resolution possi=
-ble.
-> >>>> +
-> >>>> +    -A
-> >>>> +	Generate automatically aliases for all node labels. This is simila=
-r to
-> >>>> +	the -@ option (the __symbols__ node contain identical information)=
- but
-> >>>> +	the semantics are slightly different since no phandles are automat=
-ically
-> >>>> +	generated for labeled nodes.
-> >>>> +
-> >>>> +    -M
-> >>>> +	Generate blobs with the old FDT magic number for device tree objec=
-ts.
-> >>>> +	By default blobs use the DTBO FDT magic number instead.
-> >>>> +
-> >>>>    -S <bytes>
-> >>>> 	Ensure the blob at least <bytes> long, adding additional
-> >>>> 	space if needed.
-> >>>> @@ -146,13 +164,18 @@ Additionally, dtc performs various sanity chec=
-ks on the tree.
-> >>>> Here is a very rough overview of the layout of a DTS source file:
-> >>>>=20
-> >>>>=20
-> >>>> -    sourcefile:   list_of_memreserve devicetree
-> >>>> +    sourcefile:   versioninfo plugindecl list_of_memreserve devicet=
-ree
-> >>>>=20
-> >>>>    memreserve:   label 'memreserve' ADDR ADDR ';'
-> >>>> 		| label 'memreserve' ADDR '-' ADDR ';'
-> >>>>=20
-> >>>>    devicetree:   '/' nodedef
-> >>>>=20
-> >>>> +    versioninfo:  '/' 'dts-v1' '/' ';'
-> >>>> +
-> >>>> +    plugindecl:   '/' 'plugin' '/' ';'
-> >>>> +                | /* empty */
-> >>>> +
-> >>>>    nodedef:      '{' list_of_property list_of_subnode '}' ';'
-> >>>>=20
-> >>>>    property:     label PROPNAME '=3D' propdata ';'
-> >>>> diff --git a/checks.c b/checks.c
-> >>>> index 2bd27a4..4292f4b 100644
-> >>>> --- a/checks.c
-> >>>> +++ b/checks.c
-> >>>> @@ -487,8 +487,12 @@ static void fixup_phandle_references(struct che=
-ck *c, struct boot_info *bi,
-> >>>>=20
-> >>>> 			refnode =3D get_node_by_ref(dt, m->ref);
-> >>>> 			if (! refnode) {
-> >>>> -				FAIL(c, "Reference to non-existent node or label \"%s\"\n",
-> >>>> -				     m->ref);
-> >>>> +				if (!(bi->versionflags & VF_PLUGIN))
-> >>>> +					FAIL(c, "Reference to non-existent node or "
-> >>>> +							"label \"%s\"\n", m->ref);
-> >>>> +				else /* mark the entry as unresolved */
-> >>>> +					*((cell_t *)(prop->val.val + m->offset)) =3D
-> >>>> +						cpu_to_fdt32(0xffffffff);
-> >>>> 				continue;
-> >>>> 			}
-> >>>>=20
-> >>>> diff --git a/dtc-lexer.l b/dtc-lexer.l
-> >>>> index 790fbf6..40bbc87 100644
-> >>>> --- a/dtc-lexer.l
-> >>>> +++ b/dtc-lexer.l
-> >>>> @@ -121,6 +121,11 @@ static void lexical_error(const char *fmt, ...);
-> >>>> 			return DT_V1;
-> >>>> 		}
-> >>>>=20
-> >>>> +<*>"/plugin/"	{
-> >>>> +			DPRINT("Keyword: /plugin/\n");
-> >>>> +			return DT_PLUGIN;
-> >>>> +		}
-> >>>> +
-> >>>> <*>"/memreserve/"	{
-> >>>> 			DPRINT("Keyword: /memreserve/\n");
-> >>>> 			BEGIN_DEFAULT();
-> >>>> diff --git a/dtc-parser.y b/dtc-parser.y
-> >>>> index 14aaf2e..1a1f660 100644
-> >>>> --- a/dtc-parser.y
-> >>>> +++ b/dtc-parser.y
-> >>>> @@ -19,6 +19,7 @@
-> >>>> */
-> >>>> %{
-> >>>> #include <stdio.h>
-> >>>> +#include <inttypes.h>
-> >>>>=20
-> >>>> #include "dtc.h"
-> >>>> #include "srcpos.h"
-> >>>> @@ -33,6 +34,7 @@ extern void yyerror(char const *s);
-> >>>>=20
-> >>>> extern struct boot_info *the_boot_info;
-> >>>> extern bool treesource_error;
-> >>>> +
-> >>>=20
-> >>> Extraneous whitespace change here
-> >>>=20
-> >>=20
-> >> OK.
-> >>=20
-> >>>> %}
-> >>>>=20
-> >>>> %union {
-> >>>> @@ -52,9 +54,11 @@ extern bool treesource_error;
-> >>>> 	struct node *nodelist;
-> >>>> 	struct reserve_info *re;
-> >>>> 	uint64_t integer;
-> >>>> +	unsigned int flags;
-> >>>> }
-> >>>>=20
-> >>>> %token DT_V1
-> >>>> +%token DT_PLUGIN
-> >>>> %token DT_MEMRESERVE
-> >>>> %token DT_LSHIFT DT_RSHIFT DT_LE DT_GE DT_EQ DT_NE DT_AND DT_OR
-> >>>> %token DT_BITS
-> >>>> @@ -71,6 +75,8 @@ extern bool treesource_error;
-> >>>>=20
-> >>>> %type <data> propdata
-> >>>> %type <data> propdataprefix
-> >>>> +%type <flags> versioninfo
-> >>>> +%type <flags> plugindecl
-> >>>> %type <re> memreserve
-> >>>> %type <re> memreserves
-> >>>> %type <array> arrayprefix
-> >>>> @@ -101,16 +107,34 @@ extern bool treesource_error;
-> >>>> %%
-> >>>>=20
-> >>>> sourcefile:
-> >>>> -	  v1tag memreserves devicetree
-> >>>> +	  versioninfo plugindecl memreserves devicetree
-> >>>> +		{
-> >>>> +			the_boot_info =3D build_boot_info($1 | $2, $3, $4,
-> >>>> +							guess_boot_cpuid($4));
-> >>>> +		}
-> >>>> +	;
-> >>>> +
-> >>>> +versioninfo:
-> >>>> +	v1tag
-> >>>> 		{
-> >>>> -			the_boot_info =3D build_boot_info($2, $3,
-> >>>> -							guess_boot_cpuid($3));
-> >>>> +			$$ =3D VF_DT_V1;
-> >>>> 		}
-> >>>> 	;
-> >>>>=20
-> >>>> v1tag:
-> >>>> 	  DT_V1 ';'
-> >>>> +	| DT_V1
-> >>>> 	| DT_V1 ';' v1tag
-> >>>> +
-> >>>> +plugindecl:
-> >>>> +	DT_PLUGIN ';'
-> >>>> +		{
-> >>>> +			$$ =3D VF_PLUGIN;
-> >>>> +		}
-> >>>> +	| /* empty */
-> >>>> +		{
-> >>>> +			$$ =3D 0;
-> >>>> +		}
-> >>>> 	;
-> >>>>=20
-> >>>> memreserves:
-> >>>> @@ -161,10 +185,19 @@ devicetree:
-> >>>> 		{
-> >>>> 			struct node *target =3D get_node_by_ref($1, $2);
-> >>>>=20
-> >>>> -			if (target)
-> >>>> +			if (target) {
-> >>>> 				merge_nodes(target, $3);
-> >>>> -			else
-> >>>> -				ERROR(&@2, "Label or path %s not found", $2);
-> >>>> +			} else {
-> >>>> +				/*
-> >>>> +				 * We rely on the rule being always:
-> >>>> +				 *   versioninfo plugindecl memreserves devicetree
-> >>>> +				 * so $-1 is what we want (plugindecl)
-> >>>> +				 */
-> >>>> +				if ($<flags>-1 & VF_PLUGIN)
-> >>>=20
-> >>> o_O... ok.  I've never seen negative value references before.  Can you
-> >>> provide a link to some documentation saying this is actually supported
-> >>> usage in bison?  I wasn't able to find it when I looked.
-> >>>=20
-> >>=20
-> >> There is a section about inherited attributes in the flex & bison book=
- by O=E2=80=99Reily.
-> >>=20
-> >> https://books.google.gr/books?id=3D3Sr1V5J9_qMC&lpg=3DPP1&dq=3Dflex%20=
-bison&hl=3Del&pg=3DPP1#v=3Donepage&q=3Dflex%20bison&f=3Dfalse
-> >>=20
-> >> There=E2=80=99s a direct link to the 2nd Edition of lex & yacc:
-> >>=20
-> >> https://books.google.gr/books?id=3DfMPxfWfe67EC&lpg=3DPA183&ots=3DRcRS=
-ji2NAT&dq=3Dyacc%20inherited%20attributes&hl=3Del&pg=3DPA183#v=3Donepage&q=
-=3Dyacc%20inherited%20attributes&f=3Dfalse
+> > Boolean properties are defined as being properties with no content, that
+> > are true if present and false if absent. They pose a problem for DT
+> > overlays, since the proposed (and widely used) overlay mechanism does
+> > not allow for properties (or nodes) to be deleted; overlays can only
+> > make a false property true, so boolean properties are effectively
+> > monostable - once true they become immutable.
 > >=20
-> > Thanks for the link.  I still think moving the fragment assembly out
-> > of the parser will be a better idea long term, but this does address
-> > the main concern I had, so it will do for now.
-> >=20
-> >>>> +					add_orphan_node($1, $3, $2);
-> >>>> +				else
-> >>>> +					ERROR(&@2, "Label or path %s not found", $2);
-> >>>> +			}
-> >>>> 			$$ =3D $1;
-> >>>> 		}
-> >>>> 	| devicetree DT_DEL_NODE DT_REF ';'
-> >>>> @@ -179,6 +212,11 @@ devicetree:
-> >>>>=20
-> >>>> 			$$ =3D $1;
-> >>>> 		}
-> >>>> +	| /* empty */
-> >>>> +		{
-> >>>> +			/* build empty node */
-> >>>> +			$$ =3D name_node(build_node(NULL, NULL), "");
-> >>>> +		}
-> >>>> 	;
-> >>>>=20
-> >>>> nodedef:
-> >>>> diff --git a/dtc.c b/dtc.c
-> >>>> index 9dcf640..06e91bc 100644
-> >>>> --- a/dtc.c
-> >>>> +++ b/dtc.c
-> >>>> @@ -32,6 +32,9 @@ int minsize;		/* Minimum blob size */
-> >>>> int padsize;		/* Additional padding to blob */
-> >>>> int alignsize;		/* Additional padding to blob accroding to the align=
-size */
-> >>>> int phandle_format =3D PHANDLE_BOTH;	/* Use linux,phandle or phandle=
- properties */
-> >>>> +int symbol_fixup_support;	/* enable symbols & fixup support */
-> >>>> +int auto_label_aliases;		/* auto generate labels -> aliases */
-> >>>> +int no_dtbo_magic;		/* use old FDT magic values for objects */
-> >>>>=20
-> >>>> static int is_power_of_2(int x)
-> >>>> {
-> >>>> @@ -59,7 +62,7 @@ static void fill_fullpaths(struct node *tree, cons=
-t char *prefix)
-> >>>> #define FDT_VERSION(version)	_FDT_VERSION(version)
-> >>>> #define _FDT_VERSION(version)	#version
-> >>>> static const char usage_synopsis[] =3D "dtc [options] <input file>";
-> >>>> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H=
-:sW:E:hv";
-> >>>> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H=
-:sW:E:@AMhv";
-> >>>> static struct option const usage_long_opts[] =3D {
-> >>>> 	{"quiet",            no_argument, NULL, 'q'},
-> >>>> 	{"in-format",         a_argument, NULL, 'I'},
-> >>>> @@ -78,6 +81,9 @@ static struct option const usage_long_opts[] =3D {
-> >>>> 	{"phandle",           a_argument, NULL, 'H'},
-> >>>> 	{"warning",           a_argument, NULL, 'W'},
-> >>>> 	{"error",             a_argument, NULL, 'E'},
-> >>>> +	{"symbols",	     no_argument, NULL, '@'},
-> >>>> +	{"auto-alias",       no_argument, NULL, 'A'},
-> >>>> +	{"no-dtbo-magic",    no_argument, NULL, 'M'},
-> >>>> 	{"help",             no_argument, NULL, 'h'},
-> >>>> 	{"version",          no_argument, NULL, 'v'},
-> >>>> 	{NULL,               no_argument, NULL, 0x0},
-> >>>> @@ -109,6 +115,9 @@ static const char * const usage_opts_help[] =3D {
-> >>>> 	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
-> >>>> 	"\n\tEnable/disable warnings (prefix with \"no-\")",
-> >>>> 	"\n\tEnable/disable errors (prefix with \"no-\")",
-> >>>> +	"\n\tEnable symbols/fixup support",
-> >>>> +	"\n\tEnable auto-alias of labels",
-> >>>> +	"\n\tDo not use DTBO magic value for plugin objects",
-> >>>> 	"\n\tPrint this help and exit",
-> >>>> 	"\n\tPrint version and exit",
-> >>>> 	NULL,
-> >>>> @@ -153,7 +162,7 @@ static const char *guess_input_format(const char=
- *fname, const char *fallback)
-> >>>> 	fclose(f);
-> >>>>=20
-> >>>> 	magic =3D fdt32_to_cpu(magic);
-> >>>> -	if (magic =3D=3D FDT_MAGIC)
-> >>>> +	if (magic =3D=3D FDT_MAGIC || magic =3D=3D FDT_MAGIC_DTBO)
-> >>>> 		return "dtb";
-> >>>>=20
-> >>>> 	return guess_type_by_name(fname, fallback);
-> >>>> @@ -172,6 +181,7 @@ int main(int argc, char *argv[])
-> >>>> 	FILE *outf =3D NULL;
-> >>>> 	int outversion =3D DEFAULT_FDT_VERSION;
-> >>>> 	long long cmdline_boot_cpuid =3D -1;
-> >>>> +	fdt32_t out_magic =3D FDT_MAGIC;
-> >>>>=20
-> >>>> 	quiet      =3D 0;
-> >>>> 	reservenum =3D 0;
-> >>>> @@ -249,6 +259,16 @@ int main(int argc, char *argv[])
-> >>>> 			parse_checks_option(false, true, optarg);
-> >>>> 			break;
-> >>>>=20
-> >>>> +		case '@':
-> >>>> +			symbol_fixup_support =3D 1;
-> >>>> +			break;
-> >>>> +		case 'A':
-> >>>> +			auto_label_aliases =3D 1;
-> >>>> +			break;
-> >>>> +		case 'M':
-> >>>> +			no_dtbo_magic =3D 1;
-> >>>> +			break;
-> >>>> +
-> >>>> 		case 'h':
-> >>>> 			usage(NULL);
-> >>>> 		default:
-> >>>> @@ -306,6 +326,14 @@ int main(int argc, char *argv[])
-> >>>> 	fill_fullpaths(bi->dt, "");
-> >>>> 	process_checks(force, bi);
-> >>>>=20
-> >>>> +	if (auto_label_aliases)
-> >>>> +		generate_label_tree(bi->dt, "aliases", false);
-> >>>> +
-> >>>> +	if (symbol_fixup_support) {
-> >>>> +		generate_label_tree(bi->dt, "__symbols__", true);
-> >>>> +		generate_fixups_tree(bi->dt);
-> >>>=20
-> >>> Hang on.. this doesn't seem right.  I thought -@ controlled the
-> >>> __symbols__ side (i.e. the part upon which we overlay) rather than the
-> >>> fixups side (the part which overlays).  A dtbo could certainly have
-> >>> both, of course, but for base trees, wouldn't you have symbols without
-> >>> fixups?  And should it be illegal to try to build a /plugin/ without
-> >>> -@?
-> >>=20
-> >> It does control both for now. For base trees having the fixup nodes
-> >> will allow us to do probe order dependency tracking in the future.
-> >=20
-> > Erm.. how?
-> >=20
-> >> For plugins we need the __symbols__ node to support stacked overlays, =
-i.e.
-> >> overlays referring label that were introduced by a previous overlay.
-> >=20
-> > Yes, I realise that an overlay may well want __symbols__ as well.  But
-> > they still seem conceptually different.  I think -@ should control
-> > __symbols__ whereas /plugin/ should control __fixups__.
-> >=20
->=20
-> It is easily done. Although using /plugin/ as an auto-magic option does b=
-oth
-> just fine.
+> > The standard DT syntax includes /delete-property/ and /delete-node/
+> > directives that do what you would expect from their names, but that
+> > facility is not available to overlays. There is no FDT node that
+> > represents the deletion - the directives are acted on immediately
 
-Sorry, I don't follow what you're saying.
+Uh.. only partially true.  They're acted on during the compile run,
+but not during the parse.  dtc does have an internal representation of
+node or property deletions that gets resolved when we combine the
+fragments in the source file.
+> > - so
+> > we would need some extra markup - say __delete_property__ and
+> > __delete_node__ - to hold the names of items to be deleted.
 
-> >> For plugins there is no requirement for now to actually contain refere=
-nces to
-> >> be resolved. It can easily be enforced though.
-> >=20
-> > Sure, but I don't see the relevance of that here.  You could just omit
-> > the __fixups__ node if there's nothing to go into them.
-> >=20
+So, in principle this wouldn't be that hard - we'd just need to
+translate dtc's internal representation into a representation in the
+dtb.  That could be done with special properties, or with new opcodes
+at the dtb encoding level.
+
+> > Before I take this further, does anybody have any thoughts on the idea?
+
+So.. the first question, is do we have a pressing use case for this?
+dtbos can (apart from this) alter anything in a base tree, but doing
+so isn't often a good idea.  Usually they'll just add new nodes and
+properties.
+
+> The original patchset did support removing properties (by prefixing them =
+with -).
 >=20
-> Hmm, yeah.
->=20
->=20
-> Regards
->=20
-> =E2=80=94 Pantelis
->=20
+> I can revive that if we have consensus about the format/method.
+
+On the whole, I'd prefer not to see extensions of the existing overlay
+format - instead I'd like to see focus on a new and better thought out
+connector format.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -450,25 +73,25 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---QWpDgw58+k1mSFBj
+--SUk9VBj82R8Xhb8H
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJYPjBPAAoJEGw4ysog2bOSzgMQAOHocrzxAdpRX5j0Cn7r+D3f
-mj7S0IrnUz+qIZCTkCjq/J8Y9exZK0/69fWd9NGAGwwjRQA/qXp3N1+J0QL2flBh
-WAI3FnRvaLb0UDP3m1O2QahlhluhP1N2MPSuwQL8FSLOkyIfPtqfF4fEZBtSaL21
-Px77SbOHJCeOZ07NrQbC7dqZVrdiGa6bSj+n3j6b1FJYVw8KTWdIlYeXFnYEoksH
-vX+FvBC0ZXpSYXpd/bNIhESgKE71HL3RG04VB+hiGXOFLcL8h60cK6fI/oETuRRn
-rnTM8AX89UHwq4HwmZNzWeTTCip8tky26FtNt2R6yPlzQJciXxHdftIKq7qHEs93
-SHd7iiwBe2ydAbvzA4UooV/XybCLVWH7K+O/yoH7CBSNGrP+oKl9gJYrm6gqDPzB
-sQ2u3iAiZzNF1OwoEKsIPSwpcYRFq3BsHydGQsuBicgRc0OyEfM4ZQJ8DzLJssNO
-BCNG9Pm7oaD4LnjlHZiNeALCNYSKONKvLzWtb6N7XV4PCdo7PWwzlkfgr7XplOmS
-7oGqVjOyTRRZCzGRKwC1b0ueKhdDKFVtjVdxscKMvb/Hwl4xggknCRnFCxMDId1p
-X21xMmG8H3Vqdm3KqbcuKZVPEx/iocoYnbBU2zMwreDsceNrGHmg7xlbqj/CiC7u
-TEGGjBSXb3rPoVMuPJkN
-=D9lP
+iQIcBAEBCAAGBQJYPkvSAAoJEGw4ysog2bOS2t4QAKUxWJm0dlNeaYkmNF/+POfg
+MCPPSVhn5y1xSE0lHOzyt4U0T0coauhkShtzm6McBY/u5cSiEVQiRIKWispc5ywc
+UKB7bG21yYvnSRBiS15+QDmd9kYp5AzbZczAX/tnqqXBuSucOc+YAwB8b/DFV1tq
+mjwA/ncP6lgF5grFx1RUPfv4/8Nkb9UQWBGx2NLZJ/DcY6AyXr4ibMZxuDJ68603
+vq3KofvdA6n3RTl9DfSjT5kOfH19PjX0RL9P9xD2fB+wRReH4tFULn07i0CGZDvJ
+0/hq2+7v1lbK2QvMbCzttfjTPXxGjTEnmQ6ZWYeGQ8T1ATqIXEFfNsMyY03J2a4k
+tvdtAcsO/Lugv+TYEinAfmaugBF2s/E/mFhtuQnVZDIdh5sIdFsJWuo1Wk5asSUh
+ax44EWg+34K/TxIhb+/khVMeRv6IsOlF1RkthdpxG9+irvOQbLy9mXTaMeRNcNQB
+RVadgnLk0WH2HTk36LMISNtlH/QajBqsogkzf3TwuZCBkPGtN6k6+hos/uNeC2YA
+XyTPKa/JTiyCmDRwi2Y0o7ys9znZ6ytibmAfo1bNCrI3lJa7YRCAXBFPAOgebGg4
+x2KgxDCetI8XZUWEIwlxC82Y48XXr0OSPK8gw17zLhnyLNDhP1neh1g0Xf4FyD+O
+KGGajXXWbl9MtG+kY8pn
+=HT6g
 -----END PGP SIGNATURE-----
 
---QWpDgw58+k1mSFBj--
+--SUk9VBj82R8Xhb8H--
