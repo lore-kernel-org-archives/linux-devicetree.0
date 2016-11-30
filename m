@@ -1,59 +1,102 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 30 Nov 2016 18:07:41 +0100
-Message-ID: <CAOAejn2UDbsLRLmthOitTtkWOcN97WYhg93r9nyxQdBzGGegcg@mail.gmail.com>
-References: <1466439771-2741-1-git-send-email-cedric.madianga@gmail.com>
- <1466439771-2741-3-git-send-email-cedric.madianga@gmail.com>
- <20160722070219.GB1605@katana> <CAOAejn0BZNH82kY_7UR1EjV7M1G+9jGihGb4-uCs9=XiPHUYxQ@mail.gmail.com>
- <20161130162353.GC1441@katana>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
+ documentation of Allwinner HDMI
+Date: Thu, 01 Dec 2016 01:24:52 +0800
+Message-ID: <1948481480526692@web5g.yandex.ru>
+References: <cover.1480414715.git.moinejf@free.fr>
+	<4502748.8rUF7ESxa4@avalon>
+	<20161130091208.f38cd79f1cc5d27b27f3b130@free.fr>
+	<4614815.L3DQhhBy6d@avalon> <20161130102757.9eec1f7f3377d0f4787e3829@free.fr>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161130162353.GC1441@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBZ4W7TAQKGQER4WC6NQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161130102757.9eec1f7f3377d0f4787e3829-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: "moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-
-2016-11-30 17:23 GMT+01:00 Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>:
-> Hi,
->
->> I was too busy in another project but now I am ready to complete the
->> upstream of the STM32F4 I2C driver.
->
-> Nice.
->
->> >> +static void stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
->> >> +{
->> >> +     u32 clk_rate, cr2, freq;
->> >> +
->> >> +     cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
->> >> +     cr2 &= ~STM32F4_I2C_CR2_FREQ_MASK;
->> >> +
->> >> +     clk_rate = clk_get_rate(i2c_dev->clk);
->> >> +     freq = clk_rate / MHZ_TO_HZ;
->> >> +
->> >> +     if (freq > STM32F4_I2C_MAX_FREQ)
->> >> +             freq = STM32F4_I2C_MAX_FREQ;
->> >> +     if (freq < STM32F4_I2C_MIN_FREQ)
->> >> +             freq = STM32F4_I2C_MIN_FREQ;
->> >
->> > clamp() to enforce the range?
->> Sorry but what do you mean by "clamp()" ?
->
-> The kernel has a clamp() function which would fit this purpose, I think.
-Ok I got it. I will fix it in the V4.
-Thanks
-
->
-> Regards,
->
->    Wolfram
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCjMwLjExLjIwMTYsIDE3OjI4LCAiSmVhbi1GcmFuY29pcyBNb2luZSIgPG1vaW5lamZAZnJl
+ZS5mcj46DQo+IE9uIFdlZCwgMzAgTm92IDIwMTYgMTA6MjA6MjEgKzAyMDANCj4gTGF1cmVudCBQ
+aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToNCj4NCj4+
+IMKgPiBXZWxsLCBJIGRvbid0IHNlZSB3aGF0IHRoaXMgY29ubmVjdG9yIGNhbiBiZS4NCj4+IMKg
+PiBNYXkgeW91IGdpdmUgbWUgYSBEVCBleGFtcGxlPw0KPj4NCj4+IMKgU3VyZS4NCj4+DQo+PiDC
+oGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEta29lbHNjaC5kdHMNCj4+DQo+PiDCoMKgwqDCoMKg
+wqDCoMKgwqAvKiBIRE1JIGVuY29kZXIgKi8NCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqBoZG1p
+QDM5IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0g
+ImFkaSxhZHY3NTExdyI7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVn
+ID0gPDB4Mzk+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVw
+dC1wYXJlbnQgPSA8JmdwaW8zPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBpbnRlcnJ1cHRzID0gPDI5IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+Pg0KPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1dC1kZXB0aCA9IDw4PjsNCj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhZGksaW5wdXQtY29sb3JzcGFjZSA9ICJyZ2Ii
+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1dC1jbG9jayA9
+ICIxeCI7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWRpLGlucHV0LXN0
+eWxlID0gPDE+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1
+dC1qdXN0aWZpY2F0aW9uID0gImV2ZW5seSI7DQo+Pg0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHBvcnRzIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNzaXplLWNlbGxzID0gPDA+Ow0K
+Pj4NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+cG9ydEAwIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkdjc1MTFfaW46
+IGVuZHBvaW50IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZW1vdGUtZW5kcG9pbnQg
+PSA8JmR1X291dF9yZ2I+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBvcnRAMSB7DQo+PiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBy
+ZWcgPSA8MT47DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhZHY3NTExX291dDogZW5kcG9pbnQgew0KPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb24+Ow0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgfTsNCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAvKiBIRE1JIGNvbm5l
+Y3RvciAqLw0KPj4NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoGhkbWktb3V0IHsNCj4+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImhkbWktY29ubmVjdG9yIjsN
+Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0eXBlID0gImEiOw0KPj4NCj4+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwb3J0IHsNCj4+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaGRtaV9jb246IGVuZHBvaW50
+IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHJlbW90ZS1lbmRwb2ludCA9IDwmYWR2NzUxMV9vdXQ+Ow0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqB9
+Ow0KPg0KPiBIaSBMYXVyZW50LA0KPg0KPiBTb3JyeSBmb3IgSSBkb24ndCBzZWUgdGhlIGludGVy
+ZXN0Og0KPiAtIGl0IGlzIG9idmlvdXMgdGhhdCB0aGUgSERNSSBjb25uZWN0b3IgaXMgYSAnaGRt
+aS1jb25uZWN0b3InIQ0KDQpZZXMsIGl0IG1lYW5zIHRoZSB3aXJlIGJldHdlZW4gdGhlIEhETUkg
+cGlucyBvbiB0aGUgU29DIGFuZCB0aGUgY29ubmVjdG9yIDstKQ0KDQo+IC0gdGhlIHBoeXNpY2Fs
+IGNvbm5lY3RvciB0eXBlIG1heSBiZSBjaGFuZ2VkIG9uIGFueSBib2FyZCBieSBhIHNvbGRlcmlu
+Zw0KPiDCoMKgaXJvbiBvciBhIGNvbm5lY3RvciB0byBjb25uZWN0b3IgY2FibGUuDQoNCkkgY2Fu
+IGFsd2F5cyBhbHRlciB0aGUgZGV2aWNlcyBvbiBhIGJvYXJkIDstKQ0KDQpCdXQgSSBzaG91bGQg
+YWxzbyBhbHRlciB0aGUgZHQgYWZ0ZXIgYWx0ZXJpbmcgdGhlIGJvYXJkLg0KDQo+IC0gd2hhdCBk
+b2VzIHRoZSBzb2Z0d2FyZSBkbyB3aXRoIHRoZSBjb25uZWN0b3IgdHlwZT8NCj4gLSB3aHkgbm90
+IHRvIHB1dCB0aGUgY29ubmVjdG9yIGluZm9ybWF0aW9uIGluIHRoZSBIRE1JIGRldmljZT8NCj4N
+Cj4gQW5kLCBpZiBJIGZvbGxvdyB5b3UsIHRoZSBncmFwaCBvZiBwb3J0cyBjb3VsZCBhbHNvIGJl
+IHVzZWQgdG8gZGVzY3JpYmUNCj4gdGhlIHdheSB0aGUgdmFyaW91cyBwYXJ0cyBvZiB0aGUgU29D
+cyBhcmUgcG93ZXJlZCwgdG8gZGVzY3JpYmUgdGhlIHBpbg0KPiBjb25uZWN0aW9ucywgdG8gZGVz
+Y3JpYmUgdGhlIFVTQiBjb25uZWN0b3JzLCB0byBkZXNjcmliZSB0aGUgYm9hcmQNCj4gaW50ZXJu
+YWwgaHVicyBhbmQgYnJpZGdlcy4uLg0KPg0KPiAtLQ0KPiBLZW4gYXIgYydoZW50YcOxIHwgKiog
+QnJlaXpoIGhhIExpbnV4IGF0YXYhICoqDQo+IEplZiB8IGh0dHA6Ly9tb2luZWpmLmZyZWUuZnIv
+DQo+DQo+IC0tDQo+IFlvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1
+YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4NCj4gVG8g
+dW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFpbHMgZnJv
+bSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBnb29nbGVncm91
+cHMuY29tLg0KPiBGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29nbGUu
+Y29tL2Qvb3B0b3V0Lg0KDQotLSAKWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlv
+dSBhcmUgc3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3Vw
+LgpUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWls
+cyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2ds
+ZWdyb3Vwcy5jb20uCkZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2ds
+ZS5jb20vZC9vcHRvdXQuCg==
