@@ -1,67 +1,148 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v6 4/9] dt-bindings: iio: iio-mux: document iio-mux
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [RFC v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
  bindings
-Date: Wed, 30 Nov 2016 09:52:32 +0100
-Message-ID: <ed072eb4-382d-f2cc-ed95-6a09c3528177@axentia.se>
-References: <1480493823-21462-1-git-send-email-peda@axentia.se>
- <1480493823-21462-5-git-send-email-peda@axentia.se>
+Date: Wed, 30 Nov 2016 11:03:44 +0100
+Message-ID: <1480500224.2527.26.camel@pengutronix.de>
+References: <Arnd Bergmann <arnd@arndb.de>
+ <1479888476-13138-1-git-send-email-zhangfei.gao@linaro.org>
+ <1479888476-13138-2-git-send-email-zhangfei.gao@linaro.org>
+ <1479979605.2472.4.camel@pengutronix.de>
+ <ac3c8e65-e4f2-3a9d-452c-f270d245cf9d@linaro.org>
+ <1479981017.2472.14.camel@pengutronix.de>
+ <8328a235-faeb-2218-4c49-a3f282599e95@linaro.org>
+ <1480069523.4058.17.camel@pengutronix.de>
+ <e71cfe28-cd31-828f-8c7f-b4faeed5d27f@linaro.org>
+ <1480071241.4058.23.camel@pengutronix.de>
+ <bec21998-b30c-4076-62bf-6b24c9dd1dd6@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480493823-21462-5-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bec21998-b30c-4076-62bf-6b24c9dd1dd6@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-v6 was apparently rushed a little bit too much, but I really wanted to
-supersede the stupidity I found elsewhere in v5. Perhaps I shouldn't
-have bolted on the changes for the iio-mux bindings, but so I did...
-
-On 2016-11-30 09:16, Peter Rosin wrote:
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  .../bindings/iio/multiplexer/iio-mux.txt           | 40 ++++++++++++++++++++++
->  MAINTAINERS                                        |  6 ++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> new file mode 100644
-> index 000000000000..8080cf790d82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-> @@ -0,0 +1,40 @@
-> +IIO multiplexer bindings
-> +
-> +If a multiplexer is used to select which hardware signal is fed to
-> +e.g. an ADC channel, these bindings describe that situation.
-> +
-> +Required properties:
-> +- compatible : "iio-mux"
-> +- io-channels : Channel node of the parent channel that has multiplexed
-> +		input.
-> +- io-channel-names : Should be "parent".
-> +- #address-cells = <1>;
-> +- #size-cells = <0>;
-> +- mux-controls : Mux controller node to use for operating the mux
-> +- channels : List of strings, labeling the mux controller states.
-> +
-> +The multiplexer state as described in ../misc/mux-controller.txt
-
-Delete the above non-sentence, but reintroduce the gist of it...
-
-> +For each non-empty string in the channels property, an iio channel will
-> +be created. The number of this iio channel is the same as the index into
-> +the list of strings in the channels property, and also matches the mux
-> +controller state.
-
-...at the end of the above sentence instead.
-
-I'm holding off v7 pending more important changes.
-
-Cheers,
-Peter
+QW0gRnJlaXRhZywgZGVuIDI1LjExLjIwMTYsIDIwOjA4ICswODAwIHNjaHJpZWIgemhhbmdmZWk6
+Cj4gCj4gT24gMjAxNuW5tDEx5pyIMjXml6UgMTg6NTQsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4g
+PiBBbSBGcmVpdGFnLCBkZW4gMjUuMTEuMjAxNiwgMTg6NDIgKzA4MDAgc2NocmllYiB6aGFuZ2Zl
+aToKPiA+PiBPbiAyMDE25bm0MTHmnIgyNeaXpSAxODoyNSwgUGhpbGlwcCBaYWJlbCB3cm90ZToK
+PiA+Pj4gQW0gRG9ubmVyc3RhZywgZGVuIDI0LjExLjIwMTYsIDE4OjIwICswODAwIHNjaHJpZWIg
+emhhbmdmZWk6Cj4gPj4+PiBPbiAyMDE25bm0MTHmnIgyNOaXpSAxNzo1MCwgUGhpbGlwcCBaYWJl
+bCB3cm90ZToKPiA+Pj4+PiBBbSBEb25uZXJzdGFnLCBkZW4gMjQuMTEuMjAxNiwgMTc6NDAgKzA4
+MDAgc2NocmllYiB6aGFuZ2ZlaToKPiA+Pj4+Pj4gT24gMjAxNuW5tDEx5pyIMjTml6UgMTc6MjYs
+IFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gPj4+Pj4+PiBBbSBNaXR0d29jaCwgZGVuIDIzLjExLjIw
+MTYsIDE2OjA3ICswODAwIHNjaHJpZWIgWmhhbmdmZWkgR2FvOgo+ID4+Pj4+Pj4+IEFkZCBEVCBi
+aW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBoaTM2NjAgU29DIHJlc2V0IGNvbnRyb2xsZXIuCj4g
+Pj4+Pj4+Pj4KPiA+Pj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBaaGFuZ2ZlaSBHYW8gPHpoYW5nZmVp
+Lmdhb0BsaW5hcm8ub3JnPgo+ID4+Pj4+Pj4+IC0tLQo+ID4+Pj4+Pj4+ICAgICAgLi4uL2JpbmRp
+bmdzL3Jlc2V0L2hpc2lsaWNvbixoaTM2NjAtcmVzZXQudHh0ICAgICAgfCA1MSArKysrKysrKysr
+KysrKysrKysrKysrCj4gPj4+Pj4+Pj4gICAgICAxIGZpbGUgY2hhbmdlZCwgNTEgaW5zZXJ0aW9u
+cygrKQo+ID4+Pj4+Pj4+ICAgICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGkzNjYwLXJlc2V0LnR4dAo+ID4+Pj4+
+Pj4+Cj4gPj4+Pj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9yZXNldC9oaXNpbGljb24saGkzNjYwLXJlc2V0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9yZXNldC9oaXNpbGljb24saGkzNjYwLXJlc2V0LnR4dAo+ID4+Pj4+
+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4+Pj4+Pj4gaW5kZXggMDAwMDAwMC4uMjUwZGFm
+Mgo+ID4+Pj4+Pj4+IC0tLSAvZGV2L251bGwKPiA+Pj4+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvaGlzaWxpY29uLGhpMzY2MC1yZXNldC50eHQKPiA+
+Pj4+Pj4+PiBAQCAtMCwwICsxLDUxIEBACj4gPj4+Pj4+Pj4gK0hpc2lsaWNvbiBTeXN0ZW0gUmVz
+ZXQgQ29udHJvbGxlcgo+ID4+Pj4+Pj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PQo+ID4+Pj4+Pj4+ICsKPiA+Pj4+Pj4+PiArUGxlYXNlIGFsc28gcmVmZXIgdG8gcmVz
+ZXQudHh0IGluIHRoaXMgZGlyZWN0b3J5IGZvciBjb21tb24gcmVzZXQKPiA+Pj4+Pj4+PiArY29u
+dHJvbGxlciBiaW5kaW5nIHVzYWdlLgo+ID4+Pj4+Pj4+ICsKPiA+Pj4+Pj4+PiArVGhlIHJlc2V0
+IGNvbnRyb2xsZXIgcmVnaXN0ZXJzIGFyZSBwYXJ0IG9mIHRoZSBzeXN0ZW0tY3RsIGJsb2NrIG9u
+Cj4gPj4+Pj4+Pj4gK2hpMzY2MCBTb0MuCj4gPj4+Pj4+Pj4gKwo+ID4+Pj4+Pj4+ICtSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgo+ID4+Pj4+Pj4+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZQo+ID4+Pj4+
+Pj4+ICsJCSAiaGlzaWxpY29uLGhpMzY2MC1yZXNldCIKPiA+Pj4+Pj4+PiArLSAjcmVzZXQtY2Vs
+bHM6IDEsIHNlZSBiZWxvdwo+ID4+Pj4+Pj4+ICstIGhpc2kscnN0LXN5c2NvbjogcGhhbmRsZSBv
+ZiB0aGUgcmVzZXQncyBzeXNjb24uCj4gPj4+Pj4+Pj4gKy0gaGlzaSxyZXNldC1iaXRzOiBDb250
+YWlucyB0aGUgcmVzZXQgY29udHJvbCByZWdpc3RlciBpbmZvcm1hdGlvbgo+ID4+Pj4+Pj4+ICsJ
+CSAgU2hvdWxkIGNvbnRhaW4gMiBjZWxscyBmb3IgZWFjaCByZXNldCBleHBvc2VkIHRvCj4gPj4+
+Pj4+Pj4gKwkJICBjb25zdW1lcnMsIGRlZmluZWQgYXM6Cj4gPj4+Pj4+Pj4gKwkJCUNlbGwgIzEg
+OiBvZmZzZXQgZnJvbSB0aGUgc3lzY29uIHJlZ2lzdGVyIGJhc2UKPiA+Pj4+Pj4+PiArCQkJQ2Vs
+bCAjMiA6IGJpdHMgcG9zaXRpb24gb2YgdGhlIGNvbnRyb2wgcmVnaXN0ZXIKPiA+Pj4+Pj4+PiAr
+Cj4gPj4+Pj4+Pj4gK0V4YW1wbGU6Cj4gPj4+Pj4+Pj4gKwlpb21jdTogaW9tY3VAZmZkN2UwMDAg
+ewo+ID4+Pj4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhpMzY2MC1pb21jdSIsICJz
+eXNjb24iOwo+ID4+Pj4+Pj4+ICsJCXJlZyA9IDwweDAgMHhmZmQ3ZTAwMCAweDAgMHgxMDAwPjsK
+PiA+Pj4+Pj4+PiArCX07Cj4gPj4+Pj4+Pj4gKwo+ID4+Pj4+Pj4+ICsJaW9tY3VfcnN0OiBpb21j
+dV9yc3RfY29udHJvbGxlciB7Cj4gPj4+Pj4+PiBUaGlzIHNob3VsZCBiZQo+ID4+Pj4+Pj4gCWlv
+bWN1X3JzdDogcmVzZXQtY29udHJvbGxlciB7Cj4gPj4+Pj4+Pgo+ID4+Pj4+Pj4+ICsJCWNvbXBh
+dGlibGUgPSAiaGlzaWxpY29uLGhpMzY2MC1yZXNldCI7Cj4gPj4+Pj4+Pj4gKwkJI3Jlc2V0LWNl
+bGxzID0gPDE+Owo+ID4+Pj4+Pj4+ICsJCWhpc2kscnN0LXN5c2NvbiA9IDwmaW9tY3U+Owo+ID4+
+Pj4+Pj4+ICsJCWhpc2kscmVzZXQtYml0cyA9IDwweDIwIDB4OAkJLyogMDogaTJjMCAqLwo+ID4+
+Pj4+Pj4+ICsJCQkJICAgMHgyMCAweDEwCQkvKiAxOiBpMmMxICovCj4gPj4+Pj4+Pj4gKwkJCQkg
+ICAweDIwIDB4MjAJCS8qIDI6IGkyYzIgKi8KPiA+Pj4+Pj4+PiArCQkJCSAgIDB4MjAgMHg4MDAw
+MDAwPjsJLyogMzogaTJjNiAqLwo+ID4+Pj4+Pj4+ICsJfTsKPiA+Pj4+Pj4+IFRoZSByZXNldCBs
+aW5lcyBhcmUgY29udHJvbGxlZCB0aHJvdWdoIGlvbWN1IGJpdHMsIGlzIHRoZXJlIGEgcmVhc29u
+IG5vdAo+ID4+Pj4+Pj4gdG8gcHV0IHRoZSBpb21jdV9yc3Qgbm9kZSBpbnNpZGUgdGhlIGlvbWN1
+IG5vZGU/IFRoYXQgd2F5IHRoZQo+ID4+Pj4+Pj4gaGlzaSxyc3Qtc3lzY29uIHByb3BlcnR5IGNv
+dWxkIGJlIHJlbW92ZWQgYW5kIHRoZSBzeXNjb24gY291bGQgYmUKPiA+Pj4+Pj4+IHJldHJpZXZl
+ZCB2aWEgdGhlIHJlc2V0LWNvbnRyb2xsZXIgcGFyZW50IG5vZGUuCj4gPj4+Pj4+IGlvbWN1IGlz
+IGNvbW1vbiByZWdpc3RlcnMsIGNvbnRyb2xzIGNsb2NrIGFuZCByZXNldCwgZXRjLgo+ID4+Pj4+
+PiBTbyB3ZSB1c2Ugc3lzY29uLCB3aXRob3V0IG1hcHBpbmcgdGhlIHJlZ2lzdGVycyBldmVyeXdo
+ZXJlLgo+ID4+Pj4+PiBJdCBpcyBjb21tb24gY2FzZSBpbiBoaXNpbGljb24sIHNhbWUgaW4gaGk2
+MjIwLgo+ID4+Pj4+Pgo+ID4+Pj4+PiBBbHNvIHRoZSAjY2xvY2stY2VsbHMgYW5kICNyZXNldC1j
+ZWxscyBjYW4gbm90IGJlIHB1dCBpbiB0aGUgc2FtZSBub2RlLAo+ID4+Pj4+PiBpZiB0aGV5IGFy
+ZSBib3RoIHVzaW5nIHByb2JlLCBzaW5jZSByZXNldF9wcm9iZSB3aWxsIG5vdCBiZSBjYWxsZWQu
+Cj4gPj4+Pj4+Cj4gPj4+Pj4+IFNvIHdlIHVzZSBoaXNpLHJzdC1zeXNjb24gYXMgYSBnZW5lcmFs
+IHNvbHV0aW9uLgo+ID4+Pj4+IFdoYXQgSSBtZWFudCBpcyB0aGlzOgo+ID4+Pj4+Cj4gPj4+Pj4g
+CWlvbWN1OiBpb21jdUBmZmQ3ZTAwMCB7Cj4gPj4+Pj4gCQljb21wYXRpYmxlID0gImhpc2lsaWNv
+bixoaTM2NjAtaW9tY3UiLCAic3lzY29uIiwgInNpbXBsZS1tZmQiOwo+ID4+Pj4+IAkJcmVnID0g
+PDB4MCAweGZmZDdlMDAwIDB4MCAweDEwMDA+Owo+ID4+Pj4gI2Nsb2NrLWNlbGxzID0gPDE+Owo+
+ID4+Pj4KPiA+Pj4+IEluIG15IHRlc3QsIGlmIHRoZXJlIGFkZCAjY2xvY2stY2VsbHMgPSA8MT4s
+IHJlc2V0X3Byb2JlIHdpbGwgbm90IGJlCj4gPj4+PiBjYWxsZWQgYW55IG1vcmUuCj4gPj4+PiBT
+aW5jZSBjbGtfcHJvYmUgaXMgY2FsbGVkIGZpcnN0Lgo+ID4+Pj4gTm8gbWF0dGVyIGlvbWN1X3Jz
+dCBpcyBjaGlsZCBub2RlIG9yIG5vdC4KPiA+Pj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoaXMsIGRv
+ZXMgdGhlIGNsb2NrIGRyaXZlciBiaW5kIHRvIHRoZSBpb21jdSBub2RlCj4gPj4+IHVzaW5nIENM
+S19PRl9ERUNMQVJFX0RSSVZFUiguLi4sICJoaXNpbGljb24saGkzNjYwLWlvbWN1IiwgLi4uKT8K
+PiA+PiBUaGlzIG1ldGhvZDpDTEtfT0ZfREVDTEFSRV9EUklWRVIgaXMgbm90IHByZWZlcmVkIGlu
+IGNsb2NrLAo+ID4+IGFuZCB3ZSBoYXZlIHRvIHVzZSBwcm9iZSBpbnN0ZWFkLCB0byBtYWtlIGFs
+bCBkcml2ZXIgYnVpbGQgYXMgbW9kdWxlcyBhcwo+ID4+IHBvc3NpYmxlLgo+ID4+Cj4gPj4gRm9y
+IGV4YW1wbGUgaGkzNjYwLgo+ID4+IHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGhpMzY2
+MF9jbGtfZHJpdmVyID0gewo+ID4+ICAgICAgICAgICAucHJvYmUgICAgICAgICAgPSBoaTM2NjBf
+Y2xrX3Byb2JlLAo+ID4+ICAgICAgICAgICAuZHJpdmVyICAgICAgICAgPSB7Cj4gPj4gICAgICAg
+ICAgICAgICAgICAgLm5hbWUgICA9ICJoaTM2NjAtY2xrIiwKPiA+PiAgICAgICAgICAgICAgICAg
+ICAub2ZfbWF0Y2hfdGFibGUgPSBoaTM2NjBfY2xrX21hdGNoX3RhYmxlLAo+ID4+ICAgICAgICAg
+ICB9LAo+ID4+IH07Cj4gPiBoaTM2NjBfY2xrX21hdGNoX3RhYmxlIGNvbnRhaW5zIHRoZSAiaGlz
+aWxpY29uLGhpMzY2MC1pb21jdSIgY29tcGF0aWJsZT8KPiA+IElmIHNvLCB5b3UgY291bGQgY2Fs
+bAo+ID4gCW9mX3BsYXRmb3JtX3BvcHVsYXRlKHBkZXYtPmRldi5vZl9ub2RlLCBOVUxMLCBOVUxM
+LCAmcGRldi0+ZGV2KTsKPiA+IGZyb20gaGkzNjYwX2Nsa19wcm9iZSBpbnN0ZWFkIG9mIHVzaW5n
+ICJzaW1wbGUtbWZkIiB0byBwcm9iZSB0aGUgaW9tY3UKPiA+IG5vZGUncyBjaGlsZHJlbi4KPiAK
+PiBOb3QgdXNpbmcgc2ltcGxlLW1mZDoKPiAKPiBMaWtlCj4gc3RhdGljIGNvbnN0IHN0cnVjdCBv
+Zl9kZXZpY2VfaWQgaGkzNjYwX2Nsa19tYXRjaF90YWJsZVtdID0gewo+ICAgICAgICAgIHsgLmNv
+bXBhdGlibGUgPSAiaGlzaWxpY29uLGhpMzY2MC1pb21jdSIsIH0sCj4gICAgICAgICAgeyB9Cj4g
+fTsKPiBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBoaTM2NjBfY2xrX21hdGNoX3RhYmxlKTsKPiAK
+PiBzdGF0aWMgaW50IGhpMzY2MF9jbGtfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKPiB7Cj4gICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiAgICAg
+ICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7Cj4gICAgICAg
+ICAgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqb2ZfaWQ7Cj4gICAgICAgICAgZW51bSBoaTM2
+NjBfY2xrX3R5cGUgdHlwZTsKPiAKPiAgICAgICAgICBvZl9pZCA9IG9mX21hdGNoX2RldmljZSho
+aTM2NjBfY2xrX21hdGNoX3RhYmxlLCBkZXYpOwo+ICAgICAgICAgIGlmICghb2ZfaWQpCj4gICAg
+ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPiB+Cj4gfQo+IAo+IElmIHB1dCBpb21jdV9y
+c3QgYXMgY2hpbGQgbm9kZSwgYW5kIHNldCAjY2xvY2stY2VsbHMgPSA8MT4gdG8gaW9tY3UsCj4g
+dGhlbiBoaTM2NjBfY2xrX3Byb2JlIGlzIGNhbGxlZCwgaGkzNjYwX3Jlc2V0X3Byb2JlIHdpbGwg
+bm90IGJlIGNhbGxlZC4KCkZvciBoaTM2NjBfcmVzZXRfcHJvYmUgdG8gYmUgY2FsbGVkLCB5b3Un
+bGwgaGF2ZSB0byBjYWxsCm9mX3BsYXRmb3JtX3BvcHVsYXRlIHRvIHByb2JlIHRoZSBoaTM2NjAt
+aW9tY3UgY2hpbGRyZW4gaW4gdGhpcyBjYXNlLgoKPiBTbyB1c2luZyAiaGlzaSxyc3Qtc3lzY29u
+IiBhcyBwb2ludGVyIGRvZXMgbm90IGhhdmUgdGhlIGlzc3VlLgoKSSB1bmRlcnN0YW5kIHRoYXQs
+IGl0IHN0aWxsIHNvdW5kcyB0byBtZSBsaWtlIHlvdSBhcmUgb3JnYW5pemluZyB0aGUKZGV2aWNl
+IHRyZWUgYXJvdW5kIGxpbWl0YXRpb25zIG9mIHRoZSBjdXJyZW50IGNvZGUuIEluc3RlYWQgdGhl
+IGRldmljZQp0cmVlIHNob3VsZCBiZSBvcmdhbml6ZWQgdG8gYmVzdCBkZXNjcmliZSB0aGUgaGFy
+ZHdhcmUsIGFuZCB0aGUgY29kZQpzaG91bGQgYmUgYWRhcHRlZCB0byBzdXBwb3J0IHRoYXQuCgpP
+ZiBjb3Vyc2UsIGlmIHlvdSB1c2UgdGhlIGZsYXQgRFQgbGF5b3V0IGV2ZXJ5d2hlcmUgZWxzZSwg
+SSB3b24ndCB0cnkgdG8KYmxvY2sgdGhlIHJlc2V0IGRyaXZlciBiZWNhdXNlIG9mIHRoaXMgaXNz
+dWUuIEknbSBqdXN0IHNheWluZyBuZXN0ZWQKbm9kZXMgaW4gdGhlIERUIHdvdWxkIGJldHRlciBk
+ZXNjcmliZSB0aGUgcmVhbCBjb250cm9sIGZsb3cuCgpyZWdhcmRzClBoaWxpcHAKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
