@@ -1,168 +1,128 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] of: Support parsing phandle argument lists through a
- nexus node
-Date: Wed, 30 Nov 2016 17:30:47 -0600
-Message-ID: <CAL_JsqKZ_Ohcdi0n6XU+5=3o6OwC=r_5Cv1=gx7mytUUVd2dzA@mail.gmail.com>
-References: <20161124102529.20212-1-stephen.boyd@linaro.org> <20161124102529.20212-2-stephen.boyd@linaro.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] [media] dt-bindings: add TI VPIF documentation
+Date: Wed, 30 Nov 2016 15:48:51 -0800
+Message-ID: <m27f7kil5o.fsf@baylibre.com>
+References: <20161122155244.802-1-khilman@baylibre.com>
+        <20161122155244.802-5-khilman@baylibre.com>
+        <20161128213822.26oeyzkht5jz5gd3@rob-hp-laptop>
+        <m2shqbs0eu.fsf@baylibre.com>
+        <CAL_JsqJ3wJnNa=bVN+UT4A-J5XC0jdyGAgWzROScRDLy6T8xHw@mail.gmail.com>
+        <20161130214835.GN16630@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20161124102529.20212-2-stephen.boyd@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130214835.GN16630-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org> (Sakari
+        Ailus's message of "Wed, 30 Nov 2016 23:48:36 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-media@vger.kernel.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?Q?Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2016 at 4:25 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> Platforms like 96boards have a standardized connector/expansion
-> slot that exposes signals like GPIOs to expansion boards in an
-> SoC agnostic way. We'd like the DT overlays for the expansion
-> boards to be written once without knowledge of the SoC on the
-> other side of the connector. This avoids the unscalable
-> combinatorial explosion of a different DT overlay for each
-> expansion board and SoC pair.
->
-> We need a way to describe the GPIOs routed through the connector
-> in an SoC agnostic way. Let's introduce nexus property parsing
-> into the OF core to do this. This is largely based on the
-> interrupt nexus support we already have. This allows us to remap
-> a phandle list in a consumer node (e.g. reset-gpios) through a
-> connector in a generic way (e.g. via gpio-map). Do this in a
-> generic routine so that we can remap any sort of variable length
-> phandle list.
->
-> Taking GPIOs as an example, the connector would be a GPIO nexus,
-> supporting the remapping of a GPIO specifier space to multiple
-> GPIO providers on the SoC. DT would look as shown below, where
-> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
-> expansion port where boards can be plugged in, and
-> 'expansion_device' is a device on the expansion board.
->
->         soc {
->                 soc_gpio1: gpio-controller1 {
->                         #gpio-cells = <2>;
->                 };
->
->                 soc_gpio2: gpio-controller2 {
->                         #gpio-cells = <2>;
->                 };
->         };
->
->         connector: connector {
->                 #gpio-cells = <2>;
->                 gpio-map = <0 GPIO_ACTIVE_LOW &soc_gpio1 1 GPIO_ACTIVE_LOW>,
->                            <1 GPIO_ACTIVE_LOW &soc_gpio2 4 GPIO_ACTIVE_LOW>,
->                            <2 GPIO_ACTIVE_LOW &soc_gpio1 3 GPIO_ACTIVE_LOW>,
->                            <3 GPIO_ACTIVE_LOW &soc_gpio2 2 GPIO_ACTIVE_LOW>;
->                 gpio-map-mask = <0xf 0x1>;
+Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
 
-I think the common case is something more like this:
-
-                 gpio-map = <0 0 &soc_gpio1 1 0>,
-                            <1 0 &soc_gpio2 4 0>,
-                            <2 0 &soc_gpio1 3 0>,
-                            <3 0 &soc_gpio2 2 0>;
-                 gpio-map-mask = <0xf 0>;
-
-where we want to pass the 2nd cell of the consumer (e.g. reset-gpios)
-thru. So here the GPIO_ACTIVE_LOW flag below needs to pass thru to
-&soc_gpio1. Otherwise, the gpio-map is has to enumerate every possible
-combination or it will be specific to the daughterboard's usage.
-
-Also, GPIO cells are pretty well standardized, but some cases may need
-a translation function which I guess would be part of a connector
-driver. I don't think that affects the binding nor needs to be solved
-now, but just want to raise that possibility.
-
->         };
+> Hi Rob and Kevin,
 >
->         expansion_device {
->                 reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
->         };
+> On Tue, Nov 29, 2016 at 08:41:44AM -0600, Rob Herring wrote:
+>> On Mon, Nov 28, 2016 at 4:30 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>> > Hi Rob,
+>> >
+>> > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>> >
+>> >> On Tue, Nov 22, 2016 at 07:52:44AM -0800, Kevin Hilman wrote:
+>> >>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> >>> ---
+>> >>>  .../bindings/media/ti,da850-vpif-capture.txt       | 65 ++++++++++++++++++++++
+>> >>>  .../devicetree/bindings/media/ti,da850-vpif.txt    |  8 +++
+>> >>>  2 files changed, 73 insertions(+)
+>> >>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> >>>  create mode 100644 Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> >>>
+>> >>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> >>> new file mode 100644
+>> >>> index 000000000000..c447ac482c1d
+>> >>> --- /dev/null
+>> >>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif-capture.txt
+>> >>> @@ -0,0 +1,65 @@
+>> >>> +Texas Instruments VPIF Capture
+>> >>> +------------------------------
+>> >>> +
+>> >>> +The TI Video Port InterFace (VPIF) capture component is the primary
+>> >>> +component for video capture on the DA850 family of TI DaVinci SoCs.
+>> >>> +
+>> >>> +TI Document number reference: SPRUH82C
+>> >>> +
+>> >>> +Required properties:
+>> >>> +- compatible: must be "ti,da850-vpif-capture"
+>> >>> +- reg: physical base address and length of the registers set for the device;
+>> >>> +- interrupts: should contain IRQ line for the VPIF
+>> >>> +
+>> >>> +VPIF capture has a 16-bit parallel bus input, supporting 2 8-bit
+>> >>> +channels or a single 16-bit channel.  It should contain at least one
+>> >>> +port child node with child 'endpoint' node. Please refer to the
+>> >>> +bindings defined in
+>> >>> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> >>> +
+>> >>> +Example using 2 8-bit input channels, one of which is connected to an
+>> >>> +I2C-connected TVP5147 decoder:
+>> >>> +
+>> >>> +    vpif_capture: video-capture@0x00217000 {
+>> >>> +            reg = <0x00217000 0x1000>;
+>> >>> +            interrupts = <92>;
+>> >>> +
+>> >>> +            port {
+>> >>> +                    vpif_ch0: endpoint@0 {
+>> >>> +                              reg = <0>;
+>> >>> +                              bus-width = <8>;
+>> >>> +                              remote-endpoint = <&composite>;
+>> >>> +                    };
+>> >>> +
+>> >>> +                    vpif_ch1: endpoint@1 {
+>> >>
+>> >> I think probably channels here should be ports rather than endpoints.
+>> >> AIUI, having multiple endpoints is for cases like a mux or 1 to many
+>> >> connections. There's only one data flow, but multiple sources or sinks.
+>> >
+>> > Looking at this closer... , I used an endpoint because it's bascially a
+>> > 16-bit parallel bus, that can be configured as (up to) 2 8-bit
+>> > "channels.  So, based on the video-interfaces.txt doc, I configured this
+>> > as a single port, with (up to) 2 endpoints.  That also allows me to
+>> > connect output of the decoder directly, using the remote-endpoint
+>> > property.
+>> >
+>> > So I guess I'm not fully understanding your suggestion.
+>> 
+>> NM, looks like video-interfaces.txt actually spells out this case and
+>> defines doing it as you did.
 >
-> The GPIO core would use of_parse_phandle_with_args_map() instead
-> of of_parse_phandle_with_args() and arrive at the same type of
-> result, a phandle and argument list. The difference is that the
-> phandle and arguments will be remapped through the nexus node to
-> the underlying SoC GPIO controller node. In the example above,
-> we would remap 'reset-gpios' from <&connector 2 GPIO_ACTIVE_LOW>
-> to <&soc_gpio1 3 GPIO_ACTIVE_LOW>.
-
-GPIOs also are interrupts frequently, so we need to make sure
-interrupt translation works too. It's a bit tricky as interrupt-map
-depends on #address-cells and #interrupt-cells. I think we just set
-the #address-cells to 0 on the connector node and it will be fine. We
-may need the same pass thru of flags though.
-
+> It's actually the first time I read that portion (at least so that I could
+> remember) of video-interfaces.txt. I'm not sure if anyone has implemented
+> that previously, nor how we ended up with the text. The list archive could
+> probably tell. Cc Guennadi who wrote it. :-) I couldn't immediately find DT
+> source with this arrangement.
 >
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  drivers/of/base.c  | 146 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  14 +++++
->  2 files changed, 160 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d687e6de24a0..693b73f33675 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1772,6 +1772,152 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
->  EXPORT_SYMBOL(of_parse_phandle_with_args);
->
->  /**
-> + * of_parse_phandle_with_args_map() - Find a node pointed by phandle in a list and remap it
-> + * @np:                pointer to a device tree node containing a list
-> + * @list_name: property name that contains a list
-> + * @cells_name:        property name that specifies phandles' arguments count
-> + * @index:     index of a phandle to parse out
-> + * @out_args:  optional pointer to output arguments structure (will be filled)
-> + *
-> + * This function is useful to parse lists of phandles and their arguments.
-> + * Returns 0 on success and fills out_args, on error returns appropriate
-> + * errno value.
-> + *
-> + * Caller is responsible to call of_node_put() on the returned out_args->np
-> + * pointer.
-> + *
-> + * Example:
-> + *
-> + * phandle1: node1 {
-> + *     #list-cells = <2>;
-> + * }
-> + *
-> + * phandle2: node2 {
-> + *     #list-cells = <1>;
-> + * }
-> + *
-> + * phandle3: node3 {
-> + *     #list-cells = <1>;
-> + *     list-map = <0 &phandle2 3>,
-> + *                <1 &phandle2 2>,
-> + *                <2 &phandle1 5 1>;
-> + *     list-map-mask = <0x3>;
-> + * };
-> + *
-> + * node4 {
-> + *     list = <&phandle1 1 2 &phandle3 0>;
-> + * }
-> + *
-> + * To get a device_node of the `node2' node you may call this:
-> + * of_parse_phandle_with_args(node4, "list", "#list-cells", "list-map",
-> + *                           "list-map-mask", 1, &args);
-> + */
-> +int of_parse_phandle_with_args_map(const struct device_node *np,
-> +                                  const char *list_name,
-> +                                  const char *cells_name,
-> +                                  const char *map_name,
-> +                                  const char *mask_name,
+> In case of splitting the port into two parallel interfaces, how do you
+> determine which wires belong to which endpoint? I guess they'd be particular
+> sets of wires but as there's just a single port it isn't defined by the
+> port.
 
-Perhaps these 3 could be just a single base name (e.g. "gpio")?
-Doesn't really buy much other than enforce we don't mix 'gpios' and
-'gpio'. That could never happen. ;)
+Isn't that the point of data-shift?
 
-> +                                  int index, struct of_phandle_args *out_args)
-> +{
+e.g. it's a single 16-bit parallel bus, where the lower 8 bits are for
+channel 0 and the upper 8 bits are for channel 1.  Alternately, the port
+can also be configured as a single 16-bit channel (e.g. for raw
+capture.)
 
-Rob
+If you want more details on this hardware, it's pretty well described in
+Chapter 35 of http://www.ti.com/lit/ug/spruh82c/spruh82c.pdf.
+
+FWIW, I'm not really picky about how to do this.  I'm trying to learn
+"the right way" and am happy to do that, but the feedback so far has
+been confusing (at least for someone relatively new to the DT side of
+the media framework.)
+
+Kevin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
