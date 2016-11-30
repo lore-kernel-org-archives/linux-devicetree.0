@@ -1,61 +1,50 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V6 10/10] PM / OPP: Don't assume platform doesn't have regulators
-Date: Wed, 30 Nov 2016 10:44:13 +0530
-Message-ID: <f5e2c0fd4f075fd114a48080c5985af6e5abbadc.1480481312.git.viresh.kumar@linaro.org>
-References: <cover.1480481312.git.viresh.kumar@linaro.org>
+From: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2] scripts: printing file name correctly
+Date: Wed, 30 Nov 2016 10:25:34 +0530
+Message-ID: <1480481734-45286-1-git-send-email-maninder1.s@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1480481312.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <cover.1480481312.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <cover.1480481312.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.m-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajeet.y-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If the regulators aren't set explicitly by the platform, the OPP core
-assumes that the platform doesn't have any regulator and uses the
-clk-only callback.
+Currently we are printing file name wrongly.
+pos->file ? (char *) pos->file : "<no file>")
 
-If the platform failed to register a regulator with the core, then this
-can turn out to be a dangerous assumption as the OPP core will try to
-change clk without changing regulators.
+It should be pos->file->name, and secondly if we got NULL
+file struture,we will anyway derefer it in last printf.
 
-Handle that properly by making sure that the DT didn't have any entries
-for supply voltages as well.
+So, Fixing the same.
 
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+caught with static analysis tool.
+Signed-off-by: Maninder Singh <maninder1.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vaneet Narang <v.narang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/base/power/opp/core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+v1 -> v2: changing description of patch.
 
-diff --git a/drivers/base/power/opp/core.c b/drivers/base/power/opp/core.c
-index f60d7f943b64..979403448cd6 100644
---- a/drivers/base/power/opp/core.c
-+++ b/drivers/base/power/opp/core.c
-@@ -748,7 +748,20 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ scripts/dtc/srcpos.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/scripts/dtc/srcpos.c b/scripts/dtc/srcpos.c
+index f534c22..360fd14 100644
+--- a/scripts/dtc/srcpos.c
++++ b/scripts/dtc/srcpos.c
+@@ -252,12 +252,11 @@ struct srcpos *
+ srcpos_dump(struct srcpos *pos)
+ {
+ 	printf("file        : \"%s\"\n",
+-	       pos->file ? (char *) pos->file : "<no file>");
++	       pos->file ?  pos->file->name : "<no file>");
+ 	printf("first_line  : %d\n", pos->first_line);
+ 	printf("first_column: %d\n", pos->first_column);
+ 	printf("last_line   : %d\n", pos->last_line);
+ 	printf("last_column : %d\n", pos->last_column);
+-	printf("file        : %s\n", pos->file->name);
+ }
  
- 	/* Only frequency scaling */
- 	if (!regulators) {
-+		unsigned long u_volt = opp->supplies[0].u_volt;
-+
- 		rcu_read_unlock();
-+
-+		/*
-+		 * DT contained supply ratings? Consider platform failed to set
-+		 * regulators.
-+		 */
-+		if (unlikely(u_volt)) {
-+			dev_err(dev, "%s: Regulator not registered with OPP core\n",
-+				__func__);
-+			return -EINVAL;
-+		}
-+
- 		return _generic_set_opp_clk_only(dev, clk, old_freq, freq);
- 	}
  
 -- 
-2.7.1.410.g6faf27b
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
