@@ -1,312 +1,206 @@
-From: Jernej Skrabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
-Date: Wed, 30 Nov 2016 10:04:58 -0800 (PST)
-Message-ID: <04ccf471-2ae5-4c75-bfd3-88ce49942200@googlegroups.com>
-References: <cover.1480414715.git.moinejf@free.fr> <2256264.6LWGGhFAiO@avalon> <239b60f3-3ea7-4aa7-8e8d-353e1a1d4ee5@googlegroups.com>
- <3152670.pRMCOA29o4@avalon>
-Reply-To: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_13989_24844867.1480529098317"
-Return-path: <linux-sunxi+bncBDP4JJM5QYGRBS5J7TAQKGQEK3WPNNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3152670.pRMCOA29o4@avalon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: sun4i-codec: Add support for H3 codec" to the asoc tree
+Date: Wed, 30 Nov 2016 18:07:12 +0000
+Message-ID: <E1cC9Hk-00089K-NP@debutante>
+References: <20161112064648.26779-9-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161112064648.26779-9-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_13989_24844867.1480529098317
-Content-Type: multipart/alternative;
-	boundary="----=_Part_13990_1971241755.1480529098318"
+The patch
 
-------=_Part_13990_1971241755.1480529098318
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+   ASoC: sun4i-codec: Add support for H3 codec
 
-Hi Laurent,
+has been applied to the asoc tree at
 
-Dne sreda, 30. november 2016 09.08.22 UTC+1 je oseba Laurent Pinchart=20
-napisala:
->
-> Hi Jernej,=20
->
-> On Tuesday 29 Nov 2016 15:24:25 Jernej Skrabec wrote:=20
-> > Dne torek, 29. november 2016 23.56.31 UTC+1 je oseba Laurent Pinchart=
-=20
-> > napisala:=20
-> > > On Tuesday 29 Nov 2016 14:47:20 Jernej Skrabec wrote:=20
-> > >> Dne torek, 29. november 2016 22.37.03 UTC+1 je oseba Maxime Ripard=
-=20
-> > > napisala:=20
-> > >>> On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Francois Moine wrote=
-:=20
-> > >>>> This patchset series adds HDMI video support to the Allwinner=20
-> > >>>> sun8i SoCs which include the display engine 2 (DE2).=20
-> > >>>> The driver contains the code for the A83T and H3 SoCs, and=20
-> > >>>> some H3 boards, but it could be used/extended for other SoCs=20
-> > >>>> (A64, H2, H5) and boards (Banana PIs, Orange PIs).=20
-> > >>>=20
-> > >>> Honestly, I'm getting a bit worried by the fact that you ignore=20
-> > >>> reviews.=20
-> > >>>=20
-> > >>> On the important reviews that you got that are to be seen as major=
-=20
-> > >>> issues that block the inclusion, we have:=20
-> > >>>   - The fact that the HDMI driver is actually just a designware IP,=
-=20
-> > >>>     and while you should use the driver that already exists, you=20
-> just=20
-> > >>>     duplicated all that code.=20
-> > >>=20
-> > >> That might be hard thing to do. A83T fits perfectly, but H3 and newe=
-r=20
-> > >> SoCs do not. They are using completely different HDMI phy. Decouplin=
-g=20
-> > >> controller and phy code means rewritting a good portion of the code,=
-=20
-> > >> unless some tricks are applied, like calling phy function pointers,=
-=20
-> if=20
-> > >> they are defined.=20
-> > >=20
-> > > Same HDMI TX but different HDMI TX PHY ? Kieran is working on=20
-> decoupling=20
-> > > the PHY configuration code for a Renesas SoC, that might be of=20
-> interest to=20
-> > > you.=20
-> >=20
-> > Exactly. I'm developing only U-Boot driver, but Jean-Francois will=20
-> probably=20
-> > have more interest in this.=20
->
-> We'll post patches as soon as they're ready.=20
->
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Great. Is datasheet public? I'm curious if HDMI PHY is by any chance=20
-similar.
-=20
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->
-> By the way, do you know if the H3 and newer SoCs use a different PHY from=
-=20
-> Synopsys, or a custom PHY developed by Allwinner ?=20
->
->
-Unfortunatelly, noone managed to identify PHY and Alliwinner never released=
-=20
-a
-bit of information about HDMI. Does config2_id code 0xFE (PHY type) tell yo=
-u
-anything?
-=20
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> > >> Register addresses also differ, but that can be easily solved by=20
-> using=20
-> > >> undocumented magic value to restore them.=20
-> > >=20
-> > > I love that :-)=20
-> >=20
-> > Is it allowed to use magic number which was found in binary blob? I'm=
-=20
-> new in=20
-> > all this.=20
->
-> I don't really see a problem with that, we have many drivers in the kerne=
-l=20
-> that have been developed through reverse-engineering. You should not=20
-> include=20
-> large pieces of code that have been obtained through decompilation of a=
-=20
-> proprietary binary blob as those could be protected by copyright, but=20
-> writing=20
-> to undocumented registers based on information found through usage of a=
-=20
-> binary=20
-> driver isn't a problem. (Please remember that I'm not a lawyer though)=20
->
-> > >>>   - The fact that you ignored Rob (v6) and I (v5) comment on using=
-=20
-> OF=20
-> > >>>     graph to model the connection between the display engine and th=
-e=20
-> > >>>     TCON. Something that Laurent also pointed out in this version.=
-=20
-> > >>>  =20
-> > >>>   - The fact that you ignored that you needed an HDMI connector nod=
-e=20
-> > >>>     as a child of the HDMI controller. This has been reported by Ro=
-b=20
-> > >>>     (v6) and yet again in this version by Laurent.=20
-> > >>>  =20
-> > >>>   - And finally the fact that we can't have several display engine=
-=20
-> in=20
-> > >>>     parallel, if needs be. This has happened in the past already on=
-=20
-> > >>>     Allwinner SoCs, so it's definitely something we should consider=
-=20
-> in=20
-> > >>>     the DT bindings, since we can't break them.=20
-> > >>>=20
-> > >>> Until those are fixed, I cannot see how this driver can be merged,=
-=20
-> > >>> unfortunately.=20
->
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Best regards,
-Jernej =C5=A0krabec
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Mark
 
-------=_Part_13990_1971241755.1480529098318
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+>From 4a15b24a65f13778f7616ad0a65be78d8ec0b45a Mon Sep 17 00:00:00 2001
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Date: Fri, 25 Nov 2016 20:34:40 +0800
+Subject: [PATCH] ASoC: sun4i-codec: Add support for H3 codec
 
-<div dir=3D"ltr">Hi Laurent,<br><br>Dne sreda, 30. november 2016 09.08.22 U=
-TC+1 je oseba Laurent Pinchart napisala:<blockquote class=3D"gmail_quote" s=
-tyle=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-le=
-ft: 1ex;">Hi Jernej,
-<br>
-<br>On Tuesday 29 Nov 2016 15:24:25 Jernej Skrabec wrote:
-<br>&gt; Dne torek, 29. november 2016 23.56.31 UTC+1 je oseba Laurent Pinch=
-art
-<br>&gt; napisala:
-<br>&gt; &gt; On Tuesday 29 Nov 2016 14:47:20 Jernej Skrabec wrote:
-<br>&gt; &gt;&gt; Dne torek, 29. november 2016 22.37.03 UTC+1 je oseba Maxi=
-me Ripard
-<br>&gt; &gt; napisala:
-<br>&gt; &gt;&gt;&gt; On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Franco=
-is Moine wrote:
-<br>&gt; &gt;&gt;&gt;&gt; This patchset series adds HDMI video support to t=
-he Allwinner
-<br>&gt; &gt;&gt;&gt;&gt; sun8i SoCs which include the display engine 2 (DE=
-2).
-<br>&gt; &gt;&gt;&gt;&gt; The driver contains the code for the A83T and H3 =
-SoCs, and
-<br>&gt; &gt;&gt;&gt;&gt; some H3 boards, but it could be used/extended for=
- other SoCs
-<br>&gt; &gt;&gt;&gt;&gt; (A64, H2, H5) and boards (Banana PIs, Orange PIs)=
-.
-<br>&gt; &gt;&gt;&gt;=20
-<br>&gt; &gt;&gt;&gt; Honestly, I&#39;m getting a bit worried by the fact t=
-hat you ignore
-<br>&gt; &gt;&gt;&gt; reviews.
-<br>&gt; &gt;&gt;&gt;=20
-<br>&gt; &gt;&gt;&gt; On the important reviews that you got that are to be =
-seen as major
-<br>&gt; &gt;&gt;&gt; issues that block the inclusion, we have:
-<br>&gt; &gt;&gt;&gt; =C2=A0 - The fact that the HDMI driver is actually ju=
-st a designware IP,
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 and while you should use the driver tha=
-t already exists, you just
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 duplicated all that code.
-<br>&gt; &gt;&gt;=20
-<br>&gt; &gt;&gt; That might be hard thing to do. A83T fits perfectly, but =
-H3 and newer
-<br>&gt; &gt;&gt; SoCs do not. They are using completely different HDMI phy=
-. Decoupling
-<br>&gt; &gt;&gt; controller and phy code means rewritting a good portion o=
-f the code,
-<br>&gt; &gt;&gt; unless some tricks are applied, like calling phy function=
- pointers, if
-<br>&gt; &gt;&gt; they are defined.
-<br>&gt; &gt;=20
-<br>&gt; &gt; Same HDMI TX but different HDMI TX PHY ? Kieran is working on=
- decoupling
-<br>&gt; &gt; the PHY configuration code for a Renesas SoC, that might be o=
-f interest to
-<br>&gt; &gt; you.
-<br>&gt;=20
-<br>&gt; Exactly. I&#39;m developing only U-Boot driver, but Jean-Francois =
-will probably
-<br>&gt; have more interest in this.
-<br>
-<br>We&#39;ll post patches as soon as they&#39;re ready.
-<br></blockquote><div><br>Great. Is datasheet public? I&#39;m curious if HD=
-MI PHY is by any chance similar.<br>=C2=A0</div><blockquote class=3D"gmail_=
-quote" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;pa=
-dding-left: 1ex;">
-<br>By the way, do you know if the H3 and newer SoCs use a different PHY fr=
-om=20
-<br>Synopsys, or a custom PHY developed by Allwinner ?
-<br>
-<br></blockquote><div><br>Unfortunatelly, noone managed to identify PHY and=
- Alliwinner never released a<br>bit of information about HDMI. Does config2=
-_id code 0xFE (PHY type) tell you<br>anything?<br>=C2=A0</div><blockquote c=
-lass=3D"gmail_quote" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px=
- #ccc solid;padding-left: 1ex;">&gt; &gt;&gt; Register addresses also diffe=
-r, but that can be easily solved by using
-<br>&gt; &gt;&gt; undocumented magic value to restore them.
-<br>&gt; &gt;=20
-<br>&gt; &gt; I love that :-)
-<br>&gt;=20
-<br>&gt; Is it allowed to use magic number which was found in binary blob? =
-I&#39;m new in
-<br>&gt; all this.
-<br>
-<br>I don&#39;t really see a problem with that, we have many drivers in the=
- kernel=20
-<br>that have been developed through reverse-engineering. You should not in=
-clude=20
-<br>large pieces of code that have been obtained through decompilation of a=
-=20
-<br>proprietary binary blob as those could be protected by copyright, but w=
-riting=20
-<br>to undocumented registers based on information found through usage of a=
- binary=20
-<br>driver isn&#39;t a problem. (Please remember that I&#39;m not a lawyer =
-though)
-<br>
-<br>&gt; &gt;&gt;&gt; =C2=A0 - The fact that you ignored Rob (v6) and I (v5=
-) comment on using OF
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 graph to model the connection between t=
-he display engine and the
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 TCON. Something that Laurent also point=
-ed out in this version.
-<br>&gt; &gt;&gt;&gt; =C2=A0=20
-<br>&gt; &gt;&gt;&gt; =C2=A0 - The fact that you ignored that you needed an=
- HDMI connector node
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 as a child of the HDMI controller. This=
- has been reported by Rob
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 (v6) and yet again in this version by L=
-aurent.
-<br>&gt; &gt;&gt;&gt; =C2=A0=20
-<br>&gt; &gt;&gt;&gt; =C2=A0 - And finally the fact that we can&#39;t have =
-several display engine in
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 parallel, if needs be. This has happene=
-d in the past already on
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 Allwinner SoCs, so it&#39;s definitely =
-something we should consider in
-<br>&gt; &gt;&gt;&gt; =C2=A0 =C2=A0 the DT bindings, since we can&#39;t bre=
-ak them.
-<br>&gt; &gt;&gt;&gt;=20
-<br>&gt; &gt;&gt;&gt; Until those are fixed, I cannot see how this driver c=
-an be merged,
-<br>&gt; &gt;&gt;&gt; unfortunately.
-<br></blockquote><br>Best regards,<br>Jernej =C5=A0krabec<br></div>
+The codec on the H3 is similar to the one found on the A31. One key
+difference is the analog path controls are routed through the PRCM
+block. This is supported by the sun8i-codec-analog driver, and tied
+into this codec driver with the audio card's aux_dev.
 
-<p></p>
+In addition, the H3 has no HP (headphone) and HBIAS support, and no
+MIC3 input. The FIFO related registers are slightly rearranged.
 
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/sound/sun4i-codec.txt      |  3 +
+ sound/soc/sunxi/sun4i-codec.c                      | 71 ++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
 
-------=_Part_13990_1971241755.1480529098318--
+diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+index f7a548b604fc..3033bd8aab0f 100644
+--- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
++++ b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 		- "allwinner,sun6i-a31-codec"
+ 		- "allwinner,sun7i-a20-codec"
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - reg: must contain the registers location and length
+ - interrupts: must contain the codec interrupt
+ - dmas: DMA channels for tx and rx dma. See the DMA client binding,
+@@ -23,6 +24,7 @@ Optional properties:
+ Required properties for the following compatibles:
+ 		- "allwinner,sun6i-a31-codec"
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - resets: phandle to the reset control for this device
+ - allwinner,audio-routing: A list of the connections between audio components.
+ 			   Each entry is a pair of strings, the first being the
+@@ -52,6 +54,7 @@ Required properties for the following compatibles:
+ 
+ Required properties for the following compatibles:
+ 		- "allwinner,sun8i-a23-codec"
++		- "allwinner,sun8i-h3-codec"
+ - allwinner,codec-analog-controls: A phandle to the codec analog controls
+ 				   block in the PRCM.
+ 
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index ada5fa055950..848af01692a0 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -217,6 +217,13 @@
+ #define SUN8I_A23_CODEC_DAC_TXCNT		(0x1c)
+ #define SUN8I_A23_CODEC_ADC_RXCNT		(0x20)
+ 
++/* TX FIFO moved on H3 */
++#define SUN8I_H3_CODEC_DAC_TXDATA		(0x20)
++#define SUN8I_H3_CODEC_DAC_DBG			(0x48)
++#define SUN8I_H3_CODEC_ADC_DBG			(0x4c)
++
++/* TODO H3 DAP (Digital Audio Processing) bits */
++
+ struct sun4i_codec {
+ 	struct device	*dev;
+ 	struct regmap	*regmap;
+@@ -1293,6 +1300,44 @@ static struct snd_soc_card *sun8i_a23_codec_create_card(struct device *dev)
+ 	return card;
+ };
+ 
++static struct snd_soc_card *sun8i_h3_codec_create_card(struct device *dev)
++{
++	struct snd_soc_card *card;
++	int ret;
++
++	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
++	if (!card)
++		return ERR_PTR(-ENOMEM);
++
++	aux_dev.codec_of_node = of_parse_phandle(dev->of_node,
++						 "allwinner,codec-analog-controls",
++						 0);
++	if (!aux_dev.codec_of_node) {
++		dev_err(dev, "Can't find analog controls for codec.\n");
++		return ERR_PTR(-EINVAL);
++	};
++
++	card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
++	if (!card->dai_link)
++		return ERR_PTR(-ENOMEM);
++
++	card->dev		= dev;
++	card->name		= "H3 Audio Codec";
++	card->dapm_widgets	= sun6i_codec_card_dapm_widgets;
++	card->num_dapm_widgets	= ARRAY_SIZE(sun6i_codec_card_dapm_widgets);
++	card->dapm_routes	= sun8i_codec_card_routes;
++	card->num_dapm_routes	= ARRAY_SIZE(sun8i_codec_card_routes);
++	card->aux_dev		= &aux_dev;
++	card->num_aux_devs	= 1;
++	card->fully_routed	= true;
++
++	ret = snd_soc_of_parse_audio_routing(card, "allwinner,audio-routing");
++	if (ret)
++		dev_warn(dev, "failed to parse audio-routing: %d\n", ret);
++
++	return card;
++};
++
+ static const struct regmap_config sun4i_codec_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.reg_stride	= 4,
+@@ -1321,6 +1366,13 @@ static const struct regmap_config sun8i_a23_codec_regmap_config = {
+ 	.max_register	= SUN8I_A23_CODEC_ADC_RXCNT,
+ };
+ 
++static const struct regmap_config sun8i_h3_codec_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= SUN8I_H3_CODEC_ADC_DBG,
++};
++
+ struct sun4i_codec_quirks {
+ 	const struct regmap_config *regmap_config;
+ 	const struct snd_soc_codec_driver *codec;
+@@ -1369,6 +1421,21 @@ static const struct sun4i_codec_quirks sun8i_a23_codec_quirks = {
+ 	.has_reset	= true,
+ };
+ 
++static const struct sun4i_codec_quirks sun8i_h3_codec_quirks = {
++	.regmap_config	= &sun8i_h3_codec_regmap_config,
++	/*
++	 * TODO Share the codec structure with A23 for now.
++	 * This should be split out when adding digital audio
++	 * processing support for the H3.
++	 */
++	.codec		= &sun8i_a23_codec_codec,
++	.create_card	= sun8i_h3_codec_create_card,
++	.reg_adc_fifoc	= REG_FIELD(SUN6I_CODEC_ADC_FIFOC, 0, 31),
++	.reg_dac_txdata	= SUN8I_H3_CODEC_DAC_TXDATA,
++	.reg_adc_rxdata	= SUN6I_CODEC_ADC_RXDATA,
++	.has_reset	= true,
++};
++
+ static const struct of_device_id sun4i_codec_of_match[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-codec",
+@@ -1386,6 +1453,10 @@ static const struct of_device_id sun4i_codec_of_match[] = {
+ 		.compatible = "allwinner,sun8i-a23-codec",
+ 		.data = &sun8i_a23_codec_quirks,
+ 	},
++	{
++		.compatible = "allwinner,sun8i-h3-codec",
++		.data = &sun8i_h3_codec_quirks,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_codec_of_match);
+-- 
+2.10.2
 
-------=_Part_13989_24844867.1480529098317--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
