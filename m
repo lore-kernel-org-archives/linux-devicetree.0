@@ -1,37 +1,94 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next v3 0/4] Fix OdroidC2 Gigabit Tx link issue
-Date: Tue, 29 Nov 2016 19:38:53 -0500 (EST)
-Message-ID: <20161129.193853.827524417068912706.davem@davemloft.net>
-References: <1480326409-25419-1-git-send-email-jbrunet@baylibre.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND PATCH 2/2] PCI: rockchip: Add quirk to disable RC's ASPM
+ L0s
+Date: Wed, 30 Nov 2016 08:41:45 +0800
+Message-ID: <56e13221-9889-c373-4dc5-748c6601aae7@rock-chips.com>
+References: <1479096666-112668-1-git-send-email-shawn.lin@rock-chips.com>
+ <1479096666-112668-2-git-send-email-shawn.lin@rock-chips.com>
+ <CAL_JsqKkK15Jb3tWh1Mw7RU6d8=6RYMjSEs-c4EQySaUAwnFUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480326409-25419-1-git-send-email-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAL_JsqKkK15Jb3tWh1Mw7RU6d8=6RYMjSEs-c4EQySaUAwnFUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, neolynx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Date: Mon, 28 Nov 2016 10:46:45 +0100
+Hi Rob,
 
-> This patchset fixes an issue with the OdroidC2 board (DWMAC + RTL8211F).
-> The platform seems to enter LPI on the Rx path too often while performing
-> relatively high TX transfer. This eventually break the link (both Tx and
-> Rx), and require to bring the interface down and up again to get the Rx
-> path working again.
-> 
-> The root cause of this issue is not fully understood yet but disabling EEE
-> advertisement on the PHY prevent this feature to be negotiated.
-> With this change, the link is stable and reliable, with the expected
-> throughput performance.
-> 
-> The patchset adds options in the generic phy driver to disable EEE
-> advertisement, through device tree. The way it is done is very similar
-> to the handling of the max-speed property.
+On 2016/11/29 23:34, Rob Herring wrote:
+> On Sun, Nov 13, 2016 at 10:11 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> Rockchip's RC outputs 100MHz reference clock but there are
+>> two methods for PHY to generate it.
+>>
+>> (1)One of them is to use system PLL to generate 100MHz clock and
+>> the PHY will relock it and filter signal noise then outputs the
+>> reference clock.
+>>
+>> (2)Another way is to share Soc's 24MHZ crystal oscillator with
+>> PHY and force PHY's DLL to generate 100MHz internally.
+>>
+>> When using case(2), the exit from L0s doesn't work fine occasionally
+>> due to the broken design of RC receiver's logical circuit. So even if
+>> we use extended-synch, it still fails for PHY to relock the bits from
+>> FTS sometimes. This will hang the system.
+>>
+>> Maybe we could argue that why not use case(1) to avoid it? The reason
+>> is that as we could see the reference clock is derived from system PLL
+>> and the path from it to PHY isn't so clean which means there are some
+>> noise introduced by power-domain and other buses can't be filterd out
+>> by PHY and we could see noise from the frequency spectrum by oscilloscope.
+>> This makes the TX compatibility test a little difficult to pass the spec.
+>> So case(1) and case(2) are both used indeed now. If using case(2), we
+>> should disable RC's L0s support, and that is why we need this property to
+>> indicate this quirk.
+>>
+>> Also after checking quirk.c, I noticed there is already a quirk for
+>> disabling L0s unconditionally, quirk_disable_aspm_l0s. But obviously we
+>> shouldn't do that as mentioned above that case(1) could still works fine
+>> with L0s.
+>>
+>> Reported-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Cc: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> ---
+>>
+>>  Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 2 ++
+>>  drivers/pci/host/pcie-rockchip.c                        | 9 +++++++++
+>>  2 files changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> index ba67b39..cfa44a7 100644
+>> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> @@ -42,6 +42,8 @@ Required properties:
+>>  Optional Property:
+>>  - ep-gpios: contain the entry for pre-reset gpio
+>>  - num-lanes: number of lanes to use
+>> +- quirk,aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
+>
+> quirk is not a vendor. Drop it.
 
-Patches 1-3 applied to net-next, thanks.
+I guess you want me to drop the "quirk" prefix and just use
+aspm-no-l0s instaed?
+
+>
+>> +       using 24MHz OSC for RC's PHY.
+>>  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+>>  - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
+>>  - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
+>
+>
+>
+
+
+-- 
+Best Regards
+Shawn Lin
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
