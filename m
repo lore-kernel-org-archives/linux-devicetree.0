@@ -1,38 +1,82 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [PATCH 3/6] net: ethernet: ti: cpts: add support of cpts
- HW_TS_PUSH
-Date: Wed, 30 Nov 2016 12:08:20 +0100
-Message-ID: <1480504100.9183.72.camel@pengutronix.de>
-References: <20161128230428.6872-1-grygorii.strashko@ti.com>
-         <20161128230428.6872-4-grygorii.strashko@ti.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: Bindings for Rockchip serial flash
+ controller
+Date: Wed, 30 Nov 2016 04:18:39 +0100
+Message-ID: <492f9988-816b-f857-3b3d-957479501ed5@gmail.com>
+References: <1479437945-27918-1-git-send-email-shawn.lin@rock-chips.com>
+ <1479437945-27918-2-git-send-email-shawn.lin@rock-chips.com>
+ <7fd2cdc0-2103-d254-c7b2-d2552a32a738@gmail.com>
+ <a5f13048-fbfa-7988-659a-0223b767ddf3@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20161128230428.6872-4-grygorii.strashko@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Richard Cochran <richardcochran@gmail.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a5f13048-fbfa-7988-659a-0223b767ddf3-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mo, 2016-11-28 at 17:04 -0600, Grygorii Strashko wrote:
-> This patch adds support of the CPTS HW_TS_PUSH events which are generated
-> by external low frequency time stamp channels on TI's OMAP CPSW and
-> Keystone 2 platforms. It supports up to 8 external time stamp channels for
-> HW_TS_PUSH input pins (the number of supported channel is different for
-> different SoCs and CPTS versions, check corresponding Data maual before
-> enabling it). Therefore, new DT property "cpts-ext-ts-inputs" is introduced
-> for specifying number of available external timestamp channels.
+On 11/30/2016 01:55 AM, Shawn Lin wrote:
+> On 2016/11/25 21:30, Marek Vasut wrote:
+>> On 11/18/2016 03:59 AM, Shawn Lin wrote:
+>>> Add binding document for the Rockchip serial flash controller.
+>>>
+>>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>
+>>> Changes in v2: None
+>>>
+>>>  .../devicetree/bindings/mtd/rockchip-sfc.txt       | 31
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 31 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>> b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>> new file mode 100644
+>>> index 0000000..28430ce
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+>>> @@ -0,0 +1,31 @@
+>>> +Rockchip Serial Flash Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should be
+>>> +        "rockchip,rk1108-sfc", "rockchip,sfc" for ROCKCHIP RK1108.
+>>> +- address-cells : Should be 1.
+>>> +- size-cells : Should be 0.
+>>
+>> Shouldn't these two props have a # prefix ? I'm not sure they should
+>> even be part of this binding document at all.
+>>
+>>> +- clocks: Must contain two entries for each entry in clock-names.
+>>> +- clock-names: Shall be "sfc" for the transfer-clock, and "hsfc" for
+>>> +        the peripheral clock.
+>>> +- interrupts : Should contain the interrupt for the device.
+>>> +- reg: Physical base address of the controller and length of memory
+>>> mapped.
+>>> +
+>>> +Optional properties:
+>>> +- rockchip,sfc-no-dma: Indicate the controller doesn't support dma
+>>> transfer.
+>>
+>> DMA should be in capital letters.
+> 
+> Both of DMA or dma could be found by grepping the
+> Documentation/devicetree/bindings/, so I think it
+> isn't a big deal for this. :)
 
-If this only depends on SoC and CTPS, it should be possible to derive
-the correct value from the compatible value and possibly a CPTS version
-register? If the existing compatible strings are not specific enough,
-possible a new one should be added.
+You can find a lot of spelling mistakes throughout the kernel, which
+doesn't make them right.
 
-Regards,
-Jan
+
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
