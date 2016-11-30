@@ -1,148 +1,95 @@
-From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH 2/2] ARM: imx: Add speed grading check for imx6ul
-Date: Wed, 30 Nov 2016 11:04:58 +0800
-Message-ID: <1480475098-2037-2-git-send-email-ping.bai@nxp.com>
-References: <1480475098-2037-1-git-send-email-ping.bai@nxp.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings/gpio: Add Aspeed GPIO bindings header
+Date: Wed, 30 Nov 2016 13:38:36 +1030
+Message-ID: <CACPK8Xfq0nyJLYbo8Z14oQ9yCjiSY9dkwBcaOfVQ_-pCj8_uyg@mail.gmail.com>
+References: <20161031044550.1784-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480475098-2037-1-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161031044550.1784-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6UL, it has two type of part, the difference
-is the max ARM frequency that can run at(528MHz/700MHz).
-The part can be identified by part marking for speed grading
-fuse. This patch add speed grading check to disable the unsupported
-OPP dynamically.
+Hi Rob,
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
----
- arch/arm/mach-imx/mach-imx6ul.c | 78 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+Can you take this one?
 
-diff --git a/arch/arm/mach-imx/mach-imx6ul.c b/arch/arm/mach-imx/mach-imx6ul.c
-index 6cb8a22..bf86530 100644
---- a/arch/arm/mach-imx/mach-imx6ul.c
-+++ b/arch/arm/mach-imx/mach-imx6ul.c
-@@ -9,14 +9,17 @@
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
- #include <linux/micrel_phy.h>
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/phy.h>
-+#include <linux/pm_opp.h>
- #include <linux/regmap.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- 
- #include "common.h"
- #include "cpuidle.h"
-+#include "hardware.h"
- 
- static void __init imx6ul_enet_clk_init(void)
- {
-@@ -57,6 +60,76 @@ static inline void imx6ul_enet_init(void)
- 	imx6ul_enet_phy_init();
- }
- 
-+#define OCOTP_CFG3			0x440
-+#define OCOTP_CFG3_SPEED_SHIFT		16
-+#define OCOTP_CFG3_SPEED_696MHZ		0x2
-+
-+static void __init imx6ul_opp_check_speed_grading(struct device *cpu_dev)
-+{
-+	struct device_node *np;
-+	void __iomem *base;
-+	u32 val;
-+
-+	np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
-+	if (!np) {
-+		pr_warn("failed to find ocotp node\n");
-+		return;
-+	}
-+
-+	base = of_iomap(np, 0);
-+	if (!base) {
-+		pr_warn("failed to map ocotp\n");
-+		goto put_node;
-+	}
-+
-+	/*
-+	 * Speed GRADING[1:0] defines the max speed of ARM:
-+	 * 2b'00: Reserved;
-+	 * 2b'01: 528000000Hz;
-+	 * 2b'10: 700000000Hz;
-+	 * 2b'11: Reserved;
-+	 * We need to set the max speed of ARM according to fuse map.
-+	 */
-+	val = readl_relaxed(base + OCOTP_CFG3);
-+	val >>= OCOTP_CFG3_SPEED_SHIFT;
-+	val &= 0x3;
-+
-+	if (val != OCOTP_CFG3_SPEED_696MHZ) {
-+		if (dev_pm_opp_disable(cpu_dev, 696000000))
-+			pr_warn("Failed to disable 696MHz OPP\n");
-+	}
-+	iounmap(base);
-+
-+put_node:
-+	of_node_put(np);
-+}
-+
-+static void __init imx6ul_opp_init(void)
-+{
-+	struct device_node *np;
-+	struct device *cpu_dev = get_cpu_device(0);
-+
-+	if (!cpu_dev) {
-+		pr_warn("failed to get cpu0 device\n");
-+		return;
-+	}
-+	np = of_node_get(cpu_dev->of_node);
-+	if (!np) {
-+		pr_warn("failed to find cpu0 node\n");
-+		return;
-+	}
-+
-+	if (dev_pm_opp_of_add_table(cpu_dev)) {
-+		pr_warn("failed to init OPP table\n");
-+		goto put_node;
-+	}
-+
-+	imx6ul_opp_check_speed_grading(cpu_dev);
-+
-+put_node:
-+	of_node_put(np);
-+}
-+
- static void __init imx6ul_init_machine(void)
- {
- 	struct device *parent;
-@@ -83,8 +156,11 @@ static void __init imx6ul_init_late(void)
- {
- 	imx6sx_cpuidle_init();
- 
--	if (IS_ENABLED(CONFIG_ARM_IMX6Q_CPUFREQ))
-+	if (IS_ENABLED(CONFIG_ARM_IMX6Q_CPUFREQ)) {
-+		if (cpu_is_imx6ul())
-+			imx6ul_opp_init();
- 		platform_device_register_simple("imx6q-cpufreq", -1, NULL, 0);
-+	}
- }
- 
- static const char * const imx6ul_dt_compat[] __initconst = {
--- 
-1.9.1
+Cheers,
+
+Joel
+
+On Mon, Oct 31, 2016 at 3:15 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> This provides constants for using GPIOs in the device tree on Aspeed
+> SoCs.
+>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+> The Apseed GPIO driver and binding document went upstream in 4.9, but we forgot
+> to send this patch as part of the series.
+>
+>  include/dt-bindings/gpio/aspeed-gpio.h | 47 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 include/dt-bindings/gpio/aspeed-gpio.h
+>
+> diff --git a/include/dt-bindings/gpio/aspeed-gpio.h b/include/dt-bindings/gpio/aspeed-gpio.h
+> new file mode 100644
+> index 000000000000..058c527cbcaf
+> --- /dev/null
+> +++ b/include/dt-bindings/gpio/aspeed-gpio.h
+> @@ -0,0 +1,47 @@
+> +/*
+> + * This header provides constants for binding aspeed,*-gpio.
+> + *
+> + * The first cell in Aspeed's GPIO specifier is the GPIO ID. The macros below
+> + * provide names for this.
+> + *
+> + * The second cell contains standard flag values specified in gpio.h.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_GPIO_ASPEED_GPIO_H
+> +#define _DT_BINDINGS_GPIO_ASPEED_GPIO_H
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +#define ASPEED_GPIO_PORT_A 0
+> +#define ASPEED_GPIO_PORT_B 1
+> +#define ASPEED_GPIO_PORT_C 2
+> +#define ASPEED_GPIO_PORT_D 3
+> +#define ASPEED_GPIO_PORT_E 4
+> +#define ASPEED_GPIO_PORT_F 5
+> +#define ASPEED_GPIO_PORT_G 6
+> +#define ASPEED_GPIO_PORT_H 7
+> +#define ASPEED_GPIO_PORT_I 8
+> +#define ASPEED_GPIO_PORT_J 9
+> +#define ASPEED_GPIO_PORT_K 10
+> +#define ASPEED_GPIO_PORT_L 11
+> +#define ASPEED_GPIO_PORT_M 12
+> +#define ASPEED_GPIO_PORT_N 13
+> +#define ASPEED_GPIO_PORT_O 14
+> +#define ASPEED_GPIO_PORT_P 15
+> +#define ASPEED_GPIO_PORT_Q 16
+> +#define ASPEED_GPIO_PORT_R 17
+> +#define ASPEED_GPIO_PORT_S 18
+> +#define ASPEED_GPIO_PORT_T 19
+> +#define ASPEED_GPIO_PORT_U 20
+> +#define ASPEED_GPIO_PORT_V 21
+> +#define ASPEED_GPIO_PORT_W 22
+> +#define ASPEED_GPIO_PORT_X 23
+> +#define ASPEED_GPIO_PORT_Y 24
+> +#define ASPEED_GPIO_PORT_Z 25
+> +#define ASPEED_GPIO_PORT_AA 26
+> +#define ASPEED_GPIO_PORT_BB 27
+> +
+> +#define ASPEED_GPIO(port, offset) \
+> +       ((ASPEED_GPIO_PORT_##port * 8) + offset)
+> +
+> +#endif
+> --
+> 2.9.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
