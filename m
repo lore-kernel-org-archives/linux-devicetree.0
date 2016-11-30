@@ -1,98 +1,88 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
-Date: Wed, 30 Nov 2016 10:08:35 +0200
-Message-ID: <3152670.pRMCOA29o4@avalon>
-References: <cover.1480414715.git.moinejf@free.fr> <2256264.6LWGGhFAiO@avalon> <239b60f3-3ea7-4aa7-8e8d-353e1a1d4ee5@googlegroups.com>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
+ documentation of Allwinner HDMI
+Date: Wed, 30 Nov 2016 09:12:08 +0100
+Message-ID: <20161130091208.f38cd79f1cc5d27b27f3b130@free.fr>
+References: <cover.1480414715.git.moinejf@free.fr>
+	<6356753.Ekaj7GdA0W@avalon>
+	<20161129210455.d0c8450d3ceb83c1abe521b0@free.fr>
+	<4502748.8rUF7ESxa4@avalon>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBB5MR7LAQKGQEYVWRUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBW4T7LAQKGQE3YQGTKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <239b60f3-3ea7-4aa7-8e8d-353e1a1d4ee5-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <4502748.8rUF7ESxa4@avalon>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, moinejf-GANU6spQydw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jernej,
+On Tue, 29 Nov 2016 22:10:01 +0200
+Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-On Tuesday 29 Nov 2016 15:24:25 Jernej Skrabec wrote:
-> Dne torek, 29. november 2016 23.56.31 UTC+1 je oseba Laurent Pinchart
-> napisala:
-> > On Tuesday 29 Nov 2016 14:47:20 Jernej Skrabec wrote:
-> >> Dne torek, 29. november 2016 22.37.03 UTC+1 je oseba Maxime Ripard
-> > napisala:
-> >>> On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Francois Moine wrote:
-> >>>> This patchset series adds HDMI video support to the Allwinner
-> >>>> sun8i SoCs which include the display engine 2 (DE2).
-> >>>> The driver contains the code for the A83T and H3 SoCs, and
-> >>>> some H3 boards, but it could be used/extended for other SoCs
-> >>>> (A64, H2, H5) and boards (Banana PIs, Orange PIs).
-> >>> 
-> >>> Honestly, I'm getting a bit worried by the fact that you ignore
-> >>> reviews.
-> >>> 
-> >>> On the important reviews that you got that are to be seen as major
-> >>> issues that block the inclusion, we have:
-> >>>   - The fact that the HDMI driver is actually just a designware IP,
-> >>>     and while you should use the driver that already exists, you just
-> >>>     duplicated all that code.
-> >> 
-> >> That might be hard thing to do. A83T fits perfectly, but H3 and newer
-> >> SoCs do not. They are using completely different HDMI phy. Decoupling
-> >> controller and phy code means rewritting a good portion of the code,
-> >> unless some tricks are applied, like calling phy function pointers, if
-> >> they are defined.
-> > 
-> > Same HDMI TX but different HDMI TX PHY ? Kieran is working on decoupling
-> > the PHY configuration code for a Renesas SoC, that might be of interest to
-> > you.
-> 
-> Exactly. I'm developing only U-Boot driver, but Jean-Francois will probably
-> have more interest in this.
+> Hi Jean-Fran=C3=A7ois,
+>=20
+> On Tuesday 29 Nov 2016 21:04:55 Jean-Francois Moine wrote:
+> > On Tue, 29 Nov 2016 21:33 +0200 Laurent Pinchart wrote:
+> > >>> You need a third port for the HDMI encoder output, connected to an
+> > >>> HDMI connector DT node.
+> > >>=20
+> > >> I don't see what you mean. The HDMI device is both the encoder
+> > >> and connector (as the TDA998x):
+> > >
+> > > The driver might create both an encoder and a connector, but I very m=
+uch
+> > > doubt that the "allwinner,sun8i-a83t-hdmi" hardware contains a connec=
+tor,
+> > > unless the SoC package has an HDMI connector coming out of it :-)
+> > >=20
+> > >> plane -> DE2 mixer ---> TCON -----> HDMI -----> display device
+> > >> ----- plane ------    - CRTC -   - encoder  \
+> > >>                                    connector -- (HDMI cable)
+> > >>          audio-controller -   - audio-codec /
+> >=20
+> > The schema is the same as the Dove Cubox: the TDA998x is just a chip
+> > with some wires going out and the physical connector is supposed to be
+> > at the end of the wires.
+>=20
+> I've missed the Dove Cubox DT bindings when they were submitted. Fortunat=
+ely=20
+> (or unfortunately for you, depending on how you look at it ;-)) I've paid=
+ more=20
+> attention this time.
+>=20
+> > Here, the HDMI pins of the SoC go to a pure hardware chip and then to
+> > the physical connector. Which software entity do you want to add?
+>=20
+> I don't want to add a software entity, I just want to model the connector=
+ in=20
+> DT as it's present in the system. Even though that's more common for othe=
+r bus=20
+> types than HDMI (LVDS for instance) it wouldn't be inconceivable to conne=
+ct=20
+> the HDMI signals to an on-board chim instead of an HDMI connector, so the=
+ HDMI=20
+> encoder output should be modelled by a port and connected to a connector =
+DT=20
+> node in this case.
 
-We'll post patches as soon as they're ready.
+Well, I don't see what this connector can be.
+May you give me a DT example?
 
-By the way, do you know if the H3 and newer SoCs use a different PHY from 
-Synopsys, or a custom PHY developed by Allwinner ?
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 
-> >> Register addresses also differ, but that can be easily solved by using
-> >> undocumented magic value to restore them.
-> > 
-> > I love that :-)
-> 
-> Is it allowed to use magic number which was found in binary blob? I'm new in
-> all this.
-
-I don't really see a problem with that, we have many drivers in the kernel 
-that have been developed through reverse-engineering. You should not include 
-large pieces of code that have been obtained through decompilation of a 
-proprietary binary blob as those could be protected by copyright, but writing 
-to undocumented registers based on information found through usage of a binary 
-driver isn't a problem. (Please remember that I'm not a lawyer though)
-
-> >>>   - The fact that you ignored Rob (v6) and I (v5) comment on using OF
-> >>>     graph to model the connection between the display engine and the
-> >>>     TCON. Something that Laurent also pointed out in this version.
-> >>>   
-> >>>   - The fact that you ignored that you needed an HDMI connector node
-> >>>     as a child of the HDMI controller. This has been reported by Rob
-> >>>     (v6) and yet again in this version by Laurent.
-> >>>   
-> >>>   - And finally the fact that we can't have several display engine in
-> >>>     parallel, if needs be. This has happened in the past already on
-> >>>     Allwinner SoCs, so it's definitely something we should consider in
-> >>>     the DT bindings, since we can't break them.
-> >>> 
-> >>> Until those are fixed, I cannot see how this driver can be merged,
-> >>> unfortunately.
-
--- 
-Regards,
-
-Laurent Pinchart
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
