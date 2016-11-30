@@ -1,147 +1,190 @@
-From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: add zx296718's topcrm node
-Date: Wed, 30 Nov 2016 16:26:18 +0800
-Message-ID: <CABymUCPMDqcfKQOtfj6gHWs69sh3HXaErDjE740xq6UQh_DFow@mail.gmail.com>
-References: <1480491237-5169-1-git-send-email-baoyou.xie@linaro.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v6 0/9] mux controller abstraction and iio/i2c muxes
+Date: Wed, 30 Nov 2016 09:16:54 +0100
+Message-ID: <1480493823-21462-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480491237-5169-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2016-11-30 15:33 GMT+08:00 Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> Enable topcrm clock node for zx296718, which is used for
-> CPU's frequency change.
+Hi!
 
-Please follow general rule, such as
-arm64: dts: zx: brief title of your changes
+v5 -> v6 changes
+- fix stupidity in mux_chip_priv, mux_gpio_remove and adg792a_remove.
+- change the devicetree bindings for the iio-mux to use a list of strings
+  (channels property) instead of a list children.
 
->
-> Furthermore, this patch adds the CPU clock phandle in CPU's node
-> and uses operating-points-v2 to register operating points.
->
-> So it can be used by cpufreq-dt driver.
+v4 -> v5 changes
+- remove support for fancier dt layouts and go back to the phandle
+  approach from v2 and before, killing the horrible non-working
+  refcounting crap from v4 and avoiding a bunch of life-time issues
+  in v3.
+- introduce the concept of a mux-chip, that can hold one or more
+  mux-controllers (inspired by the pwm subsystem).
+- add dt #mux-control-cells property needed to get to the desired
+  mux controller if a mux chip provides more than one.
+- take away the option to build the mux-core as a module.
+- if the mux controller has an idle state, make sure the mux controller
+  is set up in the idle state initially (when it should be idle).
+- do not use a variable length array on the stack in mux_gpio_set to
+  temporarily store the gpio state, preallocate space instead.
+- fix resource leak on one failure path in mux_gpio_probe.
+- driver for Analog Devices ADG792A/G, literally the first mux chip
+  I found on the Internet with an i2c interface (that was not a
+  dedicated i2c multiplexer like PCA9547) which I used to verify
+  that the abstractions in the mux core are up to the task. Untested,
+  just proof of concept that at least looks pretty and compiles...
+- various touch-ups.
 
-Suggest to split clock nodes and cpu-freq nodes changes into different patches.
+v3 -> v4 changes
+- rebased onto next-20161122 (depends on recent _available iio changes).
+- added support for having the mux-controller in a child node of a
+  mux-consumer if it is a sole consumer, to hopefully even further satisfy
+  the complaint from Rob (and later Lars-Peter) about dt complexity.
+- the above came at the cost of some rather horrible refcounting code,
+  please review and suggest how it should be done...
+- changed to register a device class instead of a bus.
+- pass in the parent device into mux_control_alloc and require less
+  work from mux-control drivers.
+- changed device names from mux:control%d to mux%d
+- move kernel-doc from mux-core.c to mux.h (and add some bits).
+- give the gpio driver a chance to update all mux pins at once.
+- factor out iio ext_info lookup into new helper function. /Lars-Peter
+- use an unsigned type for the iio ext_info count. /Lars-Peter
+- unified "brag strings" in the file headers.
 
->
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/zte/zx296718.dtsi | 48 +++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> index 6b239a3..f9eb37d 100644
-> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> @@ -44,6 +44,7 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/clock/zx296718-clock.h>
->
->  / {
->         compatible = "zte,zx296718";
-> @@ -81,6 +82,8 @@
->                         compatible = "arm,cortex-a53","arm,armv8";
->                         reg = <0x0 0x0>;
->                         enable-method = "psci";
-> +                       clocks = <&topcrm A53_GATE>;
-> +                       operating-points-v2 = <&cluster0_opp>;
->                 };
->
->                 cpu1: cpu@1 {
-> @@ -88,6 +91,7 @@
->                         compatible = "arm,cortex-a53","arm,armv8";
->                         reg = <0x0 0x1>;
->                         enable-method = "psci";
-> +                       operating-points-v2 = <&cluster0_opp>;
->                 };
->
->                 cpu2: cpu@2 {
-> @@ -95,6 +99,7 @@
->                         compatible = "arm,cortex-a53","arm,armv8";
->                         reg = <0x0 0x2>;
->                         enable-method = "psci";
-> +                       operating-points-v2 = <&cluster0_opp>;
->                 };
->
->                 cpu3: cpu@3 {
-> @@ -102,6 +107,43 @@
->                         compatible = "arm,cortex-a53","arm,armv8";
->                         reg = <0x0 0x3>;
->                         enable-method = "psci";
-> +                       operating-points-v2 = <&cluster0_opp>;
-> +               };
-> +       };
-> +
-> +       cluster0_opp: opp_table0 {
-> +               compatible = "operating-points-v2";
-> +               opp-shared;
-> +
-> +               opp@1000000000 {
-> +                       opp-hz = /bits/ 64 <500000000>;
+v2 -> v3 changes
+- have the mux-controller in the parent node of any mux-controller consumer,
+  to hopefully satisfy complaint from Rob about dt complexity.
+- improve commit message of the mux subsystem commit, making it more
+  general, as requested by Jonathan.
+- remove priv member from struct mux_control and calculate it on the
+  fly. /Jonathan
+- make the function comments in mux-core.c kernel doc. /Jonathan
+- add devm_mux_control_* to Documentation/driver.model/devres.txt. /Jonathan
+- add common dt bindings for mux-controllers, refer to them from the
+  mux-gpio bindings. /Rob
+- clarify how the gpio pins map to the mux state. /Rob
+- separate CONFIG_ variables for the mux core and the mux gpio driver.
+- improve Kconfig help texts.
+- make CONFIG_MUX_GPIO depend on CONFIG_GPIOLIB.
+- keep track of the number of mux states in the mux core.
+- since the iio channel number is used as mux state, it was possible
+  to drop the state member from the mux_child struct.
+- cleanup dt bindings for i2c-mux-simple, it had some of copy-paste
+  problems from ots origin (i2c-mux-gpio).
+- select the mux control subsystem in config for the i2c-mux-simple driver.
+- add entries to MAINTAINERS and my sign-off, I'm now satisfied and know
+  nothing in this to be ashamed of.
 
-Why frequency in opp name differ with opp-hz value?
+v1 -> v2 changes
+- fixup export of mux_control_put reported by kbuild
+- drop devicetree iio-ext-info property as noted by Lars-Peter,
+  and replace the functionality by exposing all ext_info
+  attributes of the parent channel for each of the muxed
+  channels. A cache on top of that and each muxed channel
+  gets its own view of the ext_info of the parent channel.
+- implement idle-state for muxes
+- clear out the cache on failure in order to force a mux
+  update on the following use
+- cleanup the probe of i2c-mux-simple driver
+- fix a bug in the i2c-mux-simple driver, where failure in
+  the selection of the mux caused a deadlock when the mux
+  was later unconditionally deselected.
 
-> +                       opp-microvolt = <857000>;
-> +                       clock-latency-ns = <500000>;
-> +               };
-> +               opp@1100000000 {
-> +                       opp-hz = /bits/ 64 <648000000>;
-> +                       opp-microvolt = <857000>;
-> +                       clock-latency-ns = <500000>;
-> +               };
-> +               opp@1200000000 {
-> +                       opp-hz = /bits/ 64 <800000000>;
-> +                       opp-microvolt = <882000>;
-> +                       clock-latency-ns = <500000>;
-> +               };
-> +               opp@1300000000 {
-> +                       opp-hz = /bits/ 64 <1000000000>;
-> +                       opp-microvolt = <892000>;
-> +                       clock-latency-ns = <500000>;
-> +               };
-> +               opp@1400000000 {
-> +                       opp-hz = /bits/ 64 <1188000000>;
-> +                       opp-microvolt = <1009000>;
-> +                       clock-latency-ns = <500000>;
-> +               };
-> +               opp@1500000000 {
-> +                       opp-hz = /bits/ 64 <1312000000>;
-> +                       opp-microvolt = <1052000>;
-> +                       clock-latency-ns = <500000>;
->                 };
+I have a piece of hardware that is using the same 3 GPIO pins
+to control four 8-way muxes. Three of them control ADC lines
+to an ADS1015 chip with an iio driver, and the last one
+controls the SDA line of an i2c bus. We have some deployed
+code to handle this, but you do not want to see it or ever
+hear about it. I'm not sure why I even mention it. Anyway,
+the situation has nagged me to no end for quite some time.
 
-I did not see frequency 1500000000 or 1312000000 in clock drivers for
-A53. Please confirm whether clock driver need update or your need
-revise your patch.
+So, after first getting more intimate with the i2c muxing code
+and later discovering the drivers/iio/inkern.c file and
+writing a couple of drivers making use of it, I came up with
+what I think is an acceptable solution; add a generic mux
+controller driver (and subsystem) that is shared between all
+instances, and combine that with an iio mux driver and a new
+generic i2c mux driver. The new i2c mux I called "simple"
+since it is only hooking the i2c muxing and the new mux
+controller (much like the alsa simple card driver does for ASoC).
 
->         };
->
-> @@ -279,6 +321,12 @@
->                         dma-requests = <32>;
->                 };
->
-> +               topcrm: clock-controller@01461000 {
+One thing that I would like to do, but don't see a solution
+for, is to move the mux control code that is present in
+various drivers in drivers/i2c/muxes to this new minimalistic
+muxing subsystem, thus converting all present i2c muxes (but
+perhaps not gates and arbitrators) to be i2c-mux-simple muxes.
 
-Removing heading 0 in address of name.
+I'm using an rwsem to lock a mux, but that isn't really a
+perfect fit. Is there a better locking primitive that I don't
+know about that fits better? I had a mutex at one point, but
+that didn't allow any concurrent accesses at all. At least
+the rwsem allows concurrent access as long as all users
+agree on the mux state, but I suspect that the rwsem will
+degrade to the mutex situation pretty quickly if there is
+any contention.
 
-> +                       compatible = "zte,zx296718-topcrm";
-> +                       reg = <0x01461000 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
->                 sysctrl: sysctrl@1463000 {
->                         compatible = "zte,zx296718-sysctrl", "syscon";
->                         reg = <0x1463000 0x1000>;
-> --
-> 2.7.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, the "mux" name feels a bit ambitious, there are many muxes
+in the world, and this tiny bit of code is probably not good
+enough to be a nice fit for all...
+
+Cheers,
+Peter
+
+Peter Rosin (9):
+  dt-bindings: document devicetree bindings for mux-controllers and
+    mux-gpio
+  misc: minimal mux subsystem and gpio-based mux controller
+  iio: inkern: api for manipulating ext_info of iio channels
+  dt-bindings: iio: iio-mux: document iio-mux bindings
+  iio: multiplexer: new iio category and iio-mux driver
+  dt-bindings: i2c: i2c-mux-simple: document i2c-mux-simple bindings
+  i2c: i2c-mux-simple: new driver
+  dt-bindings: mux-adg792a: document devicetree bindings for ADG792A/G
+    mux
+  misc: mux-adg792a: add mux controller driver for ADG792A/G
+
+ .../devicetree/bindings/i2c/i2c-mux-simple.txt     |  81 ++++
+ .../bindings/iio/multiplexer/iio-mux.txt           |  40 ++
+ .../devicetree/bindings/misc/mux-adg792a.txt       |  64 +++
+ .../devicetree/bindings/misc/mux-controller.txt    | 127 ++++++
+ .../devicetree/bindings/misc/mux-gpio.txt          |  68 +++
+ Documentation/driver-model/devres.txt              |   6 +-
+ MAINTAINERS                                        |  14 +
+ drivers/i2c/muxes/Kconfig                          |  13 +
+ drivers/i2c/muxes/Makefile                         |   1 +
+ drivers/i2c/muxes/i2c-mux-simple.c                 | 179 ++++++++
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/inkern.c                               |  60 +++
+ drivers/iio/multiplexer/Kconfig                    |  18 +
+ drivers/iio/multiplexer/Makefile                   |   6 +
+ drivers/iio/multiplexer/iio-mux.c                  | 456 +++++++++++++++++++++
+ drivers/misc/Kconfig                               |  42 ++
+ drivers/misc/Makefile                              |   3 +
+ drivers/misc/mux-adg792a.c                         | 154 +++++++
+ drivers/misc/mux-core.c                            | 311 ++++++++++++++
+ drivers/misc/mux-gpio.c                            | 138 +++++++
+ include/linux/iio/consumer.h                       |  37 ++
+ include/linux/mux.h                                | 197 +++++++++
+ 23 files changed, 2016 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/mux-adg792a.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/mux-controller.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/mux-gpio.txt
+ create mode 100644 drivers/i2c/muxes/i2c-mux-simple.c
+ create mode 100644 drivers/iio/multiplexer/Kconfig
+ create mode 100644 drivers/iio/multiplexer/Makefile
+ create mode 100644 drivers/iio/multiplexer/iio-mux.c
+ create mode 100644 drivers/misc/mux-adg792a.c
+ create mode 100644 drivers/misc/mux-core.c
+ create mode 100644 drivers/misc/mux-gpio.c
+ create mode 100644 include/linux/mux.h
+
+-- 
+2.1.4
