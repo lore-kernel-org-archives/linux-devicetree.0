@@ -1,13 +1,11 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
-Date: Wed, 30 Nov 2016 13:11:58 +1100
-Message-ID: <a7a3c242-f359-5b32-bff8-4641d8566d50@ozlabs.ru>
-References: <20161129131922.JFbeipav@smtp2o.mail.yandex.net>
+From: Bai Ping <ping.bai@nxp.com>
+Subject: [PATCH 1/2] ARM: dts: imx: Add 696MHz setpoint for imx6ul
+Date: Wed, 30 Nov 2016 11:04:57 +0800
+Message-ID: <1480475098-2037-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161129131922.JFbeipav@smtp2o.mail.yandex.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,53 +15,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjkvMTEvMTYgMjE6MTksIEljZW5vd3kgWmhlbmcgd3JvdGU6Cj4gCj4gMjAxNuW5tDEx5pyI
-Mjnml6UgMTU6MTbkuo4gQWxleGV5IEthcmRhc2hldnNraXkgPGFpa0BvemxhYnMucnU+5YaZ6YGT
-77yaCj4+Cj4+Cj4+Cj4+IE9uIFdlZCwgTm92IDIzLCAyMDE2IGF0IDY6NTkgUE0sIE1heGltZSBS
-aXBhcmQKPiA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+Pj4KPj4+
-IEhpLAo+Pj4KPj4+IE9uIFR1ZSwgTm92IDIyLCAyMDE2IGF0IDEyOjI0OjIxQU0gKzA4MDAsIElj
-ZW5vd3kgWmhlbmcgd3JvdGU6Cj4+PiA+IFRoZXJlJ3MgYSBBbGx3aW5uZXIncyBYUjgxOSBTRElP
-IFdpLUZpIG1vZHVsZSBzb2xkZXJlZCBvbiB0aGUgYm9hcmQgb2YKPj4+ID4gT3JhbmdlIFBpIFpl
-cm8sIHdoaWNoIHVzZWQgYSBkZWRpY2F0ZWQgcmVndWxhdG9yIHRvIHBvd2VyLgo+Pj4gPgo+Pj4g
-PiBBZGQgdGhlIGRldmljZSB0cmVlIG5vZGUgb2YgdGhlIHJlZ3VsYXRvciwgdGhlIGVuYWJsZSBn
-cGlvICh3aXRoCj4+PiA+IG1tYy1wd3JzZXEpIGFuZCB0aGUgc2RpbyBjb250cm9sbGVyLgo+Pj4g
-Pgo+Pj4gPiBUaGVyZSdzIGEgb3V0LW9mLXRyZWUgZHJpdmVyIHRlc3RlZCB0byB3b3JrIHdpdGgg
-dGhpcyBkZXZpY2UgdHJlZS4KPj4KPj4KPj4gYnR3IGNvdWxkIHlvdSBwbGVhc2UgZ2l2ZSBhIHBv
-aW50ZXIgd2hlcmUgdG8gZmluZCBhIFhSODE5IGRyaXZlciBmb3IKPiByZWxhdGl2ZWx5IHJlY2Vu
-dCBrZXJuZWwgKDQuOCBtYXkgYmUsIGp1c3Qgbm90IDMuNCk/IFRoYW5rcy4KPiAKPiBodHRwczov
-L2dpdGh1Yi5jb20vSWNlbm93eS94cmFkaW8KClRoYW5rcyEKCkkgdHJpZWQsIGNhbm5vdCBtYWtl
-IGl0IHdvcmsgdGhvdWdoLgoKVGhpcyBjb21waWxlczoKCkNPTkZJR19YUkFESU89eQpDT05GSUdf
-WFJBRElPX1NESU89eQpDT05GSUdfWFJBRElPX05PTl9QT1dFUl9PRl9UV09fQkxPQ0tTSVpFUz15
-CiMgQ09ORklHX1hSQURJT19VU0VfR1BJT19JUlEgaXMgbm90IHNldAojIENPTkZJR19YUkFESU9f
-NUdIWl9TVVBQT1JUIGlzIG5vdCBzZXQKIyBDT05GSUdfWFJBRElPX1dBUElfU1VQUE9SVCBpcyBu
-b3Qgc2V0CkNPTkZJR19YUkFESU9fVVNFX0VYVEVOU0lPTlM9eQoKQnV0IHByb2R1Y2VzOgoKWyAg
-ICAwLjk2NDc5M10gW1hSQURJT10gRHJpdmVyIExhYmVsOkwzNE0uMDEuMDguMDAwMgpbICAgIDAu
-OTY5NjU5XSBbWFJBRElPXSBBbGxvY2F0ZWQgaHdfcHJpdiBAIGRmNjg0ZGMwClsgICAgMy4wMzgx
-NjddIFtTQlVTX0VSUl0gc2RpbyBwcm9iZSB0aW1lb3V0IQpbICAgIDMuMDQ2MjgzXSBbWFJBRElP
-X0VSUl0gc2J1c19zZGlvX2luaXQgZmFpbGVkCgoKSWYgSSBlbmFibGUgQ09ORklHX1hSQURJT19V
-U0VfR1BJT19JUlEgKHdoaWNoIEtjb25maWcgc3VnZ2VzdCB0byBlbmFibGUgLQpkbyBJIHJlYWxs
-eSBuZWVkIGl0PyksIGl0IGRvZXMgbm90IGNvbXBpbGU6Cgpkcml2ZXJzL2J1aWx0LWluLm86IElu
-IGZ1bmN0aW9uIGBzZGlvX2lycV9zdWJzY3JpYmUnOgpzdW54aV9zaWQuYzooLnRleHQrMHgxMmRm
-ZTgpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB4cmFkaW9fcmVxdWVzdF9ncGlvX2lycScKc3Vu
-eGlfc2lkLmM6KC50ZXh0KzB4MTJlMDZjKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgeHJhZGlv
-X2ZyZWVfZ3Bpb19pcnEnCnN1bnhpX3NpZC5jOigudGV4dCsweDEyZTA4MCk6IHVuZGVmaW5lZCBy
-ZWZlcmVuY2UgdG8gYHN1bnhpX21jaV9jaGVja19yMV9yZWFkeScKZHJpdmVycy9idWlsdC1pbi5v
-OiBJbiBmdW5jdGlvbiBgc2Rpb19pcnFfdW5zdWJzY3JpYmUnOgpzdW54aV9zaWQuYzooLnRleHQr
-MHgxMmUzYjApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB4cmFkaW9fZnJlZV9ncGlvX2lycScK
-TWFrZWZpbGU6OTYyOiByZWNpcGUgZm9yIHRhcmdldCAndm1saW51eCcgZmFpbGVkCm1ha2U6ICoq
-KiBbdm1saW51eF0gRXJyb3IgMQoKCkkgYW0gdXNpbmcgcmVjZW50IHVwc3RyZWFtIGtlcm5lbCBh
-bmQKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NDM5NzU5LwpodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk0Mzk3NjEvCgphbmQgSSBhZGRlZCBtaXNzaW5nIGVt
-YWMuCgpCYXNpY2FsbHksIGhlcmUgaXMgbXkgY3VycmVudCB0cmVlIHdpdGggYWxsIHN1bjh4aSBz
-dXBwb3J0Cmh0dHBzOi8vZ2l0aHViLmNvbS9haWsvbGludXgvY29tbWl0cy9waXplcm8KCmFuZCBJ
-IGp1c3QgZGlkCmdpdCAtQyBkcml2ZXJzL25ldC9ldGhlcm5ldCBjbG9uZSBodHRwczovL2dpdGh1
-Yi5jb20vSWNlbm93eS94cmFkaW8KCmFuZCBjb21waWxlZCBpdCBpbnRvIHZtbGludXggKG5vIG1v
-ZHVsZXMpLgoKV2hhdCBhbSBJIG1pc3Npbmc/IFNvcnJ5IEkgYW0gYSBuZXdiaWUgd2l0aCBBUk0u
-IFRoYW5rcy4KCgotLSAKQWxleGV5CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add 696MHz setpoint support for i.MX6UL.
+
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
+---
+ arch/arm/boot/dts/imx6ul.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 612827d..3ade04e 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -60,12 +60,14 @@
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			operating-points = <
+ 				/* kHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1025000
+ 				198000	950000
+ 			>;
+ 			fsl,soc-operating-points = <
+ 				/* KHz	uV */
++				696000	1275000
+ 				528000	1175000
+ 				396000	1175000
+ 				198000	1175000
+-- 
+1.9.1
