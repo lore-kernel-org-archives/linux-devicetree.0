@@ -1,87 +1,109 @@
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
-Subject: Re: [PATCH v2] arm64: dts: exynos: Add flash led dt node for TM2 board
-Date: Wed, 30 Nov 2016 17:44:20 +0900
-Message-ID: <583E9164.1090208@samsung.com>
-References: <1480480062-3472-1-git-send-email-sw0312.kim@samsung.com>
- <CGME20161130045045epcas1p330bd83a82261c43e36c5519e3d5ed2d0@epcas1p3.samsung.com>
- <1480481337-3941-1-git-send-email-sw0312.kim@samsung.com>
- <583E8F73.2060804@samsung.com>
-Reply-To: sw0312.kim@samsung.com
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v6 6/9] dt-bindings: i2c: i2c-mux-simple: document i2c-mux-simple bindings
+Date: Wed, 30 Nov 2016 09:17:00 +0100
+Message-ID: <1480493823-21462-7-git-send-email-peda@axentia.se>
+References: <1480493823-21462-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <583E8F73.2060804@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org, javier@osg.samsung.com, Ingi Kim <ingi2.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480493823-21462-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Chanwoo,
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 81 ++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
 
-On 2016년 11월 30일 17:36, Chanwoo Choi wrote:
-> Dear Seung-Woo,
-> 
-> I think that this patch looks good to me.
-> But, When I tested this patch on my TM2 board,
-> the flash turn off after some millisecond automatically.
-
-Thank you for testing on your side. I will check on my side about the
-issue, and if I find, then I will send next version.
-
-Regards,
-- Seung-Woo Kim
-
-> 
-> It is strange situation. Unfortunately, I don't know the cause.
-> I think that we better to check this issue for more time.
-> 
-> Best Regards,
-> Chanwoo Choi
-> 
-> On 2016년 11월 30일 13:48, Seung-Woo Kim wrote:
->> From: Ingi Kim <ingi2.kim@samsung.com>
->>
->> This patch adds Kinetic ktd2692 flash led device node for TM2 board.
->>
->> Signed-off-by: Ingi Kim <ingi2.kim@samsung.com>
->> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->> ---
->> Change from v1:
->> - gpio active value is set with defined macro instead of value.
->> ---
->>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts |   13 +++++++++++++
->>  1 files changed, 13 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
->> index f21bdc2..0d454aa 100644
->> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
->> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
->> @@ -58,6 +58,19 @@
->>  		reg = <0x0 0x20000000 0x0 0xc0000000>;
->>  	};
->>  
->> +	camera-flash {
->> +		compatible = "kinetic,ktd2692";
->> +		ctrl-gpios = <&gpc0 1 GPIO_ACTIVE_HIGH>;
->> +		aux-gpios = <&gpc0 2 GPIO_ACTIVE_HIGH>;
->> +
->> +		flash-led {
->> +			label = "ktd2692-flash";
->> +			led-max-microamp = <300000>;
->> +			flash-max-microamp = <1500000>;
->> +			flash-max-timeout-us = <1835000>;
->> +		};
->> +	};
->> +
->>  	gpio-keys {
->>  		compatible = "gpio-keys";
->>  
->>
-> 
-> 
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+new file mode 100644
+index 000000000000..d32ebc9c5639
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+@@ -0,0 +1,81 @@
++Simple I2C Bus Mux
++
++This binding describes an I2C bus multiplexer that uses a mux controller
++from the mux subsystem to route the I2C signals.
++
++                                  .-----.  .-----.
++                                  | dev |  | dev |
++    .------------.                '-----'  '-----'
++    | SoC        |                   |        |
++    |            |          .--------+--------'
++    |   .------. |  .------+    child bus A, on MUX value set to 0
++    |   | I2C  |-|--| Mux  |
++    |   '------' |  '--+---+    child bus B, on MUX value set to 1
++    |   .------. |     |    '----------+--------+--------.
++    |   | MUX- | |     |               |        |        |
++    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
++    |   '------' |                  | dev |  | dev |  | dev |
++    '------------'                  '-----'  '-----'  '-----'
++
++Required properties:
++- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
++- i2c-parent: The phandle of the I2C bus that this multiplexer's master-side
++  port is connected to.
++- mux-controls: The phandle of the mux controller to use for operating the
++  mux.
++* Standard I2C mux properties. See i2c-mux.txt in this directory.
++* I2C child bus nodes. See i2c-mux.txt in this directory. The sub-bus number
++  is also the mux-controller state described in ../misc/mux-controller.txt
++
++For each i2c child node, an I2C child bus will be created. They will
++be numbered based on their order in the device tree.
++
++Whenever an access is made to a device on a child bus, the value set
++in the relevant node's reg property will be set as the state in the
++mux controller.
++
++Example:
++	mux: mux-controller {
++		compatible = "mux-gpio";
++		#mux-control-cells = <0>;
++
++		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
++			    <&pioA 1 GPIO_ACTIVE_HIGH>;
++	};
++
++	i2c-mux {
++		compatible = "i2c-mux-simple,mux-locked";
++		i2c-parent = <&i2c1>;
++
++		mux-controls = <&mux>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ssd1307: oled@3c {
++				compatible = "solomon,ssd1307fb-i2c";
++				reg = <0x3c>;
++				pwms = <&pwm 4 3000>;
++				reset-gpios = <&gpio2 7 1>;
++				reset-active-low;
++			};
++		};
++
++		i2c@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pca9555: pca9555@20 {
++				compatible = "nxp,pca9555";
++				gpio-controller;
++				#gpio-cells = <2>;
++				reg = <0x20>;
++			};
++		};
++	};
 -- 
-Seung-Woo Kim
-Samsung Software R&D Center
---
+2.1.4
