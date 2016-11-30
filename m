@@ -1,214 +1,48 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/4] ARM64: dts: meson-gx: Add Graphic Controller nodes
-Date: Wed, 30 Nov 2016 16:43:43 +0100
-Message-ID: <1480520625-13269-3-git-send-email-narmstrong@baylibre.com>
-References: <1480520625-13269-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480520625-13269-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, victor.wan@amlogic.com, jerry.cao@amlogic.com, Xing.Xu@amlogic.com, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com, daniel@ffwll.ch
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] i2c: pxa: Add definition of fast and high speed
+ modes via the regs layout
+Date: Wed, 30 Nov 2016 16:49:38 +0100
+Message-ID: <20161130164938.32ba768f@free-electrons.com>
+References: <20161130140017.26307-1-romain.perier@free-electrons.com>
+        <20161130140017.26307-2-romain.perier@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130140017.26307-2-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin
 List-Id: devicetree@vger.kernel.org
 
-Add Video Processing Unit and CVBS Output nodes, and enable CVBS on selected
-boards.
+Hello,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi             | 19 +++++++++++++++++++
- .../arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts | 15 +++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi      | 15 +++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi           |  4 ++++
- arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts | 15 +++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi            |  4 ++++
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts   | 15 +++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxm.dtsi            |  4 ++++
- 8 files changed, 91 insertions(+)
+On Wed, 30 Nov 2016 15:00:14 +0100, Romain Perier wrote:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index fc033c0..a27f881 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -356,5 +356,24 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		vpu: vpu@d0100000 {
-+			compatible = "amlogic,meson-gx-vpu";
-+			reg = <0x0 0xd0100000 0x0 0x100000>,
-+			      <0x0 0xc883c000 0x0 0x1000>,
-+			      <0x0 0xc8838000 0x0 0x1000>;
-+			reg-names = "vpu", "hhi", "dmc";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* CVBS VDAC output port */
-+			port@0 {
-+				reg = <0>;
-+
-+				cvbs_vdac_out: endpoint {
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 9696820..390f7db 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -142,6 +142,17 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
- 	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+		label = "cvbs";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
- };
- 
- &uart_AO {
-@@ -229,3 +240,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
-+
-+&cvbs_vdac_out {
-+	remote-endpoint = <&cvbs_connector_in>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 203be28..44bdebf 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -125,6 +125,17 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
- 	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+		label = "cvbs";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
- };
- 
- /* This UART is brought out to the DB9 connector */
-@@ -234,3 +245,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
-+
-+&cvbs_vdac_out {
-+	remote-endpoint = <&cvbs_connector_in>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index ac5ad3b..5353a20 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -506,3 +506,7 @@
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
-+
-+&vpu {
-+	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-index e99101a..7bd0538 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
-@@ -117,6 +117,17 @@
- 		clocks = <&wifi32k>;
- 		clock-names = "ext_clock";
- 	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+		label = "cvbs";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
- };
- 
- &uart_AO {
-@@ -203,3 +214,7 @@
- 	clocks = <&clkc CLKID_FCLK_DIV4>;
- 	clock-names = "clkin0";
- };
-+
-+&cvbs_vdac_out {
-+	remote-endpoint = <&cvbs_connector_in>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 9f89b99..5c7a8fa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -299,3 +299,7 @@
- 		 <&clkc CLKID_FCLK_DIV2>;
- 	clock-names = "core", "clkin0", "clkin1";
- };
-+
-+&vpu {
-+	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index d320727..5b99749 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -90,6 +90,17 @@
- 		compatible = "mmc-pwrseq-emmc";
- 		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
- 	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+		label = "cvbs";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
- };
- 
- /* This UART is brought out to the DB9 connector */
-@@ -167,3 +178,7 @@
- 		max-speed = <1000>;
- 	};
- };
-+
-+&cvbs_vdac_out {
-+	remote-endpoint = <&cvbs_connector_in>;
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-index c1974bb..eb2f0c3 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-@@ -112,3 +112,7 @@
- 		};
- 	};
- };
-+
-+&vpu {
-+	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
-+};
+>  #ifdef CONFIG_I2C_PXA_SLAVE
+>  	dev_info(&i2c->adap.dev, "Enabling slave mode\n");
+> @@ -1234,6 +1238,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  	i2c->reg_idbr = i2c->reg_base + pxa_reg_layout[i2c_type].idbr;
+>  	i2c->reg_icr = i2c->reg_base + pxa_reg_layout[i2c_type].icr;
+>  	i2c->reg_isr = i2c->reg_base + pxa_reg_layout[i2c_type].isr;
+> +	i2c->fm_mask = pxa_reg_layout[i2c_type].fm ? pxa_reg_layout[i2c_type].fm : ICR_FM;
+> +	i2c->hs_mask = pxa_reg_layout[i2c_type].hs ? pxa_reg_layout[i2c_type].hs : ICR_HS;
+
+These lines are too long according to checkpatch. What about using what
+Wolfram originally suggested, i.e:
+
+	i2c->fm_mask = pxa_reg_layout[i2c_type].fm ?: ICR_FM;
+
+which does exactly the same, but fits within 80 characters ?
+
+Thanks,
+
+Thomas
 -- 
-1.9.1
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
