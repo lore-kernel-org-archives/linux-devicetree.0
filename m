@@ -1,149 +1,208 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V6 06/10] PM / OPP: Add infrastructure to manage multiple
- regulators
-Date: Wed, 30 Nov 2016 14:37:12 -0800
-Message-ID: <20161130223712.GM6095@codeaurora.org>
-References: <cover.1480481312.git.viresh.kumar@linaro.org>
- <3b3ce1dac198fb668b97e81490bcbcf03d31e40d.1480481312.git.viresh.kumar@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 0/5] Meson GXL and GXM USB support
+Date: Wed, 30 Nov 2016 23:49:03 +0100
+Message-ID: <CAFBinCC8c2sXgo80LMMg=jqZ2hr8eLM_2g03H1J99m4xxFGYFA@mail.gmail.com>
+References: <20161126145635.24488-1-martin.blumenstingl@googlemail.com>
+ <CAFBinCAA_JEtr_0Ze0thoRaEKMnWQMKcPxJ8y88zkWAAhuxsMw@mail.gmail.com> <20161130222228.zu6ampaajg3gkdz4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3b3ce1dac198fb668b97e81490bcbcf03d31e40d.1480481312.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20161130222228.zu6ampaajg3gkdz4@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30, Viresh Kumar wrote:
-> @@ -1337,26 +1408,44 @@ struct opp_table *dev_pm_opp_set_regulator(struct device *dev, const char *name)
->  		goto err;
->  	}
->  
-> -	/* Already have a regulator set */
-> -	if (WARN_ON(!IS_ERR(opp_table->regulator))) {
-> +	/* Already have regulators set */
-> +	if (WARN_ON(opp_table->regulators)) {
->  		opp_table = ERR_PTR(-EBUSY);
->  		goto err;
->  	}
-> -	/* Allocate the regulator */
-> -	reg = regulator_get_optional(dev, name);
-> -	if (IS_ERR(reg)) {
-> -		opp_table = (struct opp_table *)reg;
-> -		if (PTR_ERR(reg) != -EPROBE_DEFER)
-> -			dev_err(dev, "%s: no regulator (%s) found: %ld\n",
-> -				__func__, name, PTR_ERR(reg));
-> +
-> +	opp_table->regulators = kmalloc_array(count,
-> +					      sizeof(*opp_table->regulators),
-> +					      GFP_KERNEL);
-> +	if (!opp_table->regulators) {
-> +		opp_table = ERR_PTR(-ENOMEM);
->  		goto err;
->  	}
->  
-> -	opp_table->regulator = reg;
-> +	for (i = 0; i < count; i++) {
-> +		reg = regulator_get_optional(dev, names[i]);
-> +		if (IS_ERR(reg)) {
-> +			opp_table = (struct opp_table *)reg;
+On Wed, Nov 30, 2016 at 11:22 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Nov 27, 2016 at 11:42:02PM +0100, Martin Blumenstingl wrote:
+>> Hello Kishon,
+>>
+>> On Sat, Nov 26, 2016 at 3:56 PM, Martin Blumenstingl
+>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> > USB support on GXL and GXM differs a lot from Meson8b and GXBB:
+>> > The most obvious change is that GXL and GXM now have one dwc3
+>> > controller and one dwc2 controller (instead of two dwc2 controllers).
+>> > With that there are also new USB PHYs.
+>> >
+>> > Due to lack of hardware I was only able to test this on a board with
+>> > GXM, but as far as I understand the hardware my preparations should be
+>> > correct (so it should also work on GXL).
+>> >
+>> > dwc2 will probably stay unused on most GXM devices since it's limited
+>> > to device mode via some dwc2 hardware configuration register.
+>> >
+>> > dwc3 is probably used on all devices, even if there is more than just
+>> > one USB port. dwc3 has a built-in USB2 hub - on GXL this hub has two
+>> > ports enabled, while on GXM there are three ports enabled (see below
+>
+> This hub is an actual USB hub? If so, then you should probably model the
+> USB bus topology (which we have a binding definition for).
+(the following explanation is based on a) what I found is going on in
+the hardware registers b) reading the vendor drivers - unfortunately
+there are no datasheets available which could give more details).
+lsusb on my GXM gives:
+...
+ Hub Port Status:
+   Port 1: 0000.0100 power
+   Port 2: 0000.0100 power
+   Port 3: 0000.0100 power
 
-This should be an ERR_CAST() instead. But this is not based on
-the correct patch anyway so this should be rebased.
+The layout looks like this:
+dwc3 provides a USB hub with 2 (on GXL) or 3 (on GXM) USB ports.
+Each of the port is driven by a PHY (port 1 = abp@0x78000, port2 =
+abp@0x78020, etc...).
 
-> +			if (PTR_ERR(reg) != -EPROBE_DEFER)
-> +				dev_err(dev, "%s: no regulator (%s) found: %ld\n",
-> +					__func__, names[i], PTR_ERR(reg));
-> +			goto free_regulators;
-> +		}
-> +
-> +		opp_table->regulators[i] = reg;
-> +	}
-> +
-> +	opp_table->regulator_count = count;
->  
->  	mutex_unlock(&opp_table_lock);
->  	return opp_table;
->  
-> +free_regulators:
-> +	while (i != 0)
-> +		regulator_put(opp_table->regulators[--i]);
-> +
-> +	kfree(opp_table->regulators);
-> +	opp_table->regulators = NULL;
->  err:
->  	_remove_opp_table(opp_table);
->  unlock:
-> @@ -1364,10 +1453,10 @@ struct opp_table *dev_pm_opp_set_regulator(struct device *dev, const char *name)
->  
->  	return opp_table;
->  }
-> -EXPORT_SYMBOL_GPL(dev_pm_opp_set_regulator);
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_regulators);
->  
->  /**
-> - * dev_pm_opp_put_regulator() - Releases resources blocked for regulator
-> + * dev_pm_opp_put_regulators() - Releases resources blocked for regulators
->   * @opp_table: opp_table returned from dev_pm_opp_set_regulator
+On GXM USB2 PHY port 3 = abp@0x78040 is connected to the third dwc3 hub port.
+On GXL PHY port 3 = abp@0x78040 is connected to the dwc2 (I could not
+prove this yet as I don't have access to any GXL hardware).
 
-This needs an update too                  ^
+So the answer is: we don't have an actual USB hub here (as this hub is
+provided by dwc3), but rather a set of PHYs which is assigned to
+dwc3's hub (if we don't configure *all* PHYs then none of the USB
+ports provided by the dwc3 hub works).
 
->   *
->   * Locking: The internal opp_table and opp structures are RCU protected.
-> diff --git a/drivers/base/power/opp/debugfs.c b/drivers/base/power/opp/debugfs.c
-> index c897676ca35f..95f433db4ac7 100644
-> --- a/drivers/base/power/opp/debugfs.c
-> +++ b/drivers/base/power/opp/debugfs.c
-> @@ -34,6 +35,46 @@ void opp_debug_remove_one(struct dev_pm_opp *opp)
->  	debugfs_remove_recursive(opp->dentry);
->  }
->  
-> +static bool opp_debug_create_supplies(struct dev_pm_opp *opp,
-> +				      struct opp_table *opp_table,
-> +				      struct dentry *pdentry)
-> +{
-> +	struct dentry *d;
-> +	int i = 0;
-> +	char *name;
-> +
-> +	/* Always create at least supply-0 directory */
-> +	do {
-> +		name = kasprintf(GFP_KERNEL, "supply-%d", i);
+Could you please point me to the USB bus topology binding (is it the
+one described in usb-device.txt)?
 
-Sorry I haven't noticed this before. Wouldn't we want to put the
-supply name here instead of a number?
+>> > for lsusb output). There are no USB3 ports enabled in the dwc3 hardware
+>> > configuration, meaning that the SoC is limited to high-speed mode.
+>> > On my GXM device the dwc3 hardware configuration forces it into "host
+>> > only" mode.
+>> >
+>> > The SoCs contain two PHY blocks: one USB3 PHY and up to four USB2 PHYs
+>> > (on GXM there are only three enabled, but the registers should support
+>> > up to four).
+>> > The USB3 PHY also handles the OTG interrupts, but since dwc3's hardware
+>> > configuration enforces "host only" mode I was not able to test this. It
+>> > simply takes care of an interrupt and then notifies all related PHYs
+>> > about the new mode.
+>> > The USB2 PHY block is a bit different: I created one PHY driver which
+>> > spans all "PHY ports" because the handling is a bit tricky. It turns
+>> > out that for each available USB port in dwc3's hub the corresponding
+>> > PHY must be enabled (even if there is no physical port - in my case
+>> > port 3 is not connected to anything, but disabling the PHY breaks
+>> > ports 1 and 2 as well).
+>> > I decided not not pass the USB2 PHYs directly to dwc3 due to three
+>> > reasons: 1. the USB3 PHY (which holds a reference to all relevant
+>> > USB2 PHY ports) controls the mode of the USB2 PHY ports (since both
+>> > are used with the same controller and thus it makes sense to keep the
+>> > mode consistent across all ports) 2. the dwc3 driver does not support
+>> > passing multiple USB2 PHYs (only one USB2 and one USB3 PHY can be
+>> > passed to it) 3. it is similar to how the vendor reference driver
+>> > manages the PHYs. Please note that this coupling is not a fixed, this
+>> > is all configurable via devicetree (so if the third USB2 PHY has to
+>> > be passed two the dwc2 controller then this is still possible by
+>> > just moving on PHY reference in the .dts).
+>> after not staring at my own code for 24 hours I realized this:
+>> (I went through quite a few iterations before getting these drivers to work)
+>> I'm basically re-modelling an "USB PHY hub" with my USB3 PHY driver
+>> (there's one "upstream" PHY interface which is passed to dwc3 and
+>> multiple downstream PHYs, each for one port on dwc3's internal hub).
+>> With this approach I could split each of the the USB2s into separate
+>> nodes again (instead of one devicetree node with #phy-cells = <1>) as
+>> the USB3 PHY is taking care of that special "we have to enable all
+>> ports or no port will be usable".
+>>
+>> We could go even one step further: why implement this in the Meson GXL
+>> specific PHY driver - why not implement a generic "phy-hub" driver
+>> (which would be valid whenever the PHY controller has to manage
+>> multiple PHYs at once, but wants to keep them all in a consistent
+>> state).
+>> The devicetree could look like this:
+>>     usb2_phy_hub: phy@0 {
+>>         compatible = "phy-hub";
+>>         phys = <&other_phy1>, <&other_phy 2>;
+>>     };
+>>
+>> &dwc3 {
+>>      phys = <&usb2_phy_hub>, <&usb3_phy0>;
+>>      phy-names = "usb2-phy", "usb3-phy";
+>> };
+>
+> I'm okay with a hub if it is modeled as a USB hub. Here though, it
+> looks like you are just trying to group things which doesn't need to be
+> in DT.
+I hope my answer above makes things more clear
 
-> +
-> +		/* Create per-opp directory */
-> +		d = debugfs_create_dir(name, pdentry);
-> +
-> +		kfree(name);
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index 4d3ec92cbabf..1cd1fcfe835a 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-> @@ -188,7 +188,10 @@ static int cpufreq_init(struct cpufreq_policy *policy)
->  	 */
->  	name = find_supply_name(cpu_dev);
->  	if (name) {
-> -		opp_table = dev_pm_opp_set_regulator(cpu_dev, name);
-> +		const char *names[] = {name};
-> +
-> +		opp_table = dev_pm_opp_set_regulators(cpu_dev, names,
-> +						ARRAY_SIZE(names));
+>> The generic phy-hub driver would then implement all phy_ops callbacks
+>> and pass then to each of it's downstream PHYs.
+>
+> You can have generic drivers without a generic binding.
+So you'd rather implement a generic driver which would provide
+functions like of_create_grouped_phy(struct device_node *np) which
+would implement the grouping logic as described (but has no binding
+itself, but rather relies on the actual platform driver taking care of
+creating that binding and re-using generic code)?
 
-This can be simplified to: 
-
-		opp_table = dev_pm_opp_set_regulators(cpu_dev, &name, 1);
-
->  		if (IS_ERR(opp_table)) {
->  			ret = PTR_ERR(opp_table);
->  			dev_err(cpu_dev, "Failed to set regulator for cpu%d: %d\n",
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> That's just what came into my head - please let me know what you think
+>> of this or share your ideas on how to approach this!
+>>
+>> > The coupling of the USB2 and USB3 PHYs is the reason why I sent the
+>> > two drivers in one patch, even though they are handling different IP
+>> > blocks (different registers, etc.).
+>> >
+>> > Unfortunately there are no datasheets available for any of these PHYs.
+>> > Both drivers were written by reading the reference drivers provided by
+>> > Amlogic and analyzing the registers on the kernel that was shipped with
+>> > my board.
+>> >
+>> > As a last note: the dwc3 driver currently only explicitly enables the
+>> > first USB port "DWC3_GUSB2PHYCFG(0)" in the internal hub. The hardware
+>> > seems to enable the other two (DWC3_GUSB2PHYCFG(1) and
+>> > DWC3_GUSB2PHYCFG(2)) automatically. I will ask the dwc3 maintainers if
+>> > changes to dwc3 are desired any how these should look like, but for now
+>> > it's working fine even without changes there.
+>> >
+>> > lsusb output on GXM for the dwc3 hub:
+>> > Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+>> > ...
+>> >  Hub Port Status:
+>> >    Port 1: 0000.0100 power
+>> >    Port 2: 0000.0100 power
+>> >    Port 3: 0000.0100 power
+>> >
+>> > NOTE: The devicetree changes depend on my previous series:
+>> > "[PATCH 0/2] minor GXL and GXM improvements" - see [0]
+>> >
+>> > NOTE2: This series depends on an upstream dwc3/xhci-plat DMA fix
+>> > (special thanks to Arnd Bergmann and Sriram Dash for fixing that):
+>> > "[PATCH v5 0/6] inherit dma configuration from parent dev" - see [1]
+>> >
+>> > I have a tree with all dependencies applied available at [2] if
+>> > someone wants a quick way to test this (I don't take any responsibility
+>> > if anything explodes though).
+>> >
+>> > [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001665.html
+>> > [1] http://marc.info/?l=linux-usb&m=147938307209685&w=2
+>> > [2] https://github.com/xdarklight/linux/commits/meson-gx-integration-4.10-20161126
+>> >
+>> > Martin Blumenstingl (5):
+>> >   Documentation: dt-bindings: Add documentation for Meson GXL USB2/3
+>> >     PHYs
+>> >   phy: meson: add USB2 and USB3 PHY support for Meson GXL
+>> >   arm64: dts: meson-gxl: add USB support
+>> >   ARM64: dts: meson-gxm: add GXM specific USB configuration
+>> >   ARM64: dts: meson-gx-p23x-q20x: enable USB on P23x and Q20x boards
+>> >
+>> >  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  25 ++
+>> >  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  27 ++
+>> >  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  12 +
+>> >  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  49 +++
+>> >  .../arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts |  17 +
+>> >  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  10 +
+>> >  drivers/phy/Kconfig                                |  13 +
+>> >  drivers/phy/Makefile                               |   2 +
+>> >  drivers/phy/phy-meson-gxl-usb2.c                   | 374 ++++++++++++++++++++
+>> >  drivers/phy/phy-meson-gxl-usb3.c                   | 377 +++++++++++++++++++++
+>> >  10 files changed, 906 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
+>> >  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+>> >  create mode 100644 drivers/phy/phy-meson-gxl-usb2.c
+>> >  create mode 100644 drivers/phy/phy-meson-gxl-usb3.c
+>> >
+>> > --
+>> > 2.10.2
+>> >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
