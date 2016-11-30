@@ -1,41 +1,55 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
-Date: Wed, 30 Nov 2016 11:05:19 +0100
-Message-ID: <20161130100519.GD28680@localhost.localdomain>
-References: <20161128230428.6872-1-grygorii.strashko@ti.com>
- <20161128230428.6872-5-grygorii.strashko@ti.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] iio: misc: add a generic regulator driver
+Date: Wed, 30 Nov 2016 11:10:36 +0100
+Message-ID: <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de>
+References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
+ <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de>
+ <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161128230428.6872-5-grygorii.strashko@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 05:04:26PM -0600, Grygorii Strashko wrote:
-> The TS_COMP output in the CPSW CPTS module is asserted for
-> ts_comp_length[15:0] RCLK periods when the time_stamp value compares
-> with the ts_comp_val[31:0] and the length value is non-zero. The
-> TS_COMP pulse edge occurs three RCLK periods after the values
-> compare. A timestamp compare event is pushed into the event FIFO when
-> TS_COMP is asserted.
+On 11/29/2016 04:35 PM, Bartosz Golaszewski wrote:
+> 2016-11-29 16:30 GMT+01:00 Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>:
+>> On 11/29/2016 04:22 PM, Bartosz Golaszewski wrote:
+>> [...]
+>>> diff --git a/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
+>>> new file mode 100644
+>>> index 0000000..147458f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
+>>> @@ -0,0 +1,18 @@
+>>> +Industrial IO regulator device driver
+>>> +-------------------------------------
+>>> +
+>>> +This document describes the bindings for the iio-regulator - a dummy device
+>>> +driver representing a physical regulator within the iio framework.
+>>
+>> No bindings for drivers, only for hardware. So this wont work.
+>>
 > 
-> This patch adds support of Pulse-Per-Second (PPS) by using the
-> timestamp compare output. The CPTS driver adds one second of counter
-> value to the ts_comp_val register after each assertion of the TS_COMP
-> output. The TS_COMP pulse polarity and width are configurable in DT.
+> What about exporting regulator attributes analogous to the one in this
+> patch from the iio-core when a *-supply property is specified for a
+> node?
 
-I really dislike this patch.  You go through contortions to get from
-the timecounter back to the raw HW counter.  That is rather ugly.
+The problem with exposing direct control to the regulator is that it allows
+to modify the hardware state without the drivers knowledge. If you
+power-cycle a device all previous configuration that has been written to the
+device is reset. The device driver needs to be aware of this otherwise its
+assumed state and the actual device state can divert which will result in
+undefined behavior. Also access to the device will fail unexpectedly when
+the regulator is turned off. So I think generally the driver should
+explicitly control the regulator, power-up when needed, power-down when not.
 
-Can you adjust the frequency of the keystone devices in hardware?  If
-so, then please implement it, and just disable PPS for the CPSW.
+- Lars
 
-The only reason I used the timecounter for frequency adjustment was
-because the am335x HW is broken.  But this shouldn't hold back other
-newer HW without the same silicon flaws.
-
-Thanks,
-Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
