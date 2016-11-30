@@ -1,69 +1,83 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the device tree
-Date: Wed, 30 Nov 2016 19:58:05 +0200
-Message-ID: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v3 0/3] Altera Cyclone Passive Serial SPI FPGA Manager
+Date: Wed, 30 Nov 2016 12:01:45 -0600
+Message-ID: <alpine.DEB.2.10.1611301150270.2617@atull-730U3E-740U3E>
+References: <cover.1480467185.git.stillcompiling@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1480467185.git.stillcompiling@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-connected to port 2 of the OMAP EHCI controller. The board however has
-no EEPROM to store the ethernet MAC address, which is programmed by the
-boot loader.
+On Wed, 30 Nov 2016, Joshua Clayton wrote:
 
-To allow Linux to use the same MAC address as the boot loader (or for
-that matter any fixed MAC address), we need a node in the device tree
-for the ethernet controller that the boot loader can update at runtime
-with a local-mac-address property. Add it, along with an alias for the
-ethernet controller to let the boot loader locate it easily.
+Hi Joshua,
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
- arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+The DT bindings will need Rob Herring's ack.  The bitrev.h
+changes will need Russell King's ack.
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 85e297ed0ea1..75ac56cdf954 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -27,6 +27,7 @@
- 	aliases {
- 		display0 = &dvi0;
- 		display1 = &tv0;
-+		ethernet = &ethernet;
- 	};
- 
- 	leds {
-@@ -348,6 +349,21 @@
- 
- &usbhsehci {
- 	phys = <0 &hsusb2_phy>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	usb2@2 {
-+		compatible = "usb424,9514";
-+		reg = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
- };
- 
- &vaux2 {
--- 
-Regards,
+I've made some comments on patch 3/3 but it looks good to me
+besides that.
 
-Laurent Pinchart
+Once we have those other acks, please submit your v4 including fixes
+for my comments and whatever else comes up.  I'm hoping it will be
+minor and with that done, v4 can go in.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When you send in v4, please also cc our new mailing list that Moritz
+made: linux-fpga@vger.kernel.org
+
+Alan
+
+> This series adds an FPGA manager for Altera cyclone FPGAs
+> that can program them using an spi port and a couple of gpios, using
+> Alteras passive serial protocol.
+> 
+> Changes from v2:
+> 
+> - Merged patch 3 and 4 as suggested in review by Moritz Fischer
+> - Changed FPGA_MIN_DELAY from 250 to 50 ms is the time advertized by
+>   Altera. This now works, as we don't assume it is done
+> 
+> Changes from v1:
+> - Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
+>   This name change was requested by Alan Tull, to be specific about which
+>   programming method is being employed on the fpga.
+> - Changed the name of the reset-gpio to config-gpio to closer match the
+>   way the pins are described in the Altera manual
+> - Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
+> 
+> - Added a bitrev8x4() function to the bitrev headers and implemented ARM
+>  const, runtime, and ARM specific faster versions (This may end up
+>  needing to be a standalone patch)
+> 
+> - Moved the bitswapping into cyclonespi_write(), as requested.
+>   This falls short of my desired generic lsb first spi support, but is a step
+>   in that direction.
+> 
+> - Fixed whitespace problems introduced during refactoring
+> 
+> - Replaced magic number for initial delay with a descriptive macro
+> - Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
+> 
+> Joshua Clayton (3):
+>   lib: add bitrev8x4()
+>   doc: dt: add cyclone-spi binding document
+>   fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
+> 
+>  .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      |  23 +++
+>  arch/arm/include/asm/bitrev.h                      |   5 +
+>  drivers/fpga/Kconfig                               |   7 +
+>  drivers/fpga/Makefile                              |   1 +
+>  drivers/fpga/cyclone-ps-spi.c                      | 176 +++++++++++++++++++++
+>  include/linux/bitrev.h                             |  26 +++
+>  6 files changed, 238 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+>  create mode 100644 drivers/fpga/cyclone-ps-spi.c
+> 
+> -- 
+> 2.9.3
+> 
+> 
