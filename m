@@ -1,48 +1,50 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/2] add support to STM LSM6DS3-LSM6DSM 6-axis Mems sensor
-Date: Wed, 30 Nov 2016 21:05:57 +0100
-Message-ID: <20161130200559.29910-1-lorenzo.bianconi@st.com>
+Subject: [PATCH v2 2/2] Documentation: dt: iio: add st_lsm6dsx sensor device binding
+Date: Wed, 30 Nov 2016 21:05:59 +0100
+Message-ID: <20161130200559.29910-3-lorenzo.bianconi@st.com>
+References: <20161130200559.29910-1-lorenzo.bianconi@st.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130200559.29910-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Changes since v1:
-- add sw fifo support
-- drop trigger dependency
-- use iio_claim_direct_mode() routine instead of grabbing the mutex directly
-- use more unique prefix for all defines
-- use info_mask_shared_by_all element for sampling_frequency
-- use devm_iio_* routines
-- use of_match_ptr instead of access directly to of_match_table
-- fix device tree binding
-- rename st_lsm6dsx_dev in st_lsm6dsx_hw
-- cosmetics
-
-Lorenzo Bianconi (2):
-  iio: imu: add support to lsm6dsx driver
-  Documentation: dt: iio: add st_lsm6dsx sensor device binding
-
- .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     |  24 +
- drivers/iio/imu/Kconfig                            |   1 +
- drivers/iio/imu/Makefile                           |   2 +
- drivers/iio/imu/st_lsm6dsx/Kconfig                 |  23 +
- drivers/iio/imu/st_lsm6dsx/Makefile                |   6 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h            | 107 ++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c       | 696 +++++++++++++++++++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c        | 111 ++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c       | 401 ++++++++++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c        | 129 ++++
- 10 files changed, 1500 insertions(+)
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/iio/imu/st_lsm6dsx.txt     | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
- create mode 100644 drivers/iio/imu/st_lsm6dsx/Kconfig
- create mode 100644 drivers/iio/imu/st_lsm6dsx/Makefile
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_ring.c
- create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
 
+diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+new file mode 100644
+index 0000000..ed3cdac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+@@ -0,0 +1,24 @@
++* ST_LSM6DSx driver for STM 6-axis (acc + gyro) imu Mems sensors
++
++Required properties:
++- compatible: must be one of:
++  "st,lsm6ds3"
++  "st,lsm6dsm"
++- reg: i2c address of the sensor / spi cs line
++
++Optional properties:
++- interrupt-parent: should be the phandle for the interrupt controller
++- interrupts: interrupt mapping for IRQ. It should be configured with
++  flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING.
++
++  Refer to interrupt-controller/interrupts.txt for generic interrupt
++  client node bindings.
++
++Example:
++
++lsm6dsm@6b {
++	compatible = "st,lsm6dsm";
++	reg = <0x6b>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <0 IRQ_TYPE_EDGE_RISING>;
++};
 -- 
 2.9.3
