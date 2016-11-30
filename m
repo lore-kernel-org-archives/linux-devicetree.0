@@ -1,102 +1,80 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
- documentation of Allwinner HDMI
-Date: Thu, 01 Dec 2016 01:24:52 +0800
-Message-ID: <1948481480526692@web5g.yandex.ru>
-References: <cover.1480414715.git.moinejf@free.fr>
-	<4502748.8rUF7ESxa4@avalon>
-	<20161130091208.f38cd79f1cc5d27b27f3b130@free.fr>
-	<4614815.L3DQhhBy6d@avalon> <20161130102757.9eec1f7f3377d0f4787e3829@free.fr>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/6] net: ethernet: ti: netcp: add support of cpts
+Date: Wed, 30 Nov 2016 11:31:56 -0600
+Message-ID: <4d69aff4-70a0-e6b8-38b0-8e95cfea7601@ti.com>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-2-grygorii.strashko@ti.com>
+ <20161130094441.GB28680@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBZ4W7TAQKGQER4WC6NQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161130102757.9eec1f7f3377d0f4787e3829-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: "moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130094441.GB28680-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCjMwLjExLjIwMTYsIDE3OjI4LCAiSmVhbi1GcmFuY29pcyBNb2luZSIgPG1vaW5lamZAZnJl
-ZS5mcj46DQo+IE9uIFdlZCwgMzAgTm92IDIwMTYgMTA6MjA6MjEgKzAyMDANCj4gTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToNCj4NCj4+
-IMKgPiBXZWxsLCBJIGRvbid0IHNlZSB3aGF0IHRoaXMgY29ubmVjdG9yIGNhbiBiZS4NCj4+IMKg
-PiBNYXkgeW91IGdpdmUgbWUgYSBEVCBleGFtcGxlPw0KPj4NCj4+IMKgU3VyZS4NCj4+DQo+PiDC
-oGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEta29lbHNjaC5kdHMNCj4+DQo+PiDCoMKgwqDCoMKg
-wqDCoMKgwqAvKiBIRE1JIGVuY29kZXIgKi8NCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqBoZG1p
-QDM5IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0g
-ImFkaSxhZHY3NTExdyI7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVn
-ID0gPDB4Mzk+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVw
-dC1wYXJlbnQgPSA8JmdwaW8zPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBpbnRlcnJ1cHRzID0gPDI5IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+Pg0KPj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1dC1kZXB0aCA9IDw4PjsNCj4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhZGksaW5wdXQtY29sb3JzcGFjZSA9ICJyZ2Ii
-Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1dC1jbG9jayA9
-ICIxeCI7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYWRpLGlucHV0LXN0
-eWxlID0gPDE+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkaSxpbnB1
-dC1qdXN0aWZpY2F0aW9uID0gImV2ZW5seSI7DQo+Pg0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoHBvcnRzIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+PiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNzaXplLWNlbGxzID0gPDA+Ow0K
-Pj4NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-cG9ydEAwIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFkdjc1MTFfaW46
-IGVuZHBvaW50IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZW1vdGUtZW5kcG9pbnQg
-PSA8JmR1X291dF9yZ2I+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBvcnRAMSB7DQo+PiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBy
-ZWcgPSA8MT47DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhZHY3NTExX291dDogZW5kcG9pbnQgew0KPj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb24+Ow0KPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgfTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgfTsNCj4+DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAvKiBIRE1JIGNvbm5l
-Y3RvciAqLw0KPj4NCj4+IMKgwqDCoMKgwqDCoMKgwqDCoGhkbWktb3V0IHsNCj4+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImhkbWktY29ubmVjdG9yIjsN
-Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0eXBlID0gImEiOw0KPj4NCj4+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwb3J0IHsNCj4+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaGRtaV9jb246IGVuZHBvaW50
-IHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoHJlbW90ZS1lbmRwb2ludCA9IDwmYWR2NzUxMV9vdXQ+Ow0KPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqB9
-Ow0KPg0KPiBIaSBMYXVyZW50LA0KPg0KPiBTb3JyeSBmb3IgSSBkb24ndCBzZWUgdGhlIGludGVy
-ZXN0Og0KPiAtIGl0IGlzIG9idmlvdXMgdGhhdCB0aGUgSERNSSBjb25uZWN0b3IgaXMgYSAnaGRt
-aS1jb25uZWN0b3InIQ0KDQpZZXMsIGl0IG1lYW5zIHRoZSB3aXJlIGJldHdlZW4gdGhlIEhETUkg
-cGlucyBvbiB0aGUgU29DIGFuZCB0aGUgY29ubmVjdG9yIDstKQ0KDQo+IC0gdGhlIHBoeXNpY2Fs
-IGNvbm5lY3RvciB0eXBlIG1heSBiZSBjaGFuZ2VkIG9uIGFueSBib2FyZCBieSBhIHNvbGRlcmlu
-Zw0KPiDCoMKgaXJvbiBvciBhIGNvbm5lY3RvciB0byBjb25uZWN0b3IgY2FibGUuDQoNCkkgY2Fu
-IGFsd2F5cyBhbHRlciB0aGUgZGV2aWNlcyBvbiBhIGJvYXJkIDstKQ0KDQpCdXQgSSBzaG91bGQg
-YWxzbyBhbHRlciB0aGUgZHQgYWZ0ZXIgYWx0ZXJpbmcgdGhlIGJvYXJkLg0KDQo+IC0gd2hhdCBk
-b2VzIHRoZSBzb2Z0d2FyZSBkbyB3aXRoIHRoZSBjb25uZWN0b3IgdHlwZT8NCj4gLSB3aHkgbm90
-IHRvIHB1dCB0aGUgY29ubmVjdG9yIGluZm9ybWF0aW9uIGluIHRoZSBIRE1JIGRldmljZT8NCj4N
-Cj4gQW5kLCBpZiBJIGZvbGxvdyB5b3UsIHRoZSBncmFwaCBvZiBwb3J0cyBjb3VsZCBhbHNvIGJl
-IHVzZWQgdG8gZGVzY3JpYmUNCj4gdGhlIHdheSB0aGUgdmFyaW91cyBwYXJ0cyBvZiB0aGUgU29D
-cyBhcmUgcG93ZXJlZCwgdG8gZGVzY3JpYmUgdGhlIHBpbg0KPiBjb25uZWN0aW9ucywgdG8gZGVz
-Y3JpYmUgdGhlIFVTQiBjb25uZWN0b3JzLCB0byBkZXNjcmliZSB0aGUgYm9hcmQNCj4gaW50ZXJu
-YWwgaHVicyBhbmQgYnJpZGdlcy4uLg0KPg0KPiAtLQ0KPiBLZW4gYXIgYydoZW50YcOxIHwgKiog
-QnJlaXpoIGhhIExpbnV4IGF0YXYhICoqDQo+IEplZiB8IGh0dHA6Ly9tb2luZWpmLmZyZWUuZnIv
-DQo+DQo+IC0tDQo+IFlvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1
-YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4NCj4gVG8g
-dW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFpbHMgZnJv
-bSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBnb29nbGVncm91
-cHMuY29tLg0KPiBGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29nbGUu
-Y29tL2Qvb3B0b3V0Lg0KDQotLSAKWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlv
-dSBhcmUgc3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3Vw
-LgpUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWls
-cyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2ds
-ZWdyb3Vwcy5jb20uCkZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2ds
-ZS5jb20vZC9vcHRvdXQuCg==
+
+
+On 11/30/2016 03:44 AM, Richard Cochran wrote:
+> On Mon, Nov 28, 2016 at 05:04:23PM -0600, Grygorii Strashko wrote:
+>> @@ -678,6 +744,9 @@ struct gbe_priv {
+>>  	int				num_et_stats;
+>>  	/*  Lock for updating the hwstats */
+>>  	spinlock_t			hw_stats_lock;
+>> +
+>> +	int                             cpts_registered;
+> 
+> The usage of this counter is racy.
+> 
+>> +	struct cpts                     *cpts;
+>>  };
+> 
+> This ++ and -- business ...
+> 
+>> +static void gbe_register_cpts(struct gbe_priv *gbe_dev)
+>> +{
+>> +	if (!gbe_dev->cpts)
+>> +		return;
+>> +
+>> +	if (gbe_dev->cpts_registered > 0)
+>> +		goto done;
+>> +
+>> +	if (cpts_register(gbe_dev->cpts)) {
+>> +		dev_err(gbe_dev->dev, "error registering cpts device\n");
+>> +		return;
+>> +	}
+>> +
+>> +done:
+>> +	++gbe_dev->cpts_registered;
+>> +}
+>> +
+>> +static void gbe_unregister_cpts(struct gbe_priv *gbe_dev)
+>> +{
+>> +	if (!gbe_dev->cpts || (gbe_dev->cpts_registered <= 0))
+>> +		return;
+>> +
+>> +	if (--gbe_dev->cpts_registered)
+>> +		return;
+>> +
+>> +	cpts_unregister(gbe_dev->cpts);
+>> +}
+> 
+> is invoked from your open() and close() methods, but those methods
+> are not serialized among multiple ports.
+> 
+
+ok. Seems my assumption that ndo_open/ndo_close serialized by rtnl_lock is incorrect. Right?
+net_device_ops.ndo_open ->
+ netcp_ndo_open
+ gbe_open
+ gbe_register_cpts
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
