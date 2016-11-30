@@ -1,255 +1,87 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] ARM64: dts: meson-gx: Add Graphic Controller nodes
-Date: Wed, 30 Nov 2016 17:07:06 +0100
-Message-ID: <0d01f10b-924e-c01d-2b6c-a8fb4aa3f60a@baylibre.com>
-References: <1480520625-13269-1-git-send-email-narmstrong@baylibre.com>
- <1480520625-13269-3-git-send-email-narmstrong@baylibre.com>
- <10006210.eA8q2ZWXP0@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: drm/bridge: adv7511: Add regulator
+ bindings
+Date: Wed, 30 Nov 2016 16:14:37 +0000
+Message-ID: <20161130161437.cgmh35pjshk25i6i@sirena.org.uk>
+References: <1474622430-6704-1-git-send-email-architt@codeaurora.org>
+ <3929994.7YhJtsl9c3@avalon>
+ <20161129110125.sksjxfy56ofzyxw3@sirena.org.uk>
+ <1557992.zAjuUn6zCK@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10006210.eA8q2ZWXP0@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0177295902=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1557992.zAjuUn6zCK@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2016 05:02 PM, Laurent Pinchart wrote:
-> Hi Neil,
-> 
-> Thank you for the patch.
-> 
-> On Wednesday 30 Nov 2016 16:43:43 Neil Armstrong wrote:
->> Add Video Processing Unit and CVBS Output nodes, and enable CVBS on selected
->> boards.
->>
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi             | 19 ++++++++++++++++
->>  .../arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts | 15 +++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi      | 15 +++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi           |  4 ++++
->>  arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts | 15 +++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi            |  4 ++++
->>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts   | 15 +++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi            |  4 ++++
->>  8 files changed, 91 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi index fc033c0..a27f881 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -356,5 +356,24 @@
->>  				status = "disabled";
->>  			};
->>  		};
->> +
->> +		vpu: vpu@d0100000 {
->> +			compatible = "amlogic,meson-gx-vpu";
->> +			reg = <0x0 0xd0100000 0x0 0x100000>,
->> +			      <0x0 0xc883c000 0x0 0x1000>,
->> +			      <0x0 0xc8838000 0x0 0x1000>;
->> +			reg-names = "vpu", "hhi", "dmc";
->> +			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			/* CVBS VDAC output port */
->> +			port@0 {
->> +				reg = <0>;
->> +
->> +				cvbs_vdac_out: endpoint {
->> +				};
-> 
-> Endpoints require a remote-endpoint property. You should move the endpoint to 
-> board DT files.
 
-OK, I was wondering, it looked dirty to me.
+--===============0177295902==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oeho6mjzjcwruso4"
+Content-Disposition: inline
 
-> 
->> +			};
->> +		};
->>  	};
->>  };
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts index
->> 9696820..390f7db 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
->> @@ -142,6 +142,17 @@
->>  		clocks = <&wifi32k>;
->>  		clock-names = "ext_clock";
->>  	};
->> +
->> +	cvbs-connector {
->> +		compatible = "composite-video-connector";
->> +		label = "cvbs";
-> 
-> Unless the board has a label for the connector (either on the board, on the 
-> casing or in the user manual) I'd leave this out. Same comment for the other 
-> boards.
 
-OK,
+--oeho6mjzjcwruso4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Neil
+On Tue, Nov 29, 2016 at 09:37:31PM +0200, Laurent Pinchart wrote:
+> On Tuesday 29 Nov 2016 11:01:25 Mark Brown wrote:
 
-> 
-> Apart from that,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
->> +
->> +		port {
->> +			cvbs_connector_in: endpoint {
->> +				remote-endpoint = <&cvbs_vdac_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>
->>  &uart_AO {
->> @@ -229,3 +240,7 @@
->>  	clocks = <&clkc CLKID_FCLK_DIV4>;
->>  	clock-names = "clkin0";
->>  };
->> +
->> +&cvbs_vdac_out {
->> +	remote-endpoint = <&cvbs_connector_in>;
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi index 203be28..44bdebf
->> 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
->> @@ -125,6 +125,17 @@
->>  		clocks = <&wifi32k>;
->>  		clock-names = "ext_clock";
->>  	};
->> +
->> +	cvbs-connector {
->> +		compatible = "composite-video-connector";
->> +		label = "cvbs";
->> +
->> +		port {
->> +			cvbs_connector_in: endpoint {
->> +				remote-endpoint = <&cvbs_vdac_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>
->>  /* This UART is brought out to the DB9 connector */
->> @@ -234,3 +245,7 @@
->>  	clocks = <&clkc CLKID_FCLK_DIV4>;
->>  	clock-names = "clkin0";
->>  };
->> +
->> +&cvbs_vdac_out {
->> +	remote-endpoint = <&cvbs_connector_in>;
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi index ac5ad3b..5353a20 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> @@ -506,3 +506,7 @@
->>  		 <&clkc CLKID_FCLK_DIV2>;
->>  	clock-names = "core", "clkin0", "clkin1";
->>  };
->> +
->> +&vpu {
->> +	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts index
->> e99101a..7bd0538 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-nexbox-a95x.dts
->> @@ -117,6 +117,17 @@
->>  		clocks = <&wifi32k>;
->>  		clock-names = "ext_clock";
->>  	};
->> +
->> +	cvbs-connector {
->> +		compatible = "composite-video-connector";
->> +		label = "cvbs";
->> +
->> +		port {
->> +			cvbs_connector_in: endpoint {
->> +				remote-endpoint = <&cvbs_vdac_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>
->>  &uart_AO {
->> @@ -203,3 +214,7 @@
->>  	clocks = <&clkc CLKID_FCLK_DIV4>;
->>  	clock-names = "clkin0";
->>  };
->> +
->> +&cvbs_vdac_out {
->> +	remote-endpoint = <&cvbs_connector_in>;
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi index 9f89b99..5c7a8fa 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> @@ -299,3 +299,7 @@
->>  		 <&clkc CLKID_FCLK_DIV2>;
->>  	clock-names = "core", "clkin0", "clkin1";
->>  };
->> +
->> +&vpu {
->> +	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts index
->> d320727..5b99749 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
->> @@ -90,6 +90,17 @@
->>  		compatible = "mmc-pwrseq-emmc";
->>  		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
->>  	};
->> +
->> +	cvbs-connector {
->> +		compatible = "composite-video-connector";
->> +		label = "cvbs";
->> +
->> +		port {
->> +			cvbs_connector_in: endpoint {
->> +				remote-endpoint = <&cvbs_vdac_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>
->>  /* This UART is brought out to the DB9 connector */
->> @@ -167,3 +178,7 @@
->>  		max-speed = <1000>;
->>  	};
->>  };
->> +
->> +&cvbs_vdac_out {
->> +	remote-endpoint = <&cvbs_connector_in>;
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
->> b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi index c1974bb..eb2f0c3 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
->> @@ -112,3 +112,7 @@
->>  		};
->>  	};
->>  };
->> +
->> +&vpu {
->> +	compatible = "amlogic,meson-gxm-vpu", "amlogic,meson-gx-vpu";
->> +};
-> 
+> > Please note that if you're going to CC me into a graphics thread there's
+> > a good chance I will miss it, I get copied on quite a lot of graphics
+> > related mail that's not really relevant so I often skip it.  Changing
+> > the subject line would help with that.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I try to add a (CC'ing xxx) at the beginning of the e-mail to draw attent=
+ion=20
+> when a question is targetted at a particular person. If that's not enough=
+ I=20
+> can change the subject, but might forget to do so from time to time. Or y=
+ou=20
+> could whitelist me, unless I'm already blacklisted ;-)
+
+That helps if I open the mail (especially with large e-mails, I do
+sometimes get bored looking for something relevant) but I also filter
+just on subject lines - once you've been involved with a thread about a
+topic people often seem to end up copying you for anything even vaguely
+related unfortunately.
+
+--oeho6mjzjcwruso4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAABCAAGBQJYPvrsAAoJECTWi3JdVIfQ4iMH/3B17ULzzVKohdWh2uuq4Bd0
+KqvC0ThTE8+uDNYA0l27CMf7KVtIs4xWIsZrEUZJEdUpW3tUk6PdD9WizHetUvIk
++bK4dRp0COg5EbV6XN6OdVu7LQAasMEVvlI+hTHZ5/v54LbbgBHDsNdl5gSc9AFz
+al1R0e/rIPHdF1sbF0OxE+x+Y3ohcMZNb9gPshvY6rxouChFPDer5249ZVaUFigJ
+b6UxSI5ax3wBd1XRILgiH0ebolN619s6yQsWzVa+8WNthZTwrGFncYZ16erjnrpZ
+7AVVf9mkD9Yp48e9BtAZeTe0vR1XipABvbSLPe/G2zb0GQ2ldvSqVnO9IedzCDI=
+=834P
+-----END PGP SIGNATURE-----
+
+--oeho6mjzjcwruso4--
+
+--===============0177295902==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0177295902==--
