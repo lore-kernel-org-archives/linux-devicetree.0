@@ -1,52 +1,20 @@
-From: liviu.dudau@arm.com
-Subject: Re: [PATCH] arm64: dts: juno: Correct PCI IO window
-Date: Wed, 30 Nov 2016 10:04:46 +0000
-Message-ID: <20161130100445.GJ1005@e106497-lin.cambridge.arm.com>
-References: <1480452310-29286-1-git-send-email-jeremy.linton@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: arm64: renesas: r8a7796/salvator-x: Add board part number to DT
+ bindings
+Date: Wed, 30 Nov 2016 11:05:25 +0100
+Message-ID: <20161130100525.GA20767@verge.net.au>
+References: <1472635054-24372-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1480452310-29286-1-git-send-email-jeremy.linton@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1472635054-24372-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMjksIDIwMTYgYXQgMDI6NDU6MTBQTSAtMDYwMCwgSmVyZW15IExpbnRvbiB3
-cm90ZToKPiBUaGUgUENJZSByb290IGNvbXBsZXggb24gSnVubyB0cmFuc2xhdGVzIHRoZSBNTUlP
-IG1hcHBlZAo+IGF0IDB4NWY4MDAwMDAgdG8gdGhlIFBJTyBhZGRyZXNzIHJhbmdlIHN0YXJ0aW5n
-IGF0IDAKPiAod2hpY2ggaXMgY29tbW9uIGJlY2F1c2UgUElPIGFkZHJlc3NlcyBhcmUgZ2VuZXJh
-bGx5IDwgNjRrKS4KPiBDb3JyZWN0IHRoZSBEVCB0byByZWZsZWN0IHRoaXMuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogSmVyZW15IExpbnRvbiA8amVyZW15LmxpbnRvbkBhcm0uY29tPgoKV2l0aCB0aGUg
-VS1Cb290IHBhdGNoIHRoYXQgSSBoYXZlIHNlbnQgdG8gdGhlIE1MOgpUZXN0ZWQtYnk6IExpdml1
-IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgoKYWxzbwoKQWNrZWQtYnk6IExpdml1IER1ZGF1
-IDxMaXZpdS5EdWRhdUBhcm0uY29tPgoKQmVzdCByZWdhcmRzLApMaXZpdQoKCj4gLS0tCj4gIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2FybS9qdW5vLWJhc2UuZHRzaQo+IGluZGV4IDMzNDI3MWEuLjdkM2EyYWMgMTAwNjQ0Cj4gLS0t
-IGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kKPiArKysgYi9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaQo+IEBAIC0zOTMsNyArMzkzLDcgQEAKPiAg
-CQkjYWRkcmVzcy1jZWxscyA9IDwzPjsKPiAgCQkjc2l6ZS1jZWxscyA9IDwyPjsKPiAgCQlkbWEt
-Y29oZXJlbnQ7Cj4gLQkJcmFuZ2VzID0gPDB4MDEwMDAwMDAgMHgwMCAweDVmODAwMDAwIDB4MDAg
-MHg1ZjgwMDAwMCAweDAgMHgwMDgwMDAwMD4sCj4gKwkJcmFuZ2VzID0gPDB4MDEwMDAwMDAgMHgw
-MCAweDAwMDAwMDAwIDB4MDAgMHg1ZjgwMDAwMCAweDAgMHgwMDgwMDAwMD4sCj4gIAkJCSA8MHgw
-MjAwMDAwMCAweDAwIDB4NTAwMDAwMDAgMHgwMCAweDUwMDAwMDAwIDB4MCAweDA4MDAwMDAwPiwK
-PiAgCQkJIDwweDQyMDAwMDAwIDB4NDAgMHgwMDAwMDAwMCAweDQwIDB4MDAwMDAwMDAgMHgxIDB4
-MDAwMDAwMDA+Owo+ICAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gLS0gCj4gMi41LjUKPiAK
-Ci0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3
-b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJj
-ZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, Aug 31, 2016 at 11:17:34AM +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks, queued up for v4.11.
