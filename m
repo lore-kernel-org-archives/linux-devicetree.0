@@ -1,109 +1,98 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 00/39] mtd: nand: denali: 2nd round of Denali NAND IP
- patch bomb
-Date: Wed, 30 Nov 2016 17:02:16 +0900
-Message-ID: <CAK7LNAQPm7w0_iSDLJihFaxSdMp5UMnpDZH5nBTyVnoLL9KYjg@mail.gmail.com>
-References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com> <20161127160459.5894be93@bbrezillon>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
+Date: Wed, 30 Nov 2016 10:08:35 +0200
+Message-ID: <3152670.pRMCOA29o4@avalon>
+References: <cover.1480414715.git.moinejf@free.fr> <2256264.6LWGGhFAiO@avalon> <239b60f3-3ea7-4aa7-8e8d-353e1a1d4ee5@googlegroups.com>
+Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161127160459.5894be93@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDKM3GOS4YHBB5MR7LAQKGQEYVWRUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <239b60f3-3ea7-4aa7-8e8d-353e1a1d4ee5-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, moinejf-GANU6spQydw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+Hi Jernej,
 
-2016-11-28 0:04 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> +Andy
->
-> Hi Masahiro,
->
-> On Sun, 27 Nov 2016 03:05:46 +0900
-> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->
->> As I said in the 1st round series, I am tackling on this driver
->> to use it for my SoCs.
->>
->> The previous series was just cosmetic things, but this series
->> includes *real* changes.
->>
->> After some more cleanups, I will start to add changes that
->> are really necessary.
->> One of the biggest problems I want to solve is a bunch of
->> hard-coded parameters that prevent me from using this driver for
->> my SoCs.
->>
->> I will introduce capability flags that are associated with DT
->> compatible and make platform-dependent parameters overridable.
->>
->> I still have lots of reworks to get done (so probably 3rd round
->> series will come), but I hope it is getting better and
->> I am showing a big picture now.
->>
->
-> Thanks for posting this 2nd round of patches, I know have a clearer
-> view of what you're trying to achieve.
-> Could you be a bit more specific about the remaining rework (your 3rd
-> round)?
+On Tuesday 29 Nov 2016 15:24:25 Jernej Skrabec wrote:
+> Dne torek, 29. november 2016 23.56.31 UTC+1 je oseba Laurent Pinchart
+> napisala:
+> > On Tuesday 29 Nov 2016 14:47:20 Jernej Skrabec wrote:
+> >> Dne torek, 29. november 2016 22.37.03 UTC+1 je oseba Maxime Ripard
+> > napisala:
+> >>> On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Francois Moine wrote:
+> >>>> This patchset series adds HDMI video support to the Allwinner
+> >>>> sun8i SoCs which include the display engine 2 (DE2).
+> >>>> The driver contains the code for the A83T and H3 SoCs, and
+> >>>> some H3 boards, but it could be used/extended for other SoCs
+> >>>> (A64, H2, H5) and boards (Banana PIs, Orange PIs).
+> >>> 
+> >>> Honestly, I'm getting a bit worried by the fact that you ignore
+> >>> reviews.
+> >>> 
+> >>> On the important reviews that you got that are to be seen as major
+> >>> issues that block the inclusion, we have:
+> >>>   - The fact that the HDMI driver is actually just a designware IP,
+> >>>     and while you should use the driver that already exists, you just
+> >>>     duplicated all that code.
+> >> 
+> >> That might be hard thing to do. A83T fits perfectly, but H3 and newer
+> >> SoCs do not. They are using completely different HDMI phy. Decoupling
+> >> controller and phy code means rewritting a good portion of the code,
+> >> unless some tricks are applied, like calling phy function pointers, if
+> >> they are defined.
+> > 
+> > Same HDMI TX but different HDMI TX PHY ? Kieran is working on decoupling
+> > the PHY configuration code for a Renesas SoC, that might be of interest to
+> > you.
+> 
+> Exactly. I'm developing only U-Boot driver, but Jean-Francois will probably
+> have more interest in this.
 
+We'll post patches as soon as they're ready.
 
-[1]
-I want to remove
-get_samsung_nand_para()
-get_onfi_nand_para()
+By the way, do you know if the H3 and newer SoCs use a different PHY from 
+Synopsys, or a custom PHY developed by Allwinner ?
 
-The driver should not hard-code timing parameters of Samsung specific
-chips.  For ONFI, it is duplicating effort of the core framework.
+> >> Register addresses also differ, but that can be easily solved by using
+> >> undocumented magic value to restore them.
+> > 
+> > I love that :-)
+> 
+> Is it allowed to use magic number which was found in binary blob? I'm new in
+> all this.
 
-I am thinking if it would be possible to implement
-chip->setup_data_interface() in order to set up
-timings in a generic way.
+I don't really see a problem with that, we have many drivers in the kernel 
+that have been developed through reverse-engineering. You should not include 
+large pieces of code that have been obtained through decompilation of a 
+proprietary binary blob as those could be protected by copyright, but writing 
+to undocumented registers based on information found through usage of a binary 
+driver isn't a problem. (Please remember that I'm not a lawyer though)
 
-[2]
-Remove driver-internal bounce buffer.
-The current Denali driver allocate DMA_BIDIRECTIONAL buffer
-to use it as a driver-internal bounce buffer.
-
-The hardware transfer page data into the bounce buffer,
-then CPU copies from the bounce buffer to a given buf (and oob_poi).
-This is not efficient.
-
-So, I want to set NAND_USE_BOUNCE_BUFFER flag
-and do dma_map_single directly for a given buffer.
-
-[3]
-Fix raw and oob callbacks.
-
-I asked in another thread,
-the current driver just puts the physically accessed OOB data
-into oob_poi, which is not a collection of ECC data.
-Raw write/read() are wrong as well.
-
-After fixing those, enable BBT scan by removing the following flag:
-    /* skip the scan for now until we have OOB read and write support */
-    chip->options |= NAND_SKIP_BBTSCAN;
-
-
-
-> Also, if you don't mind, I'd like to have reviews and testing from intel
-> users before applying the series. Can you Cc Andy (and possibly other
-> intel maintainers) for the next round.
-
-Sure.
-
-Anyway, this series already missed the pull-req for 4.10-rc1,
-we have plenty of time until 4.11-rc1.
-
-Review/test from Intel engineers are very appreciated
-because I have no access to their boards.
-
+> >>>   - The fact that you ignored Rob (v6) and I (v5) comment on using OF
+> >>>     graph to model the connection between the display engine and the
+> >>>     TCON. Something that Laurent also pointed out in this version.
+> >>>   
+> >>>   - The fact that you ignored that you needed an HDMI connector node
+> >>>     as a child of the HDMI controller. This has been reported by Rob
+> >>>     (v6) and yet again in this version by Laurent.
+> >>>   
+> >>>   - And finally the fact that we can't have several display engine in
+> >>>     parallel, if needs be. This has happened in the past already on
+> >>>     Allwinner SoCs, so it's definitely something we should consider in
+> >>>     the DT bindings, since we can't break them.
+> >>> 
+> >>> Until those are fixed, I cannot see how this driver can be merged,
+> >>> unfortunately.
 
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Laurent Pinchart
