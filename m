@@ -1,127 +1,69 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: Re: [PATCH] mmc: pwrseq: add support for Marvell SD8787 chip
-Date: Tue, 29 Nov 2016 17:20:20 -0800
-Message-ID: <CAJ_EiST_bpBm+spPuWH-a+47t4qVsDVFjUm=a+TtL-BWN3DHdw@mail.gmail.com>
-References: <1479434109-8745-1-git-send-email-matt@ranostay.consulting> <CABxcv=nEih8xX4fM0eqjkqprdt1uGTEyx5tzK04GuSgsHc=Haw@mail.gmail.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
+Date: Wed, 30 Nov 2016 13:11:58 +1100
+Message-ID: <a7a3c242-f359-5b32-bff8-4641d8566d50@ozlabs.ru>
+References: <20161129131922.JFbeipav@smtp2o.mail.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=nEih8xX4fM0eqjkqprdt1uGTEyx5tzK04GuSgsHc=Haw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161129131922.JFbeipav@smtp2o.mail.yandex.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 9:13 AM, Javier Martinez Canillas
-<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-> Hello Matt,
->
-> On Thu, Nov 17, 2016 at 10:55 PM, Matt Ranostay
-> <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
->> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
->> This can be abstracted to other chipsets if needed in the future.
->>
->> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt  |  14 +++
->>  .../bindings/net/wireless/marvell-sd8xxx.txt       |   4 +
->>  drivers/mmc/core/Kconfig                           |  10 ++
->>  drivers/mmc/core/Makefile                          |   1 +
->>  drivers/mmc/core/pwrseq_sd8787.c                   | 117 +++++++++++++++++++++
->>  5 files changed, 146 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
->>  create mode 100644 drivers/mmc/core/pwrseq_sd8787.c
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
->
-> According Documentation/devicetree/bindings/submitting-patches.txt,
-> the DT bindings patches should posted as a separate patch.
-
-Ok will do.
-
->
->> new file mode 100644
->> index 000000000000..1b658351629b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
->> @@ -0,0 +1,14 @@
->> +* Marvell SD8787 power sequence provider
->> +
->> +Required properties:
->> +- compatible: must be "mmc-pwrseq-sd8787".
->
-> Since this is not a generic binding, the compatible string should have
-> a vendor prefix.
->
-
-Makes sense to me.
-
-
->> +- pwndn-gpio: contains a power down GPIO specifier.
->> +- reset-gpio: contains a reset GPIO specifier.
->> +
->
-> I wonder if we really need a custom power sequence provider for just
-> this SDIO WiFI chip though. AFAICT the only missing piece in
-> mmc-pwrseq-simple is the power down GPIO property, so maybe
-> mmc-pwrseq-simple could be extended instead to have an optional
-> powerdown-gpios property and instead in the Marvell SD8787 DT binding
-> can be mentioned which mmc-pwrseq-simple properties are required for
-> the device.
->
-
-The reason we didn't do that is we need delay between the two
-assertions/desertions of GPIOs. It wouldn't seems good practice to
-hack the pwrseq-simple for this...
-
->> +Example:
->> +
->> +       wifi_pwrseq: wifi_pwrseq {
->> +               compatible = "mmc-pwrseq-sd8787";
->> +               pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
->> +               reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
->> +       }
->> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->
-> Does this patch depend on a previous posted series? I don't see this
-> file in today's linux-next...
-
-Got renamed to ->
-Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt it
-seems very recently.
-
->
->> index c421aba0a5bc..08fd65d35725 100644
->> --- a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
->> @@ -32,6 +32,9 @@ Optional properties:
->>                  so that the wifi chip can wakeup host platform under certain condition.
->>                  during system resume, the irq will be disabled to make sure
->>                  unnecessary interrupt is not received.
->> +  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
->> +  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
->> +                for documentation of MMC power sequence bindings.
->>
->>  Example:
->>
->> @@ -44,6 +47,7 @@ so that firmware can wakeup host using this device side pin.
->>  &mmc3 {
->>         status = "okay";
->>         vmmc-supply = <&wlan_en_reg>;
->> +       mmc-pwrseq = <&wifi_pwrseq>;
->>         bus-width = <4>;
->>         cap-power-off-card;
->>         keep-power-in-suspend;
->
-> I think this change should be split in a separate patch as well.
->
-> Best regards,
-> Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjkvMTEvMTYgMjE6MTksIEljZW5vd3kgWmhlbmcgd3JvdGU6Cj4gCj4gMjAxNuW5tDEx5pyI
+Mjnml6UgMTU6MTbkuo4gQWxleGV5IEthcmRhc2hldnNraXkgPGFpa0BvemxhYnMucnU+5YaZ6YGT
+77yaCj4+Cj4+Cj4+Cj4+IE9uIFdlZCwgTm92IDIzLCAyMDE2IGF0IDY6NTkgUE0sIE1heGltZSBS
+aXBhcmQKPiA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+Pj4KPj4+
+IEhpLAo+Pj4KPj4+IE9uIFR1ZSwgTm92IDIyLCAyMDE2IGF0IDEyOjI0OjIxQU0gKzA4MDAsIElj
+ZW5vd3kgWmhlbmcgd3JvdGU6Cj4+PiA+IFRoZXJlJ3MgYSBBbGx3aW5uZXIncyBYUjgxOSBTRElP
+IFdpLUZpIG1vZHVsZSBzb2xkZXJlZCBvbiB0aGUgYm9hcmQgb2YKPj4+ID4gT3JhbmdlIFBpIFpl
+cm8sIHdoaWNoIHVzZWQgYSBkZWRpY2F0ZWQgcmVndWxhdG9yIHRvIHBvd2VyLgo+Pj4gPgo+Pj4g
+PiBBZGQgdGhlIGRldmljZSB0cmVlIG5vZGUgb2YgdGhlIHJlZ3VsYXRvciwgdGhlIGVuYWJsZSBn
+cGlvICh3aXRoCj4+PiA+IG1tYy1wd3JzZXEpIGFuZCB0aGUgc2RpbyBjb250cm9sbGVyLgo+Pj4g
+Pgo+Pj4gPiBUaGVyZSdzIGEgb3V0LW9mLXRyZWUgZHJpdmVyIHRlc3RlZCB0byB3b3JrIHdpdGgg
+dGhpcyBkZXZpY2UgdHJlZS4KPj4KPj4KPj4gYnR3IGNvdWxkIHlvdSBwbGVhc2UgZ2l2ZSBhIHBv
+aW50ZXIgd2hlcmUgdG8gZmluZCBhIFhSODE5IGRyaXZlciBmb3IKPiByZWxhdGl2ZWx5IHJlY2Vu
+dCBrZXJuZWwgKDQuOCBtYXkgYmUsIGp1c3Qgbm90IDMuNCk/IFRoYW5rcy4KPiAKPiBodHRwczov
+L2dpdGh1Yi5jb20vSWNlbm93eS94cmFkaW8KClRoYW5rcyEKCkkgdHJpZWQsIGNhbm5vdCBtYWtl
+IGl0IHdvcmsgdGhvdWdoLgoKVGhpcyBjb21waWxlczoKCkNPTkZJR19YUkFESU89eQpDT05GSUdf
+WFJBRElPX1NESU89eQpDT05GSUdfWFJBRElPX05PTl9QT1dFUl9PRl9UV09fQkxPQ0tTSVpFUz15
+CiMgQ09ORklHX1hSQURJT19VU0VfR1BJT19JUlEgaXMgbm90IHNldAojIENPTkZJR19YUkFESU9f
+NUdIWl9TVVBQT1JUIGlzIG5vdCBzZXQKIyBDT05GSUdfWFJBRElPX1dBUElfU1VQUE9SVCBpcyBu
+b3Qgc2V0CkNPTkZJR19YUkFESU9fVVNFX0VYVEVOU0lPTlM9eQoKQnV0IHByb2R1Y2VzOgoKWyAg
+ICAwLjk2NDc5M10gW1hSQURJT10gRHJpdmVyIExhYmVsOkwzNE0uMDEuMDguMDAwMgpbICAgIDAu
+OTY5NjU5XSBbWFJBRElPXSBBbGxvY2F0ZWQgaHdfcHJpdiBAIGRmNjg0ZGMwClsgICAgMy4wMzgx
+NjddIFtTQlVTX0VSUl0gc2RpbyBwcm9iZSB0aW1lb3V0IQpbICAgIDMuMDQ2MjgzXSBbWFJBRElP
+X0VSUl0gc2J1c19zZGlvX2luaXQgZmFpbGVkCgoKSWYgSSBlbmFibGUgQ09ORklHX1hSQURJT19V
+U0VfR1BJT19JUlEgKHdoaWNoIEtjb25maWcgc3VnZ2VzdCB0byBlbmFibGUgLQpkbyBJIHJlYWxs
+eSBuZWVkIGl0PyksIGl0IGRvZXMgbm90IGNvbXBpbGU6Cgpkcml2ZXJzL2J1aWx0LWluLm86IElu
+IGZ1bmN0aW9uIGBzZGlvX2lycV9zdWJzY3JpYmUnOgpzdW54aV9zaWQuYzooLnRleHQrMHgxMmRm
+ZTgpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB4cmFkaW9fcmVxdWVzdF9ncGlvX2lycScKc3Vu
+eGlfc2lkLmM6KC50ZXh0KzB4MTJlMDZjKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgeHJhZGlv
+X2ZyZWVfZ3Bpb19pcnEnCnN1bnhpX3NpZC5jOigudGV4dCsweDEyZTA4MCk6IHVuZGVmaW5lZCBy
+ZWZlcmVuY2UgdG8gYHN1bnhpX21jaV9jaGVja19yMV9yZWFkeScKZHJpdmVycy9idWlsdC1pbi5v
+OiBJbiBmdW5jdGlvbiBgc2Rpb19pcnFfdW5zdWJzY3JpYmUnOgpzdW54aV9zaWQuYzooLnRleHQr
+MHgxMmUzYjApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGB4cmFkaW9fZnJlZV9ncGlvX2lycScK
+TWFrZWZpbGU6OTYyOiByZWNpcGUgZm9yIHRhcmdldCAndm1saW51eCcgZmFpbGVkCm1ha2U6ICoq
+KiBbdm1saW51eF0gRXJyb3IgMQoKCkkgYW0gdXNpbmcgcmVjZW50IHVwc3RyZWFtIGtlcm5lbCBh
+bmQKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NDM5NzU5LwpodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk0Mzk3NjEvCgphbmQgSSBhZGRlZCBtaXNzaW5nIGVt
+YWMuCgpCYXNpY2FsbHksIGhlcmUgaXMgbXkgY3VycmVudCB0cmVlIHdpdGggYWxsIHN1bjh4aSBz
+dXBwb3J0Cmh0dHBzOi8vZ2l0aHViLmNvbS9haWsvbGludXgvY29tbWl0cy9waXplcm8KCmFuZCBJ
+IGp1c3QgZGlkCmdpdCAtQyBkcml2ZXJzL25ldC9ldGhlcm5ldCBjbG9uZSBodHRwczovL2dpdGh1
+Yi5jb20vSWNlbm93eS94cmFkaW8KCmFuZCBjb21waWxlZCBpdCBpbnRvIHZtbGludXggKG5vIG1v
+ZHVsZXMpLgoKV2hhdCBhbSBJIG1pc3Npbmc/IFNvcnJ5IEkgYW0gYSBuZXdiaWUgd2l0aCBBUk0u
+IFRoYW5rcy4KCgotLSAKQWxleGV5CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
