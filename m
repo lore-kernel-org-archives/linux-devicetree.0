@@ -1,394 +1,102 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v11 4/7] tests: Add overlay tests
-Date: Wed, 30 Nov 2016 11:04:09 +0200
-Message-ID: <231BBD25-0488-490F-9C1A-AEF486650B79@konsulko.com>
-References: <1480349141-14145-1-git-send-email-pantelis.antoniou@konsulko.com> <1480349141-14145-5-git-send-email-pantelis.antoniou@konsulko.com> <20161129030807.GH13307@umbus.fritz.box> <17F182F7-CDF7-4052-86C2-B40505706ED4@konsulko.com> <20161130003549.GB19891@umbus>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
+Date: Wed, 30 Nov 2016 10:05:45 +0100
+Message-ID: <20161130100545.44546ed28896cdb9768f68cd@free.fr>
+References: <cover.1480414715.git.moinejf@free.fr>
+	<20161129213650.uqcgekodq77wlmxs@lukather>
+Reply-To: moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161130003549.GB19891@umbus>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBB35M7LAQKGQEVKTFFYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20161129213650.uqcgekodq77wlmxs@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Tue, 29 Nov 2016 22:36:50 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> On Nov 30, 2016, at 02:35 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
+> On Tue, Nov 29, 2016 at 11:18:35AM +0100, Jean-Francois Moine wrote:
+> > This patchset series adds HDMI video support to the Allwinner
+> > sun8i SoCs which include the display engine 2 (DE2).
+> > The driver contains the code for the A83T and H3 SoCs, and
+> > some H3 boards, but it could be used/extended for other SoCs
+> > (A64, H2, H5) and boards (Banana PIs, Orange PIs).
 >=20
-> On Tue, Nov 29, 2016 at 01:11:43PM +0200, Pantelis Antoniou wrote:
->> Hi David,
->>=20
->>> On Nov 29, 2016, at 05:08 , David Gibson =
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->>>=20
->>> On Mon, Nov 28, 2016 at 06:05:38PM +0200, Pantelis Antoniou wrote:
->>>> Add a number of tests for dynamic objects/overlays.
->>>>=20
->>>> Re-use the original test by moving the contents to a .dtsi include
->>>>=20
->>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>> tests/overlay_overlay_dtc.dts     | 76 =
-+----------------------------------
->>>> tests/overlay_overlay_dtc.dtsi    | 83 =
-+++++++++++++++++++++++++++++++++++++++
->>>> tests/overlay_overlay_new_dtc.dts | 11 ++++++
->>>> tests/overlay_overlay_simple.dts  | 12 ++++++
->>>> tests/run_tests.sh                | 41 +++++++++++++++++++
->>>> 5 files changed, 148 insertions(+), 75 deletions(-)
->>>> create mode 100644 tests/overlay_overlay_dtc.dtsi
->>>> create mode 100644 tests/overlay_overlay_new_dtc.dts
->>>> create mode 100644 tests/overlay_overlay_simple.dts
->>>>=20
->>>> diff --git a/tests/overlay_overlay_dtc.dts =
-b/tests/overlay_overlay_dtc.dts
->>>> index 30d2362..ca943ea 100644
->>>> --- a/tests/overlay_overlay_dtc.dts
->>>> +++ b/tests/overlay_overlay_dtc.dts
->>>> @@ -8,78 +8,4 @@
->>>> /dts-v1/;
->>>> /plugin/;
->>>>=20
->>>> -/ {
->>>> -	/* Test that we can change an int by another */
->>>> -	fragment@0 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			test-int-property =3D <43>;
->>>> -		};
->>>> -	};
->>>> -
->>>> -	/* Test that we can replace a string by a longer one */
->>>> -	fragment@1 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			test-str-property =3D "foobar";
->>>> -		};
->>>> -	};
->>>> -
->>>> -	/* Test that we add a new property */
->>>> -	fragment@2 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			test-str-property-2 =3D "foobar2";
->>>> -		};
->>>> -	};
->>>> -
->>>> -	/* Test that we add a new node (by phandle) */
->>>> -	fragment@3 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			new-node {
->>>> -				new-property;
->>>> -			};
->>>> -		};
->>>> -	};
->>>> -
->>>> -	fragment@5 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			local: new-local-node {
->>>> -				new-property;
->>>> -			};
->>>> -		};
->>>> -	};
->>>> -
->>>> -	fragment@6 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			test-phandle =3D <&test>, <&local>;
->>>> -		};
->>>> -	};
->>>> -
->>>> -	fragment@7 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			test-several-phandle =3D <&local>, <&local>;
->>>> -		};
->>>> -	};
->>>> -
->>>> -	fragment@8 {
->>>> -		target =3D <&test>;
->>>> -
->>>> -		__overlay__ {
->>>> -			sub-test-node {
->>>> -				new-sub-test-property;
->>>> -			};
->>>> -		};
->>>> -	};
->>>> -};
->>>> +/include/ "overlay_overlay_dtc.dtsi"
->>>=20
->>> Don't duplicate this, just replace it with the new style.  This only
->>> existed as essentially documentation for the libfdt overlay
->>> application stuff.  Since the new dtc won't support the old tag
->>> format, there's no point having a test for it.
->>=20
->> The parser now handles both tag formats just fine. I could remove =
-support
->> for it if you=E2=80=99re willing to tackle the flak.
+> Honestly, I'm getting a bit worried by the fact that you ignore
+> reviews.
 >=20
-> Oh, sorry, I missed that.
->=20
-> I'd suggest having that controlled by the same "backwards compat"
-> option to control magic number and other things.  Although changing
-> parser behaviour based on flags can get fiddly.
->=20
+> On the important reviews that you got that are to be seen as major
+> issues that block the inclusion, we have:
+>   - The fact that the HDMI driver is actually just a designware IP,
+>     and while you should use the driver that already exists, you just
+>     duplicated all that code.
 
-Ugh, I=E2=80=99d rather not. It=E2=80=99s not going to look good. I=E2=80=99=
-d rather leave it like
-this, make a note that it=E2=80=99s deprecated and remove it completely =
-a year down
-the line letting enough time for users to get up to date.
+The DW registers in the A83T and H3 are obfuscated, so, the code in
+bridge/DW cannot be used as it is. There should be either a translation
+table or a function to compute the register addresses.
 
->>=20
->>>> diff --git a/tests/overlay_overlay_dtc.dtsi =
-b/tests/overlay_overlay_dtc.dtsi
->>>> new file mode 100644
->>>> index 0000000..8ea8d5d
->>>> --- /dev/null
->>>> +++ b/tests/overlay_overlay_dtc.dtsi
->>>> @@ -0,0 +1,83 @@
->>>> +/*
->>>> + * Copyright (c) 2016 NextThing Co
->>>> + * Copyright (c) 2016 Free Electrons
->>>> + * Copyright (c) 2016 Konsulko Inc.
->>>> + *
->>>> + * SPDX-License-Identifier:	GPL-2.0+
->>>> + */
->>>> +
->>>> +/ {
->>>> +	/* Test that we can change an int by another */
->>>> +	fragment@0 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			test-int-property =3D <43>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +	/* Test that we can replace a string by a longer one */
->>>> +	fragment@1 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			test-str-property =3D "foobar";
->>>> +		};
->>>> +	};
->>>> +
->>>> +	/* Test that we add a new property */
->>>> +	fragment@2 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			test-str-property-2 =3D "foobar2";
->>>> +		};
->>>> +	};
->>>> +
->>>> +	/* Test that we add a new node (by phandle) */
->>>> +	fragment@3 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			new-node {
->>>> +				new-property;
->>>> +			};
->>>> +		};
->>>> +	};
->>>> +
->>>> +	fragment@5 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			local: new-local-node {
->>>> +				new-property;
->>>> +			};
->>>> +		};
->>>> +	};
->>>> +
->>>> +	fragment@6 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			test-phandle =3D <&test>, <&local>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +	fragment@7 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			test-several-phandle =3D <&local>, <&local>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +	fragment@8 {
->>>> +		target =3D <&test>;
->>>> +
->>>> +		__overlay__ {
->>>> +			sub-test-node {
->>>> +				new-sub-test-property;
->>>> +			};
->>>> +		};
->>>> +	};
->>>> +};
->>>> diff --git a/tests/overlay_overlay_new_dtc.dts =
-b/tests/overlay_overlay_new_dtc.dts
->>>> new file mode 100644
->>>> index 0000000..14d3f54
->>>> --- /dev/null
->>>> +++ b/tests/overlay_overlay_new_dtc.dts
->>>> @@ -0,0 +1,11 @@
->>>> +/*
->>>> + * Copyright (c) 2016 NextThing Co
->>>> + * Copyright (c) 2016 Free Electrons
->>>> + * Copyright (c) 2016 Konsulko Inc.
->>>> + *
->>>> + * SPDX-License-Identifier:	GPL-2.0+
->>>> + */
->>>> +
->>>> +/dts-v1/ /plugin/;
->>>> +
->>>> +/include/ "overlay_overlay_dtc.dtsi"
->>>> diff --git a/tests/overlay_overlay_simple.dts =
-b/tests/overlay_overlay_simple.dts
->>>> new file mode 100644
->>>> index 0000000..8657e1e
->>>> --- /dev/null
->>>> +++ b/tests/overlay_overlay_simple.dts
->>>> @@ -0,0 +1,12 @@
->>>> +/*
->>>> + * Copyright (c) 2016 Konsulko Inc.
->>>> + *
->>>> + * SPDX-License-Identifier:	GPL-2.0+
->>>> + */
->>>> +
->>>> +/dts-v1/;
->>>> +/plugin/;
->>>> +
->>>> +&test {
->>>> +	test-int-property =3D <43>;
->>>> +};
->>>> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
->>>> index e4139dd..74af0ff 100755
->>>> --- a/tests/run_tests.sh
->>>> +++ b/tests/run_tests.sh
->>>> @@ -181,6 +181,47 @@ overlay_tests () {
->>>>        run_dtc_test -@ -I dts -O dtb -o =
-overlay_base_with_symbols.test.dtb overlay_base.dts
->>>>        run_dtc_test -@ -I dts -O dtb -o =
-overlay_overlay_with_symbols.test.dtb overlay_overlay_dtc.dts
->>>>        run_test overlay overlay_base_with_symbols.test.dtb =
-overlay_overlay_with_symbols.test.dtb
->>>> +
->>>> +        # new /plugin/ format
->>>> +        run_dtc_test -@ -I dts -O dtb -o =
-overlay_overlay_new_with_symbols.test.dtb overlay_overlay_new_dtc.dts
->>>> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb =
-exists "/__symbols__"
->>>> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb =
-exists "/__fixups__"
->>>> +	run_test check_path overlay_overlay_new_with_symbols.test.dtb =
-exists "/__local_fixups__"
->>>=20
->>> Looks like you're mixing tabs and spaces here.  I don't really mind
->>> which, but keep it consistent at least at the same indentation =
-level.
->>>=20
->>=20
->> Oh, sorry, I use tabs but this sections has spaces=E2=80=A6 Will fix.
->=20
-> Well, it's more tha the first line in the block seems to be using
-> spaces, then the rest using tabs.
->=20
->>=20
->>>> +        # test new magic option
->>>> +        run_dtc_test -M@ -I dts -O dtb -o =
-overlay_overlay_with_symbols_new_magic.test.dtb overlay_overlay_dtc.dts
->>>> +	run_test check_path =
-overlay_overlay_with_symbols_new_magic.test.dtb exists "/__symbols__"
->>>> +	run_test check_path =
-overlay_overlay_with_symbols_new_magic.test.dtb exists "/__fixups__"
->>>> +	run_test check_path =
-overlay_overlay_with_symbols_new_magic.test.dtb exists =
-"/__local_fixups__"
->>>> +
->>>> +        # test plugin source to dtb and back
->>>> +        run_dtc_test -@ -I dtb -O dts -o =
-overlay_overlay_dtc.test.dts overlay_overlay_with_symbols.test.dtb
->>>> +        run_dtc_test -@ -I dts -O dtb -o =
-overlay_overlay_with_symbols.test.test.dtb overlay_overlay_dtc.test.dts
->>>> +        run_test dtbs_equal_ordered =
-overlay_overlay_with_symbols.test.dtb =
-overlay_overlay_with_symbols.test.test.dtb
->>>> +
->>>> +	# test plugin source to dtb and back (with new magic)
->>>> +        run_dtc_test -@ -I dtb -O dts -o =
-overlay_overlay_dtc_new_magic.test.dts =
-overlay_overlay_with_symbols_new_magic.test.dtb
->>>> +        run_dtc_test -@ -I dts -O dtb -o =
-overlay_overlay_with_symbols_new_magic.test.test.dtb =
-overlay_overlay_dtc_new_magic.test.dts
->>>> +        run_test dtbs_equal_ordered =
-overlay_overlay_with_symbols_new_magic.test.dtb =
-overlay_overlay_with_symbols_new_magic.test.test.dtb
->>>> +
->>>> +        # test plugin auto-generation without using -@
->>>> +        run_dtc_test -I dts -O dtb -o =
-overlay_overlay_new_with_symbols_auto.test.dtb overlay_overlay_dtc.dts
->>>> +	run_test check_path =
-overlay_overlay_new_with_symbols_auto.test.dtb exists "/__symbols__"
->>>> +	run_test check_path =
-overlay_overlay_new_with_symbols_auto.test.dtb exists "/__fixups__"
->>>> +	run_test check_path =
-overlay_overlay_new_with_symbols_auto.test.dtb exists =
-"/__local_fixups__"
->>>> +
->>>> +        # Test suppression of fixups
->>>> +        run_dtc_test -F -@ -I dts -O dtb -o =
-overlay_base_with_symbols_no_fixups.test.dtb overlay_base.dts
->>>> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb =
-exists "/__symbols__"
->>>> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb =
-not-exists "/__fixups__"
->>>> +	run_test check_path overlay_base_with_symbols_no_fixups.test.dtb =
-not-exists "/__local_fixups__"
->>>> +
->>>> +        # Test generation of aliases insted of symbols
->>>> +        run_dtc_test -A -I dts -O dtb -o =
-overlay_overlay_with_aliases.dtb overlay_overlay_dtc.dts
->>>> +	run_test check_path overlay_overlay_with_aliases.dtb exists =
-"/aliases"
->>>> +	run_test check_path overlay_overlay_with_aliases.dtb exists =
-"/__symbols__"
->>>> +	run_test check_path overlay_overlay_with_aliases.dtb exists =
-"/__fixups__"
->>>> +	run_test check_path overlay_overlay_with_aliases.dtb exists =
-"/__local_fixups__"
->>>>    fi
->>>>=20
->>>>    # Bad fixup tests
->>>=20
->>=20
->> Regards
->>=20
->> =E2=80=94 Pantelis
->>=20
->=20
-> --=20
-> David Gibson			| I'll have my music baroque, and my =
-code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
-_the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
+More, it is not sure that the bridge/DW code would work with
+Allwinner's SoCs. It seems that they got some schematics from
+DesignWare, but, is it really the same hardware? Also, if some changes
+had to be done in the bridge code, I could not check if this would
+break or not the other SoCs.
+
+Eventually, I went the same way as omap/hdmi5: different driver.
+
+>   - The fact that you ignored Rob (v6) and I (v5) comment on using OF
+>     graph to model the connection between the display engine and the
+>     TCON. Something that Laurent also pointed out in this version.
+
+I simply use the drm function drm_of_component_probe().
+If this one is in the DRM core, why should I not use it?
+If it must not be used, it would be nice to mark it as deprecated and
+to update the code of the drivers which are using it.
+
+>   - The fact that you ignored that you needed an HDMI connector node
+>     as a child of the HDMI controller. This has been reported by Rob
+>     (v6) and yet again in this version by Laurent.
+
+As I don't know what is a DT 'connector', I cannot go further.
+I hope Laurent will give me clearer explanations and a real example.
+
+>   - And finally the fact that we can't have several display engine in
+>     parallel, if needs be. This has happened in the past already on
+>     Allwinner SoCs, so it's definitely something we should consider in
+>     the DT bindings, since we can't break them.
+
+IIRC, I proposed my driver before yours, and the DE2 is completely
+different from the other display engines.
+What you are telling is "add more code to already complex code and have
+a big driver for all SoCs in each kernels".
+I think it should be better to have small modules, each one treating
+specific hardware, and to let only the needed code in the kernel memory
+at startup time.
+
+> Until those are fixed, I cannot see how this driver can be merged,
+> unfortunately.
+
+No problem. I just wanted to help people by giving the job I did on the
+boards I have. My boards are working for almost one year, fine enough
+for I use them as daily desktop computers. I don't want to spend one
+more year for having my code in the Linux kernel: there are so much
+other exciting things to do...
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
