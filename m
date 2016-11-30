@@ -1,82 +1,60 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v6 7/8] drivers:input:ads7846(+tsc2046): fix spi module table
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <20161119181824.GB20446@dtor-ws>
-Date: Tue, 22 Nov 2016 15:00:08 +0100
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <40022D47-58CC-4D76-88B9-CBEC971328F9@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com> <54f282e1adebeeb133687b6c430ecbb6f2fe6d5b.1477557860.git.hns@goldelico.com> <20161119181824.GB20446@dtor-ws>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+MIME-Version: 1.0
+In-Reply-To: <20161124102529.20212-4-stephen.boyd@linaro.org>
+References: <20161124102529.20212-1-stephen.boyd@linaro.org>
+	<20161124102529.20212-4-stephen.boyd@linaro.org>
+Date: Wed, 30 Nov 2016 16:48:26 -0600
+Message-ID: <CAL_JsqLXUYWnhdW=vdpdGmzyH_xNrn=ckxhK4rTyO8wBisAGCg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: Support gpio nexus dt bindings
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
 
-> Am 19.11.2016 um 19:18 schrieb Dmitry Torokhov =
-<dmitry.torokhov@gmail.com>:
->=20
-> On Thu, Oct 27, 2016 at 10:44:20AM +0200, H. Nikolaus Schaller wrote:
->> Fix module table so that the driver is loaded if compiled
->> as module and requested by DT.
->=20
-> We really need to fix it between spi/i23c core and module utils =
-instead
-> of keeping adding duplicate IDs all over drivers. We already have OF
-> module device table containing the same data, we should be able to use
-> it.
 
-Is someone working on that so that we can rely on it in the next merge =
-window?
-
-Otherwise I have no idea what I could change in this driver to make it =
-working.
-So I leave it as is for v8.
-
->=20
-> Thanks.
->=20
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/input/touchscreen/ads7846.c | 11 ++++++++++-
->> 1 file changed, 10 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/input/touchscreen/ads7846.c =
-b/drivers/input/touchscreen/ads7846.c
->> index 400e421..50c85d2 100644
->> --- a/drivers/input/touchscreen/ads7846.c
->> +++ b/drivers/input/touchscreen/ads7846.c
->> @@ -1532,6 +1532,16 @@ static int ads7846_remove(struct spi_device =
-*spi)
->> 	return 0;
->> }
->>=20
->> +static const struct spi_device_id ads7846_idtable[] =3D {
->> +	{ "tsc2046", 0 },
->> +	{ "ads7843", 0 },
->> +	{ "ads7845", 0 },
->> +	{ "ads7846", 0 },
->> +	{ "ads7873", 0 },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(spi, ads7846_idtable);
->> +
->> static struct spi_driver ads7846_driver =3D {
->> 	.driver =3D {
->> 		.name	=3D "ads7846",
->> @@ -1546,4 +1556,3 @@ module_spi_driver(ads7846_driver);
->>=20
->> MODULE_DESCRIPTION("ADS7846 TouchScreen Driver");
->> MODULE_LICENSE("GPL");
->> -MODULE_ALIAS("spi:ads7846");
->> --=20
->> 2.7.3
->>=20
->=20
-> --=20
-> Dmitry
-
-BR and thanks,
-Nikolaus
+On Thu, Nov 24, 2016 at 4:25 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> Platforms like 96boards have a standardized connector/expansion
+> slot that exposes signals like GPIOs to expansion boards in an
+> SoC agnostic way. We'd like the DT overlays for the expansion
+> boards to be written once without knowledge of the SoC on the
+> other side of the connector. This avoids the unscalable
+> combinatorial explosion of a different DT overlay for each
+> expansion board and SoC pair.
+>
+> Now that we have nexus support in the OF core let's change the
+> function call here that parses the phandle lists of gpios to use
+> the nexus variant. This allows us to remap phandles and their
+> arguments through any number of nexus nodes and end up with the
+> actual gpio provider being used.
+>
+> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+>
+> TODO: Document gpio-map and gpio-map-mask in GPIO devicetree binding
+>
+>  drivers/gpio/gpiolib-of.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index ecad3f0e3b77..3117397c4c41 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -71,8 +71,9 @@ struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+>         struct gpio_desc *desc;
+>         int ret;
+>
+> -       ret = of_parse_phandle_with_args(np, propname, "#gpio-cells", index,
+> -                                        &gpiospec);
+> +       ret = of_parse_phandle_with_args_map(np, propname, "#gpio-cells",
+> +                                            "gpio-map", "gpio-map-mask",
+> +                                            index, &gpiospec);
+>         if (ret) {
+>                 pr_debug("%s: can't parse '%s' property of node '%s[%d]'\n",
+>                         __func__, propname, np->full_name, index);
+> --
+> 2.10.0.297.gf6727b0
+>
