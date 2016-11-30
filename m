@@ -1,50 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v28 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Date: Wed, 30 Nov 2016 14:44:05 -0600
-Message-ID: <20161130204405.a4k54zrhe36dpdlp@rob-hp-laptop>
-References: <20161124095523.6972-1-takahiro.akashi@linaro.org>
- <20161124095944.7167-1-takahiro.akashi@linaro.org>
- <20161124171413.GE7452@e104818-lin.cambridge.arm.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Wed, 30 Nov 2016 14:43:57 -0600
+Message-ID: <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
+ <20161130184511.GB8209@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <kexec-bounces+glkk-kexec=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161124171413.GE7452-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
- <mailto:kexec-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/kexec/>
-List-Post: <mailto:kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:kexec-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
- <mailto:kexec-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "kexec" <kexec-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: kexec-bounces+glkk-kexec=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, james.morse-5wv7dgnIgG8@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161130184511.GB8209@netboy>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2016 at 05:14:13PM +0000, Catalin Marinas wrote:
-> On Thu, Nov 24, 2016 at 06:59:44PM +0900, AKASHI Takahiro wrote:
-> > From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> > 
-> > Add documentation for
-> > 	linux,crashkernel-base and crashkernel-size,
-> > 	linux,usable-memory-range
-> > 	linux,elfcorehdr
-> > used by arm64 kdump to decribe the kdump reserved area, and
-> > the elfcorehdr's location within it.
-> > 
-> > Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> > [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: added "linux,crashkernel-base" and "-size" ]
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+
+On 11/30/2016 12:45 PM, Richard Cochran wrote:
+> On Mon, Nov 28, 2016 at 05:04:26PM -0600, Grygorii Strashko wrote:
+>> +static cycle_t cpts_cc_ns2cyc(struct cpts *cpts, u64 nsecs)
+>> +{
+>> +	cycle_t cyc = (nsecs << cpts->cc.shift) + nsecs;
+>> +
+>> +	do_div(cyc, cpts->cc.mult);
+>> +
+>> +	return cyc;
+>> +}
 > 
-> Rob, Mark, are you ok with this patch?
+> So you set the comparison value once per second, based on cc.mult.
+> But when the clock is being actively synchronized, user space calls to
+> clock_adjtimex() will change cc.mult.  This can happen several times
+> per second, depending on the PTP Sync rate.
+> 
 
-I'm leaving this one to Mark.
+Right.
 
-Rob
+> In order to produce the PPS edge correctly, you would have to adjust
+> the comparison value whenever cc.mult changes, 
+
+yes. And that is done in cpts_ptp_adjfreq()
+	if (cpts->ts_comp_enabled)
+		cpts->ts_comp_one_sec_cycs = cpts_cc_ns2cyc(cpts, NSEC_PER_SEC);
+	^^^ re-calculate reload value for 
+ 
+	cpts_ts_comp_settime(cpts, ns);
+	^^^ adjust the ts_comp
+
+> but of course this is unworkable.
+> 
+
+Sry, but this is questionable - code for pps comes from TI internal
+branches (SDK releases) where it survived for a pretty long time.
+I'm, of course, agree that without HW support for freq adjustment
+this PPS feature is not super precise and has some limitation,
+but that is what we agree to live with. 
+
+Murali, do you have any comments regarding usability of SW
+freq freq adjustment approach? 
+
+> So I'll have to say NAK for this patch.
+> 
+
+:) 
+
+
+-- 
+regards,
+-grygorii
