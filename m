@@ -1,712 +1,315 @@
-Return-Path: <hns@goldelico.com>
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v6 4/8] drivers:input:tsc2007: add iio interface to read external ADC input and temperature
-From: H. Nikolaus Schaller <hns@goldelico.com>
-In-Reply-To: <20161119183615.GC20446@dtor-ws>
-Date: Tue, 22 Nov 2016 14:59:52 +0100
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6B5847EC-7412-4D37-B821-59FC60A658F5@goldelico.com>
-References: <cover.1477557860.git.hns@goldelico.com> <810571cc83159c674116f6f55624ca6227510f96.1477557860.git.hns@goldelico.com> <20161119183615.GC20446@dtor-ws>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, linux-iio@vger.kernel.org, kernel@pyra-handheld.com
+Return-Path: <baoyou.xie@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <CABymUCPMDqcfKQOtfj6gHWs69sh3HXaErDjE740xq6UQh_DFow@mail.gmail.com>
+References: <1480491237-5169-1-git-send-email-baoyou.xie@linaro.org> <CABymUCPMDqcfKQOtfj6gHWs69sh3HXaErDjE740xq6UQh_DFow@mail.gmail.com>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Date: Wed, 30 Nov 2016 17:04:39 +0800
+Message-ID: <CA+DQWkyBMEiOUteXUGnB3y_DROLJ5iuWanLQzCeG4GFbG1fYPw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: add zx296718's topcrm node
+Content-Type: multipart/alternative; boundary=001a114abf4aac7a43054280feb0
+To: Jun Nie <jun.nie@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
+--001a114abf4aac7a43054280feb0
+Content-Type: text/plain; charset=UTF-8
 
-> Am 19.11.2016 um 19:36 schrieb Dmitry Torokhov =
-<dmitry.torokhov@gmail.com>:
->=20
-> Hi Nikolaus,
->=20
-> On Thu, Oct 27, 2016 at 10:44:17AM +0200, H. Nikolaus Schaller wrote:
->> The tsc2007 chip not only has a resistive touch screen controller but
->> also an external AUX adc imput which can be used for an ambient
->> light sensor, battery voltage monitoring or any general purpose.
->>=20
->> Additionally it can measure the chip temperature.
->>=20
->> This extension provides an iio interface for these adc channels.
->>=20
->> Since it is not wasting much resources and is very straightforward,
->> we simply provide all other adc channels as optional iio interfaces
->> as weel. This can be used for debugging or special applications.
->>=20
->> This patch also splits the tsc2007 driver in several source files:
->> tsc2007.h -- constants, structs and stubs
->> tsc2007_core.c -- functional parts of the original driver
->> tsc2007_iio.c -- the optional iio stuff
->>=20
->> Makefile magic allows to conditionally link the iio
->> stuff if CONFIG_IIO=3Dy in a way that it works with
->> CONFIG_TOUCHSCREEN_TSC2007=3Dm.
->=20
-> What about CONFIG_TOUCHSCREEN_TSC2007=3Dy and CONFIG_IIO=3Dm?
+On 30 November 2016 at 16:26, Jun Nie <jun.nie@linaro.org> wrote:
 
-see reply to v7.
+> 2016-11-30 15:33 GMT+08:00 Baoyou Xie <baoyou.xie@linaro.org>:
+> > Enable topcrm clock node for zx296718, which is used for
+> > CPU's frequency change.
+>
+> Please follow general rule, such as
+> arm64: dts: zx: brief title of your changes
+>
+> Sounds good, though some patches didn't do so.
 
->=20
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/input/touchscreen/Makefile                 |   2 +
->> drivers/input/touchscreen/tsc2007.h                | 129 =
-++++++++++++++++++
->> .../touchscreen/{tsc2007.c =3D> tsc2007_core.c}      | 127 =
-++++++-----------
->> drivers/input/touchscreen/tsc2007_iio.c            | 151 =
-+++++++++++++++++++++
->> 4 files changed, 320 insertions(+), 89 deletions(-)
->> create mode 100644 drivers/input/touchscreen/tsc2007.h
->> rename drivers/input/touchscreen/{tsc2007.c =3D> tsc2007_core.c} =
-(84%)
->> create mode 100644 drivers/input/touchscreen/tsc2007_iio.c
->>=20
->> diff --git a/drivers/input/touchscreen/Makefile =
-b/drivers/input/touchscreen/Makefile
->> index 81b8645..d932e2d 100644
->> --- a/drivers/input/touchscreen/Makefile
->> +++ b/drivers/input/touchscreen/Makefile
->> @@ -80,6 +80,8 @@ obj-$(CONFIG_TOUCHSCREEN_TSC_SERIO)	+=3D =
-tsc40.o
->> obj-$(CONFIG_TOUCHSCREEN_TSC200X_CORE)	+=3D tsc200x-core.o
->> obj-$(CONFIG_TOUCHSCREEN_TSC2004)	+=3D tsc2004.o
->> obj-$(CONFIG_TOUCHSCREEN_TSC2005)	+=3D tsc2005.o
->> +tsc2007-y				:=3D tsc2007_core.o
->> +tsc2007-$(CONFIG_IIO)			+=3D tsc2007_iio.o
->> obj-$(CONFIG_TOUCHSCREEN_TSC2007)	+=3D tsc2007.o
->> obj-$(CONFIG_TOUCHSCREEN_UCB1400)	+=3D ucb1400_ts.o
->> obj-$(CONFIG_TOUCHSCREEN_WACOM_W8001)	+=3D wacom_w8001.o
->> diff --git a/drivers/input/touchscreen/tsc2007.h =
-b/drivers/input/touchscreen/tsc2007.h
->> new file mode 100644
->> index 0000000..87d5ce5
->> --- /dev/null
->> +++ b/drivers/input/touchscreen/tsc2007.h
->> @@ -0,0 +1,129 @@
->> +/*
->> + * drivers/input/touchscreen/tsc2007.h
->=20
-> No file names in comments please.
 
-Ok. Will be removed in v8.
+> >
+> > Furthermore, this patch adds the CPU clock phandle in CPU's node
+> > and uses operating-points-v2 to register operating points.
+> >
+> > So it can be used by cpufreq-dt driver.
+>
+> Suggest to split clock nodes and cpu-freq nodes changes into different
+> patches.
+>
+> >
+> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/zte/zx296718.dtsi | 48
+> +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi
+> b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> > index 6b239a3..f9eb37d 100644
+> > --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
+> > +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> > @@ -44,6 +44,7 @@
+> >  #include <dt-bindings/input/input.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >  #include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/clock/zx296718-clock.h>
+> >
+> >  / {
+> >         compatible = "zte,zx296718";
+> > @@ -81,6 +82,8 @@
+> >                         compatible = "arm,cortex-a53","arm,armv8";
+> >                         reg = <0x0 0x0>;
+> >                         enable-method = "psci";
+> > +                       clocks = <&topcrm A53_GATE>;
+> > +                       operating-points-v2 = <&cluster0_opp>;
+> >                 };
+> >
+> >                 cpu1: cpu@1 {
+> > @@ -88,6 +91,7 @@
+> >                         compatible = "arm,cortex-a53","arm,armv8";
+> >                         reg = <0x0 0x1>;
+> >                         enable-method = "psci";
+> > +                       operating-points-v2 = <&cluster0_opp>;
+> >                 };
+> >
+> >                 cpu2: cpu@2 {
+> > @@ -95,6 +99,7 @@
+> >                         compatible = "arm,cortex-a53","arm,armv8";
+> >                         reg = <0x0 0x2>;
+> >                         enable-method = "psci";
+> > +                       operating-points-v2 = <&cluster0_opp>;
+> >                 };
+> >
+> >                 cpu3: cpu@3 {
+> > @@ -102,6 +107,43 @@
+> >                         compatible = "arm,cortex-a53","arm,armv8";
+> >                         reg = <0x0 0x3>;
+> >                         enable-method = "psci";
+> > +                       operating-points-v2 = <&cluster0_opp>;
+> > +               };
+> > +       };
+> > +
+> > +       cluster0_opp: opp_table0 {
+> > +               compatible = "operating-points-v2";
+> > +               opp-shared;
+> > +
+> > +               opp@1000000000 {
+> > +                       opp-hz = /bits/ 64 <500000000>;
+>
+> Why frequency in opp name differ with opp-hz value?
+>
+> Do we must keep them same? if don't so, just leave it, OK?
 
->=20
->> + *
->> + * Copyright (c) 2008 MtekVision Co., Ltd.
->> + *	Kwangwoo Lee <kwlee@mtekvision.com>
->> + *
->> + * Using code from:
->> + *  - ads7846.c
->> + *	Copyright (c) 2005 David Brownell
->> + *	Copyright (c) 2006 Nokia Corporation
->> + *  - corgi_ts.c
->> + *	Copyright (C) 2004-2005 Richard Purdie
->> + *  - omap_ts.[hc], ads7846.h, ts_osk.c
->> + *	Copyright (C) 2002 MontaVista Software
->> + *	Copyright (C) 2004 Texas Instruments
->> + *	Copyright (C) 2005 Dirk Behme
->> + *
->> + *  This program is free software; you can redistribute it and/or =
-modify
->> + *  it under the terms of the GNU General Public License version 2 =
-as
->> + *  published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/input.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/i2c.h>
->> +#include <linux/i2c/tsc2007.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/input/touchscreen.h>
->> +
->> +#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->> +#define TSC2007_MEASURE_AUX		(0x2 << 4)
->> +#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->> +#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->> +#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->> +#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->> +#define TSC2007_SETUP			(0xb << 4)
->> +#define TSC2007_MEASURE_X		(0xc << 4)
->> +#define TSC2007_MEASURE_Y		(0xd << 4)
->> +#define TSC2007_MEASURE_Z1		(0xe << 4)
->> +#define TSC2007_MEASURE_Z2		(0xf << 4)
->> +
->> +#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->> +#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->> +#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->> +#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->> +
->> +#define TSC2007_12BIT			(0x0 << 1)
->> +#define TSC2007_8BIT			(0x1 << 1)
->> +
->> +#define	MAX_12BIT			((1 << 12) - 1)
->> +
->> +#define ADC_ON_12BIT	(TSC2007_12BIT | =
-TSC2007_ADC_ON_IRQ_DIS0)
->> +
->> +#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->> +#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->> +#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->> +#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->> +#define PWRDOWN		(TSC2007_12BIT | =
-TSC2007_POWER_OFF_IRQ_EN)
->> +
->> +struct ts_event {
->> +	u16	x;
->> +	u16	y;
->> +	u16	z1, z2;
->> +};
->> +
->> +struct tsc2007 {
->> +	struct input_dev	*input;
->> +	char			phys[32];
->> +
->> +	struct i2c_client	*client;
->> +
->> +	u16			model;
->> +	u16			x_plate_ohms;
->> +
->> +	struct touchscreen_properties prop;
->> +
->> +	bool			report_resistance;
->> +	u16			min_x;
->> +	u16			min_y;
->> +	u16			max_x;
->> +	u16			max_y;
->> +	u16			max_rt;
->> +	unsigned long		poll_period; /* in jiffies */
->> +	int			fuzzx;
->> +	int			fuzzy;
->> +	int			fuzzz;
->> +
->> +	unsigned int		gpio;
->> +	int			irq;
->> +
->> +	wait_queue_head_t	wait;
->> +	bool			stopped;
->> +	bool			pendown;
->> +
->> +	int			(*get_pendown_state)(struct device *);
->> +	void			(*clear_penirq)(void);
->> +
->> +	struct mutex		mlock;
->> +#ifdef CONFIG_IIO
->> +	void			*private;
->> +#endif
->> +};
->> +
->> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd);
->> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->> +					struct ts_event *tc);
->> +bool tsc2007_is_pen_down(struct tsc2007 *ts);
->> +
->> +#ifdef CONFIG_IIO
->> +
->> +/* defined in tsc2007_iio.c */
->> +int tsc2007_iio_configure(struct tsc2007 *ts);
->> +void tsc2007_iio_unconfigure(struct tsc2007 *ts);
->> +
->> +#else /* CONFIG_IIO */
->> +
->> +static inline int tsc2007_iio_configure(struct tsc2007 *ts)
->> +{
->> +	return 0;
->> +}
->> +static inline void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->> +{
->> +}
->> +
->> +#endif /* CONFIG_IIO */
->> diff --git a/drivers/input/touchscreen/tsc2007.c =
-b/drivers/input/touchscreen/tsc2007_core.c
->> similarity index 84%
->> rename from drivers/input/touchscreen/tsc2007.c
->> rename to drivers/input/touchscreen/tsc2007_core.c
->> index 5e3c4bf..56c9a52 100644
->> --- a/drivers/input/touchscreen/tsc2007.c
->> +++ b/drivers/input/touchscreen/tsc2007_core.c
->> @@ -20,87 +20,9 @@
->>  *  published by the Free Software Foundation.
->>  */
->>=20
->> -#include <linux/module.h>
->> -#include <linux/slab.h>
->> -#include <linux/input.h>
->> -#include <linux/interrupt.h>
->> -#include <linux/i2c.h>
->> -#include <linux/i2c/tsc2007.h>
->> -#include <linux/of_device.h>
->> -#include <linux/of.h>
->> -#include <linux/of_gpio.h>
->> -#include <linux/input/touchscreen.h>
->> -
->> -#define TSC2007_MEASURE_TEMP0		(0x0 << 4)
->> -#define TSC2007_MEASURE_AUX		(0x2 << 4)
->> -#define TSC2007_MEASURE_TEMP1		(0x4 << 4)
->> -#define TSC2007_ACTIVATE_XN		(0x8 << 4)
->> -#define TSC2007_ACTIVATE_YN		(0x9 << 4)
->> -#define TSC2007_ACTIVATE_YP_XN		(0xa << 4)
->> -#define TSC2007_SETUP			(0xb << 4)
->> -#define TSC2007_MEASURE_X		(0xc << 4)
->> -#define TSC2007_MEASURE_Y		(0xd << 4)
->> -#define TSC2007_MEASURE_Z1		(0xe << 4)
->> -#define TSC2007_MEASURE_Z2		(0xf << 4)
->> -
->> -#define TSC2007_POWER_OFF_IRQ_EN	(0x0 << 2)
->> -#define TSC2007_ADC_ON_IRQ_DIS0		(0x1 << 2)
->> -#define TSC2007_ADC_OFF_IRQ_EN		(0x2 << 2)
->> -#define TSC2007_ADC_ON_IRQ_DIS1		(0x3 << 2)
->> -
->> -#define TSC2007_12BIT			(0x0 << 1)
->> -#define TSC2007_8BIT			(0x1 << 1)
->> -
->> -#define	MAX_12BIT			((1 << 12) - 1)
->> -
->> -#define ADC_ON_12BIT	(TSC2007_12BIT | =
-TSC2007_ADC_ON_IRQ_DIS0)
->> -
->> -#define READ_Y		(ADC_ON_12BIT | TSC2007_MEASURE_Y)
->> -#define READ_Z1		(ADC_ON_12BIT | TSC2007_MEASURE_Z1)
->> -#define READ_Z2		(ADC_ON_12BIT | TSC2007_MEASURE_Z2)
->> -#define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->> -#define PWRDOWN		(TSC2007_12BIT | =
-TSC2007_POWER_OFF_IRQ_EN)
->> -
->> -struct ts_event {
->> -	u16	x;
->> -	u16	y;
->> -	u16	z1, z2;
->> -};
->> -
->> -struct tsc2007 {
->> -	struct input_dev	*input;
->> -	char			phys[32];
->> -
->> -	struct i2c_client	*client;
->> -
->> -	u16			model;
->> -	u16			x_plate_ohms;
->> -
->> -	struct touchscreen_properties prop;
->> -
->> -	bool			report_resistance;
->> -	u16			min_x;
->> -	u16			min_y;
->> -	u16			max_x;
->> -	u16			max_y;
->> -	u16			max_rt;
->> -	unsigned long		poll_period; /* in jiffies */
->> -	int			fuzzx;
->> -	int			fuzzy;
->> -	int			fuzzz;
->> +#include "tsc2007.h"
->>=20
->> -	unsigned		gpio;
->> -	int			irq;
->> -
->> -	wait_queue_head_t	wait;
->> -	bool			stopped;
->> -	bool			pendown;
->> -
->> -	int			(*get_pendown_state)(struct device *);
->> -	void			(*clear_penirq)(void);
->> -};
->> -
->> -static inline int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->> +int tsc2007_xfer(struct tsc2007 *tsc, u8 cmd)
->> {
->> 	s32 data;
->> 	u16 val;
->> @@ -121,6 +43,7 @@ static inline int tsc2007_xfer(struct tsc2007 =
-*tsc, u8 cmd)
->>=20
->> 	return val;
->> }
->> +EXPORT_SYMBOL(tsc2007_xfer);
->=20
-> Why do you export all these symbols? As far as I can tell it is still
-> the same module, but now comprising of maybe 2 object files liked
-> together. You do not need to export symbols in this case, liker will
-> resolve them when building the module.
 
-Ah, ok.
+> > +                       opp-microvolt = <857000>;
+> > +                       clock-latency-ns = <500000>;
+> > +               };
+> > +               opp@1100000000 {
+> > +                       opp-hz = /bits/ 64 <648000000>;
+> > +                       opp-microvolt = <857000>;
+> > +                       clock-latency-ns = <500000>;
+> > +               };
+> > +               opp@1200000000 {
+> > +                       opp-hz = /bits/ 64 <800000000>;
+> > +                       opp-microvolt = <882000>;
+> > +                       clock-latency-ns = <500000>;
+> > +               };
+> > +               opp@1300000000 {
+> > +                       opp-hz = /bits/ 64 <1000000000>;
+> > +                       opp-microvolt = <892000>;
+> > +                       clock-latency-ns = <500000>;
+> > +               };
+> > +               opp@1400000000 {
+> > +                       opp-hz = /bits/ 64 <1188000000>;
+> > +                       opp-microvolt = <1009000>;
+> > +                       clock-latency-ns = <500000>;
+> > +               };
+> > +               opp@1500000000 {
+> > +                       opp-hz = /bits/ 64 <1312000000>;
+> > +                       opp-microvolt = <1052000>;
+> > +                       clock-latency-ns = <500000>;
+> >                 };
+>
+> I did not see frequency 1500000000 or 1312000000 in clock drivers for
+> A53. Please confirm whether clock driver need update or your need
+> revise your patch.
+>
+> Oh, it's my mistake. In fact, frequency 1500000000 or 1312000000 can be
+removed. These two cases are trial, but we don't suggest using them in
+products.
 
-This has remained from some intermediate version where it was necessary
-to export them.
 
-Tested in v8 to be no longer necessary.
+> >         };
+> >
+> > @@ -279,6 +321,12 @@
+> >                         dma-requests = <32>;
+> >                 };
+> >
+> > +               topcrm: clock-controller@01461000 {
+>
+> Removing heading 0 in address of name.
+>
+> > +                       compatible = "zte,zx296718-topcrm";
+> > +                       reg = <0x01461000 0x1000>;
+> > +                       #clock-cells = <1>;
+> > +               };
+> > +
+> >                 sysctrl: sysctrl@1463000 {
+> >                         compatible = "zte,zx296718-sysctrl", "syscon";
+> >                         reg = <0x1463000 0x1000>;
+> > --
+> > 2.7.4
+> >
+>
 
->=20
->>=20
->> static void tsc2007_read_values(struct tsc2007 *tsc, struct ts_event =
-*tc)
->> {
->> @@ -138,7 +61,7 @@ static void tsc2007_read_values(struct tsc2007 =
-*tsc, struct ts_event *tc)
->> 	tsc2007_xfer(tsc, PWRDOWN);
->> }
->>=20
->> -static u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->> +u32 tsc2007_calculate_resistance(struct tsc2007 *tsc,
->> 					struct ts_event *tc)
->> {
->> 	u32 rt =3D 0;
->> @@ -158,8 +81,9 @@ static u32 tsc2007_calculate_resistance(struct =
-tsc2007 *tsc,
->>=20
->> 	return rt;
->> }
->> +EXPORT_SYMBOL(tsc2007_calculate_resistance);
->>=20
->> -static bool tsc2007_is_pen_down(struct tsc2007 *ts)
->> +bool tsc2007_is_pen_down(struct tsc2007 *ts)
->> {
->> 	/*
->> 	 * NOTE: We can't rely on the pressure to determine the pen down
->> @@ -180,6 +104,7 @@ static bool tsc2007_is_pen_down(struct tsc2007 =
-*ts)
->>=20
->> 	return ts->get_pendown_state(&ts->client->dev);
->> }
->> +EXPORT_SYMBOL(tsc2007_is_pen_down);
->>=20
->> static irqreturn_t tsc2007_soft_irq(int irq, void *handle)
->> {
->> @@ -192,7 +117,10 @@ static irqreturn_t tsc2007_soft_irq(int irq, =
-void *handle)
->> 	while (!ts->stopped && tsc2007_is_pen_down(ts)) {
->>=20
->> 		/* pen is down, continue with the measurement */
->> +
->> +		mutex_lock(&ts->mlock);
->> 		tsc2007_read_values(ts, &tc);
->> +		mutex_unlock(&ts->mlock);
->>=20
->> 		rt =3D tsc2007_calculate_resistance(ts, &tc);
->>=20
->> @@ -450,7 +378,8 @@ static void tsc2007_call_exit_platform_hw(void =
-*data)
->> static int tsc2007_probe(struct i2c_client *client,
->> 			 const struct i2c_device_id *id)
->> {
->> -	const struct tsc2007_platform_data *pdata =3D =
-dev_get_platdata(&client->dev);
->> +	const struct tsc2007_platform_data *pdata =3D
->> +		dev_get_platdata(&client->dev);
->> 	struct tsc2007 *ts;
->> 	struct input_dev *input_dev;
->> 	int err;
->> @@ -472,7 +401,13 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 	ts->client =3D client;
->> 	ts->irq =3D client->irq;
->> 	ts->input =3D input_dev;
->> +
->> +	err =3D tsc2007_iio_configure(ts);
->=20
-> No, this is not going to work. =46rom teh cursory glance at the new =
-iio
-> code it uses resources that you set up later in tsc2007_probe(). I'd =
-say
-> this needs to go last.
+--001a114abf4aac7a43054280feb0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-Ok, it looks as if it now can be moved to the end of the probe function.
-The original code did the memory allocation inside and therefore was
-required to be done first. Now it creates an iio wrapper around the
-"ts" struct.
-
-Tested to compile and work.
-
->=20
->> +	if (err < 0)
->> +		return err;
->> +
->> 	init_waitqueue_head(&ts->wait);
->> +	mutex_init(&ts->mlock);
->>=20
->> 	snprintf(ts->phys, sizeof(ts->phys),
->> 		 "%s/input0", dev_name(&client->dev));
->> @@ -494,7 +429,7 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 	if (pdata) {
->> 		err =3D tsc2007_probe_pdev(client, ts, pdata, id);
->> 		if (err)
->> -			return err;
->> +			goto probe_err;
-
->> 		input_set_abs_params(input_dev, ABS_X, 0, =
-ts->max_x-ts->min_x,
->> 							  ts->fuzzx, 0);
->> 		input_set_abs_params(input_dev, ABS_Y, 0, =
-ts->max_y-ts->min_y,
->> @@ -504,7 +439,7 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 	} else {
->> 		err =3D tsc2007_probe_dt(client, ts);
->> 		if (err)
->> -			return err;
->> +			goto probe_err;
->> 	}
->>=20
->> 	if (pdata) {
->> @@ -516,7 +451,7 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 				dev_err(&client->dev,
->> 					"Failed to register =
-exit_platform_hw action, %d\n",
->> 					err);
->> -				return err;
->> +				goto probe_err;
->> 			}
->> 		}
->>=20
->> @@ -533,7 +468,7 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 	if (err) {
->> 		dev_err(&client->dev, "Failed to request irq %d: %d\n",
->> 			ts->irq, err);
->> -		return err;
->> +		goto probe_err;
->> 	}
->>=20
->> 	tsc2007_stop(ts);
->> @@ -543,17 +478,30 @@ static int tsc2007_probe(struct i2c_client =
-*client,
->> 	if (err < 0) {
->> 		dev_err(&client->dev,
->> 			"Failed to setup chip: %d\n", err);
->> -		return err;	/* usually, chip does not respond */
->> +		goto probe_err;	/* chip does not respond */
->> 	}
->>=20
->> 	err =3D input_register_device(input_dev);
->> 	if (err) {
->> 		dev_err(&client->dev,
->> 			"Failed to register input device: %d\n", err);
->> -		return err;
->> +		goto probe_err;
->> 	}
->>=20
->> 	return 0;
->> +
->> +probe_err:
-
-This probe_err/unconfigure is then no longer needed if configure is
-the last step and I will remove.
-
->=20
->> +	tsc2007_iio_unconfigure(ts);
->> +	return err;
->> +}
->> +
->> +static int tsc2007_remove(struct i2c_client *client)
->> +{
->> +	struct tsc2007 *ts =3D i2c_get_clientdata(client);
->> +
->> +	tsc2007_iio_unconfigure(ts);
->> +	input_unregister_device(ts->input);
->=20
-> Why did you add input_unregister_device() for devm-managed device?
-
-Is input_register_device devm based? The function name seems to require
-an explicit unregister step.
-
-But since you say it is not required, I have removed it from v8.
-
->=20
->> +	return 0;
->> }
->>=20
->> static const struct i2c_device_id tsc2007_idtable[] =3D {
->> @@ -578,6 +526,7 @@ static struct i2c_driver tsc2007_driver =3D {
->> 	},
->> 	.id_table	=3D tsc2007_idtable,
->> 	.probe		=3D tsc2007_probe,
->> +	.remove		=3D tsc2007_remove,
->> };
->>=20
->> module_i2c_driver(tsc2007_driver);
->> diff --git a/drivers/input/touchscreen/tsc2007_iio.c =
-b/drivers/input/touchscreen/tsc2007_iio.c
->> new file mode 100644
->> index 0000000..0375d8b
->> --- /dev/null
->> +++ b/drivers/input/touchscreen/tsc2007_iio.c
->> @@ -0,0 +1,151 @@
->> +/*
->> + * drivers/input/touchscreen/tsc2007_iio.c
->> + *
->> + * Copyright (c) 2016 Golden Delicious Comp. GmbH&Co. KG
->> + *	Nikolaus Schaller <hns@goldelico.com>
->> + *
->> + *  This program is free software; you can redistribute it and/or =
-modify
->> + *  it under the terms of the GNU General Public License version 2 =
-as
->> + *  published by the Free Software Foundation.
->> + */
->> +
->> +#include "tsc2007.h"
->> +#include <linux/iio/iio.h>
->> +
->> +struct tsc2007_iio {
->> +	struct tsc2007 *ts;
->> +};
->> +
->> +#define TSC2007_CHAN_IIO(_chan, _name, _type, _chan_info) \
->> +{ \
->> +	.datasheet_name =3D _name, \
->> +	.type =3D _type, \
->> +	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |	\
->> +			BIT(_chan_info), \
->> +	.indexed =3D 1, \
->> +	.channel =3D _chan, \
->> +}
->> +
->> +static const struct iio_chan_spec tsc2007_iio_channel[] =3D {
->> +	TSC2007_CHAN_IIO(0, "x", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(1, "y", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(2, "z1", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(3, "z2", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(4, "adc", IIO_VOLTAGE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(5, "rt", IIO_VOLTAGE, IIO_CHAN_INFO_RAW), /* =
-Ohms? */
->> +	TSC2007_CHAN_IIO(6, "pen", IIO_PRESSURE, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(7, "temp0", IIO_TEMP, IIO_CHAN_INFO_RAW),
->> +	TSC2007_CHAN_IIO(8, "temp1", IIO_TEMP, IIO_CHAN_INFO_RAW),
->> +};
->> +
->> +static int tsc2007_read_raw(struct iio_dev *indio_dev,
->> +	struct iio_chan_spec const *chan, int *val, int *val2, long =
-mask)
->> +{
->> +	struct tsc2007_iio *iio =3D iio_priv(indio_dev);
->> +	struct tsc2007 *tsc =3D iio->ts;
->> +	int adc_chan =3D chan->channel;
->> +	int ret =3D 0;
->> +
->> +	if (adc_chan >=3D ARRAY_SIZE(tsc2007_iio_channel))
->> +		return -EINVAL;
->> +
->> +	if (mask !=3D IIO_CHAN_INFO_RAW)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&tsc->mlock);
->> +
->> +	switch (chan->channel) {
->> +	case 0:
->> +		*val =3D tsc2007_xfer(tsc, READ_X);
->> +		break;
->> +	case 1:
->> +		*val =3D tsc2007_xfer(tsc, READ_Y);
->> +		break;
->> +	case 2:
->> +		*val =3D tsc2007_xfer(tsc, READ_Z1);
->> +		break;
->> +	case 3:
->> +		*val =3D tsc2007_xfer(tsc, READ_Z2);
->> +		break;
->> +	case 4:
->> +		*val =3D tsc2007_xfer(tsc, (ADC_ON_12BIT | =
-TSC2007_MEASURE_AUX));
->> +		break;
->> +	case 5: {
->> +		struct ts_event tc;
->> +
->> +		tc.x =3D tsc2007_xfer(tsc, READ_X);
->> +		tc.z1 =3D tsc2007_xfer(tsc, READ_Z1);
->> +		tc.z2 =3D tsc2007_xfer(tsc, READ_Z2);
->> +		*val =3D tsc2007_calculate_resistance(tsc, &tc);
->> +		break;
->> +	}
->> +	case 6:
->> +		*val =3D tsc2007_is_pen_down(tsc);
->> +		break;
->> +	case 7:
->> +		*val =3D tsc2007_xfer(tsc,
->> +				    (ADC_ON_12BIT | =
-TSC2007_MEASURE_TEMP0));
->> +		break;
->> +	case 8:
->> +		*val =3D tsc2007_xfer(tsc,
->> +				    (ADC_ON_12BIT | =
-TSC2007_MEASURE_TEMP1));
->> +		break;
->> +	}
->> +
->> +	/* Prepare for next touch reading - power down ADC, enable =
-PENIRQ */
->> +	tsc2007_xfer(tsc, PWRDOWN);
->> +
->> +	mutex_unlock(&tsc->mlock);
->> +
->> +	ret =3D IIO_VAL_INT;
->> +
->> +	return ret;
->> +}
->> +
->> +static const struct iio_info tsc2007_iio_info =3D {
->> +	.read_raw =3D tsc2007_read_raw,
->> +	.driver_module =3D THIS_MODULE,
->> +};
->> +
->> +int tsc2007_iio_configure(struct tsc2007 *ts)
->> +{
->> +	int err;
->> +	struct iio_dev *indio_dev;
->> +	struct tsc2007_iio *iio;
->> +
->> +	indio_dev =3D devm_iio_device_alloc(&ts->client->dev,
->> +		sizeof(struct tsc2007_iio));
->> +	if (!indio_dev) {
->> +		dev_err(&ts->client->dev, "iio_device_alloc failed\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	iio =3D iio_priv(indio_dev);
->> +	iio->ts =3D ts;
->> +	ts->private =3D (void *) indio_dev;
->> +
->> +	indio_dev->name =3D "tsc2007";
->> +	indio_dev->dev.parent =3D &ts->client->dev;
->> +	indio_dev->info =3D &tsc2007_iio_info;
->> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
->> +	indio_dev->channels =3D tsc2007_iio_channel;
->> +	indio_dev->num_channels =3D ARRAY_SIZE(tsc2007_iio_channel);
->> +
->> +	err =3D iio_device_register(indio_dev);
->> +	if (err < 0) {
->> +		dev_err(&ts->client->dev, "iio_device_register() failed: =
-%d\n",
->> +			err);
->> +		return err;
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(tsc2007_iio_configure);
->> +
->> +void tsc2007_iio_unconfigure(struct tsc2007 *ts)
->> +{
->> +	struct iio_dev *indio_dev =3D ts->private;
->> +
->> +	iio_device_unregister(indio_dev);
->> +}
->> +EXPORT_SYMBOL(tsc2007_iio_unconfigure);
->> --=20
->> 2.7.3
->>=20
->=20
-> Thanks.
->=20
-> --=20
-> Dmitry
-
-BR and thanks,
-Nikolaus
+PGRpdiBkaXI9Imx0ciI+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRpdiBjbGFz
+cz0iZ21haWxfcXVvdGUiPk9uIDMwIE5vdmVtYmVyIDIwMTYgYXQgMTY6MjYsIEp1biBOaWUgPHNw
+YW4gZGlyPSJsdHIiPiZsdDs8YSBocmVmPSJtYWlsdG86anVuLm5pZUBsaW5hcm8ub3JnIiB0YXJn
+ZXQ9Il9ibGFuayI+anVuLm5pZUBsaW5hcm8ub3JnPC9hPiZndDs8L3NwYW4+IHdyb3RlOjxicj48
+YmxvY2txdW90ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHgg
+MC44ZXg7Ym9yZGVyLWxlZnQ6MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0
+OjFleCI+PHNwYW4gY2xhc3M9ImdtYWlsLSI+MjAxNi0xMS0zMCAxNTozMyBHTVQrMDg6MDAgQmFv
+eW91IFhpZSAmbHQ7PGEgaHJlZj0ibWFpbHRvOmJhb3lvdS54aWVAbGluYXJvLm9yZyI+YmFveW91
+LnhpZUBsaW5hcm8ub3JnPC9hPiZndDs6PGJyPg0KJmd0OyBFbmFibGUgdG9wY3JtIGNsb2NrIG5v
+ZGUgZm9yIHp4Mjk2NzE4LCB3aGljaCBpcyB1c2VkIGZvcjxicj4NCiZndDsgQ1BVJiMzOTtzIGZy
+ZXF1ZW5jeSBjaGFuZ2UuPGJyPg0KPGJyPg0KPC9zcGFuPlBsZWFzZSBmb2xsb3cgZ2VuZXJhbCBy
+dWxlLCBzdWNoIGFzPGJyPg0KYXJtNjQ6IGR0czogeng6IGJyaWVmIHRpdGxlIG9mIHlvdXIgY2hh
+bmdlczxicj4NCjxzcGFuIGNsYXNzPSJnbWFpbC0iPjxicj48L3NwYW4+PC9ibG9ja3F1b3RlPjxk
+aXY+U291bmRzIGdvb2QsIHRob3VnaCBzb21lIHBhdGNoZXMgZGlkbiYjMzk7dCBkbyBzby48YnI+
+PC9kaXY+PGRpdj7CoDwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9
+Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwy
+MDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij48c3BhbiBjbGFzcz0iZ21haWwtIj4NCiZndDs8YnI+
+DQomZ3Q7IEZ1cnRoZXJtb3JlLCB0aGlzIHBhdGNoIGFkZHMgdGhlIENQVSBjbG9jayBwaGFuZGxl
+IGluIENQVSYjMzk7cyBub2RlPGJyPg0KJmd0OyBhbmQgdXNlcyBvcGVyYXRpbmctcG9pbnRzLXYy
+IHRvIHJlZ2lzdGVyIG9wZXJhdGluZyBwb2ludHMuPGJyPg0KJmd0Ozxicj4NCiZndDsgU28gaXQg
+Y2FuIGJlIHVzZWQgYnkgY3B1ZnJlcS1kdCBkcml2ZXIuPGJyPg0KPGJyPg0KPC9zcGFuPlN1Z2dl
+c3QgdG8gc3BsaXQgY2xvY2sgbm9kZXMgYW5kIGNwdS1mcmVxIG5vZGVzIGNoYW5nZXMgaW50byBk
+aWZmZXJlbnQgcGF0Y2hlcy48YnI+DQo8ZGl2PjxkaXYgY2xhc3M9ImdtYWlsLWg1Ij48YnI+DQom
+Z3Q7PGJyPg0KJmd0OyBTaWduZWQtb2ZmLWJ5OiBCYW95b3UgWGllICZsdDs8YSBocmVmPSJtYWls
+dG86YmFveW91LnhpZUBsaW5hcm8ub3JnIj5iYW95b3UueGllQGxpbmFyby5vcmc8L2E+Jmd0Ozxi
+cj4NCiZndDsgLS0tPGJyPg0KJmd0O8KgIGFyY2gvYXJtNjQvYm9vdC9kdHMvenRlLzx3YnI+engy
+OTY3MTguZHRzaSB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKzx3YnI+KysrKys8
+YnI+DQomZ3Q7wqAgMSBmaWxlIGNoYW5nZWQsIDQ4IGluc2VydGlvbnMoKyk8YnI+DQomZ3Q7PGJy
+Pg0KJmd0OyBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy96dGUvPHdicj56eDI5Njcx
+OC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy96dGUvPHdicj56eDI5NjcxOC5kdHNpPGJyPg0K
+Jmd0OyBpbmRleCA2YjIzOWEzLi5mOWViMzdkIDEwMDY0NDxicj4NCiZndDsgLS0tIGEvYXJjaC9h
+cm02NC9ib290L2R0cy96dGUvPHdicj56eDI5NjcxOC5kdHNpPGJyPg0KJmd0OyArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL3p0ZS88d2JyPnp4Mjk2NzE4LmR0c2k8YnI+DQomZ3Q7IEBAIC00NCw2
+ICs0NCw3IEBAPGJyPg0KJmd0O8KgICNpbmNsdWRlICZsdDtkdC1iaW5kaW5ncy9pbnB1dC9pbnB1
+dC5oJmd0Ozxicj4NCiZndDvCoCAjaW5jbHVkZSAmbHQ7ZHQtYmluZGluZ3MvaW50ZXJydXB0LTx3
+YnI+Y29udHJvbGxlci9hcm0tZ2ljLmgmZ3Q7PGJyPg0KJmd0O8KgICNpbmNsdWRlICZsdDtkdC1i
+aW5kaW5ncy9ncGlvL2dwaW8uaCZndDs8YnI+DQomZ3Q7ICsjaW5jbHVkZSAmbHQ7ZHQtYmluZGlu
+Z3MvY2xvY2svengyOTY3MTgtPHdicj5jbG9jay5oJmd0Ozxicj4NCiZndDs8YnI+DQomZ3Q7wqAg
+LyB7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgY29tcGF0aWJsZSA9ICZxdW90O3p0ZSx6eDI5Njcx
+OCZxdW90Ozs8YnI+DQomZ3Q7IEBAIC04MSw2ICs4Miw4IEBAPGJyPg0KJmd0O8KgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29tcGF0aWJsZSA9ICZxdW90O2FybSxjb3J0ZXgt
+YTUzJnF1b3Q7LCZxdW90O2FybSxhcm12OCZxdW90Ozs8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHgwIDB4MCZndDs7PGJyPg0KJmd0O8Kg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgZW5hYmxlLW1ldGhvZCA9ICZxdW90
+O3BzY2kmcXVvdDs7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqBjbG9ja3MgPSAmbHQ7JmFtcDt0b3Bjcm0gQTUzX0dBVEUmZ3Q7Ozxicj4NCiZndDsgK8KgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BlcmF0aW5nLXBvaW50cy12MiA9ICZsdDsm
+YW1wO2NsdXN0ZXIwX29wcCZndDs7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+fTs8YnI+DQomZ3Q7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY3B1MTogY3B1
+QDEgezxicj4NCiZndDsgQEAgLTg4LDYgKzkxLDcgQEA8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21wYXRpYmxlID0gJnF1b3Q7YXJtLGNvcnRleC1hNTMm
+cXVvdDssJnF1b3Q7YXJtLGFybXY4JnF1b3Q7Ozxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoHJlZyA9ICZsdDsweDAgMHgxJmd0Ozs8YnI+DQomZ3Q7wqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBlbmFibGUtbWV0aG9kID0gJnF1b3Q7cHNj
+aSZxdW90Ozs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoG9w
+ZXJhdGluZy1wb2ludHMtdjIgPSAmbHQ7JmFtcDtjbHVzdGVyMF9vcHAmZ3Q7Ozxicj4NCiZndDvC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KJmd0Ozxicj4NCiZndDvCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoGNwdTI6IGNwdUAyIHs8YnI+DQomZ3Q7IEBAIC05NSw2ICs5OSw3IEBA
+PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29tcGF0aWJs
+ZSA9ICZxdW90O2FybSxjb3J0ZXgtYTUzJnF1b3Q7LCZxdW90O2FybSxhcm12OCZxdW90Ozs8YnI+
+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHgw
+IDB4MiZndDs7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+ZW5hYmxlLW1ldGhvZCA9ICZxdW90O3BzY2kmcXVvdDs7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBvcGVyYXRpbmctcG9pbnRzLXYyID0gJmx0OyZhbXA7Y2x1
+c3RlcjBfb3BwJmd0Ozs8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Ozxicj4N
+CiZndDs8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjcHUzOiBjcHVAMyB7PGJy
+Pg0KJmd0OyBAQCAtMTAyLDYgKzEwNyw0MyBAQDxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoGNvbXBhdGlibGUgPSAmcXVvdDthcm0sY29ydGV4LWE1MyZxdW90
+OywmcXVvdDthcm0sYXJtdjgmcXVvdDs7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgcmVnID0gJmx0OzB4MCAweDMmZ3Q7Ozxicj4NCiZndDvCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGVuYWJsZS1tZXRob2QgPSAmcXVvdDtwc2NpJnF1
+b3Q7Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BlcmF0
+aW5nLXBvaW50cy12MiA9ICZsdDsmYW1wO2NsdXN0ZXIwX29wcCZndDs7PGJyPg0KJmd0OyArwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqB9Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgfTs8YnI+DQomZ3Q7
+ICs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoGNsdXN0ZXIwX29wcDogb3BwX3RhYmxlMCB7PGJyPg0K
+Jmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb21wYXRpYmxlID0gJnF1b3Q7b3BlcmF0aW5n
+LXBvaW50cy12MiZxdW90Ozs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoG9wcC1z
+aGFyZWQ7PGJyPg0KJmd0OyArPGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBvcHBA
+MTAwMDAwMDAwMCB7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqBvcHAtaHogPSAvYml0cy8gNjQgJmx0OzUwMDAwMDAwMCZndDs7PGJyPg0KPGJyPg0KPC9kaXY+
+PC9kaXY+V2h5IGZyZXF1ZW5jeSBpbiBvcHAgbmFtZSBkaWZmZXIgd2l0aCBvcHAtaHogdmFsdWU/
+PGJyPg0KPGRpdj48ZGl2IGNsYXNzPSJnbWFpbC1oNSI+PGJyPjwvZGl2PjwvZGl2PjwvYmxvY2tx
+dW90ZT48ZGl2PkRvIHdlIG11c3Qga2VlcCB0aGVtIHNhbWU/IGlmIGRvbiYjMzk7dCBzbywganVz
+dCBsZWF2ZSBpdCwgT0s/PGJyPjwvZGl2PjxkaXY+wqA8L2Rpdj48YmxvY2txdW90ZSBjbGFzcz0i
+Z21haWxfcXVvdGUiIHN0eWxlPSJtYXJnaW46MHB4IDBweCAwcHggMC44ZXg7Ym9yZGVyLWxlZnQ6
+MXB4IHNvbGlkIHJnYigyMDQsMjA0LDIwNCk7cGFkZGluZy1sZWZ0OjFleCI+PGRpdj48ZGl2IGNs
+YXNzPSJnbWFpbC1oNSI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oG9wcC1taWNyb3ZvbHQgPSAmbHQ7ODU3MDAwJmd0Ozs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNsb2NrLWxhdGVuY3ktbnMgPSAmbHQ7NTAwMDAwJmd0Ozs8
+YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KJmd0OyArwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqBvcHBAMTEwMDAwMDAwMCB7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqBvcHAtaHogPSAvYml0cy8gNjQgJmx0OzY0ODAwMDAwMCZndDs7
+PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBvcHAtbWljcm92
+b2x0ID0gJmx0Ozg1NzAwMCZndDs7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqBjbG9jay1sYXRlbmN5LW5zID0gJmx0OzUwMDAwMCZndDs7PGJyPg0KJmd0OyAr
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgb3BwQDEyMDAwMDAwMDAgezxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgb3BwLWh6ID0gL2JpdHMvIDY0ICZsdDs4MDAwMDAwMDAmZ3Q7Ozxicj4NCiZndDsg
+K8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BwLW1pY3Jvdm9sdCA9ICZsdDs4
+ODIwMDAmZ3Q7Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+Y2xvY2stbGF0ZW5jeS1ucyA9ICZsdDs1MDAwMDAmZ3Q7Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgfTs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoG9wcEAxMzAw
+MDAwMDAwIHs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoG9w
+cC1oeiA9IC9iaXRzLyA2NCAmbHQ7MTAwMDAwMDAwMCZndDs7PGJyPg0KJmd0OyArwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBvcHAtbWljcm92b2x0ID0gJmx0Ozg5MjAwMCZndDs7
+PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjbG9jay1sYXRl
+bmN5LW5zID0gJmx0OzUwMDAwMCZndDs7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqB9Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BwQDE0MDAwMDAwMDAgezxi
+cj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BwLWh6ID0gL2Jp
+dHMvIDY0ICZsdDsxMTg4MDAwMDAwJmd0Ozs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoG9wcC1taWNyb3ZvbHQgPSAmbHQ7MTAwOTAwMCZndDs7PGJyPg0KJmd0
+OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjbG9jay1sYXRlbmN5LW5zID0g
+Jmx0OzUwMDAwMCZndDs7PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Ozxicj4N
+CiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BwQDE1MDAwMDAwMDAgezxicj4NCiZndDsg
+K8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgb3BwLWh6ID0gL2JpdHMvIDY0ICZs
+dDsxMzEyMDAwMDAwJmd0Ozs8YnI+DQomZ3Q7ICvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoG9wcC1taWNyb3ZvbHQgPSAmbHQ7MTA1MjAwMCZndDs7PGJyPg0KJmd0OyArwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjbG9jay1sYXRlbmN5LW5zID0gJmx0OzUwMDAw
+MCZndDs7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQo8YnI+DQo8
+L2Rpdj48L2Rpdj5JIGRpZCBub3Qgc2VlIGZyZXF1ZW5jeSAxNTAwMDAwMDAwIG9yIDEzMTIwMDAw
+MDAgaW4gY2xvY2sgZHJpdmVycyBmb3I8YnI+DQpBNTMuIFBsZWFzZSBjb25maXJtIHdoZXRoZXIg
+Y2xvY2sgZHJpdmVyIG5lZWQgdXBkYXRlIG9yIHlvdXIgbmVlZDxicj4NCnJldmlzZSB5b3VyIHBh
+dGNoLjxicj4NCjxzcGFuIGNsYXNzPSJnbWFpbC0iPjxicj48L3NwYW4+PC9ibG9ja3F1b3RlPjxk
+aXY+T2gsIGl0JiMzOTtzIG15IG1pc3Rha2UuIEluIGZhY3QsIGZyZXF1ZW5jeSAxNTAwMDAwMDAw
+IG9yIDEzMTIwMDAwMDAgY2FuIGJlIHJlbW92ZWQuIFRoZXNlIHR3byBjYXNlcyBhcmUgdHJpYWws
+IGJ1dCB3ZSBkb24mIzM5O3Qgc3VnZ2VzdCB1c2luZyB0aGVtIGluIHByb2R1Y3RzLjxicj48L2Rp
+dj48ZGl2PsKgPC9kaXY+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0ibWFy
+Z2luOjBweCAwcHggMHB4IDAuOGV4O2JvcmRlci1sZWZ0OjFweCBzb2xpZCByZ2IoMjA0LDIwNCwy
+MDQpO3BhZGRpbmctbGVmdDoxZXgiPjxzcGFuIGNsYXNzPSJnbWFpbC0iPg0KJmd0O8KgIMKgIMKg
+IMKgIMKgfTs8YnI+DQomZ3Q7PGJyPg0KJmd0OyBAQCAtMjc5LDYgKzMyMSwxMiBAQDxicj4NCiZn
+dDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGRtYS1yZXF1ZXN0cyA9ICZs
+dDszMiZndDs7PGJyPg0KJmd0O8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQomZ3Q7
+PGJyPg0KJmd0OyArwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0b3Bjcm06IGNsb2NrLWNvbnRyb2xs
+ZXJAMDE0NjEwMDAgezxicj4NCjxicj4NCjwvc3Bhbj5SZW1vdmluZyBoZWFkaW5nIDAgaW4gYWRk
+cmVzcyBvZiBuYW1lLjxicj4NCjxkaXYgY2xhc3M9ImdtYWlsLUhPRW5aYiI+PGRpdiBjbGFzcz0i
+Z21haWwtaDUiPjxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+Y29tcGF0aWJsZSA9ICZxdW90O3p0ZSx6eDI5NjcxOC10b3Bjcm0mcXVvdDs7PGJyPg0KJmd0OyAr
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqByZWcgPSAmbHQ7MHgwMTQ2MTAwMCAw
+eDEwMDAmZ3Q7Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+I2Nsb2NrLWNlbGxzID0gJmx0OzEmZ3Q7Ozxicj4NCiZndDsgK8KgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgfTs8YnI+DQomZ3Q7ICs8YnI+DQomZ3Q7wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBzeXNj
+dHJsOiBzeXNjdHJsQDE0NjMwMDAgezxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoGNvbXBhdGlibGUgPSAmcXVvdDt6dGUsengyOTY3MTgtc3lzY3RybCZxdW90
+OywgJnF1b3Q7c3lzY29uJnF1b3Q7Ozxicj4NCiZndDvCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoHJlZyA9ICZsdDsweDE0NjMwMDAgMHgxMDAwJmd0Ozs8YnI+DQomZ3Q7IC0t
+PGJyPg0KJmd0OyAyLjcuNDxicj4NCiZndDs8YnI+DQo8L2Rpdj48L2Rpdj48L2Jsb2NrcXVvdGU+
+PC9kaXY+PGJyPjwvZGl2PjwvZGl2Pg0K
+--001a114abf4aac7a43054280feb0--
