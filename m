@@ -1,130 +1,147 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
- documentation of Allwinner HDMI
-Date: Wed, 30 Nov 2016 10:20:21 +0200
-Message-ID: <4614815.L3DQhhBy6d@avalon>
-References: <cover.1480414715.git.moinejf@free.fr> <4502748.8rUF7ESxa4@avalon> <20161130091208.f38cd79f1cc5d27b27f3b130@free.fr>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: add zx296718's topcrm node
+Date: Wed, 30 Nov 2016 16:26:18 +0800
+Message-ID: <CABymUCPMDqcfKQOtfj6gHWs69sh3HXaErDjE740xq6UQh_DFow@mail.gmail.com>
+References: <1480491237-5169-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBN4X7LAQKGQEZ5Z2NVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161130091208.f38cd79f1cc5d27b27f3b130-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480491237-5169-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Fran=C3=A7ois,
+2016-11-30 15:33 GMT+08:00 Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> Enable topcrm clock node for zx296718, which is used for
+> CPU's frequency change.
 
-On Wednesday 30 Nov 2016 09:12:08 Jean-Francois Moine wrote:
-> On Tue, 29 Nov 2016 22:10:01 +0200 Laurent Pinchart wrote:
-> > On Tuesday 29 Nov 2016 21:04:55 Jean-Francois Moine wrote:
-> >> On Tue, 29 Nov 2016 21:33 +0200 Laurent Pinchart wrote:
-> >>>>> You need a third port for the HDMI encoder output, connected to an
-> >>>>> HDMI connector DT node.
-> >>>>=20
-> >>>> I don't see what you mean. The HDMI device is both the encoder
-> >>>=20
-> >>>> and connector (as the TDA998x):
-> >>> The driver might create both an encoder and a connector, but I very
-> >>> much doubt that the "allwinner,sun8i-a83t-hdmi" hardware contains a
-> >>> connector, unless the SoC package has an HDMI connector coming out of
-> >>> it :-)
-> >>>=20
-> >>>> plane -> DE2 mixer ---> TCON -----> HDMI -----> display device
-> >>>> ----- plane ------    - CRTC -   - encoder  \
-> >>>>                                    connector -- (HDMI cable)
-> >>>>          audio-controller -   - audio-codec /
-> >>=20
-> >> The schema is the same as the Dove Cubox: the TDA998x is just a chip
-> >> with some wires going out and the physical connector is supposed to be
-> >> at the end of the wires.
-> >=20
-> > I've missed the Dove Cubox DT bindings when they were submitted.
-> > Fortunately (or unfortunately for you, depending on how you look at it
-> > ;-)) I've paid more attention this time.
-> >=20
-> >> Here, the HDMI pins of the SoC go to a pure hardware chip and then to
-> >> the physical connector. Which software entity do you want to add?
-> >=20
-> > I don't want to add a software entity, I just want to model the connect=
-or
-> > in DT as it's present in the system. Even though that's more common for
-> > other bus types than HDMI (LVDS for instance) it wouldn't be
-> > inconceivable to connect the HDMI signals to an on-board chim instead o=
-f
-> > an HDMI connector, so the HDMI encoder output should be modelled by a
-> > port and connected to a connector DT node in this case.
->=20
-> Well, I don't see what this connector can be.
-> May you give me a DT example?
+Please follow general rule, such as
+arm64: dts: zx: brief title of your changes
 
-Sure.
+>
+> Furthermore, this patch adds the CPU clock phandle in CPU's node
+> and uses operating-points-v2 to register operating points.
+>
+> So it can be used by cpufreq-dt driver.
 
-arch/arm/boot/dts/r8a7791-koelsch.dts
+Suggest to split clock nodes and cpu-freq nodes changes into different patches.
 
-        /* HDMI encoder */
+>
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/zte/zx296718.dtsi | 48 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> index 6b239a3..f9eb37d 100644
+> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
+> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+> @@ -44,6 +44,7 @@
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/clock/zx296718-clock.h>
+>
+>  / {
+>         compatible = "zte,zx296718";
+> @@ -81,6 +82,8 @@
+>                         compatible = "arm,cortex-a53","arm,armv8";
+>                         reg = <0x0 0x0>;
+>                         enable-method = "psci";
+> +                       clocks = <&topcrm A53_GATE>;
+> +                       operating-points-v2 = <&cluster0_opp>;
+>                 };
+>
+>                 cpu1: cpu@1 {
+> @@ -88,6 +91,7 @@
+>                         compatible = "arm,cortex-a53","arm,armv8";
+>                         reg = <0x0 0x1>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp>;
+>                 };
+>
+>                 cpu2: cpu@2 {
+> @@ -95,6 +99,7 @@
+>                         compatible = "arm,cortex-a53","arm,armv8";
+>                         reg = <0x0 0x2>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp>;
+>                 };
+>
+>                 cpu3: cpu@3 {
+> @@ -102,6 +107,43 @@
+>                         compatible = "arm,cortex-a53","arm,armv8";
+>                         reg = <0x0 0x3>;
+>                         enable-method = "psci";
+> +                       operating-points-v2 = <&cluster0_opp>;
+> +               };
+> +       };
+> +
+> +       cluster0_opp: opp_table0 {
+> +               compatible = "operating-points-v2";
+> +               opp-shared;
+> +
+> +               opp@1000000000 {
+> +                       opp-hz = /bits/ 64 <500000000>;
 
-        hdmi@39 {
-                compatible =3D "adi,adv7511w";
-                reg =3D <0x39>;
-                interrupt-parent =3D <&gpio3>;
-                interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>;
+Why frequency in opp name differ with opp-hz value?
 
-                adi,input-depth =3D <8>;
-                adi,input-colorspace =3D "rgb";
-                adi,input-clock =3D "1x";
-                adi,input-style =3D <1>;
-                adi,input-justification =3D "evenly";
+> +                       opp-microvolt = <857000>;
+> +                       clock-latency-ns = <500000>;
+> +               };
+> +               opp@1100000000 {
+> +                       opp-hz = /bits/ 64 <648000000>;
+> +                       opp-microvolt = <857000>;
+> +                       clock-latency-ns = <500000>;
+> +               };
+> +               opp@1200000000 {
+> +                       opp-hz = /bits/ 64 <800000000>;
+> +                       opp-microvolt = <882000>;
+> +                       clock-latency-ns = <500000>;
+> +               };
+> +               opp@1300000000 {
+> +                       opp-hz = /bits/ 64 <1000000000>;
+> +                       opp-microvolt = <892000>;
+> +                       clock-latency-ns = <500000>;
+> +               };
+> +               opp@1400000000 {
+> +                       opp-hz = /bits/ 64 <1188000000>;
+> +                       opp-microvolt = <1009000>;
+> +                       clock-latency-ns = <500000>;
+> +               };
+> +               opp@1500000000 {
+> +                       opp-hz = /bits/ 64 <1312000000>;
+> +                       opp-microvolt = <1052000>;
+> +                       clock-latency-ns = <500000>;
+>                 };
 
-                ports {
-                        #address-cells =3D <1>;
-                        #size-cells =3D <0>;
+I did not see frequency 1500000000 or 1312000000 in clock drivers for
+A53. Please confirm whether clock driver need update or your need
+revise your patch.
 
-                        port@0 {
-                                reg =3D <0>;
-                                adv7511_in: endpoint {
-                                        remote-endpoint =3D <&du_out_rgb>;
-                                };
-                        };
+>         };
+>
+> @@ -279,6 +321,12 @@
+>                         dma-requests = <32>;
+>                 };
+>
+> +               topcrm: clock-controller@01461000 {
 
-                        port@1 {
-                                reg =3D <1>;
-                                adv7511_out: endpoint {
-                                        remote-endpoint =3D <&hdmi_con>;
-                                };
-                        };
-                };
-        };
+Removing heading 0 in address of name.
 
-        /* HDMI connector */
-
-        hdmi-out {
-                compatible =3D "hdmi-connector";
-                type =3D "a";
-
-                port {
-                        hdmi_con: endpoint {
-                                remote-endpoint =3D <&adv7511_out>;
-                        };
-                };
-        };
-
---=20
-Regards,
-
-Laurent Pinchart
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +                       compatible = "zte,zx296718-topcrm";
+> +                       reg = <0x01461000 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+>                 sysctrl: sysctrl@1463000 {
+>                         compatible = "zte,zx296718-sysctrl", "syscon";
+>                         reg = <0x1463000 0x1000>;
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
