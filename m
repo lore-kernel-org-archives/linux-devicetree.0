@@ -1,138 +1,139 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 2/4] i2c: pxa: Add support for the I2C units found in Armada 3700
-Date: Wed, 30 Nov 2016 16:43:14 +0100
-Message-ID: <87wpflkm7h.fsf@free-electrons.com>
-References: <20161130140017.26307-1-romain.perier@free-electrons.com>
-        <20161130140017.26307-3-romain.perier@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20161130140017.26307-3-romain.perier@free-electrons.com> (Romain
-        Perier's message of "Wed, 30 Nov 2016 15:00:15 +0100")
-Sender: linux-i2c-owner@vger.kernel.org
-To: Romain Perier <romain.perier@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/4] drm: Add support for the Amlogic Video Processing Unit
+Date: Wed, 30 Nov 2016 16:43:41 +0100
+Message-ID: <1480520625-13269-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Xing.Xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
- 
- On mer., nov. 30 2016, Romain Perier <romain.perier@free-electrons.com> wrote:
+This a repost of the previous version at [2] with fixes, the following patches will
+be sent via a PULL Request once the DT maintainers acks the DT bindings.
+The Amlogic maintainer will take the arm64 DT patches to avoid merges conflicts.
 
-> The Armada 3700 has two I2C controllers that is compliant with the I2C
-> Bus Specificiation 2.1, supports multi-master and different bus speed:
-> Standard mode (up to 100 KHz), Fast mode (up to 400 KHz),
-> High speed mode (up to 3.4 Mhz).
->
-> This IP block has a lot of similarity with the PXA, except some register
-> offsets and bitfield. This commits adds a basic support for this I2C
-> unit.
->
-> Signed-off-by: Romain Perier <romain.perier@free-electrons.com>
-> Tested-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+The Amlogic Meson SoCs embeds a Video Processing Unit able to output at least
+a Composite/CVBS Video with embedded VDAC and an HDMI Link with Embedded HDMI
+Transceiver.
 
-As the code had changed I tested it agin and it continues to work, so
-you can keep my Tested-by.
+Thus, the current driver does not support HDMI yet.
 
-However I have a small remark, see below:
+The Video Processig Unit is composed of multiple modules like the Video
+Input Unit and the Video Post Processing that can be associated to a
+CRTC with Planes management.
+The last Unit is the Venc that embeds at least 3 Encoders, ENCI for Interlace
+Video used by CVBS or HDMI, ENCP for Progressive Video used by the HDMI
+Transceiver and ENCL for LCD Display.
 
-> ---
->
-> Changes in v6:
->  - Revert back A3700_REGS, as asked by Wolfram and define fm_mask
->    and hs_mask in the register layout. I moved the generic code
->    for fm_mask and hs_mask to a seperated commit (1/4)
->
-> Changes in v5:
->  - Don't define registers for armada-3700, we can re-use the ones
->    for PXA3XX.
->  - Define registers mask when OF is not used, in probe_pdata. 
->
-> Changes in v4:
->  - Replaced the type of hs_mask and fm_mask by u32, instead of
->    unsigned int, As writel() take an u32 as first argument...
->
-> Changes in v3:
->  - Replaced the type of hs_mask and fm_mask by unsigned int,
->    instead of unsigned long.
->
->  drivers/i2c/busses/Kconfig   |  2 +-
->  drivers/i2c/busses/i2c-pxa.c | 15 +++++++++++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index d252276..2f56a26 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -763,7 +763,7 @@ config I2C_PUV3
->  
->  config I2C_PXA
->  	tristate "Intel PXA2XX I2C adapter"
-> -	depends on ARCH_PXA || ARCH_MMP || (X86_32 && PCI && OF)
-> +	depends on ARCH_PXA || ARCH_MMP || ARCH_MVEBU || (X86_32 && PCI && OF)
->  	help
->  	  If you have devices in the PXA I2C bus, say yes to this option.
->  	  This driver can also be built as a module.  If so, the module
+The LCD Display is not planned to be supported on the Meson GX Family.
 
-Maybe you could add that this driver is no longer only for the PXA
-family but also for the Armada 37xx.
+This driver is a DRM/KMS driver using the following DRM components :
+ - GEM-CMA
+ - PRIME-CMA
+ - Atomic Modesetting
+ - FBDev-CMA
 
-Gregory
+For the following SoCs :
+ - GXBB Family (S905)
+ - GXL Family (S905X, S905D)
+ - GXM Family (S912)
 
-> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> index dc9d0a6..0ded4bc 100644
-> --- a/drivers/i2c/busses/i2c-pxa.c
-> +++ b/drivers/i2c/busses/i2c-pxa.c
-> @@ -57,8 +57,12 @@ enum pxa_i2c_types {
->  	REGS_PXA3XX,
->  	REGS_CE4100,
->  	REGS_PXA910,
-> +	REGS_A3700,
->  };
->  
-> +#define ICR_BUSMODE_FM	(1 << 16)	   /* shifted fast mode for armada-3700 */
-> +#define ICR_BUSMODE_HS	(1 << 17)	   /* shifted high speed mode for armada-3700 */
-> +
->  /*
->   * I2C registers definitions
->   */
-> @@ -93,6 +97,15 @@ static struct pxa_reg_layout pxa_reg_layout[] = {
->  		.ilcr = 0x28,
->  		.iwcr = 0x30,
->  	},
-> +	[REGS_A3700] = {
-> +		.ibmr =	0x00,
-> +		.idbr =	0x04,
-> +		.icr =	0x08,
-> +		.isr =	0x0c,
-> +		.isar =	0x10,
-> +		.fm = ICR_BUSMODE_FM,
-> +		.hs = ICR_BUSMODE_HS,
-> +	},
->  };
->  
->  static const struct platform_device_id i2c_pxa_id_table[] = {
-> @@ -100,6 +113,7 @@ static const struct platform_device_id i2c_pxa_id_table[] = {
->  	{ "pxa3xx-pwri2c",	REGS_PXA3XX },
->  	{ "ce4100-i2c",		REGS_CE4100 },
->  	{ "pxa910-i2c",		REGS_PXA910 },
-> +	{ "armada-3700-i2c",	REGS_A3700  },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(platform, i2c_pxa_id_table);
-> @@ -1141,6 +1155,7 @@ static const struct of_device_id i2c_pxa_dt_ids[] = {
->  	{ .compatible = "mrvl,pxa-i2c", .data = (void *)REGS_PXA2XX },
->  	{ .compatible = "mrvl,pwri2c", .data = (void *)REGS_PXA3XX },
->  	{ .compatible = "mrvl,mmp-twsi", .data = (void *)REGS_PXA910 },
-> +	{ .compatible = "marvell,armada-3700-i2c", .data = (void *)REGS_A3700 },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, i2c_pxa_dt_ids);
-> -- 
-> 2.9.3
->
+The current driver only supports the CVBS PAL/NTSC output modes, but the
+CRTC/Planes management should support bigger modes.
+But Advanced Colorspace Conversion, Scaling and HDMI Modes will be added in
+a second time.
+
+The Device Tree bindings makes use of the endpoints video interface definitions
+to connect to the optional CVBS and in the future the HDMI Connector nodes.
+
+The driver has been tested with Xorg modesetting driver and Weston DRM backend.
+
+Changes since v1 at [2] :
+ - Simplify bindings to have a "composite-video-connector" to represent the on-board composite connector
+ - Remove the component_match binding since it's unused for now
+ - Moved all DRM connector code back in the venc_cvbs file
+ - Check for port endpoints validity to detech connector existence
+ - Added Daniel Vetter's ack on non-dt patches commit messages
+
+Changes since RFC at [1] :
+ - Add maintainers entry
+ - Move all Plane and CRTC code from backend to corresponding DRM code
+ - Keep only init and common code in backend source files
+ - Move the CVBS encoder out of the CVBS DT node, only keep the connector
+ - Various cleanups using DRM helpers
+ - Cleanup of copyright headers
+ - Fixup of bindings documentation
+
+[1] http://lkml.kernel.org/r/1480089791-12517-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[2] http://lkml.kernel.org/r/1480416469-9655-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+
+Neil Armstrong (4):
+  drm: Add support for Amlogic Meson Graphic Controller
+  ARM64: dts: meson-gx: Add Graphic Controller nodes
+  dt-bindings: display: add Amlogic Meson DRM Bindings
+  MAINTAINERS: add entry for Amlogic DRM drivers
+
+ .../bindings/display/meson/meson-drm.txt           |  101 ++
+ MAINTAINERS                                        |    9 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   19 +
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |   15 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |   15 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |    4 +
+ .../boot/dts/amlogic/meson-gxl-nexbox-a95x.dts     |   15 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |    4 +
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |   15 +
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |    4 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/meson/Kconfig                      |    9 +
+ drivers/gpu/drm/meson/Makefile                     |    4 +
+ drivers/gpu/drm/meson/meson_canvas.c               |   68 +
+ drivers/gpu/drm/meson/meson_canvas.h               |   42 +
+ drivers/gpu/drm/meson/meson_crtc.c                 |  208 +++
+ drivers/gpu/drm/meson/meson_crtc.h                 |   32 +
+ drivers/gpu/drm/meson/meson_drv.c                  |  343 +++++
+ drivers/gpu/drm/meson/meson_drv.h                  |   60 +
+ drivers/gpu/drm/meson/meson_plane.c                |  230 ++++
+ drivers/gpu/drm/meson/meson_plane.h                |   30 +
+ drivers/gpu/drm/meson/meson_registers.h            | 1395 ++++++++++++++++++++
+ drivers/gpu/drm/meson/meson_vclk.c                 |  167 +++
+ drivers/gpu/drm/meson/meson_vclk.h                 |   34 +
+ drivers/gpu/drm/meson/meson_venc.c                 |  254 ++++
+ drivers/gpu/drm/meson/meson_venc.h                 |   72 +
+ drivers/gpu/drm/meson/meson_venc_cvbs.c            |  293 ++++
+ drivers/gpu/drm/meson/meson_venc_cvbs.h            |   41 +
+ drivers/gpu/drm/meson/meson_viu.c                  |  331 +++++
+ drivers/gpu/drm/meson/meson_viu.h                  |   64 +
+ drivers/gpu/drm/meson/meson_vpp.c                  |  162 +++
+ drivers/gpu/drm/meson/meson_vpp.h                  |   35 +
+ 33 files changed, 4078 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/meson/meson-drm.txt
+ create mode 100644 drivers/gpu/drm/meson/Kconfig
+ create mode 100644 drivers/gpu/drm/meson/Makefile
+ create mode 100644 drivers/gpu/drm/meson/meson_canvas.c
+ create mode 100644 drivers/gpu/drm/meson/meson_canvas.h
+ create mode 100644 drivers/gpu/drm/meson/meson_crtc.c
+ create mode 100644 drivers/gpu/drm/meson/meson_crtc.h
+ create mode 100644 drivers/gpu/drm/meson/meson_drv.c
+ create mode 100644 drivers/gpu/drm/meson/meson_drv.h
+ create mode 100644 drivers/gpu/drm/meson/meson_plane.c
+ create mode 100644 drivers/gpu/drm/meson/meson_plane.h
+ create mode 100644 drivers/gpu/drm/meson/meson_registers.h
+ create mode 100644 drivers/gpu/drm/meson/meson_vclk.c
+ create mode 100644 drivers/gpu/drm/meson/meson_vclk.h
+ create mode 100644 drivers/gpu/drm/meson/meson_venc.c
+ create mode 100644 drivers/gpu/drm/meson/meson_venc.h
+ create mode 100644 drivers/gpu/drm/meson/meson_venc_cvbs.c
+ create mode 100644 drivers/gpu/drm/meson/meson_venc_cvbs.h
+ create mode 100644 drivers/gpu/drm/meson/meson_viu.c
+ create mode 100644 drivers/gpu/drm/meson/meson_viu.h
+ create mode 100644 drivers/gpu/drm/meson/meson_vpp.c
+ create mode 100644 drivers/gpu/drm/meson/meson_vpp.h
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
