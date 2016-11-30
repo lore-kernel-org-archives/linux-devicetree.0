@@ -1,81 +1,36 @@
-From: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 30 Nov 2016 17:23:53 +0100
-Message-ID: <20161130162353.GC1441@katana>
-References: <1466439771-2741-1-git-send-email-cedric.madianga@gmail.com>
- <1466439771-2741-3-git-send-email-cedric.madianga@gmail.com>
- <20160722070219.GB1605@katana>
- <CAOAejn0BZNH82kY_7UR1EjV7M1G+9jGihGb4-uCs9=XiPHUYxQ@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: juno: Correct PCI IO window
+Date: Wed, 30 Nov 2016 16:29:35 +0000
+Message-ID: <92ac8013-b88e-2f74-9a49-7d5f38a4e7a5@arm.com>
+References: <1480452310-29286-1-git-send-email-jeremy.linton@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uXxzq0nDebZQVNAZ"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn0BZNH82kY_7UR1EjV7M1G+9jGihGb4-uCs9=XiPHUYxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1480452310-29286-1-git-send-email-jeremy.linton-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+To: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jeremy,
 
---uXxzq0nDebZQVNAZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 29/11/16 20:45, Jeremy Linton wrote:
+> The PCIe root complex on Juno translates the MMIO mapped
+> at 0x5f800000 to the PIO address range starting at 0
+> (which is common because PIO addresses are generally < 64k).
+> Correct the DT to reflect this.
+>
 
-Hi,
+I have another DT fix that I have asked ARM-SoC guys to pick up directly
+from the list. If that doesn't happen, I will send PR including both.
 
-> I was too busy in another project but now I am ready to complete the
-> upstream of the STM32F4 I2C driver.
+If that happens then we need to send this to them to be picked directly.
+At this point I want to wait for couple of days to avoid confusion.
 
-Nice.
-
-> >> +static void stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
-> >> +{
-> >> +     u32 clk_rate, cr2, freq;
-> >> +
-> >> +     cr2 = readl_relaxed(i2c_dev->base + STM32F4_I2C_CR2);
-> >> +     cr2 &= ~STM32F4_I2C_CR2_FREQ_MASK;
-> >> +
-> >> +     clk_rate = clk_get_rate(i2c_dev->clk);
-> >> +     freq = clk_rate / MHZ_TO_HZ;
-> >> +
-> >> +     if (freq > STM32F4_I2C_MAX_FREQ)
-> >> +             freq = STM32F4_I2C_MAX_FREQ;
-> >> +     if (freq < STM32F4_I2C_MIN_FREQ)
-> >> +             freq = STM32F4_I2C_MIN_FREQ;
-> >
-> > clamp() to enforce the range?
-> Sorry but what do you mean by "clamp()" ?
-
-The kernel has a clamp() function which would fit this purpose, I think.
-
+-- 
 Regards,
-
-   Wolfram
-
-
---uXxzq0nDebZQVNAZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYPv0ZAAoJEBQN5MwUoCm2SZIQAJTE3hJprlSgsvvRWdPtE9MW
-4hwhZ22xtAvGEcPyZZdQdYAR6KR0zYqc2o7PHi9rFcF0RExJ4kKdKRJW+81+toHa
-utVYhwEDtRSdcvoeJhslNlXS2RXIUGKJu/xKp8bNCmvqlF4tLUvBdRk7N8DoBhjK
-1eTiYmei7d9cqY4vB8Fb/TJ/Jr59CNtN/1DFexznuG3Lmv6ZaDc4kdZTCauQLnoY
-kJtZmGxweXKJW3JWRxstiKAylmG3NGJp9Fo70XR9r+T0kqlndqe4M8rGtxlLRUWA
-hal08rqInImkrdVsExCQlXGtPfdNu15KhY4XLrABA03z1Vr1Bhkt1B4NUm6OaQ9y
-1GPTzxSIb5TfRnNxq2d6IF++9cPYR7V5HoCntnc6nH9vk4/RupUDITTSpI39UGGp
-YfKnkW7oKra3+M11GXeNfTnfSjJXlMCeSXtvyIwwGiOwRHzPLbE9JUWVCqkyKd1j
-7S1P6J+tQgyNQ/HelBckdQNgE8a9K1XClzOtZFf2yFaBETyUJGQjyYOcMYz7E41e
-BFkXa72sYAVR62e6xtbht1kAZAb3u6gysaj3Py0PpPls0bjbf+JGX84S7PQAYO7g
-qo/aqGSwkuDnsFYeCBqbJrXvhZS6Mrx/ihoD1bXwhCLA5Bnpwho7yNprTazaSmf8
-MPNsuER2yyjZ0MdYnRAR
-=g3Ap
------END PGP SIGNATURE-----
-
---uXxzq0nDebZQVNAZ--
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
