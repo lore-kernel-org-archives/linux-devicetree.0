@@ -1,59 +1,54 @@
 From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/3] Altera Cyclone Passive Serial SPI FPGA Manager
-Date: Tue, 29 Nov 2016 17:11:02 -0800
-Message-ID: <cover.1480467185.git.stillcompiling@gmail.com>
+Subject: [PATCH v3 2/3] doc: dt: add cyclone-spi binding document
+Date: Tue, 29 Nov 2016 17:11:04 -0800
+Message-ID: <2de74f6d2f2689b8ef090a9017db2ffb3bd319cb.1480467185.git.stillcompiling@gmail.com>
+References: <cover.1480467185.git.stillcompiling@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1480467185.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1480467185.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1480467185.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds an FPGA manager for Altera cyclone FPGAs
-that can program them using an spi port and a couple of gpios, using
-Alteras passive serial protocol.
+Describe a cyclonei-ps-spi devicetree entry, required features
 
-Changes from v2:
-
-- Merged patch 3 and 4 as suggested in review by Moritz Fischer
-- Changed FPGA_MIN_DELAY from 250 to 50 ms is the time advertized by
-  Altera. This now works, as we don't assume it is done
-
-Changes from v1:
-- Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
-  This name change was requested by Alan Tull, to be specific about which
-  programming method is being employed on the fpga.
-- Changed the name of the reset-gpio to config-gpio to closer match the
-  way the pins are described in the Altera manual
-- Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
-
-- Added a bitrev8x4() function to the bitrev headers and implemented ARM
- const, runtime, and ARM specific faster versions (This may end up
- needing to be a standalone patch)
-
-- Moved the bitswapping into cyclonespi_write(), as requested.
-  This falls short of my desired generic lsb first spi support, but is a step
-  in that direction.
-
-- Fixed whitespace problems introduced during refactoring
-
-- Replaced magic number for initial delay with a descriptive macro
-- Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
-
-Joshua Clayton (3):
-  lib: add bitrev8x4()
-  doc: dt: add cyclone-spi binding document
-  fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
-
- .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      |  23 +++
- arch/arm/include/asm/bitrev.h                      |   5 +
- drivers/fpga/Kconfig                               |   7 +
- drivers/fpga/Makefile                              |   1 +
- drivers/fpga/cyclone-ps-spi.c                      | 176 +++++++++++++++++++++
- include/linux/bitrev.h                             |  26 +++
- 6 files changed, 238 insertions(+)
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
- create mode 100644 drivers/fpga/cyclone-ps-spi.c
 
+diff --git a/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+new file mode 100644
+index 0000000..c942281
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+@@ -0,0 +1,23 @@
++Altera Cyclone Passive Serial SPI FPGA Manager
++
++Altera Cyclone FPGAs support a method of loading the bitstream over what is
++referred to as "passive serial".
++The passive serial link is not technically spi, and might require extra
++circuits in order to play nicely with other spi slaves on the same bus.
++
++See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
++
++Required properties:
++- compatible  : should contain "altr,cyclone-ps-spi-fpga-mgr"
++- reg         : spi slave id of the fpga
++- config-gpio : config pin (referred to as nCONFIG in the cyclone manual)
++- status-gpio : status pin (referred to as nSTATUS in the cyclone manual)
++
++Example:
++	fpga_spi: evi-fpga-spi@0 {
++		compatible = "altr,cyclone-ps-spi-fpga-mgr";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++		config-gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
++		status-gpio = <&gpio4 11 GPIO_ACTIVE_HIGH>;
++	};
 -- 
 2.9.3
 
