@@ -1,34 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] Documentation: pinctrl: palmas: Add
- ti,palmas-powerhold-override property definition
-Date: Wed, 30 Nov 2016 13:55:22 +0100
-Message-ID: <CACRpkdb36Au+QSM4mnGHunKVz-0qJ2n2dCwTV4tq5H7nxQEo1w@mail.gmail.com>
-References: <1480305718-5127-1-git-send-email-j-keerthy@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] devicetree: bindings: pinctrl: Add binding for ti,da850-pupd
+Date: Wed, 30 Nov 2016 13:59:05 +0100
+Message-ID: <CACRpkdbdaLFmF2J3VOCErNjrX_e+Q4nMmrJiBbJADk0wrTJ40A@mail.gmail.com>
+References: <1480351226-3332-1-git-send-email-david@lechnology.com> <1480351226-3332-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1480305718-5127-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, ext Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480351226-3332-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 5:01 AM, Keerthy <j-keerthy@ti.com> wrote:
-> GPIO7 is configured in POWERHOLD mode which has higher priority
-> over DEV_ON bit and keeps the PMIC supplies on even after the DEV_ON
-> bit is turned off. This property enables driver to over ride the
-> POWERHOLD value to GPIO7 so as to turn off the PMIC in power off
-> scenarios.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->
-> Remaining patches of the series are already queued.
->
-> Changes in v3: Added Rob's Ack.
+On Mon, Nov 28, 2016 at 5:40 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
 
-Patch applied to the pinctrl tree.
+> Device-tree bindings for TI DA850/OMAP-L138/AM18XX pullup/pulldown
+> pinconf controller.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> Reviewed-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+
+Totally uncontroversial standard bindings so patch applied.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
