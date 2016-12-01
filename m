@@ -1,118 +1,104 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v2 3/7] PWM: add pwm-stm32 DT bindings
-Date: Thu, 1 Dec 2016 09:44:58 +0100
-Message-ID: <CA+M3ks5xKHj49bLH1XQ97RrF+2xcXc-e7T5inZNN19uUWVOuRg@mail.gmail.com>
-References: <1480000463-9625-1-git-send-email-benjamin.gaignard@st.com>
- <1480000463-9625-4-git-send-email-benjamin.gaignard@st.com> <20161130212055.b57qkqy66j5gg57q@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
+ documentation of Allwinner HDMI
+Date: Thu, 1 Dec 2016 09:55:20 +0100
+Message-ID: <20161201085520.tk2kdi33rn6fyld2@lukather>
+References: <cover.1480414715.git.moinejf@free.fr>
+ <4614815.L3DQhhBy6d@avalon>
+ <20161130102757.9eec1f7f3377d0f4787e3829@free.fr>
+ <3478036.d2UQM8n6lv@avalon>
+ <20161130114415.2280151e2965280733a629e5@free.fr>
+ <1971681480527210@web5g.yandex.ru>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161130212055.b57qkqy66j5gg57q@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, alexandre.torgue@st.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, knaack.h@gmx.de, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4t2trd4x3htxeqol"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6OK77AQKGQEBWX744Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1971681480527210-RAIFsGP/6J5uio3avFS2gg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: "moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-11-30 22:20 GMT+01:00 Rob Herring <robh@kernel.org>:
-> On Thu, Nov 24, 2016 at 04:14:19PM +0100, Benjamin Gaignard wrote:
->> Define bindings for pwm-stm32
->>
->> version 2:
->> - use parameters instead of compatible of handle the hardware configurat=
-ion
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> ---
->>  .../devicetree/bindings/pwm/pwm-stm32.txt          | 37 +++++++++++++++=
-+++++++
->>  1 file changed, 37 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Docum=
-entation/devicetree/bindings/pwm/pwm-stm32.txt
->> new file mode 100644
->> index 0000000..36263f0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->> @@ -0,0 +1,37 @@
->> +STMicroelectronics PWM driver bindings for STM32
->> +
->> +Must be a sub-node of STM32 general purpose timer driver
->> +
->> +Required parameters:
->> +- compatible:                Must be "st,stm32-pwm"
->> +- pinctrl-names:     Set to "default".
->> +- pinctrl-0:                 List of phandles pointing to pin configura=
-tion nodes
->> +                     for PWM module.
->> +                     For Pinctrl properties, please refer to [1].
->> +
->> +Optional parameters:
->> +- st,breakinput:     Set if the hardware have break input capabilities
->> +- st,breakinput-polarity: Set break input polarity. Default is 0
->> +                      The value define the active polarity:
->> +                       - 0 (active LOW)
->> +                       - 1 (active HIGH)
->> +- st,pwm-num-chan:   Number of available PWM channels.  Default is 0.
->> +- st,32bits-counter: Set if the hardware have a 32 bits counter
->> +- st,complementary:  Set if the hardware have complementary output chan=
-nels
->
-> What does complementary mean here?
 
-Complementary channels are pwm channels where the signal level is inverted
-compare to the original channel.
-This parameter indicate that the hardware have this kind of outputs.
-If the polarity of the original channel change then polarity of
-complementary channel
-change too.
+--4t2trd4x3htxeqol
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> +
->> +[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> +
->> +Example:
->> +     gptimer1: gptimer1@40010000 {
->
-> timer@...
+On Thu, Dec 01, 2016 at 01:33:30AM +0800, Icenowy Zheng wrote:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0hdmi-out {
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "hdmi-connector";
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0type =3D "a";
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* I2C bus and GPIO references are made up=
+ for the example */
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ddc-i2c-bus =3D <&i2c4>;
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0hpd-gpios =3D <&gpio4 7 GPIO_ACTIVE_HIGH>
+> >
+> > the "hdmi-connector" is a big piece of software. It must handle a lot
+> > of more and more exotic connectors.
+> > So, I hope that you have written a "simple-hdmi-connector" which does
+> > nothing but setting the connector type.
+> > Where is it?
+>=20
+> I suddenly thought about something...
+>=20
+> If a DVI connector instead of a HDMI connector is soldered, how
+> should such a device tree be written?
 
-I would like keep "timer" for timer-trigger sub-node
+Use a dvi-connector instead :)
 
->
->> +             compatible =3D "st,stm32-gptimer";
->> +             reg =3D <0x40010000 0x400>;
->> +             clocks =3D <&rcc 0 160>;
->> +             clock-names =3D "clk_int";
->> +
->> +             pwm1@0 {
->
-> pwm {
->
-> Is there more than one?
+> How about solder a HDMI-to-VGA bridge on the board? (Maybe there
+> should be "dumb-hdmi-dvi-bridge" and "dumb-hdmi-vga-bridge"
+> drivers?)
 
-Not per hardware block but their is 12 of them in the SoC.
-Adding a number (which match with SoC documentation) help to find
-the wanted pwm in sysfs either we only have the address.
+It probably wouldn't be dumb, but yeah, it would definitely be a
+bridge instead of the connector.
 
->
->> +                     compatible =3D "st,stm32-pwm";
->> +                     st,pwm-num-chan =3D <4>;
->> +                     st,breakinput;
->> +                     st,complementary;
->> +             };
->> +     };
->> --
->> 1.9.1
->>
-
-
+Maxime
 
 --=20
-Benjamin Gaignard
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Graphic Study Group
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+--4t2trd4x3htxeqol
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Follow Linaro: Facebook | Twitter | Blog
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYP+V0AAoJEBx+YmzsjxAgWMoP/0PeynKoqGej5MdOWpYljPaz
+sj3AlxtQ20VcXeYZqdGT/iGfIcdk5fZgfAe6rgE0SG8hI97fowD+dXu086Bh08/Z
+88EmbySsghw60KZHINzEDlUv6bg78sizGK0nPbDpBLwKTwG7ooTgwJajF6M7wHwX
+TUfb7fMJ38yokvgBQo4yObBhdsDIulJU6Szt0ZWHM19699V3QzYJZA5VJ/9xzN+j
+l2pAyV5uAcQNN1IGWGG5dxwdtdgtGuFunk1n4DQ4CUvy0h4jQLx5xzLFEp1w5dfO
+E5mKBTXhddTO/7fMjGon6diVG3e4mKsvCJxtolQFwfCidGvF1hYzzYILseIzfo7f
+/2icIWTV8r94dw7a8f9ekWtyXY5PISEg1A2K4pEcJVVD9wNP3l5S1Gg43slbjUEE
+JvDrFlGyx0Oe4U0fRS8sbFJxI2TpIE2h/aciY3SvwD/irl90HKvYltfCmXF21U/J
+arkNvQYtolEIUyRZu0TIIYpKdzZD42cWfgVe13UfWbPjhZ+b7iS8NXjFyTZueh9N
+PsURIqCwFeyAIWnULhpxlHfAAhQWOtj+I3EzoAsR4Q0d3LSDQTXf3cAI7m9UxTJr
+2IdwQBr0Qd/DZcjDrZjy8jt9YRr5cnAd/6FEDEYCwZ+yeyAKDKyyY+RptdjCfbVM
+Ny5Ff40vV0zvyDwHS3xp
+=Qp4e
+-----END PGP SIGNATURE-----
+
+--4t2trd4x3htxeqol--
