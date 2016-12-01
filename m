@@ -1,56 +1,80 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v4 2/3] doc: dt: add cyclone-spi binding document
-Date: Thu,  1 Dec 2016 09:04:51 -0800
-Message-ID: <137f03de76e5f865430b17ca247e8f73e3315c8d.1480551148.git.stillcompiling@gmail.com>
-References: <cover.1480551148.git.stillcompiling@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1480551148.git.stillcompiling@gmail.com>
-In-Reply-To: <cover.1480551148.git.stillcompiling@gmail.com>
-References: <cover.1480551148.git.stillcompiling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: BCM5301X: Enable UART by default for BCM4708(1) and BCM4709(4)
+Date: Thu, 1 Dec 2016 18:23:20 +0100
+Message-ID: <CACna6rygrQuZqaViTVQM5P8ieA2Gh-h-zrEZETAQrHHT9cnrWA@mail.gmail.com>
+References: <20161128140134.25128-1-zajec5@gmail.com> <CAC3K-4o3-eSDU5JvjkgohtWLUmZqQViHvX1h2zfdPAGe+qbCOg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAC3K-4o3-eSDU5JvjkgohtWLUmZqQViHvX1h2zfdPAGe+qbCOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe a cyclonei-ps-spi devicetree entry, required features
+On 1 December 2016 at 18:14, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On Mon, Nov 28, 2016 at 9:01 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8@public.gmane.org=
+m> wrote:
+>>
+>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>
+>> Every device tested so far got UART0 (at 0x18000300) working as serial
+>> console. It's most likely part of reference design and all vendors use
+>> it that way.
+>>
+>> It seems to be easier to enable it by default and just disable it if we
+>> ever see a device with different hardware design.
+>>
+>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  | 4 ----
+>>  arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts       | 4 ----
+>>  arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts       | 4 ----
+>>  arch/arm/boot/dts/bcm4708-netgear-r6250.dts        | 4 ----
+>>  arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      | 4 ----
+>>  arch/arm/boot/dts/bcm4708.dtsi                     | 4 ++++
+>>  arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts | 4 ----
+>>  arch/arm/boot/dts/bcm47081.dtsi                    | 4 ++++
+>>  arch/arm/boot/dts/bcm4709-netgear-r7000.dts        | 4 ----
+>>  arch/arm/boot/dts/bcm4709-netgear-r8000.dts        | 4 ----
+>>  arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts  | 4 ----
+>>  arch/arm/boot/dts/bcm4709.dtsi                     | 1 +
+>>  arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts      | 4 ----
+>>  arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts      | 4 ----
+>>  arch/arm/boot/dts/bcm47094-netgear-r8500.dts       | 4 ----
+>>  arch/arm/boot/dts/bcm47094.dtsi                    | 1 +
+>
+>
+> I think there are a few missing here.  A quick grep shows
+>
+> $ grep -rI '#include "bcm470[89].dtsi"'  arch/arm/boot/dts/*.dts
+> arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-netgear-r6250.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts:#include "bcm4709.dtsi"
+> arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts:#include "bcm4709.dtsi"
+> arch/arm/boot/dts/bcm4709-netgear-r7000.dts:#include "bcm4709.dtsi"
+> arch/arm/boot/dts/bcm4709-netgear-r8000.dts:#include "bcm4709.dtsi"
+> arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts:#include "bcm4709.dtsi"
+> arch/arm/boot/dts/bcm94708.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm94709.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm953012er.dts:#include "bcm4708.dtsi"
+> arch/arm/boot/dts/bcm953012k.dts:#include "bcm4708.dtsi"
+>
+> I specifically care about the last 4 :)
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
+Actually the only missing ones are the last 4. Other ones (e.g.
+bcm4709-buffalo-wxr-1900dhp.dts) never got uart0 enabled so I just
+didn't need to modify these files.
 
- .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
-
-diff --git a/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
-new file mode 100644
-index 0000000..3f515c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
-@@ -0,0 +1,25 @@
-+Altera Cyclone Passive Serial SPI FPGA Manager
-+
-+Altera Cyclone FPGAs support a method of loading the bitstream over what is
-+referred to as "passive serial".
-+The passive serial link is not technically spi, and might require extra
-+circuits in order to play nicely with other spi slaves on the same bus.
-+
-+See https://www.altera.com/literature/hb/cyc/cyc_c51013.pdf
-+
-+Required properties:
-+- compatible  : should contain "altr,cyclone-ps-spi-fpga-mgr"
-+- reg         : spi slave id of the fpga
-+- config-gpios : config pin (referred to as nCONFIG in the cyclone manual)
-+- status-gpios : status pin (referred to as nSTATUS in the cyclone manual)
-+
-+both gpio pins are normally active low open drain.
-+
-+Example:
-+	fpga_spi: evi-fpga-spi@0 {
-+		compatible = "altr,cyclone-ps-spi-fpga-mgr";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		config-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-+		status-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-+	};
--- 
-2.9.3
+I'll send V2 updating last 4 ones as well. Thanks for catching this.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
