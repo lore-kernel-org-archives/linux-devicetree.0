@@ -1,143 +1,112 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add DT bindings info for FlexRM mailbox driver
-Date: Thu, 1 Dec 2016 14:41:54 +0530
-Message-ID: <CAALAos-nyo2tYnDKHpMHcz9MVi5YANuPwf3D=PC0ZjvUzHe_9g@mail.gmail.com>
-References: <1480048551-3285-1-git-send-email-anup.patel@broadcom.com>
- <1480048551-3285-3-git-send-email-anup.patel@broadcom.com> <20161130213854.jmjwcis2zid6busv@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
+Date: Thu, 1 Dec 2016 10:13:13 +0100
+Message-ID: <20161201091313.th7nucjmvtuolqza@lukather>
+References: <cover.1480414715.git.moinejf@free.fr>
+ <20161129213650.uqcgekodq77wlmxs@lukather>
+ <20161130100545.44546ed28896cdb9768f68cd@free.fr>
+ <2039137.LtCOH6bs2I@avalon>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161130213854.jmjwcis2zid6busv@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod KUMAR <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aqaguzpmreyrnply"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNGT77AQKGQE3SNIKUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <2039137.LtCOH6bs2I@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 1, 2016 at 3:08 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Nov 25, 2016 at 10:05:51AM +0530, Anup Patel wrote:
->> This patch adds device tree bindings document for the FlexRM
->> mailbox driver.
->
-> Bindings document h/w, not drivers.
 
-OK, I will rephrase this.
+--aqaguzpmreyrnply
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
->
->>
->> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../bindings/mailbox/brcm,flexrm-mbox.txt          | 60 ++++++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
->> new file mode 100644
->> index 0000000..7969b1c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
->> @@ -0,0 +1,60 @@
->> +Broadcom FlexRM Mailbox Driver
->
-> h/w
+Hi Laurent,
 
-OK, I will rephrase this.
+On Wed, Nov 30, 2016 at 12:12:55PM +0200, Laurent Pinchart wrote:
+> > More, it is not sure that the bridge/DW code would work with Allwinner's
+> > SoCs.
+> 
+> If it doesn't work and can't be made to work in a non-invasive way they it 
+> should certainly not be used :-)
 
->
->> +===============================
->> +The Broadcom FlexRM ring manager provides a set of rings which can be
->> +used to submit work to offload engines. An SoC may have multiple FlexRM
->> +hardware blocks. There is one device tree entry per block. The FlexRM
->> +mailbox drivers creates a mailbox instance using FlexRM rings where
->> +each mailbox channel is a separate FlexRM ring.
->> +
->> +Required properties:
->> +--------------------
->> +- compatible:        Should be "brcm,flexrm-mbox"
->
-> Sounds generic. Add SoC specific compatible strings please.
+Even if the register layout is completely scrambled, as long as the
+bits themselves aren't (and by comparing the two drivers it looks like
+they haven't changed), you can easily deal with that using the
+regmap_fields, with the two implementations (the original one and the
+scrambled one) providing their register map that way, and the driver
+code using whatever has been provided.
 
-OK, will do.
+> > Eventually, I went the same way as omap/hdmi5: different driver.
+> 
+> I might try to fix that for OMAP5 at some point, we'll see.
 
->
->> +- reg:               Specifies base physical address and size of the FlexRM
->> +             ring registers
->> +- msi-parent:        Phandles (and potential Device IDs) to MSI controllers
->> +             The FlexRM engine will send MSIs (instead of wired
->> +             interrupts) to CPU. There is one MSI for each FlexRM ring.
->
-> One ring is one h/w block, right? How many instances is not really
-> relevant.
+For complex drivers that have already a driver written and a lot of
+testing that already happened, I don't think duplication is a smart
+move.
 
-No, FlexRM is the HW block. One instance of FlexRM provides a set of
-rings (typically 32 or more).
+> > >   - And finally the fact that we can't have several display engine in
+> > >     parallel, if needs be. This has happened in the past already on
+> > >     Allwinner SoCs, so it's definitely something we should consider in
+> > >     the DT bindings, since we can't break them.
+> > 
+> > IIRC, I proposed my driver before yours, and the DE2 is completely
+> > different from the other display engines.
+> > What you are telling is "add more code to already complex code and have
+> > a big driver for all SoCs in each kernels".
+> > I think it should be better to have small modules, each one treating
+> > specific hardware, and to let only the needed code in the kernel memory
+> > at startup time.
+> > 
+> > > Until those are fixed, I cannot see how this driver can be merged,
+> > > unfortunately.
+> > 
+> > No problem. I just wanted to help people by giving the job I did on the
+> > boards I have. My boards are working for almost one year, fine enough
+> > for I use them as daily desktop computers. I don't want to spend one
+> > more year for having my code in the Linux kernel: there are so much
+> > other exciting things to do...
+> 
+> And you're certainly welcome to contribute drivers to the kernel, that's 
+> always appreciated. Of course, to ensure a reasonable level of quality and 
+> consistency between drivers, the review process often requires changes to be 
+> made to the code being submitted. When it comes to drivers I mostly pay 
+> attention to DT bindings, userspace APIs and modification to common code. 
+> Driver code itself, as long as it's reasonably clean and doesn't impede 
+> development of other drivers or impact system security in an adverse way, is 
+> still important but maybe slightly less so. I'll defer to Maxime to come to an 
+> agreement on the multiple display engines in parallel problem as I'm not 
+> familiar with it for the Allwinner platforms.
 
-There are lot other registers in FlexRM apart from ring registers. Out of
-these, only ring registers are accessible to non-secured world (i.e. Linux)
-whereas all other registers are only accessible to secure-world firmware
-(typically ATF).
+The earlier Allwinner SoCs (with the old display engine), we had some
+SoCs with multiple instances of the display engine and TCON (the
+display engine roughly implementing the planes, the TCON the
+CRTC. Roughly.). However, those were sharing some encoders (HDMI,
+DSI) after that.
 
->
->> +             Refer devicetree/bindings/interrupt-controller/msi.txt
->> +- #mbox-cells:       Specifies the number of cells needed to encode a mailbox
->> +             channel. This should be 3.
->> +
->> +             The 1st cell is the mailbox channel number.
->> +
->> +             The 2nd cell contains MSI completion threshold. This is the
->> +             number of completion messages for which FlexRM will inject
->> +             one MSI interrupt to CPU.
->> +
->> +             The 3nd cell contains MSI timer value representing time for
->> +             which FlexRM will wait to accumulate N completion messages
->> +             where N is the value specified by 2nd cell above. If FlexRM
->> +             does not get required number of completion messages in time
->> +             specified by this cell then it will inject one MSI interrupt
->> +             to CPU provided atleast one completion message is available.
->> +
->> +Optional properties:
->> +--------------------
->> +- dma-coherent:      Present if DMA operations made by the FlexRM engine (such
->> +             as DMA descriptor access, access to buffers pointed by DMA
->> +             descriptors and read/write pointer updates to DDR) are
->> +             cache coherent with the CPU.
->> +
->> +Example:
->> +--------
->> +crypto_mbox: mbox@67000000 {
->> +     compatible = "brcm,flexrm-mbox";
->> +     reg = <0x67000000 0x200000>;
->> +     msi-parent = <&gic_its 0x7f00>;
->> +     #mbox-cells = <3>;
->> +};
->> +
->> +crypto_client {
->
-> Is this a h/w block or purely a driver on top of the mailbox? The latter
-> doesn't belong in DT.
+So we need to have a single DRM device taking care of the multiple
+display engines, which essentialy means that we have to decouple the
+DRM device from the display engine. This was done in the earlier
+designs using an additional node with a list of phandles to the
+display engines in the system, and obviously, I'd prefer to have some
+consistency and reuse the same thing.
 
-The FlexRM is one HW block. It provides ring-based programming
-interface to various offload engines which are separate HW blocks.
+But the current approach doesn't work and will require some DT
+modifications if that case happens again, which we can't do because of
+the DT ABI.
 
-The driver for FlexRM is implemented as mailbox controller driver
-while the offload engine drivers will be mailbox clients.
+Maxime
 
->
->> +     ...
->> +     mboxes = <&crypto_mbox 0 0x1 0xffff>,
->> +              <&crypto_mbox 1 0x1 0xffff>,
->> +              <&crypto_mbox 16 0x1 0xffff>,
->> +              <&crypto_mbox 17 0x1 0xffff>,
->> +              <&crypto_mbox 30 0x1 0xffff>,
->> +              <&crypto_mbox 31 0x1 0xffff>;
->> +     };
->> +     ...
->> +};
-
-Regards,
-Anup
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--aqaguzpmreyrnply--
