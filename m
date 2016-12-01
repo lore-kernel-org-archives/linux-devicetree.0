@@ -1,108 +1,115 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
-Date: Thu, 1 Dec 2016 16:26:14 +0100
-Message-ID: <CAMuHMdX9Wavet8LpWvLMfJ3ZpwF+7biPSXtZAKq1YdKCe7ubDg@mail.gmail.com>
-References: <1480605494-32460-1-git-send-email-horms+renesas@verge.net.au>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v3 1/9] clk: stm32f4: Update DT bindings documentation
+Date: Thu, 1 Dec 2016 16:27:41 +0100
+Message-ID: <1480606069-5178-2-git-send-email-gabriel.fernandez@st.com>
+References: <1480606069-5178-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1480605494-32460-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1480606069-5178-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-On Thu, Dec 1, 2016 at 4:18 PM, Simon Horman <horms+renesas@verge.net.au> wrote:
-> In the case of Renesas R-Car hardware we know that there are generations of
-> SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
-> relationship between IP blocks might be. For example, I believe that
-> r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
-> descendant of the former or vice versa.
->
-> We can, however, by examining the documentation and behaviour of the
-> hardware at run-time observe that the current driver implementation appears
-> to be compatible with the IP blocks on SoCs within a given generation.
->
-> For the above reasons and convenience when enabling new SoCs a
-> per-generation fallback compatibility string scheme being adopted for
-> drivers for Renesas SoCs.
->
-> Also deprecate renesas,i2c-rcar. It seems poorly named as it is only
-> compatible with R-Car Gen 1. It also appears unused in mainline.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 32 ++++++++++++++--------
->  1 file changed, 20 insertions(+), 12 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> index 239632a0d709..8c679b17c4c6 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> @@ -1,17 +1,25 @@
->  I2C for R-Car platforms
->
->  Required properties:
-> -- compatible: Must be one of
-> -       "renesas,i2c-rcar"
-> -       "renesas,i2c-r8a7778"
-> -       "renesas,i2c-r8a7779"
-> -       "renesas,i2c-r8a7790"
-> -       "renesas,i2c-r8a7791"
-> -       "renesas,i2c-r8a7792"
-> -       "renesas,i2c-r8a7793"
-> -       "renesas,i2c-r8a7794"
-> -       "renesas,i2c-r8a7795"
-> -       "renesas,i2c-r8a7796"
-> +- compatible:
-> +       "renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
-> +       "renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
-> +       "renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-> +       "renesas,i2c-r8a7791" if the device is a part of a R8A7791 SoC.
-> +       "renesas,i2c-r8a7792" if the device is a part of a R8A7792 SoC.
-> +       "renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
-> +       "renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
-> +       "renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
-> +       "renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
-> +       "renesas,i2c-rcar-gen1" for a generic R-Car Gen1 compatible device.
-> +       "renesas,i2c-rcar-gen2" for a generic R-Car Gen2 compatible device.
-> +       "renesas,i2c-rcar-gen3" for a generic R-Car Gen3 compatible device.
+Creation of dt include file for specific stm32f4 clocks.
+These specific clocks are not derived from system clock (SYSCLOCK)
+We should use index 1 to use these clocks in DT.
+e.g. <&rcc 1 CLK_LSI>
 
-Please use "renesas,<family>-<module>" when adding family-specific
-compatible values where non are defined yet.
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/clock/st,stm32-rcc.txt     | 15 +++++++++
+ include/dt-bindings/clock/stm32f4-clock.h          | 37 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+ create mode 100644 include/dt-bindings/clock/stm32f4-clock.h
 
-I.e.
-"renesas,rcar-gen1-i2c"
-"renesas,rcar-gen1-i2c"
-"renesas,rcar-gen1-i2c"
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+index 0532d81..8f93740 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
++++ b/Documentation/devicetree/bindings/clock/st,stm32-rcc.txt
+@@ -17,6 +17,9 @@ Required properties:
+   property, containing a phandle to the clock device node, an index selecting
+   between gated clocks and other clocks and an index specifying the clock to
+   use.
++- clocks: External oscillator clock phandle
++  - high speed external clock signal (HSE)
++  - external I2S clock (I2S_CKIN)
+ 
+ Example:
+ 
+@@ -25,6 +28,7 @@ Example:
+ 		#clock-cells = <2>
+ 		compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
+ 		reg = <0x40023800 0x400>;
++		clocks = <&clk_hse>, <&clk_i2s_ckin>;
+ 	};
+ 
+ Specifying gated clocks
+@@ -66,6 +70,17 @@ The secondary index is bound with the following magic numbers:
+ 
+ 	0	SYSTICK
+ 	1	FCLK
++	2	CLK_LSI		(low-power clock source)
++	3	CLK_LSE		(generated from a 32.768 kHz low-speed external
++				 crystal or ceramic resonator)
++	4	CLK_HSE_RTC	(HSE division factor for RTC clock)
++	5	CLK_RTC		(real-time clock)
++	6	PLL_VCO_I2S	(vco frequency of I2S pll)
++	7	PLL_VCO_SAI	(vco frequency of SAI pll)
++	8	CLK_LCD		(LCD-TFT)
++	9	CLK_I2S		(I2S clocks)
++	10	CLK_SAI1	(audio clocks)
++	11	CLK_SAI2
+ 
+ Example:
+ 
+diff --git a/include/dt-bindings/clock/stm32f4-clock.h b/include/dt-bindings/clock/stm32f4-clock.h
+new file mode 100644
+index 0000000..5431f00
+--- /dev/null
++++ b/include/dt-bindings/clock/stm32f4-clock.h
+@@ -0,0 +1,37 @@
++/*
++ * stm32f4-clock.h
++ *
++ * Copyright (C) 2016 STMicroelectronics
++ * Author: Gabriel Fernandez for STMicroelectronics.
++ * License terms:  GNU General Public License (GPL), version 2
++ */
++
++/*
++ * List of clocks wich are not derived from system clock (SYSCLOCK)
++ *
++ * The index of these clocks is the secondary index of DT bindings
++ * (see Documentatoin/devicetree/bindings/clock/st,stm32-rcc.txt)
++ *
++ * e.g:
++	<assigned-clocks = <&rcc 1 CLK_LSE>;
++*/
++
++#ifndef _DT_BINDINGS_CLK_STMF4_H
++#define _DT_BINDINGS_CLK_STMF4_H
++
++#define SYSTICK			0
++#define FCLK			1
++#define CLK_LSI			2
++#define CLK_LSE			3
++#define CLK_HSE_RTC		4
++#define CLK_RTC			5
++#define PLL_VCO_I2S		6
++#define PLL_VCO_SAI		7
++#define CLK_LCD			8
++#define CLK_I2S			9
++#define CLK_SAI1		10
++#define CLK_SAI2		11
++
++#define END_PRIMARY_CLK		12
++
++#endif
+-- 
+1.9.1
 
-> +       "renesas,i2c-rcar" (deprecated)
-> +
-> +       When compatible with the generic version, nodes must list the
-> +       SoC-specific version corresponding to the platform first followed
-> +       by the generic version.
-> +
->  - reg: physical base address of the controller and length of memory mapped
->    region.
->  - interrupts: interrupt specifier.
-> @@ -33,7 +41,7 @@ Examples :
->  i2c0: i2c@e6508000 {
->         #address-cells = <1>;
->         #size-cells = <0>;
-> -       compatible = "renesas,i2c-r8a7791";
-> +       compatible = "renesas,i2c-r8a7791", "renesas,i2c-rcar-gen2";
-
-"renesas,rcar-gen2-i2c".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
