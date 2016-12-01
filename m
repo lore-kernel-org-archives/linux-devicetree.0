@@ -1,87 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 1/5] mmc: dt-bindings: add ZTE ZX296718 MMC bindings
-Date: Thu, 1 Dec 2016 07:45:44 -0600
-Message-ID: <CAL_JsqJy7Vm51uH=PbzdPeviysxpZxfK_PNA9RUakuMgqL9H+A@mail.gmail.com>
-References: <1479450555-19047-1-git-send-email-jun.nie@linaro.org>
- <1479450555-19047-2-git-send-email-jun.nie@linaro.org> <CABymUCOvpQv7D2fi7EhWUZb_B8iwvQQ7-uW0gPrSdsFabMcPbA@mail.gmail.com>
- <CABymUCPRuNnMmJ9W6YRD3rG8hdMay2QxNAUXkNK2YXBLR7Q9VA@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: da850: Add node for pullup/pulldown
+ pinconf
+Date: Thu, 1 Dec 2016 19:33:59 +0530
+Message-ID: <39ef42d3-3a34-70ff-25eb-86006d6841ee@ti.com>
+References: <1480351226-3332-1-git-send-email-david@lechnology.com>
+ <1480351226-3332-4-git-send-email-david@lechnology.com>
+ <CACRpkdZOxZRRUGkso_b0hLta4OWkeAgX2khcJxFc8EETFKiiXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CABymUCPRuNnMmJ9W6YRD3rG8hdMay2QxNAUXkNK2YXBLR7Q9VA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Jason Liu <jason.liu@linaro.org>, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZOxZRRUGkso_b0hLta4OWkeAgX2khcJxFc8EETFKiiXw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Axel Haslam <ahaslam@baylibre.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Bailon <abailon@baylibre.com>, =?UTF-8?Q?Bartosz_Go=c5=82aszewski?= <bgolaszewski@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2016 at 7:34 PM, Jun Nie <jun.nie@linaro.org> wrote:
-> 2016-11-24 10:17 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
->> 2016-11-18 14:29 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
->>> Document the device-tree binding of ZTE MMC host on
->>> ZX296718 SoC.
->>>
->>> Signed-off-by: Jun Nie <jun.nie@linaro.org>
->>> ---
->>>  .../devicetree/bindings/mmc/zx-dw-mshc.txt         | 35 ++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
->>> new file mode 100644
->>> index 0000000..c175c4b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
->>> @@ -0,0 +1,35 @@
->>> +* ZTE specific extensions to the Synopsys Designware Mobile Storage
->>> +  Host Controller
->>> +
->>> +The Synopsys designware mobile storage host controller is used to interface
->>> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
->>> +differences between the core Synopsys dw mshc controller properties described
->>> +by synopsys-dw-mshc.txt and the properties used by the ZTE specific
->>> +extensions to the Synopsys Designware Mobile Storage Host Controller.
->>> +
->>> +Required Properties:
->>> +
->>> +* compatible: should be
->>> +       - "zte,zx296718-dw-mshc": for ZX SoCs
->>> +
->>> +Example:
->>> +
->>> +       mmc1: mmc@1110000 {
->>> +               compatible = "zte,zx296718-dw-mshc";
->>> +               #address-cells = <1>;
->>> +               #size-cells = <0>;
->>> +               reg = <0x01110000 0x1000>;
->>> +               interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
->>> +               fifo-depth = <32>;
->>> +               data-addr = <0x200>;
->>> +               fifo-watermark-aligned;
->>> +               bus-width = <4>;
->>> +               clock-frequency = <50000000>;
->>> +               clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
->>> +               clock-names = "biu", "ciu";
->>> +               num-slots = <1>;
->>> +               max-frequency = <50000000>;
->>> +               cap-sdio-irq;
->>> +               cap-sd-highspeed;
->>> +               status = "disabled";
->>> +       };
->>> --
->>> 1.9.1
->>>
+On Wednesday 30 November 2016 06:31 PM, Linus Walleij wrote:
+> On Mon, Nov 28, 2016 at 5:40 PM, David Lechner <david@lechnology.com> wrote:
+> 
+>> This SoC has a separate pin controller for configuring pullup/pulldown
+>> bias on groups of pins.
 >>
->> Hi Rob & Mark,
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
 >>
->> Could you help review and act this patch if you think it is OK? Thank you!
->>
->> Jun
->
-> Hi Rob & Mark,
->
-> Could you help comment or act on this patch? Thank you!
+>> v2 changes:
+>> * Moved pin-controller@22c00c device node after gpio@226000 (there seem to be
+>>   more nodes in proper order here compared to the i2c@228000 node suggested by
+>>   Sekhar)
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Take this through the ARM SoC tree.
 
-Resend the patch to the DT list so patchwork will pick it up if you
-want it reviewed.
+Thanks Linus! Applied to v4.10/dt
 
-Rob
+Thanks,
+Sekhar
