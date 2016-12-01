@@ -1,225 +1,89 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v2 2/2] HID: i2c-hid: support Wacom digitizer + regulator
-Date: Thu, 1 Dec 2016 15:41:26 +0100
-Message-ID: <20161201144126.GE1280@mail.corp.redhat.com>
-References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
- <1480555288-142791-2-git-send-email-briannorris@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1480555288-142791-2-git-send-email-briannorris@chromium.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH/RFC i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
+Date: Thu,  1 Dec 2016 16:18:14 +0100
+Message-ID: <1480605494-32460-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Nov 30 2016 or thereabouts, Brian Norris wrote:
-> We need to power on the digitizer before using it, and it's also nice to
-> save power in suspend by disabling it. Support an optional "vdd-supply"
-> and wire it up for the new Wacom device.
-> 
-> Wacom recommended waiting up to 100ms after powering on before trying to
-> access this device.
-> 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: linux-input@vger.kernel.org
-> ---
-> v1 was a few months back. I finally got around to rewriting it based on
-> DT binding feedback.
-> 
-> v2:
->  * support compatible property for wacom, with specific "vdd-supply" name
->  * support the 100ms delay needed for this digitizer
->  * target regulator support only at specific device
-> 
->  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
->  drivers/hid/i2c-hid/i2c-hid.c | 70 ++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/i2c/i2c-hid.h   |  6 ++++
->  2 files changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
-> index b3ec4f2de875..1bc174f3a788 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid.c
-> @@ -37,7 +37,9 @@
->  #include <linux/mutex.h>
->  #include <linux/acpi.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include <linux/i2c/i2c-hid.h>
->  
-> @@ -918,10 +920,25 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
->  #endif
->  
->  #ifdef CONFIG_OF
-> +
-> +/* of_device_id match data */
-> +struct i2c_hid_of_data {
-> +	/* Name of supply regulator. */
-> +	const char *supply_name;
-> +	/* Delay required after powering on device before it is usable. */
-> +	int init_delay_ms;
-> +};
-> +
-> +static const struct i2c_hid_of_data wacom_w9013_data = {
+In the case of Renesas R-Car hardware we know that there are generations of
+SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
+relationship between IP blocks might be. For example, I believe that
+r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
+descendant of the former or vice versa.
 
-Why is the struct "wacom" specific?
-If the vdd line is required, I don't see why there is a need to specify
-that this is a Wacom specifics. Then Elan, SYnaptics will want the same
-and we won't be able to to follow.
+We can, however, by examining the documentation and behaviour of the
+hardware at run-time observe that the current driver implementation appears
+to be compatible with the IP blocks on SoCs within a given generation.
 
-> +	.supply_name		= "vdd",
-> +	.init_delay_ms		= 100,
+For the above reasons and convenience when enabling new SoCs a
+per-generation fallback compatibility string scheme being adopted for
+drivers for Renesas SoCs.
 
-If the purpose of this declaration is to set the delay, why isn't this
-something provided by the device tree?
+Also deprecate renesas,i2c-rcar. It seems poorly named as it is only
+compatible with R-Car Gen 1. It also appears unused in mainline.
 
-> +};
-> +
->  static int i2c_hid_of_probe(struct i2c_client *client,
->  		struct i2c_hid_platform_data *pdata)
->  {
->  	struct device *dev = &client->dev;
-> +	const struct i2c_hid_of_data *data = of_device_get_match_data(dev);
->  	u32 val;
->  	int ret;
->  
-> @@ -937,10 +954,33 @@ static int i2c_hid_of_probe(struct i2c_client *client,
->  	}
->  	pdata->hid_descriptor_address = val;
->  
-> +	if (data) {
-> +		pdata->init_delay_ms = data->init_delay_ms;
-> +		if (data->supply_name) {
-> +			pdata->supply = devm_regulator_get_optional(&client->dev,
-> +								    data->supply_name);
-> +			if (IS_ERR(pdata->supply)) {
-> +				ret = PTR_ERR(pdata->supply);
-> +				pdata->supply = NULL;
-> +				if (ret == -EPROBE_DEFER)
-> +					return ret;
-> +				if (ret == -ENODEV)
-> +					return 0;
-> +				dev_err(dev, "Failed to get %s regulator: %d\n",
-> +					data->supply_name, ret);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  
->  static const struct of_device_id i2c_hid_of_match[] = {
-> +	{
-> +		.compatible = "wacom,w9013",
-> +		.data = &wacom_w9013_data,
-> +	},
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 32 ++++++++++++++--------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-NACK, see 1/2
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+index 239632a0d709..8c679b17c4c6 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+@@ -1,17 +1,25 @@
+ I2C for R-Car platforms
+ 
+ Required properties:
+-- compatible: Must be one of
+-	"renesas,i2c-rcar"
+-	"renesas,i2c-r8a7778"
+-	"renesas,i2c-r8a7779"
+-	"renesas,i2c-r8a7790"
+-	"renesas,i2c-r8a7791"
+-	"renesas,i2c-r8a7792"
+-	"renesas,i2c-r8a7793"
+-	"renesas,i2c-r8a7794"
+-	"renesas,i2c-r8a7795"
+-	"renesas,i2c-r8a7796"
++- compatible:
++	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
++	"renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
++	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
++	"renesas,i2c-r8a7791" if the device is a part of a R8A7791 SoC.
++	"renesas,i2c-r8a7792" if the device is a part of a R8A7792 SoC.
++	"renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
++	"renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
++	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
++	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
++	"renesas,i2c-rcar-gen1" for a generic R-Car Gen1 compatible device.
++	"renesas,i2c-rcar-gen2" for a generic R-Car Gen2 compatible device.
++	"renesas,i2c-rcar-gen3" for a generic R-Car Gen3 compatible device.
++	"renesas,i2c-rcar" (deprecated)
++
++	When compatible with the generic version, nodes must list the
++	SoC-specific version corresponding to the platform first followed
++	by the generic version.
++
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: interrupt specifier.
+@@ -33,7 +41,7 @@ Examples :
+ i2c0: i2c@e6508000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+-	compatible = "renesas,i2c-r8a7791";
++	compatible = "renesas,i2c-r8a7791", "renesas,i2c-rcar-gen2";
+ 	reg = <0 0xe6508000 0 0x40>;
+ 	interrupts = <0 287 IRQ_TYPE_LEVEL_HIGH>;
+ 	clocks = <&mstp9_clks R8A7791_CLK_I2C0>;
+-- 
+2.7.0.rc3.207.g0ac5344
 
-I don't really like the v2. IMO, v1 was less intrusive (though it was
-missing the init_delay_ms).
-I believe it's possible to have a generic device tree description which
-doesn't require us to adapt the driver for each and every device.
-
-Cheers,
-Benjamin
-
->  	{ .compatible = "hid-over-i2c" },
->  	{},
->  };
-> @@ -983,6 +1023,17 @@ static int i2c_hid_probe(struct i2c_client *client,
->  		ihid->pdata = *platform_data;
->  	}
->  
-> +	if (ihid->pdata.supply) {
-> +		ret = regulator_enable(ihid->pdata.supply);
-> +		if (ret < 0) {
-> +			dev_err(&client->dev, "Failed to enable regulator: %d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +		if (ihid->pdata.init_delay_ms)
-> +			msleep(ihid->pdata.init_delay_ms);
-> +	}
-> +
->  	if (client->irq > 0) {
->  		ihid->irq = client->irq;
->  	} else if (ACPI_COMPANION(&client->dev)) {
-> @@ -1100,6 +1151,9 @@ static int i2c_hid_remove(struct i2c_client *client)
->  	if (ihid->desc)
->  		gpiod_put(ihid->desc);
->  
-> +	if (ihid->pdata.supply)
-> +		regulator_disable(ihid->pdata.supply);
-> +
->  	kfree(ihid);
->  
->  	acpi_dev_remove_driver_gpios(ACPI_COMPANION(&client->dev));
-> @@ -1152,6 +1206,11 @@ static int i2c_hid_suspend(struct device *dev)
->  		else
->  			hid_warn(hid, "Failed to enable irq wake: %d\n",
->  				wake_status);
-> +	} else if (ihid->pdata.supply) {
-> +		ret = regulator_disable(ihid->pdata.supply);
-> +		if (ret < 0)
-> +			hid_warn(hid, "Failed to disable supply: %d\n",
-> +				 ret);
->  	}
->  
->  	return 0;
-> @@ -1165,7 +1224,16 @@ static int i2c_hid_resume(struct device *dev)
->  	struct hid_device *hid = ihid->hid;
->  	int wake_status;
->  
-> -	if (device_may_wakeup(&client->dev) && ihid->irq_wake_enabled) {
-> +	if (!device_may_wakeup(&client->dev)) {
-> +		if (ihid->pdata.supply) {
-> +			ret = regulator_enable(ihid->pdata.supply);
-> +			if (ret < 0)
-> +				hid_warn(hid, "Failed to enable supply: %d\n",
-> +					 ret);
-> +			if (ihid->pdata.init_delay_ms)
-> +				msleep(ihid->pdata.init_delay_ms);
-> +		}
-> +	} else if (ihid->irq_wake_enabled) {
->  		wake_status = disable_irq_wake(ihid->irq);
->  		if (!wake_status)
->  			ihid->irq_wake_enabled = false;
-> diff --git a/include/linux/i2c/i2c-hid.h b/include/linux/i2c/i2c-hid.h
-> index 7aa901d92058..97688cde4a91 100644
-> --- a/include/linux/i2c/i2c-hid.h
-> +++ b/include/linux/i2c/i2c-hid.h
-> @@ -14,9 +14,13 @@
->  
->  #include <linux/types.h>
->  
-> +struct regulator;
-> +
->  /**
->   * struct i2chid_platform_data - used by hid over i2c implementation.
->   * @hid_descriptor_address: i2c register where the HID descriptor is stored.
-> + * @supply: regulator for powering on the device.
-> + * @init_delay_ms: delay after powering on before device is usable.
->   *
->   * Note that it is the responsibility of the platform driver (or the acpi 5.0
->   * driver, or the flattened device tree) to setup the irq related to the gpio in
-> @@ -31,6 +35,8 @@
->   */
->  struct i2c_hid_platform_data {
->  	u16 hid_descriptor_address;
-> +	struct regulator *supply;
-> +	int init_delay_ms;
->  };
->  
->  #endif /* __LINUX_I2C_HID_H */
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
