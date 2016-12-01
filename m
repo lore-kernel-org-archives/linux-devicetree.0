@@ -1,110 +1,157 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH/RFC v2 i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
-Date: Thu,  1 Dec 2016 16:41:03 +0100
-Message-ID: <1480606863-4418-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] Meson GXL and GXM USB support
+Date: Thu, 1 Dec 2016 09:54:10 -0600
+Message-ID: <20161201155410.5ik4kg3clrh27s2k@rob-hp-laptop>
+References: <20161126145635.24488-1-martin.blumenstingl@googlemail.com>
+ <CAFBinCAA_JEtr_0Ze0thoRaEKMnWQMKcPxJ8y88zkWAAhuxsMw@mail.gmail.com>
+ <20161130222228.zu6ampaajg3gkdz4@rob-hp-laptop>
+ <CAFBinCC8c2sXgo80LMMg=jqZ2hr8eLM_2g03H1J99m4xxFGYFA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFBinCC8c2sXgo80LMMg=jqZ2hr8eLM_2g03H1J99m4xxFGYFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the case of Renesas R-Car hardware we know that there are generations of
-SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
-relationship between IP blocks might be. For example, I believe that
-r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
-descendant of the former or vice versa.
+On Wed, Nov 30, 2016 at 11:49:03PM +0100, Martin Blumenstingl wrote:
+> On Wed, Nov 30, 2016 at 11:22 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Sun, Nov 27, 2016 at 11:42:02PM +0100, Martin Blumenstingl wrote:
+> >> Hello Kishon,
+> >>
+> >> On Sat, Nov 26, 2016 at 3:56 PM, Martin Blumenstingl
+> >> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> >> > USB support on GXL and GXM differs a lot from Meson8b and GXBB:
+> >> > The most obvious change is that GXL and GXM now have one dwc3
+> >> > controller and one dwc2 controller (instead of two dwc2 controllers).
+> >> > With that there are also new USB PHYs.
+> >> >
+> >> > Due to lack of hardware I was only able to test this on a board with
+> >> > GXM, but as far as I understand the hardware my preparations should be
+> >> > correct (so it should also work on GXL).
+> >> >
+> >> > dwc2 will probably stay unused on most GXM devices since it's limited
+> >> > to device mode via some dwc2 hardware configuration register.
+> >> >
+> >> > dwc3 is probably used on all devices, even if there is more than just
+> >> > one USB port. dwc3 has a built-in USB2 hub - on GXL this hub has two
+> >> > ports enabled, while on GXM there are three ports enabled (see below
+> >
+> > This hub is an actual USB hub? If so, then you should probably model the
+> > USB bus topology (which we have a binding definition for).
+> (the following explanation is based on a) what I found is going on in
+> the hardware registers b) reading the vendor drivers - unfortunately
+> there are no datasheets available which could give more details).
+> lsusb on my GXM gives:
+> ...
+>  Hub Port Status:
+>    Port 1: 0000.0100 power
+>    Port 2: 0000.0100 power
+>    Port 3: 0000.0100 power
+> 
+> The layout looks like this:
+> dwc3 provides a USB hub with 2 (on GXL) or 3 (on GXM) USB ports.
+> Each of the port is driven by a PHY (port 1 = abp@0x78000, port2 =
+> abp@0x78020, etc...).
+> 
+> On GXM USB2 PHY port 3 = abp@0x78040 is connected to the third dwc3 hub port.
+> On GXL PHY port 3 = abp@0x78040 is connected to the dwc2 (I could not
+> prove this yet as I don't have access to any GXL hardware).
+> 
+> So the answer is: we don't have an actual USB hub here (as this hub is
+> provided by dwc3), but rather a set of PHYs which is assigned to
+> dwc3's hub (if we don't configure *all* PHYs then none of the USB
+> ports provided by the dwc3 hub works).
+> 
+> Could you please point me to the USB bus topology binding (is it the
+> one described in usb-device.txt)?
 
-We can, however, by examining the documentation and behaviour of the
-hardware at run-time observe that the current driver implementation appears
-to be compatible with the IP blocks on SoCs within a given generation.
+Yes.
 
-For the above reasons and convenience when enabling new SoCs a
-per-generation fallback compatibility string scheme being adopted for
-drivers for Renesas SoCs.
+> 
+> >> > for lsusb output). There are no USB3 ports enabled in the dwc3 hardware
+> >> > configuration, meaning that the SoC is limited to high-speed mode.
+> >> > On my GXM device the dwc3 hardware configuration forces it into "host
+> >> > only" mode.
+> >> >
+> >> > The SoCs contain two PHY blocks: one USB3 PHY and up to four USB2 PHYs
+> >> > (on GXM there are only three enabled, but the registers should support
+> >> > up to four).
+> >> > The USB3 PHY also handles the OTG interrupts, but since dwc3's hardware
+> >> > configuration enforces "host only" mode I was not able to test this. It
+> >> > simply takes care of an interrupt and then notifies all related PHYs
+> >> > about the new mode.
+> >> > The USB2 PHY block is a bit different: I created one PHY driver which
+> >> > spans all "PHY ports" because the handling is a bit tricky. It turns
+> >> > out that for each available USB port in dwc3's hub the corresponding
+> >> > PHY must be enabled (even if there is no physical port - in my case
+> >> > port 3 is not connected to anything, but disabling the PHY breaks
+> >> > ports 1 and 2 as well).
+> >> > I decided not not pass the USB2 PHYs directly to dwc3 due to three
+> >> > reasons: 1. the USB3 PHY (which holds a reference to all relevant
+> >> > USB2 PHY ports) controls the mode of the USB2 PHY ports (since both
+> >> > are used with the same controller and thus it makes sense to keep the
+> >> > mode consistent across all ports) 2. the dwc3 driver does not support
+> >> > passing multiple USB2 PHYs (only one USB2 and one USB3 PHY can be
+> >> > passed to it) 3. it is similar to how the vendor reference driver
+> >> > manages the PHYs. Please note that this coupling is not a fixed, this
+> >> > is all configurable via devicetree (so if the third USB2 PHY has to
+> >> > be passed two the dwc2 controller then this is still possible by
+> >> > just moving on PHY reference in the .dts).
+> >> after not staring at my own code for 24 hours I realized this:
+> >> (I went through quite a few iterations before getting these drivers to work)
+> >> I'm basically re-modelling an "USB PHY hub" with my USB3 PHY driver
+> >> (there's one "upstream" PHY interface which is passed to dwc3 and
+> >> multiple downstream PHYs, each for one port on dwc3's internal hub).
+> >> With this approach I could split each of the the USB2s into separate
+> >> nodes again (instead of one devicetree node with #phy-cells = <1>) as
+> >> the USB3 PHY is taking care of that special "we have to enable all
+> >> ports or no port will be usable".
+> >>
+> >> We could go even one step further: why implement this in the Meson GXL
+> >> specific PHY driver - why not implement a generic "phy-hub" driver
+> >> (which would be valid whenever the PHY controller has to manage
+> >> multiple PHYs at once, but wants to keep them all in a consistent
+> >> state).
+> >> The devicetree could look like this:
+> >>     usb2_phy_hub: phy@0 {
+> >>         compatible = "phy-hub";
+> >>         phys = <&other_phy1>, <&other_phy 2>;
+> >>     };
+> >>
+> >> &dwc3 {
+> >>      phys = <&usb2_phy_hub>, <&usb3_phy0>;
+> >>      phy-names = "usb2-phy", "usb3-phy";
+> >> };
+> >
+> > I'm okay with a hub if it is modeled as a USB hub. Here though, it
+> > looks like you are just trying to group things which doesn't need to be
+> > in DT.
+> I hope my answer above makes things more clear
 
-Also deprecate renesas,i2c-rcar. It seems poorly named as it is only
-compatible with R-Car Gen 1. It also appears unused in mainline.
+Yes, I thought there was some heirarchy here, but it seems not.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-Include accidently omitted i2c-rcar.c portion of patch
----
- Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 32 ++++++++++++++--------
- drivers/i2c/busses/i2c-rcar.c                      |  5 +++-
- 2 files changed, 24 insertions(+), 13 deletions(-)
+So you should just list the 3 phys at the controller. The controller 
+has 3 ports and you have a phy for each port. The fact that they all 
+need to be on/initialized is a quirk and shouldn't mean that you create 
+some heirarchy in DT.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-index 239632a0d709..8c679b17c4c6 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-@@ -1,17 +1,25 @@
- I2C for R-Car platforms
- 
- Required properties:
--- compatible: Must be one of
--	"renesas,i2c-rcar"
--	"renesas,i2c-r8a7778"
--	"renesas,i2c-r8a7779"
--	"renesas,i2c-r8a7790"
--	"renesas,i2c-r8a7791"
--	"renesas,i2c-r8a7792"
--	"renesas,i2c-r8a7793"
--	"renesas,i2c-r8a7794"
--	"renesas,i2c-r8a7795"
--	"renesas,i2c-r8a7796"
-+- compatible:
-+	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
-+	"renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
-+	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-+	"renesas,i2c-r8a7791" if the device is a part of a R8A7791 SoC.
-+	"renesas,i2c-r8a7792" if the device is a part of a R8A7792 SoC.
-+	"renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
-+	"renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
-+	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
-+	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
-+	"renesas,i2c-rcar-gen1" for a generic R-Car Gen1 compatible device.
-+	"renesas,i2c-rcar-gen2" for a generic R-Car Gen2 compatible device.
-+	"renesas,i2c-rcar-gen3" for a generic R-Car Gen3 compatible device.
-+	"renesas,i2c-rcar" (deprecated)
-+
-+	When compatible with the generic version, nodes must list the
-+	SoC-specific version corresponding to the platform first followed
-+	by the generic version.
-+
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: interrupt specifier.
-@@ -33,7 +41,7 @@ Examples :
- i2c0: i2c@e6508000 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
--	compatible = "renesas,i2c-r8a7791";
-+	compatible = "renesas,i2c-r8a7791", "renesas,i2c-rcar-gen2";
- 	reg = <0 0xe6508000 0 0x40>;
- 	interrupts = <0 287 IRQ_TYPE_LEVEL_HIGH>;
- 	clocks = <&mstp9_clks R8A7791_CLK_I2C0>;
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 726615e54f2a..622def6b43e2 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -793,7 +793,6 @@ static const struct i2c_algorithm rcar_i2c_algo = {
- };
- 
- static const struct of_device_id rcar_i2c_dt_ids[] = {
--	{ .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },
- 	{ .compatible = "renesas,i2c-r8a7778", .data = (void *)I2C_RCAR_GEN1 },
- 	{ .compatible = "renesas,i2c-r8a7779", .data = (void *)I2C_RCAR_GEN1 },
- 	{ .compatible = "renesas,i2c-r8a7790", .data = (void *)I2C_RCAR_GEN2 },
-@@ -803,6 +802,10 @@ static const struct of_device_id rcar_i2c_dt_ids[] = {
- 	{ .compatible = "renesas,i2c-r8a7794", .data = (void *)I2C_RCAR_GEN2 },
- 	{ .compatible = "renesas,i2c-r8a7795", .data = (void *)I2C_RCAR_GEN3 },
- 	{ .compatible = "renesas,i2c-r8a7796", .data = (void *)I2C_RCAR_GEN3 },
-+	{ .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },	// Deprecated
-+	{ .compatible = "renesas,rcar-gen1-i2c", .data = (void *)I2C_RCAR_GEN1 },
-+	{ .compatible = "renesas,rcar-gen2-i2c", .data = (void *)I2C_RCAR_GEN2 },
-+	{ .compatible = "renesas,rcar-gen3-i2c", .data = (void *)I2C_RCAR_GEN3 },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, rcar_i2c_dt_ids);
--- 
-2.7.0.rc3.207.g0ac5344
+> >> The generic phy-hub driver would then implement all phy_ops callbacks
+> >> and pass then to each of it's downstream PHYs.
+> >
+> > You can have generic drivers without a generic binding.
+> So you'd rather implement a generic driver which would provide
+> functions like of_create_grouped_phy(struct device_node *np) which
+> would implement the grouping logic as described (but has no binding
+> itself, but rather relies on the actual platform driver taking care of
+> creating that binding and re-using generic code)?
+
+Right.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
