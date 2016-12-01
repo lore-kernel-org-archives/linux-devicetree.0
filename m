@@ -1,112 +1,268 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
-Date: Thu, 1 Dec 2016 10:13:13 +0100
-Message-ID: <20161201091313.th7nucjmvtuolqza@lukather>
-References: <cover.1480414715.git.moinejf@free.fr>
- <20161129213650.uqcgekodq77wlmxs@lukather>
- <20161130100545.44546ed28896cdb9768f68cd@free.fr>
- <2039137.LtCOH6bs2I@avalon>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] [media] davinci: vpif_capture: get subdevs from DT
+Date: Thu, 01 Dec 2016 11:16:02 +0200
+Message-ID: <2453889.B9pO7dWgEo@avalon>
+References: <20161122155244.802-1-khilman@baylibre.com> <m2zikgh5f0.fsf@baylibre.com> <20161201075730.GP16630@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aqaguzpmreyrnply"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNGT77AQKGQE3SNIKUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <2039137.LtCOH6bs2I@avalon>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161201075730.GP16630-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Bartosz =?utf-8?B?R2/FgmFzemV3c2tp?= <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---aqaguzpmreyrnply
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thursday 01 Dec 2016 09:57:31 Sakari Ailus wrote:
+> On Wed, Nov 30, 2016 at 04:14:11PM -0800, Kevin Hilman wrote:
+> > Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
+> >> On Wed, Nov 23, 2016 at 03:25:32PM -0800, Kevin Hilman wrote:
+> >>> Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> writes:
+> >>>> On Tue, Nov 22, 2016 at 07:52:43AM -0800, Kevin Hilman wrote:
+> >>>>> Allow getting of subdevs from DT ports and endpoints.
+> >>>>> 
+> >>>>> The _get_pdata() function was larely inspired by (i.e. stolen from)
+> >>>>> am437x-vpfe.c
+> >>>>> 
+> >>>>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >>>>> ---
+> >>>>> 
+> >>>>>  drivers/media/platform/davinci/vpif_capture.c | 130 +++++++++++++++-
+> >>>>>  include/media/davinci/vpif_types.h     
+> >>>>>        |   9 +-
+> >>>>>  2 files changed, 133 insertions(+), 6 deletions(-)
+> >>>>> 
+> >>>>> diff --git a/drivers/media/platform/davinci/vpif_capture.c
+> >>>>> b/drivers/media/platform/davinci/vpif_capture.c index
+> >>>>> 94ee6cf03f02..47a4699157e7 100644
+> >>>>> --- a/drivers/media/platform/davinci/vpif_capture.c
+> >>>>> +++ b/drivers/media/platform/davinci/vpif_capture.c
+> >>>>> @@ -26,6 +26,8 @@
+> >>>>>  #include <linux/slab.h>
+> >>>>> 
+> >>>>>  #include <media/v4l2-ioctl.h>
+> >>>>> +#include <media/v4l2-of.h>
+> >>>>> +#include <media/i2c/tvp514x.h>
+> >>>> 
+> >>>> Do you need this header?
+> >>> 
+> >>> Yes, based on discussion with Hans, since there is no DT binding for
+> >>> selecting the input pins of the TVP514x, I have to select it in the
+> >>> driver, so I need the defines from this header.  More on this below...
 
-Hi Laurent,
+That's really ugly :-( The problem should be fixed properly instead of adding 
+one more offender.
 
-On Wed, Nov 30, 2016 at 12:12:55PM +0200, Laurent Pinchart wrote:
-> > More, it is not sure that the bridge/DW code would work with Allwinner's
-> > SoCs.
-> 
-> If it doesn't work and can't be made to work in a non-invasive way they it 
-> should certainly not be used :-)
+> >>>>>  #include "vpif.h"
+> >>>>>  #include "vpif_capture.h"
+> >>>>> @@ -650,6 +652,10 @@ static int vpif_input_to_subdev(
+> >>>>> 
+> >>>>>  	vpif_dbg(2, debug, "vpif_input_to_subdev\n");
+> >>>>> 
+> >>>>> +	if (!chan_cfg)
+> >>>>> +		return -1;
+> >>>>> +	if (input_index >= chan_cfg->input_count)
+> >>>>> +		return -1;
+> >>>>>  	subdev_name = chan_cfg->inputs[input_index].subdev_name;
+> >>>>>  	if (subdev_name == NULL)
+> >>>>>  		return -1;
+> >>>>> @@ -657,7 +663,7 @@ static int vpif_input_to_subdev(
+> >>>>>  	/* loop through the sub device list to get the sub device info
+> >>>>>  	*/
+> >>>>>  	for (i = 0; i < vpif_cfg->subdev_count; i++) {
+> >>>>>  		subdev_info = &vpif_cfg->subdev_info[i];
+> >>>>> -		if (!strcmp(subdev_info->name, subdev_name))
+> >>>>> +		if (subdev_info && !strcmp(subdev_info->name,
+> >>>>> subdev_name))
+> >>>>>  			return i;
+> >>>>>  	}
+> >>>>>  	return -1;
+> >>>>> @@ -1327,6 +1333,21 @@ static int vpif_async_bound(struct
+> >>>>> v4l2_async_notifier *notifier,> >> >> 
+> >>>>>  {
+> >>>>>  	int i;
+> >>>>> 
+> >>>>> +	for (i = 0; i < vpif_obj.config->asd_sizes[0]; i++) {
+> >>>>> +		struct v4l2_async_subdev *_asd = vpif_obj.config
+> >>>>> ->asd[i];
+> >>>>> +		const struct device_node *node = _asd->match.of.node;
+> >>>>> +
+> >>>>> +		if (node == subdev->of_node) {
+> >>>>> +			vpif_obj.sd[i] = subdev;
+> >>>>> +			vpif_obj.config->chan_config
+> >>>>> ->inputs[i].subdev_name =
+> >>>>> +				(char *)subdev->of_node->full_name;
 
-Even if the register layout is completely scrambled, as long as the
-bits themselves aren't (and by comparing the two drivers it looks like
-they haven't changed), you can easily deal with that using the
-regmap_fields, with the two implementations (the original one and the
-scrambled one) providing their register map that way, and the driver
-code using whatever has been provided.
+Can subdev_name be made const instead of blindly casting the full_name pointer 
+? If not this is probably unsafe, and if yes it should be done :-)
 
-> > Eventually, I went the same way as omap/hdmi5: different driver.
-> 
-> I might try to fix that for OMAP5 at some point, we'll see.
+> >>>>> +			vpif_dbg(2, debug,
+> >>>>> +				 "%s: setting input %d subdev_name =
+> >>>>> %s\n",
+> >>>>> +				 __func__, i, subdev->of_node
+> >>>>> ->full_name);
+> >>>>> +			return 0;
+> >>>>> +		}
+> >>>>> +	}
+> >>>>> +
+> >>>>>  	for (i = 0; i < vpif_obj.config->subdev_count; i++)
+> >>>>>  		if (!strcmp(vpif_obj.config->subdev_info[i].name,
+> >>>>>  			    subdev->name)) {
+> >>>>> @@ -1422,6 +1443,110 @@ static int vpif_async_complete(struct
+> >>>>> v4l2_async_notifier *notifier)
+> >>>>>  	return vpif_probe_complete();
+> >>>>>  }
+> >>>>> 
+> >>>>> +static struct vpif_capture_config *
+> >>>>> +vpif_capture_get_pdata(struct platform_device *pdev)
+> >>>>> +{
+> >>>>> +	struct device_node *endpoint = NULL;
+> >>>>> +	struct v4l2_of_endpoint bus_cfg;
+> >>>>> +	struct vpif_capture_config *pdata;
+> >>>>> +	struct vpif_subdev_info *sdinfo;
+> >>>>> +	struct vpif_capture_chan_config *chan;
+> >>>>> +	unsigned int i;
+> >>>>> +
+> >>>>> +	dev_dbg(&pdev->dev, "vpif_get_pdata\n");
+> >>>>> +
+> >>>>> +	if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
+> >>>>> +		return pdev->dev.platform_data;
+> >>>>> +
+> >>>>> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> >>>>> +	if (!pdata)
+> >>>>> +		return NULL;
+> >>>>> +	pdata->subdev_info =
+> >>>>> +		devm_kzalloc(&pdev->dev, sizeof(*pdata->subdev_info) *
+> >>>>> +			     VPIF_CAPTURE_MAX_CHANNELS, GFP_KERNEL);
+> >>>>> +
+> >>>>> +	if (!pdata->subdev_info)
+> >>>>> +		return NULL;
+> >>>>> +	dev_dbg(&pdev->dev, "%s\n", __func__);
+> >>>>> +
+> >>>>> +	for (i = 0; ; i++) {
+> >>>>> +		struct device_node *rem;
+> >>>>> +		unsigned int flags;
+> >>>>> +		int err;
+> >>>>> +
+> >>>>> +		endpoint = of_graph_get_next_endpoint(pdev
+> >>>>> ->dev.of_node,
+> >>>>> +						      endpoint);
+> >>>>> +		if (!endpoint)
+> >>>>> +			break;
+> >>>>> +
+> >>>>> +		sdinfo = &pdata->subdev_info[i];
+> >>>> 
+> >>>> subdev_info[] has got VPIF_CAPTURE_MAX_CHANNELS entries only.
+> >>> 
+> >>> Right, I need to make the loop only go for a max of
+> >>> VPIF_CAPTURE_MAX_CHANNELS iterations.
+> >>> 
+> >>>>> +		chan = &pdata->chan_config[i];
+> >>>>> +		chan->inputs = devm_kzalloc(&pdev->dev,
+> >>>>> +					    sizeof(*chan->inputs) *
+> >>>>> +					    VPIF_DISPLAY_MAX_CHANNELS,
+> >>>>> +					    GFP_KERNEL);
+> >>>>> +
+> >>>>> +		chan->input_count++;
+> >>>>> +		chan->inputs[i].input.type = V4L2_INPUT_TYPE_CAMERA;
+> >>>> 
+> >>>> I wonder what's the purpose of using index i on this array as well.
+> >>> 
+> >>> The number of endpoints in DT is the number of input channels
+> >>> configured (up to a max of VPIF_CAPTURE_MAX_CHANNELS.)
+> >>> 
+> >>>> If you use that to access a corresponding entry in a different array,
+> >>>> I'd just create a struct that contains the port configuration and the
+> >>>> async sub-device. The omap3isp driver does that, for instance; see
+> >>>> isp_of_parse_nodes() in drivers/media/platform/omap3isp/isp.c if
+> >>>> you're interested. Up to you.
+> >>> 
+> >>> OK, I'll have a look at that driver. The goal here with this series is
+> >>> just to get this working with DT, but also not break the existing
+> >>> legacy platform_device support, so I'm trying not to mess with the
+> >>> driver-interal data structures too much.
+> >> 
+> >> Ack.
+> >> 
+> >>>>> +		chan->inputs[i].input.std = V4L2_STD_ALL;
+> >>>>> +		chan->inputs[i].input.capabilities = V4L2_IN_CAP_STD;
+> >>>>> +
+> >>>>> +		/* FIXME: need a new property? ch0:composite ch1:
+> >>>>> s-video */
+> >>>>> +		if (i == 0)
+> >>>> 
+> >>>> Can you assume that the first endopoint has got a particular kind of
+> >>>> input? What if it's not connected?
+> >>> 
+> >>> On all the boards I know of (there aren't many using this SoC), it's a
+> >>> safe assumption.
+> >>> 
+> >>>> If this is a different physical port (not in the meaning another) in
+> >>>> the device, I'd use the reg property for this. Please see
+> >>>> Documentation/devicetree/bindings/media/video-interfaces.txt .
+> >>> 
+> >>> My understanding (which is admittedly somewhat fuzzy) of the TVP514x is
+> >>> that it's not physically a different port.  Instead, it's just telling
+> >>> the TVP514x which pin(s) will be active inputs (and what kind of signal
+> >>> will be present.)
+> >>> 
+> >>> I'm open to a better way to describe this input select from DT, but
+> >>> based on what I heard from Hans, there isn't currently a good way to do
+> >>> that except for in the driver:
+> >>> (c.f. https://marc.info/?l=linux-arm-kernel&m=147887871615788)
+> >>> 
+> >>> Based on further discussion in that thread, it sounds like there may be
+> >>> a way forward coming soon, and I'll be glad to switch to that when it
+> >>> arrives.
 
-For complex drivers that have already a driver written and a lot of
-testing that already happened, I don't think duplication is a smart
-move.
+I'm afraid I have to disappoint Hans here, I don't have code for that yet.
 
-> > >   - And finally the fact that we can't have several display engine in
-> > >     parallel, if needs be. This has happened in the past already on
-> > >     Allwinner SoCs, so it's definitely something we should consider in
-> > >     the DT bindings, since we can't break them.
+> >> I'm not sure that properly supporting connectors will provide any help
+> >> here.
+> >> 
+> >> Looking at the s_routing() API, it's the calling driver that has to be
+> >> aware of sub-device specific function parameters. As such it's not a
+> >> very good idea to require that a driver is aware of the value range of
+> >> another driver's parameter. I wonder if a simple enumeration interface
+> >> would help here --- if I understand correctly, the purpose is just to
+> >> provide a way to choose the input using VIDIOC_S_INPUT.
+> >> 
+> >> I guess that's somehow ok as long as you have no other combinations of
+> >> these devices but this is hardly future-proof. (And certainly not a
+> >> problem created by this patch.)
 > > 
-> > IIRC, I proposed my driver before yours, and the DE2 is completely
-> > different from the other display engines.
-> > What you are telling is "add more code to already complex code and have
-> > a big driver for all SoCs in each kernels".
-> > I think it should be better to have small modules, each one treating
-> > specific hardware, and to let only the needed code in the kernel memory
-> > at startup time.
+> > Yeah, this is far from future proof.
 > > 
-> > > Until those are fixed, I cannot see how this driver can be merged,
-> > > unfortunately.
+> >> It'd be still nice to fix that as presumably we don't have the option of
+> >> reworking how we expect the device tree to look like.
 > > 
-> > No problem. I just wanted to help people by giving the job I did on the
-> > boards I have. My boards are working for almost one year, fine enough
-> > for I use them as daily desktop computers. I don't want to spend one
-> > more year for having my code in the Linux kernel: there are so much
-> > other exciting things to do...
+> > Agreed.
+> > 
+> > I'm just hoping someone can shed som light on "how we expect the device
+> > tree to look".  ;)
+>
+> :-)
 > 
-> And you're certainly welcome to contribute drivers to the kernel, that's 
-> always appreciated. Of course, to ensure a reasonable level of quality and 
-> consistency between drivers, the review process often requires changes to be 
-> made to the code being submitted. When it comes to drivers I mostly pay 
-> attention to DT bindings, userspace APIs and modification to common code. 
-> Driver code itself, as long as it's reasonably clean and doesn't impede 
-> development of other drivers or impact system security in an adverse way, is 
-> still important but maybe slightly less so. I'll defer to Maxime to come to an 
-> agreement on the multiple display engines in parallel problem as I'm not 
-> familiar with it for the Allwinner platforms.
+> For the tvp514x, do you need more than a single endpoint on the receiver
+> side? Does the input that's selected affect the bus parameters?
+> 
+> If it doesn't, you could create a custom endpoint property for the possible
+> input values. The s_routing() really should be fixed though, but that could
+> be postponed I guess. There are quite a few drivers using it.
 
-The earlier Allwinner SoCs (with the old display engine), we had some
-SoCs with multiple instances of the display engine and TCON (the
-display engine roughly implementing the planes, the TCON the
-CRTC. Roughly.). However, those were sharing some encoders (HDMI,
-DSI) after that.
-
-So we need to have a single DRM device taking care of the multiple
-display engines, which essentialy means that we have to decouple the
-DRM device from the display engine. This was done in the earlier
-designs using an additional node with a list of phandles to the
-display engines in the system, and obviously, I'd prefer to have some
-consistency and reuse the same thing.
-
-But the current approach doesn't work and will require some DT
-modifications if that case happens again, which we can't do because of
-the DT ABI.
-
-Maxime
+There's two ways to look at s_routing() in my opinion, as the calling driver 
+should really not hardcode any knowledge specific to a particular subdev. We 
+can either have the calling driver discover the possible routing options at 
+runtime through the subdev API, or modify the s_routing() API.
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---aqaguzpmreyrnply--
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
