@@ -1,7 +1,7 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v3 8/9] ARM: dts: stm32f4: Add external I2S clock
-Date: Thu, 1 Dec 2016 16:27:48 +0100
-Message-ID: <1480606069-5178-9-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v3 9/9] ARM: dts: stm32f4: Include auxiliary stm32f4 clock definition
+Date: Thu, 1 Dec 2016 16:27:49 +0100
+Message-ID: <1480606069-5178-10-git-send-email-gabriel.fernandez@st.com>
 References: <1480606069-5178-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,39 +14,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch adds an external I2S clock in the DT.
-The I2S clock could be derived from an external I2S clock or by I2S pll.
+This patch include auxiliary clock definition (clocks which are not derived
+from system clock.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32f429.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index e4dae0e..7c7dfbd 100644
+index 7c7dfbd..223dc12 100644
 --- a/arch/arm/boot/dts/stm32f429.dtsi
 +++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -68,6 +68,12 @@
- 			compatible = "fixed-clock";
- 			clock-frequency = <32000>;
- 		};
-+
-+		clk_i2s_ckin: i2s-ckin {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
- 	};
+@@ -48,6 +48,7 @@
+ #include "skeleton.dtsi"
+ #include "armv7-m.dtsi"
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
++#include <dt-bindings/clock/stm32f4-clock.h>
  
- 	soc {
-@@ -362,7 +368,7 @@
- 			#clock-cells = <2>;
- 			compatible = "st,stm32f42xx-rcc", "st,stm32-rcc";
- 			reg = <0x40023800 0x400>;
--			clocks = <&clk_hse>;
-+			clocks = <&clk_hse>, <&clk_i2s_ckin>;
- 			st,syscfg = <&pwrcfg>;
- 		};
- 
+ / {
+ 	clocks {
 -- 
 1.9.1
