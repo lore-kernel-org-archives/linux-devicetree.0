@@ -1,71 +1,101 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 6/9] clk: stm32f4: Add SAI clocks
-Date: Thu, 1 Dec 2016 16:27:46 +0100
-Message-ID: <1480606069-5178-7-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH v3 3/9] clk: stm32f4: Add post divisor for I2S & SAI PLLs
+Date: Thu, 1 Dec 2016 16:27:43 +0100
+Message-ID: <1480606069-5178-4-git-send-email-gabriel.fernandez@st.com>
 References: <1480606069-5178-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480606069-5178-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480606069-5178-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, kernel@stlinux.com, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch introduces SAI clocks for stm32f4 socs.
+This patch adds post dividers of I2S & SAI PLLs.
+These dividers are managed by a dedicated register (RCC_DCKCFGR).
+The PLL should be off before a set rate.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32f4.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/clk/clk-stm32f4.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/drivers/clk/clk-stm32f4.c b/drivers/clk/clk-stm32f4.c
-index 3063b30..02339d1 100644
+index c2b62cc..98856ac 100644
 --- a/drivers/clk/clk-stm32f4.c
 +++ b/drivers/clk/clk-stm32f4.c
-@@ -937,6 +937,9 @@ static struct clk_hw *stm32_register_cclk(struct device *dev, const char *name,
+@@ -47,6 +47,7 @@
+ #define STM32F4_RCC_CSR			0x74
+ #define STM32F4_RCC_PLLI2SCFGR		0x84
+ #define STM32F4_RCC_PLLSAICFGR		0x88
++#define STM32F4_RCC_DCKCFGR		0x8c
  
- static const char *i2s_parents[2] = { "plli2s-r", NULL };
+ struct stm32f4_gate_data {
+ 	u8	offset;
+@@ -357,6 +358,18 @@ struct stm32f4_pll {
  
-+static const char *sai_parents[4] = { "pllsai-q-div", "plli2s-q-div", NULL,
-+	"no-clock" };
+ #define to_stm32f4_pll(_gate) container_of(_gate, struct stm32f4_pll, gate)
+ 
++struct stm32f4_pll_post_div_data {
++	u8 pll_num;
++	const char *name;
++	const char *parent;
++	u8 flag;
++	u8 offset;
++	u8 shift;
++	u8 width;
++	u8 flag_div;
++	const struct clk_div_table *div_table;
++};
 +
- struct stm32_aux_clk {
- 	int idx;
- 	const char *name;
-@@ -977,6 +980,18 @@ struct stm32f4_clk_data {
- 		NO_GATE, 0,
- 		CLK_SET_RATE_PARENT
- 	},
-+	{
-+		CLK_SAI1, "sai1-a", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 20, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
-+	{
-+		CLK_SAI2, "sai1-b", sai_parents, ARRAY_SIZE(sai_parents),
-+		STM32F4_RCC_DCKCFGR, 22, 3,
-+		STM32F4_RCC_APB2ENR, 22,
-+		CLK_SET_RATE_PARENT
-+	},
+ struct stm32f4_vco_data {
+ 	const char *vco_name;
+ 	u8 offset;
+@@ -370,6 +383,18 @@ struct stm32f4_vco_data {
+ 	{ "vco-sai", STM32F4_RCC_PLLSAICFGR, 28, 29 },
  };
  
- static const struct stm32f4_clk_data stm32f429_clk_data = {
-@@ -1109,6 +1124,7 @@ static void __init stm32f4_rcc_init(struct device_node *np)
- 	i2s_in_clk = of_clk_get_parent_name(np, 1);
++#define MAX_POST_DIV 3
++static const struct stm32f4_pll_post_div_data  post_div_data[MAX_POST_DIV] = {
++	{ PLL_I2S, "plli2s-q-div", "plli2s-q", CLK_SET_RATE_PARENT,
++		STM32F4_RCC_DCKCFGR, 0, 5, 0, NULL},
++
++	{ PLL_SAI, "pllsai-q-div", "pllsai-q", CLK_SET_RATE_PARENT,
++		STM32F4_RCC_DCKCFGR, 8, 5, 0, NULL },
++
++	{ PLL_SAI, "pllsai-r-div", "pllsai-r", CLK_SET_RATE_PARENT,
++		STM32F4_RCC_DCKCFGR, 16, 2, CLK_DIVIDER_POWER_OF_TWO},
++};
++
+ struct stm32f4_div_data {
+ 	u8 shift;
+ 	u8 width;
+@@ -996,6 +1021,23 @@ static void __init stm32f4_rcc_init(struct device_node *np)
+ 	clks[PLL_VCO_SAI] = stm32f4_rcc_register_pll("vco_in",
+ 			&data->pll_data[2], &stm32f4_clk_lock);
  
- 	i2s_parents[1] = i2s_in_clk;
-+	sai_parents[2] = i2s_in_clk;
- 
- 	clk_register_fixed_rate_with_accuracy(NULL, "hsi", NULL, 0,
- 			16000000, 160000);
++	for (n = 0; n < MAX_POST_DIV; n++) {
++		const struct stm32f4_pll_post_div_data *post_div;
++
++		post_div = &post_div_data[n];
++
++		clk_register_pll_div(post_div->name,
++				post_div->parent,
++				post_div->flag,
++				base + post_div->offset,
++				post_div->shift,
++				post_div->width,
++				post_div->flag_div,
++				post_div->div_table,
++				clks[post_div->pll_num],
++				&stm32f4_clk_lock);
++	}
++
+ 	sys_parents[1] = hse_clk;
+ 	clk_register_mux_table(
+ 	    NULL, "sys", sys_parents, ARRAY_SIZE(sys_parents), 0,
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
