@@ -1,61 +1,116 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: Re: [PATCH v7 4/8] drm/sunxi: Add DT bindings
- documentation of Allwinner HDMI
-Date: Thu, 01 Dec 2016 12:41:20 +0200
-Message-ID: <5021537.YAZCMeDTSh@avalon>
-References: <cover.1480414715.git.moinejf@free.fr> <1971681480527210@web5g.yandex.ru> <20161201085520.tk2kdi33rn6fyld2@lukather>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBQP477AQKGQEBHJHQ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161201085520.tk2kdi33rn6fyld2@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <moinejf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V7 00/10] PM / OPP: Multiple regulator support
+Date: Thu,  1 Dec 2016 16:28:13 +0530
+Message-ID: <cover.1480564564.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, nm@ti.com, Vincent Guittot <vincent.guittot@linaro.org>, robh@kernel.org, d-gerlach@ti.com, broonie@kernel.org, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 Dec 2016 09:55:20 Maxime Ripard wrote:
-> On Thu, Dec 01, 2016 at 01:33:30AM +0800, Icenowy Zheng wrote:
-> >>>          hdmi-out {
-> >>>                  compatible = "hdmi-connector";
-> >>>                  type = "a";
-> >>>                  /* I2C bus and GPIO references are made up for the
-> >>> example */ ddc-i2c-bus = <&i2c4>;
-> >>>                  hpd-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>
-> >> 
-> >> the "hdmi-connector" is a big piece of software. It must handle a lot
-> >> of more and more exotic connectors.
-> >> So, I hope that you have written a "simple-hdmi-connector" which does
-> >> nothing but setting the connector type.
-> >> Where is it?
-> > 
-> > I suddenly thought about something...
-> > 
-> > If a DVI connector instead of a HDMI connector is soldered, how
-> > should such a device tree be written?
-> 
-> Use a dvi-connector instead :)
+Hi,
 
-The HDMI encoder DT node doesn't (and certainly shouldn't) report what type of 
-connector is mounted on the board. Having a connector node in DT makes the 
-connector type available to the system, allowing the DRM driver to expose the 
-right connector type to userspace (it would be confusing for the user to 
-report DRM_MODE_CONNECTOR_HDMIA for a DVI connector).
+Some platforms (like TI) have complex DVFS configuration for CPU
+devices, where multiple regulators are required to be configured to
+change DVFS state of the device. This was explained well by Nishanth
+earlier [1].
 
-> > How about solder a HDMI-to-VGA bridge on the board? (Maybe there
-> > should be "dumb-hdmi-dvi-bridge" and "dumb-hdmi-vga-bridge"
-> > drivers?)
-> 
-> It probably wouldn't be dumb, but yeah, it would definitely be a
-> bridge instead of the connector.
+One of the major complaints around multiple regulators case was that the
+DT isn't responsible in any way to represent the order in which multiple
+supplies need to be programmed, before or after a frequency change. It
+was considered in this patch and such information is left for the
+platform specific OPP driver now, which can register its own
+opp_set_rate() callback with the OPP core and the OPP core will then
+call it during DVFS.
+
+The patches are tested on Exynos5250 (Dual A15). I have hacked around DT
+and code to pass values for multiple regulators and verified that they
+are all properly read by the kernel (using debugfs interface).
+
+Dave Gerlach has already tested [2] it on the real TI platforms and it
+works well for him.
+
+This is rebased over: linux-next branch in the PM tree.
+
+V6->V7:
+- Added RBY from Stephen for the 8th patch as well.
+- Rebased over pm/bleeding-edge as the dependency patch is already
+  applied there.
+- s/dev_pm_opp_set_regulator()/dev_pm_opp_set_regulators() in a comment.
+- Removed the local 'names' array in cpufreq-dt and used "&name"
+  instead.
+- Only the 6th patch doesn't have a Reviewed-by Tag now..
+
+V5->V6:
+- Rebased over a recent fix (and resolved rebase conflicts) that will
+  get applied before this series:
+
+  https://marc.info/?l=linux-kernel&m=148047843010418&w=2
+
+V4->V5:
+- Stephen boyd had some minor review comments and gave his Reviewed-by
+  tag for the rest. Only 2 patches don't have his RBY tag.
+- Individual patches contain the version history from V4 to V5.
+
+V3->V4:
+- Separate out cpu-supply fix in the binding in a separate patch (Mark).
+- Add more documentation to the binding to explain that the relation to
+  the supplies and the order of programming them is left for the
+  platform specific bindings and that every platform using multiple
+  regulators for their devices needs to provide a separate binding
+  document explaining their implementation (Mark).
+- @Rob and Stephen: I have kept your Acks for the bindings as the
+  bindings only got a bit reworded (improved) since the time you guys
+  Acked them. Please let me know if you want more improvement in the
+  bindings now.
+- V4 for 10/10 was sent earlier, which added a missing
+  rcu_read_unlock(). Nothing else changed in it.
+- Added some missing Kernel documentation comments
+
+V2->V3:
+- The last patch is new
+- Removed a debug leftover pr_info() message
+- Renamed few names as s/set_rate/set_opp
+- Removed a TODO comment (as it is done now with this series)
+- created struct for min_uV and max_uV
+- kerneldoc comments for structures in pm_opp.h
+- s/const char */const char * const
+- use kasprintf()
+- Some more minor reformatting
+- More Ack/RBY tags added
+
+V1->V2:
+- Ack from Rob for 1st patch
+- Moved the supplies structure to pm_opp.h (Dave)
+- Fixed an compilation warning.
+
+--
+viresh
+
+[1] https://marc.info/?l=linux-pm&m=145684495832764&w=2
+[2] https://marc.info/?l=linux-kernel&m=147924789305276&w=2
+
+Viresh Kumar (10):
+  PM / OPP: Fix incorrect cpu-supply property in binding
+  PM / OPP: Reword binding supporting multiple regulators per device
+  PM / OPP: Don't use OPP structure outside of rcu protected section
+  PM / OPP: Manage supply's voltage/current in a separate structure
+  PM / OPP: Pass struct dev_pm_opp_supply to _set_opp_voltage()
+  PM / OPP: Add infrastructure to manage multiple regulators
+  PM / OPP: Separate out _generic_set_opp()
+  PM / OPP: Allow platform specific custom set_opp() callbacks
+  PM / OPP: Don't WARN on multiple calls to dev_pm_opp_set_regulators()
+  PM / OPP: Don't assume platform doesn't have regulators
+
+ Documentation/devicetree/bindings/opp/opp.txt |  27 +-
+ drivers/base/power/opp/core.c                 | 538 ++++++++++++++++++++------
+ drivers/base/power/opp/debugfs.c              |  52 ++-
+ drivers/base/power/opp/of.c                   | 105 +++--
+ drivers/base/power/opp/opp.h                  |  22 +-
+ drivers/cpufreq/cpufreq-dt.c                  |   6 +-
+ include/linux/pm_opp.h                        |  69 +++-
+ 7 files changed, 633 insertions(+), 186 deletions(-)
 
 -- 
-Regards,
+2.7.1.410.g6faf27b
 
-Laurent Pinchart
