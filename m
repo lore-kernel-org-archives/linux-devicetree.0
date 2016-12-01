@@ -1,55 +1,56 @@
-From: John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH 2/2] Synopsys USB 2.0 Device Controller (UDC) Driver
-Date: Wed, 30 Nov 2016 16:54:45 -0800
-Message-ID: <7de6b970-c88c-b277-eaae-d9c0067b590f@synopsys.com>
-References: <1480485910-7797-1-git-send-email-raviteja.garimella@broadcom.com>
- <1480485910-7797-3-git-send-email-raviteja.garimella@broadcom.com>
- <874m2pntdh.fsf@linux.intel.com>
- <CAEHZuqNgDwJL7HCP18R_M8TZcW-mENQsfyChv0_Zmm4M2ZTOkg@mail.gmail.com>
- <87k2blm8yx.fsf@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87k2blm8yx.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-usb@vger.kernel.org, John Youn <John.Youn@synopsys.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer + regulator support
+Date: Wed, 30 Nov 2016 17:21:27 -0800
+Message-ID: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2016 4:47 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Raviteja Garimella <raviteja.garimella@broadcom.com> writes:
->> Hi Balbi,
->>
->> On Wed, Nov 30, 2016 at 4:10 PM, Felipe Balbi <balbi@kernel.org> wrote:
->>>
->>> Hi,
->>>
->>> Raviteja Garimella <raviteja.garimella@broadcom.com> writes:
->>>> This is driver for Synopsys Designware Cores USB Device
->>>> Controller (UDC) Subsystem with the AMBA Advanced High-Performance
->>>> Bus (AHB). This driver works with Synopsys UDC20 products.
->>>>
->>>> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
->>>
->>> use drivers/usb/dwc2 instead of duplicating it.
->>
->> The ones we have in drivers/usb/dwc2 is for Designware high speed OTG
->> controller IP. The one that I submitted for review is for USB Device
->> controller IP (UDC). The IPs are different.
-> 
-> I'll wait for John's confirmation that this really isn't compatible with
-> dwc2. John?
-> 
+From: Caesar Wang <wxt@rock-chips.com>
 
-Hi Felipe,
+Add a compatible string and regulator property for Wacom W9103
+digitizer. Its VDD supply may need to be enabled before using it.
 
-This is our older UDC IP, not compatible with HSOTG.
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: linux-input@vger.kernel.org
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+v1 was a few months back. I finally got around to rewriting it based on
+DT binding feedback.
 
-It is also no longer supported by Synopsys and considered EOL.
+v2:
+ * add compatible property for wacom
+ * name the regulator property specifically (VDD)
 
-Regards,
-John
+ Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+index 488edcb264c4..eb98054e60c9 100644
+--- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
++++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+@@ -11,12 +11,16 @@ If this binding is used, the kernel module i2c-hid will handle the communication
+ with the device and the generic hid core layer will handle the protocol.
+ 
+ Required properties:
+-- compatible: must be "hid-over-i2c"
++- compatible: must be "hid-over-i2c", or a device-specific string like:
++    * "wacom,w9013"
+ - reg: i2c slave address
+ - hid-descr-addr: HID descriptor address
+ - interrupt-parent: the phandle for the interrupt controller
+ - interrupts: interrupt line
+ 
++Optional properties:
++- vdd-supply: phandle of the regulator that provides the supply voltage.
++
+ Example:
+ 
+ 	i2c-hid-dev@2c {
+-- 
+2.8.0.rc3.226.g39d4020
+
