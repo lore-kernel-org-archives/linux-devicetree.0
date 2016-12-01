@@ -1,40 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 01/14] Documentation: of: add type property
-Date: Thu, 1 Dec 2016 10:26:31 -0600
-Message-ID: <20161201162631.6jtubjiap7w7y3pd@rob-hp-laptop>
-References: <87k2bowckx.wl%kuninori.morimoto.gx@renesas.com>
- <87inr8wch8.wl%kuninori.morimoto.gx@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87inr8wch8.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Laurent <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH pci/next] PCI: rcar: Add gen3 fallback compatibility string for pcie-rcar
+Date: Thu,  1 Dec 2016 17:28:13 +0100
+Message-ID: <1480609693-25746-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 02:44:46AM +0000, Kuninori Morimoto wrote:
-> 
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> OF graph indicates each devices connection. But it doesn't support type
-> of each port. For example HDMI case, it has video port and sound port
-> in one device node.
-> In this case, current driver can't handle each port correctly.
-> This patch enables to use type property on OF graph.
+Add fallback compatibility string for the  R-Car Gen 3 family.  This is in
+keeping with the both the existing fallback compatibility string for the
+R-Car Gen 2 family and the fallback scheme being adopted wherever
+appropriate for drivers for Renesas SoCs.
 
-I still don't think this is necessary. Simply define which port number 
-is which for each HDMI chip.
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+ drivers/pci/host/pcie-rcar.c                       | 2 ++
+ 2 files changed, 3 insertions(+)
 
-If this is necessary, then the types, video and sound, are too generic.
-
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/graph.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+index 6cf99690eef9..eee518db90b9 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
++++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+@@ -7,6 +7,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+ 	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+ 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+ 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
++	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+ 
+ 	    When compatible with the generic version, nodes must list the
+ 	    SoC-specific version corresponding to the platform first
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 62700d1896f4..962aa3942107 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -1077,6 +1077,8 @@ static const struct of_device_id rcar_pcie_of_match[] = {
+ 	  .data = rcar_pcie_hw_init_gen2 },
+ 	{ .compatible = "renesas,pcie-r8a7791",
+ 	  .data = rcar_pcie_hw_init_gen2 },
++	{ .compatible = "renesas,pcie-rcar-gen3",
++	  .data = rcar_pcie_hw_init_hw_init },
+ 	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
+ 	{},
+ };
+-- 
+2.7.0.rc3.207.g0ac5344
