@@ -1,61 +1,49 @@
-From: Wolfram Sang <wsa-dev-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] arm64: dts: marvell: Add I2C definitions for the
- Armada 3700
-Date: Thu, 1 Dec 2016 23:37:19 +0100
-Message-ID: <20161201223719.GD19261@katana>
-References: <20161201110440.27530-1-romain.perier@free-electrons.com>
- <20161201110440.27530-4-romain.perier@free-electrons.com>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH v4 1/3] lib: add bitrev8x4()
+Date: Thu, 1 Dec 2016 23:45:23 +0100
+Message-ID: <20161201234523.3bed63dc@crub>
+References: <cover.1480551148.git.stillcompiling@gmail.com>
+ <bc92eb1507448731163ae67fc888668d327f9168.1480551148.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161201110440.27530-4-romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yahuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bc92eb1507448731163ae67fc888668d327f9168.1480551148.git.stillcompiling@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu,  1 Dec 2016 09:04:50 -0800
+Joshua Clayton stillcompiling@gmail.com wrote:
+...
+>diff --git a/arch/arm/include/asm/bitrev.h b/arch/arm/include/asm/bitrev.h
+>index ec291c3..6d2e9ca 100644
+>--- a/arch/arm/include/asm/bitrev.h
+>+++ b/arch/arm/include/asm/bitrev.h
+>@@ -17,4 +17,9 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
+> 	return __arch_bitrev32((u32)x) >> 24;
+> }
+> 
+>+static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
+>+{
+>+	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
 
---UfEAyuTBtIjiZzX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	return x;
+>+}
 
-On Thu, Dec 01, 2016 at 12:04:39PM +0100, Romain Perier wrote:
-> The Armada 3700 has two i2c bus interface units, this commit adds the
-> definitions of the corresponding device nodes. It also enables the node
-> on the development board for this SoC.
->=20
-> Signed-off-by: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+otherwise you get
 
-This needs to go via arm-soc.
+In function '__arch_bitrev8x4':
+warning: no return statement in function returning non-void [-Wreturn-type]
 
-
---UfEAyuTBtIjiZzX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYQKYfAAoJEBQN5MwUoCm253IP/19GP9h4s3DzeTc1NWd3vR4d
-3+v3yNRWvm6YHXuOfIXAhXHsLGN8t3ktmuz/ws//SGce9EzRZfoYlxJ5fV4zhmSE
-VBl++HUBefDL9JmOoXnbRCkk6/JVFd/1GiGscwB9zL6++6Y+llI3UkUAq7fM4lA7
-y+vqTzng/uyTmFPQJoyPeMbwcK3fVVL8FtaAKP4PzHeXYavwyVygdNQM+Nh4yVRH
-LDEhqKlBcMfy4QhW8VHv7AnmasgnOPh9PF+wOqP9OalWhj5jiaEdBdBgsNIdX4Sa
-5PLCBOvRKWkivRA96g4sKBOb6zlqOBf48hytW1VfkBZp2w3oRzdxEP6GWSoHYPgH
-4pWIkEetZvEeDGbgp8/qG0dsn5TAMftXNrb3rHoYJS4/LHOHNuhKWuCcZgtA7pE5
-Ji4SthSB9vYUbJk+7S+deyAJ4ZMplEUqSF9AGh+ENFbFigjJasBEZ7OWpKV2pExF
-QZBcbFldToh12sJWv7an6QEXcEVK5VFk9gKbsSQC9WcVaH3HQxurT0OXgx8rI/xS
-kzFzogN42f15EPIkclEQ2qFXoMKw4IBljv2/jQqUKYlM/KKzw3kaG4E9OxX0RZNR
-PFo2x8Q9u7gSBlThhylDVvH042w/DkcQlOX58N+T2LWP8cwSRJBDjVuqlu6RFsxV
-9z+sA2OhhGJJU71OXoXM
-=wjDh
------END PGP SIGNATURE-----
-
---UfEAyuTBtIjiZzX6--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Anatolij
