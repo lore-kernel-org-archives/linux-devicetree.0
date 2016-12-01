@@ -1,42 +1,81 @@
-From: Axel Haslam <ahaslam@baylibre.com>
-Subject: [PATCH] ARM: dts: da850: enable high speed for mmc
-Date: Thu,  1 Dec 2016 15:10:41 +0100
-Message-ID: <20161201141041.31386-1-ahaslam@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, nsekhar@ti.com, khilman@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
+ regulator support
+Date: Thu, 1 Dec 2016 15:34:34 +0100
+Message-ID: <20161201143434.GD1280@mail.corp.redhat.com>
+References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The mmc controller in da850 supports high speed modes
-so add cap-sd-highspeed and cap-mmc-highspeed.
+On Nov 30 2016 or thereabouts, Brian Norris wrote:
+> From: Caesar Wang <wxt@rock-chips.com>
+> 
+> Add a compatible string and regulator property for Wacom W9103
+> digitizer. Its VDD supply may need to be enabled before using it.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> v1 was a few months back. I finally got around to rewriting it based on
+> DT binding feedback.
+> 
+> v2:
+>  * add compatible property for wacom
+>  * name the regulator property specifically (VDD)
+> 
+>  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> index 488edcb264c4..eb98054e60c9 100644
+> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> @@ -11,12 +11,16 @@ If this binding is used, the kernel module i2c-hid will handle the communication
+>  with the device and the generic hid core layer will handle the protocol.
+>  
+>  Required properties:
+> -- compatible: must be "hid-over-i2c"
+> +- compatible: must be "hid-over-i2c", or a device-specific string like:
+> +    * "wacom,w9013"
 
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
----
- arch/arm/boot/dts/da850.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+NACK on this one.
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index ffc6e1a..0bfb1c0 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -316,6 +316,8 @@
- 		mmc0: mmc@40000 {
- 			compatible = "ti,da830-mmc";
- 			reg = <0x40000 0x1000>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
- 			interrupts = <16>;
- 			dmas = <&edma0 16 0>, <&edma0 17 0>;
- 			dma-names = "rx", "tx";
-@@ -324,6 +326,8 @@
- 		mmc1: mmc@21b000 {
- 			compatible = "ti,da830-mmc";
- 			reg = <0x21b000 0x1000>;
-+			cap-sd-highspeed;
-+			cap-mmc-highspeed;
- 			interrupts = <72>;
- 			dmas = <&edma1 28 0>, <&edma1 29 0>;
- 			dma-names = "rx", "tx";
--- 
-2.9.3
+After re-reading the v1 submission I realized Rob asked for this change,
+but I strongly disagree.
+
+HID over I2C is a generic protocol, in the same way HID over USB is. We
+can not start adding device specifics here, this is opening the can of
+worms. If the device is a HID one, nothing else should matter. The rest
+(description of the device, name, etc...) is all provided by the
+protocol.
+
+>  - reg: i2c slave address
+>  - hid-descr-addr: HID descriptor address
+>  - interrupt-parent: the phandle for the interrupt controller
+>  - interrupts: interrupt line
+>  
+> +Optional properties:
+> +- vdd-supply: phandle of the regulator that provides the supply voltage.
+
+Agree on this one however.
+
+Cheers,
+Benjamin
+
+> +
+>  Example:
+>  
+>  	i2c-hid-dev@2c {
+> -- 
+> 2.8.0.rc3.226.g39d4020
+> 
