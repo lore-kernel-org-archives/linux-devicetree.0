@@ -1,80 +1,99 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: BCM5301X: Enable UART by default for BCM4708(1) and BCM4709(4)
-Date: Thu, 1 Dec 2016 18:23:20 +0100
-Message-ID: <CACna6rygrQuZqaViTVQM5P8ieA2Gh-h-zrEZETAQrHHT9cnrWA@mail.gmail.com>
-References: <20161128140134.25128-1-zajec5@gmail.com> <CAC3K-4o3-eSDU5JvjkgohtWLUmZqQViHvX1h2zfdPAGe+qbCOg@mail.gmail.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 1/2] devicetree: i2c-hid: Add Wacom digitizer +
+ regulator support
+Date: Thu, 1 Dec 2016 09:24:50 -0800
+Message-ID: <20161201172448.GA46688@google.com>
+References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
+ <20161201143434.GD1280@mail.corp.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAC3K-4o3-eSDU5JvjkgohtWLUmZqQViHvX1h2zfdPAGe+qbCOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161201143434.GD1280@mail.corp.redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2016 at 18:14, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On Mon, Nov 28, 2016 at 9:01 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8@public.gmane.org=
-m> wrote:
->>
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>
->> Every device tested so far got UART0 (at 0x18000300) working as serial
->> console. It's most likely part of reference design and all vendors use
->> it that way.
->>
->> It seems to be easier to enable it by default and just disable it if we
->> ever see a device with different hardware design.
->>
->> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  | 4 ----
->>  arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts       | 4 ----
->>  arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts       | 4 ----
->>  arch/arm/boot/dts/bcm4708-netgear-r6250.dts        | 4 ----
->>  arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      | 4 ----
->>  arch/arm/boot/dts/bcm4708.dtsi                     | 4 ++++
->>  arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts | 4 ----
->>  arch/arm/boot/dts/bcm47081.dtsi                    | 4 ++++
->>  arch/arm/boot/dts/bcm4709-netgear-r7000.dts        | 4 ----
->>  arch/arm/boot/dts/bcm4709-netgear-r8000.dts        | 4 ----
->>  arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts  | 4 ----
->>  arch/arm/boot/dts/bcm4709.dtsi                     | 1 +
->>  arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts      | 4 ----
->>  arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts      | 4 ----
->>  arch/arm/boot/dts/bcm47094-netgear-r8500.dts       | 4 ----
->>  arch/arm/boot/dts/bcm47094.dtsi                    | 1 +
->
->
-> I think there are a few missing here.  A quick grep shows
->
-> $ grep -rI '#include "bcm470[89].dtsi"'  arch/arm/boot/dts/*.dts
-> arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-asus-rt-ac68u.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-netgear-r6250.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-netgear-r6300-v2.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm4709-asus-rt-ac87u.dts:#include "bcm4709.dtsi"
-> arch/arm/boot/dts/bcm4709-buffalo-wxr-1900dhp.dts:#include "bcm4709.dtsi"
-> arch/arm/boot/dts/bcm4709-netgear-r7000.dts:#include "bcm4709.dtsi"
-> arch/arm/boot/dts/bcm4709-netgear-r8000.dts:#include "bcm4709.dtsi"
-> arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts:#include "bcm4709.dtsi"
-> arch/arm/boot/dts/bcm94708.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm94709.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm953012er.dts:#include "bcm4708.dtsi"
-> arch/arm/boot/dts/bcm953012k.dts:#include "bcm4708.dtsi"
->
-> I specifically care about the last 4 :)
+Hi Benjamin and Rob,
 
-Actually the only missing ones are the last 4. Other ones (e.g.
-bcm4709-buffalo-wxr-1900dhp.dts) never got uart0 enabled so I just
-didn't need to modify these files.
+On Thu, Dec 01, 2016 at 03:34:34PM +0100, Benjamin Tissoires wrote:
+> On Nov 30 2016 or thereabouts, Brian Norris wrote:
+> > From: Caesar Wang <wxt@rock-chips.com>
+> > 
+> > Add a compatible string and regulator property for Wacom W9103
+> > digitizer. Its VDD supply may need to be enabled before using it.
+> > 
+> > Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Jiri Kosina <jikos@kernel.org>
+> > Cc: linux-input@vger.kernel.org
+> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+> > ---
+> > v1 was a few months back. I finally got around to rewriting it based on
+> > DT binding feedback.
+> > 
+> > v2:
+> >  * add compatible property for wacom
+> >  * name the regulator property specifically (VDD)
+> > 
+> >  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > index 488edcb264c4..eb98054e60c9 100644
+> > --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > @@ -11,12 +11,16 @@ If this binding is used, the kernel module i2c-hid will handle the communication
+> >  with the device and the generic hid core layer will handle the protocol.
+> >  
+> >  Required properties:
+> > -- compatible: must be "hid-over-i2c"
+> > +- compatible: must be "hid-over-i2c", or a device-specific string like:
+> > +    * "wacom,w9013"
+> 
+> NACK on this one.
+> 
+> After re-reading the v1 submission I realized Rob asked for this change,
+> but I strongly disagree.
+> 
+> HID over I2C is a generic protocol, in the same way HID over USB is. We
+> can not start adding device specifics here, this is opening the can of
+> worms. If the device is a HID one, nothing else should matter. The rest
+> (description of the device, name, etc...) is all provided by the
+> protocol.
 
-I'll send V2 updating last 4 ones as well. Thanks for catching this.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I should have spoken up when Rob made the suggestion, because I more or
+less agree with Benjamin here. I don't really see why this needs to have
+a specialized compatible string, as the property is still fairly
+generic, and the entire device handling is via a generic protocol. The
+fact that we manage its power via a regulator is not very
+device-specific.
+
+> >  - reg: i2c slave address
+> >  - hid-descr-addr: HID descriptor address
+> >  - interrupt-parent: the phandle for the interrupt controller
+> >  - interrupts: interrupt line
+> >  
+> > +Optional properties:
+> > +- vdd-supply: phandle of the regulator that provides the supply voltage.
+> 
+> Agree on this one however.
+
+Thanks.
+
+As Benjamin noticed on patch 2, I added a delay property; I realized I
+had been hacking that delay in to the regulator framework as a "ramp
+delay" property, when in fact it was actually a property of *this*
+device -- the 100 ms wait is a suggested wait for the HID firmware to
+boot, not for the regulator to stabilize.
+
+So, what do you two think about the following two properties?
+
+ - vdd-supply, as in the quoted patch
+ - init-delay-ms: time required by the device after power-on before it
+   is ready for communication
+
+And I'd drop the extra compatible property.
+
+Brian
