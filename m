@@ -1,34 +1,189 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH 15/22] dt-bindings: display: renesas: Add R-Car Gen3 HDMI TX DT bindings
-Date: Fri,  2 Dec 2016 01:43:30 +0200
-Message-ID: <1480635817-1258-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 14/22] dt-bindings: display: dw-hdmi: Clean up DT bindings documentation
+Date: Fri,  2 Dec 2016 01:43:29 +0200
+Message-ID: <1480635817-1258-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1480635817-1258-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480635817-1258-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ulrich Hecht <ulrich.hecht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1480635817-1258-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: Andy Yan <andy.yan@rock-chips.com>, Archit Taneja <architt@codeaurora.org>, Fabio Estevam <fabio.estevam@freescale.com>, Heiko Stuebner <heiko@sntech.de>, Jose Abreu <Jose.Abreu@synopsys.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Mark Yao <mark.yao@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Ulrich Hecht <ulrich.hecht@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Renesas R-Car Gen3 SoCs use a Synopsys DWC HDMI TX encoder IP. Add
-corresponding device tree bindings based on the DWC HDMI TX bindings
-model.
+Make it clear that the core bridge/dw_hdmi.txt document isn't a device
+tree binding by itself but is meant to be referenced by platform device
+tree bindings, and update the Rockchip and Freescale DWC HDMI TX
+bindings to reference it.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../bindings/display/bridge/renesas,dw-hdmi.txt    | 75 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
+ .../devicetree/bindings/display/bridge/dw_hdmi.txt | 85 +++++++++-------------
+ .../devicetree/bindings/display/imx/hdmi.txt       | 51 +++++++------
+ .../bindings/display/rockchip/dw_hdmi-rockchip.txt | 43 +++++++----
+ 3 files changed, 91 insertions(+), 88 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-new file mode 100644
-index 000000000000..f6b3f36d422b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-@@ -0,0 +1,75 @@
-+Renesas Gen3 DWC HDMI TX Encoder
-+================================
+diff --git a/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
+index 5e9a84d6e5f1..33bf981fbe33 100644
+--- a/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
++++ b/Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt
+@@ -1,52 +1,33 @@
+-DesignWare HDMI bridge bindings
+-
+-Required properties:
+-- compatible: platform specific such as:
+-   * "snps,dw-hdmi-tx"
+-   * "fsl,imx6q-hdmi"
+-   * "fsl,imx6dl-hdmi"
+-   * "rockchip,rk3288-dw-hdmi"
+-- reg: Physical base address and length of the controller's registers.
+-- interrupts: The HDMI interrupt number
+-- clocks, clock-names : must have the phandles to the HDMI iahb and isfr clocks,
+-  as described in Documentation/devicetree/bindings/clock/clock-bindings.txt,
+-  the clocks are soc specific, the clock-names should be "iahb", "isfr"
+--port@[X]: SoC specific port nodes with endpoint definitions as defined
+-   in Documentation/devicetree/bindings/media/video-interfaces.txt,
+-   please refer to the SoC specific binding document:
+-    * Documentation/devicetree/bindings/display/imx/hdmi.txt
+-    * Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+-
+-Optional properties
+-- reg-io-width: the width of the reg:1,4, default set to 1 if not present
+-- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing,
+-  if the property is omitted, a functionally reduced I2C bus
+-  controller on DW HDMI is probed
+-- clocks, clock-names: phandle to the HDMI CEC clock, name should be "cec"
+-
+-Example:
+-	hdmi: hdmi@0120000 {
+-		compatible = "fsl,imx6q-hdmi";
+-		reg = <0x00120000 0x9000>;
+-		interrupts = <0 115 0x04>;
+-		gpr = <&gpr>;
+-		clocks = <&clks 123>, <&clks 124>;
+-		clock-names = "iahb", "isfr";
+-		ddc-i2c-bus = <&i2c2>;
+-
+-		port@0 {
+-			reg = <0>;
+-
+-			hdmi_mux_0: endpoint {
+-				remote-endpoint = <&ipu1_di0_hdmi>;
+-			};
+-		};
+-
+-		port@1 {
+-			reg = <1>;
+-
+-			hdmi_mux_1: endpoint {
+-				remote-endpoint = <&ipu1_di1_hdmi>;
+-			};
+-		};
+-	};
++Synopsys DesignWare HDMI TX Encoder
++===================================
++
++This document defines device tree properties for the Synopsys DesignWare HDMI
++TX Encoder (DWC HDMI TX). It doesn't constitue a device tree binding
++specification by itself but is meant to be referenced by platform-specific
++device tree bindings.
++
++When referenced from platform device tree bindings the properties defined in
++this document are defined as follows. The platform device tree bindings are
++responsible for defining whether each property is required or optional.
++
++- reg: Memory mapped base address and length of the DWC HDMI TX registers.
++
++- reg-io-width: Width of the registers specified by the reg property. The
++  value is expressed in bytes and must be equal to 1 or 4 if specified. The
++  register width defaults to 1 if the property is not present.
++
++- interrupts: Reference to the DWC HDMI TX interrupt.
++
++- clocks: References to all the clocks specified in the clock-names property
++  as specified in Documentation/devicetree/bindings/clock/clock-bindings.txt.
++
++- clock-names: The DWC HDMI TX uses the following clocks.
++
++  - "iahb" is the bus clock for either AHB and APB (mandatory).
++  - "isfr" is the internal register configuration clock (mandatory).
++  - "cec" is the HDMI CEC controller main clock (optional).
++
++- ports: The connectivity of the DWC HDMI TX with the rest of the system is
++  expressed in using ports as specified in the device graph bindings defined
++  in Documentation/devicetree/bindings/graph.txt. The numbering of the ports
++  is platform-specific.
+diff --git a/Documentation/devicetree/bindings/display/imx/hdmi.txt b/Documentation/devicetree/bindings/display/imx/hdmi.txt
+index 1b756cf9afb0..66a8f86e5d12 100644
+--- a/Documentation/devicetree/bindings/display/imx/hdmi.txt
++++ b/Documentation/devicetree/bindings/display/imx/hdmi.txt
+@@ -1,29 +1,36 @@
+-Device-Tree bindings for HDMI Transmitter
++Freescale i.MX6 DWC HDMI TX Encoder
++===================================
+ 
+-HDMI Transmitter
+-================
++The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
++with a companion PHY IP.
++
++These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
++Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
++following device-specific properties.
+ 
+-The HDMI Transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
+-with accompanying PHY IP.
+ 
+ Required properties:
+- - #address-cells : should be <1>
+- - #size-cells : should be <0>
+- - compatible : should be "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
+- - gpr : should be <&gpr>.
+-   The phandle points to the iomuxc-gpr region containing the HDMI
+-   multiplexer control register.
+- - clocks, clock-names : phandles to the HDMI iahb and isrf clocks, as described
+-   in Documentation/devicetree/bindings/clock/clock-bindings.txt and
+-   Documentation/devicetree/bindings/clock/imx6q-clock.txt.
+- - port@[0-4]: Up to four port nodes with endpoint definitions as defined in
+-   Documentation/devicetree/bindings/media/video-interfaces.txt,
+-   corresponding to the four inputs to the HDMI multiplexer.
+-
+-Optional properties:
+- - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+-
+-example:
++
++- compatible : Shall be one of "fsl,imx6q-hdmi" or "fsl,imx6dl-hdmi".
++- reg: See dw_hdmi.txt.
++- interrupts: HDMI interrupt number
++- clocks: See dw_hdmi.txt.
++- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
++- ports: See dw_hdmi.txt. The DWC HDMI shall have between one and four ports,
++  numbered 0 to 3, corresponding to the four inputs of the HDMI multiplexer.
++  Each port shall have a single endpoint.
++- gpr : Shall contain a phandle to the iomuxc-gpr region containing the HDMI
++  multiplexer control register.
++
++Optional properties
++
++- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
++  or the functionally-reduced I2C master contained in the DWC HDMI. When
++  connected to a system I2C master this property contains a phandle to that
++  I2C master controller.
++
++
++Example:
+ 
+ 	gpr: iomuxc-gpr@020e0000 {
+ 		/* ... */
+diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+index 668091f27674..046076c6b277 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+@@ -1,24 +1,39 @@
+-Rockchip specific extensions to the Synopsys Designware HDMI
+-================================
++Rockchip DWC HDMI TX Encoder
++============================
 +
 +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
 +with a companion PHY IP.
@@ -37,89 +192,48 @@ index 000000000000..f6b3f36d422b
 +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
 +following device-specific properties.
 +
+ 
+ Required properties:
+-- compatible: "rockchip,rk3288-dw-hdmi";
+-- reg: Physical base address and length of the controller's registers.
+-- clocks: phandle to hdmi iahb and isfr clocks.
+-- clock-names: should be "iahb" "isfr"
+-- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
 +
-+Required properties:
-+
-+- compatible : Shall contain one or more of
-+  - "renesas,r8a7795-hdmi" for R8A7795 (R-Car H3) compatible HDMI TX
-+  - "renesas,rcar-gen3-hdmi" for the generic R-Car Gen3 compatible HDMI TX
-+
-+    When compatible with generic versions, nodes must list the SoC-specific
-+    version corresponding to the platform first, followed by the
-+    family-specific version.
-+
++- compatible: Shall contain "rockchip,rk3288-dw-hdmi".
 +- reg: See dw_hdmi.txt.
-+- interrupts: HDMI interrupt number
++- reg-io-width: See dw_hdmi.txt. Shall be 4.
+ - interrupts: HDMI interrupt number
+-- ports: contain a port node with endpoint definitions as defined in
+-  Documentation/devicetree/bindings/media/video-interfaces.txt. For
+-  vopb,set the reg = <0> and set the reg = <1> for vopl.
+-- reg-io-width: the width of the reg:1,4, the value should be 4 on
+-  rk3288 platform
 +- clocks: See dw_hdmi.txt.
 +- clock-names: Shall contain "iahb" and "isfr" as defined in dw_hdmi.txt.
-+- ports: See dw_hdmi.txt. The DWC HDMI shall have one port numbered 0
-+  corresponding to the video input of the controller and one port numbered 1
-+  corresponding to its HDMI output. Each port shall have a single endpoint.
-+
-+Optional properties:
-+
-+- power-domains: Shall reference the power domain that contains the DWC HDMI,
-+  if any.
-+
-+
-+Example:
-+
-+	hdmi0: hdmi0@fead0000 {
-+		compatible = "renesas,r8a7795-dw-hdmi";
-+		reg = <0 0xfead0000 0 0x10000>;
-+		interrupts = <0 389 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_CORE R8A7795_CLK_S0D4>, <&cpg CPG_MOD 729>;
-+		clock-names = "iahb", "isfr";
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				dw_hdmi0_in: endpoint {
-+					remote-endpoint = <&du_out_hdmi0>;
-+				};
-+			};
-+			port@1 {
-+				reg = <1>;
-+				rcar_dw_hdmi0_out: endpoint {
-+					remote-endpoint = <&hdmi0_con>;
-+				};
-+			};
-+		};
-+	};
-+
-+	hdmi0-out {
-+		compatible = "hdmi-connector";
-+		label = "HDMI0 OUT";
-+		type = "a";
-+
-+		port {
-+			hdmi0_con: endpoint {
-+				remote-endpoint = <&rcar_dw_hdmi0_out>;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 30c873192458..a513fda157d0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4231,6 +4231,7 @@ S:	Supported
- F:	drivers/gpu/drm/rcar-du/
- F:	drivers/gpu/drm/shmobile/
- F:	include/linux/platform_data/shmob_drm.h
-+F:	Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
- F:	Documentation/devicetree/bindings/display/renesas,du.txt
++- ports: See dw_hdmi.txt. The DWC HDMI shall have a single port numbered 0
++  corresponding to the video input of the controller. The port shall have two
++  endpoints, numbered 0 and 1, connected respectively to the vopb and vopl.
++- rockchip,grf: Shall reference the GRF to mux vopl/vopb.
  
- DRM DRIVER FOR QXL VIRTUAL GPU
+ Optional properties
+-- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+-- clocks, clock-names: phandle to the HDMI CEC clock, name should be "cec"
++
++- ddc-i2c-bus: The HDMI DDC bus can be connected to either a system I2C master
++  or the functionally-reduced I2C master contained in the DWC HDMI. When
++  connected to a system I2C master this property contains a phandle to that
++  I2C master controller.
++- clock-names: See dw_hdmi.txt. The "cec" clock is optional.
++- clock-names: May contain "cec" as defined in dw_hdmi.txt.
++
+ 
+ Example:
++
+ hdmi: hdmi@ff980000 {
+ 	compatible = "rockchip,rk3288-dw-hdmi";
+ 	reg = <0xff980000 0x20000>;
 -- 
 Regards,
 
 Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
