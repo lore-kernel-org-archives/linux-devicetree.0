@@ -1,52 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Thu, 1 Dec 2016 13:44:57 -0800
-Message-ID: <20161201214457.GC3703@atomide.com>
-References: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <20161201211234.GA3703@atomide.com>
- <34435805.uoQ87SrZdl@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <34435805.uoQ87SrZdl@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: samsung: Add DT bindings documentation for TM2 sound subsystem" to the asoc tree
+Date: Thu, 01 Dec 2016 21:54:49 +0000
+Message-ID: <E1cCZJZ-0000uP-Ru@debutante>
+References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>broonie@kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161201 13:37]:
-> Hi Tony,
-> 
-> On Thursday 01 Dec 2016 13:12:34 Tony Lindgren wrote:
-> > * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161130 09:58]:
-> > > The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-> > > connected to port 2 of the OMAP EHCI controller. The board however has
-> > > no EEPROM to store the ethernet MAC address, which is programmed by the
-> > > boot loader.
-> > > 
-> > > To allow Linux to use the same MAC address as the boot loader (or for
-> > > that matter any fixed MAC address), we need a node in the device tree
-> > > for the ethernet controller that the boot loader can update at runtime
-> > > with a local-mac-address property. Add it, along with an alias for the
-> > > ethernet controller to let the boot loader locate it easily.
-> > 
-> > Does not seem to work here.. Do I need to set something in u-boot?
-> > I'm using U-Boot 2016.09-00004-g26bb688.
-> 
-> Some versions (possibly forked by vendors) might set the MAC address
-> automatically in DT, but in my case I have the following in my boot script:
-> 
-> tftp 0x80800000 beagle/omap3-beagle-xm.dtb
-> fdt addr ${fileaddr} ${filesize}
-> fdt resize
-> fdt set /ocp@68000000/usbhshost@48064000/ehci@48064800/usb2@2/usbether@1 local-mac-address "[7a d2 a0 00 d1 f0]"
+The patch
 
-OK. I just added setenv ethaddr ${usbethaddr} to my bootcmd..
+   ASoC: samsung: Add DT bindings documentation for TM2 sound subsystem
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 48a760279ba31c59b8cfb14c5be9ed1c8e191038 Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Wed, 2 Nov 2016 17:02:37 +0100
+Subject: [PATCH] ASoC: samsung: Add DT bindings documentation for TM2 sound
+ subsystem
+
+This patch adds DT binding documentation for Exnos5433 based TM2
+and TM2E boards sound subsystem.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/samsung,tm2-audio.txt           | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+new file mode 100644
+index 000000000000..94442e5673b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+@@ -0,0 +1,38 @@
++Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
++
++Required properties:
++
++ - compatible		 : "samsung,tm2-audio"
++ - model		 : the user-visible name of this sound complex
++ - audio-codec		 : the phandle of the wm5110 audio codec node,
++			   as described in ../mfd/arizona.txt
++ - i2s-controller	 : the phandle of the I2S controller
++ - audio-amplifier	 : the phandle of the MAX98504 amplifier
++ - samsung,audio-routing : a list of the connections between audio components;
++			   each entry is a pair of strings, the first being the
++			   connection's sink, the second being the connection's
++			   source; valid names for sources and sinks are the
++			   WM5110's and MAX98504's pins and the jacks on the
++			   board: HP, SPK, Main Mic, Sub Mic, Third Mic,
++			   Headset Mic
++ - mic-bias-gpios	 : GPIO pin that enables the Main Mic bias regulator
++
++
++Example:
++
++sound {
++	compatible = "samsung,tm2-audio";
++	audio-codec = <&wm5110>;
++	i2s-controller = <&i2s0>;
++	audio-amplifier = <&max98504>;
++	mic-bias-gpios = <&gpr3 2 0>;
++	model = "wm5110";
++	samsung,audio-routing =
++		"HP", "HPOUT1L",
++		"HP", "HPOUT1R",
++		"SPK", "SPKOUT",
++		"SPKOUT", "HPOUT2L",
++		"SPKOUT", "HPOUT2R",
++		"Main Mic", "MICBIAS2",
++		"IN1R", "Main Mic";
++};
+-- 
+2.10.2
