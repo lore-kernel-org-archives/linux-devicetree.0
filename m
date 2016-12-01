@@ -1,45 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset bindings
-Date: Thu, 01 Dec 2016 13:05:03 +0100
-Message-ID: <3900806.3NUubBDb0Q@wuerfel>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org> <1480553321-17400-2-git-send-email-zhangfei.gao@linaro.org>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] iio: misc: add a generic regulator driver
+Date: Thu, 1 Dec 2016 13:07:06 +0100
+Message-ID: <CAMpxmJV=2xK4tDFfyVfWy7xhbAOcTxhG-hSVeKXW=eavdRmerA@mail.gmail.com>
+References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
+ <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de> <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
+ <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480553321-17400-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
-> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
-> +                                  0x20 0x10            /* 1: i2c1 */
-> +                                  0x20 0x20            /* 2: i2c2 */
-> +                                  0x20 0x8000000>;     /* 3: i2c6 */
-> +       };
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +example:
-> +
-> +        i2c0: i2c@..... {
-> +                ...
-> +               resets = <&iomcu_rst 0>;
-> +                ...
-> +        };
+2016-11-30 11:10 GMT+01:00 Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>:
+> On 11/29/2016 04:35 PM, Bartosz Golaszewski wrote:
+>> 2016-11-29 16:30 GMT+01:00 Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>:
+>>> On 11/29/2016 04:22 PM, Bartosz Golaszewski wrote:
+>>> [...]
+>>>> diff --git a/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
+>>>> new file mode 100644
+>>>> index 0000000..147458f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
+>>>> @@ -0,0 +1,18 @@
+>>>> +Industrial IO regulator device driver
+>>>> +-------------------------------------
+>>>> +
+>>>> +This document describes the bindings for the iio-regulator - a dummy device
+>>>> +driver representing a physical regulator within the iio framework.
+>>>
+>>> No bindings for drivers, only for hardware. So this wont work.
+>>>
+>>
+>> What about exporting regulator attributes analogous to the one in this
+>> patch from the iio-core when a *-supply property is specified for a
+>> node?
+>
+> The problem with exposing direct control to the regulator is that it allows
+> to modify the hardware state without the drivers knowledge. If you
+> power-cycle a device all previous configuration that has been written to the
+> device is reset. The device driver needs to be aware of this otherwise its
+> assumed state and the actual device state can divert which will result in
+> undefined behavior. Also access to the device will fail unexpectedly when
+> the regulator is turned off. So I think generally the driver should
+> explicitly control the regulator, power-up when needed, power-down when not.
+>
+> - Lars
+>
 
-I don't really like this approach, since now the information is
-in two places. Why not put the data into the reset specifier
-directly when it is used?
+I missed the fact that - unlike hwmon - the iio version of the ina2xx
+driver is not capable of detecting a bad state and re-initializing
+itself. But you're right in general of course.
 
-Also the format seems a little too close to the actual register
-layout and could be a little more abstract, using bit numbers instead
-of a bitmask and register numbers instead of offsets.
+Still, it made me think: what if we implement the suspend/resume
+callbacks in struct device_driver to store/resume the state when
+power-cycling? The core iio module would then call the suspend
+callback before disabling the regulator. We wouldn't need to duplicate
+similar code and DT bindings in every iio driver.
 
-	Arnd
-
+Best regards,
+Bartosz Golaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
