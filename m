@@ -1,95 +1,42 @@
-From: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
-Date: Thu, 1 Dec 2016 11:24:14 +0100
-Message-ID: <20161201112414.62f9b351186115f62c8998a9@bidouilliste.com>
-References: <20161122170616.29557-1-manu@bidouilliste.com>
-        <20161124195517.qrq7briu3pwjnp4n@lukather>
-        <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
-        <20161125152047.oadxi2xbgm4kdd7q@lukather>
-        <20161125220752.c989c85e01ed202be0485c78@bidouilliste.com>
-        <20161201092150.rlo5skxd6elovlgq@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Romain Perier <romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/5] Add support for the Armada 3700 SPI controller
+Date: Thu,  1 Dec 2016 11:27:14 +0100
+Message-ID: <20161201102719.4291-1-romain.perier@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161201092150.rlo5skxd6elovlgq@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The Marvell Armada 3700 SoC includes an SPI controller. This controller
+supports up to 4 SPI slave devices, with dedicated chip selects, CPIO or
+FIFO mode with DMA or CPU transfers and different SPI transfer modes
+(Standard single, Dual or Quad).
 
- Hi Maxime,
+This set of patches adds a basic support for the CPIO mode, then it
+enables the FIFO mode (CPU-side only, DMA not supported yet). It also
+adds the required definitions of the spi nodes to the devicetree.
 
-On Thu, 1 Dec 2016 10:21:50 +0100
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Romain Perier (5):
+  spi: Add basic support for Armada 3700 SPI Controller
+  spi: armada-3700: Add support for the FIFO mode
+  spi: armada-3700: Add documentation for the Armada 3700 SPI Controller
+  arm64: dts: marvell: Add definition of SPI controller for Armada 3700
+  arm64: dts: marvell: Enable spi0 on the board Armada-3720-db
 
-> Hi Emmanuel,
-> 
-> On Fri, Nov 25, 2016 at 10:07:52PM +0100, Emmanuel Vadot wrote:
-> > On Fri, 25 Nov 2016 16:20:47 +0100
-> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > 
-> > > On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
-> > > > On Thu, 24 Nov 2016 20:55:17 +0100
-> > > > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > > 
-> > > > > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
-> > > > > > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
-> > > > > > others three only have 1.
-> > > > > > Add the num-cs property to each node.
-> > > > > > 
-> > > > > > Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-> > > > > 
-> > > > > I don't think we have any code that uses it at the moment. What is the
-> > > > > rationale behind this patch?
-> > > > > 
-> > > > > Thanks!
-> > > > > Maxime
-> > > > > 
-> > > > > -- 
-> > > > > Maxime Ripard, Free Electrons
-> > > > > Embedded Linux and Kernel engineering
-> > > > > http://free-electrons.com
-> > > > 
-> > > >  Hi Maxime,
-> > > > 
-> > > >  If num-cs isn't present nothing prevent to start a transfer with a
-> > > > non-valid CS pin, resulting in an error.
-> > > >  num-cs are default property especially made for this and a SPI driver
-> > > > should try to get the property at probe/attach time.
-> > > 
-> > > Yes, but as far as I know, our driver doesn't. I'm all in for having
-> > > support for that in our driver, but without it, that patch is kind of
-> > > useless.
-> > 
-> >  Yes the Linux driver doesn't use it but my upcoming one for FreeBSD
-> > uses it. So it is not useless for downstream user of DTS.
-> 
-> Ah, I didn't know this was for FreeBSD. So you started to use our DTs,
-> or do you have some modifications to it? How does that work?
-
- Yes we use the DTS from linux from quite some times now. We're
-currently synced with 4.7-ish.
- We either use them directly or modify them according to our needs and
-driver support.
-
-> Anyway, the fact that it isn't used by our driver at the moment and
-> that it's meant for other OSes should be mentionned in the commit log.
-
- Yeah I understand, I'll send a v2 with this in the commit log.
-
-> Thanks!
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
+ .../devicetree/bindings/spi/spi-armada-3700.txt    |   25 +
+ arch/arm64/boot/dts/marvell/armada-3720-db.dts     |   30 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |   11 +
+ drivers/spi/Kconfig                                |    7 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-armada-3700.c                      | 1046 ++++++++++++++++++++
+ 6 files changed, 1120 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-armada-3700.txt
+ create mode 100644 drivers/spi/spi-armada-3700.c
 
 -- 
-Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
