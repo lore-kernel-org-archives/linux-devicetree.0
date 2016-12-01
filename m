@@ -1,158 +1,322 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] HID: i2c-hid: support Wacom digitizer + regulator
-Date: Thu, 1 Dec 2016 09:30:31 -0800
-Message-ID: <20161201173031.GB46688@google.com>
-References: <1480555288-142791-1-git-send-email-briannorris@chromium.org>
- <1480555288-142791-2-git-send-email-briannorris@chromium.org>
- <20161201144126.GE1280@mail.corp.redhat.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH dt V2] ARM: BCM5301X: Enable UART by default for BCM4708(1), BCM4709(4) & BCM53012
+Date: Thu,  1 Dec 2016 18:40:51 +0100
+Message-ID: <20161201174051.4965-1-zajec5@gmail.com>
+References: <20161128140134.25128-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161201144126.GE1280-/m+UfqrgI5QNLKR9yMNcA1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20161128140134.25128-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-On Thu, Dec 01, 2016 at 03:41:26PM +0100, Benjamin Tissoires wrote:
-> On Nov 30 2016 or thereabouts, Brian Norris wrote:
-> > We need to power on the digitizer before using it, and it's also nice to
-> > save power in suspend by disabling it. Support an optional "vdd-supply"
-> > and wire it up for the new Wacom device.
-> > 
-> > Wacom recommended waiting up to 100ms after powering on before trying to
-> > access this device.
-> > 
-> > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> > v1 was a few months back. I finally got around to rewriting it based on
-> > DT binding feedback.
-> > 
-> > v2:
-> >  * support compatible property for wacom, with specific "vdd-supply" name
-> >  * support the 100ms delay needed for this digitizer
-> >  * target regulator support only at specific device
-> > 
-> >  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 6 +++++-
-> >  drivers/hid/i2c-hid/i2c-hid.c | 70 ++++++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/i2c/i2c-hid.h   |  6 ++++
-> >  2 files changed, 75 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
-> > index b3ec4f2de875..1bc174f3a788 100644
-> > --- a/drivers/hid/i2c-hid/i2c-hid.c
-> > +++ b/drivers/hid/i2c-hid/i2c-hid.c
-> > @@ -37,7 +37,9 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/acpi.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/gpio/consumer.h>
-> > +#include <linux/regulator/consumer.h>
-> >  
-> >  #include <linux/i2c/i2c-hid.h>
-> >  
-> > @@ -918,10 +920,25 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
-> >  #endif
-> >  
-> >  #ifdef CONFIG_OF
-> > +
-> > +/* of_device_id match data */
-> > +struct i2c_hid_of_data {
-> > +	/* Name of supply regulator. */
-> > +	const char *supply_name;
-> > +	/* Delay required after powering on device before it is usable. */
-> > +	int init_delay_ms;
-> > +};
-> > +
-> > +static const struct i2c_hid_of_data wacom_w9013_data = {
-> 
-> Why is the struct "wacom" specific?
-> If the vdd line is required, I don't see why there is a need to specify
-> that this is a Wacom specifics. Then Elan, SYnaptics will want the same
-> and we won't be able to to follow.
-> 
-> > +	.supply_name		= "vdd",
-> > +	.init_delay_ms		= 100,
-> 
-> If the purpose of this declaration is to set the delay, why isn't this
-> something provided by the device tree?
+Every device tested so far got UART0 (at 0x18000300) working as serial
+console. It's most likely part of reference design and all vendors use
+it that way.
 
-The alleged purpose wasn't just for the delay (it wasn't even mentioned
-in v1), but in case there are ever devices with multiple regulators and
-different power sequencing (?) I guess. I still don't see why Rob
-thought it needed a separate compatible property.
+It seems to be easier to enable it by default and just disable it if we
+ever see a device with different hardware design.
 
-About the delay: as noted in my reply to patch 1, this was actually a
-property of the device/firmware -- it needs some time to initialize
-before we can talk to it. I previously had included that delay in the
-regulator ramp delay, but since we'd know the device info here, I found
-it convenient to latch onto the same property.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Update bcm94708.dts bcm94709.dts bcm953012er.dts & bcm953012k.dts
+---
+ arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  | 4 ----
+ arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts       | 4 ----
+ arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts       | 4 ----
+ arch/arm/boot/dts/bcm4708-netgear-r6250.dts        | 4 ----
+ arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      | 4 ----
+ arch/arm/boot/dts/bcm4708.dtsi                     | 4 ++++
+ arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts | 4 ----
+ arch/arm/boot/dts/bcm47081.dtsi                    | 4 ++++
+ arch/arm/boot/dts/bcm4709-netgear-r7000.dts        | 4 ----
+ arch/arm/boot/dts/bcm4709-netgear-r8000.dts        | 4 ----
+ arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts  | 4 ----
+ arch/arm/boot/dts/bcm4709.dtsi                     | 1 +
+ arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts      | 4 ----
+ arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts      | 4 ----
+ arch/arm/boot/dts/bcm47094-netgear-r8500.dts       | 4 ----
+ arch/arm/boot/dts/bcm47094.dtsi                    | 1 +
+ arch/arm/boot/dts/bcm94708.dts                     | 4 ----
+ arch/arm/boot/dts/bcm94709.dts                     | 4 ----
+ arch/arm/boot/dts/bcm953012er.dts                  | 4 ----
+ arch/arm/boot/dts/bcm953012k.dts                   | 1 -
+ 20 files changed, 10 insertions(+), 61 deletions(-)
 
-IOW, typically, if you have a device-specific compatible property, it
-makes sense to key device-specific info off of that property where
-possible. But if (like you suggest) the compatible property is
-counter-productive, then we would need a separate property for this
-delay.
+diff --git a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+index 9cb186e..d49afec0 100644
+--- a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
++++ b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+@@ -136,10 +136,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+index 35e6ed6..f591b0f 100644
+--- a/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
++++ b/arch/arm/boot/dts/bcm4708-luxul-xap-1510.dts
+@@ -55,10 +55,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+index 1c7e53d..50d65d8 100644
+--- a/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
++++ b/arch/arm/boot/dts/bcm4708-luxul-xwc-1000.dts
+@@ -56,10 +56,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+index 8ce39d5..8519548 100644
+--- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
++++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+@@ -83,10 +83,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+index 70f4bb9..74cfcd3 100644
+--- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
++++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+@@ -119,10 +119,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+index eed4dd1..d0eec09 100644
+--- a/arch/arm/boot/dts/bcm4708.dtsi
++++ b/arch/arm/boot/dts/bcm4708.dtsi
+@@ -34,3 +34,7 @@
+ 	};
+ 
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+index a9c8def..2922536 100644
+--- a/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
++++ b/arch/arm/boot/dts/bcm47081-buffalo-wzr-600dhp2.dts
+@@ -122,7 +122,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm47081.dtsi b/arch/arm/boot/dts/bcm47081.dtsi
+index f720012..c5f7619 100644
+--- a/arch/arm/boot/dts/bcm47081.dtsi
++++ b/arch/arm/boot/dts/bcm47081.dtsi
+@@ -24,3 +24,7 @@
+ 		};
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
+index fd38d2a..0225d82 100644
+--- a/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
++++ b/arch/arm/boot/dts/bcm4709-netgear-r7000.dts
+@@ -100,7 +100,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+index 92f8a72..56d38a3 100644
+--- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
++++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+@@ -107,10 +107,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+index 9a92c24..c67bfaa 100644
+--- a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
++++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+@@ -97,10 +97,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb2 {
+ 	vcc-gpio = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
+index f039765..c645fea 100644
+--- a/arch/arm/boot/dts/bcm4709.dtsi
++++ b/arch/arm/boot/dts/bcm4709.dtsi
+@@ -8,4 +8,5 @@
+ 
+ &uart0 {
+ 	clock-frequency = <125000000>;
++	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+index 661348d..7fb9270 100644
+--- a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
++++ b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+@@ -105,10 +105,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+index 169b35f..2f4a651 100644
+--- a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+@@ -98,10 +98,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &usb3 {
+ 	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm/boot/dts/bcm47094-netgear-r8500.dts b/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
+index 521b415..7ecd57c 100644
+--- a/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
++++ b/arch/arm/boot/dts/bcm47094-netgear-r8500.dts
+@@ -97,7 +97,3 @@
+ 		};
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm47094.dtsi b/arch/arm/boot/dts/bcm47094.dtsi
+index 4f09aa0..4840a78 100644
+--- a/arch/arm/boot/dts/bcm47094.dtsi
++++ b/arch/arm/boot/dts/bcm47094.dtsi
+@@ -14,4 +14,5 @@
+ 
+ &uart0 {
+ 	clock-frequency = <125000000>;
++	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm94708.dts b/arch/arm/boot/dts/bcm94708.dts
+index 251a486..42855a7 100644
+--- a/arch/arm/boot/dts/bcm94708.dts
++++ b/arch/arm/boot/dts/bcm94708.dts
+@@ -50,7 +50,3 @@
+ 		reg = <0x00000000 0x08000000>;
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm94709.dts b/arch/arm/boot/dts/bcm94709.dts
+index b16cac9..95e8be6 100644
+--- a/arch/arm/boot/dts/bcm94709.dts
++++ b/arch/arm/boot/dts/bcm94709.dts
+@@ -50,7 +50,3 @@
+ 		reg = <0x00000000 0x08000000>;
+ 	};
+ };
+-
+-&uart0 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/bcm953012er.dts b/arch/arm/boot/dts/bcm953012er.dts
+index 0a9abec..decd86b 100644
+--- a/arch/arm/boot/dts/bcm953012er.dts
++++ b/arch/arm/boot/dts/bcm953012er.dts
+@@ -70,10 +70,6 @@
+ 	};
+ };
+ 
+-&uart0 {
+-	status = "okay";
+-};
+-
+ &spi_nor {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm953012k.dts b/arch/arm/boot/dts/bcm953012k.dts
+index 05a985a..bfd9230 100644
+--- a/arch/arm/boot/dts/bcm953012k.dts
++++ b/arch/arm/boot/dts/bcm953012k.dts
+@@ -54,7 +54,6 @@
+ 
+ &uart0 {
+ 	clock-frequency = <62499840>;
+-	status = "okay";
+ };
+ 
+ &uart1 {
+-- 
+2.10.1
 
-> > +};
-> > +
-> >  static int i2c_hid_of_probe(struct i2c_client *client,
-> >  		struct i2c_hid_platform_data *pdata)
-> >  {
-> >  	struct device *dev = &client->dev;
-> > +	const struct i2c_hid_of_data *data = of_device_get_match_data(dev);
-> >  	u32 val;
-> >  	int ret;
-> >  
-> > @@ -937,10 +954,33 @@ static int i2c_hid_of_probe(struct i2c_client *client,
-> >  	}
-> >  	pdata->hid_descriptor_address = val;
-> >  
-> > +	if (data) {
-> > +		pdata->init_delay_ms = data->init_delay_ms;
-> > +		if (data->supply_name) {
-> > +			pdata->supply = devm_regulator_get_optional(&client->dev,
-> > +								    data->supply_name);
-> > +			if (IS_ERR(pdata->supply)) {
-> > +				ret = PTR_ERR(pdata->supply);
-> > +				pdata->supply = NULL;
-> > +				if (ret == -EPROBE_DEFER)
-> > +					return ret;
-> > +				if (ret == -ENODEV)
-> > +					return 0;
-> > +				dev_err(dev, "Failed to get %s regulator: %d\n",
-> > +					data->supply_name, ret);
-> > +				return ret;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  
-> >  static const struct of_device_id i2c_hid_of_match[] = {
-> > +	{
-> > +		.compatible = "wacom,w9013",
-> > +		.data = &wacom_w9013_data,
-> > +	},
-> 
-> NACK, see 1/2
-
-Fine with me, if Rob is OK. I replid on 1/2.
-
-> I don't really like the v2. IMO, v1 was less intrusive (though it was
-> missing the init_delay_ms).
-> I believe it's possible to have a generic device tree description which
-> doesn't require us to adapt the driver for each and every device.
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
