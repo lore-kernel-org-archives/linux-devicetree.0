@@ -1,68 +1,98 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] iio: misc: add a generic regulator driver
-Date: Thu, 1 Dec 2016 13:07:06 +0100
-Message-ID: <CAMpxmJV=2xK4tDFfyVfWy7xhbAOcTxhG-hSVeKXW=eavdRmerA@mail.gmail.com>
-References: <1480432969-20913-1-git-send-email-bgolaszewski@baylibre.com>
- <44cce3d5-f65e-1a35-20a4-5eb9fda42312@metafoo.de> <CAMpxmJWDWk-mXUHHGEKm-VVwzqEGLDQjc274Xq+Qwc2eN=YbsQ@mail.gmail.com>
- <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d4c7f1ca-49d4-7abe-bfc9-e1728f62a9fb-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: arm64: dts: zx: support cpu-freq for zx296718
+Date: Thu,  1 Dec 2016 20:08:55 +0800
+Message-ID: <1480594135-27273-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, jun.nie@linaro.org, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-2016-11-30 11:10 GMT+01:00 Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>:
-> On 11/29/2016 04:35 PM, Bartosz Golaszewski wrote:
->> 2016-11-29 16:30 GMT+01:00 Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>:
->>> On 11/29/2016 04:22 PM, Bartosz Golaszewski wrote:
->>> [...]
->>>> diff --git a/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
->>>> new file mode 100644
->>>> index 0000000..147458f
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/misc/iio-regulator.txt
->>>> @@ -0,0 +1,18 @@
->>>> +Industrial IO regulator device driver
->>>> +-------------------------------------
->>>> +
->>>> +This document describes the bindings for the iio-regulator - a dummy device
->>>> +driver representing a physical regulator within the iio framework.
->>>
->>> No bindings for drivers, only for hardware. So this wont work.
->>>
->>
->> What about exporting regulator attributes analogous to the one in this
->> patch from the iio-core when a *-supply property is specified for a
->> node?
->
-> The problem with exposing direct control to the regulator is that it allows
-> to modify the hardware state without the drivers knowledge. If you
-> power-cycle a device all previous configuration that has been written to the
-> device is reset. The device driver needs to be aware of this otherwise its
-> assumed state and the actual device state can divert which will result in
-> undefined behavior. Also access to the device will fail unexpectedly when
-> the regulator is turned off. So I think generally the driver should
-> explicitly control the regulator, power-up when needed, power-down when not.
->
-> - Lars
->
+This patch adds the CPU clock phandle in CPU's node
+and uses operating-points-v2 to register operating points.
 
-I missed the fact that - unlike hwmon - the iio version of the ina2xx
-driver is not capable of detecting a bad state and re-initializing
-itself. But you're right in general of course.
+So it can be used by cpufreq-dt driver.
 
-Still, it made me think: what if we implement the suspend/resume
-callbacks in struct device_driver to store/resume the state when
-power-cycling? The core iio module would then call the suspend
-callback before disabling the regulator. We wouldn't need to duplicate
-similar code and DT bindings in every iio driver.
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+---
+ arch/arm64/boot/dts/zte/zx296718.dtsi | 37 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Best regards,
-Bartosz Golaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
+index 7a1aed7..16f7d5e 100644
+--- a/arch/arm64/boot/dts/zte/zx296718.dtsi
++++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+@@ -44,6 +44,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/zx296718-clock.h>
+ 
+ / {
+ 	compatible = "zte,zx296718";
+@@ -81,6 +82,8 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -88,6 +91,7 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -95,6 +99,7 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -102,6 +107,38 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cluster0_opp>;
++		};
++	};
++
++	cluster0_opp: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <857000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@648000000 {
++			opp-hz = /bits/ 64 <648000000>;
++			opp-microvolt = <857000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <882000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <892000>;
++			clock-latency-ns = <500000>;
++		};
++		opp@1188000000 {
++			opp-hz = /bits/ 64 <1188000000>;
++			opp-microvolt = <1009000>;
++			clock-latency-ns = <500000>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
