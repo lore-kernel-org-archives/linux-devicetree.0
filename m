@@ -1,71 +1,160 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 39/39] mtd: nand: denali_dt: add compatible strings for
- UniPhier SoC variants
-Date: Thu, 1 Dec 2016 10:05:11 -0600
-Message-ID: <20161201160511.ahlibszokg547wxk@rob-hp-laptop>
-References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
- <1480183585-592-40-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 4/5] regulator: Add support for TI TWL6032
+Date: Thu, 1 Dec 2016 10:10:00 -0600
+Message-ID: <20161201161000.3g3eqi2xuch62lwy@rob-hp-laptop>
+References: <20161126181326.14951-1-Nicolae_Rosia@mentor.com>
+ <20161126181326.14951-5-Nicolae_Rosia@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1480183585-592-40-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <20161126181326.14951-5-Nicolae_Rosia@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>
+To: Nicolae Rosia <Nicolae_Rosia@mentor.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Graeme Gregory <gg@slimlogic.co.uk>, Baruch Siach <baruch@tkos.co.il>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 27, 2016 at 03:06:25AM +0900, Masahiro Yamada wrote:
-> Add two compatible strings for UniPhier SoCs.  The revision register
-> on both shows revision 5.0, but they are different hardware.
+On Sat, Nov 26, 2016 at 08:13:25PM +0200, Nicolae Rosia wrote:
+> The TWL6032 PMIC is similar to TWL6030, has different
+> output names, and regulator control logic.
+> It is used on Barnes & Noble Nook HD and HD+.
 > 
-> Features:
->  - DMA engine with 64 bit physical address support
->  - 1024 byte ECC step size
->  - 8 / 16 / 24 bit ECC strength
->  - The n_banks format depends on SoC
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Nicolae Rosia <Nicolae_Rosia@mentor.com>
 > ---
+>  .../bindings/regulator/twl6032-regulator.txt       | 109 ++++
+>  drivers/regulator/Kconfig                          |   7 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/twl6032-regulator.c              | 582 +++++++++++++++++++++
+>  4 files changed, 699 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/twl6032-regulator.txt
+>  create mode 100644 drivers/regulator/twl6032-regulator.c
 > 
->  .../devicetree/bindings/mtd/denali-nand.txt        | 10 +++++--
->  drivers/mtd/nand/denali_dt.c                       | 33 ++++++++++++++++++++--
->  2 files changed, 38 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> index 51fe195..cea46e2 100644
-> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-> @@ -1,13 +1,19 @@
->  * Denali NAND controller
->  
->  Required properties:
-> -  - compatible : should be "denali,denali-nand-dt"
-> +  - compatible : should be one of the following:
-> +      "denali,denali-nand-dt"
+> diff --git a/Documentation/devicetree/bindings/regulator/twl6032-regulator.txt b/Documentation/devicetree/bindings/regulator/twl6032-regulator.txt
+> new file mode 100644
+> index 0000000..323f5a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/twl6032-regulator.txt
+> @@ -0,0 +1,109 @@
+> +TWL6032 PMIC Voltage Regulator Bindings
+> +
+> +The parent node must be MFD TWL Core, ti,twl6032.
+> +
+> +Required properties:
+> +- compatible: "ti,twl6032"
+> +
+> +Optional properties:
+> +- regulators node containing regulator childs.
 
-There are multiple things wrong with this string. denali,denali is 
-redundant is one. It's also fairly useless as this IP has several 
-versions and numerous configuration options IIRC. This should be 
-deprecated IMO.
+s/childs/children/
 
-> +      "denali,denali-nand-uniphier-v5a"
-> +      "denali,denali-nand-uniphier-v5b"
+regulators node is not a property.
 
-Use your vendor prefix, not denali. The 2nd denali can probably be 
-dropped because it is not likely you have another kind of nand 
-controller in the SoC.
+> +
+> +The child regulators  must be named after their hardware
 
->    - reg : should contain registers location and length for data and reg.
->    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
->    - interrupts : The interrupt number.
->  
->  Optional properties:
-> -  - nand-ecc-step-size: must be 512 or 1024.  If not specified, default to 512.
-> +  - nand-ecc-step-size: must be 512 or 1024.  If not specified, default to:
-> +      512  for "denali,denali-nand-dt"
-> +      1024 for "denali,denali-nand-uniphier-v5a"
-> +      1024 for "denali,denali-nand-uniphier-v5b"
->      see nand.txt for details.
->    - nand-ecc-strength: see nand.txt for details
->    - nand-ecc-maximize: see nand.txt for details
+extra space             ^
+
+> +counterparts: LDO[1-6], LDOLN, LDOUSB and VANA.
+> +
+> +Each regulator is defined using the standard binding
+> +for regulators as described in ./regulator.txt
+> +
+> +Example:
+> +twl {
+> +	compatible = "ti,twl6032";
+> +
+> +	[...]
+> +
+> +	pmic {
+> +		compatible = "ti,twl6032-regulator";
+
+Not documented.
+
+> +
+> +		regulators {
+
+Do you really need pmic node and regulators node?
+
+> +			ldo1: LDO1 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <2500000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo2: LDO2 {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo3: LDO3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo4: LDO4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo5: LDO5 {
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <3000000>;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo6: LDO6 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			ldo7: LDO7 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			ldoln: LDOLN {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +
+> +			ldousb: LDOUSB {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +			};
+> +
+> +			vana: VANA {
+> +				regulator-min-microvolt = <2100000>;
+> +				regulator-max-microvolt = <2100000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	[...]
+> +};
