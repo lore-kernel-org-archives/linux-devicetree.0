@@ -1,131 +1,65 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v2 i2c/for-next] i2c: rcar: Add per-Generation
- fallback bindings
-Date: Thu, 1 Dec 2016 17:29:18 +0100
-Message-ID: <20161201162917.GB2389@verge.net.au>
-References: <1480606863-4418-1-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdXr5stBRDtD0AE=1Af3PUiA=e5pP_X1onfbfO5ri=fPrw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXr5stBRDtD0AE=1Af3PUiA=e5pP_X1onfbfO5ri=fPrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [PATCH v4 0/3] Altera Cyclone Passive Serial SPI FPGA Manager
+Date: Thu,  1 Dec 2016 09:04:49 -0800
+Message-ID: <cover.1480551148.git.stillcompiling@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 01, 2016 at 04:55:13PM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Thu, Dec 1, 2016 at 4:41 PM, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > In the case of Renesas R-Car hardware we know that there are generations of
-> > SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
-> > relationship between IP blocks might be. For example, I believe that
-> > r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
-> > descendant of the former or vice versa.
-> >
-> > We can, however, by examining the documentation and behaviour of the
-> > hardware at run-time observe that the current driver implementation appears
-> > to be compatible with the IP blocks on SoCs within a given generation.
-> >
-> > For the above reasons and convenience when enabling new SoCs a
-> > per-generation fallback compatibility string scheme being adopted for
-> > drivers for Renesas SoCs.
-> >
-> > Also deprecate renesas,i2c-rcar. It seems poorly named as it is only
-> > compatible with R-Car Gen 1. It also appears unused in mainline.
-> >
-> > Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> > ---
-> > Include accidently omitted i2c-rcar.c portion of patch
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 32 ++++++++++++++--------
-> >  drivers/i2c/busses/i2c-rcar.c                      |  5 +++-
-> >  2 files changed, 24 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > index 239632a0d709..8c679b17c4c6 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > @@ -1,17 +1,25 @@
-> >  I2C for R-Car platforms
-> >
-> >  Required properties:
-> > -- compatible: Must be one of
-> > -       "renesas,i2c-rcar"
-> > -       "renesas,i2c-r8a7778"
-> > -       "renesas,i2c-r8a7779"
-> > -       "renesas,i2c-r8a7790"
-> > -       "renesas,i2c-r8a7791"
-> > -       "renesas,i2c-r8a7792"
-> > -       "renesas,i2c-r8a7793"
-> > -       "renesas,i2c-r8a7794"
-> > -       "renesas,i2c-r8a7795"
-> > -       "renesas,i2c-r8a7796"
-> > +- compatible:
-> > +       "renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
-> > +       "renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
-> > +       "renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-> > +       "renesas,i2c-r8a7791" if the device is a part of a R8A7791 SoC.
-> > +       "renesas,i2c-r8a7792" if the device is a part of a R8A7792 SoC.
-> > +       "renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
-> > +       "renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
-> > +       "renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
-> > +       "renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
-> > +       "renesas,i2c-rcar-gen1" for a generic R-Car Gen1 compatible device.
-> > +       "renesas,i2c-rcar-gen2" for a generic R-Car Gen2 compatible device.
-> > +       "renesas,i2c-rcar-gen3" for a generic R-Car Gen3 compatible device.
-> 
-> "renesas,rcar-gen1-i2c" etc.
-> 
-> > +       "renesas,i2c-rcar" (deprecated)
-> > +
-> > +       When compatible with the generic version, nodes must list the
-> > +       SoC-specific version corresponding to the platform first followed
-> > +       by the generic version.
-> > +
-> >  - reg: physical base address of the controller and length of memory mapped
-> >    region.
-> >  - interrupts: interrupt specifier.
-> > @@ -33,7 +41,7 @@ Examples :
-> >  i2c0: i2c@e6508000 {
-> >         #address-cells = <1>;
-> >         #size-cells = <0>;
-> > -       compatible = "renesas,i2c-r8a7791";
-> > +       compatible = "renesas,i2c-r8a7791", "renesas,i2c-rcar-gen2";
-> 
-> "renesas,rcar-gen2-i2c"
-> 
-> >         reg = <0 0xe6508000 0 0x40>;
-> >         interrupts = <0 287 IRQ_TYPE_LEVEL_HIGH>;
-> >         clocks = <&mstp9_clks R8A7791_CLK_I2C0>;
-> > diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-> > index 726615e54f2a..622def6b43e2 100644
-> > --- a/drivers/i2c/busses/i2c-rcar.c
-> > +++ b/drivers/i2c/busses/i2c-rcar.c
-> > @@ -793,7 +793,6 @@ static const struct i2c_algorithm rcar_i2c_algo = {
-> >  };
-> >
-> >  static const struct of_device_id rcar_i2c_dt_ids[] = {
-> > -       { .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },
-> >         { .compatible = "renesas,i2c-r8a7778", .data = (void *)I2C_RCAR_GEN1 },
-> >         { .compatible = "renesas,i2c-r8a7779", .data = (void *)I2C_RCAR_GEN1 },
-> >         { .compatible = "renesas,i2c-r8a7790", .data = (void *)I2C_RCAR_GEN2 },
-> > @@ -803,6 +802,10 @@ static const struct of_device_id rcar_i2c_dt_ids[] = {
-> >         { .compatible = "renesas,i2c-r8a7794", .data = (void *)I2C_RCAR_GEN2 },
-> >         { .compatible = "renesas,i2c-r8a7795", .data = (void *)I2C_RCAR_GEN3 },
-> >         { .compatible = "renesas,i2c-r8a7796", .data = (void *)I2C_RCAR_GEN3 },
-> > +       { .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },    // Deprecated
-> > +       { .compatible = "renesas,rcar-gen1-i2c", .data = (void *)I2C_RCAR_GEN1 },
-> > +       { .compatible = "renesas,rcar-gen2-i2c", .data = (void *)I2C_RCAR_GEN2 },
-> > +       { .compatible = "renesas,rcar-gen3-i2c", .data = (void *)I2C_RCAR_GEN3 },
-> 
-> The driver does it right ;-)
+This series adds an FPGA manager for Altera cyclone FPGAs
+that can program them using an spi port and a couple of gpios, using
+Alteras passive serial protocol.
 
-Sorry, I switched things around at some point but it looks
-like I only did half the job.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v3:
+- Fixed up the state() function to return the state of the status pin
+  reqested by Alan Tull
+- Switched the pin to ACTIVE_LOW and coresponding logic level, and updated
+  the corresponding documentation. Thanks Rob Herring for pointing out my
+  mistake.
+- Per Rob Herring, switched from "gpio" to "gpios" in dts
+
+Changes from v2:
+- Merged patch 3 and 4 as suggested in review by Moritz Fischer
+- Changed FPGA_MIN_DELAY from 250 to 50 ms is the time advertized by
+  Altera. This now works, as we don't assume it is done
+
+Changes from v1:
+- Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
+  This name change was requested by Alan Tull, to be specific about which
+  programming method is being employed on the fpga.
+- Changed the name of the reset-gpio to config-gpio to closer match the
+  way the pins are described in the Altera manual
+- Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
+
+- Added a bitrev8x4() function to the bitrev headers and implemented ARM
+ const, runtime, and ARM specific faster versions (This may end up
+ needing to be a standalone patch)
+
+- Moved the bitswapping into cyclonespi_write(), as requested.
+  This falls short of my desired generic lsb first spi support, but is a step
+  in that direction.
+
+- Fixed whitespace problems introduced during refactoring
+
+- Replaced magic number for initial delay with a descriptive macro
+- Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
+
+Joshua Clayton (3):
+  lib: add bitrev8x4()
+  doc: dt: add cyclone-spi binding document
+  fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
+
+ .../bindings/fpga/cyclone-ps-spi-fpga-mgr.txt      |  25 +++
+ arch/arm/include/asm/bitrev.h                      |   5 +
+ drivers/fpga/Kconfig                               |   7 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/cyclone-ps-spi.c                      | 181 +++++++++++++++++++++
+ include/linux/bitrev.h                             |  26 +++
+ 6 files changed, 245 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/cyclone-ps-spi-fpga-mgr.txt
+ create mode 100644 drivers/fpga/cyclone-ps-spi.c
+
+-- 
+2.9.3
