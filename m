@@ -1,81 +1,87 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] can: rcar_canfd: Correct order of interrupt specifiers
-Date: Thu, 1 Dec 2016 14:24:33 +0100
-Message-ID: <81027038-8cf6-716b-c0a8-dc2343b93d70@pengutronix.de>
-References: <1479908686-14028-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 1/5] mmc: dt-bindings: add ZTE ZX296718 MMC bindings
+Date: Thu, 1 Dec 2016 07:45:44 -0600
+Message-ID: <CAL_JsqJy7Vm51uH=PbzdPeviysxpZxfK_PNA9RUakuMgqL9H+A@mail.gmail.com>
+References: <1479450555-19047-1-git-send-email-jun.nie@linaro.org>
+ <1479450555-19047-2-git-send-email-jun.nie@linaro.org> <CABymUCOvpQv7D2fi7EhWUZb_B8iwvQQ7-uW0gPrSdsFabMcPbA@mail.gmail.com>
+ <CABymUCPRuNnMmJ9W6YRD3rG8hdMay2QxNAUXkNK2YXBLR7Q9VA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="ILdBRDmh1GxT8KQ9N1ABKJ2M7ANNK1dVn"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1479908686-14028-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CABymUCPRuNnMmJ9W6YRD3rG8hdMay2QxNAUXkNK2YXBLR7Q9VA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jun Nie <jun.nie@linaro.org>
+Cc: Shawn Guo <shawn.guo@linaro.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Jason Liu <jason.liu@linaro.org>, chen.chaokai@zte.com.cn, lai.binz@zte.com.cn, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ILdBRDmh1GxT8KQ9N1ABKJ2M7ANNK1dVn
-Content-Type: multipart/mixed; boundary="jIfpoabaDQFDq77gFrl9p8TCsUqDHRbVP";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>,
- Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
- Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>,
- Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Message-ID: <81027038-8cf6-716b-c0a8-dc2343b93d70-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] can: rcar_canfd: Correct order of interrupt specifiers
-References: <1479908686-14028-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-In-Reply-To: <1479908686-14028-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+On Wed, Nov 30, 2016 at 7:34 PM, Jun Nie <jun.nie@linaro.org> wrote:
+> 2016-11-24 10:17 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
+>> 2016-11-18 14:29 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
+>>> Document the device-tree binding of ZTE MMC host on
+>>> ZX296718 SoC.
+>>>
+>>> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+>>> ---
+>>>  .../devicetree/bindings/mmc/zx-dw-mshc.txt         | 35 ++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>>> new file mode 100644
+>>> index 0000000..c175c4b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+>>> @@ -0,0 +1,35 @@
+>>> +* ZTE specific extensions to the Synopsys Designware Mobile Storage
+>>> +  Host Controller
+>>> +
+>>> +The Synopsys designware mobile storage host controller is used to interface
+>>> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+>>> +differences between the core Synopsys dw mshc controller properties described
+>>> +by synopsys-dw-mshc.txt and the properties used by the ZTE specific
+>>> +extensions to the Synopsys Designware Mobile Storage Host Controller.
+>>> +
+>>> +Required Properties:
+>>> +
+>>> +* compatible: should be
+>>> +       - "zte,zx296718-dw-mshc": for ZX SoCs
+>>> +
+>>> +Example:
+>>> +
+>>> +       mmc1: mmc@1110000 {
+>>> +               compatible = "zte,zx296718-dw-mshc";
+>>> +               #address-cells = <1>;
+>>> +               #size-cells = <0>;
+>>> +               reg = <0x01110000 0x1000>;
+>>> +               interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>>> +               fifo-depth = <32>;
+>>> +               data-addr = <0x200>;
+>>> +               fifo-watermark-aligned;
+>>> +               bus-width = <4>;
+>>> +               clock-frequency = <50000000>;
+>>> +               clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
+>>> +               clock-names = "biu", "ciu";
+>>> +               num-slots = <1>;
+>>> +               max-frequency = <50000000>;
+>>> +               cap-sdio-irq;
+>>> +               cap-sd-highspeed;
+>>> +               status = "disabled";
+>>> +       };
+>>> --
+>>> 1.9.1
+>>>
+>>
+>> Hi Rob & Mark,
+>>
+>> Could you help review and act this patch if you think it is OK? Thank you!
+>>
+>> Jun
+>
+> Hi Rob & Mark,
+>
+> Could you help comment or act on this patch? Thank you!
 
---jIfpoabaDQFDq77gFrl9p8TCsUqDHRbVP
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Resend the patch to the DT list so patchwork will pick it up if you
+want it reviewed.
 
-On 11/23/2016 02:44 PM, Geert Uytterhoeven wrote:
-> According to both DTS (example and actual files), and Linux driver code=
-,
-> the first interrupt specifier should be the Channel interrupt, while th=
-e
-> second interrupt specifier should be the Global interrupt.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
-Added to can-next.
-
-Thanks,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---jIfpoabaDQFDq77gFrl9p8TCsUqDHRbVP--
-
---ILdBRDmh1GxT8KQ9N1ABKJ2M7ANNK1dVn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEES2FAuYbJvAGobdVQPTuqJaypJWoFAlhAJJEACgkQPTuqJayp
-JWrYhAf8DV4nJQ7xTYC23sjccBNoEXGkESvlq6ZQw4/CT2bvPKFGniwL2ezkY1TK
-cwnK6IKavZtN0IgZS61e5ktX+ORniSP9Hq1h1swlnqlNb5BgmQc059v/rNPkzCdh
-YClEScIHtVoC399/cAa1xX51GGAlt7sm5Z4UoRBj7/iruBzYFKIjGZ2OfMXmhoTE
-kFS+uGfsPseqIwaQ1+fPyflAcYm+ahJlhh4c5Gpni5HLcSM5ZmLtXEQskmvuEi2D
-rRQs5vMUOrZLHv74gcqOAYhsBrGvv+6P56rmW1ui9wbDeO4GqQ04Vi78VjilD6ov
-svniJeMlNCQWoLYPl67fbgBexpOftQ==
-=iPGA
------END PGP SIGNATURE-----
-
---ILdBRDmh1GxT8KQ9N1ABKJ2M7ANNK1dVn--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
