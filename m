@@ -1,117 +1,143 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v4 2/9] doc: DT: venus: binding document for Qualcomm video driver
-Date: Thu,  1 Dec 2016 11:03:14 +0200
-Message-ID: <1480583001-32236-3-git-send-email-stanimir.varbanov@linaro.org>
-References: <1480583001-32236-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480583001-32236-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add DT bindings info for FlexRM mailbox driver
+Date: Thu, 1 Dec 2016 14:41:54 +0530
+Message-ID: <CAALAos-nyo2tYnDKHpMHcz9MVi5YANuPwf3D=PC0ZjvUzHe_9g@mail.gmail.com>
+References: <1480048551-3285-1-git-send-email-anup.patel@broadcom.com>
+ <1480048551-3285-3-git-send-email-anup.patel@broadcom.com> <20161130213854.jmjwcis2zid6busv@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161130213854.jmjwcis2zid6busv@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod KUMAR <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for Venus video encoder/decoder driver
+On Thu, Dec 1, 2016 at 3:08 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Nov 25, 2016 at 10:05:51AM +0530, Anup Patel wrote:
+>> This patch adds device tree bindings document for the FlexRM
+>> mailbox driver.
+>
+> Bindings document h/w, not drivers.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
-Rob, I have removed vmem clocks, interrupts and reg properties
-for vmem thing. Probably I will come with a separate platform
-driver fro that and pass the video memory DT node as phandle.
+OK, I will rephrase this.
 
- .../devicetree/bindings/media/qcom,venus.txt       | 82 ++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+>
+>>
+>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../bindings/mailbox/brcm,flexrm-mbox.txt          | 60 ++++++++++++++++++++++
+>>  1 file changed, 60 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
+>> new file mode 100644
+>> index 0000000..7969b1c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/brcm,flexrm-mbox.txt
+>> @@ -0,0 +1,60 @@
+>> +Broadcom FlexRM Mailbox Driver
+>
+> h/w
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-new file mode 100644
-index 000000000000..a64b4ea1ebba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -0,0 +1,82 @@
-+* Qualcomm Venus video encode/decode accelerator
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain one of:
-+		- "qcom,msm8916-venus"
-+		- "qcom,msm8996-venus"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property.
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain following entries:
-+		- "base"	Venus register base
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Should contain interrupts as listed in the interrupt-names
-+		    property.
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain following entries:
-+		- "venus"	Venus interrupt line
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "subcore0"		Subcore0 video accelerator clock
-+		- "subcore1"		Subcore1 video accelerator clock
-+		- "mmssnoc_axi"		Multimedia subsystem NOC AXI clock
-+		- "mmss_mmagic_iface"	Multimedia subsystem MMAGIC AHB clock
-+		- "mmss_mmagic_mbus"	Multimedia subsystem MMAGIC MAXI clock
-+		- "mmagic_video_bus"	MMAGIC video AXI clock
-+		- "video_mbus"		Video MAXI clock
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- rproc:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle to remote processor responsible for
-+		    firmware loading and processor booting.
-+
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
-+* An Example
-+	video-codec@1d00000 {
-+		compatible = "qcom,msm8916-venus";
-+		reg = <0x01d00000 0xff000>;
-+		reg-names = "base";
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "venus";
-+		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+			 <&gcc GCC_VENUS0_AHB_CLK>,
-+			 <&gcc GCC_VENUS0_AXI_CLK>;
-+		clock-names = "core", "iface", "bus";
-+		power-domains = <&gcc VENUS_GDSC>;
-+		rproc = <&venus_rproc>;
-+		iommus = <&apps_iommu 5>;
-+	};
--- 
-2.7.4
+OK, I will rephrase this.
+
+>
+>> +===============================
+>> +The Broadcom FlexRM ring manager provides a set of rings which can be
+>> +used to submit work to offload engines. An SoC may have multiple FlexRM
+>> +hardware blocks. There is one device tree entry per block. The FlexRM
+>> +mailbox drivers creates a mailbox instance using FlexRM rings where
+>> +each mailbox channel is a separate FlexRM ring.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- compatible:        Should be "brcm,flexrm-mbox"
+>
+> Sounds generic. Add SoC specific compatible strings please.
+
+OK, will do.
+
+>
+>> +- reg:               Specifies base physical address and size of the FlexRM
+>> +             ring registers
+>> +- msi-parent:        Phandles (and potential Device IDs) to MSI controllers
+>> +             The FlexRM engine will send MSIs (instead of wired
+>> +             interrupts) to CPU. There is one MSI for each FlexRM ring.
+>
+> One ring is one h/w block, right? How many instances is not really
+> relevant.
+
+No, FlexRM is the HW block. One instance of FlexRM provides a set of
+rings (typically 32 or more).
+
+There are lot other registers in FlexRM apart from ring registers. Out of
+these, only ring registers are accessible to non-secured world (i.e. Linux)
+whereas all other registers are only accessible to secure-world firmware
+(typically ATF).
+
+>
+>> +             Refer devicetree/bindings/interrupt-controller/msi.txt
+>> +- #mbox-cells:       Specifies the number of cells needed to encode a mailbox
+>> +             channel. This should be 3.
+>> +
+>> +             The 1st cell is the mailbox channel number.
+>> +
+>> +             The 2nd cell contains MSI completion threshold. This is the
+>> +             number of completion messages for which FlexRM will inject
+>> +             one MSI interrupt to CPU.
+>> +
+>> +             The 3nd cell contains MSI timer value representing time for
+>> +             which FlexRM will wait to accumulate N completion messages
+>> +             where N is the value specified by 2nd cell above. If FlexRM
+>> +             does not get required number of completion messages in time
+>> +             specified by this cell then it will inject one MSI interrupt
+>> +             to CPU provided atleast one completion message is available.
+>> +
+>> +Optional properties:
+>> +--------------------
+>> +- dma-coherent:      Present if DMA operations made by the FlexRM engine (such
+>> +             as DMA descriptor access, access to buffers pointed by DMA
+>> +             descriptors and read/write pointer updates to DDR) are
+>> +             cache coherent with the CPU.
+>> +
+>> +Example:
+>> +--------
+>> +crypto_mbox: mbox@67000000 {
+>> +     compatible = "brcm,flexrm-mbox";
+>> +     reg = <0x67000000 0x200000>;
+>> +     msi-parent = <&gic_its 0x7f00>;
+>> +     #mbox-cells = <3>;
+>> +};
+>> +
+>> +crypto_client {
+>
+> Is this a h/w block or purely a driver on top of the mailbox? The latter
+> doesn't belong in DT.
+
+The FlexRM is one HW block. It provides ring-based programming
+interface to various offload engines which are separate HW blocks.
+
+The driver for FlexRM is implemented as mailbox controller driver
+while the offload engine drivers will be mailbox clients.
+
+>
+>> +     ...
+>> +     mboxes = <&crypto_mbox 0 0x1 0xffff>,
+>> +              <&crypto_mbox 1 0x1 0xffff>,
+>> +              <&crypto_mbox 16 0x1 0xffff>,
+>> +              <&crypto_mbox 17 0x1 0xffff>,
+>> +              <&crypto_mbox 30 0x1 0xffff>,
+>> +              <&crypto_mbox 31 0x1 0xffff>;
+>> +     };
+>> +     ...
+>> +};
+
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
