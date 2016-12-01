@@ -1,103 +1,105 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v7 0/8] drm: sun8i: Add DE2 HDMI video support
-Date: Thu, 01 Dec 2016 11:19:56 +0200
-Message-ID: <2084988.kISO4Quil7@avalon>
-References: <cover.1480414715.git.moinejf@free.fr> <2039137.LtCOH6bs2I@avalon> <20161201091313.th7nucjmvtuolqza@lukather>
-Reply-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Thu, 1 Dec 2016 10:21:50 +0100
+Message-ID: <20161201092150.rlo5skxd6elovlgq@lukather>
+References: <20161122170616.29557-1-manu@bidouilliste.com>
+ <20161124195517.qrq7briu3pwjnp4n@lukather>
+ <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
+ <20161125152047.oadxi2xbgm4kdd7q@lukather>
+ <20161125220752.c989c85e01ed202be0485c78@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDKM3GOS4YHBBLGW77AQKGQENTKFXTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20161201091313.th7nucjmvtuolqza@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3x2sjuqj3u62trdt"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161125220752.c989c85e01ed202be0485c78@bidouilliste.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On Thursday 01 Dec 2016 10:13:13 Maxime Ripard wrote:
-> On Wed, Nov 30, 2016 at 12:12:55PM +0200, Laurent Pinchart wrote:
-> >> More, it is not sure that the bridge/DW code would work with Allwinner's
-> >> SoCs.
-> > 
-> > If it doesn't work and can't be made to work in a non-invasive way they it
-> > should certainly not be used :-)
-> 
-> Even if the register layout is completely scrambled, as long as the
-> bits themselves aren't (and by comparing the two drivers it looks like
-> they haven't changed), you can easily deal with that using the
-> regmap_fields, with the two implementations (the original one and the
-> scrambled one) providing their register map that way, and the driver
-> code using whatever has been provided.
+--3x2sjuqj3u62trdt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looking at https://linux-sunxi.org/DWC_HDMI_Controller#DWC_HDMI_Controller it 
-seems that an address remapping function could be used.
+Hi Emmanuel,
 
-> >> Eventually, I went the same way as omap/hdmi5: different driver.
-> > 
-> > I might try to fix that for OMAP5 at some point, we'll see.
-> 
-> For complex drivers that have already a driver written and a lot of
-> testing that already happened, I don't think duplication is a smart
-> move.
-> 
-> >>>   - And finally the fact that we can't have several display engine in
-> >>>     parallel, if needs be. This has happened in the past already on
-> >>>     Allwinner SoCs, so it's definitely something we should consider in
-> >>>     the DT bindings, since we can't break them.
-> >> 
-> >> IIRC, I proposed my driver before yours, and the DE2 is completely
-> >> different from the other display engines.
-> >> What you are telling is "add more code to already complex code and have
-> >> a big driver for all SoCs in each kernels".
-> >> I think it should be better to have small modules, each one treating
-> >> specific hardware, and to let only the needed code in the kernel memory
-> >> at startup time.
-> >> 
-> >>> Until those are fixed, I cannot see how this driver can be merged,
-> >>> unfortunately.
-> >> 
-> >> No problem. I just wanted to help people by giving the job I did on the
-> >> boards I have. My boards are working for almost one year, fine enough
-> >> for I use them as daily desktop computers. I don't want to spend one
-> >> more year for having my code in the Linux kernel: there are so much
-> >> other exciting things to do...
-> > 
-> > And you're certainly welcome to contribute drivers to the kernel, that's
-> > always appreciated. Of course, to ensure a reasonable level of quality and
-> > consistency between drivers, the review process often requires changes to
-> > be made to the code being submitted. When it comes to drivers I mostly
-> > pay attention to DT bindings, userspace APIs and modification to common
-> > code. Driver code itself, as long as it's reasonably clean and doesn't
-> > impede development of other drivers or impact system security in an
-> > adverse way, is still important but maybe slightly less so. I'll defer to
-> > Maxime to come to an agreement on the multiple display engines in
-> > parallel problem as I'm not familiar with it for the Allwinner platforms.
-> 
-> The earlier Allwinner SoCs (with the old display engine), we had some
-> SoCs with multiple instances of the display engine and TCON (the
-> display engine roughly implementing the planes, the TCON the
-> CRTC. Roughly.). However, those were sharing some encoders (HDMI,
-> DSI) after that.
-> 
-> So we need to have a single DRM device taking care of the multiple
-> display engines, which essentialy means that we have to decouple the
-> DRM device from the display engine. This was done in the earlier
-> designs using an additional node with a list of phandles to the
-> display engines in the system, and obviously, I'd prefer to have some
-> consistency and reuse the same thing.
-> 
-> But the current approach doesn't work and will require some DT
-> modifications if that case happens again, which we can't do because of
-> the DT ABI.
+On Fri, Nov 25, 2016 at 10:07:52PM +0100, Emmanuel Vadot wrote:
+> On Fri, 25 Nov 2016 16:20:47 +0100
+> Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+>=20
+> > On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
+> > > On Thu, 24 Nov 2016 20:55:17 +0100
+> > > Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
+> > >=20
+> > > > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
+> > > > > The spi0 controller on the A20 have up to 4 CS (Chip Select) whil=
+e the
+> > > > > others three only have 1.
+> > > > > Add the num-cs property to each node.
+> > > > >=20
+> > > > > Signed-off-by: Emmanuel Vadot <manu@bidouilliste.com>
+> > > >=20
+> > > > I don't think we have any code that uses it at the moment. What is =
+the
+> > > > rationale behind this patch?
+> > > >=20
+> > > > Thanks!
+> > > > Maxime
+> > > >=20
+> > > > --=20
+> > > > Maxime Ripard, Free Electrons
+> > > > Embedded Linux and Kernel engineering
+> > > > http://free-electrons.com
+> > >=20
+> > >  Hi Maxime,
+> > >=20
+> > >  If num-cs isn't present nothing prevent to start a transfer with a
+> > > non-valid CS pin, resulting in an error.
+> > >  num-cs are default property especially made for this and a SPI driver
+> > > should try to get the property at probe/attach time.
+> >=20
+> > Yes, but as far as I know, our driver doesn't. I'm all in for having
+> > support for that in our driver, but without it, that patch is kind of
+> > useless.
+>=20
+>  Yes the Linux driver doesn't use it but my upcoming one for FreeBSD
+> uses it. So it is not useless for downstream user of DTS.
 
--- 
-Regards,
+Ah, I didn't know this was for FreeBSD. So you started to use our DTs,
+or do you have some modifications to it? How does that work?
 
-Laurent Pinchart
+Anyway, the fact that it isn't used by our driver at the moment and
+that it's meant for other OSes should be mentionned in the commit log.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--3x2sjuqj3u62trdt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYP+uqAAoJEBx+YmzsjxAgVBkP/0YNqIQtgrXBSoaXAjJij8BC
+VJ4q6yvwNdD8W7Otv8UM7FgYmoI3uUWrJkcK1m8IvQmkWdPMLPWaZVvIojFauaWI
+4+FRTT5zeCEHXUvDP7RFcmNmDIDqmrOo+X3LR5QcqUaVgx+xqBfv077SCBabLX2Z
+9IOxzT8CgptN6Zxnn/zc+MG2RGaodiUiHen37CBdnGDMSdSA5DQba5JiaIUAKShG
+lLAWmmg1//iv2zVB/q4Pq8Z5LcZT8fm7dvkniVMTG92VCgX6L1jSYLYL2YrbzT/k
+ZIGauNC81Lj7WzeegHSdqDTAqf+OOdweQnUL/+xmOivmC70GqRUkJ8sUgGB6s99p
+zxQog8QzQ3FE2wexDOvO27vfSbq3CCCANlw0Hn+Wo8ZFGCj0hj9q6YpHySJC34rE
+M8AB2MVARQuH3fHR0DrVLA3sVIDPQSLlaYIAasMyTEypVOvXmTn0b6KhDYy4OA8F
+5pLZl9xUgbDhrIo2iLhfGXGkGAjnYxI8gbSI8xQBkg2akj5o530x8uswl614r4DU
+F2t9Tjq6EuUi9SM0G/Gro0Pj0efToDjWSRiSyQnpdqs62R59CUmjUSeCwciBLQz7
+ySJidbvPYmnE5ZY3v0rDeLW3hsj5KY1ue0qV80szUpH3oJtAITTPQttDUvNgsX6S
+M7jxlBD7PWgATol5B+1z
+=V8Xl
+-----END PGP SIGNATURE-----
+
+--3x2sjuqj3u62trdt--
