@@ -1,50 +1,95 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: juno: Correct PCI IO window
-Date: Thu, 1 Dec 2016 09:58:19 +0000
-Message-ID: <97ea1f58-00e9-c436-e9a5-7830aa7dbe6c@arm.com>
-References: <1480452310-29286-1-git-send-email-jeremy.linton@arm.com>
- <92ac8013-b88e-2f74-9a49-7d5f38a4e7a5@arm.com> <7823573.FNB8ayVOnQ@wuerfel>
+From: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add num-cs for A20 spi nodes
+Date: Thu, 1 Dec 2016 11:24:14 +0100
+Message-ID: <20161201112414.62f9b351186115f62c8998a9@bidouilliste.com>
+References: <20161122170616.29557-1-manu@bidouilliste.com>
+        <20161124195517.qrq7briu3pwjnp4n@lukather>
+        <20161124210509.be743aae84c26c6c2e666c6e@bidouilliste.com>
+        <20161125152047.oadxi2xbgm4kdd7q@lukather>
+        <20161125220752.c989c85e01ed202be0485c78@bidouilliste.com>
+        <20161201092150.rlo5skxd6elovlgq@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7823573.FNB8ayVOnQ@wuerfel>
+In-Reply-To: <20161201092150.rlo5skxd6elovlgq@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+ Hi Maxime,
 
-On 30/11/16 22:51, Arnd Bergmann wrote:
-> On Wednesday, November 30, 2016 4:29:35 PM CET Sudeep Holla wrote:
->> Hi Jeremy,
->>
->> On 29/11/16 20:45, Jeremy Linton wrote:
->>> The PCIe root complex on Juno translates the MMIO mapped
->>> at 0x5f800000 to the PIO address range starting at 0
->>> (which is common because PIO addresses are generally < 64k).
->>> Correct the DT to reflect this.
->>>
->>
->> I have another DT fix that I have asked ARM-SoC guys to pick up directly
->> from the list. If that doesn't happen, I will send PR including both.
->>
->> If that happens then we need to send this to them to be picked directly.
->> At this point I want to wait for couple of days to avoid confusion.
->
-> I ended up taking the other one for v4.10, but this one seems more
-> important so I applied it for v4.9.
->
-> Let me know if you disagree with the priorities, as I plan to send out
-> the last 4.9 fixes pull request to Linus tomorrow.
->
+On Thu, 1 Dec 2016 10:21:50 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-No that's fine.
+> Hi Emmanuel,
+> 
+> On Fri, Nov 25, 2016 at 10:07:52PM +0100, Emmanuel Vadot wrote:
+> > On Fri, 25 Nov 2016 16:20:47 +0100
+> > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > 
+> > > On Thu, Nov 24, 2016 at 09:05:09PM +0100, Emmanuel Vadot wrote:
+> > > > On Thu, 24 Nov 2016 20:55:17 +0100
+> > > > Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > > 
+> > > > > On Tue, Nov 22, 2016 at 06:06:16PM +0100, Emmanuel Vadot wrote:
+> > > > > > The spi0 controller on the A20 have up to 4 CS (Chip Select) while the
+> > > > > > others three only have 1.
+> > > > > > Add the num-cs property to each node.
+> > > > > > 
+> > > > > > Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+> > > > > 
+> > > > > I don't think we have any code that uses it at the moment. What is the
+> > > > > rationale behind this patch?
+> > > > > 
+> > > > > Thanks!
+> > > > > Maxime
+> > > > > 
+> > > > > -- 
+> > > > > Maxime Ripard, Free Electrons
+> > > > > Embedded Linux and Kernel engineering
+> > > > > http://free-electrons.com
+> > > > 
+> > > >  Hi Maxime,
+> > > > 
+> > > >  If num-cs isn't present nothing prevent to start a transfer with a
+> > > > non-valid CS pin, resulting in an error.
+> > > >  num-cs are default property especially made for this and a SPI driver
+> > > > should try to get the property at probe/attach time.
+> > > 
+> > > Yes, but as far as I know, our driver doesn't. I'm all in for having
+> > > support for that in our driver, but without it, that patch is kind of
+> > > useless.
+> > 
+> >  Yes the Linux driver doesn't use it but my upcoming one for FreeBSD
+> > uses it. So it is not useless for downstream user of DTS.
+> 
+> Ah, I didn't know this was for FreeBSD. So you started to use our DTs,
+> or do you have some modifications to it? How does that work?
+
+ Yes we use the DTS from linux from quite some times now. We're
+currently synced with 4.7-ish.
+ We either use them directly or modify them according to our needs and
+driver support.
+
+> Anyway, the fact that it isn't used by our driver at the moment and
+> that it's meant for other OSes should be mentionned in the commit log.
+
+ Yeah I understand, I'll send a v2 with this in the commit log.
+
+> Thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
 
 -- 
-Regards,
-Sudeep
+Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
