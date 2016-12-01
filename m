@@ -1,72 +1,31 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V6 06/10] PM / OPP: Add infrastructure to manage multiple
- regulators
-Date: Thu, 1 Dec 2016 16:29:29 +0530
-Message-ID: <20161201105929.GC7682@vireshk-i7>
-References: <cover.1480481312.git.viresh.kumar@linaro.org>
- <3b3ce1dac198fb668b97e81490bcbcf03d31e40d.1480481312.git.viresh.kumar@linaro.org>
- <20161130223712.GM6095@codeaurora.org>
- <20161201005149.GQ3288@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161201005149.GQ3288@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, d-gerlach-l0cyMroinI0@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Romain Perier <romain.perier@free-electrons.com>
+Subject: [PATCH v7 0/4] Add basic support for the I2C units of the Armada 3700
+Date: Thu,  1 Dec 2016 12:04:36 +0100
+Message-ID: <20161201110440.27530-1-romain.perier@free-electrons.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yahuda Yitschak <yehuday@marvell.com>, Hanna Hawa <hannah@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw>
 List-Id: devicetree@vger.kernel.org
 
-On 01-12-16, 06:21, Viresh Kumar wrote:
-> On 30-11-16, 14:37, Stephen Boyd wrote:
-> > > +static bool opp_debug_create_supplies(struct dev_pm_opp *opp,
-> > > +				      struct opp_table *opp_table,
-> > > +				      struct dentry *pdentry)
-> > > +{
-> > > +	struct dentry *d;
-> > > +	int i = 0;
-> > > +	char *name;
-> > > +
-> > > +	/* Always create at least supply-0 directory */
-> > > +	do {
-> > > +		name = kasprintf(GFP_KERNEL, "supply-%d", i);
-> > 
-> > Sorry I haven't noticed this before. Wouldn't we want to put the
-> > supply name here instead of a number?
-> 
-> The OPP core provides a way for platforms to use the set-OPP
-> functionality, but that is not compulsory for its user. Which makes it
-> very much possible that the OPP core wouldn't know the names of the
-> supplies at all. And so I used the numbers here. Anyway, the numbers
-> matches the order in which they are passed from DT, so that should be
-> readable.
-> 
-> Here is the new rebased version of the patch. I will send the complete
-> series again later on. Please see if it looks fine.
-> 
-> -------------------------8<-------------------------
-> 
-> From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Tue, 4 Oct 2016 17:07:28 +0530
-> Subject: [PATCH] PM / OPP: Add infrastructure to manage multiple regulators
-> 
-> This patch adds infrastructure to manage multiple regulators and updates
-> the only user (cpufreq-dt) of dev_pm_opp_set{put}_regulator().
-> 
-> This is preparatory work for adding full support for devices with
-> multiple regulators.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Tested-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+This series add basic support for the I2C bus interface units present
+in the Armada 3700 to the pxa-i2c driver. It also add the definitions of
+the device nodes to the devicetree at the SoC level and for its official
+development board: the Armada 3720 DB.
 
-Ignore this one now. I have resent the series again after resolving
-all the pending issues. Please review that.
+Romain Perier (4):
+  i2c: pxa: Add definition of fast and high speed modes via the regs
+    layout
+  i2c: pxa: Add support for the I2C units found in Armada 3700
+  arm64: dts: marvell: Add I2C definitions for the Armada 3700
+  dt-bindings: i2c: pxa: Update the documentation for the Armada 3700
 
-Thanks.
+ Documentation/devicetree/bindings/i2c/i2c-pxa.txt |  1 +
+ arch/arm64/boot/dts/marvell/armada-3720-db.dts    |  4 ++++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi      | 18 ++++++++++++++++
+ drivers/i2c/busses/Kconfig                        |  2 +-
+ drivers/i2c/busses/i2c-pxa.c                      | 26 +++++++++++++++++++++--
+ 5 files changed, 48 insertions(+), 3 deletions(-)
 
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
