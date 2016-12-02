@@ -1,100 +1,45 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v2] arm64: dts: zx: support cpu-freq for zx296718
-Date: Fri,  2 Dec 2016 13:52:36 +0800
-Message-ID: <1480657956-8140-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, jun.nie@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2] arm64: dts: zx: support cpu-freq for zx296718
+Date: Fri, 2 Dec 2016 11:30:00 +0530
+Message-ID: <20161202060000.GE7682@vireshk-i7>
+References: <1480657956-8140-1-git-send-email-baoyou.xie@linaro.org>
+ <CA+DQWkzGOzn1TRa9041Jjksj-=509XWXS_U1uaaJXNydB8Apow@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CA+DQWkzGOzn1TRa9041Jjksj-=509XWXS_U1uaaJXNydB8Apow@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, "xie.baoyou" <xie.baoyou@zte.com.cn>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the CPU clock phandle in CPU's node
-and uses operating-points-v2 to register operating points.
+On 02-12-16, 13:58, Baoyou Xie wrote:
+> + Viresh, the author of the bindings.
+> 
+> On 2 December 2016 at 13:52, Baoyou Xie <baoyou.xie@linaro.org> wrote:
+> 
+> > This patch adds the CPU clock phandle in CPU's node
+> > and uses operating-points-v2 to register operating points.
+> >
+> > So it can be used by cpufreq-dt driver.
+> >
+> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/zte/zx296718.dtsi | 39 ++++++++++++++++++++++++++++++
+> > +++++
+> >  1 file changed, 39 insertions(+)
 
-So it can be used by cpufreq-dt driver.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- arch/arm64/boot/dts/zte/zx296718.dtsi | 39 +++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-index 7a1aed7..b44d1d1 100644
---- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-+++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/zx296718-clock.h>
- 
- / {
- 	compatible = "zte,zx296718";
-@@ -81,6 +82,8 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&topcrm A53_GATE>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -88,6 +91,8 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			clocks = <&topcrm A53_GATE>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -95,6 +100,8 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			clocks = <&topcrm A53_GATE>;
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -102,6 +109,38 @@
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			clocks = <&topcrm A53_GATE>;
-+			operating-points-v2 = <&cluster0_opp>;
-+		};
-+	};
-+
-+	cluster0_opp: opp-table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			clock-latency-ns = <500000>;
-+		};
-+
-+		opp@648000000 {
-+			opp-hz = /bits/ 64 <648000000>;
-+			clock-latency-ns = <500000>;
-+		};
-+
-+		opp@800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			clock-latency-ns = <500000>;
-+		};
-+
-+		opp@1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			clock-latency-ns = <500000>;
-+		};
-+
-+		opp@1188000000 {
-+			opp-hz = /bits/ 64 <1188000000>;
-+			clock-latency-ns = <500000>;
- 		};
- 	};
- 
 -- 
-2.7.4
+viresh
