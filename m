@@ -1,278 +1,120 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/7] MFD: add stm32 general purpose timer driver
-Date: Fri, 2 Dec 2016 14:29:31 +0000
-Message-ID: <20161202142931.GP2683@dell>
-References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
- <1480673842-20804-3-git-send-email-benjamin.gaignard@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480673842-20804-3-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v4 i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
+Date: Fri,  2 Dec 2016 15:25:36 +0100
+Message-ID: <1480688736-7175-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
+In the case of Renesas R-Car hardware we know that there are generations of
+SoCs, e.g. Gen 2 and Gen 3. But beyond that it's not clear what the
+relationship between IP blocks might be. For example, I believe that
+r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
+descendant of the former or vice versa.
 
-> This hardware block could at used at same time for PWM generation
-> and IIO timer for other IPs like DAC, ADC or other timers.
-> PWM and IIO timer configuration are mixed in the same registers
-> so we need a multi fonction driver to be able to share those registers.
-> 
-> version 2:
-> - rename driver "stm32-gptimer" to be align with SoC documentation
-> - only keep one compatible
-> - use of_platform_populate() instead of devm_mfd_add_devices()
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/mfd/Kconfig               | 10 ++++++
->  drivers/mfd/Makefile              |  2 ++
->  drivers/mfd/stm32-gptimer.c       | 73 +++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/stm32-gptimer.h | 62 +++++++++++++++++++++++++++++++++
->  4 files changed, 147 insertions(+)
->  create mode 100644 drivers/mfd/stm32-gptimer.c
->  create mode 100644 include/linux/mfd/stm32-gptimer.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index c6df644..e75abcb 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1607,6 +1607,15 @@ config MFD_STW481X
->  	  in various ST Microelectronics and ST-Ericsson embedded
->  	  Nomadik series.
->  
-> +config MFD_STM32_GP_TIMER
-> +	tristate "Support for STM32 General Purpose Timer"
-> +	select MFD_CORE
-> +	select REGMAP
-> +	depends on ARCH_STM32
-> +	depends on OF
+We can, however, by examining the documentation and behaviour of the
+hardware at run-time observe that the current driver implementation appears
+to be compatible with the IP blocks on SoCs within a given generation.
 
-"|| COMPILE_TEST"?
+For the above reasons and convenience when enabling new SoCs a
+per-generation fallback compatibility string scheme is being adopted for
+drivers for Renesas SoCs.
 
-> +	help
-> +	  Select this option to enable stm32 general purpose timer
+Also:
+* Deprecate renesas,i2c-rcar. It seems poorly named as it is only
+  compatible with R-Car Gen 1. It also appears unused in mainline.
+* Add some text to describe per-SoC bindings
 
-I can see that.  Tell us more about the device and what it does.
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v4
+* Correct grammar in changelog
 
-s/stm32/STM32/
+v3
+* Consistently use renesas,<family>-<module> for new compat strings
+* Drop RFC designation
 
->  menu "Multimedia Capabilities Port drivers"
->  	depends on ARCH_SA1100
->  
-> @@ -1644,4 +1653,5 @@ config MFD_VEXPRESS_SYSREG
->  	  on the ARM Ltd. Versatile Express board.
->  
->  endmenu
-> +
+v2
+* Include accidently omitted i2c-rcar.c portion of patch
+---
+ Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 32 ++++++++++++++--------
+ drivers/i2c/busses/i2c-rcar.c                      |  5 +++-
+ 2 files changed, 24 insertions(+), 13 deletions(-)
 
-Please remove this change.  It has nothing to do with the set.
-
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9834e66..86353b9 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -211,3 +211,5 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
->  
->  obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
-> +
-> +obj-$(CONFIG_MFD_STM32_GP_TIMER) 	+= stm32-gptimer.o
-> diff --git a/drivers/mfd/stm32-gptimer.c b/drivers/mfd/stm32-gptimer.c
-> new file mode 100644
-> index 0000000..54fb95c
-> --- /dev/null
-> +++ b/drivers/mfd/stm32-gptimer.c
-> @@ -0,0 +1,73 @@
-> +/*
-> + * stm32-gptimer.c
-
-Swap this out for a description.
-
-> + * Copyright (C) STMicroelectronics 2016
-
-'\n'
-
-> + * Author: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/reset.h>
-> +
-> +#include <linux/mfd/stm32-gptimer.h>
-> +
-> +static const struct regmap_config stm32_gptimer_regmap_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = sizeof(u32),
-> +	.max_register = 0x400,
-> +	.fast_io = true,
-> +};
-> +
-> +static int stm32_gptimer_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct stm32_gptimer_dev *mfd;
-
-s/mfd/ddata/
-
-> +	struct resource *res;
-> +	void __iomem *mmio;
-> +
-> +	mfd = devm_kzalloc(dev, sizeof(*mfd), GFP_KERNEL);
-> +	if (!mfd)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-
-Remove this 3 lines.
-
-devm_ioremap_resource() does the checking and error printing for you.
-
-> +	mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(mmio))
-> +		return PTR_ERR(mmio);
-> +
-> +	mfd->regmap = devm_regmap_init_mmio_clk(dev, "clk_int", mmio,
-> +						&stm32_gptimer_regmap_cfg);
-> +	if (IS_ERR(mfd->regmap))
-> +		return PTR_ERR(mfd->regmap);
-> +
-> +	mfd->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(mfd->clk))
-> +		return PTR_ERR(mfd->clk);
-> +
-> +	platform_set_drvdata(pdev, mfd);
-> +
-> +	return of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +}
-> +
-> +static const struct of_device_id stm32_gptimer_of_match[] = {
-> +	{
-> +		.compatible = "st,stm32-gptimer",
-> +	},
-
-One line:
-
-    { .compatible = "st,stm32-gptimer" },
-
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_gptimer_of_match);
-> +
-> +static struct platform_driver stm32_gptimer_driver = {
-> +	.probe		= stm32_gptimer_probe,
-> +	.driver	= {
-> +		.name	= "stm32-gptimer",
-> +		.of_match_table = stm32_gptimer_of_match,
-> +	},
-
-Remove tabs before the '='s.
-
-> +module_platform_driver(stm32_gptimer_driver);
-> +
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 general purpose timer");
-
-"General Purpose Timer"
-
-> +MODULE_LICENSE("GPL");
-
-
-"GPL v2"
-> diff --git a/include/linux/mfd/stm32-gptimer.h b/include/linux/mfd/stm32-gptimer.h
-> new file mode 100644
-> index 0000000..f8c92de
-> --- /dev/null
-> +++ b/include/linux/mfd/stm32-gptimer.h
-> @@ -0,0 +1,62 @@
-> +/*
-> + * stm32-gptimer.h
-> + *
-> + * Copyright (C) STMicroelectronics 2016
-> + * Author: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-
-Same comments as before.
-
-> +#ifndef _LINUX_STM32_GPTIMER_H_
-> +#define _LINUX_STM32_GPTIMER_H_
-> +
-> +#include <linux/clk.h>
-> +#include <linux/regmap.h>
-> +
-> +#define TIM_CR1		0x00	/* Control Register 1      */
-> +#define TIM_CR2		0x04	/* Control Register 2      */
-> +#define TIM_SMCR	0x08	/* Slave mode control reg  */
-> +#define TIM_DIER	0x0C	/* DMA/interrupt register  */
-> +#define TIM_SR		0x10	/* Status register	   */
-> +#define TIM_EGR		0x14	/* Event Generation Reg    */
-> +#define TIM_CCMR1	0x18	/* Capt/Comp 1 Mode Reg    */
-> +#define TIM_CCMR2	0x1C	/* Capt/Comp 2 Mode Reg    */
-> +#define TIM_CCER	0x20	/* Capt/Comp Enable Reg    */
-> +#define TIM_PSC		0x28	/* Prescaler               */
-> +#define TIM_ARR		0x2c	/* Auto-Reload Register    */
-> +#define TIM_CCR1	0x34	/* Capt/Comp Register 1    */
-> +#define TIM_CCR2	0x38	/* Capt/Comp Register 2    */
-> +#define TIM_CCR3	0x3C	/* Capt/Comp Register 3    */
-> +#define TIM_CCR4	0x40	/* Capt/Comp Register 4    */
-> +#define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
-> +
-> +#define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
-> +#define TIM_CR1_ARPE	BIT(7)	/* Auto-reload Preload Ena */
-> +#define TIM_CR2_MMS	(BIT(4) | BIT(5) | BIT(6)) /* Master mode selection */
-> +#define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
-> +#define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
-> +#define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
-> +#define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
-> +#define TIM_EGR_UG	BIT(0)	/* Update Generation       */
-> +#define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
-> +#define TIM_CCMR_M1	(BIT(6) | BIT(5))  /* Channel PWM Mode 1 */
-> +#define TIM_CCER_CC1E	BIT(0)	/* Capt/Comp 1  out Ena    */
-> +#define TIM_CCER_CC1P	BIT(1)	/* Capt/Comp 1  Polarity   */
-> +#define TIM_CCER_CC1NE	BIT(2)	/* Capt/Comp 1N out Ena    */
-> +#define TIM_CCER_CC1NP	BIT(3)	/* Capt/Comp 1N Polarity   */
-> +#define TIM_CCER_CCXE	(BIT(0) | BIT(4) | BIT(8) | BIT(12))
-> +#define TIM_BDTR_BKE	BIT(12) /* Break input enable	   */
-> +#define TIM_BDTR_BKP	BIT(13) /* Break input polarity	   */
-> +#define TIM_BDTR_AOE	BIT(14)	/* Automatic Output Enable */
-> +#define TIM_BDTR_MOE	BIT(15)	/* Main Output Enable      */
-> +
-> +#define MAX_TIM_PSC		0xFFFF
-> +
-> +struct stm32_gptimer_dev {
-
-Drop the "_dev" or replace with ddata.
-
-> +	/* Device data */
-
-No need for this.
-> +	struct clk *clk;
-> +
-> +	/* Registers mapping */
-
-No need for this.
-
-> +	struct regmap *regmap;
-> +};
-> +
-> +#endif
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+index 239632a0d709..50c378ccb8e7 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+@@ -1,17 +1,25 @@
+ I2C for R-Car platforms
+ 
+ Required properties:
+-- compatible: Must be one of
+-	"renesas,i2c-rcar"
+-	"renesas,i2c-r8a7778"
+-	"renesas,i2c-r8a7779"
+-	"renesas,i2c-r8a7790"
+-	"renesas,i2c-r8a7791"
+-	"renesas,i2c-r8a7792"
+-	"renesas,i2c-r8a7793"
+-	"renesas,i2c-r8a7794"
+-	"renesas,i2c-r8a7795"
+-	"renesas,i2c-r8a7796"
++- compatible:
++	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
++	"renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
++	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
++	"renesas,i2c-r8a7791" if the device is a part of a R8A7791 SoC.
++	"renesas,i2c-r8a7792" if the device is a part of a R8A7792 SoC.
++	"renesas,i2c-r8a7793" if the device is a part of a R8A7793 SoC.
++	"renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
++	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
++	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
++	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
++	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 compatible device.
++	"renesas,rcar-gen3-i2c" for a generic R-Car Gen3 compatible device.
++	"renesas,i2c-rcar" (deprecated)
++
++	When compatible with the generic version, nodes must list the
++	SoC-specific version corresponding to the platform first followed
++	by the generic version.
++
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: interrupt specifier.
+@@ -33,7 +41,7 @@ Examples :
+ i2c0: i2c@e6508000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+-	compatible = "renesas,i2c-r8a7791";
++	compatible = "renesas,i2c-r8a7791", "renesas,rcar-gen2-i2c";
+ 	reg = <0 0xe6508000 0 0x40>;
+ 	interrupts = <0 287 IRQ_TYPE_LEVEL_HIGH>;
+ 	clocks = <&mstp9_clks R8A7791_CLK_I2C0>;
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 726615e54f2a..622def6b43e2 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -793,7 +793,6 @@ static const struct i2c_algorithm rcar_i2c_algo = {
+ };
+ 
+ static const struct of_device_id rcar_i2c_dt_ids[] = {
+-	{ .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },
+ 	{ .compatible = "renesas,i2c-r8a7778", .data = (void *)I2C_RCAR_GEN1 },
+ 	{ .compatible = "renesas,i2c-r8a7779", .data = (void *)I2C_RCAR_GEN1 },
+ 	{ .compatible = "renesas,i2c-r8a7790", .data = (void *)I2C_RCAR_GEN2 },
+@@ -803,6 +802,10 @@ static const struct of_device_id rcar_i2c_dt_ids[] = {
+ 	{ .compatible = "renesas,i2c-r8a7794", .data = (void *)I2C_RCAR_GEN2 },
+ 	{ .compatible = "renesas,i2c-r8a7795", .data = (void *)I2C_RCAR_GEN3 },
+ 	{ .compatible = "renesas,i2c-r8a7796", .data = (void *)I2C_RCAR_GEN3 },
++	{ .compatible = "renesas,i2c-rcar", .data = (void *)I2C_RCAR_GEN1 },	// Deprecated
++	{ .compatible = "renesas,rcar-gen1-i2c", .data = (void *)I2C_RCAR_GEN1 },
++	{ .compatible = "renesas,rcar-gen2-i2c", .data = (void *)I2C_RCAR_GEN2 },
++	{ .compatible = "renesas,rcar-gen3-i2c", .data = (void *)I2C_RCAR_GEN3 },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, rcar_i2c_dt_ids);
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.0.rc3.207.g0ac5344
