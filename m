@@ -1,42 +1,36 @@
 From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH 02/11] driver: clocksource: add gpt timer for imx6sll
-Date: Fri, 2 Dec 2016 14:39:25 +0800
-Message-ID: <1480660774-25055-3-git-send-email-ping.bai@nxp.com>
+Subject: [PATCH 11/11] ARM: configs: enable imx6sll support in defconfig
+Date: Fri, 2 Dec 2016 14:39:34 +0800
+Message-ID: <1480660774-25055-12-git-send-email-ping.bai@nxp.com>
 References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-clk-owner@vger.kernel.org
 To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, daniel.lezcano@linaro.org, linux-gpio@vger.kernel.org, p.zabel@pengutronix.de, fabio.estevam@nxp.com, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, p.zabel@pengutronix.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add gpt timer support for i.MX6SLL.
+Enable i.MX6SLL in imx_v6_v7_defconfig.
 
 Signed-off-by: Bai Ping <ping.bai@nxp.com>
 ---
- drivers/clocksource/timer-imx-gpt.c | 1 +
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clocksource/timer-imx-gpt.c b/drivers/clocksource/timer-imx-gpt.c
-index f595460..f71822d 100644
---- a/drivers/clocksource/timer-imx-gpt.c
-+++ b/drivers/clocksource/timer-imx-gpt.c
-@@ -556,4 +556,5 @@ static int __init imx6dl_timer_init_dt(struct device_node *np)
- CLOCKSOURCE_OF_DECLARE(imx6q_timer, "fsl,imx6q-gpt", imx31_timer_init_dt);
- CLOCKSOURCE_OF_DECLARE(imx6dl_timer, "fsl,imx6dl-gpt", imx6dl_timer_init_dt);
- CLOCKSOURCE_OF_DECLARE(imx6sl_timer, "fsl,imx6sl-gpt", imx6dl_timer_init_dt);
-+CLOCKSOURCE_OF_DECLARE(imx6sll_timer, "fsl,imx6sll-gpt", imx6dl_timer_init_dt);
- CLOCKSOURCE_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index cbe7faf..ab8afb3 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -38,6 +38,7 @@ CONFIG_SOC_IMX51=y
+ CONFIG_SOC_IMX53=y
+ CONFIG_SOC_IMX6Q=y
+ CONFIG_SOC_IMX6SL=y
++CONFIG_SOC_IMX6SLL=y
+ CONFIG_SOC_IMX6SX=y
+ CONFIG_SOC_IMX6UL=y
+ CONFIG_SOC_IMX7D=y
 -- 
 1.9.1
+
