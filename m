@@ -1,116 +1,86 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support to
- clockdomains
-Date: Fri, 02 Dec 2016 14:33:41 -0800
-Message-ID: <148071802182.32158.11479184984645880313@resonance>
-References: <1476805568-19264-1-git-send-email-t-kristo@ti.com>
- <1476805568-19264-12-git-send-email-t-kristo@ti.com>
- <20161028005047.GQ26139@codeaurora.org>
- <cd32a554-ba0a-33cd-c15c-121524ce679b@ti.com>
- <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
- <20161028233617.GP16026@codeaurora.org>
- <20161028235448.57squdf6cu2wxxvm@atomide.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] HID: i2c-hid: support regulator power on/off
+Date: Fri, 2 Dec 2016 15:00:13 -0800
+Message-ID: <20161202230013.GA18268@dtor-ws>
+References: <1480717140-14558-1-git-send-email-briannorris@chromium.org>
+ <1480717140-14558-2-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20161028235448.57squdf6cu2wxxvm@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1480717140-14558-2-git-send-email-briannorris@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tony Lindgren (2016-10-28 16:54:48)
-> * Stephen Boyd <sboyd@codeaurora.org> [161028 16:37]:
-> > On 10/28, Tony Lindgren wrote:
-> > > * Tero Kristo <t-kristo@ti.com> [161028 00:43]:
-> > > > On 28/10/16 03:50, Stephen Boyd wrote:
-> > > > > I suppose a PRCM is
-> > > > > like an MFD that has clocks and resets under it? On other
-> > > > > platforms we've combined that all into one node and just had
-> > > > > #clock-cells and #reset-cells in that node. Is there any reason
-> > > > > we can't do that here?
-> > > > =
+On Fri, Dec 02, 2016 at 02:19:00PM -0800, Brian Norris wrote:
+> On some boards, we need to enable a regulator before using the HID, and
+> it's also nice to save power in suspend by disabling it. Support an
+> optional "vdd-supply" and a companion initialization delay.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: linux-input@vger.kernel.org
+> ---
+> v2:
+>  * support compatible property for wacom, with specific "vdd-supply"
+>  * name
+>  * support the 100ms delay needed for this digitizer
+>  * target regulator support only at specific device
+> 
+> v3:
+>  * drop Wacom specifics and allow this to be used generically
+>  * add "init-delay-ms" property support
+> 
+> v4:
+>  * use devm_regulator_get() (with a 'dummy' regulator for most cases)
+>    instead of _optional() version, to make code less conditional (Dmitry)
+>  * fix but where 'init_delay_ms' wasn't getting assigned properly
+>  * disable regulator in probe() failure path
+> ---
+>  drivers/hid/i2c-hid/i2c-hid.c | 44 +++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/i2c/i2c-hid.h   |  6 ++++++
+>  2 files changed, 48 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
+> index b3ec4f2de875..5c6e037613d7 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/of.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #include <linux/i2c/i2c-hid.h>
+>  
+> @@ -937,6 +938,10 @@ static int i2c_hid_of_probe(struct i2c_client *client,
+>  	}
+>  	pdata->hid_descriptor_address = val;
+>  
+> +	ret = of_property_read_u32(dev->of_node, "init-delay-ms", &val);
+> +	if (!ret)
+> +		pdata->init_delay_ms = val;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -983,6 +988,15 @@ static int i2c_hid_probe(struct i2c_client *client,
+>  		ihid->pdata = *platform_data;
+>  	}
+>  
+> +	ihid->pdata.supply = devm_regulator_get(&client->dev, "vdd");
 
-> > > > For OMAPs, there are typically multiple instances of the PRCM aroun=
-d; OMAP4
-> > > > for example has:
-> > > > =
+Oh, haveni't noticed that the rest of the driver does not use devm.
+Well, I'll leave it up to hid-i2c folks to decide if they are OK with
+mixing up the managed and non-managed resources, it seems safe to me in
+this case.
 
-> > > > cm1 @ 0x4a004000 (clocks + clockdomains)
-> > > > cm2 @ 0x4a008000 (clocks + clockdomains)
-> > > > prm @ 0x4a306000 (few clocks + resets + power state handling)
-> > > > scrm @ 0x4a30a000 (few external clocks + plenty of misc stuff)
-> > > > =
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> > > > These instances are also under different power/voltage domains whic=
-h means
-> > > > their PM behavior is different.
-> > > > =
+Thanks.
 
-> > > > The idea behind having a clockdomain as a provider was mostly to ha=
-ve the
-> > > > topology visible : prcm-instance -> clockdomain -> clocks
-> > > =
-
-> > > Yeah that's needed to get the interconnect hierarchy right for
-> > > genpd :)
-> > > =
-
-> > > > ... but basically I think it would be possible to drop the clockdom=
-ain
-> > > > representation and just mark the prcm-instance as a clock provider.=
- Tony,
-> > > > any thoughts on that?
-> > > =
-
-> > > No let's not drop the clockdomains as those will be needed when we
-> > > move things into proper hierarchy within the interconnect instances.
-> > > This will then help with getting things right with genpd.
-> > > =
-
-> > > In the long run we just want to specify clockdomain and the offset of
-> > > the clock instance within the clockdomain in the dts files.
-> > > =
-
-> > =
-
-> > Sorry, I have very little idea how OMAP hardware works. Do you
-> > mean that you will have different nodes for each clockdomain so
-> > that genpd can map 1:1 to the node in dts? But in hardware
-> > there's a prcm that allows us to control many clock domains
-> > through register read/writes? How is the interconnect involved?
-> =
-
-> There are multiple clockdomains, at least one for each interconnect
-> instance. Once a clockdomain is idle, the related interconnect can
-> idle too. So yeah genpd pretty much maps 1:1 with the clockdomains.
-> =
-
-> There's more info in for example omap4 TRM section "3.4.1 Device
-> Power-Management Layout" that shows the voltage/power/clock domains.
-> The interconnect instances are mostly named there too looking at
-> the L4/L3 naming.
-
-I'm confused on two points:
-
-1) why are the clkdm's acting as clock providers? I've always hated the
-name "clock domain" since those bits are for managing module state, not
-clock state. The PRM, CM1 and CM2 provide the clocks, not the
-clockdomains.
-
-2) why aren't the clock domains modeled as genpds with their associated
-devices attached to them? Note that it is possible to "nest" genpd
-objects. This would also allow for the "Clockdomain Dependency"
-relationships to be properly modeled (see section 3.1.1.1.7 Clock Domain
-Dependency in the OMAP4 TRM).
-
-Regards,
-Mike
-
-> =
-
-> Regards,
-> =
-
-> Tony
+-- 
+Dmitry
