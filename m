@@ -1,71 +1,54 @@
-From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Subject: Re: [PATCH 3/4] mmc: pwrseq-simple: allow inverting of off state logic
-Date: Fri, 2 Dec 2016 00:24:18 -0800
-Message-ID: <CAJ_EiSTRafJ7ODwKiCDRZK1WG3eBYmdUsB4NLQAhiGagm7Cc0g@mail.gmail.com>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
- <1480659462-29536-4-git-send-email-matt@ranostay.consulting>
- <CAPDyKFrYVL52N22JVDA3wiWLAwUhht+6-=fi9kbGA8DYu=zPiA@mail.gmail.com> <313A249C-2BB9-487E-AF75-02ADB8AE83CC@ranostay.consulting>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
+Date: Fri, 2 Dec 2016 09:42:42 +0100
+Message-ID: <CAMuHMdUhgphRaHS8ms9syFmq4V1BpYAAkLDh7Jdbsf8t+zCDMw@mail.gmail.com>
+References: <1480666227-7622-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <313A249C-2BB9-487E-AF75-02ADB8AE83CC-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1480666227-7622-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 1, 2016 at 11:28 PM, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
->
->
->
->>> On Dec 1, 2016, at 22:57, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>
->>> On 2 December 2016 at 07:17, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
->>> Some devices need a logic level low instead of high to be in the
->>> off state.
->>>
->>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->>> ---
->>> .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt         |  2 ++
->>> drivers/mmc/core/pwrseq_simple.c                          | 15 +++++++++++----
->>> 2 files changed, 13 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>> index 703a714201d8..bea306d772d1 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->>> @@ -22,6 +22,8 @@ Optional properties:
->>>        the reset-gpios (if any) are asserted
->>> - post-power-on-delay-ms : Delay in ms after powering the card and
->>>        de-asserting the reset-gpios (if any)
->>> +- invert-off-state: Invert the power down state for the reset-gpios (if any)
->>> +       and pwrdn-gpios (if any)
->>
->> We already have DT bindings to describe GPIO pins as active high or
->> low. I think we should be able to use that instead, don't you think?
->
-> Ah issue is we are using inverse logic in the power down from anything else. But I guess we could read the gpios active high and low stats from device tree and deduce it from that
->
+On Fri, Dec 2, 2016 at 9:10 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
+> In the case of Renesas R-Car hardware we know that there are generations of
+> SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
 
-BTW this quirkiness is which why me and Lindgren went the route of an
-another pwrseq driver versus hacking the pwrseq-simple initially...
+it's
 
-In any case we can change the active high or low in the gpio
-descriptors but doesn't change the timing we need or the inverse state
-for power down.
-
-Thanks,
-
-Matt
+> relationship between IP blocks might be. For example, I believe that
+> r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
+> descendant of the former or vice versa.
 >
->>
->> [...]
->>
->> Kind regards
->> Uffe
+> We can, however, by examining the documentation and behaviour of the
+> hardware at run-time observe that the current driver implementation appears
+> to be compatible with the IP blocks on SoCs within a given generation.
+>
+> For the above reasons and convenience when enabling new SoCs a
+> per-generation fallback compatibility string scheme being adopted for
+
+is being
+
+> drivers for Renesas SoCs.
+>
+> Also:
+> * Deprecate renesas,i2c-rcar. It seems poorly named as it is only
+>   compatible with R-Car Gen 1. It also appears unused in mainline.
+> * Add some text to describe per-SoC bindings
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
