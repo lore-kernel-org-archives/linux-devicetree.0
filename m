@@ -1,63 +1,33 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH pci/next] PCI: rcar: Add gen3 fallback compatibility
- string for pcie-rcar
-Date: Fri, 2 Dec 2016 10:33:19 +0100
-Message-ID: <20161202093316.GA7341@verge.net.au>
-References: <1480609693-25746-1-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdWwuQZq7FzDUtCj5gsdQra5PrSyoUk7-ycBN9pN-RYcrA@mail.gmail.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Fri, 2 Dec 2016 10:58:48 +0100
+Message-ID: <20161202095848.GA14586@localhost.localdomain>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
+ <20161130184511.GB8209@netboy>
+ <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
+ <20161130221738.GA13099@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWwuQZq7FzDUtCj5gsdQra5PrSyoUk7-ycBN9pN-RYcrA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20161130221738.GA13099@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 10:19:21AM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Thu, Dec 1, 2016 at 5:28 PM, Simon Horman <horms+renesas@verge.net.au> wrote:
-> > Add fallback compatibility string for the  R-Car Gen 3 family.  This is in
-> > keeping with the both the existing fallback compatibility string for the
-> > R-Car Gen 2 family and the fallback scheme being adopted wherever
-> > appropriate for drivers for Renesas SoCs.
-> >
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> >  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
-> >  drivers/pci/host/pcie-rcar.c                       | 2 ++
-> >  2 files changed, 3 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > index 6cf99690eef9..eee518db90b9 100644
-> > --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> > @@ -7,6 +7,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
-> >             "renesas,pcie-r8a7793" for the R8A7793 SoC;
-> >             "renesas,pcie-r8a7795" for the R8A7795 SoC;
-> >             "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
-> > +           "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
-> >
-> >             When compatible with the generic version, nodes must list the
-> >             SoC-specific version corresponding to the platform first
-> > diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-> > index 62700d1896f4..962aa3942107 100644
-> > --- a/drivers/pci/host/pcie-rcar.c
-> > +++ b/drivers/pci/host/pcie-rcar.c
-> > @@ -1077,6 +1077,8 @@ static const struct of_device_id rcar_pcie_of_match[] = {
-> >           .data = rcar_pcie_hw_init_gen2 },
-> >         { .compatible = "renesas,pcie-r8a7791",
-> >           .data = rcar_pcie_hw_init_gen2 },
-> > +       { .compatible = "renesas,pcie-rcar-gen3",
-> > +         .data = rcar_pcie_hw_init_hw_init },
-> 
-> The family-specific handling should be inserted after the SoC-specific
-> handling.
-> Currently it doesn't matter, as both are handled exactly the same, but
-> it may avoid future mistakes.
-> 
-> BTW, can you please fix that for the existing entry for Gen2, too?
+On Wed, Nov 30, 2016 at 11:17:38PM +0100, Richard Cochran wrote:
+> On Wed, Nov 30, 2016 at 02:43:57PM -0600, Grygorii Strashko wrote:
+> > Sry, but this is questionable - code for pps comes from TI internal
+> > branches (SDK releases) where it survived for a pretty long time.
 
-Sure, will do.
+Actually, there is a way to get an accurate PPS from the am335x.  See
+this recent thread:
+
+   https://www.mail-archive.com/linuxptp-devel@lists.sourceforge.net/msg01726.html
+
+That is the way to go, and so, please drop this present patch.
+
+Thanks,
+Richard
