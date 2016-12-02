@@ -1,62 +1,47 @@
-From: Matt Ranostay <matt@ranostay.consulting>
-Subject: Re: [PATCH 3/4] mmc: pwrseq-simple: allow inverting of off state logic
-Date: Thu, 1 Dec 2016 23:28:25 -0800
-Message-ID: <313A249C-2BB9-487E-AF75-02ADB8AE83CC@ranostay.consulting>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting> <1480659462-29536-4-git-send-email-matt@ranostay.consulting> <CAPDyKFrYVL52N22JVDA3wiWLAwUhht+6-=fi9kbGA8DYu=zPiA@mail.gmail.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrYVL52N22JVDA3wiWLAwUhht+6-=fi9kbGA8DYu=zPiA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] lib: add bitrev8x4()
+Date: Fri, 2 Dec 2016 08:51:57 +0100
+Message-ID: <20161202085157.1a6ec811@crub>
+References: <cover.1480551148.git.stillcompiling@gmail.com>
+        <bc92eb1507448731163ae67fc888668d327f9168.1480551148.git.stillcompiling@gmail.com>
+        <20161201234523.3bed63dc@crub>
+        <8fb2f1c2-c39c-b74f-d5c8-d6731cbd67c8@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8fb2f1c2-c39c-b74f-d5c8-d6731cbd67c8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Joshua,
 
+On Thu, 1 Dec 2016 16:04:09 -0800
+Joshua Clayton stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+...
+>>> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
+>>> +{
+>>> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));  
+>> 	return x;  
+>Oops thats a little embarrassing;
+>I'll add a return.
+>>> +}  
+>> otherwise you get
+>>
+>> In function '__arch_bitrev8x4':
+>> warning: no return statement in function returning non-void [-Wreturn-type]
+>>
+>
+>I wonder why I do not see this warning when compiling. The inlining, maybe?
 
+do you have CONFIG_HAVE_ARCH_BITREVERSE=y in your .config?
+Probably not optimized code is used, otherwise you will send wrong
+data to FPGA (due to wrong return values from __arch_bitrev8x4).
 
-
-Sent from my iPhone
-> On Dec 1, 2016, at 22:57, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->=20
->> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wro=
-te:
->> Some devices need a logic level low instead of high to be in the
->> off state.
->>=20
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Ulf Hansson <ulf.hansson@linaro.org>
->> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->> ---
->> .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt         |  2 ++
->> drivers/mmc/core/pwrseq_simple.c                          | 15 ++++++++++=
-+----
->> 2 files changed, 13 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b=
-/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> index 703a714201d8..bea306d772d1 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->> @@ -22,6 +22,8 @@ Optional properties:
->>        the reset-gpios (if any) are asserted
->> - post-power-on-delay-ms : Delay in ms after powering the card and
->>        de-asserting the reset-gpios (if any)
->> +- invert-off-state: Invert the power down state for the reset-gpios (if a=
-ny)
->> +       and pwrdn-gpios (if any)
->=20
-> We already have DT bindings to describe GPIO pins as active high or
-> low. I think we should be able to use that instead, don't you think?
-
-Ah issue is we are using inverse logic in the power down from anything else.=
- But I guess we could read the gpios active high and low stats from device t=
-ree and deduce it from that
-
->=20
-> [...]
->=20
-> Kind regards
-> Uffe
+Anatolij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
