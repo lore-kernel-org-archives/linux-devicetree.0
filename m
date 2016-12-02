@@ -1,13 +1,13 @@
 From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 4/8] ARM: dts: stm32: Add STM32 RTC support for
- STM32F429 MCU
-Date: Fri, 2 Dec 2016 15:09:57 +0100
-Message-ID: <1480687801-19525-6-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH 8/8] ARM: configs: stm32: Add STM32 RTC support in
+ STM32 defconfig
+Date: Fri, 2 Dec 2016 15:10:01 +0100
+Message-ID: <1480687801-19525-10-git-send-email-amelie.delaunay@st.com>
 References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBAABBU4CQ3BAKGQEXSNLOYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBAABBWECQ3BAKGQEU6KWUOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1480687801-19525-2-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,38 +20,26 @@ To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJ
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds STM32 RTC bindings for STM32F429.
+This patch adds STM32 RTC support in stm32_defconfig file.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/configs/stm32_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index d195ccf..d181025 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -125,6 +125,20 @@
- 			status = "disabled";
- 		};
- 
-+		rtc: rtc@40002800 {
-+			compatible = "st,stm32-rtc";
-+			reg = <0x40002800 0x400>;
-+			clocks = <&rcc 1 CLK_RTC>;
-+			clock-names = "ck_rtc";
-+			assigned-clocks = <&rcc 1 CLK_RTC>;
-+			assigned-clock-parents = <&rcc 1 CLK_LSE>;
-+			interrupt-parent = <&exti>;
-+			interrupts = <17 1>;
-+			interrupt-names = "alarm";
-+			st,syscfg = <&pwrcfg>;
-+			status = "disabled";
-+		};
-+
- 		usart2: serial@40004400 {
- 			compatible = "st,stm32-usart", "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index e7b56d4..71f9787 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -59,6 +59,8 @@ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_STM32=y
+ CONFIG_DMADEVICES=y
+ CONFIG_STM32_DMA=y
+ # CONFIG_FILE_LOCKING is not set
 -- 
 1.9.1
 
