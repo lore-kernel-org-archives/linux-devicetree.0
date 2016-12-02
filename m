@@ -1,82 +1,454 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] pinctrl: core: Use delayed work for hogs
-Date: Fri, 2 Dec 2016 14:08:30 +0100
-Message-ID: <CACRpkdZUtqEUQbz7YqtLnYWdOmW4g4q4ikRuqfCwzf5kMR5JDg@mail.gmail.com>
-References: <20161025210221.9150-1-tony@atomide.com> <20161025210221.9150-2-tony@atomide.com>
- <CACRpkdaP3_6x0GMpy_+fSok5r+5CP6RvP6dmDCtz4ayAm-TuSQ@mail.gmail.com>
- <20161111202650.GI7138@atomide.com> <20161114205243.GU7138@atomide.com>
- <20161114220824.GC4082@atomide.com> <20161115004703.GG4082@atomide.com>
- <CACRpkdZ=pifhHrH_-466f2x3Ev4GKW0CCnTj1hL5Hfpdj5p-1A@mail.gmail.com>
- <20161115154124.GI4082@atomide.com> <20161115170838.GK4082@atomide.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 7/7] ARM: dts: stm32: add stm32 general purpose timer
+ driver in DT
+Date: Fri, 2 Dec 2016 13:22:51 +0000
+Message-ID: <20161202132251.GL2683@dell>
+References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
+ <1480673842-20804-8-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20161115170838.GK4082@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <1480673842-20804-8-git-send-email-benjamin.gaignard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Nishanth Menon <nm@ti.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linus.walleij@linaro.org, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 15, 2016 at 6:08 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Tony Lindgren <tony@atomide.com> [161115 07:42]:
->> * Linus Walleij <linus.walleij@linaro.org> [161114 22:53]:
->> > On Tue, Nov 15, 2016 at 1:47 AM, Tony Lindgren <tony@atomide.com> wrote:
->> >
->> > > 8< --------------------------------
->> > > From tony Mon Sep 17 00:00:00 2001
->> > > From: Tony Lindgren <tony@atomide.com>
->> > > Date: Tue, 25 Oct 2016 08:33:35 -0700
->> > > Subject: [PATCH] pinctrl: core: Use delayed work for hogs
->> > >
->> > > Having the pin control framework call pin controller functions
->> > > before it's probe has finished is not nice as the pin controller
->> > > device driver does not yet have struct pinctrl_dev handle.
->> > >
->> > > Let's fix this issue by adding deferred work for late init. This is
->> > > needed to be able to add pinctrl generic helper functions that expect
->> > > to know struct pinctrl_dev handle. Note that we now need to call
->> > > create_pinctrl() directly as we don't want to add the pin controller
->> > > to the list of controllers until the hogs are claimed. We also need
->> > > to pass the pinctrl_dev to the device tree parser functions as they
->> > > otherwise won't find the right controller at this point.
->> > >
->> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
->> >
->> > This looks a lot better!
->> >
->> > So if I understand correctly, we can guarantee that the delayed
->> > work will not execute until the device driver probe() has finished,
->> > and it *will* execute immediately after that?
->> >
->> > So:
->> > - Device driver probes
->> > - Delayed work is called
->> > - Next initcall
->> >
->> > I'm not 100% familiar with how delayed work works... :/
->>
->> Yeah well the delayed work gets scheduled for next jiffy but may
->> be pre-empted as it runs in process context.
->>
->> So in the worst case it could that we still may need to fix few
->> drivers to support -EPROBE_DEFER. I wonder if we should check for
->> hogs in probe already and only defer if hogs are defined?
->
-> Below is a version using delayed_work only if pinctrl_dt_has_hogs().
->
-> Not sure if testing only for pinctrl-0 is enough there though?
+On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
 
-Sorry for the lack of attention to this patch set on my part. :(
+> Add general purpose timers and it sub-nodes into DT for stm32f4.
+> Define and enable pwm1 and pwm3 for stm32f469 discovery board
+> 
+> version 3:
+> - use "st,stm32-timer-trigger" in DT
+> 
+> version 2:
+> - use parameters to describe hardware capabilities
+> - do not use references for pwm and iio timer subnodes
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  arch/arm/boot/dts/stm32f429.dtsi      | 333 +++++++++++++++++++++++++++++++++-
+>  arch/arm/boot/dts/stm32f469-disco.dts |  28 +++
+>  2 files changed, 360 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index bca491d..8c50d03 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -48,7 +48,7 @@
+>  #include "skeleton.dtsi"
+>  #include "armv7-m.dtsi"
+>  #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+> -
+> +#include <dt-bindings/iio/timer/st,stm32-timer-triggers.h>
+>  / {
+>  	clocks {
+>  		clk_hse: clk-hse {
+> @@ -355,6 +355,21 @@
+>  					slew-rate = <2>;
+>  				};
+>  			};
+> +
+> +			pwm1_pins: pwm@1 {
+> +				pins {
+> +					pinmux = <STM32F429_PA8_FUNC_TIM1_CH1>,
+> +						 <STM32F429_PB13_FUNC_TIM1_CH1N>,
+> +						 <STM32F429_PB12_FUNC_TIM1_BKIN>;
+> +				};
+> +			};
+> +
+> +			pwm3_pins: pwm@3 {
+> +				pins {
+> +					pinmux = <STM32F429_PB4_FUNC_TIM3_CH1>,
+> +						 <STM32F429_PB5_FUNC_TIM3_CH2>;
+> +				};
+> +			};
+>  		};
+>  
+>  		rcc: rcc@40023810 {
+> @@ -426,6 +441,322 @@
+>  			interrupts = <80>;
+>  			clocks = <&rcc 0 38>;
+>  		};
+> +
+> +		gptimer1: gptimer1@40010000 {
 
-Do you think you could resend these last 5 patches after the
-release of v4.10-rc1 so we merge it early for the next cycle
-and people get a chance to test and see if it works well for
-everyone?
+timer@xxxxxxx
 
-I'm worried about adding it to the tree this late in the kernel
-cycle...
+Node names should be generic and not numbered.
 
-However I like the look of the series overall a lot.
+I suggest that this isn't actually a timer either.  Is contains a
+timer (and a PWM), but in it's completeness it is not a timer per
+say.
 
-Yours,
-Linus Walleij
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40010000 0x400>;
+> +			clocks = <&rcc 0 160>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm1@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				st,breakinput;
+> +				st,complementary;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer1@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <27>;
+> +				st,input-triggers-names = TIM5_TRGO,
+> +							  TIM2_TRGO,
+> +							  TIM4_TRGO,
+> +							  TIM3_TRGO;
+
+I'm still dubious with matching by strings.
+
+I'll take a look at the C code to see what the alternatives could be.
+
+> +				st,output-triggers-names = TIM1_TRGO,
+> +							   TIM1_CH1,
+> +							   TIM1_CH2,
+> +							   TIM1_CH3,
+> +							   TIM1_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer2: gptimer2@40000000 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40000000 0x400>;
+> +			clocks = <&rcc 0 128>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm2@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				st,32bits-counter;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer2@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <28>;
+> +				st,input-triggers-names = TIM1_TRGO,
+> +							  TIM8_TRGO,
+> +							  TIM3_TRGO,
+> +							  TIM4_TRGO;
+> +				st,output-triggers-names = TIM2_TRGO,
+> +							   TIM2_CH1,
+> +							   TIM2_CH2,
+> +							   TIM2_CH3,
+> +							   TIM2_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer3: gptimer3@40000400 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40000400 0x400>;
+> +			clocks = <&rcc 0 129>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm3@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer3@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <29>;
+> +				st,input-triggers-names = TIM1_TRGO,
+> +							  TIM8_TRGO,
+> +							  TIM5_TRGO,
+> +							  TIM4_TRGO;
+> +				st,output-triggers-names = TIM3_TRGO,
+> +							   TIM3_CH1,
+> +							   TIM3_CH2,
+> +							   TIM3_CH3,
+> +							   TIM3_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer4: gptimer4@40000800 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40000800 0x400>;
+> +			clocks = <&rcc 0 130>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm4@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer4@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <30>;
+> +				st,input-triggers-names = TIM1_TRGO,
+> +							  TIM2_TRGO,
+> +							  TIM3_TRGO,
+> +							  TIM8_TRGO;
+> +				st,output-triggers-names = TIM4_TRGO,
+> +							   TIM4_CH1,
+> +							   TIM4_CH2,
+> +							   TIM4_CH3,
+> +							   TIM4_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer5: gptimer5@40000C00 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40000C00 0x400>;
+> +			clocks = <&rcc 0 131>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm5@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				st,32bits-counter;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer5@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <50>;
+> +				st,input-triggers-names = TIM2_TRGO,
+> +							  TIM3_TRGO,
+> +							  TIM4_TRGO,
+> +							  TIM8_TRGO;
+> +				st,output-triggers-names = TIM5_TRGO,
+> +							   TIM5_CH1,
+> +							   TIM5_CH2,
+> +							   TIM5_CH3,
+> +							   TIM5_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer6: gptimer6@40001000 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40001000 0x400>;
+> +			clocks = <&rcc 0 132>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			timer6@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <54>;
+> +				st,output-triggers-names = TIM6_TRGO;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer7: gptimer7@40001400 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40001400 0x400>;
+> +			clocks = <&rcc 0 133>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			timer7@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <55>;
+> +				st,output-triggers-names = TIM7_TRGO;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer8: gptimer8@40010400 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40010400 0x400>;
+> +			clocks = <&rcc 0 161>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm8@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <4>;
+> +				st,complementary;
+> +				st,breakinput;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer8@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <46>;
+> +				st,input-triggers-names = TIM1_TRGO,
+> +							  TIM2_TRGO,
+> +							  TIM4_TRGO,
+> +							  TIM5_TRGO;
+> +				st,output-triggers-names = TIM8_TRGO,
+> +							   TIM8_CH1,
+> +							   TIM8_CH2,
+> +							   TIM8_CH3,
+> +							   TIM8_CH4;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer9: gptimer9@40014000 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40014000 0x400>;
+> +			clocks = <&rcc 0 176>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm9@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer9@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <24>;
+> +				st,input-triggers-names = TIM2_TRGO,
+> +							  TIM3_TRGO;
+> +				st,output-triggers-names = TIM9_TRGO,
+> +							   TIM9_CH1,
+> +							   TIM9_CH2;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer10: gptimer10@40014400 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40014400 0x400>;
+> +			clocks = <&rcc 0 177>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm10@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <1>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer11: gptimer11@40014800 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40014800 0x400>;
+> +			clocks = <&rcc 0 178>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm11@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <1>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer12: gptimer12@40001800 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40001800 0x400>;
+> +			clocks = <&rcc 0 134>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm12@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			timer12@0 {
+> +				compatible = "st,stm32-timer-trigger";
+> +				interrupts = <43>;
+> +				st,input-triggers-names = TIM4_TRGO,
+> +							  TIM5_TRGO;
+> +				st,output-triggers-names = TIM12_TRGO,
+> +							   TIM12_CH1,
+> +							   TIM12_CH2;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer13: gptimer13@40001C00 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40001C00 0x400>;
+> +			clocks = <&rcc 0 135>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm13@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <1>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gptimer14: gptimer14@40002000 {
+> +			compatible = "st,stm32-gptimer";
+> +			reg = <0x40002000 0x400>;
+> +			clocks = <&rcc 0 136>;
+> +			clock-names = "clk_int";
+> +			status = "disabled";
+> +
+> +			pwm14@0 {
+> +				compatible = "st,stm32-pwm";
+> +				st,pwm-num-chan = <1>;
+> +				status = "disabled";
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+> index 8a163d7..df4ca7e 100644
+> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+> @@ -81,3 +81,31 @@
+>  &usart3 {
+>  	status = "okay";
+>  };
+> +
+> +&gptimer1 {
+> +	status = "okay";
+> +
+> +	pwm1@0 {
+> +		pinctrl-0	= <&pwm1_pins>;
+> +		pinctrl-names	= "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer1@0 {
+> +		status = "okay";
+> +	};
+> +};
+
+This is a much *better* format than before.
+
+I still don't like the '&' syntax though.
+
+> +&gptimer3 {
+> +	status = "okay";
+> +
+> +	pwm3@0 {
+> +		pinctrl-0	= <&pwm3_pins>;
+> +		pinctrl-names	= "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer3@0 {
+> +		status = "okay";
+> +	};
+> +};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
