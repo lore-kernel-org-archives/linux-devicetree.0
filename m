@@ -1,81 +1,120 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT binding for S3C24XX
- MMC/SD/SDIO controller
-Date: Fri, 02 Dec 2016 09:48:45 +0900
-Message-ID: <054a65d8-8606-eeb0-e028-1b85dbf1c8ba@samsung.com>
-References: <1480637665-6325-1-git-send-email-sergio.prado@e-labworks.com>
- <CGME20161202001621epcas3p2fcc946ce070dfcc594e4b89729e149d7@epcas3p2.samsung.com>
- <1480637665-6325-2-git-send-email-sergio.prado@e-labworks.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
+ device tree
+Date: Thu, 1 Dec 2016 16:50:51 -0800
+Message-ID: <20161202005051.GE3703@atomide.com>
+References: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <20161201211234.GA3703@atomide.com>
+ <34435805.uoQ87SrZdl@avalon>
+ <20161201214457.GC3703@atomide.com>
+ <20161202002921.GD3703@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1480637665-6325-2-git-send-email-sergio.prado@e-labworks.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Sergio Prado <sergio.prado@e-labworks.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161202002921.GD3703-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2016 09:14 AM, Sergio Prado wrote:
-> Adds the device tree bindings description for Samsung S3C24XX
-> MMC/SD/SDIO controller, used as a connectivity interface with external
-> MMC, SD and SDIO storage mediums.
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161201 16:29]:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161201 13:45]:
+> > * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161201 13:37]:
+> > > Hi Tony,
+> > > 
+> > > On Thursday 01 Dec 2016 13:12:34 Tony Lindgren wrote:
+> > > > * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161130 09:58]:
+> > > > > The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
+> > > > > connected to port 2 of the OMAP EHCI controller. The board however has
+> > > > > no EEPROM to store the ethernet MAC address, which is programmed by the
+> > > > > boot loader.
+> > > > > 
+> > > > > To allow Linux to use the same MAC address as the boot loader (or for
+> > > > > that matter any fixed MAC address), we need a node in the device tree
+> > > > > for the ethernet controller that the boot loader can update at runtime
+> > > > > with a local-mac-address property. Add it, along with an alias for the
+> > > > > ethernet controller to let the boot loader locate it easily.
+> > > > 
+> > > > Does not seem to work here.. Do I need to set something in u-boot?
+> > > > I'm using U-Boot 2016.09-00004-g26bb688.
+> > > 
+> > > Some versions (possibly forked by vendors) might set the MAC address
+> > > automatically in DT, but in my case I have the following in my boot script:
+> > > 
+> > > tftp 0x80800000 beagle/omap3-beagle-xm.dtb
+> > > fdt addr ${fileaddr} ${filesize}
+> > > fdt resize
+> > > fdt set /ocp@68000000/usbhshost@48064000/ehci@48064800/usb2@2/usbether@1 local-mac-address "[7a d2 a0 00 d1 f0]"
+> > 
+> > OK. I just added setenv ethaddr ${usbethaddr} to my bootcmd..
 > 
-> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
-> ---
->  .../devicetree/bindings/mmc/samsung,s3cmci.txt     | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+> Here's a similar patch for omap5-uevm. Somehow u-boot does not populate the
+> local-mac-address on it though although set in the environment.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
-> new file mode 100644
-> index 000000000000..3f044076e69a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
-> @@ -0,0 +1,38 @@
-> +* Samsung's S3C24XX MMC/SD/SDIO controller device tree bindings
-> +
-> +Samsung's S3C24XX MMC/SD/SDIO controller is used as a connectivity interface
-> +with external MMC, SD and SDIO storage mediums.
-> +
-> +This file documents differences between the core mmc properties described by
-> +mmc.txt and the properties used by the Samsung S3C24XX MMC/SD/SDIO controller
-> +implementation.
-> +
-> +Required SoC Specific Properties:
-> +- compatible: should be one of the following
-> +  - "samsung,s3c2410-sdi": for controllers compatible with s3c2410
-> +  - "samsung,s3c2412-sdi": for controllers compatible with s3c2412
-> +  - "samsung,s3c2440-sdi": for controllers compatible with s3c2440
-> +- clocks: Should reference the controller clock
-> +- clock-names: Should contain "sdi"
-> +
-> +Required Board Specific Properties:
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- pinctrl-names: Should contain only one value - "default".
+> So I had to manually do the fdt set /ocp/usbhshost@4a064000/ehci@4a064c00/usbether@3
+> command.
 
-I'm not sure but i think this description doesn't need at here.
+And here's one for pandaboard. That gets configured fine if ethaddr is
+set.
 
-> +
-> +Example:
-> +	sdi: sdi@5a000000 {
+Regards,
 
-I think it needs to use "mmc0: sdi@5a000000" instead of "sdi: sdi@5a000000"
-Because mmc is more clear than sdi.
+Tony
 
-> +		compatible = "samsung,s3c2440-sdi";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdi_pins>;
-> +		reg = <0x5a000000 0x100000>;
-> +		interrupts = <0 0 21 3>;
-> +		clocks = <&clocks PCLK_SDI>;
-> +		clock-names = "sdi";
-> +		bus-width = <4>;
-> +		cd-gpios = <&gpg 8 GPIO_ACTIVE_LOW>;
-> +		wp-gpios = <&gph 8 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	Note: This example shows both SoC specific and board specific properties
-> +	in a single device node. The properties can be actually be separated
-> +	into SoC specific node and board specific node.
-> 
+8< ------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 1 Dec 2016 16:33:20 -0800
+Subject: [PATCH] ARM: dts: pandaboard: Allow bootloader to configure USB
+ Ethernet MAC
 
+Inspired by a patch for beagleboard xm by Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, similar patch also works for
+pandaboard. The only difference is that the hub is address 1 instead
+of 2.
+
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4-panda-common.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -16,6 +16,7 @@
+ 	aliases {
+ 		display0 = &dvi0;
+ 		display1 = &hdmi0;
++		ethernet = &ethernet;
+ 	};
+ 
+ 	leds: leds {
+@@ -520,6 +521,21 @@
+ 
+ &usbhsehci {
+ 	phys = <&hsusb1_phy>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	usb2@1 {
++		compatible = "usb424,9514";
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
+ };
+ 
+ &dss {
+-- 
+2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
