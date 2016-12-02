@@ -1,70 +1,45 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/5] ARM64: dts: meson-gx: move the MDIO node to meson-gx
-Date: Sat,  3 Dec 2016 00:47:35 +0100
-Message-ID: <20161202234739.22929-2-martin.blumenstingl@googlemail.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] stmmac: dwmac-meson8b: configurable RGMII TX delay
+Date: Sat, 3 Dec 2016 00:52:14 +0100
+Message-ID: <CAFBinCDHHT-eWoYmsVQyihcbrvoW=qP9MnG8hRfMfk4VRekS2w@mail.gmail.com>
+References: <20161124143417.10178-1-martin.blumenstingl@googlemail.com>
+ <20161125130156.17879-1-martin.blumenstingl@googlemail.com> <20161127.203324.1634866862730391239.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161127.203324.1634866862730391239.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-stmmac's MDIO bus is currently only defined in meson-gxl.dtsi. Move it
-up to meson-gx to allow us to keep the stmmac configuration for
-meson-gxbb similar to the configuration on meson-gxl.
+On Mon, Nov 28, 2016 at 2:33 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Date: Fri, 25 Nov 2016 14:01:49 +0100
+>
+>> Currently the dwmac-meson8b stmmac glue driver uses a hardcoded 1/4
+>> cycle TX clock delay. This seems to work fine for many boards (for
+>> example Odroid-C2 or Amlogic's reference boards) but there are some
+>> others where TX traffic is simply broken.
+>> There are probably multiple reasons why it's working on some boards
+>> while it's broken on others:
+>> - some of Amlogic's reference boards are using a Micrel PHY
+>> - hardware circuit design
+>> - maybe more...
+>
+> The ARM arch file changes do not apply cleanly to net-next, you probably
+> want to merge them via the ARM tree instead of mine, and respin this series
+> to be without the .dts file changes.
+done, v3 contains only the net-next changes while the dts changes can
+be found here: [0]
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 ++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 47ab306..a2c3ca6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -371,6 +371,12 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			status = "disabled";
-+
-+			mdio0: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "snps,dwmac-mdio";
-+			};
- 		};
- 
- 		apb: apb@d0000000 {
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 9f89b99..d338f9b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -57,12 +57,6 @@
- 		 <&clkc CLKID_FCLK_DIV2>,
- 		 <&clkc CLKID_MPLL2>;
- 	clock-names = "stmmaceth", "clkin0", "clkin1";
--
--	mdio0: mdio {
--		#address-cells = <1>;
--		#size-cells = <0>;
--		compatible = "snps,dwmac-mdio";
--	};
- };
- 
- &aobus {
--- 
-2.10.2
+Regards,
+Martin
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001836.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
