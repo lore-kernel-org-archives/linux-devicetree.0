@@ -1,7 +1,7 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 2/5] ARM: dts: imx6qdl-nitrogen6_max: remove hardcoded LVDS bus format
-Date: Fri,  2 Dec 2016 10:08:40 +0100
-Message-ID: <20161202090843.22613-3-gary.bisson@boundarydevices.com>
+Subject: [PATCH 4/5] ARM: dts: imx6qdl-nitrogen6x: remove hardcoded LVDS bus format
+Date: Fri,  2 Dec 2016 10:08:42 +0100
+Message-ID: <20161202090843.22613-5-gary.bisson@boundarydevices.com>
 References: <20161202090843.22613-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161202090843.22613-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
@@ -15,26 +15,17 @@ information.
 
 Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-index 34887a1..c43c36e 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-@@ -739,8 +739,6 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 26d0604..16b14bd 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -579,8 +579,6 @@
  	status = "okay";
  
  	lvds-channel@0 {
--		fsl,data-mapping = "spwg";
--		fsl,data-width = <18>;
- 		status = "okay";
- 
- 		port@4 {
-@@ -753,8 +751,6 @@
- 	};
- 
- 	lvds-channel@1 {
 -		fsl,data-mapping = "spwg";
 -		fsl,data-width = <18>;
  		status = "okay";
