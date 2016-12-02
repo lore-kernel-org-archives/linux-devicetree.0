@@ -1,81 +1,63 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Fri, 02 Dec 2016 23:11:27 +0100
-Message-ID: <3449091.bg2i6Oq5SM@wuerfel>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
- <5982682.vMJxVociDa@wuerfel> <1480687813.2460.19.camel@pengutronix.de>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/2] devicetree: i2c-hid: Add regulator support
+Date: Fri,  2 Dec 2016 14:18:59 -0800
+Message-ID: <1480717140-14558-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1480687813.2460.19.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: zhangfei <zhangfei.gao@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpZGF5LCBEZWNlbWJlciAyLCAyMDE2IDM6MTA6MTMgUE0gQ0VUIFBoaWxpcHAgWmFiZWwg
-d3JvdGU6Cj4gQW0gRnJlaXRhZywgZGVuIDAyLjEyLjIwMTYsIDEzOjMyICswMTAwIHNjaHJpZWIg
-QXJuZCBCZXJnbWFubjoKPiA+IE9uIEZyaWRheSwgRGVjZW1iZXIgMiwgMjAxNiA4OjIxOjMzIEFN
-IENFVCB6aGFuZ2ZlaSB3cm90ZToKPiA+ID4gT24gMjAxNuW5tDEy5pyIMDHml6UgMjA6MDUsIEFy
-bmQgQmVyZ21hbm4gd3JvdGU6Cj4gPiA+ID4gT24gVGh1cnNkYXksIERlY2VtYmVyIDEsIDIwMTYg
-ODo0ODo0MCBBTSBDRVQgWmhhbmdmZWkgR2FvIHdyb3RlOgo+ID4gPiA+PiArICAgICAgICAgICAg
-ICAgaGlzaSxyZXNldC1iaXRzID0gPDB4MjAgMHg4ICAgICAgICAgICAgIC8qIDA6IGkyYzAgKi8K
-PiA+ID4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDIwIDB4MTAgICAg
-ICAgICAgICAvKiAxOiBpMmMxICovCj4gPiA+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgMHgyMCAweDIwICAgICAgICAgICAgLyogMjogaTJjMiAqLwo+ID4gPiA+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MjAgMHg4MDAwMDAwPjsgICAgIC8qIDM6
-IGkyYzYgKi8KPiA+ID4gPj4gKyAgICAgICB9Owo+ID4gPiA+PiArCj4gPiA+ID4+ICtTcGVjaWZ5
-aW5nIHJlc2V0IGxpbmVzIGNvbm5lY3RlZCB0byBJUCBtb2R1bGVzCj4gPiA+ID4+ICs9PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPiA+ID4+ICtleGFtcGxl
-Ogo+ID4gPiA+PiArCj4gPiA+ID4+ICsgICAgICAgIGkyYzA6IGkyY0AuLi4uLiB7Cj4gPiA+ID4+
-ICsgICAgICAgICAgICAgICAgLi4uCj4gPiA+ID4+ICsgICAgICAgICAgICAgICByZXNldHMgPSA8
-JmlvbWN1X3JzdCAwPjsKPiA+ID4gPj4gKyAgICAgICAgICAgICAgICAuLi4KPiA+ID4gPj4gKyAg
-ICAgICAgfTsKPiA+ID4gPiBJIGRvbid0IHJlYWxseSBsaWtlIHRoaXMgYXBwcm9hY2gsIHNpbmNl
-IG5vdyB0aGUgaW5mb3JtYXRpb24gaXMKPiA+ID4gPiBpbiB0d28gcGxhY2VzLiBXaHkgbm90IHB1
-dCB0aGUgZGF0YSBpbnRvIHRoZSByZXNldCBzcGVjaWZpZXIKPiA+ID4gPiBkaXJlY3RseSB3aGVu
-IGl0IGlzIHVzZWQ/Cj4gCj4gRnJvbSBteSBwb2ludCBvZiB2aWV3LCB3aXRoIHRoZSBiaW5kaW5n
-IGFib3ZlLCBhbGwgcmVzZXQgY29udHJvbGxlcgo+IHJlZ2lzdGVyL2JpdCBsYXlvdXQgaW5mb3Jt
-YXRpb24gaXMgaW4gYSBzaW5nbGUgcGxhY2UgYW5kIGNhbiBiZSBlYXNpbHkKPiBjb21wYXJlZCB0
-byBhIGxpc3QgaW4gdGhlIHJlZmVyZW5jZSBtYW51YWwsIHdoZXJlYXMgd2l0aCB5b3VyIHN1Z2dl
-c3Rpb24KPiB0aGUgZGVzY3JpcHRpb24gb2YgdGhlIHJlc2V0IGNvbnRyb2xsZXIgcmVnaXN0ZXIg
-bGF5b3V0IGlzIHNwcmVhZAo+IHRocm91Z2hvdXQgb25lIG9yIGV2ZW4gc2V2ZXJhbCBkdHNpIGZp
-bGVzLgo+IEFsc28sIHNpbmNlIG5vIHR3byByZXNldCBjb250cm9sbGVycyBhcmUgZXhhY3RseSB0
-aGUgc2FtZSwgd2UgZ2V0IGEKPiBwcm9saWZlcmF0aW9uIG9mIGRpZmZlcmVudCBzbGlnaHRseSBw
-aGFuZGxlIGFyZ3VtZW50IG1lYW5pbmdzLgoKVGhlcmUgaXMgbm8gcmVhc29uIGZvciB0aGlzIHRv
-IGJlIGFueSBkaWZmZXJlbnQgZnJvbSBvdGhlciBzdWJzeXN0ZW1zCnRoYXQgYWxsIGRvIGl0IHRo
-ZSBzYW1lIHdheTogaW50ZXJydXB0cywgZ3Bpb3MsIGRtYSwgY2xrLCAuLi4gYWxsCmRlZmluZSAj
-Zm9vLWNlbGxzIHRvIGJlIHVzZWQgZm9yIGFkZHJlc3NpbmcgdW5pZm9ybSB0aGluZ3MsCmFuZCB0
-aGUgZGF0YSBpcyBvbmx5IGluIHRoZSByZWZlcmVuY2UsIHNvIHRoYXQgdGhlIG5vZGUgdGhhdApk
-ZXNjcmliZXMgdGhlIGNvbnRyb2xsZXIgbmVlZHMgbm8ga25vd2xlZGdlIG9mIHdoYXQgaXQncyBi
-ZWluZwp1c2VkIGZvci4KCk9uZSBleGNlcHRpb24gaXMgdGhlIGNhc2UgKG9mdGVuIG9uIGNsayBi
-aW5kaW5ncykgd2hlcmUgdGhlIHJlZ2lzdGVyCmxheW91dCBpcyBhbnl0aGluZyBidXQgdW5pZm9y
-bSBhbmQgZXZlcnkgaW5wdXQgbGluZSBoYXMgYSBjb21wbGV0ZWx5CmRpZmZlcmVudCBiZWhhdmlv
-ci4gRm9yIHRoYXQgY2FzZSwgd2UgZGVmaW5lIG91ciBvd24gbnVtYmVyaW5nCnN5c3RlbSBpbiB0
-aGUgZHJpdmVyIGFuZCBoYXJkY29kZSB0aG9zZSB0YWJsZXMgdGhlcmUuCgpUaGlzIHJlc2V0IGRy
-aXZlciBkb2VzIG5vdCBzZWVtIHRvIGJlbG9uZyBpbnRvIHRoYXQgY2F0ZWdvcnkgdGhvdWdoLgpF
-dmVuIGlmIGl0IGRpZCwgd2UgcHV0dGluZyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgY29udHJvbGxl
-ciBpbnRvCml0cyBvd24gbm9kZSBpcyByZWR1bmRhbnQgYXMgdGhlIGRyaXZlciBhbHJlYWR5IGlk
-ZW50aWZpZXMgdGhlCnJlZ2lzdGVyIGxheW91dCBieSB0aGUgY29tcGF0aWJsZSBzdHJpbmcuCgo+
-ID4gPiBBbnkgZXhhbXBsZSwgc3RpbGwgbm90IHVuZGVyc3RhbmQuCj4gPiA+IFRoZXkgYXJlIGNv
-bnN1bWVyIGFuZCBwcm92aWRlci4KPiA+IAo+ID4gSSBtZWFuIGluIHRoZSBpMmMgbm9kZSwgaGF2
-ZQo+ID4gCj4gPiAJaTJjMDogaTJjQC4uLi4uIHsKPiA+IAkJLi4uCj4gPiAJCXJlc2V0cyA9IDwm
-aW9tY3VfcnN0IDB4MjAgMHg4PjsKPiA+IAkJLi4uCj4gPiAJfQo+IAo+IFRoZXJlIGFscmVhZHkg
-YXJlIGEgZmV3IGRyaXZlcnMgdGhhdCB1c2UgdGhpcywgYW5kIEkgZmVhciBwZW9wbGUgaGF2aW5n
-Cj4gdG8gY2hhbmdlIHRoZWlyIGJpbmRpbmdzIGJlY2F1c2UgbmV3IGZsYWdzIGFyZSBuZWVkZWQg
-dGhhdCBoYXZlIG5vdCBiZWVuCj4gcHJldmlvdXNseSB0aG91Z2h0IG9mLgoKSXQgcmFyZWx5IGhh
-cHBlbnMgb24gb3RoZXIgc3Vic3lzdGVtcywgYW5kIHRoZSBiaW5kaW5nIGNhbgphbHdheXMgc3Bl
-Y2lmeSBkaWZmZXJlbnQgYmVoYXZpb3IgZGVwZW5kaW5nIG9uICNyZXNldC1jZWxscy4KCglBcm5k
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+Document a "vdd-supply" and an initialization delay. Can be used for
+powering on/off a HID.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+v2:
+ * add compatible property for wacom, per Rob's request
+ * name the regulator property specifically (VDD)
+
+v3:
+ * remove wacom property, per Benjamin's request
+ * add delay property
+
+v4: no change
+---
+ Documentation/devicetree/bindings/input/hid-over-i2c.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+index 488edcb264c4..1ea290167652 100644
+--- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
++++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+@@ -17,6 +17,11 @@ Required properties:
+ - interrupt-parent: the phandle for the interrupt controller
+ - interrupts: interrupt line
+ 
++Optional properties:
++- vdd-supply: phandle of the regulator that provides the supply voltage.
++- init-delay-ms: time required by the device after power-on before it is ready
++  for communication.
++
+ Example:
+ 
+ 	i2c-hid-dev@2c {
+-- 
+2.8.0.rc3.226.g39d4020
