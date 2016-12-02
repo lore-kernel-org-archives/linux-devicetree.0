@@ -1,54 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
-Date: Fri, 2 Dec 2016 09:42:42 +0100
-Message-ID: <CAMuHMdUhgphRaHS8ms9syFmq4V1BpYAAkLDh7Jdbsf8t+zCDMw@mail.gmail.com>
-References: <1480666227-7622-1-git-send-email-horms+renesas@verge.net.au>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH 1/4] bindings: net: stmmac: correct note about TSO
+Date: Fri, 2 Dec 2016 09:48:06 +0100
+Message-ID: <1bae716e-2f18-ab4d-c88d-387d526c12bc@st.com>
+References: <1479911066-19752-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1480666227-7622-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1479911066-19752-1-git-send-email-niklass@axis.com>
+Sender: netdev-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Alexandre TORGUE <alexandre.torgue@st.com>, Phil Reid <preid@electromag.com.au>, Niklas Cassel <niklass@axis.com>, Eric Engestrom <eric@engestrom.ch>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 2, 2016 at 9:10 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
-> In the case of Renesas R-Car hardware we know that there are generations of
-> SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
-
-it's
-
-> relationship between IP blocks might be. For example, I believe that
-> r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
-> descendant of the former or vice versa.
+On 11/23/2016 3:24 PM, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel@axis.com>
 >
-> We can, however, by examining the documentation and behaviour of the
-> hardware at run-time observe that the current driver implementation appears
-> to be compatible with the IP blocks on SoCs within a given generation.
+> snps,tso was previously placed under AXI BUS Mode parameters,
+> suggesting that the property should be in the stmmac-axi-config node.
 >
-> For the above reasons and convenience when enabling new SoCs a
-> per-generation fallback compatibility string scheme being adopted for
-
-is being
-
-> drivers for Renesas SoCs.
+> TSO (TCP Segmentation Offloading) has nothing to do with AXI BUS Mode
+> parameters, and the parser actually expects it to be in the root node,
+> not in the stmmac-axi-config.
 >
-> Also:
-> * Deprecate renesas,i2c-rcar. It seems poorly named as it is only
->   compatible with R-Car Gen 1. It also appears unused in mainline.
-> * Add some text to describe per-SoC bindings
+> Also added a note about snps,tso only being available on GMAC4 and newer.
 >
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  Documentation/devicetree/bindings/net/stmmac.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index 41b49e6075f5..b95ff998ba73 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -1,7 +1,7 @@
+>  * STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
+>
+>  Required properties:
+> -- compatible: Should be "snps,dwmac-<ip_version>" "snps,dwmac"
+> +- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
+>  	For backwards compatibility: "st,spear600-gmac" is also supported.
+>  - reg: Address and length of the register set for the device
+>  - interrupt-parent: Should be the phandle for the interrupt controller
+> @@ -50,6 +50,8 @@ Optional properties:
+>  - snps,ps-speed: port selection speed that can be passed to the core when
+>  		 PCS is supported. For example, this is used in case of SGMII
+>  		 and MAC2MAC connection.
+> +- snps,tso: this enables the TSO feature otherwise it will be managed by
+> +		 MAC HW capability register. Only for GMAC4 and newer.
+>  - AXI BUS Mode parameters: below the list of all the parameters to program the
+>  			   AXI register inside the DMA module:
+>  	- snps,lpi_en: enable Low Power Interface
+> @@ -62,8 +64,6 @@ Optional properties:
+>  	- snps,fb: fixed-burst
+>  	- snps,mb: mixed-burst
+>  	- snps,rb: rebuild INCRx Burst
+> -	- snps,tso: this enables the TSO feature otherwise it will be managed by
+> -	    MAC HW capability register.
+>  - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+>
+>  Examples:
+>
