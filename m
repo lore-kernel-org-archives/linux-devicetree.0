@@ -1,70 +1,81 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3 pci/next] PCI: rcar: Add gen3 fallback
- compatibility string for pcie-rcar
-Date: Fri, 2 Dec 2016 22:50:19 +0100
-Message-ID: <20161202215016.GA21497@verge.net.au>
-References: <1480675020-26346-1-git-send-email-horms+renesas@verge.net.au>
- <1480675020-26346-4-git-send-email-horms+renesas@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
+ bindings
+Date: Fri, 02 Dec 2016 23:11:27 +0100
+Message-ID: <3449091.bg2i6Oq5SM@wuerfel>
+References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
+ <5982682.vMJxVociDa@wuerfel> <1480687813.2460.19.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1480675020-26346-4-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480687813.2460.19.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: zhangfei <zhangfei.gao@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 11:37:00AM +0100, Simon Horman wrote:
-> Add fallback compatibility string for the  R-Car Gen 3 family.  This is in
-> keeping with the both the existing fallback compatibility string for the
-> R-Car Gen 2 family and the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
-> 
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> ---
-> v2
-> * Move fallback binding to below SoC specific bindings it covers
->   in implementation
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  drivers/pci/host/pcie-rcar.c                       | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 6cf99690eef9..eee518db90b9 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -7,6 +7,7 @@ compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
->  	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
->  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
-> +	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
->  
->  	    When compatible with the generic version, nodes must list the
->  	    SoC-specific version corresponding to the platform first
-> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-> index 85971bc276c6..72058bc7af5c 100644
-> --- a/drivers/pci/host/pcie-rcar.c
-> +++ b/drivers/pci/host/pcie-rcar.c
-> @@ -1078,6 +1078,8 @@ static const struct of_device_id rcar_pcie_of_match[] = {
->  	{ .compatible = "renesas,pcie-rcar-gen2",
->  	  .data = rcar_pcie_hw_init_gen2 },
->  	{ .compatible = "renesas,pcie-r8a7795", .data = rcar_pcie_hw_init },
-> +	{ .compatible = "renesas,pcie-rcar-gen3",
-> +		.data = rcar_pcie_hw_init_hw_init },
-
-It looks like I failed to compile-test this.
-
-s/rcar_pcie_hw_init_hw_init/rcar_pcie_hw_init/
-
->  	{},
->  };
->  
-> -- 
-> 2.7.0.rc3.207.g0ac5344
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpZGF5LCBEZWNlbWJlciAyLCAyMDE2IDM6MTA6MTMgUE0gQ0VUIFBoaWxpcHAgWmFiZWwg
+d3JvdGU6Cj4gQW0gRnJlaXRhZywgZGVuIDAyLjEyLjIwMTYsIDEzOjMyICswMTAwIHNjaHJpZWIg
+QXJuZCBCZXJnbWFubjoKPiA+IE9uIEZyaWRheSwgRGVjZW1iZXIgMiwgMjAxNiA4OjIxOjMzIEFN
+IENFVCB6aGFuZ2ZlaSB3cm90ZToKPiA+ID4gT24gMjAxNuW5tDEy5pyIMDHml6UgMjA6MDUsIEFy
+bmQgQmVyZ21hbm4gd3JvdGU6Cj4gPiA+ID4gT24gVGh1cnNkYXksIERlY2VtYmVyIDEsIDIwMTYg
+ODo0ODo0MCBBTSBDRVQgWmhhbmdmZWkgR2FvIHdyb3RlOgo+ID4gPiA+PiArICAgICAgICAgICAg
+ICAgaGlzaSxyZXNldC1iaXRzID0gPDB4MjAgMHg4ICAgICAgICAgICAgIC8qIDA6IGkyYzAgKi8K
+PiA+ID4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDIwIDB4MTAgICAg
+ICAgICAgICAvKiAxOiBpMmMxICovCj4gPiA+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMHgyMCAweDIwICAgICAgICAgICAgLyogMjogaTJjMiAqLwo+ID4gPiA+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MjAgMHg4MDAwMDAwPjsgICAgIC8qIDM6
+IGkyYzYgKi8KPiA+ID4gPj4gKyAgICAgICB9Owo+ID4gPiA+PiArCj4gPiA+ID4+ICtTcGVjaWZ5
+aW5nIHJlc2V0IGxpbmVzIGNvbm5lY3RlZCB0byBJUCBtb2R1bGVzCj4gPiA+ID4+ICs9PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPiA+ID4+ICtleGFtcGxl
+Ogo+ID4gPiA+PiArCj4gPiA+ID4+ICsgICAgICAgIGkyYzA6IGkyY0AuLi4uLiB7Cj4gPiA+ID4+
+ICsgICAgICAgICAgICAgICAgLi4uCj4gPiA+ID4+ICsgICAgICAgICAgICAgICByZXNldHMgPSA8
+JmlvbWN1X3JzdCAwPjsKPiA+ID4gPj4gKyAgICAgICAgICAgICAgICAuLi4KPiA+ID4gPj4gKyAg
+ICAgICAgfTsKPiA+ID4gPiBJIGRvbid0IHJlYWxseSBsaWtlIHRoaXMgYXBwcm9hY2gsIHNpbmNl
+IG5vdyB0aGUgaW5mb3JtYXRpb24gaXMKPiA+ID4gPiBpbiB0d28gcGxhY2VzLiBXaHkgbm90IHB1
+dCB0aGUgZGF0YSBpbnRvIHRoZSByZXNldCBzcGVjaWZpZXIKPiA+ID4gPiBkaXJlY3RseSB3aGVu
+IGl0IGlzIHVzZWQ/Cj4gCj4gRnJvbSBteSBwb2ludCBvZiB2aWV3LCB3aXRoIHRoZSBiaW5kaW5n
+IGFib3ZlLCBhbGwgcmVzZXQgY29udHJvbGxlcgo+IHJlZ2lzdGVyL2JpdCBsYXlvdXQgaW5mb3Jt
+YXRpb24gaXMgaW4gYSBzaW5nbGUgcGxhY2UgYW5kIGNhbiBiZSBlYXNpbHkKPiBjb21wYXJlZCB0
+byBhIGxpc3QgaW4gdGhlIHJlZmVyZW5jZSBtYW51YWwsIHdoZXJlYXMgd2l0aCB5b3VyIHN1Z2dl
+c3Rpb24KPiB0aGUgZGVzY3JpcHRpb24gb2YgdGhlIHJlc2V0IGNvbnRyb2xsZXIgcmVnaXN0ZXIg
+bGF5b3V0IGlzIHNwcmVhZAo+IHRocm91Z2hvdXQgb25lIG9yIGV2ZW4gc2V2ZXJhbCBkdHNpIGZp
+bGVzLgo+IEFsc28sIHNpbmNlIG5vIHR3byByZXNldCBjb250cm9sbGVycyBhcmUgZXhhY3RseSB0
+aGUgc2FtZSwgd2UgZ2V0IGEKPiBwcm9saWZlcmF0aW9uIG9mIGRpZmZlcmVudCBzbGlnaHRseSBw
+aGFuZGxlIGFyZ3VtZW50IG1lYW5pbmdzLgoKVGhlcmUgaXMgbm8gcmVhc29uIGZvciB0aGlzIHRv
+IGJlIGFueSBkaWZmZXJlbnQgZnJvbSBvdGhlciBzdWJzeXN0ZW1zCnRoYXQgYWxsIGRvIGl0IHRo
+ZSBzYW1lIHdheTogaW50ZXJydXB0cywgZ3Bpb3MsIGRtYSwgY2xrLCAuLi4gYWxsCmRlZmluZSAj
+Zm9vLWNlbGxzIHRvIGJlIHVzZWQgZm9yIGFkZHJlc3NpbmcgdW5pZm9ybSB0aGluZ3MsCmFuZCB0
+aGUgZGF0YSBpcyBvbmx5IGluIHRoZSByZWZlcmVuY2UsIHNvIHRoYXQgdGhlIG5vZGUgdGhhdApk
+ZXNjcmliZXMgdGhlIGNvbnRyb2xsZXIgbmVlZHMgbm8ga25vd2xlZGdlIG9mIHdoYXQgaXQncyBi
+ZWluZwp1c2VkIGZvci4KCk9uZSBleGNlcHRpb24gaXMgdGhlIGNhc2UgKG9mdGVuIG9uIGNsayBi
+aW5kaW5ncykgd2hlcmUgdGhlIHJlZ2lzdGVyCmxheW91dCBpcyBhbnl0aGluZyBidXQgdW5pZm9y
+bSBhbmQgZXZlcnkgaW5wdXQgbGluZSBoYXMgYSBjb21wbGV0ZWx5CmRpZmZlcmVudCBiZWhhdmlv
+ci4gRm9yIHRoYXQgY2FzZSwgd2UgZGVmaW5lIG91ciBvd24gbnVtYmVyaW5nCnN5c3RlbSBpbiB0
+aGUgZHJpdmVyIGFuZCBoYXJkY29kZSB0aG9zZSB0YWJsZXMgdGhlcmUuCgpUaGlzIHJlc2V0IGRy
+aXZlciBkb2VzIG5vdCBzZWVtIHRvIGJlbG9uZyBpbnRvIHRoYXQgY2F0ZWdvcnkgdGhvdWdoLgpF
+dmVuIGlmIGl0IGRpZCwgd2UgcHV0dGluZyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgY29udHJvbGxl
+ciBpbnRvCml0cyBvd24gbm9kZSBpcyByZWR1bmRhbnQgYXMgdGhlIGRyaXZlciBhbHJlYWR5IGlk
+ZW50aWZpZXMgdGhlCnJlZ2lzdGVyIGxheW91dCBieSB0aGUgY29tcGF0aWJsZSBzdHJpbmcuCgo+
+ID4gPiBBbnkgZXhhbXBsZSwgc3RpbGwgbm90IHVuZGVyc3RhbmQuCj4gPiA+IFRoZXkgYXJlIGNv
+bnN1bWVyIGFuZCBwcm92aWRlci4KPiA+IAo+ID4gSSBtZWFuIGluIHRoZSBpMmMgbm9kZSwgaGF2
+ZQo+ID4gCj4gPiAJaTJjMDogaTJjQC4uLi4uIHsKPiA+IAkJLi4uCj4gPiAJCXJlc2V0cyA9IDwm
+aW9tY3VfcnN0IDB4MjAgMHg4PjsKPiA+IAkJLi4uCj4gPiAJfQo+IAo+IFRoZXJlIGFscmVhZHkg
+YXJlIGEgZmV3IGRyaXZlcnMgdGhhdCB1c2UgdGhpcywgYW5kIEkgZmVhciBwZW9wbGUgaGF2aW5n
+Cj4gdG8gY2hhbmdlIHRoZWlyIGJpbmRpbmdzIGJlY2F1c2UgbmV3IGZsYWdzIGFyZSBuZWVkZWQg
+dGhhdCBoYXZlIG5vdCBiZWVuCj4gcHJldmlvdXNseSB0aG91Z2h0IG9mLgoKSXQgcmFyZWx5IGhh
+cHBlbnMgb24gb3RoZXIgc3Vic3lzdGVtcywgYW5kIHRoZSBiaW5kaW5nIGNhbgphbHdheXMgc3Bl
+Y2lmeSBkaWZmZXJlbnQgYmVoYXZpb3IgZGVwZW5kaW5nIG9uICNyZXNldC1jZWxscy4KCglBcm5k
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
