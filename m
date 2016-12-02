@@ -1,7 +1,7 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 4/5] ARM: dts: imx6qdl-nitrogen6x: remove hardcoded LVDS bus format
-Date: Fri,  2 Dec 2016 10:08:42 +0100
-Message-ID: <20161202090843.22613-5-gary.bisson@boundarydevices.com>
+Subject: [PATCH 5/5] ARM: dts: imx6qdl-sabrelite: remove hardcoded LVDS bus format
+Date: Fri,  2 Dec 2016 10:08:43 +0100
+Message-ID: <20161202090843.22613-6-gary.bisson@boundarydevices.com>
 References: <20161202090843.22613-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20161202090843.22613-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
@@ -15,14 +15,14 @@ information.
 
 Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 2 --
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 26d0604..16b14bd 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -579,8 +579,6 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 1f9076e..452ae47 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -525,8 +525,6 @@
  	status = "okay";
  
  	lvds-channel@0 {
