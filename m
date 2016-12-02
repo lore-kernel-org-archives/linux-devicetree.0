@@ -1,58 +1,91 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
-Date: Fri, 2 Dec 2016 20:28:10 +0100
-Message-ID: <20161202192810.GA3259@netboy>
-References: <20161128230428.6872-1-grygorii.strashko@ti.com>
- <20161128230428.6872-5-grygorii.strashko@ti.com>
- <20161130184511.GB8209@netboy>
- <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
- <20161130221738.GA13099@localhost.localdomain>
- <20161202095848.GA14586@localhost.localdomain>
- <bfbebf2d-d057-6a21-845c-48f0a9ab0404@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v3 13/13] net: ethernet: ti: cpts: fix overflow check period
+Date: Fri, 2 Dec 2016 14:30:23 -0600
+Message-ID: <20161202203023.25526-14-grygorii.strashko@ti.com>
+References: <20161202203023.25526-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bfbebf2d-d057-6a21-845c-48f0a9ab0404-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20161202203023.25526-1-grygorii.strashko@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Richard Cochran <richardcochran@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>, Wingman Kwok <w-kwok2@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Grygorii Strashko <grygorii.strashko@ti.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 11:58:34AM -0600, Grygorii Strashko wrote:
-> or I missed smth?
+The CPTS drivers uses 8sec period for overflow checking with
+assumption that CPTS retclk will not exceed 500MHz. But that's not
+true on some TI platforms (Kesytone 2). As result, it is possible that
+CPTS counter will overflow more than once between two readings.
 
-You are missing three important points.
+Hence, fix it by selecting overflow check period dynamically as
+max_sec_before_overflow/2, where
+ max_sec_before_overflow = max_counter_val / rftclk_freq.
 
-1. Unlike the code you posted, no edges will be lost.
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/cpts.c | 10 +++++++---
+ drivers/net/ethernet/ti/cpts.h |  4 +---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-2. The solution using the PWM is implemented in USER SPACE.  If people
-   use this way, then they will be forced to understand the inherit
-   limitations.  In addition, the behavior of servo will be under
-   their control.
-
-3. The update rate of the PHC is not once per second.  It can be any
-   rate at all, like 16 Hz for the telecom profile.  You can't just
-   blindly pick out an adjustment value once per second.  Using the
-   feedback from the time stamped PWM and adjusting THAT at the PWM
-   rate (also not necessarily 1 PPS) is the right way.  The second
-   reply in that thread is an even better solution, leaving the PHC
-   free running and adjusting the timer input clock (probably they
-   used a VCO).
-
-Just hacking in some kind of kernel PPS with unknown accuracy is just
-asking for trouble later, since people will expect HW accuracy.
-
-So just get the input time stamps working, and make PWM control
-available to userspace in mainline (not sure about this, I guess it
-isn't), and leave the PPS part to a userspace utility.
-
-Thanks,
-Richard
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 806241b..e9a8b12 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -245,7 +245,7 @@ static void cpts_overflow_check(struct work_struct *work)
+ 
+ 	cpts_ptp_gettime(&cpts->info, &ts);
+ 	pr_debug("cpts overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
+-	schedule_delayed_work(&cpts->overflow_work, CPTS_OVERFLOW_PERIOD);
++	schedule_delayed_work(&cpts->overflow_work, cpts->ov_check_period);
+ }
+ 
+ static int cpts_match(struct sk_buff *skb, unsigned int ptp_class,
+@@ -382,8 +382,7 @@ int cpts_register(struct cpts *cpts)
+ 	}
+ 	cpts->phc_index = ptp_clock_index(cpts->clock);
+ 
+-	schedule_delayed_work(&cpts->overflow_work, CPTS_OVERFLOW_PERIOD);
+-
++	schedule_delayed_work(&cpts->overflow_work, cpts->ov_check_period);
+ 	return 0;
+ 
+ err_ptp:
+@@ -427,6 +426,11 @@ static void cpts_calc_mult_shift(struct cpts *cpts)
+ 	if (maxsec > 10)
+ 		maxsec = 10;
+ 
++	/* Calc overflow check period (maxsec / 2) */
++	cpts->ov_check_period = (HZ * maxsec) / 2;
++	dev_info(cpts->dev, "cpts: overflow check period %lu (jiffies)\n",
++		 cpts->ov_check_period);
++
+ 	if (cpts->cc_mult || cpts->cc.shift)
+ 		return;
+ 
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index 5da23af..c96eca2 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -97,9 +97,6 @@ enum {
+ 	CPTS_EV_TX,   /* Ethernet Transmit Event */
+ };
+ 
+-/* This covers any input clock up to about 500 MHz. */
+-#define CPTS_OVERFLOW_PERIOD (HZ * 8)
+-
+ #define CPTS_FIFO_DEPTH 16
+ #define CPTS_MAX_EVENTS 32
+ 
+@@ -127,6 +124,7 @@ struct cpts {
+ 	struct list_head events;
+ 	struct list_head pool;
+ 	struct cpts_event pool_data[CPTS_MAX_EVENTS];
++	unsigned long ov_check_period;
+ };
+ 
+ void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+-- 
+2.10.1
