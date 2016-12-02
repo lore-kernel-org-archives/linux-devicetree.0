@@ -1,70 +1,200 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Introduce domain-performance-state
- binding
-Date: Fri, 2 Dec 2016 16:17:17 +0530
-Message-ID: <20161202104717.GC22049@vireshk-i7>
-References: <m260nfz8mr.fsf@baylibre.com>
- <CAKfTPtDR6Y5UgaqJ+D5T0yBeFRSYWm6OT1+r4ZABrtqtvF2D0w@mail.gmail.com>
- <m2wpfuw5wq.fsf@baylibre.com>
- <CAKfTPtBMro7+UruF0-E26TJPu6pEAvkjF9V7SKriNBm5q+K9+A@mail.gmail.com>
- <m2fumhx21h.fsf@baylibre.com>
- <20161124020322.GI6095@codeaurora.org>
- <20161124044020.GC9376@vireshk-i7>
- <4f815e31-22d0-fef7-953c-257fa2bbcb9d@codeaurora.org>
- <20161129065726.GG3288@vireshk-i7>
- <20161130010804.GI6095@codeaurora.org>
+From: mtk09577 <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 1/2] Add crypto driver support for some MediaTek chips
+Date: Fri, 2 Dec 2016 19:39:32 +0800
+Message-ID: <1480678772.15580.21.camel@mtkswgap22>
+References: <1480649205-52695-1-git-send-email-ryder.lee@mediatek.com>
+         <1480649205-52695-2-git-send-email-ryder.lee@mediatek.com>
+         <20161202081836.GA20128@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161130010804.GI6095@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh@kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nayak Rajendra <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161202081836.GA20128@Red>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wnag@mediatek.com>, linux-mediatek@lists.infradead.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 29-11-16, 17:08, Stephen Boyd wrote:
-> Perhaps. One question is if we consider a shared regulator as a
-> regulator in the kernel, or if we want to hide the regulator
-> behind some other API that aggregates the users of the voltage. I
-> don't see how to draw the line clearly between a regulator and a
 
-Neither do I :)
+Hello,
 
-> power domain that modifies a regulator underneath. It seems like
-> everything that's using a regulator on the SoC could be using a
-> power domain instead and then we could be aggregating the voltage
-> requirements outside of the regulator APIs.
+On Fri, 2016-12-02 at 09:18 +0100, Corentin Labbe wrote:
+> Hello
+> 
+> I have some minor comment inline
+> 
+> On Fri, Dec 02, 2016 at 11:26:44AM +0800, Ryder Lee wrote:
+> > This adds support for the MediaTek hardware accelerator on
+> > mt7623/mt2701/mt8521p SoC.
+> > 
+> > This driver currently implement:
+> > - SHA1 and SHA2 family(HMAC) hash alogrithms.
+> > - AES block cipher in CBC/ECB mode with 128/196/256 bits keys.
+> 
+> I see also a PRNG but is seems not really used.
 
-If I am not wrong the regulator API chooses an intersection instead of the max
-requested voltage and so it may not fit very well in the use-case we are trying
-to solve.
+Yes, PRNG is not implemented yet, i will remove it temporarily.
 
-> The only other way I can think of doing it is by having the
-> voltages in the OPP tables for each device. That gets sort of
-> messy though because all the devices calling
-> regulator_set_voltage() have to set the min voltage to be their
-> required voltage and the max to be the global max voltage on the
-> system. Otherwise a higher voltage may not be used while it may
-> be required. Of course, we could encode that as the last value in
-> the triplet and everything works.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  drivers/crypto/Kconfig                 |   17 +
+> >  drivers/crypto/Makefile                |    1 +
+> >  drivers/crypto/mediatek/Makefile       |    2 +
+> >  drivers/crypto/mediatek/mtk-aes.c      |  734 +++++++++++++++++
+> >  drivers/crypto/mediatek/mtk-platform.c |  575 +++++++++++++
+> >  drivers/crypto/mediatek/mtk-platform.h |  230 ++++++
+> >  drivers/crypto/mediatek/mtk-regs.h     |  194 +++++
+> >  drivers/crypto/mediatek/mtk-sha.c      | 1384 ++++++++++++++++++++++++++++++++
+> >  8 files changed, 3137 insertions(+)
+> >  create mode 100644 drivers/crypto/mediatek/Makefile
+> >  create mode 100644 drivers/crypto/mediatek/mtk-aes.c
+> >  create mode 100644 drivers/crypto/mediatek/mtk-platform.c
+> >  create mode 100644 drivers/crypto/mediatek/mtk-platform.h
+> >  create mode 100644 drivers/crypto/mediatek/mtk-regs.h
+> >  create mode 100644 drivers/crypto/mediatek/mtk-sha.c
+> > 
+> > diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> > index 4d2b81f..5d9c803 100644
+> > --- a/drivers/crypto/Kconfig
+> > +++ b/drivers/crypto/Kconfig
+> > @@ -553,6 +553,23 @@ config CRYPTO_DEV_ROCKCHIP
+> >  	  This driver interfaces with the hardware crypto accelerator.
+> >  	  Supporting cbc/ecb chainmode, and aes/des/des3_ede cipher mode.
+> >  
+> > +config CRYPTO_DEV_MEDIATEK
+> > +	tristate "MediaTek's Cryptographic Engine driver"
+> > +	depends on ARM && ARCH_MEDIATEK
+> > +	select NEON
+> > +	select KERNEL_MODE_NEON
+> > +	select ARM_CRYPTO
+> > +	select CRYPTO_AES
+> > +	select CRYPTO_BLKCIPHER
+> > +	select CRYPTO_SHA1_ARM_NEON
+> > +	select CRYPTO_SHA256_ARM
+> > +	select CRYPTO_SHA512_ARM
+> > +	select CRYPTO_HMAC
+> 
+> Why do you select accelerated algos ?
+> Adding COMPILE_TEST could be helpfull also.
 
-Where will we get the performance levels in this case ?
+Our Hardware has complex procedure on calculate HMAC, and it get a bad
+performance.... So i decide to use ARM NEON instruction as fallback to
+speedup it.
+I will add COMPILE_TEST.
 
-> What do we do if the device is part of multiple domains? For
-> example it may be part of two power domains for different pieces
-> of the silicon within one device, and we may want to
-> independently control those domains depending on the clock
-> frequency.
+> [...]
+> > +
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/scatterlist.h>
+> > +#include <crypto/scatterwalk.h>
+> > +#include <crypto/algapi.h>
+> > +#include <crypto/aes.h>
+> > +#include "mtk-platform.h"
+> > +#include "mtk-regs.h"
+> > +
+> 
+> Sort headers in alphabetical order
+> 
+> [...]
+> > +
+> > +	mtk_aes_unregister_algs();
+> > +	mtk_aes_record_free(cryp);
+> > +}
+> > +EXPORT_SYMBOL(mtk_cipher_alg_release);
+> 
+> Why not EXPORT_SYMBOL_GPL ?
+> Furthermore do you really need it to be exported ?
 
-I thought the best way to handle would be to add a virtual domain for such a
-device. That domain shall be responsible for changing its parent based on the
-performance level selected, and at that point only the recalculations for both
-the parents should happen to select the new best performance level.
+My mistake. I will remove it.
 
-@Rob / Kevin: Do you have any inputs on the things we are discussing here? I
-want to involve you guys as early as possible, or we will come back to this
-again :(
+> [...]
+> > +
+> > +#include <linux/init.h>
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/platform_device.h>
+> > +#include "mtk-platform.h"
+> > +#include "mtk-regs.h"
+> > +
+> 
+> Sort headers in alphabetical order
+> 
+> [...]
+> > +
+> > +static void mtk_prng_reseed(struct mtk_cryp *cryp)
+> > +{
+> > +	/* 8 words to seed the PRNG to provide IVs */
+> > +	void __iomem *base = cryp->base;
+> > +	const u32 prng_key[8] = {0x48c24cfd, 0x6c07f742,
+> > +				0xaee75681, 0x0f27c239,
+> > +				0x79947198, 0xe2991275,
+> > +				0x21ac3c7c, 0xd008c4b4};
+> 
+> Why do you seed with thoses constant ?
+> 
+> [...]
+> > +
+> > +static int mtk_accelerator_init(struct mtk_cryp *cryp)
+> > +{
+> > +	int i, err;
+> > +
+> > +	/* Initialize advanced interrupt controller(AIC) */
+> > +	for (i = 0; i < 5; i++) {
+> 
+> I see this 5 for interrupt away, so perhaps a define could be used
+> 
+> [...]
+> 
+> here 
+> 
+> > +	for (i = 0; i < 5; i++) {
+> > +		cryp->irq[i] = platform_get_irq(pdev, i);
+> > +		if (cryp->irq[i] < 0) {
+> > +			dev_err(cryp->dev, "no IRQ:%d resource info\n", i);
+> > +			return -ENXIO;
+> > +		}
+> > +	}
+> [...]
 
--- 
-viresh
+> > +#ifndef __MTK_PLATFORM_H_
+> > +#define __MTK_PLATFORM_H_
+> > +
+> > +#include <linux/crypto.h>
+> > +#include <crypto/internal/hash.h>
+> > +#include <linux/interrupt.h>
+> 
+> Sort headers in alphabetical order
+> 
+> [...]
+> > +#define MTK_DESC_FIRST		BIT(23)
+> > +#define MTK_DESC_BUF_LEN(x)	((x) & 0x1ffff)
+> > +#define MTK_DESC_CT_LEN(x)	(((x) & 0xff) << 24)
+> > +
+> > +#define WORD(x)			((x) >> 2)
+> 
+> dangerous and ambigous define
+
+I will define a IRQ_NUM and modify ambiguous definition.
+
+> [...]
+> > +
+> > +#include <linux/dma-mapping.h>
+> > +#include <linux/scatterlist.h>
+> > +#include <linux/crypto.h>
+> > +#include <crypto/scatterwalk.h>
+> > +#include <crypto/algapi.h>
+> > +#include <crypto/sha.h>
+> > +#include <crypto/internal/hash.h>
+> 
+> Sort headers in alphabetical order
+> [...]
+> Generally more function comment could be helpfull.
+
+I will sort all header and add more function comment.
+Thanks for your review.
+
+> Regards
