@@ -1,65 +1,100 @@
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: enable SDIO Wi-Fi on Orange Pi Zero
-Date: Fri, 2 Dec 2016 15:47:15 +1100
-Message-ID: <1313b989-7591-4598-02b8-250c6943b653@ozlabs.ru>
-References: <20161129131922.JFbeipav@smtp2o.mail.yandex.net>
- <da84928a-25a2-1615-1d8e-e6570b1a6323@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <da84928a-25a2-1615-1d8e-e6570b1a6323@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>, Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v2] arm64: dts: zx: support cpu-freq for zx296718
+Date: Fri,  2 Dec 2016 13:52:36 +0800
+Message-ID: <1480657956-8140-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, jun.nie@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAvMTEvMTYgMjA6MjUsIEFuZHJlIFByenl3YXJhIHdyb3RlOgo+IEhpLAo+IAo+IE9uIDI5
-LzExLzE2IDEwOjE5LCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+Pgo+PiAyMDE25bm0MTHmnIgyOeaX
-pSAxNToxNuS6jiBBbGV4ZXkgS2FyZGFzaGV2c2tpeSA8YWlrQG96bGFicy5ydT7lhpnpgZPvvJoK
-Pj4+Cj4+Pgo+Pj4KPj4+IE9uIFdlZCwgTm92IDIzLCAyMDE2IGF0IDY6NTkgUE0sIE1heGltZSBS
-aXBhcmQKPj4gPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPj4+Pgo+
-Pj4+IEhpLAo+Pj4+Cj4+Pj4gT24gVHVlLCBOb3YgMjIsIDIwMTYgYXQgMTI6MjQ6MjFBTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4+Pj4gVGhlcmUncyBhIEFsbHdpbm5lcidzIFhSODE5
-IFNESU8gV2ktRmkgbW9kdWxlIHNvbGRlcmVkIG9uIHRoZSBib2FyZCBvZgo+Pj4+PiBPcmFuZ2Ug
-UGkgWmVybywgd2hpY2ggdXNlZCBhIGRlZGljYXRlZCByZWd1bGF0b3IgdG8gcG93ZXIuCj4+Pj4+
-Cj4+Pj4+IEFkZCB0aGUgZGV2aWNlIHRyZWUgbm9kZSBvZiB0aGUgcmVndWxhdG9yLCB0aGUgZW5h
-YmxlIGdwaW8gKHdpdGgKPj4+Pj4gbW1jLXB3cnNlcSkgYW5kIHRoZSBzZGlvIGNvbnRyb2xsZXIu
-Cj4+Pj4+Cj4+Pj4+IFRoZXJlJ3MgYSBvdXQtb2YtdHJlZSBkcml2ZXIgdGVzdGVkIHRvIHdvcmsg
-d2l0aCB0aGlzIGRldmljZSB0cmVlLgo+Pj4KPj4+Cj4+PiBidHcgY291bGQgeW91IHBsZWFzZSBn
-aXZlIGEgcG9pbnRlciB3aGVyZSB0byBmaW5kIGEgWFI4MTkgZHJpdmVyIGZvcgo+PiByZWxhdGl2
-ZWx5IHJlY2VudCBrZXJuZWwgKDQuOCBtYXkgYmUsIGp1c3Qgbm90IDMuNCk/IFRoYW5rcy4KPj4K
-Pj4gaHR0cHM6Ly9naXRodWIuY29tL0ljZW5vd3kveHJhZGlvCj4gCj4gSSB3YXMganVzdCBjdXJp
-b3VzLCBzbyBwdWxsZWQgeW91ciB0cmVlIGFuZCB0cmllZCB0byBqdXN0IGNvbXBpbGUgaXQuIEl0
-Cj4gc3RpbGwgdGhyZXcgd2FybmluZ3MgYXQgbWUgZm9yIEFSTSwgYW5kIGV2ZW4gbW9yZSBzbyBm
-b3IgYXJtNjQuCj4gSSBmaXhlZCBhbGwgb2YgdGhlbSBhbmQgcHV0IHRoYXQgb24gbXkgZ2l0aHVi
-WzFdLiBGZWVsIGZyZWUgdG8ganVzdCBwaWNrCj4gdGhlbSBmcm9tIHRoZXJlIG9yIHdhaXQgdGls
-bCBJIG1hbmFnZSB0byBjbGVhbiB0aGVtIHVwIGFuZCBzZW5kIHlvdSBhCj4gcHVsbCByZXF1ZXN0
-Lgo+IEFuZCBhbHNvIGp1c3QgYSBhIHRlc3QsIEkgcXVpY2tseSBwdXQgaXQgaW4gZHJpdmVycy9u
-ZXQvd2lyZWxlc3MveHJhZGlvLAo+IHdoZXJlIGl0IGNvbXBpbGVkIGZpbmUgYWZ0ZXIgcmVnaXN0
-ZXJpbmcgaXQgd2l0aCB0aGUgdXBwZXIgbGV2ZWwgS2NvbmZpZwo+IGFuZCBNYWtlZmlsZS4KPiAK
-PiBBbmQgd2hpbGUgbG9va2luZyBhdCBpdDogVGhpcyBsb29rcyBsaWtlIHR5cGljYWwgQVcgY29k
-ZSwgbm90IGV2ZW4KPiByZW1vdGVseSB1cHN0cmVhbWVhYmxlIGFuZCBwcm9iYWJseSBmYXIgdG9v
-IGNvbXBsaWNhdGVkLiBFbmFibGluZyBzb21lCj4gS2NvbmZpZyBvcHRpb25zIG1hZGUgaXQgY29t
-cGxhaW4gYWJvdXQgbWlzc2luZyBmdW5jdGlvbnMuCj4gSGFzIGFueW9uZSBjaGVja2VkIGlmIHRo
-aXMgaXMgY2xvc2UgdG8gYW4gZXhpc3RpbmcgV2lGaSBjaGlwPyBUaGF0Cj4gd291bGRuJ3QgYmUg
-YSBmaXJzdCA7LSkKPiAKPiBDaGVlcnMsCj4gQW5kcmUuCj4gCj4gWzFdIGh0dHBzOi8vZ2l0aHVi
-LmNvbS9hcHJpdHplbC94cmFkaW8vY29tbWl0cy9xdWlja2ZpeGVzCj4gCgpJIGp1c3QgdHJpZWQg
-dGhpcyBicmFuY2ggKyA0LjkuMC1yYzcgYnV0IEkgYW0gc3RpbGwgZ2V0dGluZzoKCgpbICAgIDAu
-OTYwNDI5XSBbWFJBRElPXSBEcml2ZXIgTGFiZWw6TDM0TS4wMS4wOC4wMDAyClsgICAgMC45NjUy
-MzNdIFtYUkFESU9dIEFsbG9jYXRlZCBod19wcml2IEAgZGY2YTRkYzAKWyAgICAzLjAzODE4MF0g
-W1NCVVNfRVJSXSBzZGlvIHByb2JlIHRpbWVvdXQhClsgICAgMy4wNDIyODhdIFtYUkFESU9fRVJS
-XSBzYnVzX3NkaW9faW5pdCBmYWlsZWQKCgpJIGFtIG1pc3NpbmcgaHVnZSBhbW91bnQgb2YgU0RJ
-TyBrbm93bGVkZ2UuIE9yIHRoZSBkZXZpY2UgdHJlZSBpcyB3cm9uZy4KQW55IGlkZWE/CgoKLS0g
-CkFsZXhleQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+This patch adds the CPU clock phandle in CPU's node
+and uses operating-points-v2 to register operating points.
+
+So it can be used by cpufreq-dt driver.
+
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+---
+ arch/arm64/boot/dts/zte/zx296718.dtsi | 39 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
+index 7a1aed7..b44d1d1 100644
+--- a/arch/arm64/boot/dts/zte/zx296718.dtsi
++++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
+@@ -44,6 +44,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/zx296718-clock.h>
+ 
+ / {
+ 	compatible = "zte,zx296718";
+@@ -81,6 +82,8 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -88,6 +91,8 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -95,6 +100,8 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -102,6 +109,38 @@
+ 			compatible = "arm,cortex-a53","arm,armv8";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			clocks = <&topcrm A53_GATE>;
++			operating-points-v2 = <&cluster0_opp>;
++		};
++	};
++
++	cluster0_opp: opp-table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp@500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			clock-latency-ns = <500000>;
++		};
++
++		opp@648000000 {
++			opp-hz = /bits/ 64 <648000000>;
++			clock-latency-ns = <500000>;
++		};
++
++		opp@800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			clock-latency-ns = <500000>;
++		};
++
++		opp@1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			clock-latency-ns = <500000>;
++		};
++
++		opp@1188000000 {
++			opp-hz = /bits/ 64 <1188000000>;
++			clock-latency-ns = <500000>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
