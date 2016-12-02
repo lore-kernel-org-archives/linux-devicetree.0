@@ -1,71 +1,75 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 2/2] drm/panel: simple: Add support for Tianma TM070JDHG30
-Date: Fri,  2 Dec 2016 09:52:08 +0100
-Message-ID: <20161202085208.19459-3-gary.bisson@boundarydevices.com>
-References: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
+Date: Fri, 2 Dec 2016 01:06:47 -0800
+Message-ID: <CAJ_EiSQWN0KF1rJDwzOeoi--g1Z0XNYevYzCLG=NngcdgF6VUw@mail.gmail.com>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting>
+ <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
+ <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
+ <B85DDAB6-D86B-4DD9-BF2C-BCB9FA09CD15@ranostay.consulting> <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFp9t1SEwQZ=uTHegbpgxxevQEy4kC=wPkc8Bo16030MNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRpYW5tYSBUTTA3MEpESEczMCBpcyBhIDciIExWRFMgZGlzcGxheSB3aXRoIGEgcmVzb2x1
-dGlvbiBvZgoxMjgweDgwMC4KaHR0cDovL3VzYS50aWFubWEuY29tL3Byb2R1Y3RzLXRlY2hub2xv
-Z3kvcHJvZHVjdC90bTA3MGpkaGczMC0wMAoKWW91IGNhbiBhbHNvIGZpbmQgdGhpcyBwcm9kdWN0
-IGFsb25nIHdpdGggYSBGVDV4MDYgdG91Y2ggY29udHJvbGxlcgpmcm9tIEJvdW5kYXJ5IERldmlj
-ZXM6Cmh0dHBzOi8vYm91bmRhcnlkZXZpY2VzLmNvbS9wcm9kdWN0L2JkMDcwbGljMi8KClNpZ25l
-ZC1vZmYtYnk6IEdhcnkgQmlzc29uIDxnYXJ5LmJpc3NvbkBib3VuZGFyeWRldmljZXMuY29tPgot
-LS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MGpkaGczMC50eHQgIHwg
-IDcgKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAg
-ICAgICB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzQgaW5z
-ZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MGpkaGczMC50eHQKCmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90aWFubWEs
-dG0wNzBqZGhnMzAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvdGlhbm1hLHRtMDcwamRoZzMwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
-eCAwMDAwMDAwLi5lYjk1MDFhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGlhbm1hLHRtMDcwamRoZzMwLnR4dApAQCAt
-MCwwICsxLDcgQEAKK1RpYW5tYSBNaWNyby1lbGVjdHJvbmljcyBUTTA3MEpESEczMCA3LjAiIFdY
-R0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBz
-aG91bGQgYmUgInRpYW5tYSx0bTA3MGpkaGczMCIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGli
-bGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4g
-c2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
-bC1zaW1wbGUuYwppbmRleCAxMTNkYjNjLi5iYzNkZDQ2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNpbXBsZS5jCkBAIC0xNDcxLDYgKzE0NzEsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBw
-YW5lbF9kZXNjIHN0YXJyeV9rcjEyMmVhMHNyYSA9IHsKIAl9LAogfTsKIAorc3RhdGljIGNvbnN0
-IHN0cnVjdCBkaXNwbGF5X3RpbWluZyB0aWFubWFfdG0wNzBqZGhnMzBfdGltaW5nID0geworCS5w
-aXhlbGNsb2NrID0geyA2MjYwMDAwMCwgNjgyMDAwMDAsIDc4MTAwMDAwIH0sCisJLmhhY3RpdmUg
-PSB7IDEyODAsIDEyODAsIDEyODAgfSwKKwkuaGZyb250X3BvcmNoID0geyAxNSwgNjQsIDE1OSB9
-LAorCS5oYmFja19wb3JjaCA9IHsgNSwgNSwgNSB9LAorCS5oc3luY19sZW4gPSB7IDEsIDEsIDI1
-NiB9LAorCS52YWN0aXZlID0geyA4MDAsIDgwMCwgODAwIH0sCisJLnZmcm9udF9wb3JjaCA9IHsg
-MywgNDAsIDk5IH0sCisJLnZiYWNrX3BvcmNoID0geyAyLCAyLCAyIH0sCisJLnZzeW5jX2xlbiA9
-IHsgMSwgMSwgMTI4IH0sCisJLmZsYWdzID0gRElTUExBWV9GTEFHU19ERV9ISUdILAorfTsKKwor
-c3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHRpYW5tYV90bTA3MGpkaGczMCA9IHsKKwku
-dGltaW5ncyA9ICZ0aWFubWFfdG0wNzBqZGhnMzBfdGltaW5nLAorCS5udW1fdGltaW5ncyA9IDEs
-CisJLmJwYyA9IDgsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDE1MSwKKwkJLmhlaWdodCA9IDk1
-LAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAor
-fTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHRwa19mMDdhXzAxMDJf
-bW9kZSA9IHsKIAkuY2xvY2sgPSAzMzI2MCwKIAkuaGRpc3BsYXkgPSA4MDAsCkBAIC0xNjg5LDYg
-KzE3MTMsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9t
-YXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJzdGFycnksa3IxMjJlYTBzcmEiLAogCQkuZGF0
-YSA9ICZzdGFycnlfa3IxMjJlYTBzcmEsCiAJfSwgeworCQkuY29tcGF0aWJsZSA9ICJ0aWFubWEs
-dG0wNzBqZGhnMzAiLAorCQkuZGF0YSA9ICZ0aWFubWFfdG0wNzBqZGhnMzAsCisJfSwgewogCQku
-Y29tcGF0aWJsZSA9ICJ0cGssZjA3YS0wMTAyIiwKIAkJLmRhdGEgPSAmdHBrX2YwN2FfMDEwMiwK
-IAl9LCB7Ci0tIAoyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Fri, Dec 2, 2016 at 12:28 AM, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 2 December 2016 at 08:22, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
+>>
+>>
+>>> On Dec 1, 2016, at 23:13, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>> On 2 December 2016 at 07:17, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
+>>>> Add optional device-post-power-on parameters to disable post_power_on
+>>>> function from being called since this breaks some device.
+>>>>
+>>>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>>>> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>>>> ---
+>>>> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
+>>>> drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
+>>>> 2 files changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> index bea306d772d1..09fa153f743e 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>>>> @@ -24,6 +24,8 @@ Optional properties:
+>>>>        de-asserting the reset-gpios (if any)
+>>>> - invert-off-state: Invert the power down state for the reset-gpios (if any)
+>>>>        and pwrdn-gpios (if any)
+>>>> +- disable-post-power-on : Avoid post_power_on function from being called since
+>>>> +       this breaks some devices
+>>>
+>>> This is a bit weird. I would like to avoid this, if possible.
+>>>
+>>> Perhaps if you simply describe the sequence in detail for your device
+>>> we can figure out the best option together.
+>>
+>> Yeah I know it is a bit weird but we need to keep that reset pin high for at least some time after pre power on.   So any case it would be another property
+>
+> This went offlist, please resend.
+>
+> Moreover, please try to describe the sequence you need in detail
+> according to your HW spec.
+>
+
+Yeah oops....
+
+So basically we need to drive the reset and powerdown lines high with
+a 300 milliseconds delay between both...
+can't have the reset line low with post power on (pretty sure but
+would need a delay anyway), and we need both reset + powerdown line
+set low on powerdown.
+
+So the power down sequence would need to be reversed for this
+application in pwrseq-simple.
+
+> Br
+> Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
