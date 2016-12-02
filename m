@@ -1,111 +1,67 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 4/9] arm64: dts: rockchip: support dwc3 USB for rk3399
-Date: Thu,  1 Dec 2016 18:27:28 -0800
-Message-ID: <1480645653-36943-5-git-send-email-briannorris@chromium.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: [PATCH 1/9] arm64: dts: Add symlinks for cros-ec-keyboard and
+ cros-ec-sbs
+Date: Thu,  1 Dec 2016 18:27:25 -0800
+Message-ID: <1480645653-36943-2-git-send-email-briannorris@chromium.org>
 References: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1480645653-36943-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, Stephen Barber <smbarber@chromium.org>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the dwc3 usb needed node information for rk3399.
+From: Douglas Anderson <dianders@chromium.org>
 
-Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+We'd like to be able to use the cros-ec-keyboard.dtsi and
+cros-ec-sbs.dtsi snippets for arm64 devices.  Currently those files live
+in the arm/boot/dts directory.
+
+Let's follow the convention set by commit 8ee57b8182c4 ("ARM64: dts:
+vexpress: Use a symlink to vexpress-v2m-rs1.dtsi from arch=arm") and use
+a symlink.  Note that in this case we put the files in a new
+"include/common" directory since these snippets may need to be
+referenced by dts files in many different subdirectories.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Heiko Stueber <heiko@sntech.de>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 ---
-Somewhat rewritten from Caesar's reposting (v2) of my patch.
+This was submitted months ago but had no users
 
-Changes:
- * Include USB2 PHY (which is now in -next)
- * Don't include USB3 PHY, as extcon support is not ready yet
- * Drop non-upstream properties
- * Fixup whitespace a bit
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 60 ++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi | 1 +
+ arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi      | 1 +
+ 2 files changed, 2 insertions(+)
+ create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+ create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 4ca8f9a7601c..1e97fb8c6415 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -316,6 +316,66 @@
- 		};
- 	};
- 
-+	usbdrd3_0: usb@fe800000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
-+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
-+			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "clk_usb3otg0_ref", "clk_usb3otg0_suspend",
-+			      "aclk_usb3otg0", "aclk_usb3_rksoc_axi_perf",
-+			      "aclk_usb3", "aclk_usb3_grf";
-+		resets = <&cru SRST_A_USB3_OTG0>;
-+		reset-names = "usb3-otg";
-+		status = "disabled";
-+
-+		usbdrd_dwc3_0: dwc3 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe800000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
-+			dr_mode = "otg";
-+			phys = <&u2phy0_otg>;
-+			phy-names = "usb2-phy";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			status = "disabled";
-+		};
-+	};
-+
-+	usbdrd3_1: usb@fe900000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
-+			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
-+			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "clk_usb3otg1_ref", "clk_usb3otg1_suspend",
-+			      "aclk_usb3otg1", "aclk_usb3_rksoc_axi_perf",
-+			      "aclk_usb3", "aclk_usb3_grf";
-+		resets = <&cru SRST_A_USB3_OTG1>;
-+		reset-names = "usb3-otg";
-+		status = "disabled";
-+
-+		usbdrd_dwc3_1: dwc3 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe900000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
-+			dr_mode = "otg";
-+			phys = <&u2phy1_otg>;
-+			phy-names = "usb2-phy";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			status = "disabled";
-+		};
-+	};
-+
- 	usb_host0_ehci: usb@fe380000 {
- 		compatible = "generic-ehci";
- 		reg = <0x0 0xfe380000 0x0 0x20000>;
+diff --git a/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+new file mode 120000
+index 000000000000..1c1889f0a791
+--- /dev/null
++++ b/arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+@@ -0,0 +1 @@
++../../../../../arm/boot/dts/cros-ec-keyboard.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
+new file mode 120000
+index 000000000000..3d7ae9c88bcd
+--- /dev/null
++++ b/arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
+@@ -0,0 +1 @@
++../../../../../arm/boot/dts/cros-ec-sbs.dtsi
+\ No newline at end of file
 -- 
 2.8.0.rc3.226.g39d4020
