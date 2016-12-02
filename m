@@ -1,52 +1,45 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [RESEND PATCH v2 0/7] drm/vc4: VEC (SDTV) output support
-Date: Fri,  2 Dec 2016 14:48:06 +0100
-Message-ID: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RESEND PATCH v2 6/7] ARM: bcm/dt: Add VEC node in bcm283x.dtsi
+Date: Fri,  2 Dec 2016 14:48:12 +0100
+Message-ID: <1480686493-4813-7-git-send-email-boris.brezillon@free-electrons.com>
+References: <1480686493-4813-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1480686493-4813-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U29ycnkgZm9yIHRoZSBub2lzZSwgYnV0IEkgZm9yZ290IHRvIENjIHRoZSBEVCBtYWludGFpbmVy
-cy4KCkhlcmUgaXMgdGhlIDJuZCB2ZXJzaW9uIG9mIHRoZSBWQzQvVkVDIHNlcmllcy4KCldlIHN0
-aWxsIG1pc3MgdGhlIHR3byBjbG9jayBwYXRjaGVzIG1lbnRpb25lZCBieSBFcmljIGluIHRoZSBm
-aXJzdAp2ZXJzaW9uIHRvIG1ha2UgdGhlIGVuY29kZXIgd29yayBubyBtYXR0ZXIgdGhlIHNldHRp
-bmcgYXBwbGllZCBieSB0aGUKYm9vdGxvYWRlci4KClJlZ2FyZHMsCgpCb3JpcwoKQm9yaXMgQnJl
-emlsbG9uICg3KToKICBkcm0vdmM0OiBGaXggLT5jbG9ja19zZWxlY3Qgc2V0dGluZyBmb3IgdGhl
-IFZFQyBlbmNvZGVyCiAgZHJtOiBUdXJuIERSTV9NT0RFX1NVQkNPTk5FQ1RPUl94eCBkZWZpbml0
-aW9ucyBpbnRvIGFuIGVudW0KICBkcm06IEFkZCBUViBjb25uZWN0b3Igc3RhdGVzIHRvIGRybV9j
-b25uZWN0b3Jfc3RhdGUKICBkcm0vdmM0OiBBZGQgc3VwcG9ydCBmb3IgdGhlIFZFQyAoVmlkZW8g
-RW5jb2RlcikgSVAKICBkcm0vdmM0OiBEb2N1bWVudCBWRUMgRFQgYmluZGluZwogIEFSTTogYmNt
-L2R0OiBBZGQgVkVDIG5vZGUgaW4gYmNtMjgzeC5kdHNpCiAgQVJNOiBiY20vZHQ6IEVuYWJsZSB0
-aGUgVkVDIElQIG9uIGFsbCBSYXNwZWJlcnJ5UGkgYm9hcmRzCgogLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgfCAgMTQgKwogYXJjaC9hcm0vYm9vdC9k
-dHMvYmNtMjgzNS1ycGkuZHRzaSAgICAgICAgICAgICAgICAgfCAgIDUgKwogYXJjaC9hcm0vYm9v
-dC9kdHMvYmNtMjgzeC5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9n
-cHUvZHJtL2RybV9hdG9taWMuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgNTAgKysKIGRyaXZl
-cnMvZ3B1L2RybS92YzQvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRy
-aXZlcnMvZ3B1L2RybS92YzQvdmM0X2NydGMuYyAgICAgICAgICAgICAgICAgICAgIHwgIDM4ICst
-CiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kZWJ1Z2ZzLmMgICAgICAgICAgICAgICAgICB8ICAg
-MSArCiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuYyAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcnYuaCAgICAgICAgICAgICAgICAgICAg
-ICB8ICAgNiArCiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9yZWdzLmggICAgICAgICAgICAgICAg
-ICAgICB8ICAgMyArLQogZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfdmVjLmMgICAgICAgICAgICAg
-ICAgICAgICAgfCA2NTcgKysrKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2RybS9kcm1fY29u
-bmVjdG9yLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAzMiArCiBpbmNsdWRlL3VhcGkvZHJt
-L2RybV9tb2RlLmggICAgICAgICAgICAgICAgICAgICAgICB8ICAxOCArLQogMTMgZmlsZXMgY2hh
-bmdlZCwgODEwIGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X3ZlYy5jCgotLSAKMi43LjQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add the VEC (Video EnCoder) node definition in bcm283x.dtsi.
+
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm283x.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 46d46d894a44..44a9c0539437 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -266,6 +266,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		vec: vec@7e806000 {
++			compatible = "brcm,bcm2835-vec";
++			reg = <0x7e806000 0x1000>;
++			clocks = <&clocks BCM2835_CLOCK_VEC>;
++			interrupts = <2 27>;
++			status = "disabled";
++		};
++
+ 		pixelvalve@7e807000 {
+ 			compatible = "brcm,bcm2835-pixelvalve2";
+ 			reg = <0x7e807000 0x100>;
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
