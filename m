@@ -1,8 +1,8 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 5/5] ARM64: dts: amlogic: add the ethernet TX delay
- configuration
-Date: Sat,  3 Dec 2016 00:47:39 +0100
-Message-ID: <20161202234739.22929-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/5] ARM64: dts: meson-gxbb-p20x: add reset for the ethernet
+ PHY
+Date: Sat,  3 Dec 2016 00:47:37 +0100
+Message-ID: <20161202234739.22929-4-martin.blumenstingl@googlemail.com>
 References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,97 +22,45 @@ To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the amlogic,tx-delay-ns with the old (hardcoded) default value
-of 2ns to all boards which are using an RGMII ethernet PHY.
+This resets the ethernet PHY during boot to get the PHY into a "clean"
+state. While here also specify the phy-handle of the ethmac node to
+make the PHY configuration similar to the one we have on GXL devices.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Tested-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts  | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts  | 2 ++
- 6 files changed, 12 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index cbaf024..fdade07 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -161,6 +161,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	phy-mode = "rgmii";
- };
- 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 2abc553..8172e12 100644
+index 203be28..2abc553 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -152,6 +152,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	phy-mode = "rgmii";
+@@ -134,10 +134,25 @@
+ 	pinctrl-names = "default";
  };
  
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index a0e92e3..ab49712 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -131,6 +131,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
++&mdio0 {
++	ethernet_phy0: ethernet-phy@0 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++	};
++};
 +
- 	phy-mode = "rgmii";
+ &ethmac {
+ 	status = "okay";
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
++
++	phy-handle = <&ethernet_phy0>;
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	phy-mode = "rgmii";
  };
  
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-index f66939c..7fd11c6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-@@ -64,6 +64,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	/* External PHY is in RGMII */
- 	phy-mode = "rgmii";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index f859d75..cf9b960 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -156,6 +156,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	/* External PHY is in RGMII */
- 	phy-mode = "rgmii";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
-index 5dbc660..e428e29 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
-@@ -64,6 +64,8 @@
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	/* External PHY is in RGMII */
- 	phy-mode = "rgmii";
- };
+ &ir {
 -- 
 2.10.2
