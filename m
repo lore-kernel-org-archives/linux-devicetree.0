@@ -1,37 +1,71 @@
 From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 1/2] of: Add vendor prefix for Tianma Micro-electronics
-Date: Fri,  2 Dec 2016 09:52:07 +0100
-Message-ID: <20161202085208.19459-2-gary.bisson@boundarydevices.com>
+Subject: [PATCH 2/2] drm/panel: simple: Add support for Tianma TM070JDHG30
+Date: Fri,  2 Dec 2016 09:52:08 +0100
+Message-ID: <20161202085208.19459-3-gary.bisson@boundarydevices.com>
 References: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-Tianma Micro-electronics Co., Ltd. (Tianma) specializes in providing
-display solutions and efficient support services worldwide.
-
-More info:
-http://en.tianma.com/about.shtml
-
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 163f84b..3d1ec68 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -291,6 +291,7 @@ technologic	Technologic Systems
- terasic	Terasic Inc.
- thine	THine Electronics, Inc.
- ti	Texas Instruments
-+tianma	Tianma Micro-electronics Co., Ltd.
- tlm	Trusted Logic Mobility
- topeet  Topeet
- toradex	Toradex AG
--- 
-2.9.3
+VGhlIFRpYW5tYSBUTTA3MEpESEczMCBpcyBhIDciIExWRFMgZGlzcGxheSB3aXRoIGEgcmVzb2x1
+dGlvbiBvZgoxMjgweDgwMC4KaHR0cDovL3VzYS50aWFubWEuY29tL3Byb2R1Y3RzLXRlY2hub2xv
+Z3kvcHJvZHVjdC90bTA3MGpkaGczMC0wMAoKWW91IGNhbiBhbHNvIGZpbmQgdGhpcyBwcm9kdWN0
+IGFsb25nIHdpdGggYSBGVDV4MDYgdG91Y2ggY29udHJvbGxlcgpmcm9tIEJvdW5kYXJ5IERldmlj
+ZXM6Cmh0dHBzOi8vYm91bmRhcnlkZXZpY2VzLmNvbS9wcm9kdWN0L2JkMDcwbGljMi8KClNpZ25l
+ZC1vZmYtYnk6IEdhcnkgQmlzc29uIDxnYXJ5LmJpc3NvbkBib3VuZGFyeWRldmljZXMuY29tPgot
+LS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MGpkaGczMC50eHQgIHwg
+IDcgKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAg
+ICAgICB8IDI3ICsrKysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMzQgaW5z
+ZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MGpkaGczMC50eHQKCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90aWFubWEs
+dG0wNzBqZGhnMzAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvdGlhbm1hLHRtMDcwamRoZzMwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAwMDAwMDAwLi5lYjk1MDFhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdGlhbm1hLHRtMDcwamRoZzMwLnR4dApAQCAt
+MCwwICsxLDcgQEAKK1RpYW5tYSBNaWNyby1lbGVjdHJvbmljcyBUTTA3MEpESEczMCA3LjAiIFdY
+R0EgVEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBz
+aG91bGQgYmUgInRpYW5tYSx0bTA3MGpkaGczMCIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGli
+bGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4g
+c2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5l
+bC1zaW1wbGUuYwppbmRleCAxMTNkYjNjLi5iYzNkZDQ2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
+bmVsLXNpbXBsZS5jCkBAIC0xNDcxLDYgKzE0NzEsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBw
+YW5lbF9kZXNjIHN0YXJyeV9rcjEyMmVhMHNyYSA9IHsKIAl9LAogfTsKIAorc3RhdGljIGNvbnN0
+IHN0cnVjdCBkaXNwbGF5X3RpbWluZyB0aWFubWFfdG0wNzBqZGhnMzBfdGltaW5nID0geworCS5w
+aXhlbGNsb2NrID0geyA2MjYwMDAwMCwgNjgyMDAwMDAsIDc4MTAwMDAwIH0sCisJLmhhY3RpdmUg
+PSB7IDEyODAsIDEyODAsIDEyODAgfSwKKwkuaGZyb250X3BvcmNoID0geyAxNSwgNjQsIDE1OSB9
+LAorCS5oYmFja19wb3JjaCA9IHsgNSwgNSwgNSB9LAorCS5oc3luY19sZW4gPSB7IDEsIDEsIDI1
+NiB9LAorCS52YWN0aXZlID0geyA4MDAsIDgwMCwgODAwIH0sCisJLnZmcm9udF9wb3JjaCA9IHsg
+MywgNDAsIDk5IH0sCisJLnZiYWNrX3BvcmNoID0geyAyLCAyLCAyIH0sCisJLnZzeW5jX2xlbiA9
+IHsgMSwgMSwgMTI4IH0sCisJLmZsYWdzID0gRElTUExBWV9GTEFHU19ERV9ISUdILAorfTsKKwor
+c3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHRpYW5tYV90bTA3MGpkaGczMCA9IHsKKwku
+dGltaW5ncyA9ICZ0aWFubWFfdG0wNzBqZGhnMzBfdGltaW5nLAorCS5udW1fdGltaW5ncyA9IDEs
+CisJLmJwYyA9IDgsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDE1MSwKKwkJLmhlaWdodCA9IDk1
+LAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAor
+fTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHRwa19mMDdhXzAxMDJf
+bW9kZSA9IHsKIAkuY2xvY2sgPSAzMzI2MCwKIAkuaGRpc3BsYXkgPSA4MDAsCkBAIC0xNjg5LDYg
+KzE3MTMsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9t
+YXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJzdGFycnksa3IxMjJlYTBzcmEiLAogCQkuZGF0
+YSA9ICZzdGFycnlfa3IxMjJlYTBzcmEsCiAJfSwgeworCQkuY29tcGF0aWJsZSA9ICJ0aWFubWEs
+dG0wNzBqZGhnMzAiLAorCQkuZGF0YSA9ICZ0aWFubWFfdG0wNzBqZGhnMzAsCisJfSwgewogCQku
+Y29tcGF0aWJsZSA9ICJ0cGssZjA3YS0wMTAyIiwKIAkJLmRhdGEgPSAmdHBrX2YwN2FfMDEwMiwK
+IAl9LCB7Ci0tIAoyLjkuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
