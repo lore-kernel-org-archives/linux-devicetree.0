@@ -1,47 +1,71 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Fri, 2 Dec 2016 23:07:54 +0200
-Message-ID: <76fca1ab-fbae-07ed-7585-cd9ba1230a19@ti.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com>
- <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
- <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
- <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
- <0fe81866-8bfd-f3a7-d808-9cb23841f504@ti.com>
- <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
- <CAL_JsqKox9WVXh=i1jSCijJDTACC35uiNtS-bg9fdyDrX0svRQ@mail.gmail.com>
- <5f146fb6-ec88-b7ee-ef5b-a5ad32c54a74@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the device tree
+Date: Fri,  2 Dec 2016 23:11:37 +0200
+Message-ID: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5f146fb6-ec88-b7ee-ef5b-a5ad32c54a74-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/16 20:58, Stephen Boyd wrote:
-> On 12/02/2016 10:45 AM, Rob Herring wrote:
->> On Fri, Dec 2, 2016 at 2:19 AM, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
->>>
->>> Rob, any response on this one? I see you have acked the reset part of the
->>> bindings which is doing pretty much the same thing as the clock part is
->>> doing here, namely adding child node under the main SCI node. Is it okay to
->>> do this same for other parts of the TI SCI?
->> Yes. It would be silly to allow for one and not others...
->>
->
-> I'm expecting a respin for the node name (clocks or clock-controller).
-> I'll also make a review pass on patch 3 today so please don't respin
-> until after that.
+The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
+connected to port 2 of the OMAP EHCI controller. The board however has
+no EEPROM to store the ethernet MAC address, which is programmed by the
+boot loader.
 
-Yeah, I need to fix that and re-send. This series will be most likely 
-delayed until 4.11 though seeing its very late in 4.9-rc already (and 
-the genpd part dependency is still not ready either) so we are not in a 
-rush right now.
+To allow Linux to use the same MAC address as the boot loader (or for
+that matter any fixed MAC address), we need a node in the device tree
+for the ethernet controller that the boot loader can update at runtime
+with a local-mac-address property. Add it, along with an alias for the
+ethernet controller to let the boot loader locate it easily.
 
--Tero
+Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+---
+Changes since v1:
+
+- Renamed usb2 DT node to hub
+---
+ arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
+index 85e297ed0ea1..673cee2234b2 100644
+--- a/arch/arm/boot/dts/omap3-beagle-xm.dts
++++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+@@ -27,6 +27,7 @@
+ 	aliases {
+ 		display0 = &dvi0;
+ 		display1 = &tv0;
++		ethernet = &ethernet;
+ 	};
+ 
+ 	leds {
+@@ -348,6 +349,21 @@
+ 
+ &usbhsehci {
+ 	phys = <0 &hsusb2_phy>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	hub@2 {
++		compatible = "usb424,9514";
++		reg = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet: usbether@1 {
++			compatible = "usb424,ec00";
++			reg = <1>;
++		};
++	};
+ };
+ 
+ &vaux2 {
+-- 
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
