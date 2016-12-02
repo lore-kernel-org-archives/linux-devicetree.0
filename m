@@ -1,74 +1,55 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset
- bindings
-Date: Fri, 02 Dec 2016 15:10:13 +0100
-Message-ID: <1480687813.2460.19.camel@pengutronix.de>
-References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org>
-         <3900806.3NUubBDb0Q@wuerfel>
-         <e15e76e2-b32d-a4d0-eb8b-850626a3946a@linaro.org>
-         <5982682.vMJxVociDa@wuerfel>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 1/8] ARM: dts: stm32: set HSE_RTC clock frequency
+ to 1 MHz on stm32f429
+Date: Fri, 2 Dec 2016 15:09:54 +0100
+Message-ID: <1480687801-19525-3-git-send-email-amelie.delaunay@st.com>
+References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5982682.vMJxVociDa@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBAABBT4CQ3BAKGQEHFUXCMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1480687801-19525-2-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 02.12.2016, 13:32 +0100 schrieb Arnd Bergmann:
-> On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
-> > Hi, Arnd
-> > 
-> > On 2016年12月01日 20:05, Arnd Bergmann wrote:
-> > > On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
-> > >> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
-> > >> +                                  0x20 0x10            /* 1: i2c1 */
-> > >> +                                  0x20 0x20            /* 2: i2c2 */
-> > >> +                                  0x20 0x8000000>;     /* 3: i2c6 */
-> > >> +       };
-> > >> +
-> > >> +Specifying reset lines connected to IP modules
-> > >> +==============================================
-> > >> +example:
-> > >> +
-> > >> +        i2c0: i2c@..... {
-> > >> +                ...
-> > >> +               resets = <&iomcu_rst 0>;
-> > >> +                ...
-> > >> +        };
-> > > I don't really like this approach, since now the information is
-> > > in two places. Why not put the data into the reset specifier
-> > > directly when it is used?
+This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
+the RTC must be 1 MHz.
 
->From my point of view, with the binding above, all reset controller
-register/bit layout information is in a single place and can be easily
-compared to a list in the reference manual, whereas with your suggestion
-the description of the reset controller register layout is spread
-throughout one or even several dtsi files.
-Also, since no two reset controllers are exactly the same, we get a
-proliferation of different slightly phandle argument meanings.
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > Any example, still not understand.
-> > They are consumer and provider.
-> 
-> I mean in the i2c node, have
-> 
-> 	i2c0: i2c@..... {
-> 		...
-> 		resets = <&iomcu_rst 0x20 0x8>;
-> 		...
-> 	}
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index b077f99..d195ccf 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -371,6 +371,8 @@
+ 			reg = <0x40023800 0x400>;
+ 			clocks = <&clk_hse>, <&clk_i2s_ckin>;
+ 			st,syscfg = <&pwrcfg>;
++			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
++			assigned-clock-rates = <1000000>;
+ 		};
+ 
+ 		dma1: dma-controller@40026000 {
+-- 
+1.9.1
 
-There already are a few drivers that use this, and I fear people having
-to change their bindings because new flags are needed that have not been
-previously thought of.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
