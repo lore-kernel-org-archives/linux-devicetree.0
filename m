@@ -1,141 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Fri, 2 Dec 2016 12:45:34 -0600
-Message-ID: <CAL_JsqKox9WVXh=i1jSCijJDTACC35uiNtS-bg9fdyDrX0svRQ@mail.gmail.com>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com> <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
- <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com> <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
- <0fe81866-8bfd-f3a7-d808-9cb23841f504@ti.com> <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Fri, 2 Dec 2016 10:47:46 -0800
+Message-ID: <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
+References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1479816163-5260-3-git-send-email-vivek.gautam@codeaurora.org>
+ <20161128231424.GN6095@codeaurora.org>
+ <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 2, 2016 at 2:19 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> On 21/11/16 10:14, Tero Kristo wrote:
->>
->> On 18/11/16 19:20, Rob Herring wrote:
->>>
->>> On Mon, Oct 31, 2016 at 7:50 AM, Tero Kristo <t-kristo@ti.com> wrote:
->>>>
->>>> On 30/10/16 22:41, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
->>>>>>
->>>>>>
->>>>>> Add a clock implementation, TI SCI clock, that will hook to the common
->>>>>> clock framework, and allow each clock to be controlled via TI SCI
->>>>>> protocol.
->>>>>>
->>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37
->>>>>> ++++++++++++++++++++++
->>>>>>  MAINTAINERS                                        |  1 +
->>>>>>  2 files changed, 38 insertions(+)
->>>>>>  create mode 100644
->>>>>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>>>> b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..bfc3ca4
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>>>> @@ -0,0 +1,37 @@
->>>>>> +Texas Instruments TI-SCI Clocks
->>>>>> +===============================
->>>>>> +
->>>>>> +All clocks on Texas Instruments' SoCs that contain a System
->>>>>> Controller,
->>>>>> +are only controlled by this entity. Communication between a host
->>>>>> processor
->>>>>> +running an OS and the System Controller happens through a protocol
->>>>>> known
->>>>>> +as TI-SCI[1]. This clock implementation plugs into the common clock
->>>>>> +framework and makes use of the TI-SCI protocol on clock API requests.
->>>>>> +
->>>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>>>>> +
->>>>>> +Required properties:
->>>>>> +-------------------
->>>>>> +- compatible: Must be "ti,k2g-sci-clk"
->>>>>> +- #clock-cells: Shall be 2.
->>>>>> +  In clock consumers, this cell represents the device ID and clock ID
->>>>>> +  exposed by the PM firmware. The assignments can be found in the
->>>>>> header
->>>>>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
->>>>>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where
->>>>>> <soc>
->>>>>> +  is the SoC involved, for example 'k2g'.
->>>>>> +
->>>>>> +Examples:
->>>>>> +--------
->>>>>> +
->>>>>> +pmmc: pmmc {
->>>>>> +       compatible = "ti,k2g-sci";
->>>>>> +
->>>>>> +       k2g_clks: k2g_clks {
->>>>>
->>>>>
->>>>>
->>>>> Use "clocks" for node name instead.
->>>>>
->>>>>> +               compatible = "ti,k2g-sci-clk";
->>>>>
->>>>>
->>>>>
->>>>> I'm starting to think all these child nodes for SCI are pointless. Is
->>>>> there any reason why the parent node can't be the clock provider (along
->>>>> with all the other providers it acks as)?
->>>>
->>>>
->>>>
->>>> I believe the only reason to keep them separate is to have kernel
->>>> side of
->>>> things modular. If we have separate nodes, the drivers can be probed
->>>> separately.
->>>>
->>>> If not, we need to build one huge blob with all the features in it,
->>>> so the
->>>> main driver can probe everything in one go, with annoying back-and-forth
->>>> callbacks in place (assuming we still want to keep stuff somehow
->>>> modular.)
->>>
->>>
->>> Since when is DT the only way to create a device? The main driver can
->>> create devices for all the sub-functions like clocks. This is the same
->>> as MFDs which have been done both ways.
->>
->>
->> Yes obviously this can be done, my main point was that it will require
->> building some sort of infra within the driver to handle this. With
->> separate nodes, none of this is going to be needed. Also, we will lose
->> any kind of configurability via DT if we don't have separate nodes; now
->> we can select the available clocks / genpds via the compatible string of
->> the clocks/genpd nodes themselves (this isn't clearly evident as of now
->> as we only support a grand total of one device, which is k2g-evm.)
->> Otherwise we need to probe against the main node and add a separate
->> compatible string for every device, and carry this information to the
->> sibling devices also somehow. It is just so much simpler if we can just
->> keep separate nodes for them.
->>
->> Also, plenty of things are doing this kind of stuff already in
->> DT/kernel, having a parent node in place and sub-functions added
->> separately for ease of use, with apparently no visible point for having
->> the nodes within the DT.
+On 12/01/2016 12:42 AM, Vivek Gautam wrote:
+> On Tue, Nov 29, 2016 at 4:44 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> On 11/22, Vivek Gautam wrote:
+>>> +     }
+>>> +
+>>> +     /*
+>>> +      * we need to read only one byte here, since the required
+>>> +      * parameter value fits in one nibble
+>>> +      */
+>>> +     val = (u8 *)nvmem_cell_read(cell, &len);
+>> Shouldn't need the cast here. Also it would be nice if
+>> nvmem_cell_read() didn't require a second argument if we don't
+>> care for it. We should update the API to allow NULL there.
+> Will remove the u8 pointer cast.
 >
+> Correct, it makes sense to allow the length pointer to be passed as NULL.
+> We don't care about this length. Will update the nvmem API, to allow this.
 >
-> Rob, any response on this one? I see you have acked the reset part of the
-> bindings which is doing pretty much the same thing as the clock part is
-> doing here, namely adding child node under the main SCI node. Is it okay to
-> do this same for other parts of the TI SCI?
+> Also, we should add a check for 'cell' as well. This pointer can be
+> NULL, and the first thing that  nvmem_cell_read does is - deference
+> the pointer 'cell'
 
-Yes. It would be silly to allow for one and not others...
+It would be pretty stupid to read a cell and pass NULL as the first
+argument. I imagine things would blow up there like we want and we would
+see a nice big stacktrace.
 
-Rob
+>>> +     } else {
+>>> +             reset_val |= CLK_REF_SEL;
+>>> +     }
+>>> +
+>>> +     writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
+>>> +
+>>> +     /* Make sure that above write is completed to get PLL source clock */
+>>> +     wmb();
+>>> +
+>>> +     /* Required to get PHY PLL lock successfully */
+>>> +     usleep_range(100, 110);
+>>> +
+>>> +     if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
+>>> +                                     PLL_LOCKED)) {
+>>> +             dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
+>>> +                     readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
+>> Would be pretty funny if this was locked now when the error
+>> printk runs. Are there other bits in there that are helpful?
+> This is the only bit that's there to check the PLL locking status.
+> Should we rather poll ?
+>
+
+I'm just saying that the printk may have the "correct" status but the
+check would have failed earlier making the printk confusing. Perhaps
+just save the register value from the first read and print it instead of
+reading it again? Polling would probably be a better design anyway?
+Hopefully the status bit isn't toggling back and forth during those
+100-100us though, which may be the case here and that would explain why
+it's not a polling design.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
