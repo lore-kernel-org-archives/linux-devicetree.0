@@ -1,64 +1,222 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v2 2/3] ARM: dts: sunxi: add support for Orange Pi Zero
- board
-Date: Fri, 02 Dec 2016 22:32:07 +0800
-Message-ID: <11535601480689127@web2g.yandex.ru>
-References: <20161121162421.800-1-icenowy@aosc.xyz>
- <20161121162421.800-2-icenowy@aosc.xyz> <5373671480239408@web31m.yandex.ru>
- <cdfd3c65-d473-badb-ea6a-035f7ab79217@arm.com>
- <20161201093619.gs6lmoxtlptp2jr6@lukather>
- <11498641480688550@web2g.yandex.ru>
- <efb30303-b9bb-7a7c-4478-af485991dd86@redhat.com>
+From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
+Date: Fri, 2 Dec 2016 15:37:22 +0100
+Message-ID: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <efb30303-b9bb-7a7c-4478-af485991dd86@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?utf-8?B?QW5kcsOpIFByenl3YXJh?= <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgowMi4xMi4yMDE2LCAyMjozMCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBIaSwKPgo+IE9uIDAyLTEyLTE2IDE1OjIyLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDC
-oDAxLjEyLjIwMTYsIDE3OjM2LCAiTWF4aW1lIFJpcGFyZCIgPG1heGltZS5yaXBhcmRAZnJlZS1l
-bGVjdHJvbnMuY29tPjoKPj4+IMKgT24gTW9uLCBOb3YgMjgsIDIwMTYgYXQgMTI6Mjk6MDdBTSAr
-MDAwMCwgQW5kcsOpIFByenl3YXJhIHdyb3RlOgo+Pj4+IMKgwqA+IFNvbWV0aGluZyBtb3JlIGlu
-dGVyZXN0aW5nIGhhcHBlbmVkLgo+Pj4+IMKgwqA+Cj4+Pj4gwqDCoD4gWHVubG9uZyBtYWRlIGEg
-YWRkLW9uIGJvYXJkIGZvciBPcmFuZ2UgUGkgWmVybywgd2hpY2ggZXhwb3NlcyB0aGUKPj4+PiDC
-oMKgPiB0d28gVVNCIENvbnRyb2xsZXJzIGV4cG9ydGVkIGF0IGV4cGFuc2lvbiBidXMgYXMgVVNC
-IFR5cGUtQQo+Pj4+IMKgwqA+IGNvbm5lY3RvcnMuCj4+Pj4gwqDCoD4KPj4+PiDCoMKgPiBBbHNv
-IGl0IGV4cG9zZXMgYSBhbmFsb2cgQS9WIGphY2sgYW5kIGEgbWljcm9waG9uZS4KPj4+PiDCoMKg
-Pgo+Pj4+IMKgwqA+IFNob3VsZCBJIGVuYWJsZSB7ZSxvfWhjaXsyLjN9IGluIHRoZSBkZXZpY2Ug
-dHJlZT8KPj4+Pgo+Pj4+IMKgwqBBY3R1YWxseSB3ZSBzaG91bGQgZG8gdGhpcyByZWdhcmRsZXNz
-IG9mIHRoaXMgZXh0ZW5zaW9uIGJvYXJkLiBUaGUgVVNCCj4+Pj4gwqDCoHBpbnMgYXJlIG5vdCBt
-dWx0aXBsZXhlZCBhbmQgYXJlIGV4cG9zZWQgb24gdXNlciBhY2Nlc3NpYmxlIHBpbnMgKGp1c3QK
-Pj4+PiDCoMKgbm90IHNvbGRlcmVkLCBidXQgdGhhdCdzIGEgZGV0YWlsKSwgc28gSSB0aGluayB0
-aGV5IHF1YWxpZnkgZm9yIERUCj4+Pj4gwqDCoGVuYWJsZW1lbnQuIEFuZCBldmVuIGlmIGEgdXNl
-ciBjYW4ndCB1c2UgdGhlbSwgaXQgZG9lc24ndCBodXJ0IHRvIGhhdmUKPj4+PiDCoMKgdGhlbSAo
-c2luY2UgdGhleSBhcmUgbm90IG11bHRpcGxleGVkKS4KPj4+Cj4+PiDCoE15IG1haW4gY29uY2Vy
-biBhYm91dCB0aGlzIGlzIHRoYXQgd2UnbGwgbGVhdmUgcmVndWxhdG9ycyBlbmFibGVkIGJ5Cj4+
-PiDCoGRlZmF1bHQsIGZvciBhIG1pbm9yaXR5IG9mIHVzZXJzLiBBbmQgdGhhdCBtaW5vcml0eSB3
-aWxsIHByZXZlbnQgdG8gZG8KPj4+IMKgYSBwcm9wZXIgcG93ZXIgbWFuYWdlbWVudCB3aGVuIHRo
-ZSB0aW1lcyBjb21lIHNpbmNlIHdlJ2xsIGhhdmUgdG8ga2VlcAo+Pj4gwqB0aGF0IGJlaGF2aW91
-ciBmb3JldmVyLgo+Pgo+PiDCoEkgdGhpbmsgdGhlc2UgdXNlcnMgY2FuIGFkZCBhICdmZHQgc2V0
-IC94eHgveHh4IHN0YXR1cyAiZGlzYWJsZWQiICcgLgo+Cj4gSSBkb24ndCB0aGluayB0aGF0IHdp
-bGwgYmUgbmVjZXNzYXJ5IEknbSBwcmV0dHkgc3VyZSB0aGVzZSBleHRyYSB1c2IKPiBwb3J0cyBk
-byBub3QgaGF2ZSBhIHJlZ3VsYXRvciBmb3IgdGhlIFZidXMsIHRoZXkganVzdCBob29rIGRpcmVj
-dGx5Cj4gdG8gdGhlIDVWIHJhaWwsIGNhbiBzb21lb25lIHdpdGggYSBzY2hlbWF0aWMgY2hlY2sg
-PwoKV2Ugc2VlbXMgdG8gaGF2ZSBzdGlsbCBubyBzY2hlbWF0aWNzIGZvciB0aGUgYWRkLW9uIGJv
-YXJkLgoKQnV0IHNvbWV0aGluZyBpcyBzdXJlIGlzIHRoYXQgdGhlcmUncyBubyBhbnkgcmVndWxh
-dG9yLXJlbGF0ZWQgcGlucwpvbiB0aGUgYWRkLW9uIHBpbm91dC4gVGhlcmUncyBvbmx5IFVTQiBE
-TSBhbmQgRFAgcGlucy4KClNvIHRoZSBWYnVzIG11c3QgYmUgZGlyZWN0bHkgY29ubmVjdGVkIHRv
-ICs1Vi4KCj4KPiBSZWdhcmRzLAo+Cj4gSGFucwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+
+Apart from the already enabled Designware HDMI port, the Utilite Pro
+has a second display pipeline which has the following shape:
+
+  IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
+                                --> HDMI connector.
+Enable support for it.
+
+In addition, since this pipeline is hardwired to IPU1, sever the link
+between IPU1 and the SoC-internal Designware HDMI encoder forcing the
+latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
+possible to drive both displays at high resolution due to the bandwidth
+limitations of a single IPU.
+
+Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+---
+
+Hi all,
+
+the removal of the link between IPU1 and the Designware HDMI encoder is the
+result of a discussion I had with Philipp Zabel:
+
+  https://lists.freedesktop.org/archives/dri-devel/2016-November/125399.html .
+
+Altough it is not possible to connect anything else to IPU1 on the Utilite, this
+approach has at least one disadvantage: if the resolution is low enough such 
+that a single IPU can handle both displays then muxing both displays to IPU1
+would reduce the power consumption.
+
+However, IMHO omitting the link IPU1 <--> DW HDMI is still the preferrable
+solution since I'm not aware of any OS/driver that is capable of switching IPUs
+or can handle the bandwidth limitation in a sane way. In particular, Linux is
+unusable when both displays are supposed to be driven at high resolution and
+both muxing options for the DW HDMI are available (this is not a userspace
+issue; the system becomes almost unresponsive as soon as the kernel sets the
+initial resolution).
+
+Cheers,
+Christopher
+
+P.S.: this patch depends on the tfp410 bridge driver which has recently been
+merged into drm-next.
+
+ arch/arm/boot/dts/imx6q-utilite-pro.dts | 115 ++++++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+index 2200994..69bdd82 100644
+--- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
++++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+@@ -59,6 +59,33 @@
+ 		rtc1 = &snvs_rtc;
+ 	};
+ 
++	encoder {
++		compatible = "ti,tfp410";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				tfp410_in: endpoint {
++					remote-endpoint = <&parallel_display_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				tfp410_out: endpoint {
++					remote-endpoint = <&hdmi_connector_in>;
++				};
++			};
++		};
++	};
++
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 		pinctrl-names = "default";
+@@ -72,6 +99,19 @@
+ 		};
+ 	};
+ 
++	hdmi-connector {
++		compatible = "hdmi-connector";
++
++		type = "a";
++		ddc-i2c-bus = <&i2c_dvi_ddc>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&tfp410_out>;
++			};
++		};
++	};
++
+ 	i2cmux {
+ 		compatible = "i2c-mux-gpio";
+ 		pinctrl-names = "default";
+@@ -105,8 +145,46 @@
+ 			#size-cells = <0>;
+ 		};
+ 	};
++
++	parallel-display {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1>;
++
++		interface-pix-fmt = "rgb24";
++
++		port@0 {
++			reg = <0>;
++
++			parallel_display_in: endpoint {
++				remote-endpoint = <&ipu1_di0_disp0>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			parallel_display_out: endpoint {
++				remote-endpoint = <&tfp410_in>;
++			};
++		};
++	};
+ };
+ 
++/*
++ * A single IPU is not able to drive both display interfaces available on the
++ * Utilite Pro at high resolution due to its bandwidth limitation. Since the
++ * tfp410 encoder is wired up to IPU1, sever the link between IPU1 and the
++ * SoC-internal Designware HDMI encoder forcing the latter to be connected to
++ * IPU2 instead of IPU1.
++ */
++/delete-node/&ipu1_di0_hdmi;
++/delete-node/&hdmi_mux_0;
++/delete-node/&ipu1_di1_hdmi;
++/delete-node/&hdmi_mux_1;
++
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c2>;
+ 	status = "okay";
+@@ -151,6 +229,39 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ipu1: ipu1grp {
++		fsl,pins = <
++			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x38
++			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x38
++			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x38
++			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x38
++			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x38
++			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x38
++			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x38
++			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x38
++			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x38
++			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x38
++			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x38
++			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x38
++			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x38
++			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x38
++			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x38
++			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x38
++			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x38
++			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x38
++			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x38
++			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x38
++			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x38
++			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x38
++			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x38
++			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x38
++			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x38
++			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x38
++			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x38
++			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x38
++		>;
++	};
++
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_7__UART2_TX_DATA 0x1b0b1
+@@ -194,6 +305,10 @@
+ 	};
+ };
+ 
++&ipu1_di0_disp0 {
++	remote-endpoint = <&parallel_display_in>;
++};
++
+ &pcie {
+ 	pcie@0,0 {
+ 		reg = <0x000000 0 0 0 0>;
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
