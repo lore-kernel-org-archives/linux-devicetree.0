@@ -1,61 +1,62 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 2/5] PM / devfreq: exynos-bus: Add the detailed correlation for
- Exynos5433
-Date: Fri, 02 Dec 2016 16:18:04 +0900
-Message-ID: <1480663087-4590-3-git-send-email-cw00.choi@samsung.com>
-References: <1480663087-4590-1-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1480663087-4590-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: krzk@kernel.org, javier@osg.samsung.com, kgene@kernel.org, robh+dt@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, linux-arm-kernel@lists.infradead.org
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH 3/4] mmc: pwrseq-simple: allow inverting of off state logic
+Date: Thu, 1 Dec 2016 23:28:25 -0800
+Message-ID: <313A249C-2BB9-487E-AF75-02ADB8AE83CC@ranostay.consulting>
+References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting> <1480659462-29536-4-git-send-email-matt@ranostay.consulting> <CAPDyKFrYVL52N22JVDA3wiWLAwUhht+6-=fi9kbGA8DYu=zPiA@mail.gmail.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrYVL52N22JVDA3wiWLAwUhht+6-=fi9kbGA8DYu=zPiA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the detailed corrleation between sub-blocks and VDD_INT power
-line for Exynos5433. VDD_INT provided the power source to INT (Internal) block.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-index d3ec8e676b6b..d085ef90d27c 100644
---- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-+++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
-@@ -123,6 +123,20 @@ Detailed correlation between sub-blocks and power line according to Exynos SoC:
- 		|--- FSYS
- 		|--- FSYS2
- 
-+- In case of Exynos5433, there is VDD_INT power line as following:
-+	VDD_INT |--- G2D (parent device)
-+		|--- MSCL
-+		|--- GSCL
-+		|--- JPEG
-+		|--- MFC
-+		|--- HEVC
-+		|--- BUS0
-+		|--- BUS1
-+		|--- BUS2
-+		|--- PERIS (Fixed clock rate)
-+		|--- PERIC (Fixed clock rate)
-+		|--- FSYS  (Fixed clock rate)
-+
- Example1:
- 	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
- 	power line (regulator). The MIF (Memory Interface) AXI bus is used to
--- 
-1.9.1
+
+
+Sent from my iPhone
+> On Dec 1, 2016, at 22:57, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>=20
+>> On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wro=
+te:
+>> Some devices need a logic level low instead of high to be in the
+>> off state.
+>>=20
+>> Cc: Tony Lindgren <tony@atomide.com>
+>> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>> ---
+>> .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt         |  2 ++
+>> drivers/mmc/core/pwrseq_simple.c                          | 15 ++++++++++=
++----
+>> 2 files changed, 13 insertions(+), 4 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b=
+/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> index 703a714201d8..bea306d772d1 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+>> @@ -22,6 +22,8 @@ Optional properties:
+>>        the reset-gpios (if any) are asserted
+>> - post-power-on-delay-ms : Delay in ms after powering the card and
+>>        de-asserting the reset-gpios (if any)
+>> +- invert-off-state: Invert the power down state for the reset-gpios (if a=
+ny)
+>> +       and pwrdn-gpios (if any)
+>=20
+> We already have DT bindings to describe GPIO pins as active high or
+> low. I think we should be able to use that instead, don't you think?
+
+Ah issue is we are using inverse logic in the power down from anything else.=
+ But I guess we could read the gpios active high and low stats from device t=
+ree and deduce it from that
+
+>=20
+> [...]
+>=20
+> Kind regards
+> Uffe
