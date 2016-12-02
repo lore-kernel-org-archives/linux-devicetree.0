@@ -1,129 +1,111 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv4 11/15] clk: ti: clockdomain: add clock provider support
- to clockdomains
-Date: Fri, 2 Dec 2016 15:12:40 -0800
-Message-ID: <20161202231240.GH4705@atomide.com>
-References: <1476805568-19264-1-git-send-email-t-kristo@ti.com>
- <1476805568-19264-12-git-send-email-t-kristo@ti.com>
- <20161028005047.GQ26139@codeaurora.org>
- <cd32a554-ba0a-33cd-c15c-121524ce679b@ti.com>
- <20161028125112.xfyrx7l7m64z6cu6@atomide.com>
- <20161028233617.GP16026@codeaurora.org>
- <20161028235448.57squdf6cu2wxxvm@atomide.com>
- <148071802182.32158.11479184984645880313@resonance>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <148071802182.32158.11479184984645880313@resonance>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable RGMII TX delay
+Date: Sat,  3 Dec 2016 00:32:36 +0100
+Message-ID: <20161202233238.17561-1-martin.blumenstingl@googlemail.com>
+References: <20161125130156.17879-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161125130156.17879-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Michael Turquette <mturquette@baylibre.com> [161202 14:34]:
-> Quoting Tony Lindgren (2016-10-28 16:54:48)
-> > * Stephen Boyd <sboyd@codeaurora.org> [161028 16:37]:
-> > > On 10/28, Tony Lindgren wrote:
-> > > > * Tero Kristo <t-kristo@ti.com> [161028 00:43]:
-> > > > > On 28/10/16 03:50, Stephen Boyd wrote:
-> > > > > > I suppose a PRCM is
-> > > > > > like an MFD that has clocks and resets under it? On other
-> > > > > > platforms we've combined that all into one node and just had
-> > > > > > #clock-cells and #reset-cells in that node. Is there any reason
-> > > > > > we can't do that here?
-> > > > > 
-> > > > > For OMAPs, there are typically multiple instances of the PRCM around; OMAP4
-> > > > > for example has:
-> > > > > 
-> > > > > cm1 @ 0x4a004000 (clocks + clockdomains)
-> > > > > cm2 @ 0x4a008000 (clocks + clockdomains)
-> > > > > prm @ 0x4a306000 (few clocks + resets + power state handling)
-> > > > > scrm @ 0x4a30a000 (few external clocks + plenty of misc stuff)
-> > > > > 
-> > > > > These instances are also under different power/voltage domains which means
-> > > > > their PM behavior is different.
-> > > > > 
-> > > > > The idea behind having a clockdomain as a provider was mostly to have the
-> > > > > topology visible : prcm-instance -> clockdomain -> clocks
-> > > > 
-> > > > Yeah that's needed to get the interconnect hierarchy right for
-> > > > genpd :)
-> > > > 
-> > > > > ... but basically I think it would be possible to drop the clockdomain
-> > > > > representation and just mark the prcm-instance as a clock provider. Tony,
-> > > > > any thoughts on that?
-> > > > 
-> > > > No let's not drop the clockdomains as those will be needed when we
-> > > > move things into proper hierarchy within the interconnect instances.
-> > > > This will then help with getting things right with genpd.
-> > > > 
-> > > > In the long run we just want to specify clockdomain and the offset of
-> > > > the clock instance within the clockdomain in the dts files.
-> > > > 
-> > > 
-> > > Sorry, I have very little idea how OMAP hardware works. Do you
-> > > mean that you will have different nodes for each clockdomain so
-> > > that genpd can map 1:1 to the node in dts? But in hardware
-> > > there's a prcm that allows us to control many clock domains
-> > > through register read/writes? How is the interconnect involved?
-> > 
-> > There are multiple clockdomains, at least one for each interconnect
-> > instance. Once a clockdomain is idle, the related interconnect can
-> > idle too. So yeah genpd pretty much maps 1:1 with the clockdomains.
-> > 
-> > There's more info in for example omap4 TRM section "3.4.1 Device
-> > Power-Management Layout" that shows the voltage/power/clock domains.
-> > The interconnect instances are mostly named there too looking at
-> > the L4/L3 naming.
-> 
-> I'm confused on two points:
-> 
-> 1) why are the clkdm's acting as clock providers? I've always hated the
-> name "clock domain" since those bits are for managing module state, not
-> clock state. The PRM, CM1 and CM2 provide the clocks, not the
-> clockdomains.
+Currently the dwmac-meson8b stmmac glue driver uses a hardcoded 1/4
+cycle (= 2ns) TX clock delay. This seems to work fine for many boards
+(for example Odroid-C2 or Amlogic's reference boards) but there are
+some others where TX traffic is simply broken.
+There are probably multiple reasons why it's working on some boards
+while it's broken on others:
+- some of Amlogic's reference boards are using a Micrel PHY
+- hardware circuit design
+- maybe more...
 
-The clock domains have multiple clock inputs that are routed to multiple
-child clocks. So it is a clock :)
+iperf3 results on my Mecool BB2 board (Meson GXM, RTL8211F PHY) with
+TX clock delay disabled on the MAC (as it's enabled in the PHY driver).
+TX throughput was virtually zero before:
+$ iperf3 -c 192.168.1.100 -R
+Connecting to host 192.168.1.100, port 5201
+Reverse mode, remote host 192.168.1.100 is sending
+[  4] local 192.168.1.206 port 52828 connected to 192.168.1.100 port 5201
+[ ID] Interval           Transfer     Bandwidth
+[  4]   0.00-1.00   sec   108 MBytes   901 Mbits/sec
+[  4]   1.00-2.00   sec  94.2 MBytes   791 Mbits/sec
+[  4]   2.00-3.00   sec  96.5 MBytes   810 Mbits/sec
+[  4]   3.00-4.00   sec  96.2 MBytes   808 Mbits/sec
+[  4]   4.00-5.00   sec  96.6 MBytes   810 Mbits/sec
+[  4]   5.00-6.00   sec  96.5 MBytes   810 Mbits/sec
+[  4]   6.00-7.00   sec  96.6 MBytes   810 Mbits/sec
+[  4]   7.00-8.00   sec  96.5 MBytes   809 Mbits/sec
+[  4]   8.00-9.00   sec   105 MBytes   884 Mbits/sec
+[  4]   9.00-10.00  sec   111 MBytes   934 Mbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-10.00  sec  1000 MBytes   839 Mbits/sec    0             sender
+[  4]   0.00-10.00  sec   998 MBytes   837 Mbits/sec                  receiver
 
-See for example omap4430 TRM "3.6.4 CD_WKUP Clock Domain" on page
-393 in my revision here.
+iperf Done.
+$ iperf3 -c 192.168.1.100
+Connecting to host 192.168.1.100, port 5201
+[  4] local 192.168.1.206 port 52832 connected to 192.168.1.100 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  4]   0.00-1.01   sec  99.5 MBytes   829 Mbits/sec  117    139 KBytes
+[  4]   1.01-2.00   sec   105 MBytes   884 Mbits/sec  129   70.7 KBytes
+[  4]   2.00-3.01   sec   107 MBytes   889 Mbits/sec  106    187 KBytes
+[  4]   3.01-4.01   sec   105 MBytes   878 Mbits/sec   92    143 KBytes
+[  4]   4.01-5.00   sec   105 MBytes   882 Mbits/sec  140    129 KBytes
+[  4]   5.00-6.01   sec   106 MBytes   883 Mbits/sec  115    195 KBytes
+[  4]   6.01-7.00   sec   102 MBytes   863 Mbits/sec  133   70.7 KBytes
+[  4]   7.00-8.01   sec   106 MBytes   884 Mbits/sec  143   97.6 KBytes
+[  4]   8.01-9.01   sec   104 MBytes   875 Mbits/sec  124    107 KBytes
+[  4]   9.01-10.01  sec   105 MBytes   876 Mbits/sec   90    139 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-10.01  sec  1.02 GBytes   874 Mbits/sec  1189             sender
+[  4]   0.00-10.01  sec  1.02 GBytes   873 Mbits/sec                  receiver
 
-On that page "Figure 3-48" shows CD_WKUP with the four input clocks.
-And then "Table 3-84. CD_WKUP Control and Status Parameters" shows
-the CD_WKUP clock domain specific registers. These registers show
-the status, I think they are all read-only registers. Then CD_WKUP
-has multiple child clocks with configurable registers.
+iperf Done.
 
->From hardware register point of view, each clock domain has:
+I get similar TX throughput on my Meson GXBB "MXQ Pro+" board when I
+disable the PHY's TX-delay and configure a 4ms TX-delay on the MAC.
+So changes to at least the RTL8211F PHY driver are needed to get it
+working properly in all situations.
 
-- Read-only clockdomain status registers in the beginning of
-  the address space
+Changes since v2:
+- moved all .dts patches (3-7) to a separate series
+- removed the default 2ns TX delay when phy-mode RGMII is specified
+- (rebased against current net-next)
 
-- Multiple similar clock instances register instances each
-  mapping to a specific interconnect target module
+Changes since v1:
+- renamed the devicetree property "amlogic,tx-delay" to
+  "amlogic,tx-delay-ns", which makes the .dts easier to read as we can
+  simply specify human-readable values instead of having "preprocessor
+  defines and calculation in human brain". Thanks to Andrew Lunn for
+  the suggestion!
+- improved documentation to indicate when the MAC TX-delay should be
+  configured and how to use the PHY's TX-delay
+- changed the default TX-delay in the dwmac-meson8b driver from 2ns
+  to 0ms when any of the rgmii-*id modes are used (the 2ns default
+  value still applies for phy-mode "rgmii")
+- added patches to properly reset the PHY on Meson GXBB devices and to
+  use a similar configuration than the one we use on Meson GXL devices
+  (by passing a phy-handle to stmmac and defining the PHY in the mdio0
+  bus - patch 3-6)
+- add the "amlogic,tx-delay-ns" property to all boards which are using
+  the RGMII PHY (patch 7)
 
-These are documented in "3.11.16.1 WKUP_CM Register Summary".
 
->From hardware point of view, we ideally want to map interconnect
-target modules to the clock instance offset from the clock domain
-for that interconnect segment. For example gptimer1 clocks would
-be just:
+Martin Blumenstingl (2):
+  net: dt-bindings: add RGMII TX delay configuration to meson8b-dwmac
+  net: stmmac: dwmac-meson8b: make the RGMII TX delay configurable
 
-clocks = <&cd_wkup 0x40>;
+ .../devicetree/bindings/net/meson-dwmac.txt         | 14 ++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 21 +++++++++++++++------
+ 2 files changed, 29 insertions(+), 6 deletions(-)
 
-> 2) why aren't the clock domains modeled as genpds with their associated
-> devices attached to them? Note that it is possible to "nest" genpd
-> objects. This would also allow for the "Clockdomain Dependency"
-> relationships to be properly modeled (see section 3.1.1.1.7 Clock Domain
-> Dependency in the OMAP4 TRM).
+-- 
+2.10.2
 
-Clock domains only route clocks to child clocks. Power domains
-are different registers. The power domains map roughly to
-interconnect instances, there we have registers to disable the
-whole interconnect when idle.
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
