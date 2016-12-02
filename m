@@ -1,137 +1,99 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: arm64: dts: zx: support cpu-freq for zx296718
-Date: Fri, 2 Dec 2016 10:36:29 +0800
-Message-ID: <20161202023627.GA6657@dragon>
-References: <1480594135-27273-1-git-send-email-baoyou.xie@linaro.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] HID: i2c-hid: support regulator power on/off
+Date: Thu, 1 Dec 2016 18:43:00 -0800
+Message-ID: <20161202024259.GA39759@google.com>
+References: <1480638670-111492-1-git-send-email-briannorris@chromium.org>
+ <1480638670-111492-2-git-send-email-briannorris@chromium.org>
+ <20161202003737.GA24901@dtor-ws>
+ <20161202004214.GA112550@google.com>
+ <20161202011615.GB24901@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480594135-27273-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20161202011615.GB24901@dtor-ws>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Viresh, the author of the bindings.
+On Thu, Dec 01, 2016 at 05:16:15PM -0800, Dmitry Torokhov wrote:
+> On Thu, Dec 01, 2016 at 04:42:15PM -0800, Brian Norris wrote:
+> > On Thu, Dec 01, 2016 at 04:37:37PM -0800, Dmitry Torokhov wrote:
+> > > On Thu, Dec 01, 2016 at 04:31:10PM -0800, Brian Norris wrote:
+> > > > On some boards, we need to enable a regulator before using the HID, and
+> > > > it's also nice to save power in suspend by disabling it. Support an
+> > > > optional "vdd-supply" and a companion initialization delay.
+> > > > 
+> > > > Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > > Cc: Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > > Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > > ---
+> > > > v2:
+> > > >  * support compatible property for wacom, with specific "vdd-supply" name
+> > > >  * support the 100ms delay needed for this digitizer
+> > > >  * target regulator support only at specific device
+> > > > 
+> > > > v3:
+> > > >  * drop Wacom specifics and allow this to be used generically
+> > > >  * add "init-delay-ms" property support
+> > > > 
+> > > >  drivers/hid/i2c-hid/i2c-hid.c | 48 ++++++++++++++++++++++++++++++++++++++++++-
+> > > >  include/linux/i2c/i2c-hid.h   |  6 ++++++
+> > > >  2 files changed, 53 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
+> > > > index b3ec4f2de875..4cb523133d13 100644
+> > > > --- a/drivers/hid/i2c-hid/i2c-hid.c
+> > > > +++ b/drivers/hid/i2c-hid/i2c-hid.c
 
-On Thu, Dec 01, 2016 at 08:08:55PM +0800, Baoyou Xie wrote:
-> This patch adds the CPU clock phandle in CPU's node
-> and uses operating-points-v2 to register operating points.
+...
+
+> > > > @@ -937,6 +939,22 @@ static int i2c_hid_of_probe(struct i2c_client *client,
+> > > >  	}
+> > > >  	pdata->hid_descriptor_address = val;
+> > > >  
+> > > > +	ret = of_property_read_u32(dev->of_node, "init-delay-ms", &val);
+> > > > +	if (!ret)
+> > > > +		pdata->init_delay_ms = ret;
+> > > > +
+> > > > +	pdata->supply = devm_regulator_get_optional(dev, "vdd");
+> > > 
+> > > Make it devm_regulator_get(), it's cleaner (you'll get a dummy regulator
+> > > that you can enable/disbale and not check if it is null or not).
+> > > 
+> > > 	pdata->supply = devm_regulator_get_optional(dev, "vdd");
+> > > 	if (IS_ERR(pdata->supply)) {
+> > > 		ret = PTR_ERR(pdata->supply);
+> > > 		if (ret != -EPROBE_DEFER)
+> > > 			dev_err(...);
+> > > 		return ret;
+> > > 	}
+> > 
+> > I had it as devm_regulator_get() in v1, but at that time, I was faking
+> > the firmware init delay using a regulator property. Now that I want to
+> > delay in this driver after enabling the regulator, I'd like to know the
+> > difference between a dummy and a real regulator. There's no need to wait
+> > after messing with the dummy regulator.
 > 
-> So it can be used by cpufreq-dt driver.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> If there is no regulator in ACPI/DT there would not be "init-delay-ms"
+> property either.
 
-Just out of curiosity, why is there no '[PATCH]' prefix in the subject?
+I suppose that's a fair assumption... the difference being that you
+assumed it, and I enforced it :)
 
-> ---
->  arch/arm64/boot/dts/zte/zx296718.dtsi | 37 +++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/zte/zx296718.dtsi b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> index 7a1aed7..16f7d5e 100644
-> --- a/arch/arm64/boot/dts/zte/zx296718.dtsi
-> +++ b/arch/arm64/boot/dts/zte/zx296718.dtsi
-> @@ -44,6 +44,7 @@
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/clock/zx296718-clock.h>
->  
->  / {
->  	compatible = "zte,zx296718";
-> @@ -81,6 +82,8 @@
->  			compatible = "arm,cortex-a53","arm,armv8";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			clocks = <&topcrm A53_GATE>;
-> +			operating-points-v2 = <&cluster0_opp>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -88,6 +91,7 @@
->  			compatible = "arm,cortex-a53","arm,armv8";
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
-> +			operating-points-v2 = <&cluster0_opp>;
->  		};
->  
->  		cpu2: cpu@2 {
-> @@ -95,6 +99,7 @@
->  			compatible = "arm,cortex-a53","arm,armv8";
->  			reg = <0x0 0x2>;
->  			enable-method = "psci";
-> +			operating-points-v2 = <&cluster0_opp>;
->  		};
->  
->  		cpu3: cpu@3 {
-> @@ -102,6 +107,38 @@
->  			compatible = "arm,cortex-a53","arm,armv8";
->  			reg = <0x0 0x3>;
->  			enable-method = "psci";
-> +			operating-points-v2 = <&cluster0_opp>;
-> +		};
-> +	};
-> +
-> +	cluster0_opp: opp_table0 {
+Anyway, I can respin without the _optional(). I'll wait at least a day
+or so, as the DT binding could use some review (it's the more
+controversial piece).
 
-I know this is how examples in the bindings doc written, but it's
-recommended to use hyphen rather than underscore in node name.  That
-said, the following naming form is better.
-
-	cluster0_opp: opp-table0
-
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp@500000000 {
-> +			opp-hz = /bits/ 64 <500000000>;
-> +			opp-microvolt = <857000>;
-> +			clock-latency-ns = <500000>;
-> +		};
-
-We prefer to have a newline between nodes.
-
-> +		opp@648000000 {
-> +			opp-hz = /bits/ 64 <648000000>;
-> +			opp-microvolt = <857000>;
-> +			clock-latency-ns = <500000>;
-> +		};
-> +		opp@800000000 {
-> +			opp-hz = /bits/ 64 <800000000>;
-> +			opp-microvolt = <882000>;
-> +			clock-latency-ns = <500000>;
-> +		};
-> +		opp@1000000000 {
-> +			opp-hz = /bits/ 64 <1000000000>;
-> +			opp-microvolt = <892000>;
-> +			clock-latency-ns = <500000>;
-> +		};
-> +		opp@1188000000 {
-> +			opp-hz = /bits/ 64 <1188000000>;
-> +			opp-microvolt = <1009000>;
-
-So we have 5 setpoints with different frequency-voltage pair.  I have
-seen 'clocks' specified in cpu0 node and understand how frequency
-scaling works.  But what about voltage scaling?  There is no
-'cpu-supply' defined, and how does voltage scale among these
-opp-microvolt settings?
-
-Another related question: if we do not support voltage scaling for now,
-what's the actually voltage when system is up running?  Is that voltage
-safe for cpu to run at all those 5 frequencies?
-
-Shawn
-
-> +			clock-latency-ns = <500000>;
->  		};
->  	};
->  
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
