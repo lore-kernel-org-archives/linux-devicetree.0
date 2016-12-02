@@ -1,112 +1,45 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
- device tree
-Date: Fri, 2 Dec 2016 08:53:24 -0800
-Message-ID: <20161202165323.GC4705@atomide.com>
-References: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <20161202011807.GF3703@atomide.com>
- <4245212.aFfvVGINdT@avalon>
+From: Nathan Sullivan <nathan.sullivan@ni.com>
+Subject: Re: [PATCH] MIPS: NI 169445 board support
+Date: Fri, 2 Dec 2016 11:30:20 -0600
+Message-ID: <20161202173020.GA22514@nathan3500-linux-VM>
+References: <1480693329-22265-1-git-send-email-nathan.sullivan@ni.com>
+ <04fd3008-14b1-b5e1-1895-093f0076644d@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <4245212.aFfvVGINdT@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <04fd3008-14b1-b5e1-1895-093f0076644d@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: ralf@linux-mips.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161202 05:38]:
-> Hi Tony,
+On Fri, Dec 02, 2016 at 04:21:59PM +0000, Zubair Lutfullah Kakakhel wrote:
+> Hi,
 > 
-> On Thursday 01 Dec 2016 17:18:08 Tony Lindgren wrote:
-> > * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161130 09:58]:
-> > >  &usbhsehci {
-> > >  
-> > >  	phys = <0 &hsusb2_phy>;
-> > > 
-> > > +
-> > > +	#address-cells = <1>;
-> > > +	#size-cells = <0>;
-> > > +
-> > > +	usb2@2 {
-> > 
-> > I think this should be usb1@2 instead of usb2@2? That's because it's
-> > at /sys/bus/usb/devices/1-2 and not at /sys/bus/usb/devices/2-2?
-> > 
-> > Or what's the naming standard here?
+> On 12/02/2016 03:42 PM, Nathan Sullivan wrote:
+> >Support the National Instruments 169445 board.
 > 
-> Good question. As far as I know, the node name is irrelevant, only the reg 
-> value is important. Maybe we should call it hub@2 ?
+> Interesting patch.
+> 
+> But do you happen to have a link to a description of the board?
+> I couldn't find anything with a quick search.
+> Perhaps the public name is something else?
+> 
+> Thanks,
+> ZubairLK
 
-Yeah hub sounds good to me, Rob?
+This patch is for a pre-release board we have not made public yet.  It's a
+straightforward MIPS system that will be used for networking, and we'd like to
+get Linux support in place ahead of release.
 
-Sohow does the kernel know which instance it is if there
-are multiple devices? For example, below is a patch for
-igepv5 (not yet using "hub" naming), note how it has things
-at 3-2 and 3-2.3. So if it also had something at 1-2 and
-1-2.1, how would we name them?
-
-Regards,
-
-Tony
-
-8< ------------------------
-
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Thu, 1 Dec 2016 17:04:50 -0800
-Subject: [PATCH] ARM: dts: omap5-igep0050: Allow bootloader to configure
- USB Ethernet MAC
-
-This is slightly different wiring compared to omap5-uevm or pandaboard:
-
-/sys/bus/usb/devices/3-2	hub
-/sys/bus/usb/devices/3-2.3	7500
-
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/omap5-igep0050.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap5-igep0050.dts b/arch/arm/boot/dts/omap5-igep0050.dts
---- a/arch/arm/boot/dts/omap5-igep0050.dts
-+++ b/arch/arm/boot/dts/omap5-igep0050.dts
-@@ -19,6 +19,10 @@
- 		reg = <0x0 0x80000000 0 0x7f000000>;	/* 2032 MB */
- 	};
- 
-+	aliases {
-+		ethernet = &ethernet;
-+	};
-+
- 	gpio_keys {
- 		compatible = "gpio-keys";
- 		pinctrl-0 = <&power_button_pin>;
-@@ -116,3 +120,20 @@
- 		OMAP5_IOPAD(0x1ca, PIN_OUTPUT | MUX_MODE6)	/* perslimbus2_clock.gpio5_145 */
- 	>;
- };
-+
-+&usbhsehci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	usb3@2 {
-+		compatible = "usb424,3503";
-+		reg = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@3 {
-+			compatible = "usb424,7500";
-+			reg = <3>;
-+		};
-+	};
-+};
--- 
-2.11.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Nathan
