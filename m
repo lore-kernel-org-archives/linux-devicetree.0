@@ -1,399 +1,188 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v3 2/2] mmc: sdhci-cadence: add Cadence SD4HC support
-Date: Fri,  2 Dec 2016 11:21:51 +0900
-Message-ID: <1480645311-13004-3-git-send-email-yamada.masahiro@socionext.com>
-References: <1480645311-13004-1-git-send-email-yamada.masahiro@socionext.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 5/9] arm64: dts: rockchip: add rk3399 OPPs
+Date: Thu,  1 Dec 2016 18:27:29 -0800
+Message-ID: <1480645653-36943-6-git-send-email-briannorris@chromium.org>
+References: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480645311-13004-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1480645653-36943-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the Cadence SD4HC SD/SDIO/eMMC Controller.
+Used for Gru/Kevin, but they should be conservative enough for all
+boards. (And ideally, any board-to-board differences can be represented
+via, e.g., describing regulator offsets.)
 
-For SD, it basically relies on the SDHCI standard code.
-For eMMC, this driver provides some callbacks to support the
-hardware part that is specific to this IP design.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+ arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi | 145 +++++++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi     |   1 +
+ 2 files changed, 146 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
 
-Changes in v3:
-  - Remove unneeded explanation about HRS and SRS from DT binding;
-    the offsets to HRS/SRS are fixed for this hardware and this is
-    quite normal, like each hardware has a fixed register view except
-    the register base.  The detailed register map is what the driver
-    cares about, so no need to explain it in the binding.
-
-Changes in v2:
-  - Remove unnecessary "select MMC_SDHCI_IO_ACCESSORS"
-
- .../devicetree/bindings/mmc/sdhci-cadence.txt      |  30 +++
- drivers/mmc/host/Kconfig                           |  11 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/sdhci-cadence.c                   | 279 +++++++++++++++++++++
- 4 files changed, 321 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
- create mode 100644 drivers/mmc/host/sdhci-cadence.c
-
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
 new file mode 100644
-index 0000000..750374f
+index 000000000000..e1038cd92ce5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-@@ -0,0 +1,30 @@
-+* Cadence SD/SDIO/eMMC Host Controller
++++ b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+@@ -0,0 +1,145 @@
++/*
++ * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+Required properties:
-+- compatible: should be "cdns,sd4hc".
-+- reg: offset and length of the register set for the device.
-+- interrupts: a single interrupt specifier.
-+- clocks: phandle to the input clock.
++/ {
++	cluster0_opp: opp-table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
 +
-+Optional properties:
-+For eMMC configuration, supported speed modes are not indicated by the SDHCI
-+Capabilities Register.  Instead, the following properties should be specified
-+if supported.  See mmc.txt for details.
-+- mmc-ddr-1_8v
-+- mmc-ddr-1_2v
-+- mmc-hs200-1_8v
-+- mmc-hs200-1_2v
-+- mmc-hs400-1_8v
-+- mmc-hs400-1_2v
-+
-+Example:
-+	emmc: sdhci@5a000000 {
-+		compatible = "cdns,sd4hc";
-+		reg = <0x5a000000 0x400>;
-+		interrupts = <0 78 4>;
-+		clocks = <&clk 4>;
-+		bus-width = <8>;
-+		mmc-ddr-1_8v;
-+		mmc-hs200-1_8v;
-+		mmc-hs400-1_8v;
++		opp00 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <800000>;
++			clock-latency-ns = <40000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <800000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <800000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <875000>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <925000>;
++		};
++		opp05 {
++			opp-hz = /bits/ 64 <1416000000>;
++			opp-microvolt = <1050000>;
++		};
++		opp06 {
++			opp-hz = /bits/ 64 <1512000000>;
++			opp-microvolt = <1125000>;
++		};
 +	};
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index ab9181e..8ac1640 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -164,6 +164,17 @@ config MMC_SDHCI_OF_HLWD
++
++	cluster1_opp: opp-table1 {
++		compatible = "operating-points-v2";
++		opp-shared;
++
++		opp00 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <800000>;
++			clock-latency-ns = <40000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <800000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <825000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <875000>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <950000>;
++		};
++		opp05 {
++			opp-hz = /bits/ 64 <1416000000>;
++			opp-microvolt = <1025000>;
++		};
++		opp06 {
++			opp-hz = /bits/ 64 <1608000000>;
++			opp-microvolt = <1075000>;
++		};
++		opp07 {
++			opp-hz = /bits/ 64 <1800000000>;
++			opp-microvolt = <1150000>;
++		};
++		opp08 {
++			opp-hz = /bits/ 64 <2016000000>;
++			opp-microvolt = <1250000>;
++		};
++	};
++};
++
++&cpu_l0 {
++	operating-points-v2 = <&cluster0_opp>;
++};
++
++&cpu_l1 {
++	operating-points-v2 = <&cluster0_opp>;
++};
++
++&cpu_l2 {
++	operating-points-v2 = <&cluster0_opp>;
++};
++
++&cpu_l3 {
++	operating-points-v2 = <&cluster0_opp>;
++};
++
++&cpu_b0 {
++	operating-points-v2 = <&cluster1_opp>;
++};
++
++&cpu_b1 {
++	operating-points-v2 = <&cluster1_opp>;
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 1e97fb8c6415..02392c084607 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1948,3 +1948,4 @@
  
- 	  If unsure, say N.
- 
-+config MMC_SDHCI_CADENCE
-+	tristate "SDHCI support for the Cadence SD/SDIO/eMMC controller"
-+	depends on MMC_SDHCI_PLTFM
-+	depends on OF
-+	help
-+	  This selects the Cadence SD/SDIO/eMMC driver.
-+
-+	  If you have a controller with this interface, say Y or M here.
-+
-+	  If unsure, say N.
-+
- config MMC_SDHCI_CNS3XXX
- 	tristate "SDHCI support on the Cavium Networks CNS3xxx SoC"
- 	depends on ARCH_CNS3XXX
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index e49a82a..55f7193 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_MMC_REALTEK_PCI)	+= rtsx_pci_sdmmc.o
- obj-$(CONFIG_MMC_REALTEK_USB)	+= rtsx_usb_sdmmc.o
- 
- obj-$(CONFIG_MMC_SDHCI_PLTFM)		+= sdhci-pltfm.o
-+obj-$(CONFIG_MMC_SDHCI_CADENCE)		+= sdhci-cadence.o
- obj-$(CONFIG_MMC_SDHCI_CNS3XXX)		+= sdhci-cns3xxx.o
- obj-$(CONFIG_MMC_SDHCI_ESDHC_IMX)	+= sdhci-esdhc-imx.o
- obj-$(CONFIG_MMC_SDHCI_DOVE)		+= sdhci-dove.o
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-new file mode 100644
-index 0000000..a7daf00
---- /dev/null
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -0,0 +1,279 @@
-+/*
-+ * Copyright (C) 2016 Socionext Inc.
-+ *   Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/mmc/host.h>
-+
-+#include "sdhci-pltfm.h"
-+
-+/* HRS - Host Register Set (specific to Cadence) */
-+#define SDHCI_CDNS_HRS04		0x10		/* PHY access port */
-+#define   SDHCI_CDNS_HRS04_ACK			BIT(26)
-+#define   SDHCI_CDNS_HRS04_RD			BIT(25)
-+#define   SDHCI_CDNS_HRS04_WR			BIT(24)
-+#define   SDHCI_CDNS_HRS04_RDATA_SHIFT		12
-+#define   SDHCI_CDNS_HRS04_WDATA_SHIFT		8
-+#define   SDHCI_CDNS_HRS04_ADDR_SHIFT		0
-+
-+#define SDHCI_CDNS_HRS06		0x18		/* eMMC control */
-+#define   SDHCI_CDNS_HRS06_TUNE_UP		BIT(15)
-+#define   SDHCI_CDNS_HRS06_TUNE_SHIFT		8
-+#define   SDHCI_CDNS_HRS06_TUNE_MASK		0x3f
-+#define   SDHCI_CDNS_HRS06_MODE_MASK		0x7
-+#define   SDHCI_CDNS_HRS06_MODE_SD		0x0
-+#define   SDHCI_CDNS_HRS06_MODE_MMC_SDR		0x2
-+#define   SDHCI_CDNS_HRS06_MODE_MMC_DDR		0x3
-+#define   SDHCI_CDNS_HRS06_MODE_MMC_HS200	0x4
-+#define   SDHCI_CDNS_HRS06_MODE_MMC_HS400	0x5
-+
-+/* SRS - Slot Register Set (SDHCI-compatible) */
-+#define SDHCI_CDNS_SRS_BASE		0x200
-+
-+/* PHY */
-+#define SDHCI_CDNS_PHY_DLY_SD_HS	0x00
-+#define SDHCI_CDNS_PHY_DLY_SD_DEFAULT	0x01
-+#define SDHCI_CDNS_PHY_DLY_UHS_SDR12	0x02
-+#define SDHCI_CDNS_PHY_DLY_UHS_SDR25	0x03
-+#define SDHCI_CDNS_PHY_DLY_UHS_SDR50	0x04
-+#define SDHCI_CDNS_PHY_DLY_UHS_DDR50	0x05
-+#define SDHCI_CDNS_PHY_DLY_EMMC_LEGACY	0x06
-+#define SDHCI_CDNS_PHY_DLY_EMMC_SDR	0x07
-+#define SDHCI_CDNS_PHY_DLY_EMMC_DDR	0x08
-+
-+/*
-+ * The tuned val register is 6 bit-wide, but not the whole of the range is
-+ * available.  The range 0-42 seems to be available (then 43 wraps around to 0)
-+ * but I am not quite sure if it is official.  Use only 0 to 39 for safety.
-+ */
-+#define SDHCI_CDNS_MAX_TUNING_LOOP	40
-+
-+struct sdhci_cdns_priv {
-+	void __iomem *hrs_addr;
-+};
-+
-+static void sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
-+				     u8 addr, u8 data)
-+{
-+	void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS04;
-+	u32 tmp;
-+
-+	tmp = (data << SDHCI_CDNS_HRS04_WDATA_SHIFT) |
-+	      (addr << SDHCI_CDNS_HRS04_ADDR_SHIFT);
-+	writel(tmp, reg);
-+
-+	tmp |= SDHCI_CDNS_HRS04_WR;
-+	writel(tmp, reg);
-+
-+	tmp &= ~SDHCI_CDNS_HRS04_WR;
-+	writel(tmp, reg);
-+}
-+
-+static void sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
-+{
-+	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_HS, 4);
-+	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_DEFAULT, 4);
-+	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_LEGACY, 9);
-+	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_SDR, 2);
-+	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_DDR, 3);
-+}
-+
-+static inline void *sdhci_cdns_priv(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+
-+	return sdhci_pltfm_priv(pltfm_host);
-+}
-+
-+static unsigned int sdhci_cdns_get_timeout_clock(struct sdhci_host *host)
-+{
-+	/*
-+	 * Cadence's spec says the Timeout Clock Frequency is the same as the
-+	 * Base Clock Frequency.  Divide it by 1000 to return a value in kHz.
-+	 */
-+	return host->max_clk / 1000;
-+}
-+
-+static int sdhci_cdns_set_tune_val(struct sdhci_host *host, unsigned int val)
-+{
-+	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
-+	void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS06;
-+	u32 tmp;
-+
-+	if (WARN_ON(val > SDHCI_CDNS_HRS06_TUNE_MASK))
-+		return -EINVAL;
-+
-+	tmp = readl(reg);
-+	tmp &= ~(SDHCI_CDNS_HRS06_TUNE_MASK << SDHCI_CDNS_HRS06_TUNE_SHIFT);
-+	tmp |= val << SDHCI_CDNS_HRS06_TUNE_SHIFT;
-+	tmp |= SDHCI_CDNS_HRS06_TUNE_UP;
-+	writel(tmp, reg);
-+
-+	return readl_poll_timeout(reg, tmp, !(tmp & SDHCI_CDNS_HRS06_TUNE_UP),
-+				  0, 1);
-+}
-+
-+static int sdhci_cdns_execute_tuning(struct sdhci_host *host, u32 opcode)
-+{
-+	int max_streak = 0;
-+	int cur_streak = 0;
-+	int end_of_streak, i;
-+
-+	/*
-+	 * This handler only implements the eMMC tuning that is specific to
-+	 * this controller.  Fall back to the standard method for SD timing.
-+	 */
-+	if (host->timing != MMC_TIMING_MMC_HS200)
-+		return -ENOTSUPP;
-+
-+	if (WARN_ON(opcode != MMC_SEND_TUNING_BLOCK_HS200))
-+		return -EINVAL;
-+
-+	for (i = 0; i < SDHCI_CDNS_MAX_TUNING_LOOP; i++) {
-+		if (sdhci_cdns_set_tune_val(host, i) ||
-+		    mmc_send_tuning(host->mmc, opcode, NULL)) { /* bad */
-+			cur_streak = 0;
-+		} else { /* good */
-+			cur_streak++;
-+			max_streak = max(max_streak, cur_streak);
-+			end_of_streak = i;
-+		}
-+	}
-+
-+	if (!max_streak) {
-+		dev_err(mmc_dev(host->mmc), "no tuning point found\n");
-+		return -EIO;
-+	}
-+
-+	return sdhci_cdns_set_tune_val(host, end_of_streak - max_streak / 2);
-+}
-+
-+static void sdhci_cdns_set_uhs_signaling(struct sdhci_host *host,
-+					 unsigned int timing)
-+{
-+	struct sdhci_cdns_priv *priv = sdhci_cdns_priv(host);
-+	u32 mode, tmp;
-+
-+	switch (timing) {
-+	case MMC_TIMING_MMC_HS:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_SDR;
-+		break;
-+	case MMC_TIMING_MMC_DDR52:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_DDR;
-+		break;
-+	case MMC_TIMING_MMC_HS200:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS200;
-+		break;
-+	case MMC_TIMING_MMC_HS400:
-+		mode = SDHCI_CDNS_HRS06_MODE_MMC_HS400;
-+		break;
-+	default:
-+		mode = SDHCI_CDNS_HRS06_MODE_SD;
-+		break;
-+	}
-+
-+	/* The speed mode for eMMC is selected by HRS06 register */
-+	tmp = readl(priv->hrs_addr + SDHCI_CDNS_HRS06);
-+	tmp &= ~SDHCI_CDNS_HRS06_MODE_MASK;
-+	tmp |= mode;
-+	writel(tmp, priv->hrs_addr + SDHCI_CDNS_HRS06);
-+
-+	/* For SD, fall back to the default handler */
-+	if (mode == SDHCI_CDNS_HRS06_MODE_SD)
-+		sdhci_set_uhs_signaling(host, timing);
-+}
-+
-+static const struct sdhci_ops sdhci_cdns_ops = {
-+	.set_clock = sdhci_set_clock,
-+	.get_timeout_clock = sdhci_cdns_get_timeout_clock,
-+	.set_bus_width = sdhci_set_bus_width,
-+	.reset = sdhci_reset,
-+	.platform_execute_tuning = sdhci_cdns_execute_tuning,
-+	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
-+};
-+
-+static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
-+	.ops = &sdhci_cdns_ops,
-+};
-+
-+static int sdhci_cdns_probe(struct platform_device *pdev)
-+{
-+	struct sdhci_host *host;
-+	struct sdhci_pltfm_host *pltfm_host;
-+	struct sdhci_cdns_priv *priv;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
-+
-+	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data, sizeof(*priv));
-+	if (IS_ERR(host)) {
-+		ret = PTR_ERR(host);
-+		goto disable_clk;
-+	}
-+
-+	pltfm_host = sdhci_priv(host);
-+	pltfm_host->clk = clk;
-+
-+	priv = sdhci_cdns_priv(host);
-+	priv->hrs_addr = host->ioaddr;
-+	host->ioaddr += SDHCI_CDNS_SRS_BASE;
-+
-+	ret = mmc_of_parse(host->mmc);
-+	if (ret)
-+		goto free;
-+
-+	sdhci_cdns_phy_init(priv);
-+
-+	ret = sdhci_add_host(host);
-+	if (ret)
-+		goto free;
-+
-+	return 0;
-+free:
-+	sdhci_pltfm_free(pdev);
-+disable_clk:
-+	clk_disable_unprepare(clk);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sdhci_cdns_match[] = {
-+	{ .compatible = "cdns,sd4hc" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_cdns_match);
-+
-+static struct platform_driver sdhci_cdns_driver = {
-+	.driver = {
-+		.name = "sdhci-cdns",
-+		.pm = &sdhci_pltfm_pmops,
-+		.of_match_table = sdhci_cdns_match,
-+	},
-+	.probe = sdhci_cdns_probe,
-+	.remove = sdhci_pltfm_unregister,
-+};
-+module_platform_driver(sdhci_cdns_driver);
-+
-+MODULE_AUTHOR("Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>");
-+MODULE_DESCRIPTION("Cadence SD/SDIO/eMMC Host Controller Driver");
-+MODULE_LICENSE("GPL");
+ 	};
+ };
++#include "rk3399-opp.dtsi"
 -- 
-2.7.4
+2.8.0.rc3.226.g39d4020
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
