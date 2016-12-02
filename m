@@ -1,39 +1,37 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 0/2] Add support for Tianma TM070JDHG30 display
-Date: Fri,  2 Dec 2016 09:52:06 +0100
-Message-ID: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: [PATCH 1/2] of: Add vendor prefix for Tianma Micro-electronics
+Date: Fri,  2 Dec 2016 09:52:07 +0100
+Message-ID: <20161202085208.19459-2-gary.bisson@boundarydevices.com>
+References: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20161202085208.19459-1-gary.bisson@boundarydevices.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Tianma Micro-electronics Co., Ltd. (Tianma) specializes in providing
+display solutions and efficient support services worldwide.
 
-This series adds support for the Tianma TM070JDHG30 7" display (1280x800).
-http://usa.tianma.com/products-technology/product/tm070jdhg30-00
-https://boundarydevices.com/product/bd070lic2/
+More info:
+http://en.tianma.com/about.shtml
 
-The first patch adds Tianma as a new vendor prefix whereas the second patch
-adds the display to the simple panel driver.
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Gary
-
-Gary Bisson (2):
-  of: Add vendor prefix for Tianma Micro-electronics
-  drm/panel: simple: Add support for Tianma TM070JDHG30
-
- .../bindings/display/panel/tianma,tm070jdhg30.txt  |  7 ++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
- 3 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,tm070jdhg30.txt
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 163f84b..3d1ec68 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -291,6 +291,7 @@ technologic	Technologic Systems
+ terasic	Terasic Inc.
+ thine	THine Electronics, Inc.
+ ti	Texas Instruments
++tianma	Tianma Micro-electronics Co., Ltd.
+ tlm	Trusted Logic Mobility
+ topeet  Topeet
+ toradex	Toradex AG
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
