@@ -1,40 +1,58 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Fri, 2 Dec 2016 10:58:22 -0800
-Message-ID: <5f146fb6-ec88-b7ee-ef5b-a5ad32c54a74@codeaurora.org>
-References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
- <1477053961-27128-2-git-send-email-t-kristo@ti.com>
- <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
- <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com>
- <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
- <0fe81866-8bfd-f3a7-d808-9cb23841f504@ti.com>
- <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
- <CAL_JsqKox9WVXh=i1jSCijJDTACC35uiNtS-bg9fdyDrX0svRQ@mail.gmail.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] net: ethernet: ti: cpts: add ptp pps support
+Date: Fri, 2 Dec 2016 20:28:10 +0100
+Message-ID: <20161202192810.GA3259@netboy>
+References: <20161128230428.6872-1-grygorii.strashko@ti.com>
+ <20161128230428.6872-5-grygorii.strashko@ti.com>
+ <20161130184511.GB8209@netboy>
+ <875d4cc2-8a47-b06d-fb46-0cacc28dbaee@ti.com>
+ <20161130221738.GA13099@localhost.localdomain>
+ <20161202095848.GA14586@localhost.localdomain>
+ <bfbebf2d-d057-6a21-845c-48f0a9ab0404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKox9WVXh=i1jSCijJDTACC35uiNtS-bg9fdyDrX0svRQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bfbebf2d-d057-6a21-845c-48f0a9ab0404-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2016 10:45 AM, Rob Herring wrote:
-> On Fri, Dec 2, 2016 at 2:19 AM, Tero Kristo <t-kristo@ti.com> wrote:
->>
->> Rob, any response on this one? I see you have acked the reset part of the
->> bindings which is doing pretty much the same thing as the clock part is
->> doing here, namely adding child node under the main SCI node. Is it okay to
->> do this same for other parts of the TI SCI?
-> Yes. It would be silly to allow for one and not others...
->
+On Fri, Dec 02, 2016 at 11:58:34AM -0600, Grygorii Strashko wrote:
+> or I missed smth?
 
-I'm expecting a respin for the node name (clocks or clock-controller).
-I'll also make a review pass on patch 3 today so please don't respin
-until after that.
+You are missing three important points.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1. Unlike the code you posted, no edges will be lost.
 
+2. The solution using the PWM is implemented in USER SPACE.  If people
+   use this way, then they will be forced to understand the inherit
+   limitations.  In addition, the behavior of servo will be under
+   their control.
+
+3. The update rate of the PHC is not once per second.  It can be any
+   rate at all, like 16 Hz for the telecom profile.  You can't just
+   blindly pick out an adjustment value once per second.  Using the
+   feedback from the time stamped PWM and adjusting THAT at the PWM
+   rate (also not necessarily 1 PPS) is the right way.  The second
+   reply in that thread is an even better solution, leaving the PHC
+   free running and adjusting the timer input clock (probably they
+   used a VCO).
+
+Just hacking in some kind of kernel PPS with unknown accuracy is just
+asking for trouble later, since people will expect HW accuracy.
+
+So just get the input time stamps working, and make PWM control
+available to userspace in mainline (not sure about this, I guess it
+isn't), and leave the PPS part to a userspace utility.
+
+Thanks,
+Richard
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
