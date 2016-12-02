@@ -1,40 +1,38 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 3/3 pci/next] PCI: rcar: Add gen3 fallback
- compatibility string for pcie-rcar
-Date: Fri, 2 Dec 2016 12:44:16 +0100
-Message-ID: <CAMuHMdW6-qF46EoJPKOXy_P4-JMc0kS7i53sDv4UHshcTFZnRw@mail.gmail.com>
-References: <1480675020-26346-1-git-send-email-horms+renesas@verge.net.au> <1480675020-26346-4-git-send-email-horms+renesas@verge.net.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/3 pci/next] PCI: rcar-gen2: Use gen2 fallback
+ compatibility last
+Date: Fri, 2 Dec 2016 12:44:50 +0100
+Message-ID: <CAMuHMdWXqZz6doeo4M6cWsLdNCX2wTO12bkwP4RY_epQDVN8EQ@mail.gmail.com>
+References: <1480675020-26346-1-git-send-email-horms+renesas@verge.net.au> <1480675020-26346-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1480675020-26346-4-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1480675020-26346-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 2, 2016 at 11:37 AM, Simon Horman
-<horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> Add fallback compatibility string for the  R-Car Gen 3 family.  This is in
-> keeping with the both the existing fallback compatibility string for the
-> R-Car Gen 2 family and the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
+On Fri, Dec 2, 2016 at 11:36 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Fallback compatibility strings should be used only if more specific ones
+> are matched and the order of compatibility strings in the corresponding
+> struct of_device_id should implement this.
 >
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> This does not have a run-time effect as current all relevant compatibility
+> strings result in the same initialisation.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
