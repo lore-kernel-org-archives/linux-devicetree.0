@@ -1,45 +1,118 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] stmmac: dwmac-meson8b: configurable RGMII TX delay
-Date: Sat, 3 Dec 2016 00:52:14 +0100
-Message-ID: <CAFBinCDHHT-eWoYmsVQyihcbrvoW=qP9MnG8hRfMfk4VRekS2w@mail.gmail.com>
-References: <20161124143417.10178-1-martin.blumenstingl@googlemail.com>
- <20161125130156.17879-1-martin.blumenstingl@googlemail.com> <20161127.203324.1634866862730391239.davem@davemloft.net>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5/5] ARM64: dts: amlogic: add the ethernet TX delay
+ configuration
+Date: Sat,  3 Dec 2016 00:47:39 +0100
+Message-ID: <20161202234739.22929-6-martin.blumenstingl@googlemail.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161127.203324.1634866862730391239.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2016 at 2:33 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Date: Fri, 25 Nov 2016 14:01:49 +0100
->
->> Currently the dwmac-meson8b stmmac glue driver uses a hardcoded 1/4
->> cycle TX clock delay. This seems to work fine for many boards (for
->> example Odroid-C2 or Amlogic's reference boards) but there are some
->> others where TX traffic is simply broken.
->> There are probably multiple reasons why it's working on some boards
->> while it's broken on others:
->> - some of Amlogic's reference boards are using a Micrel PHY
->> - hardware circuit design
->> - maybe more...
->
-> The ARM arch file changes do not apply cleanly to net-next, you probably
-> want to merge them via the ARM tree instead of mine, and respin this series
-> to be without the .dts file changes.
-done, v3 contains only the net-next changes while the dts changes can
-be found here: [0]
+This adds the amlogic,tx-delay-ns with the old (hardcoded) default value
+of 2ns to all boards which are using an RGMII ethernet PHY.
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts  | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts  | 2 ++
+ 6 files changed, 12 insertions(+)
 
-Regards,
-Martin
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001836.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index cbaf024..fdade07 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -161,6 +161,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	phy-mode = "rgmii";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 2abc553..8172e12 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -152,6 +152,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	phy-mode = "rgmii";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index a0e92e3..ab49712 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -131,6 +131,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	phy-mode = "rgmii";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+index f66939c..7fd11c6 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
+@@ -64,6 +64,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	/* External PHY is in RGMII */
+ 	phy-mode = "rgmii";
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index f859d75..cf9b960 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -156,6 +156,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	/* External PHY is in RGMII */
+ 	phy-mode = "rgmii";
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+index 5dbc660..e428e29 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts
+@@ -64,6 +64,8 @@
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	snps,reset-active-low;
+ 
++	amlogic,tx-delay-ns = <2>;
++
+ 	/* External PHY is in RGMII */
+ 	phy-mode = "rgmii";
+ };
+-- 
+2.10.2
