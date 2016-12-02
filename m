@@ -1,46 +1,67 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 4/4] mmc: pwrseq-simple: add disable-post-power-on option
-Date: Fri, 2 Dec 2016 08:13:42 +0100
-Message-ID: <CAPDyKFpCY+LHFkJVJGHaSDODVR7_Xr2ohpdOAn9Hd3qZbDTQ6w@mail.gmail.com>
-References: <1480659462-29536-1-git-send-email-matt@ranostay.consulting> <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1480659462-29536-5-git-send-email-matt@ranostay.consulting>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/5] arm64: dts: Enable bus frequency scaling on
+ Exynos5433-based TM2 board
+Date: Fri, 02 Dec 2016 16:18:02 +0900
+Message-ID: <1480663087-4590-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 December 2016 at 07:17, Matt Ranostay <matt@ranostay.consulting> wrote:
-> Add optional device-post-power-on parameters to disable post_power_on
-> function from being called since this breaks some device.
->
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
->  drivers/mmc/core/pwrseq_simple.c                            | 7 +++++++
->  2 files changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> index bea306d772d1..09fa153f743e 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> @@ -24,6 +24,8 @@ Optional properties:
->         de-asserting the reset-gpios (if any)
->  - invert-off-state: Invert the power down state for the reset-gpios (if any)
->         and pwrdn-gpios (if any)
-> +- disable-post-power-on : Avoid post_power_on function from being called since
-> +       this breaks some devices
+This patches add the AMBA bus Device-tree node unsing VDD_INT
+to enable the bus frequency scaling on Exynos5433-based TM2 board.
 
-This is a bit weird. I would like to avoid this, if possible.
+There are two kind of bus device with devfreq framework.
+- Parent bus device  : Change the frequency/voltage according to bus's utilization.
+- Passive bus device : Change only frequency according to the new level
+                       of parent bus device.
 
-Perhaps if you simply describe the sequence in detail for your device
-we can figure out the best option together.
+The VDD_INT regulator provides the power source to INT (Internal) block as
+following. The sub-blocks in the INT block share the one power source.
+       VDD_INT |--- G2D (parent device)
+               |--- MSCL
+               |--- GSCL
+               |--- JPEG
+               |--- MFC
+               |--- HEVC
+               |--- BUS0
+               |--- BUS1
+               |--- BUS2
+               |--- PERIS (Fixed clock rate)
+               |--- PERIC (Fixed clock rate)
+               |--- FSYS  (Fixed clock rate)
 
-[...]
+Each sub-block has the bus clock as following:
+ - CLK_ACLK_G2D_{400|266} : Bus clock for G2D
+ - CLK_ACLK_MSCL_400      : Bus clock for MSCL (Mobile Scaler)
+ - CLK_ACLK_GSCL_333      : Bus clock for GSCL (General Scaler)
+ - CLK_SCLK_JPEG_MSCL     : Bus clock for JPEG
+ - CLK_ACLK_MFC_400       : Bus clock for MFC (Multi Format Codec)
+ - CLK_ACLK_HEVC_400      : Bus clock for HEVC (High Effective Video Codec)
+ - CLK_ACLK_BUS0_400      : NoC(Network On Chip)'s bus clock for PERIC/PERIS/FSYS/MSCL
+ - CLK_ACLK_BUS1_400      : NoC's bus clock for MFC/HEVC/G3D
+ - CLK_ACLK_BUS2_400      : NoC's bus clock for GSCL/DISP/G2D/CAM0/CAM1/ISP
 
-Kind regards
-Uffe
+Chanwoo Choi (5):
+  clk: samsung: exynos5433: Set NoC (Network On Chip) clocks as critical
+  PM / devfreq: exynos-bus: Add the detailed correlation for Exynos5433
+  arm64: dts: exynos5433: Add PPMU dt node
+  arm64: dts: exynos5433: Add bus dt node using VDD_INT for Exynos5433
+  arm64: dts: exynos5433: Add support of bus frequency using VDD_INT on TM2
+
+ .../devicetree/bindings/devfreq/exynos-bus.txt     |  14 ++
+ arch/arm64/boot/dts/exynos/exynos5433-bus.dtsi     | 208 +++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  72 +++++++
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi         |  25 +++
+ drivers/clk/samsung/clk-exynos5433.c               |   8 +-
+ 5 files changed, 323 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-bus.dtsi
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
