@@ -1,78 +1,87 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
- chips
-Date: Fri, 2 Dec 2016 10:47:46 -0800
-Message-ID: <563a7a72-1209-2457-6f11-a890d17c3dd0@codeaurora.org>
-References: <1479816163-5260-1-git-send-email-vivek.gautam@codeaurora.org>
- <1479816163-5260-3-git-send-email-vivek.gautam@codeaurora.org>
- <20161128231424.GN6095@codeaurora.org>
- <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the
+ device tree
+Date: Fri, 2 Dec 2016 10:50:17 -0800
+Message-ID: <20161202185016.GG4705@atomide.com>
+References: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <4245212.aFfvVGINdT@avalon>
+ <20161202165323.GC4705@atomide.com>
+ <2173679.ibqUs8Vreg@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGdDnTvod7g8FOMWvUv22rrDCC0LL1BWYfiAggiQd+QvA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2173679.ibqUs8Vreg@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2016 12:42 AM, Vivek Gautam wrote:
-> On Tue, Nov 29, 2016 at 4:44 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 11/22, Vivek Gautam wrote:
->>> +     }
->>> +
->>> +     /*
->>> +      * we need to read only one byte here, since the required
->>> +      * parameter value fits in one nibble
->>> +      */
->>> +     val = (u8 *)nvmem_cell_read(cell, &len);
->> Shouldn't need the cast here. Also it would be nice if
->> nvmem_cell_read() didn't require a second argument if we don't
->> care for it. We should update the API to allow NULL there.
-> Will remove the u8 pointer cast.
->
-> Correct, it makes sense to allow the length pointer to be passed as NULL.
-> We don't care about this length. Will update the nvmem API, to allow this.
->
-> Also, we should add a check for 'cell' as well. This pointer can be
-> NULL, and the first thing that  nvmem_cell_read does is - deference
-> the pointer 'cell'
+* Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161202 10:39]:
+> Hi Tony,
+> 
+> On Friday 02 Dec 2016 08:53:24 Tony Lindgren wrote:
+> > * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161202 05:38]:
+> > > On Thursday 01 Dec 2016 17:18:08 Tony Lindgren wrote:
+> > >> * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161130 09:58]:
+> > >>>  &usbhsehci {
+> > >>>  
+> > >>>  	phys = <0 &hsusb2_phy>;
+> > >>> 
+> > >>> +
+> > >>> +	#address-cells = <1>;
+> > >>> +	#size-cells = <0>;
+> > >>> +
+> > >>> +	usb2@2 {
+> > >> 
+> > >> I think this should be usb1@2 instead of usb2@2? That's because it's
+> > >> at /sys/bus/usb/devices/1-2 and not at /sys/bus/usb/devices/2-2?
+> > >> 
+> > >> Or what's the naming standard here?
+> > > 
+> > > Good question. As far as I know, the node name is irrelevant, only the reg
+> > > value is important. Maybe we should call it hub@2 ?
+> > 
+> > Yeah hub sounds good to me, Rob?
+> > 
+> > Sohow does the kernel know which instance it is if there
+> > are multiple devices? For example, below is a patch for
+> > igepv5 (not yet using "hub" naming), note how it has things
+> > at 3-2 and 3-2.3. So if it also had something at 1-2 and
+> > 1-2.1, how would we name them?
+> 
+> Every time I have to deal with USB device names I need to look the naming 
+> scheme up. The explanation here might not be 100% accurate.
+> 
+> The first number is the bus number, which more or less identifies a host 
+> controller (and its root hub). That's a dynamically allocated ID that thus 
+> can't be used by DT, but given that DT USB bindings create node as children of 
+> a host controller, we don't need the bus number anyway.
 
-It would be pretty stupid to read a cell and pass NULL as the first
-argument. I imagine things would blow up there like we want and we would
-see a nice big stacktrace.
+Oh OK so that must be some deferred probe happening here giving
+me the 3-2 numbering instead of 1-2 numbering.
 
->>> +     } else {
->>> +             reset_val |= CLK_REF_SEL;
->>> +     }
->>> +
->>> +     writel_relaxed(reset_val, qphy->base + QUSB2PHY_PLL_TEST);
->>> +
->>> +     /* Make sure that above write is completed to get PLL source clock */
->>> +     wmb();
->>> +
->>> +     /* Required to get PHY PLL lock successfully */
->>> +     usleep_range(100, 110);
->>> +
->>> +     if (!(readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS) &
->>> +                                     PLL_LOCKED)) {
->>> +             dev_err(&phy->dev, "QUSB PHY PLL LOCK fails:%x\n",
->>> +                     readb_relaxed(qphy->base + QUSB2PHY_PLL_STATUS));
->> Would be pretty funny if this was locked now when the error
->> printk runs. Are there other bits in there that are helpful?
-> This is the only bit that's there to check the PLL locking status.
-> Should we rather poll ?
->
+> The numbers following the dash identify ports on hubs. 3-2 is thus the device 
+> connected on port 2 of the root hub of bus 3 (which is a hub), and 3-2.3 is 
+> the device connected on port 3 of the hub connected on port 2 of the root hub 
+> of bus 3.
+> 
+> If you had 1-2 and 1-2.1 it would mean that device on port 2 of the root hub 
+> of bus 1 (1-2) is a hub that has device connected on its first port (1-2.1).
 
-I'm just saying that the printk may have the "correct" status but the
-check would have failed earlier making the printk confusing. Perhaps
-just save the register value from the first read and print it instead of
-reading it again? Polling would probably be a better design anyway?
-Hopefully the status bit isn't toggling back and forth during those
-100-100us though, which may be the case here and that would explain why
-it's not a polling design.
+OK so 1-2 and 3-2 are both at the root hub port 2 so no issue there.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+BTW, considering the various versions of u-boot, just doing
+udevadm info /sys/bus/usb/devices/1-2 can be used for debugging
+as if configured properly in the dts it will show the three OF_*
+related lines.
+
+Seems like the "hub" naming would be good to use though.
+
+Thanks,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
