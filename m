@@ -1,73 +1,60 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2] ARM: omap3: beagleboard-xm: dt: Add ethernet to the device tree
-Date: Fri,  2 Dec 2016 23:11:37 +0200
-Message-ID: <1480713097-5931-1-git-send-email-laurent.pinchart@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Rob Rice <rob.rice@broadcom.com>
+Subject: [PATCH v2 0/3] Add Broadcom SPU Crypto Driver
+Date: Fri,  2 Dec 2016 16:34:56 -0500
+Message-ID: <1480714499-1476-1-git-send-email-rob.rice@broadcom.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Steve Lin <steven.lin1@broadcom.com>, Rob Rice <rob.rice@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The Beagleboard-xM has a LAN9514 USB hub and ethernet controller,
-connected to port 2 of the OMAP EHCI controller. The board however has
-no EEPROM to store the ethernet MAC address, which is programmed by the
-boot loader.
+Change in v2:
+- select CRYPTO_DES in Kconfig
 
-To allow Linux to use the same MAC address as the boot loader (or for
-that matter any fixed MAC address), we need a node in the device tree
-for the ethernet controller that the boot loader can update at runtime
-with a local-mac-address property. Add it, along with an alias for the
-ethernet controller to let the boot loader locate it easily.
+The Broadcom SPU crypto driver provides access to SPU hardware
+for symmetric crypto offload. The driver supports ablkcipher,
+ahash, and aead operations. The driver supports several
+Broadcom SoCs with different revisions of the SPU hardware.
+The driver supports SPU-M and SPU2 hardware revisions, and
+a couple versions of each hw revision, each version with minor
+differences.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
----
-Changes since v1:
+The device tree entries for the SPU depends on device tree entries
+for the Broadcom PDC driver. The PDC DT entries have been accepted
+upstream, but are not yet included in the crypto repo. See commit
+e79249143f468f8d3365dbbd1642c045bdcc98c5.
 
-- Renamed usb2 DT node to hub
----
- arch/arm/boot/dts/omap3-beagle-xm.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Rob Rice (3):
+  crypto: brcm: DT documentation for Broadcom SPU driver
+  crypto: brcm: Add Broadcom SPU driver
+  crypto: brcm: Add Broadcom SPU driver DT entry.
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 85e297ed0ea1..673cee2234b2 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -27,6 +27,7 @@
- 	aliases {
- 		display0 = &dvi0;
- 		display1 = &tv0;
-+		ethernet = &ethernet;
- 	};
- 
- 	leds {
-@@ -348,6 +349,21 @@
- 
- &usbhsehci {
- 	phys = <0 &hsusb2_phy>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	hub@2 {
-+		compatible = "usb424,9514";
-+		reg = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: usbether@1 {
-+			compatible = "usb424,ec00";
-+			reg = <1>;
-+		};
-+	};
- };
- 
- &vaux2 {
+ .../devicetree/bindings/crypto/brcm,spu-crypto.txt |   25 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |   12 +
+ drivers/crypto/Kconfig                             |   11 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/bcm/Makefile                        |   15 +
+ drivers/crypto/bcm/cipher.c                        | 4943 ++++++++++++++++++++
+ drivers/crypto/bcm/cipher.h                        |  472 ++
+ drivers/crypto/bcm/spu.c                           | 1252 +++++
+ drivers/crypto/bcm/spu.h                           |  288 ++
+ drivers/crypto/bcm/spu2.c                          | 1402 ++++++
+ drivers/crypto/bcm/spu2.h                          |  228 +
+ drivers/crypto/bcm/spum.h                          |  174 +
+ drivers/crypto/bcm/util.c                          |  584 +++
+ drivers/crypto/bcm/util.h                          |  117 +
+ 14 files changed, 9524 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
+ create mode 100644 drivers/crypto/bcm/Makefile
+ create mode 100644 drivers/crypto/bcm/cipher.c
+ create mode 100644 drivers/crypto/bcm/cipher.h
+ create mode 100644 drivers/crypto/bcm/spu.c
+ create mode 100644 drivers/crypto/bcm/spu.h
+ create mode 100644 drivers/crypto/bcm/spu2.c
+ create mode 100644 drivers/crypto/bcm/spu2.h
+ create mode 100644 drivers/crypto/bcm/spum.h
+ create mode 100644 drivers/crypto/bcm/util.c
+ create mode 100644 drivers/crypto/bcm/util.h
+
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
