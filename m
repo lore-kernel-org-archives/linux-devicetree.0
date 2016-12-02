@@ -1,56 +1,37 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] lib: add bitrev8x4()
-Date: Thu, 1 Dec 2016 16:04:09 -0800
-Message-ID: <8fb2f1c2-c39c-b74f-d5c8-d6731cbd67c8@gmail.com>
-References: <cover.1480551148.git.stillcompiling@gmail.com>
- <bc92eb1507448731163ae67fc888668d327f9168.1480551148.git.stillcompiling@gmail.com>
- <20161201234523.3bed63dc@crub>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: [PATCH 0/2] mmc: host: s3cmci: add device tree support
+Date: Thu,  1 Dec 2016 22:14:23 -0200
+Message-ID: <1480637665-6325-1-git-send-email-sergio.prado@e-labworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161201234523.3bed63dc@crub>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Cc: Sergio Prado <sergio.prado@e-labworks.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Anatolij,
+This series adds support for configuring Samsung's S3C24XX MMC/SD/SDIO
+controller via device tree.
 
-Thanks for the review.
+Tested on FriendlyARM mini2440, based on s3c2440 SoC.
 
-On 12/01/2016 02:45 PM, Anatolij Gustschin wrote:
-> On Thu,  1 Dec 2016 09:04:50 -0800
-> Joshua Clayton stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> ...
->> diff --git a/arch/arm/include/asm/bitrev.h b/arch/arm/include/asm/bitrev.h
->> index ec291c3..6d2e9ca 100644
->> --- a/arch/arm/include/asm/bitrev.h
->> +++ b/arch/arm/include/asm/bitrev.h
->> @@ -17,4 +17,9 @@ static __always_inline __attribute_const__ u8 __arch_bitrev8(u8 x)
->> 	return __arch_bitrev32((u32)x) >> 24;
->> }
->>
->> +static __always_inline __attribute_const__ u32 __arch_bitrev8x4(u32 x)
->> +{
->> +	__asm__ ("rbit %0, %1; rev %0, %0" : "=r" (x) : "r" (x));
-> 	return x;
-Oops thats a little embarrassing;
-I'll add a return.
->> +}
-> otherwise you get
->
-> In function '__arch_bitrev8x4':
-> warning: no return statement in function returning non-void [-Wreturn-type]
->
-> --
-> Anatolij
+Sergio Prado (2):
+  dt-bindings: mmc: add DT binding for S3C24XX MMC/SD/SDIO controller
+  mmc: host: s3cmci: allow probing from device tree
 
-I wonder why I do not see this warning when compiling. The inlining, maybe?
+ .../devicetree/bindings/mmc/samsung,s3cmci.txt     |  38 +++++
+ drivers/mmc/host/s3cmci.c                          | 155 +++++++++++++++++----
+ 2 files changed, 169 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
 
-
-Joshua
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
