@@ -1,202 +1,43 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 1/2] Add crypto driver support for some MediaTek chips
-Date: Fri, 2 Dec 2016 20:11:26 +0800
-Message-ID: <1480680686.15580.27.camel@mtkswgap22>
-References: <1480649205-52695-1-git-send-email-ryder.lee@mediatek.com>
-         <1480649205-52695-2-git-send-email-ryder.lee@mediatek.com>
-         <20161202081836.GA20128@Red>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND 2/2] gpio: axp209: add pinctrl support
+Date: Fri, 2 Dec 2016 13:30:22 +0100
+Message-ID: <CACRpkdbfeZ1PqtKMpP-6ty=43L1C7QQEmeM91pmN-YiOXeysTA@mail.gmail.com>
+References: <20161123141151.25315-1-quentin.schulz@free-electrons.com>
+ <20161123141151.25315-3-quentin.schulz@free-electrons.com>
+ <CACRpkdb8cej=AMs2kO1Vks-WYeae+CtAW2YOCc+Pz3E49mcrDQ@mail.gmail.com> <f46c89f2-478b-93b8-5a66-12d1307d4514@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20161202081836.GA20128@Red>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-mediatek@lists.infradead.org, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f46c89f2-478b-93b8-5a66-12d1307d4514-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Nov 29, 2016 at 11:13 PM, Quentin Schulz
+<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On Fri, 2016-12-02 at 09:18 +0100, Corentin Labbe wrote:
-> Hello
-> 
-> I have some minor comment inline
-> 
-> On Fri, Dec 02, 2016 at 11:26:44AM +0800, Ryder Lee wrote:
-> > This adds support for the MediaTek hardware accelerator on
-> > mt7623/mt2701/mt8521p SoC.
-> > 
-> > This driver currently implement:
-> > - SHA1 and SHA2 family(HMAC) hash alogrithms.
-> > - AES block cipher in CBC/ECB mode with 128/196/256 bits keys.
-> 
-> I see also a PRNG but is seems not really used.
+> So basically:
+>
+>  - first patch for adding pinctrl to the existing driver
+>  - second patch for moving the driver and binding from gpio to pinctrl
+> subsystem
+>  - third patch for both removing Kconfig entry and Makefile rule from
+> gpio subsystem, and adding a Kconfig entry and a Makefile rule in
+> pinctrl subsystem
+>
+> Is that what you want?
 
-Yes, PRNG is not implemented yet, i will remove it temporarily.
+No.
 
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  drivers/crypto/Kconfig                 |   17 +
-> >  drivers/crypto/Makefile                |    1 +
-> >  drivers/crypto/mediatek/Makefile       |    2 +
-> >  drivers/crypto/mediatek/mtk-aes.c      |  734 +++++++++++++++++
-> >  drivers/crypto/mediatek/mtk-platform.c |  575 +++++++++++++
-> >  drivers/crypto/mediatek/mtk-platform.h |  230 ++++++
-> >  drivers/crypto/mediatek/mtk-regs.h     |  194 +++++
-> >  drivers/crypto/mediatek/mtk-sha.c      | 1384
-++++++++++++++++++++++++++++++++
-> >  8 files changed, 3137 insertions(+)
-> >  create mode 100644 drivers/crypto/mediatek/Makefile
-> >  create mode 100644 drivers/crypto/mediatek/mtk-aes.c
-> >  create mode 100644 drivers/crypto/mediatek/mtk-platform.c
-> >  create mode 100644 drivers/crypto/mediatek/mtk-platform.h
-> >  create mode 100644 drivers/crypto/mediatek/mtk-regs.h
-> >  create mode 100644 drivers/crypto/mediatek/mtk-sha.c
-> > 
-> > diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-> > index 4d2b81f..5d9c803 100644
-> > --- a/drivers/crypto/Kconfig
-> > +++ b/drivers/crypto/Kconfig
-> > @@ -553,6 +553,23 @@ config CRYPTO_DEV_ROCKCHIP
-> >       This driver interfaces with the hardware crypto accelerator.
-> >       Supporting cbc/ecb chainmode, and aes/des/des3_ede cipher
-mode.
-> >  
-> > +config CRYPTO_DEV_MEDIATEK
-> > +   tristate "MediaTek's Cryptographic Engine driver"
-> > +   depends on ARM && ARCH_MEDIATEK
-> > +   select NEON
-> > +   select KERNEL_MODE_NEON
-> > +   select ARM_CRYPTO
-> > +   select CRYPTO_AES
-> > +   select CRYPTO_BLKCIPHER
-> > +   select CRYPTO_SHA1_ARM_NEON
-> > +   select CRYPTO_SHA256_ARM
-> > +   select CRYPTO_SHA512_ARM
-> > +   select CRYPTO_HMAC
-> 
-> Why do you select accelerated algos ?
-> Adding COMPILE_TEST could be helpfull also.
+Make the patch moving it to pinctrl first. This will be the same as
+the patch augmenting Kcongfig and Makefile or it will not compile.
 
-Our Hardware has complex procedure on calculate HMAC, and it get a bad
-performance.... So i decide to use ARM NEON instruction as fallback to
-speedup it.
-I will add COMPILE_TEST.
+Then a second patch to add the pinctrl features.
 
-> [...]
-> > +
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/scatterlist.h>
-> > +#include <crypto/scatterwalk.h>
-> > +#include <crypto/algapi.h>
-> > +#include <crypto/aes.h>
-> > +#include "mtk-platform.h"
-> > +#include "mtk-regs.h"
-> > +
-> 
-> Sort headers in alphabetical order
-> 
-> [...]
-> > +
-> > +   mtk_aes_unregister_algs();
-> > +   mtk_aes_record_free(cryp);
-> > +}
-> > +EXPORT_SYMBOL(mtk_cipher_alg_release);
-> 
-> Why not EXPORT_SYMBOL_GPL ?
-> Furthermore do you really need it to be exported ?
-
-My mistake. I will remove it.
-
-> [...]
-> > +
-> > +#include <linux/init.h>
-> > +#include <linux/module.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/platform_device.h>
-> > +#include "mtk-platform.h"
-> > +#include "mtk-regs.h"
-> > +
-> 
-> Sort headers in alphabetical order
-> 
-> [...]
-> > +
-> > +static void mtk_prng_reseed(struct mtk_cryp *cryp)
-> > +{
-> > +   /* 8 words to seed the PRNG to provide IVs */
-> > +   void __iomem *base = cryp->base;
-> > +   const u32 prng_key[8] = {0x48c24cfd, 0x6c07f742,
-> > +                           0xaee75681, 0x0f27c239,
-> > +                           0x79947198, 0xe2991275,
-> > +                           0x21ac3c7c, 0xd008c4b4};
-> 
-> Why do you seed with thoses constant ?
-> 
-> [...]
-> > +
-> > +static int mtk_accelerator_init(struct mtk_cryp *cryp)
-> > +{
-> > +   int i, err;
-> > +
-> > +   /* Initialize advanced interrupt controller(AIC) */
-> > +   for (i = 0; i < 5; i++) {
-> 
-> I see this 5 for interrupt away, so perhaps a define could be used
-> 
-> [...]
-> 
-> here 
-> 
-> > +   for (i = 0; i < 5; i++) {
-> > +           cryp->irq[i] = platform_get_irq(pdev, i);
-> > +           if (cryp->irq[i] < 0) {
-> > +                   dev_err(cryp->dev, "no IRQ:%d resource info\n",
-i);
-> > +                   return -ENXIO;
-> > +           }
-> > +   }
-> [...]
-
-> > +#ifndef __MTK_PLATFORM_H_
-> > +#define __MTK_PLATFORM_H_
-> > +
-> > +#include <linux/crypto.h>
-> > +#include <crypto/internal/hash.h>
-> > +#include <linux/interrupt.h>
-> 
-> Sort headers in alphabetical order
-> 
-> [...]
-> > +#define MTK_DESC_FIRST             BIT(23)
-> > +#define MTK_DESC_BUF_LEN(x)        ((x) & 0x1ffff)
-> > +#define MTK_DESC_CT_LEN(x) (((x) & 0xff) << 24)
-> > +
-> > +#define WORD(x)                    ((x) >> 2)
-> 
-> dangerous and ambigous define
-
-I will define a IRQ_NUM and modify ambiguous definition.
-
-> [...]
-> > +
-> > +#include <linux/dma-mapping.h>
-> > +#include <linux/scatterlist.h>
-> > +#include <linux/crypto.h>
-> > +#include <crypto/scatterwalk.h>
-> > +#include <crypto/algapi.h>
-> > +#include <crypto/sha.h>
-> > +#include <crypto/internal/hash.h>
-> 
-> Sort headers in alphabetical order
-> [...]
-> Generally more function comment could be helpfull.
-
-I will sort all header and add more function comment.
-Thanks for your review.
-
-> Regards
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
