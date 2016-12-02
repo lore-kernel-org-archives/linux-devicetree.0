@@ -1,130 +1,141 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] ARM: omap3: beagleboard-xm: dt: Add ethernet to the device tree
-Date: Fri, 02 Dec 2016 20:39:54 +0200
-Message-ID: <2173679.ibqUs8Vreg@avalon>
-References: <1480528685-26259-1-git-send-email-laurent.pinchart@ideasonboard.com> <4245212.aFfvVGINdT@avalon> <20161202165323.GC4705@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
+Date: Fri, 2 Dec 2016 12:45:34 -0600
+Message-ID: <CAL_JsqKox9WVXh=i1jSCijJDTACC35uiNtS-bg9fdyDrX0svRQ@mail.gmail.com>
+References: <1477053961-27128-1-git-send-email-t-kristo@ti.com>
+ <1477053961-27128-2-git-send-email-t-kristo@ti.com> <20161030204121.qvb5d33dh65awwzx@rob-hp-laptop>
+ <41c58712-bc00-ed05-9d1d-42e31397a70c@ti.com> <CAL_JsqLtSs6ifnMdEOsfXpGoWnmXuGAx83+ziB9yU+zurvob+A@mail.gmail.com>
+ <0fe81866-8bfd-f3a7-d808-9cb23841f504@ti.com> <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161202165323.GC4705-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <8579b123-f214-22f1-0236-e5b98ab51597@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-clk <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Nishanth Menon <nm@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Fri, Dec 2, 2016 at 2:19 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> On 21/11/16 10:14, Tero Kristo wrote:
+>>
+>> On 18/11/16 19:20, Rob Herring wrote:
+>>>
+>>> On Mon, Oct 31, 2016 at 7:50 AM, Tero Kristo <t-kristo@ti.com> wrote:
+>>>>
+>>>> On 30/10/16 22:41, Rob Herring wrote:
+>>>>>
+>>>>>
+>>>>> On Fri, Oct 21, 2016 at 03:45:59PM +0300, Tero Kristo wrote:
+>>>>>>
+>>>>>>
+>>>>>> Add a clock implementation, TI SCI clock, that will hook to the common
+>>>>>> clock framework, and allow each clock to be controlled via TI SCI
+>>>>>> protocol.
+>>>>>>
+>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/clock/ti,sci-clk.txt       | 37
+>>>>>> ++++++++++++++++++++++
+>>>>>>  MAINTAINERS                                        |  1 +
+>>>>>>  2 files changed, 38 insertions(+)
+>>>>>>  create mode 100644
+>>>>>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>>> b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..bfc3ca4
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>>> @@ -0,0 +1,37 @@
+>>>>>> +Texas Instruments TI-SCI Clocks
+>>>>>> +===============================
+>>>>>> +
+>>>>>> +All clocks on Texas Instruments' SoCs that contain a System
+>>>>>> Controller,
+>>>>>> +are only controlled by this entity. Communication between a host
+>>>>>> processor
+>>>>>> +running an OS and the System Controller happens through a protocol
+>>>>>> known
+>>>>>> +as TI-SCI[1]. This clock implementation plugs into the common clock
+>>>>>> +framework and makes use of the TI-SCI protocol on clock API requests.
+>>>>>> +
+>>>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +-------------------
+>>>>>> +- compatible: Must be "ti,k2g-sci-clk"
+>>>>>> +- #clock-cells: Shall be 2.
+>>>>>> +  In clock consumers, this cell represents the device ID and clock ID
+>>>>>> +  exposed by the PM firmware. The assignments can be found in the
+>>>>>> header
+>>>>>> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+>>>>>> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where
+>>>>>> <soc>
+>>>>>> +  is the SoC involved, for example 'k2g'.
+>>>>>> +
+>>>>>> +Examples:
+>>>>>> +--------
+>>>>>> +
+>>>>>> +pmmc: pmmc {
+>>>>>> +       compatible = "ti,k2g-sci";
+>>>>>> +
+>>>>>> +       k2g_clks: k2g_clks {
+>>>>>
+>>>>>
+>>>>>
+>>>>> Use "clocks" for node name instead.
+>>>>>
+>>>>>> +               compatible = "ti,k2g-sci-clk";
+>>>>>
+>>>>>
+>>>>>
+>>>>> I'm starting to think all these child nodes for SCI are pointless. Is
+>>>>> there any reason why the parent node can't be the clock provider (along
+>>>>> with all the other providers it acks as)?
+>>>>
+>>>>
+>>>>
+>>>> I believe the only reason to keep them separate is to have kernel
+>>>> side of
+>>>> things modular. If we have separate nodes, the drivers can be probed
+>>>> separately.
+>>>>
+>>>> If not, we need to build one huge blob with all the features in it,
+>>>> so the
+>>>> main driver can probe everything in one go, with annoying back-and-forth
+>>>> callbacks in place (assuming we still want to keep stuff somehow
+>>>> modular.)
+>>>
+>>>
+>>> Since when is DT the only way to create a device? The main driver can
+>>> create devices for all the sub-functions like clocks. This is the same
+>>> as MFDs which have been done both ways.
+>>
+>>
+>> Yes obviously this can be done, my main point was that it will require
+>> building some sort of infra within the driver to handle this. With
+>> separate nodes, none of this is going to be needed. Also, we will lose
+>> any kind of configurability via DT if we don't have separate nodes; now
+>> we can select the available clocks / genpds via the compatible string of
+>> the clocks/genpd nodes themselves (this isn't clearly evident as of now
+>> as we only support a grand total of one device, which is k2g-evm.)
+>> Otherwise we need to probe against the main node and add a separate
+>> compatible string for every device, and carry this information to the
+>> sibling devices also somehow. It is just so much simpler if we can just
+>> keep separate nodes for them.
+>>
+>> Also, plenty of things are doing this kind of stuff already in
+>> DT/kernel, having a parent node in place and sub-functions added
+>> separately for ease of use, with apparently no visible point for having
+>> the nodes within the DT.
+>
+>
+> Rob, any response on this one? I see you have acked the reset part of the
+> bindings which is doing pretty much the same thing as the clock part is
+> doing here, namely adding child node under the main SCI node. Is it okay to
+> do this same for other parts of the TI SCI?
 
-On Friday 02 Dec 2016 08:53:24 Tony Lindgren wrote:
-> * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161202 05:38]:
-> > On Thursday 01 Dec 2016 17:18:08 Tony Lindgren wrote:
-> >> * Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> [161130 09:58]:
-> >>>  &usbhsehci {
-> >>>  
-> >>>  	phys = <0 &hsusb2_phy>;
-> >>> 
-> >>> +
-> >>> +	#address-cells = <1>;
-> >>> +	#size-cells = <0>;
-> >>> +
-> >>> +	usb2@2 {
-> >> 
-> >> I think this should be usb1@2 instead of usb2@2? That's because it's
-> >> at /sys/bus/usb/devices/1-2 and not at /sys/bus/usb/devices/2-2?
-> >> 
-> >> Or what's the naming standard here?
-> > 
-> > Good question. As far as I know, the node name is irrelevant, only the reg
-> > value is important. Maybe we should call it hub@2 ?
-> 
-> Yeah hub sounds good to me, Rob?
-> 
-> Sohow does the kernel know which instance it is if there
-> are multiple devices? For example, below is a patch for
-> igepv5 (not yet using "hub" naming), note how it has things
-> at 3-2 and 3-2.3. So if it also had something at 1-2 and
-> 1-2.1, how would we name them?
+Yes. It would be silly to allow for one and not others...
 
-Every time I have to deal with USB device names I need to look the naming 
-scheme up. The explanation here might not be 100% accurate.
-
-The first number is the bus number, which more or less identifies a host 
-controller (and its root hub). That's a dynamically allocated ID that thus 
-can't be used by DT, but given that DT USB bindings create node as children of 
-a host controller, we don't need the bus number anyway.
-
-The numbers following the dash identify ports on hubs. 3-2 is thus the device 
-connected on port 2 of the root hub of bus 3 (which is a hub), and 3-2.3 is 
-the device connected on port 3 of the hub connected on port 2 of the root hub 
-of bus 3.
-
-If you had 1-2 and 1-2.1 it would mean that device on port 2 of the root hub 
-of bus 1 (1-2) is a hub that has device connected on its first port (1-2.1).
-
-> 8< ------------------------
-> 
-> From tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Date: Thu, 1 Dec 2016 17:04:50 -0800
-> Subject: [PATCH] ARM: dts: omap5-igep0050: Allow bootloader to configure
->  USB Ethernet MAC
-> 
-> This is slightly different wiring compared to omap5-uevm or pandaboard:
-> 
-> /sys/bus/usb/devices/3-2	hub
-> /sys/bus/usb/devices/3-2.3	7500
-> 
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/omap5-igep0050.dts | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-igep0050.dts
-> b/arch/arm/boot/dts/omap5-igep0050.dts ---
-> a/arch/arm/boot/dts/omap5-igep0050.dts
-> +++ b/arch/arm/boot/dts/omap5-igep0050.dts
-> @@ -19,6 +19,10 @@
->  		reg = <0x0 0x80000000 0 0x7f000000>;	/* 2032 MB */
->  	};
-> 
-> +	aliases {
-> +		ethernet = &ethernet;
-> +	};
-> +
->  	gpio_keys {
->  		compatible = "gpio-keys";
->  		pinctrl-0 = <&power_button_pin>;
-> @@ -116,3 +120,20 @@
->  		OMAP5_IOPAD(0x1ca, PIN_OUTPUT | MUX_MODE6)	/* 
-perslimbus2_clock.gpio5_145
-> */
->  	>;
-> 
->  };
-> +
-> +&usbhsehci {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	usb3@2 {
-> +		compatible = "usb424,3503";
-> +		reg = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethernet: usbether@3 {
-> +			compatible = "usb424,7500";
-> +			reg = <3>;
-> +		};
-> +	};
-> +};
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
