@@ -1,81 +1,87 @@
 From: Bai Ping <ping.bai@nxp.com>
-Subject: [PATCH 00/11] Add basic code support for imx6sll
-Date: Fri, 2 Dec 2016 14:39:23 +0800
-Message-ID: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+Subject: [PATCH 07/11] ARM: debug: Add low level debug support for imx6sll
+Date: Fri, 2 Dec 2016 14:39:30 +0800
+Message-ID: <1480660774-25055-8-git-send-email-ping.bai@nxp.com>
+References: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1480660774-25055-1-git-send-email-ping.bai@nxp.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, daniel.lezcano@linaro.org, linux-gpio@vger.kernel.org, p.zabel@pengutronix.de, fabio.estevam@nxp.com, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, daniel.lezcano@linaro.org, tglx@linutronix.de, p.zabel@pengutronix.de, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ping.bai@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The i.MX 6SoloLiteLite application processors are NXP's
-latest additions to a growing family of multimedia-focused
-products offering high-performance processing optimized for
-lowest power consumption. The i.MX 6SoloLiteLite processors
-feature NXP's advanced implementation of the ARM Cortex-A9 core,
-which can be interfaced with LPDDR3 and LPDDR2 DRAM memory devices.
+Add low level debug support for i.MX6SLL.
 
-i.MX6SLL is a new SOC of the i.MX6 family, shares many common modules,
-so most of the MSL code can be resued from i.MX6 serious SOC.
+Signed-off-by: Bai Ping <ping.bai@nxp.com>
+---
+ arch/arm/Kconfig.debug            |  9 +++++++++
+ arch/arm/include/debug/imx-uart.h | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-Bai Ping (11):
-  ARM: imx: Add basic msl support for imx6sll
-  driver: clocksource: add gpt timer for imx6sll
-  driver: clk: imx: Add clock driver for imx6sll
-  driver: pinctrl: imx: Add pinctrl driver support for imx6sll
-  ARM: dts: imx: Add basic dtsi for imx6sll
-  ARM: dts: imx: Add imx6sll EVK board dts support
-  ARM: debug: Add low level debug support for imx6sll
-  ARM: imx: Add suspend/resume support for imx6sll
-  ARM: imx: correct i.mx6sll dram io low power mode
-  Document: dt: binding: imx: update doc for imx6sll
-  ARM: configs: enable imx6sll support in defconfig
-
- .../devicetree/bindings/clock/imx6sll-clock.txt    |  13 +
- .../bindings/pinctrl/fsl,imx6sll-pinctrl.txt       |  37 +
- arch/arm/Kconfig.debug                             |   9 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/imx6sll-evk.dts                  | 652 +++++++++++++++
- arch/arm/boot/dts/imx6sll-pinfunc.h                | 882 +++++++++++++++++++++
- arch/arm/boot/dts/imx6sll.dtsi                     | 854 ++++++++++++++++++++
- arch/arm/configs/imx_v6_v7_defconfig               |   1 +
- arch/arm/include/debug/imx-uart.h                  |  10 +
- arch/arm/mach-imx/Kconfig                          |   8 +
- arch/arm/mach-imx/Makefile                         |   1 +
- arch/arm/mach-imx/cpu.c                            |   3 +
- arch/arm/mach-imx/cpuidle-imx6sl.c                 |   7 +-
- arch/arm/mach-imx/gpc.c                            |   8 +
- arch/arm/mach-imx/mach-imx6sl.c                    |  10 +-
- arch/arm/mach-imx/mxc.h                            |   6 +
- arch/arm/mach-imx/pm-imx6.c                        |  49 +-
- arch/arm/mach-imx/suspend-imx6.S                   |  29 +-
- drivers/clk/imx/Makefile                           |   1 +
- drivers/clk/imx/clk-imx6sll.c                      | 366 +++++++++
- drivers/clocksource/timer-imx-gpt.c                |   1 +
- drivers/pinctrl/freescale/Kconfig                  |   7 +
- drivers/pinctrl/freescale/Makefile                 |   1 +
- drivers/pinctrl/freescale/pinctrl-imx6sll.c        | 385 +++++++++
- include/dt-bindings/clock/imx6sll-clock.h          | 204 +++++
- 25 files changed, 3514 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6sll-pinctrl.txt
- create mode 100644 arch/arm/boot/dts/imx6sll-evk.dts
- create mode 100644 arch/arm/boot/dts/imx6sll-pinfunc.h
- create mode 100644 arch/arm/boot/dts/imx6sll.dtsi
- create mode 100644 drivers/clk/imx/clk-imx6sll.c
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx6sll.c
- create mode 100644 include/dt-bindings/clock/imx6sll-clock.h
-
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 408540f..d52d48c 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -405,6 +405,13 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on i.MX6SL.
+ 
++	config DEBUG_IMX6SLL_UART
++		bool "i.MX6SLL Debug UART"
++		depends on SOC_IMX6SLL
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on i.MX6SLL.
++
+ 	config DEBUG_IMX6SX_UART
+ 		bool "i.MX6SX Debug UART"
+ 		depends on SOC_IMX6SX
+@@ -1374,6 +1381,7 @@ config DEBUG_IMX_UART_PORT
+ 						DEBUG_IMX53_UART || \
+ 						DEBUG_IMX6Q_UART || \
+ 						DEBUG_IMX6SL_UART || \
++						DEBUG_IMX6SLL_UART || \
+ 						DEBUG_IMX6SX_UART || \
+ 						DEBUG_IMX6UL_UART || \
+ 						DEBUG_IMX7D_UART
+@@ -1428,6 +1436,7 @@ config DEBUG_LL_INCLUDE
+ 				 DEBUG_IMX53_UART ||\
+ 				 DEBUG_IMX6Q_UART || \
+ 				 DEBUG_IMX6SL_UART || \
++				 DEBUG_IMX6SLL_UART || \
+ 				 DEBUG_IMX6SX_UART || \
+ 				 DEBUG_IMX6UL_UART || \
+ 				 DEBUG_IMX7D_UART
+diff --git a/arch/arm/include/debug/imx-uart.h b/arch/arm/include/debug/imx-uart.h
+index bce58e9..24e60ce 100644
+--- a/arch/arm/include/debug/imx-uart.h
++++ b/arch/arm/include/debug/imx-uart.h
+@@ -81,6 +81,14 @@
+ #define IMX6SL_UART_BASE_ADDR(n) IMX6SL_UART##n##_BASE_ADDR
+ #define IMX6SL_UART_BASE(n)	IMX6SL_UART_BASE_ADDR(n)
+ 
++#define IMX6SLL_UART1_BASE_ADDR 0x02020000
++#define IMX6SLL_UART2_BASE_ADDR 0x02024000
++#define IMX6SLL_UART3_BASE_ADDR 0x02034000
++#define IMX6SLL_UART4_BASE_ADDR 0x02018000
++#define IMX6SLL_UART5_BASE_ADDR 0x021f4000
++#define IMX6SLL_UART_BASE_ADDR(n) IMX6SLL_UART##n##_BASE_ADDR
++#define IMX6SLL_UART_BASE(n)	IMX6SLL_UART_BASE_ADDR(n)
++
+ #define IMX6SX_UART1_BASE_ADDR	0x02020000
+ #define IMX6SX_UART2_BASE_ADDR	0x021e8000
+ #define IMX6SX_UART3_BASE_ADDR	0x021ec000
+@@ -133,6 +141,8 @@
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6Q)
+ #elif defined(CONFIG_DEBUG_IMX6SL_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SL)
++#elif defined(CONFIG_DEBUG_IMX6SLL_UART)
++#define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SLL)
+ #elif defined(CONFIG_DEBUG_IMX6SX_UART)
+ #define UART_PADDR	IMX_DEBUG_UART_BASE(IMX6SX)
+ #elif defined(CONFIG_DEBUG_IMX6UL_UART)
 -- 
 1.9.1
+
