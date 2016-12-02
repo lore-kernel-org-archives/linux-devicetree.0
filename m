@@ -1,153 +1,99 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH 6/6] net: smmac: allow configuring lower pbl values
-Date: Fri, 2 Dec 2016 15:13:56 +0100
-Message-ID: <1480688040-9809-1-git-send-email-niklass@axis.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] PWM: add pwm-stm32 DT bindings
+Date: Fri, 2 Dec 2016 14:23:02 +0000
+Message-ID: <20161202142302.GO2683@dell>
+References: <1480673842-20804-1-git-send-email-benjamin.gaignard@st.com>
+ <1480673842-20804-4-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, "David S. Miller" <davem@davemloft.net>, Phil Reid <preid@electromag.com.au>, Eric Engestrom <eric@engestrom.ch>, Vincent Palatin <vpalatin@chromium.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Joachim Eastwood <manabian@gmail.com>
-Cc: Niklas Cassel <niklass@axis.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1480673842-20804-4-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+On Fri, 02 Dec 2016, Benjamin Gaignard wrote:
 
-The driver currently always sets the PBLx8/PBLx4 bit, which means that
-the pbl values configured via the pbl/txpbl/rxpbl DT properties are
-always multiplied by 8/4 in the hardware.
+> Define bindings for pwm-stm32
+> 
+> version 2:
+> - use parameters instead of compatible of handle the hardware configuration
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pwm/pwm-stm32.txt          | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> new file mode 100644
+> index 0000000..575b9fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> @@ -0,0 +1,38 @@
+> +STMicroelectronics PWM driver bindings for STM32
+> +
+> +Must be a sub-node of STM32 general purpose timer driver
+> +Parent node properties are describe in ../mfd/stm32-general-purpose-timer.txt
+> +
+> +Required parameters:
+> +- compatible:		Must be "st,stm32-pwm"
+> +- pinctrl-names: 	Set to "default".
+> +- pinctrl-0: 		List of phandles pointing to pin configuration nodes
+> +			for PWM module.
+> +			For Pinctrl properties, please refer to [1].
+> +
+> +Optional parameters:
+> +- st,breakinput:	Set if the hardware have break input capabilities
+> +- st,breakinput-polarity: Set break input polarity. Default is 0
+> +			 The value define the active polarity:
+> +			  - 0 (active LOW)
+> +			  - 1 (active HIGH)
 
-In order to allow the DT to configure lower pbl values, while at the
-same time not changing behavior of any existing device trees using the
-pbl/txpbl/rxpbl settings, add a property to disable the multiplication
-of the pbl by 8/4 in the hardware.
+> +- st,breakinput-polarity-high
 
-Suggested-by: Rabin Vincent <rabinv@axis.com>
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
----
- Documentation/devicetree/bindings/net/stmmac.txt      | 2 ++
- Documentation/networking/stmmac.txt                   | 5 ++++-
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c   | 3 ++-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c      | 3 ++-
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c      | 2 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 1 +
- include/linux/stmmac.h                                | 1 +
- 7 files changed, 14 insertions(+), 3 deletions(-)
+Then assume the default if the property is not present.
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index 8080038ff1b2..128da752fec9 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -39,6 +39,8 @@ Optional properties:
- 			If set, DMA tx will use this value rather than snps,pbl.
- - snps,rxpbl		Rx Programmable Burst Length. Only for GMAC and newer.
- 			If set, DMA rx will use this value rather than snps,pbl.
-+- snps,no-pbl-x8	Don't multiply the pbl/txpbl/rxpbl values by 8.
-+			For core rev < 3.50, don't multiply the values by 4.
- - snps,aal		Address-Aligned Beats
- - snps,fixed-burst	Program the DMA to use the fixed burst mode
- - snps,mixed-burst	Program the DMA to use the mixed burst mode
-diff --git a/Documentation/networking/stmmac.txt b/Documentation/networking/stmmac.txt
-index 82c8e496b4bb..d3376c5fbcf0 100644
---- a/Documentation/networking/stmmac.txt
-+++ b/Documentation/networking/stmmac.txt
-@@ -153,8 +153,9 @@ Where:
-  o dma_cfg: internal DMA parameters
-    o pbl: the Programmable Burst Length is maximum number of beats to
-        be transferred in one DMA transaction.
--       GMAC also enables the 4xPBL by default.
-+       GMAC also enables the 4xPBL by default. (8xPBL for GMAC 3.50 and newer)
-    o txpbl/rxpbl: GMAC and newer supports independent DMA pbl for tx/rx.
-+   o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
-    o fixed_burst/mixed_burst/aal
-  o clk_csr: fixed CSR Clock range selection.
-  o has_gmac: uses the GMAC core.
-@@ -209,6 +210,7 @@ struct stmmac_dma_cfg {
- 	int pbl;
- 	int txpbl;
- 	int rxpbl;
-+	bool pblx8;
- 	int fixed_burst;
- 	int mixed_burst;
- 	bool aal;
-@@ -220,6 +222,7 @@ Where:
- 	 If set, DMA tx will use this value rather than pbl.
-  o rxpbl: Receive Programmable Burst Length. Only for GMAC and newer.
- 	 If set, DMA rx will use this value rather than pbl.
-+ o pblx8: Enable 8xPBL (4xPBL for core rev < 3.50). Enabled by default.
-  o fixed_burst: program the DMA to use the fixed burst mode
-  o mixed_burst: program the DMA to use the mixed burst mode
-  o aal: Address-Aligned Beats
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-index 1dd34fb4c1a9..1d313af647b4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-@@ -96,7 +96,8 @@ static void dwmac1000_dma_init(void __iomem *ioaddr,
- 	 * Note: before stmmac core 3.50 this mode bit was 4xPBL, and
- 	 * post 3.5 mode bit acts as 8*PBL.
- 	 */
--	value |= DMA_BUS_MODE_MAXPBL;
-+	if (dma_cfg->pblx8)
-+		value |= DMA_BUS_MODE_MAXPBL;
- 	value |= DMA_BUS_MODE_USP;
- 	value &= ~(DMA_BUS_MODE_PBL_MASK | DMA_BUS_MODE_RPBL_MASK);
- 	value |= (txpbl << DMA_BUS_MODE_PBL_SHIFT);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index 0bf47825bfeb..0f7110d19a4a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -82,7 +82,8 @@ static void dwmac4_dma_init_channel(void __iomem *ioaddr,
- 	 * on each channel
- 	 */
- 	value = readl(ioaddr + DMA_CHAN_CONTROL(channel));
--	value = value | DMA_BUS_MODE_PBL;
-+	if (dma_cfg->pblx8)
-+		value = value | DMA_BUS_MODE_PBL;
- 	writel(value, ioaddr + DMA_CHAN_CONTROL(channel));
- 
- 	value = readl(ioaddr + DMA_CHAN_TX_CONTROL(channel));
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-index 56c8a2342c14..a2831773431a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
-@@ -81,6 +81,7 @@ static void stmmac_default_data(struct plat_stmmacenet_data *plat)
- 	plat->mdio_bus_data->phy_mask = 0;
- 
- 	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
- 	/* TODO: AXI */
- 
- 	/* Set default value for multicast hash bins */
-@@ -115,6 +116,7 @@ static int quark_default_data(struct plat_stmmacenet_data *plat,
- 	plat->mdio_bus_data->phy_mask = 0;
- 
- 	plat->dma_cfg->pbl = 16;
-+	plat->dma_cfg->pblx8 = true;
- 	plat->dma_cfg->fixed_burst = 1;
- 	/* AXI (TODO) */
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 29faff42a5ea..3a713862f0a3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -314,6 +314,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 	of_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
- 	of_property_read_u32(np, "snps,txpbl", &dma_cfg->txpbl);
- 	of_property_read_u32(np, "snps,rxpbl", &dma_cfg->rxpbl);
-+	dma_cfg->pblx8 = !of_property_read_bool(np, "snps,no-pbl-x8");
- 
- 	dma_cfg->aal = of_property_read_bool(np, "snps,aal");
- 	dma_cfg->fixed_burst = of_property_read_bool(np, "snps,fixed-burst");
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index c8a7c6b278da..05a8243017b0 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -90,6 +90,7 @@ struct stmmac_dma_cfg {
- 	int pbl;
- 	int txpbl;
- 	int rxpbl;
-+	bool pblx8;
- 	int fixed_burst;
- 	int mixed_burst;
- 	bool aal;
+> +- st,pwm-num-chan:	Number of available PWM channels.  Default is 0.
+
+What's the point in having a PWM device with  no channels?
+
+Best to make this a compulsory property.
+
+> +- st,32bits-counter:	Set if the hardware have a 32 bits counter
+> +- st,complementary:	Set if the hardware have complementary output channels
+> +
+> +[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+Use relative path.
+
+../pinctrl/pinctrl-bindings.txt
+
+> +Example:
+> +	gptimer1: gptimer1@40010000 {
+> +		compatible = "st,stm32-gptimer";
+> +		reg = <0x40010000 0x400>;
+> +		clocks = <&rcc 0 160>;
+> +		clock-names = "clk_int";
+> +
+> +		pwm1@0 {
+
+Don't number the node name.
+
+pwm@xx
+
+> +			compatible = "st,stm32-pwm";
+> +			st,pwm-num-chan = <4>;
+> +			st,breakinput;
+> +			st,complementary;
+> +		};
+> +	};
+
 -- 
-2.1.4
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
