@@ -1,42 +1,67 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/2] gpio: axp209: add pinctrl support
-Date: Fri, 2 Dec 2016 13:30:22 +0100
-Message-ID: <CACRpkdbfeZ1PqtKMpP-6ty=43L1C7QQEmeM91pmN-YiOXeysTA@mail.gmail.com>
-References: <20161123141151.25315-1-quentin.schulz@free-electrons.com>
- <20161123141151.25315-3-quentin.schulz@free-electrons.com>
- <CACRpkdb8cej=AMs2kO1Vks-WYeae+CtAW2YOCc+Pz3E49mcrDQ@mail.gmail.com> <f46c89f2-478b-93b8-5a66-12d1307d4514@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [resend v2: PATCH 1/2] dt-bindings: Document the hi3660 reset bindings
+Date: Fri, 02 Dec 2016 13:32:53 +0100
+Message-ID: <5982682.vMJxVociDa@wuerfel>
+References: <1480553321-17400-1-git-send-email-zhangfei.gao@linaro.org> <3900806.3NUubBDb0Q@wuerfel> <e15e76e2-b32d-a4d0-eb8b-850626a3946a@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f46c89f2-478b-93b8-5a66-12d1307d4514-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <e15e76e2-b32d-a4d0-eb8b-850626a3946a-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 11:13 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On Friday, December 2, 2016 8:21:33 AM CET zhangfei wrote:
+> Hi, Arnd
+> 
+> On 2016年12月01日 20:05, Arnd Bergmann wrote:
+> > On Thursday, December 1, 2016 8:48:40 AM CET Zhangfei Gao wrote:
+> >> +               hisi,reset-bits = <0x20 0x8             /* 0: i2c0 */
+> >> +                                  0x20 0x10            /* 1: i2c1 */
+> >> +                                  0x20 0x20            /* 2: i2c2 */
+> >> +                                  0x20 0x8000000>;     /* 3: i2c6 */
+> >> +       };
+> >> +
+> >> +Specifying reset lines connected to IP modules
+> >> +==============================================
+> >> +example:
+> >> +
+> >> +        i2c0: i2c@..... {
+> >> +                ...
+> >> +               resets = <&iomcu_rst 0>;
+> >> +                ...
+> >> +        };
+> > I don't really like this approach, since now the information is
+> > in two places. Why not put the data into the reset specifier
+> > directly when it is used?
+> Any example, still not understand.
+> They are consumer and provider.
 
-> So basically:
->
->  - first patch for adding pinctrl to the existing driver
->  - second patch for moving the driver and binding from gpio to pinctrl
-> subsystem
->  - third patch for both removing Kconfig entry and Makefile rule from
-> gpio subsystem, and adding a Kconfig entry and a Makefile rule in
-> pinctrl subsystem
->
-> Is that what you want?
+I mean in the i2c node, have
 
-No.
+	i2c0: i2c@..... {
+		...
+		resets = <&iomcu_rst 0x20 0x8>;
+		...
+	}
 
-Make the patch moving it to pinctrl first. This will be the same as
-the patch augmenting Kcongfig and Makefile or it will not compile.
+> > Also the format seems a little too close to the actual register
+> > layout and could be a little more abstract, using bit numbers instead
+> > of a bitmask and register numbers instead of offsets.
+> We use bit numbers first.
+> But in the developing process, we found several bits may be required for 
+> one driver.
+> And they may not be continuous as the bits may already be occupied.
+> Directly using offset, we can set several bits together for simple, to 
+> give more flexibility.
+> So after discussion, we directly use offset.
 
-Then a second patch to add the pinctrl features.
+Can you give an example for why this is needed? Is this different
+from a device that has multiple reset lines?
 
-Yours,
-Linus Walleij
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
