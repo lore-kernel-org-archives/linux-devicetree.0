@@ -1,45 +1,95 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2] arm64: dts: zx: support cpu-freq for zx296718
-Date: Fri, 2 Dec 2016 11:30:00 +0530
-Message-ID: <20161202060000.GE7682@vireshk-i7>
-References: <1480657956-8140-1-git-send-email-baoyou.xie@linaro.org>
- <CA+DQWkzGOzn1TRa9041Jjksj-=509XWXS_U1uaaJXNydB8Apow@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CA+DQWkzGOzn1TRa9041Jjksj-=509XWXS_U1uaaJXNydB8Apow@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, "xie.baoyou" <xie.baoyou@zte.com.cn>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: [PATCH v4] of: Fix issue where code would fall through to error case.
+Date: Thu,  1 Dec 2016 22:10:25 -0800
+Message-ID: <1480659025-18836-1-git-send-email-moritz.fischer@ettus.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, frowand.list@gmail.com, robh+dt@kernel.org, pantelis.antoniou@konsulko.com, Moritz Fischer <mdf@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02-12-16, 13:58, Baoyou Xie wrote:
-> + Viresh, the author of the bindings.
-> 
-> On 2 December 2016 at 13:52, Baoyou Xie <baoyou.xie@linaro.org> wrote:
-> 
-> > This patch adds the CPU clock phandle in CPU's node
-> > and uses operating-points-v2 to register operating points.
-> >
-> > So it can be used by cpufreq-dt driver.
-> >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/zte/zx296718.dtsi | 39 ++++++++++++++++++++++++++++++
-> > +++++
-> >  1 file changed, 39 insertions(+)
+From: Moritz Fischer <mdf@kernel.org>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+No longer fall through into the error case that prints out
+an error if no error (err = 0) occurred.
 
+Fixes d9181b20a83(of: Add back an error message, restructured)
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Reviewed-by: Frank Rowand <frank.rowand@am.sony.com>
+---
+Hi Frank, Rob
+
+sorry for the noise before.
+
+Thanks,
+Moritz
+---
+ drivers/of/resolver.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 783bd09..8bf12e9 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -298,12 +298,12 @@ int of_resolve_phandles(struct device_node *overlay)
+ 	if (!overlay) {
+ 		pr_err("null overlay\n");
+ 		err = -EINVAL;
+-		goto err_out;
++		goto out;
+ 	}
+ 	if (!of_node_check_flag(overlay, OF_DETACHED)) {
+ 		pr_err("overlay not detached\n");
+ 		err = -EINVAL;
+-		goto err_out;
++		goto out;
+ 	}
+ 
+ 	phandle_delta = live_tree_max_phandle() + 1;
+@@ -315,7 +315,7 @@ int of_resolve_phandles(struct device_node *overlay)
+ 
+ 	err = adjust_local_phandle_references(local_fixups, overlay, phandle_delta);
+ 	if (err)
+-		goto err_out;
++		goto out;
+ 
+ 	overlay_fixups = NULL;
+ 
+@@ -333,7 +333,7 @@ int of_resolve_phandles(struct device_node *overlay)
+ 	if (!tree_symbols) {
+ 		pr_err("no symbols in root of device tree.\n");
+ 		err = -EINVAL;
+-		goto err_out;
++		goto out;
+ 	}
+ 
+ 	for_each_property_of_node(overlay_fixups, prop) {
+@@ -345,12 +345,12 @@ int of_resolve_phandles(struct device_node *overlay)
+ 		err = of_property_read_string(tree_symbols,
+ 				prop->name, &refpath);
+ 		if (err)
+-			goto err_out;
++			goto out;
+ 
+ 		refnode = of_find_node_by_path(refpath);
+ 		if (!refnode) {
+ 			err = -ENOENT;
+-			goto err_out;
++			goto out;
+ 		}
+ 
+ 		phandle = refnode->phandle;
+@@ -361,9 +361,9 @@ int of_resolve_phandles(struct device_node *overlay)
+ 			break;
+ 	}
+ 
+-err_out:
+-	pr_err("overlay phandle fixup failed: %d\n", err);
+ out:
++	if (err)
++		pr_err("overlay phandle fixup failed: %d\n", err);
+ 	of_node_put(tree_symbols);
+ 
+ 	return err;
 -- 
-viresh
+2.7.4
