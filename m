@@ -1,13 +1,12 @@
 From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/8] ARM: dts: stm32: set HSE_RTC clock frequency
- to 1 MHz on stm32f429
-Date: Fri, 2 Dec 2016 15:09:54 +0100
-Message-ID: <1480687801-19525-3-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH 2/8] dt-bindings: document the STM32 RTC bindings
+Date: Fri, 2 Dec 2016 15:09:55 +0100
+Message-ID: <1480687801-19525-4-git-send-email-amelie.delaunay@st.com>
 References: <1480687801-19525-2-git-send-email-amelie.delaunay@st.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBAABBT4CQ3BAKGQEHFUXCMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBAABBUECQ3BAKGQE6COMSDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1480687801-19525-2-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,27 +19,51 @@ To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJ
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
-the RTC must be 1 MHz.
+This patch adds documentation of device tree bindings for the STM32 RTC.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index b077f99..d195ccf 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -371,6 +371,8 @@
- 			reg = <0x40023800 0x400>;
- 			clocks = <&clk_hse>, <&clk_i2s_ckin>;
- 			st,syscfg = <&pwrcfg>;
-+			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
-+			assigned-clock-rates = <1000000>;
- 		};
- 
- 		dma1: dma-controller@40026000 {
+diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+new file mode 100644
+index 0000000..4578838
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+@@ -0,0 +1,31 @@
++STM32 Real Time Clock
++
++Required properties:
++- compatible: "st,stm32-rtc".
++- reg: address range of rtc register set.
++- clocks: reference to the clock entry ck_rtc.
++- clock-names: name of the clock used. Should be "ck_rtc".
++- interrupt-parent: phandle for the interrupt controller.
++- interrupts: rtc alarm interrupt.
++- interrupt-names: rtc alarm interrupt name, should be "alarm".
++- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
++  (RTC registers) write protection.
++
++Optional properties (to override default ck_rtc parent clock):
++- assigned-clocks: reference to the ck_rtc clock entry.
++- assigned-clock-parents: phandle of the new parent clock of ck_rtc.
++
++Example:
++
++	rtc: rtc@40002800 {
++		compatible = "st,stm32-rtc";
++		reg = <0x40002800 0x400>;
++		clocks = <&rcc 1 CLK_RTC>;
++		clock-names = "ck_rtc";
++		assigned-clocks = <&rcc 1 CLK_RTC>;
++		assigned-clock-parents = <&rcc 1 CLK_LSE>;
++		interrupt-parent = <&exti>;
++		interrupts = <17 1>;
++		interrupt-names = "alarm";
++		st,syscfg = <&pwrcfg>;
++	};
 -- 
 1.9.1
 
