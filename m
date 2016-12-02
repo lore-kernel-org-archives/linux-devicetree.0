@@ -1,57 +1,74 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 i2c/for-next] i2c: rcar: Add per-Generation fallback bindings
-Date: Fri, 2 Dec 2016 15:59:51 +0100
-Message-ID: <CAMuHMdWBCJgaiZoKeVBH2KuRPdBFoS6D-=7-8jAwCKe8MGJgUA@mail.gmail.com>
-References: <1480688736-7175-1-git-send-email-horms+renesas@verge.net.au>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v3 -next 1/2] ARM: sunxi: add support for H2+ SoC
+Date: Fri,  2 Dec 2016 23:05:12 +0800
+Message-ID: <20161202150513.34691-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1480688736-7175-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBTM3Q3BAKGQE363J2PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 2, 2016 at 3:25 PM, Simon Horman <horms+renesas@verge.net.au> wrote:
-> In the case of Renesas R-Car hardware we know that there are generations of
-> SoCs, e.g. Gen 2 and Gen 3. But beyond that it's not clear what the
-> relationship between IP blocks might be. For example, I believe that
-> r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
-> descendant of the former or vice versa.
->
-> We can, however, by examining the documentation and behaviour of the
-> hardware at run-time observe that the current driver implementation appears
-> to be compatible with the IP blocks on SoCs within a given generation.
->
-> For the above reasons and convenience when enabling new SoCs a
-> per-generation fallback compatibility string scheme is being adopted for
-> drivers for Renesas SoCs.
->
-> Also:
-> * Deprecate renesas,i2c-rcar. It seems poorly named as it is only
->   compatible with R-Car Gen 1. It also appears unused in mainline.
-> * Add some text to describe per-SoC bindings
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Allwinner H2+ is a quad-core Cortex-A7 SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It is very like H3, that they share the same SoC ID (0x1680), and H3
+memory maps as well as drivers works well on the SoC.
 
-> --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+Changes since v2:
+- Changed compatible from allwinner,sun8i-h2plus to allwinner,sun8i-h2-plus.
+ Documentation/arm/sunxi/README                  | 4 ++++
+ Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+ arch/arm/mach-sunxi/sunxi.c                     | 1 +
+ 3 files changed, 6 insertions(+)
 
-> +       "renesas,i2c-r8a7779" if the device is a part of a R8A7797 SoC.
-
-R8A7779
-
-Sorry for not noticing before.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+index cd02433..1fe4d99c 100644
+--- a/Documentation/arm/sunxi/README
++++ b/Documentation/arm/sunxi/README
+@@ -63,6 +63,10 @@ SunXi family
+         + User Manual
+           http://dl.linux-sunxi.org/A33/A33%20user%20manual%20release%201.1.pdf
+ 
++      - Allwinner H2+ (sun8i)
++        + No document available now, but is known to be working properly with
++          H3 drivers and memory map.
++
+       - Allwinner H3 (sun8i)
+         + Datasheet
+           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
+diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+index 4d6467c..59b143f 100644
+--- a/Documentation/devicetree/bindings/arm/sunxi.txt
++++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+@@ -13,6 +13,7 @@ using one of the following compatible strings:
+   allwinner,sun8i-a33
+   allwinner,sun8i-a83t
+   allwinner,sun8i-h3
++  allwinner,sun8i-h2-plus
+   allwinner,sun9i-a80
+   allwinner,sun50i-a64
+   nextthing,gr8
+diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+index 2e2bde2..320d2af 100644
+--- a/arch/arm/mach-sunxi/sunxi.c
++++ b/arch/arm/mach-sunxi/sunxi.c
+@@ -63,6 +63,7 @@ static const char * const sun8i_board_dt_compat[] = {
+ 	"allwinner,sun8i-a23",
+ 	"allwinner,sun8i-a33",
+ 	"allwinner,sun8i-a83t",
++	"allwinner,sun8i-h2-plus",
+ 	"allwinner,sun8i-h3",
+ 	NULL,
+ };
+-- 
+2.10.2
